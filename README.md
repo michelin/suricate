@@ -1,4 +1,4 @@
-Suricate : [![Build Status](https://travis-ci.org/yodamad/jador.svg?branch=master)](https://travis-ci.org/yodamad/jador)
+Suricate : [![Build Status](https://travis-ci.org/yodamad/jador.svg?branch=master)](https://travis-ci.org/suricate-io/suricate)
 
 #### Code formatting
 
