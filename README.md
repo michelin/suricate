@@ -1,3 +1,5 @@
+Suricate : [![Build Status](https://travis-ci.org/yodamad/jador.svg?branch=master)](https://travis-ci.org/yodamad/jador)
+
 #### Code formatting
 
 Follow the style you see used in the primary repository! Consistency with the rest of the project always trumps other considerations. It doesn’t matter if you have your own style or if the rest of the code breaks with the greater community - just follow along.
