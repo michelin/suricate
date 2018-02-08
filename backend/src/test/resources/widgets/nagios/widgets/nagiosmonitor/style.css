@@ -1,0 +1,61 @@
+.widget.nagiosmonitor .title {
+    color: rgba(255, 255, 255, 0.8);
+    margin: 18px 0 18px 0;
+}
+
+.widget.nagiosmonitor ul{
+    margin: 0;
+    padding: 0;
+}
+
+.widget.nagiosmonitor li.hostname{
+    margin-top: 8px;
+}
+
+.widget.nagiosmonitor ul.hosts{
+    margin-top: 5px;
+}
+
+.widget.nagiosmonitor li{
+    font-size: 12px;
+    list-style-type: none;
+}
+
+.widget.nagiosmonitor li.service{
+    margin-left:15px;
+    margin-right:15px;
+}
+
+.widget.nagiosmonitor li.service li{
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    padding: 3px;
+}
+
+.widget.nagiosmonitor  h3 {
+    font-size: 12px;
+    font-weight: bold;
+}
+.widget.nagiosmonitor  h2 {
+    font-size: 15px;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.7);
+}
+.widget.nagiosmonitor .green {
+    background-color: #86d751;
+}
+.widget.nagiosmonitor .yellow {
+    background-color: #edde43;
+    -webkit-animation: status-warning-background 1s infinite; /* Safari 4+ */
+    -moz-animation:    status-warning-background 1s infinite; /* Fx 5+ */
+    -o-animation:      status-warning-background 1s infinite; /* Opera 12+ */
+    animation:         status-warning-background 1s infinite; /* IE 10+, Fx 29+ */
+}
+.widget.nagiosmonitor .red {
+    background-color: #e3394f;
+    -webkit-animation: status-danger-background 1s infinite; /* Safari 4+ */
+    -moz-animation:    status-danger-background 1s infinite; /* Fx 5+ */
+    -o-animation:      status-danger-background 1s infinite; /* Opera 12+ */
+    animation:         status-danger-background 1s infinite; /* IE 10+, Fx 29+ */
+}

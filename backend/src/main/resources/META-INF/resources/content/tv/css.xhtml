@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+>
+
+    <c:set var="nbColumn" value="5" />
+    <style>
+        .grid-stack.grid-stack-#{nbColumn}>.grid-stack-item {
+            height : calc( 100% / 3)
+        }
+        <c:forEach var="i" begin="1" end="#{nbColumn}">
+            .grid-stack.grid-stack-#{nbColumn}>.grid-stack-item[data-gs-min-width='#{i}'] {
+                min-width: calc( (100% / #{nbColumn }) * #{i})
+            }
+            .grid-stack.grid-stack-#{nbColumn}>.grid-stack-item[data-gs-width='#{i}'] {
+                width: calc( (100% / #{nbColumn}) * #{i})
+            }
+            .grid-stack.grid-stack-#{nbColumn}>.grid-stack-item[data-gs-x='#{i}'] {
+                left: calc( (100% / #{nbColumn}) * #{i})
+            }
+            .grid-stack.grid-stack-#{nbColumn}>.grid-stack-item[data-gs-max-width='#{i}'] {
+                max-width: calc( (100% / #{nbColumn}) * #{i})
+            }
+
+        </c:forEach>
+
+
+    </style>
+</ui:composition>

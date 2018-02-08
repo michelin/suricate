@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:jsf="http://xmlns.jcp.org/jsf"
+                xmlns:o="http://omnifaces.org/ui"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <h:panelGroup id="config-widget" layout="block" styleClass="widgetChooser settings-dialog">
+        <div >
+            <div class="widget-detail" jsf:id="fields">
+                <div class="panel-heading clearfix">
+                    <h3 class="panel-title">#{DashboardManagedBean.selectedWidget.name}</h3>
+                </div>
+                <div class="panel-content">
+                    <c:if test="#{not empty DashboardManagedBean.selectedWidget.image}">
+                        <img src="#{request.contextPath}/api/asset/#{DashboardManagedBean.encrypt(DashboardManagedBean.selectedWidget.image)}" />
+                    </c:if>
+                    <div class="panel-desc">#{DashboardManagedBean.selectedWidget.description}</div>
+                    <c:if test="#{not empty DashboardManagedBean.selectedWidget.info}">
+                        <div class="ui-messages ui-messages-noicon ui-widget">
+                            <div class="ui-messages-warn ui-corner-all">
+                                <ul>
+                                    <li>
+                                        <span class="ui-messages-error-summary">
+                                            <h:outputText value="#{DashboardManagedBean.selectedWidget.info}" escape="false"/>
+                                        </span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </c:if>
+                </div>
+                <c:set var="listConfig" value="#{DashboardManagedBean.widgetVariableResponses}"/>
+                <p:tabView id="tabs-widget-config" dynamic="true">
+                    <!-- Configuration tab -->
+                    <c:if test="#{ not empty listConfig}">
+                        <p:tab>
+                            <f:facet name="title">
+                                <i class="fa fa-gear" aria-hidden="true"></i>
+                                #{msg['app.user.widget.config.configuration.title']}
+                            </f:facet>
+                            <div class="panel-body">
+                                <o:importConstants type="io.suricate.monitoring.model.WidgetVariableType" />
+                                <c:forEach items="#{listConfig}" var="entry">
+                                    <c:choose>
+                                        <c:when test="#{entry.type == WidgetVariableType.BOOLEAN}">
+                                            <div class="form-group">
+                                                <label for="#{entry.name}">#{ empty entry.description ? entry.name : entry.description} <h:outputText styleClass="required" value="*" rendered="#{entry.required}"/>:</label>
+                                                <p:messages for="#{entry.name}" showIcon="false" />
+                                                <p:selectBooleanCheckbox id="#{entry.name}"
+                                                                         value="#{DashboardManagedBean.parameters[entry.name]}"
+                                                                         required="#{entry.required}"
+                                                                         requiredMessage="#{msg['app.user.value.required']}"
+                                                />
+                                            </div>
+                                        </c:when>
+                                        <c:when test="#{entry.type == WidgetVariableType.INTEGER}">
+                                            <div class="form-group spinner">
+                                                <label for="#{entry.name}">#{ empty entry.description ? entry.name : entry.description} <h:outputText styleClass="required" value="*" rendered="#{entry.required}"/>:</label>
+                                                <p:messages for="#{entry.name}" showIcon="false" />
+                                                <p:spinner id="#{entry.name}"
+                                                           value="#{DashboardManagedBean.parameters[entry.name]}"
+                                                           styleClass="form-control"
+                                                           min="0"
+                                                           required="#{entry.required}"
+                                                           requiredMessage="#{msg['app.user.value.required']}"
+                                                />
+                                            </div>
+                                        </c:when>
+                                        <c:when test="#{entry.type == WidgetVariableType.SECRET}">
+                                            <div class="form-group">
+                                                <label for="#{entry.name}">#{ empty entry.description ? entry.name : entry.description} <h:outputText styleClass="required" value="*" rendered="#{entry.required}"/>:</label>
+                                                <p:messages for="#{entry.name}" showIcon="false" />
+                                                <p:password id="#{entry.name}"
+                                                            styleClass="form-control"
+                                                            value="#{DashboardManagedBean.parameters[entry.name]}"
+                                                            placeholder="#{entry.data}"
+                                                            required="#{entry.required}"
+                                                            redisplay="true"
+                                                            requiredMessage="#{msg['app.user.value.required']}"
+                                                />
+                                            </div>
+                                        </c:when>
+                                        <c:when test="#{entry.type == WidgetVariableType.MULTIPLE}">
+                                            <div class="form-group">
+                                                <label for="#{entry.name}">#{ empty entry.description ? entry.name : entry.description} <h:outputText styleClass="required" value="*" rendered="#{entry.required}"/>:</label>
+                                                <p:messages for="#{entry.name}" showIcon="false" />
+                                                <p:selectManyCheckbox id="#{entry.name}" value="#{DashboardManagedBean.parameters[entry.name]}" layout="grid" columns="3" style="margin-top: 10px">
+                                                    <f:selectItems value="#{ entry.getValues().entrySet()}" var="val" itemValue="#{val.key}" itemLabel="#{val.value}" />
+                                                </p:selectManyCheckbox>
+                                            </div>
+                                        </c:when>
+                                        <c:when test="#{entry.type == WidgetVariableType.COMBO}">
+                                            <div class="form-group">
+                                                <label for="#{entry.name}">#{ empty entry.description ? entry.name : entry.description} <h:outputText styleClass="required" value="*" rendered="#{entry.required}"/>:</label>
+                                                <p:messages for="#{entry.name}" showIcon="false" />
+                                                <p:selectOneMenu value="#{DashboardManagedBean.parameters[entry.name]}" style="width:150px" required="#{entry.required}" requiredMessage="#{msg['app.user.value.required']}" >
+                                                    <f:selectItem itemLabel="#{msg['app.admin.widget.field.default.dropdownlabel']}" itemValue="" noSelectionOption="true" />
+                                                    <f:selectItems value="#{ entry.getValues().entrySet()}" var="val" itemValue="#{val.key}" itemLabel="#{val.value}" />
+                                                </p:selectOneMenu>
+                                            </div>
+                                        </c:when>
+                                        <c:when test="#{entry.type == WidgetVariableType.FILE}">
+                                            <div class="form-group form-image" jsf:id="img-#{entry.name}">
+                                                <label for="#{entry.name}">#{ empty entry.description ? entry.name : entry.description} <h:outputText styleClass="required" value="*" rendered="#{entry.required}"/>:</label>
+                                                <p:messages for="#{entry.name}" showIcon="false" />
+                                                <c:choose>
+                                                    <c:when test="#{DashboardManagedBean.isImage(entry.name)}">
+                                                        <img src="#{ DashboardManagedBean.parameters[entry.name]}" class="img-avatar" />
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <c:if test="#{not empty DashboardManagedBean.parameters[entry.name]}">
+                                                            <div class="ui-messages ui-messages-noicon ui-widget">
+                                                                <div class="ui-messages-warn ui-corner-all">
+                                                                    <ul>
+                                                                        <li>
+                                                                            <span class="ui-messages-error-summary">
+                                                                                <h:outputText value="#{msg['app.user.widget.config.file.submitted']}" escape="false"/>
+                                                                            </span>
+                                                                        </li>
+                                                                    </ul>
+                                                                </div>
+                                                            </div>
+                                                        </c:if>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                                <p:fileUpload id="#{entry.name}"
+                                                              fileUploadListener="#{ DashboardManagedBean.handleFileUpload}"
+                                                              auto="true"
+                                                              mode="advanced"
+                                                              sizeLimit="10000000"
+                                                              update="img-#{entry.name}"
+                                                              required="#{entry.required}"
+                                                              requiredMessage="#{msg['app.user.value.required']}"
+                                                              invalidFileMessage="#{msg['app.user.file.invalid.format']}"
+                                                              invalidSizeMessage="#{msg['app.user.file.invalid.size']}"
+                                                              allowTypes="#{entry.data}">
+                                                </p:fileUpload>
+                                            </div>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <div class="form-group">
+                                                <label for="#{entry.name}">#{ empty entry.description ? entry.name : entry.description} <h:outputText styleClass="required" value="*" rendered="#{entry.required}"/>:</label>
+                                                <p:messages for="#{entry.name}" showIcon="false" />
+                                                <p:inputText id="#{entry.name}"
+                                                             styleClass="form-control"
+                                                             value="#{DashboardManagedBean.parameters[entry.name]}"
+                                                             placeholder="#{entry.data}"
+                                                             required="#{entry.required}"
+                                                             requiredMessage="#{msg['app.user.value.required']}"
+                                                />
+                                            </div>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </c:forEach>
+                            </div>
+                        </p:tab>
+                    </c:if>
+                    <c:if test="#{not empty DashboardManagedBean.selectedProjectWidget}">
+                        <!-- Style tab -->
+                        <p:tab>
+                            <f:facet name="title">
+                                <i class="fa fa-tint" aria-hidden="true"></i>
+                                #{msg['app.user.widget.config.style.title']}
+                            </f:facet>
+                            <div class="panel-body">
+                                <div class="form-group">
+                                    <label for="customCss">#{msg['app.user.widget.config.customCss.title']}:</label>
+                                    <p:inputTextarea id="customCss" styleClass="customCss"
+                                                     value="#{DashboardManagedBean.parameters['customCss']}"/>
+                                    <script>
+                                        $(function(){
+                                            var codeMirror = CodeMirror.fromTextArea( document.getElementsByClassName("customCss")[0],{
+                                                lineNumbers: true,
+                                                mode: "css",
+                                                theme:"mdn-like",
+                                                styleActiveLine: true,
+                                                matchBrackets: true,
+                                                autoCloseBrackets: true
+                                            });
+                                            setTimeout(function() {
+                                                codeMirror.refresh();
+                                            },100);
+
+                                            codeMirror.on('change', function () {
+                                                codeMirror.save();
+                                            });
+                                        });
+                                    </script>
+                                </div>
+                            </div>
+                        </p:tab>
+                        <!-- Log tab -->
+                        <p:tab rendered="#{not empty DashboardManagedBean.selectedWidget.backendJs and DashboardManagedBean.selectedWidget.delay gt 0}">
+                            <f:facet name="title">
+                                <i class="fa fa-history" aria-hidden="true"></i>
+                                #{msg['app.user.widget.config.log.title']}
+                            </f:facet>
+                            <div class="panel-body">
+                                <p:messages styleClass="alert animated zoomIn" showIcon="false" closable="true" autoUpdate="true" for="logs" />
+                                <c:if test="#{not empty DashboardManagedBean.selectedProjectWidget.lastSuccessDate}">
+                                    <div class="form-group">
+                                        <label for="lastSuccessDate">#{msg['app.user.widget.config.lastSuccess.title']}:</label>
+                                        <h:inputText id="lastSuccessDate" class="form-control" type="text" disabled="true" value="#{ DashboardManagedBean.selectedProjectWidget.lastSuccessDate}">
+                                            <f:convertDateTime pattern="yyyy-MM-dd HH:mm:ss" timeZone="GMT+2" />
+                                        </h:inputText>
+                                    </div>
+                                </c:if>
+                                <div class="form-group">
+                                    <label for="lastExecutionDate">#{msg['app.user.widget.config.lastExecution.title']}:</label>
+                                    <h:inputText id="lastExecutionDate" class="form-control" type="text" disabled="true" value="#{ DashboardManagedBean.selectedProjectWidget.lastExecutionDate}">
+                                        <f:convertDateTime pattern="yyyy-MM-dd HH:mm:ss" timeZone="GMT+2"/>
+                                    </h:inputText>
+                                </div>
+                                <div class="form-group">
+                                    <label for="state">#{msg['app.user.widget.config.state.title']}:</label>
+                                    <h:inputText id="state" class="form-control" type="text" disabled="true" value="#{ DashboardManagedBean.selectedProjectWidget.state}"/>
+                                    <o:importConstants type="io.suricate.monitoring.model.WidgetState" />
+                                    <p:commandButton class="btn btn-primary"
+                                                     icon="fa fa-repeat"
+                                                     action="#{DashboardManagedBean.scheduleWidget}"
+                                                     value="#{msg['app.user.widget.config.relaunch.title']}"
+                                                     process="@this"
+                                                     update="tabs-widget-config"
+                                                     rendered="#{ DashboardManagedBean.selectedProjectWidget.state == WidgetState.STOPPED}"
+                                    />
+                                </div>
+                                <c:if test="#{not empty DashboardManagedBean.selectedProjectWidget.log}">
+                                    <div class="form-group">
+                                        <label for="log">#{msg['app.user.widget.config.logTrace.title']} :</label>
+                                        <p:inputTextarea id="log" rows="7"
+                                                         readonly="true"
+                                                         style="width: 100%"
+                                                         value="#{DashboardManagedBean.selectedProjectWidget.log}"/>
+                                    </div>
+                                </c:if>
+                            </div>
+                        </p:tab>
+                    </c:if>
+                </p:tabView>
+                <div class="widget-dialog-btn">
+                    <p:commandButton class="btn btn-danger btn-with-icon"
+                                     action="#{DashboardManagedBean.cancelWidget}"
+                                     value="#{msg['app.user.cancel.widget.btn']}"
+                                     process="@this"
+                                     onclick="#{not empty DashboardManagedBean.selectedProjectWidget ? 'PF(\'widgetChooser\').hide();':''}"
+                                     update="widget-dialog-content"
+                    />
+                    <p:commandButton actionListener="#{DashboardManagedBean.saveWidgetConfiguration}"
+                                     class="btn btn-primary"
+                                     value="#{msg['app.user.confirm.widget.btn']}"
+                                     icon="fa fa-check"
+                                     process="fields"
+                                     update="fields dashboard-form:widgets"
+                                     oncomplete="if(!args.validationFailed){ PF('widgetChooser').hide();}"
+                    />
+                </div>
+            </div>
+        </div>
+    </h:panelGroup>
+</ui:composition>

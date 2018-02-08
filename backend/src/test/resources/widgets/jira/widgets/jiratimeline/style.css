@@ -1,0 +1,18 @@
+.widget.jiratimeline {
+    background-color: #4b4b4b;
+}
+.widget.jiratimeline .title {
+    color: rgba(255, 255, 255, 0.7);
+    margin: 18px 0 18px 0;
+}
+.widget.jiratimeline .more-info {
+    color: rgba(255, 255, 255, 0.7);
+}
+.widget.jiratimeline .event-description {
+    fill: white;
+    font-size: 14px;
+}
+.widget.jiratimeline .event-description-date {
+    fill: white;
+    font-size: 12px;
+}

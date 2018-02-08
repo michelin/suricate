@@ -1,0 +1,56 @@
+<app-pages-header [secondTitle]="'List of users'"></app-pages-header>
+
+<div class="table-container mat-elevation-z2">
+  <div class="table-loading-shade" *ngIf="isLoadingResults || errorCatched">
+    <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+
+    <div class="table-error" *ngIf="errorCatched">
+        An error as occured
+    </div>
+  </div>
+
+  <mat-table #table [dataSource]="matTableDataSource" class="table-show"
+             matSort matSortActive="created" matSortDisableClear matSortDirection="asc">
+
+    <!-- Username Column -->
+    <ng-container matColumnDef="username">
+        <mat-header-cell *matHeaderCellDef mat-sort-header disableClear="true">Username</mat-header-cell>
+        <mat-cell *matCellDef="let row">{{ row.username }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="fullname">
+      <mat-header-cell *matHeaderCellDef mat-sort-header disableClear="true">Fullname</mat-header-cell>
+      <mat-cell *matCellDef="let row">{{ row.fullname }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="mail">
+      <mat-header-cell *matHeaderCellDef mat-sort-header disableClear="true">Mail</mat-header-cell>
+      <mat-cell *matCellDef="let row">{{ row.mail }}</mat-cell>
+    </ng-container>
+
+    <!-- Username Column -->
+    <ng-container matColumnDef="roles">
+        <mat-header-cell *matHeaderCellDef mat-sort-header disableClear="true">Roles</mat-header-cell>
+        <mat-cell *matCellDef="let row">
+            <span *ngFor="let role of row.roles"> {{ role.name }} </span>
+        </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="edit">
+      <mat-header-cell *matHeaderCellDef> Edit </mat-header-cell>
+      <mat-cell *matCellDef="let row">
+        <a [routerLink]="[row.id]">
+          <button mat-icon-button color="accent">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </a>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+
+  <mat-paginator [length]="resultsLength" [pageSize]="30">
+  </mat-paginator>
+</div>

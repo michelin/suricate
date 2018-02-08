@@ -1,0 +1,37 @@
+<div class="auth-main">
+  <mat-card class="auth-block mat-elevation-z8">
+    <mat-card-content>
+      <mat-spinner *ngIf="formSubmitAttempt"></mat-spinner>
+
+      <div *ngIf="!formSubmitAttempt">
+        <div class="logo"></div>
+
+        <form id="login-form" [formGroup]="loginForm" (ngSubmit)="login()">
+          <mat-form-field>
+            <input matInput id="username" placeholder="Username" formControlName="username" />
+            <mat-error *ngIf="isFieldInvalid('username')">
+              Username is mandatory
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field>
+            <input matInput id="password" placeholder="Password" formControlName="password" [type]="hidePassword ? 'password' : 'text'" required/>
+            <mat-icon matSuffix color="primary" (click)="hidePassword = !hidePassword">{{hidePassword ? 'visibility' : 'visibility_off'}}</mat-icon>
+            <mat-error *ngIf="isFieldInvalid('password')">
+              Password is mandatory
+            </mat-error>
+          </mat-form-field>
+
+          <button mat-raised-button class="mat-elevation-z2" color="primary" type="submit">Sign In</button>
+        </form>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <div class="footer-legals">
+      <div>Monitoring - Version 1.1-SNAPSHOT</div>
+      <div>Copyright © 2018 Suricate - All rights reserved</div>
+  </div>
+
+</div>
+

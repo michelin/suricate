@@ -1,0 +1,7 @@
+.widget.text {
+    background-color: #ec663c;
+}
+
+.widget.text .title {
+    color: rgba(255, 255, 255, 0.7);
+}

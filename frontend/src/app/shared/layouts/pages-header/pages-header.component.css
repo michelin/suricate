@@ -1,0 +1,24 @@
+.titles {
+  display: inline-block;
+}
+.actions {
+  padding: 10px 0 0 0;
+  display: inline-block;
+  float: right;
+}
+.actions button {
+  color: #cfd2da;
+}
+
+h2.header {
+  font-weight: 300;
+  font-variant: all-small-caps;
+  margin: 0;
+  font-size: 2em;
+  line-height: 1.4em;
+}
+mat-divider {
+  margin-top: 10px;
+  margin-bottom: 15px;
+  border-top-color: #7e818880;
+}

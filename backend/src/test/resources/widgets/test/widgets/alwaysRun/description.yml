@@ -1,0 +1,4 @@
+name: Always run widget
+description: --
+technicalName: alwaysRun
+delay: 10

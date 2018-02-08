@@ -1,0 +1,61 @@
+h1 {
+  font-variant: all-small-caps;
+}
+
+mat-card {
+  width: 190px;
+  min-height: 167px;
+}
+
+mat-card .step2 {
+  min-height: 250px;
+}
+mat-card img {
+  display: flex;
+  margin: 0 auto 10px auto;
+  width: auto;
+  max-width: 130px;
+  height: auto;
+  max-height: 100px;
+  padding: 4px;
+}
+
+mat-card mat-card-actions {
+  position: absolute;
+  bottom: 20px;
+}
+
+.selected-widget-dialog-card {
+  width: auto !important;
+  margin: 10px auto;
+  padding-left: 30px;
+  min-height: 300px;
+}
+.selected-widget-dialog-card > h1 {
+  text-align: center;
+  font-size: 1.6em;
+}
+.selected-widget-dialog-card > .container {
+  display: flex;
+}
+.selected-widget-dialog-card .image-container {
+  margin: 10px 50px 0 0;
+  width: auto;
+  height: auto;
+}
+.selected-widget-dialog-card .image-container > img {
+  height: 200px;
+  width: auto;
+}
+.selected-widget-dialog-card .description-container {
+  margin: auto;
+}
+.selected-widget-dialog-card .settings-container {
+  margin-top: 30px;
+}
+.selected-widget-dialog-card .settings-container * {
+  width: 100%;
+}
+.selected-widget-dialog-card #formSettings button {
+  margin-top: 40px;
+}

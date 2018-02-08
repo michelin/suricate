@@ -1,0 +1,15 @@
+.widget.jiracount {
+    background-color:#0099ff;
+}
+
+.widget.jiracount .title {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.widget.jiracount .value {
+    color: #fff;
+}
+
+.widget.jiracount .change-rate i {
+    margin-right:4px;
+}

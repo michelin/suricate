@@ -1,0 +1,5 @@
+name: Nagios Monitor
+description: Widget user to display nagios metric for an application
+info: To use this widget, you must first add your application into nagios
+technicalName: alwaysRun
+delay: 120

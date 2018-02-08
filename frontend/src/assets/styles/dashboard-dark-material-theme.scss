@@ -1,0 +1,58 @@
+@import '~@angular/material/theming';
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat-core();
+
+$dashboard-dark: (
+     50 : #e5e7e9,
+     100 : #bfc4c8,
+     200 : #949da3,
+     300 : #69757e,
+     400 : #303F49,
+     500 : #293a46,
+     600 : #24343f,
+     700 : #1f2c37,
+     800 : #19252f,
+     900 : #0f1820,
+     A100 : #62b6ff,
+     A200 : #1997c6,
+     A400 : #0087fb,
+     A700 : #0079e1,
+     contrast: (
+          50 : #000000,
+          100 : #000000,
+          200 : #000000,
+          300 : #ffffff,
+          400 : #ffffff,
+          500 : #ffffff,
+          600 : #ffffff,
+          700 : #ffffff,
+          800 : #ffffff,
+          900 : #ffffff,
+          A100 : #000000,
+          A200 : #000000,
+          A400 : #ffffff,
+          A700 : #ffffff,
+     )
+);
+
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue.
+$dashboard-dark-primary: mat-palette($dashboard-dark, 500, 300, 800);
+$dashboard-dark-accent:  mat-palette($dashboard-dark, A200, A400, A100);
+
+// The warn palette is optional (defaults to red).
+$dashboard-dark-warn:    mat-palette($mat-red);
+
+// Create the theme object (a Sass map containing all of the palettes).
+$dashboard-dark-theme: mat-dark-theme($dashboard-dark-primary, $dashboard-dark-accent, $dashboard-dark-warn);
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include angular-material-theme($dashboard-dark-theme);

@@ -1,0 +1,9 @@
+.grid {
+  font-size: 20px;
+  color: #fff;
+  font-family: 'Open Sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
+  margin-left: -10px;
+}
+.grid-item.moving {
+  z-index: 10;
+}
