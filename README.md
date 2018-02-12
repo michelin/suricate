@@ -1,6 +1,8 @@
 # Suricate
 [![Build Status](https://travis-ci.org/suricate-io/suricate.svg?branch=master)](https://travis-ci.org/suricate-io/suricate)
 [![codecov](https://codecov.io/gh/suricate-io/suricate/branch/master/graph/badge.svg)](https://codecov.io/gh/suricate-io/suricate)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Open Source Love](https://badges.frapsoft.com/os/v3/open-source-150x25.png?v=103)](https://github.com/ellerbrock/open-source-badges/)
 
 ### Global information
 #### Contribution :beers:
