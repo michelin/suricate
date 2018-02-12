@@ -1,4 +1,12 @@
-Suricate : [![Build Status](https://travis-ci.org/suricate-io/suricate.svg?branch=master)](https://travis-ci.org/suricate-io/suricate)
+# Suricate
+ [![Build Status](https://travis-ci.org/suricate-io/suricate.svg?branch=master)](https://travis-ci.org/suricate-io/suricate)
+
+### Global information
+#### Contribution :beers:
+Everyone is welcome to contribute to Suricate. You have several possibilities:
+* Report a [bug](https://github.com/suricate-io/suricate/issues/new?template=bug.md)
+* Suggest a [feature](https://github.com/suricate-io/suricate/issues/new?template=improvement.md)
+* Developp a feature and create a [pull request](https://github.com/suricate-io/suricate/pulls)
 
 #### Code formatting
 
@@ -28,7 +36,7 @@ Don't forget to include licence header in **all** files
 1. In the Settings/Preferences dialog (Ctrl+Alt+S), click Copyright under Editor, 
 and then click Copyright Profiles. The Copyright Profiles page opens.
 
-2. Click on the **Add Buton** :
+2. Click on the **Add Button** :
     * Choose a name : Apache 2
     * Under Copyright text copy/paste the licence text above
     * Then click on **Apply**
