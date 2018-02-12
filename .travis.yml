@@ -35,7 +35,6 @@ jobs:
       language: node_js
       script: cd frontend && yarn install && yarn run build
     - stage: control_quality
-      language: java
       script: chmod +x mvnw && ./mvnw cobertura:cobertura -f backend/pom.xml
 
 notifications:
