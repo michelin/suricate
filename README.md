@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/suricate-io/suricate.svg?branch=master)](https://travis-ci.org/suricate-io/suricate)
 [![codecov](https://codecov.io/gh/suricate-io/suricate/branch/master/graph/badge.svg)](https://codecov.io/gh/suricate-io/suricate)
 [![Maintainability](https://api.codeclimate.com/v1/badges/093032ef74459c9f8a44/maintainability)](https://codeclimate.com/github/suricate-io/suricate/maintainability)
+[![GitHub issues](https://img.shields.io/github/issues/suricate-io/suricate.svg)](https://github.com/suricate-io/suricate/issues/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 ### Global information
