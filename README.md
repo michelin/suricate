@@ -4,7 +4,7 @@
 [![codecov](https://codecov.io/gh/suricate-io/suricate/branch/master/graph/badge.svg)](https://codecov.io/gh/suricate-io/suricate)
 [![Maintainability](https://api.codeclimate.com/v1/badges/093032ef74459c9f8a44/maintainability)](https://codeclimate.com/github/suricate-io/suricate/maintainability)
 [![GitHub issues](https://img.shields.io/github/issues/suricate-io/suricate.svg)](https://github.com/suricate-io/suricate/issues/)
-[![GitHub PR](https://img.shields.io/github/issues-pr/suricate-io/suricate.svg](https://github.com/suricate-io/suricate/pulls/)
+[![GitHub PR](https://img.shields.io/github/issues-pr/suricate-io/suricate.svg)](https://github.com/suricate-io/suricate/pulls/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 ### Global information
