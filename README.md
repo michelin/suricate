@@ -1,5 +1,6 @@
 # Suricate
- [![Build Status](https://travis-ci.org/suricate-io/suricate.svg?branch=master)](https://travis-ci.org/suricate-io/suricate)
+[![Build Status](https://travis-ci.org/suricate-io/suricate.svg?branch=master)](https://travis-ci.org/suricate-io/suricate)
+[![codecov](https://codecov.io/gh/suricate-io/suricate/branch/master/graph/badge.svg)](https://codecov.io/gh/suricate-io/suricate)
 
 ### Global information
 #### Contribution :beers:
