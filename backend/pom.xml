@@ -115,7 +115,7 @@
         <dependency>
             <groupId>com.github.ulisesbocchio</groupId>
             <artifactId>jasypt-spring-boot-starter</artifactId>
-            <version>1.15</version>
+            <version>1.18</version>
         </dependency>
         <dependency>
             <groupId>org.ehcache</groupId>
@@ -190,13 +190,13 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.5</version>
+            <version>2.6</version>
         </dependency>
 
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.4</version>
+            <version>3.7</version>
         </dependency>
 
         <dependency>
@@ -281,7 +281,7 @@
         <dependency>
             <groupId>com.google.truth</groupId>
             <artifactId>truth</artifactId>
-            <version>0.31</version>
+            <version>0.39</version>
             <scope>test</scope>
         </dependency>
 
