@@ -25,23 +25,23 @@ public class GitServiceTest {
     @Autowired
     private GitService gitService;
 
-//    @Test(expected = MalformedURLException.class)
-//    public void testMalformedURL() throws Exception{
-//        gitService.cloneRepo(null, null);
-//    }
-//
-//    @Test
-//    public void testCloneWidgetRepo() throws Exception{
-//        File folder = null;
-//        try {
-//             folder = gitService.cloneWidgetRepo();
-//             if (folder.exists()){
-//                 Collection<File> files = FileUtils.listFilesAndDirs(folder, TrueFileFilter.TRUE, DirectoryFileFilter.DIRECTORY);
-//                 Assert.assertTrue(files.size() > 3);
-//             }
-//        } finally {
-//            FileUtils.deleteQuietly(folder);
-//        }
-//        Assert.assertTrue(!folder.exists());
-//    }
+    @Test(expected = MalformedURLException.class)
+    public void testMalformedURL() throws Exception{
+        gitService.cloneRepo(null, null);
+    }
+
+    @Test
+    public void testCloneWidgetRepo() throws Exception{
+        File folder = null;
+        try {
+             folder = gitService.cloneWidgetRepo();
+             if (folder.exists()){
+                 Collection<File> files = FileUtils.listFilesAndDirs(folder, TrueFileFilter.TRUE, DirectoryFileFilter.DIRECTORY);
+                 Assert.assertTrue(files.size() > 3);
+             }
+        } finally {
+            FileUtils.deleteQuietly(folder);
+        }
+        Assert.assertTrue(!folder.exists());
+    }
 }
