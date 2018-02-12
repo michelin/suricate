@@ -14,11 +14,18 @@ cache:
     - node_modules
     - $HOME/.m2
     - $HOME/.yarn-cache
+
+stages:
+  - build_backend
+  - build_frontend
+  - control_quality
+
 env:
   global:
     - NODE_VERSION=8.9.1
     - SPRING_OUTPUT_ANSI_ENABLED=ALWAYS
     - SPRING_JPA_SHOW_SQL=false
+
 before_install:
   - jdk_switcher use oraclejdk8
   - java -version
@@ -27,20 +34,21 @@ before_install:
   # Repo for Yarn
   - curl -o- -L https://yarnpkg.com/install.sh | bash
   - export PATH=$HOME/.yarn/bin:$PATH
-install:
-  - cd frontend && yarn install && cd ..
-script:
-  - chmod +x mvnw
-  - ./mvnw clean test -f backend/pom.xml
-  - cd frontend
-  - yarn run build
-  - cd ..
-  - ./mvnw verify -DskipTests -f backend/pom.xml
+
+jobs:
+  include:
+    - stage: build_backend
+      script: chmod +x mvnw && ./mvnw clean test -f backend/pom.xml
+    - stage: build_frontend
+      script: cd frontend && yarn install && yarn run build
+    - stage: control_quality
+      script: ./mvnw cobertura:cobertura -f backend/pom.xml
+
 notifications:
   webhooks:
     on_success: change  # options: [always|never|change] default: always
     on_failure: always  # options: [always|never|change] default: always
     on_start: false     # default: false
+
 after_success:
-  - ./mvnw cobertura:cobertura -f backend/pom.xml
   - bash <(curl -s https://codecov.io/bash)
