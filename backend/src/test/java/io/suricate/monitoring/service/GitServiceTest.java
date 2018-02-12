@@ -19,7 +19,6 @@ import java.util.Collection;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
-@Ignore
 public class GitServiceTest {
 
     @Autowired
