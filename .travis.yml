@@ -2,11 +2,6 @@ os:
   - linux
 services:
   - docker
-language: node_js
-node_js:
-  - "8.9.1"
-jdk:
-  - oraclejdk8
 sudo: false
 cache:
   directories:
@@ -37,10 +32,13 @@ before_install:
 jobs:
   include:
     - stage: build
+      language: java
       script: chmod +x mvnw && ./mvnw clean test -f backend/pom.xml
     - # parallel build
+      language: node_js
       script: cd frontend && yarn install && yarn run build
     - stage: control_quality
+      language: java
       script: chmod +x mvnw && ./mvnw cobertura:cobertura -f backend/pom.xml
 
 notifications:
