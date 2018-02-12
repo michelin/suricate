@@ -115,7 +115,7 @@
         <dependency>
             <groupId>com.github.ulisesbocchio</groupId>
             <artifactId>jasypt-spring-boot-starter</artifactId>
-            <version>1.15</version>
+            <version>1.18</version>
         </dependency>
         <dependency>
             <groupId>org.ehcache</groupId>
