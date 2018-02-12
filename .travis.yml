@@ -16,8 +16,7 @@ cache:
     - $HOME/.yarn-cache
 
 stages:
-  - build_backend
-  - build_frontend
+  - build
   - control_quality
 
 env:
@@ -37,12 +36,12 @@ before_install:
 
 jobs:
   include:
-    - stage: build_backend
+    - stage: build
       script: chmod +x mvnw && ./mvnw clean test -f backend/pom.xml
-    - stage: build_frontend
+    - # parallel build
       script: cd frontend && yarn install && yarn run build
     - stage: control_quality
-      script: ./mvnw cobertura:cobertura -f backend/pom.xml
+      script: chmod +x mvnw && ./mvnw cobertura:cobertura -f backend/pom.xml
 
 notifications:
   webhooks:
