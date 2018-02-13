@@ -32,3 +32,10 @@ mat-sidenav > #user-section .mat-expansion-panel-body {
 .widget-dialog-card.step2 {
   min-height: 275px;
 }
+
+.widget-param-multiple .mat-option.mat-selected:not(.mat-option-disabled) {
+    color: #1997c6;
+}
+.widget-param-multiple .mat-pseudo-checkbox-checked {
+    background-color: #1997c6;
+}

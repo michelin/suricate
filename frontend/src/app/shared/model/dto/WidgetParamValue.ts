@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 
-import {WidgetVariableEnum} from './enums/WidgetVariableEnum';
-
-export class WidgetVariable {
-  public name: string;
-  public description: string;
-  public data: string;
-  public required: boolean;
-  public type: WidgetVariableEnum;
+export class WidgetParamValue {
+    public jsKey: string;
+    public value: string;
 }

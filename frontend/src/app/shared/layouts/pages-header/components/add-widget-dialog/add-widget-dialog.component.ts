@@ -21,11 +21,11 @@ import {WidgetService} from '../../../../services/widget.service';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import {Asset} from '../../../../model/dto/Asset';
 import {Widget} from '../../../../model/dto/Widget';
-import {WidgetVariableEnum} from '../../../../model/dto/enums/WidgetVariableEnum';
+import {WidgetParamEnum} from '../../../../model/dto/enums/WidgetParamEnum';
 import {FormGroup, NgForm} from '@angular/forms';
-import {ProjectWidget} from '../../../../model/dto/ProjectWidget';
 import {DashboardService} from '../../../../services/dashboard.service';
 import {HeaderDashboardSharedService} from '../../../../services/header-dashboard-shared.service';
+import {ProjectWidget} from '../../../../model/dto/ProjectWidget';
 
 @Component({
   selector: 'app-add-widget-dialog',
@@ -34,7 +34,7 @@ import {HeaderDashboardSharedService} from '../../../../services/header-dashboar
 })
 export class AddWidgetDialogComponent implements OnInit {
 
-  widgetVariableEnum = WidgetVariableEnum;
+  widgetParamEnum = WidgetParamEnum;
   categories: Category[];
   widgets: Widget[];
   selectedWidget: Widget;
@@ -71,8 +71,8 @@ export class AddWidgetDialogComponent implements OnInit {
       const form: FormGroup = formSettings.form;
       let backendConfig = '';
 
-      for (const variable of this.selectedWidget.widgetVariables) {
-        backendConfig = `${backendConfig}${variable.name}=${form.get(variable.name).value}\n`;
+      for (const param of this.selectedWidget.widgetParams) {
+        backendConfig = `${backendConfig}${param.name}=${form.get(param.name).value}\n`;
       }
 
       const projectWidget: ProjectWidget = new ProjectWidget();
@@ -86,6 +86,24 @@ export class AddWidgetDialogComponent implements OnInit {
             this.headerDashboardSharedService.projectDashboardToDisplay.next(data);
             this.addWidgetDialogRef.close();
           });
+    }
+  }
+
+  getUploadedFileBase64(event: any, formSettings: NgForm, inputName: string, regexValidator: string) {
+    const fileReader = new FileReader();
+    const regexValidation = new RegExp(regexValidator, 'g');
+
+    if (event.target.files && event.target.files.length > 0) {
+      const file: File = event.target.files[0];
+
+      if (regexValidation.test(file.name)) {
+        fileReader.readAsDataURL(file);
+        fileReader.onloadend = () => {
+          formSettings.form.get(inputName).setValue(fileReader.result);
+        };
+
+        document.getElementsByClassName(`file-selection-sentence-${inputName}`)[0].textContent = file.name;
+      }
     }
   }
 

@@ -14,25 +14,16 @@
  * limitations under the License.
  */
 
-import {Asset} from './Asset';
-import {WidgetParam} from './WidgetParam';
+import {WidgetParamEnum} from './enums/WidgetParamEnum';
+import {WidgetParamValue} from './WidgetParamValue';
 
-export class Widget {
-  id: string;
-  name: string;
-  html: string;
-  css: string;
-  customCss: string;
-  col: number;
-  row: number;
-  width: number;
-  height: number;
-  projectWidgetId: number;
-  widgetId: number;
-  error: boolean;
-  image: Asset;
-  warning: boolean;
-  description: string;
-  info: string;
-  widgetParams: WidgetParam[];
+export class WidgetParam {
+  public name: string;
+  public description: string;
+  public defaultValue: string;
+  public type: WidgetParamEnum;
+  public acceptFileRegex: string;
+  public usageExample: string;
+  public required: boolean;
+  public values: WidgetParamValue[];
 }

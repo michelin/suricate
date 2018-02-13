@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-export enum WidgetVariableEnum {
+export enum WidgetParamEnum {
   STRING = 'STRING',
   SECRET = 'SECRET',
   BOOLEAN = 'BOOLEAN',

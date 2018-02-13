@@ -26,6 +26,8 @@ import io.suricate.monitoring.model.*;
 import io.suricate.monitoring.model.dto.UpdateEvent;
 import io.suricate.monitoring.model.dto.error.ApiError;
 import io.suricate.monitoring.model.dto.update.UpdateType;
+import io.suricate.monitoring.model.dto.widget.WidgetParamResponse;
+import io.suricate.monitoring.model.dto.widget.WidgetParamValueResponse;
 import io.suricate.monitoring.model.dto.widget.WidgetPosition;
 import io.suricate.monitoring.model.dto.widget.WidgetResponse;
 import io.suricate.monitoring.repository.*;
@@ -99,12 +101,45 @@ public class WidgetService {
             widgetResponse.setDescription(widget.getDescription());
             widgetResponse.setInfo(widget.getInfo());
             widgetResponse.setImage(widget.getImage());
-            widgetResponse.getWidgetVariables().addAll(JavascriptUtils.extractVariables(widget.getBackendJs()));
+            widgetResponse.getWidgetParams().addAll(extractWidgetParams(widget));
 
             widgetResponses.add(widgetResponse);
         }
 
         return widgetResponses;
+    }
+
+    private List<WidgetParamResponse> extractWidgetParams(Widget widget) {
+        List<WidgetParamResponse> widgetParamResponses = new ArrayList<>();
+
+        if(widget.getWidgetParams() != null && !widget.getWidgetParams().isEmpty()) {
+            for (WidgetParam widgetParam: widget.getWidgetParams()) {
+                WidgetParamResponse widgetParamResponse = new WidgetParamResponse();
+
+                widgetParamResponse.setName(widgetParam.getName());
+                widgetParamResponse.setDescription(widgetParam.getDescription());
+                widgetParamResponse.setDefaultValue(widgetParam.getDefaultValue());
+                widgetParamResponse.setType(widgetParam.getType());
+                widgetParamResponse.setAcceptFileRegex(widgetParam.getAcceptFileRegex());
+                widgetParamResponse.setUsageExample(widgetParam.getUsageExample());
+                widgetParamResponse.setRequired(widgetParam.isRequired());
+
+                if(widgetParam.getPossibleValuesMap() != null && !widgetParam.getPossibleValuesMap().isEmpty()) {
+                    for(WidgetParamValue widgetParamValue : widgetParam.getPossibleValuesMap()) {
+                        WidgetParamValueResponse widgetParamValueResponse = new WidgetParamValueResponse();
+
+                        widgetParamValueResponse.setJsKey(widgetParamValue.getJsKey());
+                        widgetParamValueResponse.setValue(widgetParamValue.getValue());
+
+                        widgetParamResponse.getValues().add(widgetParamValueResponse);
+                    }
+                }
+
+                widgetParamResponses.add(widgetParamResponse);
+            }
+        }
+
+        return widgetParamResponses;
     }
 
     @Transactional

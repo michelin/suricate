@@ -59,3 +59,26 @@ mat-card mat-card-actions {
 .selected-widget-dialog-card #formSettings button {
   margin-top: 40px;
 }
+
+#formSettings .button-wrapper {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 1.25em;
+}
+#formSettings .button-wrapper .file_upload_button {
+    height: 45px;
+    width: 100%;
+    background-color: transparent;
+}
+#formSettings .button-wrapper .file_upload_button mat-icon {
+    float: left;
+    height: auto;
+    width: auto;
+    font-size: 2.2em;
+    color: #cfd2da;
+    margin-top: 4px;
+}
+#formSettings .button-wrapper .file_upload_button span {
+    color: #cfd2da;
+    font-size: 1.3em;
+}

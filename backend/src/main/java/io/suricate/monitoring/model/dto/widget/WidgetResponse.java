@@ -17,6 +17,7 @@
 package io.suricate.monitoring.model.dto.widget;
 
 import io.suricate.monitoring.model.Asset;
+import io.suricate.monitoring.model.WidgetParam;
 import io.suricate.monitoring.model.dto.AbstractDto;
 
 import java.util.ArrayList;
@@ -58,7 +59,7 @@ public class WidgetResponse extends AbstractDto {
 
     private String info;
 
-    private List<WidgetVariableResponse> widgetVariables = new ArrayList<>();
+    private List<WidgetParamResponse> widgetParams = new ArrayList<>();
 
     public String getName() {
         return name;
@@ -196,11 +197,11 @@ public class WidgetResponse extends AbstractDto {
         this.image = image;
     }
 
-    public List<WidgetVariableResponse> getWidgetVariables() {
-        return widgetVariables;
+    public List<WidgetParamResponse> getWidgetParams() {
+        return widgetParams;
     }
 
-    public void setWidgetVariables(List<WidgetVariableResponse> widgetVariables) {
-        this.widgetVariables = widgetVariables;
+    public void setWidgetParams(List<WidgetParamResponse> widgetParams) {
+        this.widgetParams = widgetParams;
     }
 }
