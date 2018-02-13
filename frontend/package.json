@@ -25,7 +25,7 @@
     "@angular/http": "^5.0.0",
     "@angular/material": "^5.0.3",
     "@angular/platform-browser": "^5.0.0",
-    "@angular/platform-browser-dynamic": "^5.0.0",
+    "@angular/platform-browser-dynamic": "^5.2.4",
     "@angular/router": "^5.0.0",
     "angular2-grid": "^2.1.0",
     "cerialize": "^0.1.18",
