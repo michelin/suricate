@@ -68,7 +68,7 @@
     "raw-loader": "^0.5.1",
     "sass-loader": "^6.0.3",
     "source-map-loader": "^0.2.0",
-    "style-loader": "^0.13.1",
+    "style-loader": "^0.20.1",
     "stylus-loader": "^3.0.1",
     "ts-node": "~3.2.0",
     "tslint": "~5.7.0",
