@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.controllers.api;
+package io.suricate.monitoring.controllers.api.error;
 
-import io.suricate.monitoring.controllers.api.exception.ApiException;
+import io.suricate.monitoring.controllers.api.error.exception.ApiException;
 import io.suricate.monitoring.model.dto.error.CustomError;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;

@@ -17,9 +17,11 @@
 package io.suricate.monitoring.controllers.api;
 
 import io.suricate.monitoring.config.security.token.TokenService;
-import io.suricate.monitoring.controllers.api.exception.ApiException;
-import io.suricate.monitoring.model.dto.error.ApiError;
+import io.suricate.monitoring.controllers.api.error.exception.ApiException;
+import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.model.dto.token.TokenResponse;
+import io.suricate.monitoring.model.enums.UserRoleEnum;
+import io.suricate.monitoring.model.user.Role;
 import io.suricate.monitoring.model.user.User;
 import io.suricate.monitoring.repository.RoleRepository;
 import io.suricate.monitoring.repository.UserRepository;
@@ -34,6 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
 import java.util.Arrays;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/${api.prefix}/login")
@@ -63,18 +66,30 @@ public class LoginController {
         TokenResponse response = new TokenResponse();
 
         if (principal == null || StringUtils.isBlank(principal.getName())) {
-            throw new ApiException(ApiError.USER_NOT_FOUND);
+            throw new ApiException(ApiErrorEnum.USER_NOT_FOUND);
         }
 
-        User user = userRepository.findByUsername(principal.getName());
-        if (user == null) {
+        Optional<User> userOptional = userRepository.findByUsername(principal.getName());
+        User user;
+
+        if (!userOptional.isPresent()) {
             if (userRepository.count() != 0) {
-                throw new ApiException(ApiError.USER_NOT_FOUND);
+                throw new ApiException(ApiErrorEnum.USER_NOT_FOUND);
             }
             LOGGER.debug("No user found. Add {} as ADMIN", principal.getName());
             user = new User();
             user.setUsername(principal.getName());
-            user.setRoles(Arrays.asList(roleRepository.findByName(ApplicationConstant.ROLE_ADMIN)));
+
+            Optional<Role> role = roleRepository.findByName(UserRoleEnum.ROLE_ADMIN.name());
+
+            if(role.isPresent()) {
+                user.setRoles(Arrays.asList(role.get()));
+            } else {
+                throw new IllegalArgumentException();
+            }
+
+        } else {
+            user = userOptional.get();
         }
         user.setToken(tokenService.generateToken());
         userRepository.save(user);

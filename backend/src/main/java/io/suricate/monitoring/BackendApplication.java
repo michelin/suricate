@@ -44,13 +44,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 @SpringBootApplication
+@EnableJpaAuditing
 @EnableJpaRepositories
 @EnableEncryptableProperties
-@EnableJpaAuditing
-@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 @EnableAsync
 @EnableCaching
-@EnableWebSecurity
 @EnableConfigurationProperties({ApplicationProperties.class})
 public class BackendApplication {
 

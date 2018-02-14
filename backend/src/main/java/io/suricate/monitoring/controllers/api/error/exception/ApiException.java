@@ -14,21 +14,32 @@
  * limitations under the License.
  */
 
+package io.suricate.monitoring.controllers.api.error.exception;
 
-package io.suricate.monitoring.config.security.provider;
 
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import io.suricate.monitoring.model.enums.ApiErrorEnum;
 
-/**
- * Interface used to defined default security config
- */
-public interface SecurityConfigurerHelper {
+public class ApiException extends RuntimeException{
 
     /**
-     * Configure method used to apply the default authentication strategy
-     * @param auth the authentication manager
-     * @throws Exception
+     * API error
      */
-    void configure(AuthenticationManagerBuilder auth) throws Exception;
-}
+    private final ApiErrorEnum error;
 
+    /**
+     * Default constructor using field
+     * @param error the API error object to store into the exception
+     */
+    public ApiException(ApiErrorEnum error) {
+        super(error.getMessage());
+        this.error = error;
+    }
+
+    /**
+     * Method used to retrieve the error
+     * @return the APi error
+     */
+    public ApiErrorEnum getError() {
+        return error;
+    }
+}

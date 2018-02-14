@@ -17,7 +17,7 @@
 package io.suricate.monitoring.model;
 
 /**
- * Enum used to define a project type
+ * enums used to define a project type
  */
 public enum ProjectType {
     DEFAULT,

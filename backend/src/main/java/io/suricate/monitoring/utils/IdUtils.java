@@ -16,8 +16,8 @@
 
 package io.suricate.monitoring.utils;
 
-import io.suricate.monitoring.controllers.api.exception.ApiException;
-import io.suricate.monitoring.model.dto.error.ApiError;
+import io.suricate.monitoring.controllers.api.error.exception.ApiException;
+import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import org.jasypt.encryption.StringEncryptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +41,7 @@ public final class IdUtils {
             id = Long.parseLong(stringEncryptor.decrypt(token));
         } catch (Exception e){
             LOGGER.debug(e.getMessage(), e);
-            throw new ApiException(ApiError.TOKEN_INVALID);
+            throw new ApiException(ApiErrorEnum.TOKEN_INVALID);
         }
         return id;
     }

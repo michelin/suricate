@@ -18,8 +18,8 @@ package io.suricate.monitoring.config.security.token;
 
 import io.suricate.monitoring.config.ApplicationProperties;
 import io.suricate.monitoring.config.security.ConnectedUser;
-import io.suricate.monitoring.controllers.api.exception.ApiException;
-import io.suricate.monitoring.model.dto.error.ApiError;
+import io.suricate.monitoring.controllers.api.error.exception.ApiException;
+import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.model.user.Role;
 import io.suricate.monitoring.model.user.User;
 import io.suricate.monitoring.repository.RoleRepository;
@@ -57,7 +57,7 @@ public class TokenInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
         final String authHeader = httpServletRequest.getHeader("Authorization");
         if (authHeader == null || !StringUtils.startsWithIgnoreCase(authHeader,BEARER)) {
-            throw new ApiException(ApiError.TOKEN_MISSING);
+            throw new ApiException(ApiErrorEnum.TOKEN_MISSING);
         }
 
         final String token = authHeader.substring(BEARER.length()).trim(); // The part after "Bearer "
@@ -65,7 +65,7 @@ public class TokenInterceptor implements HandlerInterceptor {
         //Check the token
         User user = tokenService.extractToken(token);
         if (user == null){
-            throw new ApiException(ApiError.TOKEN_INVALID);
+            throw new ApiException(ApiErrorEnum.TOKEN_INVALID);
         }
 
         // Add roles

@@ -17,7 +17,7 @@
 package io.suricate.monitoring.config.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.suricate.monitoring.model.dto.error.ApiError;
+import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.model.dto.error.CustomError;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,10 +45,10 @@ public class BasicAuthenticationEntryPoint extends org.springframework.security.
         LOGGER.debug("Authentication error - {}", path, authException);
 
         // Format response
-        response.setStatus(ApiError.AUTHENTICATION_ERROR.getStatus().value());
+        response.setStatus(ApiErrorEnum.AUTHENTICATION_ERROR.getStatus().value());
         response.setHeader("Content-type","application/json");
         ObjectMapper obj = new ObjectMapper();
-        obj.writeValue(response.getOutputStream(), new CustomError(ApiError.AUTHENTICATION_ERROR));
+        obj.writeValue(response.getOutputStream(), new CustomError(ApiErrorEnum.AUTHENTICATION_ERROR));
     }
 
 }

@@ -24,15 +24,16 @@ import org.springframework.data.repository.query.Param;
 
 import javax.annotation.Generated;
 import java.util.List;
+import java.util.Optional;
 
-public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor {
+public interface UserRepository extends JpaRepository<User, Long> {
 
 	/**
 	 * Method used to get user by username
 	 * @param username the username
 	 * @return the user object
 	 */
-    User findByUsername(String username);
+    Optional<User> findByUsername(String username);
 
 	/**
 	 * Methos used to get id by username

@@ -22,10 +22,11 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import javax.annotation.Generated;
 import java.util.List;
+import java.util.Optional;
 
 public interface RoleRepository extends JpaRepository<Role, Long>, JpaSpecificationExecutor {
 
-    Role findByName(String name);
+    Optional<Role> findByName(String name);
 
     List<Role> findByUsers_Id(Long id);
 }

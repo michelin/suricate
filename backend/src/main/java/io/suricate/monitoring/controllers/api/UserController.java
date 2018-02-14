@@ -16,8 +16,8 @@
 
 package io.suricate.monitoring.controllers.api;
 
-import io.suricate.monitoring.controllers.api.exception.ApiException;
-import io.suricate.monitoring.model.dto.error.ApiError;
+import io.suricate.monitoring.controllers.api.error.exception.ApiException;
+import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.model.dto.user.UserDto;
 import io.suricate.monitoring.model.user.User;
 import io.suricate.monitoring.service.UserService;
@@ -57,12 +57,12 @@ public class UserController {
     @PreAuthorize("hasRole('ROLE_USER')")
     public UserDto getOne(@RequestAttribute User user, @PathVariable("id") Long id) {
         if (!SecurityUtils.isAdmin() && !user.getId().equals(id)) {
-            throw new ApiException(ApiError.OPERATION_NOT_AUTHORIZED);
+            throw new ApiException(ApiErrorEnum.OPERATION_NOT_AUTHORIZED);
         }
 
         UserDto ret = userService.getOne(id);
         if (ret == null){
-            throw new ApiException(ApiError.USER_NOT_FOUND);
+            throw new ApiException(ApiErrorEnum.USER_NOT_FOUND);
         }
 
         return ret;
@@ -77,7 +77,7 @@ public class UserController {
     public UserDto getOne(@RequestAttribute User user) {
         UserDto ret = userService.getOne(user.getId());
         if (ret == null){
-            throw new ApiException(ApiError.USER_NOT_FOUND);
+            throw new ApiException(ApiErrorEnum.USER_NOT_FOUND);
         }
 
         return ret;

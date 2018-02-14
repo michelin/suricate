@@ -16,9 +16,9 @@
 
 package io.suricate.monitoring.config.security.token;
 
-import io.suricate.monitoring.controllers.api.exception.ApiException;
+import io.suricate.monitoring.controllers.api.error.exception.ApiException;
 import io.suricate.monitoring.model.Configuration;
-import io.suricate.monitoring.model.dto.error.ApiError;
+import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.model.user.User;
 import io.suricate.monitoring.repository.ConfigurationRepository;
 import io.suricate.monitoring.repository.UserRepository;
@@ -65,14 +65,14 @@ public class TokenService {
             // Check token expiration
             String time = StringUtils.substringAfter(val,";");
             if (StringUtils.isNotBlank(time) && new Date().getTime() > Long.parseLong(time)){
-                throw new ApiException(ApiError.TOKEN_EXPIRED);
+                throw new ApiException(ApiErrorEnum.TOKEN_EXPIRED);
             }
             ret = userRepository.findByToken(token);
         } catch (ApiException ae) {
             throw ae;
         } catch(Exception e){
             LOGGER.trace(e.getMessage(), e);
-            throw new ApiException(ApiError.TOKEN_INVALID);
+            throw new ApiException(ApiErrorEnum.TOKEN_INVALID);
         }
 
         return ret;

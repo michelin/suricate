@@ -21,10 +21,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheException;
 import com.github.mustachejava.MustacheFactory;
-import io.suricate.monitoring.controllers.api.exception.ApiException;
+import io.suricate.monitoring.controllers.api.error.exception.ApiException;
 import io.suricate.monitoring.model.*;
 import io.suricate.monitoring.model.dto.UpdateEvent;
-import io.suricate.monitoring.model.dto.error.ApiError;
+import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.model.dto.update.UpdateType;
 import io.suricate.monitoring.model.dto.widget.WidgetParamResponse;
 import io.suricate.monitoring.model.dto.widget.WidgetParamValueResponse;
@@ -261,7 +261,7 @@ public class WidgetService {
     public void update(Long projectId, List<WidgetPosition> positions, String projetToken){
         List<ProjectWidget> projectWidgets = projectWidgetRepository.findByProjectIdAndWidget_WidgetAvailabilityOrderById(projectId, WidgetAvailability.ACTIVATED);
         if (projectWidgets.size() != positions.size()) {
-            throw new ApiException(ApiError.PROJECT_INVALID_CONSTANCY);
+            throw new ApiException(ApiErrorEnum.PROJECT_INVALID_CONSTANCY);
         }
 
         int i = 0;

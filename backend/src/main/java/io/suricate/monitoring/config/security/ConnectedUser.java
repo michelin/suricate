@@ -22,6 +22,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 
 import java.util.Collection;
+import java.util.Collections;
 
 public class ConnectedUser extends User {
 
@@ -49,6 +50,11 @@ public class ConnectedUser extends User {
         }
         this.id = id;
     }
+
+    public ConnectedUser(String username, DirContextOperations userData, ApplicationProperties.Ldap ldap) {
+        this(username, userData, Collections.emptyList(), null, ldap);
+    }
+
 
     public Long getId() {
         return id;

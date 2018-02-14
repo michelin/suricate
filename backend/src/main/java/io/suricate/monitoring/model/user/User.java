@@ -19,8 +19,10 @@ package io.suricate.monitoring.model.user;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.suricate.monitoring.model.AbstractModel;
 import io.suricate.monitoring.model.Project;
+import io.suricate.monitoring.model.enums.AuthenticationMethod;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @Entity
@@ -30,8 +32,21 @@ public class User extends AbstractModel<Long> {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Enumerated(value = EnumType.STRING)
+    @Column(name = "auth_mode", nullable = false, length = 20)
+    private AuthenticationMethod authenticationMethod;
+
     @Column(nullable = false, unique = true)
     private String username;
+
+    @Column
+    private String firstname;
+
+    @Column
+    private String lastname;
+
+    @Column(unique = true)
+    private String email;
 
     @ManyToMany
     @JoinTable(name="user_role", joinColumns={@JoinColumn(name="user_id")}, inverseJoinColumns={@JoinColumn(name="role_id")})
@@ -43,12 +58,21 @@ public class User extends AbstractModel<Long> {
     @Column(nullable = false)
     private String token;
 
+
+
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public AuthenticationMethod getAuthenticationMethod() {
+        return authenticationMethod;
+    }
+    public void setAuthenticationMethod(AuthenticationMethod authenticationMethod) {
+        this.authenticationMethod = authenticationMethod;
     }
 
     public String getUsername() {
@@ -87,5 +111,26 @@ public class User extends AbstractModel<Long> {
     @Override
     public String getExplicitName(){
         return username;
+    }
+
+    public String getFirstname() {
+        return firstname;
+    }
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
