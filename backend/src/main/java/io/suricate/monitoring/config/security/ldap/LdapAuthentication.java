@@ -71,7 +71,6 @@ public class LdapAuthentication {
                 .userSearchFilter(applicationProperties.getAuthentication().getLdap().getUserSearchFilter())
             .contextSource()
             .url(applicationProperties.getAuthentication().getLdap().getUrl());
-
     }
 
     /**
@@ -87,42 +86,4 @@ public class LdapAuthentication {
             }
         };
     }
-
-
-//    /**
-//     * Port to expose embedded ldap with apache DS
-//     */
-//    public static final int APACHE_DS_PORT = 38654;
-//
-//    @Autowired
-//    private ApplicationProperties applicationProperties;
-//
-//    @Autowired
-//    private LdapContextSource ldapContextSource;
-//
-//    @Bean(name = "ldapTemplate")
-//    public LdapTemplate ldapTemplate() {
-//        return new LdapTemplate(ldapContextSource);
-//    }
-//
-//    @Bean(name = "contextSource")
-//    @ConditionalOnProperty(name = "security.authentication-provider", havingValue = "ldap")
-//    public LdapContextSource ldapContextSource() {
-//        LdapContextSource ldapContextSource = new LdapContextSource();
-//        ldapContextSource.setUrl(applicationProperties.getAuthentication().getLdap().getUrl());
-//        ldapContextSource.setPooled(true);
-//        ldapContextSource.afterPropertiesSet();
-//        return ldapContextSource;
-//    }
-//
-//
-//    @Bean(name = "contextSource")
-//    @ConditionalOnProperty(name = "security.authentication-provider", havingValue = "ldif")
-//    public LdapContextSource ldifContextSource() {
-//        LdapContextSource ldapContextSource = new LdapContextSource();
-//        ldapContextSource.setUrl("ldap://localhost:"+APACHE_DS_PORT);
-//        ldapContextSource.setPooled(true);
-//        ldapContextSource.afterPropertiesSet();
-//        return ldapContextSource;
-//    }
 }

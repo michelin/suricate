@@ -101,4 +101,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         entryPoint.setRealmName("API Authentication");
         return entryPoint;
     }
+
+
 }

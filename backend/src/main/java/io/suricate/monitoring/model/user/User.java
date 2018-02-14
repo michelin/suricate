@@ -32,6 +32,9 @@ public class User extends AbstractModel<Long> {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column
+    private String password;
+
     @Enumerated(value = EnumType.STRING)
     @Column(name = "auth_mode", nullable = false, length = 20)
     private AuthenticationMethod authenticationMethod;
@@ -132,5 +135,12 @@ public class User extends AbstractModel<Long> {
     }
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

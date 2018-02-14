@@ -25,7 +25,6 @@ import io.suricate.monitoring.model.user.Role;
 import io.suricate.monitoring.model.user.User;
 import io.suricate.monitoring.repository.RoleRepository;
 import io.suricate.monitoring.repository.UserRepository;
-import io.suricate.monitoring.utils.ApplicationConstant;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -40,9 +39,9 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/${api.prefix}/login")
-public class LoginController {
+public class AuthenticationController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(LoginController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationController.class);
 
     private final UserRepository userRepository;
 
@@ -51,7 +50,7 @@ public class LoginController {
     private final TokenService tokenService;
 
     @Autowired
-    public LoginController(UserRepository userRepository, RoleRepository roleRepository, TokenService tokenService) {
+    public AuthenticationController(UserRepository userRepository, RoleRepository roleRepository, TokenService tokenService) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.tokenService = tokenService;

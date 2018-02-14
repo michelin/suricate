@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.utils;
 
-import io.suricate.monitoring.model.config.ProxyConfig;
+import io.suricate.monitoring.config.ProxyConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
