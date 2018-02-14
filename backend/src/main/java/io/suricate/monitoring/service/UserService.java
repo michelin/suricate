@@ -87,7 +87,19 @@ public class UserService {
         return new UserDto(user);
     }
 
+    public Optional<User> getByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
     public Long getIdByUsername(String username) {
         return userRepository.getIdByUsername(username);
+    }
+
+    @Transactional
+    public User saveUserToken(Long userId, String token) {
+        User user = userRepository.findOne(userId);
+        user.setToken(token);
+
+        return userRepository.save(user);
     }
 }

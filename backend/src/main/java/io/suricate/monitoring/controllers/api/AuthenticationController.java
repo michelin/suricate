@@ -16,11 +16,15 @@
 
 package io.suricate.monitoring.controllers.api;
 
+import io.suricate.monitoring.config.security.ConnectedUser;
 import io.suricate.monitoring.config.security.token.jwt.JWTConfigurer;
 import io.suricate.monitoring.config.security.token.jwt.JWTFilter;
 import io.suricate.monitoring.model.dto.token.JWTTokenDto;
 import io.suricate.monitoring.model.dto.user.CredentialsDto;
 import io.suricate.monitoring.model.dto.token.TokenResponse;
+import io.suricate.monitoring.model.user.User;
+import io.suricate.monitoring.repository.UserRepository;
+import io.suricate.monitoring.service.UserService;
 import io.suricate.monitoring.service.token.TokenService;
 import jdk.nashorn.internal.parser.Token;
 import org.slf4j.Logger;
@@ -47,11 +51,13 @@ public class AuthenticationController {
 
     private final TokenService tokenService;
     private final AuthenticationManager authenticationManager;
+    private final UserService userService;
 
     @Autowired
-    public AuthenticationController(TokenService tokenService, AuthenticationManager authenticationManager) {
+    public AuthenticationController(TokenService tokenService, AuthenticationManager authenticationManager, UserService userService) {
         this.tokenService = tokenService;
         this.authenticationManager = authenticationManager;
+        this.userService = userService;
     }
 
     /**
@@ -65,6 +71,9 @@ public class AuthenticationController {
         Authentication authentication = this.authenticationManager.authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = tokenService.createToken(authentication, credentialsDto.isRememberMe(), false);
+
+        userService.saveUserToken(((ConnectedUser) authentication.getPrincipal()).getId(), jwt);
+
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JWTConfigurer.AUTHORIZATION_HEADER, JWTFilter.BEARER + jwt);
         return new ResponseEntity<>(new JWTTokenDto(jwt), httpHeaders, HttpStatus.CREATED);

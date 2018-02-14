@@ -58,7 +58,7 @@ public class User extends AbstractModel<Long> {
     @ManyToMany(mappedBy = "users")
     private List<Project> projects;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 500)
     private String token;
 
 

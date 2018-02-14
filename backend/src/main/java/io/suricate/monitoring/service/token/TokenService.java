@@ -19,6 +19,7 @@ import javax.annotation.PostConstruct;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Date;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -109,7 +110,6 @@ public class TokenService {
             .compact();
     }
 
-
     /**
      * Get authentication from a token
      * @param token the user token
@@ -126,13 +126,21 @@ public class TokenService {
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
 
-        Long userId = userService.getIdByUsername(claims.getSubject());
-        ConnectedUser principal = new ConnectedUser(claims.getSubject(), null, authorities, userId,null);
-        principal.setFirstname((String)claims.get(FIRSTNAME_KEY));
-        principal.setLastname((String)claims.get(LASTNAME_KEY));
-        // TODO check database token
+        Optional<User> userOptional = userService.getByUsername(claims.getSubject());
 
-        return new UsernamePasswordAuthenticationToken(principal, token, authorities);
+        if(userOptional.isPresent()) {
+            ConnectedUser principal = new ConnectedUser(claims.getSubject(), null, authorities, userOptional.get().getId(), null);
+            principal.setFirstname((String) claims.get(FIRSTNAME_KEY));
+            principal.setLastname((String) claims.get(LASTNAME_KEY));
+
+            if(!token.equals(userOptional.get().getToken())) {
+                //TODO: Throw error
+            }
+
+            return new UsernamePasswordAuthenticationToken(principal, token, authorities);
+        }
+
+        return null;
     }
 
 
