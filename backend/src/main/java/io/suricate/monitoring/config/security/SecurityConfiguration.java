@@ -16,7 +16,9 @@
 
 package io.suricate.monitoring.config.security;
 
+import io.suricate.monitoring.config.security.token.jwt.JWTConfigurer;
 import io.suricate.monitoring.controllers.api.error.ApiAuthenticationFailureHandler;
+import io.suricate.monitoring.service.token.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -39,13 +41,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Value("${api.prefix}")
     protected String apiPrefix;
 
+    private final TokenService tokenService;
     private final RoleHierarchyImpl roleHierarchy;
     private final ApiAuthenticationFailureHandler apiAuthenticationFailureHandler;
 
     @Autowired
-    public SecurityConfiguration(RoleHierarchyImpl roleHierarchy, ApiAuthenticationFailureHandler apiAuthenticationFailureHandler) {
+    public SecurityConfiguration(RoleHierarchyImpl roleHierarchy, ApiAuthenticationFailureHandler apiAuthenticationFailureHandler, TokenService tokenService) {
         this.roleHierarchy = roleHierarchy;
         this.apiAuthenticationFailureHandler = apiAuthenticationFailureHandler;
+        this.tokenService = tokenService;
     }
 
     /**
@@ -56,6 +60,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         web
             .expressionHandler(defaultWebSecurityExpressionHandler())
             .ignoring()
+                .antMatchers("/"+apiPrefix+"/login")
                 .antMatchers("/"+apiPrefix+"/asset/**");
     }
 
@@ -87,20 +92,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .antMatchers("/"+apiPrefix+"/**").authenticated()
             .and()
-                .antMatcher("/"+apiPrefix+"/login")
-                .httpBasic()
-                .authenticationEntryPoint(basicAuthenticationEntryPoint());
+                .apply(jwtConfigurerAdapter());
     }
 
-    /**
-     * Authentication entry point for basic authentication
-     */
-    @Bean
-    public BasicAuthenticationEntryPoint basicAuthenticationEntryPoint(){
-        BasicAuthenticationEntryPoint entryPoint =  new BasicAuthenticationEntryPoint();
-        entryPoint.setRealmName("API Authentication");
-        return entryPoint;
+    private JWTConfigurer jwtConfigurerAdapter() {
+        return new JWTConfigurer(tokenService);
     }
-
-
 }

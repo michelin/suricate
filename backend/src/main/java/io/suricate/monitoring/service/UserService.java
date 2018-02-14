@@ -86,4 +86,8 @@ public class UserService {
         User user = userRepository.findOne(userId);
         return new UserDto(user);
     }
+
+    public Long getIdByUsername(String username) {
+        return userRepository.getIdByUsername(username);
+    }
 }

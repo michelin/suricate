@@ -55,11 +55,7 @@ public class UserController {
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
-    public UserDto getOne(@RequestAttribute User user, @PathVariable("id") Long id) {
-        if (!SecurityUtils.isAdmin() && !user.getId().equals(id)) {
-            throw new ApiException(ApiErrorEnum.OPERATION_NOT_AUTHORIZED);
-        }
-
+    public UserDto getOne(@PathVariable("id") Long id) {
         UserDto ret = userService.getOne(id);
         if (ret == null){
             throw new ApiException(ApiErrorEnum.USER_NOT_FOUND);

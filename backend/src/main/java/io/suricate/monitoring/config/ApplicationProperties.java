@@ -19,9 +19,13 @@
 
 package io.suricate.monitoring.config;
 
+import jdk.nashorn.internal.objects.annotations.Getter;
+import jdk.nashorn.internal.objects.annotations.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+
+import javax.validation.constraints.NotNull;
 
 @Configuration
 @PropertySource("classpath:application.properties")
@@ -42,8 +46,14 @@ public class ApplicationProperties {
          */
         private final Ldap ldap = new Ldap();
 
+        private final Jwt jwt = new Jwt();
+
         public Ldap getLdap() {
             return ldap;
+        }
+
+        public Jwt getJwt() {
+            return jwt;
         }
     }
 
@@ -97,6 +107,43 @@ public class ApplicationProperties {
             this.mailAttributName = mailAttributName;
         }
     }
+
+    public static class Jwt {
+
+        /** Token validity in second */
+        @NotNull
+        private long tokenValidity;
+
+        /** Token validity in second remember me */
+        @NotNull
+        private long tokenValidityRememberMe;
+
+        /** Jwt secret */
+        @NotNull
+        private String secret;
+
+        public long getTokenValidity() {
+            return tokenValidity;
+        }
+        public void setTokenValidity(long tokenValidity) {
+            this.tokenValidity = tokenValidity;
+        }
+
+        public long getTokenValidityRememberMe() {
+            return tokenValidityRememberMe;
+        }
+        public void setTokenValidityRememberMe(long tokenValidityRememberMe) {
+            this.tokenValidityRememberMe = tokenValidityRememberMe;
+        }
+
+        public String getSecret() {
+            return secret;
+        }
+        public void setSecret(String secret) {
+            this.secret = secret;
+        }
+    }
+
 
     public Authentication getAuthentication() {
         return authentication;
