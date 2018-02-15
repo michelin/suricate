@@ -45,6 +45,7 @@ import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.security.KeyStore;
 
 @SpringBootApplication
 @EnableJpaAuditing
@@ -55,15 +56,18 @@ import java.io.FileNotFoundException;
 @EnableConfigurationProperties({ApplicationProperties.class})
 public class BackendApplication {
 
-    @Value("${app.trust-store:}")
-    private String trustStore;
-
-    @Value("${app.trust-store-password}")
-    private String trustStoreKey;
-
     @Value("${jasypt.encryptor.password}")
     private String encryptorPassword;
 
+    /**
+     * Application properties
+     */
+    @Autowired
+    private ApplicationProperties applicationProperties;
+
+    /**
+     * Git Service
+     */
     @Autowired
     private GitService gitService;
 
@@ -72,7 +76,7 @@ public class BackendApplication {
      * @param args command line arguments
      */
     public static void main(String[] args) {
-        SpringApplication.run(BackendApplication.class, args);  // NOSONAR
+        SpringApplication.run(BackendApplication.class, args);
     }
 
     /**
@@ -96,17 +100,34 @@ public class BackendApplication {
     }
 
     /**
-     * Add trust store to classpath
+     * Add trust store and key store to classpath
      */
     @PostConstruct
     protected void init() throws FileNotFoundException {
-        // Define trust store properties
-        if(StringUtils.isNotBlank(trustStore)) {
-            if (!new File(trustStore).exists()) { // NOSONAR
-                throw new FileNotFoundException("Trust store not found in '" + trustStore + "'. Edit the config 'app.trust-store'");
+        // Define Trust Store properties
+        if(StringUtils.isNotBlank(applicationProperties.ssl.trustStore.path)) {
+            if (!new File(applicationProperties.ssl.trustStore.path).exists()) {
+                throw new FileNotFoundException("Trust store not found under path : '" + applicationProperties.ssl.trustStore.path);
             }
-            System.setProperty("javax.net.ssl.trustStore", trustStore);
-            System.setProperty("javax.net.ssl.trustStorePassword", trustStoreKey);
+            System.setProperty("javax.net.ssl.trustStore", applicationProperties.ssl.trustStore.path);
+            System.setProperty("javax.net.ssl.trustStorePassword", applicationProperties.ssl.trustStore.password);
+
+            if(StringUtils.isNotBlank(applicationProperties.ssl.trustStore.type)) {
+                System.setProperty("javax.net.ssl.trustStoreType", applicationProperties.ssl.trustStore.type);
+            }
+        }
+
+        //Define Key Store properties
+        if(StringUtils.isNotBlank(applicationProperties.ssl.keyStore.path)) {
+            if(!new File(applicationProperties.ssl.keyStore.path).exists()) {
+                throw new FileNotFoundException("Key store not found under path : '" + applicationProperties.ssl.keyStore.path);
+            }
+            System.setProperty("javax.net.ssl.keyStore", applicationProperties.ssl.keyStore.path);
+            System.setProperty("javax.net.ssl.keyStorePassword", applicationProperties.ssl.keyStore.password);
+
+            if(StringUtils.isNotBlank(applicationProperties.ssl.keyStore.type)) {
+                System.setProperty("javax.net.ssl.keyStoreType", applicationProperties.ssl.keyStore.type);
+            }
         }
 
         // Update widgets
@@ -150,4 +171,5 @@ public class BackendApplication {
         encryptor.setConfig(config);
         return encryptor;
     }
+
 }

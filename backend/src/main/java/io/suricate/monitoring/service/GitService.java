@@ -16,6 +16,7 @@
 
 package io.suricate.monitoring.service;
 
+import io.suricate.monitoring.config.ApplicationProperties;
 import io.suricate.monitoring.model.Category;
 import io.suricate.monitoring.model.Library;
 import io.suricate.monitoring.utils.WidgetUtils;
@@ -46,17 +47,8 @@ public class GitService {
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(GitService.class);
 
-    @Value("${gitlab.widget.repo}")
-    private String widgetGitRepo;
-
-    @Value("${gitlab.widget.repo.branch}")
-    private String gitBranch;
-
-    @Value("${widget.local.folder}")
-    private String repoGit;
-
-    @Value("${gitlab.widget.update}")
-    private boolean updateEnable;
+    /** The application properties */
+    private final ApplicationProperties applicationProperties;
 
     private final WidgetService widgetService;
 
@@ -74,11 +66,12 @@ public class GitService {
      * @param widgetExecutor widget executor
      */
     @Autowired
-    public GitService(WidgetService widgetService, LibraryService libraryService, SocketService socketService, WidgetExecutor widgetExecutor) {
+    public GitService(WidgetService widgetService, LibraryService libraryService, SocketService socketService, WidgetExecutor widgetExecutor, ApplicationProperties applicationProperties) {
         this.widgetService = widgetService;
         this.libraryService = libraryService;
         this.socketService = socketService;
         this.widgetExecutor = widgetExecutor;
+        this.applicationProperties = applicationProperties;
     }
 
     /**
@@ -87,11 +80,12 @@ public class GitService {
      * @throws IOException
      */
     public File cloneWidgetRepo() throws Exception {
-        if (StringUtils.isNotBlank(repoGit)) {
-            LOGGER.info("Loading widget from git repo {}", repoGit);
-            return new File(repoGit);
+        if (StringUtils.isNotBlank(applicationProperties.widgets.local.folderPath)) {
+            LOGGER.info("Loading widget from local folder {}", applicationProperties.widgets.local.folderPath);
+            return new File(applicationProperties.widgets.local.folderPath);
         }
-        return cloneRepo(widgetGitRepo, gitBranch);
+
+        return cloneRepo(applicationProperties.widgets.git.url, applicationProperties.widgets.git.branch);
     }
 
     /**
@@ -101,7 +95,7 @@ public class GitService {
      * @return File object on local repo
      */
     public File cloneRepo(String url, String branch) throws Exception {
-        LOGGER.info("Cloning repo {}, branch {}", url, branch);
+        LOGGER.info("Cloning widget repo {}, branch {}", url, branch);
         File localRepo = null;
         Git git = null;
         try {
@@ -137,7 +131,7 @@ public class GitService {
     @Transactional
     public void updateWidgetFromGit(){
         LOGGER.info("Update widgets from Git repo");
-        if (!updateEnable){
+        if (!applicationProperties.widgets.updateEnable){
             LOGGER.info("Widget update disabled");
             return;
         }
@@ -159,7 +153,7 @@ public class GitService {
         } catch (Exception ioe) {
             LOGGER.error(ioe.getMessage(), ioe);
         } finally {
-            if (StringUtils.isBlank(repoGit)) {
+            if (StringUtils.isBlank(applicationProperties.widgets.local.folderPath)) {
                 FileUtils.deleteQuietly(folder);
             }
             widgetExecutor.initScheduler();
