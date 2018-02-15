@@ -57,6 +57,7 @@ public class UserService {
         if (connectedUser == null){
             return Optional.empty();
         }
+
         // Create user
         User user = new User();
         user.setFirstname(connectedUser.getFirstname());

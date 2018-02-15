@@ -17,7 +17,7 @@
  *
  */
 
-package io.suricate.monitoring.model;
+package io.suricate.monitoring.model.enums;
 
 public enum WidgetVariableType {
 

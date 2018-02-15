@@ -57,10 +57,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) throws Exception {
         web
-            .expressionHandler(defaultWebSecurityExpressionHandler())
-            .ignoring()
-                .antMatchers("/"+apiPrefix+"/login")
-                .antMatchers("/"+apiPrefix+"/asset/**");
+            .expressionHandler(defaultWebSecurityExpressionHandler());
     }
 
     /**
@@ -89,6 +86,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .and()
                 .authorizeRequests()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+                .antMatchers("/"+apiPrefix+"/login/**").permitAll()
                 .antMatchers("/"+apiPrefix+"/**").authenticated()
             .and()
                 .apply(jwtConfigurerAdapter());

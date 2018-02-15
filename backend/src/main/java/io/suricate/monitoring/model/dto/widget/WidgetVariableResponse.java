@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.model.dto.widget;
 
-import io.suricate.monitoring.model.WidgetVariableType;
+import io.suricate.monitoring.model.enums.WidgetVariableType;
 import io.suricate.monitoring.model.dto.AbstractDto;
 
 import java.util.Map;

@@ -16,9 +16,7 @@ import org.springframework.security.ldap.userdetails.LdapAuthoritiesPopulator;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Collection;
-import java.util.Locale;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,7 +42,7 @@ public class UserDetailsServiceLdapAuthoritiesPopulator implements LdapAuthoriti
 
         if (!currentUser.isPresent()) {
             // Call service to add user
-            currentUser = userService.initUser(new ConnectedUser(lowercaseLogin, userData, applicationProperties.getAuthentication().getLdap()));
+            currentUser = userService.initUser(new ConnectedUser(lowercaseLogin, userData, applicationProperties.authentication.ldap));
         }
 
         return currentUser.map(user -> user.getRoles().stream()
@@ -52,5 +50,4 @@ public class UserDetailsServiceLdapAuthoritiesPopulator implements LdapAuthoriti
             .collect(Collectors.toList()))
             .orElseThrow(() -> new UsernameNotFoundException("User " + lowercaseLogin + " was not authorized"));
     }
-
 }

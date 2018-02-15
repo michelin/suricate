@@ -43,7 +43,7 @@
                                 #{msg['app.user.widget.config.configuration.title']}
                             </f:facet>
                             <div class="panel-body">
-                                <o:importConstants type="io.suricate.monitoring.model.WidgetVariableType" />
+                                <o:importConstants type="io.suricate.monitoring.model.enums.WidgetVariableType" />
                                 <c:forEach items="#{listConfig}" var="entry">
                                     <c:choose>
                                         <c:when test="#{entry.type == WidgetVariableType.BOOLEAN}">
@@ -218,7 +218,7 @@
                                 <div class="form-group">
                                     <label for="state">#{msg['app.user.widget.config.state.title']}:</label>
                                     <h:inputText id="state" class="form-control" type="text" disabled="true" value="#{ DashboardManagedBean.selectedProjectWidget.state}"/>
-                                    <o:importConstants type="io.suricate.monitoring.model.WidgetState" />
+                                    <o:importConstants type="io.suricate.monitoring.model.enums.WidgetState" />
                                     <p:commandButton class="btn btn-primary"
                                                      icon="fa fa-repeat"
                                                      action="#{DashboardManagedBean.scheduleWidget}"

@@ -17,6 +17,7 @@
 package io.suricate.monitoring.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
 import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
@@ -82,7 +83,7 @@ public class Widget extends AbstractModel<Long> {
     @Column
     @Enumerated(EnumType.STRING)
     @Field
-    private WidgetAvailability widgetAvailability;
+    private WidgetAvailabilityEnum widgetAvailability;
 
     @OneToMany(mappedBy = "widget", cascade = CascadeType.ALL)
     private List<WidgetParam> widgetParams = new ArrayList<>();
@@ -177,10 +178,10 @@ public class Widget extends AbstractModel<Long> {
         this.libraries = libraries;
     }
 
-    public WidgetAvailability getWidgetAvailability() {
+    public WidgetAvailabilityEnum getWidgetAvailability() {
         return widgetAvailability;
     }
-    public void setWidgetAvailability(WidgetAvailability widgetAvailability) {
+    public void setWidgetAvailability(WidgetAvailabilityEnum widgetAvailability) {
         this.widgetAvailability = widgetAvailability;
     }
 

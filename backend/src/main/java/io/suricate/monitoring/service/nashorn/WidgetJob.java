@@ -22,7 +22,7 @@ import io.suricate.monitoring.model.dto.nashorn.ErrorType;
 import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
 import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
 import io.suricate.monitoring.model.dto.widget.WidgetVariableResponse;
-import io.suricate.monitoring.model.WidgetVariableType;
+import io.suricate.monitoring.model.enums.WidgetVariableType;
 import io.suricate.monitoring.utils.JavascriptUtils;
 import io.suricate.monitoring.utils.JsonUtils;
 import io.suricate.monitoring.utils.PropertiesUtils;

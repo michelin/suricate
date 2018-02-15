@@ -22,7 +22,7 @@ import io.suricate.monitoring.model.Project;
 import io.suricate.monitoring.model.enums.AuthenticationMethod;
 
 import javax.persistence.*;
-import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -32,15 +32,15 @@ public class User extends AbstractModel<Long> {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    @Column(nullable = false, unique = true)
+    private String username;
+
     @Column
     private String password;
 
     @Enumerated(value = EnumType.STRING)
     @Column(name = "auth_mode", nullable = false, length = 20)
     private AuthenticationMethod authenticationMethod;
-
-    @Column(nullable = false, unique = true)
-    private String username;
 
     @Column
     private String firstname;
@@ -61,6 +61,8 @@ public class User extends AbstractModel<Long> {
     @Column(nullable = false, length = 500)
     private String token;
 
+
+    public User() {}
 
 
     public Long getId() {
@@ -87,6 +89,9 @@ public class User extends AbstractModel<Long> {
     }
 
     public List<Role> getRoles() {
+        if(roles == null) {
+            this.roles = new ArrayList<>();
+        }
         return roles;
     }
 

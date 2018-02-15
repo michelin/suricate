@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model;
+package io.suricate.monitoring.model.enums;
 
 public enum WidgetState {
     /**

@@ -19,8 +19,8 @@
 
 package io.suricate.monitoring.config;
 
-import jdk.nashorn.internal.objects.annotations.Getter;
-import jdk.nashorn.internal.objects.annotations.Setter;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -30,122 +30,54 @@ import javax.validation.constraints.NotNull;
 @Configuration
 @PropertySource("classpath:application.properties")
 @ConfigurationProperties(prefix = "application", ignoreInvalidFields = false)
+@Getter @Setter
 public class ApplicationProperties {
 
     /**
      * Authentification configuration
      */
-    private final Authentication authentication = new Authentication();
+    public final Authentication authentication = new Authentication();
 
     /**
      * Authentication configuration object
      */
+    @Getter @Setter
     public static class Authentication {
         /***
          * ldap configuration
          */
-        private final Ldap ldap = new Ldap();
+        public final Ldap ldap = new Ldap();
+        public final Jwt jwt = new Jwt();
 
-        private final Jwt jwt = new Jwt();
-
-        public Ldap getLdap() {
-            return ldap;
-        }
-
-        public Jwt getJwt() {
-            return jwt;
-        }
+        public String provider;
     }
 
     /**
      * Ldap configuration object
      */
+    @Getter @Setter
     public static class Ldap {
-        private String url;
-        private String userSearchFilter;
-        private String firstNameAttributName;
-        private String lastNameAttributName;
-        private String mailAttributName;
-
-        public String getUrl() {
-            return url;
-        }
-
-        public void setUrl(String url) {
-            this.url = url;
-        }
-
-        public String getUserSearchFilter() {
-            return userSearchFilter;
-        }
-
-        public void setUserSearchFilter(String userSearchFilter) {
-            this.userSearchFilter = userSearchFilter;
-        }
-
-        public String getFirstNameAttributName() {
-            return firstNameAttributName;
-        }
-
-        public void setFirstNameAttributName(String firstNameAttributName) {
-            this.firstNameAttributName = firstNameAttributName;
-        }
-
-        public String getLastNameAttributName() {
-            return lastNameAttributName;
-        }
-
-        public void setLastNameAttributName(String lastNameAttributName) {
-            this.lastNameAttributName = lastNameAttributName;
-        }
-
-        public String getMailAttributName() {
-            return mailAttributName;
-        }
-
-        public void setMailAttributName(String mailAttributName) {
-            this.mailAttributName = mailAttributName;
-        }
+        public String url;
+        public String userSearchFilter;
+        public String fullNameAttributName;
+        public String firstNameAttributName;
+        public String lastNameAttributName;
+        public String mailAttributName;
     }
 
+    @Getter @Setter
     public static class Jwt {
 
         /** Token validity in second */
         @NotNull
-        private long tokenValidity;
+        public long tokenValidity;
 
         /** Token validity in second remember me */
         @NotNull
-        private long tokenValidityRememberMe;
+        public long tokenValidityRememberMe;
 
         /** Jwt secret */
         @NotNull
-        private String secret;
-
-        public long getTokenValidity() {
-            return tokenValidity;
-        }
-        public void setTokenValidity(long tokenValidity) {
-            this.tokenValidity = tokenValidity;
-        }
-
-        public long getTokenValidityRememberMe() {
-            return tokenValidityRememberMe;
-        }
-        public void setTokenValidityRememberMe(long tokenValidityRememberMe) {
-            this.tokenValidityRememberMe = tokenValidityRememberMe;
-        }
-
-        public String getSecret() {
-            return secret;
-        }
-        public void setSecret(String secret) {
-            this.secret = secret;
-        }
-    }
-
-
-    public Authentication getAuthentication() {
-        return authentication;
+        public String secret;
     }
 }

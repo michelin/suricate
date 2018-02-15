@@ -97,7 +97,7 @@
 
                             <div class="form-group ">
                                 <label for="widgetAvailability">#{msg['app.admin.widget.field.widgetAvailability']}</label>
-                                <o:importConstants type="io.suricate.monitoring.model.WidgetAvailability" />
+                                <o:importConstants type="io.suricate.monitoring.model.enums.WidgetAvailabilityEnum" />
                                 <p:selectOneMenu id="widgetAvailability" value="#{ WidgetEditManagedBean.widget.widgetAvailability}" style="width:150px">
                                     <f:selectItem itemLabel="#{msg['app.admin.widget.field.category.dropdownlabel']}" itemValue="" noSelectionOption="true" />
                                     <f:selectItems value="#{ WidgetAvailability.values()}" var="entry" itemValue="#{entry.name()}" itemLabel="#{entry.name()}" />

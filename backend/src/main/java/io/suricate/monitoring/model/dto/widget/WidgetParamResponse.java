@@ -1,6 +1,6 @@
 package io.suricate.monitoring.model.dto.widget;
 
-import io.suricate.monitoring.model.WidgetVariableType;
+import io.suricate.monitoring.model.enums.WidgetVariableType;
 
 import java.util.ArrayList;
 import java.util.List;

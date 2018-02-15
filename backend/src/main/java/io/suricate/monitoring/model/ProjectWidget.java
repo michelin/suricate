@@ -16,6 +16,8 @@
 
 package io.suricate.monitoring.model;
 
+import io.suricate.monitoring.model.enums.WidgetState;
+
 import javax.persistence.*;
 import java.util.Date;
 

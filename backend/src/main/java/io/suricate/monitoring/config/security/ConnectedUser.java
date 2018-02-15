@@ -29,7 +29,6 @@ public class ConnectedUser extends User {
     private Long id;
     private String firstname;
     private String lastname;
-    private String fullname;
     private String mail;
 
     /**
@@ -43,10 +42,9 @@ public class ConnectedUser extends User {
         super(username, "", true, true, true, true, authorities);
         // Add commons ldap field
         if (userData != null) {
-            this.firstname = userData.getStringAttribute(ldapProperties.getFirstNameAttributName());
-            this.lastname = userData.getStringAttribute(ldapProperties.getLastNameAttributName());
-            this.fullname = this.firstname + " " + this.lastname;
-            this.mail = userData.getStringAttribute(ldapProperties.getMailAttributName());
+            this.firstname = userData.getStringAttribute(ldapProperties.firstNameAttributName);
+            this.lastname = userData.getStringAttribute(ldapProperties.lastNameAttributName);
+            this.mail = userData.getStringAttribute(ldapProperties.mailAttributName);
         }
         this.id = id;
     }
@@ -54,7 +52,6 @@ public class ConnectedUser extends User {
     public ConnectedUser(String username, DirContextOperations userData, ApplicationProperties.Ldap ldap) {
         this(username, userData, Collections.emptyList(), null, ldap);
     }
-
 
     public Long getId() {
         return id;
@@ -75,13 +72,6 @@ public class ConnectedUser extends User {
     }
     public void setLastname(String lastname) {
         this.lastname = lastname;
-    }
-
-    public String getFullname() {
-        return fullname;
-    }
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
     }
 
     public String getMail() {

@@ -19,6 +19,7 @@
 
 package io.suricate.monitoring.model;
 
+import io.suricate.monitoring.model.enums.WidgetVariableType;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;

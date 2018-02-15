@@ -17,7 +17,7 @@
 package io.suricate.monitoring.service.search;
 
 import io.suricate.monitoring.model.Widget;
-import io.suricate.monitoring.model.WidgetAvailability;
+import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.Sort;
@@ -55,7 +55,7 @@ public class SearchService {
      * @param widgetAvailability widget availability
      * @return the list of widgets
      */
-    public List<Widget> searchWidgets(WidgetAvailability widgetAvailability, String searchQuery) {
+    public List<Widget> searchWidgets(WidgetAvailabilityEnum widgetAvailability, String searchQuery) {
 
         // Query questions first
         FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);

@@ -18,14 +18,13 @@ package io.suricate.monitoring.repository;
 
 import io.suricate.monitoring.model.Asset;
 import io.suricate.monitoring.model.Widget;
-import io.suricate.monitoring.model.WidgetAvailability;
+import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import javax.annotation.Generated;
 import java.util.List;
 
 public interface WidgetRepository
@@ -88,7 +87,7 @@ public interface WidgetRepository
 	 * @param widgetAvailability the availability type
 	 * @return the list of widgets
 	 */
-	List<Widget> findAllByWidgetAvailabilityOrderByNameAsc(WidgetAvailability widgetAvailability);
+	List<Widget> findAllByWidgetAvailabilityOrderByNameAsc(WidgetAvailabilityEnum widgetAvailability);
 
 	List<Widget> findAllByCategory_IdOrderByNameAsc(final Long categoryId);
 

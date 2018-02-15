@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.model.dto.nashorn;
 
-import io.suricate.monitoring.model.WidgetState;
+import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.model.dto.AbstractDto;
 import io.suricate.monitoring.utils.JsonUtils;
 import org.apache.commons.lang3.StringUtils;

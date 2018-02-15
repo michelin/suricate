@@ -53,7 +53,7 @@ public class LdapAuthentication {
      */
     @PostConstruct
     private void checkLdapConfiguration() {
-        if (StringUtils.isBlank(applicationProperties.getAuthentication().getLdap().getUrl())) {
+        if (StringUtils.isBlank(applicationProperties.authentication.ldap.url)) {
             throw new IllegalArgumentException("The Ldap url is mandatory when the provider is ldap");
         }
     }
@@ -68,9 +68,9 @@ public class LdapAuthentication {
         auth.ldapAuthentication()
                 .userDetailsContextMapper(userDetailsContextMapper())
                 .ldapAuthoritiesPopulator(userDetailsServiceLdapAuthoritiesPopulator)
-                .userSearchFilter(applicationProperties.getAuthentication().getLdap().getUserSearchFilter())
+                .userSearchFilter(applicationProperties.authentication.ldap.userSearchFilter)
             .contextSource()
-            .url(applicationProperties.getAuthentication().getLdap().getUrl());
+            .url(applicationProperties.authentication.ldap.url);
     }
 
     /**
@@ -82,7 +82,7 @@ public class LdapAuthentication {
             @Override
             public UserDetails mapUserFromContext(DirContextOperations ctx, String username, java.util.Collection<? extends GrantedAuthority> authorities) {
                 Long userId = userRepository.getIdByUsername(username);
-                return new ConnectedUser(username, ctx, authorities, userId, applicationProperties.getAuthentication().getLdap());
+                return new ConnectedUser(username, ctx, authorities, userId, applicationProperties.authentication.ldap);
             }
         };
     }

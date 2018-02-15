@@ -21,12 +21,8 @@ import io.suricate.monitoring.config.security.token.jwt.JWTConfigurer;
 import io.suricate.monitoring.config.security.token.jwt.JWTFilter;
 import io.suricate.monitoring.model.dto.token.JWTTokenDto;
 import io.suricate.monitoring.model.dto.user.CredentialsDto;
-import io.suricate.monitoring.model.dto.token.TokenResponse;
-import io.suricate.monitoring.model.user.User;
-import io.suricate.monitoring.repository.UserRepository;
 import io.suricate.monitoring.service.UserService;
 import io.suricate.monitoring.service.token.TokenService;
-import jdk.nashorn.internal.parser.Token;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,22 +58,20 @@ public class AuthenticationController {
 
     /**
      * Authenticate a user
+     *
      * @return A new user token
      */
-    @RequestMapping(method = RequestMethod.POST)
+    @RequestMapping(value = "/authenticate", method = RequestMethod.POST)
     public ResponseEntity<JWTTokenDto> authenticate(@RequestBody CredentialsDto credentialsDto) {
-        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(credentialsDto.getLogin(), credentialsDto.getPassword());
-
+        UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(credentialsDto.getLogin(), credentialsDto.getPassword());;
         Authentication authentication = this.authenticationManager.authenticate(authenticationToken);
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = tokenService.createToken(authentication, credentialsDto.isRememberMe(), false);
 
+        String jwt = tokenService.createToken(authentication, credentialsDto.isRememberMe(), false);
         userService.saveUserToken(((ConnectedUser) authentication.getPrincipal()).getId(), jwt);
 
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.add(JWTConfigurer.AUTHORIZATION_HEADER, JWTFilter.BEARER + jwt);
         return new ResponseEntity<>(new JWTTokenDto(jwt), httpHeaders, HttpStatus.CREATED);
     }
-
-
 }

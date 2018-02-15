@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model;
+package io.suricate.monitoring.model.enums;
 
-public enum WidgetAvailability {
-
+public enum WidgetAvailabilityEnum {
     ACTIVATED,
     DISABLED,
-    VALIDATION_PENDING;
+    VALIDATION_PENDING
 }

@@ -71,9 +71,9 @@ public class TokenService {
      */
     @PostConstruct
     public void init() {
-        this.secretKey = applicationProperties.getAuthentication().getJwt().getSecret();
-        this.tokenValidityInMilliseconds = DateUtils.MILLIS_PER_SECOND * applicationProperties.getAuthentication().getJwt().getTokenValidity();
-        this.tokenValidityInMillisecondsForRememberMe = DateUtils.MILLIS_PER_SECOND * applicationProperties.getAuthentication().getJwt().getTokenValidityRememberMe();
+        this.secretKey = applicationProperties.authentication.jwt.secret;
+        this.tokenValidityInMilliseconds = DateUtils.MILLIS_PER_SECOND * applicationProperties.authentication.jwt.tokenValidity;
+        this.tokenValidityInMillisecondsForRememberMe = DateUtils.MILLIS_PER_SECOND * applicationProperties.authentication.jwt.tokenValidityRememberMe;
     }
 
     /**
