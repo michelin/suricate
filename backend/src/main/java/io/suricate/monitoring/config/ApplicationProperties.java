@@ -24,14 +24,17 @@ import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.web.cors.CorsConfiguration;
 
 import javax.validation.constraints.NotNull;
 
 @Configuration
-@PropertySource("classpath:application.properties")
-@ConfigurationProperties(prefix = "application", ignoreInvalidFields = false)
+@ConfigurationProperties(prefix = "application", ignoreUnknownFields = false)
 @Getter @Setter
 public class ApplicationProperties {
+
+    /** Cors configuration */
+    public final CorsConfiguration cors = new CorsConfiguration();
 
     /**
      * Authentification configuration
@@ -59,7 +62,6 @@ public class ApplicationProperties {
     public static class Ldap {
         public String url;
         public String userSearchFilter;
-        public String fullNameAttributName;
         public String firstNameAttributName;
         public String lastNameAttributName;
         public String mailAttributName;

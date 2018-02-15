@@ -16,11 +16,15 @@
 
 package io.suricate.monitoring.config.security;
 
+import io.suricate.monitoring.config.ApplicationProperties;
 import io.suricate.monitoring.config.security.token.jwt.JWTConfigurer;
 import io.suricate.monitoring.controllers.api.error.ApiAuthenticationFailureHandler;
 import io.suricate.monitoring.service.token.TokenService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -30,22 +34,29 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.cors.CorsUtils;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(SecurityConfiguration.class);
+
     private final TokenService tokenService;
     private final RoleHierarchyImpl roleHierarchy;
     private final ApiAuthenticationFailureHandler apiAuthenticationFailureHandler;
+    private final ApplicationProperties applicationProperties;
 
     @Autowired
-    public SecurityConfiguration(RoleHierarchyImpl roleHierarchy, ApiAuthenticationFailureHandler apiAuthenticationFailureHandler, TokenService tokenService) {
+    public SecurityConfiguration(RoleHierarchyImpl roleHierarchy, ApiAuthenticationFailureHandler apiAuthenticationFailureHandler, TokenService tokenService, ApplicationProperties applicationProperties) {
         this.roleHierarchy = roleHierarchy;
         this.apiAuthenticationFailureHandler = apiAuthenticationFailureHandler;
         this.tokenService = tokenService;
+        this.applicationProperties = applicationProperties;
     }
 
     /**
@@ -92,4 +103,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private JWTConfigurer jwtConfigurerAdapter() {
         return new JWTConfigurer(tokenService);
     }
+
+    @Bean
+    public CorsFilter corsFilter() {
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        if (!CollectionUtils.isEmpty(applicationProperties.cors.getAllowedOrigins()) ) {
+            LOGGER.debug("Registering CORS filter");
+            source.registerCorsConfiguration("/api/**", applicationProperties.cors);
+        }
+        return new CorsFilter(source);
+    }
+
 }
