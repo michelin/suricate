@@ -56,7 +56,6 @@ public class UserDto extends AbstractDto {
     /**
      * Constructor of UserDto
      * @param user database user
-     * @param connectedUser the current connected user
      */
     public UserDto(User user) {
         this.id = user.getId();
@@ -66,17 +65,6 @@ public class UserDto extends AbstractDto {
         this.fullname = user.getFirstname() + " " + user.getLastname();
         this.lastname = user.getLastname();
         this.mail = user.getEmail();
-    }
-
-    /**
-     * Constructor of UserDto
-     * @param connectedUser the connected user
-     */
-    public UserDto(ConnectedUser connectedUser) {
-        if (connectedUser != null) {
-            this.fullname = connectedUser.getFullname();
-            this.username = connectedUser.getUsername();
-        }
     }
 
     /**

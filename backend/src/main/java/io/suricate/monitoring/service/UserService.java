@@ -66,7 +66,13 @@ public class UserService {
         user.setEmail(connectedUser.getMail());
         user.setAuthenticationMethod(AuthenticationMethod.LDAP);
 
-        Optional<Role> role = roleRepository.findByName(UserRoleEnum.ROLE_USER.name());
+        Optional<Role> role;
+        if(userRepository.count() > 0) {
+            role = roleRepository.findByName(UserRoleEnum.ROLE_USER.name());
+        } else {
+            role = roleRepository.findByName(UserRoleEnum.ROLE_ADMIN.name());
+        }
+
         if (!role.isPresent()) {
             LOGGER.error("Role {} not available in database", UserRoleEnum.ROLE_USER);
             throw new ApiException(ApiErrorEnum.DATABASE_INIT_ISSUE);

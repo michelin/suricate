@@ -74,4 +74,6 @@ public class AuthenticationController {
         httpHeaders.add(JWTConfigurer.AUTHORIZATION_HEADER, JWTFilter.BEARER + jwt);
         return new ResponseEntity<>(new JWTTokenDto(jwt), httpHeaders, HttpStatus.CREATED);
     }
+
+
 }
