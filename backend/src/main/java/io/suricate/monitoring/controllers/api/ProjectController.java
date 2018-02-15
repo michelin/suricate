@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/${api.prefix}/projects")
+@RequestMapping("/api/projects")
 public class ProjectController {
 
     private final ProjectService projectService;

@@ -34,9 +34,6 @@ public final class CorsConfig {
      */
     private static final long MAX_AGE = 3600L;
 
-    @Value("${api.prefix}")
-    private String apiPrefix;
-
     @Bean
     private CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -46,7 +43,7 @@ public final class CorsConfig {
         configuration.setAllowedHeaders(Arrays.asList("Content-Type", "Accept", "X-Requested-With", "remember-me", "authorization", "X-XSRF-TOKEN"));
         configuration.setAllowCredentials(Boolean.TRUE);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/" + apiPrefix + "/**", configuration);
+        source.registerCorsConfiguration("/api/**", configuration);
         return source;
     }
 

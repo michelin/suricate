@@ -29,7 +29,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/${api.prefix}/widgets")
+@RequestMapping("/api/widgets")
 public class WidgetController {
 
     private WidgetService widgetService;

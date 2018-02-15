@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 
 @RestController
-@RequestMapping("/${api.prefix}/asset")
+@RequestMapping("/api/asset")
 public class AssetController {
 
     /**

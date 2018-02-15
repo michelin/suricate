@@ -37,9 +37,6 @@ import org.springframework.web.cors.CorsUtils;
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    @Value("${api.prefix}")
-    protected String apiPrefix;
-
     private final TokenService tokenService;
     private final RoleHierarchyImpl roleHierarchy;
     private final ApiAuthenticationFailureHandler apiAuthenticationFailureHandler;
@@ -86,8 +83,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .and()
                 .authorizeRequests()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                .antMatchers("/"+apiPrefix+"/login/**").permitAll()
-                .antMatchers("/"+apiPrefix+"/**").authenticated()
+                .antMatchers("/api/**").authenticated()
+                .antMatchers("/api/login/**").permitAll()
             .and()
                 .apply(jwtConfigurerAdapter());
     }

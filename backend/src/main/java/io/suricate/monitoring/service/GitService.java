@@ -52,10 +52,10 @@ public class GitService {
     @Value("${gitlab.widget.repo.branch}")
     private String gitBranch;
 
-    @Value("${gitlab.widget.repo.file:}")
+    @Value("${widget.local.folder}")
     private String repoGit;
 
-    @Value("${gitlab.widget.update:true}")
+    @Value("${gitlab.widget.update}")
     private boolean updateEnable;
 
     private final WidgetService widgetService;
