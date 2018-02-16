@@ -8,6 +8,9 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 ### Global information
+
+:construction_worker: **Work in progress... First release in plan for June 2018 but feel free to help** :construction_worker:
+
 #### Contribution :beers:
 Everyone is welcome to contribute to Suricate. You have several possibilities:
 * Report a [bug](https://github.com/suricate-io/suricate/issues/new?template=bug.md)
