@@ -50,14 +50,10 @@ import java.security.KeyStore;
 @SpringBootApplication
 @EnableJpaAuditing
 @EnableJpaRepositories
-@EnableEncryptableProperties
 @EnableAsync
 @EnableCaching
 @EnableConfigurationProperties({ApplicationProperties.class})
 public class BackendApplication {
-
-    @Value("${jasypt.encryptor.password}")
-    private String encryptorPassword;
 
     /**
      * Application properties
@@ -77,26 +73,6 @@ public class BackendApplication {
      */
     public static void main(String[] args) {
         SpringApplication.run(BackendApplication.class, args);
-    }
-
-    /**
-     * Application Role hierarchy for security management
-     * @return
-     */
-    @Bean
-    protected RoleHierarchyImpl roleHierarchy() {
-        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
-        roleHierarchy.setHierarchy("ROLE_ADMIN > ROLE_USER");
-        return roleHierarchy;
-    }
-
-    /**
-     * Default mustache factory
-     * @return
-     */
-    @Bean
-    protected MustacheFactory mustacheFactory() {
-        return new DefaultMustacheFactory();
     }
 
     /**
@@ -133,43 +109,4 @@ public class BackendApplication {
         // Update widgets
         gitService.updateWidgetFromGit();
     }
-
-    /**
-     * Method used to configure the default string encryptor without salt
-     * @return the default encryptor
-     */
-    @Bean(name = "noSaltEncrypter")
-    public StringEncryptor stringEncryptor() {
-        return getPooledPBEStringEncryptor(encryptorPassword, "org.jasypt.salt.ZeroSaltGenerator");
-    }
-
-    /**
-     * Default string encryptor
-     * @return the string encryptor
-     */
-    @Bean("jasyptStringEncryptor")
-    public StringEncryptor defaultStringEncryptor() {
-        return getPooledPBEStringEncryptor(encryptorPassword, "org.jasypt.salt.RandomSaltGenerator");
-    }
-
-    /**
-     * Method used to create a String encryptor
-     * @param encryptorPassword encryptor password
-     * @param saltGeneratorClassName salt class name
-     * @return the encryptor
-     */
-    private static PooledPBEStringEncryptor getPooledPBEStringEncryptor(String encryptorPassword, String saltGeneratorClassName) {
-        PooledPBEStringEncryptor encryptor = new PooledPBEStringEncryptor();
-        SimpleStringPBEConfig config = new SimpleStringPBEConfig();
-        config.setPassword(encryptorPassword);
-        config.setAlgorithm("PBEWithMD5AndDES");
-        config.setKeyObtentionIterations("1000");
-        config.setPoolSize("1");
-        config.setProviderName("SunJCE");
-        config.setSaltGeneratorClassName(saltGeneratorClassName);
-        config.setStringOutputType("hexadecimal");
-        encryptor.setConfig(config);
-        return encryptor;
-    }
-
 }

@@ -17,13 +17,12 @@
 package io.suricate.monitoring.config.security;
 
 import io.suricate.monitoring.config.ApplicationProperties;
-import io.suricate.monitoring.config.security.token.jwt.JWTConfigurer;
+import io.suricate.monitoring.config.security.jwt.JWTConfigurer;
 import io.suricate.monitoring.controllers.api.error.ApiAuthenticationFailureHandler;
 import io.suricate.monitoring.service.token.TokenService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
@@ -47,13 +46,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(SecurityConfiguration.class);
 
     private final TokenService tokenService;
-    private final RoleHierarchyImpl roleHierarchy;
     private final ApiAuthenticationFailureHandler apiAuthenticationFailureHandler;
     private final ApplicationProperties applicationProperties;
 
     @Autowired
-    public SecurityConfiguration(RoleHierarchyImpl roleHierarchy, ApiAuthenticationFailureHandler apiAuthenticationFailureHandler, TokenService tokenService, ApplicationProperties applicationProperties) {
-        this.roleHierarchy = roleHierarchy;
+    public SecurityConfiguration(ApiAuthenticationFailureHandler apiAuthenticationFailureHandler, TokenService tokenService, ApplicationProperties applicationProperties) {
         this.apiAuthenticationFailureHandler = apiAuthenticationFailureHandler;
         this.tokenService = tokenService;
         this.applicationProperties = applicationProperties;
@@ -73,9 +70,20 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
      */
     private DefaultWebSecurityExpressionHandler defaultWebSecurityExpressionHandler() {
         DefaultWebSecurityExpressionHandler defaultWebSecurityExpressionHandler = new DefaultWebSecurityExpressionHandler();
-        defaultWebSecurityExpressionHandler.setRoleHierarchy(roleHierarchy);
+        defaultWebSecurityExpressionHandler.setRoleHierarchy(roleHierarchy());
 
         return defaultWebSecurityExpressionHandler;
+    }
+
+    /**
+     * Application Role hierarchy for security management
+     * @return
+     */
+    @Bean
+    protected RoleHierarchyImpl roleHierarchy() {
+        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
+        roleHierarchy.setHierarchy("ROLE_ADMIN > ROLE_USER");
+        return roleHierarchy;
     }
 
     /**

@@ -17,8 +17,8 @@
 package io.suricate.monitoring.controllers.api;
 
 import io.suricate.monitoring.config.security.ConnectedUser;
-import io.suricate.monitoring.config.security.token.jwt.JWTConfigurer;
-import io.suricate.monitoring.config.security.token.jwt.JWTFilter;
+import io.suricate.monitoring.config.security.jwt.JWTConfigurer;
+import io.suricate.monitoring.config.security.jwt.JWTFilter;
 import io.suricate.monitoring.model.dto.token.JWTTokenDto;
 import io.suricate.monitoring.model.dto.user.CredentialsDto;
 import io.suricate.monitoring.service.UserService;

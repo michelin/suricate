@@ -24,7 +24,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ConfigurationProperties(prefix = "proxy")
-public class ProxyConfig {
+public class ProxyConfiguration {
 
     /**
      * Proxy host

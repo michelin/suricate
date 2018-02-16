@@ -1,4 +1,4 @@
-package io.suricate.monitoring.config.security.token.jwt;
+package io.suricate.monitoring.config.security.jwt;
 
 import io.suricate.monitoring.service.token.TokenService;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
