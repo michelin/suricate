@@ -23,6 +23,6 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 /**
  * Repository used to manage Asset data
  */
-public interface AssetRepository  extends  JpaRepository<Asset, Long>, JpaSpecificationExecutor {
+public interface AssetRepository  extends  JpaRepository<Asset, Long> {
 
 }

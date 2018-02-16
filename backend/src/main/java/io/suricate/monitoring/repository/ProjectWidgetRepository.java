@@ -29,7 +29,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.Date;
 import java.util.List;
 
-public interface ProjectWidgetRepository extends JpaRepository<ProjectWidget, Long>, JpaSpecificationExecutor {
+public interface ProjectWidgetRepository extends JpaRepository<ProjectWidget, Long> {
 
     /**
      * Method used to get all nashorn request object from database

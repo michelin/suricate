@@ -24,7 +24,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface ProjectRepository extends JpaRepository<Project, Long>, JpaSpecificationExecutor {
+public interface ProjectRepository extends JpaRepository<Project, Long> {
 
 	List<Project> findByUsers_Id(Long id);
 

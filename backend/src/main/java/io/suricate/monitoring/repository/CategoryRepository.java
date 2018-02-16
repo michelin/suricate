@@ -23,7 +23,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import javax.annotation.Generated;
 import java.util.List;
 
-public interface CategoryRepository extends JpaRepository<Category, Long>, JpaSpecificationExecutor {
+public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     /**
      * Method used to find category by technical name

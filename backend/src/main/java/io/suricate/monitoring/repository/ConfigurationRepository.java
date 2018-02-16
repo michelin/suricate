@@ -25,7 +25,7 @@ import org.springframework.data.jpa.repository.Query;
 import javax.annotation.Generated;
 import java.util.List;
 
-public interface ConfigurationRepository extends JpaRepository<Configuration, String>, JpaSpecificationExecutor {
+public interface ConfigurationRepository extends JpaRepository<Configuration, String> {
 
     /**
      * Method used to get all config linked to widget scripts

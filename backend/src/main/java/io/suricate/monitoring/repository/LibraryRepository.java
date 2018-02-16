@@ -28,10 +28,7 @@ import org.springframework.data.repository.query.Param;
 import javax.annotation.Generated;
 import java.util.List;
 
-public interface LibraryRepository
-		extends
-			JpaRepository<Library, Long>,
-			JpaSpecificationExecutor {
+public interface LibraryRepository extends JpaRepository<Library, Long> {
 
 	/**
 	 * Method used to update library

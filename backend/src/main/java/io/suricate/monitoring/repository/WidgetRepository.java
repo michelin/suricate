@@ -27,10 +27,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface WidgetRepository
-		extends
-			JpaRepository<Widget, Long>,
-			JpaSpecificationExecutor {
+public interface WidgetRepository extends JpaRepository<Widget, Long> {
 
 	Widget findByTechnicalName(String technicalname);
 
