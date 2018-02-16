@@ -16,8 +16,8 @@
 
 package io.suricate.monitoring.service;
 
-import io.suricate.monitoring.model.entity.Project;
-import io.suricate.monitoring.model.entity.ProjectWidget;
+import io.suricate.monitoring.model.entity.project.Project;
+import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
 import io.suricate.monitoring.model.dto.UpdateEvent;
 import io.suricate.monitoring.model.dto.project.ProjectResponse;

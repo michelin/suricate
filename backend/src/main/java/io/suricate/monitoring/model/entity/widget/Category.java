@@ -14,9 +14,12 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.entity;
+package io.suricate.monitoring.model.entity.widget;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.suricate.monitoring.model.entity.AbstractAuditingEntity;
+import io.suricate.monitoring.model.entity.Asset;
+import io.suricate.monitoring.model.entity.widget.Widget;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 

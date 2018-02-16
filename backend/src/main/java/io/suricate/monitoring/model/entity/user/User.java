@@ -17,7 +17,7 @@
 package io.suricate.monitoring.model.entity.user;
 
 import io.suricate.monitoring.model.entity.AbstractEntity;
-import io.suricate.monitoring.model.entity.Project;
+import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.enums.AuthenticationMethod;
 
 import javax.persistence.*;

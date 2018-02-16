@@ -14,8 +14,10 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.entity;
+package io.suricate.monitoring.model.entity.project;
 
+import io.suricate.monitoring.model.entity.AbstractAuditingEntity;
+import io.suricate.monitoring.model.entity.widget.Widget;
 import io.suricate.monitoring.model.enums.WidgetState;
 
 import javax.persistence.*;

@@ -19,7 +19,7 @@
 
 package io.suricate.monitoring.repository;
 
-import io.suricate.monitoring.model.entity.WidgetParam;
+import io.suricate.monitoring.model.entity.widget.WidgetParam;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface WidgetParamRepository extends JpaRepository<WidgetParam, Long> {

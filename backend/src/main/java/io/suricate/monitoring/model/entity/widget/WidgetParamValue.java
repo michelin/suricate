@@ -17,7 +17,9 @@
  *
  */
 
-package io.suricate.monitoring.model.entity;
+package io.suricate.monitoring.model.entity.widget;
+
+import io.suricate.monitoring.model.entity.AbstractAuditingEntity;
 
 import javax.persistence.*;
 

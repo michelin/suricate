@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.service.search;
 
-import io.suricate.monitoring.model.entity.Widget;
+import io.suricate.monitoring.model.entity.widget.Widget;
 import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.lucene.search.Query;

@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.controllers.api;
 
-import io.suricate.monitoring.model.entity.Category;
+import io.suricate.monitoring.model.entity.widget.Category;
 import io.suricate.monitoring.model.dto.widget.WidgetResponse;
 import io.suricate.monitoring.service.WidgetService;
 import org.springframework.beans.factory.annotation.Autowired;

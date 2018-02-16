@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.repository;
 
-import io.suricate.monitoring.model.entity.ProjectWidget;
+import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
 import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.model.dto.nashorn.NashornRequest;

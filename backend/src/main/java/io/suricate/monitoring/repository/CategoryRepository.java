@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.repository;
 
-import io.suricate.monitoring.model.entity.Category;
+import io.suricate.monitoring.model.entity.widget.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

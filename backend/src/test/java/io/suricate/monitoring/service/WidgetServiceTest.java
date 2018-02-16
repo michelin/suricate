@@ -1,6 +1,9 @@
 package io.suricate.monitoring.service;
 
 import io.suricate.monitoring.model.entity.*;
+import io.suricate.monitoring.model.entity.project.ProjectWidget;
+import io.suricate.monitoring.model.entity.widget.Category;
+import io.suricate.monitoring.model.entity.widget.Widget;
 import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
 import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.repository.*;

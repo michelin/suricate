@@ -17,8 +17,9 @@
  *
  */
 
-package io.suricate.monitoring.model.entity;
+package io.suricate.monitoring.model.entity.widget;
 
+import io.suricate.monitoring.model.entity.AbstractAuditingEntity;
 import io.suricate.monitoring.model.enums.WidgetVariableType;
 import org.hibernate.annotations.Type;
 

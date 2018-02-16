@@ -16,6 +16,8 @@
 
 package io.suricate.monitoring.model.entity;
 
+import io.suricate.monitoring.model.entity.widget.Widget;
+
 import javax.persistence.*;
 import java.util.List;
 

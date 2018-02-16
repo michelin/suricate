@@ -1,6 +1,6 @@
 package io.suricate.monitoring.service;
 
-import io.suricate.monitoring.model.entity.ProjectWidget;
+import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
 import io.suricate.monitoring.repository.ProjectRepository;
 import io.suricate.monitoring.repository.ProjectWidgetRepository;

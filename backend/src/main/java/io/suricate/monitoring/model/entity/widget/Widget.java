@@ -14,8 +14,12 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.entity;
+package io.suricate.monitoring.model.entity.widget;
 
+import io.suricate.monitoring.model.entity.AbstractAuditingEntity;
+import io.suricate.monitoring.model.entity.Asset;
+import io.suricate.monitoring.model.entity.Library;
+import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
 import org.hibernate.search.annotations.*;
 

@@ -17,7 +17,7 @@
 package io.suricate.monitoring.repository;
 
 import io.suricate.monitoring.model.entity.Asset;
-import io.suricate.monitoring.model.entity.Widget;
+import io.suricate.monitoring.model.entity.widget.Widget;
 import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
