@@ -25,7 +25,7 @@ public abstract class AbstractAuditingEntity<ID> extends AbstractEntity<ID> {
 
     /** Created by attribute */
     @CreatedBy
-    @Column(name = "created_by")
+    @Column(name = "created_by", nullable = false, updatable = false)
     private String createdBy;
 
     /** Created date attribute */

@@ -210,7 +210,6 @@ public final class WidgetUtils {
     public static Asset readAsset(File file) throws IOException {
         Asset asset = new Asset();
         asset.setContent(FileUtils.readFileToByteArray(file));
-        asset.setLastUpdateDate(new Date(file.lastModified()));
         try {
             MagicMatch match = Magic.getMagicMatch(asset.getContent());
             asset.setContentType(match.getMimeType());

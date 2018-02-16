@@ -44,9 +44,7 @@ public class Role extends AbstractEntity<Long> {
     private List<User> users;
 
 
-
     public Role() {}
-
 
 
 

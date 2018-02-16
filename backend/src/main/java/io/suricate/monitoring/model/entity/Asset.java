@@ -42,9 +42,6 @@ public class Asset extends AbstractAuditingEntity<Long> {
     @Column
     private long size;
 
-    @LastModifiedDate
-    private Date lastUpdateDate;
-
     public Asset() {}
 
     @Override
@@ -75,12 +72,5 @@ public class Asset extends AbstractAuditingEntity<Long> {
     }
     public void setSize(long size) {
         this.size = size;
-    }
-
-    public Date getLastUpdateDate() {
-        return lastUpdateDate;
-    }
-    public void setLastUpdateDate(Date lastUpdateDate) {
-        this.lastUpdateDate = lastUpdateDate;
     }
 }

@@ -50,13 +50,13 @@ public class AssetController {
         Asset data = assetRepository.findOne(IdUtils.decrypt(token));
         if (data == null){
             return ResponseEntity.notFound().build();
-        } else if (webRequest.checkNotModified(data.getLastUpdateDate().getTime())){
+        } else if (webRequest.checkNotModified(data.getLastModifiedDate().getTime())){
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
         }
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(data.getContentType()))
                 .contentLength(data.getSize())
-                .lastModified(data.getLastUpdateDate().getTime())
+                .lastModified(data.getLastModifiedDate().getTime())
                 .cacheControl(CacheControl.noCache())
                 .body(data.getContent());
     }
