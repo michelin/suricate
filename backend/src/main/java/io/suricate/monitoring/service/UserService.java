@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
@@ -45,11 +46,14 @@ public class UserService {
     /** Class logger */
     private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
 
-    @Autowired
     private UserRepository userRepository;
+    private RoleRepository roleRepository;
 
     @Autowired
-    private RoleRepository roleRepository;
+    public UserService(UserRepository userRepository, RoleRepository roleRepository) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+    }
 
     @Transactional
     public Optional<User> initUser(ConnectedUser connectedUser){
@@ -84,22 +88,20 @@ public class UserService {
         return Optional.of(user);
     }
 
-    public List<UserDto> getAll() {
-        List<User> users = userRepository.findAll();
-        return users.stream().map(user -> new UserDto(user)).collect(Collectors.toList());
+    public List<User> getAll() {
+        return userRepository.findAll();
     }
 
-    public UserDto getOne(Long userId) {
+    public Optional<User> getOne(Long userId) {
         User user = userRepository.findOne(userId);
-        return new UserDto(user);
+        if(user == null) {
+            return Optional.empty();
+        }
+        return Optional.of(user);
     }
 
     public Optional<User> getByUsername(String username) {
         return userRepository.findByUsername(username);
-    }
-
-    public Long getIdByUsername(String username) {
-        return userRepository.getIdByUsername(username);
     }
 
     @Transactional

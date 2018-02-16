@@ -17,6 +17,7 @@
 package io.suricate.monitoring.controllers.api.error.exception;
 
 
+import io.suricate.monitoring.model.dto.error.ApiErrorDto;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
 
 public class ApiException extends RuntimeException{
@@ -24,7 +25,7 @@ public class ApiException extends RuntimeException{
     /**
      * API error
      */
-    private final ApiErrorEnum error;
+    private final ApiErrorDto error;
 
     /**
      * Default constructor using field
@@ -32,14 +33,14 @@ public class ApiException extends RuntimeException{
      */
     public ApiException(ApiErrorEnum error) {
         super(error.getMessage());
-        this.error = error;
+        this.error = new ApiErrorDto(error);
     }
 
     /**
      * Method used to retrieve the error
      * @return the APi error
      */
-    public ApiErrorEnum getError() {
+    public ApiErrorDto getError() {
         return error;
     }
 }

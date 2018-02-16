@@ -26,6 +26,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/user")
@@ -45,7 +47,8 @@ public class UserController {
     @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<UserDto> getAll() {
-        return userService.getAll();
+        List<User> users =  userService.getAll();
+        return users.stream().map(user -> new UserDto(user)).collect(Collectors.toList());
     }
 
     /**
@@ -55,12 +58,12 @@ public class UserController {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
     public UserDto getOne(@PathVariable("id") Long id) {
-        UserDto ret = userService.getOne(id);
-        if (ret == null){
+        Optional<User> user = userService.getOne(id);
+        if (!user.isPresent()){
             throw new ApiException(ApiErrorEnum.USER_NOT_FOUND);
         }
 
-        return ret;
+        return new UserDto(user.get());
     }
 
     /**
@@ -70,18 +73,6 @@ public class UserController {
     @RequestMapping(value = "/current", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
     public UserDto getOne(@RequestAttribute User user) {
-        UserDto ret = userService.getOne(user.getId());
-        if (ret == null){
-            throw new ApiException(ApiErrorEnum.USER_NOT_FOUND);
-        }
-
-        return ret;
-    }
-
-    @RequestMapping(value = "/update", method = RequestMethod.PATCH)
-    @PreAuthorize("hasRole('ROLE_USER')")
-    public User update(@RequestAttribute User user, @RequestBody User userToUpdate) {
         return null;
     }
-
 }

@@ -105,8 +105,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .and()
                 .authorizeRequests()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                .antMatchers("/api/**").authenticated()
                 .antMatchers("/api/login/**").permitAll()
+                .antMatchers("/api/**").authenticated()
             .and()
                 .apply(jwtConfigurerAdapter());
     }
