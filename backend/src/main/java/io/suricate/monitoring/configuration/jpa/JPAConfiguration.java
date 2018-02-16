@@ -6,11 +6,18 @@ import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
+/**
+ * JPA configurations
+ */
 @Configuration
 @EnableJpaAuditing(auditorAwareRef = "auditorProvider")
 public class JPAConfiguration{
 
-    /** Use for retrieve the user to Audit */
+    /**
+     * Auditor configuration
+     *
+     * @return The auditor configuration
+     */
     @Bean
     public AuditorAware<String> auditorProvider() {
         return new JPAAuditorAwareImpl();
