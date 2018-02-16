@@ -16,14 +16,14 @@
 
 package io.suricate.monitoring.service;
 
-import io.suricate.monitoring.config.security.ConnectedUser;
+import io.suricate.monitoring.configuration.security.ConnectedUser;
 import io.suricate.monitoring.controllers.api.error.exception.ApiException;
 import io.suricate.monitoring.model.dto.user.UserDto;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.model.enums.AuthenticationMethod;
 import io.suricate.monitoring.model.enums.UserRoleEnum;
-import io.suricate.monitoring.model.user.Role;
-import io.suricate.monitoring.model.user.User;
+import io.suricate.monitoring.model.entity.user.Role;
+import io.suricate.monitoring.model.entity.user.User;
 import io.suricate.monitoring.repository.RoleRepository;
 import io.suricate.monitoring.repository.UserRepository;
 import org.slf4j.Logger;

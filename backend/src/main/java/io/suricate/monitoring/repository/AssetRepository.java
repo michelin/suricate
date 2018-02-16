@@ -16,9 +16,8 @@
 
 package io.suricate.monitoring.repository;
 
-import io.suricate.monitoring.model.Asset;
+import io.suricate.monitoring.model.entity.Asset;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 /**
  * Repository used to manage Asset data

@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.service;
 
-import io.suricate.monitoring.model.Configuration;
+import io.suricate.monitoring.model.entity.Configuration;
 import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
 import io.suricate.monitoring.model.dto.nashorn.NashornResponse;

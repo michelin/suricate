@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.service;
 
-import io.suricate.monitoring.model.Library;
+import io.suricate.monitoring.model.entity.Library;
 import io.suricate.monitoring.model.dto.widget.WidgetResponse;
 import io.suricate.monitoring.repository.AssetRepository;
 import io.suricate.monitoring.repository.LibraryRepository;

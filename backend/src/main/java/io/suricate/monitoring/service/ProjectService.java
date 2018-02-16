@@ -16,14 +16,14 @@
 
 package io.suricate.monitoring.service;
 
-import io.suricate.monitoring.model.Project;
-import io.suricate.monitoring.model.ProjectWidget;
+import io.suricate.monitoring.model.entity.Project;
+import io.suricate.monitoring.model.entity.ProjectWidget;
 import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
 import io.suricate.monitoring.model.dto.UpdateEvent;
 import io.suricate.monitoring.model.dto.project.ProjectResponse;
 import io.suricate.monitoring.model.dto.project.ProjectWidgetRequest;
 import io.suricate.monitoring.model.dto.update.UpdateType;
-import io.suricate.monitoring.model.user.User;
+import io.suricate.monitoring.model.entity.user.User;
 import io.suricate.monitoring.repository.ProjectRepository;
 import io.suricate.monitoring.repository.ProjectWidgetRepository;
 import io.suricate.monitoring.repository.WidgetRepository;

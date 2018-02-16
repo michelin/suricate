@@ -16,10 +16,9 @@
 
 package io.suricate.monitoring.model.dto.user;
 
-import io.suricate.monitoring.config.security.ConnectedUser;
 import io.suricate.monitoring.model.dto.AbstractDto;
-import io.suricate.monitoring.model.user.Role;
-import io.suricate.monitoring.model.user.User;
+import io.suricate.monitoring.model.entity.user.Role;
+import io.suricate.monitoring.model.entity.user.User;
 
 import java.util.List;
 

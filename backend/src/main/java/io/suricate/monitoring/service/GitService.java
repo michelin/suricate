@@ -16,9 +16,9 @@
 
 package io.suricate.monitoring.service;
 
-import io.suricate.monitoring.config.ApplicationProperties;
-import io.suricate.monitoring.model.Category;
-import io.suricate.monitoring.model.Library;
+import io.suricate.monitoring.configuration.ApplicationProperties;
+import io.suricate.monitoring.model.entity.Category;
+import io.suricate.monitoring.model.entity.Library;
 import io.suricate.monitoring.utils.WidgetUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -27,7 +27,6 @@ import org.eclipse.jgit.api.Git;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -143,7 +142,7 @@ public class GitService {
                 File libraryFolder = new File(folder.getAbsoluteFile().getAbsolutePath() + SystemUtils.FILE_SEPARATOR + "libraries"+ SystemUtils.FILE_SEPARATOR);
                 List<Library> libraries = WidgetUtils.parseLibraryFolder(libraryFolder);
                 libraries = libraryService.updateLibraryInDatabase(libraries);
-                Map<String, Library> mapLib = libraries.stream().collect(Collectors.toMap(item -> ((Library)item).getExplicitName(), item -> item));
+                Map<String, Library> mapLib = libraries.stream().collect(Collectors.toMap(item -> ((Library)item).getTechnicalName(), item -> item));
 
                 // Parse folder
                 File widgetFolder = new File(folder.getAbsoluteFile().getAbsolutePath() + SystemUtils.FILE_SEPARATOR + "content"+ SystemUtils.FILE_SEPARATOR);

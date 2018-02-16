@@ -16,10 +16,10 @@
 
 package io.suricate.monitoring.controllers.api;
 
-import io.suricate.monitoring.model.ProjectWidget;
+import io.suricate.monitoring.model.entity.ProjectWidget;
 import io.suricate.monitoring.model.dto.project.ProjectResponse;
 import io.suricate.monitoring.model.dto.project.ProjectWidgetRequest;
-import io.suricate.monitoring.model.user.User;
+import io.suricate.monitoring.model.entity.user.User;
 import io.suricate.monitoring.service.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;

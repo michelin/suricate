@@ -1,6 +1,6 @@
 package io.suricate.monitoring.service;
 
-import io.suricate.monitoring.model.*;
+import io.suricate.monitoring.model.entity.*;
 import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
 import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.repository.*;
@@ -337,7 +337,7 @@ public class WidgetServiceTest {
         asset.setSize(10);
         widget.setImage(asset);
 
-        Map<String, Library> libraryMap = libs.stream().collect(Collectors.toMap(item -> ((Library)item).getExplicitName(), item -> item));
+        Map<String, Library> libraryMap = libs.stream().collect(Collectors.toMap(item -> ((Library)item).getTechnicalName(), item -> item));
         widgetService.addOrUpdateWidgets(category,Arrays.asList(widget), libraryMap);
 
         assertThat(categoryRepository.count()).isEqualTo(1);

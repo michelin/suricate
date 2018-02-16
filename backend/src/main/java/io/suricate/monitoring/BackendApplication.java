@@ -16,43 +16,26 @@
 
 package io.suricate.monitoring;
 
-import com.github.mustachejava.DefaultMustacheFactory;
-import com.github.mustachejava.MustacheFactory;
-import io.suricate.monitoring.config.ApplicationProperties;
+import io.suricate.monitoring.configuration.ApplicationProperties;
 import io.suricate.monitoring.service.GitService;
-import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties;
 import org.apache.commons.lang3.StringUtils;
-import org.jasypt.encryption.StringEncryptor;
-import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
-import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.context.annotation.Bean;
-import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableAsync;
-import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
 import javax.annotation.PostConstruct;
-import javax.sql.DataSource;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.security.KeyStore;
 
 @SpringBootApplication
-@EnableJpaAuditing
-@EnableJpaRepositories
 @EnableAsync
 @EnableCaching
 @EnableConfigurationProperties({ApplicationProperties.class})
+@EnableJpaRepositories
 public class BackendApplication {
 
     /**

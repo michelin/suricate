@@ -1,9 +1,9 @@
 package io.suricate.monitoring.service.token;
 
 import io.jsonwebtoken.*;
-import io.suricate.monitoring.config.ApplicationProperties;
-import io.suricate.monitoring.config.security.ConnectedUser;
-import io.suricate.monitoring.model.user.User;
+import io.suricate.monitoring.configuration.ApplicationProperties;
+import io.suricate.monitoring.configuration.security.ConnectedUser;
+import io.suricate.monitoring.model.entity.user.User;
 import io.suricate.monitoring.service.UserService;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;

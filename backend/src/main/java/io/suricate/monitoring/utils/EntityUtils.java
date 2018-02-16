@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.utils;
 
-import io.suricate.monitoring.model.AbstractModel;
+import io.suricate.monitoring.model.entity.AbstractEntity;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.proxy.LazyInitializer;
 
@@ -28,7 +28,7 @@ public final class EntityUtils {
      * @param <T> the return type
      * @return the entity Id
      */
-    public static <T> T getProxiedId(AbstractModel entity) {
+    public static <T> T getProxiedId(AbstractEntity entity) {
         if (entity instanceof HibernateProxy) {
             LazyInitializer lazyInitializer = ((HibernateProxy) entity).getHibernateLazyInitializer();
             if (lazyInitializer.isUninitialized()) {

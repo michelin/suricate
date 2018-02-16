@@ -19,7 +19,10 @@ package io.suricate.monitoring.utils;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import io.suricate.monitoring.model.*;
+import io.suricate.monitoring.model.entity.Asset;
+import io.suricate.monitoring.model.entity.Category;
+import io.suricate.monitoring.model.entity.Library;
+import io.suricate.monitoring.model.entity.Widget;
 import net.sf.jmimemagic.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -124,7 +127,7 @@ public final class WidgetUtils {
             }
         }
         // Avoid not well formed category
-        if (StringUtils.isBlank(category.getExplicitName())){
+        if (StringUtils.isBlank(category.getName())){
             LOGGER.error("Category {} invalid it's name must not be empty",folderCategory.getPath());
             return null;
         }
