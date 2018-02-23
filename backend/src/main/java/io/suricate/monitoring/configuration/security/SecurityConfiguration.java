@@ -17,9 +17,7 @@
 package io.suricate.monitoring.configuration.security;
 
 import io.suricate.monitoring.configuration.ApplicationProperties;
-import io.suricate.monitoring.configuration.security.jwt.JWTConfigurer;
 import io.suricate.monitoring.controllers.api.error.ApiAuthenticationFailureHandler;
-import io.suricate.monitoring.service.token.TokenService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,14 +43,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SecurityConfiguration.class);
 
-    private final TokenService tokenService;
     private final ApiAuthenticationFailureHandler apiAuthenticationFailureHandler;
     private final ApplicationProperties applicationProperties;
 
     @Autowired
-    public SecurityConfiguration(ApiAuthenticationFailureHandler apiAuthenticationFailureHandler, TokenService tokenService, ApplicationProperties applicationProperties) {
+    public SecurityConfiguration(ApiAuthenticationFailureHandler apiAuthenticationFailureHandler, ApplicationProperties applicationProperties) {
         this.apiAuthenticationFailureHandler = apiAuthenticationFailureHandler;
-        this.tokenService = tokenService;
         this.applicationProperties = applicationProperties;
     }
 
@@ -60,7 +56,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
      * Global Security
      */
     @Override
-    public void configure(WebSecurity web) throws Exception {
+    public void configure(WebSecurity web) {
         web
             .expressionHandler(defaultWebSecurityExpressionHandler());
     }
@@ -106,13 +102,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 .antMatchers("/api/login/**").permitAll()
-                .antMatchers("/api/**").authenticated()
-            .and()
-                .apply(jwtConfigurerAdapter());
-    }
-
-    private JWTConfigurer jwtConfigurerAdapter() {
-        return new JWTConfigurer(tokenService);
+                .antMatchers("/api/**").authenticated();
     }
 
     @Bean

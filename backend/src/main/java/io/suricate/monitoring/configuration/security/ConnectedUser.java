@@ -53,6 +53,15 @@ public class ConnectedUser extends User {
         this(username, userData, Collections.emptyList(), null, ldap);
     }
 
+    public ConnectedUser(io.suricate.monitoring.model.entity.user.User user, Collection<? extends GrantedAuthority> authorities) {
+        super(user.getUsername(), user.getPassword(), true, true, true, true, authorities);
+
+        this.id = user.getId();
+        this.firstname = user.getFirstname();
+        this.lastname = user.getLastname();
+        this.mail = user.getEmail();
+    }
+
     public Long getId() {
         return id;
     }

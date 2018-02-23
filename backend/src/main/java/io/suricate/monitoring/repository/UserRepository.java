@@ -33,6 +33,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 */
     Optional<User> findByUsername(String username);
 
+	Optional<User> findByUsernameIgnoreCase(String username);
+
 	/**
 	 * Methos used to get id by username
 	 * @param username the user name to find

@@ -66,6 +66,7 @@ public class UserController {
         return new UserDto(user.get());
     }
 
+
     /**
      * Get current user
      * @return The user
