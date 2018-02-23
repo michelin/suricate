@@ -15,6 +15,8 @@ public class JwtAccessTokenConverterConfiguration extends JwtAccessTokenConverte
     /**
      * Use this method if you want to add some extra informations on the token
      *
+     * Hidden data have to be inserted inside authentication
+     *
      * @param accessToken The token
      * @param authentication the authentication
      */
