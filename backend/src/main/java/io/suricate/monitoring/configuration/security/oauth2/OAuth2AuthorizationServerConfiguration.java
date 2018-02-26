@@ -30,6 +30,7 @@ public class OAuth2AuthorizationServerConfiguration extends AuthorizationServerC
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
         endpoints
+            .pathMapping("/oauth/token", "/api/oauth/token")
             .tokenStore(tokenStore)
             .accessTokenConverter(jwtAccessTokenConverter)
             .authenticationManager(authenticationManager);

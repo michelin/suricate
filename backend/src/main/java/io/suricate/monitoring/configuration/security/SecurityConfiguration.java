@@ -23,6 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -58,7 +59,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity web) {
         web
-            .expressionHandler(defaultWebSecurityExpressionHandler());
+            .expressionHandler(defaultWebSecurityExpressionHandler())
+            .ignoring()
+                .antMatchers(HttpMethod.OPTIONS);
     }
 
     /**
@@ -101,7 +104,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             .and()
                 .authorizeRequests()
                 .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                .antMatchers("/api/login/**").permitAll()
+                .antMatchers("/api/oauth/token").permitAll()
                 .antMatchers("/api/**").authenticated();
     }
 
@@ -114,5 +117,4 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         }
         return new CorsFilter(source);
     }
-
 }

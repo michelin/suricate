@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {RoleEnum} from './enums/RoleEnum';
+import {RoleEnum} from '../enums/RoleEnum';
 
 export class Role {
   id: number;

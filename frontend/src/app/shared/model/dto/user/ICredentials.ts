@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-export interface Login {
+export interface ICredentials {
   username: string;
   password: string;
 }

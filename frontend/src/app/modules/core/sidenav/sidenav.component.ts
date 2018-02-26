@@ -16,7 +16,7 @@
 
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import {Router} from '@angular/router';
-import {User} from '../../../shared/model/dto/User';
+import {User} from '../../../shared/model/dto/user/User';
 import {Project} from '../../../shared/model/dto/Project';
 import {DashboardService} from '../../dashboard/dashboard.service';
 import {UserService} from '../../user/user.service';

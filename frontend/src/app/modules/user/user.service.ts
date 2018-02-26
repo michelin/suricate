@@ -16,7 +16,7 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { User } from '../../shared/model/dto/User';
+import { User } from '../../shared/model/dto/user/User';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
@@ -52,11 +52,8 @@ export class UserService extends AbstractHttpService {
   }
 
   getConnectedUser(): Observable<User> {
-    let headers = new HttpHeaders();
-    headers = headers.append('Content-Type', 'application/json');
-
     return this.http
-        .get<User>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.USER_URL}/current`, {headers: headers})
+        .get<User>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.USER_URL}/current`)
         .map(response => AbstractHttpService.extractData(response))
         .catch((error: any) => AbstractHttpService.handleErrorObservable(error));
   }

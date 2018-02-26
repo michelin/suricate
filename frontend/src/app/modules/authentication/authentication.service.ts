@@ -16,13 +16,13 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import {Observable} from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/share';
+import { map} from 'rxjs/operators';
 
-import { Login } from '../../shared/model/dto/Login';
+import { ICredentials } from '../../shared/model/dto/user/ICredentials';
 import {AbstractHttpService} from '../../shared/services/abstract-http.service';
+import {AuthenticationResponse} from '../../shared/model/dto/user/AuthenticationResponse';
 
 @Injectable()
 export class AuthenticationService extends AbstractHttpService {
@@ -31,7 +31,6 @@ export class AuthenticationService extends AbstractHttpService {
   constructor(private http: HttpClient) {
     super();
   }
-
 
   static getToken(): String {
     const token = localStorage.getItem('token');
@@ -44,27 +43,6 @@ export class AuthenticationService extends AbstractHttpService {
    */
   static hasToken(): boolean {
     return !!localStorage.getItem('token');
-  }
-
-
-  /**
-   * Log the user by sending a request to the backend
-   */
-  login(user: Login): Observable<any> {
-    let headers = new HttpHeaders();
-    headers = headers.append('Authorization', 'Basic ' + btoa(user.username + ':' + user.password));
-    headers = headers.append('Content-Type', 'application/x-www-form-urlencoded');
-
-    return this.http
-      .post<any>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.LOGIN_URL}`, null, {headers: headers})
-      .map(response => {
-        if (response && response.token) {
-          localStorage.setItem('token', response.token);
-          this.loggedIn.next(true);
-
-          return response;
-        }
-      });
   }
 
   /**
@@ -80,5 +58,34 @@ export class AuthenticationService extends AbstractHttpService {
     // clear token remove user from local storage to log user out
     localStorage.removeItem('token');
     this.loggedIn.next(false);
+  }
+
+  /**
+   * Log the user by sending a request to the backend
+   */
+  authenticate(credentials: ICredentials): Observable<AuthenticationResponse> {
+    let headers = new HttpHeaders();
+    headers = headers.append('Content-Type', 'application/x-www-form-urlencoded');
+    headers = headers.append('Authorization', `Basic ${btoa('suricateAngular:suricateAngularSecret')}`);
+
+    const params = new URLSearchParams();
+    params.append('grant_type', 'password');
+    params.append('username', credentials.username);
+    params.append('password', credentials.password);
+
+    const url = `${AbstractHttpService.BASE_URL}/${AbstractHttpService.AUTHENTICATE_URL}`;
+
+    return this.http
+      .post<AuthenticationResponse>(url, params.toString(), {headers: headers})
+      .pipe(
+        map(authenticationResponse => {
+          if (authenticationResponse && authenticationResponse.access_token) {
+            localStorage.setItem('token', authenticationResponse.access_token);
+            this.loggedIn.next(true);
+
+            return authenticationResponse;
+          }
+        })
+      );
   }
 }

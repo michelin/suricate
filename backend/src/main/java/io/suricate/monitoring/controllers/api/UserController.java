@@ -25,12 +25,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/user")
+@RequestMapping("/api/users")
 public class UserController {
 
     private final UserService userService;
@@ -66,14 +67,19 @@ public class UserController {
         return new UserDto(user.get());
     }
 
-
     /**
      * Get current user
      * @return The user
      */
     @RequestMapping(value = "/current", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
-    public UserDto getOne(@RequestAttribute User user) {
-        return null;
+    public UserDto getCurrentUser(Principal principal) {
+        Optional<User> user = userService.getOneByUsername(principal.getName());
+
+        if(!user.isPresent()) {
+            throw new ApiException(ApiErrorEnum.USER_NOT_FOUND);
+        }
+
+        return new UserDto(user.get());
     }
 }

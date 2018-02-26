@@ -18,7 +18,6 @@ package io.suricate.monitoring.service;
 
 import io.suricate.monitoring.configuration.security.ConnectedUser;
 import io.suricate.monitoring.controllers.api.error.exception.ApiException;
-import io.suricate.monitoring.model.dto.user.UserDto;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.model.enums.AuthenticationMethod;
 import io.suricate.monitoring.model.enums.UserRoleEnum;
@@ -31,11 +30,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Service used to manage user
@@ -98,5 +95,9 @@ public class UserService {
             return Optional.empty();
         }
         return Optional.of(user);
+    }
+
+    public Optional<User> getOneByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 }
