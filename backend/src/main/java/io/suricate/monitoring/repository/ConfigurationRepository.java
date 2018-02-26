@@ -16,16 +16,14 @@
 
 package io.suricate.monitoring.repository;
 
-import io.suricate.monitoring.model.Configuration;
+import io.suricate.monitoring.model.entity.Configuration;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
-import javax.annotation.Generated;
 import java.util.List;
 
-public interface ConfigurationRepository extends JpaRepository<Configuration, String>, JpaSpecificationExecutor {
+public interface ConfigurationRepository extends JpaRepository<Configuration, String> {
 
     /**
      * Method used to get all config linked to widget scripts

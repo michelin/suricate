@@ -16,14 +16,14 @@
 
 package io.suricate.monitoring.service;
 
-import io.suricate.monitoring.model.Project;
-import io.suricate.monitoring.model.ProjectWidget;
-import io.suricate.monitoring.model.WidgetAvailability;
+import io.suricate.monitoring.model.entity.project.Project;
+import io.suricate.monitoring.model.entity.project.ProjectWidget;
+import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
 import io.suricate.monitoring.model.dto.UpdateEvent;
 import io.suricate.monitoring.model.dto.project.ProjectResponse;
 import io.suricate.monitoring.model.dto.project.ProjectWidgetRequest;
 import io.suricate.monitoring.model.dto.update.UpdateType;
-import io.suricate.monitoring.model.user.User;
+import io.suricate.monitoring.model.entity.user.User;
 import io.suricate.monitoring.repository.ProjectRepository;
 import io.suricate.monitoring.repository.ProjectWidgetRepository;
 import io.suricate.monitoring.repository.WidgetRepository;
@@ -69,7 +69,7 @@ public class ProjectService {
         projectResponse.setMaxColumn(project.getMaxColumn());
         projectResponse.setCssStyle(project.getCssStyle());
 
-        List<ProjectWidget> projectWidgets = projectWidgetRepository.findByProjectIdAndWidget_WidgetAvailabilityOrderById(project.getId(), WidgetAvailability.ACTIVATED);
+        List<ProjectWidget> projectWidgets = projectWidgetRepository.findByProjectIdAndWidget_WidgetAvailabilityOrderById(project.getId(), WidgetAvailabilityEnum.ACTIVATED);
         for (ProjectWidget projectWidget: projectWidgets){
             projectResponse.getWidgets().add(widgetService.getWidgetResponse(projectWidget));
         }

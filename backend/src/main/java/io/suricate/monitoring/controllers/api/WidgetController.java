@@ -16,10 +16,7 @@
 
 package io.suricate.monitoring.controllers.api;
 
-import io.suricate.monitoring.model.Category;
-import io.suricate.monitoring.model.ProjectWidget;
-import io.suricate.monitoring.model.dto.UpdateEvent;
-import io.suricate.monitoring.model.dto.update.UpdateType;
+import io.suricate.monitoring.model.entity.widget.Category;
 import io.suricate.monitoring.model.dto.widget.WidgetResponse;
 import io.suricate.monitoring.service.WidgetService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/${api.prefix}/widgets")
+@RequestMapping("/api/widgets")
 public class WidgetController {
 
     private WidgetService widgetService;

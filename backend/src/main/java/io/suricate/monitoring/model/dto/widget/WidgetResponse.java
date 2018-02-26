@@ -16,8 +16,7 @@
 
 package io.suricate.monitoring.model.dto.widget;
 
-import io.suricate.monitoring.model.Asset;
-import io.suricate.monitoring.model.WidgetParam;
+import io.suricate.monitoring.model.entity.Asset;
 import io.suricate.monitoring.model.dto.AbstractDto;
 
 import java.util.ArrayList;

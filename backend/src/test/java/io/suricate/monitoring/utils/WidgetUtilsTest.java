@@ -1,9 +1,9 @@
 package io.suricate.monitoring.utils;
 
-import io.suricate.monitoring.model.Asset;
-import io.suricate.monitoring.model.Category;
-import io.suricate.monitoring.model.Library;
-import io.suricate.monitoring.model.Widget;
+import io.suricate.monitoring.model.entity.Asset;
+import io.suricate.monitoring.model.entity.widget.Category;
+import io.suricate.monitoring.model.entity.Library;
+import io.suricate.monitoring.model.entity.widget.Widget;
 import org.junit.Test;
 
 import java.io.File;
@@ -25,7 +25,6 @@ public class WidgetUtilsTest {
         assertThat(listCategory).hasSize(4);
 
         assertThat(listCategory.get(0).getName()).isEqualTo("Jira");
-        assertThat(listCategory.get(0).getExplicitName()).isEqualTo(listCategory.get(0).getName());
         assertThat(listCategory.get(0).getId()).isNull();
         assertThat(listCategory.get(0).getImage()).isNotNull();
         assertThat(listCategory.get(0).getWidgets()).isNotNull();
@@ -44,7 +43,6 @@ public class WidgetUtilsTest {
         assertThat(listCategory.get(0).getWidgets().get(2).getLibraries().get(0).getTechnicalName()).isEqualTo("d3.js");
 
         assertThat(listCategory.get(2).getName()).isEqualTo("Other");
-        assertThat(listCategory.get(2).getExplicitName()).isEqualTo(listCategory.get(2).getName());
         assertThat(listCategory.get(2).getId()).isNull();
         assertThat(listCategory.get(2).getImage()).isNull();
         assertThat(listCategory.get(2).getWidgets()).isNotNull();
@@ -76,7 +74,6 @@ public class WidgetUtilsTest {
         assertThat(category).isNotNull();
 
         assertThat(category.getName()).isEqualTo("Jira");
-        assertThat(category.getExplicitName()).isEqualTo(category.getName());
         assertThat(category.getId()).isNull();
         assertThat(category.getImage()).isNotNull();
     }
@@ -97,7 +94,6 @@ public class WidgetUtilsTest {
         assertThat(widget).isNotNull();
 
         assertThat(widget.getName()).isEqualTo("Jira count");
-        assertThat(widget.getExplicitName()).isEqualTo(widget.getName());
         assertThat(widget.getId()).isNull();
         assertThat(widget.getInfo()).isEqualTo("test");
         assertThat(widget.getDelay()).isEqualTo(500);
@@ -118,9 +114,9 @@ public class WidgetUtilsTest {
         List<Library> list = WidgetUtils.parseLibraryFolder(new File(FilesUtilsTest.class.getResource("/Libraries/").getFile()));
         assertThat(list).isNotNull();
         assertThat(list.size()).isEqualTo(2);
-        assertThat(list.get(0).getExplicitName()).isEqualTo("d3.min.js");
+        assertThat(list.get(0).getTechnicalName()).isEqualTo("d3.min.js");
         assertThat(new String(list.get(0).getAsset().getContent())).isEqualTo("d32");
-        assertThat(list.get(1).getExplicitName()).isEqualTo("test.js");
+        assertThat(list.get(1).getTechnicalName()).isEqualTo("test.js");
         assertThat(new String(list.get(1).getAsset().getContent())).isEqualTo("ok");
     }
 

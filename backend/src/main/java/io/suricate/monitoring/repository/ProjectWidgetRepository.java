@@ -16,21 +16,19 @@
 
 package io.suricate.monitoring.repository;
 
-import io.suricate.monitoring.model.ProjectWidget;
-import io.suricate.monitoring.model.WidgetAvailability;
-import io.suricate.monitoring.model.WidgetState;
+import io.suricate.monitoring.model.entity.project.ProjectWidget;
+import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
+import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import javax.annotation.Generated;
 import java.util.Date;
 import java.util.List;
 
-public interface ProjectWidgetRepository extends JpaRepository<ProjectWidget, Long>, JpaSpecificationExecutor {
+public interface ProjectWidgetRepository extends JpaRepository<ProjectWidget, Long> {
 
     /**
      * Method used to get all nashorn request object from database
@@ -92,7 +90,7 @@ public interface ProjectWidgetRepository extends JpaRepository<ProjectWidget, Lo
      * @param widgetAvailability widget availability
      * @return the list of widget instance
      */
-    List<ProjectWidget> findByProjectIdAndWidget_WidgetAvailabilityOrderById(Long projectId, WidgetAvailability widgetAvailability);
+    List<ProjectWidget> findByProjectIdAndWidget_WidgetAvailabilityOrderById(Long projectId, WidgetAvailabilityEnum widgetAvailability);
 
     /**
      * Method used to delete a widget instance by it's id and the project id

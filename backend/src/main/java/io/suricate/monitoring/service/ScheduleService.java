@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.service;
 
-import io.suricate.monitoring.model.WidgetState;
+import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.model.dto.UpdateEvent;
 import io.suricate.monitoring.model.dto.nashorn.ErrorType;
 import io.suricate.monitoring.model.dto.nashorn.NashornResponse;

@@ -16,16 +16,15 @@
 
 package io.suricate.monitoring.repository;
 
-import io.suricate.monitoring.model.user.Role;
+import io.suricate.monitoring.model.entity.user.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-import javax.annotation.Generated;
 import java.util.List;
+import java.util.Optional;
 
-public interface RoleRepository extends JpaRepository<Role, Long>, JpaSpecificationExecutor {
+public interface RoleRepository extends JpaRepository<Role, Long> {
 
-    Role findByName(String name);
+    Optional<Role> findByName(String name);
 
     List<Role> findByUsers_Id(Long id);
 }

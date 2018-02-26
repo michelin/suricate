@@ -16,8 +16,9 @@
 
 package io.suricate.monitoring.service;
 
-import io.suricate.monitoring.model.Category;
-import io.suricate.monitoring.model.Library;
+import io.suricate.monitoring.configuration.ApplicationProperties;
+import io.suricate.monitoring.model.entity.widget.Category;
+import io.suricate.monitoring.model.entity.Library;
 import io.suricate.monitoring.utils.WidgetUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -26,7 +27,6 @@ import org.eclipse.jgit.api.Git;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
@@ -46,17 +46,8 @@ public class GitService {
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(GitService.class);
 
-    @Value("${gitlab.widget.repo}")
-    private String widgetGitRepo;
-
-    @Value("${gitlab.widget.repo.branch}")
-    private String gitBranch;
-
-    @Value("${gitlab.widget.repo.file:}")
-    private String repoGit;
-
-    @Value("${gitlab.widget.update:true}")
-    private boolean updateEnable;
+    /** The application properties */
+    private final ApplicationProperties applicationProperties;
 
     private final WidgetService widgetService;
 
@@ -74,11 +65,12 @@ public class GitService {
      * @param widgetExecutor widget executor
      */
     @Autowired
-    public GitService(WidgetService widgetService, LibraryService libraryService, SocketService socketService, WidgetExecutor widgetExecutor) {
+    public GitService(WidgetService widgetService, LibraryService libraryService, SocketService socketService, WidgetExecutor widgetExecutor, ApplicationProperties applicationProperties) {
         this.widgetService = widgetService;
         this.libraryService = libraryService;
         this.socketService = socketService;
         this.widgetExecutor = widgetExecutor;
+        this.applicationProperties = applicationProperties;
     }
 
     /**
@@ -87,11 +79,12 @@ public class GitService {
      * @throws IOException
      */
     public File cloneWidgetRepo() throws Exception {
-        if (StringUtils.isNotBlank(repoGit)) {
-            LOGGER.info("Loading widget from git repo {}", repoGit);
-            return new File(repoGit);
+        if (StringUtils.isNotBlank(applicationProperties.widgets.local.folderPath)) {
+            LOGGER.info("Loading widget from local folder {}", applicationProperties.widgets.local.folderPath);
+            return new File(applicationProperties.widgets.local.folderPath);
         }
-        return cloneRepo(widgetGitRepo, gitBranch);
+
+        return cloneRepo(applicationProperties.widgets.git.url, applicationProperties.widgets.git.branch);
     }
 
     /**
@@ -101,7 +94,7 @@ public class GitService {
      * @return File object on local repo
      */
     public File cloneRepo(String url, String branch) throws Exception {
-        LOGGER.info("Cloning repo {}, branch {}", url, branch);
+        LOGGER.info("Cloning widget repo {}, branch {}", url, branch);
         File localRepo = null;
         Git git = null;
         try {
@@ -137,7 +130,7 @@ public class GitService {
     @Transactional
     public void updateWidgetFromGit(){
         LOGGER.info("Update widgets from Git repo");
-        if (!updateEnable){
+        if (!applicationProperties.widgets.updateEnable){
             LOGGER.info("Widget update disabled");
             return;
         }
@@ -149,7 +142,7 @@ public class GitService {
                 File libraryFolder = new File(folder.getAbsoluteFile().getAbsolutePath() + SystemUtils.FILE_SEPARATOR + "libraries"+ SystemUtils.FILE_SEPARATOR);
                 List<Library> libraries = WidgetUtils.parseLibraryFolder(libraryFolder);
                 libraries = libraryService.updateLibraryInDatabase(libraries);
-                Map<String, Library> mapLib = libraries.stream().collect(Collectors.toMap(item -> ((Library)item).getExplicitName(), item -> item));
+                Map<String, Library> mapLib = libraries.stream().collect(Collectors.toMap(item -> ((Library)item).getTechnicalName(), item -> item));
 
                 // Parse folder
                 File widgetFolder = new File(folder.getAbsoluteFile().getAbsolutePath() + SystemUtils.FILE_SEPARATOR + "content"+ SystemUtils.FILE_SEPARATOR);
@@ -159,7 +152,7 @@ public class GitService {
         } catch (Exception ioe) {
             LOGGER.error(ioe.getMessage(), ioe);
         } finally {
-            if (StringUtils.isBlank(repoGit)) {
+            if (StringUtils.isBlank(applicationProperties.widgets.local.folderPath)) {
                 FileUtils.deleteQuietly(folder);
             }
             widgetExecutor.initScheduler();

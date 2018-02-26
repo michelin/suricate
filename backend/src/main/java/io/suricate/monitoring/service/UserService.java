@@ -16,24 +16,23 @@
 
 package io.suricate.monitoring.service;
 
-import io.suricate.monitoring.config.security.token.TokenService;
-import io.suricate.monitoring.model.Project;
-import io.suricate.monitoring.model.dto.user.UserDto;
-import io.suricate.monitoring.model.user.User;
-import io.suricate.monitoring.repository.ProjectRepository;
+import io.suricate.monitoring.configuration.security.ConnectedUser;
+import io.suricate.monitoring.controllers.api.error.exception.ApiException;
+import io.suricate.monitoring.model.enums.ApiErrorEnum;
+import io.suricate.monitoring.model.enums.AuthenticationMethod;
+import io.suricate.monitoring.model.enums.UserRoleEnum;
+import io.suricate.monitoring.model.entity.user.Role;
+import io.suricate.monitoring.model.entity.user.User;
 import io.suricate.monitoring.repository.RoleRepository;
 import io.suricate.monitoring.repository.UserRepository;
-import io.suricate.monitoring.service.ldap.LdapService;
-import io.suricate.monitoring.utils.ApplicationConstant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 /**
  * Service used to manage user
@@ -41,92 +40,64 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
 
-    /**
-     * Class logger
-     */
+    /** Class logger */
     private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
 
-    @Autowired
     private UserRepository userRepository;
-
-    @Autowired
-    private ProjectRepository projectRepository;
-
-    @Autowired
     private RoleRepository roleRepository;
 
     @Autowired
-    private LdapService ldapService;
-
-    @Autowired
-    private TokenService tokenService;
-
-
-    public List<UserDto> getAll() {
-        List<User> users = userRepository.findAll();
-        return users.stream().map(user -> new UserDto(user, ldapService.getUserDetails(user.getUsername()))).collect(Collectors.toList());
+    public UserService(UserRepository userRepository, RoleRepository roleRepository) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
     }
 
-    public UserDto getOne(Long userId) {
-        User user = userRepository.findOne(userId);
-        return new UserDto(user, ldapService.getUserDetails(user.getUsername()));
-    }
-
-    /**
-     * Method used to remove user form project
-     * @param projectId the current project id
-     * @param userId the user id
-     */
     @Transactional
-    public void removeUser(Long projectId, Long userId){
-        Project project = projectRepository.findOne(projectId);
-        if (project != null) {
-            project.getUsers().removeIf(user -> user.getId().equals(userId));
-            projectRepository.save(project);
+    public Optional<User> initUser(ConnectedUser connectedUser){
+
+        if (connectedUser == null){
+            return Optional.empty();
+        }
+
+        // Create user
+        User user = new User();
+        user.setFirstname(connectedUser.getFirstname());
+        user.setLastname(connectedUser.getLastname());
+        user.setUsername(connectedUser.getUsername());
+        user.setEmail(connectedUser.getMail());
+        user.setAuthenticationMethod(AuthenticationMethod.LDAP);
+
+        Optional<Role> role;
+        if(userRepository.count() > 0) {
+            role = roleRepository.findByName(UserRoleEnum.ROLE_USER.name());
         } else {
-            LOGGER.error("Project not found for id {}", projectId);
+            role = roleRepository.findByName(UserRoleEnum.ROLE_ADMIN.name());
         }
+
+        if (!role.isPresent()) {
+            LOGGER.error("Role {} not available in database", UserRoleEnum.ROLE_USER);
+            throw new ApiException(ApiErrorEnum.DATABASE_INIT_ISSUE);
+        }
+
+        user.getRoles().add(role.get());
+        userRepository.save(user);  // Save user
+
+        return Optional.of(user);
     }
 
-
-    /**
-     * Method used to get all used linked to the project with there id
-     * @param projectId the project id
-     * @return the list of user
-     */
-    public List<UserDto> getUserForProject(Long projectId) {
-        List<User> user = userRepository.findByProjects_Id(projectId);
-        return user.stream().map(u -> new UserDto(u, ldapService.getUserDetails(u.getUsername()))).collect(Collectors.toList());
+    public List<User> getAll() {
+        return userRepository.findAll();
     }
 
-    /**
-     * Method used to search a user
-     * @param query the query to search users
-     * @return the list of user found
-     */
-    public List<UserDto> searchUser(String query) {
-        return ldapService.searchUser(query).stream().map(UserDto::new).collect(Collectors.toList());
+    public Optional<User> getOne(Long userId) {
+        User user = userRepository.findOne(userId);
+        if(user == null) {
+            return Optional.empty();
+        }
+        return Optional.of(user);
     }
 
-    /**
-     * Method used to add a user to the project Id
-     * @param username the username to Add
-     * @param projectId the project Id
-     */
-    public void addUserToProject(String username, Long projectId){
-        Project project = projectRepository.findOne(projectId);
-        User user = userRepository.findByUsername(username);
-        if (user == null){
-            user = new User();
-            user.setRoles(Collections.singletonList(roleRepository.findByName(ApplicationConstant.ROLE_USER)));
-            user.setUsername(username);
-            user.setToken(tokenService.generateToken());
-            userRepository.save(user);
-        }
-        // Check not already defined user
-        if (project.getUsers().stream().noneMatch(u -> u.getUsername().equalsIgnoreCase(username))){
-            project.getUsers().add(user);
-            projectRepository.save(project);
-        }
+    public Optional<User> getOneByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 }

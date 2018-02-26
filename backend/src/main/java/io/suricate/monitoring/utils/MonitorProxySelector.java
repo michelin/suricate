@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.utils;
 
-import io.suricate.monitoring.model.config.ProxyConfig;
+import io.suricate.monitoring.configuration.ProxyConfiguration;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +41,7 @@ public class MonitorProxySelector extends ProxySelector {
     @Override
     public List<Proxy> select(URI uri) {
         Proxy ret = Proxy.NO_PROXY;
-        ProxyConfig config = SpringContextHolder.getApplicationContext().getBean(ProxyConfig.class);
+        ProxyConfiguration config = SpringContextHolder.getApplicationContext().getBean(ProxyConfiguration.class);
         try (Stream<String> stream = Arrays.stream(config.getNoProxyDomains().split(","))){
             if (StringUtils.isNotBlank(config.getNoProxyDomains())
                     && stream.filter(h -> StringUtils.containsIgnoreCase(uri.getHost(), h))

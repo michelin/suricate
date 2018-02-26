@@ -17,6 +17,7 @@
 package io.suricate.monitoring.model.dto.error;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.suricate.monitoring.model.enums.ApiErrorEnum;
 
 public class CustomError {
 
@@ -33,13 +34,13 @@ public class CustomError {
     }
 
     /**
-     * Constructor with ApiError object
-     * @param apiError api error object
+     * Constructor with ApiErrorEnum object
+     * @param apiErrorEnum api error object
      */
-    public CustomError(ApiError apiError) {
-        this.message = apiError.getMessage();
-        this.code = apiError.getCode();
-        this.key = apiError.getKey();
+    public CustomError(ApiErrorEnum apiErrorEnum) {
+        this.message = apiErrorEnum.getMessage();
+        this.code = apiErrorEnum.getCode();
+        this.key = apiErrorEnum.getKey();
     }
 
     private String message;

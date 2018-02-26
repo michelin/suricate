@@ -16,23 +16,24 @@
 
 package io.suricate.monitoring.repository;
 
-import io.suricate.monitoring.model.user.User;
+import io.suricate.monitoring.model.entity.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import javax.annotation.Generated;
 import java.util.List;
+import java.util.Optional;
 
-public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificationExecutor {
+public interface UserRepository extends JpaRepository<User, Long> {
 
 	/**
 	 * Method used to get user by username
 	 * @param username the username
 	 * @return the user object
 	 */
-    User findByUsername(String username);
+    Optional<User> findByUsername(String username);
+
+	Optional<User> findByUsernameIgnoreCase(String username);
 
 	/**
 	 * Methos used to get id by username
@@ -41,13 +42,6 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
 	 */
 	@Query("SELECT id FROM User WHERE username = :username")
     Long getIdByUsername(@Param("username") String username);
-
-	/**
-	 * Method used to get user by token
-	 * @param token the user token
-	 * @return the user object
-	 */
-	User findByToken(String token);
 
 	/**
 	 * Method used tofins all user by project id

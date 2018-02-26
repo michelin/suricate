@@ -1,7 +1,7 @@
 package io.suricate.monitoring.utils;
 
 import io.suricate.monitoring.model.dto.widget.WidgetVariableResponse;
-import io.suricate.monitoring.model.WidgetVariableType;
+import io.suricate.monitoring.model.enums.WidgetVariableType;
 import io.suricate.monitoring.service.nashorn.script.Methods;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;

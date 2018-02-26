@@ -19,7 +19,10 @@ package io.suricate.monitoring.utils;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import io.suricate.monitoring.model.*;
+import io.suricate.monitoring.model.entity.Asset;
+import io.suricate.monitoring.model.entity.widget.Category;
+import io.suricate.monitoring.model.entity.Library;
+import io.suricate.monitoring.model.entity.widget.Widget;
 import net.sf.jmimemagic.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -32,7 +35,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public final class WidgetUtils {
@@ -124,7 +126,7 @@ public final class WidgetUtils {
             }
         }
         // Avoid not well formed category
-        if (StringUtils.isBlank(category.getExplicitName())){
+        if (StringUtils.isBlank(category.getName())){
             LOGGER.error("Category {} invalid it's name must not be empty",folderCategory.getPath());
             return null;
         }
@@ -207,7 +209,6 @@ public final class WidgetUtils {
     public static Asset readAsset(File file) throws IOException {
         Asset asset = new Asset();
         asset.setContent(FileUtils.readFileToByteArray(file));
-        asset.setLastUpdateDate(new Date(file.lastModified()));
         try {
             MagicMatch match = Magic.getMagicMatch(asset.getContent());
             asset.setContentType(match.getMimeType());

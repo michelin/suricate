@@ -31,7 +31,7 @@ $ java -jar backend.jar -Dspring.config.location=file:D:\BUSDATA\conf\applicatio
 Some properties are useful in development.<br/>
 If you want to clone from a local gitlab repo, you can define a file path and a specific branch.
 ```
-gitlab.widget.repo.file=D:/BUSDATA/project/ContinousMonitoring/widgets
+widget.local.folder=D:/BUSDATA/project/ContinousMonitoring/widgets
 gitlab.widget.repo.branch=dev
 ```
 

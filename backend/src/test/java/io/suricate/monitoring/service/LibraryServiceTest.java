@@ -1,7 +1,7 @@
 package io.suricate.monitoring.service;
 
-import io.suricate.monitoring.model.Asset;
-import io.suricate.monitoring.model.Library;
+import io.suricate.monitoring.model.entity.Asset;
+import io.suricate.monitoring.model.entity.Library;
 import io.suricate.monitoring.repository.AssetRepository;
 import io.suricate.monitoring.repository.LibraryRepository;
 import org.apache.commons.io.FileUtils;

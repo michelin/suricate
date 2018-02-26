@@ -16,7 +16,8 @@
 
 package io.suricate.monitoring.utils;
 
-import io.suricate.monitoring.config.security.ConnectedUser;
+import io.suricate.monitoring.configuration.security.ConnectedUser;
+import io.suricate.monitoring.model.enums.UserRoleEnum;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -48,7 +49,7 @@ public final class SecurityUtils {
      * @return true if the connected user is admin, false otherwise
      */
     public static boolean isAdmin() {
-        return hasRole(ApplicationConstant.ROLE_ADMIN);
+        return hasRole(UserRoleEnum.ROLE_ADMIN.name());
     }
 
 

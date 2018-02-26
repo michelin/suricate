@@ -20,7 +20,7 @@ import { Observable } from 'rxjs/Observable';
 import {Router} from '@angular/router';
 import 'rxjs/add/operator/do';
 
-import {AuthenticationService} from '../services/authentication.service';
+import {AuthenticationService} from '../../modules/authentication/authentication.service';
 
 
 @Injectable()

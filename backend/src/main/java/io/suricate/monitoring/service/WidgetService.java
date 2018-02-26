@@ -21,15 +21,22 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheException;
 import com.github.mustachejava.MustacheFactory;
-import io.suricate.monitoring.controllers.api.exception.ApiException;
-import io.suricate.monitoring.model.*;
+import io.suricate.monitoring.controllers.api.error.exception.ApiException;
 import io.suricate.monitoring.model.dto.UpdateEvent;
-import io.suricate.monitoring.model.dto.error.ApiError;
+import io.suricate.monitoring.model.entity.*;
+import io.suricate.monitoring.model.entity.project.ProjectWidget;
+import io.suricate.monitoring.model.entity.widget.Category;
+import io.suricate.monitoring.model.entity.widget.Widget;
+import io.suricate.monitoring.model.entity.widget.WidgetParam;
+import io.suricate.monitoring.model.entity.widget.WidgetParamValue;
+import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.model.dto.update.UpdateType;
 import io.suricate.monitoring.model.dto.widget.WidgetParamResponse;
 import io.suricate.monitoring.model.dto.widget.WidgetParamValueResponse;
 import io.suricate.monitoring.model.dto.widget.WidgetPosition;
 import io.suricate.monitoring.model.dto.widget.WidgetResponse;
+import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
+import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.repository.*;
 import io.suricate.monitoring.service.search.SearchService;
 import io.suricate.monitoring.utils.EntityUtils;
@@ -193,7 +200,7 @@ public class WidgetService {
     public List<WidgetResponse> getWidgets(Long projectId){
         List<WidgetResponse> ret = new ArrayList<>();
 
-        List<ProjectWidget> projectWidgets = projectWidgetRepository.findByProjectIdAndWidget_WidgetAvailabilityOrderById(projectId, WidgetAvailability.ACTIVATED);
+        List<ProjectWidget> projectWidgets = projectWidgetRepository.findByProjectIdAndWidget_WidgetAvailabilityOrderById(projectId, WidgetAvailabilityEnum.ACTIVATED);
         for (ProjectWidget projectWidget: projectWidgets){
             ret.add(getWidgetResponse(projectWidget));
         }
@@ -259,9 +266,9 @@ public class WidgetService {
      */
     @Transactional
     public void update(Long projectId, List<WidgetPosition> positions, String projetToken){
-        List<ProjectWidget> projectWidgets = projectWidgetRepository.findByProjectIdAndWidget_WidgetAvailabilityOrderById(projectId, WidgetAvailability.ACTIVATED);
+        List<ProjectWidget> projectWidgets = projectWidgetRepository.findByProjectIdAndWidget_WidgetAvailabilityOrderById(projectId, WidgetAvailabilityEnum.ACTIVATED);
         if (projectWidgets.size() != positions.size()) {
-            throw new ApiException(ApiError.PROJECT_INVALID_CONSTANCY);
+            throw new ApiException(ApiErrorEnum.PROJECT_INVALID_CONSTANCY);
         }
 
         int i = 0;
@@ -300,7 +307,7 @@ public class WidgetService {
      */
     @Transactional
     @Cacheable("widget-by-category")
-    public Map<Category,List<Widget>> getAvailableWidget(WidgetAvailability widgetAvailability, String search) {
+    public Map<Category,List<Widget>> getAvailableWidget(WidgetAvailabilityEnum widgetAvailability, String search) {
         LOGGER.debug("Search widgets with terms '{}', for availability {}", search, widgetAvailability);
         Map<Category,List<Widget>> ret = new LinkedHashMap<>();
         List<Category> categories = categoryRepository.findAllByOrderByNameAsc();
@@ -453,7 +460,7 @@ public class WidgetService {
             }
             // Set activated state by default
             if (widget.getWidgetAvailability() == null){
-                widget.setWidgetAvailability(WidgetAvailability.ACTIVATED);
+                widget.setWidgetAvailability(WidgetAvailabilityEnum.ACTIVATED);
             }
 
             // set category

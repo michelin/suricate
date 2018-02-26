@@ -16,20 +16,22 @@
 
 package io.suricate.monitoring.controllers.api;
 
-import io.suricate.monitoring.controllers.api.exception.ApiException;
-import io.suricate.monitoring.model.dto.error.ApiError;
+import io.suricate.monitoring.controllers.api.error.exception.ApiException;
+import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.model.dto.user.UserDto;
-import io.suricate.monitoring.model.user.User;
+import io.suricate.monitoring.model.entity.user.User;
 import io.suricate.monitoring.service.UserService;
-import io.suricate.monitoring.utils.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/${api.prefix}/user")
+@RequestMapping("/api/users")
 public class UserController {
 
     private final UserService userService;
@@ -46,7 +48,8 @@ public class UserController {
     @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<UserDto> getAll() {
-        return userService.getAll();
+        List<User> users =  userService.getAll();
+        return users.stream().map(user -> new UserDto(user)).collect(Collectors.toList());
     }
 
     /**
@@ -55,17 +58,13 @@ public class UserController {
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
-    public UserDto getOne(@RequestAttribute User user, @PathVariable("id") Long id) {
-        if (!SecurityUtils.isAdmin() && !user.getId().equals(id)) {
-            throw new ApiException(ApiError.OPERATION_NOT_AUTHORIZED);
+    public UserDto getOne(@PathVariable("id") Long id) {
+        Optional<User> user = userService.getOne(id);
+        if (!user.isPresent()){
+            throw new ApiException(ApiErrorEnum.USER_NOT_FOUND);
         }
 
-        UserDto ret = userService.getOne(id);
-        if (ret == null){
-            throw new ApiException(ApiError.USER_NOT_FOUND);
-        }
-
-        return ret;
+        return new UserDto(user.get());
     }
 
     /**
@@ -74,19 +73,13 @@ public class UserController {
      */
     @RequestMapping(value = "/current", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
-    public UserDto getOne(@RequestAttribute User user) {
-        UserDto ret = userService.getOne(user.getId());
-        if (ret == null){
-            throw new ApiException(ApiError.USER_NOT_FOUND);
+    public UserDto getCurrentUser(Principal principal) {
+        Optional<User> user = userService.getOneByUsername(principal.getName());
+
+        if(!user.isPresent()) {
+            throw new ApiException(ApiErrorEnum.USER_NOT_FOUND);
         }
 
-        return ret;
+        return new UserDto(user.get());
     }
-
-    @RequestMapping(value = "/update", method = RequestMethod.PATCH)
-    @PreAuthorize("hasRole('ROLE_USER')")
-    public User update(@RequestAttribute User user, @RequestBody User userToUpdate) {
-        return null;
-    }
-
 }

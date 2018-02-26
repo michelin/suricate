@@ -19,15 +19,6 @@ package io.suricate.monitoring.utils;
 public final class ApplicationConstant {
 
     /**
-     * Role admin constant
-     */
-    public static final String ROLE_ADMIN = "ROLE_ADMIN";
-    /**
-     * Role user constant
-     */
-    public static final String ROLE_USER = "ROLE_USER";
-
-    /**
      * The token expiration delay
      */
     public static final String TOKEN_DELAY = "token.delay.minute";

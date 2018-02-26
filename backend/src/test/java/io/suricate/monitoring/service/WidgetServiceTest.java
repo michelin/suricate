@@ -1,6 +1,11 @@
 package io.suricate.monitoring.service;
 
-import io.suricate.monitoring.model.*;
+import io.suricate.monitoring.model.entity.*;
+import io.suricate.monitoring.model.entity.project.ProjectWidget;
+import io.suricate.monitoring.model.entity.widget.Category;
+import io.suricate.monitoring.model.entity.widget.Widget;
+import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
+import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.repository.*;
 import io.suricate.monitoring.utils.EntityUtils;
 import org.junit.Test;
@@ -178,7 +183,7 @@ public class WidgetServiceTest {
         Widget currentWidget = widgetRepository.findByTechnicalName("widget1");
         assertThat(currentWidget).isNotNull();
         assertThat(currentWidget.getImage()).isNotNull();
-        assertThat(currentWidget.getWidgetAvailability()).isEqualTo(WidgetAvailability.ACTIVATED);
+        assertThat(currentWidget.getWidgetAvailability()).isEqualTo(WidgetAvailabilityEnum.ACTIVATED);
         assertThat(currentWidget.getImage().getSize()).isEqualTo(10);
 
         // Update image
@@ -203,7 +208,7 @@ public class WidgetServiceTest {
 
         currentWidget = widgetRepository.findByTechnicalName("widget1");
         assertThat(currentWidget).isNotNull();
-        assertThat(currentWidget.getWidgetAvailability()).isEqualTo(WidgetAvailability.ACTIVATED);
+        assertThat(currentWidget.getWidgetAvailability()).isEqualTo(WidgetAvailabilityEnum.ACTIVATED);
         assertThat(currentWidget.getImage()).isNotNull();
         assertThat(currentWidget.getImage().getSize()).isEqualTo(1);
     }
@@ -252,10 +257,10 @@ public class WidgetServiceTest {
         assertThat(currentWidget.getHtmlContent()).isEqualTo("HtmlContent");
         assertThat(currentWidget.getTechnicalName()).isEqualTo("widget1");
         assertThat(currentWidget.getName()).isEqualTo("Widget 1");
-        assertThat(currentWidget.getWidgetAvailability()).isEqualTo(WidgetAvailability.ACTIVATED);
+        assertThat(currentWidget.getWidgetAvailability()).isEqualTo(WidgetAvailabilityEnum.ACTIVATED);
 
         // Change state of widget 1
-        currentWidget.setWidgetAvailability(WidgetAvailability.DISABLED);
+        currentWidget.setWidgetAvailability(WidgetAvailabilityEnum.DISABLED);
         widgetRepository.save(currentWidget);
 
         // Check widget 2
@@ -287,7 +292,7 @@ public class WidgetServiceTest {
         assertThat(widgetRepository.count()).isEqualTo(2);
         currentWidget = widgetRepository.findByTechnicalName("widget1");
         assertThat(currentWidget).isNotNull();
-        assertThat(currentWidget.getWidgetAvailability()).isEqualTo(WidgetAvailability.DISABLED);
+        assertThat(currentWidget.getWidgetAvailability()).isEqualTo(WidgetAvailabilityEnum.DISABLED);
         assertThat(currentWidget.getBackendJs()).isEqualTo("bakendjsModif");
         assertThat(EntityUtils.<Long>getProxiedId(currentWidget.getCategory())).isEqualTo(category.getId());
         assertThat(currentWidget.getCssContent()).isEqualTo("cssContentModif");
@@ -335,7 +340,7 @@ public class WidgetServiceTest {
         asset.setSize(10);
         widget.setImage(asset);
 
-        Map<String, Library> libraryMap = libs.stream().collect(Collectors.toMap(item -> ((Library)item).getExplicitName(), item -> item));
+        Map<String, Library> libraryMap = libs.stream().collect(Collectors.toMap(item -> ((Library)item).getTechnicalName(), item -> item));
         widgetService.addOrUpdateWidgets(category,Arrays.asList(widget), libraryMap);
 
         assertThat(categoryRepository.count()).isEqualTo(1);

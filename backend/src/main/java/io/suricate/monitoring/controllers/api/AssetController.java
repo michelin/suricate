@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.controllers.api;
 
-import io.suricate.monitoring.model.Asset;
+import io.suricate.monitoring.model.entity.Asset;
 import io.suricate.monitoring.repository.AssetRepository;
 import io.suricate.monitoring.utils.IdUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 
 @RestController
-@RequestMapping("/${api.prefix}/asset")
+@RequestMapping("/api/asset")
 public class AssetController {
 
     /**
@@ -50,13 +50,13 @@ public class AssetController {
         Asset data = assetRepository.findOne(IdUtils.decrypt(token));
         if (data == null){
             return ResponseEntity.notFound().build();
-        } else if (webRequest.checkNotModified(data.getLastUpdateDate().getTime())){
+        } else if (webRequest.checkNotModified(data.getLastModifiedDate().getTime())){
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
         }
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(data.getContentType()))
                 .contentLength(data.getSize())
-                .lastModified(data.getLastUpdateDate().getTime())
+                .lastModified(data.getLastModifiedDate().getTime())
                 .cacheControl(CacheControl.noCache())
                 .body(data.getContent());
     }
