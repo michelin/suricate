@@ -47,9 +47,10 @@ public class OAuth2AuthorizationServerConfiguration extends AuthorizationServerC
         clients
             .inMemory()
                 //TODO: Refactor this with properties
-                .withClient("clientIdPassword")
-                .secret("secret")
+                .withClient("suricateAngular")
+                .secret("suricateAngularSecret")
                 .authorizedGrantTypes("password", "refresh_token")
-                .scopes("read", "write");
+                .scopes("read", "write")
+                .accessTokenValiditySeconds(10000);
     }
 }

@@ -44,13 +44,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Long getIdByUsername(@Param("username") String username);
 
 	/**
-	 * Method used to get user by token
-	 * @param token the user token
-	 * @return the user object
-	 */
-	User findByToken(String token);
-
-	/**
 	 * Method used tofins all user by project id
 	 * @param id the project id
 	 * @return the list of user

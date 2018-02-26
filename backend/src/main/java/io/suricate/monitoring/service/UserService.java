@@ -99,16 +99,4 @@ public class UserService {
         }
         return Optional.of(user);
     }
-
-    public Optional<User> getByUsername(String username) {
-        return userRepository.findByUsername(username);
-    }
-
-    @Transactional
-    public User saveUserToken(Long userId, String token) {
-        User user = userRepository.findOne(userId);
-        user.setToken(token);
-
-        return userRepository.save(user);
-    }
 }

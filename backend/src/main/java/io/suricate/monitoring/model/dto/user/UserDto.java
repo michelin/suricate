@@ -21,6 +21,7 @@ import io.suricate.monitoring.model.entity.user.Role;
 import io.suricate.monitoring.model.entity.user.User;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * User dto used to manage user rights
@@ -32,7 +33,14 @@ public class UserDto extends AbstractDto {
      */
     private Long id;
 
+    /**
+     * User firstname
+     */
     private String firstname;
+
+    /**
+     * User lastname
+     */
     private String lastname;
 
     /**
@@ -50,7 +58,10 @@ public class UserDto extends AbstractDto {
      */
     private String mail;
 
-    private List<Role> roles;
+    /**
+     * User roles
+     */
+    private List<RoleDto> roles;
 
     /**
      * Constructor of UserDto
@@ -58,20 +69,12 @@ public class UserDto extends AbstractDto {
      */
     public UserDto(User user) {
         this.id = user.getId();
-        this.roles = user.getRoles();
+        this.roles = user.getRoles().stream().map(role -> new RoleDto(role)).collect(Collectors.toList());
         this.firstname = user.getFirstname();
         this.username = user.getUsername();
         this.fullname = user.getFirstname() + " " + user.getLastname();
         this.lastname = user.getLastname();
         this.mail = user.getEmail();
-    }
-
-    /**
-     * Constructor of UserDto using field username
-     * @param username the id of the connected user
-     */
-    public UserDto(String username) {
-        this.username = username;
     }
 
     public Long getId() {
@@ -120,11 +123,11 @@ public class UserDto extends AbstractDto {
         this.mail = mail;
     }
 
-    public List<Role> getRoles() {
+    public List<RoleDto> getRoles() {
         return roles;
     }
 
-    public void setRoles(List<Role> roles) {
+    public void setRoles(List<RoleDto> roles) {
         this.roles = roles;
     }
 }

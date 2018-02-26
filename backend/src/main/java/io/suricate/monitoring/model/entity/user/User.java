@@ -57,9 +57,6 @@ public class User extends AbstractEntity<Long> {
     @ManyToMany(mappedBy = "users")
     private List<Project> projects;
 
-    @Column(nullable = false, length = 500)
-    private String token;
-
 
     public User() {}
 
@@ -107,13 +104,6 @@ public class User extends AbstractEntity<Long> {
     }
     public void setProjects(List<Project> projects) {
         this.projects = projects;
-    }
-
-    public String getToken() {
-        return token;
-    }
-    public void setToken(String token) {
-        this.token = token;
     }
 
     public String getFirstname() {
