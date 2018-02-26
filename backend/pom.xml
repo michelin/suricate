@@ -221,7 +221,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-search-orm</artifactId>
-            <version>5.5.4.Final</version>
+            <version>5.10.0.Beta1</version>
         </dependency>
 
         <dependency>
