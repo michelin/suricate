@@ -21,8 +21,8 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/share';
 
-import { Login } from '../model/dto/Login';
-import {AbstractHttpService} from './abstract-http.service';
+import { Login } from '../../shared/model/dto/Login';
+import {AbstractHttpService} from '../../shared/services/abstract-http.service';
 
 @Injectable()
 export class AuthenticationService extends AbstractHttpService {

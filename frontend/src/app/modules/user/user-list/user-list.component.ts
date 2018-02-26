@@ -23,8 +23,7 @@ import {merge} from 'rxjs/observable/merge';
 import {startWith} from 'rxjs/operators/startWith';
 import {switchMap} from 'rxjs/operators/switchMap';
 import {map} from 'rxjs/operators/map';
-
-import { UserService } from '../../../../shared/services/user.service';
+import {UserService} from '../user.service';
 
 @Component({
   selector: 'app-user',

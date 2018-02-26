@@ -15,12 +15,12 @@
  */
 
 import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
-import {DashboardService} from '../../services/dashboard.service';
-import {Project} from '../../model/dto/Project';
-import {UserService} from '../../services/user.service';
-import {User} from '../../model/dto/User';
-import {AuthenticationService} from '../../services/authentication.service';
 import {Router} from '@angular/router';
+import {User} from '../../../shared/model/dto/User';
+import {Project} from '../../../shared/model/dto/Project';
+import {DashboardService} from '../../dashboard/dashboard.service';
+import {UserService} from '../../user/user.service';
+import {AuthenticationService} from '../../authentication/authentication.service';
 
 @Component({
   selector: 'app-sidenav',

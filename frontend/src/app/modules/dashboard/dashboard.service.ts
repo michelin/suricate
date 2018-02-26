@@ -15,36 +15,45 @@
  */
 
 import { Injectable } from '@angular/core';
-import {AbstractHttpService} from './abstract-http.service';
+import {AbstractHttpService} from '../../shared/services/abstract-http.service';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {Project} from '../../shared/model/dto/Project';
 import {Observable} from 'rxjs/Observable';
-import {Category} from '../model/dto/Category';
-import {Widget} from '../model/dto/Widget';
-import {ProjectWidget} from '../model/dto/ProjectWidget';
+import {ProjectWidget} from '../../shared/model/dto/ProjectWidget';
 
 @Injectable()
-export class WidgetService extends AbstractHttpService  {
+export class DashboardService extends AbstractHttpService {
 
   constructor(private http: HttpClient) {
     super();
   }
 
-  getCategories(): Observable<Category[]> {
+  getAll(): Observable<Project[]> {
     let headers = new HttpHeaders();
     headers = headers.append('Content-Type', 'application/json');
 
     return this.http
-        .get<Category[]>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.WIDGET_URL}/categories`, {headers: headers})
+        .get<Project[]>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.PROJECT_URL}`, {headers: headers})
         .map(response => AbstractHttpService.extractData(response))
         .catch((error: any) => AbstractHttpService.handleErrorObservable(error));
   }
 
-  getWidgetsByCategoryId(categoryId: number): Observable<Widget[]> {
+  getOneById(id: string): Observable<Project> {
     let headers = new HttpHeaders();
     headers = headers.append('Content-Type', 'application/json');
 
     return this.http
-        .get<Widget[]>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.WIDGET_URL}/category/${categoryId}`, {headers: headers})
+        .get<Project>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.PROJECT_URL}/${id}`, {headers: headers})
+        .map(response => AbstractHttpService.extractData(response))
+        .catch((error: any) => AbstractHttpService.handleErrorObservable(error));
+  }
+
+  addWidgetToProject(projectWidget: ProjectWidget): Observable<Project> {
+    let headers = new HttpHeaders();
+    headers = headers.append('Content-Type', 'application/json');
+
+    const url = `${AbstractHttpService.BASE_URL}/${AbstractHttpService.PROJECT_URL}/${projectWidget.projectId}`;
+    return this.http.put<Project>(`${url}`, projectWidget, {headers: headers})
         .map(response => AbstractHttpService.extractData(response))
         .catch((error: any) => AbstractHttpService.handleErrorObservable(error));
   }

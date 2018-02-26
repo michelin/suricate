@@ -120,4 +120,4 @@ import {
   ],
   declarations: []
 })
-export class MaterialDesignModule { }
+export class MaterialModule { }

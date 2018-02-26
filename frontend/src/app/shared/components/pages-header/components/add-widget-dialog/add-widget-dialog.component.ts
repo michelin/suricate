@@ -17,14 +17,14 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import {Category} from '../../../../model/dto/Category';
-import {WidgetService} from '../../../../services/widget.service';
+import {WidgetService} from '../../../../../modules/core/widget.service';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import {Asset} from '../../../../model/dto/Asset';
 import {Widget} from '../../../../model/dto/Widget';
 import {WidgetParamEnum} from '../../../../model/dto/enums/WidgetParamEnum';
 import {FormGroup, NgForm} from '@angular/forms';
-import {DashboardService} from '../../../../services/dashboard.service';
-import {HeaderDashboardSharedService} from '../../../../services/header-dashboard-shared.service';
+import {DashboardService} from '../../../../../modules/dashboard/dashboard.service';
+import {HeaderDashboardSharedService} from '../../../../../modules/core/header-dashboard-shared.service';
 import {ProjectWidget} from '../../../../model/dto/ProjectWidget';
 
 @Component({

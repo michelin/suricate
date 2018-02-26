@@ -15,45 +15,36 @@
  */
 
 import { Injectable } from '@angular/core';
-import {AbstractHttpService} from './abstract-http.service';
+import {AbstractHttpService} from '../../shared/services/abstract-http.service';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Project} from '../model/dto/Project';
 import {Observable} from 'rxjs/Observable';
-import {ProjectWidget} from '../model/dto/ProjectWidget';
+import {Category} from '../../shared/model/dto/Category';
+import {Widget} from '../../shared/model/dto/Widget';
+import {ProjectWidget} from '../../shared/model/dto/ProjectWidget';
 
 @Injectable()
-export class DashboardService extends AbstractHttpService {
+export class WidgetService extends AbstractHttpService  {
 
   constructor(private http: HttpClient) {
     super();
   }
 
-  getAll(): Observable<Project[]> {
+  getCategories(): Observable<Category[]> {
     let headers = new HttpHeaders();
     headers = headers.append('Content-Type', 'application/json');
 
     return this.http
-        .get<Project[]>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.PROJECT_URL}`, {headers: headers})
+        .get<Category[]>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.WIDGET_URL}/categories`, {headers: headers})
         .map(response => AbstractHttpService.extractData(response))
         .catch((error: any) => AbstractHttpService.handleErrorObservable(error));
   }
 
-  getOneById(id: string): Observable<Project> {
+  getWidgetsByCategoryId(categoryId: number): Observable<Widget[]> {
     let headers = new HttpHeaders();
     headers = headers.append('Content-Type', 'application/json');
 
     return this.http
-        .get<Project>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.PROJECT_URL}/${id}`, {headers: headers})
-        .map(response => AbstractHttpService.extractData(response))
-        .catch((error: any) => AbstractHttpService.handleErrorObservable(error));
-  }
-
-  addWidgetToProject(projectWidget: ProjectWidget): Observable<Project> {
-    let headers = new HttpHeaders();
-    headers = headers.append('Content-Type', 'application/json');
-
-    const url = `${AbstractHttpService.BASE_URL}/${AbstractHttpService.PROJECT_URL}/${projectWidget.projectId}`;
-    return this.http.put<Project>(`${url}`, projectWidget, {headers: headers})
+        .get<Widget[]>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.WIDGET_URL}/category/${categoryId}`, {headers: headers})
         .map(response => AbstractHttpService.extractData(response))
         .catch((error: any) => AbstractHttpService.handleErrorObservable(error));
   }

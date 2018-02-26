@@ -17,16 +17,23 @@
 import {RouterModule, Routes} from '@angular/router';
 import {NgModule} from '@angular/core';
 import {AuthGuard} from '../../shared/guards/auth.guard';
-import {DashboardService} from '../../shared/services/dashboard.service';
-import { DashboardDetailComponent } from './pages/dashboard-detail/dashboard-detail.component';
+import {DashboardService} from './dashboard.service';
+import { DashboardDetailComponent } from './dashboard-detail/dashboard-detail.component';
+import {CommonModule} from '@angular/common';
+import {SharedModule} from '../../shared/shared.module';
 
 const dashboardRoutes: Routes = [
-  { path: 'dashboard/:id', component: DashboardDetailComponent, data: { breadcrumb: 'Dashboard detail' }, canActivate: [AuthGuard]}
+  { path: 'dashboard/:id', component: DashboardDetailComponent, canActivate: [AuthGuard] }
 ];
 
 @NgModule({
   imports: [
-      RouterModule.forChild(dashboardRoutes)
+      CommonModule,
+      RouterModule.forChild(dashboardRoutes),
+      SharedModule
+  ],
+  declarations: [
+      DashboardDetailComponent
   ],
   exports: [
       RouterModule

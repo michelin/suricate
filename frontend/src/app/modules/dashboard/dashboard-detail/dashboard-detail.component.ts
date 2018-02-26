@@ -16,12 +16,12 @@
 
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
-import {DashboardService} from '../../../../shared/services/dashboard.service';
-import {Project} from '../../../../shared/model/dto/Project';
-import {Widget} from '../../../../shared/model/dto/Widget';
+import {DashboardService} from '../dashboard.service';
+import {Project} from '../../../shared/model/dto/Project';
+import {Widget} from '../../../shared/model/dto/Widget';
 import {DomSanitizer, SafeHtml, SafeStyle} from '@angular/platform-browser';
-import {AbstractHttpService} from '../../../../shared/services/abstract-http.service';
-import {HeaderDashboardSharedService} from '../../../../shared/services/header-dashboard-shared.service';
+import {AbstractHttpService} from '../../../shared/services/abstract-http.service';
+import {HeaderDashboardSharedService} from '../../core/header-dashboard-shared.service';
 
 @Component({
   selector: 'app-dashboard-detail',

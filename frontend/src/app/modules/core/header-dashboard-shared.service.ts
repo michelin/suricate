@@ -19,7 +19,7 @@
 
 import { Injectable } from '@angular/core';
 import {Subject} from 'rxjs/Subject';
-import {Project} from '../model/dto/Project';
+import {Project} from '../../shared/model/dto/Project';
 
 @Injectable()
 export class HeaderDashboardSharedService {

@@ -15,32 +15,27 @@
  */
 
 import { NgModule } from '@angular/core';
+import { LoginComponent } from './login/login.component';
 import { RouterModule, Routes } from '@angular/router';
-
-import { UserListComponent } from './user-list/user-list.component';
-import { AuthGuard } from '../../shared/guards/auth.guard';
-import {UserService} from './user.service';
+import {AuthenticationService} from './authentication.service';
 import {CommonModule} from '@angular/common';
 import {SharedModule} from '../../shared/shared.module';
 
-const appRoutes: Routes = [
-  { path: 'users', component: UserListComponent, data: { breadcrumb: 'User List' }, canActivate: [ AuthGuard ] }
+const authRoutes: Routes = [
+    { path: 'login', component: LoginComponent }
 ];
 
 @NgModule({
   imports: [
       CommonModule,
-      RouterModule.forChild(appRoutes),
+      RouterModule.forChild(authRoutes),
       SharedModule
   ],
   declarations: [
-    UserListComponent
-  ],
-  exports: [
-      RouterModule
+      LoginComponent
   ],
   providers: [
-      UserService
+      AuthenticationService
   ]
 })
-export class UserModule {}
+export class AuthenticationModule { }

@@ -16,12 +16,12 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { User } from '../model/dto/User';
+import { User } from '../../shared/model/dto/User';
 
 import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/catch';
-import {AbstractHttpService} from './abstract-http.service';
+import {AbstractHttpService} from '../../shared/services/abstract-http.service';
 
 
 @Injectable()

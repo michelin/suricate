@@ -15,32 +15,37 @@
  */
 
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-
-import { UserListComponent } from './user-list/user-list.component';
-import { AuthGuard } from '../../shared/guards/auth.guard';
-import {UserService} from './user.service';
+import { SidenavComponent } from './sidenav/sidenav.component';
+import { PagesHeaderComponent } from '../../shared/components/pages-header/pages-header.component';
+import { AddWidgetDialogComponent } from '../../shared/components/pages-header/components/add-widget-dialog/add-widget-dialog.component';
+import { HomeComponent } from './home/home.component';
+import {RouterModule, Routes} from '@angular/router';
+import {HeaderDashboardSharedService} from './header-dashboard-shared.service';
+import {WidgetService} from './widget.service';
 import {CommonModule} from '@angular/common';
 import {SharedModule} from '../../shared/shared.module';
 
-const appRoutes: Routes = [
-  { path: 'users', component: UserListComponent, data: { breadcrumb: 'User List' }, canActivate: [ AuthGuard ] }
+const coreRoutes: Routes = [
+  { path: 'home', component: HomeComponent }
 ];
 
 @NgModule({
   imports: [
       CommonModule,
-      RouterModule.forChild(appRoutes),
+      RouterModule.forChild(coreRoutes),
       SharedModule
   ],
   declarations: [
-    UserListComponent
+      SidenavComponent,
+      HomeComponent
   ],
   exports: [
-      RouterModule
+      SidenavComponent,
+      HomeComponent
   ],
   providers: [
-      UserService
+      HeaderDashboardSharedService,
+      WidgetService
   ]
 })
-export class UserModule {}
+export class CoreModule { }
