@@ -35,8 +35,9 @@ export abstract class AbstractHttpService {
     return response;
   }
 
-  static handleErrorObservable (error: Response | any) {
-    return Observable.throw(error.message || error);
+  static handleErrorObservable (error: Response) {
+    console.log(error);
+    return Observable.throw(error);
   }
 
 }
