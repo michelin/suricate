@@ -16,7 +16,7 @@
 
 import { Injectable } from '@angular/core';
 import {AbstractHttpService} from '../../shared/services/abstract-http.service';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {Project} from '../../shared/model/dto/Project';
 import {Observable} from 'rxjs/Observable';
 import {ProjectWidget} from '../../shared/model/dto/ProjectWidget';
@@ -29,32 +29,16 @@ export class DashboardService extends AbstractHttpService {
   }
 
   getAll(): Observable<Project[]> {
-    let headers = new HttpHeaders();
-    headers = headers.append('Content-Type', 'application/json');
-
-    return this.http
-        .get<Project[]>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.PROJECT_URL}`, {headers: headers})
-        .map(response => AbstractHttpService.extractData(response))
-        .catch((error: any) => AbstractHttpService.handleErrorObservable(error));
+    return this.http.get<Project[]>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.PROJECT_URL}`);
   }
 
   getOneById(id: string): Observable<Project> {
-    let headers = new HttpHeaders();
-    headers = headers.append('Content-Type', 'application/json');
-
-    return this.http
-        .get<Project>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.PROJECT_URL}/${id}`, {headers: headers})
-        .map(response => AbstractHttpService.extractData(response))
-        .catch((error: any) => AbstractHttpService.handleErrorObservable(error));
+    return this.http.get<Project>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.PROJECT_URL}/${id}`)
   }
 
   addWidgetToProject(projectWidget: ProjectWidget): Observable<Project> {
-    let headers = new HttpHeaders();
-    headers = headers.append('Content-Type', 'application/json');
-
     const url = `${AbstractHttpService.BASE_URL}/${AbstractHttpService.PROJECT_URL}/${projectWidget.projectId}`;
-    return this.http.put<Project>(`${url}`, projectWidget, {headers: headers})
-        .map(response => AbstractHttpService.extractData(response))
-        .catch((error: any) => AbstractHttpService.handleErrorObservable(error));
+
+    return this.http.put<Project>(`${url}`, projectWidget);
   }
 }

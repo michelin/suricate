@@ -95,9 +95,10 @@ export class LoginComponent implements OnInit {
             // Authentication succeed
             this.router.navigate(['/home']);
           },
-          () => {
+          error => {
             // Authentication failed
             this.formSubmitAttempt = false;
+            console.log(error);
           });
     }
   }

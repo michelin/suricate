@@ -18,7 +18,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
-import {catchError, map} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 
 import { ICredentials } from '../../shared/model/dto/user/ICredentials';
 import {AbstractHttpService} from '../../shared/services/abstract-http.service';
@@ -85,8 +85,7 @@ export class AuthenticationService extends AbstractHttpService {
 
               return authenticationResponse;
             }
-          }),
-          catchError(error => AbstractHttpService.handleErrorObservable(error))
+          })
       );
   }
 }

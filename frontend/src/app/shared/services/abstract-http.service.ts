@@ -28,16 +28,5 @@ export abstract class AbstractHttpService {
   public static readonly ASSET_URL = 'asset';
   public static readonly WIDGET_URL = 'widgets';
 
-  constructor() { }
-
-  static extractData(response) {
-    console.log(response);
-    return response;
-  }
-
-  static handleErrorObservable (error: Response) {
-    console.log(error);
-    return Observable.throw(error);
-  }
-
 }
+
