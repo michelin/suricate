@@ -1,68 +1,13 @@
-mat-card-content {
-  min-height: 245px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+.container {
+    height: 100vh;
 }
 
-mat-spinner {
-  margin: 0 auto;
+#login-form {
+    width: 40%;
 }
-
-.auth-main {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-  -ms-flex-align: center;
-  align-items: center;
-  width: 100%;
-  height: 100%;
+#card-login {
+    width: 100%;
 }
-
-.auth-main:before {
-  content: '';
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  background-size: cover;
-  will-change: transform;
-  z-index: -1;
-}
-
-.auth-block {
-  margin: 195px auto 0 auto;
-  width: 365px;
-  background: rgba(255, 255, 255, 0.83);
-}
-
-.auth-block .logo {
-  height: 80px;
-  background-size: contain;
-  margin-bottom: 15px;
-}
-
-#login-form > * {
-  width: 100%;
-}
-
-.footer-legals {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 98%;
-  padding: 10px;
-  background: rgba(255, 255, 255, 0.83);
-  color: #2942A7;
-  font-size: 13px;
-}
-
-.footer-legals {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+#card-login .mat-form-field {
+    margin-top: 25px;
 }

@@ -20,11 +20,11 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, Routes } from '@angular/router';
 import {CoreModule} from './modules/core/core.module';
 import {SharedModule} from './shared/shared.module';
-
-import { AppComponent } from './app.component';
 import { UserModule } from './modules/user/user.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
 import {AuthenticationModule} from './modules/authentication/authentication.module';
+
+import { AppComponent } from './app.component';
 
 const appRoutes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
