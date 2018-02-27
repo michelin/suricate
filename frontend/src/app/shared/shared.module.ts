@@ -24,6 +24,7 @@ import {AuthGuard} from './guards/auth.guard';
 import {MaterialModule} from './modules/material.module';
 import {PagesHeaderComponent} from './components/pages-header/pages-header.component';
 import {AddWidgetDialogComponent} from './components/pages-header/components/add-widget-dialog/add-widget-dialog.component';
+import {FlexLayoutModule} from '@angular/flex-layout';
 
 @NgModule({
   imports: [
@@ -32,20 +33,22 @@ import {AddWidgetDialogComponent} from './components/pages-header/components/add
       ReactiveFormsModule,
       HttpClientModule,
       NgGridModule,
-      MaterialModule
+      MaterialModule,
+      FlexLayoutModule
   ],
   declarations: [
       PagesHeaderComponent,
       AddWidgetDialogComponent
   ],
   exports: [
-    FormsModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-    NgGridModule,
-    MaterialModule,
-    PagesHeaderComponent,
-    AddWidgetDialogComponent
+      FormsModule,
+      ReactiveFormsModule,
+      HttpClientModule,
+      NgGridModule,
+      MaterialModule,
+      FlexLayoutModule,
+      PagesHeaderComponent,
+      AddWidgetDialogComponent
   ],
   providers: [
       { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
