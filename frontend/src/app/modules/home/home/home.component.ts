@@ -15,6 +15,8 @@
  */
 
 import { Component, OnInit } from '@angular/core';
+import {Project} from '../../../shared/model/dto/Project';
+import {DashboardService} from '../../dashboard/dashboard.service';
 
 @Component({
   selector: 'app-home',
@@ -23,9 +25,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HomeComponent implements OnInit {
 
-  constructor() { }
+  dashboards: Project[];
+
+  constructor(private dashboardService: DashboardService) { }
 
   ngOnInit() {
+    this.dashboardService.getAll()
+        .subscribe(
+            dashboards => this.dashboards = dashboards
+        );
   }
 
 }

@@ -6,10 +6,6 @@
   display: inline-block;
   float: right;
 }
-.actions button {
-  color: #cfd2da;
-}
-
 h2.header {
   font-weight: 300;
   font-variant: all-small-caps;

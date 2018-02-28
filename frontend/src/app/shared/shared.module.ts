@@ -26,6 +26,7 @@ import {PagesHeaderComponent} from './components/pages-header/pages-header.compo
 import {AddWidgetDialogComponent} from './components/pages-header/components/add-widget-dialog/add-widget-dialog.component';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {RouterModule} from '@angular/router';
+import {DashboardActionsComponent} from './components/pages-header/components/dashboard-actions/dashboard-actions.component';
 
 @NgModule({
   imports: [
@@ -40,7 +41,8 @@ import {RouterModule} from '@angular/router';
   ],
   declarations: [
       PagesHeaderComponent,
-      AddWidgetDialogComponent
+      AddWidgetDialogComponent,
+      DashboardActionsComponent
   ],
   exports: [
       FormsModule,
