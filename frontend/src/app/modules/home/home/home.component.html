@@ -1,3 +1,9 @@
-<p>
-  home works!
-</p>
+<app-pages-header [secondTitle]="'My Dashboards'"></app-pages-header>
+
+<div *ngIf="dashboards | async; else noDashboards">
+
+</div>
+
+<ng-template #noDashboards>
+  Cannot found dashboard associate to you account, try to create one
+</ng-template>

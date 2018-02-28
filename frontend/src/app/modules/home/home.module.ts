@@ -14,21 +14,28 @@
  * limitations under the License.
  */
 
-import {Component, Input, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import {RouterModule, Routes} from '@angular/router';
+import {SharedModule} from '../../shared/shared.module';
+import {HomeComponent} from './home/home.component';
 
-@Component({
-  selector: 'app-pages-header',
-  templateUrl: './pages-header.component.html',
-  styleUrls: ['./pages-header.component.css']
+
+const homeRoutes: Routes = [
+  { path: 'home', component: HomeComponent }
+];
+
+@NgModule({
+  imports: [
+    CommonModule,
+    RouterModule.forChild(homeRoutes),
+    SharedModule
+  ],
+  declarations: [
+    HomeComponent
+  ],
+  exports: [
+      HomeComponent
+  ]
 })
-export class PagesHeaderComponent implements OnInit {
-  pageName: string;
-  @Input('secondTitle') secondTitle: string;
-
-  constructor(private route: Router) {}
-
-  ngOnInit() {
-    this.pageName = this.route.url.split('/')[1];
-  }
-}
+export class HomeModule { }

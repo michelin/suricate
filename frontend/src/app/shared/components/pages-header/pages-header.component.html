@@ -7,11 +7,12 @@
   <div class="actions">
     <!-- Dashboard actions -->
     <div class="dashboard-actions" *ngIf="pageName === 'dashboard'">
-      <button mat-fab color="accent" matTooltip="New Widget" (click)="openAddWidgetDialog()"> <mat-icon>add</mat-icon> </button>
-      <button mat-fab color="accent" matTooltip="Dashboard Settings"> <mat-icon>settings_applications</mat-icon> </button>
-      <button mat-fab color="accent" matTooltip="Refresh"> <mat-icon>refresh</mat-icon> </button>
-      <button mat-fab color="accent" matTooltip="TV View"> <mat-icon>tv</mat-icon> </button>
-      <button mat-fab color="accent" matTooltip="Display on TV"> <mat-icon>live_tv</mat-icon> </button>
+      <app-dashboard-actions></app-dashboard-actions>
+    </div>
+
+    <!-- Dashboard actions -->
+    <div class="home-actions" *ngIf="pageName === 'home'">
+      <app-dashboard-actions></app-dashboard-actions>
     </div>
   </div>
 
