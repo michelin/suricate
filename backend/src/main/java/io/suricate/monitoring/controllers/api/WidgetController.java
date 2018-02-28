@@ -16,6 +16,7 @@
 
 package io.suricate.monitoring.controllers.api;
 
+import io.suricate.monitoring.model.dto.widget.CategoryDto;
 import io.suricate.monitoring.model.entity.widget.Category;
 import io.suricate.monitoring.model.dto.widget.WidgetResponse;
 import io.suricate.monitoring.service.WidgetService;
@@ -24,6 +25,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/widgets")
@@ -38,8 +40,9 @@ public class WidgetController {
 
     @RequestMapping(value = "/categories", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
-    public List<Category> getCategories() {
-        return widgetService.getCategories();
+    public List<CategoryDto> getCategories() {
+        List<Category> categories = widgetService.getCategories();
+        return categories.stream().map(category -> new CategoryDto(category)).collect(Collectors.toList());
     }
 
     @RequestMapping(value = "/category/{id}", method = RequestMethod.GET)

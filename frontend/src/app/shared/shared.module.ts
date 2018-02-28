@@ -44,6 +44,9 @@ import {DashboardActionsComponent} from './components/pages-header/components/da
       AddWidgetDialogComponent,
       DashboardActionsComponent
   ],
+  entryComponents: [
+      AddWidgetDialogComponent
+  ],
   exports: [
       FormsModule,
       ReactiveFormsModule,
