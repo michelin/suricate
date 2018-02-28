@@ -25,6 +25,7 @@ import { DashboardModule } from './modules/dashboard/dashboard.module';
 import {AuthenticationModule} from './modules/authentication/authentication.module';
 
 import { AppComponent } from './app.component';
+import {HomeModule} from './modules/home/home.module';
 
 const appRoutes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -38,6 +39,7 @@ const appRoutes: Routes = [
       RouterModule.forRoot(appRoutes),
       SharedModule,
       CoreModule,
+      HomeModule,
       AuthenticationModule,
       DashboardModule,
       UserModule

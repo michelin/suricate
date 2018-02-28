@@ -25,6 +25,7 @@ import {MaterialModule} from './modules/material.module';
 import {PagesHeaderComponent} from './components/pages-header/pages-header.component';
 import {AddWidgetDialogComponent} from './components/pages-header/components/add-widget-dialog/add-widget-dialog.component';
 import {FlexLayoutModule} from '@angular/flex-layout';
+import {RouterModule} from '@angular/router';
 
 @NgModule({
   imports: [
@@ -34,7 +35,8 @@ import {FlexLayoutModule} from '@angular/flex-layout';
       HttpClientModule,
       NgGridModule,
       MaterialModule,
-      FlexLayoutModule
+      FlexLayoutModule,
+      RouterModule
   ],
   declarations: [
       PagesHeaderComponent,
@@ -47,6 +49,7 @@ import {FlexLayoutModule} from '@angular/flex-layout';
       NgGridModule,
       MaterialModule,
       FlexLayoutModule,
+      RouterModule,
       PagesHeaderComponent,
       AddWidgetDialogComponent
   ],
