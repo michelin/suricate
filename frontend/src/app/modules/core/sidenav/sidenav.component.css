@@ -1,31 +1,32 @@
 mat-sidenav-container {
-  min-height: 100vh;
+    min-height: 100vh;
 }
 
-mat-sidenav {
-  width: 200px;
-}
-
+/** Sidenav **/
 mat-sidenav * {
-  color: #cfd2da;
-  font-variant: all-small-caps;
+    color: #cfd2da;
+    font-variant: all-small-caps;
 }
 mat-sidenav mat-icon {
-  font-variant: none;
+    font-variant: none;
 }
 
-/* Global Section */
-mat-sidenav > .sidenav-section {
-  margin: 0 auto 30px auto;
-  padding-left: 20px;
+mat-sidenav > .sidenav-section-container {
+    margin-left: 20px;
 }
 
-/* User Section */
-mat-sidenav > #user-section {
+/** Global Section **/
+mat-sidenav .sidenav-section {
+    width: 100%;
+    margin: 0 auto;
+}
+
+/** User Section **/
+mat-sidenav #user-section {
   padding: 15px 0 30px 0;
   margin: 0;
 }
-mat-sidenav > #user-section > .avatar-container {
+mat-sidenav #user-section > .avatar-container {
   margin: 0 auto;
   width: 70px;
   height: 70px;
@@ -34,7 +35,7 @@ mat-sidenav > #user-section > .avatar-container {
   border: 1px solid #303030;
 }
 
-mat-sidenav > #user-section > .avatar-container > .avatar {
+mat-sidenav #user-section > .avatar-container > .avatar {
   height: auto;
   font-size: 34px;
   line-height: 71px;
@@ -62,7 +63,7 @@ mat-nav-list.submenu .mat-list-item mat-icon {
 
 mat-nav-list .mat-list-item {
   height: 30px;
-  width: 159px;
+  width: 90%;
 }
 mat-nav-list .mat-list-item:hover {
   background-color: transparent;
@@ -75,7 +76,7 @@ mat-nav-list .mat-list-item.active {
 }
 
 mat-sidenav-content {
-  padding: 10px 10px 0 20px;
-  min-height: 95vh;
+  padding: 10px 10px 0 10px;
+  min-height: 100vh;
   overflow: -webkit-paged-x;
 }
