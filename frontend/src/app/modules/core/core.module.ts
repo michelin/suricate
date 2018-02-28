@@ -16,32 +16,21 @@
 
 import { NgModule } from '@angular/core';
 import { SidenavComponent } from './sidenav/sidenav.component';
-import { PagesHeaderComponent } from '../../shared/components/pages-header/pages-header.component';
-import { AddWidgetDialogComponent } from '../../shared/components/pages-header/components/add-widget-dialog/add-widget-dialog.component';
-import { HomeComponent } from './home/home.component';
-import {RouterModule, Routes} from '@angular/router';
 import {HeaderDashboardSharedService} from './header-dashboard-shared.service';
 import {WidgetService} from './widget.service';
 import {CommonModule} from '@angular/common';
 import {SharedModule} from '../../shared/shared.module';
 
-const coreRoutes: Routes = [
-  { path: 'home', component: HomeComponent }
-];
-
 @NgModule({
   imports: [
       CommonModule,
-      RouterModule.forChild(coreRoutes),
       SharedModule
   ],
   declarations: [
-      SidenavComponent,
-      HomeComponent
+      SidenavComponent
   ],
   exports: [
-      SidenavComponent,
-      HomeComponent
+      SidenavComponent
   ],
   providers: [
       HeaderDashboardSharedService,

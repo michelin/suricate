@@ -42,6 +42,6 @@ export class UserService extends AbstractHttpService {
   }
 
   getUserInitial(user: User): string {
-    return `${user.firstname.substring(0, 1)} ${user.lastname.substring(0, 1)}`;
+    return `${user.firstname.substring(0, 1)}${user.lastname.substring(0, 1)}`;
   }
 }

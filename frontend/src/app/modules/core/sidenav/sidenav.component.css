@@ -36,9 +36,9 @@ mat-sidenav #user-section > .avatar-container {
 }
 
 mat-sidenav #user-section > .avatar-container > .avatar {
-  height: auto;
+  height: 100%;
   font-size: 34px;
-  line-height: 71px;
+  line-height: 63px;
   text-align: center;
   background: #303030;
 }
