@@ -16,32 +16,26 @@
 
 import { Component, OnInit } from '@angular/core';
 import {MatDialog, MatDialogRef} from '@angular/material';
-import {AddWidgetDialogComponent} from '../add-widget-dialog/add-widget-dialog.component';
-import {ActivatedRoute} from '@angular/router';
+import {AddDashboardDialogComponent} from '../add-dashboard-dialog/add-dashboard-dialog.component';
 
 @Component({
-  selector: 'app-dashboard-actions',
-  templateUrl: './dashboard-actions.component.html',
-  styleUrls: ['./dashboard-actions.component.css']
+  selector: 'app-home-actions',
+  templateUrl: './home-actions.component.html',
+  styleUrls: ['./home-actions.component.css']
 })
-export class DashboardActionsComponent implements OnInit {
+export class HomeActionsComponent implements OnInit {
+  addDashboardDialogRef: MatDialogRef<AddDashboardDialogComponent>;
 
-  addWidgetDialogRef: MatDialogRef<AddWidgetDialogComponent>;
-  projectId: number;
-
-  constructor(private dialog: MatDialog,
-              private activatedRoute: ActivatedRoute) { }
+  constructor(private dialog: MatDialog) { }
 
   ngOnInit() {
-    this.activatedRoute.params.subscribe(params => {
-      this.projectId = params['id'];
+  }
+
+  openAddDashboardDialog() {
+    this.addDashboardDialogRef = this.dialog.open(AddDashboardDialogComponent, {
+      minWidth: 900,
+      minHeight: 500,
     });
   }
 
-  openAddWidgetDialog() {
-    this.addWidgetDialogRef = this.dialog.open(AddWidgetDialogComponent, {
-      minWidth: 900,
-      data: { projectId: this.projectId}
-    });
-  }
 }

@@ -1,0 +1,30 @@
+<h1 matDialogTitle class="little">Add new dashboard</h1>
+
+<mat-dialog-content>
+  <form>
+    <mat-horizontal-stepper [linear]="true">
+
+    </mat-horizontal-stepper>
+
+
+    <mat-form-field>
+      <input matInput type="text" id="dasboard_name" placeholder="Dashboard Name" formControlName="dashboard_name">
+    </mat-form-field>
+
+    <h2>{{ 'Grid configuration' | uppercase}}</h2>
+
+    <mat-form-field>
+      <input matInput type="number" id="widget_height" placeholder="Widget Height in px">
+    </mat-form-field>
+
+    <mat-form-field>
+      <input matInput type="number" id="nb_column" placeholder="Number of column (used for display widgets)">
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<!--<mat-dialog-actions [attr.align]="'start'">-->
+  <!--<button mat-button matDialogClose>Close dialog</button>-->
+  <!--<button mat-button>Action</button>-->
+
+<!--</mat-dialog-actions>-->
