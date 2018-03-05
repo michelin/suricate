@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import {ChangeDetectorRef, Component, Inject, OnInit, ViewChild} from '@angular/core';
+import {MAT_DIALOG_DATA, MatDialogRef, MatHorizontalStepper, MatStepper} from '@angular/material';
 import {Category} from '../../../../model/dto/Category';
 import {WidgetService} from '../../../../../modules/core/widget.service';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
@@ -34,6 +34,10 @@ import {ProjectWidget} from '../../../../model/dto/ProjectWidget';
 })
 export class AddWidgetDialogComponent implements OnInit {
 
+  @ViewChild('widgetStepper') widgetStepper: MatHorizontalStepper;
+  step1Completed = false;
+  step2Completed = false;
+
   widgetParamEnum = WidgetParamEnum;
   categories: Category[];
   widgets: Widget[];
@@ -44,7 +48,8 @@ export class AddWidgetDialogComponent implements OnInit {
               private dashboardService: DashboardService,
               private headerDashboardSharedService: HeaderDashboardSharedService,
               private domSanitizer: DomSanitizer,
-              private addWidgetDialogRef: MatDialogRef<AddWidgetDialogComponent>) { }
+              private addWidgetDialogRef: MatDialogRef<AddWidgetDialogComponent>,
+              private changeDetectorRef: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.widgetService
@@ -59,11 +64,18 @@ export class AddWidgetDialogComponent implements OnInit {
         .getWidgetsByCategoryId(categoryId)
         .subscribe(widgets => {
           this.widgets = widgets;
+          this.step1Completed = true;
+          this.changeDetectorRef.detectChanges();
+          this.widgetStepper.next();
         });
+
   }
 
   setSelectedWidget(selectedWidget: Widget) {
     this.selectedWidget = selectedWidget;
+    this.step2Completed = true;
+    this.changeDetectorRef.detectChanges();
+    this.widgetStepper.next();
   }
 
   addWidget(formSettings: NgForm) {

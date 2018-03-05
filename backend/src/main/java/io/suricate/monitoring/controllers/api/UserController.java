@@ -26,6 +26,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -50,6 +51,17 @@ public class UserController {
     public List<UserDto> getAll() {
         List<User> users =  userService.getAll();
         return users.stream().map(user -> new UserDto(user)).collect(Collectors.toList());
+    }
+
+    @RequestMapping(value="/search", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public List<UserDto> search(@RequestParam("username") String username) {
+        Optional<List<User>> users = userService.getAllByUsernameStartWith(username);
+        if(!users.isPresent()) {
+            return new ArrayList<>();
+        }
+
+        return users.get().stream().map(user -> new UserDto(user)).collect(Collectors.toList());
     }
 
     /**

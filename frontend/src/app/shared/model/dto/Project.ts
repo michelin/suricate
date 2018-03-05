@@ -17,7 +17,7 @@
 import {Widget} from './Widget';
 
 export class Project {
-  id: string;
+  id: number;
   name: string;
   token: string;
   widgetHeight: number;

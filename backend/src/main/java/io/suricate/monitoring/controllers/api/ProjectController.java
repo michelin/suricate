@@ -16,32 +16,53 @@
 
 package io.suricate.monitoring.controllers.api;
 
+import io.suricate.monitoring.controllers.api.error.exception.ApiException;
+import io.suricate.monitoring.model.dto.project.ProjectDto;
+import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.dto.project.ProjectResponse;
 import io.suricate.monitoring.model.dto.project.ProjectWidgetRequest;
 import io.suricate.monitoring.model.entity.user.User;
+import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.service.ProjectService;
+import io.suricate.monitoring.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/projects")
 public class ProjectController {
 
     private final ProjectService projectService;
+    private final UserService userService;
 
     @Autowired
-    public ProjectController(ProjectService projectService) {
+    public ProjectController(final ProjectService projectService, final UserService userService) {
         this.projectService = projectService;
+        this.userService = userService;
     }
 
     @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
     public List<ProjectResponse> getAll(@RequestAttribute User user) {
         return projectService.getAllByUser(user);
+    }
+
+    @RequestMapping(method = RequestMethod.PUT)
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ProjectResponse addNewProject(Principal principal, @RequestBody ProjectDto projectDto) {
+        Optional<User> user = userService.getOneByUsername(principal.getName());
+
+        if(!user.isPresent()) {
+            throw new ApiException(ApiErrorEnum.USER_NOT_FOUND);
+        }
+        Project project = projectService.addProject(user.get(), projectService.toModel(projectDto));
+        return projectService.toDTO(project);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)

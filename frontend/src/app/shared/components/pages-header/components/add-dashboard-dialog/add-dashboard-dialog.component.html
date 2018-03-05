@@ -1,30 +1,90 @@
 <h1 matDialogTitle class="little">Add new dashboard</h1>
 
 <mat-dialog-content>
-  <form>
-    <mat-horizontal-stepper [linear]="true">
+  <mat-horizontal-stepper #addDashboardStepper [linear]="true">
+    <!-- Step 1 : Dashboard settings -->
+    <mat-step [stepControl]="dashboardForm">
+      <form [formGroup]="dashboardForm" (submit)="addDashboard()" novalidate>
+        <ng-template matStepLabel> Dashboard Settings </ng-template>
 
-    </mat-horizontal-stepper>
+        <div fxLayout="column wrap"
+             fxLayoutAlign="center start"
+             fxLayoutGap="20px">
+          <!-- Dashboard name input -->
+          <mat-form-field fxFlexFill>
+            <input matInput
+                   type="text"
+                   id="dashboard_name"
+                   placeholder="Dashboard Name"
+                   formControlName="name"
+                   [required]="this.dashboardForm.get('name').errors && this.dashboardForm.get('name').errors.required">
 
+            <mat-error *ngIf="isFieldInvalid('name')">
+              This field is required
+            </mat-error>
+          </mat-form-field>
 
-    <mat-form-field>
-      <input matInput type="text" id="dasboard_name" placeholder="Dashboard Name" formControlName="dashboard_name">
-    </mat-form-field>
+          <h2 fxFlexFill>{{ 'Grid configuration' | uppercase}}</h2>
+          <mat-form-field fxFlexFill>
+            <input matInput
+                   type="number"
+                   id="widget_height"
+                   placeholder="Widget Height in px"
+                   formControlName="widgetHeight"
+                   [required]="this.dashboardForm.get('widgetHeight').errors && this.dashboardForm.get('widgetHeight').errors.required">
 
-    <h2>{{ 'Grid configuration' | uppercase}}</h2>
+            <mat-error *ngIf="isFieldInvalid('widgetHeight')">
+              This field is required and should be an integer > 0
+            </mat-error>
+          </mat-form-field>
 
-    <mat-form-field>
-      <input matInput type="number" id="widget_height" placeholder="Widget Height in px">
-    </mat-form-field>
+          <mat-form-field fxFlexFill>
+            <input matInput
+                   type="number"
+                   id="nb_column"
+                   placeholder="Number of column (used for display widgets)"
+                   formControlName="maxColumn"
+                   [required]="this.dashboardForm.get('maxColumn').errors && this.dashboardForm.get('maxColumn').errors.required">
 
-    <mat-form-field>
-      <input matInput type="number" id="nb_column" placeholder="Number of column (used for display widgets)">
-    </mat-form-field>
-  </form>
+            <mat-error *ngIf="isFieldInvalid('maxColumn')">
+              This field is required and should be an integer > 0
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <div fxLayout="row wrap" fxLayoutAlign="space-between center">
+          <button mat-button mat-dialog-close>Close</button>
+
+          <button mat-button matStepperNext>
+            Save and add users
+            <mat-icon matSuffix><i class="material-icons">keyboard_arrow_right</i></mat-icon>
+          </button>
+        </div>
+      </form>
+    </mat-step>
+
+    <!-- Step 2 : Add users -->
+    <mat-step>
+      <ng-template matStepLabel> Add Users </ng-template>
+
+      <form [formGroup]="addUserForm" fxLayout="row wrap" fxLayoutAlign="center start">
+        <mat-form-field fxFlexFill>
+          <mat-icon matPrefix style="margin-right: 10px">person_pin</mat-icon>
+          <input matInput
+                 type="text"
+                 formControlName="username"
+                 [required]="this.addUserForm.get('username').errors && this.addUserForm.get('username').errors.required"
+                 [matAutocomplete]="usernameAutoComplete">
+          <mat-hint align="start">Search by username</mat-hint>
+          <mat-autocomplete #usernameAutoComplete="matAutocomplete">
+            <mat-option *ngFor="let user of userAutoComplete | async" [value]="user.username">
+              {{user.username | uppercase}} - {{user.firstname}} {{user.lastname}}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </form>
+
+    </mat-step>
+
+  </mat-horizontal-stepper>
 </mat-dialog-content>
-
-<!--<mat-dialog-actions [attr.align]="'start'">-->
-  <!--<button mat-button matDialogClose>Close dialog</button>-->
-  <!--<button mat-button>Action</button>-->
-
-<!--</mat-dialog-actions>-->

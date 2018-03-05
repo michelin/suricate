@@ -100,6 +100,9 @@ public class User extends AbstractEntity<Long> {
     }
 
     public List<Project> getProjects() {
+        if(projects == null) {
+            projects = new ArrayList<>();
+        }
         return projects;
     }
     public void setProjects(List<Project> projects) {
