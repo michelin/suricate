@@ -57,7 +57,9 @@ export class LoginComponent implements OnInit {
    * @param {AuthenticationService} authenticationService
    * @param {FormBuilder} formBuilder
    */
-  constructor(private router: Router, private authenticationService: AuthenticationService, private formBuilder: FormBuilder) {}
+  constructor(private router: Router,
+              private authenticationService: AuthenticationService,
+              private formBuilder: FormBuilder) {}
 
   /**
    * Init objects

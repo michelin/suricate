@@ -68,7 +68,7 @@ import { CustomFormsModule} from 'ng2-validation';
   ],
   providers: [
       { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
-      AuthGuard,
+      AuthGuard
   ]
 })
 export class SharedModule { }

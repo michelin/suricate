@@ -7,6 +7,10 @@ body {
     background-color: #303030;
 }
 
+.mat-raised-button.mat-accent {
+    color: white;
+}
+
 h1.little {
     font-size: 1.2em;
     color: #7e8188 !important;

@@ -66,9 +66,8 @@ mat-nav-list .mat-list-item {
   width: 90%;
 }
 mat-nav-list .mat-list-item:hover {
-  background-color: transparent;
+  background-color: #505050;
   color: #f7f9ff;
-  font-size: 1.2em;
 }
 mat-nav-list .mat-list-item.active {
   background-color: #1997c6;

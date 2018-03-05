@@ -15,6 +15,7 @@
  */
 
 import {Widget} from './Widget';
+import {User} from './user/User';
 
 export class Project {
   id: number;
@@ -25,4 +26,5 @@ export class Project {
   cssStyle: string;
   widgets: Widget[];
   librariesToken: string[];
+  users: User[];
 }

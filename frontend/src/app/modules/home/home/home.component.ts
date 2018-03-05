@@ -30,10 +30,7 @@ export class HomeComponent implements OnInit {
   constructor(private dashboardService: DashboardService) { }
 
   ngOnInit() {
-    this.dashboardService.getAll()
-        .subscribe(
-            dashboards => this.dashboards = dashboards
-        );
+    this.dashboardService.dashboardsSubject.subscribe( dashboards => this.dashboards = dashboards );
   }
 
 }
