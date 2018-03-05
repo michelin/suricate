@@ -41,6 +41,10 @@ export class UserService extends AbstractHttpService {
     return this.http.get<User>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.USER_URL}/current`);
   }
 
+  searchUserByUsername(username: string): Observable<User[]> {
+    return this.http.get<User[]>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.USER_URL}/search?username=${username}`);
+  }
+
   getUserInitial(user: User): string {
     return `${user.firstname.substring(0, 1)}${user.lastname.substring(0, 1)}`;
   }

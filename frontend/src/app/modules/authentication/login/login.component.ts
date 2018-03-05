@@ -16,7 +16,7 @@
 
 import {Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import {FormGroup, Validators, FormBuilder, FormControl} from '@angular/forms';
 
 import { AuthenticationService} from '../authentication.service';
 
@@ -33,6 +33,8 @@ export class LoginComponent implements OnInit {
    * The login form
    */
   loginForm: FormGroup;
+  usernameCtrl: FormControl;
+  passwordCtrl: FormControl;
 
   /**
    * If the password field is hidden or not
@@ -63,9 +65,12 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     this.authenticationService.logout();
 
+    this.usernameCtrl = this.formBuilder.control('', [Validators.required]);
+    this.passwordCtrl = this.formBuilder.control('', [Validators.required]);
+
     this.loginForm = this.formBuilder.group({
-      'username': ['', Validators.required],
-      'password': ['', Validators.required]
+      'username': this.usernameCtrl,
+      'password': this.passwordCtrl
     });
   }
 

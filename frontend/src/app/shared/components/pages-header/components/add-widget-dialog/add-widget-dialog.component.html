@@ -1,10 +1,10 @@
 <h1 class="little"> Add new widget </h1>
 
 <mat-dialog-content>
-  <mat-horizontal-stepper [linear]="true">
+  <mat-horizontal-stepper #widgetStepper [linear]="true">
 
     <!-- Step 1 : Select category -->
-    <mat-step>
+    <mat-step [completed]="step1Completed">
       <ng-template matStepLabel> Select category </ng-template>
 
       <mat-grid-list cols="3" rowHeight="250px">
@@ -15,7 +15,7 @@
             </mat-card-header>
             <img mat-card-image [src]="getImageSrc(category.image)">
             <mat-card-actions>
-              <button mat-button (click)="getWidgets(category.id)" matStepperNext >SELECT</button>
+              <button mat-button (click)="getWidgets(category.id)">SELECT</button>
             </mat-card-actions>
           </mat-card>
         </mat-grid-tile>
@@ -23,7 +23,7 @@
     </mat-step>
 
     <!-- Step 2 : Select Widget -->
-    <mat-step>
+    <mat-step [(completed)]="step2Completed">
       <ng-template matStepLabel> Select Widget </ng-template>
 
       <mat-grid-list cols="3" rowHeight="350px" *ngIf="widgets">
@@ -37,7 +37,7 @@
               {{widget.description}}
             </mat-card-content>
             <mat-card-actions>
-              <button mat-button (click)="setSelectedWidget(widget)" matStepperNext >SELECT</button>
+              <button mat-button (click)="setSelectedWidget(widget)">SELECT</button>
             </mat-card-actions>
           </mat-card>
         </mat-grid-tile>
@@ -57,8 +57,9 @@
                 {{selectedWidget.description}}
               </div>
             </div>
+
             <div class="settings-container">
-              <form id="formSettings" #formSettings="ngForm" (ngSubmit)="addWidget(formSettings)" mul>
+              <form id="formSettings" #formSettings="ngForm" (ngSubmit)="addWidget(formSettings)" novalidate>
                 <div *ngFor="let param of selectedWidget.widgetParams">
 
                   <!-- Boolean Type -->

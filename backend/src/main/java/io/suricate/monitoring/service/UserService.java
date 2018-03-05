@@ -100,4 +100,8 @@ public class UserService {
     public Optional<User> getOneByUsername(String username) {
         return userRepository.findByUsername(username);
     }
+
+    public Optional<List<User>> getAllByUsernameStartWith(String username) {
+        return userRepository.findByUsernameIgnoreCaseAndStartingWith(username);
+    }
 }

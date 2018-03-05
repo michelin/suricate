@@ -35,6 +35,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 	Optional<User> findByUsernameIgnoreCase(String username);
 
+	@Query("SELECT u FROM User u " +
+			"WHERE lower(u.username) LIKE lower(concat(:username, '%'))")
+	Optional<List<User>> findByUsernameIgnoreCaseAndStartingWith(@Param("username") String username);
+
 	/**
 	 * Methos used to get id by username
 	 * @param username the user name to find

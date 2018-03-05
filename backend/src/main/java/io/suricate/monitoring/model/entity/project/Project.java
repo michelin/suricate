@@ -21,6 +21,7 @@ import io.suricate.monitoring.model.entity.AbstractAuditingEntity;
 import io.suricate.monitoring.model.entity.user.User;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -101,6 +102,9 @@ public class Project extends AbstractAuditingEntity<Long> {
     }
 
     public List<User> getUsers() {
+        if(users == null) {
+            users = new ArrayList<>();
+        }
         return users;
     }
     public void setUsers(List<User> users) {

@@ -33,7 +33,11 @@ export class DashboardService extends AbstractHttpService {
   }
 
   getOneById(id: string): Observable<Project> {
-    return this.http.get<Project>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.PROJECT_URL}/${id}`)
+    return this.http.get<Project>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.PROJECT_URL}/${id}`);
+  }
+
+  addProject(project: Project): Observable<Project> {
+    return this.http.put<Project>(`${AbstractHttpService.BASE_URL}/${DashboardService.PROJECT_URL}`, project);
   }
 
   addWidgetToProject(projectWidget: ProjectWidget): Observable<Project> {

@@ -29,6 +29,7 @@ import {RouterModule} from '@angular/router';
 import {DashboardActionsComponent} from './components/pages-header/components/dashboard-actions/dashboard-actions.component';
 import { HomeActionsComponent } from './components/pages-header/components/home-actions/home-actions.component';
 import { AddDashboardDialogComponent } from './components/pages-header/components/add-dashboard-dialog/add-dashboard-dialog.component';
+import { CustomFormsModule} from 'ng2-validation';
 
 @NgModule({
   imports: [
@@ -39,7 +40,8 @@ import { AddDashboardDialogComponent } from './components/pages-header/component
       NgGridModule,
       MaterialModule,
       FlexLayoutModule,
-      RouterModule
+      RouterModule,
+      CustomFormsModule
   ],
   declarations: [
       PagesHeaderComponent,
@@ -60,6 +62,7 @@ import { AddDashboardDialogComponent } from './components/pages-header/component
       MaterialModule,
       FlexLayoutModule,
       RouterModule,
+      CustomFormsModule,
       PagesHeaderComponent,
       AddWidgetDialogComponent
   ],
