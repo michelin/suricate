@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MatHorizontalStepper} from '@angular/material';
 import {CustomValidators} from 'ng2-validation';
 import {DashboardService} from '../../../../../modules/dashboard/dashboard.service';
@@ -24,6 +24,7 @@ import {User} from '../../../../model/dto/user/User';
 import {UserService} from '../../../../../modules/user/user.service';
 import {Observable} from 'rxjs/Observable';
 import {empty} from 'rxjs/observable/empty';
+import {Project} from '../../../../model/dto/Project';
 
 @Component({
   selector: 'app-add-dashboard-dialog',
@@ -34,14 +35,20 @@ export class AddDashboardDialogComponent implements OnInit {
   @ViewChild('addDashboardStepper') addDashboardStepper: MatHorizontalStepper;
 
   dashboardForm:      FormGroup;
+  dashboardFormCompleted: boolean;
+
   addUserForm:        FormGroup;
+  userAutoComplete:   Observable<User[]>;
+  projectAdded:       Project;
 
-  userAutoComplete: Observable<User[]>;
-
-  constructor(private formBuilder: FormBuilder, private dashboardService: DashboardService, private userService: UserService) { }
+  constructor(private formBuilder: FormBuilder,
+              private changeDetectorRef: ChangeDetectorRef,
+              private dashboardService: DashboardService,
+              private userService: UserService) { }
 
   ngOnInit() {
     // init form dashboard
+    this.dashboardFormCompleted = false;
     this.dashboardForm = this.formBuilder.group({
       'name': ['t', [Validators.required]],
       'widgetHeight': ['360', [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]],
@@ -72,8 +79,31 @@ export class AddDashboardDialogComponent implements OnInit {
 
   addDashboard() {
     if (this.dashboardForm.valid) {
-      this.dashboardService.addProject(this.dashboardForm.value).subscribe(project => console.log(project));
+      this.projectAdded = { ...this.projectAdded,
+                            ...this.dashboardForm.value};
+
+      this.dashboardService
+          .addProject(this.projectAdded)
+          .subscribe(project => {
+            this.projectAdded = project;
+            this.dashboardFormCompleted = true;
+            this.changeDetectorRef.detectChanges();
+            this.addDashboardStepper.next();
+          });
     }
   }
 
+  addUser() {
+    if (this.addUserForm.valid) {
+      this.dashboardService
+          .addUserToProject(this.projectAdded, this.addUserForm.value)
+          .subscribe(project => this.projectAdded = project);
+    }
+  }
+
+  deleteUser(userId: number) {
+    this.dashboardService
+        .deleteUserFromProject(this.projectAdded, userId)
+        .subscribe(project => this.projectAdded = project);
+  }
 }

@@ -3,13 +3,14 @@
 <mat-dialog-content>
   <mat-horizontal-stepper #addDashboardStepper [linear]="true">
     <!-- Step 1 : Dashboard settings -->
-    <mat-step [stepControl]="dashboardForm">
+    <mat-step [completed]="dashboardFormCompleted">
       <form [formGroup]="dashboardForm" (submit)="addDashboard()" novalidate>
         <ng-template matStepLabel> Dashboard Settings </ng-template>
 
         <div fxLayout="column wrap"
              fxLayoutAlign="center start"
              fxLayoutGap="20px">
+
           <!-- Dashboard name input -->
           <mat-form-field fxFlexFill>
             <input matInput
@@ -50,16 +51,13 @@
               This field is required and should be an integer > 0
             </mat-error>
           </mat-form-field>
-        </div>
 
-        <div fxLayout="row wrap" fxLayoutAlign="space-between center">
-          <button mat-button mat-dialog-close>Close</button>
-
-          <button mat-button matStepperNext>
+          <button fxFlexAlign="end" mat-raised-button color="accent">
             Save and add users
-            <mat-icon matSuffix><i class="material-icons">keyboard_arrow_right</i></mat-icon>
+            <mat-icon matSuffix>keyboard_arrow_right</mat-icon>
           </button>
         </div>
+
       </form>
     </mat-step>
 
@@ -67,8 +65,9 @@
     <mat-step>
       <ng-template matStepLabel> Add Users </ng-template>
 
-      <form [formGroup]="addUserForm" fxLayout="row wrap" fxLayoutAlign="center start">
-        <mat-form-field fxFlexFill>
+      <div fxLayout="column wrap" fxFlexAlign="start center" fxLayoutGap="50px">
+        <form id="user-form" fxFlexFill [formGroup]="addUserForm" fxLayout="row wrap" fxLayoutAlign="space-between start" fxLayoutGap="10px" (submit)="addUser()">
+        <mat-form-field fxFlex="80">
           <mat-icon matPrefix style="margin-right: 10px">person_pin</mat-icon>
           <input matInput
                  type="text"
@@ -82,9 +81,32 @@
             </mat-option>
           </mat-autocomplete>
         </mat-form-field>
+
+        <button fxFlex="15" fxFlexAlign="center" mat-raised-button id="add-user-button" color="accent" type="submit" name="add-user">Add user</button>
       </form>
 
+        <div class="user-list">
+          <h1 class="little">Users add to dashboard</h1>
+          <mat-list role="list" *ngIf="projectAdded">
+            <mat-list-item *ngFor="let user of projectAdded.users">
+              <mat-icon style="display: block">account_box</mat-icon>
+              <div> {{user.firstname}} {{user.lastname}} ({{user.username | uppercase}}) </div>
+              <button
+                      mat-icon-button
+                      matTooltip="Delete user"
+                      color="warn"
+                      (click)="deleteUser(user.id)">
+                <mat-icon>delete_forever</mat-icon>
+              </button>
+            </mat-list-item>
+          </mat-list>
+        </div>
+      </div>
     </mat-step>
 
   </mat-horizontal-stepper>
 </mat-dialog-content>
+
+<mat-dialog-actions>
+  <button mat-button mat-dialog-close>Close</button>
+</mat-dialog-actions>

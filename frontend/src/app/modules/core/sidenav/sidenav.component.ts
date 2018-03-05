@@ -39,19 +39,11 @@ export class SidenavComponent implements OnInit {
               private authenticationService: AuthenticationService) { }
 
   ngOnInit() {
-    this.userService
-        .getConnectedUser()
-        .subscribe(user => {
-          this.connectedUser = user;
-          this.changeDetectorRef.detectChanges();
-        });
+    this.dashboardService.dashboardsSubject.subscribe(projects => this.dashboards = projects);
+    this.userService.connectedUserSubject.subscribe(connectedUser => this.connectedUser = connectedUser);
 
-    this.dashboardService
-        .getAll()
-        .subscribe(dashboards => {
-          this.dashboards = dashboards;
-          this.changeDetectorRef.detectChanges();
-        });
+    this.dashboardService.getAll().subscribe();
+    this.userService.getConnectedUser().subscribe();
   }
 
   getConnectedUserInitial(): string {

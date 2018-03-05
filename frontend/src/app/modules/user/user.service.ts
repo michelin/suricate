@@ -20,10 +20,13 @@ import { User } from '../../shared/model/dto/user/User';
 
 import { Observable } from 'rxjs/Observable';
 import {AbstractHttpService} from '../../shared/services/abstract-http.service';
-
+import {map} from 'rxjs/operators';
+import {Subject} from 'rxjs/Subject';
 
 @Injectable()
 export class UserService extends AbstractHttpService {
+
+  connectedUserSubject: Subject<User> = new Subject<User>();
 
   constructor(private http: HttpClient) {
     super();
@@ -38,7 +41,12 @@ export class UserService extends AbstractHttpService {
   }
 
   getConnectedUser(): Observable<User> {
-    return this.http.get<User>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.USER_URL}/current`);
+    return this.http.get<User>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.USER_URL}/current`).pipe(
+        map(user => {
+          this.connectedUserSubject.next(user);
+          return user;
+        })
+    );
   }
 
   searchUserByUsername(username: string): Observable<User[]> {
