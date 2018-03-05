@@ -17,6 +17,7 @@
 package io.suricate.monitoring.service;
 
 import io.suricate.monitoring.model.dto.project.ProjectDto;
+import io.suricate.monitoring.model.dto.user.UserDto;
 import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
@@ -27,7 +28,6 @@ import io.suricate.monitoring.model.dto.update.UpdateType;
 import io.suricate.monitoring.model.entity.user.User;
 import io.suricate.monitoring.repository.ProjectRepository;
 import io.suricate.monitoring.repository.ProjectWidgetRepository;
-import io.suricate.monitoring.repository.UserRepository;
 import io.suricate.monitoring.repository.WidgetRepository;
 import io.suricate.monitoring.utils.logging.LogExecutionTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +36,8 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Service used to manage projects
@@ -53,7 +55,7 @@ public class ProjectService {
     private WidgetRepository widgetRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @Autowired
     private SocketService socketService;
@@ -85,7 +87,15 @@ public class ProjectService {
             projectResponse.getWidgets().add(widgetService.getWidgetResponse(projectWidget));
         }
 
-        projectResponse.getLibrariesToken().addAll(libraryService.getLibraries(projectResponse.getWidgets()));
+        List<String> librairies = libraryService.getLibraries(projectResponse.getWidgets());
+        if(librairies != null && !librairies.isEmpty()) {
+            projectResponse.getLibrariesToken().addAll(librairies);
+        }
+
+        Optional<List<User>> users = userService.getAllByProject(project);
+        if(users.isPresent()) {
+            projectResponse.getUsers().addAll(users.get().stream().map(user -> new UserDto(user)).collect(Collectors.toList()));
+        }
 
         return projectResponse;
     }
@@ -133,8 +143,8 @@ public class ProjectService {
      * @return The project associated
      */
     @LogExecutionTime
-    public ProjectResponse getOneById(Long id){
-        return toDTO(projectRepository.findOne(id));
+    public Project getOneById(Long id){
+        return projectRepository.findOne(id);
     }
 
     /**
@@ -145,8 +155,13 @@ public class ProjectService {
      * @return The project instantiate
      */
     @Transactional
-    public Project addProject(User user, Project project) {
+    public Project saveProject(User user, Project project) {
         project.getUsers().add(user);
+        return projectRepository.save(project);
+    }
+
+    public Project deleteUserFromProject(User user, Project project) {
+        project.getUsers().remove(user);
         return projectRepository.save(project);
     }
 
