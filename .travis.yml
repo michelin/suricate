@@ -33,10 +33,12 @@ jobs:
       script: chmod +x mvnw && ./mvnw clean test -f backend/pom.xml
     - # parallel build
       language: node_js
+      node_js:
+        - "8"
       script: cd frontend && yarn install && yarn run build
     - stage: control_quality
       script: chmod +x mvnw && ./mvnw test -f backend/pom.xml && bash <(curl -s https://codecov.io/bash)
-      
+
 notifications:
   webhooks:
     on_success: change  # options: [always|never|change] default: always
