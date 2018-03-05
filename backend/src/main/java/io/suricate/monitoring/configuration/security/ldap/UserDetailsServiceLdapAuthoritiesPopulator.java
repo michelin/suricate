@@ -40,7 +40,7 @@ public class UserDetailsServiceLdapAuthoritiesPopulator implements LdapAuthoriti
     public Collection<? extends GrantedAuthority> getGrantedAuthorities(DirContextOperations userData, String username) {
         LOGGER.debug("Authenticating {}", username);
         String lowercaseLogin = username.toLowerCase(Locale.ENGLISH);
-        Optional<User> currentUser =  userRepository.findByUsername(lowercaseLogin);
+        Optional<User> currentUser =  userRepository.findByUsernameIgnoreCase(lowercaseLogin);
 
         if (!currentUser.isPresent()) {
             // Call service to add user
