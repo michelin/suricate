@@ -44,6 +44,7 @@ export class DashboardDetailComponent implements OnInit {
               map(project => {
                 this.gridOptions = {
                   'max_cols': project.maxColumn,
+                  'min_cols': 1,
                   'row_height': project.widgetHeight / 1.5,
                   'margins': [5],
                   'auto_resize': true
@@ -61,6 +62,14 @@ export class DashboardDetailComponent implements OnInit {
         ${widget.css}
       </style>
       ${widget.html}
+    `);
+  }
+
+  getGridCSS(project: Project): SafeHtml {
+    return this.domSanitizer.bypassSecurityTrustHtml(`
+      <style>
+        ${project.cssStyle}
+      </style>
     `);
   }
 

@@ -2,6 +2,7 @@
 
 <div [ngGrid]="gridOptions">
   <div class="commonCssAndJs">
+    <div [innerHTML]="getGridCSS(project | async)"></div>
     <div [innerHTML]="getWidgetCommonCSS()"></div>
   </div>
   <div *ngFor="let widget of (project | async)?.widgets"

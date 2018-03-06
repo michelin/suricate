@@ -81,6 +81,7 @@ export class AddDashboardDialogComponent implements OnInit {
     if (this.dashboardForm.valid) {
       this.projectAdded = { ...this.projectAdded,
                             ...this.dashboardForm.value};
+      this.projectAdded.cssStyle = this.getCssFromForm();
 
       this.dashboardService
           .addProject(this.projectAdded)
@@ -91,6 +92,12 @@ export class AddDashboardDialogComponent implements OnInit {
             this.addDashboardStepper.next();
           });
     }
+  }
+
+  private getCssFromForm(): string {
+    return `.grid {
+
+    }`;
   }
 
   addUser() {
