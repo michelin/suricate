@@ -22,6 +22,7 @@ import {Observable} from 'rxjs/Observable';
 import {ProjectWidget} from '../../shared/model/dto/ProjectWidget';
 import {map} from 'rxjs/operators/map';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {Subject} from 'rxjs/Subject';
 
 @Injectable()
 export class DashboardService extends AbstractHttpService {
@@ -32,6 +33,7 @@ export class DashboardService extends AbstractHttpService {
    * @type {BehaviorSubject<Project[]>}
    */
   dashboardsSubject = new BehaviorSubject<Project[]>([]);
+  currendDashbordSubject = new Subject<Project>();
 
   /**
    * The constructor

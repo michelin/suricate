@@ -92,6 +92,7 @@ export class AddDashboardDialogComponent implements OnInit {
           .getOneById(this.data.projectId)
           .subscribe(project => {
             this.projectAdded = project;
+            this.dashboardBackgroundColor = this.getPropertyFromGridCss('background-color');
             this.initDashboardForm(true);
             this.initUserForm();
           });
@@ -166,6 +167,7 @@ export class AddDashboardDialogComponent implements OnInit {
             this.projectAdded = project;
             this.dashboardFormCompleted = true;
             this.changeDetectorRef.detectChanges();
+            this.dashboardService.currendDashbordSubject.next(project);
             this.addDashboardStepper.next();
           });
     }
@@ -177,7 +179,14 @@ export class AddDashboardDialogComponent implements OnInit {
    * @returns {string} The CSS as string
    */
   private getGridCss(): string {
-    return `background-color: ${this.dashboardBackgroundColor}`;
+    return `background-color:${this.dashboardBackgroundColor};`;
+  }
+
+  private getPropertyFromGridCss(property: string): string {
+    const propertyArray = this.projectAdded.cssStyle.split(';');
+    return propertyArray
+            .filter((currentProperty: string) => currentProperty.split(':')[0] === property)[0]
+            .split(':')[1];
   }
 
   /**

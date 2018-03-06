@@ -14,21 +14,25 @@
  * limitations under the License.
  */
 
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {DashboardService} from '../dashboard.service';
 import {Project} from '../../../shared/model/dto/Project';
 import {Widget} from '../../../shared/model/dto/Widget';
 import {DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import {Observable} from 'rxjs/Observable';
-import {map} from 'rxjs/operators';
+import {takeWhile} from 'rxjs/operators';
+import {of} from 'rxjs/observable/of';
 
 @Component({
   selector: 'app-dashboard-detail',
   templateUrl: './dashboard-detail.component.html',
   styleUrls: ['./dashboard-detail.component.css']
 })
-export class DashboardDetailComponent implements OnInit {
+export class DashboardDetailComponent implements OnInit, OnDestroy {
+
+  isAlive = true;
+
   /**
    * The project as observable
    */
@@ -55,21 +59,26 @@ export class DashboardDetailComponent implements OnInit {
    * Init objects
    */
   ngOnInit() {
-    this.activatedRoute.params.subscribe( params => {
-      this.project = this.dashboardService
-          .getOneById(params['id']).pipe(
-              map(project => {
-                this.gridOptions = {
-                  'max_cols': project.maxColumn,
-                  'min_cols': 1,
-                  'row_height': project.widgetHeight / 1.5,
-                  'margins': [5],
-                  'auto_resize': true
-                };
+    this.dashboardService.
+        currendDashbordSubject
+        .pipe(takeWhile(() => this.isAlive))
+        .subscribe(project => this.project = of(project));
 
-                return project;
-              })
-          );
+    this.activatedRoute.params.subscribe( params => {
+      this.dashboardService
+          .getOneById(params['id'])
+          .subscribe(project => {
+            this.gridOptions = {
+              'max_cols': project.maxColumn,
+              'min_cols': 1,
+              'row_height': project.widgetHeight / 1.5,
+              'margins': [5],
+              'auto_resize': true
+            };
+
+            this.dashboardService.currendDashbordSubject.next(project);
+          });
+
     });
   }
 
@@ -157,5 +166,9 @@ export class DashboardDetailComponent implements OnInit {
           }
         </style>
     `);
+  }
+
+  ngOnDestroy() {
+    this.isAlive = false;
   }
 }
