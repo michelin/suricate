@@ -25,6 +25,7 @@ import {UserService} from '../../../../../modules/user/user.service';
 import {Observable} from 'rxjs/Observable';
 import {empty} from 'rxjs/observable/empty';
 import {Project} from '../../../../model/dto/Project';
+import {ColorPickerService} from 'ngx-color-picker';
 
 @Component({
   selector: 'app-add-dashboard-dialog',
@@ -60,6 +61,10 @@ export class AddDashboardDialogComponent implements OnInit {
    */
   projectAdded:       Project;
 
+  isEditMode = false;
+
+  dashboardBackgroundColor = '#424242';
+
   /**
    * Constructor
    *
@@ -73,7 +78,8 @@ export class AddDashboardDialogComponent implements OnInit {
               private formBuilder: FormBuilder,
               private changeDetectorRef: ChangeDetectorRef,
               private dashboardService: DashboardService,
-              private userService: UserService) {
+              private userService: UserService,
+              private colorPickerService: ColorPickerService) {
   }
 
   /**
@@ -81,6 +87,7 @@ export class AddDashboardDialogComponent implements OnInit {
    */
   ngOnInit() {
     if (this.data.projectId) {
+      this.isEditMode = true;
       this.dashboardService
           .getOneById(this.data.projectId)
           .subscribe(project => {
@@ -151,7 +158,7 @@ export class AddDashboardDialogComponent implements OnInit {
     if (this.dashboardForm.valid) {
       this.projectAdded = { ...this.projectAdded,
                             ...this.dashboardForm.value};
-      this.projectAdded.cssStyle = this.getCssFromForm();
+      this.projectAdded.cssStyle = this.getGridCss();
 
       this.dashboardService
           .saveProject(this.projectAdded)
@@ -169,10 +176,8 @@ export class AddDashboardDialogComponent implements OnInit {
    *
    * @returns {string} The CSS as string
    */
-  private getCssFromForm(): string {
-    return `.grid {
-
-    }`;
+  private getGridCss(): string {
+    return `background-color: ${this.dashboardBackgroundColor}`;
   }
 
   /**

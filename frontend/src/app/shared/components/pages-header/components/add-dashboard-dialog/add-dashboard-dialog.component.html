@@ -1,6 +1,6 @@
 <h1 matDialogTitle class="little">Add new dashboard</h1>
 
-<mat-dialog-content>
+<mat-dialog-content *ngIf="!isEditMode || (isEditMode && projectAdded)">
   <mat-horizontal-stepper #addDashboardStepper [linear]="true">
     <!-- Step 1 : Dashboard settings -->
     <mat-step [completed]="dashboardFormCompleted">
@@ -51,6 +51,21 @@
               This field is required and should be an integer > 0
             </mat-error>
           </mat-form-field>
+
+          <h1 fxFlexFill class="little">{{ 'Grid style' | uppercase}}</h1>
+
+          <mat-form-field>
+            <input matInput
+                   placeholder="Grid background color"
+                   value=" "
+                   [style.background]="dashboardBackgroundColor"
+                   [(colorPicker)]="dashboardBackgroundColor"
+                   [cpOutputFormat]="'hex'"
+                   [cpAlphaChannel]="'always'"
+                   [cpPresetColors]="['#424242']"
+                   [readonly]="true">
+          </mat-form-field>
+
 
           <button fxFlexAlign="end" mat-raised-button color="accent">
             Save and add users

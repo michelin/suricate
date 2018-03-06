@@ -79,10 +79,12 @@ export class DashboardDetailComponent implements OnInit {
    * @param {Project} project The project
    * @returns {SafeHtml} The css as safe html
    */
-  getGridCSS(project: Project): SafeHtml {
+  getGridCSS(css: string): SafeHtml {
     return this.domSanitizer.bypassSecurityTrustHtml(`
       <style>
-        ${project.cssStyle}
+        .grid {
+          ${css}
+        }
       </style>
     `);
   }

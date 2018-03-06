@@ -30,6 +30,7 @@ import {DashboardActionsComponent} from './components/pages-header/components/da
 import { HomeActionsComponent } from './components/pages-header/components/home-actions/home-actions.component';
 import { AddDashboardDialogComponent } from './components/pages-header/components/add-dashboard-dialog/add-dashboard-dialog.component';
 import { CustomFormsModule} from 'ng2-validation';
+import {ColorPickerModule} from 'ngx-color-picker';
 
 @NgModule({
   imports: [
@@ -41,7 +42,8 @@ import { CustomFormsModule} from 'ng2-validation';
       MaterialModule,
       FlexLayoutModule,
       RouterModule,
-      CustomFormsModule
+      CustomFormsModule,
+      ColorPickerModule
   ],
   declarations: [
       PagesHeaderComponent,
@@ -63,6 +65,7 @@ import { CustomFormsModule} from 'ng2-validation';
       FlexLayoutModule,
       RouterModule,
       CustomFormsModule,
+      ColorPickerModule,
       PagesHeaderComponent,
       AddWidgetDialogComponent
   ],
