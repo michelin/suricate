@@ -108,8 +108,7 @@ public class ProjectController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ProjectResponse addWidgetToProject(@RequestAttribute User user,
-                                              @PathVariable("id") Long id,
+    public ProjectResponse addWidgetToProject(@PathVariable("id") Long id,
                                               @RequestBody ProjectWidgetRequest projectWidgetRequest) {
         ProjectWidget projectWidget = projectService.addWidgetToProject(projectWidgetRequest);
         return projectService.toDTO(projectService.getOneById(projectWidget.getProject().getId()));

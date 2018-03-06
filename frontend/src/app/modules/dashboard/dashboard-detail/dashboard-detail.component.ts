@@ -44,8 +44,9 @@ export class DashboardDetailComponent implements OnInit {
               map(project => {
                 this.gridOptions = {
                   'max_cols': project.maxColumn,
-                  'auto_resize': true,
-                  'maintain_ratio': true,
+                  'row_height': project.widgetHeight / 1.5,
+                  'margins': [5],
+                  'auto_resize': true
                 };
 
                 return project;

@@ -1,6 +1,6 @@
 <app-pages-header [secondTitle]="(project | async)?.name"></app-pages-header>
 
-<div [ngGrid]="{'max_cols': (project | async)?.maxColumn, 'row_height': (project | async)?.widgetHeight/1.5, 'margins': [5], 'auto_resize': true}">
+<div [ngGrid]="gridOptions">
   <div class="commonCssAndJs">
     <div [innerHTML]="getWidgetCommonCSS()"></div>
   </div>
