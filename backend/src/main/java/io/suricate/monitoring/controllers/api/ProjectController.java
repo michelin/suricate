@@ -20,7 +20,6 @@ import io.suricate.monitoring.controllers.api.error.exception.ApiException;
 import io.suricate.monitoring.model.dto.project.ProjectDto;
 import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
-import io.suricate.monitoring.model.dto.project.ProjectResponse;
 import io.suricate.monitoring.model.dto.project.ProjectWidgetRequest;
 import io.suricate.monitoring.model.entity.user.User;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
@@ -53,7 +52,7 @@ public class ProjectController {
 
     @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
-    public List<ProjectResponse> getAll(Principal principal) {
+    public List<ProjectDto> getAll(Principal principal) {
         List<Project> projects;
         Collection<GrantedAuthority> authorities = ((OAuth2Authentication) SecurityContextHolder.getContext().getAuthentication()).getAuthorities();
 
@@ -74,7 +73,7 @@ public class ProjectController {
 
     @RequestMapping(method = RequestMethod.PUT)
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ProjectResponse addNewProject(Principal principal, @RequestBody ProjectDto projectDto) {
+    public ProjectDto addNewProject(Principal principal, @RequestBody ProjectDto projectDto) {
         Optional<User> user = userService.getOneByUsername(principal.getName());
 
         if(!user.isPresent()) {
@@ -86,7 +85,7 @@ public class ProjectController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ProjectResponse getOneById(@PathVariable("id") Long id) {
+    public ProjectDto getOneById(@PathVariable("id") Long id) {
         Optional<Project> project = projectService.getOneById(id);
         if(!project.isPresent()) {
             throw new ApiException(ApiErrorEnum.PROJECT_NOT_FOUND);
@@ -97,8 +96,8 @@ public class ProjectController {
 
     @RequestMapping(value = "/{id}/users", method = RequestMethod.PUT)
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ProjectResponse addUserToProject(  @PathVariable("id") Long id,
-                                              @RequestBody Map<String, String> usernameMap) {
+    public ProjectDto addUserToProject(@PathVariable("id") Long id,
+                                       @RequestBody Map<String, String> usernameMap) {
         Optional<User> user = userService.getOneByUsername(usernameMap.get("username"));
         Optional<Project> project = projectService.getOneById(id);
 
@@ -115,7 +114,7 @@ public class ProjectController {
 
     @RequestMapping(value = "/{id}/users/{userId}", method = RequestMethod.DELETE)
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ProjectResponse deleteUserToProject(@PathVariable("id") Long id, @PathVariable("userId") Long userId) {
+    public ProjectDto deleteUserToProject(@PathVariable("id") Long id, @PathVariable("userId") Long userId) {
         Optional<User> user = userService.getOne(userId);
         Optional<Project> project = projectService.getOneById(id);
 
@@ -132,8 +131,8 @@ public class ProjectController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ProjectResponse addWidgetToProject(@PathVariable("id") Long id,
-                                              @RequestBody ProjectWidgetRequest projectWidgetRequest) {
+    public ProjectDto addWidgetToProject(@PathVariable("id") Long id,
+                                         @RequestBody ProjectWidgetRequest projectWidgetRequest) {
         ProjectWidget projectWidget = projectService.addWidgetToProject(projectWidgetRequest);
         Optional<Project> project = projectService.getOneById(projectWidget.getProject().getId());
 

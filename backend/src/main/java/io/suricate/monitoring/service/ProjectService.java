@@ -22,7 +22,6 @@ import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
 import io.suricate.monitoring.model.dto.UpdateEvent;
-import io.suricate.monitoring.model.dto.project.ProjectResponse;
 import io.suricate.monitoring.model.dto.project.ProjectWidgetRequest;
 import io.suricate.monitoring.model.dto.update.UpdateType;
 import io.suricate.monitoring.model.entity.user.User;
@@ -34,7 +33,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -72,32 +70,32 @@ public class ProjectService {
      * @param project The project model object
      * @return The associated DTO object
      */
-    public ProjectResponse toDTO(Project project) {
-        ProjectResponse projectResponse = new ProjectResponse();
+    public ProjectDto toDTO(Project project) {
+        ProjectDto projectDto = new ProjectDto();
 
-        projectResponse.setId(project.getId());
-        projectResponse.setName(project.getName());
-        projectResponse.setToken(project.getToken());
-        projectResponse.setWidgetHeight(project.getWidgetHeight());
-        projectResponse.setMaxColumn(project.getMaxColumn());
-        projectResponse.setCssStyle(project.getCssStyle());
+        projectDto.setId(project.getId());
+        projectDto.setName(project.getName());
+        projectDto.setToken(project.getToken());
+        projectDto.setWidgetHeight(project.getWidgetHeight());
+        projectDto.setMaxColumn(project.getMaxColumn());
+        projectDto.setCssStyle(project.getCssStyle());
 
         List<ProjectWidget> projectWidgets = projectWidgetRepository.findByProjectIdAndWidget_WidgetAvailabilityOrderById(project.getId(), WidgetAvailabilityEnum.ACTIVATED);
         for (ProjectWidget projectWidget: projectWidgets){
-            projectResponse.getWidgets().add(widgetService.getWidgetResponse(projectWidget));
+            projectDto.getWidgets().add(widgetService.getWidgetResponse(projectWidget));
         }
 
-        List<String> librairies = libraryService.getLibraries(projectResponse.getWidgets());
+        List<String> librairies = libraryService.getLibraries(projectDto.getWidgets());
         if(librairies != null && !librairies.isEmpty()) {
-            projectResponse.getLibrariesToken().addAll(librairies);
+            projectDto.getLibrariesToken().addAll(librairies);
         }
 
         Optional<List<User>> users = userService.getAllByProject(project);
         if(users.isPresent()) {
-            projectResponse.getUsers().addAll(users.get().stream().map(user -> new UserDto(user)).collect(Collectors.toList()));
+            projectDto.getUsers().addAll(users.get().stream().map(user -> new UserDto(user)).collect(Collectors.toList()));
         }
 
-        return projectResponse;
+        return projectDto;
     }
 
     /**
