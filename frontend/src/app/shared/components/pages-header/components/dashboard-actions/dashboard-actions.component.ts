@@ -18,6 +18,7 @@ import { Component, OnInit } from '@angular/core';
 import {MatDialog, MatDialogRef} from '@angular/material';
 import {AddWidgetDialogComponent} from '../add-widget-dialog/add-widget-dialog.component';
 import {ActivatedRoute} from '@angular/router';
+import {AddDashboardDialogComponent} from '../add-dashboard-dialog/add-dashboard-dialog.component';
 
 @Component({
   selector: 'app-dashboard-actions',
@@ -27,6 +28,7 @@ import {ActivatedRoute} from '@angular/router';
 export class DashboardActionsComponent implements OnInit {
 
   addWidgetDialogRef: MatDialogRef<AddWidgetDialogComponent>;
+  editWidgetDialogRef: MatDialogRef<AddDashboardDialogComponent>;
   projectId: number;
 
   constructor(private dialog: MatDialog,
@@ -42,6 +44,13 @@ export class DashboardActionsComponent implements OnInit {
     this.addWidgetDialogRef = this.dialog.open(AddWidgetDialogComponent, {
       minWidth: 900,
       data: { projectId: this.projectId}
+    });
+  }
+
+  openEditDashboardDialog() {
+    this.editWidgetDialogRef = this.dialog.open(AddDashboardDialogComponent, {
+      minWidth: 900,
+      data: { projectId: this.projectId }
     });
   }
 }

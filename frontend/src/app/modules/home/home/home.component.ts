@@ -14,23 +14,51 @@
  * limitations under the License.
  */
 
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Project} from '../../../shared/model/dto/Project';
 import {DashboardService} from '../../dashboard/dashboard.service';
+import { takeWhile} from 'rxjs/operators';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.css']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
 
+  /**
+   * True while the component is instantiate
+   * @type {boolean}
+   */
+  private alive = true;
+
+  /**
+   * The list of dashboards
+   */
   dashboards: Project[];
 
+  /**
+   * The constructor
+   *
+   * @param {DashboardService} dashboardService The dashboard service
+   */
   constructor(private dashboardService: DashboardService) { }
 
+  /**
+   * Init objects
+   */
   ngOnInit() {
-    this.dashboardService.dashboardsSubject.subscribe( dashboards => this.dashboards = dashboards );
+    this.dashboardService
+        .dashboardsSubject
+        .pipe(takeWhile(() => this.alive))
+        .subscribe( dashboards => this.dashboards = dashboards);
+  }
+
+  /**
+   * Called when the component is destroy
+   */
+  ngOnDestroy() {
+    this.alive = false;
   }
 
 }

@@ -33,8 +33,6 @@ export class LoginComponent implements OnInit {
    * The login form
    */
   loginForm: FormGroup;
-  usernameCtrl: FormControl;
-  passwordCtrl: FormControl;
 
   /**
    * If the password field is hidden or not
@@ -53,9 +51,9 @@ export class LoginComponent implements OnInit {
   /**
    * Constructor
    *
-   * @param {Router} router
-   * @param {AuthenticationService} authenticationService
-   * @param {FormBuilder} formBuilder
+   * @param {Router} router The router service
+   * @param {AuthenticationService} authenticationService The authentication service
+   * @param {FormBuilder} formBuilder The form builder service
    */
   constructor(private router: Router,
               private authenticationService: AuthenticationService,
@@ -67,20 +65,17 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     this.authenticationService.logout();
 
-    this.usernameCtrl = this.formBuilder.control('', [Validators.required]);
-    this.passwordCtrl = this.formBuilder.control('', [Validators.required]);
-
     this.loginForm = this.formBuilder.group({
-      'username': this.usernameCtrl,
-      'password': this.passwordCtrl
+      'username': ['', [Validators.required]],
+      'password': ['', [Validators.required]]
     });
   }
 
   /**
-   * Check if the field is valid
+   * Check if the field is invalid
    *
-   * @param {string} field
-   * @returns {boolean}
+   * @param {string} field The field to check
+   * @returns {boolean} False if the field valid, true otherwise
    */
   isFieldInvalid(field: string) {
     return this.loginForm.invalid && (this.loginForm.get(field).dirty || this.loginForm.get(field).touched);

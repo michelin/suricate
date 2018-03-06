@@ -35,8 +35,8 @@
                        type="text"
                        id="username"
                        placeholder="Username"
-                       [formControl]="usernameCtrl"
-                       [required]="usernameCtrl.errors && usernameCtrl.errors.required"/>
+                       formControlName="username"
+                       [required]="loginForm.get('username').errors && loginForm.get('username').errors.required"/>
                 <mat-error *ngIf="isFieldInvalid('username')">
                   Username is mandatory
                 </mat-error>
@@ -48,8 +48,8 @@
                        [type]="hidePassword ? 'password' : 'text'"
                        id="password"
                        placeholder="Password"
-                       [formControl]="passwordCtrl"
-                       [required]="passwordCtrl.errors && passwordCtrl.errors.required" />
+                       formControlName="password"
+                       [required]="loginForm.get('password').errors && loginForm.get('password').errors.required" />
 
                 <mat-icon matSuffix
                           color="primary"

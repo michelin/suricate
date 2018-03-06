@@ -26,20 +26,35 @@ import {AuthenticationResponse} from '../../shared/model/dto/user/Authentication
 
 @Injectable()
 export class AuthenticationService extends AbstractHttpService {
+  /**
+   * LoggedIn Subject (Hold if the user is logged in or not)
+   * @type {BehaviorSubject<boolean>}
+   */
   private loggedIn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(AuthenticationService.hasToken());
 
-  constructor(private http: HttpClient) {
+  /**
+   * Constructor
+   *
+   * @param {HttpClient} httpClient The HttpClient service
+   */
+  constructor(private httpClient: HttpClient) {
     super();
   }
 
+  /**
+   * Retrieve the token from local storage
+   *
+   * @returns {String} The token
+   */
   static getToken(): String {
     const token = localStorage.getItem('token');
     return token ? token : '';
   }
 
   /**
-   * if we have token the user is loggedIn
-   * @returns {boolean}
+   * Tell if the user has a token or not
+   *
+   * @returns {boolean} True if the user have a token store, false otherwise
    */
   static hasToken(): boolean {
     return !!localStorage.getItem('token');
@@ -54,6 +69,9 @@ export class AuthenticationService extends AbstractHttpService {
     return this.loggedIn.asObservable();
   }
 
+  /**
+   * Logout the user
+   */
   logout(): void {
     // clear token remove user from local storage to log user out
     localStorage.removeItem('token');
@@ -61,7 +79,10 @@ export class AuthenticationService extends AbstractHttpService {
   }
 
   /**
-   * Log the user by sending a request to the backend
+   * Authenticate the user throw OAuth2 Password grant
+   *
+   * @param {ICredentials} credentials The user credentials
+   * @returns {Observable<AuthenticationResponse>} The response as Observable
    */
   authenticate(credentials: ICredentials): Observable<AuthenticationResponse> {
     let headers = new HttpHeaders();
@@ -75,7 +96,7 @@ export class AuthenticationService extends AbstractHttpService {
 
     const url = `${AbstractHttpService.BASE_URL}/${AbstractHttpService.AUTHENTICATE_URL}`;
 
-    return this.http
+    return this.httpClient
       .post<AuthenticationResponse>(url, params.toString(), {headers: headers})
       .pipe(
           map(authenticationResponse => {

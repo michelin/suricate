@@ -29,16 +29,33 @@ import {map} from 'rxjs/operators';
   styleUrls: ['./dashboard-detail.component.css']
 })
 export class DashboardDetailComponent implements OnInit {
+  /**
+   * The project as observable
+   */
   project: Observable<Project>;
+  /**
+   * The options for the plugin angular2-grid
+   */
   gridOptions: {};
 
-  constructor(private route: ActivatedRoute,
+  /**
+   * constructor
+   *
+   * @param {ActivatedRoute} activatedRoute The activated route service
+   * @param {DashboardService} dashboardService The dashboard service
+   * @param {ChangeDetectorRef} changeDetectorRef The change detector service
+   * @param {DomSanitizer} domSanitizer The domSanitizer service
+   */
+  constructor(private activatedRoute: ActivatedRoute,
               private dashboardService: DashboardService,
               private changeDetectorRef: ChangeDetectorRef,
               private domSanitizer: DomSanitizer) { }
 
+  /**
+   * Init objects
+   */
   ngOnInit() {
-    this.route.params.subscribe( params => {
+    this.activatedRoute.params.subscribe( params => {
       this.project = this.dashboardService
           .getOneById(params['id']).pipe(
               map(project => {
@@ -56,6 +73,27 @@ export class DashboardDetailComponent implements OnInit {
     });
   }
 
+  /**
+   * Get the CSS for the grid
+   *
+   * @param {Project} project The project
+   * @returns {SafeHtml} The css as safe html
+   */
+  getGridCSS(project: Project): SafeHtml {
+    return this.domSanitizer.bypassSecurityTrustHtml(`
+      <style>
+        ${project.cssStyle}
+      </style>
+    `);
+  }
+
+
+  /**
+   * Get the html/CSS code for the widget
+   *
+   * @param {Widget} widget The widget
+   * @returns {SafeHtml} The html as SafeHtml
+   */
   getHtmlFormWidget(widget: Widget): SafeHtml {
     return this.domSanitizer.bypassSecurityTrustHtml(`
       <style>
@@ -65,14 +103,11 @@ export class DashboardDetailComponent implements OnInit {
     `);
   }
 
-  getGridCSS(project: Project): SafeHtml {
-    return this.domSanitizer.bypassSecurityTrustHtml(`
-      <style>
-        ${project.cssStyle}
-      </style>
-    `);
-  }
-
+  /**
+   * Get the oommon css for each widget
+   *
+   * @returns {SafeHtml} AS safe HTML
+   */
   getWidgetCommonCSS(): SafeHtml {
     return this.domSanitizer.bypassSecurityTrustHtml(`
       <style>

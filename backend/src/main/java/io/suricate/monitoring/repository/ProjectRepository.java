@@ -22,14 +22,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProjectRepository extends JpaRepository<Project, Long> {
 
 	List<Project> findByUsers_Id(Long id);
-
-	Project findByIdAndUsers_Id(Long id, Long usersId);
-
-	Project findByToken(String token);
 
 	/**
 	 * Method used to get Project token from it's id

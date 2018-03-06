@@ -28,12 +28,15 @@ import io.suricate.monitoring.service.ProjectService;
 import io.suricate.monitoring.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/projects")
@@ -51,12 +54,22 @@ public class ProjectController {
     @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
     public List<ProjectResponse> getAll(Principal principal) {
-        Optional<User> user = userService.getOneByUsername(principal.getName());
-        if(!user.isPresent()) {
-            throw new ApiException(ApiErrorEnum.USER_NOT_FOUND);
+        List<Project> projects;
+        Collection<GrantedAuthority> authorities = ((OAuth2Authentication) SecurityContextHolder.getContext().getAuthentication()).getAuthorities();
+
+        if(authorities.contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
+            projects = projectService.getAll();
+
+        } else {
+            Optional<User> user = userService.getOneByUsername(principal.getName());
+            if(!user.isPresent()) {
+                throw new ApiException(ApiErrorEnum.USER_NOT_FOUND);
+            }
+
+            projects = projectService.getAllByUser(user.get());
         }
 
-        return projectService.getAllByUser(user.get());
+        return projects.stream().map(project -> projectService.toDTO(project)).collect(Collectors.toList());
     }
 
     @RequestMapping(method = RequestMethod.PUT)
@@ -74,7 +87,12 @@ public class ProjectController {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
     public ProjectResponse getOneById(@PathVariable("id") Long id) {
-        return  projectService.toDTO(projectService.getOneById(id));
+        Optional<Project> project = projectService.getOneById(id);
+        if(!project.isPresent()) {
+            throw new ApiException(ApiErrorEnum.PROJECT_NOT_FOUND);
+        }
+
+        return  projectService.toDTO(project.get());
     }
 
     @RequestMapping(value = "/{id}/users", method = RequestMethod.PUT)
@@ -82,28 +100,34 @@ public class ProjectController {
     public ProjectResponse addUserToProject(  @PathVariable("id") Long id,
                                               @RequestBody Map<String, String> usernameMap) {
         Optional<User> user = userService.getOneByUsername(usernameMap.get("username"));
-        Project project = projectService.getOneById(id);
+        Optional<Project> project = projectService.getOneById(id);
 
         if(!user.isPresent()) {
             throw new ApiException(ApiErrorEnum.USER_NOT_FOUND);
         }
+        if(!project.isPresent()) {
+            throw new ApiException(ApiErrorEnum.PROJECT_NOT_FOUND);
+        }
 
-        projectService.saveProject(user.get(), project);
-        return projectService.toDTO(project);
+        projectService.saveProject(user.get(), project.get());
+        return projectService.toDTO(project.get());
     }
 
     @RequestMapping(value = "/{id}/users/{userId}", method = RequestMethod.DELETE)
     @PreAuthorize("hasRole('ROLE_USER')")
     public ProjectResponse deleteUserToProject(@PathVariable("id") Long id, @PathVariable("userId") Long userId) {
         Optional<User> user = userService.getOne(userId);
-        Project project = projectService.getOneById(id);
+        Optional<Project> project = projectService.getOneById(id);
 
         if(!user.isPresent()) {
             throw new ApiException(ApiErrorEnum.USER_NOT_FOUND);
         }
+        if(!project.isPresent()) {
+            throw new ApiException(ApiErrorEnum.PROJECT_NOT_FOUND);
+        }
 
-        projectService.deleteUserFromProject(user.get(), project);
-        return projectService.toDTO(project);
+        projectService.deleteUserFromProject(user.get(), project.get());
+        return projectService.toDTO(project.get());
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
@@ -111,6 +135,12 @@ public class ProjectController {
     public ProjectResponse addWidgetToProject(@PathVariable("id") Long id,
                                               @RequestBody ProjectWidgetRequest projectWidgetRequest) {
         ProjectWidget projectWidget = projectService.addWidgetToProject(projectWidgetRequest);
-        return projectService.toDTO(projectService.getOneById(projectWidget.getProject().getId()));
+        Optional<Project> project = projectService.getOneById(projectWidget.getProject().getId());
+
+        if(!project.isPresent()) {
+            throw new ApiException(ApiErrorEnum.PROJECT_NOT_FOUND);
+        }
+
+        return projectService.toDTO(project.get());
     }
 }

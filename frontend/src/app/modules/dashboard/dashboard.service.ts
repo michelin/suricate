@@ -26,12 +26,27 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 @Injectable()
 export class DashboardService extends AbstractHttpService {
 
+  /**
+   * Hold the list of dashboards
+   *
+   * @type {BehaviorSubject<Project[]>}
+   */
   dashboardsSubject = new BehaviorSubject<Project[]>([]);
 
-  constructor(private http: HttpClient) {
+  /**
+   * The constructor
+   *
+   * @param {HttpClient} httpClient The http client
+   */
+  constructor(private httpClient: HttpClient) {
     super();
   }
 
+  /**
+   * Update the list hold by the subject
+   *
+   * @param {Project} project The project
+   */
   private updateSubject(project: Project) {
     const currentList = this.dashboardsSubject.getValue();
     const indexOfCurrentProject = currentList.findIndex(currentProject => currentProject.id === project.id);
@@ -43,8 +58,13 @@ export class DashboardService extends AbstractHttpService {
     this.dashboardsSubject.next([...currentList, project]);
   }
 
+  /**
+   * Get every dashboards and update the list
+   *
+   * @returns {Observable<Project[]>} The list as observable
+   */
   getAll(): Observable<Project[]> {
-    return this.http.get<Project[]>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.PROJECT_URL}`).pipe(
+    return this.httpClient.get<Project[]>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.PROJECT_URL}`).pipe(
       map(projects => {
         this.dashboardsSubject.next(projects);
         return projects;
@@ -52,12 +72,24 @@ export class DashboardService extends AbstractHttpService {
     );
   }
 
+  /**
+   * Get a dashboard by id
+   *
+   * @param {string} id The dashboard id
+   * @returns {Observable<Project>} The dashboard as observable
+   */
   getOneById(id: string): Observable<Project> {
-    return this.http.get<Project>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.PROJECT_URL}/${id}`);
+    return this.httpClient.get<Project>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.PROJECT_URL}/${id}`);
   }
 
-  addProject(project: Project): Observable<Project> {
-    return this.http.put<Project>(`${AbstractHttpService.BASE_URL}/${DashboardService.PROJECT_URL}`, project)
+  /**
+   * Add/Update a dashboard and update the subject list
+   *
+   * @param {Project} project The project
+   * @returns {Observable<Project>} The project as observable
+   */
+  saveProject(project: Project): Observable<Project> {
+    return this.httpClient.put<Project>(`${AbstractHttpService.BASE_URL}/${DashboardService.PROJECT_URL}`, project)
         .pipe(
           map(projectAdded => {
             this.updateSubject(projectAdded);
@@ -66,14 +98,27 @@ export class DashboardService extends AbstractHttpService {
         );
   }
 
+  /**
+   * Add a new widget to the project
+   *
+   * @param {ProjectWidget} projectWidget The project widget to modify
+   * @returns {Observable<Project>} The project as observable
+   */
   addWidgetToProject(projectWidget: ProjectWidget): Observable<Project> {
     const url = `${AbstractHttpService.BASE_URL}/${AbstractHttpService.PROJECT_URL}/${projectWidget.projectId}`;
 
-    return this.http.put<Project>(`${url}`, projectWidget);
+    return this.httpClient.put<Project>(`${url}`, projectWidget);
   }
 
+  /**
+   * Add a user to a project
+   *
+   * @param {Project} project The project
+   * @param {string} username The username to add
+   * @returns {Observable<Project>} The project as observable
+   */
   addUserToProject(project: Project, username: string): Observable<Project> {
-    return this.http.put<Project>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.PROJECT_URL}/${project.id}/users/`, username)
+    return this.httpClient.put<Project>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.PROJECT_URL}/${project.id}/users/`, username)
         .pipe(
             map(projectUpdated => {
               this.updateSubject(project);
@@ -82,8 +127,15 @@ export class DashboardService extends AbstractHttpService {
         );
   }
 
+  /**
+   * Delete a user from a project
+   *
+   * @param {Project} project The project
+   * @param {number} userId The userId
+   * @returns {Observable<Project>} The project as observable
+   */
   deleteUserFromProject(project: Project, userId: number): Observable<Project> {
-    return this.http.delete<Project>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.PROJECT_URL}/${project.id}/users/${userId}`)
+    return this.httpClient.delete<Project>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.PROJECT_URL}/${project.id}/users/${userId}`)
         .pipe(
             map(projectUpdated => {
               this.updateSubject(project);

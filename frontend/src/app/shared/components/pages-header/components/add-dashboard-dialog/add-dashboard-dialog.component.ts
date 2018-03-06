@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {MatHorizontalStepper} from '@angular/material';
+import {MAT_DIALOG_DATA, MatHorizontalStepper} from '@angular/material';
 import {CustomValidators} from 'ng2-validation';
 import {DashboardService} from '../../../../../modules/dashboard/dashboard.service';
 import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
@@ -32,29 +32,96 @@ import {Project} from '../../../../model/dto/Project';
   styleUrls: ['./add-dashboard-dialog.component.css']
 })
 export class AddDashboardDialogComponent implements OnInit {
+  /**
+   * Mat horizontal stepper
+   */
   @ViewChild('addDashboardStepper') addDashboardStepper: MatHorizontalStepper;
 
+  /**
+   * Dashboard form group
+   */
   dashboardForm:      FormGroup;
+
+  /**
+   * Tell if the form has been completed or not
+   */
   dashboardFormCompleted: boolean;
 
+  /**
+   * User form group
+   */
   addUserForm:        FormGroup;
+  /**
+   * Observable of users (Used for auto completion
+   */
   userAutoComplete:   Observable<User[]>;
+  /**
+   * The current project
+   */
   projectAdded:       Project;
 
-  constructor(private formBuilder: FormBuilder,
+  /**
+   * Constructor
+   *
+   * @param data The data passed to the dialog
+   * @param {FormBuilder} formBuilder The formbuilder service
+   * @param {ChangeDetectorRef} changeDetectorRef The change detector service
+   * @param {DashboardService} dashboardService The dashboard service
+   * @param {UserService} userService The user service
+   */
+  constructor(@Inject(MAT_DIALOG_DATA) private data: any,
+              private formBuilder: FormBuilder,
               private changeDetectorRef: ChangeDetectorRef,
               private dashboardService: DashboardService,
-              private userService: UserService) { }
+              private userService: UserService) {
+  }
 
+  /**
+   * Initialisation of the component
+   */
   ngOnInit() {
-    // init form dashboard
-    this.dashboardFormCompleted = false;
-    this.dashboardForm = this.formBuilder.group({
-      'name': ['t', [Validators.required]],
-      'widgetHeight': ['360', [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]],
-      'maxColumn': ['5', [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]]
-    });
+    if (this.data.projectId) {
+      this.dashboardService
+          .getOneById(this.data.projectId)
+          .subscribe(project => {
+            this.projectAdded = project;
+            this.initDashboardForm(true);
+            this.initUserForm();
+          });
 
+    } else {
+      // init form dashboard
+      this.initDashboardForm(false);
+
+      // Init user form
+      this.initUserForm();
+    }
+  }
+
+  /**
+   * Init the dashboard form
+   *
+   * @param {boolean} formCompleted True if the form has been completed, false otherwise
+   */
+  private initDashboardForm(formCompleted: boolean) {
+    this.dashboardFormCompleted = formCompleted;
+    this.dashboardForm = this.formBuilder.group({
+      'name':
+          [this.projectAdded ? this.projectAdded.name : '',
+            [Validators.required]],
+      'widgetHeight':
+          [this.projectAdded ? this.projectAdded.widgetHeight : '360',
+            [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]],
+      'maxColumn':
+          [this.projectAdded ? this.projectAdded.maxColumn : '5',
+            [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]]
+    });
+  }
+
+  /**
+   * Initialisation of the user form
+   */
+  private initUserForm() {
     // Init Add user form
     this.addUserForm = this.formBuilder.group({
       'username': ['', [Validators.required]]
@@ -70,13 +137,16 @@ export class AddDashboardDialogComponent implements OnInit {
   /**
    * Check if the field is valid
    *
-   * @param {string} field
-   * @returns {boolean}
+   * @param {string} field The field to check
+   * @returns {boolean} False if the field is valid, false otherwise
    */
   isFieldInvalid(field: string) {
     return this.dashboardForm.invalid && (this.dashboardForm.get(field).dirty || this.dashboardForm.get(field).touched);
   }
 
+  /**
+   * Function used for add/Save a dashboard
+   */
   addDashboard() {
     if (this.dashboardForm.valid) {
       this.projectAdded = { ...this.projectAdded,
@@ -84,7 +154,7 @@ export class AddDashboardDialogComponent implements OnInit {
       this.projectAdded.cssStyle = this.getCssFromForm();
 
       this.dashboardService
-          .addProject(this.projectAdded)
+          .saveProject(this.projectAdded)
           .subscribe(project => {
             this.projectAdded = project;
             this.dashboardFormCompleted = true;
@@ -94,12 +164,20 @@ export class AddDashboardDialogComponent implements OnInit {
     }
   }
 
+  /**
+   * Get the Grid css
+   *
+   * @returns {string} The CSS as string
+   */
   private getCssFromForm(): string {
     return `.grid {
 
     }`;
   }
 
+  /**
+   * Add a user to the current dashboard
+   */
   addUser() {
     if (this.addUserForm.valid) {
       this.dashboardService
@@ -108,6 +186,11 @@ export class AddDashboardDialogComponent implements OnInit {
     }
   }
 
+  /**
+   * Delete a user from the dashboard
+   *
+   * @param {number} userId The user id
+   */
   deleteUser(userId: number) {
     this.dashboardService
         .deleteUserFromProject(this.projectAdded, userId)

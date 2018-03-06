@@ -119,21 +119,18 @@ public class ProjectService {
         return project;
     }
 
+    public List<Project> getAll() {
+        return projectRepository.findAll();
+    }
+
     /**
      * Retrieve all the project for a user
      *
      * @param user The user
      * @return The project list associated to the user
      */
-    public List<ProjectResponse> getAllByUser(User user) {
-        List<ProjectResponse> projectsResponse = new ArrayList<>();
-
-        List<Project> projects = projectRepository.findByUsers_Id(user.getId());
-        for(Project project : projects) {
-            projectsResponse.add(toDTO(project));
-        }
-
-        return projectsResponse;
+    public List<Project> getAllByUser(User user) {
+        return projectRepository.findByUsers_Id(user.getId());
     }
 
     /**
@@ -143,8 +140,13 @@ public class ProjectService {
      * @return The project associated
      */
     @LogExecutionTime
-    public Project getOneById(Long id){
-        return projectRepository.findOne(id);
+    public Optional<Project> getOneById(Long id){
+        Project project = projectRepository.findOne(id);
+
+        if(project == null) {
+            return Optional.empty();
+        }
+        return Optional.of(project);
     }
 
     /**

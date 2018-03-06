@@ -24,15 +24,31 @@ import {Widget} from '../../shared/model/dto/Widget';
 @Injectable()
 export class WidgetService extends AbstractHttpService  {
 
-  constructor(private http: HttpClient) {
+  /**
+   * Constructor
+   *
+   * @param {HttpClient} httpClient The http client service
+   */
+  constructor(private httpClient: HttpClient) {
     super();
   }
 
+  /**
+   * Retrieve every categories
+   *
+   * @returns {Observable<Category[]>} The categories as observable
+   */
   getCategories(): Observable<Category[]> {
-    return this.http.get<Category[]>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.WIDGET_URL}/categories`);
+    return this.httpClient.get<Category[]>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.WIDGET_URL}/categories`);
   }
 
+  /**
+   * Get every widget for a category
+   *
+   * @param {number} categoryId The category id
+   * @returns {Observable<Widget[]>} The widgets as observable
+   */
   getWidgetsByCategoryId(categoryId: number): Observable<Widget[]> {
-    return this.http.get<Widget[]>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.WIDGET_URL}/category/${categoryId}`);
+    return this.httpClient.get<Widget[]>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.WIDGET_URL}/category/${categoryId}`);
   }
 }
