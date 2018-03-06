@@ -73,7 +73,7 @@ public class ProjectController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ProjectResponse getOneById(@RequestAttribute User user, @PathVariable("id") Long id) {
+    public ProjectResponse getOneById(@PathVariable("id") Long id) {
         return  projectService.toDTO(projectService.getOneById(id));
     }
 

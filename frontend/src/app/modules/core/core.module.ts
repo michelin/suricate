@@ -16,7 +16,6 @@
 
 import { NgModule } from '@angular/core';
 import { SidenavComponent } from './sidenav/sidenav.component';
-import {HeaderDashboardSharedService} from './header-dashboard-shared.service';
 import {WidgetService} from './widget.service';
 import {CommonModule} from '@angular/common';
 import {SharedModule} from '../../shared/shared.module';
@@ -33,7 +32,6 @@ import {SharedModule} from '../../shared/shared.module';
       SidenavComponent
   ],
   providers: [
-      HeaderDashboardSharedService,
       WidgetService
   ]
 })

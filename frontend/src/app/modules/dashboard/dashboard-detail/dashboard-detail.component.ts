@@ -19,9 +19,9 @@ import {ActivatedRoute} from '@angular/router';
 import {DashboardService} from '../dashboard.service';
 import {Project} from '../../../shared/model/dto/Project';
 import {Widget} from '../../../shared/model/dto/Widget';
-import {DomSanitizer, SafeHtml, SafeStyle} from '@angular/platform-browser';
-import {AbstractHttpService} from '../../../shared/services/abstract-http.service';
-import {HeaderDashboardSharedService} from '../../core/header-dashboard-shared.service';
+import {DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import {Observable} from 'rxjs/Observable';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-dashboard-detail',
@@ -29,34 +29,29 @@ import {HeaderDashboardSharedService} from '../../core/header-dashboard-shared.s
   styleUrls: ['./dashboard-detail.component.css']
 })
 export class DashboardDetailComponent implements OnInit {
-  public project: Project;
-  public gridOptions: {};
+  project: Observable<Project>;
+  gridOptions: {};
 
   constructor(private route: ActivatedRoute,
               private dashboardService: DashboardService,
-              private headerDashboardSharedService: HeaderDashboardSharedService,
               private changeDetectorRef: ChangeDetectorRef,
               private domSanitizer: DomSanitizer) { }
 
   ngOnInit() {
-    this.headerDashboardSharedService.projectDashboardToDisplay.subscribe(project => {
-      this.project = project;
+    this.route.params.subscribe( params => {
+      this.project = this.dashboardService
+          .getOneById(params['id']).pipe(
+              map(project => {
+                this.gridOptions = {
+                  'max_cols': project.maxColumn,
+                  'auto_resize': true,
+                  'maintain_ratio': true,
+                };
+
+                return project;
+              })
+          );
     });
-
-    this.route.params.subscribe( params =>
-        this.dashboardService
-            .getOneById(params['id'])
-            .subscribe( project => {
-              this.headerDashboardSharedService.projectDashboardToDisplay.next(project);
-
-              this.gridOptions = {
-                'max_cols': project.maxColumn,
-                'auto_resize': true,
-                'maintain_ratio': true,
-              };
-              this.changeDetectorRef.detectChanges();
-            })
-    );
   }
 
   getHtmlFormWidget(widget: Widget): SafeHtml {
@@ -66,19 +61,6 @@ export class DashboardDetailComponent implements OnInit {
       </style>
       ${widget.html}
     `);
-  }
-
-  getHtmlScriptsFromProject(librariesToken: string[]): SafeHtml {
-    let scripts = '';
-
-    for (const libraryToken of librariesToken) {
-      scripts = scripts.concat(`
-                  <script type="text/javascript" charset="UTF-8"
-                          src="${AbstractHttpService.BASE_URL}/${AbstractHttpService.ASSET_URL}/${libraryToken}"></script>
-                `);
-    }
-
-    return this.domSanitizer.bypassSecurityTrustHtml(scripts);
   }
 
   getWidgetCommonCSS(): SafeHtml {

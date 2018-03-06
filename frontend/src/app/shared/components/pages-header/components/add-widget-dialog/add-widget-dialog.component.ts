@@ -15,7 +15,7 @@
  */
 
 import {ChangeDetectorRef, Component, Inject, OnInit, ViewChild} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef, MatHorizontalStepper, MatStepper} from '@angular/material';
+import {MAT_DIALOG_DATA, MatDialogRef, MatHorizontalStepper} from '@angular/material';
 import {Category} from '../../../../model/dto/Category';
 import {WidgetService} from '../../../../../modules/core/widget.service';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
@@ -24,7 +24,6 @@ import {Widget} from '../../../../model/dto/Widget';
 import {WidgetParamEnum} from '../../../../model/dto/enums/WidgetParamEnum';
 import {FormGroup, NgForm} from '@angular/forms';
 import {DashboardService} from '../../../../../modules/dashboard/dashboard.service';
-import {HeaderDashboardSharedService} from '../../../../../modules/core/header-dashboard-shared.service';
 import {ProjectWidget} from '../../../../model/dto/ProjectWidget';
 
 @Component({
@@ -46,7 +45,6 @@ export class AddWidgetDialogComponent implements OnInit {
   constructor(@Inject(MAT_DIALOG_DATA) private data: any,
               private widgetService: WidgetService,
               private dashboardService: DashboardService,
-              private headerDashboardSharedService: HeaderDashboardSharedService,
               private domSanitizer: DomSanitizer,
               private addWidgetDialogRef: MatDialogRef<AddWidgetDialogComponent>,
               private changeDetectorRef: ChangeDetectorRef) { }
@@ -95,7 +93,6 @@ export class AddWidgetDialogComponent implements OnInit {
       this.dashboardService
           .addWidgetToProject(projectWidget)
           .subscribe(data => {
-            this.headerDashboardSharedService.projectDashboardToDisplay.next(data);
             this.addWidgetDialogRef.close();
           });
     }
