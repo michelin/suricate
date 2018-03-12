@@ -52,7 +52,7 @@ mat-sidenav #user-section .mat-expansion-panel {
 mat-nav-list.submenu {
   background-color: #5a5a5a;
   display: block;
-  padding: 6px 0 6px 0;
+  padding: 10px 0 10px 0;
   border-top: 1px solid #2d2d2d;
   border-bottom: 1px solid #2d2d2d;
 }

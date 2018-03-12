@@ -29,12 +29,16 @@ import io.suricate.monitoring.repository.ProjectRepository;
 import io.suricate.monitoring.repository.ProjectWidgetRepository;
 import io.suricate.monitoring.repository.WidgetRepository;
 import io.suricate.monitoring.utils.logging.LogExecutionTime;
+import org.apache.commons.lang3.StringUtils;
+import org.jasypt.encryption.StringEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -42,6 +46,10 @@ import java.util.stream.Collectors;
  */
 @Service
 public class ProjectService {
+
+    @Autowired
+    @Qualifier("jasyptStringEncryptor")
+    private StringEncryptor stringEncryptor;
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -157,6 +165,11 @@ public class ProjectService {
     @Transactional
     public Project saveProject(User user, Project project) {
         project.getUsers().add(user);
+
+        if(StringUtils.isBlank(project.getToken())) {
+            project.setToken(stringEncryptor.encrypt(UUID.randomUUID().toString()));
+        }
+
         return projectRepository.save(project);
     }
 
