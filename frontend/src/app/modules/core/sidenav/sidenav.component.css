@@ -6,6 +6,7 @@ mat-sidenav-container {
 mat-sidenav * {
     color: #cfd2da;
     font-variant: all-small-caps;
+    font-size: 0.8rem;
 }
 mat-sidenav mat-icon {
     font-variant: none;
@@ -23,13 +24,13 @@ mat-sidenav .sidenav-section {
 
 /** User Section **/
 mat-sidenav #user-section {
-  padding: 15px 0 30px 0;
+  padding: 15px 0 10px 0;
   margin: 0;
 }
 mat-sidenav #user-section > .avatar-container {
   margin: 0 auto;
-  width: 70px;
-  height: 70px;
+  width: 60px;
+  height: 60px;
   overflow: hidden;
   border-radius: 50%;
   border: 1px solid #303030;
@@ -37,18 +38,21 @@ mat-sidenav #user-section > .avatar-container {
 
 mat-sidenav #user-section > .avatar-container > .avatar {
   height: 100%;
-  font-size: 34px;
-  line-height: 63px;
+  font-size: 25px;
+  line-height: 54px;
   text-align: center;
   background: #303030;
+}
+
+mat-sidenav #user-section .mat-expansion-panel {
+    padding-top: 5px;
 }
 
 /** Nav list **/
 mat-nav-list.submenu {
   background-color: #5a5a5a;
-  margin-top: 8px;
   display: block;
-  padding: 10px 0 10px 0;
+  padding: 6px 0 6px 0;
   border-top: 1px solid #2d2d2d;
   border-bottom: 1px solid #2d2d2d;
 }
@@ -62,7 +66,7 @@ mat-nav-list.submenu .mat-list-item mat-icon {
 }
 
 mat-nav-list .mat-list-item {
-  height: 30px;
+  height: 23px;
   width: 90%;
 }
 mat-nav-list .mat-list-item:hover {

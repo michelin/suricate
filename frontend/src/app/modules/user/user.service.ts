@@ -33,15 +33,15 @@ export class UserService extends AbstractHttpService {
   }
 
   getAll(): Observable<User[]> {
-    return this.http.get<User[]>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.USER_URL}`);
+    return this.http.get<User[]>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.USERS_URL}`);
   }
 
   getById(userId: string): Observable<User> {
-    return this.http.get<User>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.USER_URL}/${userId}`);
+    return this.http.get<User>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.USERS_URL}/${userId}`);
   }
 
   getConnectedUser(): Observable<User> {
-    return this.http.get<User>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.USER_URL}/current`).pipe(
+    return this.http.get<User>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.USERS_URL}/current`).pipe(
         map(user => {
           this.connectedUserSubject.next(user);
           return user;
@@ -50,7 +50,7 @@ export class UserService extends AbstractHttpService {
   }
 
   searchUserByUsername(username: string): Observable<User[]> {
-    return this.http.get<User[]>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.USER_URL}/search?username=${username}`);
+    return this.http.get<User[]>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.USERS_URL}/search?username=${username}`);
   }
 
   getUserInitial(user: User): string {

@@ -128,7 +128,7 @@ public class ProjectService {
      * @return The project list associated to the user
      */
     public List<Project> getAllByUser(User user) {
-        return projectRepository.findByUsers_Id(user.getId());
+        return projectRepository.findByUsers_IdOrderByName(user.getId());
     }
 
     /**

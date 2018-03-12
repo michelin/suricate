@@ -39,7 +39,7 @@ export class WidgetService extends AbstractHttpService  {
    * @returns {Observable<Category[]>} The categories as observable
    */
   getCategories(): Observable<Category[]> {
-    return this.httpClient.get<Category[]>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.WIDGET_URL}/categories`);
+    return this.httpClient.get<Category[]>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.WIDGETS_URL}/categories`);
   }
 
   /**
@@ -49,6 +49,6 @@ export class WidgetService extends AbstractHttpService  {
    * @returns {Observable<Widget[]>} The widgets as observable
    */
   getWidgetsByCategoryId(categoryId: number): Observable<Widget[]> {
-    return this.httpClient.get<Widget[]>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.WIDGET_URL}/category/${categoryId}`);
+    return this.httpClient.get<Widget[]>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.WIDGETS_URL}/category/${categoryId}`);
   }
 }

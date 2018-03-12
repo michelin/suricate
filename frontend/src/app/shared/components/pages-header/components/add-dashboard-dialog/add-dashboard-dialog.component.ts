@@ -86,7 +86,7 @@ export class AddDashboardDialogComponent implements OnInit {
    * Initialisation of the component
    */
   ngOnInit() {
-    if (this.data.projectId) {
+    if (this.data && this.data.projectId) {
       this.isEditMode = true;
       this.dashboardService
           .getOneById(this.data.projectId)

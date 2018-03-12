@@ -26,7 +26,7 @@ import java.util.Optional;
 
 public interface ProjectRepository extends JpaRepository<Project, Long> {
 
-	List<Project> findByUsers_Id(Long id);
+	List<Project> findByUsers_IdOrderByName(Long id);
 
 	/**
 	 * Method used to get Project token from it's id
@@ -35,5 +35,4 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 	 */
 	@Query("SELECT token FROM Project WHERE id=:id")
 	String getToken(@Param("id") Long id);
-
 }

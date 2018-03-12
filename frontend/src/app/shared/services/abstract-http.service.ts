@@ -23,10 +23,11 @@ export abstract class AbstractHttpService {
 
   public static readonly BASE_URL = 'http://localhost:8080/api';
   public static readonly AUTHENTICATE_URL = 'oauth/token';
-  public static readonly USER_URL = 'users';
-  public static readonly PROJECT_URL = 'projects';
+  public static readonly USERS_URL = 'users';
+  public static readonly PROJECTS_URL = 'projects';
   public static readonly ASSET_URL = 'asset';
-  public static readonly WIDGET_URL = 'widgets';
+  public static readonly WIDGETS_URL = 'widgets';
+  public static readonly CONFIGURATIONS_URL = 'configurations';
 
 }
 

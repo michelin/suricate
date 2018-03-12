@@ -27,6 +27,8 @@ import {Subject} from 'rxjs/Subject';
 @Injectable()
 export class DashboardService extends AbstractHttpService {
 
+  public static readonly PROJECTS_BASE_URL = `${AbstractHttpService.BASE_URL}/${AbstractHttpService.PROJECTS_URL}`;
+
   /**
    * Hold the list of dashboards
    *
@@ -66,7 +68,7 @@ export class DashboardService extends AbstractHttpService {
    * @returns {Observable<Project[]>} The list as observable
    */
   getAll(): Observable<Project[]> {
-    return this.httpClient.get<Project[]>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.PROJECT_URL}`).pipe(
+    return this.httpClient.get<Project[]>(`${DashboardService.PROJECTS_BASE_URL}`).pipe(
       map(projects => {
         this.dashboardsSubject.next(projects);
         return projects;
@@ -81,7 +83,7 @@ export class DashboardService extends AbstractHttpService {
    * @returns {Observable<Project>} The dashboard as observable
    */
   getOneById(id: string): Observable<Project> {
-    return this.httpClient.get<Project>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.PROJECT_URL}/${id}`);
+    return this.httpClient.get<Project>(`${DashboardService.PROJECTS_BASE_URL}/${id}`);
   }
 
   /**
@@ -91,7 +93,7 @@ export class DashboardService extends AbstractHttpService {
    * @returns {Observable<Project>} The project as observable
    */
   saveProject(project: Project): Observable<Project> {
-    return this.httpClient.put<Project>(`${AbstractHttpService.BASE_URL}/${DashboardService.PROJECT_URL}`, project)
+    return this.httpClient.put<Project>(`${DashboardService.PROJECTS_BASE_URL}`, project)
         .pipe(
           map(projectAdded => {
             this.updateSubject(projectAdded);
@@ -107,9 +109,7 @@ export class DashboardService extends AbstractHttpService {
    * @returns {Observable<Project>} The project as observable
    */
   addWidgetToProject(projectWidget: ProjectWidget): Observable<Project> {
-    const url = `${AbstractHttpService.BASE_URL}/${AbstractHttpService.PROJECT_URL}/${projectWidget.projectId}`;
-
-    return this.httpClient.put<Project>(`${url}`, projectWidget);
+    return this.httpClient.put<Project>(`${DashboardService.PROJECTS_BASE_URL}/${projectWidget.projectId}`, projectWidget);
   }
 
   /**
@@ -120,7 +120,7 @@ export class DashboardService extends AbstractHttpService {
    * @returns {Observable<Project>} The project as observable
    */
   addUserToProject(project: Project, username: string): Observable<Project> {
-    return this.httpClient.put<Project>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.PROJECT_URL}/${project.id}/users/`, username)
+    return this.httpClient.put<Project>(`${DashboardService.PROJECTS_BASE_URL}/${project.id}/users/`, username)
         .pipe(
             map(projectUpdated => {
               this.updateSubject(project);
@@ -137,7 +137,7 @@ export class DashboardService extends AbstractHttpService {
    * @returns {Observable<Project>} The project as observable
    */
   deleteUserFromProject(project: Project, userId: number): Observable<Project> {
-    return this.httpClient.delete<Project>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.PROJECT_URL}/${project.id}/users/${userId}`)
+    return this.httpClient.delete<Project>(`${DashboardService.PROJECTS_BASE_URL}/${project.id}/users/${userId}`)
         .pipe(
             map(projectUpdated => {
               this.updateSubject(project);
