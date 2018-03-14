@@ -18,7 +18,7 @@ package io.suricate.monitoring.service.nashorn;
 
 import io.suricate.monitoring.model.dto.error.RemoteError;
 import io.suricate.monitoring.model.dto.error.RequestException;
-import io.suricate.monitoring.model.dto.nashorn.ErrorType;
+import io.suricate.monitoring.model.enums.NashornErrorTypeEnum;
 import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
 import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
 import io.suricate.monitoring.model.dto.widget.WidgetVariableResponse;
@@ -96,10 +96,10 @@ public class WidgetJob implements Callable<NashornResponse>{
                     ret.setData(json);
                     ret.setLog(ToStringUtils.hideConfig(sw.toString(), mapProperties.values()));
                 } else {
-                    LOGGER.debug("JSON returned not valid - widgetInstance {}", nashornRequest.getProjectWidgetId());
+                    LOGGER.debug("JSON returned not isValid - widgetInstance {}", nashornRequest.getProjectWidgetId());
                     LOGGER.debug(json);
-                    ret.setLog(ToStringUtils.hideConfig(sw.toString() + "\nReturned json not valid - " + json, mapProperties.values()));
-                    ret.setError(nashornRequest.isAlreadySuccess() ? ErrorType.ERROR : ErrorType.FATAL);
+                    ret.setLog(ToStringUtils.hideConfig(sw.toString() + "\nReturned json not isValid - " + json, mapProperties.values()));
+                    ret.setError(nashornRequest.isAlreadySuccess() ? NashornErrorTypeEnum.ERROR : NashornErrorTypeEnum.FATAL);
                 }
             }
         } catch (Exception e) {
@@ -108,9 +108,9 @@ public class WidgetJob implements Callable<NashornResponse>{
             // Check timeout error and remote Error
             Throwable rootCause = ExceptionUtils.getRootCause(e);
             if (isFatalError(e, rootCause)) {
-                ret.setError(ErrorType.FATAL);
+                ret.setError(NashornErrorTypeEnum.FATAL);
             } else {
-                ret.setError(ErrorType.ERROR);
+                ret.setError(NashornErrorTypeEnum.ERROR);
             }
             if (rootCause instanceof RequestException) {
                 ret.setLog("Service Response:\n\n"+((RequestException) rootCause).getResponse()+"\n\nTechnical Data:\n\n"+((RequestException) rootCause).getTechnicalData());

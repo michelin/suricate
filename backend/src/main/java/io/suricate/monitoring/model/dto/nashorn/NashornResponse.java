@@ -17,6 +17,7 @@
 package io.suricate.monitoring.model.dto.nashorn;
 
 import io.suricate.monitoring.model.dto.AbstractDto;
+import io.suricate.monitoring.model.enums.NashornErrorTypeEnum;
 import io.suricate.monitoring.utils.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -52,11 +53,11 @@ public class NashornResponse extends AbstractDto {
     /**
      * Error
      */
-    private ErrorType error;
+    private NashornErrorTypeEnum error;
 
     /**
-     * Method used to check if the object is valid
-     * @return true if this object is valid, false otherwise
+     * Method used to check if the object is isValid
+     * @return true if this object is isValid, false otherwise
      */
     public boolean isValid(){
         return JsonUtils.isJsonValid(data) && projectId != null && projectWidgetId != null && error == null;
@@ -95,10 +96,10 @@ public class NashornResponse extends AbstractDto {
     }
 
     public boolean isFatal() {
-        return ErrorType.FATAL == error;
+        return NashornErrorTypeEnum.FATAL == error;
     }
 
-    public void setError(ErrorType error) {
+    public void setError(NashornErrorTypeEnum error) {
         this.error = error;
     }
 
@@ -110,7 +111,7 @@ public class NashornResponse extends AbstractDto {
         this.projectWidgetId = projectWidgetId;
     }
 
-    public ErrorType getError() {
+    public NashornErrorTypeEnum getError() {
         return error;
     }
 }

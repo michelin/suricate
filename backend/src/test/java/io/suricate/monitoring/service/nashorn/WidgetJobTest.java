@@ -56,7 +56,7 @@ public class WidgetJobTest {
 //        NashornResponse response = widgetJob.call();
 //
 //
-//        Assert.assertEquals(ErrorType.FATAL ,response.getError());
+//        Assert.assertEquals(NashornErrorTypeEnum.FATAL ,response.getError());
 //        Assert.assertEquals(response.isFatal(), true);
 //        Assert.assertNotNull(response.getLog());
 //        Assert.assertEquals(10, (long) response.getProjectId());
@@ -67,7 +67,7 @@ public class WidgetJobTest {
 //        request.setAlreadySuccess(true);
 //        response = widgetJob.call();
 //
-//        Assert.assertEquals(ErrorType.ERROR , response.getError());
+//        Assert.assertEquals(NashornErrorTypeEnum.ERROR , response.getError());
 //        Assert.assertEquals(response.isFatal(), false);
 //        Assert.assertNotNull(response.getLog());
 //        Assert.assertEquals(10, (long) response.getProjectId());
@@ -200,7 +200,7 @@ public class WidgetJobTest {
 //        request.setAlreadySuccess(true);
 //        response = widgetJob.call();
 //
-//        Assert.assertEquals(ErrorType.ERROR , response.getError());
+//        Assert.assertEquals(NashornErrorTypeEnum.ERROR , response.getError());
 //        Assert.assertEquals(response.isFatal(), false);
 //        Assert.assertNotNull(response.getLog());
 //        Assert.assertEquals(10, (long) response.getProjectId());
@@ -232,7 +232,7 @@ public class WidgetJobTest {
 //        request.setAlreadySuccess(true);
 //        response = widgetJob.call();
 //
-//        Assert.assertEquals(ErrorType.ERROR , response.getError());
+//        Assert.assertEquals(NashornErrorTypeEnum.ERROR , response.getError());
 //        Assert.assertEquals(response.isFatal(), false);
 //        Assert.assertNotNull(response.getLog());
 //        Assert.assertEquals(10, (long) response.getProjectId());

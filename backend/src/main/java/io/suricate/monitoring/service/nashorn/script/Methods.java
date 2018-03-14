@@ -116,7 +116,7 @@ public final class Methods {
 
 
     /**
-     * Method used to valid is a thread is interrupted
+     * Method used to isValid is a thread is interrupted
      * @throws InterruptedException an exception if the thread is interrupted
      */
     public static void checkInterupted() throws InterruptedException {

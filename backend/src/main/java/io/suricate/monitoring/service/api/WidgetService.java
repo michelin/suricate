@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.service;
+package io.suricate.monitoring.service.api;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -38,6 +38,9 @@ import io.suricate.monitoring.model.dto.widget.WidgetResponse;
 import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
 import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.repository.*;
+import io.suricate.monitoring.service.CacheService;
+import io.suricate.monitoring.service.SocketService;
+import io.suricate.monitoring.service.WidgetExecutor;
 import io.suricate.monitoring.service.search.SearchService;
 import io.suricate.monitoring.utils.EntityUtils;
 import io.suricate.monitoring.utils.JavascriptUtils;
@@ -376,16 +379,6 @@ public class WidgetService {
     @Transactional
     public void updateProjectWidget(Long projectWidgetId, String style, String backendConfig){
         projectWidgetRepository.updateConfig(projectWidgetId, style, backendConfig);
-    }
-
-    /**
-     * Method used to update application state
-     * @param widgetState widget state
-     * @param id project widget id
-     */
-    @Transactional
-    public void updateState(WidgetState widgetState, Long id, Date date){
-        projectWidgetRepository.updateState(widgetState, id, date);
     }
 
     @Transactional
