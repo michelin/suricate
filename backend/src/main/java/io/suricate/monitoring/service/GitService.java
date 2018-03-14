@@ -19,6 +19,8 @@ package io.suricate.monitoring.service;
 import io.suricate.monitoring.configuration.ApplicationProperties;
 import io.suricate.monitoring.model.entity.widget.Category;
 import io.suricate.monitoring.model.entity.Library;
+import io.suricate.monitoring.service.api.LibraryService;
+import io.suricate.monitoring.service.api.WidgetService;
 import io.suricate.monitoring.utils.WidgetUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;

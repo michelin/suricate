@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.service;
+package io.suricate.monitoring.service.api;
 
 import io.suricate.monitoring.configuration.security.ConnectedUser;
 import io.suricate.monitoring.controllers.api.error.exception.ApiException;

@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.dto.nashorn;
+package io.suricate.monitoring.model.enums;
 
-public enum ErrorType {
+public enum NashornErrorTypeEnum {
     /**
      * Stop the process execution
      */
