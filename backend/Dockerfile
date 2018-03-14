@@ -2,7 +2,7 @@ FROM maven:3.5-jdk-8
 
 RUN mvn clean package -DskipTests
 
-ADD target/monitoring.jar
+COPY target/monitoring.jar /
 
 RUN sh -c 'touch /monitoring.jar'
 
