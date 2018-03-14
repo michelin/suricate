@@ -31,9 +31,9 @@ public final class JsonUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(JsonUtils.class);
 
     /**
-     * Method used to valid if the JSON in parameter is valid
+     * Method used to isValid if the JSON in parameter is isValid
      * @param jsonInString the json string to test
-     * @return true if the json is valid false otherwise
+     * @return true if the json is isValid false otherwise
      */
     public static boolean isJsonValid(String jsonInString) {
         if (StringUtils.isNotBlank(jsonInString)) {

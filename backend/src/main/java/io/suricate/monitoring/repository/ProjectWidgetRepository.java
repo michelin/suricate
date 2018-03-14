@@ -31,13 +31,27 @@ import java.util.List;
 public interface ProjectWidgetRepository extends JpaRepository<ProjectWidget, Long> {
 
     /**
-     * Method used to get all nashorn request object from database
-     * @return
+     * Method used to reset the state of a widget instance
      */
-    @Query("SELECT new io.suricate.monitoring.model.dto.nashorn.NashornRequest(pw.backendConfig, w.backendJs, pw.data, pw.project.id, pw.id, w.delay, w.timeout, pw.state, pw.lastSuccessDate) " +
-            "FROM ProjectWidget pw, Widget w " +
-            "WHERE pw.widget.id = w.id")
-    List<NashornRequest> getAll();
+    @Modifying
+    @Query("UPDATE ProjectWidget " +
+                "SET    lastSuccessDate = null, " +
+                        "log = null," +
+                        "state = 'STOPPED'")
+    void resetProjectWidgetsState();
+
+    @Modifying
+    @Query("UPDATE ProjectWidget " +
+        "SET state = :state, " +
+        "lastExecutionDate = :lastExecutionDate " +
+        "WHERE id = :id")
+    int updateState(@Param("state") WidgetState widgetState, @Param("id") Long id, @Param("lastExecutionDate") Date lastExecutionDate);
+
+
+
+
+
+
 
 
     /**
@@ -76,13 +90,6 @@ public interface ProjectWidgetRepository extends JpaRepository<ProjectWidget, Lo
             "log = :log " +
             "WHERE id = :id")
     int updateExecutionLog(@Param("lastExecutionDate")Date date, @Param("log") String log, @Param("id") Long id, @Param("state") WidgetState widgetState);
-
-    @Modifying
-    @Query("UPDATE ProjectWidget " +
-            "SET state = :state, " +
-            "lastExecutionDate = :lastExecutionDate " +
-            "WHERE id = :id")
-    int updateState(@Param("state") WidgetState widgetState, @Param("id") Long id, @Param("lastExecutionDate") Date lastExecutionDate);
 
     /**
      * Method used to find all project and widget for a project
@@ -123,15 +130,5 @@ public interface ProjectWidgetRepository extends JpaRepository<ProjectWidget, Lo
             "log = null " +
             "WHERE id = :id")
     int updateConfig(@Param("id") Long projectWidgetId, @Param("customStyle") String style,@Param("backendConfig") String backendConfig);
-
-    /**
-     * Method used to reset the state of a widget instance
-     */
-    @Modifying
-    @Query("UPDATE ProjectWidget " +
-            "SET lastSuccessDate = null, " +
-            "log = null," +
-            "state = 'STOPPED'")
-    void resetWidgetState();
 
 }

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.service;
+package io.suricate.monitoring.service.api;
 
 import io.suricate.monitoring.model.entity.Library;
 import io.suricate.monitoring.model.dto.widget.WidgetResponse;

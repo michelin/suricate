@@ -21,7 +21,9 @@ import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
 import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
 import io.suricate.monitoring.repository.ConfigurationRepository;
-import io.suricate.monitoring.repository.ProjectWidgetRepository;
+import io.suricate.monitoring.service.api.ConfigurationService;
+import io.suricate.monitoring.service.api.ProjectWidgetService;
+import io.suricate.monitoring.service.nashorn.NashornService;
 import io.suricate.monitoring.service.nashorn.WidgetJob;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -74,11 +76,9 @@ public class WidgetExecutor implements Schedulable{
     private ScheduledThreadPoolExecutor scheduledExecutorService;
     private ScheduledThreadPoolExecutor scheduledExecutorServiceFuture;
 
-    @Autowired
-    private ProjectWidgetRepository projectWidgetRepository;
-
-    @Autowired
-    private ConfigurationRepository configurationRepository;
+    private ProjectWidgetService projectWidgetService;
+    private NashornService nashornService;
+    private ConfigurationService configurationService;
 
     @Autowired
     private ApplicationContext ctx;
@@ -87,6 +87,12 @@ public class WidgetExecutor implements Schedulable{
     @Qualifier("jasyptStringEncryptor")
     private StringEncryptor stringEncryptor;
 
+
+    public WidgetExecutor(final ProjectWidgetService projectWidgetService, final NashornService nashornService, final ConfigurationService configurationService) {
+        this.projectWidgetService = projectWidgetService;
+        this.nashornService = nashornService;
+        this.configurationService = configurationService;
+    }
 
     /**
      * Map containing all current scheduled jobs
@@ -122,8 +128,9 @@ public class WidgetExecutor implements Schedulable{
      */
     protected void loadWidget(){
         LOGGER.debug("Load Widgets from database");
-        projectWidgetRepository.resetWidgetState();
-        List<NashornRequest> list = projectWidgetRepository.getAll();
+        projectWidgetService.resetProjectWidgetsState();
+
+        List<NashornRequest> list = nashornService.getEveryNashornRequestFromDatabase();
         for (NashornRequest nashornRequest: list){
             try {
                 schedule(nashornRequest, true, true);
@@ -143,23 +150,17 @@ public class WidgetExecutor implements Schedulable{
         if (nashornRequest == null){
             return;
         }
-        WidgetService widgetService = ctx.getBean(WidgetService.class);
-        // Check if the request is valid
-        if (!nashornRequest.valid()) {
-            LOGGER.debug("Widget content not valid for widget instance :{}", nashornRequest.getProjectWidgetId());
-            widgetService.updateState(WidgetState.STOPPED, nashornRequest.getProjectWidgetId(), new Date());
+        ProjectWidgetService projectWidgetService = ctx.getBean(ProjectWidgetService.class);
+
+        if(!nashornService.isNashornRequestExecutable(nashornRequest)) {
+            projectWidgetService.updateState(WidgetState.STOPPED, nashornRequest.getProjectWidgetId(), new Date());
             return;
         }
-        // Check if the delay if ok
-        if (nashornRequest.getDelay() < 0){
-            LOGGER.debug("Stop widget instance because delay < 0 for projectWidgetId:{}", nashornRequest.getProjectWidgetId());
-            widgetService.updateState(WidgetState.STOPPED, nashornRequest.getProjectWidgetId(), new Date());
-            return;
-        }
+
         // Update the status if necessary
         if (WidgetState.STOPPED == nashornRequest.getWidgetState()) {
             LOGGER.debug("Scheduled widget instance:{}", nashornRequest.getProjectWidgetId());
-            widgetService.updateState(WidgetState.RUNNING, nashornRequest.getProjectWidgetId(), new Date());
+            projectWidgetService.updateState(WidgetState.RUNNING, nashornRequest.getProjectWidgetId(), new Date());
         }
 
         Long delay = nashornRequest.getDelay();
@@ -174,9 +175,7 @@ public class WidgetExecutor implements Schedulable{
         addGlobalConfiguration(nashornRequest);
 
         // Create scheduled future
-        ScheduledFuture<NashornResponse> future = scheduledExecutorService.schedule(new WidgetJob(nashornRequest, stringEncryptor),
-                delay,
-                TimeUnit.SECONDS);
+        ScheduledFuture<NashornResponse> future = scheduledExecutorService.schedule(new WidgetJob(nashornRequest, stringEncryptor), delay, TimeUnit.SECONDS);
 
         // Create task
         ResultTask resultTask = ctx.getBean(ResultTask.class, future, nashornRequest, this);
@@ -235,14 +234,7 @@ public class WidgetExecutor implements Schedulable{
      * @param nashornRequest the request to launch a job
      */
     private void addGlobalConfiguration(NashornRequest nashornRequest) {
-        List<Configuration> configurations = configurationRepository.findConfigurationForWidget();
-        if (configurations != null && !configurations.isEmpty()) {
-            StringBuilder builder = new StringBuilder(nashornRequest.getProperties());
-            builder.append('\n');
-            for (Configuration configuration : configurations) {
-                builder.append(configuration.getKey()).append('=').append(configuration.getValue()).append('\n');
-            }
-            nashornRequest.setProperties(builder.toString());
-        }
+        List<Configuration> configurations = configurationService.getConfigurationForWidgets();
+        nashornService.injectWidgetsConfigurations(nashornRequest, configurations);
     }
 }

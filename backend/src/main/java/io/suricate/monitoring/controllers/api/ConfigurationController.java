@@ -2,7 +2,7 @@ package io.suricate.monitoring.controllers.api;
 
 import io.suricate.monitoring.model.dto.ConfigurationDto;
 import io.suricate.monitoring.model.entity.Configuration;
-import io.suricate.monitoring.service.ConfigurationService;
+import io.suricate.monitoring.service.api.ConfigurationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
