@@ -2,20 +2,16 @@
   display: inline-block;
 }
 .actions {
-  padding: 10px 25px 0 0;
+  padding: 0px 25px 0 0;
   display: inline-block;
   float: right;
 }
-.actions button {
-  color: #cfd2da;
-}
-
 h2.header {
   font-weight: 300;
   font-variant: all-small-caps;
   margin: 0;
-  font-size: 2em;
-  line-height: 1.4em;
+  font-size: 1.2rem;
+  line-height: 1.4rem;
 }
 mat-divider {
   margin-top: 10px;

@@ -14,18 +14,28 @@
  * limitations under the License.
  */
 
-import { Component, OnInit } from '@angular/core';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import {RouterModule, Routes} from '@angular/router';
+import {SharedModule} from '../../shared/shared.module';
+import {HomeComponent} from './home/home.component';
 
-@Component({
-  selector: 'app-home',
-  templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+
+const homeRoutes: Routes = [
+  { path: 'home', component: HomeComponent }
+];
+
+@NgModule({
+  imports: [
+    CommonModule,
+    RouterModule.forChild(homeRoutes),
+    SharedModule
+  ],
+  declarations: [
+    HomeComponent
+  ],
+  exports: [
+      HomeComponent
+  ]
 })
-export class HomeComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit() {
-  }
-
-}
+export class HomeModule { }

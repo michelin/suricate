@@ -63,6 +63,8 @@ public class UserDto extends AbstractDto {
      */
     private List<RoleDto> roles;
 
+    public UserDto() {}
+
     /**
      * Constructor of UserDto
      * @param user database user

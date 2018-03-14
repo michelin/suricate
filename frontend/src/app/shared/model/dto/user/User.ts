@@ -19,6 +19,8 @@ import {Role} from './Role';
 export class User {
   public id: number;
   public username: string;
+  public firstname: string;
+  public lastname: string;
   public fullname: string;
   public mail: string;
   public roles: Role[];

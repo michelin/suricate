@@ -33,7 +33,6 @@ import {UserService} from '../user.service';
 export class UserListComponent implements AfterViewInit {
   matTableDataSource = new MatTableDataSource();
 
-  pageTitle = 'User list';
   displayedColumns = ['username', 'fullname', 'mail', 'roles', 'edit'];
   isLoadingResults = false;
   errorCatched = false;

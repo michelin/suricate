@@ -29,7 +29,6 @@ import java.util.List;
 /**
  * Project entity
  */
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @Entity
 @Indexed
 public class Category extends AbstractAuditingEntity<Long> {

@@ -14,52 +14,91 @@
  * limitations under the License.
  */
 
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import {FormGroup, Validators, FormBuilder, FormControl} from '@angular/forms';
 
 import { AuthenticationService} from '../authentication.service';
 
+/**
+ * Manage the login page
+ */
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
+  /**
+   * The login form
+   */
   loginForm: FormGroup;
 
+  /**
+   * If the password field is hidden or not
+   *
+   * @type {boolean}
+   */
   hidePassword = true;
-  @ViewChild('formSubmitAttempt') formSubmitAttempt = false;
 
-  constructor(private router: Router, private authenticationService: AuthenticationService, private formBuilder: FormBuilder) {
+  /**
+   * Used for display spinner when form has been submitted
+   *
+   * @type {boolean}
+   */
+  formSubmitAttempt = false;
+
+  /**
+   * Constructor
+   *
+   * @param {Router} router The router service
+   * @param {AuthenticationService} authenticationService The authentication service
+   * @param {FormBuilder} formBuilder The form builder service
+   */
+  constructor(private router: Router,
+              private authenticationService: AuthenticationService,
+              private formBuilder: FormBuilder) {}
+
+  /**
+   * Init objects
+   */
+  ngOnInit() {
+    this.authenticationService.logout();
+
     this.loginForm = this.formBuilder.group({
-      'username': ['', Validators.required],
-      'password': ['', Validators.required]
+      'username': ['', [Validators.required]],
+      'password': ['', [Validators.required]]
     });
   }
 
-  ngOnInit() {
-    this.authenticationService.logout();
-  }
-
+  /**
+   * Check if the field is invalid
+   *
+   * @param {string} field The field to check
+   * @returns {boolean} False if the field valid, true otherwise
+   */
   isFieldInvalid(field: string) {
-    return (
-      (this.loginForm.get(field).touched && !this.loginForm.get(field).valid) ||
-      (this.loginForm.get(field).untouched && this.formSubmitAttempt)
-    );
+    return this.loginForm.invalid && (this.loginForm.get(field).dirty || this.loginForm.get(field).touched);
   }
 
+  /**
+   * Execute login action
+   */
   login() {
     if (this.loginForm.valid) {
+      // Display spinner
       this.formSubmitAttempt = true;
 
+      // Try to authenticate
       this.authenticationService
         .authenticate(this.loginForm.value)
         .subscribe (
-          authenticationResponse => {
+          () => {
+            // Authentication succeed
             this.router.navigate(['/home']);
           },
           error => {
+            // Authentication failed
             this.formSubmitAttempt = false;
             console.log(error);
           });

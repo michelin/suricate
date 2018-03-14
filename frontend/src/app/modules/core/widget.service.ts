@@ -16,36 +16,39 @@
 
 import { Injectable } from '@angular/core';
 import {AbstractHttpService} from '../../shared/services/abstract-http.service';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
 import {Category} from '../../shared/model/dto/Category';
 import {Widget} from '../../shared/model/dto/Widget';
-import {ProjectWidget} from '../../shared/model/dto/ProjectWidget';
 
 @Injectable()
 export class WidgetService extends AbstractHttpService  {
 
-  constructor(private http: HttpClient) {
+  /**
+   * Constructor
+   *
+   * @param {HttpClient} httpClient The http client service
+   */
+  constructor(private httpClient: HttpClient) {
     super();
   }
 
+  /**
+   * Retrieve every categories
+   *
+   * @returns {Observable<Category[]>} The categories as observable
+   */
   getCategories(): Observable<Category[]> {
-    let headers = new HttpHeaders();
-    headers = headers.append('Content-Type', 'application/json');
-
-    return this.http
-        .get<Category[]>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.WIDGET_URL}/categories`, {headers: headers})
-        .map(response => AbstractHttpService.extractData(response))
-        .catch((error: any) => AbstractHttpService.handleErrorObservable(error));
+    return this.httpClient.get<Category[]>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.WIDGETS_URL}/categories`);
   }
 
+  /**
+   * Get every widget for a category
+   *
+   * @param {number} categoryId The category id
+   * @returns {Observable<Widget[]>} The widgets as observable
+   */
   getWidgetsByCategoryId(categoryId: number): Observable<Widget[]> {
-    let headers = new HttpHeaders();
-    headers = headers.append('Content-Type', 'application/json');
-
-    return this.http
-        .get<Widget[]>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.WIDGET_URL}/category/${categoryId}`, {headers: headers})
-        .map(response => AbstractHttpService.extractData(response))
-        .catch((error: any) => AbstractHttpService.handleErrorObservable(error));
+    return this.httpClient.get<Widget[]>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.WIDGETS_URL}/category/${categoryId}`);
   }
 }

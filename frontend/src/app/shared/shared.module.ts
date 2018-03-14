@@ -24,6 +24,13 @@ import {AuthGuard} from './guards/auth.guard';
 import {MaterialModule} from './modules/material.module';
 import {PagesHeaderComponent} from './components/pages-header/pages-header.component';
 import {AddWidgetDialogComponent} from './components/pages-header/components/add-widget-dialog/add-widget-dialog.component';
+import {FlexLayoutModule} from '@angular/flex-layout';
+import {RouterModule} from '@angular/router';
+import {DashboardActionsComponent} from './components/pages-header/components/dashboard-actions/dashboard-actions.component';
+import { HomeActionsComponent } from './components/pages-header/components/home-actions/home-actions.component';
+import { AddDashboardDialogComponent } from './components/pages-header/components/add-dashboard-dialog/add-dashboard-dialog.component';
+import { CustomFormsModule} from 'ng2-validation';
+import {ColorPickerModule} from 'ngx-color-picker';
 
 @NgModule({
   imports: [
@@ -32,24 +39,39 @@ import {AddWidgetDialogComponent} from './components/pages-header/components/add
       ReactiveFormsModule,
       HttpClientModule,
       NgGridModule,
-      MaterialModule
+      MaterialModule,
+      FlexLayoutModule,
+      RouterModule,
+      CustomFormsModule,
+      ColorPickerModule
   ],
   declarations: [
       PagesHeaderComponent,
-      AddWidgetDialogComponent
+      AddWidgetDialogComponent,
+      DashboardActionsComponent,
+      HomeActionsComponent,
+      AddDashboardDialogComponent
+  ],
+  entryComponents: [
+      AddWidgetDialogComponent,
+      AddDashboardDialogComponent
   ],
   exports: [
-    FormsModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-    NgGridModule,
-    MaterialModule,
-    PagesHeaderComponent,
-    AddWidgetDialogComponent
+      FormsModule,
+      ReactiveFormsModule,
+      HttpClientModule,
+      NgGridModule,
+      MaterialModule,
+      FlexLayoutModule,
+      RouterModule,
+      CustomFormsModule,
+      ColorPickerModule,
+      PagesHeaderComponent,
+      AddWidgetDialogComponent
   ],
   providers: [
       { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
-      AuthGuard,
+      AuthGuard
   ]
 })
 export class SharedModule { }

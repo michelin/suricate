@@ -47,7 +47,7 @@ $dashboard-dark-primary: mat-palette($dashboard-dark, 500, 300, 800);
 $dashboard-dark-accent:  mat-palette($dashboard-dark, A200, A400, A100);
 
 // The warn palette is optional (defaults to red).
-$dashboard-dark-warn:    mat-palette($mat-red);
+$dashboard-dark-warn:    mat-palette($mat-red, 300);
 
 // Create the theme object (a Sass map containing all of the palettes).
 $dashboard-dark-theme: mat-dark-theme($dashboard-dark-primary, $dashboard-dark-accent, $dashboard-dark-warn);

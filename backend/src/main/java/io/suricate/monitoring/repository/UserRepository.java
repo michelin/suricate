@@ -26,14 +26,11 @@ import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
 
-	/**
-	 * Method used to get user by username
-	 * @param username the username
-	 * @return the user object
-	 */
-    Optional<User> findByUsername(String username);
-
 	Optional<User> findByUsernameIgnoreCase(String username);
+
+	@Query("SELECT u FROM User u " +
+			"WHERE lower(u.username) LIKE lower(concat(:username, '%'))")
+	Optional<List<User>> findByUsernameIgnoreCaseAndStartingWith(@Param("username") String username);
 
 	/**
 	 * Methos used to get id by username
@@ -48,5 +45,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	 * @param id the project id
 	 * @return the list of user
 	 */
-	List<User> findByProjects_Id(Long id);
+	Optional<List<User>> findByProjects_Id(Long id);
 }

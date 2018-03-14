@@ -18,6 +18,7 @@ package io.suricate.monitoring.service;
 
 import io.suricate.monitoring.configuration.security.ConnectedUser;
 import io.suricate.monitoring.controllers.api.error.exception.ApiException;
+import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.model.enums.AuthenticationMethod;
 import io.suricate.monitoring.model.enums.UserRoleEnum;
@@ -98,6 +99,14 @@ public class UserService {
     }
 
     public Optional<User> getOneByUsername(String username) {
-        return userRepository.findByUsername(username);
+        return userRepository.findByUsernameIgnoreCase(username);
+    }
+
+    public Optional<List<User>> getAllByUsernameStartWith(String username) {
+        return userRepository.findByUsernameIgnoreCaseAndStartingWith(username);
+    }
+
+    public Optional<List<User>> getAllByProject(Project project) {
+        return userRepository.findByProjects_Id(project.getId());
     }
 }

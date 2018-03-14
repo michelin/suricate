@@ -1,16 +1,14 @@
-<ng-template [ngIf]="project">
-  <app-pages-header [secondTitle]="project.name"></app-pages-header>
+<app-pages-header [secondTitle]="(project | async)?.name"></app-pages-header>
 
-  <div [ngGrid]="{'max_cols': project.maxColumn, 'row_height': project.widgetHeight/1.5, 'margins': [5], 'auto_resize': true}">
-    <div class="commonCssAndJs">
-      <div [innerHTML]="getWidgetCommonCSS()"></div>
-      <div [innerHTML]="getHtmlScriptsFromProject(project.librariesToken)"></div>
-    </div>
-    <div *ngFor="let widget of project.widgets"
-         [ngClass]="'widget ' + widget.id + ' widget-' + widget.projectWidgetId"
-         [ngGridItem]="{'col': widget.col+1, 'row': widget.row, 'sizey': widget.height, 'sizex': widget.width}"
-         [innerHTML]="getHtmlFormWidget(widget)">
-
-    </div>
+<div *ngIf="gridOptions" [ngGrid]="gridOptions">
+  <div class="commonCssAndJs">
+    <div [innerHTML]="getGridCSS((project | async)?.cssStyle)"></div>
+    <div [innerHTML]="getWidgetCommonCSS()"></div>
   </div>
-<ng-template>
+  <div *ngFor="let widget of (project | async)?.widgets"
+       [ngClass]="'widget ' + widget.id + ' widget-' + widget.projectWidgetId"
+       [ngGridItem]="{'col': widget.col+1, 'row': widget.row, 'sizey': widget.height, 'sizex': widget.width}"
+       [innerHTML]="getHtmlFormWidget(widget)">
+
+  </div>
+</div>

@@ -14,52 +14,94 @@
  * limitations under the License.
  */
 
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {User} from '../../../shared/model/dto/user/User';
 import {Project} from '../../../shared/model/dto/Project';
 import {DashboardService} from '../../dashboard/dashboard.service';
 import {UserService} from '../../user/user.service';
 import {AuthenticationService} from '../../authentication/authentication.service';
+import {takeUntil, takeWhile} from 'rxjs/operators';
 
 @Component({
   selector: 'app-sidenav',
   templateUrl: './sidenav.component.html',
   styleUrls: ['./sidenav.component.css']
 })
-export class SidenavComponent implements OnInit {
+export class SidenavComponent implements OnInit, OnDestroy {
 
+  /**
+   * Used for close the observable subscription
+   *
+   * @type {boolean}
+   */
+  private alive = true;
+
+  /**
+   * The connected user
+   */
   public connectedUser: User;
+
+  /**
+   * The list of dashboards
+   */
   public dashboards: Project[];
 
+  /**
+   * Constructor
+   *
+   * @param {Router} router The router service
+   * @param {ChangeDetectorRef} changeDetectorRef The change detector service
+   * @param {DashboardService} dashboardService The dashboard service
+   * @param {UserService} userService The user service
+   * @param {AuthenticationService} authenticationService The authentication service
+   */
   constructor(private router: Router,
               private changeDetectorRef: ChangeDetectorRef,
               private dashboardService: DashboardService,
               private userService: UserService,
               private authenticationService: AuthenticationService) { }
 
+  /**
+   * Init objects
+   */
   ngOnInit() {
-    this.userService
-        .getConnectedUser()
-        .subscribe(user => {
-          this.connectedUser = user;
-          this.changeDetectorRef.detectChanges();
-        });
-
     this.dashboardService
-        .getAll()
-        .subscribe(dashboards => {
-          this.dashboards = dashboards;
-          this.changeDetectorRef.detectChanges();
-        });
+        .dashboardsSubject
+        .pipe(takeWhile(() => this.alive))
+        .subscribe(projects => this.dashboards = projects);
+
+    this.userService
+        .connectedUserSubject
+        .pipe(takeWhile(() => this.alive))
+        .subscribe(connectedUser => this.connectedUser = connectedUser);
+
+    this.dashboardService.getAll().subscribe();
+    this.userService.getConnectedUser().subscribe();
   }
 
+  /**
+   * Retrieve the initials of the connected user
+   *
+   * @returns {string} The initials
+   */
   getConnectedUserInitial(): string {
     return this.userService.getUserInitial(this.connectedUser);
   }
 
+  /**
+   * Logout the user
+   */
   logout(): void {
     this.authenticationService.logout();
     this.router.navigate(['/login']);
+  }
+
+  /**
+   * Called when the component is destoyed
+   * All the subscriptions are closed
+   */
+  ngOnDestroy() {
+    this.alive = false;
   }
 }

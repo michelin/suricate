@@ -1,51 +1,56 @@
 mat-sidenav-container {
-  min-height: 100vh;
+    min-height: 100vh;
 }
 
-mat-sidenav {
-  width: 200px;
-}
-
+/** Sidenav **/
 mat-sidenav * {
-  color: #cfd2da;
-  font-variant: all-small-caps;
+    color: #cfd2da;
+    font-variant: all-small-caps;
+    font-size: 0.8rem;
 }
 mat-sidenav mat-icon {
-  font-variant: none;
+    font-variant: none;
 }
 
-/* Global Section */
-mat-sidenav > .sidenav-section {
-  margin: 0 auto 30px auto;
-  padding-left: 20px;
+mat-sidenav > .sidenav-section-container {
+    margin-left: 20px;
 }
 
-/* User Section */
-mat-sidenav > #user-section {
-  padding: 15px 0 30px 0;
+/** Global Section **/
+mat-sidenav .sidenav-section {
+    width: 100%;
+    margin: 0 auto;
+}
+
+/** User Section **/
+mat-sidenav #user-section {
+  padding: 15px 0 10px 0;
   margin: 0;
 }
-mat-sidenav > #user-section > .avatar-container {
+mat-sidenav #user-section > .avatar-container {
   margin: 0 auto;
-  width: 70px;
-  height: 70px;
+  width: 60px;
+  height: 60px;
   overflow: hidden;
   border-radius: 50%;
   border: 1px solid #303030;
 }
 
-mat-sidenav > #user-section > .avatar-container > .avatar {
-  height: auto;
-  font-size: 34px;
-  line-height: 71px;
+mat-sidenav #user-section > .avatar-container > .avatar {
+  height: 100%;
+  font-size: 25px;
+  line-height: 54px;
   text-align: center;
   background: #303030;
+}
+
+mat-sidenav #user-section .mat-expansion-panel {
+    padding-top: 5px;
 }
 
 /** Nav list **/
 mat-nav-list.submenu {
   background-color: #5a5a5a;
-  margin-top: 8px;
   display: block;
   padding: 10px 0 10px 0;
   border-top: 1px solid #2d2d2d;
@@ -61,13 +66,12 @@ mat-nav-list.submenu .mat-list-item mat-icon {
 }
 
 mat-nav-list .mat-list-item {
-  height: 30px;
-  width: 159px;
+  height: 23px;
+  width: 90%;
 }
 mat-nav-list .mat-list-item:hover {
-  background-color: transparent;
+  background-color: #505050;
   color: #f7f9ff;
-  font-size: 1.2em;
 }
 mat-nav-list .mat-list-item.active {
   background-color: #1997c6;
@@ -75,7 +79,7 @@ mat-nav-list .mat-list-item.active {
 }
 
 mat-sidenav-content {
-  padding: 10px 10px 0 20px;
-  min-height: 95vh;
+  padding: 10px 10px 0 10px;
+  min-height: 100vh;
   overflow: -webkit-paged-x;
 }

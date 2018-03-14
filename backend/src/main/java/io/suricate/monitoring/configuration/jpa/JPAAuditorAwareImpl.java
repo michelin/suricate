@@ -2,7 +2,6 @@ package io.suricate.monitoring.configuration.jpa;
 
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 
 /**
  * Class used for update Auditing column at each request
@@ -20,6 +19,6 @@ public class JPAAuditorAwareImpl implements AuditorAware<String> {
             return "APPLICATION";
         }
 
-        return ((User) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUsername();
+        return SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
     }
 }

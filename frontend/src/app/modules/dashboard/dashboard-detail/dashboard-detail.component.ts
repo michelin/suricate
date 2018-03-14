@@ -14,51 +14,97 @@
  * limitations under the License.
  */
 
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {DashboardService} from '../dashboard.service';
 import {Project} from '../../../shared/model/dto/Project';
 import {Widget} from '../../../shared/model/dto/Widget';
-import {DomSanitizer, SafeHtml, SafeStyle} from '@angular/platform-browser';
-import {AbstractHttpService} from '../../../shared/services/abstract-http.service';
-import {HeaderDashboardSharedService} from '../../core/header-dashboard-shared.service';
+import {DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import {Observable} from 'rxjs/Observable';
+import {takeWhile} from 'rxjs/operators';
+import {of} from 'rxjs/observable/of';
 
 @Component({
   selector: 'app-dashboard-detail',
   templateUrl: './dashboard-detail.component.html',
   styleUrls: ['./dashboard-detail.component.css']
 })
-export class DashboardDetailComponent implements OnInit {
-  public project: Project;
-  public gridOptions: {};
+export class DashboardDetailComponent implements OnInit, OnDestroy {
 
-  constructor(private route: ActivatedRoute,
+  isAlive = true;
+
+  /**
+   * The project as observable
+   */
+  project: Observable<Project>;
+  /**
+   * The options for the plugin angular2-grid
+   */
+  gridOptions: {};
+
+  /**
+   * constructor
+   *
+   * @param {ActivatedRoute} activatedRoute The activated route service
+   * @param {DashboardService} dashboardService The dashboard service
+   * @param {ChangeDetectorRef} changeDetectorRef The change detector service
+   * @param {DomSanitizer} domSanitizer The domSanitizer service
+   */
+  constructor(private activatedRoute: ActivatedRoute,
               private dashboardService: DashboardService,
-              private headerDashboardSharedService: HeaderDashboardSharedService,
               private changeDetectorRef: ChangeDetectorRef,
               private domSanitizer: DomSanitizer) { }
 
+  /**
+   * Init objects
+   */
   ngOnInit() {
-    this.headerDashboardSharedService.projectDashboardToDisplay.subscribe(project => {
-      this.project = project;
+    this.dashboardService.
+        currendDashbordSubject
+        .pipe(takeWhile(() => this.isAlive))
+        .subscribe(project => this.project = of(project));
+
+    this.activatedRoute.params.subscribe( params => {
+      this.dashboardService
+          .getOneById(params['id'])
+          .subscribe(project => {
+            this.gridOptions = {
+              'max_cols': project.maxColumn,
+              'min_cols': 1,
+              'row_height': project.widgetHeight / 1.5,
+              'margins': [5],
+              'auto_resize': true
+            };
+
+            this.dashboardService.currendDashbordSubject.next(project);
+          });
+
     });
-
-    this.route.params.subscribe( params =>
-        this.dashboardService
-            .getOneById(params['id'])
-            .subscribe( project => {
-              this.headerDashboardSharedService.projectDashboardToDisplay.next(project);
-
-              this.gridOptions = {
-                'max_cols': project.maxColumn,
-                'auto_resize': true,
-                'maintain_ratio': true,
-              };
-              this.changeDetectorRef.detectChanges();
-            })
-    );
   }
 
+  /**
+   * Get the CSS for the grid
+   *
+   * @param {Project} project The project
+   * @returns {SafeHtml} The css as safe html
+   */
+  getGridCSS(css: string): SafeHtml {
+    return this.domSanitizer.bypassSecurityTrustHtml(`
+      <style>
+        .grid {
+          ${css}
+        }
+      </style>
+    `);
+  }
+
+
+  /**
+   * Get the html/CSS code for the widget
+   *
+   * @param {Widget} widget The widget
+   * @returns {SafeHtml} The html as SafeHtml
+   */
   getHtmlFormWidget(widget: Widget): SafeHtml {
     return this.domSanitizer.bypassSecurityTrustHtml(`
       <style>
@@ -68,19 +114,11 @@ export class DashboardDetailComponent implements OnInit {
     `);
   }
 
-  getHtmlScriptsFromProject(librariesToken: string[]): SafeHtml {
-    let scripts = '';
-
-    for (const libraryToken of librariesToken) {
-      scripts = scripts.concat(`
-                  <script type="text/javascript" charset="UTF-8"
-                          src="${AbstractHttpService.BASE_URL}/${AbstractHttpService.ASSET_URL}/${libraryToken}"></script>
-                `);
-    }
-
-    return this.domSanitizer.bypassSecurityTrustHtml(scripts);
-  }
-
+  /**
+   * Get the oommon css for each widget
+   *
+   * @returns {SafeHtml} AS safe HTML
+   */
   getWidgetCommonCSS(): SafeHtml {
     return this.domSanitizer.bypassSecurityTrustHtml(`
       <style>
@@ -128,5 +166,9 @@ export class DashboardDetailComponent implements OnInit {
           }
         </style>
     `);
+  }
+
+  ngOnDestroy() {
+    this.isAlive = false;
   }
 }

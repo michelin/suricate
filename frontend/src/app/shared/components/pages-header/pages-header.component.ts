@@ -15,9 +15,7 @@
  */
 
 import {Component, Input, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {MatDialog, MatDialogRef} from '@angular/material';
-import {AddWidgetDialogComponent} from './components/add-widget-dialog/add-widget-dialog.component';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-pages-header',
@@ -25,28 +23,12 @@ import {AddWidgetDialogComponent} from './components/add-widget-dialog/add-widge
   styleUrls: ['./pages-header.component.css']
 })
 export class PagesHeaderComponent implements OnInit {
-  addWidgetDialogRef: MatDialogRef<AddWidgetDialogComponent>;
   pageName: string;
-  projectId: number;
-
   @Input('secondTitle') secondTitle: string;
 
-  constructor(private route: Router,
-              private dialog: MatDialog,
-              private activatedRoute: ActivatedRoute) {}
+  constructor(private route: Router) {}
 
   ngOnInit() {
-    this.activatedRoute.params.subscribe(params => {
-      this.projectId = params['id'];
-    });
-
     this.pageName = this.route.url.split('/')[1];
-  }
-
-  openAddWidgetDialog() {
-    this.addWidgetDialogRef = this.dialog.open(AddWidgetDialogComponent, {
-      minWidth: 900,
-      data: { projectId: this.projectId}
-    });
   }
 }

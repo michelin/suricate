@@ -15,64 +15,45 @@
  */
 
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { User } from '../../shared/model/dto/user/User';
 
 import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/catch';
 import {AbstractHttpService} from '../../shared/services/abstract-http.service';
-
+import {map} from 'rxjs/operators';
+import {Subject} from 'rxjs/Subject';
 
 @Injectable()
 export class UserService extends AbstractHttpService {
+
+  connectedUserSubject: Subject<User> = new Subject<User>();
 
   constructor(private http: HttpClient) {
     super();
   }
 
   getAll(): Observable<User[]> {
-    let headers = new HttpHeaders();
-    headers = headers.append('Content-Type', 'application/json');
-
-    return this.http
-        .get<User[]>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.USER_URL}`, {headers: headers})
-        .map(response => AbstractHttpService.extractData(response))
-        .catch((error: any) => AbstractHttpService.handleErrorObservable(error));
+    return this.http.get<User[]>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.USERS_URL}`);
   }
 
   getById(userId: string): Observable<User> {
-    let headers = new HttpHeaders();
-    headers = headers.append('Content-Type', 'application/json');
-
-    return this.http
-        .get<User>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.USER_URL}/${userId}`, {headers: headers})
-        .map(response => AbstractHttpService.extractData(response))
-        .catch((error: any) => AbstractHttpService.handleErrorObservable(error));
+    return this.http.get<User>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.USERS_URL}/${userId}`);
   }
 
   getConnectedUser(): Observable<User> {
-    return this.http
-        .get<User>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.USER_URL}/current`)
-        .map(response => AbstractHttpService.extractData(response))
-        .catch((error: any) => AbstractHttpService.handleErrorObservable(error));
+    return this.http.get<User>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.USERS_URL}/current`).pipe(
+        map(user => {
+          this.connectedUserSubject.next(user);
+          return user;
+        })
+    );
   }
 
-  updateUser(user: User): void {
-    let headers = new HttpHeaders();
-    headers = headers.append('Content-Type', 'application/json');
-
-    const body = JSON.stringify(user);
-    this.http
-        .patch<User>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.USER_URL}/update`, body , {headers: headers})
-        .catch((error: any) => AbstractHttpService.handleErrorObservable(error));
+  searchUserByUsername(username: string): Observable<User[]> {
+    return this.http.get<User[]>(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.USERS_URL}/search?username=${username}`);
   }
 
   getUserInitial(user: User): string {
-    let initial = '';
-    initial = initial.concat(user.fullname.split(' ')[0].substring(0, 1));
-    initial = initial.concat(user.fullname.split(' ')[1].substring(0, 1));
-
-    return initial;
+    return `${user.firstname.substring(0, 1)}${user.lastname.substring(0, 1)}`;
   }
 }

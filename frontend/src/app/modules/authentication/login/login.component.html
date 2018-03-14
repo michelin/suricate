@@ -1,37 +1,73 @@
-<div class="auth-main">
-  <mat-card class="auth-block mat-elevation-z8">
-    <mat-card-content>
-      <mat-spinner *ngIf="formSubmitAttempt"></mat-spinner>
+<div class="container"
+     fxLayout="column wrap"
+     fxLayoutAlign="center center">
 
-      <div *ngIf="!formSubmitAttempt">
-        <div class="logo"></div>
+    <form id="login-form"
+          [formGroup]="loginForm"
+          (ngSubmit)="login()"
+          fxFlex
+          fxLayout="column wrap"
+          fxLayoutAlign="center center"
+          novalidate>
 
-        <form id="login-form" [formGroup]="loginForm" (ngSubmit)="login()">
-          <mat-form-field>
-            <input matInput id="username" placeholder="Username" formControlName="username" />
-            <mat-error *ngIf="isFieldInvalid('username')">
-              Username is mandatory
-            </mat-error>
-          </mat-form-field>
+        <mat-card id="card-login"
+                  fxFlex="50"
+                  fxLayout="column wrap"
+                  fxLayoutAlign="center"
+                  class="mat-elevation-z12">
 
-          <mat-form-field>
-            <input matInput id="password" placeholder="Password" formControlName="password" [type]="hidePassword ? 'password' : 'text'" required/>
-            <mat-icon matSuffix color="primary" (click)="hidePassword = !hidePassword">{{hidePassword ? 'visibility' : 'visibility_off'}}</mat-icon>
-            <mat-error *ngIf="isFieldInvalid('password')">
-              Password is mandatory
-            </mat-error>
-          </mat-form-field>
+          <mat-card-content fxFlex="80"
+                            fxLayout="row wrap"
+                            fxLayoutAlign="center center">
+            <!-- When form has been submitted -->
+            <mat-spinner *ngIf="formSubmitAttempt"></mat-spinner>
 
-          <button mat-raised-button class="mat-elevation-z2" color="primary" type="submit">Sign In</button>
-        </form>
-      </div>
-    </mat-card-content>
-  </mat-card>
+            <!-- Before Submit the form -->
+            <div fxFlex="90"
+                 fxLayout="column wrap"
+                 fxLayoutAlign="center"
+                 *ngIf="!formSubmitAttempt"
+                 class="form-content">
 
-  <div class="footer-legals">
-      <div>Monitoring - Version 1.1-SNAPSHOT</div>
-      <div>Copyright © 2018 Suricate - All rights reserved</div>
-  </div>
+              <!-- Username Input -->
+              <mat-form-field>
+                <input matInput
+                       type="text"
+                       id="username"
+                       placeholder="Username"
+                       formControlName="username"
+                       [required]="loginForm.get('username').errors && loginForm.get('username').errors.required"/>
+                <mat-error *ngIf="isFieldInvalid('username')">
+                  Username is mandatory
+                </mat-error>
+              </mat-form-field>
 
+              <!-- Password Input -->
+              <mat-form-field>
+                <input matInput
+                       [type]="hidePassword ? 'password' : 'text'"
+                       id="password"
+                       placeholder="Password"
+                       formControlName="password"
+                       [required]="loginForm.get('password').errors && loginForm.get('password').errors.required" />
+
+                <mat-icon matSuffix
+                          color="primary"
+                          (click)="hidePassword = !hidePassword">{{hidePassword ? 'visibility' : 'visibility_off'}}
+                </mat-icon>
+                <mat-error *ngIf="isFieldInvalid('password')">
+                  Password is mandatory
+                </mat-error>
+              </mat-form-field>
+            </div>
+          </mat-card-content>
+
+          <mat-card-actions fxFlex="13"
+                            fxLayout="row wrap"
+                            fxLayoutAlign="center"
+                            *ngIf="!formSubmitAttempt">
+            <button fxFlex="90" mat-raised-button class="mat-elevation-z2" color="primary" type="submit">Sign In</button>
+          </mat-card-actions>
+        </mat-card>
+    </form>
 </div>
-

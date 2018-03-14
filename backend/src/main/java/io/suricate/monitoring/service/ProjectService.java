@@ -16,11 +16,12 @@
 
 package io.suricate.monitoring.service;
 
+import io.suricate.monitoring.model.dto.project.ProjectDto;
+import io.suricate.monitoring.model.dto.user.UserDto;
 import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
 import io.suricate.monitoring.model.dto.UpdateEvent;
-import io.suricate.monitoring.model.dto.project.ProjectResponse;
 import io.suricate.monitoring.model.dto.project.ProjectWidgetRequest;
 import io.suricate.monitoring.model.dto.update.UpdateType;
 import io.suricate.monitoring.model.entity.user.User;
@@ -28,18 +29,27 @@ import io.suricate.monitoring.repository.ProjectRepository;
 import io.suricate.monitoring.repository.ProjectWidgetRepository;
 import io.suricate.monitoring.repository.WidgetRepository;
 import io.suricate.monitoring.utils.logging.LogExecutionTime;
+import org.apache.commons.lang3.StringUtils;
+import org.jasypt.encryption.StringEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  * Service used to manage projects
  */
 @Service
 public class ProjectService {
+
+    @Autowired
+    @Qualifier("jasyptStringEncryptor")
+    private StringEncryptor stringEncryptor;
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -51,6 +61,9 @@ public class ProjectService {
     private WidgetRepository widgetRepository;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private SocketService socketService;
 
     @Autowired
@@ -59,41 +72,110 @@ public class ProjectService {
     @Autowired
     private transient LibraryService libraryService;
 
-    private ProjectResponse tranform(Project project) {
-        ProjectResponse projectResponse = new ProjectResponse();
+    /**
+     * Transforme a model object into a DTO object
+     *
+     * @param project The project model object
+     * @return The associated DTO object
+     */
+    public ProjectDto toDTO(Project project) {
+        ProjectDto projectDto = new ProjectDto();
 
-        projectResponse.setId(project.getId());
-        projectResponse.setName(project.getName());
-        projectResponse.setToken(project.getToken());
-        projectResponse.setWidgetHeight(project.getWidgetHeight());
-        projectResponse.setMaxColumn(project.getMaxColumn());
-        projectResponse.setCssStyle(project.getCssStyle());
+        projectDto.setId(project.getId());
+        projectDto.setName(project.getName());
+        projectDto.setToken(project.getToken());
+        projectDto.setWidgetHeight(project.getWidgetHeight());
+        projectDto.setMaxColumn(project.getMaxColumn());
+        projectDto.setCssStyle(project.getCssStyle());
 
         List<ProjectWidget> projectWidgets = projectWidgetRepository.findByProjectIdAndWidget_WidgetAvailabilityOrderById(project.getId(), WidgetAvailabilityEnum.ACTIVATED);
         for (ProjectWidget projectWidget: projectWidgets){
-            projectResponse.getWidgets().add(widgetService.getWidgetResponse(projectWidget));
+            projectDto.getWidgets().add(widgetService.getWidgetResponse(projectWidget));
         }
 
-        projectResponse.getLibrariesToken().addAll(libraryService.getLibraries(projectResponse.getWidgets()));
-
-        return projectResponse;
-    }
-
-    public List<ProjectResponse> getAllByUser(User user) {
-        List<ProjectResponse> projectsResponse = new ArrayList<>();
-
-        List<Project> projects = projectRepository.findByUsers_Id(user.getId());
-        for(Project project : projects) {
-            projectsResponse.add(tranform(project));
+        List<String> librairies = libraryService.getLibraries(projectDto.getWidgets());
+        if(librairies != null && !librairies.isEmpty()) {
+            projectDto.getLibrariesToken().addAll(librairies);
         }
 
-        return projectsResponse;
+        Optional<List<User>> users = userService.getAllByProject(project);
+        if(users.isPresent()) {
+            projectDto.getUsers().addAll(users.get().stream().map(user -> new UserDto(user)).collect(Collectors.toList()));
+        }
+
+        return projectDto;
     }
 
-    @Transactional
+    /**
+     * Tranforme a model object into a DTO object
+     *
+     * @param projectDto The DTO project object
+     * @return The associated model object
+     */
+    public Project toModel(ProjectDto projectDto) {
+        Project project = new Project();
+
+        project.setId(projectDto.getId());
+        project.setName(projectDto.getName());
+        project.setMaxColumn(projectDto.getMaxColumn());
+        project.setWidgetHeight(projectDto.getWidgetHeight());
+        project.setCssStyle(projectDto.getCssStyle());
+        project.setToken("");
+
+        return project;
+    }
+
+    public List<Project> getAll() {
+        return projectRepository.findAll();
+    }
+
+    /**
+     * Retrieve all the project for a user
+     *
+     * @param user The user
+     * @return The project list associated to the user
+     */
+    public List<Project> getAllByUser(User user) {
+        return projectRepository.findByUsers_IdOrderByName(user.getId());
+    }
+
+    /**
+     * Get a project by the project id
+     *
+     * @param id The id of the project
+     * @return The project associated
+     */
     @LogExecutionTime
-    public ProjectResponse getOneById(Long id){
-        return tranform(projectRepository.findOne(id));
+    public Optional<Project> getOneById(Long id){
+        Project project = projectRepository.findOne(id);
+
+        if(project == null) {
+            return Optional.empty();
+        }
+        return Optional.of(project);
+    }
+
+    /**
+     * Create a new project for a user
+     *
+     * @param user The user how create the project
+     * @param project The project to instantiate
+     * @return The project instantiate
+     */
+    @Transactional
+    public Project saveProject(User user, Project project) {
+        project.getUsers().add(user);
+
+        if(StringUtils.isBlank(project.getToken())) {
+            project.setToken(stringEncryptor.encrypt(UUID.randomUUID().toString()));
+        }
+
+        return projectRepository.save(project);
+    }
+
+    public Project deleteUserFromProject(User user, Project project) {
+        project.getUsers().remove(user);
+        return projectRepository.save(project);
     }
 
     @Transactional
@@ -141,5 +223,4 @@ public class ProjectService {
         // delete project
         projectRepository.delete(id);
     }
-
 }

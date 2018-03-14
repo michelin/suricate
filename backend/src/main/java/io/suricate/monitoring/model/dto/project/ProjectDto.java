@@ -16,21 +16,23 @@
 
 package io.suricate.monitoring.model.dto.project;
 
+import io.suricate.monitoring.model.dto.user.UserDto;
 import io.suricate.monitoring.model.dto.widget.WidgetResponse;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProjectResponse {
+public class ProjectDto {
 
     private Long id;
     private String name;
+    private Integer maxColumn;
+    private Integer widgetHeight;
+    private String cssStyle;
     private String token;
     private List<WidgetResponse> widgets = new ArrayList<>();
-    private Integer widgetHeight;
-    private Integer maxColumn;
-    private String cssStyle;
     private List<String> librariesToken = new ArrayList<>();
+    private List<UserDto> users = new ArrayList<>();
 
     public Long getId() {
         return id;
@@ -94,5 +96,16 @@ public class ProjectResponse {
 
     public void setLibrariesToken(List<String> librariesToken) {
         this.librariesToken = librariesToken;
+    }
+
+    public List<UserDto> getUsers() {
+        if(users == null) {
+            users = new ArrayList<>();
+        }
+        return users;
+    }
+
+    public void setUsers(List<UserDto> users) {
+        this.users = users;
     }
 }
