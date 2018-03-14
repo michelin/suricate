@@ -31,6 +31,6 @@ public interface ConfigurationRepository extends JpaRepository<Configuration, St
      */
     @Cacheable("configuration")
     @Query("SELECT c FROM Configuration c WHERE c.key LIKE 'WIDGET_CONFIG_%'")
-    List<Configuration> findConfigurationForWidget();
+    List<Configuration> findConfigurationForWidgets();
 
 }

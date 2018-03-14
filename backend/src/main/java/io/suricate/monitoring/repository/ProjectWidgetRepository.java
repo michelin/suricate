@@ -30,8 +30,6 @@ import java.util.List;
 
 public interface ProjectWidgetRepository extends JpaRepository<ProjectWidget, Long> {
 
-    List<ProjectWidget> getAll();
-
     /**
      * Method used to reset the state of a widget instance
      */

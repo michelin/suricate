@@ -61,4 +61,8 @@ public class ConfigurationService {
 
         return Optional.of(configurations);
     }
+
+    public List<Configuration> getConfigurationForWidgets() {
+        return this.configurationRepository.findConfigurationForWidgets();
+    }
 }

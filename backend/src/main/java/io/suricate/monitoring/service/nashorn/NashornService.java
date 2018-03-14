@@ -1,8 +1,10 @@
 package io.suricate.monitoring.service.nashorn;
 
 import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
+import io.suricate.monitoring.model.entity.Configuration;
 import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.repository.ProjectWidgetRepository;
+import io.suricate.monitoring.service.api.ProjectWidgetService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -16,14 +18,14 @@ public class NashornService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NashornService.class.getName());
 
-    private final ProjectWidgetRepository projectWidgetRepository;
+    private final ProjectWidgetService projectWidgetService;
 
-    public NashornService(final ProjectWidgetRepository projectWidgetRepository) {
-        this.projectWidgetRepository = projectWidgetRepository;
+    public NashornService(final ProjectWidgetService projectWidgetService) {
+        this.projectWidgetService = projectWidgetService;
     }
 
     public List<NashornRequest> getEveryNashornRequestFromDatabase() {
-        return projectWidgetRepository
+        return projectWidgetService
             .getAll()
             .stream()
             .map(projectWidget -> {
@@ -54,5 +56,23 @@ public class NashornService {
         }
 
         return true;
+    }
+
+    public NashornRequest injectWidgetsConfigurations(NashornRequest nashornRequest, List<Configuration> configurations) {
+
+        if (configurations != null && !configurations.isEmpty()) {
+            StringBuilder builder = new StringBuilder(nashornRequest.getProperties()).append('\n');
+
+            for (Configuration configuration : configurations) {
+                builder
+                    .append(configuration.getKey())
+                    .append('=')
+                    .append(configuration.getValue())
+                    .append('\n');
+            }
+            nashornRequest.setProperties(builder.toString());
+        }
+
+        return nashornRequest;
     }
 }

@@ -1,5 +1,6 @@
 package io.suricate.monitoring.service.api;
 
+import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.repository.ProjectWidgetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Date;
+import java.util.List;
 
 @Service
 public class ProjectWidgetService {
@@ -16,6 +18,10 @@ public class ProjectWidgetService {
     @Autowired
     public ProjectWidgetService(final ProjectWidgetRepository projectWidgetRepository) {
         this.projectWidgetRepository = projectWidgetRepository;
+    }
+
+    public List<ProjectWidget> getAll() {
+        return this.projectWidgetRepository.findAll();
     }
 
     public void resetProjectWidgetsState() {

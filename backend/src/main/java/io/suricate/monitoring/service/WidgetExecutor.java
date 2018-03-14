@@ -21,8 +21,8 @@ import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
 import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
 import io.suricate.monitoring.repository.ConfigurationRepository;
+import io.suricate.monitoring.service.api.ConfigurationService;
 import io.suricate.monitoring.service.api.ProjectWidgetService;
-import io.suricate.monitoring.service.api.WidgetService;
 import io.suricate.monitoring.service.nashorn.NashornService;
 import io.suricate.monitoring.service.nashorn.WidgetJob;
 import org.apache.commons.lang3.RandomUtils;
@@ -78,10 +78,7 @@ public class WidgetExecutor implements Schedulable{
 
     private ProjectWidgetService projectWidgetService;
     private NashornService nashornService;
-
-
-    @Autowired
-    private ConfigurationRepository configurationRepository;
+    private ConfigurationService configurationService;
 
     @Autowired
     private ApplicationContext ctx;
@@ -91,9 +88,10 @@ public class WidgetExecutor implements Schedulable{
     private StringEncryptor stringEncryptor;
 
 
-    public WidgetExecutor(final ProjectWidgetService projectWidgetService, final NashornService nashornService) {
+    public WidgetExecutor(final ProjectWidgetService projectWidgetService, final NashornService nashornService, final ConfigurationService configurationService) {
         this.projectWidgetService = projectWidgetService;
         this.nashornService = nashornService;
+        this.configurationService = configurationService;
     }
 
     /**
@@ -177,9 +175,7 @@ public class WidgetExecutor implements Schedulable{
         addGlobalConfiguration(nashornRequest);
 
         // Create scheduled future
-        ScheduledFuture<NashornResponse> future = scheduledExecutorService.schedule(new WidgetJob(nashornRequest, stringEncryptor),
-                delay,
-                TimeUnit.SECONDS);
+        ScheduledFuture<NashornResponse> future = scheduledExecutorService.schedule(new WidgetJob(nashornRequest, stringEncryptor), delay, TimeUnit.SECONDS);
 
         // Create task
         ResultTask resultTask = ctx.getBean(ResultTask.class, future, nashornRequest, this);
@@ -238,14 +234,7 @@ public class WidgetExecutor implements Schedulable{
      * @param nashornRequest the request to launch a job
      */
     private void addGlobalConfiguration(NashornRequest nashornRequest) {
-        List<Configuration> configurations = configurationRepository.findConfigurationForWidget();
-        if (configurations != null && !configurations.isEmpty()) {
-            StringBuilder builder = new StringBuilder(nashornRequest.getProperties());
-            builder.append('\n');
-            for (Configuration configuration : configurations) {
-                builder.append(configuration.getKey()).append('=').append(configuration.getValue()).append('\n');
-            }
-            nashornRequest.setProperties(builder.toString());
-        }
+        List<Configuration> configurations = configurationService.getConfigurationForWidgets();
+        nashornService.injectWidgetsConfigurations(nashornRequest, configurations);
     }
 }
