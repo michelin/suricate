@@ -20,7 +20,7 @@ import io.suricate.monitoring.controllers.api.error.exception.ApiException;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.model.dto.user.UserDto;
 import io.suricate.monitoring.model.entity.user.User;
-import io.suricate.monitoring.service.UserService;
+import io.suricate.monitoring.service.api.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;

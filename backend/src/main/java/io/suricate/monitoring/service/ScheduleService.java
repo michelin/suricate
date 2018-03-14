@@ -16,12 +16,13 @@
 
 package io.suricate.monitoring.service;
 
+import io.suricate.monitoring.model.enums.NashornErrorTypeEnum;
 import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.model.dto.UpdateEvent;
-import io.suricate.monitoring.model.dto.nashorn.ErrorType;
 import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
 import io.suricate.monitoring.model.dto.update.UpdateType;
 import io.suricate.monitoring.repository.ProjectWidgetRepository;
+import io.suricate.monitoring.service.api.WidgetService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,7 +57,7 @@ public class ScheduleService {
     @Transactional
     public void handleResponse(NashornResponse nashornResponse, Schedulable callBack){
         updateData(nashornResponse);
-        // check if the request is valid
+        // check if the request is isValid
         if (!nashornResponse.isValid()){
             LOGGER.error("Error for widget instance: {}, log: {}, data: {}", nashornResponse.getProjectWidgetId(), nashornResponse.getLog(), nashornResponse);
         }
@@ -102,7 +103,7 @@ public class ScheduleService {
         if (nashornResponse.isValid()) {
             projectWidgetRepository.updateSuccessExecution(nashornResponse.getLaunchDate(), nashornResponse.getLog(), nashornResponse.getData(), nashornResponse.getProjectWidgetId(), WidgetState.RUNNING);
         } else {
-            WidgetState state = nashornResponse.getError() == ErrorType.FATAL ? WidgetState.STOPPED : WidgetState.WARNING;
+            WidgetState state = nashornResponse.getError() == NashornErrorTypeEnum.FATAL ? WidgetState.STOPPED : WidgetState.WARNING;
             projectWidgetRepository.updateExecutionLog(nashornResponse.getLaunchDate(), nashornResponse.getLog(), nashornResponse.getProjectWidgetId(), state);
         }
     }

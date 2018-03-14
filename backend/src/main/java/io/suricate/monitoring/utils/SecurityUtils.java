@@ -45,7 +45,7 @@ public final class SecurityUtils {
     }
 
     /**
-     * Method used to valid if the connected user is admin
+     * Method used to isValid if the connected user is admin
      * @return true if the connected user is admin, false otherwise
      */
     public static boolean isAdmin() {
@@ -54,7 +54,7 @@ public final class SecurityUtils {
 
 
     /**
-     * Method used to valid if the connected user as all role in list
+     * Method used to isValid if the connected user as all role in list
      * @param roles list of roles
      * @return true if the connected user have all roles, false otherwise
      */

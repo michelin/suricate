@@ -1,4 +1,4 @@
-package io.suricate.monitoring.service;
+package io.suricate.monitoring.service.api;
 
 import io.suricate.monitoring.model.dto.ConfigurationDto;
 import io.suricate.monitoring.model.entity.Configuration;

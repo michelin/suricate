@@ -79,11 +79,23 @@ public class NashornRequest extends AbstractDto {
         // Empty constructor
     }
 
+    public NashornRequest(String properties, String script, String previousData, Long projectId, Long technicalId, Long delay, Long timeout, WidgetState state, Date lastSuccess) {
+        this.properties = properties;
+        this.script = script;
+        this.previousData = previousData;
+        this.projectId = projectId;
+        this.projectWidgetId = technicalId;
+        this.delay = delay;
+        this.widgetState = state;
+        this.timeout = timeout;
+        this.alreadySuccess = lastSuccess != null;
+    }
+
     /**
-     * Method sued to valid all bean data
-     * @return true if all data are valid, false otherwise
+     * Method used to validate all bean data
+     * @return true if all data are isValid, false otherwise
      */
-    public boolean valid(){
+    public boolean isValid(){
         return projectId != null
                 && projectWidgetId != null
                 && JsonUtils.isJsonValid(previousData)
@@ -129,18 +141,6 @@ public class NashornRequest extends AbstractDto {
 
     public void setDelay(Long delay) {
         this.delay = delay;
-    }
-
-    public NashornRequest(String properties, String script, String previousData, Long projectId, Long technicalId, Long delay, Long timeout, WidgetState state, Date lastSuccess) {
-        this.properties = properties;
-        this.script = script;
-        this.previousData = previousData;
-        this.projectId = projectId;
-        this.projectWidgetId = technicalId;
-        this.delay = delay;
-        this.widgetState = state;
-        this.timeout = timeout;
-        this.alreadySuccess = lastSuccess != null;
     }
 
     public Long getProjectWidgetId() {

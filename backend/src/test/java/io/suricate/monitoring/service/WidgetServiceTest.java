@@ -7,6 +7,9 @@ import io.suricate.monitoring.model.entity.widget.Widget;
 import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
 import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.repository.*;
+import io.suricate.monitoring.service.api.LibraryService;
+import io.suricate.monitoring.service.api.ProjectWidgetService;
+import io.suricate.monitoring.service.api.WidgetService;
 import io.suricate.monitoring.utils.EntityUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -48,6 +51,9 @@ public class WidgetServiceTest {
     WidgetService widgetService;
 
     @Autowired
+    ProjectWidgetService projectWidgetService;
+
+    @Autowired
     LibraryService libraryService;
 
     @Autowired
@@ -61,7 +67,7 @@ public class WidgetServiceTest {
         assertThat(projectWidgetRepository.count()).isEqualTo(1);
 
         Date date = new Date();
-        widgetService.updateState(WidgetState.RUNNING,projectWidget.getId(),date);
+        projectWidgetService.updateState(WidgetState.RUNNING,projectWidget.getId(),date);
         ProjectWidget currentPw = projectWidgetRepository.findAll().get(0);
         assertThat(currentPw.getState()).isEqualTo(WidgetState.RUNNING);
         assertThat(currentPw.getLastExecutionDate().getTime()).isEqualTo(date.getTime());
