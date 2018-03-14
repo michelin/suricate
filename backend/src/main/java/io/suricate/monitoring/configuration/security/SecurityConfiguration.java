@@ -43,13 +43,10 @@ import org.springframework.web.filter.CorsFilter;
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SecurityConfiguration.class);
-
-    private final ApiAuthenticationFailureHandler apiAuthenticationFailureHandler;
     private final ApplicationProperties applicationProperties;
 
     @Autowired
-    public SecurityConfiguration(ApiAuthenticationFailureHandler apiAuthenticationFailureHandler, ApplicationProperties applicationProperties) {
-        this.apiAuthenticationFailureHandler = apiAuthenticationFailureHandler;
+    public SecurityConfiguration(ApplicationProperties applicationProperties) {
         this.applicationProperties = applicationProperties;
     }
 
@@ -83,29 +80,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
         roleHierarchy.setHierarchy("ROLE_ADMIN > ROLE_USER");
         return roleHierarchy;
-    }
-
-    /**
-     * Resource Security
-     */
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http
-                .csrf().disable()
-                .exceptionHandling()
-                .authenticationEntryPoint(apiAuthenticationFailureHandler)
-                .accessDeniedHandler(apiAuthenticationFailureHandler)
-            .and()
-                .headers()
-                    .frameOptions().disable()
-            .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and()
-                .authorizeRequests()
-                .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                .antMatchers("/api/oauth/token").permitAll()
-                .antMatchers("/api/**").authenticated();
     }
 
     @Bean
