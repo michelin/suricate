@@ -64,7 +64,7 @@ jobs:
         - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo "dev"; fi`
         - docker build -f frontend/Dockerfile -t $REPO:$TAG .
         - docker push $REPO
-		
+
 notifications:
   webhooks:
     on_success: change  # options: [always|never|change] default: always
