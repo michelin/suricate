@@ -9,10 +9,11 @@ cache:
     - node_modules
     - $HOME/.m2
     - $HOME/.yarn-cache
+    - ./backend/target
 
 stages:
   - build
-  - control_quality
+  # - control_quality
   - docker
 
 env:
@@ -30,6 +31,7 @@ before_install:
 
 jobs:
   include:
+    # Build applications
     - stage: build
       script: chmod +x mvnw && ./mvnw clean test -f backend/pom.xml
     - # parallel build
@@ -37,17 +39,17 @@ jobs:
       node_js:
         - "8"
       script: cd frontend && yarn install && yarn run build
-    - stage: control_quality
-      script: chmod +x mvnw && ./mvnw test -f backend/pom.xml && bash <(curl -s https://codecov.io/bash)
-
-after_success:
-    - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
-    - export REPO=suricate/backend
-    - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
-    - docker build -f backend/Dockerfile -t $REPO:$COMMIT .
-    - docker tag $REPO:$COMMIT $REPO:$TAG
-    - docker tag $REPO:$COMMIT $REPO:travis-$TRAVIS_BUILD_NUMBER
-    - docker push $REPO
+    # Control code quality
+    # - stage: control_quality
+    #  script: chmod +x mvnw && ./mvnw test -f backend/pom.xml && bash <(curl -s https://codecov.io/bash)
+    # Build docker image
+    - stage: docker
+      script:
+        - docker login -u=$DOCKER_USER -p=$DOCKER_PASS
+        - export REPO=suricate/backend
+        - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
+        - docker build -f backend/Dockerfile -t $REPO:$TAG .
+        - docker push $REPO
 
 notifications:
   webhooks:
