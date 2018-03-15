@@ -5,10 +5,10 @@ services:
 sudo: false
 cache:
   directories:
-    - node
-    - node_modules
+    - frontend/node_modules
     - $HOME/.m2
     - $HOME/.yarn-cache
+    - $HOME/.cache/yarn
 
 stages:
   - build
@@ -38,7 +38,10 @@ jobs:
       language: node_js
       node_js:
         - "8"
-      script: cd frontend && yarn install && yarn run build
+      script: 
+      - cd frontend
+      - yarn install
+      - yarn run build
     # Control code quality
     # - stage: control_quality
     #  script: chmod +x mvnw && ./mvnw test -f backend/pom.xml && bash <(curl -s https://codecov.io/bash)
@@ -51,7 +54,17 @@ jobs:
         - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo "dev"; fi`
         - docker build -f backend/Dockerfile -t $REPO:$TAG .
         - docker push $REPO
-
+    - # parallel docker
+      script:
+        - cd frontend
+        - yarn install
+        - yarn run build
+        - docker login -u=$DOCKER_USER -p=$DOCKER_PASS
+        - export REPO=suricate/frontend
+        - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo "dev"; fi`
+        - docker build -f frontend/Dockerfile -t $REPO:$TAG .
+        - docker push $REPO
+		
 notifications:
   webhooks:
     on_success: change  # options: [always|never|change] default: always
