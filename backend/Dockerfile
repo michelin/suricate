@@ -1,6 +1,6 @@
-FROM maven:3.5-jdk-8
+FROM frolvlad/alpine-oraclejdk8:slim
 
-ADD target/monitoring.jar
+ADD backend/target/monitoring.jar
 
 RUN sh -c 'touch /monitoring.jar'
 

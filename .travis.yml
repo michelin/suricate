@@ -47,7 +47,7 @@ jobs:
       script:
         - docker login -u=$DOCKER_USER -p=$DOCKER_PASS
         - export REPO=suricate/backend
-        - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
+        - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo "dev"; fi`
         - docker build -f backend/Dockerfile -t $REPO:$TAG .
         - docker push $REPO
 
