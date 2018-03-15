@@ -62,7 +62,7 @@ jobs:
         - docker login -u=$DOCKER_USER -p=$DOCKER_PASS
         - export REPO=suricate/frontend
         - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo "dev"; fi`
-        - docker build -f frontend/Dockerfile -t $REPO:$TAG .
+        - docker build -f Dockerfile -t $REPO:$TAG .
         - docker push $REPO
 
 notifications:
