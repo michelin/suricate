@@ -9,7 +9,6 @@ cache:
     - node_modules
     - $HOME/.m2
     - $HOME/.yarn-cache
-    - ./backend/target
 
 stages:
   - build
@@ -33,7 +32,8 @@ jobs:
   include:
     # Build applications
     - stage: build
-      script: chmod +x mvnw && ./mvnw clean test -f backend/pom.xml
+      script: 
+        - chmod +x mvnw && ./mvnw clean test -f backend/pom.xml
     - # parallel build
       language: node_js
       node_js:
@@ -45,6 +45,7 @@ jobs:
     # Build docker image
     - stage: docker
       script:
+        - chmod +x mvnw && ./mvnw package -f backend/pom.xml -DskipTests
         - docker login -u=$DOCKER_USER -p=$DOCKER_PASS
         - export REPO=suricate/backend
         - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo "dev"; fi`
