@@ -17,11 +17,10 @@
 package io.suricate.monitoring.model.dto.user;
 
 import io.suricate.monitoring.model.dto.AbstractDto;
-import io.suricate.monitoring.model.entity.user.Role;
-import io.suricate.monitoring.model.entity.user.User;
+import io.suricate.monitoring.model.enums.AuthenticationMethod;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * User dto used to manage user rights
@@ -49,14 +48,20 @@ public class UserDto extends AbstractDto {
     private String fullname;
 
     /**
-     * Ldap username
+     *  username
      */
     private String username;
 
     /**
-     * Ldap Mail
+     *  Mail
      */
-    private String mail;
+    private String email;
+
+    private String password;
+
+    private String confirmPassword;
+
+    private AuthenticationMethod authenticationMethod;
 
     /**
      * User roles
@@ -64,20 +69,6 @@ public class UserDto extends AbstractDto {
     private List<RoleDto> roles;
 
     public UserDto() {}
-
-    /**
-     * Constructor of UserDto
-     * @param user database user
-     */
-    public UserDto(User user) {
-        this.id = user.getId();
-        this.roles = user.getRoles().stream().map(role -> new RoleDto(role)).collect(Collectors.toList());
-        this.firstname = user.getFirstname();
-        this.username = user.getUsername();
-        this.fullname = user.getFirstname() + " " + user.getLastname();
-        this.lastname = user.getLastname();
-        this.mail = user.getEmail();
-    }
 
     public Long getId() {
         return id;
@@ -117,15 +108,40 @@ public class UserDto extends AbstractDto {
         this.fullname = fullname;
     }
 
-    public String getMail() {
-        return mail;
+    public String getEmail() {
+        return email;
     }
 
-    public void setMail(String mail) {
-        this.mail = mail;
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
+    }
+
+    public AuthenticationMethod getAuthenticationMethod() {
+        return authenticationMethod;
+    }
+
+    public void setAuthenticationMethod(AuthenticationMethod authenticationMethod) {
+        this.authenticationMethod = authenticationMethod;
     }
 
     public List<RoleDto> getRoles() {
+        if(roles == null) {
+            this.roles = new ArrayList<>();
+        }
         return roles;
     }
 

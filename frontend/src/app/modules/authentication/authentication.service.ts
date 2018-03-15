@@ -23,6 +23,7 @@ import {map} from 'rxjs/operators';
 import { ICredentials } from '../../shared/model/dto/user/ICredentials';
 import {AbstractHttpService} from '../../shared/services/abstract-http.service';
 import {AuthenticationResponse} from '../../shared/model/dto/user/AuthenticationResponse';
+import {User} from '../../shared/model/dto/user/User';
 
 @Injectable()
 export class AuthenticationService extends AbstractHttpService {
@@ -108,5 +109,9 @@ export class AuthenticationService extends AbstractHttpService {
             }
           })
       );
+  }
+
+  register(user: User) {
+    this.httpClient.post(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.USERS_URL}/register`, user).subscribe();
   }
 }

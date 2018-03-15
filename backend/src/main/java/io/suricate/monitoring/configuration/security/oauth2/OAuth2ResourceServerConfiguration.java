@@ -52,6 +52,7 @@ public class OAuth2ResourceServerConfiguration extends ResourceServerConfigurerA
                     .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                     .antMatchers("/h2-console/**").permitAll()
                     .antMatchers("/api/oauth/token").permitAll()
+                    .antMatchers("/api/users/register").permitAll()
                     .antMatchers("/api/**").authenticated();
     }
 }

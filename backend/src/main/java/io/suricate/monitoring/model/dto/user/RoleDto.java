@@ -1,17 +1,18 @@
 package io.suricate.monitoring.model.dto.user;
 
-import io.suricate.monitoring.model.entity.user.Role;
-
 public class RoleDto {
 
+    private Long id;
     private String name;
     private String description;
 
     public RoleDto() {}
 
-    public RoleDto(Role role) {
-        this.name = role.getName();
-        this.description = role.getDescription();
+    public Long getId() {
+        return id;
+    }
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {

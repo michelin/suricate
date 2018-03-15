@@ -2,72 +2,85 @@
      fxLayout="column wrap"
      fxLayoutAlign="center center">
 
+  <div class="content"
+       fxFlex="100"
+       fxLayout="column wrap"
+       fxLayoutAlign="center center"
+       fxLayoutGap="7%">
+
     <form id="login-form"
           [formGroup]="loginForm"
           (ngSubmit)="login()"
-          fxFlex
-          fxLayout="column wrap"
-          fxLayoutAlign="center center"
+          fxFlex="50"
           novalidate>
 
-        <mat-card id="card-login"
-                  fxFlex="50"
-                  fxLayout="column wrap"
-                  fxLayoutAlign="center"
-                  class="mat-elevation-z12">
+      <mat-card id="card-login"
+                fxFlexFill
+                fxLayout="column wrap"
+                fxLayoutAlign="center"
+                class="mat-elevation-z12">
 
-          <mat-card-content fxFlex="80"
-                            fxLayout="row wrap"
-                            fxLayoutAlign="center center">
-            <!-- When form has been submitted -->
-            <mat-spinner *ngIf="formSubmitAttempt"></mat-spinner>
+        <mat-card-content fxFlex="80"
+                          fxLayout="row wrap"
+                          fxLayoutAlign="center center">
+          <!-- When form has been submitted -->
+          <mat-spinner *ngIf="formSubmitAttempt"></mat-spinner>
 
-            <!-- Before Submit the form -->
-            <div fxFlex="90"
-                 fxLayout="column wrap"
-                 fxLayoutAlign="center"
-                 *ngIf="!formSubmitAttempt"
-                 class="form-content">
+          <!-- Before Submit the form -->
+          <div fxFlex="90"
+               fxLayout="column wrap"
+               fxLayoutAlign="center"
+               *ngIf="!formSubmitAttempt"
+               class="form-content">
 
-              <!-- Username Input -->
-              <mat-form-field>
-                <input matInput
-                       type="text"
-                       id="username"
-                       placeholder="Username"
-                       formControlName="username"
-                       [required]="loginForm.get('username').errors && loginForm.get('username').errors.required"/>
-                <mat-error *ngIf="isFieldInvalid('username')">
-                  Username is mandatory
-                </mat-error>
-              </mat-form-field>
+            <!-- Username Input -->
+            <mat-form-field>
+              <mat-icon class="prefix" matPrefix>person</mat-icon>
+              <input matInput
+                     type="text"
+                     id="username"
+                     placeholder="Username"
+                     formControlName="username"
+                     [required]="loginForm.get('username').errors && loginForm.get('username').errors.required"/>
+              <mat-error *ngIf="isFieldInvalid('username')">
+                Username is mandatory
+              </mat-error>
+            </mat-form-field>
 
-              <!-- Password Input -->
-              <mat-form-field>
-                <input matInput
-                       [type]="hidePassword ? 'password' : 'text'"
-                       id="password"
-                       placeholder="Password"
-                       formControlName="password"
-                       [required]="loginForm.get('password').errors && loginForm.get('password').errors.required" />
+            <!-- Password Input -->
+            <mat-form-field>
+              <mat-icon class="prefix" matPrefix>lock</mat-icon>
+              <input matInput
+                     [type]="hidePassword ? 'password' : 'text'"
+                     id="password"
+                     placeholder="Password"
+                     formControlName="password"
+                     [required]="loginForm.get('password').errors && loginForm.get('password').errors.required" />
 
-                <mat-icon matSuffix
-                          color="primary"
-                          (click)="hidePassword = !hidePassword">{{hidePassword ? 'visibility' : 'visibility_off'}}
-                </mat-icon>
-                <mat-error *ngIf="isFieldInvalid('password')">
-                  Password is mandatory
-                </mat-error>
-              </mat-form-field>
-            </div>
-          </mat-card-content>
+              <mat-icon matSuffix
+                        (click)="hidePassword = !hidePassword">
+                {{hidePassword ? 'visibility' : 'visibility_off'}}
+              </mat-icon>
+              <mat-error *ngIf="isFieldInvalid('password')">
+                Password is mandatory
+              </mat-error>
+            </mat-form-field>
+          </div>
+        </mat-card-content>
 
-          <mat-card-actions fxFlex="13"
-                            fxLayout="row wrap"
-                            fxLayoutAlign="center"
-                            *ngIf="!formSubmitAttempt">
-            <button fxFlex="90" mat-raised-button class="mat-elevation-z2" color="primary" type="submit">Sign In</button>
-          </mat-card-actions>
-        </mat-card>
+        <mat-card-actions fxFlex="13"
+                          fxLayout="row wrap"
+                          fxLayoutAlign="center"
+                          fxLayoutGap="15px"
+                          *ngIf="!formSubmitAttempt">
+          <button fxFlex="85" mat-raised-button class="mat-elevation-z2" color="accent" type="submit">{{ 'Sign In' | uppercase}}</button>
+        </mat-card-actions>
+      </mat-card>
     </form>
+
+    <div fxFlex="5" class="not-registered-sentance" fxFlexAlign="start">
+      Not registered ?
+      <a [routerLink]="['/register']">Sign up here !</a>
+    </div>
+  </div>
 </div>

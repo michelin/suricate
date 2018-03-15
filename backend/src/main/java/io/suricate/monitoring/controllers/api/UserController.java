@@ -21,24 +21,26 @@ import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.model.dto.user.UserDto;
 import io.suricate.monitoring.model.entity.user.User;
 import io.suricate.monitoring.service.api.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class.getName());
+
     private final UserService userService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(final UserService userService) {
         this.userService = userService;
     }
 
@@ -50,7 +52,7 @@ public class UserController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<UserDto> getAll() {
         List<User> users =  userService.getAll();
-        return users.stream().map(user -> new UserDto(user)).collect(Collectors.toList());
+        return users.stream().map(user -> userService.toDto(user)).collect(Collectors.toList());
     }
 
     @RequestMapping(value="/search", method = RequestMethod.GET)
@@ -61,7 +63,14 @@ public class UserController {
             return new ArrayList<>();
         }
 
-        return users.get().stream().map(user -> new UserDto(user)).collect(Collectors.toList());
+        return users.get().stream().map(user -> userService.toDto(user)).collect(Collectors.toList());
+    }
+
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    @PreAuthorize("isAnonymous()")
+    public UserDto register(@RequestBody UserDto userDto) {
+        User userSaved = userService.registerNewUserAccount(userDto);
+        return userService.toDto(userSaved);
     }
 
     /**
@@ -76,7 +85,7 @@ public class UserController {
             throw new ApiException(ApiErrorEnum.USER_NOT_FOUND);
         }
 
-        return new UserDto(user.get());
+        return userService.toDto(user.get());
     }
 
     /**
@@ -92,6 +101,6 @@ public class UserController {
             throw new ApiException(ApiErrorEnum.USER_NOT_FOUND);
         }
 
-        return new UserDto(user.get());
+        return userService.toDto(user.get());
     }
 }

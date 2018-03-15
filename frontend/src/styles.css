@@ -47,3 +47,12 @@ mat-sidenav > #user-section .mat-expansion-panel-body {
 .mat-table .mat-row .mat-cell {
     font-size: 11px;
 }
+
+a, a:visited {
+    text-decoration: none;
+    text-decoration: -moz-none;
+    color: #0d6f93;
+}
+a:hover {
+    color: #1997c6;
+}

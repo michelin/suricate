@@ -17,7 +17,6 @@
 package io.suricate.monitoring.service.api;
 
 import io.suricate.monitoring.model.dto.project.ProjectDto;
-import io.suricate.monitoring.model.dto.user.UserDto;
 import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
@@ -101,7 +100,7 @@ public class ProjectService {
 
         Optional<List<User>> users = userService.getAllByProject(project);
         if(users.isPresent()) {
-            projectDto.getUsers().addAll(users.get().stream().map(user -> new UserDto(user)).collect(Collectors.toList()));
+            projectDto.getUsers().addAll(users.get().stream().map(user -> userService.toDto(user)).collect(Collectors.toList()));
         }
 
         return projectDto;
