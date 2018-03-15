@@ -12,8 +12,10 @@ cache:
 
 stages:
   - build
-  # - control_quality
-  - docker
+  - control_quality
+  - name : docker
+    # Only publish new images on Docker Hub from protected branches
+    if : branch IN (master, dev)
 
 env:
   global:
@@ -43,8 +45,8 @@ jobs:
       - yarn install
       - yarn run build
     # Control code quality
-    # - stage: control_quality
-    #  script: chmod +x mvnw && ./mvnw test -f backend/pom.xml && bash <(curl -s https://codecov.io/bash)
+    - stage: control_quality
+      script: chmod +x mvnw && ./mvnw test -f backend/pom.xml && bash <(curl -s https://codecov.io/bash)
     # Build docker image
     - stage: docker
       script:
