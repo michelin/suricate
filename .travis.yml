@@ -15,7 +15,7 @@ stages:
   - control_quality
   - name : docker
     # Only publish new images on Docker Hub from protected branches
-    if : branch IN (master, dev)
+    if : branch IN (master, dev) AND type = push
 
 env:
   global:
