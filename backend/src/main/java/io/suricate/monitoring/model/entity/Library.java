@@ -54,4 +54,13 @@ public class Library extends AbstractAuditingEntity<Long>{
      */
     @ManyToMany(mappedBy = "libraries")
     private List<Widget> widgets = new ArrayList<>();
+
+    /**
+     * Constructor minimal
+     *
+     * @param technicalName The technical name
+     */
+    public Library(String technicalName) {
+        this.technicalName = technicalName;
+    }
 }
