@@ -1,0 +1,148 @@
+<div class="container"
+     fxLayout="column wrap"
+     fxLayoutAlign="center center">
+
+  <div class="content"
+       fxFlex="100"
+       fxLayout="column wrap"
+       fxLayoutAlign="center center"
+       fxLayoutGap="7%">
+
+    <form id="register-form"
+          [formGroup]="registerForm"
+          (ngSubmit)="signUp()"
+          fxFlex="80"
+          novalidate>
+
+      <mat-card id="card-register"
+                fxFlexFill
+                fxLayout="column wrap"
+                fxLayoutAlign="center"
+                class="mat-elevation-z12">
+
+        <mat-card-content fxFlex="88"
+                          fxLayout="row wrap"
+                          fxLayoutAlign="center center">
+          <!-- When form has been submitted -->
+          <mat-spinner *ngIf="formSubmitAttempt"></mat-spinner>
+
+          <!-- Before Submit the form -->
+          <div fxFlex="90"
+               fxLayout="column wrap"
+               fxLayoutAlign="center"
+               fxLayoutGap="6px"
+               *ngIf="!formSubmitAttempt"
+               class="form-content">
+
+            <!-- Username Input -->
+            <mat-form-field>
+              <mat-icon class="prefix" matPrefix>android</mat-icon>
+              <input matInput
+                     type="text"
+                     id="username"
+                     placeholder="Username"
+                     formControlName="username"
+                     [required]="registerForm.get('username').errors && registerForm.get('username').errors.required"/>
+              <mat-error *ngIf="isFieldInvalid('username')">
+                Username is mandatory with a min length of 3
+              </mat-error>
+            </mat-form-field>
+
+            <!-- Firstname Input -->
+            <mat-form-field>
+              <mat-icon class="prefix" matPrefix>person</mat-icon>
+              <input matInput
+                     type="text"
+                     id="firstname"
+                     placeholder="Firstname"
+                     formControlName="firstname"
+                     [required]="registerForm.get('firstname').errors && registerForm.get('firstname').errors.required"/>
+              <mat-error *ngIf="isFieldInvalid('firstname')">
+                Firstname is mandatory with a min length of 2
+              </mat-error>
+            </mat-form-field>
+
+            <!-- Lastname Input -->
+            <mat-form-field>
+              <mat-icon class="prefix" matPrefix>person</mat-icon>
+              <input matInput
+                     type="text"
+                     id="lastname"
+                     placeholder="Lastname"
+                     formControlName="lastname"
+                     [required]="registerForm.get('lastname').errors && registerForm.get('lastname').errors.required"/>
+              <mat-error *ngIf="isFieldInvalid('lastname')">
+                Lastname is mandatory with a min length of 2
+              </mat-error>
+            </mat-form-field>
+
+            <!-- Email Input -->
+            <mat-form-field>
+              <mat-icon class="prefix" matPrefix>email</mat-icon>
+              <input matInput
+                     type="text"
+                     id="email"
+                     placeholder="Email"
+                     formControlName="email"
+                     [required]="registerForm.get('email').errors && registerForm.get('email').errors.required"/>
+              <mat-error *ngIf="isFieldInvalid('email') && registerForm.get('email').errors?.required">
+                Email is mandatory
+              </mat-error>
+              <mat-error *ngIf="isFieldInvalid('email') && registerForm.get('email').errors?.email">
+                Is this really an email ?
+              </mat-error>
+            </mat-form-field>
+
+            <!-- Password Input -->
+            <mat-form-field>
+              <mat-icon class="prefix" matPrefix>lock</mat-icon>
+              <input matInput
+                     [type]="hidePassword ? 'password' : 'text'"
+                     id="password"
+                     placeholder="Password"
+                     formControlName="password"
+                     [required]="registerForm.get('password').errors && registerForm.get('password').errors.required" />
+              <mat-icon matSuffix (click)="hidePassword = !hidePassword"> {{hidePassword ? 'visibility' : 'visibility_off'}} </mat-icon>
+              <mat-error *ngIf="isFieldInvalid('password') && registerForm.get('password').errors?.required">
+                Password is mandatory with a min length of 3
+              </mat-error>
+            </mat-form-field>
+
+            <!-- Confirm Password Input -->
+            <mat-form-field>
+              <mat-icon class="prefix" matPrefix>lock</mat-icon>
+              <input matInput
+                     [type]="hidePassword ? 'password' : 'text'"
+                     id="confirm_password"
+                     placeholder="Confirm Password"
+                     formControlName="confirmPassword"
+                     [required]="registerForm.get('confirmPassword').errors && registerForm.get('confirmPassword').errors.required" />
+
+              <mat-icon matSuffix (click)="hidePassword = !hidePassword"> {{hidePassword ? 'visibility' : 'visibility_off'}} </mat-icon>
+              <mat-error *ngIf="isFieldInvalid('confirmPassword') && registerForm.get('confirmPassword').errors?.required">
+                Password is mandatory with a min length of 3
+              </mat-error>
+              <mat-error *ngIf="isFieldInvalid('confirmPassword') && registerForm.get('confirmPassword').errors?.unmatchedPasswords">
+                The confirmation password and the password should match
+              </mat-error>
+            </mat-form-field>
+
+          </div>
+        </mat-card-content>
+
+        <mat-card-actions fxFlex="8"
+                          fxLayout="row wrap"
+                          fxLayoutAlign="center"
+                          fxLayoutGap="15px"
+                          *ngIf="!formSubmitAttempt">
+          <button fxFlex="85" mat-raised-button class="mat-elevation-z2" color="accent" type="submit">{{ 'Sign Up' | uppercase}}</button>
+        </mat-card-actions>
+      </mat-card>
+    </form>
+
+    <div fxFlex="5" class="registered-sentance" fxFlexAlign="start">
+      Already registered ?
+      <a [routerLink]="['/login']">Sign in here !</a>
+    </div>
+  </div>
+</div>

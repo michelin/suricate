@@ -19,7 +19,7 @@ package io.suricate.monitoring.configuration.security.ldap;
 
 import io.suricate.monitoring.configuration.ApplicationProperties;
 import io.suricate.monitoring.configuration.security.ConnectedUser;
-import io.suricate.monitoring.repository.UserRepository;
+import io.suricate.monitoring.service.api.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -33,17 +33,24 @@ import org.springframework.security.ldap.userdetails.UserDetailsContextMapper;
 
 import javax.annotation.PostConstruct;
 
+/**
+ * The LDAP authentication
+ *
+ */
 @Configuration
 @ConditionalOnProperty(name = "application.authentication.provider", havingValue = "ldap")
 public class LdapAuthentication {
 
-    private final UserRepository userRepository;
+    /**
+     * The user service
+     */
+    private final UserService userService;
     private final ApplicationProperties applicationProperties;
     private final UserDetailsServiceLdapAuthoritiesPopulator userDetailsServiceLdapAuthoritiesPopulator;
 
     @Autowired
-    public LdapAuthentication(UserRepository userRepository, ApplicationProperties applicationProperties, UserDetailsServiceLdapAuthoritiesPopulator userDetailsServiceLdapAuthoritiesPopulator) {
-        this.userRepository = userRepository;
+    public LdapAuthentication(UserService userService, ApplicationProperties applicationProperties, UserDetailsServiceLdapAuthoritiesPopulator userDetailsServiceLdapAuthoritiesPopulator) {
+        this.userService = userService;
         this.applicationProperties = applicationProperties;
         this.userDetailsServiceLdapAuthoritiesPopulator = userDetailsServiceLdapAuthoritiesPopulator;
     }
@@ -81,7 +88,7 @@ public class LdapAuthentication {
         return new LdapUserDetailsMapper() {
             @Override
             public UserDetails mapUserFromContext(DirContextOperations ctx, String username, java.util.Collection<? extends GrantedAuthority> authorities) {
-                Long userId = userRepository.getIdByUsername(username);
+                Long userId = userService.getIdByUsername(username);
                 return new ConnectedUser(username, ctx, authorities, userId, applicationProperties.authentication.ldap);
             }
         };

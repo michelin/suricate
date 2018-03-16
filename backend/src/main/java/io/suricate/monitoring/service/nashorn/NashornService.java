@@ -1,3 +1,19 @@
+/*
+ * Copyright 2012-2018 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.suricate.monitoring.service.nashorn;
 
 import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
@@ -13,17 +29,36 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * The nashorn service
+ */
 @Service
 public class NashornService {
 
+    /**
+     * Class logger
+     */
     private static final Logger LOGGER = LoggerFactory.getLogger(NashornService.class.getName());
 
+    /**
+     * The project widget service
+     */
     private final ProjectWidgetService projectWidgetService;
 
+    /**
+     * Constructor
+     *
+     * @param projectWidgetService The project widget service
+     */
     public NashornService(final ProjectWidgetService projectWidgetService) {
         this.projectWidgetService = projectWidgetService;
     }
 
+    /**
+     * Get All the nashorn requests used for instantiate Project Widgets
+     *
+     * @return The list of nashorn requests
+     */
     public List<NashornRequest> getEveryNashornRequestFromDatabase() {
         return projectWidgetService
             .getAll()
@@ -44,6 +79,12 @@ public class NashornService {
             .collect(Collectors.toList());
     }
 
+    /**
+     * Test if the nashorn request is ok for being execute
+     *
+     * @param nashornRequest The nashorn request to test
+     * @return True is it's ok, false otherwise
+     */
     public boolean isNashornRequestExecutable(final NashornRequest nashornRequest) {
         if(!nashornRequest.isValid()) {
             LOGGER.debug("Widget content not isValid for widget instance :{}", nashornRequest.getProjectWidgetId());
@@ -58,6 +99,13 @@ public class NashornService {
         return true;
     }
 
+    /**
+     * Inject the global configurations into the nashorn request
+     *
+     * @param nashornRequest The nashorn request
+     * @param configurations The global configurations
+     * @return The nashorn request updated
+     */
     public NashornRequest injectWidgetsConfigurations(NashornRequest nashornRequest, List<Configuration> configurations) {
 
         if (configurations != null && !configurations.isEmpty()) {

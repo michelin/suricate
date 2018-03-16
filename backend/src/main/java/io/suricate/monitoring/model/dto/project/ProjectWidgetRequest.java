@@ -19,31 +19,24 @@
 
 package io.suricate.monitoring.model.dto.project;
 
+import lombok.*;
+
+/**
+ * Object representing a project widget used for communication with clients of the webservice
+ * Link a widget with a dashboard/project
+ */
+@Getter @Setter @NoArgsConstructor @EqualsAndHashCode @ToString
 public class ProjectWidgetRequest {
+    /**
+     * Contains the configuration of the widget
+     */
     private String backendConfig;
+    /**
+     * The project id
+     */
     private Long projectId;
+    /**
+     * The widget if
+     */
     private Long widgetId;
-
-    ProjectWidgetRequest(){}
-
-    public String getBackendConfig() {
-        return backendConfig;
-    }
-    public void setBackendConfig(String backendConfig) {
-        this.backendConfig = backendConfig;
-    }
-
-    public Long getProjectId() {
-        return projectId;
-    }
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
-    }
-
-    public Long getWidgetId() {
-        return widgetId;
-    }
-    public void setWidgetId(Long widgetId) {
-        this.widgetId = widgetId;
-    }
 }

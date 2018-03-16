@@ -14,12 +14,24 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.dto.update;
+package io.suricate.monitoring.configuration;
 
-public enum UpdateType {
-    GRID,
-    WIDGET,
-    POSITION,
-    DISCONNECT,
-    DISPLAY_NUMBER
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+
+/**
+ * Database password encoder service
+ */
+@Component
+public class DatabasePasswordEncoder {
+
+    /**
+     * Configure the password encoder
+     */
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder(11);
+    }
 }

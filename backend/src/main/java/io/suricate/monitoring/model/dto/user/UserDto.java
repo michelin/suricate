@@ -17,15 +17,16 @@
 package io.suricate.monitoring.model.dto.user;
 
 import io.suricate.monitoring.model.dto.AbstractDto;
-import io.suricate.monitoring.model.entity.user.Role;
-import io.suricate.monitoring.model.entity.user.User;
+import io.suricate.monitoring.model.enums.AuthenticationMethod;
+import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
- * User dto used to manage user rights
+ * Reprensent a user used for communication with the clients via webservices
  */
+@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
 public class UserDto extends AbstractDto {
 
     /**
@@ -49,87 +50,32 @@ public class UserDto extends AbstractDto {
     private String fullname;
 
     /**
-     * Ldap username
+     *  username
      */
     private String username;
 
     /**
-     * Ldap Mail
+     *  Mail
      */
-    private String mail;
+    private String email;
+
+    /**
+     * Password of the user
+     */
+    private String password;
+
+    /**
+     * The confirmation password
+     */
+    private String confirmPassword;
+
+    /**
+     * The authentication method
+     */
+    private AuthenticationMethod authenticationMethod;
 
     /**
      * User roles
      */
-    private List<RoleDto> roles;
-
-    public UserDto() {}
-
-    /**
-     * Constructor of UserDto
-     * @param user database user
-     */
-    public UserDto(User user) {
-        this.id = user.getId();
-        this.roles = user.getRoles().stream().map(role -> new RoleDto(role)).collect(Collectors.toList());
-        this.firstname = user.getFirstname();
-        this.username = user.getUsername();
-        this.fullname = user.getFirstname() + " " + user.getLastname();
-        this.lastname = user.getLastname();
-        this.mail = user.getEmail();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getFirstname() {
-        return firstname;
-    }
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getFullname() {
-        return fullname;
-    }
-
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
-    }
-
-    public String getMail() {
-        return mail;
-    }
-
-    public void setMail(String mail) {
-        this.mail = mail;
-    }
-
-    public List<RoleDto> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<RoleDto> roles) {
-        this.roles = roles;
-    }
+    private List<RoleDto> roles = new ArrayList<>();
 }

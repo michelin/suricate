@@ -20,25 +20,42 @@ import io.suricate.monitoring.controllers.api.error.exception.ApiException;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.model.dto.user.UserDto;
 import io.suricate.monitoring.model.entity.user.User;
+import io.suricate.monitoring.model.enums.AuthenticationMethod;
 import io.suricate.monitoring.service.api.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * User controller
+ */
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
 
+    /**
+     * Class logger
+     */
+    private final static Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+
+    /**
+     * The user service
+     */
     private final UserService userService;
 
+    /**
+     * Constructor
+     *
+     * @param userService The user service to inject
+     */
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(final UserService userService) {
         this.userService = userService;
     }
 
@@ -50,9 +67,15 @@ public class UserController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<UserDto> getAll() {
         List<User> users =  userService.getAll();
-        return users.stream().map(user -> new UserDto(user)).collect(Collectors.toList());
+        return users.stream().map(user -> userService.toDto(user)).collect(Collectors.toList());
     }
 
+    /**
+     * Search users by username
+     *
+     * @param username The username query
+     * @return The user that match with the query
+     */
     @RequestMapping(value="/search", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
     public List<UserDto> search(@RequestParam("username") String username) {
@@ -61,11 +84,26 @@ public class UserController {
             return new ArrayList<>();
         }
 
-        return users.get().stream().map(user -> new UserDto(user)).collect(Collectors.toList());
+        return users.get().stream().map(user -> userService.toDto(user)).collect(Collectors.toList());
+    }
+
+    /**
+     * Register a new user in the database
+     *
+     * @param userDto The user to register
+     * @return The user registered
+     */
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
+    @PreAuthorize("isAnonymous()")
+    public UserDto register(@RequestBody UserDto userDto) {
+        User userSaved = userService.registerNewUserAccount(userDto, AuthenticationMethod.DATABASE);
+        return userService.toDto(userSaved);
     }
 
     /**
      * List a specific user
+     *
+     * @param id The user id to get
      * @return The user
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -76,12 +114,14 @@ public class UserController {
             throw new ApiException(ApiErrorEnum.USER_NOT_FOUND);
         }
 
-        return new UserDto(user.get());
+        return userService.toDto(user.get());
     }
 
     /**
      * Get current user
-     * @return The user
+     *
+     * @param principal the user authenticated
+     * @return The user informations
      */
     @RequestMapping(value = "/current", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -92,6 +132,6 @@ public class UserController {
             throw new ApiException(ApiErrorEnum.USER_NOT_FOUND);
         }
 
-        return new UserDto(user.get());
+        return userService.toDto(user.get());
     }
 }

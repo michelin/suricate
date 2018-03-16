@@ -30,7 +30,7 @@ import io.suricate.monitoring.model.entity.widget.Widget;
 import io.suricate.monitoring.model.entity.widget.WidgetParam;
 import io.suricate.monitoring.model.entity.widget.WidgetParamValue;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
-import io.suricate.monitoring.model.dto.update.UpdateType;
+import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.model.dto.widget.WidgetParamResponse;
 import io.suricate.monitoring.model.dto.widget.WidgetParamValueResponse;
 import io.suricate.monitoring.model.dto.widget.WidgetPosition;
@@ -60,6 +60,9 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.*;
 
+/**
+ * Widget service
+ */
 @Service
 public class WidgetService {
 
@@ -68,26 +71,69 @@ public class WidgetService {
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(WidgetService.class);
 
+    /**
+     * The mustacheFactory
+     */
     private final MustacheFactory mustacheFactory;
 
+    /**
+     * Project widget repository
+     */
     private final ProjectWidgetRepository projectWidgetRepository;
 
+    /**
+     * Widget repository
+     */
     private final WidgetRepository widgetRepository;
 
+    /**
+     * Category repository
+     */
     private final CategoryRepository categoryRepository;
 
+    /**
+     * Socket service
+     */
     private final SocketService socketService;
 
+    /**
+     * Cache service
+     */
     private final CacheService cacheService;
 
+    /**
+     * Asset repository
+     */
     private final AssetRepository assetRepository;
 
+    /**
+     * Search service
+     */
     private final SearchService searchService;
 
+    /**
+     * Object Mapper
+     */
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    /**
+     * The application context
+     */
     private final ApplicationContext ctx;
 
+    /**
+     * Constructor
+     *
+     * @param mustacheFactory The mustache factory (HTML template)
+     * @param projectWidgetRepository The project widget repository
+     * @param widgetRepository The widget repository
+     * @param categoryRepository The category repository
+     * @param socketService The socket service
+     * @param cacheService The cache service
+     * @param ctx The application context
+     * @param assetRepository The asset repository
+     * @param searchService The search service
+     */
     @Autowired
     public WidgetService(MustacheFactory mustacheFactory, ProjectWidgetRepository projectWidgetRepository, WidgetRepository widgetRepository, CategoryRepository categoryRepository, SocketService socketService, CacheService cacheService, ApplicationContext ctx, AssetRepository assetRepository, SearchService searchService) {
         this.mustacheFactory = mustacheFactory;
@@ -101,6 +147,11 @@ public class WidgetService {
         this.searchService = searchService;
     }
 
+    /**
+     * Tranform a list of Domain objects into a DTO objects
+     * @param widgets The list of widgets to tranform
+     * @return The list as DTO objects
+     */
     private List<WidgetResponse> transformIntoDTO(List<Widget> widgets) {
         List<WidgetResponse> widgetResponses = new ArrayList<>();
 
@@ -119,6 +170,12 @@ public class WidgetService {
         return widgetResponses;
     }
 
+    /**
+     * Extract the list of widget params of a widget
+     *
+     * @param widget The widget
+     * @return The related list of params
+     */
     private List<WidgetParamResponse> extractWidgetParams(Widget widget) {
         List<WidgetParamResponse> widgetParamResponses = new ArrayList<>();
 
@@ -152,12 +209,22 @@ public class WidgetService {
         return widgetParamResponses;
     }
 
+    /**
+     * Get every categories
+     * @return The list of categories
+     */
     @Transactional
     @Cacheable("widget-categories")
     public List<Category> getCategories() {
         return categoryRepository.findAllByOrderByNameAsc();
     }
 
+    /**
+     * Get every widgets for a category
+     *
+     * @param categoryId The category id used for found widgets
+     * @return The list of related widgets
+     */
     @Transactional
     public List<WidgetResponse> getWidgetsByCategory(final Long categoryId) {
         return transformIntoDTO(widgetRepository.findAllByCategory_IdOrderByNameAsc(categoryId));
@@ -197,7 +264,12 @@ public class WidgetService {
     }
 
 
-
+    /**
+     * Get every widgets for a project
+     *
+     * @param projectId The project id
+     * @return The list of widgets for this project
+     */
     @Transactional
     @LogExecutionTime
     public List<WidgetResponse> getWidgets(Long projectId){
@@ -366,7 +438,7 @@ public class WidgetService {
 
     /**
      * Method used to schedule a widget
-     * @param projectWidgetId
+     * @param projectWidgetId The project widget id
      */
     @Transactional
     public void scheduleWidget(Long projectWidgetId){
@@ -374,13 +446,24 @@ public class WidgetService {
     }
 
     /**
-     * Method used to add project widget
+     * Method used to update the configuration and custom css for project widget
+     *
+     * @param projectWidgetId The project widget id
+     * @param style The custom css style
+     * @param backendConfig The backend configuration
+     *
      */
     @Transactional
     public void updateProjectWidget(Long projectWidgetId, String style, String backendConfig){
         projectWidgetRepository.updateConfig(projectWidgetId, style, backendConfig);
     }
 
+    /**
+     * Update categories and widgets in database with the new list
+     *
+     * @param list The list of categories + widgets
+     * @param mapLibrary The libraries
+     */
     @Transactional
     public void updateWidgetInDatabase(List<Category> list, Map<String, Library> mapLibrary){
         for (Category category : list){
@@ -391,6 +474,13 @@ public class WidgetService {
         cacheService.clearAllCache();
     }
 
+    /**
+     * Add or update a list of widgets in database
+     *
+     * @param category The category
+     * @param widgets The related widgets
+     * @param mapLibrary The libraries
+     */
     @Transactional
     public void addOrUpdateWidgets(Category category, List<Widget> widgets, Map<String, Library> mapLibrary){
         if (category == null || widgets == null) {

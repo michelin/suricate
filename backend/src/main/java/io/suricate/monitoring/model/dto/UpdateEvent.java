@@ -16,17 +16,31 @@
 
 package io.suricate.monitoring.model.dto;
 
-import io.suricate.monitoring.model.dto.update.UpdateType;
+import io.suricate.monitoring.model.enums.UpdateType;
+import lombok.*;
 
 import java.io.Serializable;
 import java.util.Date;
 
+/**
+ * WebSocket update event
+ */
+@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
 public class UpdateEvent extends AbstractDto{
 
+    /**
+     * The update date
+     */
     private Date date;
 
+    /**
+     * The update type {@link UpdateType}
+     */
     private UpdateType type;
 
+    /**
+     * The content to send
+     */
     private Serializable content;
 
     /**
@@ -36,29 +50,5 @@ public class UpdateEvent extends AbstractDto{
     public UpdateEvent(UpdateType type) {
         this.type = type;
         date = new Date();
-    }
-
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public UpdateType getType() {
-        return type;
-    }
-
-    public void setType(UpdateType type) {
-        this.type = type;
-    }
-
-    public Serializable getContent() {
-        return content;
-    }
-
-    public void setContent(Serializable content) {
-        this.content = content;
     }
 }

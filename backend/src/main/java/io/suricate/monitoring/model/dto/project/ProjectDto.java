@@ -18,94 +18,51 @@ package io.suricate.monitoring.model.dto.project;
 
 import io.suricate.monitoring.model.dto.user.UserDto;
 import io.suricate.monitoring.model.dto.widget.WidgetResponse;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Project object used for communication with clients of the webservice
+ */
+@Getter @Setter @NoArgsConstructor @EqualsAndHashCode @ToString
 public class ProjectDto {
 
+    /**
+     * The id
+     */
     private Long id;
+    /**
+     * The project name
+     */
     private String name;
+    /**
+     * Number of column in the dashboard
+     */
     private Integer maxColumn;
+    /**
+     * The height for widgets contained
+     */
     private Integer widgetHeight;
+    /**
+     * The global css for the dashboard
+     */
     private String cssStyle;
+    /**
+     * The dashboard token
+     */
     private String token;
+    /**
+     * The list of widgets
+     */
     private List<WidgetResponse> widgets = new ArrayList<>();
+    /**
+     * The librairies related
+     */
     private List<String> librariesToken = new ArrayList<>();
+    /**
+     * The users added to the widget
+     */
     private List<UserDto> users = new ArrayList<>();
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public List<WidgetResponse> getWidgets() {
-        return widgets;
-    }
-
-    public void setWidgets(List<WidgetResponse> widgets) {
-        this.widgets = widgets;
-    }
-
-    public Integer getWidgetHeight() {
-        return widgetHeight;
-    }
-
-    public void setWidgetHeight(Integer widgetHeight) {
-        this.widgetHeight = widgetHeight;
-    }
-
-    public Integer getMaxColumn() {
-        return maxColumn;
-    }
-
-    public void setMaxColumn(Integer maxColumn) {
-        this.maxColumn = maxColumn;
-    }
-
-    public String getCssStyle() {
-        return cssStyle;
-    }
-
-    public void setCssStyle(String cssStyle) {
-        this.cssStyle = cssStyle;
-    }
-
-    public List<String> getLibrariesToken() {
-        return librariesToken;
-    }
-
-    public void setLibrariesToken(List<String> librariesToken) {
-        this.librariesToken = librariesToken;
-    }
-
-    public List<UserDto> getUsers() {
-        if(users == null) {
-            users = new ArrayList<>();
-        }
-        return users;
-    }
-
-    public void setUsers(List<UserDto> users) {
-        this.users = users;
-    }
 }

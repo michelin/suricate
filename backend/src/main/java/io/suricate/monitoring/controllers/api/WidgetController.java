@@ -20,6 +20,8 @@ import io.suricate.monitoring.model.dto.widget.CategoryDto;
 import io.suricate.monitoring.model.entity.widget.Category;
 import io.suricate.monitoring.model.dto.widget.WidgetResponse;
 import io.suricate.monitoring.service.api.WidgetService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -27,17 +29,38 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * The widget controller
+ */
 @RestController
 @RequestMapping("/api/widgets")
 public class WidgetController {
 
+    /**
+     * Class logger
+     */
+    private final static Logger LOGGER = LoggerFactory.getLogger(WidgetController.class);
+
+    /**
+     * Widget service
+     */
     private WidgetService widgetService;
 
+    /**
+     * Constructor
+     *
+     * @param widgetService Widget service to inject
+     */
     @Autowired
     public WidgetController(WidgetService widgetService) {
         this.widgetService = widgetService;
     }
 
+    /**
+     * Get the list of widget categories
+     *
+     * @return A list of category
+     */
     @RequestMapping(value = "/categories", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
     public List<CategoryDto> getCategories() {
@@ -45,6 +68,12 @@ public class WidgetController {
         return categories.stream().map(category -> new CategoryDto(category)).collect(Collectors.toList());
     }
 
+    /**
+     * Get every widget for a category
+     *
+     * @param id The category id
+     * @return The list of related widgets
+     */
     @RequestMapping(value = "/category/{id}", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
     public List<WidgetResponse> getWidgetByCategory(@PathVariable("id") Long id) {

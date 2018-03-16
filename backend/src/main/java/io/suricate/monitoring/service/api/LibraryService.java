@@ -29,13 +29,28 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * The library service
+ */
 @Service
 public class LibraryService {
 
+    /**
+     * Library repository
+     */
     private final LibraryRepository libraryRepository;
 
+    /**
+     * Asset repository
+     */
     private final AssetRepository assetRepository;
 
+    /**
+     * The constructor
+     *
+     * @param libraryRepository Inject the library repository
+     * @param assetRepository Inject the asset repository
+     */
     @Autowired
     public LibraryService(LibraryRepository libraryRepository, AssetRepository assetRepository) {
         this.libraryRepository = libraryRepository;
@@ -44,8 +59,8 @@ public class LibraryService {
 
     /**
      * Method used to get all library for the displayed widget
-     * @param response
-     * @return
+     * @param response The list of widget response
+     * @return The list of related libraries
      */
     @LogExecutionTime
     public List<String> getLibraries(List<WidgetResponse> response) {

@@ -4,16 +4,13 @@
 .content{
     width: 40%;
 }
-#login-form {
+#register-form {
     width: 100%;
 }
-#card-login {
+#card-register {
     width: 100%;
 }
-#card-login .mat-form-field {
-    margin-top: 25px;
-}
-.not-registered-sentance {
+.registered-sentance {
     color: rgba(255, 255, 255, 0.70);
     margin-left: 9%;
 }

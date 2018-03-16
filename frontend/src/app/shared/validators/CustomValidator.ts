@@ -14,17 +14,16 @@
  *  * See the License for the specific language governing permissions and
  *  * limitations under the License.
  *
- *
  */
 
-package io.suricate.monitoring.repository;
+import {AbstractControl, ValidatorFn} from '@angular/forms';
 
-import io.suricate.monitoring.model.entity.widget.WidgetParam;
-import org.springframework.data.jpa.repository.JpaRepository;
+export function checkPasswordMatch(passwordControl: AbstractControl): ValidatorFn {
 
-/**
- * Repository used for request widget params in database
- */
-public interface WidgetParamRepository extends JpaRepository<WidgetParam, Long> {
+  return(confirmPasswordControl: AbstractControl): {[key: string]: any} => {
+    if (passwordControl.dirty && passwordControl.touched && confirmPasswordControl.dirty && confirmPasswordControl.touched) {
+      return passwordControl.value !== confirmPasswordControl.value ? {unmatchedPasswords: true} : null;
+    }
+  };
 
 }

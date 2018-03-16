@@ -22,9 +22,24 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Repository used for request Roles in database
+ */
 public interface RoleRepository extends JpaRepository<Role, Long> {
 
+    /**
+     * Find a role by name
+     *
+     * @param name The name of the role
+     * @return The role as optional
+     */
     Optional<Role> findByName(String name);
 
+    /**
+     * Find the list of roles for a user
+     *
+     * @param id The user id
+     * @return The list of related roles
+     */
     List<Role> findByUsers_Id(Long id);
 }

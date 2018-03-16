@@ -23,5 +23,7 @@ export class User {
   public lastname: string;
   public fullname: string;
   public mail: string;
+  public password: string;
+  public confirmPassword: string;
   public roles: Role[];
 }

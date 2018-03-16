@@ -20,6 +20,9 @@ package io.suricate.monitoring.controllers.api.error.exception;
 import io.suricate.monitoring.model.dto.error.ApiErrorDto;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
 
+/**
+ * API Exception management
+ */
 public class ApiException extends RuntimeException{
 
     /**

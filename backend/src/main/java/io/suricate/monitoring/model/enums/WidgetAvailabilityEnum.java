@@ -16,6 +16,9 @@
 
 package io.suricate.monitoring.model.enums;
 
+/**
+ * Widget availability
+ */
 public enum WidgetAvailabilityEnum {
     ACTIVATED,
     DISABLED,

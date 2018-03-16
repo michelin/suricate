@@ -19,6 +19,8 @@ package io.suricate.monitoring.controllers.api;
 import io.suricate.monitoring.model.entity.Asset;
 import io.suricate.monitoring.repository.AssetRepository;
 import io.suricate.monitoring.utils.IdUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
@@ -30,9 +32,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 
+/**
+ * Asset controller
+ */
 @RestController
 @RequestMapping("/api/asset")
 public class AssetController {
+
+    /**
+     * Class logger
+     */
+    private final static Logger LOGGER = LoggerFactory.getLogger(AssetController.class);
 
     /**
      * Asset repository

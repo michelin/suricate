@@ -25,6 +25,8 @@ import io.suricate.monitoring.model.entity.user.User;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.service.api.ProjectService;
 import io.suricate.monitoring.service.api.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.GrantedAuthority;
@@ -37,22 +39,49 @@ import java.security.Principal;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Project controller
+ */
 @RestController
 @RequestMapping("/api/projects")
 public class ProjectController {
 
+    /**
+     * Class logger
+     */
+    private final static Logger LOGGER = LoggerFactory.getLogger(Project.class);
+
+    /**
+     * Project service
+     */
     private final ProjectService projectService;
+    /**
+     * User service
+     */
     private final UserService userService;
 
+    /**
+     * Constructor for dependency injection
+     *
+     * @param projectService The project service to inject
+     * @param userService The user service to inject
+     */
     @Autowired
     public ProjectController(final ProjectService projectService, final UserService userService) {
         this.projectService = projectService;
         this.userService = userService;
     }
 
+    /**
+     * Get every project in database
+     *
+     * @param principal The connected user
+     * @return The whole list of projects
+     */
     @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
     public List<ProjectDto> getAll(Principal principal) {
+        //TODO: Dispatch the logic in two separated methods
         List<Project> projects;
         Collection<GrantedAuthority> authorities = ((OAuth2Authentication) SecurityContextHolder.getContext().getAuthentication()).getAuthorities();
 
@@ -71,6 +100,13 @@ public class ProjectController {
         return projects.stream().map(project -> projectService.toDTO(project)).collect(Collectors.toList());
     }
 
+    /**
+     * Add a new project/dashboard for a user
+     *
+     * @param principal The connected user
+     * @param projectDto The project to add
+     * @return The saved project
+     */
     @RequestMapping(method = RequestMethod.PUT)
     @PreAuthorize("hasRole('ROLE_USER')")
     public ProjectDto addNewProject(Principal principal, @RequestBody ProjectDto projectDto) {
@@ -83,6 +119,12 @@ public class ProjectController {
         return projectService.toDTO(project);
     }
 
+    /**
+     * Get a project by id
+     *
+     * @param id The id of the project
+     * @return The project
+     */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
     public ProjectDto getOneById(@PathVariable("id") Long id) {
@@ -94,6 +136,13 @@ public class ProjectController {
         return  projectService.toDTO(project.get());
     }
 
+    /**
+     * Add a user to a project
+     *
+     * @param id Id of the project
+     * @param usernameMap Username of the user to add
+     * @return The project
+     */
     @RequestMapping(value = "/{id}/users", method = RequestMethod.PUT)
     @PreAuthorize("hasRole('ROLE_USER')")
     public ProjectDto addUserToProject(@PathVariable("id") Long id,
@@ -112,6 +161,13 @@ public class ProjectController {
         return projectService.toDTO(project.get());
     }
 
+    /**
+     * Delete a user from a dashboard
+     *
+     * @param id The project/dashboard id
+     * @param userId The user id to delete
+     * @return The project
+     */
     @RequestMapping(value = "/{id}/users/{userId}", method = RequestMethod.DELETE)
     @PreAuthorize("hasRole('ROLE_USER')")
     public ProjectDto deleteUserToProject(@PathVariable("id") Long id, @PathVariable("userId") Long userId) {
@@ -129,6 +185,13 @@ public class ProjectController {
         return projectService.toDTO(project.get());
     }
 
+    /**
+     * Add widget into the dashboard
+     *
+     * @param id The project id
+     * @param projectWidgetRequest The projectWidget to add
+     * @return The project
+     */
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @PreAuthorize("hasRole('ROLE_USER')")
     public ProjectDto addWidgetToProject(@PathVariable("id") Long id,

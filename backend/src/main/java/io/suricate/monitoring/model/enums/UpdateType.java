@@ -14,24 +14,15 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.configuration;
-
-import com.github.mustachejava.DefaultMustacheFactory;
-import com.github.mustachejava.MustacheFactory;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+package io.suricate.monitoring.model.enums;
 
 /**
- * Configuration for mustache template (Used in widget's HTML files)
+ * Update type (Websocket)
  */
-@Configuration
-public class TemplateConfiguration {
-
-    /**
-     * Default mustache factory
-     */
-    @Bean
-    protected MustacheFactory mustacheFactory() {
-        return new DefaultMustacheFactory();
-    }
+public enum UpdateType {
+    GRID,
+    WIDGET,
+    POSITION,
+    DISCONNECT,
+    DISPLAY_NUMBER
 }

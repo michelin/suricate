@@ -19,102 +19,66 @@ package io.suricate.monitoring.model.entity.project;
 
 import io.suricate.monitoring.model.entity.AbstractAuditingEntity;
 import io.suricate.monitoring.model.entity.user.User;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Project entity
+ * Project/dashboard entity
  */
 @Entity
+@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
 public class Project extends AbstractAuditingEntity<Long> {
 
+    /**
+     * The project id
+     */
     @Id
     @GeneratedValue
     private Long id;
 
+    /**
+     * The project name
+     */
     @Column(nullable = false)
     private String name;
 
+    /**
+     * The project token
+     */
     @Column(nullable = false)
     private String token;
 
-    @OneToMany(mappedBy = "project",cascade = CascadeType.REMOVE)
-    private List<ProjectWidget> widgets;
-
+    /**
+     * The height of the widgets
+     */
     @Column
     private Integer widgetHeight;
 
+    /**
+     * The number of column
+     */
     @Column
     private Integer maxColumn;
 
+    /**
+     * The css style of the grid
+     */
     @Lob
     private String cssStyle;
 
+    /**
+     * The list of widgets related to it
+     */
+    @OneToMany(mappedBy = "project",cascade = CascadeType.REMOVE)
+    private List<ProjectWidget> widgets = new ArrayList<>();
+
+    /**
+     * The list of users of the project
+     */
     @ManyToMany
     @JoinTable(name="user_project", joinColumns={@JoinColumn(name="project_id")}, inverseJoinColumns={@JoinColumn(name="user_id")})
-    private List<User> users;
-
-    public Project() {}
-
-    @Override
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getToken() {
-        return token;
-    }
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public List<ProjectWidget> getWidgets() {
-        return widgets;
-    }
-    public void setWidgets(List<ProjectWidget> widgets) {
-        this.widgets = widgets;
-    }
-
-    public Integer getWidgetHeight() {
-        return widgetHeight;
-    }
-    public void setWidgetHeight(Integer widgetHeight) {
-        this.widgetHeight = widgetHeight;
-    }
-
-    public Integer getMaxColumn() {
-        return maxColumn;
-    }
-    public void setMaxColumn(Integer maxColumn) {
-        this.maxColumn = maxColumn;
-    }
-
-    public List<User> getUsers() {
-        if(users == null) {
-            users = new ArrayList<>();
-        }
-        return users;
-    }
-    public void setUsers(List<User> users) {
-        this.users = users;
-    }
-
-    public String getCssStyle() {
-        return cssStyle;
-    }
-    public void setCssStyle(String cssStyle) {
-        this.cssStyle = cssStyle;
-    }
+    private List<User> users = new ArrayList<>();
 }

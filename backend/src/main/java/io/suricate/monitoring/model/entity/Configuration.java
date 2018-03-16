@@ -16,45 +16,37 @@
 
 package io.suricate.monitoring.model.entity;
 
+import lombok.*;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+/**
+ * The configuration entity
+ */
 @Entity
+@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
 public class Configuration extends AbstractAuditingEntity<String> {
 
+    /**
+     * The key of the configuration (used in JS Files)
+     */
     @Id
     @Column(name = "config_key",nullable = false, unique = true)
     private String key;
 
+    /**
+     * The related value enter by the user
+     */
     @Column(name = "config_value", nullable = false)
     private String value;
 
+    /**
+     * export
+     */
     @Column(name = "config_export")
     private boolean export;
-
-    public Configuration() {}
-
-    public String getKey() {
-        return key;
-    }
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public String getValue() {
-        return value;
-    }
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    public boolean isExport() {
-        return export;
-    }
-    public void setExport(boolean export) {
-        this.export = export;
-    }
 
     @Override
     public String getId() {
