@@ -28,6 +28,9 @@ import org.springframework.data.repository.query.Param;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * Repository used for request Project widget in database
+ */
 public interface ProjectWidgetRepository extends JpaRepository<ProjectWidget, Long> {
 
     /**
@@ -40,6 +43,14 @@ public interface ProjectWidgetRepository extends JpaRepository<ProjectWidget, Lo
                         "state = 'STOPPED'")
     void resetProjectWidgetsState();
 
+    /**
+     * Update the state of a project widget (nashorn execution)
+     *
+     * @param widgetState The new widget state
+     * @param id The project widget id
+     * @param lastExecutionDate The last execution date
+     * @return State of the query
+     */
     @Modifying
     @Query("UPDATE ProjectWidget " +
         "SET state = :state, " +
@@ -65,6 +76,16 @@ public interface ProjectWidgetRepository extends JpaRepository<ProjectWidget, Lo
             "AND pw.id = :id ")
     NashornRequest getRequestByProjectWidgetId(@Param("id") Long id);
 
+    /**
+     * Update the position in the grid of a widget
+     *
+     * @param row The new start row number
+     * @param col The new Start col number
+     * @param width The new number of columns taken by the widget
+     * @param height The new number of rows taken by the widget
+     * @param id The project widget id
+     * @return State of the update
+     */
     @Modifying
     @Query("UPDATE ProjectWidget SET row = :row, " +
             "col = :col, " +
@@ -73,6 +94,16 @@ public interface ProjectWidgetRepository extends JpaRepository<ProjectWidget, Lo
             "WHERE id = :id")
     int updateRowAndColAndWidthAndHeightById(@Param("row") int row,@Param("col") int col,@Param("width") int width,@Param("height") int height,@Param("id") Long id );
 
+    /**
+     * Update the state of a project widget when nashorn execution end by a success
+     *
+     * @param date The last execution date
+     * @param log The log of nashorn execution
+     * @param data The data returned by nashorn
+     * @param id The id of the project widget
+     * @param widgetState The widget state
+     * @return State of the query
+     */
     @Modifying
     @Query("UPDATE ProjectWidget " +
             "SET lastExecutionDate = :lastExecutionDate, " +
@@ -83,6 +114,15 @@ public interface ProjectWidgetRepository extends JpaRepository<ProjectWidget, Lo
             "WHERE id = :id")
     int updateSuccessExecution(@Param("lastExecutionDate")Date date, @Param("log") String log, @Param("data") String data, @Param("id") Long id, @Param("state") WidgetState widgetState);
 
+    /**
+     * Update the state of a project widget when nashorn execution end with errors
+     *
+     * @param date The last execution date
+     * @param log The logs of the execution
+     * @param id The project widget id
+     * @param widgetState The widget state
+     * @return State of the query
+     */
     @Modifying
     @Query("UPDATE ProjectWidget " +
             "SET lastExecutionDate = :lastExecutionDate, " +
@@ -118,7 +158,7 @@ public interface ProjectWidgetRepository extends JpaRepository<ProjectWidget, Lo
     /**
      * Method used to update the config of a widget instance
      * @param projectWidgetId the widget id
-     * @param style style id
+     * @param style The custom css
      * @param backendConfig widget instance configuration
      * @return the number of row updated
      */

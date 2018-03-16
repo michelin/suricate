@@ -21,6 +21,7 @@ import io.suricate.monitoring.model.entity.Asset;
 import io.suricate.monitoring.model.entity.Library;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
+import lombok.*;
 import org.hibernate.search.annotations.*;
 
 import javax.persistence.*;
@@ -28,180 +29,141 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Project entity
+ * Widget entity in database
+ * (Retrieve from the widget repo)
  */
 @Entity
 @Indexed
+@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
 public class Widget extends AbstractAuditingEntity<Long> {
 
+    /**
+     * The widget id
+     */
     @Id
     @GeneratedValue
     private Long id;
 
+    /**
+     * The widget name
+     */
     @Column(nullable = false)
     @SortableField
     @Field @Boost(3)
     private String name;
 
+    /**
+     * The widget description
+     */
     @Column(nullable = false)
     @Field
     private String description;
 
+    /**
+     * The technical name of the widget
+     */
     @Column(unique = true)
     private String technicalName;
 
+    /**
+     * The html content of the widget
+     */
     @Lob
     private String htmlContent;
 
+    /**
+     * The css content of the widget
+     */
     @Lob
     private String cssContent;
 
+    /**
+     * The JS of this widget
+     */
     @Lob
     private String backendJs;
 
+    /**
+     * Some information on the usage of the widget
+     */
     @Column
     private String info;
 
+    /**
+     * The default refresh delay (Nashorn)
+     */
     @Column
     private Long delay;
 
+    /**
+     * The default timeout (Nashorn)
+     */
     @Column
     private Long timeout;
 
+    /**
+     * The representation image
+     */
     @OneToOne(cascade = CascadeType.REMOVE)
     private Asset image;
 
+    /**
+     * The list of instances related to it
+     */
     @OneToMany(mappedBy = "widget")
-    private List<ProjectWidget> widgetInstances;
+    private List<ProjectWidget> widgetInstances = new ArrayList<>();
 
+    /**
+     * The related JS librairie used for displaying it on the clients
+     */
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name="widget_library", joinColumns={@JoinColumn(name="widget_id")}, inverseJoinColumns={@JoinColumn(name="library_id")})
-    private List<Library> libraries;
+    private List<Library> libraries = new ArrayList<>();
 
+    /**
+     * The category of this widget
+     */
     @ManyToOne(fetch=FetchType.LAZY)
     @IndexedEmbedded(depth = 1)
     private Category category;
 
+    /**
+     * The widget availability {@link WidgetAvailabilityEnum}
+     */
     @Column
     @Enumerated(EnumType.STRING)
     @Field
     private WidgetAvailabilityEnum widgetAvailability;
 
+    /**
+     * The list of params for this widget
+     */
     @OneToMany(mappedBy = "widget", cascade = CascadeType.ALL)
     private List<WidgetParam> widgetParams = new ArrayList<>();
 
-    public Widget() {}
-
-    @Override
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getHtmlContent() {
-        return htmlContent;
-    }
-    public void setHtmlContent(String htmlContent) {
-        this.htmlContent = htmlContent;
-    }
-
-    public String getCssContent() {
-        return cssContent;
-    }
-    public void setCssContent(String cssContent) {
-        this.cssContent = cssContent;
-    }
-
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getTechnicalName() {
-        return technicalName;
-    }
-    public void setTechnicalName(String technicalName) {
-        this.technicalName = technicalName;
-    }
-
-    public String getBackendJs() {
-        return backendJs;
-    }
-    public void setBackendJs(String backendJs) {
-        this.backendJs = backendJs;
-    }
-
-    public Long getDelay() {
-        return delay;
-    }
-    public void setDelay(Long delay) {
-        this.delay = delay;
-    }
-
-    public Asset getImage() {
-        return image;
-    }
-    public void setImage(Asset image) {
-        this.image = image;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Category getCategory() {
-        return category;
-    }
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-
-    public String getInfo() {
-        return info;
-    }
-    public void setInfo(String info) {
-        this.info = info;
-    }
-
-    public List<Library> getLibraries() {
-        return libraries;
-    }
-    public void setLibraries(List<Library> libraries) {
-        this.libraries = libraries;
-    }
-
-    public WidgetAvailabilityEnum getWidgetAvailability() {
-        return widgetAvailability;
-    }
-    public void setWidgetAvailability(WidgetAvailabilityEnum widgetAvailability) {
-        this.widgetAvailability = widgetAvailability;
-    }
-
-    public Long getTimeout() {
-        return timeout;
-    }
-    public void setTimeout(Long timeout) {
-        this.timeout = timeout;
-    }
-
-
-    public List<WidgetParam> getWidgetParams() {
-        return widgetParams;
-    }
+    /**
+     * Widget params setter
+     * @param widgetParams The list of params to set
+     */
     public void setWidgetParams(List<WidgetParam> widgetParams) {
         this.addWidgetParams(widgetParams);
     }
+
+    /**
+     * The list of widget params to add
+     * @param widgetParams The list of widget params
+     */
     public void addWidgetParams(List<WidgetParam> widgetParams) {
-        widgetParams.forEach( widgetParam -> {
-            this.widgetParams.add(widgetParam);
-            widgetParam.setWidget(this);
-        });
+        widgetParams.forEach( widgetParam -> this.addWidgetParam(widgetParam));
+    }
+
+    /**
+     * Add a new param into the list
+     *
+     * @param widgetParam The param to ass
+     */
+    public void addWidgetParam(WidgetParam widgetParam) {
+        this.widgetParams.add(widgetParam);
+        widgetParam.setWidget(this);
     }
 }

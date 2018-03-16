@@ -22,7 +22,7 @@ import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
 import io.suricate.monitoring.model.dto.UpdateEvent;
 import io.suricate.monitoring.model.dto.project.ProjectWidgetRequest;
-import io.suricate.monitoring.model.dto.update.UpdateType;
+import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.model.entity.user.User;
 import io.suricate.monitoring.repository.ProjectRepository;
 import io.suricate.monitoring.repository.ProjectWidgetRepository;
@@ -47,28 +47,52 @@ import java.util.stream.Collectors;
 @Service
 public class ProjectService {
 
+    /**
+     * String encryptor (mainly used for SECRET widget params)
+     */
     @Autowired
     @Qualifier("jasyptStringEncryptor")
     private StringEncryptor stringEncryptor;
 
+    /**
+     * Project repository
+     */
     @Autowired
     private ProjectRepository projectRepository;
 
+    /**
+     * ProjectWidget repository
+     */
     @Autowired
     private ProjectWidgetRepository projectWidgetRepository;
 
+    /**
+     * Widget repository
+     */
     @Autowired
     private WidgetRepository widgetRepository;
 
+    /**
+     * User service
+     */
     @Autowired
     private UserService userService;
 
+    /**
+     * Socket service
+     */
     @Autowired
     private SocketService socketService;
 
+    /**
+     * Widget service
+     */
     @Autowired
     private WidgetService widgetService;
 
+    /**
+     * Library service
+     */
     @Autowired
     private transient LibraryService libraryService;
 
@@ -173,11 +197,24 @@ public class ProjectService {
         return projectRepository.save(project);
     }
 
+    /**
+     * Delete a user from a project
+     *
+     * @param user The user to delete
+     * @param project The project related
+     * @return The project with user deleted
+     */
     public Project deleteUserFromProject(User user, Project project) {
         project.getUsers().remove(user);
         return projectRepository.save(project);
     }
 
+    /**
+     * Add a new widget into the project
+     *
+     * @param projectWidgetRequest The project widget to add
+     * @return The projectWidget instantiate
+     */
     @Transactional
     public ProjectWidget addWidgetToProject(ProjectWidgetRequest projectWidgetRequest) {
         ProjectWidget projectWidget = new ProjectWidget();

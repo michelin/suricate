@@ -18,189 +18,104 @@ package io.suricate.monitoring.model.dto.widget;
 
 import io.suricate.monitoring.model.entity.Asset;
 import io.suricate.monitoring.model.dto.AbstractDto;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The widget response used for communication with the clients via webservices
+ */
+@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
 public class WidgetResponse extends AbstractDto {
 
+    /**
+     * The widget id
+     */
     private String id;
 
+    /**
+     * The name of the widget
+     */
     private String name;
 
+    /**
+     * The html content after instantiation by nashorn
+     */
     private String html;
 
+    /**
+     * The css of the widget (defined in the css file)
+     */
     private String css;
 
+    /**
+     * The custom css (override by the user)
+     */
     private String customCss;
 
+    /**
+     * The start column of the widget
+     */
     private int col;
 
+    /**
+     * The start row of the widget
+     */
     private int row;
 
+    /**
+     * The width of the widget (number of row taken in the grid)
+     */
     private int width;
 
+    /**
+     * The height of the widget (number of height taken in the grid)
+     */
     private int height;
 
+    /**
+     * The project widget id
+     */
     private Long projectWidgetId;
 
+    /**
+     * The widget id
+     */
     private Long widgetId;
 
+    /**
+     * If the widget is in error
+     */
     private boolean error;
 
+    /**
+     * The widget image
+     */
     private Asset image;
 
+    /**
+     * The image id
+     */
     private Long imageId;
 
+    /**
+     * If the widget got warnings
+     */
     private boolean warning;
 
+    /**
+     * The description of the widget
+     */
     private String description;
 
+    /**
+     * Informations on the widget
+     */
     private String info;
 
+    /**
+     * The list of params
+     */
     private List<WidgetParamResponse> widgetParams = new ArrayList<>();
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getHtml() {
-        return html;
-    }
-
-    public void setHtml(String html) {
-        this.html = html;
-    }
-
-    public String getCss() {
-        return css;
-    }
-
-    public void setCss(String css) {
-        this.css = css;
-    }
-
-    public int getCol() {
-        return col;
-    }
-
-    public void setCol(int col) {
-        this.col = col;
-    }
-
-    public int getRow() {
-        return row;
-    }
-
-    public void setRow(int row) {
-        this.row = row;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public Long getProjectWidgetId() {
-        return projectWidgetId;
-    }
-
-    public void setProjectWidgetId(Long projectWidgetId) {
-        this.projectWidgetId = projectWidgetId;
-    }
-
-    public boolean isError() {
-        return error;
-    }
-
-    public void setError(boolean error) {
-        this.error = error;
-    }
-
-    public Long getWidgetId() {
-        return widgetId;
-    }
-
-    public void setWidgetId(Long widgetId) {
-        this.widgetId = widgetId;
-    }
-
-    public String getCustomCss() {
-        return customCss;
-    }
-
-    public void setCustomCss(String customCss) {
-        this.customCss = customCss;
-    }
-
-    public boolean isWarning() {
-        return warning;
-    }
-
-    public void setWarning(boolean warning) {
-        this.warning = warning;
-    }
-
-    public Long getImageId() {
-        return imageId;
-    }
-
-    public void setImageId(Long imageId) {
-        this.imageId = imageId;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getInfo() {
-        return info;
-    }
-
-    public void setInfo(String info) {
-        this.info = info;
-    }
-
-    public Asset getImage() {
-        return image;
-    }
-
-    public void setImage(Asset image) {
-        this.image = image;
-    }
-
-    public List<WidgetParamResponse> getWidgetParams() {
-        return widgetParams;
-    }
-
-    public void setWidgetParams(List<WidgetParamResponse> widgetParams) {
-        this.widgetParams = widgetParams;
-    }
 }

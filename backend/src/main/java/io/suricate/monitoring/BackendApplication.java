@@ -31,6 +31,9 @@ import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileNotFoundException;
 
+/**
+ * Main java class
+ */
 @SpringBootApplication
 @EnableAsync
 @EnableCaching

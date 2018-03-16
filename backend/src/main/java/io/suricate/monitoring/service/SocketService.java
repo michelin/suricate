@@ -21,7 +21,7 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 import io.suricate.monitoring.model.dto.Client;
 import io.suricate.monitoring.model.dto.UpdateEvent;
-import io.suricate.monitoring.model.dto.update.UpdateType;
+import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.repository.ProjectRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

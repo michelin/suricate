@@ -21,6 +21,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.http.HttpStatus;
 
+/**
+ * Api Errors
+ */
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum ApiErrorEnum {
 

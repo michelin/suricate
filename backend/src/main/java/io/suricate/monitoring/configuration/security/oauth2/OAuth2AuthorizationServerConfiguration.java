@@ -1,3 +1,19 @@
+/*
+ * Copyright 2012-2018 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package io.suricate.monitoring.configuration.security.oauth2;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,14 +27,33 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Aut
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 
+/**
+ * OAuth Authorization server : Manage authorization before requesting the resource server
+ */
 @Configuration
 @EnableAuthorizationServer
 public class OAuth2AuthorizationServerConfiguration extends AuthorizationServerConfigurerAdapter {
 
+    /**
+     * Manage authentications
+     */
     private final AuthenticationManager authenticationManager;
+    /**
+     * Service that hold tokens (JWT)
+     */
     private final TokenStore tokenStore;
+    /**
+     * Service used for decoding tokens
+     */
     private final JwtAccessTokenConverter jwtAccessTokenConverter;
 
+    /**
+     * Constructor
+     *
+     * @param authenticationManager Authentication manager
+     * @param tokenStore Token store service
+     * @param jwtAccessTokenConverter Token converter service
+     */
     @Autowired
     public OAuth2AuthorizationServerConfiguration(AuthenticationManager authenticationManager, TokenStore tokenStore, JwtAccessTokenConverter jwtAccessTokenConverter) {
         this.authenticationManager = authenticationManager;
@@ -27,6 +62,11 @@ public class OAuth2AuthorizationServerConfiguration extends AuthorizationServerC
 
     }
 
+    /**
+     * Configure the endpoints by redefine OAuth connection path, inject token and authentication manager
+     *
+     * @param endpoints configurer for enpoints
+     */
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) {
         endpoints
@@ -36,6 +76,11 @@ public class OAuth2AuthorizationServerConfiguration extends AuthorizationServerC
             .authenticationManager(authenticationManager);
     }
 
+    /**
+     * OAuth authorization server policy
+     *
+     * @param oauthServer The Oauth server to configure
+     */
     @Override
     public void configure(AuthorizationServerSecurityConfigurer oauthServer) {
         oauthServer
@@ -43,6 +88,12 @@ public class OAuth2AuthorizationServerConfiguration extends AuthorizationServerC
             .checkTokenAccess("isAuthenticated()");
     }
 
+    /**
+     * Access OAuth server from clients
+     *
+     * @param clients Define clients who have access to the server
+     * @throws Exception When an error throw
+     */
     @Override
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients

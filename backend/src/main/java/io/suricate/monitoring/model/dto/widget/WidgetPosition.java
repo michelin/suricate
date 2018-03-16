@@ -18,48 +18,34 @@ package io.suricate.monitoring.model.dto.widget;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.suricate.monitoring.model.dto.AbstractDto;
+import lombok.*;
 
+/**
+ * Widget position used for communication with the clients via webservices
+ * (For example when a widget change of position)
+ */
+@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
 public class WidgetPosition extends AbstractDto {
 
+    /**
+     * The start column of this widget
+     */
     private int col;
 
+    /**
+     * The start row of the widget
+     */
     private int row;
 
+    /**
+     * The number of column for this widget
+     */
     @JsonProperty("size_x")
     private int sizeX;
 
+    /**
+     * The number of rows
+     */
     @JsonProperty("size_y")
     private int sizeY;
-
-    public int getCol() {
-        return col;
-    }
-
-    public void setCol(int col) {
-        this.col = col;
-    }
-
-    public int getRow() {
-        return row;
-    }
-
-    public void setRow(int row) {
-        this.row = row;
-    }
-
-    public int getSizeX() {
-        return sizeX;
-    }
-
-    public void setSizeX(int sizeX) {
-        this.sizeX = sizeX;
-    }
-
-    public int getSizeY() {
-        return sizeY;
-    }
-
-    public void setSizeY(int sizeY) {
-        this.sizeY = sizeY;
-    }
 }

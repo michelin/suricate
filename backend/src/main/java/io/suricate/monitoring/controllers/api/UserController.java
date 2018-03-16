@@ -20,6 +20,7 @@ import io.suricate.monitoring.controllers.api.error.exception.ApiException;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.model.dto.user.UserDto;
 import io.suricate.monitoring.model.entity.user.User;
+import io.suricate.monitoring.model.enums.AuthenticationMethod;
 import io.suricate.monitoring.service.api.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,14 +32,28 @@ import java.security.Principal;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * User controller
+ */
 @RestController
 @RequestMapping("/api/users")
 public class UserController {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class.getName());
+    /**
+     * Class logger
+     */
+    private final static Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
+    /**
+     * The user service
+     */
     private final UserService userService;
 
+    /**
+     * Constructor
+     *
+     * @param userService The user service to inject
+     */
     @Autowired
     public UserController(final UserService userService) {
         this.userService = userService;
@@ -55,6 +70,12 @@ public class UserController {
         return users.stream().map(user -> userService.toDto(user)).collect(Collectors.toList());
     }
 
+    /**
+     * Search users by username
+     *
+     * @param username The username query
+     * @return The user that match with the query
+     */
     @RequestMapping(value="/search", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
     public List<UserDto> search(@RequestParam("username") String username) {
@@ -66,15 +87,23 @@ public class UserController {
         return users.get().stream().map(user -> userService.toDto(user)).collect(Collectors.toList());
     }
 
+    /**
+     * Register a new user in the database
+     *
+     * @param userDto The user to register
+     * @return The user registered
+     */
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     @PreAuthorize("isAnonymous()")
     public UserDto register(@RequestBody UserDto userDto) {
-        User userSaved = userService.registerNewUserAccount(userDto);
+        User userSaved = userService.registerNewUserAccount(userDto, AuthenticationMethod.DATABASE);
         return userService.toDto(userSaved);
     }
 
     /**
      * List a specific user
+     *
+     * @param id The user id to get
      * @return The user
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -90,7 +119,9 @@ public class UserController {
 
     /**
      * Get current user
-     * @return The user
+     *
+     * @param principal the user authenticated
+     * @return The user informations
      */
     @RequestMapping(value = "/current", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")

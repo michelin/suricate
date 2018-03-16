@@ -44,13 +44,31 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
 
-    /** Class logger */
+    /**
+     * Class logger
+     * */
     private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
 
+    /**
+     * The user repository
+     */
     private final UserRepository userRepository;
+    /**
+     * The role service
+     */
     private final RoleService roleService;
+    /**
+     * The password encoder
+     */
     private final PasswordEncoder passwordEncoder;
 
+    /**
+     * Constructor
+     *
+     * @param userRepository The user repository
+     * @param roleService The role service
+     * @param passwordEncoder The password encoder
+     */
     @Autowired
     public UserService(final UserRepository userRepository, final RoleService roleService, final PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
@@ -58,6 +76,12 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * Transform a domain object into a dto object
+     *
+     * @param user The user object domain
+     * @return The DTO representation
+     */
     public UserDto toDto(User user) {
         UserDto userDto = new UserDto();
 
@@ -73,6 +97,12 @@ public class UserService {
         return userDto;
     }
 
+    /**
+     * Transform a model object into a dto
+     *
+     * @param userDto The user dto object to transform
+     * @return The model object
+     */
     public User toModel(UserDto userDto) {
         User user = new User();
 
@@ -88,8 +118,15 @@ public class UserService {
         return user;
     }
 
-    public User registerNewUserAccount(UserDto userDto) {
-        userDto.setAuthenticationMethod(AuthenticationMethod.DATABASE);
+    /**
+     * Register a new user in the database
+     *
+     * @param userDto User to register
+     * @param authenticationMethod The authentication method
+     * @return The user registered
+     */
+    public User registerNewUserAccount(UserDto userDto, AuthenticationMethod authenticationMethod) {
+        userDto.setAuthenticationMethod(authenticationMethod);
         userDto.setPassword(passwordEncoder.encode(userDto.getPassword()));
         userDto.setConfirmPassword(passwordEncoder.encode(userDto.getConfirmPassword()));
 
@@ -105,6 +142,12 @@ public class UserService {
         return user;
     }
 
+    /**
+     * Init a user (LDAP auth mode)
+     *
+     * @param connectedUser The connected user
+     * @return The user
+     */
     @Transactional
     public Optional<User> initUser(ConnectedUser connectedUser){
 
@@ -138,10 +181,21 @@ public class UserService {
         return Optional.of(user);
     }
 
+    /**
+     * Get every user in database
+     *
+     * @return The list of users
+     */
     public List<User> getAll() {
         return userRepository.findAll();
     }
 
+    /**
+     * Get a user by id
+     *
+     * @param userId The user id
+     * @return The user as optional
+     */
     public Optional<User> getOne(Long userId) {
         User user = userRepository.findOne(userId);
         if(user == null) {
@@ -150,14 +204,41 @@ public class UserService {
         return Optional.of(user);
     }
 
+    /**
+     * Get a user by username
+     *
+     * @param username The username to find
+     * @return The user as optional
+     */
     public Optional<User> getOneByUsername(String username) {
         return userRepository.findByUsernameIgnoreCase(username);
     }
 
+    /**
+     * Get the user id by username
+     * @param username The username to find
+     * @return The id
+     */
+    public Long getIdByUsername(String username) {
+        return userRepository.getIdByUsername(username);
+    }
+
+    /**
+     * Search users with the username starting with query
+     *
+     * @param username The part of username to find
+     * @return The list of related users
+     */
     public Optional<List<User>> getAllByUsernameStartWith(String username) {
         return userRepository.findByUsernameIgnoreCaseAndStartingWith(username);
     }
 
+    /**
+     * Get every user related to a project id
+     *
+     * @param project The project
+     * @return The list of users
+     */
     public Optional<List<User>> getAllByProject(Project project) {
         return userRepository.findByProjects_Id(project.getId());
     }

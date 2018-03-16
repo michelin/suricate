@@ -14,8 +14,11 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.dto.update;
+package io.suricate.monitoring.model.enums;
 
+/**
+ * Update type (Websocket)
+ */
 public enum UpdateType {
     GRID,
     WIDGET,

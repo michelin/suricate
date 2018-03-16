@@ -16,6 +16,9 @@
 
 package io.suricate.monitoring.configuration;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
@@ -24,6 +27,7 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 @ConfigurationProperties(prefix = "proxy")
+@Getter @Setter @NoArgsConstructor
 public class ProxyConfiguration {
 
     /**
@@ -40,28 +44,4 @@ public class ProxyConfiguration {
      * List of all proxy domain to ignore
      */
     private String noProxyDomains;
-
-    public String getHost() {
-        return host;
-    }
-
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    public int getPort() {
-        return port;
-    }
-
-    public void setPort(int port) {
-        this.port = port;
-    }
-
-    public String getNoProxyDomains() {
-        return noProxyDomains;
-    }
-
-    public void setNoProxyDomains(String noProxyDomains) {
-        this.noProxyDomains = noProxyDomains;
-    }
 }

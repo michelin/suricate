@@ -20,7 +20,7 @@ import io.suricate.monitoring.model.enums.NashornErrorTypeEnum;
 import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.model.dto.UpdateEvent;
 import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
-import io.suricate.monitoring.model.dto.update.UpdateType;
+import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.repository.ProjectWidgetRepository;
 import io.suricate.monitoring.service.api.WidgetService;
 import org.apache.commons.lang3.exception.ExceptionUtils;

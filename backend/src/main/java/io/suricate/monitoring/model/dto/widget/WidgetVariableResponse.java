@@ -18,87 +18,43 @@ package io.suricate.monitoring.model.dto.widget;
 
 import io.suricate.monitoring.model.enums.WidgetVariableType;
 import io.suricate.monitoring.model.dto.AbstractDto;
+import lombok.*;
 
 import java.util.Map;
 
+/**
+ * Widget variable used for communication with the clients via webservices
+ */
+@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
 public class WidgetVariableResponse extends AbstractDto {
 
+    /**
+     * The variable name
+     */
     private String name;
 
+    /**
+     * The variable description
+     */
     private String description;
 
+    /**
+     * The data
+     */
     private String data;
 
+    /**
+     * The variable type
+     */
     private WidgetVariableType type;
 
+    /**
+     * If the variable is required
+     */
     private boolean required;
 
+    /**
+     * Map of values
+     */
     private Map<String, String> values;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public WidgetVariableType getType() {
-        return type;
-    }
-
-    public void setType(WidgetVariableType type) {
-        this.type = type;
-    }
-
-    public boolean isRequired() {
-        return required;
-    }
-
-    public void setRequired(boolean required) {
-        this.required = required;
-    }
-
-    public String getData() {
-        return data;
-    }
-
-    public void setData(String data) {
-        this.data = data;
-    }
-
-    public Map<String, String> getValues() {
-        return values;
-    }
-
-    public void setValues(Map<String, String> values) {
-        this.values = values;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o){
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()){
-            return false;
-        }
-
-        WidgetVariableResponse that = (WidgetVariableResponse) o;
-
-        return name != null ? name.equals(that.name) : that.name == null;
-    }
-
-    @Override
-    public int hashCode() {
-        return name != null ? name.hashCode() : 0;
-    }
 }

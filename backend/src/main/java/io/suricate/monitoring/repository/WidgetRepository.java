@@ -26,8 +26,17 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
+/**
+ * Repository used for request Widget repository in database
+ */
 public interface WidgetRepository extends JpaRepository<Widget, Long> {
 
+	/**
+	 * Find a widget by technical name
+	 *
+	 * @param technicalname The technical name
+	 * @return The related widget
+	 */
 	Widget findByTechnicalName(String technicalname);
 
 	/**
@@ -49,6 +58,21 @@ public interface WidgetRepository extends JpaRepository<Widget, Long> {
 	Widget findByProjectWidgetId(@Param("id") Long projectWidgetId, @Param("projectId") Long projectId);
 
 
+	/**
+	 * update a widgetby technical name
+	 *
+	 * @param name The widget name
+	 * @param description The widget description
+	 * @param htmlContent The html content of the widget
+	 * @param cssContent The css content of the widget
+	 * @param backendJs The JS of the widget
+	 * @param image The image
+	 * @param info The user informations
+	 * @param delay The refresh delay
+	 * @param categoryId The related category id
+	 * @param technicalName The technical name
+	 * @return The state of the update
+	 */
 	@Modifying
 	@Query("UPDATE Widget " +
 			"SET name = :name, " +
@@ -74,7 +98,7 @@ public interface WidgetRepository extends JpaRepository<Widget, Long> {
 
 	/**
 	 * Method used to get all widget by name desc
-	 * @return
+	 * @return The list of related widgets
 	 */
 	List<Widget> findAllByOrderByNameAsc();
 
@@ -85,6 +109,12 @@ public interface WidgetRepository extends JpaRepository<Widget, Long> {
 	 */
 	List<Widget> findAllByWidgetAvailabilityOrderByNameAsc(WidgetAvailabilityEnum widgetAvailability);
 
+	/**
+	 * Find every widgets by category id
+	 *
+	 * @param categoryId The category id
+	 * @return The list of related widgets ordered by name
+	 */
 	List<Widget> findAllByCategory_IdOrderByNameAsc(final Long categoryId);
 
 }

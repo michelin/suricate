@@ -14,13 +14,17 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Configuration controller
+ */
 @RestController
 @RequestMapping("/api/configurations")
 public class ConfigurationController {
+
     /**
      * Class logger
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger(ConfigurationController.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(ConfigurationController.class);
 
     /**
      * The configuration Service
@@ -37,6 +41,10 @@ public class ConfigurationController {
         this.configurationService = configurationService;
     }
 
+    /**
+     * Get the full list of configurations
+     * @return The list of configurations
+     */
     @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<ConfigurationDto> getAll() {
