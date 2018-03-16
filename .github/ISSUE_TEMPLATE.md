@@ -5,6 +5,7 @@ Describe your issue here.
 [] Bug
 [] Improvment
 [] Documentation
+[] Feature
 
 **NB**: Specify labels in right panel also
 
