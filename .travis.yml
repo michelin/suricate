@@ -5,14 +5,17 @@ services:
 sudo: false
 cache:
   directories:
-    - node
-    - node_modules
+    - frontend/node_modules
     - $HOME/.m2
     - $HOME/.yarn-cache
+    - $HOME/.cache/yarn
 
 stages:
   - build
   - control_quality
+  - name : docker
+    # Only publish new images on Docker Hub from protected branches
+    if : branch IN (master, dev) AND type = push
 
 env:
   global:
@@ -29,15 +32,40 @@ before_install:
 
 jobs:
   include:
+    # Build applications
     - stage: build
-      script: chmod +x mvnw && ./mvnw clean test -f backend/pom.xml
+      script: 
+        - chmod +x mvnw && ./mvnw clean test -f backend/pom.xml
     - # parallel build
       language: node_js
       node_js:
         - "8"
-      script: cd frontend && yarn install && yarn run build
+      script: 
+      - cd frontend
+      - yarn install
+      - yarn run build
+    # Control code quality
     - stage: control_quality
       script: chmod +x mvnw && ./mvnw test -f backend/pom.xml && bash <(curl -s https://codecov.io/bash)
+    # Build docker image
+    - stage: docker
+      script:
+        - chmod +x mvnw && ./mvnw package -f backend/pom.xml -DskipTests
+        - docker login -u=$DOCKER_USER -p=$DOCKER_PASS
+        - export REPO=suricate/backend
+        - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo "dev"; fi`
+        - docker build -f backend/Dockerfile -t $REPO:$TAG .
+        - docker push $REPO
+    - # parallel docker
+      script:
+        - cd frontend
+        - yarn install
+        - yarn run build
+        - docker login -u=$DOCKER_USER -p=$DOCKER_PASS
+        - export REPO=suricate/frontend
+        - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo "dev"; fi`
+        - docker build -f Dockerfile -t $REPO:$TAG .
+        - docker push $REPO
 
 notifications:
   webhooks:
