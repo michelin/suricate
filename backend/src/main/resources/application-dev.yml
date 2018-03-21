@@ -1,0 +1,22 @@
+###     Properties for development     ###
+##########################################
+spring:
+  h2.console:
+    enabled: true
+    path: /h2-console
+  ###   DDL   ###
+  jpa.hibernate.ddl-auto: update
+  ###   DATASOURCES   ###
+  ## You can override datasource by uncommented and fill these lines
+  # datasource:
+  #   url:
+  #   driverClassName:
+  #   username:
+  #   password:
+
+
+application:
+  ### Security (ldap | database) ###
+  authentication.provider: database
+  ### Widgets Repo ###
+  widgets.local.folderPath:
