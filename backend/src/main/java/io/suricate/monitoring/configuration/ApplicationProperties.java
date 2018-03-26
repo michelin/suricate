@@ -30,7 +30,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 @Configuration
-@PropertySource("classpath:application.properties")
+@PropertySource("classpath:application.yml")
 @ConfigurationProperties(prefix = "application", ignoreUnknownFields = false)
 @Getter @Setter
 public class ApplicationProperties {

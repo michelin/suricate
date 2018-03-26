@@ -1,0 +1,19 @@
+###     Properties for docker env      ###
+##########################################
+
+###   DATASOURCES   ###
+## You can override datasource by uncommented and fill these lines
+spring:
+  datasource:
+    url: jdbc:mysql://mysql-db:3306/suricate
+    driverClassName: com.mysql.jdbc.Driver
+    username: demo
+    password: demo
+  ###   DDL   ###
+  jpa.hibernate.ddl-auto: update
+
+application:
+  ### Security (ldap | database) ###
+  authentication.provider: database
+  ### Widgets Repo ###
+  widgets.local.folderPath:
