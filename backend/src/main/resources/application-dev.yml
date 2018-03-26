@@ -9,14 +9,22 @@ spring:
   ###   DATASOURCES   ###
   ## You can override datasource by uncommented and fill these lines
   # datasource:
-  #   url:
-  #   driverClassName:
-  #   username:
-  #   password:
+  #  url:
+  #  driverClassName:
+  #  username:
+  # password:
 
 
 application:
-  ### Security (ldap | database) ###
-  authentication.provider: database
+  authentication:
+    ### Security (ldap | database) ###
+    provider: database
+    ###   LDAP Authentication   ###
+    # ldap:
+    #  url:
+    #  userSearchFilter:
+    #  firstNameAttributName:
+    #  lastNameAttributName:
+    #  mailAttributName:
   ### Widgets Repo ###
   widgets.local.folderPath:
