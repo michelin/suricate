@@ -72,6 +72,8 @@ jasypt.encryptor:
 ##########################################
 application:
   authentication:
+    ### Authentication Management (ldap | database) ###
+    provider: database
     ###   LDAP Authentication   ###
     ldap:
       url:
@@ -79,8 +81,6 @@ application:
       firstNameAttributName:
       lastNameAttributName:
       mailAttributName:
-    ### Authentication Management (ldap | database) ###
-    provider: database
     ### JWT Configuration ###
     jwt:
       secret:  ${random.value}
