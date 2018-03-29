@@ -14,9 +14,12 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.configuration;
+package io.suricate.monitoring.configuration.webSocket;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.AbstractWebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
@@ -29,12 +32,37 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 public class WebSocketConfiguration extends AbstractWebSocketMessageBrokerConfigurer {
 
     /**
-     * Websocket endpoints
+     * Class logger
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(WebSocketConfiguration.class);
+
+    /**
+     * Websocket endpoints (open a new flow)
+     *
      * @param registry The endpoint registry
      */
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws").withSockJS();
+        registry
+            .addEndpoint("/ws")
+                .setAllowedOrigins("*")
+                .withSockJS();
     }
 
+    /* *
+     * Message broker configuration URL's used for exchange
+     *
+     * * EnableSimpleBroker : Prefix used for message broker communication
+     * * * The client will subscribe to "/queue/xxxx" define in the Message handler controller mapped with @SendTo
+     *
+     * * Possibility to add a SetApplicationDestinationPrefixes if want a client can send messages to the server
+     * * * Used like this "/destinationPrefix/registryEndpoint"
+     *
+     * @param config The configuration
+     */
+//    @Override
+//    public void configureMessageBroker(MessageBrokerRegistry config) {
+//        config.enableSimpleBroker("/queue");
+//        config.setUserDestinationPrefix("/user");
+//    }
 }
