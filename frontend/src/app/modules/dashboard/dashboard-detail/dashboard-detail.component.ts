@@ -23,7 +23,15 @@ import {DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import {Observable} from 'rxjs/Observable';
 import {takeWhile} from 'rxjs/operators';
 import {of} from 'rxjs/observable/of';
+import { StompService } from 'ng2-stomp-service';
+import {AuthenticationService} from '../../authentication/authentication.service';
+import {AbstractHttpService} from '../../../shared/services/abstract-http.service';
+import {WSConfiguration} from '../../../shared/model/websocket/WSConfiguration';
+import {WebsocketService} from '../../../shared/services/websocket.service';
 
+/**
+ * Component that display a specific dashboard
+ */
 @Component({
   selector: 'app-dashboard-detail',
   templateUrl: './dashboard-detail.component.html',
@@ -31,12 +39,18 @@ import {of} from 'rxjs/observable/of';
 })
 export class DashboardDetailComponent implements OnInit, OnDestroy {
 
+  /**
+   * Used for keep the subscription of subjects/Obsevables open
+   *
+   * @type {boolean} True if we keep the connection, False if we have to unsubscribe
+   */
   isAlive = true;
 
   /**
    * The project as observable
    */
-  project: Observable<Project>;
+  project$: Observable<Project>;
+
   /**
    * The options for the plugin angular2-grid
    */
@@ -49,37 +63,96 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    * @param {DashboardService} dashboardService The dashboard service
    * @param {ChangeDetectorRef} changeDetectorRef The change detector service
    * @param {DomSanitizer} domSanitizer The domSanitizer service
+   * @param {StompService} stompService The stomp service for websockets
+   * @param {WebsocketService} websocketService The websocket service
    */
   constructor(private activatedRoute: ActivatedRoute,
               private dashboardService: DashboardService,
               private changeDetectorRef: ChangeDetectorRef,
-              private domSanitizer: DomSanitizer) { }
+              private domSanitizer: DomSanitizer,
+              private websocketService: WebsocketService) { }
 
   /**
    * Init objects
    */
   ngOnInit() {
-    this.dashboardService.
-        currendDashbordSubject
-        .pipe(takeWhile(() => this.isAlive))
-        .subscribe(project => this.project = of(project));
+    // init current dashboard
+    this.subcribeToProjectSubject();
 
     this.activatedRoute.params.subscribe( params => {
       this.dashboardService
           .getOneById(params['id'])
           .subscribe(project => {
-            this.gridOptions = {
-              'max_cols': project.maxColumn,
-              'min_cols': 1,
-              'row_height': project.widgetHeight / 1.5,
-              'margins': [5],
-              'auto_resize': true
-            };
-
+            this.initGridStackOptions(project);
+            this.createWebsocketConnection(project);
             this.dashboardService.currendDashbordSubject.next(project);
           });
-
     });
+  }
+
+  /**
+   * Init the Project subject subscription
+   */
+  subcribeToProjectSubject() {
+    this.dashboardService.
+    currendDashbordSubject
+        .pipe(takeWhile(() => this.isAlive))
+        .subscribe(project => this.project$ = of(project) );
+  }
+
+  /**
+   * Init the options for Grid Stack plugin
+   *
+   * @param {Project} project The project used for the initialization
+   */
+  initGridStackOptions(project: Project) {
+    this.gridOptions = {
+      'max_cols': project.maxColumn,
+      'min_cols': 1,
+      'row_height': project.widgetHeight / 1.5,
+      'margins': [5],
+      'auto_resize': true
+    };
+  }
+
+  /**
+   * Create the dashboard websocket connection
+   *
+   * @param {Project} project The project wanted for the connection
+   */
+  createWebsocketConnection(project: Project) {
+    const websocketConfiguration: WSConfiguration = {
+      host: `${AbstractHttpService.BASE_WS_URL}?${AbstractHttpService.SPRING_ACCESS_TOKEN_ENPOINT}=${AuthenticationService.getToken()}`,
+      debug: true,
+      queue: {'init': false}
+    };
+
+    this.websocketService
+        .connect(websocketConfiguration)
+        .subscribe(() => {
+          this.websocketService.subscribe(`/user/${project.token}-123/queue/unique`, this.handleUniqueScreenEvent);
+          this.websocketService.subscribe(`/user/${project.token}/queue/live`, this.handleGlobalScreenEvent);
+        });
+  }
+
+  /**
+   * Manage the event sent by the server (destination : A specified screen)
+   *
+   * @param {string} message The message received
+   * @param headers The headers of the websocket event
+   */
+  handleUniqueScreenEvent(message: string, headers: any) {
+    console.log(`uniqueScreenEvent - ${message}`);
+  }
+
+  /**
+   * Manage the event sent by the server (destination : Every screen connected to this project)
+   *
+   * @param {string} message The message received
+   * @param headers The headers of the websocket event
+   */
+  handleGlobalScreenEvent(message: string, headers: any) {
+    console.log(`globalScreenEvent - ${message}`);
   }
 
   /**
@@ -168,6 +241,9 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
     `);
   }
 
+  /**
+   * Called when the component is getting destroy
+   */
   ngOnDestroy() {
     this.isAlive = false;
   }
