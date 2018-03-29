@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.dto;
+package io.suricate.monitoring.model.dto.websocket;
 
+import io.suricate.monitoring.model.dto.AbstractDto;
 import io.suricate.monitoring.model.enums.UpdateType;
 import lombok.*;
 
@@ -26,7 +27,7 @@ import java.util.Date;
  * WebSocket update event
  */
 @Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
-public class UpdateEvent extends AbstractDto{
+public class UpdateEvent extends AbstractDto {
 
     /**
      * The update date
