@@ -30,7 +30,7 @@ export class ConfigurationService extends AbstractHttpService {
    *
    * @type {string}
    */
-  private static readonly CONFIGURATIONS_BASE_URL = `${AbstractHttpService.BASE_URL}/${AbstractHttpService.CONFIGURATIONS_URL}`;
+  private static readonly CONFIGURATIONS_BASE_URL = `${AbstractHttpService.BASE_API_URL}/${AbstractHttpService.CONFIGURATIONS_URL}`;
 
   /**
    * Constructor
