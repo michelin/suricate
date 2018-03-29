@@ -89,6 +89,16 @@ public class DashboardWebSocketService {
     }
 
     /**
+     * Remove a link between a projectId and WebsocketClient
+     *
+     * @param projectId The projectId
+     * @param websocketClient The websocket client
+     */
+    public void removeProjectClient (final String projectId, final WebsocketClient websocketClient) {
+        projectClients.remove(projectId, websocketClient);
+    }
+
+    /**
      * Add new link between the websocket session ID and a WebsocketClient
      *
      * @param websocketSessionId The websocket session id
@@ -96,6 +106,16 @@ public class DashboardWebSocketService {
      */
     public void addSessionClient (final String websocketSessionId, final WebsocketClient websocketClient) {
         sessionClient.put(websocketSessionId, websocketClient);
+    }
+
+    /**
+     * Remove a websocket session from the map
+     *
+     * @param websocketSessionId The websocket session to remove
+     * @return The websocket session removed
+     */
+    public WebsocketClient removeSessionClient (final String websocketSessionId) {
+        return sessionClient.remove(websocketSessionId);
     }
 
     /**

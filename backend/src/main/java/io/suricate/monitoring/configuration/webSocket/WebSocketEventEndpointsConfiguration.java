@@ -89,16 +89,17 @@ public class WebSocketEventEndpointsConfiguration {
     }
 
     /**
-     * Handle a the disconnect event of a websocket client
+     * Handle the disconnect event of a websocket client
      *
      * @param event The disconnect event
      */
     @EventListener
     protected void onSessionDisconnectEvent(SessionDisconnectEvent event) {
-        StompHeaderAccessor sha = StompHeaderAccessor.wrap(event.getMessage());
-//        WebsocketClient client = sessionClient.remove(sha.getSessionId());
-//        if (client != null) {
-//            projectClients.remove(client.getProjectId(), client);
-//        }
+        StompHeaderAccessor stompHeaderAccessor = StompHeaderAccessor.wrap(event.getMessage());
+        WebsocketClient websocketClient = dashboardWebSocketService.removeSessionClient(stompHeaderAccessor.getSessionId());
+
+        if (websocketClient != null) {
+            dashboardWebSocketService.removeProjectClient(websocketClient.getProjectId(), websocketClient);
+        }
     }
 }
