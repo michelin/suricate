@@ -74,7 +74,7 @@ export class WebsocketService extends AbstractHttpService {
    * @param {string} eventUrl The subcription url
    * @param {Function} callbackFunction The callback function to call when a new event is received
    */
-  subscribe(eventUrl: string, callbackFunction: Function): Observable<Subscription> {
+  subscribe(eventUrl: string, callbackFunction: Function): Subscription {
     if (this.stompService.status !== WebsocketService.WS_STATUS_CONNECTED) {
       Observable.throw(new Error('No connection found, connect your websocket before subscribe to an event'));
     }
@@ -82,7 +82,7 @@ export class WebsocketService extends AbstractHttpService {
     const subscription: Subscription = this.stompService.subscribe(`${eventUrl}`, callbackFunction);
     this.nbActiveSubscription += +1;
 
-    return of(subscription);
+    return subscription;
   }
 
   /**

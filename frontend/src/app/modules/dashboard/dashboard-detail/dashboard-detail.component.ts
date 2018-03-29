@@ -28,6 +28,7 @@ import {AuthenticationService} from '../../authentication/authentication.service
 import {AbstractHttpService} from '../../../shared/services/abstract-http.service';
 import {WSConfiguration} from '../../../shared/model/websocket/WSConfiguration';
 import {WebsocketService} from '../../../shared/services/websocket.service';
+import {Subscription} from 'rxjs/Subscription';
 
 /**
  * Component that display a specific dashboard
@@ -55,6 +56,11 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    * The options for the plugin angular2-grid
    */
   gridOptions: {};
+
+  /**
+   * Save every web socket subscriptions event
+   */
+  websocketSubscriptions: Subscription[] = [];
 
   /**
    * constructor
@@ -130,8 +136,13 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
     this.websocketService
         .connect(websocketConfiguration)
         .subscribe(() => {
-          this.websocketService.subscribe(`/user/${project.token}-123/queue/unique`, this.handleUniqueScreenEvent);
-          this.websocketService.subscribe(`/user/${project.token}/queue/live`, this.handleGlobalScreenEvent);
+          const uniqueSubscription: Subscription = this.websocketService
+                                                       .subscribe(`/user/${project.token}-123/queue/unique`, this.handleUniqueScreenEvent);
+          const globalSubscription: Subscription = this.websocketService
+                                                       .subscribe(`/user/${project.token}/queue/live`, this.handleGlobalScreenEvent);
+
+          this.websocketSubscriptions.push(uniqueSubscription);
+          this.websocketSubscriptions.push(globalSubscription);
         });
   }
 
@@ -246,5 +257,9 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    */
   ngOnDestroy() {
     this.isAlive = false;
+
+    this.websocketSubscriptions.forEach( (websocketSubscription: Subscription) => {
+      this.websocketService.unsubscribe(websocketSubscription);
+    });
   }
 }
