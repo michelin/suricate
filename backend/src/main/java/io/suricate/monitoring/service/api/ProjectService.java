@@ -27,7 +27,7 @@ import io.suricate.monitoring.model.entity.user.User;
 import io.suricate.monitoring.repository.ProjectRepository;
 import io.suricate.monitoring.repository.ProjectWidgetRepository;
 import io.suricate.monitoring.repository.WidgetRepository;
-import io.suricate.monitoring.service.SocketService;
+import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
 import io.suricate.monitoring.utils.logging.LogExecutionTime;
 import org.apache.commons.lang3.StringUtils;
 import org.jasypt.encryption.StringEncryptor;
@@ -82,7 +82,7 @@ public class ProjectService {
      * Socket service
      */
     @Autowired
-    private SocketService socketService;
+    private DashboardWebSocketService dashboardWebsocketService;
 
     /**
      * Widget service
@@ -232,7 +232,7 @@ public class ProjectService {
         widgetService.scheduleWidget(projectWidget.getId());
 
         // Update grid
-        socketService.updateProjectScreen(projectWidget.getProject().getToken(),  new UpdateEvent(UpdateType.GRID));
+        dashboardWebsocketService.updateProjectScreen(projectWidget.getProject().getToken(),  new UpdateEvent(UpdateType.GRID));
 
         return projectWidget;
     }
@@ -247,7 +247,7 @@ public class ProjectService {
         project.setName(newName);
         projectRepository.save(project);
         // Update grid
-        socketService.updateProjectScreen(project.getToken(), new UpdateEvent(UpdateType.GRID));
+        dashboardWebsocketService.updateProjectScreen(project.getToken(), new UpdateEvent(UpdateType.GRID));
     }
 
     /**
@@ -256,7 +256,7 @@ public class ProjectService {
      */
     public void deleteProject(Long id){
         // notify clients
-        socketService.updateProjectScreen(id, new UpdateEvent(UpdateType.DISCONNECT));
+        dashboardWebsocketService.updateProjectScreen(id, new UpdateEvent(UpdateType.DISCONNECT));
         // delete project
         projectRepository.delete(id);
     }

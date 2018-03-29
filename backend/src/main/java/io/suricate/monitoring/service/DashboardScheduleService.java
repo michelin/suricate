@@ -23,6 +23,7 @@ import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
 import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.repository.ProjectWidgetRepository;
 import io.suricate.monitoring.service.api.WidgetService;
+import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +45,7 @@ public class DashboardScheduleService {
     private ProjectWidgetRepository projectWidgetRepository;
 
     @Autowired
-    private SocketService socketService;
+    private DashboardWebSocketService socketService;
 
     @Autowired
     private WidgetService widgetService;
