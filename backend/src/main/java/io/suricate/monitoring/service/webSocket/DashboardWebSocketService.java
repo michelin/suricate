@@ -55,8 +55,15 @@ public class DashboardWebSocketService {
      */
     private final ProjectService projectService;
 
-    private Multimap<String /* Project ID */,WebsocketClient> projectClients = Multimaps.synchronizedListMultimap(ArrayListMultimap.create());
-    private Map<String /* WebsocketClient session Id */,WebsocketClient> sessionClient = Collections.synchronizedMap(new HashMap<>());
+    /**
+     * MultiMap containing the projectId as Key and the list of the WebsocketClient connected as value
+     */
+    private Multimap<String, WebsocketClient> projectClients = Multimaps.synchronizedListMultimap(ArrayListMultimap.create());
+
+    /**
+     * SynchronizedMap containing the websocket session ID as key and the related WebsocketClient
+     */
+    private Map<String, WebsocketClient> sessionClient = Collections.synchronizedMap(new HashMap<>());
 
     /**
      * Constructor
@@ -68,6 +75,27 @@ public class DashboardWebSocketService {
     public DashboardWebSocketService(final SimpMessagingTemplate simpMessagingTemplate, @Lazy final ProjectService projectService) {
         this.simpMessagingTemplate = simpMessagingTemplate;
         this.projectService = projectService;
+    }
+
+    /**
+     * Add a new link between the projectId and a WebsocketClient
+     * Used when a new Websocket connection is done
+     *
+     * @param projectId The connected projectId
+     * @param websocketClient The related websocket client
+     */
+    public void addProjectClient (final String projectId, final WebsocketClient websocketClient) {
+        projectClients.put(projectId, websocketClient);
+    }
+
+    /**
+     * Add new link between the websocket session ID and a WebsocketClient
+     *
+     * @param websocketSessionId The websocket session id
+     * @param websocketClient The related websocket client
+     */
+    public void addSessionClient (final String websocketSessionId, final WebsocketClient websocketClient) {
+        sessionClient.put(websocketSessionId, websocketClient);
     }
 
     /**
