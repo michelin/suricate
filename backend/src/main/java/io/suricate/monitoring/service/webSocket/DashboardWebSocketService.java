@@ -19,7 +19,7 @@ package io.suricate.monitoring.service.webSocket;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
-import io.suricate.monitoring.model.dto.Client;
+import io.suricate.monitoring.model.dto.websocket.WebsocketClient;
 import io.suricate.monitoring.model.dto.UpdateEvent;
 import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.service.api.ProjectService;
@@ -55,8 +55,8 @@ public class DashboardWebSocketService {
      */
     private final ProjectService projectService;
 
-    private Multimap<String /* Project ID */,Client> projectClients = Multimaps.synchronizedListMultimap(ArrayListMultimap.create());
-    private Map<String /* Client session Id */,Client> sessionClient = Collections.synchronizedMap(new HashMap<>());
+    private Multimap<String /* Project ID */,WebsocketClient> projectClients = Multimaps.synchronizedListMultimap(ArrayListMultimap.create());
+    private Map<String /* WebsocketClient session Id */,WebsocketClient> sessionClient = Collections.synchronizedMap(new HashMap<>());
 
     /**
      * Constructor
@@ -153,7 +153,7 @@ public class DashboardWebSocketService {
      * @param projectId the project iD
      * @return the list of client
      */
-    public Collection<Client> getClient(String projectId) {
+    public Collection<WebsocketClient> getClient(String projectId) {
         return projectClients.get(projectId);
     }
 
@@ -164,7 +164,7 @@ public class DashboardWebSocketService {
      * @param projectId the specified project Id
      */
     public void displayUniqueNumber(String projectId) {
-        Iterator<Client> it = projectClients.values().iterator();
+        Iterator<WebsocketClient> it = projectClients.values().iterator();
         while (it.hasNext()) {
             updateProjectScreen(projectId, it.next().getId(), new UpdateEvent(UpdateType.DISPLAY_NUMBER));
         }
@@ -173,10 +173,10 @@ public class DashboardWebSocketService {
     /**
      * Disconnect screen from project
      *
-     * @param client the client to disconnect
+     * @param websocketClient the websocketClient to disconnect
      */
-    public void disconnectClient(Client client) {
-        updateProjectScreen(client.getProjectId(), client.getId(), new UpdateEvent(UpdateType.DISCONNECT));
+    public void disconnectClient(WebsocketClient websocketClient) {
+        updateProjectScreen(websocketClient.getProjectId(), websocketClient.getId(), new UpdateEvent(UpdateType.DISCONNECT));
     }
 
     /**

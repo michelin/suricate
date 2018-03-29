@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.configuration.webSocket;
 
-import io.suricate.monitoring.model.dto.Client;
+import io.suricate.monitoring.model.dto.websocket.WebsocketClient;
 import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,10 +79,10 @@ public class WebSocketEventEndpointsConfiguration {
             Matcher matcher = pattern.matcher(simpDestination);
 
             if (matcher.find()){
-                Client client = new Client(matcher.group(PROJECT_REGEX_GROUP), stompHeaderAccessor.getSessionId(), matcher.group(ID_REGEX_GROUP));
-                LOGGER.debug("New Client {} with id {} for project {}", client.getSessionId() ,client.getId(), client.getProjectId());
-//                projectClients.put(client.getProjectId(), client);
-//                sessionClient.put(client.getSessionId(), client);
+                WebsocketClient websocketClient = new WebsocketClient(matcher.group(PROJECT_REGEX_GROUP), stompHeaderAccessor.getSessionId(), matcher.group(ID_REGEX_GROUP));
+                LOGGER.debug("New Client {} with id {} for project {}", websocketClient.getSessionId(), websocketClient.getId(), websocketClient.getProjectId());
+//                projectClients.put(websocketClient.getProjectId(), websocketClient);
+//                sessionClient.put(websocketClient.getSessionId(), websocketClient);
             }
         }
     }
@@ -95,7 +95,7 @@ public class WebSocketEventEndpointsConfiguration {
     @EventListener
     protected void onSessionDisconnectEvent(SessionDisconnectEvent event) {
         StompHeaderAccessor sha = StompHeaderAccessor.wrap(event.getMessage());
-//        Client client = sessionClient.remove(sha.getSessionId());
+//        WebsocketClient client = sessionClient.remove(sha.getSessionId());
 //        if (client != null) {
 //            projectClients.remove(client.getProjectId(), client);
 //        }

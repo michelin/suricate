@@ -14,9 +14,11 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.dto;
+package io.suricate.monitoring.model.dto.websocket;
 
-public class Client extends AbstractDto{
+import io.suricate.monitoring.model.dto.AbstractDto;
+
+public class WebsocketClient extends AbstractDto {
 
     private String projectId;
 
@@ -30,7 +32,7 @@ public class Client extends AbstractDto{
      * @param sessionId the session id
      * @param id client id
      */
-    public Client(String projectId, String sessionId, String id) {
+    public WebsocketClient(String projectId, String sessionId, String id) {
         this.projectId = projectId;
         this.sessionId = sessionId;
         this.id = id;
@@ -45,9 +47,9 @@ public class Client extends AbstractDto{
             return false;
         }
 
-        Client client = (Client) o;
+        WebsocketClient websocketClient = (WebsocketClient) o;
 
-        return getSessionId() == null ? client.getSessionId() == null : getSessionId().equals(client.getSessionId());
+        return getSessionId() == null ? websocketClient.getSessionId() == null : getSessionId().equals(websocketClient.getSessionId());
     }
 
     @Override
