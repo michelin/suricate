@@ -57,7 +57,7 @@ public class GitService {
 
     private final LibraryService libraryService;
 
-    private final DashboardWebSocketService socketService;
+    private final DashboardWebSocketService dashboardWebSocketService;
 
     private final NashornWidgetExecutor nashornWidgetExecutor;
 
@@ -65,14 +65,14 @@ public class GitService {
      * Contructor using fields
      * @param widgetService widget service
      * @param libraryService library service
-     * @param socketService socket service
+     * @param dashboardWebSocketService socket service
      * @param nashornWidgetExecutor widget executor
      */
     @Autowired
-    public GitService(WidgetService widgetService, LibraryService libraryService, DashboardWebSocketService socketService, NashornWidgetExecutor nashornWidgetExecutor, ApplicationProperties applicationProperties) {
+    public GitService(WidgetService widgetService, LibraryService libraryService, DashboardWebSocketService dashboardWebSocketService, NashornWidgetExecutor nashornWidgetExecutor, ApplicationProperties applicationProperties) {
         this.widgetService = widgetService;
         this.libraryService = libraryService;
-        this.socketService = socketService;
+        this.dashboardWebSocketService = dashboardWebSocketService;
         this.nashornWidgetExecutor = nashornWidgetExecutor;
         this.applicationProperties = applicationProperties;
     }
@@ -160,7 +160,7 @@ public class GitService {
                 FileUtils.deleteQuietly(folder);
             }
             nashornWidgetExecutor.initScheduler();
-            socketService.reloadAllConnectedDashboard();
+            dashboardWebSocketService.reloadAllConnectedDashboard();
         }
     }
 }

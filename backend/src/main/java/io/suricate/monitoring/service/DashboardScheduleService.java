@@ -45,7 +45,7 @@ public class DashboardScheduleService {
     private ProjectWidgetRepository projectWidgetRepository;
 
     @Autowired
-    private DashboardWebSocketService socketService;
+    private DashboardWebSocketService dashboardWebSocketService;
 
     @Autowired
     private WidgetService widgetService;
@@ -81,7 +81,7 @@ public class DashboardScheduleService {
         UpdateEvent event = new UpdateEvent(UpdateType.WIDGET);
         event.setContent(widgetService.getWidgetResponse(projectWidgetRepository.findOne(projetWidgetId)));
 
-        socketService.updateGlobalScreensByProjectId(projectId, event);
+        dashboardWebSocketService.updateGlobalScreensByProjectId(projectId, event);
     }
 
     /**
