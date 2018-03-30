@@ -17,67 +17,38 @@
 package io.suricate.monitoring.model.dto.websocket;
 
 import io.suricate.monitoring.model.dto.AbstractDto;
+import lombok.*;
 
+/**
+ * Representation of websocket client
+ */
+@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
 public class WebsocketClient extends AbstractDto {
 
+    /**
+     * The project id subscribed by the client
+     */
     private String projectId;
 
+    /**
+     * The websocket session id
+     */
     private String sessionId;
 
-    private String id;
+    /**
+     * The client screen code
+     */
+    private String screenCode;
 
     /**
      * Default constructor using fields
      * @param projectId the project id
      * @param sessionId the session id
-     * @param id client id
+     * @param screenCode The screenCode
      */
-    public WebsocketClient(String projectId, String sessionId, String id) {
+    public WebsocketClient(String projectId, String sessionId, String screenCode) {
         this.projectId = projectId;
         this.sessionId = sessionId;
-        this.id = id;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o){
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()){
-            return false;
-        }
-
-        WebsocketClient websocketClient = (WebsocketClient) o;
-
-        return getSessionId() == null ? websocketClient.getSessionId() == null : getSessionId().equals(websocketClient.getSessionId());
-    }
-
-    @Override
-    public int hashCode() {
-        return getSessionId() == null ? 0 : getSessionId().hashCode();
-    }
-
-    public String getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(String projectId) {
-        this.projectId = projectId;
-    }
-
-    public String getSessionId() {
-        return sessionId;
-    }
-
-    public void setSessionId(String sessionId) {
-        this.sessionId = sessionId;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
+        this.screenCode = screenCode;
     }
 }

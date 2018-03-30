@@ -214,7 +214,7 @@ public class DashboardWebSocketService {
     public void displayUniqueNumber(String projectId) {
         Iterator<WebsocketClient> it = projectClients.values().iterator();
         while (it.hasNext()) {
-            updateProjectScreen(projectId, it.next().getId(), new UpdateEvent(UpdateType.DISPLAY_NUMBER));
+            updateProjectScreen(projectId, it.next().getScreenCode(), new UpdateEvent(UpdateType.DISPLAY_NUMBER));
         }
     }
 
@@ -224,7 +224,7 @@ public class DashboardWebSocketService {
      * @param websocketClient the websocketClient to disconnect
      */
     public void disconnectClient(WebsocketClient websocketClient) {
-        updateProjectScreen(websocketClient.getProjectId(), websocketClient.getId(), new UpdateEvent(UpdateType.DISCONNECT));
+        updateProjectScreen(websocketClient.getProjectId(), websocketClient.getScreenCode(), new UpdateEvent(UpdateType.DISCONNECT));
     }
 
     /**

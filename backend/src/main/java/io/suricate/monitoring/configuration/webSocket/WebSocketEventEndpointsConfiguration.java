@@ -46,9 +46,9 @@ public class WebSocketEventEndpointsConfiguration {
     private static final int PROJECT_REGEX_GROUP = 1;
 
     /**
-     * Regex group for client id
+     * Regex group for screen code
      */
-    private static final int ID_REGEX_GROUP = 2;
+    private static final int SCREEN_CODE_REGEX_GROUP = 2;
 
     /**
      * The dashboard websocket service
@@ -79,8 +79,8 @@ public class WebSocketEventEndpointsConfiguration {
             Matcher matcher = pattern.matcher(simpDestination);
 
             if (matcher.find()){
-                WebsocketClient websocketClient = new WebsocketClient(matcher.group(PROJECT_REGEX_GROUP), stompHeaderAccessor.getSessionId(), matcher.group(ID_REGEX_GROUP));
-                LOGGER.debug("New Client {} with id {} for project {}", websocketClient.getSessionId(), websocketClient.getId(), websocketClient.getProjectId());
+                WebsocketClient websocketClient = new WebsocketClient(matcher.group(PROJECT_REGEX_GROUP), stompHeaderAccessor.getSessionId(), matcher.group(SCREEN_CODE_REGEX_GROUP));
+                LOGGER.debug("New Client {} with id {} for project {}", websocketClient.getSessionId(), websocketClient.getScreenCode(), websocketClient.getProjectId());
 
                 dashboardWebSocketService.addProjectClient(websocketClient.getProjectId(), websocketClient);
                 dashboardWebSocketService.addSessionClient(websocketClient.getSessionId(), websocketClient);
