@@ -29,6 +29,7 @@ import {AbstractHttpService} from '../../../shared/services/abstract-http.servic
 import {WSConfiguration} from '../../../shared/model/websocket/WSConfiguration';
 import {WebsocketService} from '../../../shared/services/websocket.service';
 import {Subscription} from 'rxjs/Subscription';
+import {NumberUtils} from '../../../shared/utils/NumberUtils';
 
 /**
  * Component that display a specific dashboard
@@ -39,6 +40,20 @@ import {Subscription} from 'rxjs/Subscription';
   styleUrls: ['./dashboard-detail.component.css']
 })
 export class DashboardDetailComponent implements OnInit, OnDestroy {
+
+  /**
+   * Define the min bound for the screen code random generation
+   *
+   * @type {number} The min bound
+   */
+  private readonly MIN_SCREEN_CODE_BOUND = 100000;
+
+  /**
+   * Define the max bound for the screen code random generation
+   *
+   * @type {number} The max bound
+   */
+  private readonly MAX_SCREEN_CODE_BOUND = 999999;
 
   /**
    * Used for keep the subscription of subjects/Obsevables open
@@ -63,6 +78,11 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
   websocketSubscriptions: Subscription[] = [];
 
   /**
+   * Screen code used for websocket communication as clientId
+   */
+  screenCode: number;
+
+  /**
    * constructor
    *
    * @param {ActivatedRoute} activatedRoute The activated route service
@@ -85,6 +105,10 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
     // init current dashboard
     this.subcribeToProjectSubject();
 
+    // Screen code generation
+    this.screenCode = NumberUtils.getRandomIntBetween(this.MIN_SCREEN_CODE_BOUND, this.MAX_SCREEN_CODE_BOUND);
+
+    // Global init from project
     this.activatedRoute.params.subscribe( params => {
       this.dashboardService
           .getOneById(params['id'])
@@ -137,9 +161,16 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
         .connect(websocketConfiguration)
         .subscribe(() => {
           const uniqueSubscription: Subscription = this.websocketService
-                                                       .subscribe(`/user/${project.token}-123/queue/unique`, this.handleUniqueScreenEvent);
+                                                       .subscribe(
+                                                           `/user/${project.token}-${this.screenCode}/queue/unique`,
+                                                           this.handleUniqueScreenEvent
+                                                       );
+
           const globalSubscription: Subscription = this.websocketService
-                                                       .subscribe(`/user/${project.token}/queue/live`, this.handleGlobalScreenEvent);
+                                                       .subscribe(
+                                                           `/user/${project.token}/queue/live`,
+                                                           this.handleGlobalScreenEvent,
+                                                       );
 
           this.websocketSubscriptions.push(uniqueSubscription);
           this.websocketSubscriptions.push(globalSubscription);
