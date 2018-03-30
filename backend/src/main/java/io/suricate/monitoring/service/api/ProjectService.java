@@ -238,6 +238,16 @@ public class ProjectService {
     }
 
     /**
+     * Method used for retrieve a project token from a project id
+     *
+     * @param projectId The project id
+     * @return The related token
+     */
+    public String getTokenByProjectId(final Long projectId) {
+        return projectRepository.getToken(projectId);
+    }
+
+    /**
      * Method used to update a project
      * @param project the project to update
      * @param newName the new name

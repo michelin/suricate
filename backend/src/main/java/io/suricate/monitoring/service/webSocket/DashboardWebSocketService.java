@@ -141,7 +141,7 @@ public class DashboardWebSocketService {
      * @param payload the payload content
      */
     public void updateGlobalScreensByProjectId(Long projectId, Object payload) {
-        //updateGlobalScreensByProjectToken(projectRepository.getToken(projectId), payload);
+        updateGlobalScreensByProjectToken(projectService.getTokenByProjectId(projectId), payload);
     }
 
     /**
