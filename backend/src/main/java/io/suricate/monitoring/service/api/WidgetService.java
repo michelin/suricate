@@ -400,7 +400,7 @@ public class WidgetService {
         }
         projectWidgetRepository.flush();
         // notify clients
-        dashboardWebsocketService.updateProjectScreen(projetToken, new UpdateEvent(UpdateType.POSITION));
+        dashboardWebsocketService.updateGlobalScreensByProjectToken(projetToken, new UpdateEvent(UpdateType.POSITION));
     }
 
     /**
@@ -414,7 +414,7 @@ public class WidgetService {
         projectWidgetRepository.deleteByProjectIdAndId(projectId, projectWidgetId);
         projectWidgetRepository.flush();
         // notify client
-        dashboardWebsocketService.updateProjectScreen(projectId, new UpdateEvent(UpdateType.GRID));
+        dashboardWebsocketService.updateGlobalScreensByProjectId(projectId, new UpdateEvent(UpdateType.GRID));
     }
 
     /**

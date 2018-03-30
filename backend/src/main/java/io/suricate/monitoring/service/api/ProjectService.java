@@ -232,7 +232,7 @@ public class ProjectService {
         widgetService.scheduleWidget(projectWidget.getId());
 
         // Update grid
-        dashboardWebsocketService.updateProjectScreen(projectWidget.getProject().getToken(),  new UpdateEvent(UpdateType.GRID));
+        dashboardWebsocketService.updateGlobalScreensByProjectToken(projectWidget.getProject().getToken(),  new UpdateEvent(UpdateType.GRID));
 
         return projectWidget;
     }
@@ -247,7 +247,7 @@ public class ProjectService {
         project.setName(newName);
         projectRepository.save(project);
         // Update grid
-        dashboardWebsocketService.updateProjectScreen(project.getToken(), new UpdateEvent(UpdateType.GRID));
+        dashboardWebsocketService.updateGlobalScreensByProjectToken(project.getToken(), new UpdateEvent(UpdateType.GRID));
     }
 
     /**
@@ -256,7 +256,7 @@ public class ProjectService {
      */
     public void deleteProject(Long id){
         // notify clients
-        dashboardWebsocketService.updateProjectScreen(id, new UpdateEvent(UpdateType.DISCONNECT));
+        dashboardWebsocketService.updateGlobalScreensByProjectId(id, new UpdateEvent(UpdateType.DISCONNECT));
         // delete project
         projectRepository.delete(id);
     }

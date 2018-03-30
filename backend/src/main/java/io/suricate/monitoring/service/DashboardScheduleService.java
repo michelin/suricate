@@ -80,7 +80,8 @@ public class DashboardScheduleService {
         // Notify the dashboard
         UpdateEvent event = new UpdateEvent(UpdateType.WIDGET);
         event.setContent(widgetService.getWidgetResponse(projectWidgetRepository.findOne(projetWidgetId)));
-        socketService.updateProjectScreen(projectId, event);
+
+        socketService.updateGlobalScreensByProjectId(projectId, event);
     }
 
     /**
