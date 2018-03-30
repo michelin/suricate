@@ -80,9 +80,9 @@ public class WebSocketEventEndpointsConfiguration {
 
             if (matcher.find()){
                 WebsocketClient websocketClient = new WebsocketClient(matcher.group(PROJECT_REGEX_GROUP), stompHeaderAccessor.getSessionId(), matcher.group(SCREEN_CODE_REGEX_GROUP));
-                LOGGER.debug("New Client {} with id {} for project {}", websocketClient.getSessionId(), websocketClient.getScreenCode(), websocketClient.getProjectId());
+                LOGGER.debug("New Client {} with id {} for project {}", websocketClient.getSessionId(), websocketClient.getScreenCode(), websocketClient.getProjectToken());
 
-                dashboardWebSocketService.addProjectClient(websocketClient.getProjectId(), websocketClient);
+                dashboardWebSocketService.addProjectClient(websocketClient.getProjectToken(), websocketClient);
                 dashboardWebSocketService.addSessionClient(websocketClient.getSessionId(), websocketClient);
             }
         }
@@ -99,7 +99,7 @@ public class WebSocketEventEndpointsConfiguration {
         WebsocketClient websocketClient = dashboardWebSocketService.removeSessionClient(stompHeaderAccessor.getSessionId());
 
         if (websocketClient != null) {
-            dashboardWebSocketService.removeProjectClient(websocketClient.getProjectId(), websocketClient);
+            dashboardWebSocketService.removeProjectClient(websocketClient.getProjectToken(), websocketClient);
         }
     }
 }

@@ -226,7 +226,7 @@ public class DashboardWebSocketService {
      * @param websocketClient the websocketClient to disconnect
      */
     public void disconnectClient(WebsocketClient websocketClient) {
-        updateUniqueScreen(websocketClient.getProjectId(), websocketClient.getScreenCode(), new UpdateEvent(UpdateType.DISCONNECT));
+        updateUniqueScreen(websocketClient.getProjectToken(), websocketClient.getScreenCode(), new UpdateEvent(UpdateType.DISCONNECT));
     }
 
     /**

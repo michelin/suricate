@@ -26,9 +26,9 @@ import lombok.*;
 public class WebsocketClient extends AbstractDto {
 
     /**
-     * The project id subscribed by the client
+     * The project token subscribed by the client
      */
-    private String projectId;
+    private String projectToken;
 
     /**
      * The websocket session id
@@ -42,12 +42,12 @@ public class WebsocketClient extends AbstractDto {
 
     /**
      * Default constructor using fields
-     * @param projectId the project id
+     * @param projectToken the project token
      * @param sessionId the session id
      * @param screenCode The screenCode
      */
-    public WebsocketClient(String projectId, String sessionId, String screenCode) {
-        this.projectId = projectId;
+    public WebsocketClient(String projectToken, String sessionId, String screenCode) {
+        this.projectToken = projectToken;
         this.sessionId = sessionId;
         this.screenCode = screenCode;
     }
