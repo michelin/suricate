@@ -37,7 +37,7 @@
     "ng2-validation": "^4.2.0",
     "ngx-color-picker": "^5.3.3",
     "rxjs": "^5.5.2",
-    "zone.js": "^0.8.14"
+    "zone.js": "^0.8.23"
   },
   "devDependencies": {
     "@angular/cli": "^1.7.1",
