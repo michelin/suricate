@@ -36,7 +36,7 @@
     "material-design-icons-iconfont": "^3.0.3",
     "ng2-validation": "^4.2.0",
     "ngx-color-picker": "^5.3.3",
-    "rxjs": "^5.5.2",
+    "rxjs": "^5.5.8",
     "zone.js": "^0.8.14"
   },
   "devDependencies": {
