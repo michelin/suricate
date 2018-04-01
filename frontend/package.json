@@ -48,7 +48,7 @@
     "@types/jasmine": "~2.5.53",
     "@types/jasminewd2": "~2.0.2",
     "@types/node": "~6.0.60",
-    "autoprefixer": "^6.5.3",
+    "autoprefixer": "^8.2.0",
     "circular-dependency-plugin": "^4.2.1",
     "codelyzer": "^4.1.0",
     "copy-webpack-plugin": "^4.1.1",
