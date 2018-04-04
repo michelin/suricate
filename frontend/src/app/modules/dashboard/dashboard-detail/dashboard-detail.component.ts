@@ -30,6 +30,7 @@ import {WSConfiguration} from '../../../shared/model/websocket/WSConfiguration';
 import {WebsocketService} from '../../../shared/services/websocket.service';
 import {Subscription} from 'rxjs/Subscription';
 import {NumberUtils} from '../../../shared/utils/NumberUtils';
+import {WSUpdateEvent} from '../../../shared/model/websocket/WSUpdateEvent';
 
 /**
  * Component that display a specific dashboard
@@ -182,21 +183,21 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
   /**
    * Manage the event sent by the server (destination : A specified screen)
    *
-   * @param {string} message The message received
+   * @param {WSUpdateEvent} updateEvent The message received
    * @param headers The headers of the websocket event
    */
-  handleUniqueScreenEvent(message: string, headers: any) {
-    console.log(`uniqueScreenEvent - ${message}`);
+  handleUniqueScreenEvent(updateEvent: WSUpdateEvent, headers: any) {
+    console.log(`uniqueScreenEvent - ${updateEvent}`);
   }
 
   /**
    * Manage the event sent by the server (destination : Every screen connected to this project)
    *
-   * @param {string} message The message received
+   * @param {WSUpdateEvent} updateEvent The message received
    * @param headers The headers of the websocket event
    */
-  handleGlobalScreenEvent(message: string, headers: any) {
-    console.log(`globalScreenEvent - ${message}`);
+  handleGlobalScreenEvent(updateEvent: WSUpdateEvent, headers: any) {
+    console.log(`globalScreenEvent - ${updateEvent}`);
   }
 
   unsubscribeToWebsockets() {
