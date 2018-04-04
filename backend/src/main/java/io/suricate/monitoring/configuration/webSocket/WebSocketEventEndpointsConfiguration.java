@@ -99,6 +99,7 @@ public class WebSocketEventEndpointsConfiguration {
         WebsocketClient websocketClient = dashboardWebSocketService.removeSessionClient(stompHeaderAccessor.getSessionId());
 
         if (websocketClient != null) {
+            LOGGER.debug("Disconnected Client {} with id {} for project {}", websocketClient.getSessionId(), websocketClient.getScreenCode(), websocketClient.getProjectToken());
             dashboardWebSocketService.removeProjectClient(websocketClient.getProjectToken(), websocketClient);
         }
     }

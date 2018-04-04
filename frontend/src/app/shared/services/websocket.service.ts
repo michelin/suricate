@@ -79,10 +79,7 @@ export class WebsocketService extends AbstractHttpService {
       Observable.throw(new Error('No connection found, connect your websocket before subscribe to an event'));
     }
 
-    const subscription: Subscription = this.stompService.subscribe(`${eventUrl}`, callbackFunction);
-    this.nbActiveSubscription += +1;
-
-    return subscription;
+    return this.stompService.subscribe(`${eventUrl}`, callbackFunction);
   }
 
   /**
@@ -92,20 +89,16 @@ export class WebsocketService extends AbstractHttpService {
    */
   unsubscribe(subscription: Subscription) {
     subscription.unsubscribe();
-    this.nbActiveSubscription -= +1;
-
-    // If we have no subscription we can disconnect the websocket
-    if (this.nbActiveSubscription === 0) {
-      this.disconnect();
-    }
   }
 
   /**
    * Handle the disconnection of the websocket
    */
   disconnect() {
-    this.stompService.disconnect().then(() => {
-      console.log( 'Connection closed' );
-    });
+    if (this.stompService.status === WebsocketService.WS_STATUS_CONNECTED) {
+      this.stompService.disconnect().then(() => {
+        console.log('Connection closed');
+      });
+    }
   }
 }

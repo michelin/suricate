@@ -105,15 +105,17 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
     // init current dashboard
     this.subcribeToProjectSubject();
 
-    // Screen code generation
-    this.screenCode = NumberUtils.getRandomIntBetween(this.MIN_SCREEN_CODE_BOUND, this.MAX_SCREEN_CODE_BOUND);
-
     // Global init from project
     this.activatedRoute.params.subscribe( params => {
       this.dashboardService
           .getOneById(params['id'])
           .subscribe(project => {
             this.initGridStackOptions(project);
+            // Unsubcribe every websockets if we have change of dashboard
+            this.unsubscribeToWebsockets();
+            // Screen code generation
+            this.screenCode = NumberUtils.getRandomIntBetween(this.MIN_SCREEN_CODE_BOUND, this.MAX_SCREEN_CODE_BOUND);
+            // Subscribe to the new dashboard
             this.createWebsocketConnection(project);
             this.dashboardService.currendDashbordSubject.next(project);
           });
@@ -195,6 +197,15 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    */
   handleGlobalScreenEvent(message: string, headers: any) {
     console.log(`globalScreenEvent - ${message}`);
+  }
+
+  unsubscribeToWebsockets() {
+    this.websocketSubscriptions.forEach( (websocketSubscription: Subscription, index: number) => {
+      this.websocketService.unsubscribe(websocketSubscription);
+      this.websocketSubscriptions.splice(index, 1);
+    });
+
+    this.websocketService.disconnect();
   }
 
   /**
@@ -289,8 +300,6 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.isAlive = false;
 
-    this.websocketSubscriptions.forEach( (websocketSubscription: Subscription) => {
-      this.websocketService.unsubscribe(websocketSubscription);
-    });
+    this.unsubscribeToWebsockets();
   }
 }
