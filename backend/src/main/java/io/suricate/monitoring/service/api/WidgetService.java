@@ -40,7 +40,7 @@ import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.repository.*;
 import io.suricate.monitoring.service.CacheService;
 import io.suricate.monitoring.service.SocketService;
-import io.suricate.monitoring.service.WidgetExecutor;
+import io.suricate.monitoring.service.nashorn.NashornWidgetExecutor;
 import io.suricate.monitoring.service.search.SearchService;
 import io.suricate.monitoring.utils.EntityUtils;
 import io.suricate.monitoring.utils.JavascriptUtils;
@@ -368,7 +368,7 @@ public class WidgetService {
      */
     @Transactional
     public void removeWidget(Long projectId, Long projectWidgetId){
-        ctx.getBean(WidgetExecutor.class).cancelWidgetInstance(projectWidgetId);
+        ctx.getBean(NashornWidgetExecutor.class).cancelWidgetInstance(projectWidgetId);
         projectWidgetRepository.deleteByProjectIdAndId(projectId, projectWidgetId);
         projectWidgetRepository.flush();
         // notify client
@@ -442,7 +442,7 @@ public class WidgetService {
      */
     @Transactional
     public void scheduleWidget(Long projectWidgetId){
-        ctx.getBean(WidgetExecutor.class).cancelAndSchedule(projectWidgetRepository.getRequestByProjectWidgetId(projectWidgetId));
+        ctx.getBean(NashornWidgetExecutor.class).cancelAndSchedule(projectWidgetRepository.getRequestByProjectWidgetId(projectWidgetId));
     }
 
     /**

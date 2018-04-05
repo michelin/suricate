@@ -1,4 +1,4 @@
-package io.suricate.monitoring.service.nashorn;
+package io.suricate.monitoring.service.nashorn.task;
 
 import io.suricate.monitoring.model.dto.error.FatalError;
 import io.suricate.monitoring.model.dto.error.RemoteError;
@@ -11,7 +11,7 @@ import org.junit.Test;
 
 import java.net.ConnectException;
 
-public class WidgetJobTest {
+public class NashornWidgetExecuteAsyncTaskTest {
 
 //    @Test
 //    public void testBadScript() throws Exception {
@@ -21,7 +21,7 @@ public class WidgetJobTest {
 //        request.setProjectId(0L);
 //        request.setScript("fdsqdfs");
 //
-//        WidgetJob widgetJob = new WidgetJob(request,null);
+//        NashornWidgetExecuteAsyncTask widgetJob = new NashornWidgetExecuteAsyncTask(request,null);
 //        NashornResponse response = widgetJob.call();
 //
 //        Assert.assertEquals(response.isFatal(), true);
@@ -36,7 +36,7 @@ public class WidgetJobTest {
 //        request.setProjectId(0L);
 //        request.setScript("function test() {}");
 //
-//        WidgetJob widgetJob = new WidgetJob(request,null);
+//        NashornWidgetExecuteAsyncTask widgetJob = new NashornWidgetExecuteAsyncTask(request,null);
 //        NashornResponse response = widgetJob.call();
 //
 //        Assert.assertEquals(response.isFatal(), true);
@@ -52,7 +52,7 @@ public class WidgetJobTest {
 //        request.setProjectId(10L);
 //        request.setScript("function run () {}");
 //
-//        WidgetJob widgetJob = new WidgetJob(request,null);
+//        NashornWidgetExecuteAsyncTask widgetJob = new NashornWidgetExecuteAsyncTask(request,null);
 //        NashornResponse response = widgetJob.call();
 //
 //
@@ -84,7 +84,7 @@ public class WidgetJobTest {
 //        request.setProjectId(10L);
 //        request.setScript("function run () { return '{}'}");
 //
-//        WidgetJob widgetJob = new WidgetJob(request,null);
+//        NashornWidgetExecuteAsyncTask widgetJob = new NashornWidgetExecuteAsyncTask(request,null);
 //        NashornResponse response = widgetJob.call();
 //
 //
@@ -105,7 +105,7 @@ public class WidgetJobTest {
 //        request.setProjectId(10L);
 //        request.setScript("function run () { print('ok'); return '{}'}");
 //
-//        WidgetJob widgetJob = new WidgetJob(request,null);
+//        NashornWidgetExecuteAsyncTask widgetJob = new NashornWidgetExecuteAsyncTask(request,null);
 //        NashornResponse response = widgetJob.call();
 //
 //
@@ -126,7 +126,7 @@ public class WidgetJobTest {
 //        request.setProjectId(10L);
 //        request.setScript("function run () { var file = Java.type('java.io.File'); file.listRoots(); return '{}'}");
 //
-//        WidgetJob widgetJob = new WidgetJob(request,null);
+//        NashornWidgetExecuteAsyncTask widgetJob = new NashornWidgetExecuteAsyncTask(request,null);
 //        NashornResponse response = widgetJob.call();
 //
 //        Assert.assertNotNull(response.getError());
@@ -146,7 +146,7 @@ public class WidgetJobTest {
 //        request.setProjectId(10L);
 //        request.setScript("function run () { print(Packages.btoa('test')); return '{}'}");
 //
-//        WidgetJob widgetJob = new WidgetJob(request,null);
+//        NashornWidgetExecuteAsyncTask widgetJob = new NashornWidgetExecuteAsyncTask(request,null);
 //        NashornResponse response = widgetJob.call();
 //
 //        Assert.assertNull(response.getError());
@@ -166,7 +166,7 @@ public class WidgetJobTest {
 //        request.setProjectId(10L);
 //        request.setScript("function run () { Packages.call(\"https://localhost/rzer/\", null, null, null); return '{}'}");
 //
-//        WidgetJob widgetJob = new WidgetJob(request,null);
+//        NashornWidgetExecuteAsyncTask widgetJob = new NashornWidgetExecuteAsyncTask(request,null);
 //        NashornResponse response = widgetJob.call();
 //
 //        Assert.assertNotNull(response.getError());
@@ -186,7 +186,7 @@ public class WidgetJobTest {
 //        request.setProjectId(10L);
 //        request.setScript("function run () { Packages.throwError(); return '{}'}");
 //
-//        WidgetJob widgetJob = new WidgetJob(request,null);
+//        NashornWidgetExecuteAsyncTask widgetJob = new NashornWidgetExecuteAsyncTask(request,null);
 //        NashornResponse response = widgetJob.call();
 //
 //        Assert.assertNotNull(response.getError());
@@ -218,7 +218,7 @@ public class WidgetJobTest {
 //        request.setProjectId(10L);
 //        request.setScript("function run () { Packages.throwTimeout(); return '{}'}");
 //
-//        WidgetJob widgetJob = new WidgetJob(request,null);
+//        NashornWidgetExecuteAsyncTask widgetJob = new NashornWidgetExecuteAsyncTask(request,null);
 //        NashornResponse response = widgetJob.call();
 //
 //        Assert.assertNotNull(response.getError());
@@ -260,7 +260,7 @@ public class WidgetJobTest {
 //        request.setProperties("SURI_SECRET="+encryptor.encrypt(encryptedString));
 //        request.setScript("//SURI_SECRET::title::SECRET::Placeholder\nfunction run () { print(SURI_SECRET); return '{}'}");
 //
-//        WidgetJob widgetJob = new WidgetJob(request, encryptor);
+//        NashornWidgetExecuteAsyncTask widgetJob = new NashornWidgetExecuteAsyncTask(request, encryptor);
 //        NashornResponse response = widgetJob.call();
 //
 //        Assert.assertNull(response.getError());
@@ -289,7 +289,7 @@ public class WidgetJobTest {
 //        request.setProperties("SURI_SECRET=A054578BC");
 //        request.setScript("//SURI_SECRET::title::SECRET::Placeholder\nfunction run () { print(SURI_SECRET); return '{}'}");
 //
-//        WidgetJob widgetJob = new WidgetJob(request, encryptor);
+//        NashornWidgetExecuteAsyncTask widgetJob = new NashornWidgetExecuteAsyncTask(request, encryptor);
 //        NashornResponse response = widgetJob.call();
 //
 //        Assert.assertNotNull(response.getError());
@@ -300,7 +300,7 @@ public class WidgetJobTest {
 //    @Test
 //    public void testIsFatalError() throws Exception {
 //        NashornRequest nashornRequest = new NashornRequest();
-//        WidgetJob widgetJob = new WidgetJob(nashornRequest, null);
+//        NashornWidgetExecuteAsyncTask widgetJob = new NashornWidgetExecuteAsyncTask(nashornRequest, null);
 //        nashornRequest.setAlreadySuccess(false);
 //
 //        Assert.assertEquals(true, widgetJob.isFatalError(new Exception(""),new Exception("")));
@@ -322,7 +322,7 @@ public class WidgetJobTest {
 //    @Test
 //    public void testPrettiFy() throws Exception {
 //        NashornRequest nashornRequest = new NashornRequest();
-//        WidgetJob widgetJob = new WidgetJob(nashornRequest, null);
+//        NashornWidgetExecuteAsyncTask widgetJob = new NashornWidgetExecuteAsyncTask(nashornRequest, null);
 //        nashornRequest.setAlreadySuccess(false);
 //
 //        Assert.assertEquals("", widgetJob.prettify("ExecutionException: java.lang.FatalError:"));

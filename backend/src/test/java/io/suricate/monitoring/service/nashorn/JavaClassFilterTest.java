@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import java.io.File;
 
-public class ClassFilterTest {
+public class JavaClassFilterTest {
 
 
     private JavaClassFilter classFilter = new JavaClassFilter();

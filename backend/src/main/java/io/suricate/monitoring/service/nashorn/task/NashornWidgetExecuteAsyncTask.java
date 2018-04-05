@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.service.nashorn;
+package io.suricate.monitoring.service.nashorn.task;
 
 import io.suricate.monitoring.model.dto.error.RemoteError;
 import io.suricate.monitoring.model.dto.error.RequestException;
@@ -23,6 +23,7 @@ import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
 import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
 import io.suricate.monitoring.model.dto.widget.WidgetVariableResponse;
 import io.suricate.monitoring.model.enums.WidgetVariableType;
+import io.suricate.monitoring.service.nashorn.JavaClassFilter;
 import io.suricate.monitoring.utils.JavascriptUtils;
 import io.suricate.monitoring.utils.JsonUtils;
 import io.suricate.monitoring.utils.PropertiesUtils;
@@ -43,18 +44,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-public class WidgetJob implements Callable<NashornResponse>{
+public class NashornWidgetExecuteAsyncTask implements Callable<NashornResponse>{
 
     /**
      * Class logger
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger(WidgetJob.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(NashornWidgetExecuteAsyncTask.class);
 
     private final NashornRequest nashornRequest;
 
     private final StringEncryptor stringEncryptor;
 
-    public WidgetJob(NashornRequest nashornRequest, StringEncryptor stringEncryptor) {
+    public NashornWidgetExecuteAsyncTask(NashornRequest nashornRequest, StringEncryptor stringEncryptor) {
         this.nashornRequest = nashornRequest;
         this.stringEncryptor = stringEncryptor;
     }

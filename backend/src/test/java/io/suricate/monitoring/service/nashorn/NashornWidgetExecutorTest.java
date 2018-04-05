@@ -1,10 +1,11 @@
-package io.suricate.monitoring.service;
+package io.suricate.monitoring.service.nashorn;
 
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
 import io.suricate.monitoring.repository.ProjectRepository;
 import io.suricate.monitoring.repository.ProjectWidgetRepository;
 import io.suricate.monitoring.repository.WidgetRepository;
+import io.suricate.monitoring.service.nashorn.NashornWidgetExecutor;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -19,10 +20,10 @@ import static com.google.common.truth.Truth.assertThat;
 //@SpringBootTest
 //@ActiveProfiles("test")
 //@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class WidgetExecutorTest {
+public class NashornWidgetExecutorTest {
 
     @Autowired
-    WidgetExecutor widgetExecutor;
+    NashornWidgetExecutor nashornWidgetExecutor;
 
     @Autowired
     WidgetRepository widgetRepository;

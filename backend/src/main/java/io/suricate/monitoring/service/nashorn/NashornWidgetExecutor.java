@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.service;
+package io.suricate.monitoring.service.nashorn;
 
 import io.suricate.monitoring.model.entity.Configuration;
 import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
 import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
-import io.suricate.monitoring.repository.ConfigurationRepository;
+import io.suricate.monitoring.service.Schedulable;
 import io.suricate.monitoring.service.api.ConfigurationService;
 import io.suricate.monitoring.service.api.ProjectWidgetService;
-import io.suricate.monitoring.service.nashorn.NashornService;
-import io.suricate.monitoring.service.nashorn.WidgetJob;
+import io.suricate.monitoring.service.nashorn.task.NashornResultAsyncTask;
+import io.suricate.monitoring.service.nashorn.task.NashornWidgetExecuteAsyncTask;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -44,12 +44,12 @@ import java.util.Map;
 import java.util.concurrent.*;
 
 @Service
-public class WidgetExecutor implements Schedulable{
+public class NashornWidgetExecutor implements Schedulable {
 
     /**
      * Class logger
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger(WidgetExecutor.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(NashornWidgetExecutor.class.getName());
 
     /**
      * The number of executor
@@ -88,7 +88,7 @@ public class WidgetExecutor implements Schedulable{
     private StringEncryptor stringEncryptor;
 
 
-    public WidgetExecutor(final ProjectWidgetService projectWidgetService, final NashornService nashornService, final ConfigurationService configurationService) {
+    public NashornWidgetExecutor(final ProjectWidgetService projectWidgetService, final NashornService nashornService, final ConfigurationService configurationService) {
         this.projectWidgetService = projectWidgetService;
         this.nashornService = nashornService;
         this.configurationService = configurationService;
@@ -175,13 +175,13 @@ public class WidgetExecutor implements Schedulable{
         addGlobalConfiguration(nashornRequest);
 
         // Create scheduled future
-        ScheduledFuture<NashornResponse> future = scheduledExecutorService.schedule(new WidgetJob(nashornRequest, stringEncryptor), delay, TimeUnit.SECONDS);
+        ScheduledFuture<NashornResponse> future = scheduledExecutorService.schedule(new NashornWidgetExecuteAsyncTask(nashornRequest, stringEncryptor), delay, TimeUnit.SECONDS);
 
         // Create task
-        ResultTask resultTask = ctx.getBean(ResultTask.class, future, nashornRequest, this);
+        NashornResultAsyncTask nashornResultAsyncTask = ctx.getBean(NashornResultAsyncTask.class, future, nashornRequest, this);
 
         // future
-        ScheduledFuture<Void> futureResult = scheduledExecutorServiceFuture.schedule(resultTask, delay, TimeUnit.SECONDS);
+        ScheduledFuture<Void> futureResult = scheduledExecutorServiceFuture.schedule(nashornResultAsyncTask, delay, TimeUnit.SECONDS);
 
         // Update job
         jobs.put(nashornRequest.getProjectWidgetId(),
