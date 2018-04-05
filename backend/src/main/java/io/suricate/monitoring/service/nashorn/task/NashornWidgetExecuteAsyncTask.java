@@ -44,6 +44,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
+/**
+ * Class used for execute a widget project passed via nashorn request
+ */
 public class NashornWidgetExecuteAsyncTask implements Callable<NashornResponse>{
 
     /**
@@ -51,15 +54,33 @@ public class NashornWidgetExecuteAsyncTask implements Callable<NashornResponse>{
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(NashornWidgetExecuteAsyncTask.class);
 
+    /**
+     * The nashorn request to execute
+     */
     private final NashornRequest nashornRequest;
 
+    /**
+     * The string encyptor used for decrypt "SECRET" properties
+     */
     private final StringEncryptor stringEncryptor;
 
+    /**
+     * Constructor
+     *
+     * @param nashornRequest The nashorn request
+     * @param stringEncryptor The string encryptor bean
+     */
     public NashornWidgetExecuteAsyncTask(NashornRequest nashornRequest, StringEncryptor stringEncryptor) {
         this.nashornRequest = nashornRequest;
         this.stringEncryptor = stringEncryptor;
     }
 
+    /**
+     * Method called by the scheduler
+     *
+     * @return The response from nashorn execution
+     * @throws Exception Every uncaught execeptions
+     */
     @Override
     public NashornResponse call() throws Exception {
         NashornResponse ret = new NashornResponse();
@@ -69,17 +90,19 @@ public class NashornWidgetExecuteAsyncTask implements Callable<NashornResponse>{
             // restrict some java class
             ScriptEngine engine = factory.getScriptEngine(new JavaClassFilter());
 
-            // prepare properties
+            // Get properties from widget project backend_config
             Map<String,String> mapProperties = PropertiesUtils.getMap(nashornRequest.getProperties());
+            // Decrypt SECRET properties
             decryptProperties(mapProperties);
 
+            // Populate properties in the engine
             for (Map.Entry<String,String> entry : mapProperties.entrySet()) {
                 engine.getBindings(ScriptContext.ENGINE_SCOPE).put(entry.getKey().toUpperCase(), entry.getValue());
             }
-            // add param
+            // add the data of the previous execution
             engine.getBindings(ScriptContext.ENGINE_SCOPE).put(JavascriptUtils.INTERNAL_PREVIOUS_VARIABLE, nashornRequest.getPreviousData());
 
-            // add instanceid
+            // add the project widget id (id of the widget instance)
             engine.getBindings(ScriptContext.ENGINE_SCOPE).put(JavascriptUtils.INSTANCE_ID_VARIABLE, nashornRequest.getProjectWidgetId());
 
             // add output buffer
