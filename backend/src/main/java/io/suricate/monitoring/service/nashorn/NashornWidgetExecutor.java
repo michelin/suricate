@@ -16,13 +16,16 @@
 
 package io.suricate.monitoring.service.nashorn;
 
+import io.suricate.monitoring.model.dto.widget.WidgetVariableResponse;
 import io.suricate.monitoring.model.entity.Configuration;
+import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
 import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
 import io.suricate.monitoring.service.Schedulable;
 import io.suricate.monitoring.service.api.ConfigurationService;
 import io.suricate.monitoring.service.api.ProjectWidgetService;
+import io.suricate.monitoring.service.api.WidgetService;
 import io.suricate.monitoring.service.nashorn.task.NashornResultAsyncTask;
 import io.suricate.monitoring.service.nashorn.task.NashornWidgetExecuteAsyncTask;
 import org.apache.commons.lang3.RandomUtils;
@@ -79,19 +82,20 @@ public class NashornWidgetExecutor implements Schedulable {
     private ProjectWidgetService projectWidgetService;
     private NashornService nashornService;
     private ConfigurationService configurationService;
-
-    @Autowired
     private ApplicationContext ctx;
-
-    @Autowired
-    @Qualifier("jasyptStringEncryptor")
     private StringEncryptor stringEncryptor;
 
-
-    public NashornWidgetExecutor(final ProjectWidgetService projectWidgetService, final NashornService nashornService, final ConfigurationService configurationService) {
+    @Autowired
+    public NashornWidgetExecutor(final ApplicationContext applicationContext,
+                                 final ProjectWidgetService projectWidgetService,
+                                 final NashornService nashornService,
+                                 final ConfigurationService configurationService,
+                                 @Qualifier("jasyptStringEncryptor") final StringEncryptor stringEncryptor) {
+        this.ctx = applicationContext;
         this.projectWidgetService = projectWidgetService;
         this.nashornService = nashornService;
         this.configurationService = configurationService;
+        this.stringEncryptor = stringEncryptor;
     }
 
     /**
@@ -150,7 +154,9 @@ public class NashornWidgetExecutor implements Schedulable {
         if (nashornRequest == null){
             return;
         }
+        // Get the beans inside schedule
         ProjectWidgetService projectWidgetService = ctx.getBean(ProjectWidgetService.class);
+        WidgetService widgetService = ctx.getBean(WidgetService.class);
 
         if(!nashornService.isNashornRequestExecutable(nashornRequest)) {
             projectWidgetService.updateState(WidgetState.STOPPED, nashornRequest.getProjectWidgetId(), new Date());
@@ -174,13 +180,14 @@ public class NashornWidgetExecutor implements Schedulable {
         // Add Global application config
         addGlobalConfiguration(nashornRequest);
 
-        // Create scheduled future
-        ScheduledFuture<NashornResponse> future = scheduledExecutorService.schedule(new NashornWidgetExecuteAsyncTask(nashornRequest, stringEncryptor), delay, TimeUnit.SECONDS);
+        ProjectWidget projectWidget = projectWidgetService.getOne(nashornRequest.getProjectWidgetId());
+        List<WidgetVariableResponse> widgetVariableResponses = widgetService.getWidgetVariables(projectWidget.getWidget());
 
-        // Create task
+        // Create scheduled future task
+        ScheduledFuture<NashornResponse> future = scheduledExecutorService.schedule(new NashornWidgetExecuteAsyncTask(nashornRequest, stringEncryptor, widgetVariableResponses), delay, TimeUnit.SECONDS);
+
+        // Create result future task
         NashornResultAsyncTask nashornResultAsyncTask = ctx.getBean(NashornResultAsyncTask.class, future, nashornRequest, this);
-
-        // future
         ScheduledFuture<Void> futureResult = scheduledExecutorServiceFuture.schedule(nashornResultAsyncTask, delay, TimeUnit.SECONDS);
 
         // Update job

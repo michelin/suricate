@@ -113,7 +113,7 @@ public class NashornResultAsyncTask implements Callable<Void>{
         } catch (CancellationException ce) {
             LOGGER.debug("Widget instance {} execution canceled ({}) - {}", request.getProjectWidgetId(), future.toString(), ce.getMessage(), ce);
         } catch (Exception e) {
-            LOGGER.error("Error {} for widget instance:{}",ExceptionUtils.getMessage(e), request.getProjectWidgetId());
+            LOGGER.error("Error {} for widget instance:{}",ExceptionUtils.getMessage(e), request.getProjectWidgetId(), e);
             future.cancel(true);
             try {
                 dashboardScheduleService.updateLogException(e, request.getProjectWidgetId(), request.getProjectId());
