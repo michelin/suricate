@@ -14,15 +14,19 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.service.nashorn;
+package io.suricate.monitoring.service.nashorn.task;
 
 import io.suricate.monitoring.model.dto.error.RemoteError;
 import io.suricate.monitoring.model.dto.error.RequestException;
+import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.enums.NashornErrorTypeEnum;
 import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
 import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
 import io.suricate.monitoring.model.dto.widget.WidgetVariableResponse;
 import io.suricate.monitoring.model.enums.WidgetVariableType;
+import io.suricate.monitoring.service.api.ProjectWidgetService;
+import io.suricate.monitoring.service.api.WidgetService;
+import io.suricate.monitoring.service.nashorn.JavaClassFilter;
 import io.suricate.monitoring.utils.JavascriptUtils;
 import io.suricate.monitoring.utils.JsonUtils;
 import io.suricate.monitoring.utils.PropertiesUtils;
@@ -33,6 +37,7 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.jasypt.encryption.StringEncryptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.script.*;
 import java.io.StringWriter;
@@ -43,22 +48,52 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-public class WidgetJob implements Callable<NashornResponse>{
+/**
+ * Class used for execute a widget project passed via nashorn request
+ */
+public class NashornWidgetExecuteAsyncTask implements Callable<NashornResponse>{
 
     /**
      * Class logger
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger(WidgetJob.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(NashornWidgetExecuteAsyncTask.class);
 
+    /**
+     * The nashorn request to execute
+     */
     private final NashornRequest nashornRequest;
 
+    /**
+     * The string encyptor used for decrypt "SECRET" properties
+     */
     private final StringEncryptor stringEncryptor;
 
-    public WidgetJob(NashornRequest nashornRequest, StringEncryptor stringEncryptor) {
+    /**
+     * The list of widget variable responses
+     */
+    private final List<WidgetVariableResponse> widgetVariableResponses;
+
+    /**
+     * Constructor
+     *
+     * @param nashornRequest The nashorn request
+     * @param stringEncryptor The string encryptor bean
+     * @param widgetVariableResponses The widget variables
+     */
+    public NashornWidgetExecuteAsyncTask(NashornRequest nashornRequest,
+                                         StringEncryptor stringEncryptor,
+                                         List<WidgetVariableResponse> widgetVariableResponses) {
         this.nashornRequest = nashornRequest;
         this.stringEncryptor = stringEncryptor;
+        this.widgetVariableResponses = widgetVariableResponses;
     }
 
+    /**
+     * Method called by the scheduler
+     *
+     * @return The response from nashorn execution
+     * @throws Exception Every uncaught execeptions
+     */
     @Override
     public NashornResponse call() throws Exception {
         NashornResponse ret = new NashornResponse();
@@ -68,17 +103,21 @@ public class WidgetJob implements Callable<NashornResponse>{
             // restrict some java class
             ScriptEngine engine = factory.getScriptEngine(new JavaClassFilter());
 
-            // prepare properties
+            // Get properties from widget project backend_config
             Map<String,String> mapProperties = PropertiesUtils.getMap(nashornRequest.getProperties());
-            decryptProperties(mapProperties);
+            // Decrypt SECRET properties
+            decryptProperties(mapProperties, widgetVariableResponses);
+            // Put unset not required properties
+            insertUnsetOptionalProperties(mapProperties, widgetVariableResponses);
 
+            // Populate properties in the engine
             for (Map.Entry<String,String> entry : mapProperties.entrySet()) {
                 engine.getBindings(ScriptContext.ENGINE_SCOPE).put(entry.getKey().toUpperCase(), entry.getValue());
             }
-            // add param
+            // add the data of the previous execution
             engine.getBindings(ScriptContext.ENGINE_SCOPE).put(JavascriptUtils.INTERNAL_PREVIOUS_VARIABLE, nashornRequest.getPreviousData());
 
-            // add instanceid
+            // add the project widget id (id of the widget instance)
             engine.getBindings(ScriptContext.ENGINE_SCOPE).put(JavascriptUtils.INSTANCE_ID_VARIABLE, nashornRequest.getProjectWidgetId());
 
             // add output buffer
@@ -127,21 +166,38 @@ public class WidgetJob implements Callable<NashornResponse>{
 
     /**
      * Method used to decypt properties
+     *
      * @param mapProperties the properties map
+     * @param widgetVariableResponses The list of variables for a widget
      */
-    private void decryptProperties(Map<String, String> mapProperties) {
-        List<WidgetVariableResponse> widgetVariableResponses = JavascriptUtils.extractVariables(nashornRequest.getScript());
-
-        // decrypt encrypted property
+    private void decryptProperties(Map<String, String> mapProperties, List<WidgetVariableResponse> widgetVariableResponses) {
         if (widgetVariableResponses != null) {
             for (WidgetVariableResponse widgetVariableResponse : widgetVariableResponses){
+                // decrypt encrypted property
                 if (WidgetVariableType.SECRET == widgetVariableResponse.getType()){
                     mapProperties.put(widgetVariableResponse.getName(), stringEncryptor.decrypt(mapProperties.get(widgetVariableResponse.getName())));
-                } else if (!mapProperties.containsKey(widgetVariableResponse.getName()) && !widgetVariableResponse.isRequired()){ // Set optional as null
+                }
+            }
+        }
+
+    }
+
+    /**
+     * Set the unset variables in the map properties
+     * 
+     * @param mapProperties The map properties to fill
+     * @param widgetVariableResponses The list of widget responses
+     */
+    private void insertUnsetOptionalProperties(Map<String, String> mapProperties, List<WidgetVariableResponse> widgetVariableResponses) {
+        if (widgetVariableResponses != null) {
+            for (WidgetVariableResponse widgetVariableResponse : widgetVariableResponses) {
+                // Set unset optional properties as null
+                if (!mapProperties.containsKey(widgetVariableResponse.getName()) && !widgetVariableResponse.isRequired()){
                     mapProperties.put(widgetVariableResponse.getName(), null);
                 }
             }
         }
+        
     }
 
 

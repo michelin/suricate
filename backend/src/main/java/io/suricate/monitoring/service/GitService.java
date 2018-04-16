@@ -21,6 +21,7 @@ import io.suricate.monitoring.model.entity.widget.Category;
 import io.suricate.monitoring.model.entity.Library;
 import io.suricate.monitoring.service.api.LibraryService;
 import io.suricate.monitoring.service.api.WidgetService;
+import io.suricate.monitoring.service.nashorn.NashornWidgetExecutor;
 import io.suricate.monitoring.utils.WidgetUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -57,21 +58,21 @@ public class GitService {
 
     private final SocketService socketService;
 
-    private final WidgetExecutor widgetExecutor;
+    private final NashornWidgetExecutor nashornWidgetExecutor;
 
     /**
      * Contructor using fields
      * @param widgetService widget service
      * @param libraryService library service
      * @param socketService socket service
-     * @param widgetExecutor widget executor
+     * @param nashornWidgetExecutor widget executor
      */
     @Autowired
-    public GitService(WidgetService widgetService, LibraryService libraryService, SocketService socketService, WidgetExecutor widgetExecutor, ApplicationProperties applicationProperties) {
+    public GitService(WidgetService widgetService, LibraryService libraryService, SocketService socketService, NashornWidgetExecutor nashornWidgetExecutor, ApplicationProperties applicationProperties) {
         this.widgetService = widgetService;
         this.libraryService = libraryService;
         this.socketService = socketService;
-        this.widgetExecutor = widgetExecutor;
+        this.nashornWidgetExecutor = nashornWidgetExecutor;
         this.applicationProperties = applicationProperties;
     }
 
@@ -157,7 +158,7 @@ public class GitService {
             if (StringUtils.isBlank(applicationProperties.widgets.local.folderPath)) {
                 FileUtils.deleteQuietly(folder);
             }
-            widgetExecutor.initScheduler();
+            nashornWidgetExecutor.initScheduler();
             socketService.reloadAllConnectedDashboard();
         }
     }
