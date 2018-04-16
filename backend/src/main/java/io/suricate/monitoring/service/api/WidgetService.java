@@ -23,24 +23,18 @@ import com.github.mustachejava.MustacheException;
 import com.github.mustachejava.MustacheFactory;
 import io.suricate.monitoring.controllers.api.error.exception.ApiException;
 import io.suricate.monitoring.model.dto.UpdateEvent;
+import io.suricate.monitoring.model.dto.widget.*;
 import io.suricate.monitoring.model.entity.*;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.entity.widget.Category;
 import io.suricate.monitoring.model.entity.widget.Widget;
 import io.suricate.monitoring.model.entity.widget.WidgetParam;
 import io.suricate.monitoring.model.entity.widget.WidgetParamValue;
-import io.suricate.monitoring.model.enums.ApiErrorEnum;
-import io.suricate.monitoring.model.enums.UpdateType;
-import io.suricate.monitoring.model.dto.widget.WidgetParamResponse;
-import io.suricate.monitoring.model.dto.widget.WidgetParamValueResponse;
-import io.suricate.monitoring.model.dto.widget.WidgetPosition;
-import io.suricate.monitoring.model.dto.widget.WidgetResponse;
-import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
-import io.suricate.monitoring.model.enums.WidgetState;
+import io.suricate.monitoring.model.enums.*;
 import io.suricate.monitoring.repository.*;
 import io.suricate.monitoring.service.CacheService;
 import io.suricate.monitoring.service.SocketService;
-import io.suricate.monitoring.service.WidgetExecutor;
+import io.suricate.monitoring.service.nashorn.NashornWidgetExecutor;
 import io.suricate.monitoring.service.search.SearchService;
 import io.suricate.monitoring.utils.EntityUtils;
 import io.suricate.monitoring.utils.JavascriptUtils;
@@ -59,6 +53,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Widget service
@@ -230,9 +225,54 @@ public class WidgetService {
         return transformIntoDTO(widgetRepository.findAllByCategory_IdOrderByNameAsc(categoryId));
     }
 
+    /**
+     * Get the list of the variables for a widget
+     *
+     * @param widget The widget
+     * @return The list of variables related
+     */
+    public List<WidgetVariableResponse> getWidgetVariables(final Widget widget) {
+        List<WidgetVariableResponse> widgetVariableResponses = new ArrayList<>();
 
+        for(WidgetParam widgetParam: widget.getWidgetParams()) {
+            WidgetVariableResponse widgetVariableResponse = new WidgetVariableResponse();
+            widgetVariableResponse.setName(widgetParam.getName());
+            widgetVariableResponse.setDescription(widgetParam.getDescription());
+            widgetVariableResponse.setType(widgetParam.getType());
 
+            if(widgetVariableResponse.getType() != null) {
+                switch(widgetVariableResponse.getType()) {
+                    case COMBO:
+                        widgetVariableResponse.setValues(getWidgetParamValuesAsMap(widgetParam.getPossibleValuesMap()));
+                        break;
 
+                    case MULTIPLE:
+                        widgetVariableResponse.setValues(getWidgetParamValuesAsMap(widgetParam.getPossibleValuesMap()));
+                        break;
+
+                    default:
+                        widgetVariableResponse.setData(StringUtils.trimToNull(widgetParam.getDefaultValue()));
+                        break;
+                }
+            }
+
+            widgetVariableResponses.add(widgetVariableResponse);
+        }
+
+        return widgetVariableResponses;
+    }
+
+    /**
+     * Get the widget param list as a Map
+     *
+     * @param widgetParamValues The list of the widget param values
+     * @return The list as a Map<String, String>
+     */
+    public Map<String, String> getWidgetParamValuesAsMap(List<WidgetParamValue> widgetParamValues) {
+        return widgetParamValues
+            .stream()
+            .collect(Collectors.toMap(WidgetParamValue::getJsKey, WidgetParamValue::getValue));
+    }
 
 
 
@@ -368,7 +408,7 @@ public class WidgetService {
      */
     @Transactional
     public void removeWidget(Long projectId, Long projectWidgetId){
-        ctx.getBean(WidgetExecutor.class).cancelWidgetInstance(projectWidgetId);
+        ctx.getBean(NashornWidgetExecutor.class).cancelWidgetInstance(projectWidgetId);
         projectWidgetRepository.deleteByProjectIdAndId(projectId, projectWidgetId);
         projectWidgetRepository.flush();
         // notify client
@@ -442,7 +482,7 @@ public class WidgetService {
      */
     @Transactional
     public void scheduleWidget(Long projectWidgetId){
-        ctx.getBean(WidgetExecutor.class).cancelAndSchedule(projectWidgetRepository.getRequestByProjectWidgetId(projectWidgetId));
+        ctx.getBean(NashornWidgetExecutor.class).cancelAndSchedule(projectWidgetRepository.getRequestByProjectWidgetId(projectWidgetId));
     }
 
     /**

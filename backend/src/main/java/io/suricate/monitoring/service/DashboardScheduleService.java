@@ -33,12 +33,12 @@ import javax.transaction.Transactional;
 import java.util.Date;
 
 @Service
-public class ScheduleService {
+public class DashboardScheduleService {
 
     /**
      * Class logger
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger(ScheduleService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DashboardScheduleService.class);
 
     @Autowired
     private ProjectWidgetRepository projectWidgetRepository;

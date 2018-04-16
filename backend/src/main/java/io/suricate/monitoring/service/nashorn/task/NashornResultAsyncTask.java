@@ -14,10 +14,12 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.service;
+package io.suricate.monitoring.service.nashorn.task;
 
 import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
 import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
+import io.suricate.monitoring.service.Schedulable;
+import io.suricate.monitoring.service.DashboardScheduleService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,12 +38,12 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 @Scope(value="prototype")
-public class ResultTask implements Callable<Void>{
+public class NashornResultAsyncTask implements Callable<Void>{
 
     /**
      * Class logger
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger(ResultTask.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(NashornResultAsyncTask.class.getName());
 
     /**
      * Task timeout 60 seconds
@@ -64,7 +66,7 @@ public class ResultTask implements Callable<Void>{
     private static final int MIN_BACK_OFF_PERIOD = 1000;
 
     @Autowired
-    private ScheduleService scheduleService;
+    private DashboardScheduleService dashboardScheduleService;
 
     private ScheduledFuture<NashornResponse> future;
 
@@ -74,7 +76,7 @@ public class ResultTask implements Callable<Void>{
 
     private RetryTemplate retryTemplate;
 
-    public ResultTask(ScheduledFuture<NashornResponse> future, NashornRequest request, Schedulable callback) {
+    public NashornResultAsyncTask(ScheduledFuture<NashornResponse> future, NashornRequest request, Schedulable callback) {
         this.future = future;
         this.request = request;
         this.callBack = callback;
@@ -99,7 +101,7 @@ public class ResultTask implements Callable<Void>{
             // Handle response with retry
             retryTemplate.execute((RetryCallback<Void, Exception>) context -> {
                 LOGGER.debug("Trying {}/{} to update widgets instance {}", context.getRetryCount(), MAX_RETRY, nashornResponse.getProjectWidgetId());
-                scheduleService.handleResponse( nashornResponse, callBack);
+                dashboardScheduleService.handleResponse( nashornResponse, callBack);
                 return null;
             }, context -> {
                 LOGGER.error("Update data failed after {} attempts for widget instance:{}", MAX_RETRY, request.getProjectWidgetId());
@@ -111,10 +113,10 @@ public class ResultTask implements Callable<Void>{
         } catch (CancellationException ce) {
             LOGGER.debug("Widget instance {} execution canceled ({}) - {}", request.getProjectWidgetId(), future.toString(), ce.getMessage(), ce);
         } catch (Exception e) {
-            LOGGER.error("Error {} for widget instance:{}",ExceptionUtils.getMessage(e), request.getProjectWidgetId());
+            LOGGER.error("Error {} for widget instance:{}",ExceptionUtils.getMessage(e), request.getProjectWidgetId(), e);
             future.cancel(true);
             try {
-                scheduleService.updateLogException(e, request.getProjectWidgetId(), request.getProjectId());
+                dashboardScheduleService.updateLogException(e, request.getProjectWidgetId(), request.getProjectId());
             }catch (Exception e1){
                 LOGGER.error("Database issue, reschedule instance:{} - error {}", request.getProjectWidgetId(), ExceptionUtils.getMessage(e1));
                 callBack.schedule(request, false, false);
