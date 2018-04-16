@@ -6,6 +6,7 @@
     "ng": "ng",
     "start": "yarn run webpack:dev --port=4200",
     "build": "webpack --config webpack/webpack.dev.js",
+    "build-docker": "webpack --config webpack/webpack.docker.js",
     "test": "karma start ./karma.conf.js",
     "lint": "ng lint",
     "e2e": "protractor ./protractor.conf.js",

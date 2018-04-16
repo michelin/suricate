@@ -4,16 +4,13 @@ database:
       MYSQL_PASSWORD: demo
       MYSQL_USER: demo
       MYSQL_DATABASE: suricate
+      MYSQL_ROOT_PASSWORD: demo
 
 backend:
-  image: suricate/backend:dev
+  image: backend:beta.16
+  environment:
+   - "SPRING_PROFILES_ACTIVE=docker"          
   links:
    - database:mysql-db
-
-frontend:
-  build: suricate/frontend:dev
-  links:
-   - backend:suricate-backend
   ports:
-   - "80:80"
-
+   - "8080:8080"
