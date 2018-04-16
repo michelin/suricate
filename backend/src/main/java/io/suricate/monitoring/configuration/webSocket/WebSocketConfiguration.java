@@ -47,21 +47,4 @@ public class WebSocketConfiguration extends AbstractWebSocketMessageBrokerConfig
                 .setAllowedOrigins("*")
                 .withSockJS();
     }
-
-    /* *
-     * Message broker configuration URL's used for exchange
-     *
-     * * EnableSimpleBroker : Prefix used for message broker communication
-     * * * The client will subscribe to "/queue/xxxx" define in the Message handler controller mapped with @SendTo
-     *
-     * * Possibility to add a SetApplicationDestinationPrefixes if want a client can send messages to the server
-     * * * Used like this "/destinationPrefix/registryEndpoint"
-     *
-     * @param config The configuration
-     */
-//    @Override
-//    public void configureMessageBroker(MessageBrokerRegistry config) {
-//        config.enableSimpleBroker("/queue");
-//        config.setUserDestinationPrefix("/user");
-//    }
 }
