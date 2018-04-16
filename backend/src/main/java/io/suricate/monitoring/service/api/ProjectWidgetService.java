@@ -57,6 +57,16 @@ public class ProjectWidgetService {
     }
 
     /**
+     * Get the project widget by id
+     *
+     * @param projectWidgetId The project widget id
+     * @return The project widget
+     */
+    public ProjectWidget getOne(final Long projectWidgetId) {
+        return projectWidgetRepository.getOne(projectWidgetId);
+    }
+
+    /**
      * Reset the execution state of a project widget
      */
     public void resetProjectWidgetsState() {
