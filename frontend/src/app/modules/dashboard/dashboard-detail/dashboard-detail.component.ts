@@ -90,7 +90,6 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    * @param {DashboardService} dashboardService The dashboard service
    * @param {ChangeDetectorRef} changeDetectorRef The change detector service
    * @param {DomSanitizer} domSanitizer The domSanitizer service
-   * @param {StompService} stompService The stomp service for websockets
    * @param {WebsocketService} websocketService The websocket service
    */
   constructor(private activatedRoute: ActivatedRoute,
