@@ -23,7 +23,6 @@ import {DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import {Observable} from 'rxjs/Observable';
 import {takeWhile} from 'rxjs/operators';
 import {of} from 'rxjs/observable/of';
-import { StompService } from 'ng2-stomp-service';
 import {AuthenticationService} from '../../authentication/authentication.service';
 import {AbstractHttpService} from '../../../shared/services/abstract-http.service';
 import {WSConfiguration} from '../../../shared/model/websocket/WSConfiguration';
