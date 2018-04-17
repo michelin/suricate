@@ -21,7 +21,7 @@ import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
 import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
-import io.suricate.monitoring.model.dto.project.ProjectWidgetRequest;
+import io.suricate.monitoring.model.dto.project.ProjectWidgetDto;
 import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.model.entity.user.User;
 import io.suricate.monitoring.repository.ProjectRepository;
@@ -212,20 +212,20 @@ public class ProjectService {
     /**
      * Add a new widget into the project
      *
-     * @param projectWidgetRequest The project widget to add
+     * @param projectWidgetDto The project widget to add
      * @return The projectWidget instantiate
      */
     @Transactional
-    public ProjectWidget addWidgetToProject(ProjectWidgetRequest projectWidgetRequest) {
+    public ProjectWidget addWidgetToProject(ProjectWidgetDto projectWidgetDto) {
         ProjectWidget projectWidget = new ProjectWidget();
         projectWidget.setCol(0);
         projectWidget.setRow(0);
         projectWidget.setWidth(1);
         projectWidget.setHeight(1);
         projectWidget.setData("{}");
-        projectWidget.setBackendConfig(projectWidgetRequest.getBackendConfig());
-        projectWidget.setWidget(widgetRepository.findOne(projectWidgetRequest.getWidgetId()));
-        projectWidget.setProject(projectRepository.findOne(projectWidgetRequest.getProjectId()));
+        projectWidget.setBackendConfig(projectWidgetDto.getBackendConfig());
+        projectWidget.setWidget(widgetRepository.findOne(projectWidgetDto.getWidget().getId()));
+        projectWidget.setProject(projectRepository.findOne(projectWidgetDto.getProject().getId()));
 
         // Add project widget
         projectWidget = projectWidgetRepository.saveAndFlush(projectWidget);

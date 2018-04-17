@@ -20,7 +20,7 @@ import io.suricate.monitoring.controllers.api.error.exception.ApiException;
 import io.suricate.monitoring.model.dto.project.ProjectDto;
 import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
-import io.suricate.monitoring.model.dto.project.ProjectWidgetRequest;
+import io.suricate.monitoring.model.dto.project.ProjectWidgetDto;
 import io.suricate.monitoring.model.entity.user.User;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.service.api.ProjectService;
@@ -189,14 +189,14 @@ public class ProjectController {
      * Add widget into the dashboard
      *
      * @param id The project id
-     * @param projectWidgetRequest The projectWidget to add
+     * @param projectWidgetDto The projectWidget to add
      * @return The project
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @PreAuthorize("hasRole('ROLE_USER')")
     public ProjectDto addWidgetToProject(@PathVariable("id") Long id,
-                                         @RequestBody ProjectWidgetRequest projectWidgetRequest) {
-        ProjectWidget projectWidget = projectService.addWidgetToProject(projectWidgetRequest);
+                                         @RequestBody ProjectWidgetDto projectWidgetDto) {
+        ProjectWidget projectWidget = projectService.addWidgetToProject(projectWidgetDto);
         Optional<Project> project = projectService.getOneById(projectWidget.getProject().getId());
 
         if(!project.isPresent()) {
