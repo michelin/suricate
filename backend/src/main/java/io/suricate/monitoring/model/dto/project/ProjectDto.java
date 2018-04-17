@@ -17,7 +17,6 @@
 package io.suricate.monitoring.model.dto.project;
 
 import io.suricate.monitoring.model.dto.user.UserDto;
-import io.suricate.monitoring.model.dto.widget.WidgetResponse;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -56,7 +55,7 @@ public class ProjectDto {
     /**
      * The list of widgets
      */
-    private List<WidgetResponse> widgets = new ArrayList<>();
+    private List<ProjectWidgetDto> widgets = new ArrayList<>();
     /**
      * The librairies related
      */

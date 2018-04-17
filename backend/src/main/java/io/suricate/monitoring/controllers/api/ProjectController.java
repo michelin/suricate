@@ -97,7 +97,7 @@ public class ProjectController {
             projects = projectService.getAllByUser(user.get());
         }
 
-        return projects.stream().map(project -> projectService.toDTO(project)).collect(Collectors.toList());
+        return projects.stream().map(project -> projectService.toDTO(project, true)).collect(Collectors.toList());
     }
 
     /**
@@ -116,7 +116,7 @@ public class ProjectController {
             throw new ApiException(ApiErrorEnum.USER_NOT_FOUND);
         }
         Project project = projectService.saveProject(user.get(), projectService.toModel(projectDto));
-        return projectService.toDTO(project);
+        return projectService.toDTO(project, true);
     }
 
     /**
@@ -133,7 +133,7 @@ public class ProjectController {
             throw new ApiException(ApiErrorEnum.PROJECT_NOT_FOUND);
         }
 
-        return  projectService.toDTO(project.get());
+        return  projectService.toDTO(project.get(), true);
     }
 
     /**
@@ -158,7 +158,7 @@ public class ProjectController {
         }
 
         projectService.saveProject(user.get(), project.get());
-        return projectService.toDTO(project.get());
+        return projectService.toDTO(project.get(), true);
     }
 
     /**
@@ -182,7 +182,7 @@ public class ProjectController {
         }
 
         projectService.deleteUserFromProject(user.get(), project.get());
-        return projectService.toDTO(project.get());
+        return projectService.toDTO(project.get(), true);
     }
 
     /**
@@ -203,6 +203,6 @@ public class ProjectController {
             throw new ApiException(ApiErrorEnum.PROJECT_NOT_FOUND);
         }
 
-        return projectService.toDTO(project.get());
+        return projectService.toDTO(project.get(), true);
     }
 }

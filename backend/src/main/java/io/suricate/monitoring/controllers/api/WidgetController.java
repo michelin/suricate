@@ -17,8 +17,8 @@
 package io.suricate.monitoring.controllers.api;
 
 import io.suricate.monitoring.model.dto.widget.CategoryDto;
+import io.suricate.monitoring.model.dto.widget.WidgetDto;
 import io.suricate.monitoring.model.entity.widget.Category;
-import io.suricate.monitoring.model.dto.widget.WidgetResponse;
 import io.suricate.monitoring.service.api.WidgetService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,7 +76,7 @@ public class WidgetController {
      */
     @RequestMapping(value = "/category/{id}", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
-    public List<WidgetResponse> getWidgetByCategory(@PathVariable("id") Long id) {
+    public List<WidgetDto> getWidgetByCategory(@PathVariable("id") Long id) {
         return widgetService.getWidgetsByCategory(id);
     }
 }

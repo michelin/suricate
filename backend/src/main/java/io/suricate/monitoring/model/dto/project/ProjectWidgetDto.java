@@ -70,6 +70,11 @@ public class ProjectWidgetDto extends AbstractDto {
     private String customStyle;
 
     /**
+     * The instantiation of the html widget template
+     */
+    private String instantiateHtml;
+
+    /**
      * Contains the configuration of the widget
      */
     private String backendConfig;
@@ -92,7 +97,7 @@ public class ProjectWidgetDto extends AbstractDto {
     /**
      * The widget state {@link WidgetState}
      */
-    private WidgetState widgetState;
+    private WidgetState state;
 
     /**
      * The related project
