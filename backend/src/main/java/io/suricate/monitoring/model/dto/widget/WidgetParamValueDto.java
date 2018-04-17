@@ -22,7 +22,7 @@ import lombok.*;
  * Widget param value response used for communication with the clients via webservices
  */
 @Getter @Setter @NoArgsConstructor @EqualsAndHashCode @ToString
-public class WidgetParamValueResponse {
+public class WidgetParamValueDto {
     /**
      * The key used in the js file
      */

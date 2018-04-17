@@ -164,12 +164,12 @@ public class WidgetService {
      * @param widget The widget
      * @return The related list of params
      */
-    private List<WidgetParamResponse> extractWidgetParams(Widget widget) {
-        List<WidgetParamResponse> widgetParamResponses = new ArrayList<>();
+    private List<WidgetParamDto> extractWidgetParams(Widget widget) {
+        List<WidgetParamDto> widgetParamResponses = new ArrayList<>();
 
         if(widget.getWidgetParams() != null && !widget.getWidgetParams().isEmpty()) {
             for (WidgetParam widgetParam: widget.getWidgetParams()) {
-                WidgetParamResponse widgetParamResponse = new WidgetParamResponse();
+                WidgetParamDto widgetParamResponse = new WidgetParamDto();
 
                 widgetParamResponse.setName(widgetParam.getName());
                 widgetParamResponse.setDescription(widgetParam.getDescription());
@@ -181,7 +181,7 @@ public class WidgetService {
 
                 if(widgetParam.getPossibleValuesMap() != null && !widgetParam.getPossibleValuesMap().isEmpty()) {
                     for(WidgetParamValue widgetParamValue : widgetParam.getPossibleValuesMap()) {
-                        WidgetParamValueResponse widgetParamValueResponse = new WidgetParamValueResponse();
+                        WidgetParamValueDto widgetParamValueResponse = new WidgetParamValueDto();
 
                         widgetParamValueResponse.setJsKey(widgetParamValue.getJsKey());
                         widgetParamValueResponse.setValue(widgetParamValue.getValue());

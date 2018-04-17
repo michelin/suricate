@@ -88,5 +88,5 @@ public class WidgetDto extends AbstractDto {
     /**
      * The list of the params for this widget
      */
-    private List<WidgetParamResponse> widgetParams;
+    private List<WidgetParamDto> widgetParams;
 }

@@ -26,7 +26,7 @@ import java.util.List;
  * Represent a widget param response used for communication with the clients via webservices
  */
 @Getter @Setter @NoArgsConstructor @EqualsAndHashCode @ToString
-public class WidgetParamResponse {
+public class WidgetParamDto {
     /**
      * The param name
      */
@@ -65,5 +65,5 @@ public class WidgetParamResponse {
     /**
      * The list of param values if the type is COMBO or a MULTIPLE
      */
-    private List<WidgetParamValueResponse> values = new ArrayList<>();
+    private List<WidgetParamValueDto> values = new ArrayList<>();
 }
