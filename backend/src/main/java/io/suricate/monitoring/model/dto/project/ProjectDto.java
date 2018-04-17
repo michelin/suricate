@@ -55,7 +55,7 @@ public class ProjectDto {
     /**
      * The list of widgets
      */
-    private List<ProjectWidgetDto> widgets = new ArrayList<>();
+    private List<ProjectWidgetDto> projectWidgets = new ArrayList<>();
     /**
      * The librairies related
      */

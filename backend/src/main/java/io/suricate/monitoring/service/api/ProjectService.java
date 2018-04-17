@@ -121,7 +121,7 @@ public class ProjectService {
         if(withRelatedWidgets) {
             List<ProjectWidget> projectWidgets = projectWidgetRepository.findByProjectIdAndWidget_WidgetAvailabilityOrderById(project.getId(), WidgetAvailabilityEnum.ACTIVATED);
             for (ProjectWidget projectWidget : projectWidgets) {
-                projectDto.getWidgets().add(projectWidgetService.instantiateProjectWidget(projectWidget));
+                projectDto.getProjectWidgets().add(projectWidgetService.instantiateProjectWidget(projectWidget));
             }
         }
 
