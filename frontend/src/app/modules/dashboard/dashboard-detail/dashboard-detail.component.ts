@@ -30,6 +30,7 @@ import {WebsocketService} from '../../../shared/services/websocket.service';
 import {Subscription} from 'rxjs/Subscription';
 import {NumberUtils} from '../../../shared/utils/NumberUtils';
 import {WSUpdateEvent} from '../../../shared/model/websocket/WSUpdateEvent';
+import {WSUpdateType} from '../../../shared/model/websocket/enums/WSUpdateType';
 
 /**
  * Component that display a specific dashboard
@@ -125,8 +126,9 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    * Init the Project subject subscription
    */
   subcribeToProjectSubject() {
-    this.dashboardService.
-    currendDashbordSubject
+    this
+        .dashboardService
+        .currendDashbordSubject
         .pipe(takeWhile(() => this.isAlive))
         .subscribe(project => this.project$ = of(project) );
   }
@@ -164,13 +166,13 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
           const uniqueSubscription: Subscription = this.websocketService
                                                        .subscribe(
                                                            `/user/${project.token}-${this.screenCode}/queue/unique`,
-                                                           this.handleUniqueScreenEvent
+                                                           this.handleUniqueScreenEvent.bind(this)
                                                        );
 
           const globalSubscription: Subscription = this.websocketService
                                                        .subscribe(
                                                            `/user/${project.token}/queue/live`,
-                                                           this.handleGlobalScreenEvent,
+                                                           this.handleGlobalScreenEvent.bind(this)
                                                        );
 
           this.websocketSubscriptions.push(uniqueSubscription);
@@ -195,9 +197,14 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    * @param headers The headers of the websocket event
    */
   handleGlobalScreenEvent(updateEvent: WSUpdateEvent, headers: any) {
-    console.log(`globalScreenEvent - ${updateEvent}`);
+    if (updateEvent.type === WSUpdateType.WIDGET) {
+      this.dashboardService.updateWidgetHtmlFromProjetWidgetId(updateEvent.content.projectWidgetId, updateEvent.content.html);
+    }
   }
 
+  /**
+   * Unsubcribe and disconnect from websockets
+   */
   unsubscribeToWebsockets() {
     this.websocketSubscriptions.forEach( (websocketSubscription: Subscription, index: number) => {
       this.websocketService.unsubscribe(websocketSubscription);
@@ -222,7 +229,6 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
       </style>
     `);
   }
-
 
   /**
    * Get the html/CSS code for the widget
