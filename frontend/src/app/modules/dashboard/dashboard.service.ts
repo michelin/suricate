@@ -23,6 +23,7 @@ import {ProjectWidget} from '../../shared/model/dto/ProjectWidget';
 import {map} from 'rxjs/operators/map';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Subject} from 'rxjs/Subject';
+import {Widget} from '../../shared/model/dto/Widget';
 
 @Injectable()
 export class DashboardService extends AbstractHttpService {
@@ -35,7 +36,7 @@ export class DashboardService extends AbstractHttpService {
    * @type {BehaviorSubject<Project[]>}
    */
   dashboardsSubject = new BehaviorSubject<Project[]>([]);
-  currendDashbordSubject = new Subject<Project>();
+  currendDashbordSubject = new BehaviorSubject<Project>(null);
 
   /**
    * The constructor
@@ -51,7 +52,7 @@ export class DashboardService extends AbstractHttpService {
    *
    * @param {Project} project The project
    */
-  private updateSubject(project: Project) {
+  private updateSubject(project: Project): void {
     const currentList = this.dashboardsSubject.getValue();
     const indexOfCurrentProject = currentList.findIndex(currentProject => currentProject.id === project.id);
 
@@ -60,6 +61,29 @@ export class DashboardService extends AbstractHttpService {
     }
 
     this.dashboardsSubject.next([...currentList, project]);
+  }
+
+  /**
+   * Use to update the html of a websocket
+   *
+   * @param {number} projectWidgetId The project widget ID to update
+   * @param {string} html The HTML to replace
+   */
+  public updateWidgetHtmlFromProjetWidgetId(projectWidgetId: number, html: string): void {
+    let widget: Widget = null;
+    this.currendDashbordSubject
+        .getValue()
+        .widgets
+        .filter( currentWidget => {
+          if (currentWidget.projectWidgetId === projectWidgetId) {
+            widget = currentWidget;
+          }
+        });
+
+    if (widget) {
+      widget.html = html;
+    }
+
   }
 
   /**
