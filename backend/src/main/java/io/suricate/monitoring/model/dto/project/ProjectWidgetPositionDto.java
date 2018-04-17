@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.dto.widget;
+package io.suricate.monitoring.model.dto.project;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.suricate.monitoring.model.dto.AbstractDto;
 import lombok.*;
 
@@ -25,7 +24,7 @@ import lombok.*;
  * (For example when a widget change of position)
  */
 @Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
-public class WidgetPosition extends AbstractDto {
+public class ProjectWidgetPositionDto extends AbstractDto {
 
     /**
      * The start column of this widget
@@ -38,14 +37,12 @@ public class WidgetPosition extends AbstractDto {
     private int row;
 
     /**
-     * The number of column for this widget
+     * The number of columns for this widget
      */
-    @JsonProperty("size_x")
-    private int sizeX;
+    private int width;
 
     /**
      * The number of rows
      */
-    @JsonProperty("size_y")
-    private int sizeY;
+    private int height;
 }

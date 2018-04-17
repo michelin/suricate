@@ -17,6 +17,7 @@
 package io.suricate.monitoring.service.api;
 
 import io.suricate.monitoring.controllers.api.error.exception.ApiException;
+import io.suricate.monitoring.model.dto.project.ProjectWidgetPositionDto;
 import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
 import io.suricate.monitoring.model.dto.widget.*;
 import io.suricate.monitoring.model.entity.*;
@@ -274,7 +275,7 @@ public class WidgetService {
      * @param projetToken project token
      */
     @Transactional
-    public void update(Long projectId, List<WidgetPosition> positions, String projetToken){
+    public void update(Long projectId, List<ProjectWidgetPositionDto> positions, String projetToken){
         List<ProjectWidget> projectWidgets = projectWidgetRepository.findByProjectIdAndWidget_WidgetAvailabilityOrderById(projectId, WidgetAvailabilityEnum.ACTIVATED);
         if (projectWidgets.size() != positions.size()) {
             throw new ApiException(ApiErrorEnum.PROJECT_INVALID_CONSTANCY);
@@ -284,8 +285,8 @@ public class WidgetService {
         for (ProjectWidget projectWidget : projectWidgets){
             projectWidgetRepository.updateRowAndColAndWidthAndHeightById(positions.get(i).getRow(),
                     positions.get(i).getCol(),
-                    positions.get(i).getSizeX(),
-                    positions.get(i).getSizeY(),
+                    positions.get(i).getWidth(),
+                    positions.get(i).getHeight(),
                     projectWidget.getId()
                     );
             i++;

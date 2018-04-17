@@ -22,6 +22,7 @@ import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheException;
 import com.github.mustachejava.MustacheFactory;
 import io.suricate.monitoring.model.dto.project.ProjectWidgetDto;
+import io.suricate.monitoring.model.dto.project.ProjectWidgetPositionDto;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.entity.widget.Widget;
 import io.suricate.monitoring.model.enums.WidgetState;
@@ -98,14 +99,16 @@ public class ProjectWidgetService {
      * @return The related dto
      */
     public ProjectWidgetDto tranformIntoDto(final ProjectWidget projectWidget) {
-        ProjectWidgetDto projectWidgetDto = new ProjectWidgetDto();
+        ProjectWidgetPositionDto projectWidgetPositionDto = new ProjectWidgetPositionDto();
+        projectWidgetPositionDto.setRow(projectWidget.getRow());
+        projectWidgetPositionDto.setCol(projectWidget.getCol());
+        projectWidgetPositionDto.setHeight(projectWidget.getHeight());
+        projectWidgetPositionDto.setWidth(projectWidget.getWidth());
 
+        ProjectWidgetDto projectWidgetDto = new ProjectWidgetDto();
         projectWidgetDto.setId(projectWidget.getId());
         projectWidgetDto.setData(projectWidget.getData());
-        projectWidgetDto.setRow(projectWidget.getRow());
-        projectWidgetDto.setCol(projectWidget.getCol());
-        projectWidgetDto.setWidth(projectWidget.getWidth());
-        projectWidgetDto.setHeight(projectWidget.getHeight());
+        projectWidgetDto.setWidgetPosition(projectWidgetPositionDto);
         projectWidgetDto.setCustomStyle(StringUtils.trimToEmpty(projectWidget.getCustomStyle()));
         projectWidgetDto.setBackendConfig(projectWidget.getBackendConfig());
         projectWidgetDto.setLog(projectWidget.getLog());

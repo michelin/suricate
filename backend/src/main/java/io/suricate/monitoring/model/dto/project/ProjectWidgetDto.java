@@ -45,24 +45,9 @@ public class ProjectWidgetDto extends AbstractDto {
     private String data;
 
     /**
-     * The started row number in the grid
+     * The position of this instance of widget in the grid
      */
-    private int row;
-
-    /**
-     * The started col number in the grid
-     */
-    private int col;
-
-    /**
-     * The number of rows taken in the grid
-     */
-    private int width;
-
-    /**
-     * The number of cols taken in the grid
-     */
-    private int height;
+    private ProjectWidgetPositionDto widgetPosition;
 
     /**
      * The css style for this instance
