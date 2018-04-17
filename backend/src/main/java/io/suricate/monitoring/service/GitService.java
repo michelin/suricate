@@ -21,6 +21,7 @@ import io.suricate.monitoring.model.entity.widget.Category;
 import io.suricate.monitoring.model.entity.Library;
 import io.suricate.monitoring.service.api.LibraryService;
 import io.suricate.monitoring.service.api.WidgetService;
+import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
 import io.suricate.monitoring.service.nashorn.NashornWidgetExecutor;
 import io.suricate.monitoring.utils.WidgetUtils;
 import org.apache.commons.io.FileUtils;
@@ -56,7 +57,7 @@ public class GitService {
 
     private final LibraryService libraryService;
 
-    private final SocketService socketService;
+    private final DashboardWebSocketService dashboardWebSocketService;
 
     private final NashornWidgetExecutor nashornWidgetExecutor;
 
@@ -64,14 +65,14 @@ public class GitService {
      * Contructor using fields
      * @param widgetService widget service
      * @param libraryService library service
-     * @param socketService socket service
+     * @param dashboardWebSocketService socket service
      * @param nashornWidgetExecutor widget executor
      */
     @Autowired
-    public GitService(WidgetService widgetService, LibraryService libraryService, SocketService socketService, NashornWidgetExecutor nashornWidgetExecutor, ApplicationProperties applicationProperties) {
+    public GitService(WidgetService widgetService, LibraryService libraryService, DashboardWebSocketService dashboardWebSocketService, NashornWidgetExecutor nashornWidgetExecutor, ApplicationProperties applicationProperties) {
         this.widgetService = widgetService;
         this.libraryService = libraryService;
-        this.socketService = socketService;
+        this.dashboardWebSocketService = dashboardWebSocketService;
         this.nashornWidgetExecutor = nashornWidgetExecutor;
         this.applicationProperties = applicationProperties;
     }
@@ -159,7 +160,7 @@ public class GitService {
                 FileUtils.deleteQuietly(folder);
             }
             nashornWidgetExecutor.initScheduler();
-            socketService.reloadAllConnectedDashboard();
+            dashboardWebSocketService.reloadAllConnectedDashboard();
         }
     }
 }

@@ -38,6 +38,7 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 
 	/**
 	 * Method used to get Project token from it's id
+	 *
 	 * @param id the project id
 	 * @return the project token
 	 */

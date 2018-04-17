@@ -27,7 +27,7 @@ import {Subject} from 'rxjs/Subject';
 @Injectable()
 export class DashboardService extends AbstractHttpService {
 
-  public static readonly PROJECTS_BASE_URL = `${AbstractHttpService.BASE_URL}/${AbstractHttpService.PROJECTS_URL}`;
+  public static readonly PROJECTS_BASE_URL = `${AbstractHttpService.BASE_API_URL}/${AbstractHttpService.PROJECTS_URL}`;
 
   /**
    * Hold the list of dashboards

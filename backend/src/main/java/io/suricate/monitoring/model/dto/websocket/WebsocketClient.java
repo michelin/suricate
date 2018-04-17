@@ -14,41 +14,41 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.dto;
+package io.suricate.monitoring.model.dto.websocket;
 
-import io.suricate.monitoring.model.enums.UpdateType;
+import io.suricate.monitoring.model.dto.AbstractDto;
 import lombok.*;
 
-import java.io.Serializable;
-import java.util.Date;
-
 /**
- * WebSocket update event
+ * Representation of websocket client
  */
 @Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
-public class UpdateEvent extends AbstractDto{
+public class WebsocketClient extends AbstractDto {
 
     /**
-     * The update date
+     * The project token subscribed by the client
      */
-    private Date date;
+    private String projectToken;
 
     /**
-     * The update type {@link UpdateType}
+     * The websocket session id
      */
-    private UpdateType type;
+    private String sessionId;
 
     /**
-     * The content to send
+     * The client screen code
      */
-    private Serializable content;
+    private String screenCode;
 
     /**
-     * Default constructor
-     * @param type the update type
+     * Default constructor using fields
+     * @param projectToken the project token
+     * @param sessionId the session id
+     * @param screenCode The screenCode
      */
-    public UpdateEvent(UpdateType type) {
-        this.type = type;
-        date = new Date();
+    public WebsocketClient(String projectToken, String sessionId, String screenCode) {
+        this.projectToken = projectToken;
+        this.sessionId = sessionId;
+        this.screenCode = screenCode;
     }
 }

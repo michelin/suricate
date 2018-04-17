@@ -14,11 +14,18 @@
  * limitations under the License.
  */
 
-/* SystemJS module definition */
-declare var module: NodeModule;
-declare module 'stompjs';
-declare module 'sockjs-client';
+import { TestBed, inject } from '@angular/core/testing';
 
-interface NodeModule {
-  id: string;
-}
+import { WebsocketService } from './websocket.service';
+
+describe('WebsocketService', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [WebsocketService]
+    });
+  });
+
+  it('should be created', inject([WebsocketService], (service: WebsocketService) => {
+    expect(service).toBeTruthy();
+  }));
+});

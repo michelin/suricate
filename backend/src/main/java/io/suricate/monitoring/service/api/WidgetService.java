@@ -22,7 +22,7 @@ import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheException;
 import com.github.mustachejava.MustacheFactory;
 import io.suricate.monitoring.controllers.api.error.exception.ApiException;
-import io.suricate.monitoring.model.dto.UpdateEvent;
+import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
 import io.suricate.monitoring.model.dto.widget.*;
 import io.suricate.monitoring.model.entity.*;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
@@ -33,8 +33,8 @@ import io.suricate.monitoring.model.entity.widget.WidgetParamValue;
 import io.suricate.monitoring.model.enums.*;
 import io.suricate.monitoring.repository.*;
 import io.suricate.monitoring.service.CacheService;
-import io.suricate.monitoring.service.SocketService;
 import io.suricate.monitoring.service.nashorn.NashornWidgetExecutor;
+import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
 import io.suricate.monitoring.service.search.SearchService;
 import io.suricate.monitoring.utils.EntityUtils;
 import io.suricate.monitoring.utils.JavascriptUtils;
@@ -89,7 +89,7 @@ public class WidgetService {
     /**
      * Socket service
      */
-    private final SocketService socketService;
+    private final DashboardWebSocketService dashboardWebsocketService;
 
     /**
      * Cache service
@@ -123,19 +123,19 @@ public class WidgetService {
      * @param projectWidgetRepository The project widget repository
      * @param widgetRepository The widget repository
      * @param categoryRepository The category repository
-     * @param socketService The socket service
+     * @param dashboardWebsocketService The socket service
      * @param cacheService The cache service
      * @param ctx The application context
      * @param assetRepository The asset repository
      * @param searchService The search service
      */
     @Autowired
-    public WidgetService(MustacheFactory mustacheFactory, ProjectWidgetRepository projectWidgetRepository, WidgetRepository widgetRepository, CategoryRepository categoryRepository, SocketService socketService, CacheService cacheService, ApplicationContext ctx, AssetRepository assetRepository, SearchService searchService) {
+    public WidgetService(MustacheFactory mustacheFactory, ProjectWidgetRepository projectWidgetRepository, WidgetRepository widgetRepository, CategoryRepository categoryRepository, DashboardWebSocketService dashboardWebsocketService, CacheService cacheService, ApplicationContext ctx, AssetRepository assetRepository, SearchService searchService) {
         this.mustacheFactory = mustacheFactory;
         this.projectWidgetRepository = projectWidgetRepository;
         this.widgetRepository = widgetRepository;
         this.categoryRepository = categoryRepository;
-        this.socketService = socketService;
+        this.dashboardWebsocketService = dashboardWebsocketService;
         this.cacheService = cacheService;
         this.ctx = ctx;
         this.assetRepository = assetRepository;
@@ -398,7 +398,7 @@ public class WidgetService {
         }
         projectWidgetRepository.flush();
         // notify clients
-        socketService.updateProjectScreen(projetToken, new UpdateEvent(UpdateType.POSITION));
+        dashboardWebsocketService.updateGlobalScreensByProjectToken(projetToken, new UpdateEvent(UpdateType.POSITION));
     }
 
     /**
@@ -412,7 +412,7 @@ public class WidgetService {
         projectWidgetRepository.deleteByProjectIdAndId(projectId, projectWidgetId);
         projectWidgetRepository.flush();
         // notify client
-        socketService.updateProjectScreen(projectId, new UpdateEvent(UpdateType.GRID));
+        dashboardWebsocketService.updateGlobalScreensByProjectId(projectId, new UpdateEvent(UpdateType.GRID));
     }
 
     /**
