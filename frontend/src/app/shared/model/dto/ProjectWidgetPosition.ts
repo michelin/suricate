@@ -1,5 +1,5 @@
 /*
- *
+ *  /*
  *  * Copyright 2012-2018 the original author or authors.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,25 +14,11 @@
  *  * See the License for the specific language governing permissions and
  *  * limitations under the License.
  *
- *
  */
 
-import {WidgetStateEnum} from './enums/WidgetSateEnum';
-import {ProjectWidgetPosition} from './ProjectWidgetPosition';
-import {Project} from './Project';
-import {Widget} from './Widget';
-
-export class ProjectWidget {
-  public id: number;
-  public data: string;
-  public widgetPosition: ProjectWidgetPosition;
-  public customStyle: string;
-  public instantiateHtml: string;
-  public backendConfig: string;
-  public log: string;
-  public lastExecutionDate: Date;
-  public lastSuccessDate: Date;
-  public state: WidgetStateEnum;
-  public project: Project;
-  public widget: Widget;
+export class ProjectWidgetPosition {
+  col: number;
+  row: number;
+  width: number;
+  height: number;
 }
