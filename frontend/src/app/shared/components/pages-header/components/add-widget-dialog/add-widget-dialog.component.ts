@@ -87,8 +87,8 @@ export class AddWidgetDialogComponent implements OnInit {
 
       const projectWidget: ProjectWidget = new ProjectWidget();
       projectWidget.backendConfig = backendConfig;
-      projectWidget.projectId = this.data.projectId;
-      projectWidget.widgetId = this.selectedWidget.widgetId;
+      projectWidget.project = this.dashboardService.currendDashbordSubject.getValue();
+      projectWidget.widget = this.selectedWidget;
 
       this.dashboardService
           .addWidgetToProject(projectWidget)
