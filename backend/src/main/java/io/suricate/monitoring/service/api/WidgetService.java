@@ -61,19 +61,9 @@ public class WidgetService {
     private final WidgetRepository widgetRepository;
 
     /**
-     * Project widget service
-     */
-    private final ProjectWidgetService projectWidgetService;
-
-    /**
      * Category repository
      */
     private final CategoryService categoryService;
-
-    /**
-     * Socket service
-     */
-    private final DashboardWebSocketService dashboardWebsocketService;
 
     /**
      * Cache service
@@ -86,44 +76,22 @@ public class WidgetService {
     private final AssetService assetService;
 
     /**
-     * Search service
-     */
-    private final SearchService searchService;
-
-    /**
-     * The application context
-     */
-    private final ApplicationContext ctx;
-
-    /**
      * Constructor
      *
      * @param widgetRepository The widget repository
-     * @param projectWidgetService The project widget service to inject
      * @param categoryService The category service
-     * @param dashboardWebsocketService The socket service
      * @param cacheService The cache service
-     * @param ctx The application context
      * @param assetService The asset service
-     * @param searchService The search service
      */
     @Autowired
     public WidgetService(final WidgetRepository widgetRepository,
-                         final ProjectWidgetService projectWidgetService,
                          final CategoryService categoryService,
-                         final DashboardWebSocketService dashboardWebsocketService,
                          final CacheService cacheService,
-                         final ApplicationContext ctx,
-                         final AssetService assetService,
-                         final SearchService searchService) {
+                         final AssetService assetService) {
         this.widgetRepository = widgetRepository;
-        this.projectWidgetService = projectWidgetService;
         this.categoryService = categoryService;
-        this.dashboardWebsocketService = dashboardWebsocketService;
         this.cacheService = cacheService;
-        this.ctx = ctx;
         this.assetService = assetService;
-        this.searchService = searchService;
     }
 
     /**
