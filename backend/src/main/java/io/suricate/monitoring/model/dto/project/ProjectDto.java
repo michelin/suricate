@@ -16,6 +16,7 @@
 
 package io.suricate.monitoring.model.dto.project;
 
+import io.suricate.monitoring.model.dto.AbstractDto;
 import io.suricate.monitoring.model.dto.user.UserDto;
 import lombok.*;
 
@@ -25,8 +26,8 @@ import java.util.List;
 /**
  * Project object used for communication with clients of the webservice
  */
-@Getter @Setter @NoArgsConstructor @EqualsAndHashCode @ToString
-public class ProjectDto {
+@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
+public class ProjectDto extends AbstractDto {
 
     /**
      * The id

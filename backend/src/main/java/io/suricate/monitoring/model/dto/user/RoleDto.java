@@ -16,13 +16,14 @@
 
 package io.suricate.monitoring.model.dto.user;
 
+import io.suricate.monitoring.model.dto.AbstractDto;
 import lombok.*;
 
 /**
  * Represent a role used for communication with the clients via webservices
  */
-@Getter @Setter @NoArgsConstructor @EqualsAndHashCode @ToString
-public class RoleDto {
+@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
+public class RoleDto extends AbstractDto {
 
     /**
      * The role id

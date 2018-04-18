@@ -67,17 +67,18 @@ public class AssetController {
      */
     @RequestMapping(path = "/{token}", method = RequestMethod.GET)
     public ResponseEntity<byte[]> getAsset(WebRequest webRequest, @PathVariable("token") String token) {
-        Asset data = assetService.findOne(IdUtils.decrypt(token));
-        if (data == null){
+        Asset asset = assetService.findOne(IdUtils.decrypt(token));
+        if (asset == null){
             return ResponseEntity.notFound().build();
-        } else if (webRequest.checkNotModified(data.getLastModifiedDate().getTime())){
+        } else if (webRequest.checkNotModified(asset.getLastModifiedDate().getTime())){
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
         }
-        return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(data.getContentType()))
-                .contentLength(data.getSize())
-                .lastModified(data.getLastModifiedDate().getTime())
-                .cacheControl(CacheControl.noCache())
-                .body(data.getContent());
+        return ResponseEntity
+            .ok()
+            .contentType(MediaType.parseMediaType(asset.getContentType()))
+            .contentLength(asset.getSize())
+            .lastModified(asset.getLastModifiedDate().getTime())
+            .cacheControl(CacheControl.noCache())
+            .body(asset.getContent());
     }
 }
