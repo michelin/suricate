@@ -67,7 +67,7 @@ public class UserController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public List<UserDto> getAll() {
         List<User> users =  userService.getAll();
-        return users.stream().map(user -> userService.toDto(user)).collect(Collectors.toList());
+        return users.stream().map(userService::toDto).collect(Collectors.toList());
     }
 
     /**
@@ -84,7 +84,7 @@ public class UserController {
             return new ArrayList<>();
         }
 
-        return users.get().stream().map(user -> userService.toDto(user)).collect(Collectors.toList());
+        return users.get().stream().map(userService::toDto).collect(Collectors.toList());
     }
 
     /**
