@@ -33,7 +33,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -86,7 +86,7 @@ public class UserService {
         UserDto userDto = new UserDto();
 
         userDto.setId(user.getId());
-        userDto.getRoles().addAll(user.getRoles().stream().map(role -> roleService.toDto(role)).collect(Collectors.toList()));
+        userDto.getRoles().addAll(user.getRoles().stream().map(roleService::toDto).collect(Collectors.toList()));
         userDto.setUsername(user.getUsername());
         userDto.setFirstname(user.getFirstname());
         userDto.setLastname(user.getLastname());
@@ -113,7 +113,7 @@ public class UserService {
         user.setEmail(userDto.getEmail());
         user.setPassword(userDto.getPassword());
         user.setAuthenticationMethod(userDto.getAuthenticationMethod());
-        user.getRoles().addAll( userDto.getRoles().stream().map(roleDto -> roleService.toModel(roleDto)).collect(Collectors.toList()) );
+        user.getRoles().addAll( userDto.getRoles().stream().map(roleService::toModel).collect(Collectors.toList()) );
 
         return user;
     }
@@ -134,7 +134,7 @@ public class UserService {
         if(!role.isPresent()) {
             LOGGER.debug("Cannot find Role");
         }
-        userDto.setRoles(Arrays.asList(roleService.toDto(role.get())));
+        userDto.setRoles(Collections.singletonList(roleService.toDto(role.get())));
 
         User user = toModel(userDto);
         userRepository.save(user);
