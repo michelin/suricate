@@ -19,6 +19,8 @@ package io.suricate.monitoring.service.api;
 import io.suricate.monitoring.model.dto.ConfigurationDto;
 import io.suricate.monitoring.model.entity.Configuration;
 import io.suricate.monitoring.repository.ConfigurationRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +33,12 @@ import java.util.stream.Collectors;
  */
 @Service
 public class ConfigurationService {
+
+    /**
+     * Class logger
+     */
+    private final static Logger LOGGER = LoggerFactory.getLogger(ConfigurationService.class);
+
     /**
      * The configuration repository
      */

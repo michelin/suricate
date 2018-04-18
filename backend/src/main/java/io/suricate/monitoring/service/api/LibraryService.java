@@ -18,10 +18,11 @@ package io.suricate.monitoring.service.api;
 
 import io.suricate.monitoring.model.entity.Library;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
-import io.suricate.monitoring.repository.AssetRepository;
 import io.suricate.monitoring.repository.LibraryRepository;
 import io.suricate.monitoring.utils.IdUtils;
 import io.suricate.monitoring.utils.logging.LogExecutionTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +35,11 @@ import java.util.stream.Collectors;
  */
 @Service
 public class LibraryService {
+
+    /**
+     * Class logger
+     */
+    private final static Logger LOGGER = LoggerFactory.getLogger(LibraryService.class);
 
     /**
      * Library repository
