@@ -77,7 +77,7 @@ public class ConfigurationService {
      * @return The list tranform
      */
     public List<ConfigurationDto> toDTO(List<Configuration> configurations) {
-        return configurations.stream().map(configuration -> this.toDTO(configuration)).collect(Collectors.toList());
+        return configurations.stream().map(this::toDTO).collect(Collectors.toList());
     }
 
     /**
