@@ -111,7 +111,7 @@ public class ProjectService {
                           final ProjectRepository projectRepository,
                           final UserService userService,
                           final DashboardWebSocketService dashboardWebSocketService,
-                          final DashboardScheduleService dashboardScheduleService,
+                          @Lazy final DashboardScheduleService dashboardScheduleService,
                           final WidgetService widgetService,
                           @Lazy final ProjectWidgetService projectWidgetService,
                           final LibraryService libraryService) {
