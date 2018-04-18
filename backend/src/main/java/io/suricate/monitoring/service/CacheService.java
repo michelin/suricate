@@ -38,7 +38,7 @@ public class CacheService {
      * @param cacheManager application cache manager instance
      */
     @Autowired
-    public CacheService(CacheManager cacheManager) {
+    public CacheService(final CacheManager cacheManager) {
         this.cacheManager = cacheManager;
     }
 

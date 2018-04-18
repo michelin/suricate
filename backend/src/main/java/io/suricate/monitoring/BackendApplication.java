@@ -24,6 +24,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableAsync;
 
@@ -44,14 +45,24 @@ public class BackendApplication {
     /**
      * Application properties
      */
-    @Autowired
-    private ApplicationProperties applicationProperties;
+    private final ApplicationProperties applicationProperties;
 
     /**
      * Git Service
      */
+    private final GitService gitService;
+
+    /**
+     * The constructor
+     *
+     * @param applicationProperties application properties to inject
+     * @param gitService git service to inject
+     */
     @Autowired
-    private GitService gitService;
+    public BackendApplication(final ApplicationProperties applicationProperties, final GitService gitService) {
+        this.applicationProperties = applicationProperties;
+        this.gitService = gitService;
+    }
 
     /**
      * Main springboot class

@@ -27,8 +27,15 @@ import org.springframework.stereotype.Component;
 @Component
 public class SearchIndexBuilder implements ApplicationListener<ApplicationReadyEvent> {
 
+    /**
+     * The search service
+     */
+    private final SearchService searchService;
+
     @Autowired
-    private SearchService searchService;
+    public SearchIndexBuilder(final SearchService searchService) {
+        this.searchService = searchService;
+    }
 
     /**
      * Re-index on startup.

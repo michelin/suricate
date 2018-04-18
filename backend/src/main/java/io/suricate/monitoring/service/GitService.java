@@ -42,6 +42,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Manage git calls
+ */
 @Service
 public class GitService {
 
@@ -53,12 +56,24 @@ public class GitService {
     /** The application properties */
     private final ApplicationProperties applicationProperties;
 
+    /**
+     * The widget service
+     */
     private final WidgetService widgetService;
 
+    /**
+     * The library service
+     */
     private final LibraryService libraryService;
 
+    /**
+     * The dashboard websocket service
+     */
     private final DashboardWebSocketService dashboardWebSocketService;
 
+    /**
+     * The nashorn widget executor
+     */
     private final NashornWidgetExecutor nashornWidgetExecutor;
 
     /**
@@ -69,7 +84,11 @@ public class GitService {
      * @param nashornWidgetExecutor widget executor
      */
     @Autowired
-    public GitService(WidgetService widgetService, LibraryService libraryService, DashboardWebSocketService dashboardWebSocketService, NashornWidgetExecutor nashornWidgetExecutor, ApplicationProperties applicationProperties) {
+    public GitService(final WidgetService widgetService,
+                      final LibraryService libraryService,
+                      final DashboardWebSocketService dashboardWebSocketService,
+                      final NashornWidgetExecutor nashornWidgetExecutor,
+                      final ApplicationProperties applicationProperties) {
         this.widgetService = widgetService;
         this.libraryService = libraryService;
         this.dashboardWebSocketService = dashboardWebSocketService;
