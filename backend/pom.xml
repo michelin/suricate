@@ -26,6 +26,7 @@
         <jsf-spring-boot-starter.version>2.4.1</jsf-spring-boot-starter.version>
         <jar.finalname>${project.artifactId}</jar.finalname>
         <sonar.java.binaries>${project.build.directory}/classes</sonar.java.binaries>
+        <org.mapstruct.version>1.2.0.Final</org.mapstruct.version>
     </properties>
     <dependencies>
         <dependency>
@@ -271,6 +272,7 @@
             <version>3.10.0</version>
         </dependency>
 
+        <!-- Code helpers -->
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
@@ -286,6 +288,18 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.16.20</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-jdk8</artifactId>
+            <version>${org.mapstruct.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
+            <version>${org.mapstruct.version}</version>
+            <scope>provided</scope>
         </dependency>
 
 
