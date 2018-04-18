@@ -24,7 +24,6 @@ import org.springframework.http.HttpStatus;
 /**
  * Api Errors
  */
-@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum ApiErrorEnum {
 
     TOKEN_MISSING("Missing or invalid Authorization header", "token.missing", HttpStatus.BAD_REQUEST),
@@ -37,13 +36,6 @@ public enum ApiErrorEnum {
     OPERATION_NOT_AUTHORIZED("Operation not authorized", "operation.not.authorized", HttpStatus.UNAUTHORIZED),
     DATABASE_INIT_ISSUE("Database Init error", "database.init.error", HttpStatus.INTERNAL_SERVER_ERROR);
 
-    ApiErrorEnum(String message, String key, HttpStatus status) {
-        this.status = status;
-        this.message = message;
-        this.code = ordinal();
-        this.key = key;
-    }
-
     private String message;
 
     private int code;
@@ -52,22 +44,22 @@ public enum ApiErrorEnum {
 
     private HttpStatus status;
 
-    @JsonProperty
+    ApiErrorEnum(String message, String key, HttpStatus status) {
+        this.status = status;
+        this.message = message;
+        this.code = ordinal();
+        this.key = key;
+    }
+
     public String getMessage() {
         return message;
     }
-
-    @JsonProperty
     public int getCode() {
         return code;
     }
-
-    @JsonProperty
     public String getKey() {
         return key;
     }
-
-    @JsonIgnore
     public HttpStatus getStatus() {
         return status;
     }
