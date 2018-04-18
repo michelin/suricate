@@ -51,6 +51,9 @@ public class WidgetServiceTest {
     WidgetService widgetService;
 
     @Autowired
+    CategoryService categoryService;
+
+    @Autowired
     ProjectWidgetService projectWidgetService;
 
     @Autowired
@@ -74,75 +77,6 @@ public class WidgetServiceTest {
     }
 
     @Test
-    public void addOrUpdateCategoryNullTest() {
-        // check empty
-        assertThat(categoryRepository.count()).isEqualTo(0);
-        assertThat(assetRepository.count()).isEqualTo(0);
-        widgetService.addOrUpdateCategory(null);
-        assertThat(categoryRepository.count()).isEqualTo(0);
-        assertThat(assetRepository.count()).isEqualTo(0);
-    }
-
-    @Test
-    public void addOrUpdateCategoryTest() {
-        // check empty
-        assertThat(categoryRepository.count()).isEqualTo(0);
-        assertThat(assetRepository.count()).isEqualTo(0);
-
-        Category category = new Category();
-        category.setName("Category 1");
-        category.setTechnicalName("categ1");
-
-        Asset asset = new Asset();
-        asset.setContentType("text/plain");
-        asset.setSize(10);
-
-        category.setImage(asset);
-
-        widgetService.addOrUpdateCategory(category);
-        assertThat(category.getId()).isNotNull();
-        assertThat(categoryRepository.count()).isEqualTo(1);
-        assertThat(assetRepository.count()).isEqualTo(1);
-        Category category1 = categoryRepository.findByTechnicalName("categ1");
-        assertThat(category1).isNotNull();
-        assertThat(category1.getName()).isEqualTo("Category 1");
-        assertThat(category1.getTechnicalName()).isEqualTo("categ1");
-        assertThat(category1.getImage().getSize()).isEqualTo(10);
-
-        // save the same category
-        category.setId(null);
-        asset.setId(null);
-        asset.setSize(100);
-
-        widgetService.addOrUpdateCategory(category);
-        assertThat(category.getId()).isNotNull();
-        assertThat(categoryRepository.count()).isEqualTo(1);
-        assertThat(assetRepository.count()).isEqualTo(1);
-        category1 = categoryRepository.findByTechnicalName("categ1");
-        assertThat(category1).isNotNull();
-        assertThat(category1.getName()).isEqualTo("Category 1");
-        assertThat(category1.getTechnicalName()).isEqualTo("categ1");
-        assertThat(category1.getImage().getSize()).isEqualTo(100);
-
-        // save an other category
-        category.setName("Category 2");
-        category.setTechnicalName("categ2");
-        category.setId(null);
-        asset.setId(null);
-        asset.setSize(110);
-
-        widgetService.addOrUpdateCategory(category);
-        assertThat(category.getId()).isNotNull();
-        assertThat(categoryRepository.count()).isEqualTo(2);
-        assertThat(assetRepository.count()).isEqualTo(2);
-        Category category2 = categoryRepository.findByTechnicalName("categ2");
-        assertThat(category2).isNotNull();
-        assertThat(category2.getName()).isEqualTo("Category 2");
-        assertThat(category2.getTechnicalName()).isEqualTo("categ2");
-        assertThat(category2.getImage().getSize()).isEqualTo(110);
-    }
-
-    @Test
     public void addOrUpdateWidgetNullTest() {
         assertThat(widgetRepository.count()).isEqualTo(0);
         widgetService.addOrUpdateWidgets(null,null, null);
@@ -160,7 +94,7 @@ public class WidgetServiceTest {
         Category category = new Category();
         category.setName("test");
         category.setTechnicalName("test");
-        widgetService.addOrUpdateCategory(category);
+        categoryService.addOrUpdateCategory(category);
 
         // Create widget list
         Widget widget = new Widget();
@@ -227,7 +161,7 @@ public class WidgetServiceTest {
         Category category = new Category();
         category.setName("test");
         category.setTechnicalName("test");
-        widgetService.addOrUpdateCategory(category);
+        categoryService.addOrUpdateCategory(category);
 
         // Create widget list
         Widget widget = new Widget();
@@ -328,7 +262,7 @@ public class WidgetServiceTest {
         Category category = new Category();
         category.setName("test");
         category.setTechnicalName("test");
-        widgetService.addOrUpdateCategory(category);
+        categoryService.addOrUpdateCategory(category);
 
         // Create widget list
         Widget widget = new Widget();

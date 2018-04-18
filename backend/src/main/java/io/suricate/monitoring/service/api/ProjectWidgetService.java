@@ -21,19 +21,26 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheException;
 import com.github.mustachejava.MustacheFactory;
+import io.suricate.monitoring.controllers.api.error.exception.ApiException;
 import io.suricate.monitoring.model.dto.project.ProjectWidgetDto;
 import io.suricate.monitoring.model.dto.project.ProjectWidgetPositionDto;
+import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.entity.widget.Widget;
+import io.suricate.monitoring.model.enums.ApiErrorEnum;
+import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
 import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.repository.ProjectWidgetRepository;
+import io.suricate.monitoring.service.nashorn.NashornWidgetExecutor;
+import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
 import io.suricate.monitoring.utils.JavascriptUtils;
 import io.suricate.monitoring.utils.PropertiesUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -71,9 +78,19 @@ public class ProjectWidgetService {
     private final WidgetService widgetService;
 
     /**
+     * The dashboard websocket service
+     */
+    private final DashboardWebSocketService dashboardWebsocketService;
+
+    /**
      * The mustacheFactory
      */
     private final MustacheFactory mustacheFactory;
+
+    /**
+     * The application context
+     */
+    private final ApplicationContext ctx;
 
     /**
      * Constructor
@@ -81,16 +98,23 @@ public class ProjectWidgetService {
      * @param projectWidgetRepository The project widget repository
      * @param projectService The project service
      * @param widgetService The widget service
+     * @param dashboardWebSocketService The dashboard websocket service
      * @param mustacheFactory The mustache factory (HTML template)
+     * @param ctx The application context
      */
     @Autowired
     public ProjectWidgetService(final ProjectWidgetRepository projectWidgetRepository,
                                 final ProjectService projectService,
-                                final WidgetService widgetService, final MustacheFactory mustacheFactory) {
+                                final WidgetService widgetService,
+                                final MustacheFactory mustacheFactory,
+                                final DashboardWebSocketService dashboardWebSocketService,
+                                final ApplicationContext ctx) {
         this.projectWidgetRepository = projectWidgetRepository;
         this.projectService = projectService;
         this.widgetService = widgetService;
+        this.dashboardWebsocketService = dashboardWebSocketService;
         this.mustacheFactory = mustacheFactory;
+        this.ctx = ctx;
     }
 
     /**
@@ -154,6 +178,19 @@ public class ProjectWidgetService {
     }
 
     /**
+     * Update the position of a widget
+     *
+     * @param projectWidgetId The projectWidget id
+     * @param startCol The new start col
+     * @param startRow The new start row
+     * @param height The new Height
+     * @param width The new width
+     */
+    public void updateWidgetPositionByProjectWidgetId(final Long projectWidgetId, final int startCol, final int startRow, final int height, final int width) {
+        projectWidgetRepository.updateRowAndColAndWidthAndHeightById(startRow, startCol, width, height, projectWidgetId);
+    }
+
+    /**
      * Save and flush a project widget
      *
      * @param projectWidget The project widget to save
@@ -162,6 +199,52 @@ public class ProjectWidgetService {
     public ProjectWidget saveAndFlush(ProjectWidget projectWidget) {
         return projectWidgetRepository.saveAndFlush(projectWidget);
     }
+
+    /**
+     * Method used to update all widgets positions for a current project
+     *
+     * @param projectId the project id
+     * @param positions lit of position
+     * @param projetToken project token
+     */
+    @Transactional
+    public void updateWidgetPosition(Long projectId, List<ProjectWidgetPositionDto> positions, String projetToken){
+        List<ProjectWidget> projectWidgets = getAllByProjectIdAndWidgetAvailability(projectId, WidgetAvailabilityEnum.ACTIVATED);
+        if (projectWidgets.size() != positions.size()) {
+            throw new ApiException(ApiErrorEnum.PROJECT_INVALID_CONSTANCY);
+        }
+
+        int i = 0;
+        for (ProjectWidget projectWidget : projectWidgets){
+            updateWidgetPositionByProjectWidgetId(
+                projectWidget.getId(),
+                positions.get(i).getCol(),
+                positions.get(i).getRow(),
+                positions.get(i).getHeight(),
+                positions.get(i).getWidth()
+            );
+            i++;
+        }
+        projectWidgetRepository.flush();
+        // notify clients
+        dashboardWebsocketService.updateGlobalScreensByProjectToken(projetToken, new UpdateEvent(UpdateType.POSITION));
+    }
+
+    /**
+     * Method used to remove widget from the dashboard
+     *
+     * @param projectId the project id
+     * @param projectWidgetId the projectwidget id
+     */
+    @Transactional
+    public void removeWidgetFromDashboard(Long projectId, Long projectWidgetId){
+        ctx.getBean(NashornWidgetExecutor.class).cancelWidgetInstance(projectWidgetId);
+        projectWidgetRepository.deleteByProjectIdAndId(projectId, projectWidgetId);
+        projectWidgetRepository.flush();
+        // notify client
+        dashboardWebsocketService.updateGlobalScreensByProjectId(projectId, new UpdateEvent(UpdateType.GRID));
+    }
+
 
     /**
      * Reset the execution state of a project widget
@@ -218,5 +301,27 @@ public class ProjectWidgetService {
         projectWidgetDto.setInstantiateHtml(instantiateHtml);
 
         return projectWidgetDto;
+    }
+
+    /**
+     * Method used to schedule a widget
+     * @param projectWidgetId The project widget id
+     */
+    @Transactional
+    public void scheduleWidget(Long projectWidgetId){
+        ctx.getBean(NashornWidgetExecutor.class).cancelAndSchedule(projectWidgetRepository.getRequestByProjectWidgetId(projectWidgetId));
+    }
+
+    /**
+     * Method used to update the configuration and custom css for project widget
+     *
+     * @param projectWidgetId The project widget id
+     * @param style The custom css style
+     * @param backendConfig The backend configuration
+     *
+     */
+    @Transactional
+    public void updateProjectWidget(Long projectWidgetId, String style, String backendConfig){
+        projectWidgetRepository.updateConfig(projectWidgetId, style, backendConfig);
     }
 }

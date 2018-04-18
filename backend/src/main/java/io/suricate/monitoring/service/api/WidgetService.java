@@ -56,19 +56,19 @@ public class WidgetService {
     private static final Logger LOGGER = LoggerFactory.getLogger(WidgetService.class);
 
     /**
-     * Project widget repository
-     */
-    private final ProjectWidgetRepository projectWidgetRepository;
-
-    /**
      * Widget repository
      */
     private final WidgetRepository widgetRepository;
 
     /**
+     * Project widget service
+     */
+    private final ProjectWidgetService projectWidgetService;
+
+    /**
      * Category repository
      */
-    private final CategoryRepository categoryRepository;
+    private final CategoryService categoryService;
 
     /**
      * Socket service
@@ -83,7 +83,7 @@ public class WidgetService {
     /**
      * Asset repository
      */
-    private final AssetRepository assetRepository;
+    private final AssetService assetService;
 
     /**
      * Search service
@@ -98,24 +98,31 @@ public class WidgetService {
     /**
      * Constructor
      *
-     * @param projectWidgetRepository The project widget repository
      * @param widgetRepository The widget repository
-     * @param categoryRepository The category repository
+     * @param projectWidgetService The project widget service to inject
+     * @param categoryService The category service
      * @param dashboardWebsocketService The socket service
      * @param cacheService The cache service
      * @param ctx The application context
-     * @param assetRepository The asset repository
+     * @param assetService The asset service
      * @param searchService The search service
      */
     @Autowired
-    public WidgetService(ProjectWidgetRepository projectWidgetRepository, WidgetRepository widgetRepository, CategoryRepository categoryRepository, DashboardWebSocketService dashboardWebsocketService, CacheService cacheService, ApplicationContext ctx, AssetRepository assetRepository, SearchService searchService) {
-        this.projectWidgetRepository = projectWidgetRepository;
+    public WidgetService(final WidgetRepository widgetRepository,
+                         final ProjectWidgetService projectWidgetService,
+                         final CategoryService categoryService,
+                         final DashboardWebSocketService dashboardWebsocketService,
+                         final CacheService cacheService,
+                         final ApplicationContext ctx,
+                         final AssetService assetService,
+                         final SearchService searchService) {
         this.widgetRepository = widgetRepository;
-        this.categoryRepository = categoryRepository;
+        this.projectWidgetService = projectWidgetService;
+        this.categoryService = categoryService;
         this.dashboardWebsocketService = dashboardWebsocketService;
         this.cacheService = cacheService;
         this.ctx = ctx;
-        this.assetRepository = assetRepository;
+        this.assetService = assetService;
         this.searchService = searchService;
     }
 
@@ -208,24 +215,14 @@ public class WidgetService {
     }
 
     /**
-     * Get every categories
-     * @return The list of categories
-     */
-    @Transactional
-    @Cacheable("widget-categories")
-    public List<Category> getCategories() {
-        return categoryRepository.findAllByOrderByNameAsc();
-    }
-
-    /**
      * Get every widgets for a category
      *
      * @param categoryId The category id used for found widgets
      * @return The list of related widgets
      */
     @Transactional
-    public List<WidgetDto> getWidgetsByCategory(final Long categoryId) {
-        return transformIntoDTOs(widgetRepository.findAllByCategory_IdOrderByNameAsc(categoryId));
+    public List<Widget> getWidgetsByCategory(final Long categoryId) {
+        return widgetRepository.findAllByCategory_IdOrderByNameAsc(categoryId);
     }
 
     /**
@@ -277,107 +274,6 @@ public class WidgetService {
             .collect(Collectors.toMap(WidgetParamValue::getJsKey, WidgetParamValue::getValue));
     }
 
-    /**
-     * Method used to update all widgets positions for a current project
-     * @param projectId the project id
-     * @param positions lit of position
-     * @param projetToken project token
-     */
-    @Transactional
-    public void update(Long projectId, List<ProjectWidgetPositionDto> positions, String projetToken){
-        List<ProjectWidget> projectWidgets = projectWidgetRepository.findByProjectIdAndWidget_WidgetAvailabilityOrderById(projectId, WidgetAvailabilityEnum.ACTIVATED);
-        if (projectWidgets.size() != positions.size()) {
-            throw new ApiException(ApiErrorEnum.PROJECT_INVALID_CONSTANCY);
-        }
-
-        int i = 0;
-        for (ProjectWidget projectWidget : projectWidgets){
-            projectWidgetRepository.updateRowAndColAndWidthAndHeightById(positions.get(i).getRow(),
-                    positions.get(i).getCol(),
-                    positions.get(i).getWidth(),
-                    positions.get(i).getHeight(),
-                    projectWidget.getId()
-                    );
-            i++;
-        }
-        projectWidgetRepository.flush();
-        // notify clients
-        dashboardWebsocketService.updateGlobalScreensByProjectToken(projetToken, new UpdateEvent(UpdateType.POSITION));
-    }
-
-    /**
-     * Method used to remove widget from the dashboard
-     * @param projectId the project id
-     * @param projectWidgetId the projectwidget id
-     */
-    @Transactional
-    public void removeWidget(Long projectId, Long projectWidgetId){
-        ctx.getBean(NashornWidgetExecutor.class).cancelWidgetInstance(projectWidgetId);
-        projectWidgetRepository.deleteByProjectIdAndId(projectId, projectWidgetId);
-        projectWidgetRepository.flush();
-        // notify client
-        dashboardWebsocketService.updateGlobalScreensByProjectId(projectId, new UpdateEvent(UpdateType.GRID));
-    }
-
-    /**
-     * Method used to get all widget by category
-     * @param widgetAvailability the availability of widgets
-     * @return a map sorted by category which contain a list of widgets
-     */
-    @Transactional
-    @Cacheable("widget-by-category")
-    public Map<Category,List<Widget>> getAvailableWidget(WidgetAvailabilityEnum widgetAvailability, String search) {
-        LOGGER.debug("Search widgets with terms '{}', for availability {}", search, widgetAvailability);
-        Map<Category,List<Widget>> ret = new LinkedHashMap<>();
-        List<Category> categories = categoryRepository.findAllByOrderByNameAsc();
-        List<Widget> widgets = null;
-        if (StringUtils.isNotBlank(search)){
-            widgets = searchService.searchWidgets(widgetAvailability, search);
-        } else {
-            if (widgetAvailability == null) {
-                widgets = widgetRepository.findAllByOrderByNameAsc();
-            } else {
-                widgets = widgetRepository.findAllByWidgetAvailabilityOrderByNameAsc(widgetAvailability);
-            }
-        }
-
-        for (Category category : categories) {
-            List<Widget> cateWidget = new ArrayList<>();
-            for (Widget widget : widgets) {
-                if (widget.getCategory() != null && category.getId().equals(widget.getCategory().getId())) {
-                    cateWidget.add(widget);
-                }
-            }
-            if (!cateWidget.isEmpty()) {
-                widgets.removeAll(cateWidget);
-                ret.put(category, cateWidget);
-            }
-        }
-
-        return ret;
-    }
-
-    /**
-     * Method used to schedule a widget
-     * @param projectWidgetId The project widget id
-     */
-    @Transactional
-    public void scheduleWidget(Long projectWidgetId){
-        ctx.getBean(NashornWidgetExecutor.class).cancelAndSchedule(projectWidgetRepository.getRequestByProjectWidgetId(projectWidgetId));
-    }
-
-    /**
-     * Method used to update the configuration and custom css for project widget
-     *
-     * @param projectWidgetId The project widget id
-     * @param style The custom css style
-     * @param backendConfig The backend configuration
-     *
-     */
-    @Transactional
-    public void updateProjectWidget(Long projectWidgetId, String style, String backendConfig){
-        projectWidgetRepository.updateConfig(projectWidgetId, style, backendConfig);
-    }
 
     /**
      * Update categories and widgets in database with the new list
@@ -388,7 +284,7 @@ public class WidgetService {
     @Transactional
     public void updateWidgetInDatabase(List<Category> list, Map<String, Library> mapLibrary){
         for (Category category : list){
-            addOrUpdateCategory(category);
+            categoryService.addOrUpdateCategory(category);
             // Create/update widgets
             addOrUpdateWidgets(category, category.getWidgets(), mapLibrary);
         }
@@ -418,7 +314,7 @@ public class WidgetService {
                 if (currentWidget != null && currentWidget.getImage() != null) {
                     widget.getImage().setId(currentWidget.getImage().getId());
                 }
-                assetRepository.save(widget.getImage());
+                assetService.save(widget.getImage());
             }
 
             //Replace The existing list of params and values by the new one
@@ -472,31 +368,5 @@ public class WidgetService {
 
             widgetRepository.save(widget);
         }
-    }
-
-    /**
-     * Method used to add or update an category
-     * @param category the category to add
-     */
-    @Transactional
-    public void addOrUpdateCategory(Category category) {
-        if (category == null){
-            return;
-        }
-        // Find and existing category with the same id
-        Category currentCateg = categoryRepository.findByTechnicalName(category.getTechnicalName());
-        if (category.getImage() != null) {
-            if (currentCateg != null && currentCateg.getImage() != null){
-                category.getImage().setId(currentCateg.getImage().getId());
-            }
-            assetRepository.save(category.getImage());
-        }
-
-        if (currentCateg != null){
-            category.setId(currentCateg.getId());
-        }
-
-        // Create/Update category
-        categoryRepository.save(category);
     }
 }

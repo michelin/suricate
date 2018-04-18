@@ -19,6 +19,8 @@ package io.suricate.monitoring.controllers.api;
 import io.suricate.monitoring.model.dto.widget.CategoryDto;
 import io.suricate.monitoring.model.dto.widget.WidgetDto;
 import io.suricate.monitoring.model.entity.widget.Category;
+import io.suricate.monitoring.model.entity.widget.Widget;
+import io.suricate.monitoring.service.api.CategoryService;
 import io.suricate.monitoring.service.api.WidgetService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,13 +49,19 @@ public class WidgetController {
     private WidgetService widgetService;
 
     /**
+     * Category service
+     */
+    private CategoryService categoryService;
+
+    /**
      * Constructor
      *
      * @param widgetService Widget service to inject
      */
     @Autowired
-    public WidgetController(final WidgetService widgetService) {
+    public WidgetController(final WidgetService widgetService, final CategoryService categoryService) {
         this.widgetService = widgetService;
+        this.categoryService = categoryService;
     }
 
     /**
@@ -64,7 +72,7 @@ public class WidgetController {
     @RequestMapping(value = "/categories", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
     public List<CategoryDto> getCategories() {
-        List<Category> categories = widgetService.getCategories();
+        List<Category> categories = categoryService.getCategoriesOrderByName();
         return categories.stream().map(CategoryDto::new).collect(Collectors.toList());
     }
 
@@ -77,6 +85,8 @@ public class WidgetController {
     @RequestMapping(value = "/category/{id}", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
     public List<WidgetDto> getWidgetByCategory(@PathVariable("id") Long id) {
-        return widgetService.getWidgetsByCategory(id);
+        List<Widget> widgets = widgetService.getWidgetsByCategory(id);
+
+        return widgetService.transformIntoDTOs(widgets);
     }
 }

@@ -256,7 +256,7 @@ public class ProjectService {
 
         // Add project widget
         projectWidget = projectWidgetService.saveAndFlush(projectWidget);
-        widgetService.scheduleWidget(projectWidget.getId());
+        projectWidgetService.scheduleWidget(projectWidget.getId());
 
         // Update grid
         dashboardWebsocketService.updateGlobalScreensByProjectToken(projectWidget.getProject().getToken(),  new UpdateEvent(UpdateType.GRID));
