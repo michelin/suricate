@@ -65,7 +65,7 @@ public class WidgetController {
     @PreAuthorize("hasRole('ROLE_USER')")
     public List<CategoryDto> getCategories() {
         List<Category> categories = widgetService.getCategories();
-        return categories.stream().map(category -> new CategoryDto(category)).collect(Collectors.toList());
+        return categories.stream().map(CategoryDto::new).collect(Collectors.toList());
     }
 
     /**
