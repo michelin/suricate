@@ -149,10 +149,11 @@ public class ProjectService {
         }
 
         Optional<List<User>> users = userService.getAllByProject(project);
-        if(users.isPresent()) {
-            projectDto.getUsers().addAll(users.get().stream().map(user -> userService.toDto(user)).collect(Collectors.toList()));
-        }
-
+        users.ifPresent(
+            currentUserList -> projectDto.getUsers().addAll(
+                currentUserList.stream().map(userService::toDto).collect(Collectors.toList())
+            )
+        );
         return projectDto;
     }
 
