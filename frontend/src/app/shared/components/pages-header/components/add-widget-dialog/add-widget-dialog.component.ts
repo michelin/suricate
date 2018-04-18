@@ -21,7 +21,7 @@ import {WidgetService} from '../../../../../modules/core/widget.service';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import {Asset} from '../../../../model/dto/Asset';
 import {Widget} from '../../../../model/dto/Widget';
-import {WidgetParamEnum} from '../../../../model/dto/enums/WidgetParamEnum';
+import {WidgetVariableType} from '../../../../model/dto/enums/WidgetVariableType';
 import {FormGroup, NgForm} from '@angular/forms';
 import {DashboardService} from '../../../../../modules/dashboard/dashboard.service';
 import {ProjectWidget} from '../../../../model/dto/ProjectWidget';
@@ -37,7 +37,7 @@ export class AddWidgetDialogComponent implements OnInit {
   step1Completed = false;
   step2Completed = false;
 
-  widgetParamEnum = WidgetParamEnum;
+  widgetParamEnum = WidgetVariableType;
   categories: Category[];
   widgets: Widget[];
   selectedWidget: Widget;
@@ -87,8 +87,8 @@ export class AddWidgetDialogComponent implements OnInit {
 
       const projectWidget: ProjectWidget = new ProjectWidget();
       projectWidget.backendConfig = backendConfig;
-      projectWidget.projectId = this.data.projectId;
-      projectWidget.widgetId = this.selectedWidget.widgetId;
+      projectWidget.project = this.dashboardService.currendDashbordSubject.getValue();
+      projectWidget.widget = this.selectedWidget;
 
       this.dashboardService
           .addWidgetToProject(projectWidget)

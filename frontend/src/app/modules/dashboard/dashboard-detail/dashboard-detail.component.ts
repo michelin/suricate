@@ -31,6 +31,7 @@ import {Subscription} from 'rxjs/Subscription';
 import {NumberUtils} from '../../../shared/utils/NumberUtils';
 import {WSUpdateEvent} from '../../../shared/model/websocket/WSUpdateEvent';
 import {WSUpdateType} from '../../../shared/model/websocket/enums/WSUpdateType';
+import {ProjectWidget} from '../../../shared/model/dto/ProjectWidget';
 
 /**
  * Component that display a specific dashboard
@@ -198,7 +199,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    */
   handleGlobalScreenEvent(updateEvent: WSUpdateEvent, headers: any) {
     if (updateEvent.type === WSUpdateType.WIDGET) {
-      this.dashboardService.updateWidgetHtmlFromProjetWidgetId(updateEvent.content.projectWidgetId, updateEvent.content.html);
+      this.dashboardService.updateWidgetHtmlFromProjetWidgetId(updateEvent.content.id, updateEvent.content.instantiateHtml);
     }
   }
 
@@ -233,15 +234,16 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
   /**
    * Get the html/CSS code for the widget
    *
-   * @param {Widget} widget The widget
+   * @param {ProjectWidget} projectWidget The widget
    * @returns {SafeHtml} The html as SafeHtml
    */
-  getHtmlFormWidget(widget: Widget): SafeHtml {
+  getHtmlAndCss(projectWidget: ProjectWidget): SafeHtml {
     return this.domSanitizer.bypassSecurityTrustHtml(`
       <style>
-        ${widget.css}
+        ${projectWidget.widget.cssContent}
+        ${projectWidget.customStyle}
       </style>
-      ${widget.html}
+      ${projectWidget.instantiateHtml}
     `);
   }
 

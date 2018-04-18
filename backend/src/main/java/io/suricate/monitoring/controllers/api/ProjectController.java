@@ -20,7 +20,7 @@ import io.suricate.monitoring.controllers.api.error.exception.ApiException;
 import io.suricate.monitoring.model.dto.project.ProjectDto;
 import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
-import io.suricate.monitoring.model.dto.project.ProjectWidgetRequest;
+import io.suricate.monitoring.model.dto.project.ProjectWidgetDto;
 import io.suricate.monitoring.model.entity.user.User;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.service.api.ProjectService;
@@ -97,7 +97,7 @@ public class ProjectController {
             projects = projectService.getAllByUser(user.get());
         }
 
-        return projects.stream().map(project -> projectService.toDTO(project)).collect(Collectors.toList());
+        return projects.stream().map(project -> projectService.toDTO(project, true)).collect(Collectors.toList());
     }
 
     /**
@@ -116,7 +116,7 @@ public class ProjectController {
             throw new ApiException(ApiErrorEnum.USER_NOT_FOUND);
         }
         Project project = projectService.saveProject(user.get(), projectService.toModel(projectDto));
-        return projectService.toDTO(project);
+        return projectService.toDTO(project, true);
     }
 
     /**
@@ -133,7 +133,7 @@ public class ProjectController {
             throw new ApiException(ApiErrorEnum.PROJECT_NOT_FOUND);
         }
 
-        return  projectService.toDTO(project.get());
+        return  projectService.toDTO(project.get(), true);
     }
 
     /**
@@ -158,7 +158,7 @@ public class ProjectController {
         }
 
         projectService.saveProject(user.get(), project.get());
-        return projectService.toDTO(project.get());
+        return projectService.toDTO(project.get(), true);
     }
 
     /**
@@ -182,27 +182,27 @@ public class ProjectController {
         }
 
         projectService.deleteUserFromProject(user.get(), project.get());
-        return projectService.toDTO(project.get());
+        return projectService.toDTO(project.get(), true);
     }
 
     /**
      * Add widget into the dashboard
      *
      * @param id The project id
-     * @param projectWidgetRequest The projectWidget to add
+     * @param projectWidgetDto The projectWidget to add
      * @return The project
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @PreAuthorize("hasRole('ROLE_USER')")
     public ProjectDto addWidgetToProject(@PathVariable("id") Long id,
-                                         @RequestBody ProjectWidgetRequest projectWidgetRequest) {
-        ProjectWidget projectWidget = projectService.addWidgetToProject(projectWidgetRequest);
+                                         @RequestBody ProjectWidgetDto projectWidgetDto) {
+        ProjectWidget projectWidget = projectService.addWidgetToProject(projectWidgetDto);
         Optional<Project> project = projectService.getOneById(projectWidget.getProject().getId());
 
         if(!project.isPresent()) {
             throw new ApiException(ApiErrorEnum.PROJECT_NOT_FOUND);
         }
 
-        return projectService.toDTO(project.get());
+        return projectService.toDTO(project.get(), true);
     }
 }

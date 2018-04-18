@@ -21,7 +21,7 @@ import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
 import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
-import io.suricate.monitoring.model.dto.project.ProjectWidgetRequest;
+import io.suricate.monitoring.model.dto.project.ProjectWidgetDto;
 import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.model.entity.user.User;
 import io.suricate.monitoring.repository.ProjectRepository;
@@ -33,6 +33,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jasypt.encryption.StringEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -90,6 +91,10 @@ public class ProjectService {
     @Autowired
     private WidgetService widgetService;
 
+    @Autowired
+    @Lazy
+    private ProjectWidgetService projectWidgetService;
+
     /**
      * Library service
      */
@@ -100,9 +105,10 @@ public class ProjectService {
      * Transforme a model object into a DTO object
      *
      * @param project The project model object
+     * @param withRelatedWidgets True if we want to attach the related widgets false otherwise
      * @return The associated DTO object
      */
-    public ProjectDto toDTO(Project project) {
+    public ProjectDto toDTO(Project project, boolean withRelatedWidgets) {
         ProjectDto projectDto = new ProjectDto();
 
         projectDto.setId(project.getId());
@@ -112,12 +118,14 @@ public class ProjectService {
         projectDto.setMaxColumn(project.getMaxColumn());
         projectDto.setCssStyle(project.getCssStyle());
 
-        List<ProjectWidget> projectWidgets = projectWidgetRepository.findByProjectIdAndWidget_WidgetAvailabilityOrderById(project.getId(), WidgetAvailabilityEnum.ACTIVATED);
-        for (ProjectWidget projectWidget: projectWidgets){
-            projectDto.getWidgets().add(widgetService.getWidgetResponse(projectWidget));
+        if(withRelatedWidgets) {
+            List<ProjectWidget> projectWidgets = projectWidgetRepository.findByProjectIdAndWidget_WidgetAvailabilityOrderById(project.getId(), WidgetAvailabilityEnum.ACTIVATED);
+            for (ProjectWidget projectWidget : projectWidgets) {
+                projectDto.getProjectWidgets().add(projectWidgetService.instantiateProjectWidget(projectWidget));
+            }
         }
 
-        List<String> librairies = libraryService.getLibraries(projectDto.getWidgets());
+        List<String> librairies = libraryService.getLibraries(project.getWidgets());
         if(librairies != null && !librairies.isEmpty()) {
             projectDto.getLibrariesToken().addAll(librairies);
         }
@@ -212,20 +220,20 @@ public class ProjectService {
     /**
      * Add a new widget into the project
      *
-     * @param projectWidgetRequest The project widget to add
+     * @param projectWidgetDto The project widget to add
      * @return The projectWidget instantiate
      */
     @Transactional
-    public ProjectWidget addWidgetToProject(ProjectWidgetRequest projectWidgetRequest) {
+    public ProjectWidget addWidgetToProject(ProjectWidgetDto projectWidgetDto) {
         ProjectWidget projectWidget = new ProjectWidget();
         projectWidget.setCol(0);
         projectWidget.setRow(0);
         projectWidget.setWidth(1);
         projectWidget.setHeight(1);
         projectWidget.setData("{}");
-        projectWidget.setBackendConfig(projectWidgetRequest.getBackendConfig());
-        projectWidget.setWidget(widgetRepository.findOne(projectWidgetRequest.getWidgetId()));
-        projectWidget.setProject(projectRepository.findOne(projectWidgetRequest.getProjectId()));
+        projectWidget.setBackendConfig(projectWidgetDto.getBackendConfig());
+        projectWidget.setWidget(widgetRepository.findOne(projectWidgetDto.getWidget().getId()));
+        projectWidget.setProject(projectRepository.findOne(projectWidgetDto.getProject().getId()));
 
         // Add project widget
         projectWidget = projectWidgetRepository.saveAndFlush(projectWidget);

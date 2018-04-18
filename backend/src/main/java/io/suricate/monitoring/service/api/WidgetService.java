@@ -16,12 +16,8 @@
 
 package io.suricate.monitoring.service.api;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.mustachejava.Mustache;
-import com.github.mustachejava.MustacheException;
-import com.github.mustachejava.MustacheFactory;
 import io.suricate.monitoring.controllers.api.error.exception.ApiException;
+import io.suricate.monitoring.model.dto.project.ProjectWidgetPositionDto;
 import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
 import io.suricate.monitoring.model.dto.widget.*;
 import io.suricate.monitoring.model.entity.*;
@@ -36,10 +32,6 @@ import io.suricate.monitoring.service.CacheService;
 import io.suricate.monitoring.service.nashorn.NashornWidgetExecutor;
 import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
 import io.suricate.monitoring.service.search.SearchService;
-import io.suricate.monitoring.utils.EntityUtils;
-import io.suricate.monitoring.utils.JavascriptUtils;
-import io.suricate.monitoring.utils.PropertiesUtils;
-import io.suricate.monitoring.utils.logging.LogExecutionTime;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,9 +41,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.io.IOException;
-import java.io.StringReader;
-import java.io.StringWriter;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -65,11 +54,6 @@ public class WidgetService {
      * Class logger
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(WidgetService.class);
-
-    /**
-     * The mustacheFactory
-     */
-    private final MustacheFactory mustacheFactory;
 
     /**
      * Project widget repository
@@ -107,11 +91,6 @@ public class WidgetService {
     private final SearchService searchService;
 
     /**
-     * Object Mapper
-     */
-    private final ObjectMapper objectMapper = new ObjectMapper();
-
-    /**
      * The application context
      */
     private final ApplicationContext ctx;
@@ -119,7 +98,6 @@ public class WidgetService {
     /**
      * Constructor
      *
-     * @param mustacheFactory The mustache factory (HTML template)
      * @param projectWidgetRepository The project widget repository
      * @param widgetRepository The widget repository
      * @param categoryRepository The category repository
@@ -130,8 +108,7 @@ public class WidgetService {
      * @param searchService The search service
      */
     @Autowired
-    public WidgetService(MustacheFactory mustacheFactory, ProjectWidgetRepository projectWidgetRepository, WidgetRepository widgetRepository, CategoryRepository categoryRepository, DashboardWebSocketService dashboardWebsocketService, CacheService cacheService, ApplicationContext ctx, AssetRepository assetRepository, SearchService searchService) {
-        this.mustacheFactory = mustacheFactory;
+    public WidgetService(ProjectWidgetRepository projectWidgetRepository, WidgetRepository widgetRepository, CategoryRepository categoryRepository, DashboardWebSocketService dashboardWebsocketService, CacheService cacheService, ApplicationContext ctx, AssetRepository assetRepository, SearchService searchService) {
         this.projectWidgetRepository = projectWidgetRepository;
         this.widgetRepository = widgetRepository;
         this.categoryRepository = categoryRepository;
@@ -147,22 +124,39 @@ public class WidgetService {
      * @param widgets The list of widgets to tranform
      * @return The list as DTO objects
      */
-    private List<WidgetResponse> transformIntoDTO(List<Widget> widgets) {
-        List<WidgetResponse> widgetResponses = new ArrayList<>();
+    public List<WidgetDto> transformIntoDTOs(final List<Widget> widgets) {
+        return widgets
+            .stream()
+            .map(this::tranformIntoDto)
+            .collect(Collectors.toList());
+    }
 
-        for(Widget widget : widgets) {
-            WidgetResponse widgetResponse = new WidgetResponse();
-            widgetResponse.setWidgetId(widget.getId());
-            widgetResponse.setName(widget.getName());
-            widgetResponse.setDescription(widget.getDescription());
-            widgetResponse.setInfo(widget.getInfo());
-            widgetResponse.setImage(widget.getImage());
-            widgetResponse.getWidgetParams().addAll(extractWidgetParams(widget));
+    /**
+     * Transform a widget into a DTO object
+     *
+     * @param widget The widget to transform
+     * @return The related DTO
+     */
+    public WidgetDto tranformIntoDto(final Widget widget) {
+        WidgetDto widgetDto = new WidgetDto();
 
-            widgetResponses.add(widgetResponse);
-        }
+        widgetDto.setId(widget.getId());
+        widgetDto.setName(widget.getName());
+        widgetDto.setDescription(widget.getDescription());
+        widgetDto.setTechnicalName(widget.getTechnicalName());
+        widgetDto.setHtmlContent(widget.getHtmlContent());
+        widgetDto.setCssContent(StringUtils.trimToEmpty(widget.getCssContent()));
+        widgetDto.setBackendJs(widget.getBackendJs());
+        widgetDto.setInfo(widget.getInfo());
+        widgetDto.setDelay(widget.getDelay());
+        widgetDto.setTimeout(widget.getTimeout());
+        widgetDto.setImage(widget.getImage());
+        widgetDto.getLibraries().addAll(widget.getLibraries());
+        widgetDto.setCategory(new CategoryDto(widget.getCategory()));
+        widgetDto.setWidgetAvailability(widget.getWidgetAvailability());
+        widgetDto.getWidgetParams().addAll(extractWidgetParams(widget));
 
-        return widgetResponses;
+        return widgetDto;
     }
 
     /**
@@ -171,12 +165,12 @@ public class WidgetService {
      * @param widget The widget
      * @return The related list of params
      */
-    private List<WidgetParamResponse> extractWidgetParams(Widget widget) {
-        List<WidgetParamResponse> widgetParamResponses = new ArrayList<>();
+    private List<WidgetParamDto> extractWidgetParams(Widget widget) {
+        List<WidgetParamDto> widgetParamResponses = new ArrayList<>();
 
         if(widget.getWidgetParams() != null && !widget.getWidgetParams().isEmpty()) {
             for (WidgetParam widgetParam: widget.getWidgetParams()) {
-                WidgetParamResponse widgetParamResponse = new WidgetParamResponse();
+                WidgetParamDto widgetParamResponse = new WidgetParamDto();
 
                 widgetParamResponse.setName(widgetParam.getName());
                 widgetParamResponse.setDescription(widgetParam.getDescription());
@@ -188,7 +182,7 @@ public class WidgetService {
 
                 if(widgetParam.getPossibleValuesMap() != null && !widgetParam.getPossibleValuesMap().isEmpty()) {
                     for(WidgetParamValue widgetParamValue : widgetParam.getPossibleValuesMap()) {
-                        WidgetParamValueResponse widgetParamValueResponse = new WidgetParamValueResponse();
+                        WidgetParamValueDto widgetParamValueResponse = new WidgetParamValueDto();
 
                         widgetParamValueResponse.setJsKey(widgetParamValue.getJsKey());
                         widgetParamValueResponse.setValue(widgetParamValue.getValue());
@@ -221,8 +215,8 @@ public class WidgetService {
      * @return The list of related widgets
      */
     @Transactional
-    public List<WidgetResponse> getWidgetsByCategory(final Long categoryId) {
-        return transformIntoDTO(widgetRepository.findAllByCategory_IdOrderByNameAsc(categoryId));
+    public List<WidgetDto> getWidgetsByCategory(final Long categoryId) {
+        return transformIntoDTOs(widgetRepository.findAllByCategory_IdOrderByNameAsc(categoryId));
     }
 
     /**
@@ -274,105 +268,6 @@ public class WidgetService {
             .collect(Collectors.toMap(WidgetParamValue::getJsKey, WidgetParamValue::getValue));
     }
 
-
-
-
-
-
-
-    /**
-     * Method used to add project widget
-     * @param projectWidget the project widget to save
-     */
-    @Transactional
-    public ProjectWidget addprojectWidget(ProjectWidget projectWidget){
-        projectWidget = projectWidgetRepository.save(projectWidget);
-        scheduleWidget(projectWidget.getId());
-
-        return projectWidget;
-    }
-
-    /**
-     * Get a width with it's id
-     * @param id the widget id
-     * @return the widget object
-     */
-    @Transactional
-    @Cacheable("widget-data")
-    public Widget getwidget(Long id){
-        return widgetRepository.findOne(id);
-    }
-
-
-    /**
-     * Get every widgets for a project
-     *
-     * @param projectId The project id
-     * @return The list of widgets for this project
-     */
-    @Transactional
-    @LogExecutionTime
-    public List<WidgetResponse> getWidgets(Long projectId){
-        List<WidgetResponse> ret = new ArrayList<>();
-
-        List<ProjectWidget> projectWidgets = projectWidgetRepository.findByProjectIdAndWidget_WidgetAvailabilityOrderById(projectId, WidgetAvailabilityEnum.ACTIVATED);
-        for (ProjectWidget projectWidget: projectWidgets){
-            ret.add(getWidgetResponse(projectWidget));
-        }
-        return ret;
-    }
-
-    /**
-     * Method used to get widget response from a project widget
-     * @param projectWidget the project widget
-     * @return a widgetresponse object
-     */
-    @Transactional
-    public WidgetResponse getWidgetResponse(ProjectWidget projectWidget) {
-        Map<String, Object> map = null;
-        Widget widget = projectWidget.getWidget();
-
-        String content = widget.getHtmlContent();
-        if (StringUtils.isNotEmpty(projectWidget.getData())) {
-            try {
-                map = objectMapper.readValue(projectWidget.getData(), new TypeReference<Map<String, Object>>() {});
-                // Add backend config
-                map.putAll(PropertiesUtils.getMap(projectWidget.getBackendConfig()));
-                map.put(JavascriptUtils.INSTANCE_ID_VARIABLE, projectWidget.getId());
-            } catch (IOException e) {
-                LOGGER.error(e.getMessage(), e);
-            }
-
-            StringWriter stringWriter = new StringWriter();
-            try {
-                Mustache mustache = mustacheFactory.compile(new StringReader(content), widget.getTechnicalName());
-                mustache.execute(stringWriter, map);
-            } catch (MustacheException me){
-                LOGGER.error("Error with mustache template for widget {}", widget.getTechnicalName(), me);
-            }
-            stringWriter.flush();
-            content = stringWriter.toString();
-        }
-
-        // Create widget response
-        WidgetResponse response = new WidgetResponse();
-        response.setHeight(projectWidget.getHeight());
-        response.setWidth(projectWidget.getWidth());
-        response.setRow(projectWidget.getRow());
-        response.setCol(projectWidget.getCol());
-        response.setCss(StringUtils.trimToEmpty(widget.getCssContent()));
-        response.setCustomCss(StringUtils.trimToEmpty(projectWidget.getCustomStyle()));
-        response.setHtml(content);
-        response.setImageId(EntityUtils.getProxiedId(widget.getImage()));
-        response.setId(widget.getTechnicalName());
-        response.setWidgetId(widget.getId());
-        response.setProjectWidgetId(projectWidget.getId());
-        response.setError(widget.getDelay() > 0 && WidgetState.STOPPED == projectWidget.getState());
-        response.setWarning(WidgetState.WARNING == projectWidget.getState());
-
-        return response;
-    }
-
     /**
      * Method used to update all widgets positions for a current project
      * @param projectId the project id
@@ -380,7 +275,7 @@ public class WidgetService {
      * @param projetToken project token
      */
     @Transactional
-    public void update(Long projectId, List<WidgetPosition> positions, String projetToken){
+    public void update(Long projectId, List<ProjectWidgetPositionDto> positions, String projetToken){
         List<ProjectWidget> projectWidgets = projectWidgetRepository.findByProjectIdAndWidget_WidgetAvailabilityOrderById(projectId, WidgetAvailabilityEnum.ACTIVATED);
         if (projectWidgets.size() != positions.size()) {
             throw new ApiException(ApiErrorEnum.PROJECT_INVALID_CONSTANCY);
@@ -390,8 +285,8 @@ public class WidgetService {
         for (ProjectWidget projectWidget : projectWidgets){
             projectWidgetRepository.updateRowAndColAndWidthAndHeightById(positions.get(i).getRow(),
                     positions.get(i).getCol(),
-                    positions.get(i).getSizeX(),
-                    positions.get(i).getSizeY(),
+                    positions.get(i).getWidth(),
+                    positions.get(i).getHeight(),
                     projectWidget.getId()
                     );
             i++;
@@ -452,29 +347,6 @@ public class WidgetService {
 
         return ret;
     }
-
-    /**
-     * Get widget by project widget id and project id
-     * @param projectWidgetId the widget id
-     * @param projectId project Id
-     * @return the widget object
-     */
-    @Transactional
-    public Widget getwidgetByProjectWidgetId(Long projectWidgetId, Long projectId){
-        return widgetRepository.findByProjectWidgetId(projectWidgetId, projectId);
-    }
-
-    /**
-     * Get widget by project widget id and project id
-     * @param projectWidgetId the widget id
-     * @param projectId project Id
-     * @return the widget object
-     */
-    @Transactional
-    public ProjectWidget getWidgetProject(Long projectWidgetId, Long projectId){
-        return projectWidgetRepository.findByIdAndProject_Id(projectWidgetId, projectId);
-    }
-
 
     /**
      * Method used to schedule a widget

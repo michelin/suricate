@@ -22,7 +22,7 @@ import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
 import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
 import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.repository.ProjectWidgetRepository;
-import io.suricate.monitoring.service.api.WidgetService;
+import io.suricate.monitoring.service.api.ProjectWidgetService;
 import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -48,7 +48,7 @@ public class DashboardScheduleService {
     private DashboardWebSocketService dashboardWebSocketService;
 
     @Autowired
-    private WidgetService widgetService;
+    private ProjectWidgetService projectWidgetService;
 
     /**
      * Method used to handle nashorn process response
@@ -79,7 +79,7 @@ public class DashboardScheduleService {
     private void notifyWidgetUpdate(Long projetWidgetId, Long projectId) {
         // Notify the dashboard
         UpdateEvent event = new UpdateEvent(UpdateType.WIDGET);
-        event.setContent(widgetService.getWidgetResponse(projectWidgetRepository.findOne(projetWidgetId)));
+        event.setContent(projectWidgetService.instantiateProjectWidget(projectWidgetRepository.findOne(projetWidgetId)));
 
         dashboardWebSocketService.updateGlobalScreensByProjectId(projectId, event);
     }

@@ -16,15 +16,32 @@
 
 package io.suricate.monitoring.service.api;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.mustachejava.Mustache;
+import com.github.mustachejava.MustacheException;
+import com.github.mustachejava.MustacheFactory;
+import io.suricate.monitoring.model.dto.project.ProjectWidgetDto;
+import io.suricate.monitoring.model.dto.project.ProjectWidgetPositionDto;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
+import io.suricate.monitoring.model.entity.widget.Widget;
 import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.repository.ProjectWidgetRepository;
+import io.suricate.monitoring.utils.JavascriptUtils;
+import io.suricate.monitoring.utils.PropertiesUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Project widget service
@@ -33,18 +50,76 @@ import java.util.List;
 public class ProjectWidgetService {
 
     /**
+     * Class logger
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProjectWidgetService.class);
+
+    /**
      * The project widget repository
      */
     private final ProjectWidgetRepository projectWidgetRepository;
 
     /**
+     * The project service
+     */
+    private final ProjectService projectService;
+
+    /**
+     * The widget service
+     */
+    private final WidgetService widgetService;
+
+    /**
+     * The mustacheFactory
+     */
+    private final MustacheFactory mustacheFactory;
+
+    /**
      * Constructor
      *
      * @param projectWidgetRepository The project widget repository
+     * @param projectService The project service
+     * @param widgetService The widget service
+     * @param mustacheFactory The mustache factory (HTML template)
      */
     @Autowired
-    public ProjectWidgetService(final ProjectWidgetRepository projectWidgetRepository) {
+    public ProjectWidgetService(final ProjectWidgetRepository projectWidgetRepository,
+                                final ProjectService projectService,
+                                final WidgetService widgetService, final MustacheFactory mustacheFactory) {
         this.projectWidgetRepository = projectWidgetRepository;
+        this.projectService = projectService;
+        this.widgetService = widgetService;
+        this.mustacheFactory = mustacheFactory;
+    }
+
+    /**
+     * Treansform a project widget into a dto object
+     *
+     * @param projectWidget The project widget to transform
+     * @return The related dto
+     */
+    public ProjectWidgetDto tranformIntoDto(final ProjectWidget projectWidget) {
+        ProjectWidgetPositionDto projectWidgetPositionDto = new ProjectWidgetPositionDto();
+        projectWidgetPositionDto.setRow(projectWidget.getRow());
+        projectWidgetPositionDto.setCol(projectWidget.getCol());
+        projectWidgetPositionDto.setHeight(projectWidget.getHeight());
+        projectWidgetPositionDto.setWidth(projectWidget.getWidth());
+
+        ProjectWidgetDto projectWidgetDto = new ProjectWidgetDto();
+        projectWidgetDto.setId(projectWidget.getId());
+        projectWidgetDto.setData(projectWidget.getData());
+        projectWidgetDto.setWidgetPosition(projectWidgetPositionDto);
+        projectWidgetDto.setCustomStyle(StringUtils.trimToEmpty(projectWidget.getCustomStyle()));
+        projectWidgetDto.setBackendConfig(projectWidget.getBackendConfig());
+        projectWidgetDto.setLog(projectWidget.getLog());
+        projectWidgetDto.setLastExecutionDate(projectWidget.getLastExecutionDate());
+        projectWidgetDto.setLastSuccessDate(projectWidget.getLastSuccessDate());
+        projectWidgetDto.setState(projectWidget.getState());
+        projectWidgetDto.setProject(projectService.toDTO(projectWidget.getProject(), false));
+        projectWidgetDto.setWidget(widgetService.tranformIntoDto(projectWidget.getWidget()));
+
+
+        return projectWidgetDto;
     }
 
     /**
@@ -81,5 +156,45 @@ public class ProjectWidgetService {
     @Transactional
     public void updateState(WidgetState widgetState, Long id, Date date){
         projectWidgetRepository.updateState(widgetState, id, date);
+    }
+
+    /**
+     * Method used to get widget response from a project widget
+     * @param projectWidget the project widget
+     * @return a widgetresponse object
+     */
+    @Transactional
+    public ProjectWidgetDto instantiateProjectWidget(ProjectWidget projectWidget) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        Map<String, Object> map = null;
+        Widget widget = projectWidget.getWidget();
+
+        String instantiateHtml = widget.getHtmlContent();
+        if (StringUtils.isNotEmpty(projectWidget.getData())) {
+            try {
+                map = objectMapper.readValue(projectWidget.getData(), new TypeReference<Map<String, Object>>() {});
+                // Add backend config
+                map.putAll(PropertiesUtils.getMap(projectWidget.getBackendConfig()));
+                map.put(JavascriptUtils.INSTANCE_ID_VARIABLE, projectWidget.getId());
+            } catch (IOException e) {
+                LOGGER.error(e.getMessage(), e);
+            }
+
+            StringWriter stringWriter = new StringWriter();
+            try {
+                Mustache mustache = mustacheFactory.compile(new StringReader(instantiateHtml), widget.getTechnicalName());
+                mustache.execute(stringWriter, map);
+            } catch (MustacheException me){
+                LOGGER.error("Error with mustache template for widget {}", widget.getTechnicalName(), me);
+            }
+            stringWriter.flush();
+            instantiateHtml = stringWriter.toString();
+        }
+
+        // Create the response
+        ProjectWidgetDto projectWidgetDto = tranformIntoDto(projectWidget);
+        projectWidgetDto.setInstantiateHtml(instantiateHtml);
+
+        return projectWidgetDto;
     }
 }

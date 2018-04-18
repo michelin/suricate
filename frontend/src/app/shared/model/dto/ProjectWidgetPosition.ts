@@ -14,29 +14,11 @@
  *  * See the License for the specific language governing permissions and
  *  * limitations under the License.
  *
- *
  */
 
-package io.suricate.monitoring.model.dto.project;
-
-import lombok.*;
-
-/**
- * Object representing a project widget used for communication with clients of the webservice
- * Link a widget with a dashboard/project
- */
-@Getter @Setter @NoArgsConstructor @EqualsAndHashCode @ToString
-public class ProjectWidgetRequest {
-    /**
-     * Contains the configuration of the widget
-     */
-    private String backendConfig;
-    /**
-     * The project id
-     */
-    private Long projectId;
-    /**
-     * The widget if
-     */
-    private Long widgetId;
+export class ProjectWidgetPosition {
+  col: number;
+  row: number;
+  width: number;
+  height: number;
 }

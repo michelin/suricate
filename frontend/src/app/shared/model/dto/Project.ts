@@ -16,15 +16,16 @@
 
 import {Widget} from './Widget';
 import {User} from './user/User';
+import {ProjectWidget} from './ProjectWidget';
 
 export class Project {
   id: number;
   name: string;
-  token: string;
-  widgetHeight: number;
   maxColumn: number;
+  widgetHeight: number;
   cssStyle: string;
-  widgets: Widget[];
+  token: string;
+  projectWidgets: ProjectWidget[];
   librariesToken: string[];
   users: User[];
 }

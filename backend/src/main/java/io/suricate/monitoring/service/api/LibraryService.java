@@ -17,7 +17,7 @@
 package io.suricate.monitoring.service.api;
 
 import io.suricate.monitoring.model.entity.Library;
-import io.suricate.monitoring.model.dto.widget.WidgetResponse;
+import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.repository.AssetRepository;
 import io.suricate.monitoring.repository.LibraryRepository;
 import io.suricate.monitoring.utils.IdUtils;
@@ -59,12 +59,12 @@ public class LibraryService {
 
     /**
      * Method used to get all library for the displayed widget
-     * @param response The list of widget response
+     * @param projectWidgets The list of project widget
      * @return The list of related libraries
      */
     @LogExecutionTime
-    public List<String> getLibraries(List<WidgetResponse> response) {
-        List<Long> widgetList = response.stream().map( WidgetResponse::getWidgetId).distinct().collect(Collectors.toList());
+    public List<String> getLibraries(List<ProjectWidget> projectWidgets) {
+        List<Long> widgetList = projectWidgets.stream().map( projectWidget -> projectWidget.getWidget().getId()).distinct().collect(Collectors.toList());
         if (widgetList.isEmpty()){
             return null;
         }
