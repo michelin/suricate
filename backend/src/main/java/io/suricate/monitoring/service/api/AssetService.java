@@ -42,4 +42,14 @@ public class AssetService {
     public Asset findOne(final Long id) {
         return assetRepository.findOne(id);
     }
+
+    /**
+     * Save a new asset in database
+     *
+     * @param asset The asset to save
+     * @return The asset saved
+     */
+    public Asset save(Asset asset) {
+        return assetRepository.save(asset);
+    }
 }

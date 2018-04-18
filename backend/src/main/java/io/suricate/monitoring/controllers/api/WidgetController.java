@@ -52,7 +52,7 @@ public class WidgetController {
      * @param widgetService Widget service to inject
      */
     @Autowired
-    public WidgetController(WidgetService widgetService) {
+    public WidgetController(final WidgetService widgetService) {
         this.widgetService = widgetService;
     }
 

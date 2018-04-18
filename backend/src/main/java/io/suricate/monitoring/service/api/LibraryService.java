@@ -43,18 +43,18 @@ public class LibraryService {
     /**
      * Asset repository
      */
-    private final AssetRepository assetRepository;
+    private final AssetService assetService;
 
     /**
      * The constructor
      *
      * @param libraryRepository Inject the library repository
-     * @param assetRepository Inject the asset repository
+     * @param assetService Inject the asset service
      */
     @Autowired
-    public LibraryService(LibraryRepository libraryRepository, AssetRepository assetRepository) {
+    public LibraryService(final LibraryRepository libraryRepository, final AssetService assetService) {
         this.libraryRepository = libraryRepository;
-        this.assetRepository = assetRepository;
+        this.assetService = assetService;
     }
 
     /**
@@ -89,7 +89,7 @@ public class LibraryService {
                 if (lib != null && lib.getAsset() != null) {
                     library.getAsset().setId(lib.getAsset().getId());
                 }
-                assetRepository.save(library.getAsset());
+                assetService.save(library.getAsset());
             }
             if (lib != null) {
                 library.setId(lib.getId());
