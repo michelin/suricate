@@ -160,6 +160,15 @@ public class WidgetService {
     }
 
     /**
+     * Find a widget by id
+     * @param id The widget id
+     * @return The related widget
+     */
+    public Widget findOne(final Long id) {
+        return widgetRepository.findOne(id);
+    }
+
+    /**
      * Extract the list of widget params of a widget
      *
      * @param widget The widget

@@ -31,6 +31,8 @@ import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
 import io.suricate.monitoring.utils.logging.LogExecutionTime;
 import org.apache.commons.lang3.StringUtils;
 import org.jasypt.encryption.StringEncryptor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Lazy;
@@ -49,57 +51,73 @@ import java.util.stream.Collectors;
 public class ProjectService {
 
     /**
+     * Class logger
+     */
+    private final static Logger LOGGER = LoggerFactory.getLogger(ProjectService.class);
+
+    /**
      * String encryptor (mainly used for SECRET widget params)
      */
-    @Autowired
-    @Qualifier("jasyptStringEncryptor")
-    private StringEncryptor stringEncryptor;
+    private final StringEncryptor stringEncryptor;
 
     /**
      * Project repository
      */
-    @Autowired
-    private ProjectRepository projectRepository;
-
-    /**
-     * ProjectWidget repository
-     */
-    @Autowired
-    private ProjectWidgetRepository projectWidgetRepository;
-
-    /**
-     * Widget repository
-     */
-    @Autowired
-    private WidgetRepository widgetRepository;
+    private final ProjectRepository projectRepository;
 
     /**
      * User service
      */
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     /**
-     * Socket service
+     * dashboard Socket service
      */
-    @Autowired
-    private DashboardWebSocketService dashboardWebsocketService;
+    private final DashboardWebSocketService dashboardWebsocketService;
 
     /**
      * Widget service
      */
-    @Autowired
-    private WidgetService widgetService;
+    private final WidgetService widgetService;
 
-    @Autowired
-    @Lazy
-    private ProjectWidgetService projectWidgetService;
+    /**
+     * The project widget service
+     */
+    private final ProjectWidgetService projectWidgetService;
 
     /**
      * Library service
      */
+    private final transient LibraryService libraryService;
+
+    /**
+     * Constructor
+     *
+     * @param stringEncryptor The string encryptor to inject
+     * @param projectRepository The project repository to inject
+     * @param userService The user service to inject
+     * @param dashboardWebSocketService The dashboard web socket service to inject
+     * @param widgetService The widget service to inject
+     * @param projectWidgetService The project widget service to inject
+     * @param libraryService The library service to inject
+     */
     @Autowired
-    private transient LibraryService libraryService;
+    public ProjectService(@Qualifier("jasyptStringEncryptor") final StringEncryptor stringEncryptor,
+                          final ProjectRepository projectRepository,
+                          final UserService userService,
+                          final DashboardWebSocketService dashboardWebSocketService,
+                          final WidgetService widgetService,
+                          @Lazy final ProjectWidgetService projectWidgetService,
+                          final LibraryService libraryService) {
+
+        this.stringEncryptor = stringEncryptor;
+        this.projectRepository = projectRepository;
+        this.userService = userService;
+        this.dashboardWebsocketService = dashboardWebSocketService;
+        this.widgetService = widgetService;
+        this.projectWidgetService = projectWidgetService;
+        this.libraryService = libraryService;
+    }
 
     /**
      * Transforme a model object into a DTO object
@@ -119,7 +137,7 @@ public class ProjectService {
         projectDto.setCssStyle(project.getCssStyle());
 
         if(withRelatedWidgets) {
-            List<ProjectWidget> projectWidgets = projectWidgetRepository.findByProjectIdAndWidget_WidgetAvailabilityOrderById(project.getId(), WidgetAvailabilityEnum.ACTIVATED);
+            List<ProjectWidget> projectWidgets = projectWidgetService.getAllByProjectIdAndWidgetAvailability(project.getId(), WidgetAvailabilityEnum.ACTIVATED);
             for (ProjectWidget projectWidget : projectWidgets) {
                 projectDto.getProjectWidgets().add(projectWidgetService.instantiateProjectWidget(projectWidget));
             }
@@ -232,11 +250,11 @@ public class ProjectService {
         projectWidget.setHeight(1);
         projectWidget.setData("{}");
         projectWidget.setBackendConfig(projectWidgetDto.getBackendConfig());
-        projectWidget.setWidget(widgetRepository.findOne(projectWidgetDto.getWidget().getId()));
+        projectWidget.setWidget(widgetService.findOne(projectWidgetDto.getWidget().getId()));
         projectWidget.setProject(projectRepository.findOne(projectWidgetDto.getProject().getId()));
 
         // Add project widget
-        projectWidget = projectWidgetRepository.saveAndFlush(projectWidget);
+        projectWidget = projectWidgetService.saveAndFlush(projectWidget);
         widgetService.scheduleWidget(projectWidget.getId());
 
         // Update grid

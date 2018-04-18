@@ -25,6 +25,7 @@ import io.suricate.monitoring.model.dto.project.ProjectWidgetDto;
 import io.suricate.monitoring.model.dto.project.ProjectWidgetPositionDto;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.entity.widget.Widget;
+import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
 import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.repository.ProjectWidgetRepository;
 import io.suricate.monitoring.utils.JavascriptUtils;
@@ -139,6 +140,27 @@ public class ProjectWidgetService {
      */
     public ProjectWidget getOne(final Long projectWidgetId) {
         return projectWidgetRepository.getOne(projectWidgetId);
+    }
+
+    /**
+     * Get all by Project widget by project id and widget availability
+     *
+     * @param projectId The project id
+     * @param widgetAvailabilityEnum The widget availability enum
+     * @return The list of related project widget
+     */
+    public List<ProjectWidget> getAllByProjectIdAndWidgetAvailability(final Long projectId, final WidgetAvailabilityEnum widgetAvailabilityEnum) {
+        return projectWidgetRepository.findByProjectIdAndWidget_WidgetAvailabilityOrderById(projectId, widgetAvailabilityEnum);
+    }
+
+    /**
+     * Save and flush a project widget
+     *
+     * @param projectWidget The project widget to save
+     * @return The project widget saved
+     */
+    public ProjectWidget saveAndFlush(ProjectWidget projectWidget) {
+        return projectWidgetRepository.saveAndFlush(projectWidget);
     }
 
     /**
