@@ -25,8 +25,7 @@ import io.suricate.monitoring.model.dto.project.ProjectWidgetDto;
 import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.model.entity.user.User;
 import io.suricate.monitoring.repository.ProjectRepository;
-import io.suricate.monitoring.repository.ProjectWidgetRepository;
-import io.suricate.monitoring.repository.WidgetRepository;
+import io.suricate.monitoring.service.scheduler.DashboardScheduleService;
 import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
 import io.suricate.monitoring.utils.logging.LogExecutionTime;
 import org.apache.commons.lang3.StringUtils;
@@ -76,6 +75,11 @@ public class ProjectService {
     private final DashboardWebSocketService dashboardWebsocketService;
 
     /**
+     * The dashboard schedule service
+     */
+    private final DashboardScheduleService dashboardScheduleService;
+
+    /**
      * Widget service
      */
     private final WidgetService widgetService;
@@ -97,6 +101,7 @@ public class ProjectService {
      * @param projectRepository The project repository to inject
      * @param userService The user service to inject
      * @param dashboardWebSocketService The dashboard web socket service to inject
+     * @param dashboardScheduleService The dashboard schedule service to inject
      * @param widgetService The widget service to inject
      * @param projectWidgetService The project widget service to inject
      * @param libraryService The library service to inject
@@ -106,6 +111,7 @@ public class ProjectService {
                           final ProjectRepository projectRepository,
                           final UserService userService,
                           final DashboardWebSocketService dashboardWebSocketService,
+                          final DashboardScheduleService dashboardScheduleService,
                           final WidgetService widgetService,
                           @Lazy final ProjectWidgetService projectWidgetService,
                           final LibraryService libraryService) {
@@ -114,6 +120,7 @@ public class ProjectService {
         this.projectRepository = projectRepository;
         this.userService = userService;
         this.dashboardWebsocketService = dashboardWebSocketService;
+        this.dashboardScheduleService = dashboardScheduleService;
         this.widgetService = widgetService;
         this.projectWidgetService = projectWidgetService;
         this.libraryService = libraryService;
@@ -256,7 +263,7 @@ public class ProjectService {
 
         // Add project widget
         projectWidget = projectWidgetService.saveAndFlush(projectWidget);
-        projectWidgetService.scheduleWidget(projectWidget.getId());
+        dashboardScheduleService.scheduleWidget(projectWidget.getId());
 
         // Update grid
         dashboardWebsocketService.updateGlobalScreensByProjectToken(projectWidget.getProject().getToken(),  new UpdateEvent(UpdateType.GRID));

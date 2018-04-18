@@ -18,6 +18,7 @@ package io.suricate.monitoring.service.nashorn;
 
 import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
 import io.suricate.monitoring.model.entity.Configuration;
+import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.repository.ProjectWidgetRepository;
 import io.suricate.monitoring.service.api.ProjectWidgetService;
@@ -63,20 +64,40 @@ public class NashornService {
         return projectWidgetService
             .getAll()
             .stream()
-            .map(projectWidget -> {
-                String properties = projectWidget.getBackendConfig();
-                String script = projectWidget.getWidget().getBackendJs();
-                String previousData = projectWidget.getData();
-                Long projectId = projectWidget.getProject().getId();
-                Long technicalId = projectWidget.getId();
-                Long delay = projectWidget.getWidget().getDelay();
-                Long timeout = projectWidget.getWidget().getTimeout();
-                WidgetState state = projectWidget.getState();
-                Date lastSuccess = projectWidget.getLastSuccessDate();
-
-                return new NashornRequest(properties, script, previousData, projectId, technicalId, delay, timeout, state, lastSuccess);
-            })
+            .map(this::createNashornRequestByProjectWidget)
             .collect(Collectors.toList());
+    }
+
+    /**
+     * Create a nashorn request by a project widget id
+     *
+     * @param projectWidgetId The project widget id
+     * @return The related nashorn request
+     */
+    public NashornRequest getNashornRequestByProjectWidgetId(final Long projectWidgetId) {
+        ProjectWidget projectWidget = projectWidgetService.getOne(projectWidgetId);
+
+        return createNashornRequestByProjectWidget(projectWidget);
+    }
+
+    /**
+     * Create a nashorn request by a project widget
+     *
+     * @param projectWidget The project widget
+     * @return The related nashorn request
+     */
+    private NashornRequest createNashornRequestByProjectWidget(final ProjectWidget projectWidget) {
+        String properties = projectWidget.getBackendConfig();
+        String script = projectWidget.getWidget().getBackendJs();
+        String previousData = projectWidget.getData();
+        Long projectId = projectWidget.getProject().getId();
+        Long technicalId = projectWidget.getId();
+        Long delay = projectWidget.getWidget().getDelay();
+        Long timeout = projectWidget.getWidget().getTimeout();
+        WidgetState state = projectWidget.getState();
+        Date lastSuccess = projectWidget.getLastSuccessDate();
+
+        return new NashornRequest(properties, script, previousData, projectId, technicalId, delay, timeout, state, lastSuccess);
     }
 
     /**

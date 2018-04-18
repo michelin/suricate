@@ -14,20 +14,23 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.service;
+package io.suricate.monitoring.service.scheduler;
 
+import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
+import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.enums.NashornErrorTypeEnum;
 import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
 import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
 import io.suricate.monitoring.model.enums.UpdateType;
-import io.suricate.monitoring.repository.ProjectWidgetRepository;
 import io.suricate.monitoring.service.api.ProjectWidgetService;
+import io.suricate.monitoring.service.nashorn.NashornService;
 import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -41,14 +44,44 @@ public class DashboardScheduleService {
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(DashboardScheduleService.class);
 
-    @Autowired
-    private ProjectWidgetRepository projectWidgetRepository;
+    /**
+     * The dashboard websocket service
+     */
+    private final DashboardWebSocketService dashboardWebSocketService;
 
-    @Autowired
-    private DashboardWebSocketService dashboardWebSocketService;
+    /**
+     * The project widget service
+     */
+    private final ProjectWidgetService projectWidgetService;
 
+    /**
+     * The nashorn service
+     */
+    private final NashornService nashornService;
+
+    /**
+     * The application context
+     */
+    private final ApplicationContext applicationContext;
+
+    /**
+     * Constructor
+     *
+     * @param dashboardWebSocketService The dashboard websocket service
+     * @param projectWidgetService The project widget service
+     * @param nashornService The nashorn service to inject
+     * @param applicationContext The application context to inject
+     */
     @Autowired
-    private ProjectWidgetService projectWidgetService;
+    public DashboardScheduleService(final DashboardWebSocketService dashboardWebSocketService,
+                                    final ProjectWidgetService projectWidgetService,
+                                    final NashornService nashornService,
+                                    final ApplicationContext applicationContext) {
+        this.dashboardWebSocketService = dashboardWebSocketService;
+        this.projectWidgetService = projectWidgetService;
+        this.nashornService = nashornService;
+        this.applicationContext = applicationContext;
+    }
 
     /**
      * Method used to handle nashorn process response
@@ -65,7 +98,8 @@ public class DashboardScheduleService {
         // Stop execution if a fatal error is detected
         if (!nashornResponse.isFatal()) {
             LOGGER.debug("Schedule widget instance: {}", nashornResponse.getProjectWidgetId());
-            callBack.schedule(projectWidgetRepository.getRequestByProjectWidgetId(nashornResponse.getProjectWidgetId()), false, false);
+            NashornRequest newNashornRequest = nashornService.getNashornRequestByProjectWidgetId(nashornResponse.getProjectWidgetId());
+            callBack.schedule(newNashornRequest, false, false);
         }
         notifyWidgetUpdate(nashornResponse.getProjectWidgetId(), nashornResponse.getProjectId());
     }
@@ -73,26 +107,38 @@ public class DashboardScheduleService {
 
     /**
      * Method used to notify and update the widget on dashboard
-     * @param projetWidgetId project widget Id
+     * @param projectWidgetId project widget Id
      * @param projectId project Id
      */
-    private void notifyWidgetUpdate(Long projetWidgetId, Long projectId) {
+    private void notifyWidgetUpdate(Long projectWidgetId, Long projectId) {
         // Notify the dashboard
         UpdateEvent event = new UpdateEvent(UpdateType.WIDGET);
-        event.setContent(projectWidgetService.instantiateProjectWidget(projectWidgetRepository.findOne(projetWidgetId)));
+        ProjectWidget projectWidget = projectWidgetService.getOne(projectWidgetId);
+        event.setContent(projectWidgetService.instantiateProjectWidget(projectWidget));
 
         dashboardWebSocketService.updateGlobalScreensByProjectId(projectId, event);
     }
 
     /**
+     * Method used to schedule a widget
+     * @param projectWidgetId The project widget id
+     */
+    @Transactional
+    public void scheduleWidget(final Long projectWidgetId){
+        NashornRequest nashornRequest = nashornService.getNashornRequestByProjectWidgetId(projectWidgetId);
+        applicationContext.getBean(NashornWidgetScheduler.class).cancelAndSchedule(nashornRequest);
+    }
+
+    /**
      * Method used to update logs
-     * @param e exception throw
+     *
+     * @param exception exception throw
      * @param projectWidgetId the widget instance id
      * @param projectId the project id
      */
     @Transactional
-    public void updateLogException(Exception e ,Long projectWidgetId, Long projectId){
-        projectWidgetRepository.updateExecutionLog(new Date(), ExceptionUtils.getMessage(e), projectWidgetId, WidgetState.STOPPED);
+    public void updateLogException(Exception exception, Long projectWidgetId, Long projectId){
+        projectWidgetService.updateLogExecution(new Date(), ExceptionUtils.getMessage(exception), projectWidgetId,  WidgetState.STOPPED);
         notifyWidgetUpdate(projectWidgetId, projectId);
     }
 
@@ -103,10 +149,10 @@ public class DashboardScheduleService {
      */
     private void updateData(NashornResponse nashornResponse){
         if (nashornResponse.isValid()) {
-            projectWidgetRepository.updateSuccessExecution(nashornResponse.getLaunchDate(), nashornResponse.getLog(), nashornResponse.getData(), nashornResponse.getProjectWidgetId(), WidgetState.RUNNING);
+            projectWidgetService.updateSuccessExecution(nashornResponse.getProjectWidgetId(), nashornResponse.getLaunchDate(), nashornResponse.getLog(), nashornResponse.getData(), WidgetState.RUNNING);
         } else {
             WidgetState state = nashornResponse.getError() == NashornErrorTypeEnum.FATAL ? WidgetState.STOPPED : WidgetState.WARNING;
-            projectWidgetRepository.updateExecutionLog(nashornResponse.getLaunchDate(), nashornResponse.getLog(), nashornResponse.getProjectWidgetId(), state);
+            projectWidgetService.updateLogExecution(nashornResponse.getLaunchDate(), nashornResponse.getLog(), nashornResponse.getProjectWidgetId(), state);
         }
     }
 

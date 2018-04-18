@@ -32,7 +32,7 @@ import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
 import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.repository.ProjectWidgetRepository;
-import io.suricate.monitoring.service.nashorn.NashornWidgetExecutor;
+import io.suricate.monitoring.service.scheduler.NashornWidgetScheduler;
 import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
 import io.suricate.monitoring.utils.JavascriptUtils;
 import io.suricate.monitoring.utils.PropertiesUtils;
@@ -238,7 +238,7 @@ public class ProjectWidgetService {
      */
     @Transactional
     public void removeWidgetFromDashboard(Long projectId, Long projectWidgetId){
-        ctx.getBean(NashornWidgetExecutor.class).cancelWidgetInstance(projectWidgetId);
+        ctx.getBean(NashornWidgetScheduler.class).cancelWidgetInstance(projectWidgetId);
         projectWidgetRepository.deleteByProjectIdAndId(projectId, projectWidgetId);
         projectWidgetRepository.flush();
         // notify client
@@ -304,15 +304,6 @@ public class ProjectWidgetService {
     }
 
     /**
-     * Method used to schedule a widget
-     * @param projectWidgetId The project widget id
-     */
-    @Transactional
-    public void scheduleWidget(Long projectWidgetId){
-        ctx.getBean(NashornWidgetExecutor.class).cancelAndSchedule(projectWidgetRepository.getRequestByProjectWidgetId(projectWidgetId));
-    }
-
-    /**
      * Method used to update the configuration and custom css for project widget
      *
      * @param projectWidgetId The project widget id
@@ -323,5 +314,30 @@ public class ProjectWidgetService {
     @Transactional
     public void updateProjectWidget(Long projectWidgetId, String style, String backendConfig){
         projectWidgetRepository.updateConfig(projectWidgetId, style, backendConfig);
+    }
+
+    /**
+     * Update nashorn execution log
+     *
+     * @param executionDate The execution date
+     * @param log The message to log
+     * @param projectWidgetId The project widget id to update
+     * @param widgetState The widget sate
+     */
+    public void updateLogExecution(final Date executionDate, final String log, final Long projectWidgetId, final WidgetState widgetState) {
+        projectWidgetRepository.updateExecutionLog(executionDate, log, projectWidgetId, widgetState);
+    }
+
+    /**
+     * Update project widget when nashorn execution is a success
+     *
+     * @param projectWidgetId The projectWidget id
+     * @param executionDate The execution date
+     * @param executionLog The execution log
+     * @param data The data return by the execution
+     * @param widgetState The state of the widget
+     */
+    public void updateSuccessExecution(final Long projectWidgetId, final Date executionDate, final String executionLog, final String data, final WidgetState widgetState) {
+        projectWidgetRepository.updateSuccessExecution(executionDate,executionLog, data, projectWidgetId, widgetState);
     }
 }

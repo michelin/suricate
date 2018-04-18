@@ -22,7 +22,7 @@ import io.suricate.monitoring.model.entity.Library;
 import io.suricate.monitoring.service.api.LibraryService;
 import io.suricate.monitoring.service.api.WidgetService;
 import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
-import io.suricate.monitoring.service.nashorn.NashornWidgetExecutor;
+import io.suricate.monitoring.service.scheduler.NashornWidgetScheduler;
 import io.suricate.monitoring.utils.WidgetUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -74,25 +74,25 @@ public class GitService {
     /**
      * The nashorn widget executor
      */
-    private final NashornWidgetExecutor nashornWidgetExecutor;
+    private final NashornWidgetScheduler nashornWidgetScheduler;
 
     /**
      * Contructor using fields
      * @param widgetService widget service
      * @param libraryService library service
      * @param dashboardWebSocketService socket service
-     * @param nashornWidgetExecutor widget executor
+     * @param nashornWidgetScheduler widget executor
      */
     @Autowired
     public GitService(final WidgetService widgetService,
                       final LibraryService libraryService,
                       final DashboardWebSocketService dashboardWebSocketService,
-                      final NashornWidgetExecutor nashornWidgetExecutor,
+                      final NashornWidgetScheduler nashornWidgetScheduler,
                       final ApplicationProperties applicationProperties) {
         this.widgetService = widgetService;
         this.libraryService = libraryService;
         this.dashboardWebSocketService = dashboardWebSocketService;
-        this.nashornWidgetExecutor = nashornWidgetExecutor;
+        this.nashornWidgetScheduler = nashornWidgetScheduler;
         this.applicationProperties = applicationProperties;
     }
 
@@ -178,7 +178,7 @@ public class GitService {
             if (StringUtils.isBlank(applicationProperties.widgets.local.folderPath)) {
                 FileUtils.deleteQuietly(folder);
             }
-            nashornWidgetExecutor.initScheduler();
+            nashornWidgetScheduler.initScheduler();
             dashboardWebSocketService.reloadAllConnectedDashboard();
         }
     }

@@ -16,12 +16,8 @@
 
 package io.suricate.monitoring.service.api;
 
-import io.suricate.monitoring.controllers.api.error.exception.ApiException;
-import io.suricate.monitoring.model.dto.project.ProjectWidgetPositionDto;
-import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
 import io.suricate.monitoring.model.dto.widget.*;
 import io.suricate.monitoring.model.entity.*;
-import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.entity.widget.Category;
 import io.suricate.monitoring.model.entity.widget.Widget;
 import io.suricate.monitoring.model.entity.widget.WidgetParam;
@@ -29,15 +25,10 @@ import io.suricate.monitoring.model.entity.widget.WidgetParamValue;
 import io.suricate.monitoring.model.enums.*;
 import io.suricate.monitoring.repository.*;
 import io.suricate.monitoring.service.CacheService;
-import io.suricate.monitoring.service.nashorn.NashornWidgetExecutor;
-import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
-import io.suricate.monitoring.service.search.SearchService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;

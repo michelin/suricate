@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.service;
+package io.suricate.monitoring.service.scheduler;
 
 import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
 
