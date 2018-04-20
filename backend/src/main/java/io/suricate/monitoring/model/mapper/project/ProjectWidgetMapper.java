@@ -46,7 +46,8 @@ public abstract class ProjectWidgetMapper {
         @Mapping(target = "widgetPosition.height", source = "projectWidget.height"),
         @Mapping(target = "widgetPosition.width", source = "projectWidget.width"),
         @Mapping(target = "instantiateHtml", expression = "java(projectWidgetService.instantiateProjectWidgetHtml(projectWidget))"),
-        @Mapping(target = "project", qualifiedByName = "toProjectDtoWithoutProjectWidget")
+        @Mapping(target = "project", qualifiedByName = "toProjectDtoWithoutProjectWidget"),
+        @Mapping(target = "widget", qualifiedByName = "toWidgetDtoDefault")
     })
     public abstract ProjectWidgetDto toProjectWidgetDtoDefault(ProjectWidget projectWidget);
 

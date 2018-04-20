@@ -41,11 +41,11 @@ public abstract class ProjectMapper {
      */
     @Named("toProjectDtoDefault")
     @Mappings({
-        @Mapping(target = "projectWidgets", source = "project.widgets", qualifiedByName = "toProjectWidgetDtoDefault"),
-        @Mapping(target = "librariesToken", expression = "java(libraryService.getLibraries(project.getWidgets()))")
-
+        @Mapping(target = "projectWidgets", source = "project.widgets", qualifiedByName = "toProjectWidgetDtosDefault"),
+        @Mapping(target = "librariesToken", expression = "java(libraryService.getLibraries(project.getWidgets()))"),
+        @Mapping(target = "users", qualifiedByName = "toUserDtosDefault")
     })
-    public abstract ProjectDto toProjectDto(Project project);
+    public abstract ProjectDto toProjectDtoDefault(Project project);
 
     /**
      * Transform a project into a ProjectDto
@@ -55,7 +55,9 @@ public abstract class ProjectMapper {
      */
     @Named("toProjectDtoWithoutProjectWidget")
     @Mappings({
-        @Mapping(target = "projectWidgets", source = "project.widgets", ignore = true)
+        @Mapping(target = "projectWidgets", source = "project.widgets", ignore = true),
+        @Mapping(target = "librariesToken", expression = "java(libraryService.getLibraries(project.getWidgets()))"),
+        @Mapping(target = "users", qualifiedByName = "toUserDtosDefault")
     })
     public abstract ProjectDto toProjectDtoWithoutProjectWidget(Project project);
 
