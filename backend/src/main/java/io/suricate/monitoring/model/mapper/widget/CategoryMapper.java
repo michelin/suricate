@@ -4,13 +4,14 @@ import io.suricate.monitoring.model.dto.widget.CategoryDto;
 import io.suricate.monitoring.model.entity.widget.Category;
 import io.suricate.monitoring.model.mapper.AssetMapper;
 import org.mapstruct.*;
-import org.mapstruct.factory.Mappers;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 /**
  * Interface that manage the generation DTO/Model objects for Category class
  */
+@Component
 @Mapper(
     componentModel = "spring",
     uses = {
@@ -31,6 +32,9 @@ public abstract class CategoryMapper {
      * @return The related category DTO
      */
     @Named("toCategoryDtoDefault")
+    @Mappings({
+        @Mapping(target = "widgets", qualifiedByName = "toWidgetDtosWithoutCategory")
+    })
     public abstract CategoryDto toCategoryDtoDefault(Category category);
 
     /**
@@ -55,6 +59,7 @@ public abstract class CategoryMapper {
      * @param categories The list of category to transform
      * @return The related DTO
      */
+    @Named("toCategoryDtosDefault")
     @IterableMapping(qualifiedByName = "toCategoryDtoDefault")
-    public abstract List<CategoryDto> toCategoryDtos(List<Category> categories);
+    public abstract List<CategoryDto> toCategoryDtosDefault(List<Category> categories);
 }

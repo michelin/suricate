@@ -2,17 +2,18 @@ package io.suricate.monitoring.model.mapper.project;
 
 import io.suricate.monitoring.model.dto.project.ProjectWidgetDto;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
-import io.suricate.monitoring.model.mapper.role.UserMapper;
 import io.suricate.monitoring.model.mapper.widget.WidgetMapper;
 import io.suricate.monitoring.service.api.ProjectWidgetService;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 /**
  * Interface that manage the generation DTO/Model objects for project widget class
  */
+@Component
 @Mapper(
     componentModel = "spring",
     uses = {
@@ -59,6 +60,7 @@ public abstract class ProjectWidgetMapper {
      * @param projectWidgets The list of project widget to tranform
      * @return The related list of dto object
      */
+    @Named("toProjectWidgetDtosDefault")
     @IterableMapping(qualifiedByName = "toProjectWidgetDtoDefault")
-    public abstract List<ProjectWidgetDto> toProjectWidgetDtos(List<ProjectWidget> projectWidgets);
+    public abstract List<ProjectWidgetDto> toProjectWidgetDtosDefault(List<ProjectWidget> projectWidgets);
 }

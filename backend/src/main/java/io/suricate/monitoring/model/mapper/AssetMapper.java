@@ -5,12 +5,14 @@ import io.suricate.monitoring.model.entity.Asset;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 /**
  * Interface that manage the generation DTO/Model objects for asset class
  */
+@Component
 @Mapper(
     componentModel = "spring"
 )
@@ -40,6 +42,7 @@ public abstract class AssetMapper {
      * @param assets The list of assets to transform
      * @return The related DTOs
      */
+    @Named("toAssetDtosDefault")
     @IterableMapping(qualifiedByName = "toAssetDtoDefault")
-    public abstract List<AssetDto> toAssetDtos(List<Asset> assets);
+    public abstract List<AssetDto> toAssetDtosDefault(List<Asset> assets);
 }

@@ -3,12 +3,14 @@ package io.suricate.monitoring.model.mapper.role;
 import io.suricate.monitoring.model.dto.user.UserDto;
 import io.suricate.monitoring.model.entity.user.User;
 import org.mapstruct.*;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 /**
  * Interface that manage the generation DTO/Model objects for User class
  */
+@Component
 @Mapper(
     componentModel = "spring",
     uses = {
@@ -29,7 +31,7 @@ public abstract class UserMapper {
      */
     @Named("toUserDtoDefault")
     @Mappings({
-        @Mapping(target = "roles", qualifiedByName = "toRoleDtoWithoutUsers")
+        @Mapping(target = "roles", qualifiedByName = "toRoleDtosWithoutUsers")
     })
     public abstract UserDto toUserDtoDefault(User user);
 
@@ -49,6 +51,17 @@ public abstract class UserMapper {
      * @param users The list of user to transform
      * @return The related users DTO
      */
+    @Named("toUserDtosDefault")
     @IterableMapping(qualifiedByName = "toUserDtoDefault")
-    public abstract List<UserDto> toUserDtos(List<User> users);
+    public abstract List<UserDto> toUserDtosDefault(List<User> users);
+
+    /**
+     * Tranform a list of Users into a list of UserDto without role
+     *
+     * @param users The list of user to transform
+     * @return The related users DTO
+     */
+    @Named("toUserDtosWithoutRole")
+    @IterableMapping(qualifiedByName = "toUserDtoWithoutRole")
+    public abstract List<UserDto> toUserDtosWithoutRole(List<User> users);
 }

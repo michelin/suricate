@@ -6,12 +6,14 @@ import io.suricate.monitoring.model.entity.Configuration;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 /**
  * Interface that manage the generation DTO/Model objects for configuration class
  */
+@Component
 @Mapper(
     componentModel = "spring"
 )
@@ -40,6 +42,7 @@ public abstract class ConfigurationMapper {
      * @param configurations The configurations to transform
      * @return The related list of configurations DTO
      */
+    @Named("toConfigurationDtosDefault")
     @IterableMapping(qualifiedByName = "toConfigurationDtoDefault")
-    public abstract List<ConfigurationDto> toConfigurationDtos(List<Configuration> configurations);
+    public abstract List<ConfigurationDto> toConfigurationDtosDefault(List<Configuration> configurations);
 }

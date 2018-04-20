@@ -6,12 +6,14 @@ import io.suricate.monitoring.model.mapper.role.UserMapper;
 import io.suricate.monitoring.service.api.LibraryService;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 /**
  * Interface that manage the generation DTO/Model objects for project class
  */
+@Component
 @Mapper(
     componentModel = "spring",
     uses = {
@@ -39,7 +41,7 @@ public abstract class ProjectMapper {
      */
     @Named("toProjectDtoDefault")
     @Mappings({
-        @Mapping(target = "projectWidgets", source = "project.widgets"),
+        @Mapping(target = "projectWidgets", source = "project.widgets", qualifiedByName = "toProjectWidgetDtoDefault"),
         @Mapping(target = "librariesToken", expression = "java(libraryService.getLibraries(project.getWidgets()))")
 
     })
@@ -67,6 +69,7 @@ public abstract class ProjectMapper {
      * @param projects The list of project to tranform
      * @return The related list of dto object
      */
+    @Named("toProjectDtosDefault")
     @IterableMapping(qualifiedByName = "toProjectDtoDefault")
-    public abstract List<ProjectDto> toProjectDtos(List<Project> projects);
+    public abstract List<ProjectDto> toProjectDtosDefault(List<Project> projects);
 }
