@@ -31,13 +31,17 @@ public abstract class UserMapper {
      */
     @Named("toUserDtoDefault")
     @Mappings({
-        @Mapping(target = "roles", qualifiedByName = "toRoleDtosWithoutUsers")
+        @Mapping(target = "roles", qualifiedByName = "toRoleDtosWithoutUsers"),
+        @Mapping(target = "fullname", expression = "java(String.format(\"%s %s\", user.getFirstname(), user.getLastname()))"),
+        @Mapping(target = "password", ignore = true)
     })
     public abstract UserDto toUserDtoDefault(User user);
 
     @Named("toUserDtoWithoutRole")
     @Mappings({
-        @Mapping(target = "roles", ignore = true)
+        @Mapping(target = "roles", ignore = true),
+        @Mapping(target = "fullname", expression = "java(String.format(\"%s %s\", user.getFirstname(), user.getLastname()))"),
+        @Mapping(target = "password", ignore = true)
     })
     public abstract UserDto toUserDtoWithoutRole(User user);
 
