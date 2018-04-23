@@ -233,7 +233,11 @@ public class ProjectWidgetService {
      */
     @Transactional
     public void updateState(WidgetState widgetState, Long id, Date date){
-        projectWidgetRepository.updateState(widgetState, id, date);
+        ProjectWidget projectWidget = getOne(id);
+        projectWidget.setState(widgetState);
+        projectWidget.setLastExecutionDate(date);
+
+        projectWidgetRepository.saveAndFlush(projectWidget);
     }
 
     /**

@@ -44,21 +44,6 @@ public interface ProjectWidgetRepository extends JpaRepository<ProjectWidget, Lo
     void resetProjectWidgetsState();
 
     /**
-     * Update the state of a project widget (nashorn execution)
-     *
-     * @param widgetState The new widget state
-     * @param id The project widget id
-     * @param lastExecutionDate The last execution date
-     * @return State of the query
-     */
-    @Modifying
-    @Query("UPDATE ProjectWidget " +
-        "SET state = :state, " +
-        "lastExecutionDate = :lastExecutionDate " +
-        "WHERE id = :id")
-    int updateState(@Param("state") WidgetState widgetState, @Param("id") Long id, @Param("lastExecutionDate") Date lastExecutionDate);
-
-    /**
      * Update the position in the grid of a widget
      *
      * @param row The new start row number

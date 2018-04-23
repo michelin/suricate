@@ -20,10 +20,10 @@ import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
 import io.suricate.monitoring.model.entity.Configuration;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.enums.WidgetState;
-import io.suricate.monitoring.repository.ProjectWidgetRepository;
 import io.suricate.monitoring.service.api.ProjectWidgetService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -51,6 +51,7 @@ public class NashornService {
      *
      * @param projectWidgetService The project widget service
      */
+    @Autowired
     public NashornService(final ProjectWidgetService projectWidgetService) {
         this.projectWidgetService = projectWidgetService;
     }
