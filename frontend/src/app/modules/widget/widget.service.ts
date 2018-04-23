@@ -48,7 +48,7 @@ export class WidgetService extends AbstractHttpService  {
    *
    * @returns {Observable<Widget[]>} The list of widgets as observable
    */
-  getWidgets(): Observable<Widget[]> {
+  getAll(): Observable<Widget[]> {
     return this.httpClient.get<Widget[]>(`${WidgetService.WIDGETS_BASE_URL}`);
   }
 
