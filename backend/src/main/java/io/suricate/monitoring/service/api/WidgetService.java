@@ -97,45 +97,6 @@ public class WidgetService {
     }
 
     /**
-     * Extract the list of widget params of a widget
-     *
-     * @param widget The widget
-     * @return The related list of params
-     */
-    private List<WidgetParamDto> extractWidgetParams(Widget widget) {
-        List<WidgetParamDto> widgetParamResponses = new ArrayList<>();
-
-        if(widget.getWidgetParams() != null && !widget.getWidgetParams().isEmpty()) {
-            for (WidgetParam widgetParam: widget.getWidgetParams()) {
-                WidgetParamDto widgetParamResponse = new WidgetParamDto();
-
-                widgetParamResponse.setName(widgetParam.getName());
-                widgetParamResponse.setDescription(widgetParam.getDescription());
-                widgetParamResponse.setDefaultValue(widgetParam.getDefaultValue());
-                widgetParamResponse.setType(widgetParam.getType());
-                widgetParamResponse.setAcceptFileRegex(widgetParam.getAcceptFileRegex());
-                widgetParamResponse.setUsageExample(widgetParam.getUsageExample());
-                widgetParamResponse.setRequired(widgetParam.isRequired());
-
-                if(widgetParam.getPossibleValuesMap() != null && !widgetParam.getPossibleValuesMap().isEmpty()) {
-                    for(WidgetParamValue widgetParamValue : widgetParam.getPossibleValuesMap()) {
-                        WidgetParamValueDto widgetParamValueResponse = new WidgetParamValueDto();
-
-                        widgetParamValueResponse.setJsKey(widgetParamValue.getJsKey());
-                        widgetParamValueResponse.setValue(widgetParamValue.getValue());
-
-                        widgetParamResponse.getValues().add(widgetParamValueResponse);
-                    }
-                }
-
-                widgetParamResponses.add(widgetParamResponse);
-            }
-        }
-
-        return widgetParamResponses;
-    }
-
-    /**
      * Get every widgets for a category
      *
      * @param categoryId The category id used for found widgets
