@@ -88,6 +88,21 @@ public class WidgetService {
     }
 
     /**
+     * Return every widgets order by name
+     *
+     * @return The list of widgets order by name
+     */
+    public Optional<List<Widget>> getAll() {
+        List<Widget> widgets = widgetRepository.findAllByOrderByNameAsc();
+
+        if(widgets == null || widgets.isEmpty()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(widgets);
+    }
+
+    /**
      * Find a widget by id
      * @param id The widget id
      * @return The related widget

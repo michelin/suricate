@@ -88,6 +88,31 @@ public class WidgetController {
     }
 
     /**
+     * Get the list of widgets
+     *
+     * @return The list of widgets
+     */
+    @RequestMapping(method = RequestMethod.GET)
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<List<WidgetDto>> getWidgets() {
+        Optional<List<Widget>> widgets = widgetService.getAll();
+
+        if(!widgets.isPresent()) {
+            return ResponseEntity
+                .noContent()
+                .cacheControl(CacheControl.noCache())
+                .build();
+        }
+
+        return ResponseEntity
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .cacheControl(CacheControl.noCache())
+            .body(widgetMapper.toWidgetDtosDefault(widgets.get()));
+
+    }
+
+    /**
      * Get the list of widget categories
      *
      * @return A list of category
