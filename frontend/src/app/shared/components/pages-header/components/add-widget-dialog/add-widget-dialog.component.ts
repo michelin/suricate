@@ -17,7 +17,7 @@
 import {ChangeDetectorRef, Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef, MatHorizontalStepper} from '@angular/material';
 import {Category} from '../../../../model/dto/Category';
-import {WidgetService} from '../../../../../modules/core/widget.service';
+import {WidgetService} from '../../../../../modules/widget/widget.service';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import {Asset} from '../../../../model/dto/Asset';
 import {Widget} from '../../../../model/dto/Widget';
