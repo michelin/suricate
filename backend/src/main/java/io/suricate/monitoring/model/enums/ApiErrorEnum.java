@@ -16,9 +16,6 @@
 
 package io.suricate.monitoring.model.enums;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.http.HttpStatus;
 
 /**
@@ -30,6 +27,7 @@ public enum ApiErrorEnum {
     TOKEN_EXPIRED("Token expired", "token.expired", HttpStatus.UNAUTHORIZED),
     TOKEN_INVALID("Invalid token", "token.invalid", HttpStatus.UNAUTHORIZED),
     USER_NOT_FOUND("User not found","user.not.found", HttpStatus.NOT_FOUND),
+    USER_CREATION_ERROR("Error when creating user","user.creation.error", HttpStatus.INTERNAL_SERVER_ERROR),
     PROJECT_NOT_FOUND("Project not found","project.not.found", HttpStatus.NOT_FOUND),
     PROJECT_INVALID_CONSTANCY("Project invalid consistency","project.invalid.consistency", HttpStatus.CONFLICT),
     AUTHENTICATION_ERROR("Authentication error : Token expired or invalid", "authentication.error", HttpStatus.UNAUTHORIZED),

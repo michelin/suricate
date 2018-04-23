@@ -20,16 +20,21 @@ import io.suricate.monitoring.model.dto.widget.CategoryDto;
 import io.suricate.monitoring.model.dto.widget.WidgetDto;
 import io.suricate.monitoring.model.entity.widget.Category;
 import io.suricate.monitoring.model.entity.widget.Widget;
+import io.suricate.monitoring.model.mapper.widget.CategoryMapper;
+import io.suricate.monitoring.model.mapper.widget.WidgetMapper;
 import io.suricate.monitoring.service.api.CategoryService;
 import io.suricate.monitoring.service.api.WidgetService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.CacheControl;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 /**
  * The widget controller
@@ -46,22 +51,40 @@ public class WidgetController {
     /**
      * Widget service
      */
-    private WidgetService widgetService;
+    private final WidgetService widgetService;
 
     /**
      * Category service
      */
-    private CategoryService categoryService;
+    private final CategoryService categoryService;
+
+    /**
+     * Mapper domain/DTO for categories
+     */
+    private final CategoryMapper categoryMapper;
+
+    /**
+     * The widget mapper
+     */
+    private final WidgetMapper widgetMapper;
 
     /**
      * Constructor
      *
      * @param widgetService Widget service to inject
+     * @param categoryService The category service
+     * @param categoryMapper The category mapper
+     * @param widgetMapper The widget mapper
      */
     @Autowired
-    public WidgetController(final WidgetService widgetService, final CategoryService categoryService) {
+    public WidgetController(final WidgetService widgetService,
+                            final CategoryService categoryService,
+                            final CategoryMapper categoryMapper,
+                            final WidgetMapper widgetMapper) {
         this.widgetService = widgetService;
         this.categoryService = categoryService;
+        this.categoryMapper = categoryMapper;
+        this.widgetMapper = widgetMapper;
     }
 
     /**
@@ -71,9 +94,14 @@ public class WidgetController {
      */
     @RequestMapping(value = "/categories", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
-    public List<CategoryDto> getCategories() {
+    public ResponseEntity<List<CategoryDto>> getCategories() {
         List<Category> categories = categoryService.getCategoriesOrderByName();
-        return categories.stream().map(CategoryDto::new).collect(Collectors.toList());
+        return ResponseEntity
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .cacheControl(CacheControl.noCache())
+            .body(categoryMapper.toCategoryDtosDefault(categories));
+
     }
 
     /**
@@ -84,9 +112,20 @@ public class WidgetController {
      */
     @RequestMapping(value = "/category/{id}", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
-    public List<WidgetDto> getWidgetByCategory(@PathVariable("id") Long id) {
-        List<Widget> widgets = widgetService.getWidgetsByCategory(id);
+    public ResponseEntity<List<WidgetDto>> getWidgetByCategory(@PathVariable("id") Long id) {
+        Optional<List<Widget>> widgets = widgetService.getWidgetsByCategory(id);
 
-        return widgetService.transformIntoDTOs(widgets);
+        if(!widgets.isPresent()) {
+            ResponseEntity
+                .noContent()
+                .cacheControl(CacheControl.noCache())
+                .build();
+        }
+
+        return ResponseEntity
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .cacheControl(CacheControl.noCache())
+            .body(widgetMapper.toWidgetDtosDefault(widgets.get()));
     }
 }

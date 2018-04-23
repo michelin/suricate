@@ -17,7 +17,6 @@
 package io.suricate.monitoring.controllers.api;
 
 import io.suricate.monitoring.model.entity.Asset;
-import io.suricate.monitoring.repository.AssetRepository;
 import io.suricate.monitoring.service.api.AssetService;
 import io.suricate.monitoring.utils.IdUtils;
 import org.slf4j.Logger;

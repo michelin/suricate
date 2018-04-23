@@ -50,35 +50,6 @@ public class RoleService {
     }
 
     /**
-     * Tranform a Domain object into a DTO object
-     * @param role The domain role
-     * @return The DTO Object
-     */
-    public RoleDto toDto(Role role) {
-        RoleDto roleDto = new RoleDto();
-        roleDto.setId(role.getId());
-        roleDto.setName(role.getName());
-        roleDto.setDescription(role.getDescription());
-
-        return roleDto;
-    }
-
-    /**
-     * Tranform a DTO object into a domain object
-     *
-     * @param roleDto The DTO to transform
-     * @return The domain object
-     */
-    public Role toModel(RoleDto roleDto) {
-        Role role = new Role();
-        role.setId(roleDto.getId());
-        role.setName(roleDto.getName());
-        role.setDescription(roleDto.getDescription());
-
-        return role;
-    }
-
-    /**
      * Get a role by name
      *
      * @param roleName The role name to find

@@ -19,6 +19,9 @@ package io.suricate.monitoring.model.dto.user;
 import io.suricate.monitoring.model.dto.AbstractDto;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Represent a role used for communication with the clients via webservices
  */
@@ -37,4 +40,9 @@ public class RoleDto extends AbstractDto {
      * The role description
      */
     private String description;
+
+    /**
+     * The list of user for this role
+     */
+    private List<UserDto> users = new ArrayList<>();
 }

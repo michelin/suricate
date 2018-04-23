@@ -22,7 +22,6 @@ import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheException;
 import com.github.mustachejava.MustacheFactory;
 import io.suricate.monitoring.controllers.api.error.exception.ApiException;
-import io.suricate.monitoring.model.dto.project.ProjectWidgetDto;
 import io.suricate.monitoring.model.dto.project.ProjectWidgetPositionDto;
 import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
@@ -31,7 +30,9 @@ import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
 import io.suricate.monitoring.model.enums.WidgetState;
+import io.suricate.monitoring.model.mapper.project.ProjectWidgetMapper;
 import io.suricate.monitoring.repository.ProjectWidgetRepository;
+import io.suricate.monitoring.service.scheduler.DashboardScheduleService;
 import io.suricate.monitoring.service.scheduler.NashornWidgetScheduler;
 import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
 import io.suricate.monitoring.utils.JavascriptUtils;
@@ -41,6 +42,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -68,19 +70,14 @@ public class ProjectWidgetService {
     private final ProjectWidgetRepository projectWidgetRepository;
 
     /**
-     * The project service
-     */
-    private final ProjectService projectService;
-
-    /**
-     * The widget service
-     */
-    private final WidgetService widgetService;
-
-    /**
      * The dashboard websocket service
      */
     private final DashboardWebSocketService dashboardWebsocketService;
+
+    /**
+     * The dashboard schedule service
+     */
+    private final DashboardScheduleService dashboardScheduleService;
 
     /**
      * The mustacheFactory
@@ -96,55 +93,22 @@ public class ProjectWidgetService {
      * Constructor
      *
      * @param projectWidgetRepository The project widget repository
-     * @param projectService The project service
-     * @param widgetService The widget service
      * @param dashboardWebSocketService The dashboard websocket service
+     * @param dashboardScheduleService The dashboard scheduler
      * @param mustacheFactory The mustache factory (HTML template)
      * @param ctx The application context
      */
     @Autowired
     public ProjectWidgetService(final ProjectWidgetRepository projectWidgetRepository,
-                                final ProjectService projectService,
-                                final WidgetService widgetService,
                                 final MustacheFactory mustacheFactory,
                                 final DashboardWebSocketService dashboardWebSocketService,
+                                @Lazy final DashboardScheduleService dashboardScheduleService,
                                 final ApplicationContext ctx) {
         this.projectWidgetRepository = projectWidgetRepository;
-        this.projectService = projectService;
-        this.widgetService = widgetService;
         this.dashboardWebsocketService = dashboardWebSocketService;
+        this.dashboardScheduleService = dashboardScheduleService;
         this.mustacheFactory = mustacheFactory;
         this.ctx = ctx;
-    }
-
-    /**
-     * Treansform a project widget into a dto object
-     *
-     * @param projectWidget The project widget to transform
-     * @return The related dto
-     */
-    public ProjectWidgetDto tranformIntoDto(final ProjectWidget projectWidget) {
-        ProjectWidgetPositionDto projectWidgetPositionDto = new ProjectWidgetPositionDto();
-        projectWidgetPositionDto.setRow(projectWidget.getRow());
-        projectWidgetPositionDto.setCol(projectWidget.getCol());
-        projectWidgetPositionDto.setHeight(projectWidget.getHeight());
-        projectWidgetPositionDto.setWidth(projectWidget.getWidth());
-
-        ProjectWidgetDto projectWidgetDto = new ProjectWidgetDto();
-        projectWidgetDto.setId(projectWidget.getId());
-        projectWidgetDto.setData(projectWidget.getData());
-        projectWidgetDto.setWidgetPosition(projectWidgetPositionDto);
-        projectWidgetDto.setCustomStyle(StringUtils.trimToEmpty(projectWidget.getCustomStyle()));
-        projectWidgetDto.setBackendConfig(projectWidget.getBackendConfig());
-        projectWidgetDto.setLog(projectWidget.getLog());
-        projectWidgetDto.setLastExecutionDate(projectWidget.getLastExecutionDate());
-        projectWidgetDto.setLastSuccessDate(projectWidget.getLastSuccessDate());
-        projectWidgetDto.setState(projectWidget.getState());
-        projectWidgetDto.setProject(projectService.toDTO(projectWidget.getProject(), false));
-        projectWidgetDto.setWidget(widgetService.tranformIntoDto(projectWidget.getWidget()));
-
-
-        return projectWidgetDto;
     }
 
     /**
@@ -164,6 +128,25 @@ public class ProjectWidgetService {
      */
     public ProjectWidget getOne(final Long projectWidgetId) {
         return projectWidgetRepository.getOne(projectWidgetId);
+    }
+
+    /**
+     * Add a new project widget
+     *
+     * @param projectWidget The project widget to add
+     * @return The projectWidget instantiate
+     */
+    @Transactional
+    public ProjectWidget addProjectWidget(ProjectWidget projectWidget) {
+
+        // Add project widget
+        projectWidget = projectWidgetRepository.saveAndFlush(projectWidget);
+        dashboardScheduleService.scheduleWidget(projectWidget.getId());
+
+        // Update grid
+        dashboardWebsocketService.updateGlobalScreensByProjectToken(projectWidget.getProject().getToken(),  new UpdateEvent(UpdateType.GRID));
+
+        return projectWidget;
     }
 
     /**
@@ -188,16 +171,6 @@ public class ProjectWidgetService {
      */
     public void updateWidgetPositionByProjectWidgetId(final Long projectWidgetId, final int startCol, final int startRow, final int height, final int width) {
         projectWidgetRepository.updateRowAndColAndWidthAndHeightById(startRow, startCol, width, height, projectWidgetId);
-    }
-
-    /**
-     * Save and flush a project widget
-     *
-     * @param projectWidget The project widget to save
-     * @return The project widget saved
-     */
-    public ProjectWidget saveAndFlush(ProjectWidget projectWidget) {
-        return projectWidgetRepository.saveAndFlush(projectWidget);
     }
 
     /**
@@ -264,12 +237,14 @@ public class ProjectWidgetService {
     }
 
     /**
-     * Method used to get widget response from a project widget
+     * Method used to get instantiate html for a projectWidget
+     * Call inside {@link ProjectWidgetMapper}
+     *
      * @param projectWidget the project widget
-     * @return a widgetresponse object
+     * @return The html instantiate
      */
     @Transactional
-    public ProjectWidgetDto instantiateProjectWidget(ProjectWidget projectWidget) {
+    public String instantiateProjectWidgetHtml(ProjectWidget projectWidget) {
         ObjectMapper objectMapper = new ObjectMapper();
         Map<String, Object> map = null;
         Widget widget = projectWidget.getWidget();
@@ -296,11 +271,7 @@ public class ProjectWidgetService {
             instantiateHtml = stringWriter.toString();
         }
 
-        // Create the response
-        ProjectWidgetDto projectWidgetDto = tranformIntoDto(projectWidget);
-        projectWidgetDto.setInstantiateHtml(instantiateHtml);
-
-        return projectWidgetDto;
+        return instantiateHtml;
     }
 
     /**

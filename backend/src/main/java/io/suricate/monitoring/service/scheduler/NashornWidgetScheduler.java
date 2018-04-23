@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.service.scheduler;
 
-import io.suricate.monitoring.model.dto.widget.WidgetVariableResponse;
+import io.suricate.monitoring.model.dto.nashorn.WidgetVariableResponse;
 import io.suricate.monitoring.model.entity.Configuration;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.enums.WidgetState;

@@ -23,6 +23,7 @@ import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
 import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
 import io.suricate.monitoring.model.enums.UpdateType;
+import io.suricate.monitoring.model.mapper.project.ProjectWidgetMapper;
 import io.suricate.monitoring.service.api.ProjectWidgetService;
 import io.suricate.monitoring.service.nashorn.NashornService;
 import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
@@ -55,6 +56,11 @@ public class DashboardScheduleService {
     private final ProjectWidgetService projectWidgetService;
 
     /**
+     * The project widget mapper
+     */
+    private final ProjectWidgetMapper projectWidgetMapper;
+
+    /**
      * The nashorn service
      */
     private final NashornService nashornService;
@@ -69,16 +75,19 @@ public class DashboardScheduleService {
      *
      * @param dashboardWebSocketService The dashboard websocket service
      * @param projectWidgetService The project widget service
+     * @param projectWidgetMapper The project widget mapper
      * @param nashornService The nashorn service to inject
      * @param applicationContext The application context to inject
      */
     @Autowired
     public DashboardScheduleService(final DashboardWebSocketService dashboardWebSocketService,
                                     final ProjectWidgetService projectWidgetService,
+                                    final ProjectWidgetMapper projectWidgetMapper,
                                     final NashornService nashornService,
                                     final ApplicationContext applicationContext) {
         this.dashboardWebSocketService = dashboardWebSocketService;
         this.projectWidgetService = projectWidgetService;
+        this.projectWidgetMapper = projectWidgetMapper;
         this.nashornService = nashornService;
         this.applicationContext = applicationContext;
     }
@@ -114,7 +123,7 @@ public class DashboardScheduleService {
         // Notify the dashboard
         UpdateEvent event = new UpdateEvent(UpdateType.WIDGET);
         ProjectWidget projectWidget = projectWidgetService.getOne(projectWidgetId);
-        event.setContent(projectWidgetService.instantiateProjectWidget(projectWidget));
+        event.setContent(projectWidgetMapper.toProjectWidgetDtoDefault(projectWidget));
 
         dashboardWebSocketService.updateGlobalScreensByProjectId(projectId, event);
     }

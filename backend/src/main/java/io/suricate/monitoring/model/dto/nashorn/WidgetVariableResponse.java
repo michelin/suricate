@@ -14,44 +14,47 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.dto.error;
+package io.suricate.monitoring.model.dto.nashorn;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import io.suricate.monitoring.model.enums.WidgetVariableType;
 import io.suricate.monitoring.model.dto.AbstractDto;
-import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import lombok.*;
 
-import java.util.Date;
+import java.util.Map;
 
 /**
- * Used for send errors through webservices
+ * Widget variable used for communication with the clients via webservices
  */
 @Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
-public class ApiErrorDto extends AbstractDto {
-    /**
-     * The error message to send
-     */
-    private String message;
-    /**
-     * The key code
-     */
-    private String key;
-    /**
-     * The HttpStatus number
-     */
-    private int status;
-    /**
-     * The datetime of the error
-     */
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date timestamp;
+public class WidgetVariableResponse extends AbstractDto {
 
+    /**
+     * The variable name
+     */
+    private String name;
 
-    public ApiErrorDto(ApiErrorEnum apiErrorEnum) {
-        this.message = apiErrorEnum.getMessage();
-        this.key = apiErrorEnum.getKey();
-        this.timestamp = new Date();
-        this.status = apiErrorEnum.getStatus().value();
-    }
+    /**
+     * The variable description
+     */
+    private String description;
+
+    /**
+     * The data
+     */
+    private String data;
+
+    /**
+     * The variable type
+     */
+    private WidgetVariableType type;
+
+    /**
+     * If the variable is required
+     */
+    private boolean required;
+
+    /**
+     * Map of values
+     */
+    private Map<String, String> values;
 }

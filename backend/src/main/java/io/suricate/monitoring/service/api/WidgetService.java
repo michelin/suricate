@@ -16,6 +16,7 @@
 
 package io.suricate.monitoring.service.api;
 
+import io.suricate.monitoring.model.dto.nashorn.WidgetVariableResponse;
 import io.suricate.monitoring.model.dto.widget.*;
 import io.suricate.monitoring.model.entity.*;
 import io.suricate.monitoring.model.entity.widget.Category;
@@ -79,50 +80,11 @@ public class WidgetService {
                          final CategoryService categoryService,
                          final CacheService cacheService,
                          final AssetService assetService) {
+
         this.widgetRepository = widgetRepository;
         this.categoryService = categoryService;
         this.cacheService = cacheService;
         this.assetService = assetService;
-    }
-
-    /**
-     * Tranform a list of Domain objects into a DTO objects
-     * @param widgets The list of widgets to tranform
-     * @return The list as DTO objects
-     */
-    public List<WidgetDto> transformIntoDTOs(final List<Widget> widgets) {
-        return widgets
-            .stream()
-            .map(this::tranformIntoDto)
-            .collect(Collectors.toList());
-    }
-
-    /**
-     * Transform a widget into a DTO object
-     *
-     * @param widget The widget to transform
-     * @return The related DTO
-     */
-    public WidgetDto tranformIntoDto(final Widget widget) {
-        WidgetDto widgetDto = new WidgetDto();
-
-        widgetDto.setId(widget.getId());
-        widgetDto.setName(widget.getName());
-        widgetDto.setDescription(widget.getDescription());
-        widgetDto.setTechnicalName(widget.getTechnicalName());
-        widgetDto.setHtmlContent(widget.getHtmlContent());
-        widgetDto.setCssContent(StringUtils.trimToEmpty(widget.getCssContent()));
-        widgetDto.setBackendJs(widget.getBackendJs());
-        widgetDto.setInfo(widget.getInfo());
-        widgetDto.setDelay(widget.getDelay());
-        widgetDto.setTimeout(widget.getTimeout());
-        widgetDto.setImage(widget.getImage());
-        widgetDto.getLibraries().addAll(widget.getLibraries());
-        widgetDto.setCategory(new CategoryDto(widget.getCategory()));
-        widgetDto.setWidgetAvailability(widget.getWidgetAvailability());
-        widgetDto.getWidgetParams().addAll(extractWidgetParams(widget));
-
-        return widgetDto;
     }
 
     /**
@@ -180,8 +142,14 @@ public class WidgetService {
      * @return The list of related widgets
      */
     @Transactional
-    public List<Widget> getWidgetsByCategory(final Long categoryId) {
-        return widgetRepository.findAllByCategory_IdOrderByNameAsc(categoryId);
+    public Optional<List<Widget>> getWidgetsByCategory(final Long categoryId) {
+        List<Widget> widgets = widgetRepository.findAllByCategory_IdOrderByNameAsc(categoryId);
+
+        if(widgets == null || widgets.isEmpty()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(widgets);
     }
 
     /**

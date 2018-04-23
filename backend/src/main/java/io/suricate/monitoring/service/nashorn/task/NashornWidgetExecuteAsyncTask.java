@@ -18,14 +18,11 @@ package io.suricate.monitoring.service.nashorn.task;
 
 import io.suricate.monitoring.model.dto.error.RemoteError;
 import io.suricate.monitoring.model.dto.error.RequestException;
-import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.enums.NashornErrorTypeEnum;
 import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
 import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
-import io.suricate.monitoring.model.dto.widget.WidgetVariableResponse;
+import io.suricate.monitoring.model.dto.nashorn.WidgetVariableResponse;
 import io.suricate.monitoring.model.enums.WidgetVariableType;
-import io.suricate.monitoring.service.api.ProjectWidgetService;
-import io.suricate.monitoring.service.api.WidgetService;
 import io.suricate.monitoring.service.nashorn.JavaClassFilter;
 import io.suricate.monitoring.utils.JavascriptUtils;
 import io.suricate.monitoring.utils.JsonUtils;
@@ -37,7 +34,6 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.jasypt.encryption.StringEncryptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.script.*;
 import java.io.StringWriter;
