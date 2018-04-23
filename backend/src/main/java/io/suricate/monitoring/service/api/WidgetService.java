@@ -17,7 +17,6 @@
 package io.suricate.monitoring.service.api;
 
 import io.suricate.monitoring.model.dto.nashorn.WidgetVariableResponse;
-import io.suricate.monitoring.model.dto.widget.*;
 import io.suricate.monitoring.model.entity.*;
 import io.suricate.monitoring.model.entity.widget.Category;
 import io.suricate.monitoring.model.entity.widget.Widget;
