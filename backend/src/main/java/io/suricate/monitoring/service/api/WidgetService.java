@@ -87,12 +87,12 @@ public class WidgetService {
     }
 
     /**
-     * Return every widgets order by name
+     * Return every widgets order by category name
      *
-     * @return The list of widgets order by name
+     * @return The list of widgets order by category name
      */
     public Optional<List<Widget>> getAll() {
-        List<Widget> widgets = widgetRepository.findAllByOrderByNameAsc();
+        List<Widget> widgets = widgetRepository.findAllByOrderByCategory_NameAsc();
 
         if(widgets == null || widgets.isEmpty()) {
             return Optional.empty();
