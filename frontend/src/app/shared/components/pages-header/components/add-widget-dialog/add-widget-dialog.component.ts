@@ -25,6 +25,7 @@ import {WidgetVariableType} from '../../../../model/dto/enums/WidgetVariableType
 import {FormGroup, NgForm} from '@angular/forms';
 import {DashboardService} from '../../../../../modules/dashboard/dashboard.service';
 import {ProjectWidget} from '../../../../model/dto/ProjectWidget';
+import {WidgetAvailabilityEnum} from '../../../../model/dto/enums/WidgetAvailabilityEnum';
 
 @Component({
   selector: 'app-add-widget-dialog',
@@ -61,7 +62,7 @@ export class AddWidgetDialogComponent implements OnInit {
     this.widgetService
         .getWidgetsByCategoryId(categoryId)
         .subscribe(widgets => {
-          this.widgets = widgets;
+          this.widgets = widgets.filter((widget: Widget) => widget.widgetAvailability === WidgetAvailabilityEnum.ACTIVATED);
           this.step1Completed = true;
           this.changeDetectorRef.detectChanges();
           this.widgetStepper.next();
