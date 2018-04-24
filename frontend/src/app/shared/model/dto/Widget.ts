@@ -20,7 +20,7 @@ import {Category} from './Category';
 import {WidgetAvailabilityEnum} from './enums/WidgetAvailabilityEnum';
 
 export class Widget {
-  id: string;
+  id: number;
   name: string;
   description: string;
   technicalName: string;

@@ -24,10 +24,11 @@ import {switchMap} from 'rxjs/operators/switchMap';
 import {merge} from 'rxjs/observable/merge';
 import {startWith} from 'rxjs/operators/startWith';
 import {of as observableOf} from 'rxjs/observable/of';
-import {MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
+import {MatPaginator, MatSlideToggleChange, MatSort, MatTableDataSource} from '@angular/material';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {Asset} from '../../../shared/model/dto/Asset';
 import {WidgetAvailabilityEnum} from '../../../shared/model/dto/enums/WidgetAvailabilityEnum';
+import {Widget} from '../../../shared/model/dto/Widget';
 
 /**
  * Component that display the list of widgets (admin part)
@@ -39,16 +40,50 @@ import {WidgetAvailabilityEnum} from '../../../shared/model/dto/enums/WidgetAvai
 })
 export class WidgetListComponent implements OnInit {
 
+  /**
+   * Manage the sort of each column on the table
+   */
   @ViewChild(MatSort) matSort: MatSort;
+  /**
+   * Manage the pagination
+   */
   @ViewChild(MatPaginator) matPaginator: MatPaginator;
+  /**
+   * The table data source
+   * @type {MatTableDataSource<any>} The datasource
+   */
   matTableDataSource = new MatTableDataSource();
-
+  /**
+   * The column displayed
+   * @type {string[]} The list a column name
+   */
   displayedColumns = ['image', 'name', 'description', 'category', 'status'];
+  /**
+   * Manage hide and show spinner when loading the table
+   * @type {boolean}
+   */
   isLoadingResults = false;
+  /**
+   * Check if we have an error while fetching lines
+   * @type {boolean}
+   */
   errorCatched = false;
+  /**
+   * The number of widget objects
+   * @type {number}
+   */
   resultsLength = 0;
 
+  /**
+   * The widget availability enums
+   * @type {WidgetAvailabilityEnum} The list of enums
+   */
   widgetAvailability = WidgetAvailabilityEnum;
+
+  /**
+   * The list of widgets
+   */
+  widgets: Widget[];
 
   /**
    * Constructor
@@ -98,10 +133,17 @@ export class WidgetListComponent implements OnInit {
           this.resultsLength = data.length;
           this.matTableDataSource.data = data;
           this.matTableDataSource.sort = this.matSort;
+          this.widgets = data;
         });
 
   }
 
+  /**
+   * Get the widget image as SafeHtml
+   *
+   * @param {Asset} imageAsset The asset to display
+   * @returns {SafeHtml} The src html image as SafeHtml
+   */
   getHtmlImage(imageAsset: Asset): SafeHtml {
     let imgHtml: string;
 
@@ -116,9 +158,28 @@ export class WidgetListComponent implements OnInit {
         .bypassSecurityTrustHtml(imgHtml);
   }
 
+  /**
+   * Apply the column filter
+   * @param {string} filterValue The value to search
+   */
   applyFilter(filterValue: string) {
     filterValue = filterValue.trim(); // Remove whitespace
     this.matTableDataSource.filter = filterValue;
+  }
+
+  /**
+   * Enable or disable a widget
+   *
+   * @param {number} widgetId The widget to disable
+   * @param {MatSlideToggleChange} changeEvent when click on the toggle slider
+   */
+  toggleWidgetActivation(widgetId: number, changeEvent: MatSlideToggleChange) {
+    const widget: Widget = this.widgets.find((currentWidget: Widget) => currentWidget.id === widgetId);
+
+    if (widget) {
+      widget.widgetAvailability = changeEvent.checked ? WidgetAvailabilityEnum.ACTIVATED : WidgetAvailabilityEnum.DISABLED;
+      this.widgetService.updateWidget(widget).subscribe();
+    }
   }
 
 }
