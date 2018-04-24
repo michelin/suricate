@@ -21,10 +21,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.google.common.truth.Truth.assertThat;
@@ -112,7 +109,7 @@ public class WidgetServiceTest {
         widget.setImage(asset);
 
 
-        widgetService.addOrUpdateWidgets(category,Arrays.asList(widget), null);
+        widgetService.addOrUpdateWidgets(category, Collections.singletonList(widget), null);
         assetRepository.flush();
         widgetRepository.flush();
 
@@ -140,7 +137,7 @@ public class WidgetServiceTest {
         widget2.setName("Widget 1");
         widget2.setImage(asset1);
 
-        widgetService.addOrUpdateWidgets(category,Arrays.asList(widget2), null);
+        widgetService.addOrUpdateWidgets(category, Collections.singletonList(widget2), null);
 
         assertThat(categoryRepository.count()).isEqualTo(1);
         assertThat(widgetRepository.count()).isEqualTo(1);
@@ -255,7 +252,7 @@ public class WidgetServiceTest {
         lib.setTechnicalName("lib1");
         lib.setAsset(asset);
 
-        List<Library> libs = libraryService.updateLibraryInDatabase(Arrays.asList(lib));
+        List<Library> libs = libraryService.updateLibraryInDatabase(Collections.singletonList(lib));
         assertThat(libs.size()).isEqualTo(1);
 
         // Add a category
@@ -281,7 +278,7 @@ public class WidgetServiceTest {
         widget.setImage(asset);
 
         Map<String, Library> libraryMap = libs.stream().collect(Collectors.toMap(item -> ((Library)item).getTechnicalName(), item -> item));
-        widgetService.addOrUpdateWidgets(category,Arrays.asList(widget), libraryMap);
+        widgetService.addOrUpdateWidgets(category, Collections.singletonList(widget), libraryMap);
 
         assertThat(categoryRepository.count()).isEqualTo(1);
         assertThat(widgetRepository.count()).isEqualTo(1);

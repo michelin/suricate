@@ -15,6 +15,7 @@ import io.suricate.monitoring.service.scheduler.NashornWidgetScheduler;
 import io.suricate.monitoring.utils.FilesUtilsTest;
 import io.suricate.monitoring.utils.WidgetUtils;
 import org.apache.commons.lang3.tuple.Pair;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -124,6 +125,7 @@ public class NashornWidgetSchedulerTest {
         Thread.sleep(2100);
         // Wait completion
         while(scheduledExecutorServiceFuture.getActiveCount() != 0){}
+        Assert.assertNotNull(newFuture);
         assertThat(newFuture.isDone()).isTrue();
 
         // reinit
