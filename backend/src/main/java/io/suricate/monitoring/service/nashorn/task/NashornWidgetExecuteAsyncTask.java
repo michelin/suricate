@@ -219,7 +219,6 @@ public class NashornWidgetExecuteAsyncTask implements Callable<NashornResponse>{
         return !(rootCause instanceof RemoteError
                 || StringUtils.containsIgnoreCase(ExceptionUtils.getMessage(e),"timeout")
                 || rootCause instanceof UnknownHostException
-                || rootCause instanceof ConnectException
                 || nashornRequest.isAlreadySuccess()
         );
     }

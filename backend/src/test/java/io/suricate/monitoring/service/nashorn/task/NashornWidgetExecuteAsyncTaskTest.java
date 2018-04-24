@@ -11,11 +11,18 @@ import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
 import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
 
+@RunWith(SpringRunner.class)
+@SpringBootTest
+@ActiveProfiles("test")
 public class NashornWidgetExecuteAsyncTaskTest {
 
     @Test
@@ -179,7 +186,7 @@ public class NashornWidgetExecuteAsyncTaskTest {
         request.setScript("function run () { Packages.call(\"https://localhost/rzer/\", null, null, null); return '{}'}");
 
         List<WidgetVariableResponse> widgetVariableResponses = new ArrayList<>();
-        NashornWidgetExecuteAsyncTask widgetJob = new NashornWidgetExecuteAsyncTask(request,null,widgetVariableResponses);
+        NashornWidgetExecuteAsyncTask widgetJob = new NashornWidgetExecuteAsyncTask(request,null, widgetVariableResponses);
         NashornResponse response = widgetJob.call();
 
         Assert.assertNotNull(response.getError());
