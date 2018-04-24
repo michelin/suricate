@@ -17,7 +17,6 @@
  */
 
 import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
-import {Widget} from '../../../shared/model/dto/Widget';
 import {WidgetService} from '../widget.service';
 import {catchError} from 'rxjs/operators';
 import {map} from 'rxjs/operators/map';
@@ -28,6 +27,7 @@ import {of as observableOf} from 'rxjs/observable/of';
 import {MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {Asset} from '../../../shared/model/dto/Asset';
+import {WidgetAvailabilityEnum} from '../../../shared/model/dto/enums/WidgetAvailabilityEnum';
 
 /**
  * Component that display the list of widgets (admin part)
@@ -43,15 +43,12 @@ export class WidgetListComponent implements OnInit {
   @ViewChild(MatPaginator) matPaginator: MatPaginator;
   matTableDataSource = new MatTableDataSource();
 
-  displayedColumns = ['image', 'name', 'description', 'category'];
+  displayedColumns = ['image', 'name', 'description', 'category', 'status'];
   isLoadingResults = false;
   errorCatched = false;
   resultsLength = 0;
 
-  /**
-   * The list of widgets
-   */
-  widgets: Widget[];
+  widgetAvailability = WidgetAvailabilityEnum;
 
   /**
    * Constructor
@@ -100,6 +97,7 @@ export class WidgetListComponent implements OnInit {
         .subscribe(data =>  {
           this.resultsLength = data.length;
           this.matTableDataSource.data = data;
+          this.matTableDataSource.sort = this.matSort;
         });
 
   }
@@ -116,6 +114,11 @@ export class WidgetListComponent implements OnInit {
     return this
         .domSanitizer
         .bypassSecurityTrustHtml(imgHtml);
+  }
+
+  applyFilter(filterValue: string) {
+    filterValue = filterValue.trim(); // Remove whitespace
+    this.matTableDataSource.filter = filterValue;
   }
 
 }

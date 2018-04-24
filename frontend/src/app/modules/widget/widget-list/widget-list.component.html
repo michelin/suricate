@@ -1,6 +1,6 @@
 <app-pages-header [secondTitle]="'List of widgets'"></app-pages-header>
 
-<div class="table-container mat-elevation-z2">
+<div class="table-container mat-elevation-z8">
   <div class="table-loading-shade" *ngIf="isLoadingResults || errorCatched">
     <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
 
@@ -9,32 +9,58 @@
     </div>
   </div>
 
-  <mat-table #table [dataSource]="matTableDataSource" class="table-show"
-             matSort matSortActive="created" matSortDisableClear matSortDirection="asc">
+  <mat-table #table [dataSource]="matTableDataSource" class="table-show" matSort>
 
     <ng-container matColumnDef="image">
-      <mat-header-cell fxFlex="17%" *matHeaderCellDef mat-sort-header disableClear="true">Image</mat-header-cell>
+      <mat-header-cell fxFlex="17%" *matHeaderCellDef></mat-header-cell>
       <mat-cell fxFlex="17%" *matCellDef="let row">
         <div class="list-image" [innerHtml]="getHtmlImage(row.image)"></div>
       </mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="name">
-      <mat-header-cell fxFlex="15%" *matHeaderCellDef mat-sort-header disableClear="true">Name</mat-header-cell>
+      <mat-header-cell fxFlex="15%" *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
       <mat-cell  fxFlex="15%" *matCellDef="let row">{{ row.name }}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="description">
-      <mat-header-cell *matHeaderCellDef mat-sort-header disableClear="true">Description</mat-header-cell>
-      <mat-cell *matCellDef="let row">{{ row.description }}</mat-cell>
+      <mat-header-cell fxFlex="40%" *matHeaderCellDef>Description</mat-header-cell>
+      <mat-cell fxFlex="40%" *matCellDef="let row">{{ row.description }}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="category">
-      <mat-header-cell *matHeaderCellDef mat-sort-header disableClear="true">Category</mat-header-cell>
-      <mat-cell *matCellDef="let row">{{ row.category.name }}</mat-cell>
+      <mat-header-cell fxFlex="15%" *matHeaderCellDef mat-sort-header>Category</mat-header-cell>
+      <mat-cell fxFlex="15%" *matCellDef="let row">{{ row.category.name }}</mat-cell>
     </ng-container>
 
-    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <ng-container matColumnDef="status">
+      <mat-header-cell fxFlex="13%" *matHeaderCellDef mat-sort-header>Activation status</mat-header-cell>
+      <mat-cell fxFlex="13%" *matCellDef="let row">
+        <mat-slide-toggle color="accent" [checked]="row.widgetAvailability == widgetAvailability.ACTIVATED"></mat-slide-toggle>
+      </mat-cell>
+    </ng-container>
+
+    <!--<mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>-->
+
+    <ng-container *matHeaderRowDef="displayedColumns">
+      <mat-header-row></mat-header-row>
+      <!-- Filter row -->
+      <div class="mat-header-row">
+        <div fxFlex="17%" class="mat-header-cell" role="columnheader"></div>
+        <div fxFlex="15%" class="mat-header-cell" role="columnheader">
+          <mat-form-field>
+            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+          </mat-form-field>
+        </div>
+        <div fxFlex="40%" class="mat-header-cell" role="columnheader"></div>
+        <div fxFlex="15%" class="mat-header-cell" role="columnheader">
+          <mat-form-field>
+            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+          </mat-form-field>
+        </div>
+        <div fxFlex="13%" class="mat-header-cell" role="columnheader"></div>
+      </div>
+    </ng-container>
     <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
   </mat-table>
 
