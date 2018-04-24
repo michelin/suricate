@@ -1,8 +1,8 @@
 package io.suricate.monitoring.model.dto.widget;
 
 import io.suricate.monitoring.model.dto.AbstractDto;
-import io.suricate.monitoring.model.entity.Asset;
-import io.suricate.monitoring.model.entity.Library;
+import io.suricate.monitoring.model.dto.AssetDto;
+import io.suricate.monitoring.model.dto.LibraryDto;
 import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
 import lombok.*;
 
@@ -68,12 +68,12 @@ public class WidgetDto extends AbstractDto {
     /**
      * A representation by an image of the widget
      */
-    private Asset image;
+    private AssetDto image;
 
     /**
      * The list of related librairies
      */
-    private List<Library> libraries = new ArrayList<>();
+    private List<LibraryDto> libraries = new ArrayList<>();
 
     /**
      * The category of this widget

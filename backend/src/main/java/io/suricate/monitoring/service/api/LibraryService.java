@@ -18,10 +18,11 @@ package io.suricate.monitoring.service.api;
 
 import io.suricate.monitoring.model.entity.Library;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
-import io.suricate.monitoring.repository.AssetRepository;
 import io.suricate.monitoring.repository.LibraryRepository;
 import io.suricate.monitoring.utils.IdUtils;
 import io.suricate.monitoring.utils.logging.LogExecutionTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +37,11 @@ import java.util.stream.Collectors;
 public class LibraryService {
 
     /**
+     * Class logger
+     */
+    private final static Logger LOGGER = LoggerFactory.getLogger(LibraryService.class);
+
+    /**
      * Library repository
      */
     private final LibraryRepository libraryRepository;
@@ -43,18 +49,18 @@ public class LibraryService {
     /**
      * Asset repository
      */
-    private final AssetRepository assetRepository;
+    private final AssetService assetService;
 
     /**
      * The constructor
      *
      * @param libraryRepository Inject the library repository
-     * @param assetRepository Inject the asset repository
+     * @param assetService Inject the asset service
      */
     @Autowired
-    public LibraryService(LibraryRepository libraryRepository, AssetRepository assetRepository) {
+    public LibraryService(final LibraryRepository libraryRepository, final AssetService assetService) {
         this.libraryRepository = libraryRepository;
-        this.assetRepository = assetRepository;
+        this.assetService = assetService;
     }
 
     /**
@@ -89,7 +95,7 @@ public class LibraryService {
                 if (lib != null && lib.getAsset() != null) {
                     library.getAsset().setId(lib.getAsset().getId());
                 }
-                assetRepository.save(library.getAsset());
+                assetService.save(library.getAsset());
             }
             if (lib != null) {
                 library.setId(lib.getId());

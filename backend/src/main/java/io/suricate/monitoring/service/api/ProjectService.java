@@ -16,31 +16,25 @@
 
 package io.suricate.monitoring.service.api;
 
-import io.suricate.monitoring.model.dto.project.ProjectDto;
 import io.suricate.monitoring.model.entity.project.Project;
-import io.suricate.monitoring.model.entity.project.ProjectWidget;
-import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
 import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
-import io.suricate.monitoring.model.dto.project.ProjectWidgetDto;
 import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.model.entity.user.User;
 import io.suricate.monitoring.repository.ProjectRepository;
-import io.suricate.monitoring.repository.ProjectWidgetRepository;
-import io.suricate.monitoring.repository.WidgetRepository;
 import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
 import io.suricate.monitoring.utils.logging.LogExecutionTime;
 import org.apache.commons.lang3.StringUtils;
 import org.jasypt.encryption.StringEncryptor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * Service used to manage projects
@@ -49,112 +43,40 @@ import java.util.stream.Collectors;
 public class ProjectService {
 
     /**
+     * Class logger
+     */
+    private final static Logger LOGGER = LoggerFactory.getLogger(ProjectService.class);
+
+    /**
      * String encryptor (mainly used for SECRET widget params)
      */
-    @Autowired
-    @Qualifier("jasyptStringEncryptor")
-    private StringEncryptor stringEncryptor;
+    private final StringEncryptor stringEncryptor;
 
     /**
      * Project repository
      */
-    @Autowired
-    private ProjectRepository projectRepository;
+    private final ProjectRepository projectRepository;
 
     /**
-     * ProjectWidget repository
+     * dashboard Socket service
      */
-    @Autowired
-    private ProjectWidgetRepository projectWidgetRepository;
+    private final DashboardWebSocketService dashboardWebsocketService;
 
     /**
-     * Widget repository
-     */
-    @Autowired
-    private WidgetRepository widgetRepository;
-
-    /**
-     * User service
-     */
-    @Autowired
-    private UserService userService;
-
-    /**
-     * Socket service
-     */
-    @Autowired
-    private DashboardWebSocketService dashboardWebsocketService;
-
-    /**
-     * Widget service
-     */
-    @Autowired
-    private WidgetService widgetService;
-
-    @Autowired
-    @Lazy
-    private ProjectWidgetService projectWidgetService;
-
-    /**
-     * Library service
-     */
-    @Autowired
-    private transient LibraryService libraryService;
-
-    /**
-     * Transforme a model object into a DTO object
+     * Constructor
      *
-     * @param project The project model object
-     * @param withRelatedWidgets True if we want to attach the related widgets false otherwise
-     * @return The associated DTO object
+     * @param stringEncryptor The string encryptor to inject
+     * @param projectRepository The project repository to inject
+     * @param dashboardWebSocketService The dashboard web socket service to inject
      */
-    public ProjectDto toDTO(Project project, boolean withRelatedWidgets) {
-        ProjectDto projectDto = new ProjectDto();
+    @Autowired
+    public ProjectService(@Qualifier("jasyptStringEncryptor") final StringEncryptor stringEncryptor,
+                          final ProjectRepository projectRepository,
+                          final DashboardWebSocketService dashboardWebSocketService) {
 
-        projectDto.setId(project.getId());
-        projectDto.setName(project.getName());
-        projectDto.setToken(project.getToken());
-        projectDto.setWidgetHeight(project.getWidgetHeight());
-        projectDto.setMaxColumn(project.getMaxColumn());
-        projectDto.setCssStyle(project.getCssStyle());
-
-        if(withRelatedWidgets) {
-            List<ProjectWidget> projectWidgets = projectWidgetRepository.findByProjectIdAndWidget_WidgetAvailabilityOrderById(project.getId(), WidgetAvailabilityEnum.ACTIVATED);
-            for (ProjectWidget projectWidget : projectWidgets) {
-                projectDto.getProjectWidgets().add(projectWidgetService.instantiateProjectWidget(projectWidget));
-            }
-        }
-
-        List<String> librairies = libraryService.getLibraries(project.getWidgets());
-        if(librairies != null && !librairies.isEmpty()) {
-            projectDto.getLibrariesToken().addAll(librairies);
-        }
-
-        Optional<List<User>> users = userService.getAllByProject(project);
-        if(users.isPresent()) {
-            projectDto.getUsers().addAll(users.get().stream().map(user -> userService.toDto(user)).collect(Collectors.toList()));
-        }
-
-        return projectDto;
-    }
-
-    /**
-     * Tranforme a model object into a DTO object
-     *
-     * @param projectDto The DTO project object
-     * @return The associated model object
-     */
-    public Project toModel(ProjectDto projectDto) {
-        Project project = new Project();
-
-        project.setId(projectDto.getId());
-        project.setName(projectDto.getName());
-        project.setMaxColumn(projectDto.getMaxColumn());
-        project.setWidgetHeight(projectDto.getWidgetHeight());
-        project.setCssStyle(projectDto.getCssStyle());
-        project.setToken("");
-
-        return project;
+        this.stringEncryptor = stringEncryptor;
+        this.projectRepository = projectRepository;
+        this.dashboardWebsocketService = dashboardWebSocketService;
     }
 
     public List<Project> getAll() {
@@ -217,33 +139,7 @@ public class ProjectService {
         return projectRepository.save(project);
     }
 
-    /**
-     * Add a new widget into the project
-     *
-     * @param projectWidgetDto The project widget to add
-     * @return The projectWidget instantiate
-     */
-    @Transactional
-    public ProjectWidget addWidgetToProject(ProjectWidgetDto projectWidgetDto) {
-        ProjectWidget projectWidget = new ProjectWidget();
-        projectWidget.setCol(0);
-        projectWidget.setRow(0);
-        projectWidget.setWidth(1);
-        projectWidget.setHeight(1);
-        projectWidget.setData("{}");
-        projectWidget.setBackendConfig(projectWidgetDto.getBackendConfig());
-        projectWidget.setWidget(widgetRepository.findOne(projectWidgetDto.getWidget().getId()));
-        projectWidget.setProject(projectRepository.findOne(projectWidgetDto.getProject().getId()));
 
-        // Add project widget
-        projectWidget = projectWidgetRepository.saveAndFlush(projectWidget);
-        widgetService.scheduleWidget(projectWidget.getId());
-
-        // Update grid
-        dashboardWebsocketService.updateGlobalScreensByProjectToken(projectWidget.getProject().getToken(),  new UpdateEvent(UpdateType.GRID));
-
-        return projectWidget;
-    }
 
     /**
      * Method used for retrieve a project token from a project id

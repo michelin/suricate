@@ -44,39 +44,6 @@ public interface ProjectWidgetRepository extends JpaRepository<ProjectWidget, Lo
     void resetProjectWidgetsState();
 
     /**
-     * Update the state of a project widget (nashorn execution)
-     *
-     * @param widgetState The new widget state
-     * @param id The project widget id
-     * @param lastExecutionDate The last execution date
-     * @return State of the query
-     */
-    @Modifying
-    @Query("UPDATE ProjectWidget " +
-        "SET state = :state, " +
-        "lastExecutionDate = :lastExecutionDate " +
-        "WHERE id = :id")
-    int updateState(@Param("state") WidgetState widgetState, @Param("id") Long id, @Param("lastExecutionDate") Date lastExecutionDate);
-
-
-
-
-
-
-
-
-    /**
-     * Method used to get the nashorn request object for a specific projet and widget
-     * @param id the widget id
-     * @return the nashorn request
-     */
-    @Query("SELECT new io.suricate.monitoring.model.dto.nashorn.NashornRequest(pw.backendConfig, w.backendJs, pw.data, pw.project.id, pw.id, w.delay, w.timeout, pw.state, pw.lastSuccessDate) " +
-            "FROM ProjectWidget pw, Widget w " +
-            "WHERE pw.widget.id = w.id " +
-            "AND pw.id = :id ")
-    NashornRequest getRequestByProjectWidgetId(@Param("id") Long id);
-
-    /**
      * Update the position in the grid of a widget
      *
      * @param row The new start row number

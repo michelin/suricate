@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.service.nashorn;
+package io.suricate.monitoring.service.scheduler;
 
-import io.suricate.monitoring.model.dto.widget.WidgetVariableResponse;
+import io.suricate.monitoring.model.dto.nashorn.WidgetVariableResponse;
 import io.suricate.monitoring.model.entity.Configuration;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
 import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
-import io.suricate.monitoring.service.Schedulable;
 import io.suricate.monitoring.service.api.ConfigurationService;
 import io.suricate.monitoring.service.api.ProjectWidgetService;
 import io.suricate.monitoring.service.api.WidgetService;
+import io.suricate.monitoring.service.nashorn.NashornService;
 import io.suricate.monitoring.service.nashorn.task.NashornResultAsyncTask;
 import io.suricate.monitoring.service.nashorn.task.NashornWidgetExecuteAsyncTask;
 import org.apache.commons.lang3.RandomUtils;
@@ -47,12 +47,12 @@ import java.util.Map;
 import java.util.concurrent.*;
 
 @Service
-public class NashornWidgetExecutor implements Schedulable {
+public class NashornWidgetScheduler implements Schedulable {
 
     /**
      * Class logger
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger(NashornWidgetExecutor.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(NashornWidgetScheduler.class.getName());
 
     /**
      * The number of executor
@@ -86,11 +86,11 @@ public class NashornWidgetExecutor implements Schedulable {
     private StringEncryptor stringEncryptor;
 
     @Autowired
-    public NashornWidgetExecutor(final ApplicationContext applicationContext,
-                                 final ProjectWidgetService projectWidgetService,
-                                 final NashornService nashornService,
-                                 final ConfigurationService configurationService,
-                                 @Qualifier("jasyptStringEncryptor") final StringEncryptor stringEncryptor) {
+    public NashornWidgetScheduler(final ApplicationContext applicationContext,
+                                  final ProjectWidgetService projectWidgetService,
+                                  final NashornService nashornService,
+                                  final ConfigurationService configurationService,
+                                  @Qualifier("jasyptStringEncryptor") final StringEncryptor stringEncryptor) {
         this.ctx = applicationContext;
         this.projectWidgetService = projectWidgetService;
         this.nashornService = nashornService;

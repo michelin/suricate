@@ -14,13 +14,13 @@ public class JavaClassFilterTest {
 
     @Test
     public void testUnauthorizedClass() throws Exception {
-        Assert.assertEquals(false,classFilter.exposeToScripts(File.class.getName()));
-        Assert.assertEquals(false,classFilter.exposeToScripts(ApplicationConstant.class.getName()));
+        Assert.assertFalse(classFilter.exposeToScripts(File.class.getName()));
+        Assert.assertFalse(classFilter.exposeToScripts(ApplicationConstant.class.getName()));
     }
 
     @Test
     public void testAuthorizedClass() throws Exception {
-        Assert.assertEquals(true,classFilter.exposeToScripts(Methods.class.getName()));
+        Assert.assertTrue(classFilter.exposeToScripts(Methods.class.getName()));
     }
 
 }

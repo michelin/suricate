@@ -16,12 +16,9 @@
 
 package io.suricate.monitoring.service.api;
 
-import io.suricate.monitoring.controllers.api.error.exception.ApiException;
-import io.suricate.monitoring.model.dto.project.ProjectWidgetPositionDto;
-import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
+import io.suricate.monitoring.model.dto.nashorn.WidgetVariableResponse;
 import io.suricate.monitoring.model.dto.widget.*;
 import io.suricate.monitoring.model.entity.*;
-import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.entity.widget.Category;
 import io.suricate.monitoring.model.entity.widget.Widget;
 import io.suricate.monitoring.model.entity.widget.WidgetParam;
@@ -29,15 +26,10 @@ import io.suricate.monitoring.model.entity.widget.WidgetParamValue;
 import io.suricate.monitoring.model.enums.*;
 import io.suricate.monitoring.repository.*;
 import io.suricate.monitoring.service.CacheService;
-import io.suricate.monitoring.service.nashorn.NashornWidgetExecutor;
-import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
-import io.suricate.monitoring.service.search.SearchService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -56,11 +48,6 @@ public class WidgetService {
     private static final Logger LOGGER = LoggerFactory.getLogger(WidgetService.class);
 
     /**
-     * Project widget repository
-     */
-    private final ProjectWidgetRepository projectWidgetRepository;
-
-    /**
      * Widget repository
      */
     private final WidgetRepository widgetRepository;
@@ -68,12 +55,7 @@ public class WidgetService {
     /**
      * Category repository
      */
-    private final CategoryRepository categoryRepository;
-
-    /**
-     * Socket service
-     */
-    private final DashboardWebSocketService dashboardWebsocketService;
+    private final CategoryService categoryService;
 
     /**
      * Cache service
@@ -83,129 +65,35 @@ public class WidgetService {
     /**
      * Asset repository
      */
-    private final AssetRepository assetRepository;
-
-    /**
-     * Search service
-     */
-    private final SearchService searchService;
-
-    /**
-     * The application context
-     */
-    private final ApplicationContext ctx;
+    private final AssetService assetService;
 
     /**
      * Constructor
      *
-     * @param projectWidgetRepository The project widget repository
      * @param widgetRepository The widget repository
-     * @param categoryRepository The category repository
-     * @param dashboardWebsocketService The socket service
+     * @param categoryService The category service
      * @param cacheService The cache service
-     * @param ctx The application context
-     * @param assetRepository The asset repository
-     * @param searchService The search service
+     * @param assetService The asset service
      */
     @Autowired
-    public WidgetService(ProjectWidgetRepository projectWidgetRepository, WidgetRepository widgetRepository, CategoryRepository categoryRepository, DashboardWebSocketService dashboardWebsocketService, CacheService cacheService, ApplicationContext ctx, AssetRepository assetRepository, SearchService searchService) {
-        this.projectWidgetRepository = projectWidgetRepository;
+    public WidgetService(final WidgetRepository widgetRepository,
+                         final CategoryService categoryService,
+                         final CacheService cacheService,
+                         final AssetService assetService) {
+
         this.widgetRepository = widgetRepository;
-        this.categoryRepository = categoryRepository;
-        this.dashboardWebsocketService = dashboardWebsocketService;
+        this.categoryService = categoryService;
         this.cacheService = cacheService;
-        this.ctx = ctx;
-        this.assetRepository = assetRepository;
-        this.searchService = searchService;
+        this.assetService = assetService;
     }
 
     /**
-     * Tranform a list of Domain objects into a DTO objects
-     * @param widgets The list of widgets to tranform
-     * @return The list as DTO objects
+     * Find a widget by id
+     * @param id The widget id
+     * @return The related widget
      */
-    public List<WidgetDto> transformIntoDTOs(final List<Widget> widgets) {
-        return widgets
-            .stream()
-            .map(this::tranformIntoDto)
-            .collect(Collectors.toList());
-    }
-
-    /**
-     * Transform a widget into a DTO object
-     *
-     * @param widget The widget to transform
-     * @return The related DTO
-     */
-    public WidgetDto tranformIntoDto(final Widget widget) {
-        WidgetDto widgetDto = new WidgetDto();
-
-        widgetDto.setId(widget.getId());
-        widgetDto.setName(widget.getName());
-        widgetDto.setDescription(widget.getDescription());
-        widgetDto.setTechnicalName(widget.getTechnicalName());
-        widgetDto.setHtmlContent(widget.getHtmlContent());
-        widgetDto.setCssContent(StringUtils.trimToEmpty(widget.getCssContent()));
-        widgetDto.setBackendJs(widget.getBackendJs());
-        widgetDto.setInfo(widget.getInfo());
-        widgetDto.setDelay(widget.getDelay());
-        widgetDto.setTimeout(widget.getTimeout());
-        widgetDto.setImage(widget.getImage());
-        widgetDto.getLibraries().addAll(widget.getLibraries());
-        widgetDto.setCategory(new CategoryDto(widget.getCategory()));
-        widgetDto.setWidgetAvailability(widget.getWidgetAvailability());
-        widgetDto.getWidgetParams().addAll(extractWidgetParams(widget));
-
-        return widgetDto;
-    }
-
-    /**
-     * Extract the list of widget params of a widget
-     *
-     * @param widget The widget
-     * @return The related list of params
-     */
-    private List<WidgetParamDto> extractWidgetParams(Widget widget) {
-        List<WidgetParamDto> widgetParamResponses = new ArrayList<>();
-
-        if(widget.getWidgetParams() != null && !widget.getWidgetParams().isEmpty()) {
-            for (WidgetParam widgetParam: widget.getWidgetParams()) {
-                WidgetParamDto widgetParamResponse = new WidgetParamDto();
-
-                widgetParamResponse.setName(widgetParam.getName());
-                widgetParamResponse.setDescription(widgetParam.getDescription());
-                widgetParamResponse.setDefaultValue(widgetParam.getDefaultValue());
-                widgetParamResponse.setType(widgetParam.getType());
-                widgetParamResponse.setAcceptFileRegex(widgetParam.getAcceptFileRegex());
-                widgetParamResponse.setUsageExample(widgetParam.getUsageExample());
-                widgetParamResponse.setRequired(widgetParam.isRequired());
-
-                if(widgetParam.getPossibleValuesMap() != null && !widgetParam.getPossibleValuesMap().isEmpty()) {
-                    for(WidgetParamValue widgetParamValue : widgetParam.getPossibleValuesMap()) {
-                        WidgetParamValueDto widgetParamValueResponse = new WidgetParamValueDto();
-
-                        widgetParamValueResponse.setJsKey(widgetParamValue.getJsKey());
-                        widgetParamValueResponse.setValue(widgetParamValue.getValue());
-
-                        widgetParamResponse.getValues().add(widgetParamValueResponse);
-                    }
-                }
-
-                widgetParamResponses.add(widgetParamResponse);
-            }
-        }
-
-        return widgetParamResponses;
-    }
-
-    /**
-     * Get every categories
-     * @return The list of categories
-     */
-    @Transactional
-    @Cacheable("widget-categories")
-    public List<Category> getCategories() {
-        return categoryRepository.findAllByOrderByNameAsc();
+    public Widget findOne(final Long id) {
+        return widgetRepository.findOne(id);
     }
 
     /**
@@ -215,8 +103,14 @@ public class WidgetService {
      * @return The list of related widgets
      */
     @Transactional
-    public List<WidgetDto> getWidgetsByCategory(final Long categoryId) {
-        return transformIntoDTOs(widgetRepository.findAllByCategory_IdOrderByNameAsc(categoryId));
+    public Optional<List<Widget>> getWidgetsByCategory(final Long categoryId) {
+        List<Widget> widgets = widgetRepository.findAllByCategory_IdOrderByNameAsc(categoryId);
+
+        if(widgets == null || widgets.isEmpty()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(widgets);
     }
 
     /**
@@ -268,107 +162,6 @@ public class WidgetService {
             .collect(Collectors.toMap(WidgetParamValue::getJsKey, WidgetParamValue::getValue));
     }
 
-    /**
-     * Method used to update all widgets positions for a current project
-     * @param projectId the project id
-     * @param positions lit of position
-     * @param projetToken project token
-     */
-    @Transactional
-    public void update(Long projectId, List<ProjectWidgetPositionDto> positions, String projetToken){
-        List<ProjectWidget> projectWidgets = projectWidgetRepository.findByProjectIdAndWidget_WidgetAvailabilityOrderById(projectId, WidgetAvailabilityEnum.ACTIVATED);
-        if (projectWidgets.size() != positions.size()) {
-            throw new ApiException(ApiErrorEnum.PROJECT_INVALID_CONSTANCY);
-        }
-
-        int i = 0;
-        for (ProjectWidget projectWidget : projectWidgets){
-            projectWidgetRepository.updateRowAndColAndWidthAndHeightById(positions.get(i).getRow(),
-                    positions.get(i).getCol(),
-                    positions.get(i).getWidth(),
-                    positions.get(i).getHeight(),
-                    projectWidget.getId()
-                    );
-            i++;
-        }
-        projectWidgetRepository.flush();
-        // notify clients
-        dashboardWebsocketService.updateGlobalScreensByProjectToken(projetToken, new UpdateEvent(UpdateType.POSITION));
-    }
-
-    /**
-     * Method used to remove widget from the dashboard
-     * @param projectId the project id
-     * @param projectWidgetId the projectwidget id
-     */
-    @Transactional
-    public void removeWidget(Long projectId, Long projectWidgetId){
-        ctx.getBean(NashornWidgetExecutor.class).cancelWidgetInstance(projectWidgetId);
-        projectWidgetRepository.deleteByProjectIdAndId(projectId, projectWidgetId);
-        projectWidgetRepository.flush();
-        // notify client
-        dashboardWebsocketService.updateGlobalScreensByProjectId(projectId, new UpdateEvent(UpdateType.GRID));
-    }
-
-    /**
-     * Method used to get all widget by category
-     * @param widgetAvailability the availability of widgets
-     * @return a map sorted by category which contain a list of widgets
-     */
-    @Transactional
-    @Cacheable("widget-by-category")
-    public Map<Category,List<Widget>> getAvailableWidget(WidgetAvailabilityEnum widgetAvailability, String search) {
-        LOGGER.debug("Search widgets with terms '{}', for availability {}", search, widgetAvailability);
-        Map<Category,List<Widget>> ret = new LinkedHashMap<>();
-        List<Category> categories = categoryRepository.findAllByOrderByNameAsc();
-        List<Widget> widgets = null;
-        if (StringUtils.isNotBlank(search)){
-            widgets = searchService.searchWidgets(widgetAvailability, search);
-        } else {
-            if (widgetAvailability == null) {
-                widgets = widgetRepository.findAllByOrderByNameAsc();
-            } else {
-                widgets = widgetRepository.findAllByWidgetAvailabilityOrderByNameAsc(widgetAvailability);
-            }
-        }
-
-        for (Category category : categories) {
-            List<Widget> cateWidget = new ArrayList<>();
-            for (Widget widget : widgets) {
-                if (widget.getCategory() != null && category.getId().equals(widget.getCategory().getId())) {
-                    cateWidget.add(widget);
-                }
-            }
-            if (!cateWidget.isEmpty()) {
-                widgets.removeAll(cateWidget);
-                ret.put(category, cateWidget);
-            }
-        }
-
-        return ret;
-    }
-
-    /**
-     * Method used to schedule a widget
-     * @param projectWidgetId The project widget id
-     */
-    @Transactional
-    public void scheduleWidget(Long projectWidgetId){
-        ctx.getBean(NashornWidgetExecutor.class).cancelAndSchedule(projectWidgetRepository.getRequestByProjectWidgetId(projectWidgetId));
-    }
-
-    /**
-     * Method used to update the configuration and custom css for project widget
-     *
-     * @param projectWidgetId The project widget id
-     * @param style The custom css style
-     * @param backendConfig The backend configuration
-     *
-     */
-    @Transactional
-    public void updateProjectWidget(Long projectWidgetId, String style, String backendConfig){
-        projectWidgetRepository.updateConfig(projectWidgetId, style, backendConfig);
-    }
 
     /**
      * Update categories and widgets in database with the new list
@@ -379,7 +172,7 @@ public class WidgetService {
     @Transactional
     public void updateWidgetInDatabase(List<Category> list, Map<String, Library> mapLibrary){
         for (Category category : list){
-            addOrUpdateCategory(category);
+            categoryService.addOrUpdateCategory(category);
             // Create/update widgets
             addOrUpdateWidgets(category, category.getWidgets(), mapLibrary);
         }
@@ -409,7 +202,7 @@ public class WidgetService {
                 if (currentWidget != null && currentWidget.getImage() != null) {
                     widget.getImage().setId(currentWidget.getImage().getId());
                 }
-                assetRepository.save(widget.getImage());
+                assetService.save(widget.getImage());
             }
 
             //Replace The existing list of params and values by the new one
@@ -463,31 +256,5 @@ public class WidgetService {
 
             widgetRepository.save(widget);
         }
-    }
-
-    /**
-     * Method used to add or update an category
-     * @param category the category to add
-     */
-    @Transactional
-    public void addOrUpdateCategory(Category category) {
-        if (category == null){
-            return;
-        }
-        // Find and existing category with the same id
-        Category currentCateg = categoryRepository.findByTechnicalName(category.getTechnicalName());
-        if (category.getImage() != null) {
-            if (currentCateg != null && currentCateg.getImage() != null){
-                category.getImage().setId(currentCateg.getImage().getId());
-            }
-            assetRepository.save(category.getImage());
-        }
-
-        if (currentCateg != null){
-            category.setId(currentCateg.getId());
-        }
-
-        // Create/Update category
-        categoryRepository.save(category);
     }
 }

@@ -22,7 +22,7 @@ import io.suricate.monitoring.model.entity.Library;
 import io.suricate.monitoring.service.api.LibraryService;
 import io.suricate.monitoring.service.api.WidgetService;
 import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
-import io.suricate.monitoring.service.nashorn.NashornWidgetExecutor;
+import io.suricate.monitoring.service.scheduler.NashornWidgetScheduler;
 import io.suricate.monitoring.utils.WidgetUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -42,6 +42,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Manage git calls
+ */
 @Service
 public class GitService {
 
@@ -53,27 +56,43 @@ public class GitService {
     /** The application properties */
     private final ApplicationProperties applicationProperties;
 
+    /**
+     * The widget service
+     */
     private final WidgetService widgetService;
 
+    /**
+     * The library service
+     */
     private final LibraryService libraryService;
 
+    /**
+     * The dashboard websocket service
+     */
     private final DashboardWebSocketService dashboardWebSocketService;
 
-    private final NashornWidgetExecutor nashornWidgetExecutor;
+    /**
+     * The nashorn widget executor
+     */
+    private final NashornWidgetScheduler nashornWidgetScheduler;
 
     /**
      * Contructor using fields
      * @param widgetService widget service
      * @param libraryService library service
      * @param dashboardWebSocketService socket service
-     * @param nashornWidgetExecutor widget executor
+     * @param nashornWidgetScheduler widget executor
      */
     @Autowired
-    public GitService(WidgetService widgetService, LibraryService libraryService, DashboardWebSocketService dashboardWebSocketService, NashornWidgetExecutor nashornWidgetExecutor, ApplicationProperties applicationProperties) {
+    public GitService(final WidgetService widgetService,
+                      final LibraryService libraryService,
+                      final DashboardWebSocketService dashboardWebSocketService,
+                      final NashornWidgetScheduler nashornWidgetScheduler,
+                      final ApplicationProperties applicationProperties) {
         this.widgetService = widgetService;
         this.libraryService = libraryService;
         this.dashboardWebSocketService = dashboardWebSocketService;
-        this.nashornWidgetExecutor = nashornWidgetExecutor;
+        this.nashornWidgetScheduler = nashornWidgetScheduler;
         this.applicationProperties = applicationProperties;
     }
 
@@ -159,7 +178,7 @@ public class GitService {
             if (StringUtils.isBlank(applicationProperties.widgets.local.folderPath)) {
                 FileUtils.deleteQuietly(folder);
             }
-            nashornWidgetExecutor.initScheduler();
+            nashornWidgetScheduler.initScheduler();
             dashboardWebSocketService.reloadAllConnectedDashboard();
         }
     }

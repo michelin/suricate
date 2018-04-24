@@ -17,7 +17,7 @@
 package io.suricate.monitoring.controllers.api;
 
 import io.suricate.monitoring.model.entity.Asset;
-import io.suricate.monitoring.repository.AssetRepository;
+import io.suricate.monitoring.service.api.AssetService;
 import io.suricate.monitoring.utils.IdUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,10 +45,19 @@ public class AssetController {
     private final static Logger LOGGER = LoggerFactory.getLogger(AssetController.class);
 
     /**
-     * Asset repository
+     * Asset Service
+     */
+    private final AssetService assetService;
+
+    /**
+     * The constructor
+     *
+     * @param assetService The asset service
      */
     @Autowired
-    private AssetRepository assetRepository;
+    public AssetController(final AssetService assetService) {
+        this.assetService = assetService;
+    }
 
     /**
      * Get asset for the specified token
@@ -57,17 +66,18 @@ public class AssetController {
      */
     @RequestMapping(path = "/{token}", method = RequestMethod.GET)
     public ResponseEntity<byte[]> getAsset(WebRequest webRequest, @PathVariable("token") String token) {
-        Asset data = assetRepository.findOne(IdUtils.decrypt(token));
-        if (data == null){
+        Asset asset = assetService.findOne(IdUtils.decrypt(token));
+        if (asset == null){
             return ResponseEntity.notFound().build();
-        } else if (webRequest.checkNotModified(data.getLastModifiedDate().getTime())){
+        } else if (webRequest.checkNotModified(asset.getLastModifiedDate().getTime())){
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
         }
-        return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(data.getContentType()))
-                .contentLength(data.getSize())
-                .lastModified(data.getLastModifiedDate().getTime())
-                .cacheControl(CacheControl.noCache())
-                .body(data.getContent());
+        return ResponseEntity
+            .ok()
+            .contentType(MediaType.parseMediaType(asset.getContentType()))
+            .contentLength(asset.getSize())
+            .lastModified(asset.getLastModifiedDate().getTime())
+            .cacheControl(CacheControl.noCache())
+            .body(asset.getContent());
     }
 }

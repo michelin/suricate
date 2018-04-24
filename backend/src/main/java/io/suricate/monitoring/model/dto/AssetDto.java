@@ -14,38 +14,32 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.dto.widget;
+package io.suricate.monitoring.model.dto;
 
-import io.suricate.monitoring.model.entity.Asset;
 import lombok.*;
 
-import java.util.List;
-
-
 /**
- * Represent a cateogry used for communication with the clients via webservices
+ * Asset class used for communicate through webservices
  */
-@Getter @Setter @NoArgsConstructor @EqualsAndHashCode @ToString
-public class CategoryDto {
+@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
+public class AssetDto extends AbstractDto  {
     /**
-     * The category id
+     * The asset id
      */
     private Long id;
-    /**
-     * The category name
-     */
-    private String name;
-    /**
-     * The technical name of the category
-     */
-    private String technicalName;
-    /**
-     * The image related to this category
-     */
-    private Asset image;
 
     /**
-     * The list of widgets related to this category
+     * The blob content
      */
-    private List<WidgetDto> widgets;
+    private byte[] content;
+
+    /**
+     * The content type
+     */
+    private String contentType;
+
+    /**
+     * The size of the asset
+     */
+    private long size;
 }

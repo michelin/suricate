@@ -16,21 +16,27 @@
 
 package io.suricate.monitoring.service.api;
 
-import io.suricate.monitoring.model.dto.ConfigurationDto;
 import io.suricate.monitoring.model.entity.Configuration;
 import io.suricate.monitoring.repository.ConfigurationRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Configuration service
  */
 @Service
 public class ConfigurationService {
+
+    /**
+     * Class logger
+     */
+    private final static Logger LOGGER = LoggerFactory.getLogger(ConfigurationService.class);
+
     /**
      * The configuration repository
      */
@@ -44,32 +50,6 @@ public class ConfigurationService {
     @Autowired
     public ConfigurationService(final ConfigurationRepository configurationRepository) {
         this.configurationRepository = configurationRepository;
-    }
-
-    /**
-     * Transform a configuration into a DTO
-     *
-     * @param configuration The ocnfiguration to transform
-     * @return The related configuration dto
-     */
-    public ConfigurationDto toDTO(Configuration configuration) {
-        ConfigurationDto configurationDto = new ConfigurationDto();
-
-        configurationDto.setKey(configuration.getKey());
-        configurationDto.setValue(configuration.getValue());
-        configurationDto.setExport(configuration.isExport());
-
-        return configurationDto;
-    }
-
-    /**
-     * Transform a list of configurations into a dto object
-     *
-     * @param configurations The list of configurations to tranform
-     * @return The list tranform
-     */
-    public List<ConfigurationDto> toDTO(List<Configuration> configurations) {
-        return configurations.stream().map(configuration -> this.toDTO(configuration)).collect(Collectors.toList());
     }
 
     /**

@@ -23,21 +23,24 @@ import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.dto.project.ProjectWidgetDto;
 import io.suricate.monitoring.model.entity.user.User;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
+import io.suricate.monitoring.model.mapper.project.ProjectMapper;
+import io.suricate.monitoring.model.mapper.project.ProjectWidgetMapper;
 import io.suricate.monitoring.service.api.ProjectService;
+import io.suricate.monitoring.service.api.ProjectWidgetService;
 import io.suricate.monitoring.service.api.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.CacheControl;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.security.Principal;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Project controller
@@ -55,50 +58,104 @@ public class ProjectController {
      * Project service
      */
     private final ProjectService projectService;
+
+    /**
+     * The project widget service
+     */
+    private final ProjectWidgetService projectWidgetService;
+
     /**
      * User service
      */
     private final UserService userService;
 
     /**
+     * The mapper that transform domain/dto objects
+     */
+    private final ProjectMapper projectMapper;
+
+    /**
+     * Project widget mapper
+     */
+    private final ProjectWidgetMapper projectWidgetMapper;
+
+    /**
      * Constructor for dependency injection
      *
      * @param projectService The project service to inject
+     * @param projectWidgetService The project widget service
      * @param userService The user service to inject
+     * @param projectMapper The project mapper
+     * @param projectWidgetMapper The project widget mapper
      */
     @Autowired
-    public ProjectController(final ProjectService projectService, final UserService userService) {
+    public ProjectController(final ProjectService projectService,
+                             final ProjectWidgetService projectWidgetService,
+                             final UserService userService,
+                             final ProjectMapper projectMapper,
+                             final ProjectWidgetMapper projectWidgetMapper) {
         this.projectService = projectService;
+        this.projectWidgetService = projectWidgetService;
         this.userService = userService;
+        this.projectMapper = projectMapper;
+        this.projectWidgetMapper = projectWidgetMapper;
     }
 
     /**
      * Get every project in database
      *
-     * @param principal The connected user
      * @return The whole list of projects
      */
     @RequestMapping(method = RequestMethod.GET)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<List<ProjectDto>> getAll() {
+
+        return Optional
+            .ofNullable(projectService.getAll())
+            .map(projects ->
+                ResponseEntity
+                    .ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .cacheControl(CacheControl.noCache())
+                    .body(projectMapper.toProjectDtosDefault(projects))
+            )
+            .orElseGet(() ->
+                ResponseEntity
+                    .noContent()
+                    .cacheControl(CacheControl.noCache())
+                    .build()
+            );
+    }
+
+    /**
+     * Get projects for a user
+     *
+     * @param principal The connected user
+     * @return The whole list of projects
+     */
+    @RequestMapping(value = "/currentUser", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
-    public List<ProjectDto> getAll(Principal principal) {
-        //TODO: Dispatch the logic in two separated methods
-        List<Project> projects;
-        Collection<GrantedAuthority> authorities = ((OAuth2Authentication) SecurityContextHolder.getContext().getAuthentication()).getAuthorities();
+    public ResponseEntity<List<ProjectDto>> getAllByUser(Principal principal) {
+        Optional<User> user = userService.getOneByUsername(principal.getName());
 
-        if(authorities.contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
-            projects = projectService.getAll();
+        if(!user.isPresent()) {
+            LOGGER.debug("No user with username : {}", principal.getName());
 
-        } else {
-            Optional<User> user = userService.getOneByUsername(principal.getName());
-            if(!user.isPresent()) {
-                throw new ApiException(ApiErrorEnum.USER_NOT_FOUND);
-            }
-
-            projects = projectService.getAllByUser(user.get());
+            return ResponseEntity
+                .notFound()
+                .cacheControl(CacheControl.noCache())
+                .build();
         }
 
-        return projects.stream().map(project -> projectService.toDTO(project, true)).collect(Collectors.toList());
+        List<Project> projects = projectService.getAllByUser(user.get());
+
+        return ResponseEntity
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .cacheControl(CacheControl.noCache())
+            .body(projectMapper.toProjectDtosDefault(projects));
     }
+
 
     /**
      * Add a new project/dashboard for a user
@@ -109,14 +166,29 @@ public class ProjectController {
      */
     @RequestMapping(method = RequestMethod.PUT)
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ProjectDto addNewProject(Principal principal, @RequestBody ProjectDto projectDto) {
+    public ResponseEntity<ProjectDto> addNewProject(Principal principal, @RequestBody ProjectDto projectDto) {
         Optional<User> user = userService.getOneByUsername(principal.getName());
 
         if(!user.isPresent()) {
-            throw new ApiException(ApiErrorEnum.USER_NOT_FOUND);
+            return ResponseEntity
+                .notFound()
+                .cacheControl(CacheControl.noCache())
+                .build();
         }
-        Project project = projectService.saveProject(user.get(), projectService.toModel(projectDto));
-        return projectService.toDTO(project, true);
+
+        Project project = projectService.saveProject(user.get(), projectMapper.toNewProject(projectDto));
+
+        URI resourceLocation = ServletUriComponentsBuilder
+            .fromCurrentContextPath()
+            .path("/api/projects/" + project.getId())
+            .build()
+            .toUri();
+
+        return ResponseEntity
+            .created(resourceLocation)
+            .contentType(MediaType.APPLICATION_JSON)
+            .cacheControl(CacheControl.noCache())
+            .body(projectMapper.toProjectDtoDefault(project));
     }
 
     /**
@@ -127,13 +199,21 @@ public class ProjectController {
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ProjectDto getOneById(@PathVariable("id") Long id) {
+    public ResponseEntity<ProjectDto> getOneById(@PathVariable("id") Long id) {
         Optional<Project> project = projectService.getOneById(id);
+
         if(!project.isPresent()) {
-            throw new ApiException(ApiErrorEnum.PROJECT_NOT_FOUND);
+            return ResponseEntity
+                .notFound()
+                .cacheControl(CacheControl.noCache())
+                .build();
         }
 
-        return  projectService.toDTO(project.get(), true);
+        return ResponseEntity
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .cacheControl(CacheControl.noCache())
+            .body(projectMapper.toProjectDtoDefault(project.get()));
     }
 
     /**
@@ -145,8 +225,8 @@ public class ProjectController {
      */
     @RequestMapping(value = "/{id}/users", method = RequestMethod.PUT)
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ProjectDto addUserToProject(@PathVariable("id") Long id,
-                                       @RequestBody Map<String, String> usernameMap) {
+    public ResponseEntity<ProjectDto> addUserToProject(@PathVariable("id") Long id,
+                                                       @RequestBody Map<String, String> usernameMap) {
         Optional<User> user = userService.getOneByUsername(usernameMap.get("username"));
         Optional<Project> project = projectService.getOneById(id);
 
@@ -158,7 +238,11 @@ public class ProjectController {
         }
 
         projectService.saveProject(user.get(), project.get());
-        return projectService.toDTO(project.get(), true);
+        return ResponseEntity
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .cacheControl(CacheControl.noCache())
+            .body(projectMapper.toProjectDtoDefault(project.get()));
     }
 
     /**
@@ -170,7 +254,7 @@ public class ProjectController {
      */
     @RequestMapping(value = "/{id}/users/{userId}", method = RequestMethod.DELETE)
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ProjectDto deleteUserToProject(@PathVariable("id") Long id, @PathVariable("userId") Long userId) {
+    public ResponseEntity<ProjectDto> deleteUserToProject(@PathVariable("id") Long id, @PathVariable("userId") Long userId) {
         Optional<User> user = userService.getOne(userId);
         Optional<Project> project = projectService.getOneById(id);
 
@@ -182,7 +266,12 @@ public class ProjectController {
         }
 
         projectService.deleteUserFromProject(user.get(), project.get());
-        return projectService.toDTO(project.get(), true);
+
+        return ResponseEntity
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .cacheControl(CacheControl.noCache())
+            .body(projectMapper.toProjectDtoDefault(project.get()));
     }
 
     /**
@@ -194,15 +283,21 @@ public class ProjectController {
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ProjectDto addWidgetToProject(@PathVariable("id") Long id,
+    public ResponseEntity<ProjectDto> addWidgetToProject(@PathVariable("id") Long id,
                                          @RequestBody ProjectWidgetDto projectWidgetDto) {
-        ProjectWidget projectWidget = projectService.addWidgetToProject(projectWidgetDto);
-        Optional<Project> project = projectService.getOneById(projectWidget.getProject().getId());
+        ProjectWidget projectWidget = projectWidgetMapper.toNewProjectWidget(projectWidgetDto, id);
+        projectWidgetService.addProjectWidget(projectWidget);
 
-        if(!project.isPresent()) {
-            throw new ApiException(ApiErrorEnum.PROJECT_NOT_FOUND);
-        }
+        URI resourceLocation = ServletUriComponentsBuilder
+            .fromCurrentContextPath()
+            .path("/api/projects/" + projectWidget.getProject().getId())
+            .build()
+            .toUri();
 
-        return projectService.toDTO(project.get(), true);
+        return ResponseEntity
+            .created(resourceLocation)
+            .contentType(MediaType.APPLICATION_JSON)
+            .cacheControl(CacheControl.noCache())
+            .body(projectMapper.toProjectDtoDefault(projectWidget.getProject()));
     }
 }

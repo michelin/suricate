@@ -14,47 +14,36 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.dto.widget;
+package io.suricate.monitoring.model.dto;
 
-import io.suricate.monitoring.model.enums.WidgetVariableType;
-import io.suricate.monitoring.model.dto.AbstractDto;
+import io.suricate.monitoring.model.dto.widget.WidgetDto;
 import lombok.*;
 
-import java.util.Map;
+import java.util.List;
 
 /**
- * Widget variable used for communication with the clients via webservices
+ * Library used for communication with the clients via webservices
  */
 @Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
-public class WidgetVariableResponse extends AbstractDto {
+public class LibraryDto extends AbstractDto {
 
     /**
-     * The variable name
+     * The library id
      */
-    private String name;
+    private Long id;
 
     /**
-     * The variable description
+     * The library technical name
      */
-    private String description;
+    private String technicalName;
 
     /**
-     * The data
+     * The related asset
      */
-    private String data;
+    private AssetDto asset;
 
     /**
-     * The variable type
+     * List of widgets related to it
      */
-    private WidgetVariableType type;
-
-    /**
-     * If the variable is required
-     */
-    private boolean required;
-
-    /**
-     * Map of values
-     */
-    private Map<String, String> values;
+    private List<WidgetDto> widgets;
 }
