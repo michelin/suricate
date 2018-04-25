@@ -34,7 +34,7 @@ import java.util.List;
 public interface ProjectWidgetRepository extends JpaRepository<ProjectWidget, Long> {
 
     /**
-     * Method used to reset the state of a widget instance
+     * Method used to reset the state of every widget instances
      */
     @Modifying
     @Query("UPDATE ProjectWidget " +

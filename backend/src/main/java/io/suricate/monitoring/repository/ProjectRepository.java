@@ -22,6 +22,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Repository used for request Projects in database
@@ -35,6 +36,14 @@ public interface ProjectRepository extends JpaRepository<Project, Long> {
 	 * @return List of related projects ordered by name
 	 */
 	List<Project> findByUsers_IdOrderByName(Long id);
+
+	/**
+	 * Find a project by token
+	 *
+	 * @param token The token to find
+	 * @return The project as Optionals
+	 */
+	Optional<Project> findProjectByToken(final String token);
 
 	/**
 	 * Method used to get Project token from it's id

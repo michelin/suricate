@@ -228,14 +228,30 @@ public class ProjectWidgetService {
 
     /**
      * Method used to update application state
+     *
      * @param widgetState widget state
      * @param id project widget id
+     */
+    @Transactional
+    public void updateState(WidgetState widgetState, Long id){
+        updateState(widgetState, id, null);
+    }
+
+    /**
+     * Method used to update application state
+     *
+     * @param widgetState widget state
+     * @param id project widget id
+     * @param date The last execution date
      */
     @Transactional
     public void updateState(WidgetState widgetState, Long id, Date date){
         ProjectWidget projectWidget = getOne(id);
         projectWidget.setState(widgetState);
-        projectWidget.setLastExecutionDate(date);
+
+        if(date != null ) {
+            projectWidget.setLastExecutionDate(date);
+        }
 
         projectWidgetRepository.saveAndFlush(projectWidget);
     }
