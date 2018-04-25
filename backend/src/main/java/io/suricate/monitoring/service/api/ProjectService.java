@@ -110,6 +110,16 @@ public class ProjectService {
     }
 
     /**
+     * Get a project by it's token
+     *
+     * @param token The token to find
+     * @return The project
+     */
+    public Optional<Project> getOneByToken(final String token) {
+        return projectRepository.findProjectByToken(token);
+    }
+
+    /**
      * Create a new project for a user
      *
      * @param user The user how create the project

@@ -19,10 +19,14 @@ package io.suricate.monitoring.service.webSocket;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
+import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
 import io.suricate.monitoring.model.dto.websocket.WebsocketClient;
 import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
+import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.service.api.ProjectService;
+import io.suricate.monitoring.service.nashorn.NashornService;
+import io.suricate.monitoring.service.scheduler.NashornWidgetScheduler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +35,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.*;
 
 /**
@@ -56,7 +61,17 @@ public class DashboardWebSocketService {
     private final ProjectService projectService;
 
     /**
-     * MultiMap containing the projectId as Key and the list of the WebsocketClient connected as value
+     * The nashorn service
+     */
+    private final NashornService nashornService;
+
+    /**
+     * The nashorn widget Scheduler
+     */
+    private final NashornWidgetScheduler nashornWidgetScheduler;
+
+    /**
+     * MultiMap containing the projectToken as Key and the list of the WebsocketClient connected as value
      */
     private Multimap<String, WebsocketClient> projectClients = Multimaps.synchronizedListMultimap(ArrayListMultimap.create());
 
@@ -72,30 +87,53 @@ public class DashboardWebSocketService {
      * @param projectService The project service
      */
     @Autowired
-    public DashboardWebSocketService(final SimpMessagingTemplate simpMessagingTemplate, @Lazy final ProjectService projectService) {
+    public DashboardWebSocketService(final SimpMessagingTemplate simpMessagingTemplate,
+                                     @Lazy final ProjectService projectService,
+                                     final NashornService nashornService,
+                                     final NashornWidgetScheduler nashornWidgetScheduler) {
         this.simpMessagingTemplate = simpMessagingTemplate;
         this.projectService = projectService;
+        this.nashornService = nashornService;
+        this.nashornWidgetScheduler = nashornWidgetScheduler;
     }
 
     /**
-     * Add a new link between the projectId and a WebsocketClient
+     * Add a new link between the projectToken and a WebsocketClient
      * Used when a new Websocket connection is done
      *
-     * @param projectId The connected projectId
+     * @param projectToken The connected projectToken
      * @param websocketClient The related websocket client
      */
-    public void addProjectClient (final String projectId, final WebsocketClient websocketClient) {
-        projectClients.put(projectId, websocketClient);
+    @Transactional
+    public void addProjectClient (final String projectToken, final WebsocketClient websocketClient) {
+        boolean shouldInstantiateProject = !projectClients.containsKey(projectToken);
+        projectClients.put(projectToken, websocketClient);
+
+        if(shouldInstantiateProject) {
+            Optional<Project> projectOpt = projectService.getOneByToken(projectToken);
+
+            if(projectOpt.isPresent()) {
+                List<NashornRequest> nashornRequest = nashornService.getNashornRequestsByProject(projectOpt.get());
+                nashornWidgetScheduler.scheduleList(nashornRequest, true, false);
+            }
+        }
     }
 
     /**
-     * Remove a link between a projectId and WebsocketClient
+     * Remove a link between a projectToken and WebsocketClient
      *
-     * @param projectId The projectId
+     * @param projectToken The projectToken
      * @param websocketClient The websocket client
      */
-    public void removeProjectClient (final String projectId, final WebsocketClient websocketClient) {
-        projectClients.remove(projectId, websocketClient);
+    @Transactional
+    public void removeProjectClient (final String projectToken, final WebsocketClient websocketClient) {
+        projectClients.remove(projectToken, websocketClient);
+
+        if(projectClients == null || !projectClients.containsKey(projectToken)) {
+            projectService
+                .getOneByToken(projectToken)
+                .ifPresent(nashornWidgetScheduler::cancelProjectScheduling);
+        }
     }
 
     /**
