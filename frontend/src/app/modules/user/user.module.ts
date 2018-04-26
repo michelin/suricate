@@ -23,9 +23,11 @@ import {UserService} from './user.service';
 import {CommonModule} from '@angular/common';
 import {SharedModule} from '../../shared/shared.module';
 import { DeleteUserDialogComponent } from './components/delete-user-dialog/delete-user-dialog.component';
+import { UserEditComponent } from './user-edit/user-edit.component';
 
 const appRoutes: Routes = [
-  { path: 'users', component: UserListComponent, data: { breadcrumb: 'User List' }, canActivate: [ AuthGuard ] }
+  { path: 'users', component: UserListComponent, data: { breadcrumb: 'User List' }, canActivate: [ AuthGuard ] },
+  { path: 'users/:userId/edit', component: UserEditComponent, data: { breadcrumb: 'Edit User' }, canActivate: [ AuthGuard ] }
 ];
 
 @NgModule({
@@ -36,7 +38,8 @@ const appRoutes: Routes = [
   ],
   declarations: [
       UserListComponent,
-      DeleteUserDialogComponent
+      DeleteUserDialogComponent,
+      UserEditComponent
   ],
   entryComponents: [
       DeleteUserDialogComponent

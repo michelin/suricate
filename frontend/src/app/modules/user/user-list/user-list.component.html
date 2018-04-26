@@ -36,7 +36,7 @@
     <ng-container matColumnDef="edit">
       <mat-header-cell fxFlex="5" *matHeaderCellDef> Edit </mat-header-cell>
       <mat-cell fxFlex="5" *matCellDef="let row">
-        <a [routerLink]="[row.id]">
+        <a [routerLink]="[row.id, 'edit']">
           <button mat-icon-button color="accent">
             <mat-icon>edit</mat-icon>
           </button>
