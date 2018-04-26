@@ -17,6 +17,7 @@
 package io.suricate.monitoring.service.api;
 
 import io.suricate.monitoring.model.dto.nashorn.WidgetVariableResponse;
+import io.suricate.monitoring.model.dto.widget.WidgetDto;
 import io.suricate.monitoring.model.entity.*;
 import io.suricate.monitoring.model.entity.widget.Category;
 import io.suricate.monitoring.model.entity.widget.Widget;
@@ -174,6 +175,24 @@ public class WidgetService {
         return widgetParamValues
             .stream()
             .collect(Collectors.toMap(WidgetParamValue::getJsKey, WidgetParamValue::getValue));
+    }
+
+    /**
+     * Update a widget
+     *
+     * @param widgetId The widget id to update
+     * @param widgetDtoWithchanges The object that holds changes
+     * @return The widget update
+     */
+    public Optional<Widget> updateWidget(final Long widgetId, final WidgetDto widgetDtoWithchanges) {
+        if(!widgetRepository.exists(widgetId)) {
+            return Optional.empty();
+        }
+
+        Widget widgetToBeModified = findOne(widgetId);
+        widgetToBeModified.setWidgetAvailability(widgetDtoWithchanges.getWidgetAvailability());
+
+        return Optional.of(widgetRepository.save(widgetToBeModified));
     }
 
 

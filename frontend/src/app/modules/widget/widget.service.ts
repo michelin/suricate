@@ -53,6 +53,16 @@ export class WidgetService extends AbstractHttpService  {
   }
 
   /**
+   * Update a widget
+   *
+   * @param {Widget} widget The widget to update
+   * @returns {Observable<Widget>} The widget updated
+   */
+  updateWidget(widget: Widget): Observable<Widget> {
+    return this.httpClient.post<Widget>(`${WidgetService.WIDGETS_BASE_URL}/${widget.id}`, widget);
+  }
+
+  /**
    * Retrieve every categories
    *
    * @returns {Observable<Category[]>} The categories as observable

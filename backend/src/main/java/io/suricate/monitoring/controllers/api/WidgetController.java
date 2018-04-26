@@ -113,6 +113,33 @@ public class WidgetController {
     }
 
     /**
+     * Update a widget
+     *
+     * @param widgetId The widget id to update
+     * @param widgetDtoWithChanges The object holding changes
+     * @return The widget dto changed
+     */
+    @RequestMapping(value = "/{widgetId}", method = RequestMethod.POST)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<WidgetDto> updateWidget(@PathVariable("widgetId") Long widgetId,
+                                  @RequestBody WidgetDto widgetDtoWithChanges) {
+        Optional<Widget> widgetOpt = widgetService.updateWidget(widgetId, widgetDtoWithChanges);
+
+        if(!widgetOpt.isPresent()) {
+            return ResponseEntity
+                .notFound()
+                .cacheControl(CacheControl.noCache())
+                .build();
+        }
+
+        return ResponseEntity
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .cacheControl(CacheControl.noCache())
+            .body(widgetMapper.toWidgetDtoDefault(widgetOpt.get()));
+    }
+
+    /**
      * Get the list of widget categories
      *
      * @return A list of category
