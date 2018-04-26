@@ -21,16 +21,21 @@ import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.model.dto.user.UserDto;
 import io.suricate.monitoring.model.entity.user.User;
 import io.suricate.monitoring.model.enums.AuthenticationMethod;
+import io.suricate.monitoring.model.mapper.role.UserMapper;
 import io.suricate.monitoring.service.api.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.CacheControl;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.security.Principal;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * User controller
@@ -50,13 +55,20 @@ public class UserController {
     private final UserService userService;
 
     /**
+     * The user mapper
+     */
+    private final UserMapper userMapper;
+
+    /**
      * Constructor
      *
      * @param userService The user service to inject
+     * @param userMapper The user mapper to inject
      */
     @Autowired
-    public UserController(final UserService userService) {
+    public UserController(final UserService userService, final UserMapper userMapper) {
         this.userService = userService;
+        this.userMapper = userMapper;
     }
 
     /**
@@ -65,9 +77,21 @@ public class UserController {
      */
     @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public List<UserDto> getAll() {
-        List<User> users =  userService.getAll();
-        return users.stream().map(user -> userService.toDto(user)).collect(Collectors.toList());
+    public ResponseEntity<List<UserDto>> getAll() {
+        Optional<List<User>> users =  userService.getAll();
+
+        if(!users.isPresent()) {
+            return ResponseEntity
+                .noContent()
+                .cacheControl(CacheControl.noCache())
+                .build();
+        }
+
+        return ResponseEntity
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .cacheControl(CacheControl.noCache())
+            .body(userMapper.toUserDtosDefault(users.get()));
     }
 
     /**
@@ -78,13 +102,21 @@ public class UserController {
      */
     @RequestMapping(value="/search", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
-    public List<UserDto> search(@RequestParam("username") String username) {
+    public ResponseEntity<List<UserDto>> search(@RequestParam("username") String username) {
         Optional<List<User>> users = userService.getAllByUsernameStartWith(username);
+
         if(!users.isPresent()) {
-            return new ArrayList<>();
+            return ResponseEntity
+                .noContent()
+                .cacheControl(CacheControl.noCache())
+                .build();
         }
 
-        return users.get().stream().map(user -> userService.toDto(user)).collect(Collectors.toList());
+        return ResponseEntity
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .cacheControl(CacheControl.noCache())
+            .body(userMapper.toUserDtosDefault(users.get()));
     }
 
     /**
@@ -95,9 +127,25 @@ public class UserController {
      */
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     @PreAuthorize("isAnonymous()")
-    public UserDto register(@RequestBody UserDto userDto) {
-        User userSaved = userService.registerNewUserAccount(userDto, AuthenticationMethod.DATABASE);
-        return userService.toDto(userSaved);
+    public ResponseEntity<UserDto> register(@RequestBody UserDto userDto) {
+        User user = userMapper.toNewUser(userDto, AuthenticationMethod.DATABASE);
+        Optional<User> userSaved = userService.registerNewUserAccount(user);
+
+        if(!userSaved.isPresent()) {
+            throw new ApiException(ApiErrorEnum.USER_CREATION_ERROR);
+        }
+
+        URI resourceLocation = ServletUriComponentsBuilder
+            .fromCurrentContextPath()
+            .path("/api/users/" + user.getId())
+            .build()
+            .toUri();
+
+        return ResponseEntity
+            .created(resourceLocation)
+            .contentType(MediaType.APPLICATION_JSON)
+            .cacheControl(CacheControl.noCache())
+            .body(userMapper.toUserDtoDefault(userSaved.get()));
     }
 
     /**
@@ -108,13 +156,17 @@ public class UserController {
      */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
-    public UserDto getOne(@PathVariable("id") Long id) {
+    public ResponseEntity<UserDto> getOne(@PathVariable("id") Long id) {
         Optional<User> user = userService.getOne(id);
         if (!user.isPresent()){
             throw new ApiException(ApiErrorEnum.USER_NOT_FOUND);
         }
 
-        return userService.toDto(user.get());
+        return ResponseEntity
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .cacheControl(CacheControl.noCache())
+            .body(userMapper.toUserDtoDefault(user.get()));
     }
 
     /**
@@ -125,13 +177,18 @@ public class UserController {
      */
     @RequestMapping(value = "/current", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
-    public UserDto getCurrentUser(Principal principal) {
+    public ResponseEntity<UserDto> getCurrentUser(Principal principal) {
         Optional<User> user = userService.getOneByUsername(principal.getName());
 
         if(!user.isPresent()) {
             throw new ApiException(ApiErrorEnum.USER_NOT_FOUND);
         }
 
-        return userService.toDto(user.get());
+        return ResponseEntity
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .cacheControl(CacheControl.noCache())
+            .body(userMapper.toUserDtoDefault(user.get()));
+
     }
 }

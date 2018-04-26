@@ -17,14 +17,15 @@
 import {ChangeDetectorRef, Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef, MatHorizontalStepper} from '@angular/material';
 import {Category} from '../../../../model/dto/Category';
-import {WidgetService} from '../../../../../modules/core/widget.service';
+import {WidgetService} from '../../../../../modules/widget/widget.service';
 import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import {Asset} from '../../../../model/dto/Asset';
 import {Widget} from '../../../../model/dto/Widget';
-import {WidgetParamEnum} from '../../../../model/dto/enums/WidgetParamEnum';
+import {WidgetVariableType} from '../../../../model/dto/enums/WidgetVariableType';
 import {FormGroup, NgForm} from '@angular/forms';
 import {DashboardService} from '../../../../../modules/dashboard/dashboard.service';
 import {ProjectWidget} from '../../../../model/dto/ProjectWidget';
+import {WidgetAvailabilityEnum} from '../../../../model/dto/enums/WidgetAvailabilityEnum';
 
 @Component({
   selector: 'app-add-widget-dialog',
@@ -37,7 +38,7 @@ export class AddWidgetDialogComponent implements OnInit {
   step1Completed = false;
   step2Completed = false;
 
-  widgetParamEnum = WidgetParamEnum;
+  widgetParamEnum = WidgetVariableType;
   categories: Category[];
   widgets: Widget[];
   selectedWidget: Widget;
@@ -61,7 +62,7 @@ export class AddWidgetDialogComponent implements OnInit {
     this.widgetService
         .getWidgetsByCategoryId(categoryId)
         .subscribe(widgets => {
-          this.widgets = widgets;
+          this.widgets = widgets.filter((widget: Widget) => widget.widgetAvailability === WidgetAvailabilityEnum.ACTIVATED);
           this.step1Completed = true;
           this.changeDetectorRef.detectChanges();
           this.widgetStepper.next();
@@ -87,8 +88,8 @@ export class AddWidgetDialogComponent implements OnInit {
 
       const projectWidget: ProjectWidget = new ProjectWidget();
       projectWidget.backendConfig = backendConfig;
-      projectWidget.projectId = this.data.projectId;
-      projectWidget.widgetId = this.selectedWidget.widgetId;
+      projectWidget.project = this.dashboardService.currendDashbordSubject.getValue();
+      projectWidget.widget = this.selectedWidget;
 
       this.dashboardService
           .addWidgetToProject(projectWidget)

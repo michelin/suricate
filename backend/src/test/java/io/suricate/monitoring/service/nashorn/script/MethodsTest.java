@@ -14,12 +14,12 @@ public class MethodsTest {
 
     @Test
     public void testAtobNull(){
-        Assert.assertEquals(null, Methods.btoa(null));
+        Assert.assertNull(Methods.btoa(null));
     }
 
     @Test
     public void testAtobEmpty(){
-        Assert.assertEquals(null, Methods.btoa(""));
+        Assert.assertNull(Methods.btoa(""));
     }
 
     @Test

@@ -27,6 +27,7 @@ import {AuthenticationModule} from './modules/authentication/authentication.modu
 import { AppComponent } from './app.component';
 import {HomeModule} from './modules/home/home.module';
 import {ConfigurationModule} from './modules/configuration/configuration.module';
+import {WidgetModule} from './modules/widget/widget.module';
 
 const appRoutes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -44,7 +45,8 @@ const appRoutes: Routes = [
       AuthenticationModule,
       DashboardModule,
       UserModule,
-      ConfigurationModule
+      ConfigurationModule,
+      WidgetModule
   ],
   declarations: [
       AppComponent

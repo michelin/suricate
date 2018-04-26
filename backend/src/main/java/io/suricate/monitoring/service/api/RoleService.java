@@ -19,6 +19,8 @@ package io.suricate.monitoring.service.api;
 import io.suricate.monitoring.model.dto.user.RoleDto;
 import io.suricate.monitoring.model.entity.user.Role;
 import io.suricate.monitoring.repository.RoleRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -28,6 +30,10 @@ import java.util.Optional;
  */
 @Service
 public class RoleService {
+    /**
+     * Class logger
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(RoleService.class);
 
     /**
      * Role repository
@@ -41,35 +47,6 @@ public class RoleService {
      */
     public RoleService(final RoleRepository roleRepository) {
         this.roleRepository = roleRepository;
-    }
-
-    /**
-     * Tranform a Domain object into a DTO object
-     * @param role The domain role
-     * @return The DTO Object
-     */
-    public RoleDto toDto(Role role) {
-        RoleDto roleDto = new RoleDto();
-        roleDto.setId(role.getId());
-        roleDto.setName(role.getName());
-        roleDto.setDescription(role.getDescription());
-
-        return roleDto;
-    }
-
-    /**
-     * Tranform a DTO object into a domain object
-     *
-     * @param roleDto The DTO to transform
-     * @return The domain object
-     */
-    public Role toModel(RoleDto roleDto) {
-        Role role = new Role();
-        role.setId(roleDto.getId());
-        role.setName(roleDto.getName());
-        role.setDescription(roleDto.getDescription());
-
-        return role;
     }
 
     /**

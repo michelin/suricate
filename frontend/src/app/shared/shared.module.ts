@@ -31,6 +31,8 @@ import { HomeActionsComponent } from './components/pages-header/components/home-
 import { AddDashboardDialogComponent } from './components/pages-header/components/add-dashboard-dialog/add-dashboard-dialog.component';
 import { CustomFormsModule} from 'ng2-validation';
 import {ColorPickerModule} from 'ngx-color-picker';
+import {StompService} from 'ng2-stomp-service/index';
+import {WebsocketService} from './services/websocket.service';
 
 @NgModule({
   imports: [
@@ -71,7 +73,9 @@ import {ColorPickerModule} from 'ngx-color-picker';
   ],
   providers: [
       { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
-      AuthGuard
+      AuthGuard,
+      StompService,
+      WebsocketService
   ]
 })
 export class SharedModule { }

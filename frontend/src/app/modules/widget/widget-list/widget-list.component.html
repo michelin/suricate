@@ -1,0 +1,69 @@
+<app-pages-header [secondTitle]="'List of widgets'"></app-pages-header>
+
+<div class="table-container mat-elevation-z8">
+  <div class="table-loading-shade" *ngIf="isLoadingResults || errorCatched">
+    <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+
+    <div class="table-error" *ngIf="errorCatched">
+      An error as occured
+    </div>
+  </div>
+
+  <mat-table #table [dataSource]="matTableDataSource" class="table-show" matSort>
+
+    <ng-container matColumnDef="image">
+      <mat-header-cell fxFlex="17%" *matHeaderCellDef></mat-header-cell>
+      <mat-cell fxFlex="17%" *matCellDef="let row">
+        <div class="list-image" [innerHtml]="getHtmlImage(row.image)"></div>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="name">
+      <mat-header-cell fxFlex="15%" *matHeaderCellDef mat-sort-header> Name </mat-header-cell>
+      <mat-cell  fxFlex="15%" *matCellDef="let row">{{ row.name }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="description">
+      <mat-header-cell fxFlex="40%" *matHeaderCellDef>Description</mat-header-cell>
+      <mat-cell fxFlex="40%" *matCellDef="let row">{{ row.description }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="category">
+      <mat-header-cell fxFlex="15%" *matHeaderCellDef mat-sort-header>Category</mat-header-cell>
+      <mat-cell fxFlex="15%" *matCellDef="let row">{{ row.category.name }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <mat-header-cell fxFlex="13%" *matHeaderCellDef mat-sort-header>Activation status</mat-header-cell>
+      <mat-cell fxFlex="13%" *matCellDef="let row">
+        <mat-slide-toggle color="accent"
+                          [checked]="row.widgetAvailability == widgetAvailability.ACTIVATED"
+                          (change)="toggleWidgetActivation(row.id, $event)"></mat-slide-toggle>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container *matHeaderRowDef="displayedColumns">
+      <mat-header-row></mat-header-row>
+      <!-- Filter row -->
+      <div class="mat-header-row">
+        <div fxFlex="17%" class="mat-header-cell" role="columnheader"></div>
+        <div fxFlex="15%" class="mat-header-cell" role="columnheader">
+          <mat-form-field>
+            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+          </mat-form-field>
+        </div>
+        <div fxFlex="40%" class="mat-header-cell" role="columnheader"></div>
+        <div fxFlex="15%" class="mat-header-cell" role="columnheader">
+          <mat-form-field>
+            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+          </mat-form-field>
+        </div>
+        <div fxFlex="13%" class="mat-header-cell" role="columnheader"></div>
+      </div>
+    </ng-container>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+
+  <mat-paginator [length]="resultsLength" [pageSize]="30">
+  </mat-paginator>
+</div>

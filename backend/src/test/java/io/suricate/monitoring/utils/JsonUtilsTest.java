@@ -8,21 +8,21 @@ public class JsonUtilsTest {
 
     @Test
     public void testJsonValidNull(){
-        Assert.assertEquals(false, JsonUtils.isJsonValid(null));
+        Assert.assertFalse(JsonUtils.isJsonValid(null));
     }
 
     @Test
     public void testJsonValidEmpty(){
-        Assert.assertEquals(false, JsonUtils.isJsonValid(StringUtils.EMPTY));
+        Assert.assertFalse(JsonUtils.isJsonValid(StringUtils.EMPTY));
     }
 
     @Test
     public void testJsonInvalid(){
-        Assert.assertEquals(false, JsonUtils.isJsonValid("{\"test\":0"));
+        Assert.assertFalse(JsonUtils.isJsonValid("{\"test\":0"));
     }
 
     @Test
     public void testJsonValid(){
-        Assert.assertEquals(true, JsonUtils.isJsonValid("{\"test\":0}"));
+        Assert.assertTrue(JsonUtils.isJsonValid("{\"test\":0}"));
     }
 }

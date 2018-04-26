@@ -18,19 +18,21 @@
  */
 
 import {WidgetStateEnum} from './enums/WidgetSateEnum';
+import {ProjectWidgetPosition} from './ProjectWidgetPosition';
+import {Project} from './Project';
+import {Widget} from './Widget';
 
 export class ProjectWidget {
+  public id: number;
   public data: string;
-  public row: number;
-  public col: number;
-  public width: number;
-  public height: number;
+  public widgetPosition: ProjectWidgetPosition;
   public customStyle: string;
+  public instantiateHtml: string;
   public backendConfig: string;
   public log: string;
   public lastExecutionDate: Date;
   public lastSuccessDate: Date;
   public state: WidgetStateEnum;
-  public projectId: number;
-  public widgetId: number;
+  public project: Project;
+  public widget: Widget;
 }

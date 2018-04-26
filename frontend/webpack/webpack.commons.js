@@ -44,6 +44,9 @@ module.exports = (options) =>
             chunkFilename: "[id].chunk.js",
             crossOriginLoading: false
         },
+        node: {
+            net: 'empty'
+        },
         module: {
             rules: [
                 {test: /\.html$/, loader: "raw-loader"},

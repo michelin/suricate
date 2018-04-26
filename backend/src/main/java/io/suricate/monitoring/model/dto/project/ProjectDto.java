@@ -16,8 +16,8 @@
 
 package io.suricate.monitoring.model.dto.project;
 
+import io.suricate.monitoring.model.dto.AbstractDto;
 import io.suricate.monitoring.model.dto.user.UserDto;
-import io.suricate.monitoring.model.dto.widget.WidgetResponse;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -26,8 +26,8 @@ import java.util.List;
 /**
  * Project object used for communication with clients of the webservice
  */
-@Getter @Setter @NoArgsConstructor @EqualsAndHashCode @ToString
-public class ProjectDto {
+@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
+public class ProjectDto extends AbstractDto {
 
     /**
      * The id
@@ -56,7 +56,7 @@ public class ProjectDto {
     /**
      * The list of widgets
      */
-    private List<WidgetResponse> widgets = new ArrayList<>();
+    private List<ProjectWidgetDto> projectWidgets = new ArrayList<>();
     /**
      * The librairies related
      */

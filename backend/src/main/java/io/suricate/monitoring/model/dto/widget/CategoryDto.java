@@ -17,8 +17,9 @@
 package io.suricate.monitoring.model.dto.widget;
 
 import io.suricate.monitoring.model.entity.Asset;
-import io.suricate.monitoring.model.entity.widget.Category;
 import lombok.*;
+
+import java.util.List;
 
 
 /**
@@ -44,14 +45,7 @@ public class CategoryDto {
     private Asset image;
 
     /**
-     * Tranform a model object into a dto object
-     *
-     * @param category The category to transform
+     * The list of widgets related to this category
      */
-    public CategoryDto(Category category) {
-        this.id = category.getId();
-        this.name = category.getName();
-        this.technicalName = category.getTechnicalName();
-        this.image = category.getImage();
-    }
+    private List<WidgetDto> widgets;
 }

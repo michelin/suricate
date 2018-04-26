@@ -23,11 +23,12 @@ import {ProjectWidget} from '../../shared/model/dto/ProjectWidget';
 import {map} from 'rxjs/operators/map';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Subject} from 'rxjs/Subject';
+import {Widget} from '../../shared/model/dto/Widget';
 
 @Injectable()
 export class DashboardService extends AbstractHttpService {
 
-  public static readonly PROJECTS_BASE_URL = `${AbstractHttpService.BASE_URL}/${AbstractHttpService.PROJECTS_URL}`;
+  public static readonly PROJECTS_BASE_URL = `${AbstractHttpService.BASE_API_URL}/${AbstractHttpService.PROJECTS_URL}`;
 
   /**
    * Hold the list of dashboards
@@ -35,7 +36,7 @@ export class DashboardService extends AbstractHttpService {
    * @type {BehaviorSubject<Project[]>}
    */
   dashboardsSubject = new BehaviorSubject<Project[]>([]);
-  currendDashbordSubject = new Subject<Project>();
+  currendDashbordSubject = new BehaviorSubject<Project>(null);
 
   /**
    * The constructor
@@ -51,7 +52,7 @@ export class DashboardService extends AbstractHttpService {
    *
    * @param {Project} project The project
    */
-  private updateSubject(project: Project) {
+  private updateSubject(project: Project): void {
     const currentList = this.dashboardsSubject.getValue();
     const indexOfCurrentProject = currentList.findIndex(currentProject => currentProject.id === project.id);
 
@@ -60,6 +61,29 @@ export class DashboardService extends AbstractHttpService {
     }
 
     this.dashboardsSubject.next([...currentList, project]);
+  }
+
+  /**
+   * Use to update the html of a websocket
+   *
+   * @param {number} projectWidgetId The project widget ID to update
+   * @param {string} newHtmlContent The HTML to replace
+   */
+  public updateWidgetHtmlFromProjetWidgetId(projectWidgetId: number, newHtmlContent: string): void {
+    let projectWidgetToUpdate: ProjectWidget = null;
+    this.currendDashbordSubject
+        .getValue()
+        .projectWidgets
+        .filter( currentProjectWidget => {
+          if (currentProjectWidget.id === projectWidgetId) {
+            projectWidgetToUpdate = currentProjectWidget;
+          }
+        });
+
+    if (projectWidgetToUpdate) {
+      projectWidgetToUpdate.instantiateHtml = newHtmlContent;
+    }
+
   }
 
   /**
@@ -109,7 +133,15 @@ export class DashboardService extends AbstractHttpService {
    * @returns {Observable<Project>} The project as observable
    */
   addWidgetToProject(projectWidget: ProjectWidget): Observable<Project> {
-    return this.httpClient.put<Project>(`${DashboardService.PROJECTS_BASE_URL}/${projectWidget.projectId}`, projectWidget);
+    return this
+        .httpClient
+        .put<Project>(`${DashboardService.PROJECTS_BASE_URL}/${projectWidget.project.id}`, projectWidget)
+        .pipe(
+            map( project => {
+              this.currendDashbordSubject.next(project);
+              return project;
+            })
+        );
   }
 
   /**

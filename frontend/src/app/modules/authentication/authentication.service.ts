@@ -95,7 +95,7 @@ export class AuthenticationService extends AbstractHttpService {
     params.append('username', credentials.username);
     params.append('password', credentials.password);
 
-    const url = `${AbstractHttpService.BASE_URL}/${AbstractHttpService.AUTHENTICATE_URL}`;
+    const url = `${AbstractHttpService.BASE_API_URL}/${AbstractHttpService.AUTHENTICATE_URL}`;
 
     return this.httpClient
       .post<AuthenticationResponse>(url, params.toString(), {headers: headers})
@@ -112,6 +112,6 @@ export class AuthenticationService extends AbstractHttpService {
   }
 
   register(user: User) {
-    this.httpClient.post(`${AbstractHttpService.BASE_URL}/${AbstractHttpService.USERS_URL}/register`, user).subscribe();
+    this.httpClient.post(`${AbstractHttpService.BASE_API_URL}/${AbstractHttpService.USERS_URL}/register`, user).subscribe();
   }
 }

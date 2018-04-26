@@ -16,6 +16,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 
 import static com.google.common.truth.Truth.assertThat;
 
@@ -61,7 +62,7 @@ public class LibraryServiceTest {
         asset.setContent(FileUtils.readFileToByteArray(new File(LibraryServiceTest.class.getResource("/Libraries/d3.min.js").getFile())));
         lib.setAsset(asset);
         // First update
-        libraryService.updateLibraryInDatabase(Arrays.asList(lib));
+        libraryService.updateLibraryInDatabase(Collections.singletonList(lib));
 
         assertThat(libraryRepository.count()).isEqualTo(1);
         Library library = libraryRepository.findByTechnicalName("test");
@@ -81,7 +82,7 @@ public class LibraryServiceTest {
 
 
         // Update same library
-        libraryService.updateLibraryInDatabase(Arrays.asList(lib));
+        libraryService.updateLibraryInDatabase(Collections.singletonList(lib));
         assertThat(libraryRepository.count()).isEqualTo(1);
         library = libraryRepository.findByTechnicalName("test");
         assertThat(library.getAsset()).isNotNull();
@@ -98,7 +99,7 @@ public class LibraryServiceTest {
         asset.setSize(10);
         lib.setAsset(asset);
 
-        libraryService.updateLibraryInDatabase(Arrays.asList(lib));
+        libraryService.updateLibraryInDatabase(Collections.singletonList(lib));
         assertThat(libraryRepository.count()).isEqualTo(2);
         assertThat(assetRepository.count()).isEqualTo(2);
     }

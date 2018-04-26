@@ -18,13 +18,17 @@ package io.suricate.monitoring.service.nashorn;
 
 import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
 import io.suricate.monitoring.model.entity.Configuration;
+import io.suricate.monitoring.model.entity.project.Project;
+import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.enums.WidgetState;
-import io.suricate.monitoring.repository.ProjectWidgetRepository;
 import io.suricate.monitoring.service.api.ProjectWidgetService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,33 +54,56 @@ public class NashornService {
      *
      * @param projectWidgetService The project widget service
      */
-    public NashornService(final ProjectWidgetService projectWidgetService) {
+    @Autowired
+    public NashornService(@Lazy final ProjectWidgetService projectWidgetService) {
         this.projectWidgetService = projectWidgetService;
     }
 
     /**
-     * Get All the nashorn requests used for instantiate Project Widgets
+     * Get the list of related nashorn request for a project
      *
-     * @return The list of nashorn requests
+     * @param project The project
+     * @return The list of related nashorn request
      */
-    public List<NashornRequest> getEveryNashornRequestFromDatabase() {
-        return projectWidgetService
-            .getAll()
+    @Transactional
+    public List<NashornRequest> getNashornRequestsByProject(final Project project) {
+        return project
+            .getWidgets()
             .stream()
-            .map(projectWidget -> {
-                String properties = projectWidget.getBackendConfig();
-                String script = projectWidget.getWidget().getBackendJs();
-                String previousData = projectWidget.getData();
-                Long projectId = projectWidget.getProject().getId();
-                Long technicalId = projectWidget.getId();
-                Long delay = projectWidget.getWidget().getDelay();
-                Long timeout = projectWidget.getWidget().getTimeout();
-                WidgetState state = projectWidget.getState();
-                Date lastSuccess = projectWidget.getLastSuccessDate();
-
-                return new NashornRequest(properties, script, previousData, projectId, technicalId, delay, timeout, state, lastSuccess);
-            })
+            .map(this::createNashornRequestByProjectWidget)
             .collect(Collectors.toList());
+    }
+
+    /**
+     * Create a nashorn request by a project widget id
+     *
+     * @param projectWidgetId The project widget id
+     * @return The related nashorn request
+     */
+    public NashornRequest getNashornRequestByProjectWidgetId(final Long projectWidgetId) {
+        ProjectWidget projectWidget = projectWidgetService.getOne(projectWidgetId);
+
+        return createNashornRequestByProjectWidget(projectWidget);
+    }
+
+    /**
+     * Create a nashorn request by a project widget
+     *
+     * @param projectWidget The project widget
+     * @return The related nashorn request
+     */
+    private NashornRequest createNashornRequestByProjectWidget(final ProjectWidget projectWidget) {
+        String properties = projectWidget.getBackendConfig();
+        String script = projectWidget.getWidget().getBackendJs();
+        String previousData = projectWidget.getData();
+        Long projectId = projectWidget.getProject().getId();
+        Long technicalId = projectWidget.getId();
+        Long delay = projectWidget.getWidget().getDelay();
+        Long timeout = projectWidget.getWidget().getTimeout();
+        WidgetState state = projectWidget.getState();
+        Date lastSuccess = projectWidget.getLastSuccessDate();
+
+        return new NashornRequest(properties, script, previousData, projectId, technicalId, delay, timeout, state, lastSuccess);
     }
 
     /**

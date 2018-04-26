@@ -21,8 +21,8 @@ import lombok.*;
 /**
  * Configuration used for communication with the clients via webservices
  */
-@Getter @Setter @NoArgsConstructor @EqualsAndHashCode @ToString
-public class ConfigurationDto {
+@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
+public class ConfigurationDto extends AbstractDto  {
 
     /**
      * The configuration key
