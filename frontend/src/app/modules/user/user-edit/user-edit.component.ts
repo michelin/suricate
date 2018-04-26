@@ -15,8 +15,15 @@
  */
 
 import { Component, OnInit } from '@angular/core';
+import {UserService} from '../user.service';
+import {ActivatedRoute} from '@angular/router';
+import {User} from '../../../shared/model/dto/user/User';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {CustomValidators} from 'ng2-validation';
 
-
+/**
+ * Component user the edition of a user
+ */
 @Component({
   selector: 'app-user-edit',
   templateUrl: './user-edit.component.html',
@@ -24,9 +31,57 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UserEditComponent implements OnInit {
 
-  constructor() { }
+  /**
+   * The form group
+   */
+  editUserForm: FormGroup;
 
+  /**
+   * The user to edit
+   */
+  user: User;
+
+  /**
+   * Constructor
+   *
+   * @param {UserService} userService The user service to inject
+   * @param {ActivatedRoute} activatedRoute The activated route to inject
+   * @param {FormBuilder} formBuilder The formBuilder service
+   */
+  constructor(private userService: UserService,
+              private activatedRoute: ActivatedRoute,
+              private formBuilder: FormBuilder) { }
+
+  /**
+   * Called when the component is displayed
+   */
   ngOnInit() {
+    this
+        .activatedRoute
+        .params
+        .subscribe( params => {
+          this
+              .userService
+              .getById(params['userId'])
+              .subscribe( user => this.user = user);
+        });
+
+    this.editUserForm = this.formBuilder.group({
+      username: ['', [Validators.required, Validators.minLength(3)]],
+      firstname: ['', [Validators.required, Validators.minLength(2)]],
+      lastname: ['', [Validators.required, Validators.minLength(2)]],
+      email: ['', [Validators.required, CustomValidators.email]]
+    });
+  }
+
+  /**
+   * Check if the field is invalid
+   *
+   * @param {string} field The field to check
+   * @returns {boolean} False if the field valid, true otherwise
+   */
+  isFieldInvalid(field: string) {
+    return this.editUserForm.invalid && (this.editUserForm.get(field).dirty || this.editUserForm.get(field).touched);
   }
 
 }
