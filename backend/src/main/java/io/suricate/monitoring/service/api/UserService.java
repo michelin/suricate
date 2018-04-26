@@ -193,4 +193,13 @@ public class UserService {
     public Optional<List<User>> getAllByProject(Project project) {
         return userRepository.findByProjects_Id(project.getId());
     }
+
+    /**
+     * Delete a user
+     *
+     * @param user the user to delete
+     */
+    public void deleteUserByUserId(final User user) {
+        userRepository.delete(user);
+    }
 }
