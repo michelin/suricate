@@ -137,14 +137,8 @@ public class UserService {
      *
      * @return The list of users
      */
-    public Optional<List<User>> getAll() {
-        List<User> users = userRepository.findAll();
-
-        if(users == null || users.isEmpty()) {
-            return Optional.empty();
-        }
-
-        return Optional.of(users);
+    public Optional<List<User>> getAllOrderByUsername() {
+        return userRepository.findAllByOrderByUsername();
     }
 
     /**

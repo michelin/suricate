@@ -78,7 +78,7 @@ public class UserController {
     @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<UserDto>> getAll() {
-        Optional<List<User>> users =  userService.getAll();
+        Optional<List<User>> users =  userService.getAllOrderByUsername();
 
         if(!users.isPresent()) {
             return ResponseEntity

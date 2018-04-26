@@ -24,6 +24,7 @@ import {startWith} from 'rxjs/operators/startWith';
 import {switchMap} from 'rxjs/operators/switchMap';
 import {map} from 'rxjs/operators/map';
 import {UserService} from '../user.service';
+import {Role} from '../../../shared/model/dto/user/Role';
 
 @Component({
   selector: 'app-user',
@@ -33,7 +34,7 @@ import {UserService} from '../user.service';
 export class UserListComponent implements AfterViewInit {
   matTableDataSource = new MatTableDataSource();
 
-  displayedColumns = ['username', 'fullname', 'mail', 'roles', 'edit'];
+  displayedColumns = ['username', 'fullname', 'mail', 'roles', 'edit', 'delete'];
   isLoadingResults = false;
   errorCatched = false;
   resultsLength = 0;
@@ -73,7 +74,25 @@ export class UserListComponent implements AfterViewInit {
         .subscribe(data =>  {
           this.resultsLength = data.length;
           this.matTableDataSource.data = data;
+          this.matTableDataSource.sort = this.matSort;
         });
+
+    this.matTableDataSource.sortingDataAccessor = (item: any, property) => {
+      switch (property) {
+        case 'roles':
+          return this.getRolesName(item.roles);
+        default:
+          return item[property];
+      }
+    };
+  }
+
+  getRolesName(roles: Role[]): string {
+    return roles.map(role => role.name).toString();
+  }
+  
+  openDialogDeleteUser(userId: number) {
+    console.log(userId);
   }
 
 }
