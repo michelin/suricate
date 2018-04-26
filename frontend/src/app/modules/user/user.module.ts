@@ -22,6 +22,7 @@ import { AuthGuard } from '../../shared/guards/auth.guard';
 import {UserService} from './user.service';
 import {CommonModule} from '@angular/common';
 import {SharedModule} from '../../shared/shared.module';
+import { DeleteUserDialogComponent } from './components/delete-user-dialog/delete-user-dialog.component';
 
 const appRoutes: Routes = [
   { path: 'users', component: UserListComponent, data: { breadcrumb: 'User List' }, canActivate: [ AuthGuard ] }
@@ -34,7 +35,11 @@ const appRoutes: Routes = [
       SharedModule
   ],
   declarations: [
-    UserListComponent
+      UserListComponent,
+      DeleteUserDialogComponent
+  ],
+  entryComponents: [
+      DeleteUserDialogComponent
   ],
   exports: [
       RouterModule
