@@ -152,8 +152,13 @@ export class UserListComponent implements AfterViewInit {
       data: {user: user}
     });
 
-    deleteUserDialogRef.afterClosed().subscribe(shouldDelete => {
-
+    deleteUserDialogRef.afterClosed().subscribe(shouldDeleteUser => {
+      if (shouldDeleteUser) {
+        this
+            .userService
+            .deleteUser(user)
+            .subscribe(() => this.initUsersTable());
+      }
     });
   }
 

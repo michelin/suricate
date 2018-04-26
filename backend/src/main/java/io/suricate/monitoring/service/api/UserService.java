@@ -56,15 +56,24 @@ public class UserService {
     private final RoleService roleService;
 
     /**
+     * The project service
+     */
+    private final ProjectService projectService;
+
+    /**
      * Constructor
      *
      * @param userRepository The user repository
      * @param roleService The role service
+     * @param projectService The projectService to inject
      */
     @Autowired
-    public UserService(final UserRepository userRepository, final RoleService roleService) {
+    public UserService(final UserRepository userRepository,
+                       final RoleService roleService,
+                       final ProjectService projectService) {
         this.userRepository = userRepository;
         this.roleService = roleService;
+        this.projectService = projectService;
     }
 
     /**
@@ -199,7 +208,9 @@ public class UserService {
      *
      * @param user the user to delete
      */
-    public void deleteUserByUserId(final User user) {
+    @Transactional
+    public void deleteUserByUserId(User user) {
+        user.getProjects().forEach(project -> projectService.deleteUserFromProject(user, project));
         userRepository.delete(user);
     }
 }
