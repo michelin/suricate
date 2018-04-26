@@ -17,7 +17,6 @@
 package io.suricate.monitoring.service.api;
 
 import io.suricate.monitoring.model.dto.nashorn.WidgetVariableResponse;
-import io.suricate.monitoring.model.dto.widget.*;
 import io.suricate.monitoring.model.entity.*;
 import io.suricate.monitoring.model.entity.widget.Category;
 import io.suricate.monitoring.model.entity.widget.Widget;
@@ -85,6 +84,21 @@ public class WidgetService {
         this.categoryService = categoryService;
         this.cacheService = cacheService;
         this.assetService = assetService;
+    }
+
+    /**
+     * Return every widgets order by category name
+     *
+     * @return The list of widgets order by category name
+     */
+    public Optional<List<Widget>> getAll() {
+        List<Widget> widgets = widgetRepository.findAllByOrderByCategory_NameAsc();
+
+        if(widgets == null || widgets.isEmpty()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(widgets);
     }
 
     /**

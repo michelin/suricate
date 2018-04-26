@@ -97,10 +97,11 @@ public interface WidgetRepository extends JpaRepository<Widget, Long> {
 					 @Param("technicalName") String technicalName);
 
 	/**
-	 * Method used to get all widget by name desc
-	 * @return The list of related widgets
+	 * Find All by category name asc
+	 *
+	 * @return The list of widgets
 	 */
-	List<Widget> findAllByOrderByNameAsc();
+	List<Widget> findAllByOrderByCategory_NameAsc();
 
 	/**
 	 * Method used to get all widget by Availability

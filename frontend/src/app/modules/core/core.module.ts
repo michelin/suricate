@@ -16,7 +16,6 @@
 
 import { NgModule } from '@angular/core';
 import { SidenavComponent } from './sidenav/sidenav.component';
-import {WidgetService} from './widget.service';
 import {CommonModule} from '@angular/common';
 import {SharedModule} from '../../shared/shared.module';
 
@@ -30,9 +29,6 @@ import {SharedModule} from '../../shared/shared.module';
   ],
   exports: [
       SidenavComponent
-  ],
-  providers: [
-      WidgetService
   ]
 })
 export class CoreModule { }
