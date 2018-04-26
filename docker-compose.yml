@@ -13,4 +13,11 @@ backend:
   links:
    - database:mysql-db
   ports:
-   - "8080:8080"
+   - "18080:8080"
+
+frontend:
+  image: frontend:beta.1
+  links:
+   - backend:suricate-backend
+  ports:
+   - "80:80"

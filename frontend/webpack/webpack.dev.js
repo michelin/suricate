@@ -6,6 +6,7 @@ const helpers = require('./webpack.utils');
 const commonConfig = require('./webpack.commons.js');
 
 const ENV = 'dev';
+const BASE_URL = process.env.BASE_URL = 'http://localhost:8080';
 
 module.exports = webpackMerge(commonConfig({ env: ENV }), {
     devtool: 'eval-source-map',
@@ -17,7 +18,13 @@ module.exports = webpackMerge(commonConfig({ env: ENV }), {
     },
 
     plugins: [
-        new ExtractTextPlugin('[name].css')
+        new ExtractTextPlugin('[name].css'),
+        new webpack.DefinePlugin({
+            'process.env': {
+                'ENV': JSON.stringify(ENV),
+                'BASE_URL': JSON.stringify(BASE_URL)
+            }
+        })
     ],
     devServer: {
         historyApiFallback: true,
