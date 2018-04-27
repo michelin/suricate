@@ -34,6 +34,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.swing.text.html.Option;
+import javax.transaction.Transactional;
 import java.net.URI;
 import java.security.Principal;
 import java.util.*;
@@ -178,6 +179,7 @@ public class UserController {
      */
     @RequestMapping(value = "/{userId}", method = RequestMethod.DELETE)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @Transactional
     public ResponseEntity<UserDto> deleteOne(@PathVariable("userId") Long userId) {
         Optional<User> userOptional = userService.getOne(userId);
 
