@@ -27,6 +27,8 @@ import {UserService} from '../user.service';
 import {Role} from '../../../shared/model/dto/user/Role';
 import {DeleteUserDialogComponent} from '../components/delete-user-dialog/delete-user-dialog.component';
 import {User} from '../../../shared/model/dto/user/User';
+import {ToastService} from '../../../shared/components/toast/toast.service';
+import {ToastType} from '../../../shared/model/toastNotification/ToastType';
 
 /**
  * This component is used for displaying the list of users
@@ -79,10 +81,12 @@ export class UserListComponent implements AfterViewInit {
    * @param {UserService} userService The user service to inject
    * @param {ChangeDetectorRef} changeDetectorRef The change detector service to inject
    * @param {MatDialog} matDialog The mat dialog service to inject
+   * @param {ToastService} toastService The toast service to inject
    */
   constructor(private userService: UserService,
               private changeDetectorRef: ChangeDetectorRef,
-              private matDialog: MatDialog) { }
+              private matDialog: MatDialog,
+              private toastService: ToastService) { }
 
   /**
    * Called when the view has been init
@@ -157,7 +161,10 @@ export class UserListComponent implements AfterViewInit {
         this
             .userService
             .deleteUser(user)
-            .subscribe(() => this.initUsersTable());
+            .subscribe(() => {
+              this.toastService.sendMessage('User deleted successfully', ToastType.SUCCESS);
+              this.initUsersTable();
+            });
       }
     });
   }
