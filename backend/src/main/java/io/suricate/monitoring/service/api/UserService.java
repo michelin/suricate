@@ -25,6 +25,7 @@ import io.suricate.monitoring.model.enums.UserRoleEnum;
 import io.suricate.monitoring.model.entity.user.Role;
 import io.suricate.monitoring.model.entity.user.User;
 import io.suricate.monitoring.repository.UserRepository;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -212,5 +213,45 @@ public class UserService {
     public void deleteUserByUserId(User user) {
         user.getProjects().forEach(project -> projectService.deleteUserFromProject(user, project));
         userRepository.delete(user);
+    }
+
+    /**
+     * Update a user
+     *
+     * @param userId The user id
+     * @param username The username to update
+     * @param firstname The firstname to update
+     * @param lastname The lastname to update
+     * @param email The email to update
+     * @return The user updated
+     */
+    public Optional<User> updateUser(final Long userId, final String username, final String firstname, final String lastname, final String email) {
+        Optional<User> userOpt = getOne(userId);
+
+        if(!userOpt.isPresent()) {
+            return Optional.empty();
+        }
+
+        User user = userOpt.get();
+
+        if(StringUtils.isNotBlank(StringUtils.trimToEmpty(username))) {
+            user.setUsername(username.trim());
+        }
+
+        if(StringUtils.isNotBlank(StringUtils.trimToEmpty(firstname))) {
+            user.setFirstname(firstname.trim());
+        }
+
+        if(StringUtils.isNotBlank(StringUtils.trimToEmpty(lastname))) {
+            user.setLastname(lastname.trim());
+        }
+
+        if(StringUtils.isNotBlank(StringUtils.trimToEmpty(email))) {
+            user.setEmail(email.trim());
+        }
+
+        userRepository.save(user);
+
+        return Optional.of(user);
     }
 }

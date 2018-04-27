@@ -197,6 +197,38 @@ public class UserController {
     }
 
     /**
+     * Update a user
+     *
+     * @param userId The user id
+     * @param userDto The informations to update
+     * @return The user updated
+     */
+    @RequestMapping(value = "/{userId}", method = RequestMethod.PUT)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<UserDto> updateOne(@PathVariable("userId") Long userId, @RequestBody UserDto userDto) {
+        Optional<User> userOptional = userService.updateUser(
+            userId,
+            userDto.getUsername(),
+            userDto.getFirstname(),
+            userDto.getLastname(),
+            userDto.getEmail()
+        );
+
+        if(!userOptional.isPresent()) {
+            return ResponseEntity
+                .notFound()
+                .cacheControl(CacheControl.noCache())
+                .build();
+        }
+
+        return ResponseEntity
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .cacheControl(CacheControl.noCache())
+            .body(userMapper.toUserDtoDefault(userOptional.get()));
+    }
+
+    /**
      * Get current user
      *
      * @param principal the user authenticated
