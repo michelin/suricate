@@ -1,6 +1,6 @@
 <app-pages-header [secondTitle]="user?.fullname"></app-pages-header>
 
-<form [formGroup]="editUserForm">
+<form [formGroup]="editUserForm" (ngSubmit)="saveUser()">
   <mat-card id="card-edit-user"
             class="container-body mat-elevation-z8"
             fxLayout="column wrap"
@@ -15,7 +15,6 @@
         <input matInput
                type="text"
                id="username"
-               [value]="user?.username"
                placeholder="Username" formControlName="username"
                [required]="editUserForm.get('username').errors && editUserForm.get('username').errors.required"/>
         <mat-error *ngIf="isFieldInvalid('username')">
@@ -30,7 +29,6 @@
         <input matInput
                type="text"
                id="firstname"
-               [value]="user?.firstname"
                placeholder="Firstname"formControlName="firstname"
                [required]="editUserForm.get('firstname').errors && editUserForm.get('firstname').errors.required"/>
         <mat-error *ngIf="isFieldInvalid('firstname')">
@@ -58,7 +56,6 @@
         <input matInput
                type="text"
                id="email"
-               [value]="user?.email"
                placeholder="Email"
                formControlName="email"
                [required]="editUserForm.get('email').errors && editUserForm.get('email').errors.required"/>

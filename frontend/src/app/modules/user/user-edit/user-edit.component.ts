@@ -20,6 +20,8 @@ import {ActivatedRoute} from '@angular/router';
 import {User} from '../../../shared/model/dto/user/User';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {CustomValidators} from 'ng2-validation';
+import {ToastService} from '../../../shared/components/toast/toast.service';
+import {ToastType} from '../../../shared/model/toastNotification/ToastType';
 
 /**
  * Component user the edition of a user
@@ -47,10 +49,12 @@ export class UserEditComponent implements OnInit {
    * @param {UserService} userService The user service to inject
    * @param {ActivatedRoute} activatedRoute The activated route to inject
    * @param {FormBuilder} formBuilder The formBuilder service
+   * @param {ToastService} toastService The service used for displayed Toast notification
    */
   constructor(private userService: UserService,
               private activatedRoute: ActivatedRoute,
-              private formBuilder: FormBuilder) { }
+              private formBuilder: FormBuilder,
+              private toastService: ToastService) { }
 
   /**
    * Called when the component is displayed
@@ -63,14 +67,22 @@ export class UserEditComponent implements OnInit {
           this
               .userService
               .getById(params['userId'])
-              .subscribe( user => this.user = user);
+              .subscribe( user => {
+                this.user = user;
+                this.initUserEditForm();
+              });
         });
+  }
 
+  /**
+   * Init the user edit form
+   */
+  initUserEditForm() {
     this.editUserForm = this.formBuilder.group({
-      username: ['', [Validators.required, Validators.minLength(3)]],
-      firstname: ['', [Validators.required, Validators.minLength(2)]],
-      lastname: ['', [Validators.required, Validators.minLength(2)]],
-      email: ['', [Validators.required, CustomValidators.email]]
+      username: [this.user.username, [Validators.required, Validators.minLength(3)]],
+      firstname: [this.user.firstname, [Validators.required, Validators.minLength(2)]],
+      lastname: [this.user.lastname, [Validators.required, Validators.minLength(2)]],
+      email: [this.user.email, [Validators.required, CustomValidators.email]]
     });
   }
 
@@ -82,6 +94,19 @@ export class UserEditComponent implements OnInit {
    */
   isFieldInvalid(field: string) {
     return this.editUserForm.invalid && (this.editUserForm.get(field).dirty || this.editUserForm.get(field).touched);
+  }
+
+  /**
+   * Save a user
+   */
+  saveUser() {
+    const userUpdated: User = this.editUserForm.value;
+    userUpdated.id = this.user.id;
+
+    this
+        .userService
+        .updateUser(userUpdated)
+        .subscribe(() => this.toastService.sendMessage('User saved successfully', ToastType.SUCCESS));
   }
 
 }

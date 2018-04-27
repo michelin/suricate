@@ -22,6 +22,7 @@ import { Observable } from 'rxjs/Observable';
 import {AbstractHttpService} from '../../shared/services/abstract-http.service';
 import {map} from 'rxjs/operators';
 import {Subject} from 'rxjs/Subject';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 
 /**
  * User service that manage users
@@ -40,7 +41,7 @@ export class UserService extends AbstractHttpService {
    *
    * @type {Subject<User>}
    */
-  connectedUserSubject: Subject<User> = new Subject<User>();
+  connectedUserSubject: BehaviorSubject<User> = new BehaviorSubject<User>(null);
 
   /**
    * The constructor
@@ -90,6 +91,26 @@ export class UserService extends AbstractHttpService {
    */
   deleteUser(user: User): Observable<User> {
     return this.http.delete<User>(`${UserService.USERS_BASE_URL}/${user.id}`);
+  }
+
+  /**
+   * Update a user
+   *
+   * @param {User} user The user to update
+   * @returns {Observable<User>} The user updated
+   */
+  updateUser(user: User): Observable<User> {
+    return this
+        .http
+        .put<User>(`${UserService.USERS_BASE_URL}/${user.id}`, user)
+        .pipe(
+            map(userUpdated => {
+              if (userUpdated.id === this.connectedUserSubject.getValue().id) {
+                this.connectedUserSubject.next(userUpdated);
+              }
+              return userUpdated;
+            })
+        );
   }
 
   /**
