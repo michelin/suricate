@@ -1,0 +1,123 @@
+:host {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 10px 10px;
+    Z-index: 10;
+}
+.wrapper {
+    width: 350px;
+}
+.notification {
+    background-color: whitesmoke;
+    position: relative;
+    border-radius: 2px;
+    height: 80px;
+}
+.notification.success {
+    background-color: #8bc34a;
+    color: #fff;
+}
+.notification.success > .notification-body > .icon-wrapper {
+    background-color: #77a740;
+}
+.notification.primary {
+    background-color: #05a7f3;
+    color: #fff;
+}
+.notification.primary > .notification-body > .icon-wrapper {
+    background-color: #0491d5;
+}
+.notification.warning {
+    background-color: #ffc107;
+    color: #fff;
+}
+.notification.warning > .notification-body > .icon-wrapper {
+    background-color: #dba602;
+}
+.notification.danger {
+    background-color: #f54338;
+    color: #fff;
+}
+.notification.danger > .notification-body > .icon-wrapper {
+    background-color: #d13b2e;
+}
+.notification-body {
+    height: 100%;
+}
+.notification-body > .icon-wrapper {
+    height: 100%;
+    margin-right: 15px;
+}
+.notification-body > .icon-wrapper > .mat-icon {
+    font-size: 3em;
+    height: auto;
+    width: auto;
+}
+.notification > .delete {
+    position: absolute;
+    right: 0.5rem;
+    top: 0.5rem;
+}
+.notification-title {
+    font-size: 1.4em;
+}
+.notification-body {
+    font-size: 0.8em;
+}
+.delete:active {
+    background-color: rgba(10,10,10,.4);
+}
+.delete:focus, .delete:hover {
+    background-color: rgba(10,10,10,.3);
+}
+.delete::before {
+    height: 2px;
+    width: 50%;
+}
+.delete::after {
+    height: 50%;
+    width: 2px;
+}
+.delete::after, .delete::before {
+    background-color: #fff;
+    content: "";
+    display: block;
+    left: 50%;
+    position: absolute;
+    top: 50%;
+    -webkit-transform: translateX(-50%) translateY(-50%) rotate(45deg);
+    transform: translateX(-50%) translateY(-50%) rotate(45deg);
+    -webkit-transform-origin: center center;
+    transform-origin: center center;
+}
+.delete {
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  background-color: rgba(10, 10, 10, 0.2);
+  border: none;
+  border-radius: 290486px;
+  cursor: pointer;
+  display: inline-block;
+  -ms-flex-positive: 0;
+  flex-grow: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  font-size: 0;
+  height: 20px;
+  max-height: 20px;
+  max-width: 20px;
+  min-height: 20px;
+  min-width: 20px;
+  outline: none;
+  position: relative;
+  vertical-align: top;
+  width: 20px;
+}
+.delete {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}

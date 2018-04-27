@@ -33,6 +33,8 @@ import { CustomFormsModule} from 'ng2-validation';
 import {ColorPickerModule} from 'ngx-color-picker';
 import {StompService} from 'ng2-stomp-service/index';
 import {WebsocketService} from './services/websocket.service';
+import { ToastComponent } from './components/toast/toast.component';
+import {ToastService} from './components/toast/toast.service';
 
 @NgModule({
   imports: [
@@ -52,7 +54,8 @@ import {WebsocketService} from './services/websocket.service';
       AddWidgetDialogComponent,
       DashboardActionsComponent,
       HomeActionsComponent,
-      AddDashboardDialogComponent
+      AddDashboardDialogComponent,
+      ToastComponent
   ],
   entryComponents: [
       AddWidgetDialogComponent,
@@ -69,13 +72,15 @@ import {WebsocketService} from './services/websocket.service';
       CustomFormsModule,
       ColorPickerModule,
       PagesHeaderComponent,
-      AddWidgetDialogComponent
+      AddWidgetDialogComponent,
+      ToastComponent
   ],
   providers: [
       { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
       AuthGuard,
       StompService,
-      WebsocketService
+      WebsocketService,
+      ToastService
   ]
 })
 export class SharedModule { }
