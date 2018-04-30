@@ -33,6 +33,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.swing.text.html.Option;
+import javax.transaction.Transactional;
 import java.net.URI;
 import java.security.Principal;
 import java.util.*;
@@ -78,7 +80,7 @@ public class UserController {
     @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<UserDto>> getAll() {
-        Optional<List<User>> users =  userService.getAll();
+        Optional<List<User>> users =  userService.getAllOrderByUsername();
 
         if(!users.isPresent()) {
             return ResponseEntity
@@ -167,6 +169,65 @@ public class UserController {
             .contentType(MediaType.APPLICATION_JSON)
             .cacheControl(CacheControl.noCache())
             .body(userMapper.toUserDtoDefault(user.get()));
+    }
+
+    /**
+     * Delete a user
+     *
+     * @param userId The user id to delete
+     * @return The user deleted
+     */
+    @RequestMapping(value = "/{userId}", method = RequestMethod.DELETE)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @Transactional
+    public ResponseEntity<UserDto> deleteOne(@PathVariable("userId") Long userId) {
+        Optional<User> userOptional = userService.getOne(userId);
+
+        if(!userOptional.isPresent()) {
+            return ResponseEntity
+                    .notFound()
+                    .cacheControl(CacheControl.noCache())
+                    .build();
+        }
+
+        userService.deleteUserByUserId(userOptional.get());
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .cacheControl(CacheControl.noCache())
+                .body(userMapper.toUserDtoDefault(userOptional.get()));
+    }
+
+    /**
+     * Update a user
+     *
+     * @param userId The user id
+     * @param userDto The informations to update
+     * @return The user updated
+     */
+    @RequestMapping(value = "/{userId}", method = RequestMethod.PUT)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<UserDto> updateOne(@PathVariable("userId") Long userId, @RequestBody UserDto userDto) {
+        Optional<User> userOptional = userService.updateUser(
+            userId,
+            userDto.getUsername(),
+            userDto.getFirstname(),
+            userDto.getLastname(),
+            userDto.getEmail()
+        );
+
+        if(!userOptional.isPresent()) {
+            return ResponseEntity
+                .notFound()
+                .cacheControl(CacheControl.noCache())
+                .build();
+        }
+
+        return ResponseEntity
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .cacheControl(CacheControl.noCache())
+            .body(userMapper.toUserDtoDefault(userOptional.get()));
     }
 
     /**

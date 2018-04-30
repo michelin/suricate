@@ -25,6 +25,7 @@ import io.suricate.monitoring.model.enums.UserRoleEnum;
 import io.suricate.monitoring.model.entity.user.Role;
 import io.suricate.monitoring.model.entity.user.User;
 import io.suricate.monitoring.repository.UserRepository;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,15 +57,24 @@ public class UserService {
     private final RoleService roleService;
 
     /**
+     * The project service
+     */
+    private final ProjectService projectService;
+
+    /**
      * Constructor
      *
      * @param userRepository The user repository
      * @param roleService The role service
+     * @param projectService The projectService to inject
      */
     @Autowired
-    public UserService(final UserRepository userRepository, final RoleService roleService) {
+    public UserService(final UserRepository userRepository,
+                       final RoleService roleService,
+                       final ProjectService projectService) {
         this.userRepository = userRepository;
         this.roleService = roleService;
+        this.projectService = projectService;
     }
 
     /**
@@ -137,14 +147,8 @@ public class UserService {
      *
      * @return The list of users
      */
-    public Optional<List<User>> getAll() {
-        List<User> users = userRepository.findAll();
-
-        if(users == null || users.isEmpty()) {
-            return Optional.empty();
-        }
-
-        return Optional.of(users);
+    public Optional<List<User>> getAllOrderByUsername() {
+        return userRepository.findAllByOrderByUsername();
     }
 
     /**
@@ -198,5 +202,56 @@ public class UserService {
      */
     public Optional<List<User>> getAllByProject(Project project) {
         return userRepository.findByProjects_Id(project.getId());
+    }
+
+    /**
+     * Delete a user
+     *
+     * @param user the user to delete
+     */
+    @Transactional
+    public void deleteUserByUserId(User user) {
+        user.getProjects().forEach(project -> projectService.deleteUserFromProject(user, project));
+        userRepository.delete(user);
+    }
+
+    /**
+     * Update a user
+     *
+     * @param userId The user id
+     * @param username The username to update
+     * @param firstname The firstname to update
+     * @param lastname The lastname to update
+     * @param email The email to update
+     * @return The user updated
+     */
+    public Optional<User> updateUser(final Long userId, final String username, final String firstname, final String lastname, final String email) {
+        Optional<User> userOpt = getOne(userId);
+
+        if(!userOpt.isPresent()) {
+            return Optional.empty();
+        }
+
+        User user = userOpt.get();
+
+        if(StringUtils.isNotBlank(StringUtils.trimToEmpty(username))) {
+            user.setUsername(username.trim());
+        }
+
+        if(StringUtils.isNotBlank(StringUtils.trimToEmpty(firstname))) {
+            user.setFirstname(firstname.trim());
+        }
+
+        if(StringUtils.isNotBlank(StringUtils.trimToEmpty(lastname))) {
+            user.setLastname(lastname.trim());
+        }
+
+        if(StringUtils.isNotBlank(StringUtils.trimToEmpty(email))) {
+            user.setEmail(email.trim());
+        }
+
+        userRepository.save(user);
+
+        return Optional.of(user);
     }
 }

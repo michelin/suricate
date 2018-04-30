@@ -30,6 +30,13 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Long> {
 
 	/**
+	 * Find every user by username
+	 *
+	 * @return The list of users by username
+	 */
+	Optional<List<User>> findAllByOrderByUsername();
+
+	/**
 	 * Find a user by the username without taking case into account
 	 *
 	 * @param username The username

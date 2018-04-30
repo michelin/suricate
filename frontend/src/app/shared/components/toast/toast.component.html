@@ -1,0 +1,25 @@
+<div [@slideInOut]="animationState">
+  <div class="wrapper" *ngIf="message | async" >
+  <aside>
+    <div class="notification mat-elevation-z12" [ngClass]="(message | async)?.style">
+      <button class="delete" (click)="hideToast()"></button>
+      <div class="notification-body" fxLayout="row" fxLayoutAlign="start center">
+        <div fxFlex="30" class="icon-wrapper" fxLayoutAlign="center center">
+            <mat-icon class="material-icons" *ngIf="(message | async)?.style === ToastType.INFO; else displayWarning">format_italic</mat-icon>
+            <mat-icon class="material-icons" #displayWarning *ngIf="(message | async)?.style === ToastType.WARNING; else displayDanger">warning</mat-icon>
+            <mat-icon class="material-icons" #displayDanger *ngIf="(message | async)?.style === ToastType.DANGER; else displaySuccess">error</mat-icon>
+            <mat-icon class="material-icons" #displaySuccess *ngIf="(message | async)?.style === ToastType.SUCCESS">done</mat-icon>
+        </div>
+        <div fxFlex="70">
+          <div class="notification-title">
+            {{ (message | async)?.title }}
+          </div>
+          <div class="notification-body">
+            {{ (message | async)?.content }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </aside>
+  </div>
+</div>
