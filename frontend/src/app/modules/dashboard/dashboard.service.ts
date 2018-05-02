@@ -126,13 +126,29 @@ export class DashboardService extends AbstractHttpService {
    * @param {Project} project The project
    * @returns {Observable<Project>} The project as observable
    */
-  saveProject(project: Project): Observable<Project> {
+  createProject(project: Project): Observable<Project> {
     return this.httpClient.put<Project>(`${DashboardService.PROJECTS_BASE_URL}`, project)
         .pipe(
           map(projectAdded => {
             this.updateSubject(projectAdded);
             return projectAdded;
           })
+        );
+  }
+
+  /**
+   * Add/Update a dashboard and update the subject list
+   *
+   * @param {Project} project The project
+   * @returns {Observable<Project>} The project as observable
+   */
+  editProject(project: Project): Observable<Project> {
+    return this.httpClient.post<Project>(`${DashboardService.PROJECTS_BASE_URL}/${project.id}`, project)
+        .pipe(
+            map(projectAdded => {
+              this.updateSubject(projectAdded);
+              return projectAdded;
+            })
         );
   }
 

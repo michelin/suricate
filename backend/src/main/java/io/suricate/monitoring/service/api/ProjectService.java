@@ -127,7 +127,7 @@ public class ProjectService {
      * @return The project instantiate
      */
     @Transactional
-    public Project saveProject(User user, Project project) {
+    public Project createProject(User user, Project project) {
         project.getUsers().add(user);
 
         if(StringUtils.isBlank(project.getToken())) {
@@ -135,6 +135,52 @@ public class ProjectService {
         }
 
         return projectRepository.save(project);
+    }
+
+    /**
+     * Method used to update a project
+     *
+     * @param project the project to update
+     * @param newName the new name
+     * @param widgetHeight The new widget height
+     * @param maxColumn The new max column
+     */
+    @Transactional
+    public void updateProject(Project project,
+                              final String newName,
+                              final int widgetHeight,
+                              final int maxColumn,
+                              final String customCss) {
+        if(StringUtils.isNotBlank(newName)) {
+            project.setName(newName);
+        }
+        if(widgetHeight > 0) {
+            project.setWidgetHeight(widgetHeight);
+        }
+        if(maxColumn > 0) {
+            project.setMaxColumn(maxColumn);
+        }
+
+        if(StringUtils.isNotBlank(customCss)) {
+            project.setCssStyle(customCss);
+        }
+
+        projectRepository.save(project);
+        // Update grid
+        dashboardWebsocketService.updateGlobalScreensByProjectToken(project.getToken(), new UpdateEvent(UpdateType.GRID));
+    }
+
+    /**
+     * Add a user to a project
+     *
+     * @param user The user to add
+     * @param project The project to edit
+     * @return The project with the user
+     */
+    @Transactional
+    public void addUserToProject(User user, Project project) {
+        project.getUsers().add(user);
+        projectRepository.save(project);
     }
 
     /**
@@ -159,19 +205,6 @@ public class ProjectService {
      */
     public String getTokenByProjectId(final Long projectId) {
         return projectRepository.getToken(projectId);
-    }
-
-    /**
-     * Method used to update a project
-     * @param project the project to update
-     * @param newName the new name
-     */
-    @Transactional
-    public void updateProject(Project project, String newName) {
-        project.setName(newName);
-        projectRepository.save(project);
-        // Update grid
-        dashboardWebsocketService.updateGlobalScreensByProjectToken(project.getToken(), new UpdateEvent(UpdateType.GRID));
     }
 
     /**

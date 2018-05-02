@@ -155,22 +155,31 @@ export class AddDashboardDialogComponent implements OnInit {
   /**
    * Function used for add/Save a dashboard
    */
-  addDashboard() {
+  saveDashboard() {
     if (this.dashboardForm.valid) {
       this.projectAdded = { ...this.projectAdded,
                             ...this.dashboardForm.value};
       this.projectAdded.cssStyle = this.getGridCss();
 
-      this.dashboardService
-          .saveProject(this.projectAdded)
-          .subscribe(project => {
-            this.projectAdded = project;
-            this.dashboardFormCompleted = true;
-            this.changeDetectorRef.detectChanges();
-            this.dashboardService.currendDashbordSubject.next(project);
-            this.addDashboardStepper.next();
-          });
+      if (!this.isEditMode) {
+        this.dashboardService
+            .createProject(this.projectAdded)
+            .subscribe(project => this.displayProject(project));
+
+      } else {
+        this.dashboardService
+            .editProject(this.projectAdded)
+            .subscribe(project => this.displayProject(project))
+      }
     }
+  }
+
+  displayProject(project: Project) {
+    this.projectAdded = project;
+    this.dashboardFormCompleted = true;
+    this.changeDetectorRef.detectChanges();
+    this.dashboardService.currendDashbordSubject.next(project);
+    this.addDashboardStepper.next();
   }
 
   /**

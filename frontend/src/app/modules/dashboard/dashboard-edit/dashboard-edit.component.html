@@ -1,3 +1,89 @@
-<p>
-  dashboard-edit works!
-</p>
+<app-pages-header [secondTitle]="dashboard?.name"></app-pages-header>
+
+<form *ngIf="dashboard" [formGroup]="editDashboardForm" (ngSubmit)="saveDashboard()">
+  <mat-card id="card-edit-dashboard"
+            class="container-body mat-elevation-z8"
+            fxLayout="column wrap"
+            fxLayoutAlign="center center"
+            fxLayoutGap="30px">
+
+    <mat-card-content fxLayout="column wrap"
+                      fxLayoutAlign="center center">
+
+      <h4 class="title" fxFlexAlign="start"> {{ 'General informations' | uppercase }} </h4>
+
+      <!-- Name Input -->
+      <mat-form-field>
+        <mat-icon class="prefix" matPrefix>loyalty</mat-icon>
+        <input matInput
+               type="text"
+               id="name"
+               placeholder="Name"
+               formControlName="name"
+               [required]="editDashboardForm.get('name').errors && editDashboardForm.get('name').errors.required"/>
+        <mat-error *ngIf="isFieldInvalid('name')">
+          The dashboard name is mandatory
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Token Input -->
+      <mat-form-field>
+        <mat-icon class="prefix" matPrefix>vpn_key</mat-icon>
+        <input matInput
+               type="text"
+               id="token"
+               placeholder="Token"
+               formControlName="token"
+               [required]="editDashboardForm.get('token').errors && editDashboardForm.get('token').errors.required"
+               readonly />
+        <mat-error *ngIf="isFieldInvalid('token')">
+          The dashboard token is mandatory
+        </mat-error>
+      </mat-form-field>
+
+      <!-- widgetHeight Input -->
+      <mat-form-field>
+        <mat-icon class="prefix" matPrefix>equalizer</mat-icon>
+        <input matInput
+               type="text"
+               id="widgetHeight"
+               placeholder="Widget Height"
+               formControlName="widgetHeight"
+               [required]="editDashboardForm.get('widgetHeight').errors && editDashboardForm.get('widgetHeight').errors.required" />
+        <mat-error *ngIf="isFieldInvalid('widgetHeight')">
+          The dashboard widget height is mandatory and should be > 0
+        </mat-error>
+      </mat-form-field>
+
+
+      <!-- widgetHeight Input -->
+      <mat-form-field>
+        <mat-icon class="prefix" matPrefix>view_week</mat-icon>
+        <input matInput
+               type="text"
+               id="maxColumn"
+               placeholder="Max Column"
+               formControlName="maxColumn"
+               [required]="editDashboardForm.get('maxColumn').errors && editDashboardForm.get('maxColumn').errors.required" />
+        <mat-error *ngIf="isFieldInvalid('maxColumn')">
+          The maximum column field is mandatory and should be > 0
+        </mat-error>
+      </mat-form-field>
+
+      <h4 class="title" fxFlexAlign="start"> {{ 'Users' | uppercase }} </h4>
+
+      <mat-list role="list" *ngIf="dashboard?.users">
+        <mat-list-item *ngFor="let user of dashboard?.users">
+          <mat-icon class="prefix">account_box</mat-icon>
+          <div class="user"> {{user.firstname}} {{user.lastname}} ({{user.username | uppercase}}) </div>
+        </mat-list-item>
+      </mat-list>
+
+    </mat-card-content>
+
+    <mat-card-actions>
+      <button mat-raised-button class="mat-elevation-z2" color="accent" type="submit">{{ 'Save' | uppercase}}</button>
+    </mat-card-actions>
+
+  </mat-card>
+</form>

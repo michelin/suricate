@@ -4,7 +4,7 @@
   <mat-horizontal-stepper #addDashboardStepper [linear]="true">
     <!-- Step 1 : Dashboard settings -->
     <mat-step [completed]="dashboardFormCompleted">
-      <form [formGroup]="dashboardForm" (submit)="addDashboard()" novalidate>
+      <form [formGroup]="dashboardForm" (submit)="saveDashboard()" novalidate>
         <ng-template matStepLabel> Dashboard Settings </ng-template>
 
         <div fxLayout="column wrap"

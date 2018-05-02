@@ -27,7 +27,12 @@ import { DashboardEditComponent } from './dashboard-edit/dashboard-edit.componen
 const dashboardRoutes: Routes = [
   { path: 'dashboard/:id', component: DashboardDetailComponent, canActivate: [AuthGuard] },
   { path: 'dashboards', component: DashboardListComponent, canActivate: [AuthGuard] },
-  { path: 'dashboards/:dashboardId/edit', component: DashboardEditComponent, canActivate: [AuthGuard] }
+  {
+    path: 'dashboards/:dashboardId/edit',
+    component: DashboardEditComponent,
+    data: { breadcrumb: 'Edit Dashboard' },
+    canActivate: [AuthGuard]
+  }
 ];
 
 @NgModule({
