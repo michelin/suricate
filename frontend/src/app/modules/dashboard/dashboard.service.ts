@@ -92,13 +92,23 @@ export class DashboardService extends AbstractHttpService {
    * @returns {Observable<Project[]>} The list as observable
    */
   getAll(): Observable<Project[]> {
-    return this.httpClient.get<Project[]>(`${DashboardService.PROJECTS_BASE_URL}`).pipe(
-      map(projects => {
-        this.dashboardsSubject.next(projects);
-        return projects;
-      })
+    return this.httpClient.get<Project[]>(`${DashboardService.PROJECTS_BASE_URL}`);
+  }
+
+  /**
+   * Get every dashboards for the current user
+   *
+   * @returns {Observable<Project[]>} The list as observable
+   */
+  getAllForCurrentUser(): Observable<Project[]> {
+    return this.httpClient.get<Project[]>(`${DashboardService.PROJECTS_BASE_URL}/currentUser`).pipe(
+        map(projects => {
+          this.dashboardsSubject.next(projects);
+          return projects;
+        })
     );
   }
+
 
   /**
    * Get a dashboard by id

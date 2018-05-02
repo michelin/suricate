@@ -135,7 +135,7 @@ public class ProjectController {
      */
     @RequestMapping(value = "/currentUser", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<List<ProjectDto>> getAllByUser(Principal principal) {
+    public ResponseEntity<List<ProjectDto>> getAllForCurrentUser(Principal principal) {
         Optional<User> user = userService.getOneByUsername(principal.getName());
 
         if(!user.isPresent()) {
