@@ -75,7 +75,7 @@
     "karma-jasmine-html-reporter": "^0.2.2",
     "less-loader": "^4.0.5",
     "postcss-custom-properties": "^7.0.0",
-    "postcss-loader": "^2.0.8",
+    "postcss-loader": "^2.1.4",
     "postcss-url": "^7.1.2",
     "protractor": "~5.1.2",
     "raw-loader": "^0.5.1",
