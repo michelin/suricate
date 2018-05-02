@@ -1,11 +1,12 @@
 ###     Properties for development     ###
 ##########################################
 spring:
+  profiles: dev
   h2.console:
     enabled: true
     path: /h2-console
   ###   DDL   ###
-  jpa.hibernate.ddl-auto: update
+  jpa.hibernate.ddl-auto: create-drop
   ###   DATASOURCES   ###
   ## You can override datasource by uncommented and fill these lines
   # datasource:
