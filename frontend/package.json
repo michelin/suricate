@@ -53,7 +53,7 @@
     "@ngtools/webpack": "^1.10.1",
     "@types/jasmine": "~2.5.53",
     "@types/jasminewd2": "~2.0.2",
-    "@types/node": "~6.0.60",
+    "@types/node": "~8.10.11",
     "autoprefixer": "^6.5.3",
     "circular-dependency-plugin": "^4.2.1",
     "codelyzer": "^4.1.0",
