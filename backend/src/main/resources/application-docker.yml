@@ -4,13 +4,14 @@
 ###   DATASOURCES   ###
 ## You can override datasource by uncommented and fill these lines
 spring:
+  profiles: docker
   datasource:
     url: jdbc:mysql://mysql-db:3306/suricate
     driverClassName: com.mysql.jdbc.Driver
     username: demo
     password: demo
   ###   DDL   ###
-  jpa.hibernate.ddl-auto: update
+  jpa.hibernate.ddl-auto: create-drop
 
 application:
   ### Security (ldap | database) ###
