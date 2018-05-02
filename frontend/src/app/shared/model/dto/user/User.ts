@@ -22,7 +22,7 @@ export class User {
   public firstname: string;
   public lastname: string;
   public fullname: string;
-  public mail: string;
+  public email: string;
   public password: string;
   public confirmPassword: string;
   public roles: Role[];

@@ -1,0 +1,22 @@
+#card-edit-user {
+    width: 100%;
+}
+#card-edit-user > * {
+    width: 70%;
+    margin: 5px 0;
+}
+#card-edit-user button {
+    display: block;
+    width: 100%;
+}
+.mat-icon {
+    color: rgba(255, 255, 255, 0.70);
+}
+
+.mat-icon.prefix {
+    margin-right: 10px;
+}
+.mat-form-field {
+    width: 100%;
+    margin: 10px 0;
+}
