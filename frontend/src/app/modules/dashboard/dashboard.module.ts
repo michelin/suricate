@@ -22,10 +22,12 @@ import { DashboardDetailComponent } from './dashboard-detail/dashboard-detail.co
 import {CommonModule} from '@angular/common';
 import {SharedModule} from '../../shared/shared.module';
 import {DashboardListComponent} from './dashboard-list/dashboard-list.component';
+import { DashboardEditComponent } from './dashboard-edit/dashboard-edit.component';
 
 const dashboardRoutes: Routes = [
   { path: 'dashboard/:id', component: DashboardDetailComponent, canActivate: [AuthGuard] },
-  { path: 'dashboards', component: DashboardListComponent, canActivate: [AuthGuard] }
+  { path: 'dashboards', component: DashboardListComponent, canActivate: [AuthGuard] },
+  { path: 'dashboards/:dashboardId/edit', component: DashboardEditComponent, canActivate: [AuthGuard] }
 ];
 
 @NgModule({
@@ -36,7 +38,8 @@ const dashboardRoutes: Routes = [
   ],
   declarations: [
       DashboardDetailComponent,
-      DashboardListComponent
+      DashboardListComponent,
+      DashboardEditComponent
   ],
   exports: [
       RouterModule
