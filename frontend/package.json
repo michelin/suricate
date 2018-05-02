@@ -28,7 +28,7 @@
     "@angular/forms": "^5.2.6",
     "@angular/http": "^5.2.6",
     "@angular/material": "^5.2.3",
-    "@angular/platform-browser": "^5.2.6",
+    "@angular/platform-browser": "^5.2.10",
     "@angular/platform-browser-dynamic": "^5.2.6",
     "@angular/router": "^5.2.6",
     "angular2-grid": "^2.1.0",
