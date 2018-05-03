@@ -24,6 +24,8 @@ import {map} from 'rxjs/operators/map';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Subject} from 'rxjs/Subject';
 import {Widget} from '../../shared/model/dto/Widget';
+import {UserService} from '../user/user.service';
+import {User} from '../../shared/model/dto/user/User';
 
 @Injectable()
 export class DashboardService extends AbstractHttpService {
@@ -46,7 +48,8 @@ export class DashboardService extends AbstractHttpService {
    *
    * @param {HttpClient} httpClient The http client
    */
-  constructor(private httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient,
+              private userService: UserService) {
     super();
   }
 
@@ -64,10 +67,13 @@ export class DashboardService extends AbstractHttpService {
       currentList.splice(indexOfCurrentProject, 1);
     }
 
-    if (action === DashboardService.ACTION_UPDATE) {
-      this.dashboardsSubject.next([...currentList, project]);
-    } else {
-      this.dashboardsSubject.next([...currentList]);
+    const currentUser: User = this.userService.connectedUserSubject.getValue();
+    if (project.users.findIndex(userLoop => userLoop.id === currentUser.id) >= 0) {
+      if (action === DashboardService.ACTION_UPDATE) {
+        this.dashboardsSubject.next([...currentList, project]);
+      } else {
+        this.dashboardsSubject.next([...currentList]);
+      }
     }
   }
 
@@ -116,7 +122,6 @@ export class DashboardService extends AbstractHttpService {
         })
     );
   }
-
 
   /**
    * Get a dashboard by id
