@@ -20,7 +20,7 @@ import 'rxjs/add/observable/throw';
 export abstract class AbstractHttpService {
 
     public static readonly BASE_API_URL = process.env.BASE_URL + '/api';
-    public static readonly BASE_WS_URL = process.env.BASE_URL + 'BASE_URL/ws';
+    public static readonly BASE_WS_URL = process.env.BASE_URL + '/ws';
     public static readonly AUTHENTICATE_URL = 'oauth/token';
     public static readonly SPRING_ACCESS_TOKEN_ENPOINT = 'access_token';
     public static readonly USERS_URL = 'users';

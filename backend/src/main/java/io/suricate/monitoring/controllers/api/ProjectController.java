@@ -135,7 +135,7 @@ public class ProjectController {
      */
     @RequestMapping(value = "/currentUser", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<List<ProjectDto>> getAllByUser(Principal principal) {
+    public ResponseEntity<List<ProjectDto>> getAllForCurrentUser(Principal principal) {
         Optional<User> user = userService.getOneByUsername(principal.getName());
 
         if(!user.isPresent()) {
@@ -166,7 +166,7 @@ public class ProjectController {
      */
     @RequestMapping(method = RequestMethod.PUT)
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ProjectDto> addNewProject(Principal principal, @RequestBody ProjectDto projectDto) {
+    public ResponseEntity<ProjectDto> createProject(Principal principal, @RequestBody ProjectDto projectDto) {
         Optional<User> user = userService.getOneByUsername(principal.getName());
 
         if(!user.isPresent()) {
@@ -176,7 +176,7 @@ public class ProjectController {
                 .build();
         }
 
-        Project project = projectService.saveProject(user.get(), projectMapper.toNewProject(projectDto));
+        Project project = projectService.createProject(user.get(), projectMapper.toNewProject(projectDto));
 
         URI resourceLocation = ServletUriComponentsBuilder
             .fromCurrentContextPath()
@@ -189,6 +189,39 @@ public class ProjectController {
             .contentType(MediaType.APPLICATION_JSON)
             .cacheControl(CacheControl.noCache())
             .body(projectMapper.toProjectDtoDefault(project));
+    }
+
+    /**
+     * Update an existing project
+     *
+     * @param projectId The project id to update
+     * @param projectDto The informations to update
+     * @return The project updated
+     */
+    @RequestMapping(value = "/{projectId}", method = RequestMethod.PUT)
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<ProjectDto> updateProject(@PathVariable("projectId") Long projectId, @RequestBody ProjectDto projectDto) {
+        Optional<Project> projectOptional = projectService.getOneById(projectId);
+
+        if(!projectOptional.isPresent()) {
+            return ResponseEntity
+                    .notFound()
+                    .cacheControl(CacheControl.noCache())
+                    .build();
+        }
+
+        projectService.updateProject(
+                projectOptional.get(),
+                projectDto.getName(),
+                projectDto.getWidgetHeight(),
+                projectDto.getMaxColumn(),
+                projectDto.getCssStyle()
+        );
+        return ResponseEntity
+                .ok()
+                .cacheControl(CacheControl.noCache())
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(projectMapper.toProjectDtoDefault(projectOptional.get()));
     }
 
     /**
@@ -217,6 +250,32 @@ public class ProjectController {
     }
 
     /**
+     * Method that delete a project
+     *
+     * @param projectId The project id to delete
+     * @return The project deleted
+     */
+    @RequestMapping(value = "/{projectId}", method = RequestMethod.DELETE)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<ProjectDto> deleteOneById(@PathVariable("projectId") Long projectId) {
+        Optional<Project> projectOptional = projectService.getOneById(projectId);
+
+        if(!projectOptional.isPresent()) {
+            return ResponseEntity
+                    .notFound()
+                    .cacheControl(CacheControl.noCache())
+                    .build();
+        }
+
+        projectService.deleteProject(projectOptional.get());
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .cacheControl(CacheControl.noCache())
+                .body(projectMapper.toProjectDtoDefault(projectOptional.get()));
+    }
+
+    /**
      * Add a user to a project
      *
      * @param id Id of the project
@@ -237,7 +296,7 @@ public class ProjectController {
             throw new ApiException(ApiErrorEnum.PROJECT_NOT_FOUND);
         }
 
-        projectService.saveProject(user.get(), project.get());
+        projectService.addUserToProject(user.get(), project.get());
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
@@ -281,7 +340,7 @@ public class ProjectController {
      * @param projectWidgetDto The projectWidget to add
      * @return The project
      */
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{id}/widgets", method = RequestMethod.PUT)
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ProjectDto> addWidgetToProject(@PathVariable("id") Long id,
                                          @RequestBody ProjectWidgetDto projectWidgetDto) {

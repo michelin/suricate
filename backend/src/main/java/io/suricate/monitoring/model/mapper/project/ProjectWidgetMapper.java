@@ -116,7 +116,8 @@ public abstract class ProjectWidgetMapper {
         @Mapping(target = "height", expression = "java(1)"),
         @Mapping(target = "width", expression = "java(1)"),
         @Mapping(target = "project", expression = "java( projectService.getOneById(projectId).get())"),
-        @Mapping(target = "widget", expression = "java( widgetService.findOne(projectWidgetDto.getWidget().getId()) )")
+        @Mapping(target = "widget", expression = "java( widgetService.findOne(projectWidgetDto.getWidget().getId()) )"),
+        @Mapping(target = "data", expression = "java( \"{}\" )")
     })
     public abstract ProjectWidget toNewProjectWidget(ProjectWidgetDto projectWidgetDto, Long projectId);
 

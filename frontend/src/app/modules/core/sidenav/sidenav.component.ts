@@ -76,7 +76,7 @@ export class SidenavComponent implements OnInit, OnDestroy {
         .pipe(takeWhile(() => this.alive))
         .subscribe(connectedUser => this.connectedUser = connectedUser);
 
-    this.dashboardService.getAll().subscribe();
+    this.dashboardService.getAllForCurrentUser().subscribe();
     this.userService.getConnectedUser().subscribe();
   }
 
