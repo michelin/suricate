@@ -39,7 +39,7 @@
     <ng-container matColumnDef="delete">
       <mat-header-cell fxFlex="5" *matHeaderCellDef> Delete </mat-header-cell>
       <mat-cell fxFlex="5" *matCellDef="let row">
-        <a>
+        <a (click)="openDialogDeleteDashboard(row)">
           <button mat-icon-button color="warn">
             <mat-icon>delete</mat-icon>
           </button>

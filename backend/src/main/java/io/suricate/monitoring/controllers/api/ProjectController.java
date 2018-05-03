@@ -250,6 +250,32 @@ public class ProjectController {
     }
 
     /**
+     * Method that delete a project
+     *
+     * @param projectId The project id to delete
+     * @return The project deleted
+     */
+    @RequestMapping(value = "/{projectId}", method = RequestMethod.DELETE)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<ProjectDto> deleteOneById(@PathVariable("projectId") Long projectId) {
+        Optional<Project> projectOptional = projectService.getOneById(projectId);
+
+        if(!projectOptional.isPresent()) {
+            return ResponseEntity
+                    .notFound()
+                    .cacheControl(CacheControl.noCache())
+                    .build();
+        }
+
+        projectService.deleteProject(projectOptional.get());
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .cacheControl(CacheControl.noCache())
+                .body(projectMapper.toProjectDtoDefault(projectOptional.get()));
+    }
+
+    /**
      * Add a user to a project
      *
      * @param id Id of the project

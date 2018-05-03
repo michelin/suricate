@@ -15,7 +15,7 @@
  */
 
 import {ChangeDetectorRef, Component, ViewChild, AfterViewInit} from '@angular/core';
-import {MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
+import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import {Project} from '../../../shared/model/dto/Project';
 import {DashboardService} from '../dashboard.service';
 import {switchMap} from 'rxjs/operators/switchMap';
@@ -24,7 +24,14 @@ import {of as observableOf} from 'rxjs/observable/of';
 import {merge} from 'rxjs/observable/merge';
 import {startWith} from 'rxjs/operators/startWith';
 import {map} from 'rxjs/operators/map';
+import {ToastType} from '../../../shared/model/toastNotification/ToastType';
+import {User} from '../../../shared/model/dto/user/User';
+import {ToastService} from '../../../shared/components/toast/toast.service';
+import {DeleteDashboardDialogComponent} from '../components/delete-dashboard-dialog/delete-dashboard-dialog.component';
 
+/**
+ * Component that manage the dashboard list for admin part
+ */
 @Component({
   selector: 'app-dashboard-list',
   templateUrl: './dashboard-list.component.html',
@@ -73,9 +80,13 @@ export class DashboardListComponent implements AfterViewInit {
    *
    * @param {DashboardService} dashboardService The dashboardService to inject
    * @param {ChangeDetectorRef} changeDetectorRef The change detector ref
+   * @param {MatDialog} matDialog The matDialog service to inject
+   * @param {ToastService} toastService The toast service to inject
    */
   constructor(private dashboardService: DashboardService,
-              private changeDetectorRef: ChangeDetectorRef) { }
+              private changeDetectorRef: ChangeDetectorRef,
+              private matDialog: MatDialog,
+              private toastService: ToastService) { }
 
   /**
    * Called when the view has been init
@@ -115,6 +126,29 @@ export class DashboardListComponent implements AfterViewInit {
           this.matTableDataSource.data = data;
           this.matTableDataSource.sort = this.matSort;
         });
+  }
+
+  /**
+   * Delete a created dashboard
+   * 
+   * @param {Project} project The dashboard to delete
+   */
+  openDialogDeleteDashboard(project: Project) {
+    const deleteUserDialogRef = this.matDialog.open(DeleteDashboardDialogComponent, {
+      data: {project: project}
+    });
+
+    deleteUserDialogRef.afterClosed().subscribe(shouldDeleteDashboard => {
+      if (shouldDeleteDashboard) {
+        this
+            .dashboardService
+            .deleteProject(project)
+            .subscribe(() => {
+              this.toastService.sendMessage('Project deleted successfully', ToastType.SUCCESS);
+              this.initProjectsTable();
+            });
+      }
+    });
   }
 
 }

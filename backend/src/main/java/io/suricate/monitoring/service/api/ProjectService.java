@@ -195,8 +195,6 @@ public class ProjectService {
         return projectRepository.save(project);
     }
 
-
-
     /**
      * Method used for retrieve a project token from a project id
      *
@@ -209,12 +207,14 @@ public class ProjectService {
 
     /**
      * Method used to delete a project with his ID
-     * @param id the project ID
+     *
+     * @param project the project to delete
      */
-    public void deleteProject(Long id){
+    @Transactional
+    public void deleteProject(Project project){
         // notify clients
-        dashboardWebsocketService.updateGlobalScreensByProjectId(id, new UpdateEvent(UpdateType.DISCONNECT));
+        dashboardWebsocketService.updateGlobalScreensByProjectId(project.getId(), new UpdateEvent(UpdateType.DISCONNECT));
         // delete project
-        projectRepository.delete(id);
+        projectRepository.delete(project);
     }
 }
