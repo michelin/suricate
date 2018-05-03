@@ -10,7 +10,7 @@
             <mat-icon class="material-icons" #displayDanger *ngIf="(message | async)?.style === ToastType.DANGER; else displaySuccess">error</mat-icon>
             <mat-icon class="material-icons" #displaySuccess *ngIf="(message | async)?.style === ToastType.SUCCESS">done</mat-icon>
         </div>
-        <div fxFlex="70">
+        <div class="notification-content" fxFlex="70">
           <div class="notification-title">
             {{ (message | async)?.title }}
           </div>

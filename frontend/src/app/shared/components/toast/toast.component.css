@@ -121,3 +121,6 @@
   -ms-user-select: none;
   user-select: none;
 }
+.notification-content {
+    justify-content: center;
+}
