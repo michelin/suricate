@@ -117,7 +117,6 @@ export class DashboardService extends AbstractHttpService {
     );
   }
 
-
   /**
    * Get a dashboard by id
    *
