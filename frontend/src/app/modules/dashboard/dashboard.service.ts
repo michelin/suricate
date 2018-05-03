@@ -143,7 +143,7 @@ export class DashboardService extends AbstractHttpService {
    * @returns {Observable<Project>} The project as observable
    */
   editProject(project: Project): Observable<Project> {
-    return this.httpClient.post<Project>(`${DashboardService.PROJECTS_BASE_URL}/${project.id}`, project)
+    return this.httpClient.put<Project>(`${DashboardService.PROJECTS_BASE_URL}/${project.id}`, project)
         .pipe(
             map(projectAdded => {
               this.updateSubject(projectAdded);
@@ -161,7 +161,7 @@ export class DashboardService extends AbstractHttpService {
   addWidgetToProject(projectWidget: ProjectWidget): Observable<Project> {
     return this
         .httpClient
-        .put<Project>(`${DashboardService.PROJECTS_BASE_URL}/${projectWidget.project.id}`, projectWidget)
+        .put<Project>(`${DashboardService.PROJECTS_BASE_URL}/${projectWidget.project.id}/widgets`, projectWidget)
         .pipe(
             map( project => {
               this.currendDashbordSubject.next(project);
@@ -178,7 +178,7 @@ export class DashboardService extends AbstractHttpService {
    * @returns {Observable<Project>} The project as observable
    */
   addUserToProject(project: Project, username: string): Observable<Project> {
-    return this.httpClient.put<Project>(`${DashboardService.PROJECTS_BASE_URL}/${project.id}/users/`, username)
+    return this.httpClient.put<Project>(`${DashboardService.PROJECTS_BASE_URL}/${project.id}/users`, username)
         .pipe(
             map(projectUpdated => {
               this.updateSubject(project);

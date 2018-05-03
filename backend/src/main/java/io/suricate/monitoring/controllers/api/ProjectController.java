@@ -198,7 +198,7 @@ public class ProjectController {
      * @param projectDto The informations to update
      * @return The project updated
      */
-    @RequestMapping(value = "/{projectId}", method = RequestMethod.POST)
+    @RequestMapping(value = "/{projectId}", method = RequestMethod.PUT)
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ProjectDto> updateProject(@PathVariable("projectId") Long projectId, @RequestBody ProjectDto projectDto) {
         Optional<Project> projectOptional = projectService.getOneById(projectId);
@@ -314,7 +314,7 @@ public class ProjectController {
      * @param projectWidgetDto The projectWidget to add
      * @return The project
      */
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{id}/widgets", method = RequestMethod.PUT)
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ProjectDto> addWidgetToProject(@PathVariable("id") Long id,
                                          @RequestBody ProjectWidgetDto projectWidgetDto) {
