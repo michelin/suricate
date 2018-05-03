@@ -19,7 +19,13 @@ import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {CustomValidators} from 'ng2-validation';
 import {checkPasswordMatch} from '../../../shared/validators/CustomValidator';
 import {AuthenticationService} from '../authentication.service';
+import {User} from '../../../shared/model/dto/user/User';
+import {ICredentials} from '../../../shared/model/dto/user/ICredentials';
+import {Router} from '@angular/router';
 
+/**
+ * Component that register a new user
+ */
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
@@ -27,17 +33,48 @@ import {AuthenticationService} from '../authentication.service';
 })
 export class RegisterComponent implements OnInit {
 
+  /**
+   * The register form
+   */
   registerForm: FormGroup;
+  /**
+   * The form control for the password confirmation
+   */
   confirmPasswordControl: FormControl;
+  /**
+   * The form control for the password
+   */
   passwordControl: FormControl;
 
+  /**
+   * Tell if the form has been submit or not
+   *
+   * @type {boolean} true if the form is submitting, false otherwise
+   */
   formSubmitAttempt = false;
+  /**
+   * If the password should be hide or not
+   * @type {boolean}
+   */
   hidePassword = true;
 
+  /**
+   * Constructor
+   *
+   * @param {FormBuilder} formBuilder The formBuilder service to inject
+   * @param {AuthenticationService} authenticationService The authentication service to inject
+   * @param {Router} router The router service to inject
+   */
   constructor(private formBuilder: FormBuilder,
-              private authenticationService: AuthenticationService) { }
+              private authenticationService: AuthenticationService,
+              private router: Router) { }
 
+  /**
+   * Called when the component is init
+   */
   ngOnInit() {
+    this.authenticationService.logout();
+
     this.passwordControl = this.formBuilder
         .control(
             '',
@@ -70,7 +107,32 @@ export class RegisterComponent implements OnInit {
     return this.registerForm.invalid && (this.registerForm.get(field).dirty || this.registerForm.get(field).touched);
   }
 
+  /**
+   * Send the register form
+   */
   signUp() {
-    this.authenticationService.register(this.registerForm.value);
+    this.formSubmitAttempt = true;
+
+    const user: User = this.registerForm.value;
+    this
+        .authenticationService
+        .register(user)
+        .subscribe( () => {
+          const credentials: ICredentials = {username: user.username, password: user.password};
+          this
+              .authenticationService
+              .authenticate(credentials)
+              .subscribe(
+                  () => {
+                    // Authentication succeed
+                    this.router.navigate(['/home']);
+                  },
+                  error => {
+                    // Authentication failed
+                    this.formSubmitAttempt = false;
+                    console.log(error);
+                  }
+              );
+        });
   }
 }

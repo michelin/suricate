@@ -111,7 +111,13 @@ export class AuthenticationService extends AbstractHttpService {
       );
   }
 
-  register(user: User) {
-    this.httpClient.post(`${AbstractHttpService.BASE_API_URL}/${AbstractHttpService.USERS_URL}/register`, user).subscribe();
+  /**
+   * Register a new user
+   *
+   * @param {User} user The user to register
+   * @returns {Observable<User>} The user registered
+   */
+  register(user: User): Observable<User> {
+    return this.httpClient.post<User>(`${AbstractHttpService.BASE_API_URL}/${AbstractHttpService.USERS_URL}/register`, user);
   }
 }
