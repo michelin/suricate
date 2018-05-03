@@ -1,6 +1,6 @@
 FROM frolvlad/alpine-oraclejdk8:slim
 
-ADD target/monitoring.jar monitoring.jar
+ADD backend/target/monitoring.jar monitoring.jar
 
 RUN sh -c 'touch /monitoring.jar'
 
