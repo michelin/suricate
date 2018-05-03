@@ -29,6 +29,8 @@ import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {Asset} from '../../../shared/model/dto/Asset';
 import {WidgetAvailabilityEnum} from '../../../shared/model/dto/enums/WidgetAvailabilityEnum';
 import {Widget} from '../../../shared/model/dto/Widget';
+import {ToastService} from '../../../shared/components/toast/toast.service';
+import {ToastType} from '../../../shared/model/toastNotification/ToastType';
 
 /**
  * Component that display the list of widgets (admin part)
@@ -91,10 +93,12 @@ export class WidgetListComponent implements OnInit {
    * @param {WidgetService} widgetService The widgetService to inject
    * @param {ChangeDetectorRef} changeDetectorRef enable the change detection after view init
    * @param {DomSanitizer} domSanitizer The dom sanitizer service
+   * @param {ToastService} toastService The toast notificaiton service
    */
   constructor(private widgetService: WidgetService,
               private changeDetectorRef: ChangeDetectorRef,
-              private domSanitizer: DomSanitizer) {
+              private domSanitizer: DomSanitizer,
+              private toastService: ToastService) {
   }
 
   /**
@@ -170,15 +174,23 @@ export class WidgetListComponent implements OnInit {
   /**
    * Enable or disable a widget
    *
-   * @param {number} widgetId The widget to disable
+   * @param {Widget} widget The widget to disable
    * @param {MatSlideToggleChange} changeEvent when click on the toggle slider
    */
-  toggleWidgetActivation(widgetId: number, changeEvent: MatSlideToggleChange) {
-    const widget: Widget = this.widgets.find((currentWidget: Widget) => currentWidget.id === widgetId);
+  toggleWidgetActivation(widget: Widget, changeEvent: MatSlideToggleChange) {
+    const widgetToDisable: Widget = this.widgets.find((currentWidget: Widget) => currentWidget.id === widget.id);
 
-    if (widget) {
-      widget.widgetAvailability = changeEvent.checked ? WidgetAvailabilityEnum.ACTIVATED : WidgetAvailabilityEnum.DISABLED;
-      this.widgetService.updateWidget(widget).subscribe();
+    if (widgetToDisable) {
+      widgetToDisable.widgetAvailability = changeEvent.checked ? WidgetAvailabilityEnum.ACTIVATED : WidgetAvailabilityEnum.DISABLED;
+      this
+          .widgetService
+          .updateWidget(widgetToDisable)
+          .subscribe( (widgetResponse: Widget) => {
+            this.toastService.sendMessage(
+                `The widget "${widgetResponse.name}" has been ${widgetResponse.widgetAvailability.toString()}`,
+                ToastType.SUCCESS
+            );
+          });
     }
   }
 

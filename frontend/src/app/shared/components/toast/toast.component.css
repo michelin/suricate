@@ -1,11 +1,12 @@
 :host {
     position: absolute;
-    top: 0;
-    right: 0;
-    margin: 10px 10px;
     Z-index: 10;
 }
 .wrapper {
+    position: fixed;
+    top: 0;
+    right: 0;
+    margin: 10px 10px;
     width: 350px;
 }
 .notification {
@@ -60,7 +61,7 @@
     top: 0.5rem;
 }
 .notification-title {
-    font-size: 1.4em;
+    font-size: 1.2em;
 }
 .notification-body {
     font-size: 0.8em;
