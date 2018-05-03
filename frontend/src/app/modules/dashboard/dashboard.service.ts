@@ -47,6 +47,7 @@ export class DashboardService extends AbstractHttpService {
    * The constructor
    *
    * @param {HttpClient} httpClient The http client
+   * @param {UserService} userService The user service to inject
    */
   constructor(private httpClient: HttpClient,
               private userService: UserService) {

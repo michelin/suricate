@@ -32,6 +32,9 @@ import {NumberUtils} from '../../../shared/utils/NumberUtils';
 import {WSUpdateEvent} from '../../../shared/model/websocket/WSUpdateEvent';
 import {WSUpdateType} from '../../../shared/model/websocket/enums/WSUpdateType';
 import {ProjectWidget} from '../../../shared/model/dto/ProjectWidget';
+import {NgGridItemEvent} from 'angular2-grid';
+import {ProjectWidgetService} from '../project-widget.service';
+import {ProjectWidgetPosition} from '../../../shared/model/dto/ProjectWidgetPosition';
 
 /**
  * Component that display a specific dashboard
@@ -92,12 +95,14 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    * @param {ChangeDetectorRef} changeDetectorRef The change detector service
    * @param {DomSanitizer} domSanitizer The domSanitizer service
    * @param {WebsocketService} websocketService The websocket service
+   * @param {ProjectWidgetService} projectWidgetService The project widget service to inject
    */
   constructor(private activatedRoute: ActivatedRoute,
               private dashboardService: DashboardService,
               private changeDetectorRef: ChangeDetectorRef,
               private domSanitizer: DomSanitizer,
-              private websocketService: WebsocketService) { }
+              private websocketService: WebsocketService,
+              private projectWidgetService: ProjectWidgetService) { }
 
   /**
    * Init objects
@@ -299,6 +304,24 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
           }
         </style>
     `);
+  }
+
+  /**
+   * Update the project widget position for every widgets
+   *
+   * @param {NgGridItemEvent[]} gridItemEvents The list of grid item events
+   */
+  updateProjectWidgetsPosition(gridItemEvents: NgGridItemEvent[]) {
+    gridItemEvents.forEach(gridItemEvent => {
+      const projectWidgetPosition: ProjectWidgetPosition = {
+        col: gridItemEvent.col,
+        row: gridItemEvent.row,
+        width: gridItemEvent.sizex,
+        height: gridItemEvent.sizey
+      };
+
+      this.projectWidgetService.updateWidgetPosition(gridItemEvent.payload, projectWidgetPosition).subscribe();
+    });
   }
 
   /**
