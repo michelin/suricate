@@ -27,6 +27,11 @@ import lombok.*;
 public class ProjectWidgetPositionDto extends AbstractDto {
 
     /**
+     * The project widget id related to this project widget position
+     */
+    private Long projectWidgetId;
+
+    /**
      * The start column of this widget
      */
     private int col;

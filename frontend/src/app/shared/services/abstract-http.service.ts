@@ -25,6 +25,7 @@ export abstract class AbstractHttpService {
     public static readonly SPRING_ACCESS_TOKEN_ENPOINT = 'access_token';
     public static readonly USERS_URL = 'users';
     public static readonly PROJECTS_URL = 'projects';
+    public static readonly PROJECT_WIDGETS_URL = 'project_widgets';
     public static readonly ASSET_URL = 'asset';
     public static readonly WIDGETS_URL = 'widgets';
     public static readonly CONFIGURATIONS_URL = 'configurations';

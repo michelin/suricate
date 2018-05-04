@@ -47,7 +47,7 @@ export class DashboardEditComponent implements OnInit {
         .subscribe( params => {
           this
               .dashboardService
-              .getOneById(params['dashboardId'])
+              .getOneById(+params['dashboardId'])
               .subscribe( dashboard => {
                 this.dashboard = dashboard;
                 this.initDashboardForm();

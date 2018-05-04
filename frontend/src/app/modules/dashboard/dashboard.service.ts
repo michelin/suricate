@@ -22,10 +22,9 @@ import {Observable} from 'rxjs/Observable';
 import {ProjectWidget} from '../../shared/model/dto/ProjectWidget';
 import {map} from 'rxjs/operators/map';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {Subject} from 'rxjs/Subject';
-import {Widget} from '../../shared/model/dto/Widget';
 import {UserService} from '../user/user.service';
 import {User} from '../../shared/model/dto/user/User';
+import {ProjectWidgetPosition} from '../../shared/model/dto/ProjectWidgetPosition';
 
 @Injectable()
 export class DashboardService extends AbstractHttpService {
@@ -47,6 +46,7 @@ export class DashboardService extends AbstractHttpService {
    * The constructor
    *
    * @param {HttpClient} httpClient The http client
+   * @param {UserService} userService The user service to inject
    */
   constructor(private httpClient: HttpClient,
               private userService: UserService) {
@@ -126,10 +126,10 @@ export class DashboardService extends AbstractHttpService {
   /**
    * Get a dashboard by id
    *
-   * @param {string} id The dashboard id
+   * @param {number} id The dashboard id
    * @returns {Observable<Project>} The dashboard as observable
    */
-  getOneById(id: string): Observable<Project> {
+  getOneById(id: number): Observable<Project> {
     return this.httpClient.get<Project>(`${DashboardService.PROJECTS_BASE_URL}/${id}`);
   }
 
@@ -231,6 +231,26 @@ export class DashboardService extends AbstractHttpService {
             map(projectDelete => {
               this.updateSubject(projectDelete, DashboardService.ACTION_DELETE);
               return projectDelete;
+            })
+        );
+  }
+
+  /**
+   * Update the list of project widgets position for a project
+   *
+   * @param {number} projectId The project id to update
+   * @param {ProjectWidgetPosition[]} projectWidgetPositions The list of project widget position
+   * @returns {Observable<Project>} The project updated
+   */
+  updateWidgetPositionForProject(projectId: number, projectWidgetPositions: ProjectWidgetPosition[]): Observable<Project> {
+    return this
+        .httpClient
+        .put<Project>(`${DashboardService.PROJECTS_BASE_URL}/${projectId}/projectWidgetPositions`, projectWidgetPositions)
+        .pipe(
+            map(project => {
+              this.updateSubject(project, DashboardService.ACTION_UPDATE);
+
+              return project;
             })
         );
   }
