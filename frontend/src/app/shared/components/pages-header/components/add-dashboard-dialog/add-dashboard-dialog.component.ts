@@ -89,7 +89,7 @@ export class AddDashboardDialogComponent implements OnInit {
     if (this.data && this.data.projectId) {
       this.isEditMode = true;
       this.dashboardService
-          .getOneById(this.data.projectId)
+          .getOneById(+this.data.projectId)
           .subscribe(project => {
             this.projectAdded = project;
             this.dashboardBackgroundColor = this.getPropertyFromGridCss('background-color');

@@ -126,10 +126,10 @@ export class DashboardService extends AbstractHttpService {
   /**
    * Get a dashboard by id
    *
-   * @param {string} id The dashboard id
+   * @param {number} id The dashboard id
    * @returns {Observable<Project>} The dashboard as observable
    */
-  getOneById(id: string): Observable<Project> {
+  getOneById(id: number): Observable<Project> {
     return this.httpClient.get<Project>(`${DashboardService.PROJECTS_BASE_URL}/${id}`);
   }
 

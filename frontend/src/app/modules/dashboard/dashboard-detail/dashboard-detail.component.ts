@@ -115,7 +115,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
     // Global init from project
     this.activatedRoute.params.subscribe( params => {
       this.dashboardService
-          .getOneById(params['id'])
+          .getOneById(+params['id'])
           .subscribe(project => {
             this.initGridStackOptions(project);
             // Unsubcribe every websockets if we have change of dashboard
@@ -206,6 +206,16 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
   handleGlobalScreenEvent(updateEvent: WSUpdateEvent, headers: any) {
     if (updateEvent.type === WSUpdateType.WIDGET) {
       this.dashboardService.updateWidgetHtmlFromProjetWidgetId(updateEvent.content.id, updateEvent.content.instantiateHtml);
+    }
+
+    if (updateEvent.type === WSUpdateType.POSITION) {
+      const currentProject: Project = this.dashboardService.currendDashbordSubject.getValue();
+      this.dashboardService
+          .getOneById(currentProject.id)
+          .subscribe(project => {
+            this.isGridItemInit = false;
+            this.dashboardService.currendDashbordSubject.next(project);
+          });
     }
   }
 
