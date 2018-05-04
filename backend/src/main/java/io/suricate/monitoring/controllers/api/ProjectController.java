@@ -18,6 +18,7 @@ package io.suricate.monitoring.controllers.api;
 
 import io.suricate.monitoring.controllers.api.error.exception.ApiException;
 import io.suricate.monitoring.model.dto.project.ProjectDto;
+import io.suricate.monitoring.model.dto.project.ProjectWidgetPositionDto;
 import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.dto.project.ProjectWidgetDto;
@@ -343,7 +344,7 @@ public class ProjectController {
     @RequestMapping(value = "/{id}/widgets", method = RequestMethod.PUT)
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ProjectDto> addWidgetToProject(@PathVariable("id") Long id,
-                                         @RequestBody ProjectWidgetDto projectWidgetDto) {
+                                                         @RequestBody ProjectWidgetDto projectWidgetDto) {
         ProjectWidget projectWidget = projectWidgetMapper.toNewProjectWidget(projectWidgetDto, id);
         projectWidgetService.addProjectWidget(projectWidget);
 
@@ -358,5 +359,33 @@ public class ProjectController {
             .contentType(MediaType.APPLICATION_JSON)
             .cacheControl(CacheControl.noCache())
             .body(projectMapper.toProjectDtoDefault(projectWidget.getProject()));
+    }
+
+    /**
+     * Update the list of widget positions for a project
+     *
+     * @param projectId The project id to update
+     * @param projectWidgetPositionDtos The list of project widget positions
+     * @return The project updated
+     */
+    @RequestMapping(value = "/{projectId}/projectWidgetPositions", method = RequestMethod.PUT)
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<ProjectDto> updateProjectWidgetsPositionForProject(@PathVariable("projectId") Long projectId,
+                                                                             @RequestBody List<ProjectWidgetPositionDto> projectWidgetPositionDtos) {
+        Optional<Project> projectOptional = projectService.getOneById(projectId);
+
+        if(!projectOptional.isPresent()) {
+            return ResponseEntity
+                    .notFound()
+                    .cacheControl(CacheControl.noCache())
+                    .build();
+        }
+
+        projectWidgetService.updateWidgetPositionByProject(projectOptional.get(), projectWidgetPositionDtos);
+        return ResponseEntity
+                .ok()
+                .cacheControl(CacheControl.noCache())
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(projectMapper.toProjectDtoDefault(projectOptional.get()));
     }
 }
