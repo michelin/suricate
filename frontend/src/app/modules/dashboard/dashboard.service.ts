@@ -22,10 +22,9 @@ import {Observable} from 'rxjs/Observable';
 import {ProjectWidget} from '../../shared/model/dto/ProjectWidget';
 import {map} from 'rxjs/operators/map';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {Subject} from 'rxjs/Subject';
-import {Widget} from '../../shared/model/dto/Widget';
 import {UserService} from '../user/user.service';
 import {User} from '../../shared/model/dto/user/User';
+import {ProjectWidgetPosition} from '../../shared/model/dto/ProjectWidgetPosition';
 
 @Injectable()
 export class DashboardService extends AbstractHttpService {
@@ -232,6 +231,26 @@ export class DashboardService extends AbstractHttpService {
             map(projectDelete => {
               this.updateSubject(projectDelete, DashboardService.ACTION_DELETE);
               return projectDelete;
+            })
+        );
+  }
+
+  /**
+   * Update the list of project widgets position for a project
+   *
+   * @param {number} projectId The project id to update
+   * @param {ProjectWidgetPosition[]} projectWidgetPositions The list of project widget position
+   * @returns {Observable<Project>} The project updated
+   */
+  updateWidgetPositionForProject(projectId: number, projectWidgetPositions: ProjectWidgetPosition[]): Observable<Project> {
+    return this
+        .httpClient
+        .put<Project>(`${DashboardService.PROJECTS_BASE_URL}/${projectId}/projectWidgetPositions`, projectWidgetPositions)
+        .pipe(
+            map(project => {
+              this.updateSubject(project, DashboardService.ACTION_UPDATE);
+
+              return project;
             })
         );
   }

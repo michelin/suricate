@@ -24,7 +24,6 @@ import {SharedModule} from '../../shared/shared.module';
 import {DashboardListComponent} from './dashboard-list/dashboard-list.component';
 import { DashboardEditComponent } from './dashboard-edit/dashboard-edit.component';
 import { DeleteDashboardDialogComponent } from './components/delete-dashboard-dialog/delete-dashboard-dialog.component';
-import {ProjectWidgetService} from './project-widget.service';
 
 const dashboardRoutes: Routes = [
   { path: 'dashboard/:id', component: DashboardDetailComponent, canActivate: [AuthGuard] },
@@ -53,8 +52,7 @@ const dashboardRoutes: Routes = [
       RouterModule
   ],
   providers: [
-      DashboardService,
-      ProjectWidgetService
+      DashboardService
   ],
   entryComponents: [
       DeleteDashboardDialogComponent

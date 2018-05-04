@@ -17,6 +17,7 @@
  */
 
 export class ProjectWidgetPosition {
+  projectWidgetId: number;
   col: number;
   row: number;
   width: number;

@@ -7,7 +7,7 @@
   </div>
   <div *ngFor="let projectWidget of (project$ | async)?.projectWidgets"
        [ngClass]="'widget ' + projectWidget.widget.technicalName + ' widget-' + projectWidget.id"
-       [ngGridItem]="{'col': projectWidget.widgetPosition.col+1,
+       [ngGridItem]="{'col': projectWidget.widgetPosition.col,
                       'row': projectWidget.widgetPosition.row,
                       'sizey': projectWidget.widgetPosition.height,
                       'sizex': projectWidget.widgetPosition.width,
