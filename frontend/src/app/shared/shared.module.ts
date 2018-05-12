@@ -35,6 +35,7 @@ import {StompService} from 'ng2-stomp-service/index';
 import {WebsocketService} from './services/websocket.service';
 import { ToastComponent } from './components/toast/toast.component';
 import {ToastService} from './components/toast/toast.service';
+import { PagesFooterComponent } from './components/pages-footer/pages-footer.component';
 
 @NgModule({
   imports: [
@@ -55,7 +56,8 @@ import {ToastService} from './components/toast/toast.service';
       DashboardActionsComponent,
       HomeActionsComponent,
       AddDashboardDialogComponent,
-      ToastComponent
+      ToastComponent,
+      PagesFooterComponent
   ],
   entryComponents: [
       AddWidgetDialogComponent,
