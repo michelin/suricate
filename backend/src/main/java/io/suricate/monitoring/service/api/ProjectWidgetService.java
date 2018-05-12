@@ -21,14 +21,12 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheException;
 import com.github.mustachejava.MustacheFactory;
-import io.suricate.monitoring.controllers.api.error.exception.ApiException;
 import io.suricate.monitoring.model.dto.project.ProjectWidgetPositionDto;
 import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
+import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.entity.widget.Widget;
-import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.model.enums.UpdateType;
-import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
 import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.model.mapper.project.ProjectWidgetMapper;
 import io.suricate.monitoring.repository.ProjectWidgetRepository;
@@ -150,17 +148,6 @@ public class ProjectWidgetService {
     }
 
     /**
-     * Get all by Project widget by project id and widget availability
-     *
-     * @param projectId The project id
-     * @param widgetAvailabilityEnum The widget availability enum
-     * @return The list of related project widget
-     */
-    public List<ProjectWidget> getAllByProjectIdAndWidgetAvailability(final Long projectId, final WidgetAvailabilityEnum widgetAvailabilityEnum) {
-        return projectWidgetRepository.findByProjectIdAndWidget_WidgetAvailabilityOrderById(projectId, widgetAvailabilityEnum);
-    }
-
-    /**
      * Update the position of a widget
      *
      * @param projectWidgetId The projectWidget id
@@ -176,31 +163,23 @@ public class ProjectWidgetService {
     /**
      * Method used to update all widgets positions for a current project
      *
-     * @param projectId the project id
+     * @param project the project to update
      * @param positions lit of position
-     * @param projetToken project token
      */
     @Transactional
-    public void updateWidgetPosition(Long projectId, List<ProjectWidgetPositionDto> positions, String projetToken){
-        List<ProjectWidget> projectWidgets = getAllByProjectIdAndWidgetAvailability(projectId, WidgetAvailabilityEnum.ACTIVATED);
-        if (projectWidgets.size() != positions.size()) {
-            throw new ApiException(ApiErrorEnum.PROJECT_INVALID_CONSTANCY);
-        }
-
-        int i = 0;
-        for (ProjectWidget projectWidget : projectWidgets){
+    public void updateWidgetPositionByProject(Project project, final List<ProjectWidgetPositionDto> positions){
+        for (ProjectWidgetPositionDto projectWidgetPositionDto : positions){
             updateWidgetPositionByProjectWidgetId(
-                projectWidget.getId(),
-                positions.get(i).getCol(),
-                positions.get(i).getRow(),
-                positions.get(i).getHeight(),
-                positions.get(i).getWidth()
+                projectWidgetPositionDto.getProjectWidgetId(),
+                projectWidgetPositionDto.getCol(),
+                projectWidgetPositionDto.getRow(),
+                projectWidgetPositionDto.getHeight(),
+                projectWidgetPositionDto.getWidth()
             );
-            i++;
         }
         projectWidgetRepository.flush();
         // notify clients
-        dashboardWebsocketService.updateGlobalScreensByProjectToken(projetToken, new UpdateEvent(UpdateType.POSITION));
+        dashboardWebsocketService.updateGlobalScreensByProjectToken(project.getToken(), new UpdateEvent(UpdateType.POSITION));
     }
 
     /**

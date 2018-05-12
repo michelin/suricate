@@ -13,24 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/throw';
 
 @Injectable()
 export abstract class AbstractHttpService {
 
-  public static readonly BASE_URL = 'http://localhost:8080';
-  public static readonly BASE_API_URL = `${AbstractHttpService.BASE_URL}/api`;
-  public static readonly BASE_WS_URL = `${AbstractHttpService.BASE_URL}/ws`;
-  public static readonly AUTHENTICATE_URL = 'oauth/token';
-  public static readonly SPRING_ACCESS_TOKEN_ENPOINT = 'access_token';
-  public static readonly USERS_URL = 'users';
-  public static readonly PROJECTS_URL = 'projects';
-  public static readonly ASSET_URL = 'asset';
-  public static readonly WIDGETS_URL = 'widgets';
-  public static readonly CONFIGURATIONS_URL = 'configurations';
-
+    public static readonly BASE_API_URL = process.env.BASE_URL + '/api';
+    public static readonly BASE_WS_URL = process.env.BASE_URL + '/ws';
+    public static readonly AUTHENTICATE_URL = 'oauth/token';
+    public static readonly SPRING_ACCESS_TOKEN_ENPOINT = 'access_token';
+    public static readonly USERS_URL = 'users';
+    public static readonly PROJECTS_URL = 'projects';
+    public static readonly PROJECT_WIDGETS_URL = 'project_widgets';
+    public static readonly ASSET_URL = 'asset';
+    public static readonly WIDGETS_URL = 'widgets';
+    public static readonly CONFIGURATIONS_URL = 'configurations';
 }
-

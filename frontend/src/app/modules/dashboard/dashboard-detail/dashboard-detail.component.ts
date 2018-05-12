@@ -18,7 +18,6 @@ import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {DashboardService} from '../dashboard.service';
 import {Project} from '../../../shared/model/dto/Project';
-import {Widget} from '../../../shared/model/dto/Widget';
 import {DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import {Observable} from 'rxjs/Observable';
 import {takeWhile} from 'rxjs/operators';
@@ -32,6 +31,8 @@ import {NumberUtils} from '../../../shared/utils/NumberUtils';
 import {WSUpdateEvent} from '../../../shared/model/websocket/WSUpdateEvent';
 import {WSUpdateType} from '../../../shared/model/websocket/enums/WSUpdateType';
 import {ProjectWidget} from '../../../shared/model/dto/ProjectWidget';
+import {NgGridItem, NgGridItemEvent} from 'angular2-grid';
+import {ProjectWidgetPosition} from '../../../shared/model/dto/ProjectWidgetPosition';
 
 /**
  * Component that display a specific dashboard
@@ -85,6 +86,11 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
   screenCode: number;
 
   /**
+   * True if the grid items has been initialized false otherwise
+   */
+  isGridItemInit = false;
+
+  /**
    * constructor
    *
    * @param {ActivatedRoute} activatedRoute The activated route service
@@ -109,7 +115,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
     // Global init from project
     this.activatedRoute.params.subscribe( params => {
       this.dashboardService
-          .getOneById(params['id'])
+          .getOneById(+params['id'])
           .subscribe(project => {
             this.initGridStackOptions(project);
             // Unsubcribe every websockets if we have change of dashboard
@@ -200,6 +206,16 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
   handleGlobalScreenEvent(updateEvent: WSUpdateEvent, headers: any) {
     if (updateEvent.type === WSUpdateType.WIDGET) {
       this.dashboardService.updateWidgetHtmlFromProjetWidgetId(updateEvent.content.id, updateEvent.content.instantiateHtml);
+    }
+
+    if (updateEvent.type === WSUpdateType.POSITION) {
+      const currentProject: Project = this.dashboardService.currendDashbordSubject.getValue();
+      this.dashboardService
+          .getOneById(currentProject.id)
+          .subscribe(project => {
+            this.isGridItemInit = false;
+            this.dashboardService.currendDashbordSubject.next(project);
+          });
     }
   }
 
@@ -299,6 +315,46 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
           }
         </style>
     `);
+  }
+
+  /**
+   * Update the project widget position for every widgets
+   *
+   * @param {NgGridItemEvent[]} gridItemEvents The list of grid item events
+   */
+  updateProjectWidgetsPosition(gridItemEvents: NgGridItemEvent[]) {
+    const currentProject: Project = this.dashboardService.currendDashbordSubject.getValue();
+
+    // update the position only if the grid item has been init
+    if (this.isGridItemInit) {
+      const projectWidgetPositions: ProjectWidgetPosition[] = [];
+
+      gridItemEvents.forEach(gridItemEvent => {
+        const projectWidgetPosition: ProjectWidgetPosition = {
+          projectWidgetId: gridItemEvent.payload,
+          col: gridItemEvent.col,
+          row: gridItemEvent.row,
+          width: gridItemEvent.sizex,
+          height: gridItemEvent.sizey
+        };
+
+        projectWidgetPositions.push(projectWidgetPosition);
+      });
+
+      this.dashboardService
+          .updateWidgetPositionForProject(
+              this.dashboardService.currendDashbordSubject.getValue().id,
+              projectWidgetPositions
+          )
+          .subscribe();
+    }
+
+    // We check if the grid item is init, if it's we change the boolean.
+    // Without this the grid item plugin will send request to the server at the initialisation of the component
+    // (probably a bug of the "OnItemChange" event)
+    if (!this.isGridItemInit && gridItemEvents.length === currentProject.projectWidgets.length) {
+      this.isGridItemInit = true;
+    }
   }
 
   /**

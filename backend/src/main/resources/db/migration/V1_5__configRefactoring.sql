@@ -41,6 +41,3 @@ ALTER TABLE widget_param_value ADD COLUMN created_by VARCHAR(255) NOT NULL;
 ALTER TABLE widget_param_value ADD COLUMN created_date DATETIME NOT NULL;
 ALTER TABLE widget_param_value ADD COLUMN last_modified_by VARCHAR(255);
 ALTER TABLE widget_param_value ADD COLUMN last_modified_date DATETIME;
-
-
-

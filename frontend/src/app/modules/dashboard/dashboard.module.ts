@@ -21,9 +21,19 @@ import {DashboardService} from './dashboard.service';
 import { DashboardDetailComponent } from './dashboard-detail/dashboard-detail.component';
 import {CommonModule} from '@angular/common';
 import {SharedModule} from '../../shared/shared.module';
+import {DashboardListComponent} from './dashboard-list/dashboard-list.component';
+import { DashboardEditComponent } from './dashboard-edit/dashboard-edit.component';
+import { DeleteDashboardDialogComponent } from './components/delete-dashboard-dialog/delete-dashboard-dialog.component';
 
 const dashboardRoutes: Routes = [
-  { path: 'dashboard/:id', component: DashboardDetailComponent, canActivate: [AuthGuard] }
+  { path: 'dashboard/:id', component: DashboardDetailComponent, canActivate: [AuthGuard] },
+  { path: 'dashboards', component: DashboardListComponent, canActivate: [AuthGuard] },
+  {
+    path: 'dashboards/:dashboardId/edit',
+    component: DashboardEditComponent,
+    data: { breadcrumb: 'Edit Dashboard' },
+    canActivate: [AuthGuard]
+  }
 ];
 
 @NgModule({
@@ -33,13 +43,19 @@ const dashboardRoutes: Routes = [
       SharedModule
   ],
   declarations: [
-      DashboardDetailComponent
+      DashboardDetailComponent,
+      DashboardListComponent,
+      DashboardEditComponent,
+      DeleteDashboardDialogComponent
   ],
   exports: [
       RouterModule
   ],
   providers: [
       DashboardService
+  ],
+  entryComponents: [
+      DeleteDashboardDialogComponent
   ]
 })
 export class DashboardModule {}

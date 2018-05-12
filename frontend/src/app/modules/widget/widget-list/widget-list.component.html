@@ -38,7 +38,7 @@
       <mat-cell fxFlex="13%" *matCellDef="let row">
         <mat-slide-toggle color="accent"
                           [checked]="row.widgetAvailability == widgetAvailability.ACTIVATED"
-                          (change)="toggleWidgetActivation(row.id, $event)"></mat-slide-toggle>
+                          (change)="toggleWidgetActivation(row, $event)"></mat-slide-toggle>
       </mat-cell>
     </ng-container>
 
