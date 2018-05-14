@@ -31,7 +31,7 @@ import {NumberUtils} from '../../../shared/utils/NumberUtils';
 import {WSUpdateEvent} from '../../../shared/model/websocket/WSUpdateEvent';
 import {WSUpdateType} from '../../../shared/model/websocket/enums/WSUpdateType';
 import {ProjectWidget} from '../../../shared/model/dto/ProjectWidget';
-import {NgGridItem, NgGridItemEvent} from 'angular2-grid';
+import {NgGridItemEvent} from 'angular2-grid';
 import {ProjectWidgetPosition} from '../../../shared/model/dto/ProjectWidgetPosition';
 
 /**
@@ -237,14 +237,14 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    * @param {Project} project The project
    * @returns {SafeHtml} The css as safe html
    */
-  getGridCSS(css: string): SafeHtml {
-    return this.domSanitizer.bypassSecurityTrustHtml(`
+  getGridCSS(css: string): string {
+    return `
       <style>
         .grid {
           ${css}
         }
       </style>
-    `);
+    `;
   }
 
   /**
@@ -253,8 +253,8 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    * @param {ProjectWidget} projectWidget The widget
    * @returns {SafeHtml} The html as SafeHtml
    */
-  getHtmlAndCss(projectWidget: ProjectWidget): SafeHtml {
-    return this.domSanitizer.bypassSecurityTrustHtml(`
+  getHtmlAndCss(projectWidget: ProjectWidget): string {
+    return `
       <style>
         ${projectWidget.widget.cssContent}
         ${projectWidget.customStyle ? projectWidget.customStyle  : '' }
@@ -262,10 +262,16 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
 
       ${this.getActionButtonsHtml(projectWidget)}
       ${projectWidget.instantiateHtml}
-    `);
+    `;
   }
 
-  getActionButtonsHtml(projectWidget: ProjectWidget) {
+  /**
+   * Get the html for the action buttons
+   *
+   * @param {ProjectWidget} projectWidget The project widget
+   * @returns {string} The html string
+   */
+  getActionButtonsHtml(projectWidget: ProjectWidget): string {
     return `
       <button id="delete-${projectWidget.id}"
               name="delete-${projectWidget.id}"
@@ -290,7 +296,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    *
    * @returns {string}
    */
-  getActionButtonsCss() {
+  getActionButtonsCss(): string {
     return `
       .widget .btn-widget {
         position: absolute;
@@ -315,8 +321,8 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    *
    * @returns {SafeHtml} AS safe HTML
    */
-  getWidgetCommonCSS(): SafeHtml {
-    return this.domSanitizer.bypassSecurityTrustHtml(`
+  getWidgetCommonCSS(): string {
+    return `
       <style>
         .grid-item h1 {
             margin-bottom: 12px;
@@ -362,7 +368,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
           }
           ${this.getActionButtonsCss()}
         </style>
-    `);
+    `;
   }
 
   /**
