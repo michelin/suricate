@@ -24,6 +24,7 @@ import {SharedModule} from '../../shared/shared.module';
 import {DashboardListComponent} from './dashboard-list/dashboard-list.component';
 import { DashboardEditComponent } from './dashboard-edit/dashboard-edit.component';
 import { DeleteDashboardDialogComponent } from './components/delete-dashboard-dialog/delete-dashboard-dialog.component';
+import { DeleteProjectWidgetDialogComponent } from './components/delete-project-widget-dialog/delete-project-widget-dialog.component';
 
 const dashboardRoutes: Routes = [
   { path: 'dashboard/:id', component: DashboardDetailComponent, canActivate: [AuthGuard] },
@@ -46,7 +47,8 @@ const dashboardRoutes: Routes = [
       DashboardDetailComponent,
       DashboardListComponent,
       DashboardEditComponent,
-      DeleteDashboardDialogComponent
+      DeleteDashboardDialogComponent,
+      DeleteProjectWidgetDialogComponent
   ],
   exports: [
       RouterModule
@@ -55,7 +57,8 @@ const dashboardRoutes: Routes = [
       DashboardService
   ],
   entryComponents: [
-      DeleteDashboardDialogComponent
+      DeleteDashboardDialogComponent,
+      DeleteProjectWidgetDialogComponent
   ]
 })
 export class DashboardModule {}
