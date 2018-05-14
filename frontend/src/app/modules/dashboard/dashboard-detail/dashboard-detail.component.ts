@@ -150,7 +150,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
       'max_cols': project.maxColumn,
       'min_cols': 1,
       'row_height': project.widgetHeight / 1.5,
-      'margins': [5],
+      'margins': [2],
       'auto_resize': true
     };
   }
@@ -303,6 +303,8 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
         background-color: rgba(66,66,66,0.6);
         color: #cfd2da;
         border: none;
+        cursor: pointer;
+        z-index: 20;
       }
       .widget .btn-widget .material-icons {
         font-size: 16px;
