@@ -297,13 +297,15 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
         background-color: rgba(66,66,66,0.6);
         color: #cfd2da;
         border: none;
-        margin-right: 5px;
+      }
+      .widget .btn-widget .material-icons {
+        font-size: 16px;
       }
       .widget .btn-widget.btn-widget-delete {
         right: 0;
       }
       .widget .btn-widget.btn-widget-edit {
-        right: 41px;
+        right: 34px;
       }
     `;
   }
