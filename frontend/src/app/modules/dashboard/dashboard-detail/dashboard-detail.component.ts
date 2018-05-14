@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {DashboardService} from '../dashboard.service';
 import {Project} from '../../../shared/model/dto/Project';
@@ -42,7 +42,7 @@ import {ProjectWidgetPosition} from '../../../shared/model/dto/ProjectWidgetPosi
   templateUrl: './dashboard-detail.component.html',
   styleUrls: ['./dashboard-detail.component.css']
 })
-export class DashboardDetailComponent implements OnInit, OnDestroy {
+export class DashboardDetailComponent implements OnInit, OnDestroy, AfterViewInit {
 
   /**
    * Define the min bound for the screen code random generation
@@ -90,6 +90,8 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    */
   isGridItemInit = false;
 
+  @ViewChildren('projectWidgetsRendered') projectWidgetsRendered: QueryList<any>;
+
   /**
    * constructor
    *
@@ -127,6 +129,18 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
             this.dashboardService.currendDashbordSubject.next(project);
           });
     });
+  }
+
+  /**
+   * Called when the view has been init
+   */
+  ngAfterViewInit() {
+    // Check when the projectWidgets *ngFor is ended
+    this.projectWidgetsRendered
+        .changes
+        .subscribe((forElements: QueryList<any>) => {
+          this.isGridItemInit = true;
+        });
   }
 
   /**
@@ -379,8 +393,6 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    * @param {NgGridItemEvent[]} gridItemEvents The list of grid item events
    */
   updateProjectWidgetsPosition(gridItemEvents: NgGridItemEvent[]) {
-    const currentProject: Project = this.dashboardService.currendDashbordSubject.getValue();
-
     // update the position only if the grid item has been init
     if (this.isGridItemInit) {
       const projectWidgetPositions: ProjectWidgetPosition[] = [];
@@ -403,13 +415,6 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
               projectWidgetPositions
           )
           .subscribe();
-    }
-
-    // We check if the grid item is init, if it's we change the boolean.
-    // Without this the grid item plugin will send request to the server at the initialisation of the component
-    // (probably a bug of the "OnItemChange" event)
-    if (!this.isGridItemInit && gridItemEvents.length === currentProject.projectWidgets.length) {
-      this.isGridItemInit = true;
     }
   }
 

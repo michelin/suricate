@@ -5,7 +5,8 @@
     <div [innerHTML]="getGridCSS((project$ | async)?.cssStyle) | safeHtml"></div>
     <div [innerHTML]="getWidgetCommonCSS() | safeHtml"></div>
   </div>
-  <div *ngFor="let projectWidget of (project$ | async)?.projectWidgets"
+  <div #projectWidgetsRendered
+       *ngFor="let projectWidget of (project$ | async)?.projectWidgets; let projectWidgetsLoaded = last"
        [ngClass]="'widget ' + projectWidget.widget.technicalName + ' widget-' + projectWidget.id"
        [ngGridItem]="{'col': projectWidget.widgetPosition.col,
                       'row': projectWidget.widgetPosition.row,
