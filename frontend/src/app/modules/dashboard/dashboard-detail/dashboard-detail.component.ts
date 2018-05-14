@@ -257,10 +257,55 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
     return this.domSanitizer.bypassSecurityTrustHtml(`
       <style>
         ${projectWidget.widget.cssContent}
-        ${projectWidget.customStyle}
+        ${projectWidget.customStyle ? projectWidget.customStyle  : '' }
       </style>
+
+      ${this.getActionButtonsHtml(projectWidget)}
       ${projectWidget.instantiateHtml}
     `);
+  }
+
+  getActionButtonsHtml(projectWidget: ProjectWidget) {
+    return `
+      <button id="delete-${projectWidget.id}"
+              name="delete-${projectWidget.id}"
+              class="btn-widget btn-widget-delete"
+              role="button"
+              aria-disabled="false">
+        <mat-icon class="material-icons">delete_forever</mat-icon>
+      </button>
+
+      <button id="edit-${projectWidget.id}"
+              name="edit-${projectWidget.id}"
+              class="btn-widget btn-widget-edit"
+              role="button"
+              aria-disabled="false">
+        <mat-icon class="material-icons">edit</mat-icon>
+      </button>
+    `;
+  }
+
+  /**
+   * Get the css for widget action buttons
+   *
+   * @returns {string}
+   */
+  getActionButtonsCss() {
+    return `
+      .widget .btn-widget {
+        position: absolute;
+        background-color: rgba(66,66,66,0.6);
+        color: #cfd2da;
+        border: none;
+        margin-right: 5px;
+      }
+      .widget .btn-widget.btn-widget-delete {
+        right: 0;
+      }
+      .widget .btn-widget.btn-widget-edit {
+        right: 41px;
+      }
+    `;
   }
 
   /**
@@ -313,6 +358,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
             top: 50%;
             transform: translateY(-50%);
           }
+          ${this.getActionButtonsCss()}
         </style>
     `);
   }
