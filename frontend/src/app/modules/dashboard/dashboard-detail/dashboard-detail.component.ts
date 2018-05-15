@@ -115,6 +115,10 @@ export class DashboardDetailComponent implements OnInit, OnDestroy, AfterViewIni
               private matDialog: MatDialog,
               private websocketService: WebsocketService) { }
 
+  /* ******************************************************* */
+  /*                  Component Life cycle                   */
+  /* ******************************************************* */
+
   /**
    * Init objects
    */
@@ -149,29 +153,21 @@ export class DashboardDetailComponent implements OnInit, OnDestroy, AfterViewIni
         .subscribe((projectWidgetElements: QueryList<any>) => {
           this.isGridItemInit = true;
           this.bindDeleteProjectWidgetEvent(projectWidgetElements);
+          this.bindEditProjectWidgetEvent(projectWidgetElements);
         });
   }
 
   /**
-   * Bind edit and delete events for each button element
-   * @param {QueryList<any>} projectWidgetElements The project widget elements
+   * Called when the component is getting destroy
    */
-  bindDeleteProjectWidgetEvent(projectWidgetElements: QueryList<any>) {
-    projectWidgetElements.forEach((projectWidgetElement: ElementRef) => {
-      const deleteButton: any = projectWidgetElement.nativeElement.querySelector('.btn-widget-delete');
-      if (deleteButton) {
-        fromEvent<MouseEvent>(deleteButton, 'click')
-            .pipe(
-                takeWhile(() => this.isAlive && this.isGridItemInit),
-                map((mouseEvent: MouseEvent) => mouseEvent.toElement.closest('.widget').querySelector('.btn-widget-delete'))
-            )
-            .subscribe((deleteButtonElement: any) => {
-              this.deleteProjectWidgetFromDashboard(+deleteButtonElement.getAttribute('data-project-widget-id'));
-            });
-      }
-    });
+  ngOnDestroy() {
+    this.isAlive = false;
+    this.unsubscribeToWebsockets();
   }
 
+  /* ******************************************************* */
+  /*              Component initialisation                   */
+  /* ******************************************************* */
 
   /**
    * Init the Project subject subscription
@@ -183,6 +179,10 @@ export class DashboardDetailComponent implements OnInit, OnDestroy, AfterViewIni
         .pipe(takeWhile(() => this.isAlive))
         .subscribe(project => this.project$ = of(project) );
   }
+
+  /* ******************************************************* */
+  /*                  Grid Stack Management                  */
+  /* ******************************************************* */
 
   /**
    * Init the options for Grid Stack plugin
@@ -199,92 +199,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy, AfterViewIni
     };
   }
 
-  /**
-   * Create the dashboard websocket connection
-   *
-   * @param {Project} project The project wanted for the connection
-   */
-  createWebsocketConnection(project: Project) {
-    const websocketConfiguration: WSConfiguration = {
-      host: `${AbstractHttpService.BASE_WS_URL}?${AbstractHttpService.SPRING_ACCESS_TOKEN_ENPOINT}=${AuthenticationService.getToken()}`,
-      debug: true,
-      queue: {'init': false}
-    };
-
-    this.websocketService
-        .connect(websocketConfiguration)
-        .subscribe(() => {
-          const uniqueSubscription: Subscription = this.websocketService
-                                                       .subscribe(
-                                                           `/user/${project.token}-${this.screenCode}/queue/unique`,
-                                                           this.handleUniqueScreenEvent.bind(this)
-                                                       );
-
-          const globalSubscription: Subscription = this.websocketService
-                                                       .subscribe(
-                                                           `/user/${project.token}/queue/live`,
-                                                           this.handleGlobalScreenEvent.bind(this)
-                                                       );
-
-          this.websocketSubscriptions.push(uniqueSubscription);
-          this.websocketSubscriptions.push(globalSubscription);
-        });
-  }
-
-  /**
-   * Manage the event sent by the server (destination : A specified screen)
-   *
-   * @param {WSUpdateEvent} updateEvent The message received
-   * @param headers The headers of the websocket event
-   */
-  handleUniqueScreenEvent(updateEvent: WSUpdateEvent, headers: any) {
-    console.log(`uniqueScreenEvent - ${updateEvent}`);
-  }
-
-  /**
-   * Manage the event sent by the server (destination : Every screen connected to this project)
-   *
-   * @param {WSUpdateEvent} updateEvent The message received
-   * @param headers The headers of the websocket event
-   */
-  handleGlobalScreenEvent(updateEvent: WSUpdateEvent, headers: any) {
-    if (updateEvent.type === WSUpdateType.WIDGET) {
-      const projectWidget: ProjectWidget = updateEvent.content;
-      if (projectWidget) {
-        this.dashboardService.updateWidgetHtmlFromProjetWidgetId(updateEvent.content.id, projectWidget.instantiateHtml);
-      }
-    }
-
-    if (updateEvent.type === WSUpdateType.POSITION) {
-      const currentProject: Project = this.dashboardService.currendDashbordSubject.getValue();
-      this.dashboardService
-          .getOneById(currentProject.id)
-          .subscribe(project => {
-            this.isGridItemInit = false;
-            this.dashboardService.currendDashbordSubject.next(project);
-          });
-    }
-
-    if (updateEvent.type === WSUpdateType.GRID) {
-      const project: Project = updateEvent.content;
-      if (project) {
-        this.isGridItemInit = false;
-        this.dashboardService.currendDashbordSubject.next(project);
-      }
-    }
-  }
-
-  /**
-   * Unsubcribe and disconnect from websockets
-   */
-  unsubscribeToWebsockets() {
-    this.websocketSubscriptions.forEach( (websocketSubscription: Subscription, index: number) => {
-      this.websocketService.unsubscribe(websocketSubscription);
-      this.websocketSubscriptions.splice(index, 1);
-    });
-
-    this.websocketService.disconnect();
-  }
+  /* *********  Common (Grid + Widget) CSS Management ******* */
 
   /**
    * Get the CSS for the grid
@@ -299,79 +214,6 @@ export class DashboardDetailComponent implements OnInit, OnDestroy, AfterViewIni
           ${css}
         }
       </style>
-    `;
-  }
-
-  /**
-   * Get the html/CSS code for the widget
-   *
-   * @param {ProjectWidget} projectWidget The widget
-   * @returns {SafeHtml} The html as SafeHtml
-   */
-  getHtmlAndCss(projectWidget: ProjectWidget): string {
-    return `
-      <style>
-        ${projectWidget.widget.cssContent}
-        ${projectWidget.customStyle ? projectWidget.customStyle  : '' }
-      </style>
-
-      ${this.getActionButtonsHtml(projectWidget)}
-      ${projectWidget.instantiateHtml}
-    `;
-  }
-
-  /**
-   * Get the html for the action buttons
-   *
-   * @param {ProjectWidget} projectWidget The project widget
-   * @returns {string} The html string
-   */
-  getActionButtonsHtml(projectWidget: ProjectWidget): string {
-    return `
-      <button id="delete-${projectWidget.id}"
-              name="delete-${projectWidget.id}"
-              class="btn-widget btn-widget-delete"
-              role="button"
-              data-project-widget-id="${projectWidget.id}"
-              aria-disabled="false">
-        <mat-icon class="material-icons">delete_forever</mat-icon>
-      </button>
-
-      <button id="edit-${projectWidget.id}"
-              name="edit-${projectWidget.id}"
-              class="btn-widget btn-widget-edit"
-              role="button"
-              data-project-widget-id="${projectWidget.id}"
-              aria-disabled="false">
-        <mat-icon class="material-icons">edit</mat-icon>
-      </button>
-    `;
-  }
-
-  /**
-   * Get the css for widget action buttons
-   *
-   * @returns {string}
-   */
-  getActionButtonsCss(): string {
-    return `
-      .widget .btn-widget {
-        position: absolute;
-        background-color: rgba(66,66,66,0.6);
-        color: #cfd2da;
-        border: none;
-        cursor: pointer;
-        z-index: 20;
-      }
-      .widget .btn-widget .material-icons {
-        font-size: 16px;
-      }
-      .widget .btn-widget.btn-widget-delete {
-        right: 0;
-      }
-      .widget .btn-widget.btn-widget-edit {
-        right: 34px;
-      }
     `;
   }
 
@@ -429,6 +271,220 @@ export class DashboardDetailComponent implements OnInit, OnDestroy, AfterViewIni
         </style>
     `;
   }
+
+  /* ************ Unique Widget HTML and CSS Management ************* */
+
+  /**
+   * Get the html/CSS code for the widget
+   *
+   * @param {ProjectWidget} projectWidget The widget
+   * @returns {SafeHtml} The html as SafeHtml
+   */
+  getHtmlAndCss(projectWidget: ProjectWidget): string {
+    return `
+      <style>
+        ${projectWidget.widget.cssContent}
+        ${projectWidget.customStyle ? projectWidget.customStyle  : '' }
+      </style>
+
+      ${this.getActionButtonsHtml(projectWidget)}
+      ${projectWidget.instantiateHtml}
+    `;
+  }
+
+  /* *************** Widget Action buttons (CSS, HTML, Bindings) ************** */
+  /**
+   * Get the css for widget action buttons
+   *
+   * @returns {string}
+   */
+  getActionButtonsCss(): string {
+    return `
+      .widget .btn-widget {
+        position: absolute;
+        background-color: rgba(66,66,66,0.6);
+        color: #cfd2da;
+        border: none;
+        cursor: pointer;
+        z-index: 20;
+      }
+      .widget .btn-widget .material-icons {
+        font-size: 16px;
+      }
+      .widget .btn-widget.btn-widget-delete {
+        right: 0;
+      }
+      .widget .btn-widget.btn-widget-edit {
+        right: 34px;
+      }
+    `;
+  }
+
+  /**
+   * Get the html for the action buttons
+   *
+   * @param {ProjectWidget} projectWidget The project widget
+   * @returns {string} The html string
+   */
+  getActionButtonsHtml(projectWidget: ProjectWidget): string {
+    return `
+      <button id="delete-${projectWidget.id}"
+              name="delete-${projectWidget.id}"
+              class="btn-widget btn-widget-delete"
+              role="button"
+              data-project-widget-id="${projectWidget.id}"
+              aria-disabled="false">
+        <mat-icon class="material-icons">delete_forever</mat-icon>
+      </button>
+
+      <button id="edit-${projectWidget.id}"
+              name="edit-${projectWidget.id}"
+              class="btn-widget btn-widget-edit"
+              role="button"
+              data-project-widget-id="${projectWidget.id}"
+              aria-disabled="false">
+        <mat-icon class="material-icons">edit</mat-icon>
+      </button>
+    `;
+  }
+
+  /**
+   * Bind delete events for each delete button element
+   *
+   * @param {QueryList<any>} projectWidgetElements The project widget elements
+   */
+  bindDeleteProjectWidgetEvent(projectWidgetElements: QueryList<any>) {
+    projectWidgetElements.forEach((projectWidgetElement: ElementRef) => {
+      const deleteButton: any = projectWidgetElement.nativeElement.querySelector('.btn-widget-delete');
+      if (deleteButton) {
+        fromEvent<MouseEvent>(deleteButton, 'click')
+            .pipe(
+                takeWhile(() => this.isAlive && this.isGridItemInit),
+                map((mouseEvent: MouseEvent) => mouseEvent.toElement.closest('.widget').querySelector('.btn-widget-delete'))
+            )
+            .subscribe((deleteButtonElement: any) => {
+              this.deleteProjectWidgetFromDashboard(+deleteButtonElement.getAttribute('data-project-widget-id'));
+            });
+      }
+    });
+  }
+
+  /**
+   * Bind edit events for each edit button elements
+   *
+   * @param {QueryList<any>} projectWidgetElements The list of elements
+   */
+  bindEditProjectWidgetEvent(projectWidgetElements: QueryList<any>) {
+    projectWidgetElements.forEach((projectWidgetElement: ElementRef) => {
+      const editButton: any = projectWidgetElement.nativeElement.quarySelector('.btn-widget-edit');
+      if (editButton) {
+        fromEvent<MouseEvent>(editButton, 'click')
+            .pipe(
+                takeWhile(() => this.isAlive && this.isGridItemInit),
+                map((mouseEvent: MouseEvent) => mouseEvent.toElement.closest('.widget').querySelector('.btn-widget-edit'))
+            )
+            .subscribe((editButtonElement: any) => {
+
+            });
+      }
+    });
+
+  }
+
+  /* ******************************************************* */
+  /*                  Websocket Management                   */
+  /* ******************************************************* */
+
+  /**
+   * Unsubcribe and disconnect from websockets
+   */
+  unsubscribeToWebsockets() {
+    this.websocketSubscriptions.forEach( (websocketSubscription: Subscription, index: number) => {
+      this.websocketService.unsubscribe(websocketSubscription);
+      this.websocketSubscriptions.splice(index, 1);
+    });
+
+    this.websocketService.disconnect();
+  }
+
+  /**
+   * Create the dashboard websocket connection
+   *
+   * @param {Project} project The project wanted for the connection
+   */
+  createWebsocketConnection(project: Project) {
+    const websocketConfiguration: WSConfiguration = {
+      host: `${AbstractHttpService.BASE_WS_URL}?${AbstractHttpService.SPRING_ACCESS_TOKEN_ENPOINT}=${AuthenticationService.getToken()}`,
+      debug: true,
+      queue: {'init': false}
+    };
+
+    this.websocketService
+        .connect(websocketConfiguration)
+        .subscribe(() => {
+          const uniqueSubscription: Subscription = this.websocketService
+              .subscribe(
+                  `/user/${project.token}-${this.screenCode}/queue/unique`,
+                  this.handleUniqueScreenEvent.bind(this)
+              );
+
+          const globalSubscription: Subscription = this.websocketService
+              .subscribe(
+                  `/user/${project.token}/queue/live`,
+                  this.handleGlobalScreenEvent.bind(this)
+              );
+
+          this.websocketSubscriptions.push(uniqueSubscription);
+          this.websocketSubscriptions.push(globalSubscription);
+        });
+  }
+
+  /**
+   * Manage the event sent by the server (destination : A specified screen)
+   *
+   * @param {WSUpdateEvent} updateEvent The message received
+   * @param headers The headers of the websocket event
+   */
+  handleUniqueScreenEvent(updateEvent: WSUpdateEvent, headers: any) {
+    console.log(`uniqueScreenEvent - ${updateEvent}`);
+  }
+
+  /**
+   * Manage the event sent by the server (destination : Every screen connected to this project)
+   *
+   * @param {WSUpdateEvent} updateEvent The message received
+   * @param headers The headers of the websocket event
+   */
+  handleGlobalScreenEvent(updateEvent: WSUpdateEvent, headers: any) {
+    if (updateEvent.type === WSUpdateType.WIDGET) {
+      const projectWidget: ProjectWidget = updateEvent.content;
+      if (projectWidget) {
+        this.dashboardService.updateWidgetHtmlFromProjetWidgetId(updateEvent.content.id, projectWidget.instantiateHtml);
+      }
+    }
+
+    if (updateEvent.type === WSUpdateType.POSITION) {
+      const currentProject: Project = this.dashboardService.currendDashbordSubject.getValue();
+      this.dashboardService
+          .getOneById(currentProject.id)
+          .subscribe(project => {
+            this.isGridItemInit = false;
+            this.dashboardService.currendDashbordSubject.next(project);
+          });
+    }
+
+    if (updateEvent.type === WSUpdateType.GRID) {
+      const project: Project = updateEvent.content;
+      if (project) {
+        this.isGridItemInit = false;
+        this.dashboardService.currendDashbordSubject.next(project);
+      }
+    }
+  }
+
+  /* ******************************************************* */
+  /*                  REST Management                        */
+  /* ******************************************************* */
 
   /**
    * Delete a project widget from a dashboard
@@ -488,12 +544,4 @@ export class DashboardDetailComponent implements OnInit, OnDestroy, AfterViewIni
     }
   }
 
-  /**
-   * Called when the component is getting destroy
-   */
-  ngOnDestroy() {
-    this.isAlive = false;
-
-    this.unsubscribeToWebsockets();
-  }
 }
