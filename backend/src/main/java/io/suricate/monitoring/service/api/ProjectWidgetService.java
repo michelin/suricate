@@ -28,6 +28,7 @@ import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.entity.widget.Widget;
 import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.model.enums.WidgetState;
+import io.suricate.monitoring.model.mapper.project.ProjectMapper;
 import io.suricate.monitoring.model.mapper.project.ProjectWidgetMapper;
 import io.suricate.monitoring.repository.ProjectWidgetRepository;
 import io.suricate.monitoring.service.scheduler.DashboardScheduleService;
@@ -83,6 +84,11 @@ public class ProjectWidgetService {
     private final MustacheFactory mustacheFactory;
 
     /**
+     * The project mapper used for manage model/dto object
+     */
+    private final ProjectMapper projectMapper;
+
+    /**
      * The application context
      */
     private final ApplicationContext ctx;
@@ -94,6 +100,7 @@ public class ProjectWidgetService {
      * @param dashboardWebSocketService The dashboard websocket service
      * @param dashboardScheduleService The dashboard scheduler
      * @param mustacheFactory The mustache factory (HTML template)
+     * @param projectMapper The project mapper
      * @param ctx The application context
      */
     @Autowired
@@ -101,11 +108,13 @@ public class ProjectWidgetService {
                                 final MustacheFactory mustacheFactory,
                                 final DashboardWebSocketService dashboardWebSocketService,
                                 @Lazy final DashboardScheduleService dashboardScheduleService,
+                                final ProjectMapper projectMapper,
                                 final ApplicationContext ctx) {
         this.projectWidgetRepository = projectWidgetRepository;
         this.dashboardWebsocketService = dashboardWebSocketService;
         this.dashboardScheduleService = dashboardScheduleService;
         this.mustacheFactory = mustacheFactory;
+        this.projectMapper = projectMapper;
         this.ctx = ctx;
     }
 
@@ -142,7 +151,9 @@ public class ProjectWidgetService {
         dashboardScheduleService.scheduleWidget(projectWidget.getId());
 
         // Update grid
-        dashboardWebsocketService.updateGlobalScreensByProjectToken(projectWidget.getProject().getToken(),  new UpdateEvent(UpdateType.GRID));
+        UpdateEvent updateEvent = new UpdateEvent(UpdateType.GRID);
+        updateEvent.setContent(projectMapper.toProjectDtoDefault(projectWidget.getProject()));
+        dashboardWebsocketService.updateGlobalScreensByProjectToken(projectWidget.getProject().getToken(), updateEvent);
 
         return projectWidget;
     }
@@ -185,16 +196,19 @@ public class ProjectWidgetService {
     /**
      * Method used to remove widget from the dashboard
      *
-     * @param projectId the project id
+     * @param project the project
      * @param projectWidgetId the projectwidget id
      */
     @Transactional
-    public void removeWidgetFromDashboard(Long projectId, Long projectWidgetId){
+    public void removeWidgetFromDashboard(Project project, Long projectWidgetId){
         ctx.getBean(NashornWidgetScheduler.class).cancelWidgetInstance(projectWidgetId);
-        projectWidgetRepository.deleteByProjectIdAndId(projectId, projectWidgetId);
+        projectWidgetRepository.deleteByProjectIdAndId(project.getId(), projectWidgetId);
         projectWidgetRepository.flush();
+
         // notify client
-        dashboardWebsocketService.updateGlobalScreensByProjectId(projectId, new UpdateEvent(UpdateType.GRID));
+        UpdateEvent updateEvent = new UpdateEvent(UpdateType.GRID);
+        updateEvent.setContent(projectMapper.toProjectDtoDefault(project));
+        dashboardWebsocketService.updateGlobalScreensByProjectId(project.getId(), updateEvent);
     }
 
 

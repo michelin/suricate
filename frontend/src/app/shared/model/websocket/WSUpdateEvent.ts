@@ -22,5 +22,5 @@ import {ProjectWidget} from '../dto/ProjectWidget';
 export class WSUpdateEvent {
   date: Date;
   type: WSUpdateType;
-  content: ProjectWidget;
+  content: any;
 }

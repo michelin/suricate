@@ -20,7 +20,7 @@ import {DashboardService} from '../dashboard.service';
 import {Project} from '../../../shared/model/dto/Project';
 import {DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import {Observable} from 'rxjs/Observable';
-import {takeWhile} from 'rxjs/operators';
+import {map, takeWhile} from 'rxjs/operators';
 import {of} from 'rxjs/observable/of';
 import {AuthenticationService} from '../../authentication/authentication.service';
 import {AbstractHttpService} from '../../../shared/services/abstract-http.service';
@@ -33,6 +33,9 @@ import {WSUpdateType} from '../../../shared/model/websocket/enums/WSUpdateType';
 import {ProjectWidget} from '../../../shared/model/dto/ProjectWidget';
 import {NgGridItemEvent} from 'angular2-grid';
 import {ProjectWidgetPosition} from '../../../shared/model/dto/ProjectWidgetPosition';
+import {MatDialog} from '@angular/material';
+import {DeleteProjectWidgetDialogComponent} from '../components/delete-project-widget-dialog/delete-project-widget-dialog.component';
+import {fromEvent} from 'rxjs/observable/fromEvent';
 
 /**
  * Component that display a specific dashboard
@@ -90,6 +93,9 @@ export class DashboardDetailComponent implements OnInit, OnDestroy, AfterViewIni
    */
   isGridItemInit = false;
 
+  /**
+   * The list of projectWidgets rendered by the ngFor
+   */
   @ViewChildren('projectWidgetsRendered') projectWidgetsRendered: QueryList<any>;
 
   /**
@@ -99,12 +105,14 @@ export class DashboardDetailComponent implements OnInit, OnDestroy, AfterViewIni
    * @param {DashboardService} dashboardService The dashboard service
    * @param {ChangeDetectorRef} changeDetectorRef The change detector service
    * @param {DomSanitizer} domSanitizer The domSanitizer service
+   * @param {MatDialog} matDialog The material dialog service
    * @param {WebsocketService} websocketService The websocket service
    */
   constructor(private activatedRoute: ActivatedRoute,
               private dashboardService: DashboardService,
               private changeDetectorRef: ChangeDetectorRef,
               private domSanitizer: DomSanitizer,
+              private matDialog: MatDialog,
               private websocketService: WebsocketService) { }
 
   /**
@@ -138,10 +146,32 @@ export class DashboardDetailComponent implements OnInit, OnDestroy, AfterViewIni
     // Check when the projectWidgets *ngFor is ended
     this.projectWidgetsRendered
         .changes
-        .subscribe((forElements: QueryList<any>) => {
+        .subscribe((projectWidgetElements: QueryList<any>) => {
           this.isGridItemInit = true;
+          this.bindDeleteProjectWidgetEvent(projectWidgetElements);
         });
   }
+
+  /**
+   * Bind edit and delete events for each button element
+   * @param {QueryList<any>} projectWidgetElements The project widget elements
+   */
+  bindDeleteProjectWidgetEvent(projectWidgetElements: QueryList<any>) {
+    projectWidgetElements.forEach((projectWidgetElement: ElementRef) => {
+      const deleteButton: any = projectWidgetElement.nativeElement.querySelector('.btn-widget-delete');
+      if (deleteButton) {
+        fromEvent<MouseEvent>(deleteButton, 'click')
+            .pipe(
+                takeWhile(() => this.isAlive && this.isGridItemInit),
+                map((mouseEvent: MouseEvent) => mouseEvent.toElement.closest('.widget').querySelector('.btn-widget-delete'))
+            )
+            .subscribe((deleteButtonElement: any) => {
+              this.deleteProjectWidgetFromDashboard(+deleteButtonElement.getAttribute('data-project-widget-id'));
+            });
+      }
+    });
+  }
+
 
   /**
    * Init the Project subject subscription
@@ -219,7 +249,10 @@ export class DashboardDetailComponent implements OnInit, OnDestroy, AfterViewIni
    */
   handleGlobalScreenEvent(updateEvent: WSUpdateEvent, headers: any) {
     if (updateEvent.type === WSUpdateType.WIDGET) {
-      this.dashboardService.updateWidgetHtmlFromProjetWidgetId(updateEvent.content.id, updateEvent.content.instantiateHtml);
+      const projectWidget: ProjectWidget = updateEvent.content;
+      if (projectWidget) {
+        this.dashboardService.updateWidgetHtmlFromProjetWidgetId(updateEvent.content.id, projectWidget.instantiateHtml);
+      }
     }
 
     if (updateEvent.type === WSUpdateType.POSITION) {
@@ -230,6 +263,14 @@ export class DashboardDetailComponent implements OnInit, OnDestroy, AfterViewIni
             this.isGridItemInit = false;
             this.dashboardService.currendDashbordSubject.next(project);
           });
+    }
+
+    if (updateEvent.type === WSUpdateType.GRID) {
+      const project: Project = updateEvent.content;
+      if (project) {
+        this.isGridItemInit = false;
+        this.dashboardService.currendDashbordSubject.next(project);
+      }
     }
   }
 
@@ -291,6 +332,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy, AfterViewIni
               name="delete-${projectWidget.id}"
               class="btn-widget btn-widget-delete"
               role="button"
+              data-project-widget-id="${projectWidget.id}"
               aria-disabled="false">
         <mat-icon class="material-icons">delete_forever</mat-icon>
       </button>
@@ -299,6 +341,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy, AfterViewIni
               name="edit-${projectWidget.id}"
               class="btn-widget btn-widget-edit"
               role="button"
+              data-project-widget-id="${projectWidget.id}"
               aria-disabled="false">
         <mat-icon class="material-icons">edit</mat-icon>
       </button>
@@ -385,6 +428,33 @@ export class DashboardDetailComponent implements OnInit, OnDestroy, AfterViewIni
           ${this.getActionButtonsCss()}
         </style>
     `;
+  }
+
+  /**
+   * Delete a project widget from a dashboard
+   *
+   * @param {number} projectWidgetId The project widget id to delete
+   */
+  deleteProjectWidgetFromDashboard(projectWidgetId: number) {
+    const projectWidget: ProjectWidget = this.dashboardService.currendDashbordSubject.getValue()
+                                             .projectWidgets
+                                             .find((currentProjectWidget: ProjectWidget) => {
+                                               return currentProjectWidget.id === projectWidgetId;
+                                             });
+
+    if (projectWidget) {
+      const deleteProjectWidgetDialogRef = this.matDialog.open(DeleteProjectWidgetDialogComponent, {
+        data: {projectWidget: projectWidget}
+      });
+
+      deleteProjectWidgetDialogRef.afterClosed().subscribe(shouldDeleteProjectWidget => {
+        if (shouldDeleteProjectWidget) {
+          this.dashboardService
+              .deleteProjectWidgetFromProject(projectWidget.project.id, projectWidget.id)
+              .subscribe();
+        }
+      });
+    }
   }
 
   /**
