@@ -14,13 +14,22 @@
  * limitations under the License.
  */
 
-// The file contents for the current environment will overwrite these during build.
-// The build system defaults to the dev environment which uses `environment.ts`, but if you do
-// `ng build --env=prod` then `environment.prod.ts` will be used instead.
-// The list of which env maps to which file can be found in `.angular-cli.json`.
+import { Component, OnInit } from '@angular/core';
+import { environment } from '../../../../environments/environment';
 
-export const environment = {
-  production: false,
-  VERSION: require('../../package.json').version,
-  ENVIRONMENT: require('../../package.json').environment
-};
+@Component({
+  selector: 'app-pages-footer',
+  templateUrl: './pages-footer.component.html',
+  styleUrls: ['./pages-footer.component.css']
+})
+export class PagesFooterComponent implements OnInit {
+
+  public version: string = environment.VERSION;
+  public env: string = environment.ENVIRONMENT;
+
+  constructor() { }
+
+  ngOnInit() {
+  }
+
+}

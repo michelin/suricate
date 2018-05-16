@@ -35,6 +35,7 @@ import {StompService} from 'ng2-stomp-service/index';
 import {WebsocketService} from './services/websocket.service';
 import { ToastComponent } from './components/toast/toast.component';
 import {ToastService} from './components/toast/toast.service';
+import { PagesFooterComponent } from './components/pages-footer/pages-footer.component';
 import {SafeHtmlPipe} from './pipes/safe-html.pipe';
 import { SafeUrlPipe } from './pipes/safe-url.pipe';
 
@@ -58,6 +59,7 @@ import { SafeUrlPipe } from './pipes/safe-url.pipe';
       HomeActionsComponent,
       AddDashboardDialogComponent,
       ToastComponent,
+      PagesFooterComponent,
       SafeHtmlPipe,
       SafeUrlPipe
   ],
