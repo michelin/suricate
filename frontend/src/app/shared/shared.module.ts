@@ -36,6 +36,8 @@ import {WebsocketService} from './services/websocket.service';
 import { ToastComponent } from './components/toast/toast.component';
 import {ToastService} from './components/toast/toast.service';
 import { PagesFooterComponent } from './components/pages-footer/pages-footer.component';
+import {SafeHtmlPipe} from './pipes/safe-html.pipe';
+import { SafeUrlPipe } from './pipes/safe-url.pipe';
 
 @NgModule({
   imports: [
@@ -57,7 +59,9 @@ import { PagesFooterComponent } from './components/pages-footer/pages-footer.com
       HomeActionsComponent,
       AddDashboardDialogComponent,
       ToastComponent,
-      PagesFooterComponent
+      PagesFooterComponent,
+      SafeHtmlPipe,
+      SafeUrlPipe
   ],
   entryComponents: [
       AddWidgetDialogComponent,
@@ -75,7 +79,9 @@ import { PagesFooterComponent } from './components/pages-footer/pages-footer.com
       ColorPickerModule,
       PagesHeaderComponent,
       AddWidgetDialogComponent,
-      ToastComponent
+      ToastComponent,
+      SafeHtmlPipe,
+      SafeUrlPipe
   ],
   providers: [
       { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },

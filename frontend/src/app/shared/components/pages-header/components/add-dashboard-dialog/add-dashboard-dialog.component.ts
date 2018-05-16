@@ -169,7 +169,7 @@ export class AddDashboardDialogComponent implements OnInit {
       } else {
         this.dashboardService
             .editProject(this.projectAdded)
-            .subscribe(project => this.displayProject(project))
+            .subscribe(project => this.displayProject(project));
       }
     }
   }

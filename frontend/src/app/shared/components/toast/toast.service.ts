@@ -35,7 +35,7 @@ export class ToastService {
     return this.toastMessageSubject.asObservable();
   }
 
-  sendMessage(title, style?, content?,): void {
+  sendMessage(title, style?, content?): void {
     this.toastMessageSubject.next(new ToastMessage(title, content, style));
   }
 

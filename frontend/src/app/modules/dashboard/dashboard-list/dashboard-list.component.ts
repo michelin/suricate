@@ -130,7 +130,7 @@ export class DashboardListComponent implements AfterViewInit {
 
   /**
    * Delete a created dashboard
-   * 
+   *
    * @param {Project} project The dashboard to delete
    */
   openDialogDeleteDashboard(project: Project) {

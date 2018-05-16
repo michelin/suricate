@@ -32,6 +32,7 @@ import io.suricate.monitoring.service.api.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -91,7 +92,7 @@ public class ProjectController {
      */
     @Autowired
     public ProjectController(final ProjectService projectService,
-                             final ProjectWidgetService projectWidgetService,
+                             @Lazy final ProjectWidgetService projectWidgetService,
                              final UserService userService,
                              final ProjectMapper projectMapper,
                              final ProjectWidgetMapper projectWidgetMapper) {
@@ -387,5 +388,63 @@ public class ProjectController {
                 .cacheControl(CacheControl.noCache())
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(projectMapper.toProjectDtoDefault(projectOptional.get()));
+    }
+
+    /**
+     * Delete a project widget from a dashboard
+     *
+     * @param projectId The project ID
+     * @param projectWidgetId The project widget to delete
+     * @return The dashboard updated
+     */
+    @RequestMapping(value = "{projectId}/projectWidgets/{projectWidgetId}", method = RequestMethod.DELETE)
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<ProjectDto> deleteProjectWidgetFromProject(@PathVariable("projectId") Long projectId,
+                                                                     @PathVariable("projectWidgetId") Long projectWidgetId) {
+        Optional<Project> projectOptional = projectService.getOneById(projectId);
+        if(!projectOptional.isPresent()) {
+            return ResponseEntity.notFound().cacheControl(CacheControl.noCache()).build();
+        }
+
+        projectWidgetService.removeWidgetFromDashboard(projectOptional.get(), projectWidgetId);
+
+        return ResponseEntity
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .cacheControl(CacheControl.noCache())
+            .body(projectMapper.toProjectDtoDefault(projectOptional.get()));
+    }
+
+    /**
+     * Edit a project widget for a project
+     *
+     * @param projectId The project id
+     * @param projectWidgetId The project widget id
+     * @param projectWidgetDto The project widget updated
+     * @return The project updated
+     */
+    @RequestMapping(value = "{projectId}/projectWidgets/{projectWidgetId}", method = RequestMethod.PUT)
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<ProjectDto> editProjectWidgetFromProject(@PathVariable("projectId") Long projectId,
+                                                                   @PathVariable("projectWidgetId") Long projectWidgetId,
+                                                                   @RequestBody ProjectWidgetDto projectWidgetDto) {
+
+        Optional<ProjectWidget> projectWidgetOptional = projectWidgetService.findByProjectIdAndProjectWidgetId(projectId, projectWidgetId);
+        if(!projectWidgetOptional.isPresent()) {
+            return ResponseEntity.notFound().cacheControl(CacheControl.noCache()).build();
+        }
+
+        Optional<Project> projectOptional = projectService.getOneById(projectId);
+        if(!projectOptional.isPresent()) {
+            return ResponseEntity.notFound().cacheControl(CacheControl.noCache()).build();
+        }
+        ProjectWidget projectWidget = projectWidgetOptional.get();
+        projectWidgetService.updateProjectWidget(projectWidget, projectWidgetDto.getCustomStyle(), projectWidgetDto.getBackendConfig());
+
+        return ResponseEntity
+            .ok()
+            .cacheControl(CacheControl.noCache())
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(projectMapper.toProjectDtoDefault(projectOptional.get()));
     }
 }

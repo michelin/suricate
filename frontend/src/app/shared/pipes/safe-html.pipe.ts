@@ -16,11 +16,18 @@
  *
  */
 
-import {WSUpdateType} from './enums/WSUpdateType';
-import {ProjectWidget} from '../dto/ProjectWidget';
+import { Pipe, PipeTransform } from '@angular/core';
+import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 
-export class WSUpdateEvent {
-  date: Date;
-  type: WSUpdateType;
-  content: any;
+@Pipe({
+  name: 'safeHtml'
+})
+export class SafeHtmlPipe implements PipeTransform {
+
+  constructor(private domSanitizer: DomSanitizer) {}
+
+  transform(valueToSanitize: string): SafeHtml {
+    return this.domSanitizer.bypassSecurityTrustHtml(valueToSanitize);
+  }
+
 }
