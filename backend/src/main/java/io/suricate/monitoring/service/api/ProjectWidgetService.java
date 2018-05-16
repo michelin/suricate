@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheException;
 import com.github.mustachejava.MustacheFactory;
+import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
 import io.suricate.monitoring.model.dto.project.ProjectWidgetPositionDto;
 import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
 import io.suricate.monitoring.model.entity.project.Project;
@@ -31,6 +32,7 @@ import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.model.mapper.project.ProjectMapper;
 import io.suricate.monitoring.model.mapper.project.ProjectWidgetMapper;
 import io.suricate.monitoring.repository.ProjectWidgetRepository;
+import io.suricate.monitoring.service.nashorn.NashornService;
 import io.suricate.monitoring.service.scheduler.DashboardScheduleService;
 import io.suricate.monitoring.service.scheduler.NashornWidgetScheduler;
 import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
@@ -51,6 +53,7 @@ import java.io.StringWriter;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Project widget service
@@ -135,6 +138,17 @@ public class ProjectWidgetService {
      */
     public ProjectWidget getOne(final Long projectWidgetId) {
         return projectWidgetRepository.getOne(projectWidgetId);
+    }
+
+    /**
+     * Find a project widget by the project id and the project widget id
+     *
+     * @param projectId The project id
+     * @param projectWidgetId The project widget id
+     * @return The project widget as Optional
+     */
+    public Optional<ProjectWidget> findByProjectIdAndProjectWidgetId(final Long projectId, final Long projectWidgetId) {
+        return projectWidgetRepository.findByIdAndProject_Id(projectWidgetId, projectId);
     }
 
     /**
@@ -290,14 +304,24 @@ public class ProjectWidgetService {
     /**
      * Method used to update the configuration and custom css for project widget
      *
-     * @param projectWidgetId The project widget id
-     * @param style The custom css style
-     * @param backendConfig The backend configuration
-     *
+     * @param projectWidget The project widget id
+     * @param customStyle The new css style
+     * @param backendConfig The new config
      */
     @Transactional
-    public void updateProjectWidget(Long projectWidgetId, String style, String backendConfig){
-        projectWidgetRepository.updateConfig(projectWidgetId, style, backendConfig);
+    public void updateProjectWidget(ProjectWidget projectWidget, final String customStyle, final String backendConfig){
+        ctx.getBean(NashornWidgetScheduler.class).cancelWidgetInstance(projectWidget.getId());
+
+        projectWidget.setCustomStyle(customStyle);
+        projectWidget.setBackendConfig(backendConfig);
+        projectWidgetRepository.save(projectWidget);
+
+        dashboardScheduleService.scheduleWidget(projectWidget.getId());
+
+        // notify client
+        UpdateEvent updateEvent = new UpdateEvent(UpdateType.GRID);
+        updateEvent.setContent(projectMapper.toProjectDtoDefault(projectWidget.getProject()));
+        dashboardWebsocketService.updateGlobalScreensByProjectId(projectWidget.getProject().getId(), updateEvent);
     }
 
     /**

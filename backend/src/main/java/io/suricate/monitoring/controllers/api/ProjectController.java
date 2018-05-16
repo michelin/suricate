@@ -414,4 +414,37 @@ public class ProjectController {
             .cacheControl(CacheControl.noCache())
             .body(projectMapper.toProjectDtoDefault(projectOptional.get()));
     }
+
+    /**
+     * Edit a project widget for a project
+     *
+     * @param projectId The project id
+     * @param projectWidgetId The project widget id
+     * @param projectWidgetDto The project widget updated
+     * @return The project updated
+     */
+    @RequestMapping(value = "{projectId}/projectWidgets/{projectWidgetId}", method = RequestMethod.PUT)
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<ProjectDto> editProjectWidgetFromProject(@PathVariable("projectId") Long projectId,
+                                                                   @PathVariable("projectWidgetId") Long projectWidgetId,
+                                                                   @RequestBody ProjectWidgetDto projectWidgetDto) {
+
+        Optional<ProjectWidget> projectWidgetOptional = projectWidgetService.findByProjectIdAndProjectWidgetId(projectId, projectWidgetId);
+        if(!projectWidgetOptional.isPresent()) {
+            return ResponseEntity.notFound().cacheControl(CacheControl.noCache()).build();
+        }
+
+        Optional<Project> projectOptional = projectService.getOneById(projectId);
+        if(!projectOptional.isPresent()) {
+            return ResponseEntity.notFound().cacheControl(CacheControl.noCache()).build();
+        }
+        ProjectWidget projectWidget = projectWidgetOptional.get();
+        projectWidgetService.updateProjectWidget(projectWidget, projectWidgetDto.getCustomStyle(), projectWidgetDto.getBackendConfig());
+
+        return ResponseEntity
+            .ok()
+            .cacheControl(CacheControl.noCache())
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(projectMapper.toProjectDtoDefault(projectOptional.get()));
+    }
 }

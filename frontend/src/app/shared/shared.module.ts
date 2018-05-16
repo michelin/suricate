@@ -36,6 +36,7 @@ import {WebsocketService} from './services/websocket.service';
 import { ToastComponent } from './components/toast/toast.component';
 import {ToastService} from './components/toast/toast.service';
 import {SafeHtmlPipe} from './pipes/safe-html.pipe';
+import { SafeUrlPipe } from './pipes/safe-url.pipe';
 
 @NgModule({
   imports: [
@@ -57,7 +58,8 @@ import {SafeHtmlPipe} from './pipes/safe-html.pipe';
       HomeActionsComponent,
       AddDashboardDialogComponent,
       ToastComponent,
-      SafeHtmlPipe
+      SafeHtmlPipe,
+      SafeUrlPipe
   ],
   entryComponents: [
       AddWidgetDialogComponent,
@@ -76,7 +78,8 @@ import {SafeHtmlPipe} from './pipes/safe-html.pipe';
       PagesHeaderComponent,
       AddWidgetDialogComponent,
       ToastComponent,
-      SafeHtmlPipe
+      SafeHtmlPipe,
+      SafeUrlPipe
   ],
   providers: [
       { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },

@@ -36,6 +36,8 @@ import {ProjectWidgetPosition} from '../../../shared/model/dto/ProjectWidgetPosi
 import {MatDialog} from '@angular/material';
 import {DeleteProjectWidgetDialogComponent} from '../components/delete-project-widget-dialog/delete-project-widget-dialog.component';
 import {fromEvent} from 'rxjs/observable/fromEvent';
+import {AddWidgetDialogComponent} from '../../../shared/components/pages-header/components/add-widget-dialog/add-widget-dialog.component';
+import {EditProjectWidgetDialogComponent} from '../components/edit-project-widget-dialog/edit-project-widget-dialog.component';
 
 /**
  * Component that display a specific dashboard
@@ -376,7 +378,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy, AfterViewIni
    */
   bindEditProjectWidgetEvent(projectWidgetElements: QueryList<any>) {
     projectWidgetElements.forEach((projectWidgetElement: ElementRef) => {
-      const editButton: any = projectWidgetElement.nativeElement.quarySelector('.btn-widget-edit');
+      const editButton: any = projectWidgetElement.nativeElement.querySelector('.btn-widget-edit');
       if (editButton) {
         fromEvent<MouseEvent>(editButton, 'click')
             .pipe(
@@ -384,7 +386,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy, AfterViewIni
                 map((mouseEvent: MouseEvent) => mouseEvent.toElement.closest('.widget').querySelector('.btn-widget-edit'))
             )
             .subscribe((editButtonElement: any) => {
-
+              this.editProjectWidgetFromDashboard(+editButtonElement.getAttribute('data-project-widget-id'));
             });
       }
     });
@@ -513,12 +515,29 @@ export class DashboardDetailComponent implements OnInit, OnDestroy, AfterViewIni
     }
   }
 
+  editProjectWidgetFromDashboard(projectWidgetId: number) {
+    const projectWidget: ProjectWidget = this.dashboardService.currendDashbordSubject.getValue()
+                                             .projectWidgets
+                                             .find((currentProjectWidget: ProjectWidget) => {
+                                               return currentProjectWidget.id === projectWidgetId;
+                                             });
+
+    if (projectWidget) {
+      this.matDialog.open(EditProjectWidgetDialogComponent, {
+        minWidth: 700,
+        data: {projectWidget: projectWidget}
+      });
+    }
+  }
+
   /**
    * Update the project widget position for every widgets
    *
    * @param {NgGridItemEvent[]} gridItemEvents The list of grid item events
    */
   updateProjectWidgetsPosition(gridItemEvents: NgGridItemEvent[]) {
+    const currentProject: Project = this.dashboardService.currendDashbordSubject.getValue();
+
     // update the position only if the grid item has been init
     if (this.isGridItemInit) {
       const projectWidgetPositions: ProjectWidgetPosition[] = [];
@@ -536,11 +555,15 @@ export class DashboardDetailComponent implements OnInit, OnDestroy, AfterViewIni
       });
 
       this.dashboardService
-          .updateWidgetPositionForProject(
-              this.dashboardService.currendDashbordSubject.getValue().id,
-              projectWidgetPositions
-          )
+          .updateWidgetPositionForProject(currentProject.id, projectWidgetPositions)
           .subscribe();
+    }
+
+    // We check if the grid item is init, if it's we change the boolean.
+    // Without this the grid item plugin will send request to the server at the initialisation of the component
+    // (probably a bug of the "OnItemChange" event)
+    if (!this.isGridItemInit && gridItemEvents.length === currentProject.projectWidgets.length) {
+      this.isGridItemInit = true;
     }
   }
 

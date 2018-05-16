@@ -277,4 +277,12 @@ export class DashboardService extends AbstractHttpService {
             })
         );
   }
+
+  editProjectWidgetFromProject(projectId: number, projectWidget: ProjectWidget): Observable<Project> {
+    const url = `${DashboardService.PROJECTS_BASE_URL}/${projectId}/projectWidgets/${projectWidget.id}`;
+
+    return this
+        .httpClient
+        .put<Project>(url, projectWidget);
+  }
 }
