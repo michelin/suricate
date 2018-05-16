@@ -254,4 +254,35 @@ export class DashboardService extends AbstractHttpService {
             })
         );
   }
+
+  /**
+   * Delete a project widget from a dashboard
+   *
+   * @param {number} projectId The project id
+   * @param {number} projectWidgetId The project widget id to delete
+   * @returns {Observable<Project>} The project updated
+   */
+  deleteProjectWidgetFromProject(projectId: number, projectWidgetId: number): Observable<Project> {
+    const url = `${DashboardService.PROJECTS_BASE_URL}/${projectId}/projectWidgets/${projectWidgetId}`;
+
+    return this
+        .httpClient
+        .delete<Project>(url)
+        .pipe(
+            map(project => {
+              this.updateSubject(project, DashboardService.ACTION_UPDATE);
+              this.currendDashbordSubject.next(project);
+
+              return project;
+            })
+        );
+  }
+
+  editProjectWidgetFromProject(projectId: number, projectWidget: ProjectWidget): Observable<Project> {
+    const url = `${DashboardService.PROJECTS_BASE_URL}/${projectId}/projectWidgets/${projectWidget.id}`;
+
+    return this
+        .httpClient
+        .put<Project>(url, projectWidget);
+  }
 }

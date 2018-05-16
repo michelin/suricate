@@ -35,6 +35,8 @@ import {StompService} from 'ng2-stomp-service/index';
 import {WebsocketService} from './services/websocket.service';
 import { ToastComponent } from './components/toast/toast.component';
 import {ToastService} from './components/toast/toast.service';
+import {SafeHtmlPipe} from './pipes/safe-html.pipe';
+import { SafeUrlPipe } from './pipes/safe-url.pipe';
 
 @NgModule({
   imports: [
@@ -55,7 +57,9 @@ import {ToastService} from './components/toast/toast.service';
       DashboardActionsComponent,
       HomeActionsComponent,
       AddDashboardDialogComponent,
-      ToastComponent
+      ToastComponent,
+      SafeHtmlPipe,
+      SafeUrlPipe
   ],
   entryComponents: [
       AddWidgetDialogComponent,
@@ -73,7 +77,9 @@ import {ToastService} from './components/toast/toast.service';
       ColorPickerModule,
       PagesHeaderComponent,
       AddWidgetDialogComponent,
-      ToastComponent
+      ToastComponent,
+      SafeHtmlPipe,
+      SafeUrlPipe
   ],
   providers: [
       { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },

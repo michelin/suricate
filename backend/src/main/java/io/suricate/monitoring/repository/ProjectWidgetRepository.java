@@ -27,6 +27,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Repository used for request Project widget in database
@@ -120,22 +121,5 @@ public interface ProjectWidgetRepository extends JpaRepository<ProjectWidget, Lo
      * @param projectId project id
      * @return project widget id
      */
-    ProjectWidget findByIdAndProject_Id(Long projectWidgetId, Long projectId);
-
-    /**
-     * Method used to update the config of a widget instance
-     * @param projectWidgetId the widget id
-     * @param style The custom css
-     * @param backendConfig widget instance configuration
-     * @return the number of row updated
-     */
-    @Modifying
-    @Query("UPDATE ProjectWidget " +
-            "SET customStyle = :customStyle, " +
-            "backendConfig = :backendConfig, " +
-            "lastSuccessDate = null, " +
-            "log = null " +
-            "WHERE id = :id")
-    int updateConfig(@Param("id") Long projectWidgetId, @Param("customStyle") String style,@Param("backendConfig") String backendConfig);
-
+    Optional<ProjectWidget> findByIdAndProject_Id(Long projectWidgetId, Long projectId);
 }

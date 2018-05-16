@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheException;
 import com.github.mustachejava.MustacheFactory;
+import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
 import io.suricate.monitoring.model.dto.project.ProjectWidgetPositionDto;
 import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
 import io.suricate.monitoring.model.entity.project.Project;
@@ -28,8 +29,10 @@ import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.entity.widget.Widget;
 import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.model.enums.WidgetState;
+import io.suricate.monitoring.model.mapper.project.ProjectMapper;
 import io.suricate.monitoring.model.mapper.project.ProjectWidgetMapper;
 import io.suricate.monitoring.repository.ProjectWidgetRepository;
+import io.suricate.monitoring.service.nashorn.NashornService;
 import io.suricate.monitoring.service.scheduler.DashboardScheduleService;
 import io.suricate.monitoring.service.scheduler.NashornWidgetScheduler;
 import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
@@ -50,6 +53,7 @@ import java.io.StringWriter;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Project widget service
@@ -83,6 +87,11 @@ public class ProjectWidgetService {
     private final MustacheFactory mustacheFactory;
 
     /**
+     * The project mapper used for manage model/dto object
+     */
+    private final ProjectMapper projectMapper;
+
+    /**
      * The application context
      */
     private final ApplicationContext ctx;
@@ -94,6 +103,7 @@ public class ProjectWidgetService {
      * @param dashboardWebSocketService The dashboard websocket service
      * @param dashboardScheduleService The dashboard scheduler
      * @param mustacheFactory The mustache factory (HTML template)
+     * @param projectMapper The project mapper
      * @param ctx The application context
      */
     @Autowired
@@ -101,11 +111,13 @@ public class ProjectWidgetService {
                                 final MustacheFactory mustacheFactory,
                                 final DashboardWebSocketService dashboardWebSocketService,
                                 @Lazy final DashboardScheduleService dashboardScheduleService,
+                                final ProjectMapper projectMapper,
                                 final ApplicationContext ctx) {
         this.projectWidgetRepository = projectWidgetRepository;
         this.dashboardWebsocketService = dashboardWebSocketService;
         this.dashboardScheduleService = dashboardScheduleService;
         this.mustacheFactory = mustacheFactory;
+        this.projectMapper = projectMapper;
         this.ctx = ctx;
     }
 
@@ -129,6 +141,17 @@ public class ProjectWidgetService {
     }
 
     /**
+     * Find a project widget by the project id and the project widget id
+     *
+     * @param projectId The project id
+     * @param projectWidgetId The project widget id
+     * @return The project widget as Optional
+     */
+    public Optional<ProjectWidget> findByProjectIdAndProjectWidgetId(final Long projectId, final Long projectWidgetId) {
+        return projectWidgetRepository.findByIdAndProject_Id(projectWidgetId, projectId);
+    }
+
+    /**
      * Add a new project widget
      *
      * @param projectWidget The project widget to add
@@ -142,7 +165,9 @@ public class ProjectWidgetService {
         dashboardScheduleService.scheduleWidget(projectWidget.getId());
 
         // Update grid
-        dashboardWebsocketService.updateGlobalScreensByProjectToken(projectWidget.getProject().getToken(),  new UpdateEvent(UpdateType.GRID));
+        UpdateEvent updateEvent = new UpdateEvent(UpdateType.GRID);
+        updateEvent.setContent(projectMapper.toProjectDtoDefault(projectWidget.getProject()));
+        dashboardWebsocketService.updateGlobalScreensByProjectToken(projectWidget.getProject().getToken(), updateEvent);
 
         return projectWidget;
     }
@@ -185,16 +210,19 @@ public class ProjectWidgetService {
     /**
      * Method used to remove widget from the dashboard
      *
-     * @param projectId the project id
+     * @param project the project
      * @param projectWidgetId the projectwidget id
      */
     @Transactional
-    public void removeWidgetFromDashboard(Long projectId, Long projectWidgetId){
+    public void removeWidgetFromDashboard(Project project, Long projectWidgetId){
         ctx.getBean(NashornWidgetScheduler.class).cancelWidgetInstance(projectWidgetId);
-        projectWidgetRepository.deleteByProjectIdAndId(projectId, projectWidgetId);
+        projectWidgetRepository.deleteByProjectIdAndId(project.getId(), projectWidgetId);
         projectWidgetRepository.flush();
+
         // notify client
-        dashboardWebsocketService.updateGlobalScreensByProjectId(projectId, new UpdateEvent(UpdateType.GRID));
+        UpdateEvent updateEvent = new UpdateEvent(UpdateType.GRID);
+        updateEvent.setContent(projectMapper.toProjectDtoDefault(project));
+        dashboardWebsocketService.updateGlobalScreensByProjectId(project.getId(), updateEvent);
     }
 
 
@@ -276,14 +304,24 @@ public class ProjectWidgetService {
     /**
      * Method used to update the configuration and custom css for project widget
      *
-     * @param projectWidgetId The project widget id
-     * @param style The custom css style
-     * @param backendConfig The backend configuration
-     *
+     * @param projectWidget The project widget id
+     * @param customStyle The new css style
+     * @param backendConfig The new config
      */
     @Transactional
-    public void updateProjectWidget(Long projectWidgetId, String style, String backendConfig){
-        projectWidgetRepository.updateConfig(projectWidgetId, style, backendConfig);
+    public void updateProjectWidget(ProjectWidget projectWidget, final String customStyle, final String backendConfig){
+        ctx.getBean(NashornWidgetScheduler.class).cancelWidgetInstance(projectWidget.getId());
+
+        projectWidget.setCustomStyle(customStyle);
+        projectWidget.setBackendConfig(backendConfig);
+        projectWidgetRepository.save(projectWidget);
+
+        dashboardScheduleService.scheduleWidget(projectWidget.getId());
+
+        // notify client
+        UpdateEvent updateEvent = new UpdateEvent(UpdateType.GRID);
+        updateEvent.setContent(projectMapper.toProjectDtoDefault(projectWidget.getProject()));
+        dashboardWebsocketService.updateGlobalScreensByProjectId(projectWidget.getProject().getId(), updateEvent);
     }
 
     /**
