@@ -46,6 +46,7 @@ export class EditProjectWidgetDialogComponent implements OnInit {
    * Constructor
    *
    * @param data The data give to the dialog
+   * @param dialogRef The mat dialog ref
    * @param dashboardService The dashboard service to inject
    * @param toastService The notification service
    */
