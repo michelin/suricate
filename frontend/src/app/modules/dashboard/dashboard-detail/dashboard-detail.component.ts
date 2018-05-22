@@ -27,7 +27,6 @@ import {AbstractHttpService} from '../../../shared/services/abstract-http.servic
 import {WSConfiguration} from '../../../shared/model/websocket/WSConfiguration';
 import {WebsocketService} from '../../../shared/services/websocket.service';
 import {Subscription} from 'rxjs/Subscription';
-import {NumberUtils} from '../../../shared/utils/NumberUtils';
 import {WSUpdateEvent} from '../../../shared/model/websocket/WSUpdateEvent';
 import {WSUpdateType} from '../../../shared/model/websocket/enums/WSUpdateType';
 import {ProjectWidget} from '../../../shared/model/dto/ProjectWidget';
@@ -50,20 +49,6 @@ import {EditProjectWidgetDialogComponent} from '../components/edit-project-widge
 export class DashboardDetailComponent implements OnInit, OnDestroy, AfterViewInit {
 
   /**
-   * Define the min bound for the screen code random generation
-   *
-   * @type {number} The min bound
-   */
-  private readonly MIN_SCREEN_CODE_BOUND = 100000;
-
-  /**
-   * Define the max bound for the screen code random generation
-   *
-   * @type {number} The max bound
-   */
-  private readonly MAX_SCREEN_CODE_BOUND = 999999;
-
-  /**
    * Used for keep the subscription of subjects/Obsevables open
    *
    * @type {boolean} True if we keep the connection, False if we have to unsubscribe
@@ -84,11 +69,6 @@ export class DashboardDetailComponent implements OnInit, OnDestroy, AfterViewIni
    * Save every web socket subscriptions event
    */
   websocketSubscriptions: Subscription[] = [];
-
-  /**
-   * Screen code used for websocket communication as clientId
-   */
-  screenCode: number;
 
   /**
    * True if the grid items has been initialized false otherwise
@@ -136,8 +116,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy, AfterViewIni
             this.initGridStackOptions(project);
             // Unsubcribe every websockets if we have change of dashboard
             this.unsubscribeToWebsockets();
-            // Screen code generation
-            this.screenCode = NumberUtils.getRandomIntBetween(this.MIN_SCREEN_CODE_BOUND, this.MAX_SCREEN_CODE_BOUND);
+
             // Subscribe to the new dashboard
             this.createWebsocketConnection(project);
             this.dashboardService.currendDashbordSubject.next(project);
@@ -426,7 +405,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy, AfterViewIni
         .subscribe(() => {
           const uniqueSubscription: Subscription = this.websocketService
               .subscribe(
-                  `/user/${project.token}-${this.screenCode}/queue/unique`,
+                  `/user/${project.token}-${this.websocketService.screenCode}/queue/unique`,
                   this.handleUniqueScreenEvent.bind(this)
               );
 

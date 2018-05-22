@@ -22,7 +22,7 @@ import {Subscription} from 'rxjs/Subscription';
 import {Observable} from 'rxjs/Observable';
 import {empty} from 'rxjs/observable/empty';
 import {fromPromise} from 'rxjs/observable/fromPromise';
-import {of} from 'rxjs/observable/of';
+import {NumberUtils} from '../utils/NumberUtils';
 
 /**
  * Service that manage the websockets connections
@@ -36,8 +36,24 @@ export class WebsocketService extends AbstractHttpService {
   public static readonly WS_STATUS_CONNECTED = 'CONNECTED';
 
 
-  /** Keep the number of connections in memory **/
-  nbActiveSubscription = 0;
+  /**
+   * Define the min bound for the screen code random generation
+   *
+   * @type {number} The min bound
+   */
+  private readonly MIN_SCREEN_CODE_BOUND = 100000;
+
+  /**
+   * Define the max bound for the screen code random generation
+   *
+   * @type {number} The max bound
+   */
+  private readonly MAX_SCREEN_CODE_BOUND = 999999;
+
+  /**
+   * Screen code used for websocket communication as clientId
+   */
+  private _screenCode: number;
 
   /**
    * The constructor of the service
@@ -46,6 +62,26 @@ export class WebsocketService extends AbstractHttpService {
    */
   constructor(private stompService: StompService) {
     super();
+  }
+
+  /**
+   * Get the screen code
+   * @returns {number} The screen code
+   */
+  get screenCode(): number {
+    if (!this._screenCode) {
+      this.generateScreenCode();
+    }
+
+    return this._screenCode;
+  }
+
+  /**
+   * Generate a new screen code
+   */
+  private generateScreenCode(): void {
+    // Screen code generation
+    this._screenCode = NumberUtils.getRandomIntBetween(this.MIN_SCREEN_CODE_BOUND, this.MAX_SCREEN_CODE_BOUND);
   }
 
   /**

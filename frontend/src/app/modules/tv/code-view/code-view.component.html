@@ -1,3 +1,31 @@
-<p>
-  code-view works!
-</p>
+<div class="container"
+     fxLayout="column wrap"
+     fxLayoutAlign="center center">
+
+  <div class="content"
+       fxFlex="100"
+       fxLayout="row wrap"
+       fxLayoutAlign="center center">
+
+    <mat-card id="tv-code-card"
+              fxFlex="100"
+              fxLayout="column wrap"
+              fxLayoutAlign="center"
+              class="mat-elevation-z12">
+
+      <mat-card-content fxFlex="100"
+                        fxLayout="row wrap"
+                        fxLayoutAlign="center start">
+
+        <div fxFlex="100" fxLayout="row" fxLayoutAlign="center center">
+          <img src="../../../../assets/images/logo.png">
+        </div>
+
+        <div id="screen-code-wrapper" fxFlex="100" fxLayout="row" fxLayoutAlign="center center">
+          {{ screenCode }}
+        </div>
+      </mat-card-content>
+    </mat-card>
+
+  </div>
+</div>

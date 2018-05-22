@@ -1,0 +1,19 @@
+.container {
+    height: 97vh;
+}
+.content{
+    width: 40%;
+}
+#tv-code-card {
+    height: 50%;
+}
+#tv-code-card img {
+    margin: auto;
+    width: 48%;
+    height: auto;
+}
+#tv-code-card #screen-code-wrapper {
+    height: 46%;
+    font-size: 3.2em;
+    background-color: #3030307a;
+}

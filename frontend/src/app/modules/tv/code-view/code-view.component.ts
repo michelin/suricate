@@ -16,6 +16,7 @@
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {SidenavService} from '../../core/sidenav/sidenav.service';
+import {WebsocketService} from '../../../shared/services/websocket.service';
 
 @Component({
   selector: 'app-code-view',
@@ -24,12 +25,25 @@ import {SidenavService} from '../../core/sidenav/sidenav.service';
 })
 export class CodeViewComponent implements OnInit, OnDestroy {
 
-  constructor(private sidenavService: SidenavService) { }
+  /**
+   * The screen code to display
+   */
+  screenCode: number;
 
+  constructor(private sidenavService: SidenavService,
+              private websocketService: WebsocketService) { }
+
+  /**
+   * Init of the component
+   */
   ngOnInit() {
     this.sidenavService.closeSidenav();
+    this.screenCode = this.websocketService.screenCode;
   }
 
+  /**
+   * When the component is detroyed
+   */
   ngOnDestroy() {
     this.sidenavService.openSidenav();
   }
