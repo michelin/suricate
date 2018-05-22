@@ -285,4 +285,9 @@ export class DashboardService extends AbstractHttpService {
         .httpClient
         .put<Project>(url, projectWidget);
   }
+
+  connectProjectToTv(projectId: number, screenCode: number): void {
+    const url = `${DashboardService.PROJECTS_BASE_URL}/${projectId}/connect/${screenCode}`;
+    this.httpClient.get<void>(url).subscribe();
+  }
 }

@@ -356,11 +356,7 @@ export class DashboardScreenComponent implements OnInit, AfterViewInit, OnDestro
    * @param {Project} project The project wanted for the connection
    */
   createWebsocketConnection(project: Project) {
-    const websocketConfiguration: WSConfiguration = {
-      host: `${AbstractHttpService.BASE_WS_URL}?${AbstractHttpService.SPRING_ACCESS_TOKEN_ENPOINT}=${AuthenticationService.getToken()}`,
-      debug: true,
-      queue: {'init': false}
-    };
+    const websocketConfiguration: WSConfiguration = this.websocketService.getDashboardWSConfiguration();
 
     this.websocketService
         .connect(websocketConfiguration)

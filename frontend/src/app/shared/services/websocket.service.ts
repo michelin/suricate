@@ -23,6 +23,7 @@ import {Observable} from 'rxjs/Observable';
 import {empty} from 'rxjs/observable/empty';
 import {fromPromise} from 'rxjs/observable/fromPromise';
 import {NumberUtils} from '../utils/NumberUtils';
+import {AuthenticationService} from '../../modules/authentication/authentication.service';
 
 /**
  * Service that manage the websockets connections
@@ -34,7 +35,6 @@ export class WebsocketService extends AbstractHttpService {
   public static readonly WS_STATUS_CLOSED = 'CLOSED';
   public static readonly WS_STATUS_CONNECTING = 'CONNECTING';
   public static readonly WS_STATUS_CONNECTED = 'CONNECTED';
-
 
   /**
    * Define the min bound for the screen code random generation
@@ -51,11 +51,6 @@ export class WebsocketService extends AbstractHttpService {
   private readonly MAX_SCREEN_CODE_BOUND = 999999;
 
   /**
-   * Screen code used for websocket communication as clientId
-   */
-  private _screenCode: number;
-
-  /**
    * The constructor of the service
    *
    * @param {StompService} stompService The websocket service from ng2-STOMP-OVER-Websocket plugin
@@ -64,16 +59,20 @@ export class WebsocketService extends AbstractHttpService {
     super();
   }
 
+  /* ****************************************************************** */
+  /*                    Screen code management                          */
+  /* ****************************************************************** */
+
   /**
    * Get the screen code
    * @returns {number} The screen code
    */
   get screenCode(): number {
-    if (!this._screenCode) {
+    if (!localStorage.getItem('screenCode')) {
       this.generateScreenCode();
     }
 
-    return this._screenCode;
+    return +localStorage.getItem('screenCode');
   }
 
   /**
@@ -81,8 +80,39 @@ export class WebsocketService extends AbstractHttpService {
    */
   private generateScreenCode(): void {
     // Screen code generation
-    this._screenCode = NumberUtils.getRandomIntBetween(this.MIN_SCREEN_CODE_BOUND, this.MAX_SCREEN_CODE_BOUND);
+    localStorage.setItem('screenCode', String(NumberUtils.getRandomIntBetween(this.MIN_SCREEN_CODE_BOUND, this.MAX_SCREEN_CODE_BOUND)));
   }
+
+  /**
+   * Reset the screen code
+   * @returns {number}
+   */
+  public resetScreenCode(): number {
+    this.generateScreenCode();
+    return this.screenCode;
+  }
+
+  /* ****************************************************************** */
+  /*                    Dashboard specific                              */
+  /* ****************************************************************** */
+
+  /**
+   * Get the dashboard configuration for websocket
+   *
+   * @returns {WSConfiguration} The configuration
+   */
+  getDashboardWSConfiguration(): WSConfiguration {
+    return {
+      host: `${AbstractHttpService.BASE_WS_URL}?${AbstractHttpService.SPRING_ACCESS_TOKEN_ENPOINT}=${AuthenticationService.getToken()}`,
+      debug: true,
+      queue: {'init': false}
+    };
+  }
+
+
+  /* ****************************************************************** */
+  /*                    Global Management                               */
+  /* ****************************************************************** */
 
   /**
    * Handle the connection of a websocket

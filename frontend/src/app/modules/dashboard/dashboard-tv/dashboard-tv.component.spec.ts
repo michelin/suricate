@@ -16,25 +16,28 @@
  *
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {RouterModule, Routes} from '@angular/router';
-import {SharedModule} from '../../shared/shared.module';
-import {CodeViewComponent} from './code-view/code-view.component';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-const tvRoutes: Routes = [
-  { path: 'tv', component: CodeViewComponent },
-];
+import { DashboardTvComponent } from './dashboard-tv.component';
 
-@NgModule({
-  imports: [
-      CommonModule,
-      RouterModule.forChild(tvRoutes),
-      SharedModule
-  ],
-  declarations: [
-      CodeViewComponent
-  ],
-  providers: []
-})
-export class TvModule { }
+describe('DashboardTvComponent', () => {
+  let component: DashboardTvComponent;
+  let fixture: ComponentFixture<DashboardTvComponent>;
+
+  beforeEach(async(() => {
+    TestBed.configureTestingModule({
+      declarations: [ DashboardTvComponent ]
+    })
+    .compileComponents();
+  }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(DashboardTvComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

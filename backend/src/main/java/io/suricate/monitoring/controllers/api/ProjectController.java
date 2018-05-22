@@ -29,6 +29,7 @@ import io.suricate.monitoring.model.mapper.project.ProjectWidgetMapper;
 import io.suricate.monitoring.service.api.ProjectService;
 import io.suricate.monitoring.service.api.ProjectWidgetService;
 import io.suricate.monitoring.service.api.UserService;
+import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,7 @@ import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -82,6 +84,11 @@ public class ProjectController {
     private final ProjectWidgetMapper projectWidgetMapper;
 
     /**
+     * The dashboard websocket service
+     */
+    private final DashboardWebSocketService dashboardWebSocketService;
+
+    /**
      * Constructor for dependency injection
      *
      * @param projectService The project service to inject
@@ -95,12 +102,14 @@ public class ProjectController {
                              @Lazy final ProjectWidgetService projectWidgetService,
                              final UserService userService,
                              final ProjectMapper projectMapper,
-                             final ProjectWidgetMapper projectWidgetMapper) {
+                             final ProjectWidgetMapper projectWidgetMapper,
+                             final DashboardWebSocketService dashboardWebSocketService) {
         this.projectService = projectService;
         this.projectWidgetService = projectWidgetService;
         this.userService = userService;
         this.projectMapper = projectMapper;
         this.projectWidgetMapper = projectWidgetMapper;
+        this.dashboardWebSocketService = dashboardWebSocketService;
     }
 
     /**
@@ -446,5 +455,14 @@ public class ProjectController {
             .cacheControl(CacheControl.noCache())
             .contentType(MediaType.APPLICATION_JSON)
             .body(projectMapper.toProjectDtoDefault(projectOptional.get()));
+    }
+
+    @RequestMapping(value = "{projectId}/connect/{screenCode}", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @Transactional
+    public void connectProjectToTv(@PathVariable("projectId") Long projectId,
+                                   @PathVariable("screenCode") String screenCode) {
+        Optional<Project> projectOptional = projectService.getOneById(projectId);
+        projectOptional.ifPresent(project -> this.dashboardWebSocketService.connectUniqueScreen(project, screenCode));
     }
 }

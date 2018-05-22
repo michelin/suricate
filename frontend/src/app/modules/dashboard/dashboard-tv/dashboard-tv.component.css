@@ -4,16 +4,17 @@
 .content{
     width: 40%;
 }
+.logo-container {
+    height: 70%;
+}
 #tv-code-card {
     height: 50%;
 }
 #tv-code-card img {
-    margin: auto;
-    width: 48%;
-    height: auto;
+    margin: 0 auto;
 }
 #tv-code-card #screen-code-wrapper {
-    height: 46%;
-    font-size: 3.2em;
+    height: 26%;
+    font-size: 3.2rem;
     background-color: #3030307a;
 }

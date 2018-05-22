@@ -24,6 +24,7 @@ import io.suricate.monitoring.model.dto.websocket.WebsocketClient;
 import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
 import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.enums.UpdateType;
+import io.suricate.monitoring.model.mapper.project.ProjectMapper;
 import io.suricate.monitoring.service.api.ProjectService;
 import io.suricate.monitoring.service.nashorn.NashornService;
 import io.suricate.monitoring.service.scheduler.NashornWidgetScheduler;
@@ -61,6 +62,11 @@ public class DashboardWebSocketService {
     private final ProjectService projectService;
 
     /**
+     * The project mapper
+     */
+    private final ProjectMapper projectMapper;
+
+    /**
      * The nashorn service
      */
     private final NashornService nashornService;
@@ -85,14 +91,19 @@ public class DashboardWebSocketService {
      *
      * @param simpMessagingTemplate message template used for send messages through stomp websockets
      * @param projectService The project service
+     * @param projectMapper The project mapper
+     * @param nashornService The nashorn service
+     * @param nashornWidgetScheduler The nashorn scheduler
      */
     @Autowired
     public DashboardWebSocketService(final SimpMessagingTemplate simpMessagingTemplate,
                                      @Lazy final ProjectService projectService,
+                                     @Lazy final ProjectMapper projectMapper,
                                      final NashornService nashornService,
                                      final NashornWidgetScheduler nashornWidgetScheduler) {
         this.simpMessagingTemplate = simpMessagingTemplate;
         this.projectService = projectService;
+        this.projectMapper = projectMapper;
         this.nashornService = nashornService;
         this.nashornWidgetScheduler = nashornWidgetScheduler;
     }
@@ -157,22 +168,6 @@ public class DashboardWebSocketService {
     }
 
     /**
-     * Send notification to users subscribed on channel "/user/queue/notify".
-     *
-     * @param clientId the client ID to notify
-     * @param payload the object to send to the client
-     */
-    @Async
-    public void notifyRegister(String clientId, Object payload) {
-        LOGGER.debug("Register screen {}", clientId);
-        simpMessagingTemplate.convertAndSendToUser(
-                clientId.trim(),
-                "/queue/register",
-                payload
-        );
-    }
-
-    /**
      * Method used for updates by project id every screens connected to this project
      *
      * @param projectId the project id
@@ -205,34 +200,40 @@ public class DashboardWebSocketService {
         );
     }
 
-
     /**
      * Method used to update unique screen by project token and screen code
      *
      * @param projectToken project token
-     * @param userId user id
+     * @param screenCode The screen code
      * @param payload data to send
      */
     @Async
-    public void updateUniqueScreen(String projectToken, String userId, Object payload) {
+    public void updateUniqueScreen(String projectToken, String screenCode, Object payload) {
         LOGGER.debug("screen unique");
-        LOGGER.debug("Update project's screen {} for user {}, data: {}", projectToken, userId, payload);
+        LOGGER.debug("Update project's screen {} for user {}, data: {}", projectToken, screenCode, payload);
 
         simpMessagingTemplate.convertAndSendToUser(
-                projectToken.trim()+"-"+userId,
+                projectToken.trim()+"-"+screenCode,
                 "/queue/unique",
                 payload
         );
     }
 
     /**
-     * Get client number on a specified projectId
+     * Method used to connect a screen by screen code
      *
-     * @param projectId the project iD
-     * @return the number of client for the specified client ID
+     * @param screenCode The screen code
      */
-    public int getClientNumber(String projectId) {
-        return projectClients.get(projectId).size();
+    public void connectUniqueScreen(final Project project, final String screenCode) {
+        LOGGER.debug("screen unique");
+        UpdateEvent updateEvent = new UpdateEvent(UpdateType.CONNECT);
+        updateEvent.setContent(projectMapper.toProjectDtoDefault(project));
+
+        simpMessagingTemplate.convertAndSendToUser(
+            screenCode,
+            "/queue/connect",
+            updateEvent
+        );
     }
 
     /**
@@ -249,12 +250,12 @@ public class DashboardWebSocketService {
     /**
      * Force dashboard to display client Id
      *
-     * @param projectId the specified project Id
+     * @param projectToken the specified project token
      */
-    public void displayUniqueNumber(String projectId) {
+    public void displayUniqueNumber(String projectToken) {
         Iterator<WebsocketClient> it = projectClients.values().iterator();
         while (it.hasNext()) {
-            updateUniqueScreen(projectId, it.next().getScreenCode(), new UpdateEvent(UpdateType.DISPLAY_NUMBER));
+            updateUniqueScreen(projectToken, it.next().getScreenCode(), new UpdateEvent(UpdateType.DISPLAY_NUMBER));
         }
     }
 
