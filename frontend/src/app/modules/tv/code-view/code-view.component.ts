@@ -14,25 +14,23 @@
  * limitations under the License.
  */
 
-import { NgModule } from '@angular/core';
-import { SidenavComponent } from './sidenav/sidenav.component';
-import {CommonModule} from '@angular/common';
-import {SharedModule} from '../../shared/shared.module';
-import {SidenavService} from './sidenav/sidenav.service';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {SidenavService} from '../../core/sidenav/sidenav.service';
 
-@NgModule({
-  imports: [
-      CommonModule,
-      SharedModule
-  ],
-  declarations: [
-      SidenavComponent
-  ],
-  providers: [
-      SidenavService,
-  ],
-  exports: [
-      SidenavComponent
-  ]
+@Component({
+  selector: 'app-code-view',
+  templateUrl: './code-view.component.html',
+  styleUrls: ['./code-view.component.css']
 })
-export class CoreModule { }
+export class CodeViewComponent implements OnInit, OnDestroy {
+
+  constructor(private sidenavService: SidenavService) { }
+
+  ngOnInit() {
+    this.sidenavService.closeSidenav();
+  }
+
+  ngOnDestroy() {
+    this.sidenavService.openSidenav();
+  }
+}

@@ -14,25 +14,18 @@
  * limitations under the License.
  */
 
-import { NgModule } from '@angular/core';
-import { SidenavComponent } from './sidenav/sidenav.component';
-import {CommonModule} from '@angular/common';
-import {SharedModule} from '../../shared/shared.module';
-import {SidenavService} from './sidenav/sidenav.service';
+import { TestBed, inject } from '@angular/core/testing';
 
-@NgModule({
-  imports: [
-      CommonModule,
-      SharedModule
-  ],
-  declarations: [
-      SidenavComponent
-  ],
-  providers: [
-      SidenavService,
-  ],
-  exports: [
-      SidenavComponent
-  ]
-})
-export class CoreModule { }
+import { SidenavService } from './sidenav.service';
+
+describe('SidenavService', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [SidenavService]
+    });
+  });
+
+  it('should be created', inject([SidenavService], (service: SidenavService) => {
+    expect(service).toBeTruthy();
+  }));
+});
