@@ -268,6 +268,7 @@ public class ProjectController {
      */
     @RequestMapping(value = "/{projectId}", method = RequestMethod.DELETE)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @Transactional
     public ResponseEntity<ProjectDto> deleteOneById(@PathVariable("projectId") Long projectId) {
         Optional<Project> projectOptional = projectService.getOneById(projectId);
 
