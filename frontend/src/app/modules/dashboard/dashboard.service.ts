@@ -278,6 +278,13 @@ export class DashboardService extends AbstractHttpService {
         );
   }
 
+  /**
+   * Edit a project widget from a project
+   *
+   * @param {number} projectId The project id
+   * @param {ProjectWidget} projectWidget The project widget to edit
+   * @returns {Observable<Project>} The project updated
+   */
   editProjectWidgetFromProject(projectId: number, projectWidget: ProjectWidget): Observable<Project> {
     const url = `${DashboardService.PROJECTS_BASE_URL}/${projectId}/projectWidgets/${projectWidget.id}`;
 
@@ -286,8 +293,27 @@ export class DashboardService extends AbstractHttpService {
         .put<Project>(url, projectWidget);
   }
 
+  /**
+   * Send the notification for connect a new tv to this dashboard
+   *
+   * @param {number} projectId The project to connect
+   * @param {number} screenCode The tv screen code
+   */
   connectProjectToTv(projectId: number, screenCode: number): void {
     const url = `${DashboardService.PROJECTS_BASE_URL}/${projectId}/connect/${screenCode}`;
     this.httpClient.get<void>(url).subscribe();
+  }
+
+  /**
+   * Sort list of project by name
+   *
+   * @param {Project[]} projects The list of projects to sort
+   */
+  sortByProjectName(projects: Project[]) {
+    return projects.sort((left, right): number => {
+      if (left.name < right.name) { return -1; }
+      if (left.name > right.name) { return 1; }
+      return 0;
+    });
   }
 }

@@ -59,6 +59,7 @@ export class SidenavComponent implements OnInit, AfterViewInit, OnDestroy {
    * @param {DashboardService} dashboardService The dashboard service
    * @param {UserService} userService The user service
    * @param {AuthenticationService} authenticationService The authentication service
+   * @param {SidenavService} sidenavService The sidenav service
    */
   constructor(private router: Router,
               private changeDetectorRef: ChangeDetectorRef,
@@ -74,7 +75,7 @@ export class SidenavComponent implements OnInit, AfterViewInit, OnDestroy {
     this.dashboardService
         .dashboardsSubject
         .pipe(takeWhile(() => this.alive))
-        .subscribe(projects => this.dashboards = projects);
+        .subscribe(projects => this.dashboards = this.dashboardService.sortByProjectName(projects));
 
     this.userService
         .connectedUserSubject
