@@ -91,11 +91,17 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * When on code view screen we wait for new connection
    */
   listenForConnection() {
-    this.screenSubscription = this.websocketService
-        .subscribe(
-            `/user/${this.screenCode}/queue/connect`,
-            this.handleConnectEvent.bind(this)
-        );
+    const websocketConfiguration: WSConfiguration = this.websocketService.getDashboardWSConfiguration();
+
+    this.websocketService
+        .connect(websocketConfiguration)
+        .subscribe(() => {
+          this.screenSubscription = this.websocketService
+              .subscribe(
+                  `/user/${this.screenCode}/queue/connect`,
+                  this.handleConnectEvent.bind(this)
+              );
+        });
   }
 
   /**

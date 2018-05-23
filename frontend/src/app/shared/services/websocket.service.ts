@@ -23,7 +23,6 @@ import {Observable} from 'rxjs/Observable';
 import {empty} from 'rxjs/observable/empty';
 import {fromPromise} from 'rxjs/observable/fromPromise';
 import {NumberUtils} from '../utils/NumberUtils';
-import {AuthenticationService} from '../../modules/authentication/authentication.service';
 
 /**
  * Service that manage the websockets connections
