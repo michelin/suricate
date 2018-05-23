@@ -1,28 +1,66 @@
 package io.suricate.monitoring.configuration.swagger;
 
+import com.google.common.base.Predicate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.service.Contact;
+import springfox.documentation.service.Tag;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
-import static springfox.documentation.builders.PathSelectors.any;
+import static com.google.common.base.Predicates.or;
+import static springfox.documentation.builders.PathSelectors.regex;
 
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
 
     @Bean
-    public Docket swaggerSpringMvcPlugin() {
+    public Docket userApi() {
+        Docket docket = createDocket("User", userPaths());
+        addUserTags(docket);
+        return docket;
+    }
+
+    @Bean
+    public Docket assetApi() {
+        Docket docket = createDocket("Asset", assetPaths());
+        addAssetTags(docket);
+        return docket;
+    }
+
+    @Bean
+    public Docket projectsApi() {
+        Docket docket = createDocket("Projects", projectsPaths());
+        addProjectsTags(docket);
+        return docket;
+    }
+
+    @Bean
+    public Docket widgetsApi() {
+        Docket docket = createDocket("Widgets", widgetsPaths());
+        addWidgetsTags(docket);
+        return docket;
+    }
+
+    @Bean
+    public Docket configurationsApi() {
+        Docket docket = createDocket("Configurations", configurationsPaths());
+        addConfigurationsTags(docket);
+        return docket;
+    }
+
+
+    private Docket createDocket(String name, Predicate<String> paths) {
         return new Docket(DocumentationType.SWAGGER_2)
+                .groupName(name)
                 .useDefaultResponseMessages(false)
                 .apiInfo(apiInfo())
                 .select()
-                //.paths(Predicates.not(PathSelectors.regex("/error.*")))
-                .paths(any())
+                .paths(paths)
                 .build();
     }
 
@@ -30,10 +68,53 @@ public class SwaggerConfig {
         return new ApiInfoBuilder()
                 .title("Suricate API")
                 .description("Rest API for integrating with backend layer.")
-                .contact(new Contact("name", "url", "email"))
-                //.license("Apache License Version 2.0")
-                //.licenseUrl("https://github.com/springfox/springfox/blob/master/LICENSE")
-                //.version("2.0")
+                .contact(new Contact("suricate", "https://github.com/suricate-io/suricate", "email@email.com"))
+                .version("1.0")
                 .build();
+    }
+
+    private Predicate<String> userPaths() {
+        return or(regex("/api/users.*"));
+    }
+
+    private void addUserTags(Docket docket) {
+        Tag userTag = new Tag("User", "User API");
+        docket.tags(userTag, userTag);
+    }
+
+    private Predicate<String> assetPaths() {
+        return or(regex("/api/asset.*"));
+    }
+
+    private void addAssetTags(Docket docket) {
+        Tag userTag = new Tag("Asset", "Asset API");
+        docket.tags(userTag, userTag);
+    }
+
+    private Predicate<String> projectsPaths() {
+        return or(regex("/api/projects.*"));
+    }
+
+    private void addProjectsTags(Docket docket) {
+        Tag userTag = new Tag("Projects", "Projects API");
+        docket.tags(userTag, userTag);
+    }
+
+    private Predicate<String> widgetsPaths() {
+        return or(regex("/api/widgets.*"));
+    }
+
+    private void addWidgetsTags(Docket docket) {
+        Tag userTag = new Tag("Widgets", "Widgets API");
+        docket.tags(userTag, userTag);
+    }
+
+    private Predicate<String> configurationsPaths() {
+        return or(regex("/api/configurations.*"));
+    }
+
+    private void addConfigurationsTags(Docket docket) {
+        Tag userTag = new Tag("Configurations", "Configurations API");
+        docket.tags(userTag, userTag);
     }
 }

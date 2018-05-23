@@ -17,12 +17,13 @@
 package io.suricate.monitoring.controllers.api;
 
 import io.suricate.monitoring.controllers.api.error.exception.ApiException;
-import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.model.dto.user.UserDto;
 import io.suricate.monitoring.model.entity.user.User;
+import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.model.enums.AuthenticationMethod;
 import io.suricate.monitoring.model.mapper.role.UserMapper;
 import io.suricate.monitoring.service.api.UserService;
+import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,16 +34,17 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.swing.text.html.Option;
 import javax.transaction.Transactional;
 import java.net.URI;
 import java.security.Principal;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * User controller
  */
 @RestController
+@Api(tags = {"User"})
 @RequestMapping("/api/users")
 public class UserController {
 
