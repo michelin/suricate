@@ -77,7 +77,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    */
   ngOnInit() {
     this.sidenavService.closeSidenav();
-    this.screenCode = this.websocketService.resetScreenCode();
+    this.screenCode = this.websocketService.getscreenCode();
 
     this.dashboardService
         .currendDashbordSubject
@@ -91,16 +91,11 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * When on code view screen we wait for new connection
    */
   listenForConnection() {
-    const websocketConfiguration: WSConfiguration = this.websocketService.getDashboardWSConfiguration();
-    this.websocketService
-        .connect(websocketConfiguration)
-        .subscribe(() => {
-          this.screenSubscription = this.websocketService
-              .subscribe(
-                  `/user/${this.screenCode}/queue/connect`,
-                  this.handleConnectEvent.bind(this)
-              );
-        });
+    this.screenSubscription = this.websocketService
+        .subscribe(
+            `/user/${this.screenCode}/queue/connect`,
+            this.handleConnectEvent.bind(this)
+        );
   }
 
   /**

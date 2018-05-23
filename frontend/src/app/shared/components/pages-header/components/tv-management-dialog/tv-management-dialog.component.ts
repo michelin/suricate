@@ -50,8 +50,7 @@ export class TvManagementDialogComponent implements OnInit {
    */
   constructor(@Inject(MAT_DIALOG_DATA) private data: any,
               private formBuilder: FormBuilder,
-              private dashboardService: DashboardService,
-              private changeDetectorRef: ChangeDetectorRef) { }
+              private dashboardService: DashboardService) { }
 
   /**
    * When the component is initialized
@@ -62,7 +61,6 @@ export class TvManagementDialogComponent implements OnInit {
         .getOneById(this.data.projectId)
         .subscribe(project => {
           this.dashboardService.currendDashbordSubject.next(project);
-          this.changeDetectorRef.detectChanges();
         });
 
     this.screenRegisterForm = this.formBuilder.group({

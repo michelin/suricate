@@ -67,29 +67,8 @@ export class WebsocketService extends AbstractHttpService {
    * Get the screen code
    * @returns {number} The screen code
    */
-  get screenCode(): number {
-    if (!localStorage.getItem('screenCode')) {
-      this.generateScreenCode();
-    }
-
-    return +localStorage.getItem('screenCode');
-  }
-
-  /**
-   * Generate a new screen code
-   */
-  private generateScreenCode(): void {
-    // Screen code generation
-    localStorage.setItem('screenCode', String(NumberUtils.getRandomIntBetween(this.MIN_SCREEN_CODE_BOUND, this.MAX_SCREEN_CODE_BOUND)));
-  }
-
-  /**
-   * Reset the screen code
-   * @returns {number}
-   */
-  public resetScreenCode(): number {
-    this.generateScreenCode();
-    return this.screenCode;
+  getscreenCode(): number {
+    return NumberUtils.getRandomIntBetween(this.MIN_SCREEN_CODE_BOUND, this.MAX_SCREEN_CODE_BOUND);
   }
 
   /* ****************************************************************** */
