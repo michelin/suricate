@@ -18,6 +18,7 @@ package io.suricate.monitoring.model.dto.project;
 
 import io.suricate.monitoring.model.dto.AbstractDto;
 import io.suricate.monitoring.model.dto.user.UserDto;
+import io.suricate.monitoring.model.dto.websocket.WebsocketClient;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -65,4 +66,9 @@ public class ProjectDto extends AbstractDto {
      * The users added to the widget
      */
     private List<UserDto> users = new ArrayList<>();
+
+    /**
+     * The list of every connected clients through web socket
+     */
+    private List<WebsocketClient> websocketClients = new ArrayList<>();
 }

@@ -20,6 +20,7 @@ import io.suricate.monitoring.model.dto.project.ProjectDto;
 import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.mapper.role.UserMapper;
 import io.suricate.monitoring.service.api.LibraryService;
+import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -45,6 +46,12 @@ public abstract class ProjectMapper {
     @Autowired
     protected LibraryService libraryService;
 
+    /**
+     * The dashboard web socket service
+     */
+    @Autowired
+    protected DashboardWebSocketService dashboardWebSocketService;
+
     /* ************************* TO DTO ********************************************** */
 
     /* ******************************************************* */
@@ -61,7 +68,8 @@ public abstract class ProjectMapper {
     @Mappings({
         @Mapping(target = "projectWidgets", source = "project.widgets", qualifiedByName = "toProjectWidgetDtosDefault"),
         @Mapping(target = "librariesToken", expression = "java(libraryService.getLibraries(project.getWidgets()))"),
-        @Mapping(target = "users", qualifiedByName = "toUserDtosDefault")
+        @Mapping(target = "users", qualifiedByName = "toUserDtosDefault"),
+        @Mapping(target = "websocketClients", expression = "java(dashboardWebSocketService.getWebsocketClientForProjectToken(project.getToken()))")
     })
     public abstract ProjectDto toProjectDtoDefault(Project project);
 
@@ -75,7 +83,8 @@ public abstract class ProjectMapper {
     @Mappings({
         @Mapping(target = "projectWidgets", source = "project.widgets", ignore = true),
         @Mapping(target = "librariesToken", expression = "java(libraryService.getLibraries(project.getWidgets()))"),
-        @Mapping(target = "users", qualifiedByName = "toUserDtosDefault")
+        @Mapping(target = "users", qualifiedByName = "toUserDtosDefault"),
+        @Mapping(target = "websocketClients", expression = "java(dashboardWebSocketService.getWebsocketClientForProjectToken(project.getToken()))")
     })
     public abstract ProjectDto toProjectDtoWithoutProjectWidget(Project project);
 

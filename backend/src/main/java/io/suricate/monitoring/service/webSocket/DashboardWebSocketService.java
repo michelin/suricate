@@ -35,8 +35,8 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.*;
 
 /**
@@ -128,6 +128,17 @@ public class DashboardWebSocketService {
                 nashornWidgetScheduler.scheduleList(nashornRequest, true, true);
             }
         }
+    }
+
+    /**
+     * Get the list of every connected dashboard
+     *
+     * @param projectToken The project token used for find every websocket clients
+     * @return The list of related websocket clients
+     */
+    @Transactional
+    public List<WebsocketClient> getWebsocketClientForProjectToken(final String projectToken) {
+        return new ArrayList<>(projectClients.get(projectToken));
     }
 
     /**

@@ -100,6 +100,7 @@ public class ProjectService {
      * @return The project associated
      */
     @LogExecutionTime
+    @Transactional
     public Optional<Project> getOneById(Long id){
         Project project = projectRepository.findOne(id);
 

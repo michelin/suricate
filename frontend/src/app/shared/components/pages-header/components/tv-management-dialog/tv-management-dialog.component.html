@@ -7,36 +7,36 @@
     <form [formGroup]="screenRegisterForm" (submit)="registerScreen()" novalidate>
       <div id="register-div" fxFlex="100" fxLayout="row wrap" fxLayoutGap="20px">
         <h2 class="little" fxFlex="100"> Enroll screen to this dashboard </h2>
-
         <mat-divider fxFlex="100"></mat-divider>
 
         <div fxFlex="100" fxLayout="col wrap" fxLayoutAlign="start center" fxLayoutGap="25px">
-          <mat-form-field fxFlex="40">
+          <mat-form-field fxFlex="50">
             <input matInput
                    type="number"
                    placeholder="Enter the code displayed on the screen"
-                   formControlName="screenCode"
-                   [required]="true">
-
-            <mat-error *ngIf="isFieldInvalid('screenCode')">
-              This field is required, with a length of 6
-            </mat-error>
+                   formControlName="screenCode">
           </mat-form-field>
-
           <button mat-raised-button color="accent"> Register </button>
         </div>
       </div>
     </form>
 
-
     <!-- Registered screen part -->
     <div id="registered-div" fxFlex="100" fxLayout="row wrap" fxLayoutGap="20px">
-      <h2 class="little" fxFlex="100"> Currently linked screen -  </h2>
-
+      <h2 class="little" fxFlex="100"> Currently linked screen - {{ project.websocketClients.length }} client(s) </h2>
       <mat-divider fxFlex="100"></mat-divider>
 
-      <div fxFlex="100" fxLayout="col wrap" fxLayoutAlign="start center" fxLayoutGap="60px">
+      <div id="screen-container" fxFlex="100" fxLayout="col wrap" fxLayoutAlign="start center" fxLayoutGap="30px">
 
+        <!-- screen codes -->
+        <div *ngFor="let websocketClient of project.websocketClients " fxFlex="29" fxLayout="row wrap" fxLayoutAlign="center center">
+          <span class="screen-line" fxFlex="100" fxLayout="col wrap" fxLayoutAlign="center center">
+            <mat-icon class="screen-icon">tv</mat-icon>
+            <span class="screen-code">code: {{ websocketClient.screenCode }}</span>
+          </span>
+
+          <button fxFlex="75" mat-raised-button color="accent">DISCONNECT</button>
+        </div>
       </div>
     </div>
 

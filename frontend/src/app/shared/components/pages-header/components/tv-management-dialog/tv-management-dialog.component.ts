@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import {Component, Inject, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA} from '@angular/material';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormBuilder, FormGroup} from '@angular/forms';
 import {DashboardService} from '../../../../../modules/dashboard/dashboard.service';
-import {CustomValidators} from 'ng2-validation';
+import {Project} from '../../../../model/dto/Project';
 
 /**
  * Component that manage the popup for Dashboard TV Management
@@ -37,40 +37,37 @@ export class TvManagementDialogComponent implements OnInit {
   screenRegisterForm: FormGroup;
 
   /**
-   * The project id
+   * The current project
    */
-  projectId: number;
+  project: Project;
 
   /**
    * Constructor
    *
-   * @param data The data sent by the parent component
+   * @param data The data give to the modal
    * @param {FormBuilder} formBuilder The formBuilder
    * @param {DashboardService} dashboardService The dashboard service to inject
    */
   constructor(@Inject(MAT_DIALOG_DATA) private data: any,
               private formBuilder: FormBuilder,
-              private dashboardService: DashboardService) { }
+              private dashboardService: DashboardService,
+              private changeDetectorRef: ChangeDetectorRef) { }
 
   /**
    * When the component is initialized
    */
   ngOnInit() {
-    this.projectId = this.data.projectId;
+    this.dashboardService.currendDashbordSubject.subscribe(project => this.project = project);
+    this.dashboardService
+        .getOneById(this.data.projectId)
+        .subscribe(project => {
+          this.dashboardService.currendDashbordSubject.next(project);
+          this.changeDetectorRef.detectChanges();
+        });
+
     this.screenRegisterForm = this.formBuilder.group({
-      screenCode: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(6), CustomValidators.digits]]
+      screenCode: ['']
     });
-  }
-
-
-  /**
-   * Check if the field is valid
-   *
-   * @param {string} field The field to check
-   * @returns {boolean} False if the field is valid, false otherwise
-   */
-  isFieldInvalid(field: string) {
-    return this.screenRegisterForm.invalid && (this.screenRegisterForm.get(field).dirty || this.screenRegisterForm.get(field).touched);
   }
 
   /**
@@ -79,7 +76,7 @@ export class TvManagementDialogComponent implements OnInit {
   registerScreen() {
     if (this.screenRegisterForm.valid) {
       const screenCode: string = this.screenRegisterForm.get('screenCode').value;
-      this.dashboardService.connectProjectToScreen(this.projectId, +screenCode);
+      this.dashboardService.connectProjectToScreen(this.project.id, +screenCode);
     }
   }
 
