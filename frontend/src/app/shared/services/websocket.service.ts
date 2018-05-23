@@ -82,7 +82,7 @@ export class WebsocketService extends AbstractHttpService {
    */
   getDashboardWSConfiguration(): WSConfiguration {
     return {
-      host: `${AbstractHttpService.BASE_WS_URL}?${AbstractHttpService.SPRING_ACCESS_TOKEN_ENPOINT}=${AuthenticationService.getToken()}`,
+      host: `${AbstractHttpService.BASE_WS_URL}`,
       debug: true,
       queue: {'init': false}
     };

@@ -363,7 +363,7 @@ export class DashboardScreenComponent implements OnInit, AfterViewInit, OnDestro
         .subscribe(() => {
           const uniqueSubscription: Subscription = this.websocketService
               .subscribe(
-                  `/user/${project.token}-${this.websocketService.screenCode}/queue/unique`,
+                  `/user/${project.token}-${this.websocketService.getscreenCode()}/queue/unique`,
                   this.handleUniqueScreenEvent.bind(this)
               );
 
