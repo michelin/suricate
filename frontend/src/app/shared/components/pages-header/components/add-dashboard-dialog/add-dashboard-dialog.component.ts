@@ -73,6 +73,7 @@ export class AddDashboardDialogComponent implements OnInit {
    * @param {ChangeDetectorRef} changeDetectorRef The change detector service
    * @param {DashboardService} dashboardService The dashboard service
    * @param {UserService} userService The user service
+   * @param {ColorPickerService} colorPickerService The color picker service for dashboard background color
    */
   constructor(@Inject(MAT_DIALOG_DATA) private data: any,
               private formBuilder: FormBuilder,

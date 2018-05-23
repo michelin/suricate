@@ -14,10 +14,19 @@ body {
 .mat-raised-button.mat-accent {
     color: white;
 }
-
+mat-divider {
+    border-top-color: #7e818880;
+}
 h1.little {
     font-size: 1em;
     color: #7e8188 !important;
+    margin: 0;
+    font-variant: all-small-caps;
+}
+
+h2.little {
+    font-size: 1.3em;
+    color: #8d9097 !important;
     margin: 0;
     font-variant: all-small-caps;
 }

@@ -299,7 +299,7 @@ export class DashboardService extends AbstractHttpService {
    * @param {number} projectId The project to connect
    * @param {number} screenCode The tv screen code
    */
-  connectProjectToTv(projectId: number, screenCode: number): void {
+  connectProjectToScreen(projectId: number, screenCode: number): void {
     const url = `${DashboardService.PROJECTS_BASE_URL}/${projectId}/connect/${screenCode}`;
     this.httpClient.get<void>(url).subscribe();
   }
