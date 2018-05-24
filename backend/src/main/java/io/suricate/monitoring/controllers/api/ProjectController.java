@@ -262,6 +262,31 @@ public class ProjectController {
     }
 
     /**
+     * Get a project by token
+     *
+     * @param token The token of the project
+     * @return The project
+     */
+    @RequestMapping(value = "/project/{token}", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<ProjectDto> getOneByToken(@PathVariable("token") String token) {
+        Optional<Project> project = projectService.getOneByToken(token);
+
+        if(!project.isPresent()) {
+            return ResponseEntity
+                    .notFound()
+                    .cacheControl(CacheControl.noCache())
+                    .build();
+        }
+
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .cacheControl(CacheControl.noCache())
+                .body(projectMapper.toProjectDtoDefault(project.get()));
+    }
+
+    /**
      * Method that delete a project
      *
      * @param projectId The project id to delete

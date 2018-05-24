@@ -54,6 +54,11 @@ export class DashboardScreenComponent implements OnInit, AfterViewInit, OnDestro
   @Input('readOnly') readOnly = true;
 
   /**
+   * The screen code
+   */
+  @Input('screenCode') screenCode: number;
+
+  /**
    * Used for keep the subscription of subjects/Obsevables open
    *
    * @type {boolean} True if we keep the connection, False if we have to unsubscribe
@@ -81,20 +86,17 @@ export class DashboardScreenComponent implements OnInit, AfterViewInit, OnDestro
   isGridItemInit = false;
 
   /**
-   * The screen code
-   */
-  screenCode: number;
-
-  /**
    * constructor
    *
    * @param {DashboardService} dashboardService The dashboard service
    * @param {MatDialog} matDialog The material dialog service
    * @param {WebsocketService} websocketService The websocket service
+   * @param {Router} router The router service
    */
   constructor(private dashboardService: DashboardService,
               private websocketService: WebsocketService,
-              private matDialog: MatDialog) { }
+              private matDialog: MatDialog,
+              private router: Router) { }
 
   /**
    * Init of the component
@@ -102,7 +104,11 @@ export class DashboardScreenComponent implements OnInit, AfterViewInit, OnDestro
   ngOnInit() {
     // Unsubcribe every websockets if we have change of dashboard
     this.unsubscribeToWebsockets();
-    this.screenCode = this.websocketService.getscreenCode();
+
+    if (!this.screenCode) {
+      this.screenCode = this.websocketService.getscreenCode();
+    }
+
     if (this.project) {
       this.initGridStackOptions(this.project);
       // Subscribe to the new dashboard
@@ -410,7 +416,8 @@ export class DashboardScreenComponent implements OnInit, AfterViewInit, OnDestro
    */
   handleUniqueScreenEvent(updateEvent: WSUpdateEvent, headers: any) {
     if (updateEvent.type === WSUpdateType.DISCONNECT) {
-      window.location.reload();
+      this.unsubscribeToWebsockets();
+      this.router.navigate(['/tv']);
     }
   }
 

@@ -135,6 +135,16 @@ export class DashboardService extends AbstractHttpService {
   }
 
   /**
+   * Get a dashboard by token
+   *
+   * @param {string} token The dashboard token
+   * @returns {Observable<Project>} The dashboard as observable
+   */
+  getOneByToken(token: string): Observable<Project> {
+    return this.httpClient.get<Project>(`${DashboardService.PROJECTS_BASE_URL}/project/${token}`);
+  }
+
+  /**
    * Add/Update a dashboard and update the subject list
    *
    * @param {Project} project The project

@@ -28,6 +28,7 @@ import {WSConfiguration} from '../../../shared/model/websocket/WSConfiguration';
 import {Subscription} from 'rxjs/Subscription';
 import {WSUpdateEvent} from '../../../shared/model/websocket/WSUpdateEvent';
 import {WSUpdateType} from '../../../shared/model/websocket/enums/WSUpdateType';
+import {ActivatedRoute, Router} from '@angular/router';
 
 /**
  * Dashboard TV Management
@@ -67,10 +68,14 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * @param {SidenavService} sidenavService The sidenav service to inject
    * @param {DashboardService} dashboardService The dashboard service to inject
    * @param {WebsocketService} websocketService The websocket service to inject
+   * @param {ActivatedRoute} activatedRoute The activated route service
+   * @param {Router} router The router service
    */
   constructor(private sidenavService: SidenavService,
               private dashboardService: DashboardService,
-              private websocketService: WebsocketService) { }
+              private websocketService: WebsocketService,
+              private activatedRoute: ActivatedRoute,
+              private router: Router) { }
 
   /**
    * Init of the component
@@ -84,7 +89,18 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
         .pipe(takeWhile(() => this.isAlive))
         .subscribe(project => this.project$ = of(project));
 
-    this.listenForConnection();
+    this.activatedRoute.queryParams.subscribe( params => {
+      if (params['token']) {
+        this.dashboardService.getOneByToken(params['token']).subscribe(project => {
+          this.dashboardService.currendDashbordSubject.next(project);
+        });
+
+      } else {
+        this.dashboardService.currendDashbordSubject.next(null);
+        this.listenForConnection();
+      }
+    });
+
   }
 
   /**
@@ -113,9 +129,10 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   handleConnectEvent(updateEvent: WSUpdateEvent, headers: any) {
     if (updateEvent.type === WSUpdateType.CONNECT) {
       const project: Project = updateEvent.content;
+
       if (project) {
         this.unsubscribeListening();
-        this.dashboardService.currendDashbordSubject.next(project);
+        this.router.navigate(['/tv'], {queryParams: {token: project.token} });
       }
     }
   }
