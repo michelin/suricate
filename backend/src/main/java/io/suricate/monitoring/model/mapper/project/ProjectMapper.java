@@ -69,7 +69,7 @@ public abstract class ProjectMapper {
         @Mapping(target = "projectWidgets", source = "project.widgets", qualifiedByName = "toProjectWidgetDtosDefault"),
         @Mapping(target = "librariesToken", expression = "java(libraryService.getLibraries(project.getWidgets()))"),
         @Mapping(target = "users", qualifiedByName = "toUserDtosDefault"),
-        @Mapping(target = "websocketClients", expression = "java(dashboardWebSocketService.getWebsocketClientForProjectToken(project.getToken()))")
+        @Mapping(target = "websocketClients", expression = "java(dashboardWebSocketService.getWebsocketClientByProjectToken(project.getToken()))")
     })
     public abstract ProjectDto toProjectDtoDefault(Project project);
 
@@ -84,7 +84,7 @@ public abstract class ProjectMapper {
         @Mapping(target = "projectWidgets", source = "project.widgets", ignore = true),
         @Mapping(target = "librariesToken", expression = "java(libraryService.getLibraries(project.getWidgets()))"),
         @Mapping(target = "users", qualifiedByName = "toUserDtosDefault"),
-        @Mapping(target = "websocketClients", expression = "java(dashboardWebSocketService.getWebsocketClientForProjectToken(project.getToken()))")
+        @Mapping(target = "websocketClients", expression = "java(dashboardWebSocketService.getWebsocketClientByProjectToken(project.getToken()))")
     })
     public abstract ProjectDto toProjectDtoWithoutProjectWidget(Project project);
 

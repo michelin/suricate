@@ -19,6 +19,7 @@ package io.suricate.monitoring.controllers.api;
 import io.suricate.monitoring.controllers.api.error.exception.ApiException;
 import io.suricate.monitoring.model.dto.project.ProjectDto;
 import io.suricate.monitoring.model.dto.project.ProjectWidgetPositionDto;
+import io.suricate.monitoring.model.dto.websocket.WebsocketClient;
 import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.dto.project.ProjectWidgetDto;
@@ -458,12 +459,30 @@ public class ProjectController {
             .body(projectMapper.toProjectDtoDefault(projectOptional.get()));
     }
 
-    @RequestMapping(value = "{projectId}/connect/{screenCode}", method = RequestMethod.GET)
+    /**
+     * connect a new Screen for a dashboard by screen code
+     *
+     * @param projectId The project id we want to display
+     * @param screenCode The screen code to enroll
+     */
+    @RequestMapping(value = "{projectId}/tv/connect/{screenCode}", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
     @Transactional
     public void connectProjectToTv(@PathVariable("projectId") Long projectId,
                                    @PathVariable("screenCode") String screenCode) {
         Optional<Project> projectOptional = projectService.getOneById(projectId);
         projectOptional.ifPresent(project -> this.dashboardWebSocketService.connectUniqueScreen(project, screenCode));
+    }
+
+    /**
+     * Disconnect a client
+     *
+     * @param websocketClient The websocket client to disconnect
+     */
+    @RequestMapping(value = "tv/disconnect", method = RequestMethod.PUT)
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @Transactional
+    public void disconnectProjectToTv(@RequestBody WebsocketClient websocketClient) {
+        this.dashboardWebSocketService.disconnectClient(websocketClient);
     }
 }

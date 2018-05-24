@@ -33,7 +33,7 @@
             <mat-icon class="screen-icon">tv</mat-icon>
             <span class="screen-code">code: {{ websocketClient.screenCode }}</span>
           </span>
-          <button fxFlex="75" mat-raised-button color="accent">DISCONNECT</button>
+          <button fxFlex="75" mat-raised-button color="accent" (click)="disconnectScreen(websocketClient)">DISCONNECT</button>
         </div>
       </div>
     </div>

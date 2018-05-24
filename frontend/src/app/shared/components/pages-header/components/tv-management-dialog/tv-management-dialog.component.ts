@@ -19,6 +19,7 @@ import {MAT_DIALOG_DATA} from '@angular/material';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {DashboardService} from '../../../../../modules/dashboard/dashboard.service';
 import {Project} from '../../../../model/dto/Project';
+import {WebsocketClient} from '../../../../model/dto/WebsocketClient';
 
 /**
  * Component that manage the popup for Dashboard TV Management
@@ -68,11 +69,20 @@ export class TvManagementDialogComponent implements OnInit {
   /**
    * Register the screen
    */
-  registerScreen() {
+  registerScreen(): void {
     if (this.screenRegisterForm.valid) {
       const screenCode: string = this.screenRegisterForm.get('screenCode').value;
       this.dashboardService.connectProjectToScreen(this.project.id, +screenCode);
     }
+  }
+
+  /**
+   * Disconnect a websocket
+   *
+   * @param {WebsocketClient} websocketClient The websocket to disconnect
+   */
+  disconnectScreen(websocketClient: WebsocketClient): void {
+    this.dashboardService.disconnectProjectToScreen(websocketClient);
   }
 
 }

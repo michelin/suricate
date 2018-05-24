@@ -25,6 +25,7 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {UserService} from '../user/user.service';
 import {User} from '../../shared/model/dto/user/User';
 import {ProjectWidgetPosition} from '../../shared/model/dto/ProjectWidgetPosition';
+import {WebsocketClient} from '../../shared/model/dto/WebsocketClient';
 
 @Injectable()
 export class DashboardService extends AbstractHttpService {
@@ -300,8 +301,18 @@ export class DashboardService extends AbstractHttpService {
    * @param {number} screenCode The tv screen code
    */
   connectProjectToScreen(projectId: number, screenCode: number): void {
-    const url = `${DashboardService.PROJECTS_BASE_URL}/${projectId}/connect/${screenCode}`;
+    const url = `${DashboardService.PROJECTS_BASE_URL}/${projectId}/tv/connect/${screenCode}`;
     this.httpClient.get<void>(url).subscribe();
+  }
+
+  /**
+   * Send the notification to disconnect a tv for this dashboard
+   *
+   * @param {WebsocketClient} websocketClient The client to disconnect
+   */
+  disconnectProjectToScreen(websocketClient: WebsocketClient): void {
+    const url = `${DashboardService.PROJECTS_BASE_URL}/tv/disconnect/`;
+    this.httpClient.put<void>(url, websocketClient).subscribe();
   }
 
   /**
@@ -309,7 +320,7 @@ export class DashboardService extends AbstractHttpService {
    *
    * @param {Project[]} projects The list of projects to sort
    */
-  sortByProjectName(projects: Project[]) {
+  sortByProjectName(projects: Project[]): Project[] {
     return projects.sort((left, right): number => {
       if (left.name < right.name) { return -1; }
       if (left.name > right.name) { return 1; }

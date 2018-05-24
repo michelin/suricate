@@ -137,7 +137,7 @@ public class DashboardWebSocketService {
      * @return The list of related websocket clients
      */
     @Transactional
-    public List<WebsocketClient> getWebsocketClientForProjectToken(final String projectToken) {
+    public List<WebsocketClient> getWebsocketClientByProjectToken(final String projectToken) {
         return new ArrayList<>(projectClients.get(projectToken));
     }
 
@@ -246,17 +246,6 @@ public class DashboardWebSocketService {
             updateEvent
         );
     }
-
-    /**
-     * Get client on a specified projectId
-     *
-     * @param projectId the project iD
-     * @return the list of client
-     */
-    public Collection<WebsocketClient> getClient(String projectId) {
-        return projectClients.get(projectId);
-    }
-
 
     /**
      * Force dashboard to display client Id

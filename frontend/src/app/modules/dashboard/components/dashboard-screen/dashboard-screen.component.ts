@@ -23,16 +23,15 @@ import {fromEvent} from 'rxjs/observable/fromEvent';
 import {DashboardService} from '../../dashboard.service';
 import {Subscription} from 'rxjs/Subscription';
 import {WebsocketService} from '../../../../shared/services/websocket.service';
-import {AbstractHttpService} from '../../../../shared/services/abstract-http.service';
 import {WSUpdateType} from '../../../../shared/model/websocket/enums/WSUpdateType';
 import {WSConfiguration} from '../../../../shared/model/websocket/WSConfiguration';
-import {AuthenticationService} from '../../../authentication/authentication.service';
 import {WSUpdateEvent} from '../../../../shared/model/websocket/WSUpdateEvent';
 import {NgGridItemEvent} from 'angular2-grid';
 import {ProjectWidgetPosition} from '../../../../shared/model/dto/ProjectWidgetPosition';
 import {DeleteProjectWidgetDialogComponent} from '../delete-project-widget-dialog/delete-project-widget-dialog.component';
 import {EditProjectWidgetDialogComponent} from '../edit-project-widget-dialog/edit-project-widget-dialog.component';
 import {MatDialog} from '@angular/material';
+import {Router} from '@angular/router';
 
 /**
  * Display the grid stack widgets
@@ -82,6 +81,11 @@ export class DashboardScreenComponent implements OnInit, AfterViewInit, OnDestro
   isGridItemInit = false;
 
   /**
+   * The screen code
+   */
+  screenCode: number;
+
+  /**
    * constructor
    *
    * @param {DashboardService} dashboardService The dashboard service
@@ -98,6 +102,7 @@ export class DashboardScreenComponent implements OnInit, AfterViewInit, OnDestro
   ngOnInit() {
     // Unsubcribe every websockets if we have change of dashboard
     this.unsubscribeToWebsockets();
+    this.screenCode = this.websocketService.getscreenCode();
     if (this.project) {
       this.initGridStackOptions(this.project);
       // Subscribe to the new dashboard
@@ -382,7 +387,7 @@ export class DashboardScreenComponent implements OnInit, AfterViewInit, OnDestro
         .subscribe(() => {
           const uniqueSubscription: Subscription = this.websocketService
               .subscribe(
-                  `/user/${project.token}-${this.websocketService.getscreenCode()}/queue/unique`,
+                  `/user/${project.token}-${this.screenCode}/queue/unique`,
                   this.handleUniqueScreenEvent.bind(this)
               );
 
@@ -404,7 +409,9 @@ export class DashboardScreenComponent implements OnInit, AfterViewInit, OnDestro
    * @param headers The headers of the websocket event
    */
   handleUniqueScreenEvent(updateEvent: WSUpdateEvent, headers: any) {
-    console.log(`uniqueScreenEvent - ${updateEvent}`);
+    if (updateEvent.type === WSUpdateType.DISCONNECT) {
+      window.location.reload();
+    }
   }
 
   /**
