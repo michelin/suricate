@@ -1,3 +1,3 @@
 <app-pages-header [secondTitle]="(project$ | async)?.name"></app-pages-header>
 
-<app-dashboard-screen *ngIf="(project$ | async)" [project]="(project$ | async)"></app-dashboard-screen>
+<app-dashboard-screen *ngIf="(project$ | async)" [project]="(project$ | async)" [readOnly]="false"></app-dashboard-screen>

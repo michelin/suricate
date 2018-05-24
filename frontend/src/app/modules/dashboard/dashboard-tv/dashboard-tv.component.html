@@ -1,4 +1,4 @@
-<app-dashboard-screen *ngIf="(project$ | async); else displayScreenCode" [project]="(project$ | async)"></app-dashboard-screen>
+<app-dashboard-screen *ngIf="(project$ | async); else displayScreenCode" [project]="(project$ | async)" [readOnly]="true"></app-dashboard-screen>
 
 <ng-template #displayScreenCode>
   <div class="container"

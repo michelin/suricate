@@ -50,6 +50,11 @@ export class DashboardScreenComponent implements OnInit, AfterViewInit, OnDestro
   @Input('project') project: Project;
 
   /**
+   * Tell if the dashboard should be on readOnly or not
+   */
+  @Input('readOnly') readOnly = true;
+
+  /**
    * Used for keep the subscription of subjects/Obsevables open
    *
    * @type {boolean} True if we keep the connection, False if we have to unsubscribe
@@ -104,14 +109,16 @@ export class DashboardScreenComponent implements OnInit, AfterViewInit, OnDestro
    * Called when the view has been init
    */
   ngAfterViewInit() {
-    // Check when the projectWidgets *ngFor is ended
-    this.projectWidgetsRendered
-        .changes
-        .subscribe((projectWidgetElements: QueryList<any>) => {
-          this.isGridItemInit = true;
-          this.bindDeleteProjectWidgetEvent(projectWidgetElements);
-          this.bindEditProjectWidgetEvent(projectWidgetElements);
-        });
+    if (!this.readOnly) {
+      // Check when the projectWidgets *ngFor is ended
+      this.projectWidgetsRendered
+          .changes
+          .subscribe((projectWidgetElements: QueryList<any>) => {
+            this.isGridItemInit = true;
+            this.bindDeleteProjectWidgetEvent(projectWidgetElements);
+            this.bindEditProjectWidgetEvent(projectWidgetElements);
+          });
+    }
   }
 
 
@@ -140,6 +147,14 @@ export class DashboardScreenComponent implements OnInit, AfterViewInit, OnDestro
       'margins': [2],
       'auto_resize': true
     };
+
+    if (this.readOnly) {
+      this.gridOptions = {
+        ...this.gridOptions,
+        'draggable': false,
+        'resizable': false,
+      };
+    }
   }
 
 
@@ -271,6 +286,10 @@ export class DashboardScreenComponent implements OnInit, AfterViewInit, OnDestro
    * @returns {string} The html string
    */
   getActionButtonsHtml(projectWidget: ProjectWidget): string {
+    if (this.readOnly) {
+      return '';
+    }
+
     return `
       <button id="delete-${projectWidget.id}"
               name="delete-${projectWidget.id}"
