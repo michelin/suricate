@@ -19,7 +19,6 @@ package io.suricate.monitoring.controllers.api;
 import io.suricate.monitoring.controllers.api.error.exception.ApiException;
 import io.suricate.monitoring.model.dto.project.ProjectDto;
 import io.suricate.monitoring.model.dto.project.ProjectWidgetPositionDto;
-import io.suricate.monitoring.model.dto.websocket.WebsocketClient;
 import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.dto.project.ProjectWidgetDto;
@@ -30,7 +29,6 @@ import io.suricate.monitoring.model.mapper.project.ProjectWidgetMapper;
 import io.suricate.monitoring.service.api.ProjectService;
 import io.suricate.monitoring.service.api.ProjectWidgetService;
 import io.suricate.monitoring.service.api.UserService;
-import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +55,7 @@ public class ProjectController {
     /**
      * Class logger
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(Project.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(ProjectController.class);
 
     /**
      * Project service
@@ -85,11 +83,6 @@ public class ProjectController {
     private final ProjectWidgetMapper projectWidgetMapper;
 
     /**
-     * The dashboard websocket service
-     */
-    private final DashboardWebSocketService dashboardWebSocketService;
-
-    /**
      * Constructor for dependency injection
      *
      * @param projectService The project service to inject
@@ -103,14 +96,12 @@ public class ProjectController {
                              @Lazy final ProjectWidgetService projectWidgetService,
                              final UserService userService,
                              final ProjectMapper projectMapper,
-                             final ProjectWidgetMapper projectWidgetMapper,
-                             final DashboardWebSocketService dashboardWebSocketService) {
+                             final ProjectWidgetMapper projectWidgetMapper) {
         this.projectService = projectService;
         this.projectWidgetService = projectWidgetService;
         this.userService = userService;
         this.projectMapper = projectMapper;
         this.projectWidgetMapper = projectWidgetMapper;
-        this.dashboardWebSocketService = dashboardWebSocketService;
     }
 
     /**
@@ -482,32 +473,5 @@ public class ProjectController {
             .cacheControl(CacheControl.noCache())
             .contentType(MediaType.APPLICATION_JSON)
             .body(projectMapper.toProjectDtoDefault(projectOptional.get()));
-    }
-
-    /**
-     * connect a new Screen for a dashboard by screen code
-     *
-     * @param projectId The project id we want to display
-     * @param screenCode The screen code to enroll
-     */
-    @RequestMapping(value = "{projectId}/tv/connect/{screenCode}", method = RequestMethod.GET)
-    @PreAuthorize("hasRole('ROLE_USER')")
-    @Transactional
-    public void connectProjectToTv(@PathVariable("projectId") Long projectId,
-                                   @PathVariable("screenCode") String screenCode) {
-        Optional<Project> projectOptional = projectService.getOneById(projectId);
-        projectOptional.ifPresent(project -> this.dashboardWebSocketService.connectUniqueScreen(project, screenCode));
-    }
-
-    /**
-     * Disconnect a client
-     *
-     * @param websocketClient The websocket client to disconnect
-     */
-    @RequestMapping(value = "tv/disconnect", method = RequestMethod.PUT)
-    @PreAuthorize("hasRole('ROLE_USER')")
-    @Transactional
-    public void disconnectProjectToTv(@RequestBody WebsocketClient websocketClient) {
-        this.dashboardWebSocketService.disconnectClient(websocketClient);
     }
 }

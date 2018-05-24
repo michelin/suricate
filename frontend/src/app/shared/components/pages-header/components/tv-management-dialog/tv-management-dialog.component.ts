@@ -20,6 +20,7 @@ import {FormBuilder, FormGroup} from '@angular/forms';
 import {DashboardService} from '../../../../../modules/dashboard/dashboard.service';
 import {Project} from '../../../../model/dto/Project';
 import {WebsocketClient} from '../../../../model/dto/WebsocketClient';
+import {ScreenService} from '../../../../../modules/dashboard/screen.service';
 
 /**
  * Component that manage the popup for Dashboard TV Management
@@ -48,10 +49,12 @@ export class TvManagementDialogComponent implements OnInit {
    * @param data The data give to the modal
    * @param {FormBuilder} formBuilder The formBuilder
    * @param {DashboardService} dashboardService The dashboard service to inject
+   * @param {ScreenService} screenService The screen service
    */
   constructor(@Inject(MAT_DIALOG_DATA) private data: any,
               private formBuilder: FormBuilder,
-              private dashboardService: DashboardService) { }
+              private dashboardService: DashboardService,
+              private screenService: ScreenService) { }
 
   /**
    * When the component is initialized
@@ -72,7 +75,7 @@ export class TvManagementDialogComponent implements OnInit {
   registerScreen(): void {
     if (this.screenRegisterForm.valid) {
       const screenCode: string = this.screenRegisterForm.get('screenCode').value;
-      this.dashboardService.connectProjectToScreen(this.project.id, +screenCode);
+      this.screenService.connectProjectToScreen(this.project.token, +screenCode);
     }
   }
 
@@ -82,7 +85,7 @@ export class TvManagementDialogComponent implements OnInit {
    * @param {WebsocketClient} websocketClient The websocket to disconnect
    */
   disconnectScreen(websocketClient: WebsocketClient): void {
-    this.dashboardService.disconnectProjectToScreen(websocketClient);
+    this.screenService.disconnectScreen(websocketClient);
   }
 
 }

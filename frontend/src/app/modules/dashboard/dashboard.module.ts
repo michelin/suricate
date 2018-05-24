@@ -28,6 +28,7 @@ import { DeleteProjectWidgetDialogComponent } from './components/delete-project-
 import { EditProjectWidgetDialogComponent } from './components/edit-project-widget-dialog/edit-project-widget-dialog.component';
 import { DashboardScreenComponent } from './components/dashboard-screen/dashboard-screen.component';
 import {DashboardTvComponent} from './dashboard-tv/dashboard-tv.component';
+import {ScreenService} from './screen.service';
 
 const dashboardRoutes: Routes = [
   { path: 'tv', component: DashboardTvComponent },
@@ -61,7 +62,8 @@ const dashboardRoutes: Routes = [
       RouterModule
   ],
   providers: [
-      DashboardService
+      DashboardService,
+      ScreenService
   ],
   entryComponents: [
       DeleteDashboardDialogComponent,

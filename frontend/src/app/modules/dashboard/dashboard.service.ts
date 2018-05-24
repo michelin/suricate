@@ -305,27 +305,6 @@ export class DashboardService extends AbstractHttpService {
   }
 
   /**
-   * Send the notification for connect a new tv to this dashboard
-   *
-   * @param {number} projectId The project to connect
-   * @param {number} screenCode The tv screen code
-   */
-  connectProjectToScreen(projectId: number, screenCode: number): void {
-    const url = `${DashboardService.PROJECTS_BASE_URL}/${projectId}/tv/connect/${screenCode}`;
-    this.httpClient.get<void>(url).subscribe();
-  }
-
-  /**
-   * Send the notification to disconnect a tv for this dashboard
-   *
-   * @param {WebsocketClient} websocketClient The client to disconnect
-   */
-  disconnectProjectToScreen(websocketClient: WebsocketClient): void {
-    const url = `${DashboardService.PROJECTS_BASE_URL}/tv/disconnect/`;
-    this.httpClient.put<void>(url, websocketClient).subscribe();
-  }
-
-  /**
    * Sort list of project by name
    *
    * @param {Project[]} projects The list of projects to sort
