@@ -56,12 +56,9 @@ export class TvManagementDialogComponent implements OnInit {
    * When the component is initialized
    */
   ngOnInit() {
-    this.dashboardService.currendDashbordSubject.subscribe(project => this.project = project);
     this.dashboardService
         .getOneById(this.data.projectId)
-        .subscribe(project => {
-          this.dashboardService.currendDashbordSubject.next(project);
-        });
+        .subscribe(project => this.project = project );
 
     this.screenRegisterForm = this.formBuilder.group({
       screenCode: ['']
