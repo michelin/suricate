@@ -204,7 +204,9 @@ public class ProjectWidgetService {
         }
         projectWidgetRepository.flush();
         // notify clients
-        dashboardWebsocketService.updateGlobalScreensByProjectToken(project.getToken(), new UpdateEvent(UpdateType.POSITION));
+        UpdateEvent updateEvent = new UpdateEvent(UpdateType.POSITION);
+        updateEvent.setContent(projectMapper.toProjectDtoDefault(project));
+        dashboardWebsocketService.updateGlobalScreensByProjectToken(project.getToken(), updateEvent);
     }
 
     /**

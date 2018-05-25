@@ -16,11 +16,34 @@
  *
  */
 
-export enum WSUpdateType {
-  GRID = 'GRID',
-  WIDGET = 'WIDGET',
-  POSITION = 'POSITION',
-  DISCONNECT = 'DISCONNECT',
-  CONNECT = 'CONNECT',
-  DISPLAY_NUMBER = 'DISPLAY_NUMBER'
+import { Injectable } from '@angular/core';
+import {Subject} from 'rxjs/Subject';
+import {Observable} from 'rxjs/Observable';
+
+/**
+ * Sidenav service
+ */
+@Injectable()
+export class SidenavService {
+
+  /**
+   * The sidenav subject
+   *
+   * @type {Subject<boolean>} True open, false close
+   */
+  private sidenavOpenCloseEventSubject = new Subject<boolean>();
+
+  constructor() { }
+
+  subscribeToSidenavOpenCloseEvent(): Observable<boolean> {
+    return this.sidenavOpenCloseEventSubject.asObservable();
+  }
+
+  closeSidenav(): void {
+    this.sidenavOpenCloseEventSubject.next(false);
+  }
+
+  openSidenav(): void {
+    this.sidenavOpenCloseEventSubject.next(true);
+  }
 }

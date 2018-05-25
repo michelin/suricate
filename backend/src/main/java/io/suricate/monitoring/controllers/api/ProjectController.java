@@ -37,6 +37,7 @@ import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -54,7 +55,7 @@ public class ProjectController {
     /**
      * Class logger
      */
-    private final static Logger LOGGER = LoggerFactory.getLogger(Project.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(ProjectController.class);
 
     /**
      * Project service
@@ -252,6 +253,31 @@ public class ProjectController {
     }
 
     /**
+     * Get a project by token
+     *
+     * @param token The token of the project
+     * @return The project
+     */
+    @RequestMapping(value = "/project/{token}", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<ProjectDto> getOneByToken(@PathVariable("token") String token) {
+        Optional<Project> project = projectService.getOneByToken(token);
+
+        if(!project.isPresent()) {
+            return ResponseEntity
+                    .notFound()
+                    .cacheControl(CacheControl.noCache())
+                    .build();
+        }
+
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .cacheControl(CacheControl.noCache())
+                .body(projectMapper.toProjectDtoDefault(project.get()));
+    }
+
+    /**
      * Method that delete a project
      *
      * @param projectId The project id to delete
@@ -259,6 +285,7 @@ public class ProjectController {
      */
     @RequestMapping(value = "/{projectId}", method = RequestMethod.DELETE)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @Transactional
     public ResponseEntity<ProjectDto> deleteOneById(@PathVariable("projectId") Long projectId) {
         Optional<Project> projectOptional = projectService.getOneById(projectId);
 

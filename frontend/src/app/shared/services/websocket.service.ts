@@ -22,7 +22,7 @@ import {Subscription} from 'rxjs/Subscription';
 import {Observable} from 'rxjs/Observable';
 import {empty} from 'rxjs/observable/empty';
 import {fromPromise} from 'rxjs/observable/fromPromise';
-import {of} from 'rxjs/observable/of';
+import {NumberUtils} from '../utils/NumberUtils';
 
 /**
  * Service that manage the websockets connections
@@ -35,9 +35,19 @@ export class WebsocketService extends AbstractHttpService {
   public static readonly WS_STATUS_CONNECTING = 'CONNECTING';
   public static readonly WS_STATUS_CONNECTED = 'CONNECTED';
 
+  /**
+   * Define the min bound for the screen code random generation
+   *
+   * @type {number} The min bound
+   */
+  private readonly MIN_SCREEN_CODE_BOUND = 100000;
 
-  /** Keep the number of connections in memory **/
-  nbActiveSubscription = 0;
+  /**
+   * Define the max bound for the screen code random generation
+   *
+   * @type {number} The max bound
+   */
+  private readonly MAX_SCREEN_CODE_BOUND = 999999;
 
   /**
    * The constructor of the service
@@ -47,6 +57,40 @@ export class WebsocketService extends AbstractHttpService {
   constructor(private stompService: StompService) {
     super();
   }
+
+  /* ****************************************************************** */
+  /*                    Screen code management                          */
+  /* ****************************************************************** */
+
+  /**
+   * Get the screen code
+   * @returns {number} The screen code
+   */
+  getscreenCode(): number {
+    return NumberUtils.getRandomIntBetween(this.MIN_SCREEN_CODE_BOUND, this.MAX_SCREEN_CODE_BOUND);
+  }
+
+  /* ****************************************************************** */
+  /*                    Dashboard specific                              */
+  /* ****************************************************************** */
+
+  /**
+   * Get the dashboard configuration for websocket
+   *
+   * @returns {WSConfiguration} The configuration
+   */
+  getDashboardWSConfiguration(): WSConfiguration {
+    return {
+      host: `${AbstractHttpService.BASE_WS_URL}`,
+      debug: true,
+      queue: {'init': false}
+    };
+  }
+
+
+  /* ****************************************************************** */
+  /*                    Global Management                               */
+  /* ****************************************************************** */
 
   /**
    * Handle the connection of a websocket

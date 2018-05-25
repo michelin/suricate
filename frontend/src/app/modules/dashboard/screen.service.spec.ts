@@ -14,16 +14,18 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.enums;
+import { TestBed, inject } from '@angular/core/testing';
 
-/**
- * Update type (Websocket)
- */
-public enum UpdateType {
-    GRID,
-    WIDGET,
-    POSITION,
-    DISCONNECT,
-    CONNECT,
-    DISPLAY_NUMBER
-}
+import { ScreenService } from './screen.service';
+
+describe('ScreenService', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [ScreenService]
+    });
+  });
+
+  it('should be created', inject([ScreenService], (service: ScreenService) => {
+    expect(service).toBeTruthy();
+  }));
+});

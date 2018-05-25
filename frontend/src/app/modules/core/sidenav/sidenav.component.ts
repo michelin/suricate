@@ -14,21 +14,25 @@
  * limitations under the License.
  */
 
-import {ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, AfterViewInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {User} from '../../../shared/model/dto/user/User';
 import {Project} from '../../../shared/model/dto/Project';
 import {DashboardService} from '../../dashboard/dashboard.service';
 import {UserService} from '../../user/user.service';
 import {AuthenticationService} from '../../authentication/authentication.service';
-import {takeUntil, takeWhile} from 'rxjs/operators';
+import {takeWhile} from 'rxjs/operators';
+import {MatSidenav} from '@angular/material';
+import {SidenavService} from './sidenav.service';
 
 @Component({
   selector: 'app-sidenav',
   templateUrl: './sidenav.component.html',
   styleUrls: ['./sidenav.component.css']
 })
-export class SidenavComponent implements OnInit, OnDestroy {
+export class SidenavComponent implements OnInit, AfterViewInit, OnDestroy {
+
+  @ViewChild('sidenav') sidenav: MatSidenav;
 
   /**
    * Used for close the observable subscription
@@ -55,12 +59,14 @@ export class SidenavComponent implements OnInit, OnDestroy {
    * @param {DashboardService} dashboardService The dashboard service
    * @param {UserService} userService The user service
    * @param {AuthenticationService} authenticationService The authentication service
+   * @param {SidenavService} sidenavService The sidenav service
    */
   constructor(private router: Router,
               private changeDetectorRef: ChangeDetectorRef,
               private dashboardService: DashboardService,
               private userService: UserService,
-              private authenticationService: AuthenticationService) { }
+              private authenticationService: AuthenticationService,
+              private sidenavService: SidenavService) { }
 
   /**
    * Init objects
@@ -69,7 +75,7 @@ export class SidenavComponent implements OnInit, OnDestroy {
     this.dashboardService
         .dashboardsSubject
         .pipe(takeWhile(() => this.alive))
-        .subscribe(projects => this.dashboards = projects);
+        .subscribe(projects => this.dashboards = this.dashboardService.sortByProjectName(projects));
 
     this.userService
         .connectedUserSubject
@@ -78,6 +84,19 @@ export class SidenavComponent implements OnInit, OnDestroy {
 
     this.dashboardService.getAllForCurrentUser().subscribe();
     this.userService.getConnectedUser().subscribe();
+  }
+
+  ngAfterViewInit() {
+    this.sidenavService
+        .subscribeToSidenavOpenCloseEvent()
+        .pipe(takeWhile(() => this.alive))
+        .subscribe( (shouldOpen: boolean) => {
+          if (shouldOpen) {
+            this.sidenav.open();
+          } else {
+            this.sidenav.close();
+          }
+        });
   }
 
   /**
