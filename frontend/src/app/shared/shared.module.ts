@@ -86,7 +86,8 @@ import { TvManagementDialogComponent } from './components/pages-header/component
       AddWidgetDialogComponent,
       ToastComponent,
       SafeHtmlPipe,
-      SafeUrlPipe
+      SafeUrlPipe,
+      RunScriptsDirective
   ],
   providers: [
       { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
