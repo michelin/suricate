@@ -38,6 +38,7 @@ import {ToastService} from './components/toast/toast.service';
 import { PagesFooterComponent } from './components/pages-footer/pages-footer.component';
 import {SafeHtmlPipe} from './pipes/safe-html.pipe';
 import { SafeUrlPipe } from './pipes/safe-url.pipe';
+import { RunScriptsDirective } from './directives/run-scripts.directive';
 import { TvManagementDialogComponent } from './components/pages-header/components/tv-management-dialog/tv-management-dialog.component';
 
 @NgModule({
@@ -63,7 +64,8 @@ import { TvManagementDialogComponent } from './components/pages-header/component
       PagesFooterComponent,
       SafeHtmlPipe,
       SafeUrlPipe,
-      TvManagementDialogComponent
+      TvManagementDialogComponent,
+      RunScriptsDirective
   ],
   entryComponents: [
       AddWidgetDialogComponent,
