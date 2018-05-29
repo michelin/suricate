@@ -61,6 +61,9 @@ export class RunScriptsDirective implements OnInit {
       script.parentNode.replaceChild(copyScript, script);
     });
 
-    this.scriptRenderingFinished.emit(true);
+    // Wait for DOM rendering
+    setTimeout(() => {
+      this.scriptRenderingFinished.emit(true);
+    });
   }
 }
