@@ -86,6 +86,12 @@ export class DashboardScreenComponent implements OnInit, AfterViewInit, OnDestro
   isGridItemInit = false;
 
   /**
+   * True if the "src" scripts Are Rendered
+   * @type {boolean}
+   */
+  isSrcScriptsRendered = false;
+
+  /**
    * constructor
    *
    * @param {DashboardService} dashboardService The dashboard service
@@ -240,6 +246,33 @@ export class DashboardScreenComponent implements OnInit, AfterViewInit, OnDestro
           ${this.getActionButtonsCss()}
         </style>
     `;
+  }
+
+  /* ************ JS Management *********************** */
+
+  /**
+   * Get the JS libraries from project
+   *
+   * @param {string[]} librariesToken The libraries token
+   * @returns {string} The src script
+   */
+  getJSLibraries(librariesToken: string[]): string {
+    let scriptUrls = '';
+
+    librariesToken.forEach(token => {
+      scriptUrls = scriptUrls.concat(`<script src="http://localhost:8080/api/asset/${token}"></script>`);
+    });
+
+    return scriptUrls;
+  }
+
+
+  /**
+   * Set if src scripts are rendered
+   * @param {boolean} isScriptRendered
+   */
+  setSrcScriptRendered(isScriptRendered: boolean) {
+    this.isSrcScriptsRendered = isScriptRendered;
   }
 
   /* ************ Unique Widget HTML and CSS Management ************* */

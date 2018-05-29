@@ -1,4 +1,4 @@
-import {Directive, ElementRef, OnInit} from '@angular/core';
+import {Directive, ElementRef, EventEmitter, OnInit, Output} from '@angular/core';
 
 /**
  * Directive used for running script under HTML Views
@@ -7,6 +7,13 @@ import {Directive, ElementRef, OnInit} from '@angular/core';
   selector: '[appRunScripts]'
 })
 export class RunScriptsDirective implements OnInit {
+
+  /**
+   * Emit an event when the script rendering for childs are ended
+   *
+   * @type {EventEmitter<any>}
+   */
+  @Output('scriptRenderingFinished') scriptRenderingFinished = new EventEmitter();
 
   /**
    * The constructor
@@ -20,7 +27,7 @@ export class RunScriptsDirective implements OnInit {
    */
   ngOnInit(): void {
     setTimeout(() => {
-      // Wait for DROM rendering
+      // Wait for DOM rendering
       this.reinsertScripts();
     });
   }
@@ -29,7 +36,11 @@ export class RunScriptsDirective implements OnInit {
    * Reinsert scripts tag inside DOM for execution
    */
   reinsertScripts(): void {
-    const scripts: HTMLScriptElement[] = this.elementRef.nativeElement.getElementsByTagName('script');
+    let scripts: HTMLScriptElement[] = Array.from(this.elementRef.nativeElement.getElementsByTagName('script'));
+    const scriptsWithSrc: HTMLScriptElement[] = scripts.filter(currentScript => currentScript.src);
+    const scriptsInline: HTMLScriptElement[] = scripts.filter(currentScript => currentScript.innerHTML);
+    scripts = [...scriptsWithSrc, ...scriptsInline];
+
     const scriptsInitialLength = scripts.length;
 
     Array.from(Array(scriptsInitialLength).keys()).forEach((index: number) => {
@@ -49,5 +60,7 @@ export class RunScriptsDirective implements OnInit {
       copyScript.async = false;
       script.parentNode.replaceChild(copyScript, script);
     });
+
+    this.scriptRenderingFinished.emit(true);
   }
 }
