@@ -15,7 +15,18 @@
  */
 
 
-import {AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  QueryList, SimpleChanges,
+  ViewChildren
+} from '@angular/core';
 import {Project} from '../../../../shared/model/dto/Project';
 import {map, takeWhile} from 'rxjs/operators';
 import {ProjectWidget} from '../../../../shared/model/dto/ProjectWidget';
@@ -41,7 +52,7 @@ import { interval } from 'rxjs/observable/interval';
   templateUrl: './dashboard-screen.component.html',
   styleUrls: ['./dashboard-screen.component.css']
 })
-export class DashboardScreenComponent implements OnInit, AfterViewInit, OnDestroy {
+export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewInit, OnDestroy {
 
   /**
    * The project to display
@@ -91,7 +102,10 @@ export class DashboardScreenComponent implements OnInit, AfterViewInit, OnDestro
    */
   isSrcScriptsRendered = false;
 
-  stompClientStatus: WSStatusEnum;
+  /**
+   * The current stomp client status
+   */
+  stompClientStatus: WSStatusEnum = WSStatusEnum.DISCONNECTED;
 
   /**
    * constructor
@@ -100,27 +114,41 @@ export class DashboardScreenComponent implements OnInit, AfterViewInit, OnDestro
    * @param {MatDialog} matDialog The material dialog service
    * @param {WebsocketService} websocketService The websocket service
    * @param {Router} router The router service
+   * @param {ChangeDetectorRef} changeDetectorRef The change detector ref service
    */
   constructor(private dashboardService: DashboardService,
               private websocketService: WebsocketService,
               private matDialog: MatDialog,
-              private router: Router) { }
+              private router: Router,
+              private changeDetectorRef: ChangeDetectorRef) { }
+
+  /**
+   * Call before ngOnInit and at every changes
+   * @param {SimpleChanges} changes
+   */
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.project) {
+      if (changes.project.previousValue && changes.project.previousValue.id !== changes.project.currentValue.id) {
+        this.unsubscribeToWebsockets();
+      }
+
+      this.project = changes.project.currentValue;
+      this.changeDetectorRef.detectChanges();
+      this.createWebsocketConnection(this.project);
+    }
+  }
 
   /**
    * Init of the component
    */
   ngOnInit() {
-    // Unsubcribe every websockets if we have change of dashboard
-    this.unsubscribeToWebsockets();
-
     if (!this.screenCode) {
       this.screenCode = this.websocketService.getscreenCode();
     }
 
     if (this.project) {
       this.initGridStackOptions(this.project);
-      // Subscribe to the new dashboard
-      this.createWebsocketConnection(this.project);
+      this.subscribeToWebsocketChange();
     }
   }
 
@@ -140,13 +168,13 @@ export class DashboardScreenComponent implements OnInit, AfterViewInit, OnDestro
     }
   }
 
-
   /**
    * Called when the component is getting destroy
    */
   ngOnDestroy() {
     this.isAlive = false;
     this.unsubscribeToWebsockets();
+    this.websocketService.disconnect();
   }
 
   /* ******************************************************* */
@@ -409,10 +437,9 @@ export class DashboardScreenComponent implements OnInit, AfterViewInit, OnDestro
   unsubscribeToWebsockets() {
     this.websocketSubscriptions.forEach( (websocketSubscription: any, index: number) => {
       this.websocketService.unsubscribe(websocketSubscription);
-      this.websocketSubscriptions.splice(index, 1);
     });
 
-    this.websocketService.disconnect();
+    this.websocketSubscriptions = [];
   }
 
   /**
@@ -421,9 +448,17 @@ export class DashboardScreenComponent implements OnInit, AfterViewInit, OnDestro
    * @param {Project} project The project wanted for the connection
    */
   createWebsocketConnection(project: Project) {
+    this.websocketService.configuration = this.websocketService.getDashboardWSConfiguration();
+    this.websocketService.startConnection();
+  }
+
+  /**
+   * Check for change on websocket status
+   */
+  subscribeToWebsocketChange() {
     this.websocketService
         .stompClientStatus
-        .pipe(takeWhile( () => this.isAlive ))
+        .pipe(takeWhile(() => this.isAlive))
         .subscribe((status: WSStatusEnum) => {
           this.stompClientStatus = status;
 
@@ -432,23 +467,22 @@ export class DashboardScreenComponent implements OnInit, AfterViewInit, OnDestro
               this.subscribeToDestinations();
               break;
             }
+
             case WSStatusEnum.ERROR: {
               interval(2000)
-                  .pipe( takeWhile(() => this.stompClientStatus !== WSStatusEnum.CONNECTED) )
+                  .pipe(takeWhile(() => this.stompClientStatus !== WSStatusEnum.CONNECTED))
                   .subscribe(() => {
                     this.unsubscribeToWebsockets();
                     this.websocketService.startConnection();
                   });
               break;
             }
+
             default: {
               break;
             }
           }
         });
-
-    this.websocketService.configuration = this.websocketService.getDashboardWSConfiguration();
-    this.websocketService.startConnection();
   }
 
   /**
@@ -478,6 +512,7 @@ export class DashboardScreenComponent implements OnInit, AfterViewInit, OnDestro
   handleUniqueScreenEvent(updateEvent: WSUpdateEvent, headers: any) {
     if (updateEvent.type === WSUpdateType.DISCONNECT) {
       this.unsubscribeToWebsockets();
+      this.websocketService.disconnect();
       this.router.navigate(['/tv']);
     }
   }
@@ -511,6 +546,8 @@ export class DashboardScreenComponent implements OnInit, AfterViewInit, OnDestro
         this.dashboardService.currendDashbordSubject.next(projectUpdated);
       }
     }
+
+    this.changeDetectorRef.detectChanges();
   }
 
   /**
