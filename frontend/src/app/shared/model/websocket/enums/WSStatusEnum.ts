@@ -17,11 +17,11 @@
  */
 
 /**
- * Interface that represent the Stomp configuration (cf: Library ng2-STOMP-Over-Websocket)
+ * Hold the different status for websocket connection
  */
-export interface WSConfiguration {
-  /** Websocket endpoint **/
-  host: string;
-  /** debuging (optional) **/
-  debug?: boolean;
+export enum WSStatusEnum {
+  DISCONNECTED = 'DISCONNECTED',
+  CONNECTING = 'CONNECTING',
+  CONNECTED = 'CONNECTED',
+  ERROR = 'ERROR'
 }

@@ -16,13 +16,15 @@
 
 import { Injectable } from '@angular/core';
 import {AbstractHttpService} from './abstract-http.service';
-import {StompService} from 'ng2-stomp-service/index';
 import {WSConfiguration} from '../model/websocket/WSConfiguration';
 import {Subscription} from 'rxjs/Subscription';
 import {Observable} from 'rxjs/Observable';
-import {empty} from 'rxjs/observable/empty';
-import {fromPromise} from 'rxjs/observable/fromPromise';
 import {NumberUtils} from '../utils/NumberUtils';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {WSStatusEnum} from '../model/websocket/enums/WSStatusEnum';
+
+import * as Stomp from 'stompjs';
+import * as SockJS from 'sockjs-client';
 
 /**
  * Service that manage the websockets connections
@@ -30,10 +32,27 @@ import {NumberUtils} from '../utils/NumberUtils';
 @Injectable()
 export class WebsocketService extends AbstractHttpService {
 
-  /** Inventory WebSocket status **/
-  public static readonly WS_STATUS_CLOSED = 'CLOSED';
-  public static readonly WS_STATUS_CONNECTING = 'CONNECTING';
-  public static readonly WS_STATUS_CONNECTED = 'CONNECTED';
+  /**
+   * Current websocket status
+   *
+   * @type {BehaviorSubject<WSStatusEnum>}
+   */
+  private _status = new BehaviorSubject<WSStatusEnum>(WSStatusEnum.DISCONNECTED);
+
+  /**
+   * The websocket configuration
+   */
+  private _configuration: WSConfiguration;
+
+  /**
+   * The SOCK JS Socket
+   */
+  private _socket: any;
+
+  /**
+   * The stomp client
+   */
+  private _stompClient: any;
 
   /**
    * Define the min bound for the screen code random generation
@@ -51,11 +70,38 @@ export class WebsocketService extends AbstractHttpService {
 
   /**
    * The constructor of the service
-   *
-   * @param {StompService} stompService The websocket service from ng2-STOMP-OVER-Websocket plugin
    */
-  constructor(private stompService: StompService) {
+  constructor() {
     super();
+  }
+
+  /* ****************************************************************** */
+  /*                    Getter /etter                                   */
+  /* ****************************************************************** */
+
+  /**
+   * The status as observable
+   * @returns {Observable<WSStatusEnum>}
+   */
+  get stompClientStatus(): Observable<WSStatusEnum> {
+    return this._status.asObservable();
+  }
+
+  /**
+   * The status value
+   * @returns {Observable<WSStatusEnum>}
+   */
+  get stompClientStatusValue(): WSStatusEnum {
+    return this._status.getValue();
+  }
+
+  /**
+   * Set a new configuration
+   *
+   * @param {WSConfiguration} configuration
+   */
+  set configuration(configuration: WSConfiguration) {
+    this._configuration = configuration;
   }
 
   /* ****************************************************************** */
@@ -71,7 +117,7 @@ export class WebsocketService extends AbstractHttpService {
   }
 
   /* ****************************************************************** */
-  /*                    Dashboard specific                              */
+  /*                    WebSocket Management                            */
   /* ****************************************************************** */
 
   /**
@@ -82,48 +128,63 @@ export class WebsocketService extends AbstractHttpService {
   getDashboardWSConfiguration(): WSConfiguration {
     return {
       host: `${AbstractHttpService.BASE_WS_URL}`,
-      debug: true,
-      queue: {'init': false}
+      debug: true
     };
   }
 
-
-  /* ****************************************************************** */
-  /*                    Global Management                               */
-  /* ****************************************************************** */
-
   /**
    * Handle the connection of a websocket
-   *
-   * @param {WSConfiguration} configuration
    */
-  connect(configuration: WSConfiguration): Observable<any> {
-    // configuration
-    this.stompService.configure(configuration);
+  startConnection() {
+    if (!this._configuration) {
+      Observable.throw('Configuration is required');
+    }
 
-    // start connection
-    return fromPromise(
-        this.stompService.startConnect().then(() => {
-          this.stompService.done('init');
-          console.log('connected');
+    this._status.next(WSStatusEnum.CONNECTING);
 
-          return empty();
-        })
-    );
+    // Prepare connection
+    this._socket = new SockJS(this._configuration.host);
+    this._stompClient = Stomp.over(this._socket);
+
+    if (this._configuration.debug) {
+      this._stompClient.debug = function(message) {
+        console.log(message);
+      };
+    }
+
+    // Connect to server (Attributes : headers, onConnect, onError)
+    this._stompClient.connect({}, this.onConnect.bind(this), this.onError.bind(this));
+  }
+
+  /**
+   * Successfull connection to server
+   */
+  onConnect(frame: any) {
+    this._status.next(WSStatusEnum.CONNECTED);
+  }
+
+  /**
+   * An error as been detected
+   * @param {string} error The error message
+   */
+  onError(error: string) {
+    console.error(`Error: ${error}`);
+    if (error.indexOf('Lost connection') !== -1) {
+      this._status.next(WSStatusEnum.ERROR);
+    }
   }
 
   /**
    * Handle the subcription of a websocket
    *
-   * @param {string} eventUrl The subcription url
+   * @param {string} destination The subcription url
    * @param {Function} callbackFunction The callback function to call when a new event is received
    */
-  subscribe(eventUrl: string, callbackFunction: Function): Subscription {
-    if (this.stompService.status !== WebsocketService.WS_STATUS_CONNECTED) {
-      Observable.throw(new Error('No connection found, connect your websocket before subscribe to an event'));
-    }
-
-    return this.stompService.subscribe(`${eventUrl}`, callbackFunction);
+  subscribeToDestination(destination: string, callbackFunction: Function): any {
+    return this._stompClient.subscribe(destination, function (response) {
+      const message: string = JSON.parse(response.body);
+      callbackFunction(message);
+    });
   }
 
   /**
@@ -139,9 +200,9 @@ export class WebsocketService extends AbstractHttpService {
    * Handle the disconnection of the websocket
    */
   disconnect() {
-    if (this.stompService.status === WebsocketService.WS_STATUS_CONNECTED) {
-      this.stompService.disconnect().then(() => {
-        console.log('Connection closed');
+    if (this._stompClient) {
+      this._stompClient.disconnect(() => {
+        this._status.next(WSStatusEnum.DISCONNECTED);
       });
     }
   }

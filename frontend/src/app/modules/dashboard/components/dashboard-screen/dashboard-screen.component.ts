@@ -21,10 +21,8 @@ import {map, takeWhile} from 'rxjs/operators';
 import {ProjectWidget} from '../../../../shared/model/dto/ProjectWidget';
 import {fromEvent} from 'rxjs/observable/fromEvent';
 import {DashboardService} from '../../dashboard.service';
-import {Subscription} from 'rxjs/Subscription';
 import {WebsocketService} from '../../../../shared/services/websocket.service';
 import {WSUpdateType} from '../../../../shared/model/websocket/enums/WSUpdateType';
-import {WSConfiguration} from '../../../../shared/model/websocket/WSConfiguration';
 import {WSUpdateEvent} from '../../../../shared/model/websocket/WSUpdateEvent';
 import {NgGridItemEvent} from 'angular2-grid';
 import {ProjectWidgetPosition} from '../../../../shared/model/dto/ProjectWidgetPosition';
@@ -32,6 +30,8 @@ import {DeleteProjectWidgetDialogComponent} from '../delete-project-widget-dialo
 import {EditProjectWidgetDialogComponent} from '../edit-project-widget-dialog/edit-project-widget-dialog.component';
 import {MatDialog} from '@angular/material';
 import {Router} from '@angular/router';
+import {WSStatusEnum} from '../../../../shared/model/websocket/enums/WSStatusEnum';
+import { interval } from 'rxjs/observable/interval';
 
 /**
  * Display the grid stack widgets
@@ -73,7 +73,7 @@ export class DashboardScreenComponent implements OnInit, AfterViewInit, OnDestro
   /**
    * Save every web socket subscriptions event
    */
-  websocketSubscriptions: Subscription[] = [];
+  websocketSubscriptions: any[] = [];
 
   /**
    * The options for the plugin angular2-grid
@@ -90,6 +90,8 @@ export class DashboardScreenComponent implements OnInit, AfterViewInit, OnDestro
    * @type {boolean}
    */
   isSrcScriptsRendered = false;
+
+  stompClientStatus: WSStatusEnum;
 
   /**
    * constructor
@@ -405,7 +407,7 @@ export class DashboardScreenComponent implements OnInit, AfterViewInit, OnDestro
    * Unsubcribe and disconnect from websockets
    */
   unsubscribeToWebsockets() {
-    this.websocketSubscriptions.forEach( (websocketSubscription: Subscription, index: number) => {
+    this.websocketSubscriptions.forEach( (websocketSubscription: any, index: number) => {
       this.websocketService.unsubscribe(websocketSubscription);
       this.websocketSubscriptions.splice(index, 1);
     });
@@ -419,26 +421,52 @@ export class DashboardScreenComponent implements OnInit, AfterViewInit, OnDestro
    * @param {Project} project The project wanted for the connection
    */
   createWebsocketConnection(project: Project) {
-    const websocketConfiguration: WSConfiguration = this.websocketService.getDashboardWSConfiguration();
-
     this.websocketService
-        .connect(websocketConfiguration)
-        .subscribe(() => {
-          const uniqueSubscription: Subscription = this.websocketService
-              .subscribe(
-                  `/user/${project.token}-${this.screenCode}/queue/unique`,
-                  this.handleUniqueScreenEvent.bind(this)
-              );
+        .stompClientStatus
+        .pipe(takeWhile( () => this.isAlive ))
+        .subscribe((status: WSStatusEnum) => {
+          this.stompClientStatus = status;
 
-          const globalSubscription: Subscription = this.websocketService
-              .subscribe(
-                  `/user/${project.token}/queue/live`,
-                  this.handleGlobalScreenEvent.bind(this)
-              );
-
-          this.websocketSubscriptions.push(uniqueSubscription);
-          this.websocketSubscriptions.push(globalSubscription);
+          switch (status) {
+            case WSStatusEnum.CONNECTED: {
+              this.subscribeToDestinations();
+              break;
+            }
+            case WSStatusEnum.ERROR: {
+              interval(2000)
+                  .pipe( takeWhile(() => this.stompClientStatus !== WSStatusEnum.CONNECTED) )
+                  .subscribe(() => {
+                    this.unsubscribeToWebsockets();
+                    this.websocketService.startConnection();
+                  });
+              break;
+            }
+            default: {
+              break;
+            }
+          }
         });
+
+    this.websocketService.configuration = this.websocketService.getDashboardWSConfiguration();
+    this.websocketService.startConnection();
+  }
+
+  /**
+   * Subscribe to destinations
+   */
+  subscribeToDestinations() {
+    const uniqueSubscription: any = this.websocketService.subscribeToDestination(
+        `/user/${this.project.token}-${this.screenCode}/queue/unique`,
+        this.handleUniqueScreenEvent.bind(this)
+    );
+
+    const globalSubscription: any = this.websocketService.subscribeToDestination(
+        `/user/${this.project.token}/queue/live`,
+        this.handleGlobalScreenEvent.bind(this)
+    );
+
+    this.websocketSubscriptions.push(uniqueSubscription);
+    this.websocketSubscriptions.push(globalSubscription);
   }
 
   /**

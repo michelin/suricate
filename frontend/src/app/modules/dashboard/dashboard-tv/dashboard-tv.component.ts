@@ -24,11 +24,10 @@ import {of} from 'rxjs/observable/of';
 import {Project} from '../../../shared/model/dto/Project';
 import {Observable} from 'rxjs/Observable';
 import {DashboardService} from '../dashboard.service';
-import {WSConfiguration} from '../../../shared/model/websocket/WSConfiguration';
-import {Subscription} from 'rxjs/Subscription';
 import {WSUpdateEvent} from '../../../shared/model/websocket/WSUpdateEvent';
 import {WSUpdateType} from '../../../shared/model/websocket/enums/WSUpdateType';
 import {ActivatedRoute, Router} from '@angular/router';
+import {WSStatusEnum} from '../../../shared/model/websocket/enums/WSStatusEnum';
 
 /**
  * Dashboard TV Management
@@ -60,7 +59,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   /**
    * The screen subscription (Code View)
    */
-  screenSubscription: Subscription;
+  screenSubscription: any;
 
   /**
    * The constructor
@@ -107,19 +106,29 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * When on code view screen we wait for new connection
    */
   listenForConnection() {
-    const websocketConfiguration: WSConfiguration = this.websocketService.getDashboardWSConfiguration();
-
     this.websocketService
-        .connect(websocketConfiguration)
-        .subscribe(() => {
-          this.screenSubscription = this.websocketService
-              .subscribe(
-                  `/user/${this.screenCode}/queue/connect`,
-                  this.handleConnectEvent.bind(this)
-              );
+        .stompClientStatus
+        .pipe(takeWhile( () => this.isAlive ))
+        .subscribe((status: WSStatusEnum) => {
+          switch (status) {
+            case WSStatusEnum.CONNECTED: {
+              this.subscribeToDestinations();
+              break;
+            }
+          }
         });
+
+    this.websocketService.configuration = this.websocketService.getDashboardWSConfiguration();
+    this.websocketService.startConnection();
   }
 
+  /**
+   * Subcribe to listening destination
+   */
+  subscribeToDestinations() {
+    this.screenSubscription = this.websocketService
+        .subscribeToDestination(`/user/${this.screenCode}/queue/connect`, this.handleConnectEvent.bind(this));
+  }
   /**
    * Handle the connection event
    *
@@ -144,6 +153,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
     if (this.screenSubscription) {
       this.websocketService.unsubscribe(this.screenSubscription);
     }
+    this.websocketService.disconnect();
   }
 
   /**
