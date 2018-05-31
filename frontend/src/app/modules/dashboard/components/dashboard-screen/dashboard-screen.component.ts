@@ -464,7 +464,9 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
 
           switch (status) {
             case WSStatusEnum.CONNECTED: {
-              this.subscribeToDestinations();
+              if (this.websocketSubscriptions.length <= 2) {
+                this.subscribeToDestinations();
+              }
               break;
             }
 

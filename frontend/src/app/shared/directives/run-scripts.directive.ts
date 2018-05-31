@@ -64,6 +64,6 @@ export class RunScriptsDirective implements OnInit {
     // Wait for DOM rendering
     setTimeout(() => {
       this.scriptRenderingFinished.emit(true);
-    });
+    }, 100);
   }
 }

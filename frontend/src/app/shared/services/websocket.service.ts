@@ -160,7 +160,9 @@ export class WebsocketService extends AbstractHttpService {
    * Successfull connection to server
    */
   onConnect(frame: any) {
-    this._status.next(WSStatusEnum.CONNECTED);
+    setTimeout(() => {
+      this._status.next(WSStatusEnum.CONNECTED);
+    }, 100);
   }
 
   /**
