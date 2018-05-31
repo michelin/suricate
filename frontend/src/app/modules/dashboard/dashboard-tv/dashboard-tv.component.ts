@@ -27,7 +27,8 @@ import {DashboardService} from '../dashboard.service';
 import {WSUpdateEvent} from '../../../shared/model/websocket/WSUpdateEvent';
 import {WSUpdateType} from '../../../shared/model/websocket/enums/WSUpdateType';
 import {ActivatedRoute, Router} from '@angular/router';
-import {WSStatusEnum} from '../../../shared/model/websocket/enums/WSStatusEnum';
+import {Subscription} from 'rxjs/Subscription';
+import * as Stomp from '@stomp/stompjs';
 
 /**
  * Dashboard TV Management
@@ -59,7 +60,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   /**
    * The screen subscription (Code View)
    */
-  screenSubscription: any;
+  screenSubscription: Subscription;
 
   /**
    * The constructor
@@ -106,41 +107,28 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * When on code view screen we wait for new connection
    */
   listenForConnection() {
-    this.websocketService
-        .stompClientStatus
-        .pipe(takeWhile( () => this.isAlive ))
-        .subscribe((status: WSStatusEnum) => {
-          switch (status) {
-            case WSStatusEnum.CONNECTED: {
-              this.subscribeToDestinations();
-              break;
-            }
-          }
-        });
-
-    this.websocketService.configuration = this.websocketService.getDashboardWSConfiguration();
     this.websocketService.startConnection();
+    this.screenSubscription = this
+        .websocketService
+        .subscribeToDestination(`/user/${this.screenCode}/queue/connect`)
+        .pipe( takeWhile( () => this.isAlive ) )
+        .subscribe((stompMessage: Stomp.Message) => {
+          this.handleConnectEvent(JSON.parse(stompMessage.body));
+        });
   }
 
-  /**
-   * Subcribe to listening destination
-   */
-  subscribeToDestinations() {
-    this.screenSubscription = this.websocketService
-        .subscribeToDestination(`/user/${this.screenCode}/queue/connect`, this.handleConnectEvent.bind(this));
-  }
   /**
    * Handle the connection event
    *
    * @param {WSUpdateEvent} updateEvent Update event
-   * @param headers The headers
    */
-  handleConnectEvent(updateEvent: WSUpdateEvent, headers: any) {
+  handleConnectEvent(updateEvent: WSUpdateEvent) {
     if (updateEvent.type === WSUpdateType.CONNECT) {
       const project: Project = updateEvent.content;
 
       if (project) {
         this.unsubscribeListening();
+        this.websocketService.disconnect();
         this.router.navigate(['/tv'], {queryParams: {token: project.token} });
       }
     }
@@ -151,9 +139,8 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    */
   unsubscribeListening() {
     if (this.screenSubscription) {
-      this.websocketService.unsubscribe(this.screenSubscription);
+      this.screenSubscription.unsubscribe();
     }
-    this.websocketService.disconnect();
   }
 
   /**
@@ -162,6 +149,8 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.isAlive = false;
     this.sidenavService.openSidenav();
+
     this.unsubscribeListening();
+    this.websocketService.disconnect();
   }
 }

@@ -31,6 +31,8 @@
     "@angular/platform-browser": "^5.2.6",
     "@angular/platform-browser-dynamic": "^5.2.6",
     "@angular/router": "^5.2.6",
+    "@stomp/ng2-stompjs": "^4.0.0",
+    "@stomp/stompjs": "^4.0.6",
     "angular2-grid": "^2.1.0",
     "cerialize": "^0.1.18",
     "core-js": "^2.4.1",
@@ -44,7 +46,6 @@
     "ngx-color-picker": "^5.3.3",
     "rxjs": "^5.5.2",
     "sockjs-client": "^1.1.4",
-    "stompjs": "^2.3.3",
     "zone.js": "^0.8.14"
   },
   "devDependencies": {

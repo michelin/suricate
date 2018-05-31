@@ -33,16 +33,17 @@ import {ProjectWidget} from '../../../../shared/model/dto/ProjectWidget';
 import {fromEvent} from 'rxjs/observable/fromEvent';
 import {DashboardService} from '../../dashboard.service';
 import {WebsocketService} from '../../../../shared/services/websocket.service';
-import {WSUpdateType} from '../../../../shared/model/websocket/enums/WSUpdateType';
-import {WSUpdateEvent} from '../../../../shared/model/websocket/WSUpdateEvent';
 import {NgGridItemEvent} from 'angular2-grid';
 import {ProjectWidgetPosition} from '../../../../shared/model/dto/ProjectWidgetPosition';
 import {DeleteProjectWidgetDialogComponent} from '../delete-project-widget-dialog/delete-project-widget-dialog.component';
 import {EditProjectWidgetDialogComponent} from '../edit-project-widget-dialog/edit-project-widget-dialog.component';
 import {MatDialog} from '@angular/material';
 import {Router} from '@angular/router';
-import {WSStatusEnum} from '../../../../shared/model/websocket/enums/WSStatusEnum';
-import { interval } from 'rxjs/observable/interval';
+
+import * as Stomp from '@stomp/stompjs';
+import {Subscription} from 'rxjs/Subscription';
+import {WSUpdateEvent} from '../../../../shared/model/websocket/WSUpdateEvent';
+import {WSUpdateType} from '../../../../shared/model/websocket/enums/WSUpdateType';
 
 /**
  * Display the grid stack widgets
@@ -84,7 +85,7 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
   /**
    * Save every web socket subscriptions event
    */
-  websocketSubscriptions: any[] = [];
+  websocketSubscriptions: Subscription[] = [];
 
   /**
    * The options for the plugin angular2-grid
@@ -101,11 +102,6 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
    * @type {boolean}
    */
   isSrcScriptsRendered = false;
-
-  /**
-   * The current stomp client status
-   */
-  stompClientStatus: WSStatusEnum = WSStatusEnum.DISCONNECTED;
 
   /**
    * constructor
@@ -128,13 +124,10 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
    */
   ngOnChanges(changes: SimpleChanges) {
     if (changes.project) {
-      if (changes.project.previousValue && changes.project.previousValue.id !== changes.project.currentValue.id) {
-        this.unsubscribeToWebsockets();
-      }
-
-      this.project = changes.project.currentValue;
-      this.changeDetectorRef.detectChanges();
-      this.createWebsocketConnection(this.project);
+      this.unsubscribeToDestinations();
+      this.disconnect();
+      this.websocketService.startConnection();
+      this.subscribeToDestinations();
     }
   }
 
@@ -148,9 +141,9 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
 
     if (this.project) {
       this.initGridStackOptions(this.project);
-      this.subscribeToWebsocketChange();
     }
   }
+
 
   /**
    * Called when the view has been init
@@ -172,9 +165,9 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
    * Called when the component is getting destroy
    */
   ngOnDestroy() {
+    this.unsubscribeToDestinations();
+    this.disconnect();
     this.isAlive = false;
-    this.unsubscribeToWebsockets();
-    this.websocketService.disconnect();
   }
 
   /* ******************************************************* */
@@ -432,89 +425,32 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
   /* ******************************************************* */
 
   /**
-   * Unsubcribe and disconnect from websockets
-   */
-  unsubscribeToWebsockets() {
-    this.websocketSubscriptions.forEach( (websocketSubscription: any, index: number) => {
-      this.websocketService.unsubscribe(websocketSubscription);
-    });
-
-    this.websocketSubscriptions = [];
-  }
-
-  /**
-   * Create the dashboard websocket connection
-   *
-   * @param {Project} project The project wanted for the connection
-   */
-  createWebsocketConnection(project: Project) {
-    this.websocketService.configuration = this.websocketService.getDashboardWSConfiguration();
-    this.websocketService.startConnection();
-  }
-
-  /**
-   * Check for change on websocket status
-   */
-  subscribeToWebsocketChange() {
-    this.websocketService
-        .stompClientStatus
-        .pipe(takeWhile(() => this.isAlive))
-        .subscribe((status: WSStatusEnum) => {
-          this.stompClientStatus = status;
-
-          switch (status) {
-            case WSStatusEnum.CONNECTED: {
-              if (this.websocketSubscriptions.length <= 2) {
-                this.subscribeToDestinations();
-              }
-              break;
-            }
-
-            case WSStatusEnum.ERROR: {
-              interval(2000)
-                  .pipe(takeWhile(() => this.stompClientStatus !== WSStatusEnum.CONNECTED))
-                  .subscribe(() => {
-                    this.unsubscribeToWebsockets();
-                    this.websocketService.startConnection();
-                  });
-              break;
-            }
-
-            default: {
-              break;
-            }
-          }
-        });
-  }
-
-  /**
    * Subscribe to destinations
    */
   subscribeToDestinations() {
-    const uniqueSubscription: any = this.websocketService.subscribeToDestination(
-        `/user/${this.project.token}-${this.screenCode}/queue/unique`,
-        this.handleUniqueScreenEvent.bind(this)
+    this.websocketSubscriptions.push(
+        this.websocketService
+            .subscribeToDestination(`/user/${this.project.token}-${this.screenCode}/queue/unique`)
+            .pipe( takeWhile( () => this.isAlive ) )
+            .subscribe((stompMessage: Stomp.Message) => this.handleUniqueScreenEvent(JSON.parse(stompMessage.body)) )
     );
 
-    const globalSubscription: any = this.websocketService.subscribeToDestination(
-        `/user/${this.project.token}/queue/live`,
-        this.handleGlobalScreenEvent.bind(this)
+    this.websocketSubscriptions.push(
+        this.websocketService
+            .subscribeToDestination(`/user/${this.project.token}/queue/live`)
+            .pipe( takeWhile( () => this.isAlive ) )
+            .subscribe((stompMessage: Stomp.Message) => this.handleGlobalScreenEvent(JSON.parse(stompMessage.body)) )
     );
-
-    this.websocketSubscriptions.push(uniqueSubscription);
-    this.websocketSubscriptions.push(globalSubscription);
   }
 
   /**
    * Manage the event sent by the server (destination : A specified screen)
    *
    * @param {WSUpdateEvent} updateEvent The message received
-   * @param headers The headers of the websocket event
    */
-  handleUniqueScreenEvent(updateEvent: WSUpdateEvent, headers: any) {
+  handleUniqueScreenEvent(updateEvent: WSUpdateEvent) {
     if (updateEvent.type === WSUpdateType.DISCONNECT) {
-      this.unsubscribeToWebsockets();
-      this.websocketService.disconnect();
+
       this.router.navigate(['/tv']);
     }
   }
@@ -523,9 +459,8 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
    * Manage the event sent by the server (destination : Every screen connected to this project)
    *
    * @param {WSUpdateEvent} updateEvent The message received
-   * @param headers The headers of the websocket event
    */
-  handleGlobalScreenEvent(updateEvent: WSUpdateEvent, headers: any) {
+  handleGlobalScreenEvent(updateEvent: WSUpdateEvent) {
     if (updateEvent.type === WSUpdateType.WIDGET) {
       const projectWidget: ProjectWidget = updateEvent.content;
       if (projectWidget) {
@@ -548,8 +483,16 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
         this.dashboardService.currendDashbordSubject.next(projectUpdated);
       }
     }
+  }
 
-    this.changeDetectorRef.detectChanges();
+  unsubscribeToDestinations() {
+    this.websocketSubscriptions.forEach((subscription: Subscription) => {
+      subscription.unsubscribe();
+    });
+  }
+
+  disconnect() {
+    this.websocketService.disconnect();
   }
 
   /**

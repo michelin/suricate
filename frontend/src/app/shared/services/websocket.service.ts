@@ -16,43 +16,18 @@
 
 import { Injectable } from '@angular/core';
 import {AbstractHttpService} from './abstract-http.service';
-import {WSConfiguration} from '../model/websocket/WSConfiguration';
-import {Subscription} from 'rxjs/Subscription';
 import {Observable} from 'rxjs/Observable';
 import {NumberUtils} from '../utils/NumberUtils';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {WSStatusEnum} from '../model/websocket/enums/WSStatusEnum';
 
-import * as Stomp from 'stompjs';
+import * as Stomp from '@stomp/stompjs';
 import * as SockJS from 'sockjs-client';
+import {StompConfig, StompRService} from '@stomp/ng2-stompjs';
 
 /**
  * Service that manage the websockets connections
  */
 @Injectable()
 export class WebsocketService extends AbstractHttpService {
-
-  /**
-   * Current websocket status
-   *
-   * @type {BehaviorSubject<WSStatusEnum>}
-   */
-  private _status = new BehaviorSubject<WSStatusEnum>(WSStatusEnum.DISCONNECTED);
-
-  /**
-   * The websocket configuration
-   */
-  private _configuration: WSConfiguration;
-
-  /**
-   * The SOCK JS Socket
-   */
-  private _socket: any;
-
-  /**
-   * The stomp client
-   */
-  private _stompClient: any;
 
   /**
    * Define the min bound for the screen code random generation
@@ -71,37 +46,8 @@ export class WebsocketService extends AbstractHttpService {
   /**
    * The constructor of the service
    */
-  constructor() {
+  constructor(private stompRService: StompRService) {
     super();
-  }
-
-  /* ****************************************************************** */
-  /*                    Getter /etter                                   */
-  /* ****************************************************************** */
-
-  /**
-   * The status as observable
-   * @returns {Observable<WSStatusEnum>}
-   */
-  get stompClientStatus(): Observable<WSStatusEnum> {
-    return this._status.asObservable();
-  }
-
-  /**
-   * The status value
-   * @returns {Observable<WSStatusEnum>}
-   */
-  get stompClientStatusValue(): WSStatusEnum {
-    return this._status.getValue();
-  }
-
-  /**
-   * Set a new configuration
-   *
-   * @param {WSConfiguration} configuration
-   */
-  set configuration(configuration: WSConfiguration) {
-    this._configuration = configuration;
   }
 
   /* ****************************************************************** */
@@ -121,91 +67,39 @@ export class WebsocketService extends AbstractHttpService {
   /* ****************************************************************** */
 
   /**
-   * Get the dashboard configuration for websocket
+   * Get the websocket config
    *
-   * @returns {WSConfiguration} The configuration
+   * @returns {StompConfig} The config
    */
-  getDashboardWSConfiguration(): WSConfiguration {
-    return {
-      host: `${AbstractHttpService.BASE_WS_URL}`,
-      debug: true
-    };
+  getWebsocketConfig(): StompConfig {
+    const stompConfig = new StompConfig();
+    stompConfig.url = () => new SockJS(AbstractHttpService.BASE_WS_URL);;
+    stompConfig.heartbeat_in = 0;
+    stompConfig.heartbeat_out = 20000;
+    stompConfig.reconnect_delay = 1000;
+    stompConfig.debug = true;
+
+    return stompConfig;
   }
 
   /**
-   * Handle the connection of a websocket
+   * Start the websocket connection
    */
   startConnection() {
-    if (!this._configuration) {
-      Observable.throw('Configuration is required');
-    }
-
-    this._status.next(WSStatusEnum.CONNECTING);
-
-    // Prepare connection
-    this._socket = new SockJS(this._configuration.host);
-    this._stompClient = Stomp.over(this._socket);
-
-    if (this._configuration.debug) {
-      this._stompClient.debug = function(message) {
-        console.log(message);
-      };
-    }
-
-    // Connect to server (Attributes : headers, onConnect, onError)
-    this._stompClient.connect({}, this.onConnect.bind(this), this.onError.bind(this));
+    this.stompRService.config = this.getWebsocketConfig();
+    this.stompRService.initAndConnect();
   }
 
   /**
-   * Successfull connection to server
-   */
-  onConnect(frame: any) {
-    setTimeout(() => {
-      this._status.next(WSStatusEnum.CONNECTED);
-    }, 100);
-  }
-
-  /**
-   * An error as been detected
-   * @param {string} error The error message
-   */
-  onError(error: string) {
-    console.error(`Error: ${error}`);
-    if (error.indexOf('Lost connection') !== -1) {
-      this._status.next(WSStatusEnum.ERROR);
-    }
-  }
-
-  /**
-   * Handle the subcription of a websocket
+   * Subcribe to a queue name
    *
    * @param {string} destination The subcription url
-   * @param {Function} callbackFunction The callback function to call when a new event is received
    */
-  subscribeToDestination(destination: string, callbackFunction: Function): any {
-    return this._stompClient.subscribe(destination, function (response) {
-      const message: string = JSON.parse(response.body);
-      callbackFunction(message);
-    });
+  subscribeToDestination(destination: string): Observable<Stomp.Message> {
+    return this.stompRService.subscribe(destination);
   }
 
-  /**
-   * Unsubscribe to an event
-   *
-   * @param {Subscription} subscription The subscription to close
-   */
-  unsubscribe(subscription: Subscription) {
-    subscription.unsubscribe();
-  }
-
-  /**
-   * Handle the disconnection of the websocket
-   */
   disconnect() {
-    if (this._stompClient) {
-      this._stompClient.disconnect(() => {
-        this._status.next(WSStatusEnum.DISCONNECTED);
-      });
-    }
+    this.stompRService.disconnect();
   }
 }
