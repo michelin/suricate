@@ -15,23 +15,35 @@
  */
 
 
-import {AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, QueryList, ViewChildren} from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  QueryList, SimpleChanges,
+  ViewChildren
+} from '@angular/core';
 import {Project} from '../../../../shared/model/dto/Project';
 import {map, takeWhile} from 'rxjs/operators';
 import {ProjectWidget} from '../../../../shared/model/dto/ProjectWidget';
 import {fromEvent} from 'rxjs/observable/fromEvent';
 import {DashboardService} from '../../dashboard.service';
-import {Subscription} from 'rxjs/Subscription';
 import {WebsocketService} from '../../../../shared/services/websocket.service';
-import {WSUpdateType} from '../../../../shared/model/websocket/enums/WSUpdateType';
-import {WSConfiguration} from '../../../../shared/model/websocket/WSConfiguration';
-import {WSUpdateEvent} from '../../../../shared/model/websocket/WSUpdateEvent';
 import {NgGridItemEvent} from 'angular2-grid';
 import {ProjectWidgetPosition} from '../../../../shared/model/dto/ProjectWidgetPosition';
 import {DeleteProjectWidgetDialogComponent} from '../delete-project-widget-dialog/delete-project-widget-dialog.component';
 import {EditProjectWidgetDialogComponent} from '../edit-project-widget-dialog/edit-project-widget-dialog.component';
 import {MatDialog} from '@angular/material';
 import {Router} from '@angular/router';
+
+import * as Stomp from '@stomp/stompjs';
+import {Subscription} from 'rxjs/Subscription';
+import {WSUpdateEvent} from '../../../../shared/model/websocket/WSUpdateEvent';
+import {WSUpdateType} from '../../../../shared/model/websocket/enums/WSUpdateType';
 
 /**
  * Display the grid stack widgets
@@ -41,7 +53,7 @@ import {Router} from '@angular/router';
   templateUrl: './dashboard-screen.component.html',
   styleUrls: ['./dashboard-screen.component.css']
 })
-export class DashboardScreenComponent implements OnInit, AfterViewInit, OnDestroy {
+export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewInit, OnDestroy {
 
   /**
    * The project to display
@@ -86,35 +98,54 @@ export class DashboardScreenComponent implements OnInit, AfterViewInit, OnDestro
   isGridItemInit = false;
 
   /**
+   * True if the "src" scripts Are Rendered
+   * @type {boolean}
+   */
+  isSrcScriptsRendered = false;
+
+  /**
    * constructor
    *
    * @param {DashboardService} dashboardService The dashboard service
    * @param {MatDialog} matDialog The material dialog service
    * @param {WebsocketService} websocketService The websocket service
    * @param {Router} router The router service
+   * @param {ChangeDetectorRef} changeDetectorRef The change detector ref service
    */
   constructor(private dashboardService: DashboardService,
               private websocketService: WebsocketService,
               private matDialog: MatDialog,
-              private router: Router) { }
+              private router: Router,
+              private changeDetectorRef: ChangeDetectorRef) { }
+
+  /**
+   * Call before ngOnInit and at every changes
+   * @param {SimpleChanges} changes
+   */
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes.project && changes.project.previousValue && changes.project.previousValue.id !== changes.project.currentValue.id) {
+      this.unsubscribeToDestinations();
+      this.disconnect();
+      this.websocketService.startConnection();
+      this.subscribeToDestinations();
+    }
+  }
 
   /**
    * Init of the component
    */
   ngOnInit() {
-    // Unsubcribe every websockets if we have change of dashboard
-    this.unsubscribeToWebsockets();
-
     if (!this.screenCode) {
       this.screenCode = this.websocketService.getscreenCode();
     }
 
     if (this.project) {
       this.initGridStackOptions(this.project);
-      // Subscribe to the new dashboard
-      this.createWebsocketConnection(this.project);
+      this.websocketService.startConnection();
+      this.subscribeToDestinations();
     }
   }
+
 
   /**
    * Called when the view has been init
@@ -132,13 +163,13 @@ export class DashboardScreenComponent implements OnInit, AfterViewInit, OnDestro
     }
   }
 
-
   /**
    * Called when the component is getting destroy
    */
   ngOnDestroy() {
+    this.unsubscribeToDestinations();
+    this.disconnect();
     this.isAlive = false;
-    this.unsubscribeToWebsockets();
   }
 
   /* ******************************************************* */
@@ -240,6 +271,33 @@ export class DashboardScreenComponent implements OnInit, AfterViewInit, OnDestro
           ${this.getActionButtonsCss()}
         </style>
     `;
+  }
+
+  /* ************ JS Management *********************** */
+
+  /**
+   * Get the JS libraries from project
+   *
+   * @param {string[]} librariesToken The libraries token
+   * @returns {string} The src script
+   */
+  getJSLibraries(librariesToken: string[]): string {
+    let scriptUrls = '';
+
+    librariesToken.forEach(token => {
+      scriptUrls = scriptUrls.concat(`<script src="http://localhost:8080/api/asset/${token}"></script>`);
+    });
+
+    return scriptUrls;
+  }
+
+
+  /**
+   * Set if src scripts are rendered
+   * @param {boolean} isScriptRendered
+   */
+  setSrcScriptRendered(isScriptRendered: boolean) {
+    this.isSrcScriptsRendered = isScriptRendered;
   }
 
   /* ************ Unique Widget HTML and CSS Management ************* */
@@ -369,54 +427,33 @@ export class DashboardScreenComponent implements OnInit, AfterViewInit, OnDestro
   /* ******************************************************* */
 
   /**
-   * Unsubcribe and disconnect from websockets
+   * Subscribe to destinations
    */
-  unsubscribeToWebsockets() {
-    this.websocketSubscriptions.forEach( (websocketSubscription: Subscription, index: number) => {
-      this.websocketService.unsubscribe(websocketSubscription);
-      this.websocketSubscriptions.splice(index, 1);
-    });
+  subscribeToDestinations() {
+    this.websocketSubscriptions.push(
+        this.websocketService
+            .subscribeToDestination(`/user/${this.project.token}-${this.screenCode}/queue/unique`)
+            .pipe( takeWhile( () => this.isAlive ) )
+            .subscribe((stompMessage: Stomp.Message) => this.handleUniqueScreenEvent(JSON.parse(stompMessage.body)) )
+    );
 
-    this.websocketService.disconnect();
-  }
-
-  /**
-   * Create the dashboard websocket connection
-   *
-   * @param {Project} project The project wanted for the connection
-   */
-  createWebsocketConnection(project: Project) {
-    const websocketConfiguration: WSConfiguration = this.websocketService.getDashboardWSConfiguration();
-
-    this.websocketService
-        .connect(websocketConfiguration)
-        .subscribe(() => {
-          const uniqueSubscription: Subscription = this.websocketService
-              .subscribe(
-                  `/user/${project.token}-${this.screenCode}/queue/unique`,
-                  this.handleUniqueScreenEvent.bind(this)
-              );
-
-          const globalSubscription: Subscription = this.websocketService
-              .subscribe(
-                  `/user/${project.token}/queue/live`,
-                  this.handleGlobalScreenEvent.bind(this)
-              );
-
-          this.websocketSubscriptions.push(uniqueSubscription);
-          this.websocketSubscriptions.push(globalSubscription);
-        });
+    this.websocketSubscriptions.push(
+        this.websocketService
+            .subscribeToDestination(`/user/${this.project.token}/queue/live`)
+            .pipe( takeWhile( () => this.isAlive ) )
+            .subscribe((stompMessage: Stomp.Message) => this.handleGlobalScreenEvent(JSON.parse(stompMessage.body)) )
+    );
   }
 
   /**
    * Manage the event sent by the server (destination : A specified screen)
    *
    * @param {WSUpdateEvent} updateEvent The message received
-   * @param headers The headers of the websocket event
    */
-  handleUniqueScreenEvent(updateEvent: WSUpdateEvent, headers: any) {
+  handleUniqueScreenEvent(updateEvent: WSUpdateEvent) {
     if (updateEvent.type === WSUpdateType.DISCONNECT) {
-      this.unsubscribeToWebsockets();
+      this.unsubscribeToDestinations();
+      this.websocketService.disconnect();
       this.router.navigate(['/tv']);
     }
   }
@@ -425,9 +462,8 @@ export class DashboardScreenComponent implements OnInit, AfterViewInit, OnDestro
    * Manage the event sent by the server (destination : Every screen connected to this project)
    *
    * @param {WSUpdateEvent} updateEvent The message received
-   * @param headers The headers of the websocket event
    */
-  handleGlobalScreenEvent(updateEvent: WSUpdateEvent, headers: any) {
+  handleGlobalScreenEvent(updateEvent: WSUpdateEvent) {
     if (updateEvent.type === WSUpdateType.WIDGET) {
       const projectWidget: ProjectWidget = updateEvent.content;
       if (projectWidget) {
@@ -450,6 +486,18 @@ export class DashboardScreenComponent implements OnInit, AfterViewInit, OnDestro
         this.dashboardService.currendDashbordSubject.next(projectUpdated);
       }
     }
+
+    this.changeDetectorRef.detectChanges();
+  }
+
+  unsubscribeToDestinations() {
+    this.websocketSubscriptions.forEach((subscription: Subscription) => {
+      subscription.unsubscribe();
+    });
+  }
+
+  disconnect() {
+    this.websocketService.disconnect();
   }
 
   /**

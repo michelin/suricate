@@ -220,9 +220,9 @@ module.exports = (options) =>
                 compilerOptions: {}
             }),
             new ProvidePlugin({
-                $: "jquery",
-                jquery: "jquery",
-                jQuery: "jquery"
+                jQuery: 'jquery',
+                $: 'jquery',
+                jquery: 'jquery'
             })
         ],
         devServer: {

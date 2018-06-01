@@ -31,14 +31,15 @@ import { HomeActionsComponent } from './components/pages-header/components/home-
 import { AddDashboardDialogComponent } from './components/pages-header/components/add-dashboard-dialog/add-dashboard-dialog.component';
 import { CustomFormsModule} from 'ng2-validation';
 import {ColorPickerModule} from 'ngx-color-picker';
-import {StompService} from 'ng2-stomp-service/index';
 import {WebsocketService} from './services/websocket.service';
 import { ToastComponent } from './components/toast/toast.component';
 import {ToastService} from './components/toast/toast.service';
 import { PagesFooterComponent } from './components/pages-footer/pages-footer.component';
 import {SafeHtmlPipe} from './pipes/safe-html.pipe';
 import { SafeUrlPipe } from './pipes/safe-url.pipe';
+import { RunScriptsDirective } from './directives/run-scripts.directive';
 import { TvManagementDialogComponent } from './components/pages-header/components/tv-management-dialog/tv-management-dialog.component';
+import {StompRService} from '@stomp/ng2-stompjs';
 
 @NgModule({
   imports: [
@@ -63,7 +64,8 @@ import { TvManagementDialogComponent } from './components/pages-header/component
       PagesFooterComponent,
       SafeHtmlPipe,
       SafeUrlPipe,
-      TvManagementDialogComponent
+      TvManagementDialogComponent,
+      RunScriptsDirective
   ],
   entryComponents: [
       AddWidgetDialogComponent,
@@ -84,14 +86,15 @@ import { TvManagementDialogComponent } from './components/pages-header/component
       AddWidgetDialogComponent,
       ToastComponent,
       SafeHtmlPipe,
-      SafeUrlPipe
+      SafeUrlPipe,
+      RunScriptsDirective
   ],
   providers: [
       { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
       AuthGuard,
-      StompService,
       WebsocketService,
-      ToastService
+      ToastService,
+      StompRService
   ]
 })
 export class SharedModule { }
