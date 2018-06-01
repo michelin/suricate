@@ -16,24 +16,18 @@
 
 import { Injectable } from '@angular/core';
 import {AbstractHttpService} from './abstract-http.service';
-import {StompService} from 'ng2-stomp-service/index';
-import {WSConfiguration} from '../model/websocket/WSConfiguration';
-import {Subscription} from 'rxjs/Subscription';
 import {Observable} from 'rxjs/Observable';
-import {empty} from 'rxjs/observable/empty';
-import {fromPromise} from 'rxjs/observable/fromPromise';
 import {NumberUtils} from '../utils/NumberUtils';
+
+import * as Stomp from '@stomp/stompjs';
+import * as SockJS from 'sockjs-client';
+import {StompConfig, StompRService} from '@stomp/ng2-stompjs';
 
 /**
  * Service that manage the websockets connections
  */
 @Injectable()
 export class WebsocketService extends AbstractHttpService {
-
-  /** Inventory WebSocket status **/
-  public static readonly WS_STATUS_CLOSED = 'CLOSED';
-  public static readonly WS_STATUS_CONNECTING = 'CONNECTING';
-  public static readonly WS_STATUS_CONNECTED = 'CONNECTED';
 
   /**
    * Define the min bound for the screen code random generation
@@ -51,10 +45,8 @@ export class WebsocketService extends AbstractHttpService {
 
   /**
    * The constructor of the service
-   *
-   * @param {StompService} stompService The websocket service from ng2-STOMP-OVER-Websocket plugin
    */
-  constructor(private stompService: StompService) {
+  constructor(private stompRService: StompRService) {
     super();
   }
 
@@ -71,78 +63,43 @@ export class WebsocketService extends AbstractHttpService {
   }
 
   /* ****************************************************************** */
-  /*                    Dashboard specific                              */
+  /*                    WebSocket Management                            */
   /* ****************************************************************** */
 
   /**
-   * Get the dashboard configuration for websocket
+   * Get the websocket config
    *
-   * @returns {WSConfiguration} The configuration
+   * @returns {StompConfig} The config
    */
-  getDashboardWSConfiguration(): WSConfiguration {
-    return {
-      host: `${AbstractHttpService.BASE_WS_URL}`,
-      debug: true,
-      queue: {'init': false}
-    };
-  }
+  getWebsocketConfig(): StompConfig {
+    const stompConfig = new StompConfig();
+    stompConfig.url = () => new SockJS(AbstractHttpService.BASE_WS_URL);
+    stompConfig.heartbeat_in = 0;
+    stompConfig.heartbeat_out = 20000;
+    stompConfig.reconnect_delay = 1000;
+    stompConfig.debug = true;
 
-
-  /* ****************************************************************** */
-  /*                    Global Management                               */
-  /* ****************************************************************** */
-
-  /**
-   * Handle the connection of a websocket
-   *
-   * @param {WSConfiguration} configuration
-   */
-  connect(configuration: WSConfiguration): Observable<any> {
-    // configuration
-    this.stompService.configure(configuration);
-
-    // start connection
-    return fromPromise(
-        this.stompService.startConnect().then(() => {
-          this.stompService.done('init');
-          console.log('connected');
-
-          return empty();
-        })
-    );
+    return stompConfig;
   }
 
   /**
-   * Handle the subcription of a websocket
-   *
-   * @param {string} eventUrl The subcription url
-   * @param {Function} callbackFunction The callback function to call when a new event is received
+   * Start the websocket connection
    */
-  subscribe(eventUrl: string, callbackFunction: Function): Subscription {
-    if (this.stompService.status !== WebsocketService.WS_STATUS_CONNECTED) {
-      Observable.throw(new Error('No connection found, connect your websocket before subscribe to an event'));
-    }
-
-    return this.stompService.subscribe(`${eventUrl}`, callbackFunction);
+  startConnection() {
+    this.stompRService.config = this.getWebsocketConfig();
+    this.stompRService.initAndConnect();
   }
 
   /**
-   * Unsubscribe to an event
+   * Subcribe to a queue name
    *
-   * @param {Subscription} subscription The subscription to close
+   * @param {string} destination The subcription url
    */
-  unsubscribe(subscription: Subscription) {
-    subscription.unsubscribe();
+  subscribeToDestination(destination: string): Observable<Stomp.Message> {
+    return this.stompRService.subscribe(destination);
   }
 
-  /**
-   * Handle the disconnection of the websocket
-   */
   disconnect() {
-    if (this.stompService.status === WebsocketService.WS_STATUS_CONNECTED) {
-      this.stompService.disconnect().then(() => {
-        console.log('Connection closed');
-      });
-    }
+    this.stompRService.disconnect();
   }
 }
