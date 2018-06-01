@@ -24,11 +24,11 @@ import {of} from 'rxjs/observable/of';
 import {Project} from '../../../shared/model/dto/Project';
 import {Observable} from 'rxjs/Observable';
 import {DashboardService} from '../dashboard.service';
-import {WSConfiguration} from '../../../shared/model/websocket/WSConfiguration';
-import {Subscription} from 'rxjs/Subscription';
 import {WSUpdateEvent} from '../../../shared/model/websocket/WSUpdateEvent';
 import {WSUpdateType} from '../../../shared/model/websocket/enums/WSUpdateType';
 import {ActivatedRoute, Router} from '@angular/router';
+import {Subscription} from 'rxjs/Subscription';
+import * as Stomp from '@stomp/stompjs';
 
 /**
  * Dashboard TV Management
@@ -107,16 +107,13 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * When on code view screen we wait for new connection
    */
   listenForConnection() {
-    const websocketConfiguration: WSConfiguration = this.websocketService.getDashboardWSConfiguration();
-
-    this.websocketService
-        .connect(websocketConfiguration)
-        .subscribe(() => {
-          this.screenSubscription = this.websocketService
-              .subscribe(
-                  `/user/${this.screenCode}/queue/connect`,
-                  this.handleConnectEvent.bind(this)
-              );
+    this.websocketService.startConnection();
+    this.screenSubscription = this
+        .websocketService
+        .subscribeToDestination(`/user/${this.screenCode}/queue/connect`)
+        .pipe( takeWhile( () => this.isAlive ) )
+        .subscribe((stompMessage: Stomp.Message) => {
+          this.handleConnectEvent(JSON.parse(stompMessage.body));
         });
   }
 
@@ -124,14 +121,14 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * Handle the connection event
    *
    * @param {WSUpdateEvent} updateEvent Update event
-   * @param headers The headers
    */
-  handleConnectEvent(updateEvent: WSUpdateEvent, headers: any) {
+  handleConnectEvent(updateEvent: WSUpdateEvent) {
     if (updateEvent.type === WSUpdateType.CONNECT) {
       const project: Project = updateEvent.content;
 
       if (project) {
         this.unsubscribeListening();
+        this.websocketService.disconnect();
         this.router.navigate(['/tv'], {queryParams: {token: project.token} });
       }
     }
@@ -142,7 +139,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    */
   unsubscribeListening() {
     if (this.screenSubscription) {
-      this.websocketService.unsubscribe(this.screenSubscription);
+      this.screenSubscription.unsubscribe();
     }
   }
 
@@ -152,6 +149,8 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.isAlive = false;
     this.sidenavService.openSidenav();
+
     this.unsubscribeListening();
+    this.websocketService.disconnect();
   }
 }
