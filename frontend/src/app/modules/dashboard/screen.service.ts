@@ -59,4 +59,13 @@ export class ScreenService extends AbstractHttpService {
     this.httpClient.put<void>(url, websocketClient).subscribe();
   }
 
+  /**
+   * Refresh every screens for a project token
+   *
+   * @param {string} projectToken The project token to refresh
+   */
+  refreshEveryConnectedScreensForProject(projectToken: string): void {
+    const url = `${ScreenService.SCREENS_BASE_URL}/refresh/${projectToken}`;
+    this.httpClient.get<void>(url).subscribe();
+  }
 }

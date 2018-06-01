@@ -89,4 +89,15 @@ public class ScreenController {
     public void disconnectProjectToTv(@RequestBody WebsocketClient websocketClient) {
         this.dashboardWebSocketService.disconnectClient(websocketClient);
     }
+
+    /**
+     * Refresh every screen for a project token
+     *
+     * @param projectToken The project token used for the refresh
+     */
+    @RequestMapping(value = "refresh/{projectToken}", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public void refreshEveryConnectedScreensForProject(@PathVariable("projectToken") String projectToken) {
+        this.dashboardWebSocketService.reloadAllConnectedDashboardForAProject(projectToken);
+    }
 }
