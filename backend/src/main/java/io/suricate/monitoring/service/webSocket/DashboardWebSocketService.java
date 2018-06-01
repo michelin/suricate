@@ -273,8 +273,18 @@ public class DashboardWebSocketService {
      */
     public void reloadAllConnectedDashboard(){
         Iterator<String> it = projectClients.keySet().iterator();
+
         while (it.hasNext()) {
-            updateGlobalScreensByProjectToken(it.next(), new UpdateEvent(UpdateType.GRID));
+            updateGlobalScreensByProjectToken(it.next(), new UpdateEvent(UpdateType.RELOAD));
         }
+    }
+
+    /**
+     * Method that force the reload of every connected clients for a project
+     *
+     * @param projectToken The project token
+     */
+    public void reloadAllConnectedDashboardForAProject(final String projectToken) {
+        updateGlobalScreensByProjectToken(projectToken, new UpdateEvent(UpdateType.RELOAD));
     }
 }

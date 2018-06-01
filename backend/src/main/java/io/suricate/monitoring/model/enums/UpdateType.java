@@ -25,5 +25,6 @@ public enum UpdateType {
     POSITION,
     DISCONNECT,
     CONNECT,
-    DISPLAY_NUMBER
+    DISPLAY_NUMBER,
+    RELOAD
 }

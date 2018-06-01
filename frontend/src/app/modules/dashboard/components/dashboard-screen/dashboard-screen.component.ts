@@ -471,7 +471,7 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
       }
     }
 
-    if (updateEvent.type === WSUpdateType.POSITION) {
+    if (updateEvent.type === WSUpdateType.POSITION || updateEvent.type === WSUpdateType.GRID) {
       const projectUpdated: Project = updateEvent.content;
       if (projectUpdated) {
         this.isGridItemInit = false;
@@ -479,12 +479,8 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
       }
     }
 
-    if (updateEvent.type === WSUpdateType.GRID) {
-      const projectUpdated: Project = updateEvent.content;
-      if (projectUpdated) {
-        this.isGridItemInit = false;
-        this.dashboardService.currendDashbordSubject.next(projectUpdated);
-      }
+    if (updateEvent.type === WSUpdateType.RELOAD) {
+      location.reload();
     }
 
     this.changeDetectorRef.detectChanges();
