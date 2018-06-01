@@ -1,6 +1,6 @@
 {
   "name": "suricate-frontend",
-  "version": "1.7.0",
+  "version": "1.0.0",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
