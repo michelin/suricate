@@ -123,7 +123,7 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
    * @param {SimpleChanges} changes
    */
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.project) {
+    if (changes.project && changes.project.previousValue && changes.project.previousValue.id !== changes.project.currentValue.id) {
       this.unsubscribeToDestinations();
       this.disconnect();
       this.websocketService.startConnection();
@@ -141,6 +141,8 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
 
     if (this.project) {
       this.initGridStackOptions(this.project);
+      this.websocketService.startConnection();
+      this.subscribeToDestinations();
     }
   }
 
@@ -450,7 +452,8 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
    */
   handleUniqueScreenEvent(updateEvent: WSUpdateEvent) {
     if (updateEvent.type === WSUpdateType.DISCONNECT) {
-
+      this.unsubscribeToDestinations();
+      this.websocketService.disconnect();
       this.router.navigate(['/tv']);
     }
   }
@@ -483,6 +486,8 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
         this.dashboardService.currendDashbordSubject.next(projectUpdated);
       }
     }
+
+    this.changeDetectorRef.detectChanges();
   }
 
   unsubscribeToDestinations() {

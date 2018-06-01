@@ -73,7 +73,7 @@ export class WebsocketService extends AbstractHttpService {
    */
   getWebsocketConfig(): StompConfig {
     const stompConfig = new StompConfig();
-    stompConfig.url = () => new SockJS(AbstractHttpService.BASE_WS_URL);;
+    stompConfig.url = () => new SockJS(AbstractHttpService.BASE_WS_URL);
     stompConfig.heartbeat_in = 0;
     stompConfig.heartbeat_out = 20000;
     stompConfig.reconnect_delay = 1000;
