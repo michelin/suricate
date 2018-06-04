@@ -1,11 +1,11 @@
-<!--<div id="server-error"-->
-     <!--*ngIf="currentStompConnectionState === stompStateEnum.CLOSED || currentStompConnectionState === stompStateEnum.TRYING"-->
-     <!--fxLayout="row wrap"-->
-     <!--fxLayoutAlign="center center"-->
-     <!--fxLayoutGap="30px">-->
-  <!--<span> <mat-icon>warning</mat-icon> </span>-->
-  <!--<span> Server connection lost. Trying to reconnect ... </span>-->
-<!--</div>-->
+<div id="server-error"
+     *ngIf="currentStompConnectionState === stompStateEnum.CLOSED || currentStompConnectionState === stompStateEnum.TRYING"
+     fxLayout="row wrap"
+     fxLayoutAlign="center center"
+     fxLayoutGap="30px">
+  <span> <mat-icon>warning</mat-icon> </span>
+  <span> Server connection lost. Trying to reconnect ... </span>
+</div>
 
 <div *ngIf="gridOptions" [ngGrid]="gridOptions" (onItemChange)="updateProjectWidgetsPosition($event)" >
   <div class="commonCssAndJs">
