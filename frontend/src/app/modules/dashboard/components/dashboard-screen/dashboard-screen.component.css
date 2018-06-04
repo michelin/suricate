@@ -6,3 +6,15 @@
 .grid-item.moving {
     z-index: 10;
 }
+#server-error {
+    background-color: #b58900;
+    position: relative;
+    z-index: 20;
+    height: 85px;
+    font-size: 1.5rem;
+}
+#server-error .mat-icon {
+    font-size: 3rem;
+    width: 48px;
+    height: 48px;
+}

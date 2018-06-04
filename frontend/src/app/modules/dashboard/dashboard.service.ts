@@ -25,7 +25,7 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {UserService} from '../user/user.service';
 import {User} from '../../shared/model/dto/user/User';
 import {ProjectWidgetPosition} from '../../shared/model/dto/ProjectWidgetPosition';
-import {WebsocketClient} from '../../shared/model/dto/WebsocketClient';
+import {WidgetStateEnum} from '../../shared/model/dto/enums/WidgetSateEnum';
 
 @Injectable()
 export class DashboardService extends AbstractHttpService {
@@ -83,8 +83,9 @@ export class DashboardService extends AbstractHttpService {
    *
    * @param {number} projectWidgetId The project widget ID to update
    * @param {string} newHtmlContent The HTML to replace
+   * @param {WidgetStateEnum} widgetStatus The widget status
    */
-  public updateWidgetHtmlFromProjetWidgetId(projectWidgetId: number, newHtmlContent: string): void {
+  public updateWidgetHtmlFromProjetWidgetId(projectWidgetId: number, newHtmlContent: string, widgetStatus: WidgetStateEnum): void {
     let projectWidgetToUpdate: ProjectWidget = null;
     this.currendDashbordSubject
         .getValue()
@@ -97,6 +98,7 @@ export class DashboardService extends AbstractHttpService {
 
     if (projectWidgetToUpdate) {
       projectWidgetToUpdate.instantiateHtml = newHtmlContent;
+      projectWidgetToUpdate.state = widgetStatus;
     }
 
   }

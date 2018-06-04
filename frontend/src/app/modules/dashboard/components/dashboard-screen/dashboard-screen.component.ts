@@ -28,7 +28,7 @@ import {
   ViewChildren
 } from '@angular/core';
 import {Project} from '../../../../shared/model/dto/Project';
-import {map, takeWhile} from 'rxjs/operators';
+import {map, takeWhile, auditTime} from 'rxjs/operators';
 import {ProjectWidget} from '../../../../shared/model/dto/ProjectWidget';
 import {fromEvent} from 'rxjs/observable/fromEvent';
 import {DashboardService} from '../../dashboard.service';
@@ -44,6 +44,8 @@ import * as Stomp from '@stomp/stompjs';
 import {Subscription} from 'rxjs/Subscription';
 import {WSUpdateEvent} from '../../../../shared/model/websocket/WSUpdateEvent';
 import {WSUpdateType} from '../../../../shared/model/websocket/enums/WSUpdateType';
+import {StompState} from '@stomp/ng2-stompjs';
+import {WidgetStateEnum} from '../../../../shared/model/dto/enums/WidgetSateEnum';
 
 /**
  * Display the grid stack widgets
@@ -104,6 +106,18 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
   isSrcScriptsRendered = false;
 
   /**
+   * The current stomp connection state
+   */
+  currentStompConnectionState: StompState;
+
+  /**
+   * The stomp state enum
+   *
+   * @type {StompState}
+   */
+  stompStateEnum = StompState;
+
+  /**
    * constructor
    *
    * @param {DashboardService} dashboardService The dashboard service
@@ -123,11 +137,15 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
    * @param {SimpleChanges} changes
    */
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.project && changes.project.previousValue && changes.project.previousValue.id !== changes.project.currentValue.id) {
-      this.unsubscribeToDestinations();
-      this.disconnect();
-      this.websocketService.startConnection();
-      this.subscribeToDestinations();
+    if (changes.project) {
+      this.project = changes.project.currentValue;
+
+      if (changes.project.previousValue && changes.project.previousValue.id !== changes.project.currentValue.id) {
+        this.unsubscribeToDestinations();
+        this.disconnect();
+        this.websocketService.startConnection();
+        this.subscribeToDestinations();
+      }
     }
   }
 
@@ -143,6 +161,16 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
       this.initGridStackOptions(this.project);
       this.websocketService.startConnection();
       this.subscribeToDestinations();
+
+      this.websocketService
+          .stompConnectionState
+          .pipe(
+              takeWhile( () => this.isAlive),
+              auditTime(10000)
+          )
+          .subscribe((stompState: StompState) => {
+            this.currentStompConnectionState = stompState;
+          });
     }
   }
 
@@ -315,9 +343,69 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
         ${projectWidget.customStyle ? projectWidget.customStyle  : '' }
       </style>
 
+      ${this.getWidgetHtml(projectWidget)}
+    `;
+  }
+
+  /**
+   * Get The html for a widget
+   *
+   * @param {ProjectWidget} projectWidget The project widget
+   * @returns {string} The related html
+   */
+  getWidgetHtml(projectWidget: ProjectWidget): string {
+    let widgetHtml = '';
+
+    if (projectWidget.state === WidgetStateEnum.STOPPED) {
+      widgetHtml = widgetHtml.concat(`
+        <div style="position: relative;
+                    background-color: #b41e1ee0;
+                    width: 100%;
+                    z-index: 15;
+                    top: 13px;
+                    text-align: center;
+                    font-size: 0.5em;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center">
+          <span>
+            <mat-icon class="material-icons">warning</mat-icon>
+          </span>
+          <span style="display: inline-block">
+            Widget execution error
+          </span>
+        </div>
+      `);
+    }
+
+    if (projectWidget.state === WidgetStateEnum.WARNING) {
+      widgetHtml = widgetHtml.concat(`
+        <div style="position: relative;
+                    background-color: #e8af00db;
+                    width: 100%;
+                    z-index: 15;
+                    top: 13px;
+                    text-align: center;
+                    font-size: 0.5em;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center">
+          <span>
+            <mat-icon class="material-icons">warning</mat-icon>
+          </span>
+          <span style="display: inline-block">
+            Issue with remote server. Retrying ...
+          </span>
+        </div>
+      `);
+    }
+
+    widgetHtml = widgetHtml.concat(`
       ${this.getActionButtonsHtml(projectWidget)}
       ${projectWidget.instantiateHtml}
-    `;
+    `);
+
+    return widgetHtml;
   }
 
   /* *************** Widget Action buttons (CSS, HTML, Bindings) ************** */
@@ -467,7 +555,8 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
     if (updateEvent.type === WSUpdateType.WIDGET) {
       const projectWidget: ProjectWidget = updateEvent.content;
       if (projectWidget) {
-        this.dashboardService.updateWidgetHtmlFromProjetWidgetId(updateEvent.content.id, projectWidget.instantiateHtml);
+        this.dashboardService
+            .updateWidgetHtmlFromProjetWidgetId(updateEvent.content.id, projectWidget.instantiateHtml, projectWidget.state);
       }
     }
 
