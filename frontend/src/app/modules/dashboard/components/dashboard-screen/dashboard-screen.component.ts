@@ -137,11 +137,15 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
    * @param {SimpleChanges} changes
    */
   ngOnChanges(changes: SimpleChanges) {
-    if (changes.project && changes.project.previousValue && changes.project.previousValue.id !== changes.project.currentValue.id) {
-      this.unsubscribeToDestinations();
-      this.disconnect();
-      this.websocketService.startConnection();
-      this.subscribeToDestinations();
+    if (changes.project) {
+      this.project = changes.project.currentValue;
+
+      if (changes.project.previousValue && changes.project.previousValue.id !== changes.project.currentValue.id) {
+        this.unsubscribeToDestinations();
+        this.disconnect();
+        this.websocketService.startConnection();
+        this.subscribeToDestinations();
+      }
     }
   }
 
@@ -551,7 +555,8 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
     if (updateEvent.type === WSUpdateType.WIDGET) {
       const projectWidget: ProjectWidget = updateEvent.content;
       if (projectWidget) {
-        this.dashboardService.updateWidgetHtmlFromProjetWidgetId(updateEvent.content.id, projectWidget.instantiateHtml);
+        this.dashboardService
+            .updateWidgetHtmlFromProjetWidgetId(updateEvent.content.id, projectWidget.instantiateHtml, projectWidget.state);
       }
     }
 
