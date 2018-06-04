@@ -45,6 +45,7 @@ import {Subscription} from 'rxjs/Subscription';
 import {WSUpdateEvent} from '../../../../shared/model/websocket/WSUpdateEvent';
 import {WSUpdateType} from '../../../../shared/model/websocket/enums/WSUpdateType';
 import {StompState} from '@stomp/ng2-stompjs';
+import {WidgetStateEnum} from '../../../../shared/model/dto/enums/WidgetSateEnum';
 
 /**
  * Display the grid stack widgets
@@ -338,9 +339,69 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
         ${projectWidget.customStyle ? projectWidget.customStyle  : '' }
       </style>
 
+      ${this.getWidgetHtml(projectWidget)}
+    `;
+  }
+
+  /**
+   * Get The html for a widget
+   *
+   * @param {ProjectWidget} projectWidget The project widget
+   * @returns {string} The related html
+   */
+  getWidgetHtml(projectWidget: ProjectWidget): string {
+    let widgetHtml = '';
+
+    if (projectWidget.state === WidgetStateEnum.STOPPED) {
+      widgetHtml = widgetHtml.concat(`
+        <div style="position: relative;
+                    background-color: #b41e1ee0;
+                    width: 100%;
+                    z-index: 15;
+                    top: 13px;
+                    text-align: center;
+                    font-size: 0.5em;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center">
+          <span>
+            <mat-icon class="material-icons">warning</mat-icon>
+          </span>
+          <span style="display: inline-block">
+            Widget execution error
+          </span>
+        </div>
+      `);
+    }
+
+    if (projectWidget.state === WidgetStateEnum.WARNING) {
+      widgetHtml = widgetHtml.concat(`
+        <div style="position: relative;
+                    background-color: #e8af00db;
+                    width: 100%;
+                    z-index: 15;
+                    top: 13px;
+                    text-align: center;
+                    font-size: 0.5em;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center">
+          <span>
+            <mat-icon class="material-icons">warning</mat-icon>
+          </span>
+          <span style="display: inline-block">
+            Issue with remote server. Retrying ...
+          </span>
+        </div>
+      `);
+    }
+
+    widgetHtml = widgetHtml.concat(`
       ${this.getActionButtonsHtml(projectWidget)}
       ${projectWidget.instantiateHtml}
-    `;
+    `);
+
+    return widgetHtml;
   }
 
   /* *************** Widget Action buttons (CSS, HTML, Bindings) ************** */
