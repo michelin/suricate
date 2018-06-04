@@ -21,7 +21,7 @@ import {NumberUtils} from '../utils/NumberUtils';
 
 import * as Stomp from '@stomp/stompjs';
 import * as SockJS from 'sockjs-client';
-import {StompConfig, StompRService} from '@stomp/ng2-stompjs';
+import {StompConfig, StompRService, StompState} from '@stomp/ng2-stompjs';
 
 /**
  * Service that manage the websockets connections
@@ -65,6 +65,15 @@ export class WebsocketService extends AbstractHttpService {
   /* ****************************************************************** */
   /*                    WebSocket Management                            */
   /* ****************************************************************** */
+
+  /**
+   * Get the stomp connection state
+   *
+   * @returns {Observable<StompState>}
+   */
+  get stompConnectionState(): Observable<StompState> {
+    return this.stompRService.state.asObservable();
+  }
 
   /**
    * Get the websocket config

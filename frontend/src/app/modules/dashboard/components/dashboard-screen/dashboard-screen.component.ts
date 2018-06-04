@@ -28,7 +28,7 @@ import {
   ViewChildren
 } from '@angular/core';
 import {Project} from '../../../../shared/model/dto/Project';
-import {map, takeWhile} from 'rxjs/operators';
+import {map, takeWhile, auditTime} from 'rxjs/operators';
 import {ProjectWidget} from '../../../../shared/model/dto/ProjectWidget';
 import {fromEvent} from 'rxjs/observable/fromEvent';
 import {DashboardService} from '../../dashboard.service';
@@ -44,6 +44,7 @@ import * as Stomp from '@stomp/stompjs';
 import {Subscription} from 'rxjs/Subscription';
 import {WSUpdateEvent} from '../../../../shared/model/websocket/WSUpdateEvent';
 import {WSUpdateType} from '../../../../shared/model/websocket/enums/WSUpdateType';
+import {StompState} from '@stomp/ng2-stompjs';
 
 /**
  * Display the grid stack widgets
@@ -104,6 +105,18 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
   isSrcScriptsRendered = false;
 
   /**
+   * The current stomp connection state
+   */
+  currentStompConnectionState: StompState;
+
+  /**
+   * The stomp state enum
+   *
+   * @type {StompState}
+   */
+  stompStateEnum = StompState;
+
+  /**
    * constructor
    *
    * @param {DashboardService} dashboardService The dashboard service
@@ -143,6 +156,16 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
       this.initGridStackOptions(this.project);
       this.websocketService.startConnection();
       this.subscribeToDestinations();
+
+      this.websocketService
+          .stompConnectionState
+          .pipe(
+              takeWhile( () => this.isAlive),
+              auditTime(10000)
+          )
+          .subscribe((stompState: StompState) => {
+            this.currentStompConnectionState = stompState;
+          });
     }
   }
 
