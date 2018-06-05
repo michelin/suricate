@@ -36,6 +36,7 @@
     "angular2-grid": "^2.1.0",
     "cerialize": "^0.1.18",
     "core-js": "^2.4.1",
+    "font-awesome": "^4.7.0",
     "hammerjs": "^2.0.8",
     "jquery": "^3.3.1",
     "lodash": "^4.17.10",

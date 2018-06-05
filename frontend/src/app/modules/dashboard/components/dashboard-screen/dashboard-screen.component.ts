@@ -189,6 +189,9 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
             this.bindEditProjectWidgetEvent(projectWidgetElements);
           });
     }
+
+    // We have to inject this variable in the window scope (because some Widgets use it for init the js)
+    window['page_loaded'] = true;
   }
 
   /**
@@ -213,7 +216,7 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
     this.gridOptions = {
       'max_cols': project.maxColumn,
       'min_cols': 1,
-      'row_height': project.widgetHeight / 1.5,
+      'row_height': project.widgetHeight,
       'margins': [2],
       'auto_resize': true
     };
@@ -254,50 +257,68 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
   getWidgetCommonCSS(): string {
     return `
       <style>
-        .grid-item h1 {
-            margin-bottom: 12px;
-            text-align: center;
-            font-size: 1em;
-            font-weight: 400;
-            margin-right: 10px;
-            margin-left: 10px;
-          }
-          .grid-item h2 {
-            text-transform: uppercase;
-            font-size: 3em;
-            font-weight: 700;
-            color: #fff;
-          }
-          .grid .widget a {
-            text-decoration: none;
-          }
-          .grid-item p {
-            padding: 0;
-            margin: 0;
-          }
-          .grid-item .more-info {
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 0.6em;
-            position: absolute;
-            bottom: 32px;
-            left: 0;
-            right: 0;
-          }
-          .grid-item .updated-at {
-            font-size: 15px;
-            position: absolute;
-            bottom: 12px;
-            left: 0;
-            right: 0;
-            color: rgba(0, 0, 0, 0.3);
-          }
-          .grid-item > div {
-            position: relative;
-            top: 50%;
-            transform: translateY(-50%);
-          }
-          ${this.getActionButtonsCss()}
-        </style>
+        .grid-stack .widget {
+          text-align: center;
+        }
+        .grid-stack .grid-stack-item-content {
+          height: 100%;
+          width: 100%;
+          position: absolute;
+          top: 0;
+          overflow: hidden;
+        }
+        .grid-stack .grid-stack-item-content * {
+          color: #fff;
+        }
+        .grid-stack .grid-stack-item-content .link {
+          display: block;
+          width: 90%;
+          margin: auto;
+          position: relative;
+          top: 5px;
+          height: 91%;
+        }
+        .grid-stack .grid-stack-item-content-inner {
+          max-height: 100%;
+          position: relative;
+          top: 50%;
+          transform: translateY(-50%);
+        }
+        .grid-stack h1,.grid-stack h2,.grid-stack h3,.grid-stack h4,.grid-stack h5,.grid-stack p {
+          padding: 0;
+          margin: 0;
+        }
+        .grid-stack h1 {
+          font-size: 1.4rem;
+          text-transform: uppercase;
+          margin-top: 6px;
+          margin-bottom: 6%;
+        }
+        .grid-stack h2 {
+          font-size: 3.7rem;
+        }
+        .grid-stack p {
+          font-size: 0.8em;
+        }
+        .grid-stack .widget .more-info {
+          color: rgba(255, 255, 255, 0.5);
+          ont-size: 0.9rem;
+          position: absolute;
+          bottom: 17px;
+          left: 0;
+          right: 0;
+        }
+        .grid-stack .widget .updated-at {
+          color: rgba(0, 0, 0, 0.3);
+          font-size: 0.9rem;
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+        }
+
+        ${this.getActionButtonsCss()}
+      </style>
     `;
   }
 
@@ -356,13 +377,14 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
   getWidgetHtml(projectWidget: ProjectWidget): string {
     let widgetHtml = '';
 
-    if (projectWidget.state === WidgetStateEnum.STOPPED) {
-      widgetHtml = widgetHtml.concat(`
+    if (projectWidget.widget.delay > 0 && projectWidget.log) {
+      if (projectWidget.state === WidgetStateEnum.STOPPED) {
+        widgetHtml = widgetHtml.concat(`
         <div style="position: relative;
                     background-color: #b41e1ee0;
                     width: 100%;
                     z-index: 15;
-                    top: 13px;
+                    top: 0;
                     text-align: center;
                     font-size: 0.5em;
                     display: flex;
@@ -376,15 +398,15 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
           </span>
         </div>
       `);
-    }
+      }
 
-    if (projectWidget.state === WidgetStateEnum.WARNING) {
-      widgetHtml = widgetHtml.concat(`
+      if (projectWidget.state === WidgetStateEnum.WARNING) {
+        widgetHtml = widgetHtml.concat(`
         <div style="position: relative;
                     background-color: #e8af00db;
                     width: 100%;
                     z-index: 15;
-                    top: 13px;
+                    top: 0;
                     text-align: center;
                     font-size: 0.5em;
                     display: flex;
@@ -398,11 +420,14 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
           </span>
         </div>
       `);
+      }
     }
 
     widgetHtml = widgetHtml.concat(`
       ${this.getActionButtonsHtml(projectWidget)}
-      ${projectWidget.instantiateHtml}
+      <div class="grid-stack-item-content">
+        ${projectWidget.instantiateHtml}
+      </div>
     `);
 
     return widgetHtml;
