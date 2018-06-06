@@ -11,7 +11,8 @@
   <div class="commonCssAndJs">
     <div [innerHTML]="getGridCSS(project.cssStyle) | safeHtml"></div>
     <div [innerHTML]="getWidgetCommonCSS() | safeHtml"></div>
-    <div [innerHTML]="getJSLibraries(project.librariesToken) | safeHtml"
+    <div *ngIf="project.librariesToken"
+         [innerHTML]="getJSLibraries(project.librariesToken) | safeHtml"
          (scriptRenderingFinished)="setSrcScriptRendered($event)"
          appRunScripts></div>
   </div>
