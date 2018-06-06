@@ -12,6 +12,9 @@
       </div>
     </div>
 
+    <div id="widget-info" [innerHtml]="projectWidget.widget.info | safeHtml ">
+    </div>
+
     <div class="settings-container">
       <form id="formSettings" #formSettings="ngForm" (ngSubmit)="editWidget(formSettings)" novalidate>
         <div *ngFor="let param of projectWidget.widget.widgetParams">
