@@ -18,7 +18,7 @@ import { Component, OnInit } from '@angular/core';
 import {MatDialog, MatDialogRef} from '@angular/material';
 import {AddWidgetDialogComponent} from '../add-widget-dialog/add-widget-dialog.component';
 import {ActivatedRoute} from '@angular/router';
-import {AddDashboardDialogComponent} from '../add-dashboard-dialog/add-dashboard-dialog.component';
+import {AddDashboardDialogComponent} from '../../../../../modules/home/components/add-dashboard-dialog/add-dashboard-dialog.component';
 import {TvManagementDialogComponent} from '../tv-management-dialog/tv-management-dialog.component';
 import {ScreenService} from '../../../../../modules/dashboard/screen.service';
 import {DashboardService} from '../../../../../modules/dashboard/dashboard.service';

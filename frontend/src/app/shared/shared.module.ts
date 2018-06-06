@@ -27,8 +27,6 @@ import {AddWidgetDialogComponent} from './components/pages-header/components/add
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {RouterModule} from '@angular/router';
 import {DashboardActionsComponent} from './components/pages-header/components/dashboard-actions/dashboard-actions.component';
-import { HomeActionsComponent } from './components/pages-header/components/home-actions/home-actions.component';
-import { AddDashboardDialogComponent } from './components/pages-header/components/add-dashboard-dialog/add-dashboard-dialog.component';
 import { CustomFormsModule} from 'ng2-validation';
 import {ColorPickerModule} from 'ngx-color-picker';
 import {WebsocketService} from './services/websocket.service';
@@ -58,8 +56,6 @@ import {StompRService} from '@stomp/ng2-stompjs';
       PagesHeaderComponent,
       AddWidgetDialogComponent,
       DashboardActionsComponent,
-      HomeActionsComponent,
-      AddDashboardDialogComponent,
       ToastComponent,
       PagesFooterComponent,
       SafeHtmlPipe,
@@ -69,7 +65,6 @@ import {StompRService} from '@stomp/ng2-stompjs';
   ],
   entryComponents: [
       AddWidgetDialogComponent,
-      AddDashboardDialogComponent,
       TvManagementDialogComponent
   ],
   exports: [
