@@ -118,6 +118,12 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
   stompStateEnum = StompState;
 
   /**
+   * Tell if we should display the screen code
+   * @type {boolean}
+   */
+  displayScreenCode = false;
+
+  /**
    * constructor
    *
    * @param {DashboardService} dashboardService The dashboard service
@@ -602,7 +608,8 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
 
     // DISPLAY SCREEN CODE
     if (updateEvent.type === WSUpdateType.DISPLAY_NUMBER) {
-      console.log(this.screenCode);
+      this.displayScreenCode = true;
+      setTimeout( () => this.displayScreenCode = false, 10000);
     }
 
     this.changeDetectorRef.detectChanges();
