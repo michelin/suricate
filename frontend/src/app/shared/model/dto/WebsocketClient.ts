@@ -16,12 +16,11 @@
  *
  */
 
-export enum WSUpdateType {
-  GRID = 'GRID',
-  WIDGET = 'WIDGET',
-  POSITION = 'POSITION',
-  DISCONNECT = 'DISCONNECT',
-  CONNECT = 'CONNECT',
-  DISPLAY_NUMBER = 'DISPLAY_NUMBER',
-  RELOAD = 'RELOAD'
+/**
+ * Class that represent the websocket client
+ */
+export class WebsocketClient {
+  projectToken: string;
+  sessionId: string;
+  screencode: string;
 }

@@ -21,10 +21,12 @@ export abstract class AbstractHttpService {
 
     public static readonly BASE_API_URL = process.env.BASE_URL + '/api';
     public static readonly BASE_WS_URL = process.env.BASE_URL + '/ws';
+
     public static readonly AUTHENTICATE_URL = 'oauth/token';
     public static readonly SPRING_ACCESS_TOKEN_ENPOINT = 'access_token';
     public static readonly USERS_URL = 'users';
     public static readonly PROJECTS_URL = 'projects';
+    public static readonly SCREENS_URL = 'screens';
     public static readonly PROJECT_WIDGETS_URL = 'project_widgets';
     public static readonly ASSET_URL = 'asset';
     public static readonly WIDGETS_URL = 'widgets';

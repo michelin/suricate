@@ -26,8 +26,12 @@ import { DashboardEditComponent } from './dashboard-edit/dashboard-edit.componen
 import { DeleteDashboardDialogComponent } from './components/delete-dashboard-dialog/delete-dashboard-dialog.component';
 import { DeleteProjectWidgetDialogComponent } from './components/delete-project-widget-dialog/delete-project-widget-dialog.component';
 import { EditProjectWidgetDialogComponent } from './components/edit-project-widget-dialog/edit-project-widget-dialog.component';
+import { DashboardScreenComponent } from './components/dashboard-screen/dashboard-screen.component';
+import {DashboardTvComponent} from './dashboard-tv/dashboard-tv.component';
+import {ScreenService} from './screen.service';
 
 const dashboardRoutes: Routes = [
+  { path: 'tv', component: DashboardTvComponent },
   { path: 'dashboard/:id', component: DashboardDetailComponent, canActivate: [AuthGuard] },
   { path: 'dashboards', component: DashboardListComponent, canActivate: [AuthGuard] },
   {
@@ -50,13 +54,16 @@ const dashboardRoutes: Routes = [
       DashboardEditComponent,
       DeleteDashboardDialogComponent,
       DeleteProjectWidgetDialogComponent,
-      EditProjectWidgetDialogComponent
+      EditProjectWidgetDialogComponent,
+      DashboardScreenComponent,
+      DashboardTvComponent
   ],
   exports: [
       RouterModule
   ],
   providers: [
-      DashboardService
+      DashboardService,
+      ScreenService
   ],
   entryComponents: [
       DeleteDashboardDialogComponent,

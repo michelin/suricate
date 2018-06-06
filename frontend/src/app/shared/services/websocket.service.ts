@@ -16,13 +16,12 @@
 
 import { Injectable } from '@angular/core';
 import {AbstractHttpService} from './abstract-http.service';
-import {StompService} from 'ng2-stomp-service/index';
-import {WSConfiguration} from '../model/websocket/WSConfiguration';
-import {Subscription} from 'rxjs/Subscription';
 import {Observable} from 'rxjs/Observable';
-import {empty} from 'rxjs/observable/empty';
-import {fromPromise} from 'rxjs/observable/fromPromise';
-import {of} from 'rxjs/observable/of';
+import {NumberUtils} from '../utils/NumberUtils';
+
+import * as Stomp from '@stomp/stompjs';
+import * as SockJS from 'sockjs-client';
+import {StompConfig, StompRService, StompState} from '@stomp/ng2-stompjs';
 
 /**
  * Service that manage the websockets connections
@@ -30,75 +29,86 @@ import {of} from 'rxjs/observable/of';
 @Injectable()
 export class WebsocketService extends AbstractHttpService {
 
-  /** Inventory WebSocket status **/
-  public static readonly WS_STATUS_CLOSED = 'CLOSED';
-  public static readonly WS_STATUS_CONNECTING = 'CONNECTING';
-  public static readonly WS_STATUS_CONNECTED = 'CONNECTED';
+  /**
+   * Define the min bound for the screen code random generation
+   *
+   * @type {number} The min bound
+   */
+  private readonly MIN_SCREEN_CODE_BOUND = 100000;
 
-
-  /** Keep the number of connections in memory **/
-  nbActiveSubscription = 0;
+  /**
+   * Define the max bound for the screen code random generation
+   *
+   * @type {number} The max bound
+   */
+  private readonly MAX_SCREEN_CODE_BOUND = 999999;
 
   /**
    * The constructor of the service
-   *
-   * @param {StompService} stompService The websocket service from ng2-STOMP-OVER-Websocket plugin
    */
-  constructor(private stompService: StompService) {
+  constructor(private stompRService: StompRService) {
     super();
   }
 
+  /* ****************************************************************** */
+  /*                    Screen code management                          */
+  /* ****************************************************************** */
+
   /**
-   * Handle the connection of a websocket
-   *
-   * @param {WSConfiguration} configuration
+   * Get the screen code
+   * @returns {number} The screen code
    */
-  connect(configuration: WSConfiguration): Observable<any> {
-    // configuration
-    this.stompService.configure(configuration);
+  getscreenCode(): number {
+    return NumberUtils.getRandomIntBetween(this.MIN_SCREEN_CODE_BOUND, this.MAX_SCREEN_CODE_BOUND);
+  }
 
-    // start connection
-    return fromPromise(
-        this.stompService.startConnect().then(() => {
-          this.stompService.done('init');
-          console.log('connected');
+  /* ****************************************************************** */
+  /*                    WebSocket Management                            */
+  /* ****************************************************************** */
 
-          return empty();
-        })
-    );
+  /**
+   * Get the stomp connection state
+   *
+   * @returns {Observable<StompState>}
+   */
+  get stompConnectionState(): Observable<StompState> {
+    return this.stompRService.state.asObservable();
   }
 
   /**
-   * Handle the subcription of a websocket
+   * Get the websocket config
    *
-   * @param {string} eventUrl The subcription url
-   * @param {Function} callbackFunction The callback function to call when a new event is received
+   * @returns {StompConfig} The config
    */
-  subscribe(eventUrl: string, callbackFunction: Function): Subscription {
-    if (this.stompService.status !== WebsocketService.WS_STATUS_CONNECTED) {
-      Observable.throw(new Error('No connection found, connect your websocket before subscribe to an event'));
-    }
+  getWebsocketConfig(): StompConfig {
+    const stompConfig = new StompConfig();
+    stompConfig.url = () => new SockJS(AbstractHttpService.BASE_WS_URL);
+    stompConfig.heartbeat_in = 0;
+    stompConfig.heartbeat_out = 20000;
+    stompConfig.reconnect_delay = 1000;
+    stompConfig.debug = true;
 
-    return this.stompService.subscribe(`${eventUrl}`, callbackFunction);
+    return stompConfig;
   }
 
   /**
-   * Unsubscribe to an event
-   *
-   * @param {Subscription} subscription The subscription to close
+   * Start the websocket connection
    */
-  unsubscribe(subscription: Subscription) {
-    subscription.unsubscribe();
+  startConnection() {
+    this.stompRService.config = this.getWebsocketConfig();
+    this.stompRService.initAndConnect();
   }
 
   /**
-   * Handle the disconnection of the websocket
+   * Subcribe to a queue name
+   *
+   * @param {string} destination The subcription url
    */
+  subscribeToDestination(destination: string): Observable<Stomp.Message> {
+    return this.stompRService.subscribe(destination);
+  }
+
   disconnect() {
-    if (this.stompService.status === WebsocketService.WS_STATUS_CONNECTED) {
-      this.stompService.disconnect().then(() => {
-        console.log('Connection closed');
-      });
-    }
+    this.stompRService.disconnect();
   }
 }

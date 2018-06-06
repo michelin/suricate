@@ -19,6 +19,9 @@ import {MatDialog, MatDialogRef} from '@angular/material';
 import {AddWidgetDialogComponent} from '../add-widget-dialog/add-widget-dialog.component';
 import {ActivatedRoute} from '@angular/router';
 import {AddDashboardDialogComponent} from '../add-dashboard-dialog/add-dashboard-dialog.component';
+import {TvManagementDialogComponent} from '../tv-management-dialog/tv-management-dialog.component';
+import {ScreenService} from '../../../../../modules/dashboard/screen.service';
+import {DashboardService} from '../../../../../modules/dashboard/dashboard.service';
 
 @Component({
   selector: 'app-dashboard-actions',
@@ -27,19 +30,51 @@ import {AddDashboardDialogComponent} from '../add-dashboard-dialog/add-dashboard
 })
 export class DashboardActionsComponent implements OnInit {
 
+  /**
+   * Dialog reference used for add a widget
+   */
   addWidgetDialogRef: MatDialogRef<AddWidgetDialogComponent>;
-  editWidgetDialogRef: MatDialogRef<AddDashboardDialogComponent>;
+
+  /**
+   * Dialog reference used for edit a dashboard
+   */
+  editDashboardDialogRef: MatDialogRef<AddDashboardDialogComponent>;
+
+  /**
+   * Dialog reference used for TV Management
+   */
+  tvManagementDialogRef: MatDialogRef<TvManagementDialogComponent>;
+
+  /**
+   * The current project id
+   */
   projectId: number;
 
+  /**
+   * The constructor
+   *
+   * @param {MatDialog} dialog The mat dialog to inject
+   * @param {ActivatedRoute} activatedRoute The activated route
+   * @param {ScreenService} screenService The screen service
+   * @param {DashboardService} dashboardService The dashboard service
+   */
   constructor(private dialog: MatDialog,
-              private activatedRoute: ActivatedRoute) { }
+              private activatedRoute: ActivatedRoute,
+              private screenService: ScreenService,
+              private dashboardService: DashboardService) { }
 
+  /**
+   * When the component is init
+   */
   ngOnInit() {
     this.activatedRoute.params.subscribe(params => {
       this.projectId = params['id'];
     });
   }
 
+  /**
+   * Open the Add widget dialog
+   */
   openAddWidgetDialog() {
     this.addWidgetDialogRef = this.dialog.open(AddWidgetDialogComponent, {
       minWidth: 900,
@@ -47,10 +82,30 @@ export class DashboardActionsComponent implements OnInit {
     });
   }
 
+  /**
+   * Open the edit widget dialog
+   */
   openEditDashboardDialog() {
-    this.editWidgetDialogRef = this.dialog.open(AddDashboardDialogComponent, {
+    this.editDashboardDialogRef = this.dialog.open(AddDashboardDialogComponent, {
       minWidth: 900,
       data: { projectId: this.projectId }
     });
+  }
+
+  /**
+   * Open the tv management dialog
+   */
+  openTvManagementDialog() {
+    this.tvManagementDialogRef = this.dialog.open(TvManagementDialogComponent, {
+      minWidth: 900,
+      data: { projectId: this.projectId }
+    });
+  }
+
+  /**
+   * Refresh every screens for the current dashboard
+   */
+  refreshConnectedScreens() {
+    this.screenService.refreshEveryConnectedScreensForProject(this.dashboardService.currendDashbordSubject.getValue().token);
   }
 }

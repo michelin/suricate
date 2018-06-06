@@ -1,19 +1,6 @@
 <app-pages-header [secondTitle]="(project$ | async)?.name"></app-pages-header>
 
-<div *ngIf="gridOptions" [ngGrid]="gridOptions" (onItemChange)="updateProjectWidgetsPosition($event)">
-  <div class="commonCssAndJs">
-    <div [innerHTML]="getGridCSS((project$ | async)?.cssStyle) | safeHtml"></div>
-    <div [innerHTML]="getWidgetCommonCSS() | safeHtml"></div>
-  </div>
-  <div #projectWidgetsRendered
-       *ngFor="let projectWidget of (project$ | async)?.projectWidgets; let projectWidgetsLoaded = last"
-       [ngClass]="'widget ' + projectWidget.widget.technicalName + ' widget-' + projectWidget.id"
-       [ngGridItem]="{'col': projectWidget.widgetPosition.col,
-                      'row': projectWidget.widgetPosition.row,
-                      'sizey': projectWidget.widgetPosition.height,
-                      'sizex': projectWidget.widgetPosition.width,
-                      'payload': projectWidget.id}"
-       [innerHTML]="getHtmlAndCss(projectWidget) | safeHtml">
-
-  </div>
-</div>
+<app-dashboard-screen *ngIf="(project$ | async)"
+                      [project]="(project$ | async)"
+                      [readOnly]="false">
+</app-dashboard-screen>

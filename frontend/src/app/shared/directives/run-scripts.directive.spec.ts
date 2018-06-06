@@ -14,17 +14,10 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.enums;
 
-/**
- * Update type (Websocket)
- */
-public enum UpdateType {
-    GRID,
-    WIDGET,
-    POSITION,
-    DISCONNECT,
-    CONNECT,
-    DISPLAY_NUMBER,
-    RELOAD
-}
+import { RunScriptsDirective } from './run-scripts.directive';
+
+describe('RunScriptsDirective', () => {
+  it('should create an instance', () => {
+  });
+});

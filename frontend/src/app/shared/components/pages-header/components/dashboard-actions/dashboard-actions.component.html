@@ -1,5 +1,19 @@
-<button mat-mini-fab color="accent" matTooltip="New Widget" (click)="openAddWidgetDialog()"> <mat-icon>add</mat-icon> </button>
-<button mat-mini-fab color="accent" matTooltip="Dashboard Settings" (click)="openEditDashboardDialog()"> <mat-icon>settings_applications</mat-icon> </button>
-<button mat-mini-fab color="accent" matTooltip="Refresh"> <mat-icon>refresh</mat-icon> </button>
-<button mat-mini-fab  color="accent" matTooltip="TV View"> <mat-icon>tv</mat-icon> </button>
-<button mat-mini-fab  color="accent" matTooltip="Display on TV"> <mat-icon>live_tv</mat-icon> </button>
+<button mat-mini-fab color="accent" matTooltip="New Widget" (click)="openAddWidgetDialog()">
+  <mat-icon>add</mat-icon>
+</button>
+
+<button mat-mini-fab color="accent" matTooltip="Dashboard Settings" (click)="openEditDashboardDialog()">
+  <mat-icon>settings_applications</mat-icon>
+</button>
+
+<button mat-mini-fab color="accent" matTooltip="Refresh Screens" (click)="refreshConnectedScreens()">
+  <mat-icon>refresh</mat-icon>
+</button>
+
+<button mat-mini-fab  color="accent" matTooltip="TV View">
+  <mat-icon>tv</mat-icon>
+</button>
+
+<button mat-mini-fab  color="accent" matTooltip="Screen Management" (click)="openTvManagementDialog()">
+  <mat-icon>live_tv</mat-icon>
+</button>
