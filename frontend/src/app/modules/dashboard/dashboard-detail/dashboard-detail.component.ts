@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import {Component, OnInit, OnDestroy} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {Component, OnInit, OnDestroy, ChangeDetectorRef} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
 import {DashboardService} from '../dashboard.service';
 import {takeWhile} from 'rxjs/operators';
-import {of} from 'rxjs/observable/of';
-import {Observable} from 'rxjs/Observable';
 import {Project} from '../../../shared/model/dto/Project';
+import {AddWidgetDialogComponent} from '../../../shared/components/pages-header/components/add-widget-dialog/add-widget-dialog.component';
+import {MatDialog, MatDialogRef} from '@angular/material';
 
 /**
  * Component that display a specific dashboard
@@ -33,6 +33,11 @@ import {Project} from '../../../shared/model/dto/Project';
 export class DashboardDetailComponent implements OnInit, OnDestroy {
 
   /**
+   * The widget dialog ref
+   */
+  addWidgetDialogRef: MatDialogRef<AddWidgetDialogComponent>;
+
+  /**
    * Tell if the component is displayed
    *
    * @type {boolean}
@@ -42,16 +47,20 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
   /**
    * The project as observable
    */
-  project$: Observable<Project>;
+  project: Project;
 
   /**
    * constructor
    *
    * @param {ActivatedRoute} activatedRoute The activated route service
    * @param {DashboardService} dashboardService The dashboard service
+   * @param {ChangeDetectorRef} changeDetectorRef The change detector ref service
+   * @param {MatDialog} matDialog The mat dialog service
    */
   constructor(private activatedRoute: ActivatedRoute,
-              private dashboardService: DashboardService) { }
+              private dashboardService: DashboardService,
+              private changeDetectorRef: ChangeDetectorRef,
+              private matDialog: MatDialog) { }
 
   /**
    * Init objects
@@ -69,7 +78,20 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
     this.dashboardService
         .currendDashbordSubject
         .pipe(takeWhile(() => this.isAlive))
-        .subscribe(project => this.project$ = of(project));
+        .subscribe(project => {
+          this.project = project;
+          this.changeDetectorRef.detectChanges();
+        });
+  }
+
+  /**
+   * The add widget dialog ref
+   */
+  openAddWidgetDialog() {
+    this.addWidgetDialogRef = this.matDialog.open(AddWidgetDialogComponent, {
+      minWidth: 900,
+      minHeight: 500,
+    });
   }
 
   /**

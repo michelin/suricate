@@ -1,0 +1,15 @@
+.mat-card {
+    margin-bottom: 20px;
+}
+
+.mat-card .mat-card-content .mat-icon {
+    font-size: 5rem;
+    width: auto;
+    height: auto;
+}
+
+.mat-card a {
+    display: block;
+    color: inherit;
+    cursor: pointer;
+}
