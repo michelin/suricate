@@ -28,7 +28,7 @@ export class Widget {
   cssContent: string;
   backendJs: string;
   info: string;
-  delay: string;
+  delay: number;
   timeout: string;
   image: Asset;
   category: Category;

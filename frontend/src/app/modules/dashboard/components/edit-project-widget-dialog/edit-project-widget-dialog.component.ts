@@ -109,7 +109,7 @@ export class EditProjectWidgetDialogComponent implements OnInit {
   getParamValueByParamName(backendConfig: string, param: WidgetParam): string {
     const paramLines: string[] = backendConfig.split('\n');
     const paramLine = paramLines.find((currentParam: string) => currentParam.startsWith(param.name));
-    return paramLine ? paramLine.split('=')[1] : '';
+    return paramLine ? paramLine.split(/=(.+)?/)[1] : '';
   }
 
   /**

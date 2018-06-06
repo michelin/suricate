@@ -23,6 +23,7 @@
         "assets/styles/normalize.css",
         "assets/styles/dashboard-dark-material-theme.scss",
         "../node_modules/material-design-icons-iconfont/dist/material-design-icons.css",
+        "../node_modules/font-awesome/css/font-awesome.css",
         "styles.css"
       ],
       "scripts": [
