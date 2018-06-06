@@ -58,6 +58,9 @@
               </div>
             </div>
 
+            <div id="widget-info" [innerHtml]="selectedWidget.info | safeHtml ">
+            </div>
+
             <div class="settings-container">
               <form id="formSettings" #formSettings="ngForm" (ngSubmit)="addWidget(formSettings)" novalidate>
                 <div *ngFor="let param of selectedWidget.widgetParams">
