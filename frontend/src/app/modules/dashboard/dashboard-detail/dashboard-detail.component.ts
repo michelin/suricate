@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import {Component, OnInit, OnDestroy, ChangeDetectorRef} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import {Component, OnInit, OnDestroy} from '@angular/core';
+import {ActivatedRoute} from '@angular/router';
 import {DashboardService} from '../dashboard.service';
 import {takeWhile} from 'rxjs/operators';
 import {Project} from '../../../shared/model/dto/Project';
@@ -56,12 +56,10 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    *
    * @param {ActivatedRoute} activatedRoute The activated route service
    * @param {DashboardService} dashboardService The dashboard service
-   * @param {ChangeDetectorRef} changeDetectorRef The change detector ref service
    * @param {MatDialog} matDialog The mat dialog service
    */
   constructor(private activatedRoute: ActivatedRoute,
               private dashboardService: DashboardService,
-              private changeDetectorRef: ChangeDetectorRef,
               private matDialog: MatDialog) { }
 
   /**
