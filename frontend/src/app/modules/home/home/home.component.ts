@@ -18,6 +18,9 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Project} from '../../../shared/model/dto/Project';
 import {DashboardService} from '../../dashboard/dashboard.service';
 import { takeWhile} from 'rxjs/operators';
+import {MatDialogRef, MatDialog} from '@angular/material';
+import {AddDashboardDialogComponent} from '../components/add-dashboard-dialog/add-dashboard-dialog.component';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -25,6 +28,7 @@ import { takeWhile} from 'rxjs/operators';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit, OnDestroy {
+  addDashboardDialogRef: MatDialogRef<AddDashboardDialogComponent>;
 
   /**
    * True while the component is instantiate
@@ -41,8 +45,12 @@ export class HomeComponent implements OnInit, OnDestroy {
    * The constructor
    *
    * @param {DashboardService} dashboardService The dashboard service
+   * @param {MatDialog} matDialog The mat dialog service
+   * @param {Router} router The router service
    */
-  constructor(private dashboardService: DashboardService) { }
+  constructor(private dashboardService: DashboardService,
+              private matDialog: MatDialog,
+              private router: Router) { }
 
   /**
    * Init objects
@@ -52,6 +60,25 @@ export class HomeComponent implements OnInit, OnDestroy {
         .dashboardsSubject
         .pipe(takeWhile(() => this.alive))
         .subscribe( dashboards => this.dashboards = dashboards);
+  }
+
+  /**
+   * Open the add dashboard dialog
+   */
+  openAddDashboardDialog() {
+    this.addDashboardDialogRef = this.matDialog.open(AddDashboardDialogComponent, {
+      minWidth: 900,
+      minHeight: 500,
+    });
+  }
+
+  /**
+   * Navigate to a dashboard
+   *
+   * @param {number} dashboardId The dashboard id
+   */
+  navigateToDashboard(dashboardId: number) {
+    this.router.navigate(['/dashboard', dashboardId]);
   }
 
   /**
