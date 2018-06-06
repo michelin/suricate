@@ -19,6 +19,7 @@ import { CommonModule } from '@angular/common';
 import {RouterModule, Routes} from '@angular/router';
 import {SharedModule} from '../../shared/shared.module';
 import {HomeComponent} from './home/home.component';
+import {AddDashboardDialogComponent} from './components/add-dashboard-dialog/add-dashboard-dialog.component';
 
 
 const homeRoutes: Routes = [
@@ -27,15 +28,19 @@ const homeRoutes: Routes = [
 
 @NgModule({
   imports: [
-    CommonModule,
-    RouterModule.forChild(homeRoutes),
-    SharedModule
+      CommonModule,
+      RouterModule.forChild(homeRoutes),
+      SharedModule
   ],
   declarations: [
-    HomeComponent
+      HomeComponent,
+      AddDashboardDialogComponent
   ],
   exports: [
       HomeComponent
+  ],
+  entryComponents: [
+      AddDashboardDialogComponent
   ]
 })
 export class HomeModule { }
