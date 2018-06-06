@@ -21,6 +21,8 @@ import {takeWhile} from 'rxjs/operators';
 import {Project} from '../../../shared/model/dto/Project';
 import {AddWidgetDialogComponent} from '../../../shared/components/pages-header/components/add-widget-dialog/add-widget-dialog.component';
 import {MatDialog, MatDialogRef} from '@angular/material';
+import {Observable} from 'rxjs/Observable';
+import {of} from 'rxjs/observable/of';
 
 /**
  * Component that display a specific dashboard
@@ -47,7 +49,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
   /**
    * The project as observable
    */
-  project: Project;
+  project$: Observable<Project>;
 
   /**
    * constructor
@@ -78,10 +80,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
     this.dashboardService
         .currendDashbordSubject
         .pipe(takeWhile(() => this.isAlive))
-        .subscribe(project => {
-          this.project = project;
-          this.changeDetectorRef.detectChanges();
-        });
+        .subscribe(project => this.project$ = of(project) );
   }
 
   /**

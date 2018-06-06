@@ -1,8 +1,8 @@
-<app-pages-header [secondTitle]="project?.name"></app-pages-header>
+<app-pages-header [secondTitle]="(project$ | async)?.name"></app-pages-header>
 
 <!-- Dashboard screen -->
-<app-dashboard-screen *ngIf="project?.projectWidgets?.length > 0; else dashboardNoWidget"
-                      [project]="project"
+<app-dashboard-screen *ngIf="(project$ | async)?.projectWidgets?.length > 0; else dashboardNoWidget"
+                      [project]="(project$ | async)"
                       [readOnly]="false">
 </app-dashboard-screen>
 
