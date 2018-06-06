@@ -36,6 +36,14 @@
           <button fxFlex="75" mat-raised-button color="accent" (click)="disconnectScreen(websocketClient)">DISCONNECT</button>
         </div>
       </div>
+
+      <!-- Show screen code -->
+      <div id="display-code-link" >
+        <a fxLayout="col wrap" fxLayoutAlign="start center" (click)="displayScreenCode(project.token)">
+          <mat-icon>keyboard_arrow_right</mat-icon>
+          <span>Show code on clients to identify screen</span>
+        </a>
+      </div>
     </div>
 
   </div>

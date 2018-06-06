@@ -577,6 +577,7 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
    * @param {WSUpdateEvent} updateEvent The message received
    */
   handleGlobalScreenEvent(updateEvent: WSUpdateEvent) {
+    // WIDGET
     if (updateEvent.type === WSUpdateType.WIDGET) {
       const projectWidget: ProjectWidget = updateEvent.content;
       if (projectWidget) {
@@ -585,6 +586,7 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
       }
     }
 
+    // POSITION & GRID
     if (updateEvent.type === WSUpdateType.POSITION || updateEvent.type === WSUpdateType.GRID) {
       const projectUpdated: Project = updateEvent.content;
       if (projectUpdated) {
@@ -593,8 +595,14 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
       }
     }
 
+    // RELOAD
     if (updateEvent.type === WSUpdateType.RELOAD) {
       location.reload();
+    }
+
+    // DISPLAY SCREEN CODE
+    if (updateEvent.type === WSUpdateType.DISPLAY_NUMBER) {
+      console.log(this.screenCode);
     }
 
     this.changeDetectorRef.detectChanges();
