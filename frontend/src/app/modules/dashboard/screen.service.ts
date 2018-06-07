@@ -68,4 +68,13 @@ export class ScreenService extends AbstractHttpService {
     const url = `${ScreenService.SCREENS_BASE_URL}/refresh/${projectToken}`;
     this.httpClient.get<void>(url).subscribe();
   }
+
+  /**
+   * Display the screen code on every connected screens
+   * @param {string} projectToken The project token
+   */
+  displayScreenCodeEveryConnectedScreensForProject(projectToken: string): void {
+    const url = `${ScreenService.SCREENS_BASE_URL}/screencode/${projectToken}`;
+    this.httpClient.get<void>(url).subscribe();
+  }
 }
