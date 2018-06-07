@@ -1,6 +1,24 @@
 <app-pages-header [secondTitle]="(project$ | async)?.name"></app-pages-header>
 
-<app-dashboard-screen *ngIf="(project$ | async)"
+<!-- Dashboard screen -->
+<app-dashboard-screen *ngIf="(project$ | async)?.projectWidgets?.length > 0; else dashboardNoWidget"
                       [project]="(project$ | async)"
                       [readOnly]="false">
 </app-dashboard-screen>
+
+<!-- Display the add card, if no widget inside the project -->
+<ng-template #dashboardNoWidget>
+  <div fxLayout="col wrap" fxLayoutAlign="start start">
+    <!-- Add Dashboard Card -->
+    <mat-card id="add-dashboard-card" fxFlex="30%">
+      <a (click)="openAddWidgetDialog()">
+        <mat-card-content fxLayout="row wrap" fxLayoutAlign="center center">
+          <mat-icon>add_box</mat-icon>
+        </mat-card-content>
+      </a>
+      <mat-card-actions align="start">
+        <button #addDashboardButton mat-button (click)="openAddWidgetDialog()">Add a new widget</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</ng-template>

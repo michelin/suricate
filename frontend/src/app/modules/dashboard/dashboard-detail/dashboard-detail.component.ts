@@ -18,9 +18,11 @@ import {Component, OnInit, OnDestroy} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {DashboardService} from '../dashboard.service';
 import {takeWhile} from 'rxjs/operators';
-import {of} from 'rxjs/observable/of';
-import {Observable} from 'rxjs/Observable';
 import {Project} from '../../../shared/model/dto/Project';
+import {AddWidgetDialogComponent} from '../../../shared/components/pages-header/components/add-widget-dialog/add-widget-dialog.component';
+import {MatDialog, MatDialogRef} from '@angular/material';
+import {Observable} from 'rxjs/Observable';
+import {of} from 'rxjs/observable/of';
 
 /**
  * Component that display a specific dashboard
@@ -31,6 +33,11 @@ import {Project} from '../../../shared/model/dto/Project';
   styleUrls: ['./dashboard-detail.component.css']
 })
 export class DashboardDetailComponent implements OnInit, OnDestroy {
+
+  /**
+   * The widget dialog ref
+   */
+  addWidgetDialogRef: MatDialogRef<AddWidgetDialogComponent>;
 
   /**
    * Tell if the component is displayed
@@ -49,9 +56,11 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    *
    * @param {ActivatedRoute} activatedRoute The activated route service
    * @param {DashboardService} dashboardService The dashboard service
+   * @param {MatDialog} matDialog The mat dialog service
    */
   constructor(private activatedRoute: ActivatedRoute,
-              private dashboardService: DashboardService) { }
+              private dashboardService: DashboardService,
+              private matDialog: MatDialog) { }
 
   /**
    * Init objects
@@ -69,7 +78,17 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
     this.dashboardService
         .currendDashbordSubject
         .pipe(takeWhile(() => this.isAlive))
-        .subscribe(project => this.project$ = of(project));
+        .subscribe(project => this.project$ = of(project) );
+  }
+
+  /**
+   * The add widget dialog ref
+   */
+  openAddWidgetDialog() {
+    this.addWidgetDialogRef = this.matDialog.open(AddWidgetDialogComponent, {
+      minWidth: 900,
+      minHeight: 500,
+    });
   }
 
   /**
