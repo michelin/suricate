@@ -19,3 +19,11 @@ mat-divider {
     font-variant: all-small-caps;
     margin-top: -5px;
 }
+#display-code-link {
+    color: rgb(151, 153, 162);
+}
+#display-code-link a {
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+}

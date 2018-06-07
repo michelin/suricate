@@ -252,11 +252,8 @@ public class DashboardWebSocketService {
      *
      * @param projectToken the specified project token
      */
-    public void displayUniqueNumber(String projectToken) {
-        Iterator<WebsocketClient> it = projectClients.values().iterator();
-        while (it.hasNext()) {
-            updateUniqueScreen(projectToken, it.next().getScreenCode(), new UpdateEvent(UpdateType.DISPLAY_NUMBER));
-        }
+    public void displayScreenCodeForProject(String projectToken) {
+        updateGlobalScreensByProjectToken(projectToken, new UpdateEvent(UpdateType.DISPLAY_NUMBER));
     }
 
     /**

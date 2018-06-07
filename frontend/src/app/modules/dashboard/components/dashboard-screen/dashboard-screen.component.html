@@ -1,3 +1,4 @@
+<!-- Display Synchronisation server Errors -->
 <div id="server-error"
      *ngIf="currentStompConnectionState === stompStateEnum.CLOSED || currentStompConnectionState === stompStateEnum.TRYING"
      fxLayout="row wrap"
@@ -7,6 +8,13 @@
   <span> Server connection lost. Trying to reconnect ... </span>
 </div>
 
+<!-- Display Screen code -->
+<div *ngIf="displayScreenCode" id="screen-code-div" fxLayout="col wrap" fxLayoutAlign="center center" fxLayoutGap="50px">
+  <mat-icon>tv</mat-icon>
+  <span> {{ screenCode }}</span>
+</div>
+
+<!-- Grid project -->
 <div *ngIf="gridOptions" [ngGrid]="gridOptions" (onItemChange)="updateProjectWidgetsPosition($event)" class="grid-stack" >
   <div class="commonCssAndJs">
     <div [innerHTML]="getGridCSS(project.cssStyle) | safeHtml"></div>
