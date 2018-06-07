@@ -88,4 +88,13 @@ export class TvManagementDialogComponent implements OnInit {
     this.screenService.disconnectScreen(websocketClient);
   }
 
+  /**
+   * Display the screen code on every connected screens
+   * @param projectToken The project token
+   */
+  displayScreenCode(projectToken: string): void {
+    if (projectToken) {
+      this.screenService.displayScreenCodeEveryConnectedScreensForProject(projectToken);
+    }
+  }
 }

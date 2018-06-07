@@ -100,4 +100,15 @@ public class ScreenController {
     public void refreshEveryConnectedScreensForProject(@PathVariable("projectToken") String projectToken) {
         this.dashboardWebSocketService.reloadAllConnectedDashboardForAProject(projectToken);
     }
+
+    /**
+     * Display the screen code on every connected dashboard
+     *
+     * @param projectToken The project token
+     */
+    @RequestMapping(value = "screencode/{projectToken}", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public void displayScreenCodeEveryConnectedScreensForProject(@PathVariable("projectToken") String projectToken) {
+        this.dashboardWebSocketService.displayScreenCodeForProject(projectToken);
+    }
 }
