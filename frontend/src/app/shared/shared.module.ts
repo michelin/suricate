@@ -39,6 +39,7 @@ import {RunScriptsDirective} from './directives/run-scripts.directive';
 import {TvManagementDialogComponent} from './components/pages-header/components/tv-management-dialog/tv-management-dialog.component';
 import {StompRService} from '@stomp/ng2-stompjs';
 import {AdminGuard} from './auth/guards/admin.guard';
+import {TokenService} from './auth/token.service';
 
 @NgModule({
   imports: [
