@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {CustomValidators} from 'ng2-validation';
 import {checkPasswordMatch} from '../../../shared/validators/CustomValidator';
-import {AuthenticationService} from '../authentication.service';
 import {User} from '../../../shared/model/dto/user/User';
 import {ICredentials} from '../../../shared/model/dto/user/ICredentials';
 import {Router} from '@angular/router';
+import {AuthenticationService} from '../../../shared/auth/authentication.service';
 
 /**
  * Component that register a new user
@@ -67,7 +67,8 @@ export class RegisterComponent implements OnInit {
    */
   constructor(private formBuilder: FormBuilder,
               private authenticationService: AuthenticationService,
-              private router: Router) { }
+              private router: Router) {
+  }
 
   /**
    * Called when the component is init
@@ -117,7 +118,7 @@ export class RegisterComponent implements OnInit {
     this
         .authenticationService
         .register(user)
-        .subscribe( () => {
+        .subscribe(() => {
           const credentials: ICredentials = {username: user.username, password: user.password};
           this
               .authenticationService

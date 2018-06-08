@@ -16,7 +16,7 @@
 
 import {Component, OnInit} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
-import {AuthenticationService} from './modules/authentication/authentication.service';
+import {AuthenticationService} from './shared/auth/authentication.service';
 
 @Component({
   selector: 'app-root',
@@ -28,7 +28,8 @@ export class AppComponent implements OnInit {
 
   title = 'Dashboard - Monitoring';
 
-  constructor(private authenticationService: AuthenticationService) {}
+  constructor(private authenticationService: AuthenticationService) {
+  }
 
   ngOnInit() {
     this.isLoggedIn$ = this.authenticationService.isLoggedIn();

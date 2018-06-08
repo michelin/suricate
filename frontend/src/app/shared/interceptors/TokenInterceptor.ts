@@ -15,37 +15,43 @@
  */
 
 import {Injectable, Injector} from '@angular/core';
-import { HttpRequest, HttpHandler, HttpEvent, HttpInterceptor, HttpErrorResponse } from '@angular/common/http';
-import { Observable } from 'rxjs/Observable';
+import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
+import {Observable} from 'rxjs/Observable';
 import {Router} from '@angular/router';
 import 'rxjs/add/operator/do';
 
-import {AuthenticationService} from '../../modules/authentication/authentication.service';
+import {AuthenticationService} from '../auth/authentication.service';
 
 
+/**
+ * The token interceptor
+ */
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
 
-    constructor(private injector: Injector, private router: Router) {
+  constructor(private injector: Injector,
+              private router: Router,
+              private authenticationService: AuthenticationService) {
+  }
+
+  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    if (this.authenticationService.token && this.authenticationService.token !== '') {
+      request = request.clone({
+        setHeaders: {Authorization: `Bearer ${this.authenticationService.token}`}
+      });
     }
 
-    intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        if (AuthenticationService.getToken() && AuthenticationService.getToken() !== '') {
-            request = request.clone({
-                setHeaders: { Authorization: `Bearer ${AuthenticationService.getToken()}` }
-            });
-        }
-
-        return next.handle(request)
-            .do(
-                (event: HttpEvent<any>) => {},
-                (error: any) => {
-                    if (error instanceof HttpErrorResponse) {
-                        if (error.status === 401) {
-                            this.router.navigate(['/login']);
-                        }
-                    }
+    return next.handle(request)
+        .do(
+            (event: HttpEvent<any>) => {
+            },
+            (error: any) => {
+              if (error instanceof HttpErrorResponse) {
+                if (error.status === 401) {
+                  this.router.navigate(['/login']);
                 }
-            );
-    }
+              }
+            }
+        );
+  }
 }

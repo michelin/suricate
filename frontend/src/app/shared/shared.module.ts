@@ -14,83 +14,84 @@
  * limitations under the License.
  */
 
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {NgGridModule} from 'angular2-grid';
 import {TokenInterceptor} from './interceptors/TokenInterceptor';
-import {AuthGuard} from './guards/auth.guard';
+import {AuthGuard} from './auth/guards/auth.guard';
 import {MaterialModule} from './modules/material.module';
 import {PagesHeaderComponent} from './components/pages-header/pages-header.component';
 import {AddWidgetDialogComponent} from './components/pages-header/components/add-widget-dialog/add-widget-dialog.component';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {RouterModule} from '@angular/router';
 import {DashboardActionsComponent} from './components/pages-header/components/dashboard-actions/dashboard-actions.component';
-import { CustomFormsModule} from 'ng2-validation';
+import {CustomFormsModule} from 'ng2-validation';
 import {ColorPickerModule} from 'ngx-color-picker';
 import {WebsocketService} from './services/websocket.service';
-import { ToastComponent } from './components/toast/toast.component';
+import {ToastComponent} from './components/toast/toast.component';
 import {ToastService} from './components/toast/toast.service';
-import { PagesFooterComponent } from './components/pages-footer/pages-footer.component';
+import {PagesFooterComponent} from './components/pages-footer/pages-footer.component';
 import {SafeHtmlPipe} from './pipes/safe-html.pipe';
-import { SafeUrlPipe } from './pipes/safe-url.pipe';
-import { RunScriptsDirective } from './directives/run-scripts.directive';
-import { TvManagementDialogComponent } from './components/pages-header/components/tv-management-dialog/tv-management-dialog.component';
+import {SafeUrlPipe} from './pipes/safe-url.pipe';
+import {RunScriptsDirective} from './directives/run-scripts.directive';
+import {TvManagementDialogComponent} from './components/pages-header/components/tv-management-dialog/tv-management-dialog.component';
 import {StompRService} from '@stomp/ng2-stompjs';
 
 @NgModule({
   imports: [
-      CommonModule,
-      FormsModule,
-      ReactiveFormsModule,
-      HttpClientModule,
-      NgGridModule,
-      MaterialModule,
-      FlexLayoutModule,
-      RouterModule,
-      CustomFormsModule,
-      ColorPickerModule
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    NgGridModule,
+    MaterialModule,
+    FlexLayoutModule,
+    RouterModule,
+    CustomFormsModule,
+    ColorPickerModule
   ],
   declarations: [
-      PagesHeaderComponent,
-      AddWidgetDialogComponent,
-      DashboardActionsComponent,
-      ToastComponent,
-      PagesFooterComponent,
-      SafeHtmlPipe,
-      SafeUrlPipe,
-      TvManagementDialogComponent,
-      RunScriptsDirective
+    PagesHeaderComponent,
+    AddWidgetDialogComponent,
+    DashboardActionsComponent,
+    ToastComponent,
+    PagesFooterComponent,
+    SafeHtmlPipe,
+    SafeUrlPipe,
+    TvManagementDialogComponent,
+    RunScriptsDirective
   ],
   entryComponents: [
-      AddWidgetDialogComponent,
-      TvManagementDialogComponent
+    AddWidgetDialogComponent,
+    TvManagementDialogComponent
   ],
   exports: [
-      FormsModule,
-      ReactiveFormsModule,
-      HttpClientModule,
-      NgGridModule,
-      MaterialModule,
-      FlexLayoutModule,
-      RouterModule,
-      CustomFormsModule,
-      ColorPickerModule,
-      PagesHeaderComponent,
-      AddWidgetDialogComponent,
-      ToastComponent,
-      SafeHtmlPipe,
-      SafeUrlPipe,
-      RunScriptsDirective,
-      PagesFooterComponent
+    FormsModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    NgGridModule,
+    MaterialModule,
+    FlexLayoutModule,
+    RouterModule,
+    CustomFormsModule,
+    ColorPickerModule,
+    PagesHeaderComponent,
+    AddWidgetDialogComponent,
+    ToastComponent,
+    SafeHtmlPipe,
+    SafeUrlPipe,
+    RunScriptsDirective,
+    PagesFooterComponent
   ],
   providers: [
-      { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
-      AuthGuard,
-      WebsocketService,
-      ToastService,
-      StompRService
+    {provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true},
+    AuthGuard,
+    WebsocketService,
+    ToastService,
+    StompRService
   ]
 })
-export class SharedModule { }
+export class SharedModule {
+}
