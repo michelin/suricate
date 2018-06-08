@@ -82,7 +82,8 @@ import {StompRService} from '@stomp/ng2-stompjs';
       ToastComponent,
       SafeHtmlPipe,
       SafeUrlPipe,
-      RunScriptsDirective
+      RunScriptsDirective,
+      PagesFooterComponent
   ],
   providers: [
       { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
