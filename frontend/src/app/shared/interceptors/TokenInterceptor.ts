@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import {Injectable, Injector} from '@angular/core';
-import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
-import {Router} from '@angular/router';
-import 'rxjs/add/operator/do';
 
-import {AuthenticationService} from '../auth/authentication.service';
+import {AuthenticationService} from '../../modules/authentication/authentication.service';
+import {AbstractHttpService} from '../services/abstract-http.service';
+import {TokenService} from '../auth/token.service';
 
 
 /**
@@ -29,29 +29,27 @@ import {AuthenticationService} from '../auth/authentication.service';
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
 
-  constructor(private injector: Injector,
-              private router: Router,
-              private authenticationService: AuthenticationService) {
+  constructor(private authenticationService: AuthenticationService, private _tokenService: TokenService) {
   }
 
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (this.authenticationService.token && this.authenticationService.token !== '') {
-      request = request.clone({
-        setHeaders: {Authorization: `Bearer ${this.authenticationService.token}`}
-      });
+    if (!request ||
+        !request.url ||
+        (
+            /^http/.test(request.url) &&
+            !(AbstractHttpService.BASE_API_URL && request.url.startsWith(AbstractHttpService.BASE_API_URL))
+        )) {
+      return next.handle(request);
     }
 
-    return next.handle(request)
-        .do(
-            (event: HttpEvent<any>) => {
-            },
-            (error: any) => {
-              if (error instanceof HttpErrorResponse) {
-                if (error.status === 401) {
-                  this.router.navigate(['/login']);
-                }
-              }
-            }
-        );
+    const token = this._tokenService.token || sessionStorage.getItem('token');
+    if (!!token) {
+      request = request.clone({
+        setHeaders: {
+          Authorization: 'Bearer ' + token
+        }
+      });
+    }
+    return next.handle(request);
   }
 }
