@@ -38,6 +38,7 @@ import {SafeUrlPipe} from './pipes/safe-url.pipe';
 import {RunScriptsDirective} from './directives/run-scripts.directive';
 import {TvManagementDialogComponent} from './components/pages-header/components/tv-management-dialog/tv-management-dialog.component';
 import {StompRService} from '@stomp/ng2-stompjs';
+import {AdminGuard} from './auth/guards/admin.guard';
 
 @NgModule({
   imports: [
@@ -88,9 +89,11 @@ import {StompRService} from '@stomp/ng2-stompjs';
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true},
     AuthGuard,
+    AdminGuard,
     WebsocketService,
     ToastService,
-    StompRService
+    StompRService,
+    TokenService
   ]
 })
 export class SharedModule {
