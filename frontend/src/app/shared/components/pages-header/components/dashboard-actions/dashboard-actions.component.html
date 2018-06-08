@@ -10,9 +10,11 @@
   <mat-icon>refresh</mat-icon>
 </button>
 
-<button mat-mini-fab  color="accent" matTooltip="TV View">
-  <mat-icon>tv</mat-icon>
-</button>
+<a [routerLink]="['/tv']" [queryParams]="{token: project.token}" target="_blank" >
+  <button mat-mini-fab  color="accent" matTooltip="TV View">
+    <mat-icon>tv</mat-icon>
+  </button>
+</a>
 
 <button mat-mini-fab  color="accent" matTooltip="Screen Management" (click)="openTvManagementDialog()">
   <mat-icon>live_tv</mat-icon>

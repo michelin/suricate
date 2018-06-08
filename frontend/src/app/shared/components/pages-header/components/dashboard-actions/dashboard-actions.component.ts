@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {MatDialog, MatDialogRef} from '@angular/material';
 import {AddWidgetDialogComponent} from '../add-widget-dialog/add-widget-dialog.component';
 import {ActivatedRoute} from '@angular/router';
@@ -22,6 +22,7 @@ import {AddDashboardDialogComponent} from '../../../../../modules/home/component
 import {TvManagementDialogComponent} from '../tv-management-dialog/tv-management-dialog.component';
 import {ScreenService} from '../../../../../modules/dashboard/screen.service';
 import {DashboardService} from '../../../../../modules/dashboard/dashboard.service';
+import {Project} from '../../../../model/dto/Project';
 
 @Component({
   selector: 'app-dashboard-actions',
@@ -48,7 +49,7 @@ export class DashboardActionsComponent implements OnInit {
   /**
    * The current project id
    */
-  projectId: number;
+  project: Project;
 
   /**
    * The constructor
@@ -61,15 +62,14 @@ export class DashboardActionsComponent implements OnInit {
   constructor(private dialog: MatDialog,
               private activatedRoute: ActivatedRoute,
               private screenService: ScreenService,
-              private dashboardService: DashboardService) { }
+              private dashboardService: DashboardService) {
+  }
 
   /**
    * When the component is init
    */
   ngOnInit() {
-    this.activatedRoute.params.subscribe(params => {
-      this.projectId = params['id'];
-    });
+    this.dashboardService.currendDashbordSubject.subscribe(project => this.project = project);
   }
 
   /**
@@ -78,7 +78,7 @@ export class DashboardActionsComponent implements OnInit {
   openAddWidgetDialog() {
     this.addWidgetDialogRef = this.dialog.open(AddWidgetDialogComponent, {
       minWidth: 900,
-      data: { projectId: this.projectId}
+      data: {projectId: this.project.id}
     });
   }
 
@@ -88,7 +88,7 @@ export class DashboardActionsComponent implements OnInit {
   openEditDashboardDialog() {
     this.editDashboardDialogRef = this.dialog.open(AddDashboardDialogComponent, {
       minWidth: 900,
-      data: { projectId: this.projectId }
+      data: {projectId: this.project.id}
     });
   }
 
@@ -98,7 +98,7 @@ export class DashboardActionsComponent implements OnInit {
   openTvManagementDialog() {
     this.tvManagementDialogRef = this.dialog.open(TvManagementDialogComponent, {
       minWidth: 900,
-      data: { projectId: this.projectId }
+      data: {projectId: this.project.id}
     });
   }
 
@@ -106,6 +106,6 @@ export class DashboardActionsComponent implements OnInit {
    * Refresh every screens for the current dashboard
    */
   refreshConnectedScreens() {
-    this.screenService.refreshEveryConnectedScreensForProject(this.dashboardService.currendDashbordSubject.getValue().token);
+    this.screenService.refreshEveryConnectedScreensForProject(this.project.token);
   }
 }
