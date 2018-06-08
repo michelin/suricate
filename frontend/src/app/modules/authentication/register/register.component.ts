@@ -21,7 +21,7 @@ import {checkPasswordMatch} from '../../../shared/validators/CustomValidator';
 import {User} from '../../../shared/model/dto/user/User';
 import {ICredentials} from '../../../shared/model/dto/user/ICredentials';
 import {Router} from '@angular/router';
-import {AuthenticationService} from '../../../shared/auth/authentication.service';
+import {AuthenticationService} from '../authentication.service';
 
 /**
  * Component that register a new user

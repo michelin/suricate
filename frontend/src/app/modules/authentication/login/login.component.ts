@@ -17,7 +17,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {AuthenticationService} from '../../../shared/auth/authentication.service';
+import {AuthenticationService} from '../authentication.service';
 
 /**
  * Manage the login page

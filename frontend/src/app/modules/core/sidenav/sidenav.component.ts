@@ -23,7 +23,7 @@ import {UserService} from '../../user/user.service';
 import {takeWhile} from 'rxjs/operators';
 import {MatSidenav} from '@angular/material';
 import {SidenavService} from './sidenav.service';
-import {AuthenticationService} from '../../../shared/auth/authentication.service';
+import {AuthenticationService} from '../../authentication/authentication.service';
 
 @Component({
   selector: 'app-sidenav',

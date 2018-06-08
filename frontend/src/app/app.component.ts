@@ -16,7 +16,7 @@
 
 import {Component, OnInit} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
-import {AuthenticationService} from './shared/auth/authentication.service';
+import {AuthenticationService} from './modules/authentication/authentication.service';
 
 @Component({
   selector: 'app-root',

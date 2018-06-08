@@ -16,73 +16,54 @@
  *
  */
 
-import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+/*
+ *  /*
+ *  * Copyright 2012-2018 the original author or authors.
+ *  *
+ *  * Licensed under the Apache License, Version 2.0 (the "License");
+ *  * you may not use this file except in compliance with the License.
+ *  * You may obtain a copy of the License at
+ *  *
+ *  *      http://www.apache.org/licenses/LICENSE-2.0
+ *  *
+ *  * Unless required by applicable law or agreed to in writing, software
+ *  * distributed under the License is distributed on an "AS IS" BASIS,
+ *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  * See the License for the specific language governing permissions and
+ *  * limitations under the License.
+ *
+ */
+import {Injectable} from '@angular/core';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
-import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {map} from 'rxjs/operators';
 
-import { ICredentials } from '../model/dto/user/ICredentials';
-import {AbstractHttpService} from '../services/abstract-http.service';
-import {AuthenticationResponse} from '../model/dto/user/AuthenticationResponse';
-import {User} from '../model/dto/user/User';
+import {ICredentials} from '../../shared/model/dto/user/ICredentials';
+import {AbstractHttpService} from '../../shared/services/abstract-http.service';
+import {AuthenticationResponse} from '../../shared/model/dto/user/AuthenticationResponse';
+import {User} from '../../shared/model/dto/user/User';
+import {TokenService} from '../../shared/auth/token.service';
 
+/**
+ * The authentication service
+ */
 @Injectable()
 export class AuthenticationService extends AbstractHttpService {
   /**
    * LoggedIn Subject (Hold if the user is logged in or not)
    * @type {BehaviorSubject<boolean>}
    */
-  private _loggedIn$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(this.hasToken());
-
-  /**
-   * The token
-   */
-  private _token: string;
-
+  private _loggedIn$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(this._tokenService.hasToken());
 
   /**
    * Constructor
    *
    * @param {HttpClient} _httpClient The HttpClient service
+   * @param {TokenService} _tokenService The token service
    */
-  constructor(private _httpClient: HttpClient) {
+  constructor(private _httpClient: HttpClient, private _tokenService: TokenService) {
     super();
-  }
-
-  /* ***************************************************** */
-  /*                     Getter / Setter                   */
-  /* ***************************************************** */
-
-  /**
-   * Get the token from localStorage
-   *
-   * @returns {string | null}
-   */
-  get token() {
-    return localStorage.getItem('token');
-  }
-
-  /**
-   * Set the token into localStorage
-   *
-   * @param {string} newToken The new token
-   */
-  set token(newToken: string) {
-    localStorage.setItem('token', newToken);
-  }
-
-  /* ***************************************************** */
-  /*                     Methods                           */
-  /* ***************************************************** */
-
-  /**
-   * Tell if the user has a token or not
-   *
-   * @returns {boolean} True if the user have a token store, false otherwise
-   */
-  hasToken(): boolean {
-    return !!this.token;
   }
 
   /**
@@ -117,7 +98,7 @@ export class AuthenticationService extends AbstractHttpService {
         .pipe(
             map(authenticationResponse => {
               if (authenticationResponse && authenticationResponse.access_token) {
-                this.token = authenticationResponse.access_token;
+                this._tokenService.token = authenticationResponse.access_token;
                 this._loggedIn$.next(true);
 
                 return authenticationResponse;

@@ -20,6 +20,7 @@ import {RouterModule, Routes} from '@angular/router';
 import {CommonModule} from '@angular/common';
 import {SharedModule} from '../../shared/shared.module';
 import {RegisterComponent} from './register/register.component';
+import {AuthenticationService} from './authentication.service';
 
 const authRoutes: Routes = [
   {path: 'login', component: LoginComponent},
@@ -36,7 +37,9 @@ const authRoutes: Routes = [
     LoginComponent,
     RegisterComponent
   ],
-  providers: []
+  providers: [
+    AuthenticationService
+  ]
 })
 export class AuthenticationModule {
 }
