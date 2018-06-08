@@ -7,37 +7,41 @@
                mode="side"
                align="start"
                opened="true"
-               class="mat-elevation-z8" >
+               class="mat-elevation-z8">
     <!-- User Section -->
     <div id="user-section" class="sidenav-section" *ngIf="connectedUser">
-        <div class="avatar-container">
-          <div class="avatar">
-            {{getConnectedUserInitial()}}
-          </div>
+      <div class="avatar-container">
+        <div class="avatar">
+          {{getConnectedUserInitial()}}
         </div>
-
-        <mat-accordion>
-          <mat-expansion-panel class="mat-elevation-z0">
-            <mat-expansion-panel-header>
-              <mat-panel-title>
-                <div class="nameContainer">
-                  <div> {{connectedUser.fullname}} </div>
-                  <div> ({{connectedUser.username}}) </div>
-                </div>
-              </mat-panel-title>
-            </mat-expansion-panel-header>
-
-            <mat-nav-list class="submenu">
-              <div><a mat-list-item href="javascript:void(0)"> <mat-icon>settings</mat-icon> Settings </a></div>
-              <div><a mat-list-item (click)="logout()">  <mat-icon>exit_to_app</mat-icon> Logout </a></div>
-            </mat-nav-list>
-          </mat-expansion-panel>
-        </mat-accordion>
       </div>
+
+      <mat-accordion>
+        <mat-expansion-panel class="mat-elevation-z0">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <div class="nameContainer">
+                <div> {{connectedUser.fullname}}</div>
+                <div> ({{connectedUser.username}})</div>
+              </div>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+
+          <mat-nav-list class="submenu">
+            <div><a mat-list-item href="javascript:void(0)">
+              <mat-icon>settings</mat-icon>
+              Settings </a></div>
+            <div><a mat-list-item (click)="logout()">
+              <mat-icon>exit_to_app</mat-icon>
+              Logout </a></div>
+          </mat-nav-list>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </div>
 
     <div class="sidenav-section-container" fxLayout="column wrap" fxLayoutGap="8px">
       <!-- Admin Section -->
-      <div class="sidenav-section">
+      <div *ngIf="isUserAdmin" class="sidenav-section">
         <h1 class="little">Administration</h1>
         <mat-nav-list>
           <a mat-list-item routerLinkActive="active" [routerLink]="['/users']"> Users </a>
@@ -51,7 +55,8 @@
       <div class="sidenav-section">
         <h1 class="little">dashboards</h1>
         <mat-nav-list>
-          <a mat-list-item routerLinkActive="active" *ngFor="let dashboard of dashboards" [routerLink]="['/dashboard', dashboard.id]">{{dashboard.name}}</a>
+          <a mat-list-item routerLinkActive="active" *ngFor="let dashboard of dashboards"
+             [routerLink]="['/dashboard', dashboard.id]">{{dashboard.name}}</a>
         </mat-nav-list>
       </div>
     </div>

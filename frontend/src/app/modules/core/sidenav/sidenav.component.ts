@@ -47,6 +47,11 @@ export class SidenavComponent implements OnInit, AfterViewInit, OnDestroy {
   public connectedUser: User;
 
   /**
+   * True if the user is admin
+   */
+  public isUserAdmin: boolean;
+
+  /**
    * The list of dashboards
    */
   public dashboards: Project[];
@@ -85,6 +90,7 @@ export class SidenavComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.dashboardService.getAllForCurrentUser().subscribe();
     this.userService.getConnectedUser().subscribe();
+    this.isUserAdmin = this.userService.isAdmin();
   }
 
   ngAfterViewInit() {
