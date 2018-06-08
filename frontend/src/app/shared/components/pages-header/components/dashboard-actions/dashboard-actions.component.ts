@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {MatDialog, MatDialogRef} from '@angular/material';
 import {AddWidgetDialogComponent} from '../add-widget-dialog/add-widget-dialog.component';
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute} from '@angular/router';
 import {AddDashboardDialogComponent} from '../../../../../modules/home/components/add-dashboard-dialog/add-dashboard-dialog.component';
 import {TvManagementDialogComponent} from '../tv-management-dialog/tv-management-dialog.component';
 import {ScreenService} from '../../../../../modules/dashboard/screen.service';
@@ -58,19 +58,18 @@ export class DashboardActionsComponent implements OnInit {
    * @param {ActivatedRoute} activatedRoute The activated route
    * @param {ScreenService} screenService The screen service
    * @param {DashboardService} dashboardService The dashboard service
-   * @param {Router} router The router service
    */
   constructor(private dialog: MatDialog,
               private activatedRoute: ActivatedRoute,
               private screenService: ScreenService,
-              private dashboardService: DashboardService,
-              private router: Router) { }
+              private dashboardService: DashboardService) {
+  }
 
   /**
    * When the component is init
    */
   ngOnInit() {
-    this.dashboardService.currendDashbordSubject.subscribe(project => this.project = project)
+    this.dashboardService.currendDashbordSubject.subscribe(project => this.project = project);
   }
 
   /**
@@ -79,7 +78,7 @@ export class DashboardActionsComponent implements OnInit {
   openAddWidgetDialog() {
     this.addWidgetDialogRef = this.dialog.open(AddWidgetDialogComponent, {
       minWidth: 900,
-      data: { projectId: this.project.id}
+      data: {projectId: this.project.id}
     });
   }
 
@@ -89,7 +88,7 @@ export class DashboardActionsComponent implements OnInit {
   openEditDashboardDialog() {
     this.editDashboardDialogRef = this.dialog.open(AddDashboardDialogComponent, {
       minWidth: 900,
-      data: { projectId: this.project.id }
+      data: {projectId: this.project.id}
     });
   }
 
@@ -99,7 +98,7 @@ export class DashboardActionsComponent implements OnInit {
   openTvManagementDialog() {
     this.tvManagementDialogRef = this.dialog.open(TvManagementDialogComponent, {
       minWidth: 900,
-      data: { projectId: this.project.id }
+      data: {projectId: this.project.id}
     });
   }
 
