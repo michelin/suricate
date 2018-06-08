@@ -14,31 +14,32 @@
  * limitations under the License.
  */
 
-import { NgModule } from '@angular/core';
-import { LoginComponent } from './login/login.component';
-import { RouterModule, Routes } from '@angular/router';
-import {AuthenticationService} from './authentication.service';
+import {NgModule} from '@angular/core';
+import {LoginComponent} from './login/login.component';
+import {RouterModule, Routes} from '@angular/router';
 import {CommonModule} from '@angular/common';
 import {SharedModule} from '../../shared/shared.module';
-import { RegisterComponent } from './register/register.component';
+import {RegisterComponent} from './register/register.component';
+import {AuthenticationService} from './authentication.service';
 
 const authRoutes: Routes = [
-    { path: 'login', component: LoginComponent },
-    { path: 'register', component: RegisterComponent }
+  {path: 'login', component: LoginComponent},
+  {path: 'register', component: RegisterComponent}
 ];
 
 @NgModule({
   imports: [
-      CommonModule,
-      RouterModule.forChild(authRoutes),
-      SharedModule
+    CommonModule,
+    RouterModule.forChild(authRoutes),
+    SharedModule
   ],
   declarations: [
-      LoginComponent,
-      RegisterComponent
+    LoginComponent,
+    RegisterComponent
   ],
   providers: [
-      AuthenticationService
+    AuthenticationService
   ]
 })
-export class AuthenticationModule { }
+export class AuthenticationModule {
+}

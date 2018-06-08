@@ -14,24 +14,19 @@
  * limitations under the License.
  */
 
-import {Component, OnInit} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
-import {AuthenticationService} from './modules/authentication/authentication.service';
 
-@Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
-})
-export class AppComponent implements OnInit {
-  isLoggedIn$: Observable<boolean>;
+import {inject, TestBed} from '@angular/core/testing';
 
-  title = 'Dashboard - Monitoring';
+import {TokenService} from './token.service';
 
-  constructor(private authenticationService: AuthenticationService) {
-  }
+describe('TokenService', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [TokenService]
+    });
+  });
 
-  ngOnInit() {
-    this.isLoggedIn$ = this.authenticationService.isLoggedIn();
-  }
-}
+  it('should be created', inject([TokenService], (service: TokenService) => {
+    expect(service).toBeTruthy();
+  }));
+});

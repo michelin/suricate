@@ -14,45 +14,45 @@
  * limitations under the License.
  */
 
-import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { RouterModule, Routes } from '@angular/router';
+import {NgModule} from '@angular/core';
+import {BrowserModule} from '@angular/platform-browser';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {RouterModule, Routes} from '@angular/router';
 import {CoreModule} from './modules/core/core.module';
 import {SharedModule} from './shared/shared.module';
-import { UserModule } from './modules/user/user.module';
-import { DashboardModule } from './modules/dashboard/dashboard.module';
+import {UserModule} from './modules/user/user.module';
+import {DashboardModule} from './modules/dashboard/dashboard.module';
 import {AuthenticationModule} from './modules/authentication/authentication.module';
 
-import { AppComponent } from './app.component';
+import {AppComponent} from './app.component';
 import {HomeModule} from './modules/home/home.module';
 import {ConfigurationModule} from './modules/configuration/configuration.module';
 import {WidgetModule} from './modules/widget/widget.module';
 
 const appRoutes: Routes = [
-  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  {path: '', redirectTo: '/home', pathMatch: 'full'},
+  {path: '**', redirectTo: 'home', pathMatch: 'full'}
 ];
-
 
 @NgModule({
   imports: [
-      BrowserModule,
-      BrowserAnimationsModule,
-      RouterModule.forRoot(appRoutes),
-      SharedModule,
-      CoreModule,
-      HomeModule,
-      AuthenticationModule,
-      DashboardModule,
-      UserModule,
-      ConfigurationModule,
-      WidgetModule
+    BrowserModule,
+    BrowserAnimationsModule,
+    RouterModule.forRoot(appRoutes),
+    SharedModule,
+    CoreModule,
+    HomeModule,
+    AuthenticationModule,
+    DashboardModule,
+    UserModule,
+    ConfigurationModule,
+    WidgetModule
   ],
   declarations: [
-      AppComponent
+    AppComponent
   ],
-  providers: [
-  ],
+  providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+}

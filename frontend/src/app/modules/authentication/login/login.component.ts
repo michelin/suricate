@@ -14,11 +14,10 @@
  * limitations under the License.
  */
 
-import {Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import {FormGroup, Validators, FormBuilder, FormControl} from '@angular/forms';
-
-import { AuthenticationService} from '../authentication.service';
+import {Component, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AuthenticationService} from '../authentication.service';
 
 /**
  * Manage the login page
@@ -57,7 +56,8 @@ export class LoginComponent implements OnInit {
    */
   constructor(private router: Router,
               private authenticationService: AuthenticationService,
-              private formBuilder: FormBuilder) {}
+              private formBuilder: FormBuilder) {
+  }
 
   /**
    * Init objects
@@ -91,17 +91,17 @@ export class LoginComponent implements OnInit {
 
       // Try to authenticate
       this.authenticationService
-        .authenticate(this.loginForm.value)
-        .subscribe (
-          () => {
-            // Authentication succeed
-            this.router.navigate(['/home']);
-          },
-          error => {
-            // Authentication failed
-            this.formSubmitAttempt = false;
-            console.log(error);
-          });
+          .authenticate(this.loginForm.value)
+          .subscribe(
+              () => {
+                // Authentication succeed
+                this.router.navigate(['/home']);
+              },
+              error => {
+                // Authentication failed
+                this.formSubmitAttempt = false;
+                console.log(error);
+              });
     }
   }
 }

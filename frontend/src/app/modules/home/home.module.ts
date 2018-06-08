@@ -14,33 +14,35 @@
  * limitations under the License.
  */
 
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
 import {RouterModule, Routes} from '@angular/router';
 import {SharedModule} from '../../shared/shared.module';
 import {HomeComponent} from './home/home.component';
 import {AddDashboardDialogComponent} from './components/add-dashboard-dialog/add-dashboard-dialog.component';
+import {AuthGuard} from '../../shared/auth/guards/auth.guard';
 
 
 const homeRoutes: Routes = [
-  { path: 'home', component: HomeComponent }
+  {path: 'home', component: HomeComponent, canActivate: [AuthGuard]}
 ];
 
 @NgModule({
   imports: [
-      CommonModule,
-      RouterModule.forChild(homeRoutes),
-      SharedModule
+    CommonModule,
+    RouterModule.forChild(homeRoutes),
+    SharedModule
   ],
   declarations: [
-      HomeComponent,
-      AddDashboardDialogComponent
+    HomeComponent,
+    AddDashboardDialogComponent
   ],
   exports: [
-      HomeComponent
+    HomeComponent
   ],
   entryComponents: [
-      AddDashboardDialogComponent
+    AddDashboardDialogComponent
   ]
 })
-export class HomeModule { }
+export class HomeModule {
+}

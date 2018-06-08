@@ -14,15 +14,17 @@
  * limitations under the License.
  */
 
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { User } from '../../shared/model/dto/user/User';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {User} from '../../shared/model/dto/user/User';
 
-import { Observable } from 'rxjs/Observable';
+import {Observable} from 'rxjs/Observable';
 import {AbstractHttpService} from '../../shared/services/abstract-http.service';
 import {map} from 'rxjs/operators';
 import {Subject} from 'rxjs/Subject';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {TokenService} from '../../shared/auth/token.service';
+import {RoleEnum} from '../../shared/model/dto/enums/RoleEnum';
 
 /**
  * User service that manage users
@@ -47,8 +49,9 @@ export class UserService extends AbstractHttpService {
    * The constructor
    *
    * @param {HttpClient} http The http client service to inject
+   * @param {TokenService} _tokenService The token service
    */
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private _tokenService: TokenService) {
     super();
   }
 
@@ -131,5 +134,13 @@ export class UserService extends AbstractHttpService {
    */
   getUserInitial(user: User): string {
     return `${user.firstname.substring(0, 1)}${user.lastname.substring(0, 1)}`;
+  }
+
+  /**
+   * Test if the user is admin
+   * @returns {boolean} True if the current user admin, false otherwise
+   */
+  isAdmin(): boolean {
+    return this._tokenService.getUserRoles().includes(RoleEnum.ROLE_ADMIN);
   }
 }

@@ -14,24 +14,18 @@
  * limitations under the License.
  */
 
-import {Component, OnInit} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
-import {AuthenticationService} from './modules/authentication/authentication.service';
+import {inject, TestBed} from '@angular/core/testing';
 
-@Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
-})
-export class AppComponent implements OnInit {
-  isLoggedIn$: Observable<boolean>;
+import {AdminGuard} from './admin.guard';
 
-  title = 'Dashboard - Monitoring';
+describe('AdminGuard', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [AdminGuard]
+    });
+  });
 
-  constructor(private authenticationService: AuthenticationService) {
-  }
-
-  ngOnInit() {
-    this.isLoggedIn$ = this.authenticationService.isLoggedIn();
-  }
-}
+  it('should ...', inject([AdminGuard], (guard: AdminGuard) => {
+    expect(guard).toBeTruthy();
+  }));
+});

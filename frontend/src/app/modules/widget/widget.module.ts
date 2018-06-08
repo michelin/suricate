@@ -16,29 +16,31 @@
  *
  */
 
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
 import {WidgetService} from './widget.service';
 import {SharedModule} from '../../shared/shared.module';
-import { WidgetListComponent } from './widget-list/widget-list.component';
-import {AuthGuard} from '../../shared/guards/auth.guard';
+import {WidgetListComponent} from './widget-list/widget-list.component';
+import {AuthGuard} from '../../shared/auth/guards/auth.guard';
 import {RouterModule, Routes} from '@angular/router';
+import {AdminGuard} from '../../shared/auth/guards/admin.guard';
 
 const widgetRoutes: Routes = [
-  {path: 'widgets', component: WidgetListComponent, canActivate: [ AuthGuard ]}
+  {path: 'widgets', component: WidgetListComponent, canActivate: [AuthGuard, AdminGuard]}
 ];
 
 
 @NgModule({
   imports: [
-      CommonModule,
-      SharedModule,
-      RouterModule.forChild(widgetRoutes)
+    CommonModule,
+    SharedModule,
+    RouterModule.forChild(widgetRoutes)
   ],
   declarations: [
-  WidgetListComponent],
+    WidgetListComponent],
   providers: [
-      WidgetService
+    WidgetService
   ]
 })
-export class WidgetModule { }
+export class WidgetModule {
+}
