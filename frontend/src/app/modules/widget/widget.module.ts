@@ -23,9 +23,10 @@ import {SharedModule} from '../../shared/shared.module';
 import {WidgetListComponent} from './widget-list/widget-list.component';
 import {AuthGuard} from '../../shared/auth/guards/auth.guard';
 import {RouterModule, Routes} from '@angular/router';
+import {AdminGuard} from '../../shared/auth/guards/admin.guard';
 
 const widgetRoutes: Routes = [
-  {path: 'widgets', component: WidgetListComponent, canActivate: [AuthGuard]}
+  {path: 'widgets', component: WidgetListComponent, canActivate: [AuthGuard, AdminGuard]}
 ];
 
 

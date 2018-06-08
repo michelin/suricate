@@ -27,7 +27,7 @@ import {UserEditComponent} from './user-edit/user-edit.component';
 import {AdminGuard} from '../../shared/auth/guards/admin.guard';
 
 const appRoutes: Routes = [
-  {path: 'users', component: UserListComponent, data: {breadcrumb: 'User List'}, canActivate: [AuthGuard]},
+  {path: 'users', component: UserListComponent, data: {breadcrumb: 'User List'}, canActivate: [AuthGuard, AdminGuard]},
   {path: 'users/:userId/edit', component: UserEditComponent, data: {breadcrumb: 'Edit User'}, canActivate: [AuthGuard, AdminGuard]}
 ];
 

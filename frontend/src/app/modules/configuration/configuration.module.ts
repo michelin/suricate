@@ -23,9 +23,10 @@ import {RouterModule, Routes} from '@angular/router';
 import {AuthGuard} from '../../shared/auth/guards/auth.guard';
 import {SharedModule} from '../../shared/shared.module';
 import {ConfigurationService} from './configuration.service';
+import {AdminGuard} from '../../shared/auth/guards/admin.guard';
 
 const configurationRoute: Routes = [
-  {path: 'configurations', component: ConfigurationListComponent, canActivate: [AuthGuard]}
+  {path: 'configurations', component: ConfigurationListComponent, canActivate: [AuthGuard, AdminGuard]}
 ];
 
 @NgModule({

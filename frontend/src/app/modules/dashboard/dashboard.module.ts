@@ -29,16 +29,17 @@ import {EditProjectWidgetDialogComponent} from './components/edit-project-widget
 import {DashboardScreenComponent} from './components/dashboard-screen/dashboard-screen.component';
 import {DashboardTvComponent} from './dashboard-tv/dashboard-tv.component';
 import {ScreenService} from './screen.service';
+import {AdminGuard} from '../../shared/auth/guards/admin.guard';
 
 const dashboardRoutes: Routes = [
   {path: 'tv', component: DashboardTvComponent},
   {path: 'dashboard/:id', component: DashboardDetailComponent, canActivate: [AuthGuard]},
-  {path: 'dashboards', component: DashboardListComponent, canActivate: [AuthGuard]},
+  {path: 'dashboards', component: DashboardListComponent, canActivate: [AuthGuard, AdminGuard]},
   {
     path: 'dashboards/:dashboardId/edit',
     component: DashboardEditComponent,
     data: {breadcrumb: 'Edit Dashboard'},
-    canActivate: [AuthGuard]
+    canActivate: [AuthGuard, AdminGuard]
   }
 ];
 
