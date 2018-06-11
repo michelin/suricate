@@ -1,9 +1,9 @@
 /** Sidenav **/
 mat-sidenav * {
-    color: #cfd2da;
     font-variant: all-small-caps;
     font-size: 0.8rem;
 }
+
 mat-sidenav mat-icon {
     font-variant: none;
 }
@@ -20,24 +20,25 @@ mat-sidenav .sidenav-section {
 
 /** User Section **/
 mat-sidenav #user-section {
-  padding: 15px 0 10px 0;
-  margin: 0;
+    padding: 15px 0 10px 0;
+    margin: 0;
 }
+
 mat-sidenav #user-section > .avatar-container {
-  margin: 0 auto;
-  width: 60px;
-  height: 60px;
-  overflow: hidden;
-  border-radius: 50%;
-  border: 1px solid #303030;
+    margin: 0 auto;
+    width: 60px;
+    height: 60px;
+    overflow: hidden;
+    border-radius: 50%;
+    border: 1px solid #303030;
 }
 
 mat-sidenav #user-section > .avatar-container > .avatar {
-  height: 100%;
-  font-size: 25px;
-  line-height: 54px;
-  text-align: center;
-  background: #303030;
+    height: 100%;
+    font-size: 25px;
+    line-height: 54px;
+    text-align: center;
+    background: #303030;
 }
 
 mat-sidenav #user-section .mat-expansion-panel {
@@ -46,36 +47,33 @@ mat-sidenav #user-section .mat-expansion-panel {
 
 /** Nav list **/
 mat-nav-list.submenu {
-  background-color: #5a5a5a;
-  display: block;
-  padding: 10px 0 10px 0;
-  border-top: 1px solid #2d2d2d;
-  border-bottom: 1px solid #2d2d2d;
+    display: block;
+    padding: 10px 0 10px 0;
+    border-top: 1px solid #2d2d2d;
+    border-bottom: 1px solid #2d2d2d;
 }
+
 mat-nav-list.submenu .mat-list-item {
-  height: 20px;
+    height: 20px;
 }
+
 mat-nav-list.submenu .mat-list-item mat-icon {
-  font-size: 17px;
-  padding-top: 10px;
-  margin-right: 10px;
+    font-size: 17px;
+    padding-top: 10px;
+    margin-right: 10px;
 }
 
 mat-nav-list .mat-list-item {
-  height: 23px;
-  width: 90%;
+    height: 23px;
+    width: 90%;
 }
-mat-nav-list .mat-list-item:hover {
-  background-color: #505050;
-  color: #f7f9ff;
-}
+
 mat-nav-list .mat-list-item.active {
-  background-color: #1997c6;
-  border-radius: 3px;
+    border-radius: 3px;
 }
 
 mat-sidenav-content {
-  padding: 10px 10px 10px 10px;
-  min-height: 95vh;
-  overflow: -webkit-paged-x;
+    padding: 10px 10px 10px 10px;
+    min-height: 95vh;
+    overflow: -webkit-paged-x;
 }

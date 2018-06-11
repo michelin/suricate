@@ -1,0 +1,94 @@
+/*!
+ *  /*
+ *  * Copyright 2012-2018 the original author or authors.
+ *  *
+ *  * Licensed under the Apache License, Version 2.0 (the "License");
+ *  * you may not use this file except in compliance with the License.
+ *  * You may obtain a copy of the License at
+ *  *
+ *  *      http://www.apache.org/licenses/LICENSE-2.0
+ *  *
+ *  * Unless required by applicable law or agreed to in writing, software
+ *  * distributed under the License is distributed on an "AS IS" BASIS,
+ *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  * See the License for the specific language governing permissions and
+ *  * limitations under the License.
+ *
+ */
+@import '~@angular/material/theming';
+
+/* ****************************************** */
+/*          Retrieve Variables                */
+/* ****************************************** */
+
+// Retrieve Variables from theme
+@mixin mat-theme-variables($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, accent);
+  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
+}
+
+/* ****************************************** */
+/*              Custom rules                  */
+/* ****************************************** */
+
+/**
+ * CSS Style for main elements
+ */
+@mixin main-elements($theme, $customTheme) {
+  $background: map-get($theme, background);
+
+  body {
+    background-color: mat-color($background, background);
+  }
+}
+
+/**
+ * Custom css rules for mat-sidenav
+ */
+@mixin custom-mat-sidenav($theme, $customTheme) {
+  $accent: map-get($theme, accent);
+  $second-background: map-get($customTheme, second-background);
+  $background-color-hover: map-get($customTheme, background-color-hover);
+  $text-color: map-get($customTheme, text-color);
+  $text-color-hover: map-get($customTheme, text-color-hover);
+
+  mat-sidenav {
+    * {
+      color: $text-color;
+    }
+
+    mat-nav-list {
+      &.submenu {
+        background-color: $second-background;
+      }
+
+      .mat-list-item {
+        &:hover {
+          background-color: $background-color-hover;
+
+          .mat-list-item-content {
+            color: $text-color-hover;
+          }
+        }
+
+        &.active {
+          &:hover {
+            background-color: mat-color($accent) !important;
+          }
+          background-color: mat-color($accent) !important;
+        }
+      }
+    }
+  }
+}
+
+/* ****************************************** */
+/*              Main Theming function         */
+/* ****************************************** */
+@mixin main-custom-theming($theme, $customTheme) {
+  @include main-elements($theme, $customTheme);
+  @include custom-mat-sidenav($theme, $customTheme);
+}

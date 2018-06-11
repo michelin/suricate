@@ -34,9 +34,9 @@ module.exports = (options) =>
             polyfills: ["./src/polyfills"],
             styles: [
                 "./src/assets/styles/normalize.css",
-                "./src/assets/styles/dashboard-dark-material-theme.scss",
                 "./node_modules/material-design-icons-iconfont/dist/material-design-icons.scss",
                 "./node_modules/font-awesome/css/font-awesome.css",
+                "./src/assets/styles/themes/dashboard-themes.scss",
                 "./src/styles.css"
             ]
         },
@@ -64,9 +64,9 @@ module.exports = (options) =>
                     test: /\.css$/,
                     exclude: [
                         path.join(process.cwd(), "src\\assets\\styles\\normalize.css"),
-                        path.join(process.cwd(), "src\\assets\\styles\\dashboard-dark-material-theme.scss"),
                         path.join(process.cwd(), "node_modules\\material-design-icons-iconfont\\dist\\material-design-icons.scss"),
                         path.join(process.cwd(), "node_modules\\font-awesome\\css\\font-awesome.css"),
+                        path.join(process.cwd(), "src\\assets\\styles\\themes\\dashboard-themes.scss"),
                         path.join(process.cwd(), "src\\styles.css")
                     ],
                     use: [
@@ -85,9 +85,9 @@ module.exports = (options) =>
                     test: /\.scss$|\.sass$/,
                     exclude: [
                         path.join(process.cwd(), "src\\assets\\styles\\normalize.css"),
-                        path.join(process.cwd(), "src\\assets\\styles\\dashboard-dark-material-theme.scss"),
                         path.join(process.cwd(), "node_modules\\material-design-icons-iconfont\\dist\\material-design-icons.scss"),
                         path.join(process.cwd(), "node_modules\\font-awesome\\css\\font-awesome.css"),
+                        path.join(process.cwd(), "src\\assets\\styles\\themes\\dashboard-themes.scss"),
                         path.join(process.cwd(), "src\\styles.css")
                     ],
                     use: [
@@ -110,9 +110,9 @@ module.exports = (options) =>
                     test: /\.css$/,
                     include: [
                         path.join(process.cwd(), "src\\assets\\styles\\normalize.css"),
-                        path.join(process.cwd(), "src\\assets\\styles\\dashboard-dark-material-theme.scss"),
                         path.join(process.cwd(), "node_modules\\material-design-icons-iconfont\\dist\\material-design-icons.scss"),
                         path.join(process.cwd(), "node_modules\\font-awesome\\css\\font-awesome.css"),
+                        path.join(process.cwd(), "src\\assets\\styles\\themes\\dashboard-themes.scss"),
                         path.join(process.cwd(), "src\\styles.css")
                     ],
                     use: [
@@ -131,9 +131,9 @@ module.exports = (options) =>
                     test: /\.scss$|\.sass$/,
                     include: [
                         path.join(process.cwd(), "src\\assets\\styles\\normalize.css"),
-                        path.join(process.cwd(), "src\\assets\\styles\\dashboard-dark-material-theme.scss"),
                         path.join(process.cwd(), "node_modules\\material-design-icons-iconfont\\dist\\material-design-icons.scss"),
                         path.join(process.cwd(), "node_modules\\font-awesome\\css\\font-awesome.css"),
+                        path.join(process.cwd(), "src\\assets\\styles\\themes\\dashboard-themes.scss"),
                         path.join(process.cwd(), "src\\styles.css")
                     ],
                     use: [
