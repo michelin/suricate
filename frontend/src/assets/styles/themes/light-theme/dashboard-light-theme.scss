@@ -27,7 +27,7 @@
 // Select colors
 $light-primary: mat-palette($dashboard-light, 500, 300, 800);
 $light-accent: mat-palette($dashboard-light, A200, A400, A100);
-$light-warn: mat-palette($mat-red, 300);
+$light-warn: mat-palette($mat-red, 600);
 
 // Theme creation
 $light-theme: mat-light-theme($light-primary, $light-accent, $light-warn);
@@ -37,5 +37,7 @@ $light-theme: mat-light-theme($light-primary, $light-accent, $light-warn);
 /* ************************************************************ */
 $background-color-content: #edf0f5;
 $text-color: black;
+$text-color-title: #7e8188;
+$table-hover-color: #dfdfdf;
 
-$light-custom-theme: custom-color-theme($background-color-content, $text-color);
+$light-custom-theme: custom-color-theme($background-color-content, $text-color, $text-color-title, $table-hover-color);

@@ -42,7 +42,7 @@
     <div class="sidenav-section-container" fxLayout="column wrap" fxLayoutGap="8px">
       <!-- Admin Section -->
       <div *ngIf="isUserAdmin" class="sidenav-section">
-        <h1 class="little">Administration</h1>
+        <h1 class="little title">Administration</h1>
         <mat-nav-list>
           <a mat-list-item routerLinkActive="active" [routerLink]="['/users']"> Users </a>
           <a mat-list-item routerLinkActive="active" [routerLink]="['/configurations']">Configurations</a>
@@ -53,7 +53,7 @@
 
       <!-- Dashboard Section -->
       <div class="sidenav-section">
-        <h1 class="little">dashboards</h1>
+        <h1 class="little title">dashboards</h1>
         <mat-nav-list>
           <a mat-list-item routerLinkActive="active" *ngFor="let dashboard of dashboards"
              [routerLink]="['/dashboard', dashboard.id]">{{dashboard.name}}</a>

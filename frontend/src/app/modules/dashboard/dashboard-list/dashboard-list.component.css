@@ -29,7 +29,3 @@
     max-width: 360px;
     text-align: center;
 }
-
-mat-row:hover {
-    background-color: #666;
-}

@@ -6,10 +6,6 @@ body {
     font: 15px Roboto, sans-serif;
 }
 
-.container-body {
-    background-color: #424242;
-}
-
 .mat-raised-button.mat-accent .mat-button-wrapper {
     color: white !important;
 }
@@ -20,14 +16,12 @@ mat-divider {
 
 h1.little {
     font-size: 1em;
-    color: #7e8188 !important;
     margin: 0;
     font-variant: all-small-caps;
 }
 
 h2.little {
     font-size: 1.3em;
-    color: #8d9097 !important;
     margin: 0;
     font-variant: all-small-caps;
 }
@@ -69,4 +63,12 @@ a:hover {
 
 .mat-form-field-suffix .show-pwd-icon {
     cursor: pointer;
+}
+
+mat-step-header .mat-step-icon > span {
+    color: #f5f4f4;
+}
+
+mat-step-header .mat-step-icon > mat-icon {
+    color: #dcdcdc;
 }

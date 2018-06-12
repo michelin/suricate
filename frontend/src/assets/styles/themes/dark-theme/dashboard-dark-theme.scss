@@ -39,5 +39,7 @@ $dark-theme: mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
 /* ************************************************************ */
 $background-color-content: #303030;
 $text-color: rgba(255, 255, 255, 0.70);
+$text-color-title: #b0b2b8;
+$table-hover-color: #666;
 
-$dark-custom-theme: custom-color-theme($background-color-content, $text-color);
+$dark-custom-theme: custom-color-theme($background-color-content, $text-color, $text-color-title, $table-hover-color);

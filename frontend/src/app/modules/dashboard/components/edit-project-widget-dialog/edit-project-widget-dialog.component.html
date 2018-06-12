@@ -12,7 +12,7 @@
       </div>
     </div>
 
-    <div id="widget-info" [innerHtml]="projectWidget.widget.info | safeHtml ">
+    <div *ngIf="projectWidget.widget.info" id="widget-info" [innerHtml]="projectWidget.widget.info | safeHtml ">
     </div>
 
     <div class="settings-container">
@@ -97,16 +97,20 @@
             <!-- Used for display file selection window -->
             <button mat-raised-button class="file_upload_button mat-elevation-z8" type="button" (click)="file.click()">
               <mat-icon>attach_file</mat-icon>
-              <span [class]="'file-selection-sentence-' + param.name" >Choose a file ...</span>
+              <span [class]="'file-selection-sentence-' + param.name">Choose a file ...</span>
             </button>
             <!-- Used for retrieve the file -->
-            <input #file style="display:none;" type="file" [pattern]="param.acceptFileRegex" (change)="getUploadedFileBase64($event, formSettings, param.name, param.acceptFileRegex)">
+            <input #file
+                   style="display:none;"
+                   type="file"
+                   [pattern]="param.acceptFileRegex"
+                   (change)="getUploadedFileBase64($event, formSettings, param.name, param.acceptFileRegex)">
             <!-- Used for send base64 file with the form -->
             <input type="text" style="display:none;" [name]="param.name" [required]="param.required" ngModel>
           </div>
         </div>
 
-        <button mat-raised-button class="mat-elevation-z4" color="primary" type="submit">Save</button>
+        <button mat-raised-button class="mat-elevation-z4" color="accent" type="submit">Save</button>
       </form>
     </div>
   </div>
