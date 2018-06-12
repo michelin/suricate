@@ -15,7 +15,7 @@
 }
 
 #card-login .mat-form-field {
-    margin-top: 25px;
+    margin-top: 15px;
 }
 
 .not-registered-sentance {
@@ -24,4 +24,10 @@
 
 .mat-icon.prefix {
     margin-right: 10px;
+}
+
+#login-div img {
+    width: 185px;
+    height: auto;
+    margin: 0 auto;
 }

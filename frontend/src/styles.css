@@ -66,3 +66,7 @@ a, a:visited {
 a:hover {
     color: #1997c6;
 }
+
+.mat-form-field-suffix .show-pwd-icon {
+    cursor: pointer;
+}

@@ -101,8 +101,12 @@
                      id="password"
                      placeholder="Password"
                      formControlName="password"
-                     [required]="registerForm.get('password').errors && registerForm.get('password').errors.required" />
-              <mat-icon matSuffix (click)="hidePassword = !hidePassword"> {{hidePassword ? 'visibility' : 'visibility_off'}} </mat-icon>
+                     [required]="registerForm.get('password').errors && registerForm.get('password').errors.required"/>
+              <mat-icon class="show-pwd-icon"
+                        matSuffix
+                        (click)="hidePassword = !hidePassword">
+                {{hidePassword ? 'visibility' : 'visibility_off'}}
+              </mat-icon>
               <mat-error *ngIf="isFieldInvalid('password') && registerForm.get('password').errors?.required">
                 Password is mandatory with a min length of 3
               </mat-error>
@@ -116,13 +120,18 @@
                      id="confirm_password"
                      placeholder="Confirm Password"
                      formControlName="confirmPassword"
-                     [required]="registerForm.get('confirmPassword').errors && registerForm.get('confirmPassword').errors.required" />
-
-              <mat-icon matSuffix (click)="hidePassword = !hidePassword"> {{hidePassword ? 'visibility' : 'visibility_off'}} </mat-icon>
-              <mat-error *ngIf="isFieldInvalid('confirmPassword') && registerForm.get('confirmPassword').errors?.required">
+                     [required]="registerForm.get('confirmPassword').errors && registerForm.get('confirmPassword').errors.required"/>
+              <mat-icon class="show-pwd-icon"
+                        matSuffix
+                        (click)="hidePassword = !hidePassword">
+                {{hidePassword ? 'visibility' : 'visibility_off'}}
+              </mat-icon>
+              <mat-error
+                  *ngIf="isFieldInvalid('confirmPassword') && registerForm.get('confirmPassword').errors?.required">
                 Password is mandatory with a min length of 3
               </mat-error>
-              <mat-error *ngIf="isFieldInvalid('confirmPassword') && registerForm.get('confirmPassword').errors?.unmatchedPasswords">
+              <mat-error
+                  *ngIf="isFieldInvalid('confirmPassword') && registerForm.get('confirmPassword').errors?.unmatchedPasswords">
                 The confirmation password and the password should match
               </mat-error>
             </mat-form-field>
@@ -135,7 +144,9 @@
                           fxLayoutAlign="center"
                           fxLayoutGap="15px"
                           *ngIf="!formSubmitAttempt">
-          <button fxFlex="85" mat-raised-button class="mat-elevation-z2" color="accent" type="submit">{{ 'Sign Up' | uppercase}}</button>
+          <button fxFlex="85" mat-raised-button class="mat-elevation-z2" color="accent" type="submit">{{ 'Sign Up' |
+            uppercase}}
+          </button>
         </mat-card-actions>
       </mat-card>
     </form>

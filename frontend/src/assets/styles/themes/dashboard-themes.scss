@@ -27,10 +27,10 @@
 @include mat-core();
 
 // DEFAULT THEME
-@include angular-material-theme($light-theme);
-@include main-custom-theming($light-theme, $light-custom-theme)
-//@include angular-material-theme($dark-theme);
-//@include main-custom-theming($dark-theme, $dark-custom-theme)
+//@include angular-material-theme($light-theme);
+//@include main-custom-theming($light-theme, $light-custom-theme)
+@include angular-material-theme($dark-theme);
+@include main-custom-theming($dark-theme, $dark-custom-theme)
 
 // DARK THEME
 .dark-theme {
