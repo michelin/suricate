@@ -16,24 +16,34 @@
  *
  */
 
+import { Injectable } from '@angular/core';
+import {Subject} from 'rxjs/Subject';
+import {Observable} from 'rxjs/Observable';
+
 /**
- * Interface that represent the Stomp configuration (cf: Library ng2-STOMP-Over-Websocket)
+ * Sidenav service
  */
-export interface WSConfiguration {
-  /** Websocket endpoint **/
-  host: string;
-  /** headers (optional) **/
-  headers?: Object;
-  /** heartbeats out (optional) **/
-  heartbeatIn?: number;
-  /** heartbeat in (optional) **/
-  heartbeatOut?: number;
-  /** debuging (optional) **/
-  debug?: boolean;
-  /** reconnection time (ms) (optional) **/
-  recTimeout?: number;
-  /** queue object **/
-  queue: Object;
-  /** queue cheking Time (ms) (optional) **/
-  queueCheckTime?: number;
+@Injectable()
+export class SidenavService {
+
+  /**
+   * The sidenav subject
+   *
+   * @type {Subject<boolean>} True open, false close
+   */
+  private sidenavOpenCloseEventSubject = new Subject<boolean>();
+
+  constructor() { }
+
+  subscribeToSidenavOpenCloseEvent(): Observable<boolean> {
+    return this.sidenavOpenCloseEventSubject.asObservable();
+  }
+
+  closeSidenav(): void {
+    this.sidenavOpenCloseEventSubject.next(false);
+  }
+
+  openSidenav(): void {
+    this.sidenavOpenCloseEventSubject.next(true);
+  }
 }

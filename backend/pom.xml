@@ -17,7 +17,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.10.RELEASE</version>
+        <version>1.5.13.RELEASE</version>
     </parent>
 
     <properties>
@@ -149,7 +149,7 @@
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
-            <version>3.1.0</version>
+            <version>3.2.0</version>
         </dependency>
 
         <dependency>
@@ -287,7 +287,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.16.20</version>
+            <version>1.16.22</version>
         </dependency>
 
         <dependency>

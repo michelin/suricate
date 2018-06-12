@@ -36,6 +36,7 @@ module.exports = (options) =>
                 "./src/assets/styles/normalize.css",
                 "./src/assets/styles/dashboard-dark-material-theme.scss",
                 "./node_modules/material-design-icons-iconfont/dist/material-design-icons.scss",
+                "./node_modules/font-awesome/css/font-awesome.css",
                 "./src/styles.css"
             ]
         },
@@ -65,6 +66,7 @@ module.exports = (options) =>
                         path.join(process.cwd(), "src\\assets\\styles\\normalize.css"),
                         path.join(process.cwd(), "src\\assets\\styles\\dashboard-dark-material-theme.scss"),
                         path.join(process.cwd(), "node_modules\\material-design-icons-iconfont\\dist\\material-design-icons.scss"),
+                        path.join(process.cwd(), "node_modules\\font-awesome\\css\\font-awesome.css"),
                         path.join(process.cwd(), "src\\styles.css")
                     ],
                     use: [
@@ -85,6 +87,7 @@ module.exports = (options) =>
                         path.join(process.cwd(), "src\\assets\\styles\\normalize.css"),
                         path.join(process.cwd(), "src\\assets\\styles\\dashboard-dark-material-theme.scss"),
                         path.join(process.cwd(), "node_modules\\material-design-icons-iconfont\\dist\\material-design-icons.scss"),
+                        path.join(process.cwd(), "node_modules\\font-awesome\\css\\font-awesome.css"),
                         path.join(process.cwd(), "src\\styles.css")
                     ],
                     use: [
@@ -109,6 +112,7 @@ module.exports = (options) =>
                         path.join(process.cwd(), "src\\assets\\styles\\normalize.css"),
                         path.join(process.cwd(), "src\\assets\\styles\\dashboard-dark-material-theme.scss"),
                         path.join(process.cwd(), "node_modules\\material-design-icons-iconfont\\dist\\material-design-icons.scss"),
+                        path.join(process.cwd(), "node_modules\\font-awesome\\css\\font-awesome.css"),
                         path.join(process.cwd(), "src\\styles.css")
                     ],
                     use: [
@@ -129,6 +133,7 @@ module.exports = (options) =>
                         path.join(process.cwd(), "src\\assets\\styles\\normalize.css"),
                         path.join(process.cwd(), "src\\assets\\styles\\dashboard-dark-material-theme.scss"),
                         path.join(process.cwd(), "node_modules\\material-design-icons-iconfont\\dist\\material-design-icons.scss"),
+                        path.join(process.cwd(), "node_modules\\font-awesome\\css\\font-awesome.css"),
                         path.join(process.cwd(), "src\\styles.css")
                     ],
                     use: [
@@ -220,9 +225,9 @@ module.exports = (options) =>
                 compilerOptions: {}
             }),
             new ProvidePlugin({
-                $: "jquery",
-                jquery: "jquery",
-                jQuery: "jquery"
+                jQuery: 'jquery',
+                $: 'jquery',
+                jquery: 'jquery'
             })
         ],
         devServer: {

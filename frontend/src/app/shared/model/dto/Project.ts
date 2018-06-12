@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import {Widget} from './Widget';
 import {User} from './user/User';
 import {ProjectWidget} from './ProjectWidget';
+import {WebsocketClient} from './WebsocketClient';
 
 export class Project {
   id: number;
@@ -28,4 +28,5 @@ export class Project {
   projectWidgets: ProjectWidget[];
   librariesToken: string[];
   users: User[];
+  websocketClients: WebsocketClient[];
 }

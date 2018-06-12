@@ -28,7 +28,8 @@ export class AppComponent implements OnInit {
 
   title = 'Dashboard - Monitoring';
 
-  constructor(private authenticationService: AuthenticationService) {}
+  constructor(private authenticationService: AuthenticationService) {
+  }
 
   ngOnInit() {
     this.isLoggedIn$ = this.authenticationService.isLoggedIn();

@@ -24,5 +24,7 @@ public enum UpdateType {
     WIDGET,
     POSITION,
     DISCONNECT,
-    DISPLAY_NUMBER
+    CONNECT,
+    DISPLAY_NUMBER,
+    RELOAD
 }

@@ -1,9 +1,30 @@
 <app-pages-header [secondTitle]="'My Dashboards'"></app-pages-header>
 
-<div *ngIf="dashboards; else noDashboards">
+<div fxLayout="col wrap" fxLayoutAlign="start start" fxLayoutGap="15px">
 
+  <!-- Add Dashboard Card -->
+  <mat-card id="add-dashboard-card" fxFlex="30%">
+    <a (click)="openAddDashboardDialog()">
+      <mat-card-content fxLayout="row wrap" fxLayoutAlign="center center">
+        <mat-icon>add_box</mat-icon>
+      </mat-card-content>
+    </a>
+    <mat-card-actions align="start">
+      <button #addDashboardButton mat-button (click)="openAddDashboardDialog()">Add a new dashboard</button>
+    </mat-card-actions>
+  </mat-card>
+
+  <!-- Other dashboards -->
+  <mat-card *ngFor="let dashboard of dashboards" fxFlex="30%">
+    <a (click)="navigateToDashboard(dashboard.id)">
+      <mat-card-content fxLayout="row wrap" fxLayoutAlign="center center">
+        <mat-icon>dashboard</mat-icon>
+      </mat-card-content>
+    </a>
+    <mat-card-actions align="start">
+      <button mat-button (click)="navigateToDashboard(dashboard.id)">
+        {{ dashboard.name }}
+      </button>
+    </mat-card-actions>
+  </mat-card>
 </div>
-
-<ng-template #noDashboards>
-  Cannot found dashboard associated to your account, try to create one
-</ng-template>

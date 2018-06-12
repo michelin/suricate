@@ -11,7 +11,7 @@ spring:
     username: demo
     password: demo
   ###   DDL   ###
-  jpa.hibernate.ddl-auto: create-drop
+  jpa.hibernate.ddl-auto: validate
 
 application:
   ### Security (ldap | database) ###

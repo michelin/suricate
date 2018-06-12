@@ -18,6 +18,7 @@ import { NgModule } from '@angular/core';
 import { SidenavComponent } from './sidenav/sidenav.component';
 import {CommonModule} from '@angular/common';
 import {SharedModule} from '../../shared/shared.module';
+import {SidenavService} from './sidenav/sidenav.service';
 
 @NgModule({
   imports: [
@@ -26,6 +27,9 @@ import {SharedModule} from '../../shared/shared.module';
   ],
   declarations: [
       SidenavComponent
+  ],
+  providers: [
+      SidenavService,
   ],
   exports: [
       SidenavComponent

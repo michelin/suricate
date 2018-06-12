@@ -16,52 +16,61 @@
 
 import {RouterModule, Routes} from '@angular/router';
 import {NgModule} from '@angular/core';
-import {AuthGuard} from '../../shared/guards/auth.guard';
+import {AuthGuard} from '../../shared/auth/guards/auth.guard';
 import {DashboardService} from './dashboard.service';
-import { DashboardDetailComponent } from './dashboard-detail/dashboard-detail.component';
+import {DashboardDetailComponent} from './dashboard-detail/dashboard-detail.component';
 import {CommonModule} from '@angular/common';
 import {SharedModule} from '../../shared/shared.module';
 import {DashboardListComponent} from './dashboard-list/dashboard-list.component';
-import { DashboardEditComponent } from './dashboard-edit/dashboard-edit.component';
-import { DeleteDashboardDialogComponent } from './components/delete-dashboard-dialog/delete-dashboard-dialog.component';
-import { DeleteProjectWidgetDialogComponent } from './components/delete-project-widget-dialog/delete-project-widget-dialog.component';
-import { EditProjectWidgetDialogComponent } from './components/edit-project-widget-dialog/edit-project-widget-dialog.component';
+import {DashboardEditComponent} from './dashboard-edit/dashboard-edit.component';
+import {DeleteDashboardDialogComponent} from './components/delete-dashboard-dialog/delete-dashboard-dialog.component';
+import {DeleteProjectWidgetDialogComponent} from './components/delete-project-widget-dialog/delete-project-widget-dialog.component';
+import {EditProjectWidgetDialogComponent} from './components/edit-project-widget-dialog/edit-project-widget-dialog.component';
+import {DashboardScreenComponent} from './components/dashboard-screen/dashboard-screen.component';
+import {DashboardTvComponent} from './dashboard-tv/dashboard-tv.component';
+import {ScreenService} from './screen.service';
+import {AdminGuard} from '../../shared/auth/guards/admin.guard';
 
 const dashboardRoutes: Routes = [
-  { path: 'dashboard/:id', component: DashboardDetailComponent, canActivate: [AuthGuard] },
-  { path: 'dashboards', component: DashboardListComponent, canActivate: [AuthGuard] },
+  {path: 'tv', component: DashboardTvComponent},
+  {path: 'dashboard/:id', component: DashboardDetailComponent, canActivate: [AuthGuard]},
+  {path: 'dashboards', component: DashboardListComponent, canActivate: [AuthGuard, AdminGuard]},
   {
     path: 'dashboards/:dashboardId/edit',
     component: DashboardEditComponent,
-    data: { breadcrumb: 'Edit Dashboard' },
-    canActivate: [AuthGuard]
+    data: {breadcrumb: 'Edit Dashboard'},
+    canActivate: [AuthGuard, AdminGuard]
   }
 ];
 
 @NgModule({
   imports: [
-      CommonModule,
-      RouterModule.forChild(dashboardRoutes),
-      SharedModule
+    CommonModule,
+    RouterModule.forChild(dashboardRoutes),
+    SharedModule
   ],
   declarations: [
-      DashboardDetailComponent,
-      DashboardListComponent,
-      DashboardEditComponent,
-      DeleteDashboardDialogComponent,
-      DeleteProjectWidgetDialogComponent,
-      EditProjectWidgetDialogComponent
+    DashboardDetailComponent,
+    DashboardListComponent,
+    DashboardEditComponent,
+    DeleteDashboardDialogComponent,
+    DeleteProjectWidgetDialogComponent,
+    EditProjectWidgetDialogComponent,
+    DashboardScreenComponent,
+    DashboardTvComponent
   ],
   exports: [
-      RouterModule
+    RouterModule
   ],
   providers: [
-      DashboardService
+    DashboardService,
+    ScreenService
   ],
   entryComponents: [
-      DeleteDashboardDialogComponent,
-      DeleteProjectWidgetDialogComponent,
-      EditProjectWidgetDialogComponent
+    DeleteDashboardDialogComponent,
+    DeleteProjectWidgetDialogComponent,
+    EditProjectWidgetDialogComponent
   ]
 })
-export class DashboardModule {}
+export class DashboardModule {
+}

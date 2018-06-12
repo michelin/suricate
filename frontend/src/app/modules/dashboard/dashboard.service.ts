@@ -25,6 +25,7 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {UserService} from '../user/user.service';
 import {User} from '../../shared/model/dto/user/User';
 import {ProjectWidgetPosition} from '../../shared/model/dto/ProjectWidgetPosition';
+import {WidgetStateEnum} from '../../shared/model/dto/enums/WidgetSateEnum';
 
 @Injectable()
 export class DashboardService extends AbstractHttpService {
@@ -82,8 +83,9 @@ export class DashboardService extends AbstractHttpService {
    *
    * @param {number} projectWidgetId The project widget ID to update
    * @param {string} newHtmlContent The HTML to replace
+   * @param {WidgetStateEnum} widgetStatus The widget status
    */
-  public updateWidgetHtmlFromProjetWidgetId(projectWidgetId: number, newHtmlContent: string): void {
+  public updateWidgetHtmlFromProjetWidgetId(projectWidgetId: number, newHtmlContent: string, widgetStatus: WidgetStateEnum): void {
     let projectWidgetToUpdate: ProjectWidget = null;
     this.currendDashbordSubject
         .getValue()
@@ -96,6 +98,7 @@ export class DashboardService extends AbstractHttpService {
 
     if (projectWidgetToUpdate) {
       projectWidgetToUpdate.instantiateHtml = newHtmlContent;
+      projectWidgetToUpdate.state = widgetStatus;
     }
 
   }
@@ -131,6 +134,16 @@ export class DashboardService extends AbstractHttpService {
    */
   getOneById(id: number): Observable<Project> {
     return this.httpClient.get<Project>(`${DashboardService.PROJECTS_BASE_URL}/${id}`);
+  }
+
+  /**
+   * Get a dashboard by token
+   *
+   * @param {string} token The dashboard token
+   * @returns {Observable<Project>} The dashboard as observable
+   */
+  getOneByToken(token: string): Observable<Project> {
+    return this.httpClient.get<Project>(`${DashboardService.PROJECTS_BASE_URL}/project/${token}`);
   }
 
   /**
@@ -278,11 +291,31 @@ export class DashboardService extends AbstractHttpService {
         );
   }
 
+  /**
+   * Edit a project widget from a project
+   *
+   * @param {number} projectId The project id
+   * @param {ProjectWidget} projectWidget The project widget to edit
+   * @returns {Observable<Project>} The project updated
+   */
   editProjectWidgetFromProject(projectId: number, projectWidget: ProjectWidget): Observable<Project> {
     const url = `${DashboardService.PROJECTS_BASE_URL}/${projectId}/projectWidgets/${projectWidget.id}`;
 
     return this
         .httpClient
         .put<Project>(url, projectWidget);
+  }
+
+  /**
+   * Sort list of project by name
+   *
+   * @param {Project[]} projects The list of projects to sort
+   */
+  sortByProjectName(projects: Project[]): Project[] {
+    return projects.sort((left, right): number => {
+      if (left.name < right.name) { return -1; }
+      if (left.name > right.name) { return 1; }
+      return 0;
+    });
   }
 }
