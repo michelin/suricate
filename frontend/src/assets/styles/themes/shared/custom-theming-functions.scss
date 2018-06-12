@@ -17,16 +17,11 @@
  */
 
 // Create a container object for custom theming rules
-@function custom-color-theme( $text-color,
-                              $second-background,
-                              $text-color-hover,
-                              $background-color-hover) {
+@function custom-color-theme($background-color-content, $text-color) {
 
   @return (
-          text-color: $text-color,
-          second-background: $second-background,
-          text-color-hover: $text-color-hover,
-          background-color-hover: $background-color-hover
+          background-color-content: $background-color-content,
+          text-color: $text-color
   );
 }
 

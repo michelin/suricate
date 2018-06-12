@@ -38,10 +38,15 @@
  * CSS Style for main elements
  */
 @mixin main-elements($theme, $customTheme) {
-  $background: map-get($theme, background);
+  $background-color-content: map-get($customTheme, background-color-content);
+  $text-color: map-get($customTheme, text-color);
 
   body {
-    background-color: mat-color($background, background);
+    background-color: $background-color-content;
+
+    * {
+      color: $text-color;
+    }
   }
 }
 
@@ -50,27 +55,34 @@
  */
 @mixin custom-mat-sidenav($theme, $customTheme) {
   $accent: map-get($theme, accent);
-  $second-background: map-get($customTheme, second-background);
-  $background-color-hover: map-get($customTheme, background-color-hover);
-  $text-color: map-get($customTheme, text-color);
-  $text-color-hover: map-get($customTheme, text-color-hover);
+  $background-color-content: map-get($customTheme, background-color-content);
 
   mat-sidenav {
+    background-color: #424242 !important;
+
     * {
-      color: $text-color;
+      color: #cfd2da;
+    }
+
+    mat-expansion-panel {
+      background-color: #424242 !important;
+
+      .mat-expansion-panel-content {
+        background-color: #5a5a5a;
+      }
     }
 
     mat-nav-list {
       &.submenu {
-        background-color: $second-background;
+        background-color: #5a5a5a;
       }
 
       .mat-list-item {
         &:hover {
-          background-color: $background-color-hover;
+          background-color: #505050;
 
           .mat-list-item-content {
-            color: $text-color-hover;
+            color: #f7f9ff;
           }
         }
 
@@ -82,6 +94,10 @@
         }
       }
     }
+  }
+
+  mat-sidenav-content {
+    background-color: $background-color-content;
   }
 }
 

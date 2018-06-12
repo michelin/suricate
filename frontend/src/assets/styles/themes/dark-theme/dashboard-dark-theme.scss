@@ -37,9 +37,7 @@ $dark-theme: mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
 /* ************************************************************ */
 /*                       Custom Variables                       */
 /* ************************************************************ */
-$text-color: #cfd2da;
-$text-color-hover: #f7f9ff;
-$second-background: #5a5a5a;
-$background-color-hover: #505050;
+$background-color-content: #303030;
+$text-color: rgba(255, 255, 255, 0.70);
 
-$dark-custom-theme: custom-color-theme($text-color, $second-background, $text-color-hover, $background-color-hover);
+$dark-custom-theme: custom-color-theme($background-color-content, $text-color);

@@ -35,9 +35,7 @@ $light-theme: mat-light-theme($light-primary, $light-accent, $light-warn);
 /* ************************************************************ */
 /*                       Custom Variables                       */
 /* ************************************************************ */
-$text-color: #cfd2da;
-$text-color-hover: #f7f9ff;
-$second-background: #5a5a5a;
-$background-color-hover: #505050;
+$background-color-content: #edf0f5;
+$text-color: black;
 
-$light-custom-theme: custom-color-theme($text-color, $second-background, $text-color-hover, $background-color-hover);
+$light-custom-theme: custom-color-theme($background-color-content, $text-color);
