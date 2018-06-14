@@ -16,6 +16,7 @@
 
 package io.suricate.monitoring.service.api;
 
+import io.suricate.monitoring.model.dto.setting.UserSettingDto;
 import io.suricate.monitoring.model.entity.setting.AllowedSettingValue;
 import io.suricate.monitoring.model.entity.setting.UserSetting;
 import io.suricate.monitoring.model.entity.user.User;
@@ -42,22 +43,34 @@ public class UserSettingService {
     private final static Logger LOGGER = LoggerFactory.getLogger(UserSettingService.class);
 
     /**
+     * The user setting repository
+     */
+    private final UserSettingRepository userSettingRepository;
+
+    /**
      * The setting service
      */
     private final SettingService settingService;
 
-    private final UserSettingRepository userSettingRepository;
+    /**
+     * The allowed setting value service
+     */
+    private final AllowedSettingValueService allowedSettingValueService;
 
     /**
      * Controller
      *
-     * @param settingService The setting service
+     * @param userSettingRepository      The user setting repository
+     * @param settingService             The setting service
+     * @param allowedSettingValueService The allowed setting service
      */
     @Autowired
-    public UserSettingService(final SettingService settingService,
-                              final UserSettingRepository userSettingRepository) {
-        this.settingService = settingService;
+    public UserSettingService(final UserSettingRepository userSettingRepository,
+                              final SettingService settingService,
+                              final AllowedSettingValueService allowedSettingValueService) {
         this.userSettingRepository = userSettingRepository;
+        this.settingService = settingService;
+        this.allowedSettingValueService = allowedSettingValueService;
     }
 
     /**
@@ -100,5 +113,32 @@ public class UserSettingService {
         userSetting.setSettingValue(allowedSettingValue);
 
         return userSetting;
+    }
+
+
+    /**
+     * Update the settings for a user
+     *
+     * @param user            The user
+     * @param userSettingDtos The updated settings
+     * @return The user settings updated
+     */
+    public List<UserSetting> updateUserSettingsForUser(User user, final List<UserSettingDto> userSettingDtos) {
+        for (UserSettingDto userSettingDto : userSettingDtos) {
+            UserSetting userSetting = userSettingRepository.findOne(userSettingDto.getId());
+
+            if (userSetting.getSetting().isConstrained()) {
+                // Constrained case
+                allowedSettingValueService
+                    .getOneById(userSettingDto.getSettingValue().getId())
+                    .ifPresent(userSetting::setSettingValue);
+            } else {
+                // Unconstrained case
+                userSetting.setUnconstrainedValue(userSettingDto.getUnconstrainedValue());
+            }
+            userSettingRepository.save(userSetting);
+        }
+
+        return user.getUserSettings();
     }
 }

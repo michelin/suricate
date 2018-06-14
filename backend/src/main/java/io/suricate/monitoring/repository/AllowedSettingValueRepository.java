@@ -16,22 +16,11 @@
 
 package io.suricate.monitoring.repository;
 
-import io.suricate.monitoring.model.entity.setting.Setting;
+import io.suricate.monitoring.model.entity.setting.AllowedSettingValue;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
-import java.util.Optional;
-
 /**
- * Repository used for request Settings in database
+ * AllowedSettingValue repository
  */
-public interface SettingRepository extends JpaRepository<Setting, Long> {
-
-    /**
-     * Find every settings by description
-     *
-     * @return The list of the settings
-     */
-    Optional<List<Setting>> findAllByOrderByDescription();
-
+public interface AllowedSettingValueRepository extends JpaRepository<AllowedSettingValue, Long> {
 }

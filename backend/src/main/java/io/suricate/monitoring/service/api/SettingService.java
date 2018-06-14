@@ -58,12 +58,6 @@ public class SettingService {
      * @return The list of settings
      */
     public Optional<List<Setting>> getAll() {
-        List<Setting> settings = this.settingRepository.findAll();
-
-        if (settings == null || settings.isEmpty()) {
-            return Optional.empty();
-        }
-
-        return Optional.of(settings);
+        return this.settingRepository.findAllByOrderByDescription();
     }
 }
