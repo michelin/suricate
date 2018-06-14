@@ -19,6 +19,7 @@ package io.suricate.monitoring.model.mapper.role;
 import io.suricate.monitoring.model.dto.user.UserDto;
 import io.suricate.monitoring.model.entity.user.User;
 import io.suricate.monitoring.model.enums.AuthenticationMethod;
+import io.suricate.monitoring.model.mapper.setting.UserSettingMapper;
 import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,7 +34,8 @@ import java.util.List;
 @Mapper(
     componentModel = "spring",
     uses = {
-        RoleMapper.class
+        RoleMapper.class,
+        UserSettingMapper.class
     }
 )
 public abstract class UserMapper {
@@ -56,18 +58,28 @@ public abstract class UserMapper {
     @Named("toUserDtoDefault")
     @Mappings({
         @Mapping(target = "roles", qualifiedByName = "toRoleDtosWithoutUsers"),
+        @Mapping(target = "userSettings", qualifiedByName = "toUserSettingDtoWithoutUser"),
         @Mapping(target = "fullname", expression = "java(String.format(\"%s %s\", user.getFirstname(), user.getLastname()))"),
         @Mapping(target = "password", ignore = true)
     })
     public abstract UserDto toUserDtoDefault(User user);
 
+    /**
+     * Transform a user into a user dto without roles
+     *
+     * @param user The user to tranform
+     * @return The related dto
+     */
     @Named("toUserDtoWithoutRole")
     @Mappings({
         @Mapping(target = "roles", ignore = true),
+        @Mapping(target = "userSettings", qualifiedByName = "toUserSettingDtoWithoutUser"),
         @Mapping(target = "fullname", expression = "java(String.format(\"%s %s\", user.getFirstname(), user.getLastname()))"),
         @Mapping(target = "password", ignore = true)
     })
     public abstract UserDto toUserDtoWithoutRole(User user);
+
+
 
     /* ******************************************************* */
     /*                    List Mapping                         */
@@ -103,7 +115,7 @@ public abstract class UserMapper {
     /**
      * Tranform a UserDto into a User for creation
      *
-     * @param userDto The userDto to transform
+     * @param userDto              The userDto to transform
      * @param authenticationMethod The authentication method of the user
      * @return The related user
      */

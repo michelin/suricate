@@ -54,5 +54,5 @@ public class SettingDto {
     /**
      * Hold the possible values (if we have a select setting for example)
      */
-    private List<AllowedSettingValueDto> allowedSettingValue = new ArrayList<>();
+    private List<AllowedSettingValueDto> allowedSettingValues = new ArrayList<>();
 }

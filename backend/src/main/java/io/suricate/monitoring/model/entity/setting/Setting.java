@@ -65,5 +65,5 @@ public class Setting {
      * Hold the possible values (if we have a select setting for example)
      */
     @OneToMany(mappedBy = "setting")
-    private List<AllowedSettingValue> allowedSettingValue = new ArrayList<>();
+    private List<AllowedSettingValue> allowedSettingValues = new ArrayList<>();
 }
