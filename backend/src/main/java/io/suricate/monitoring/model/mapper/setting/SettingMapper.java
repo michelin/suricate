@@ -64,5 +64,4 @@ public abstract class SettingMapper {
     @Named("toSettingDtosDefault")
     @IterableMapping(qualifiedByName = "toSettingDtoDefault")
     public abstract List<SettingDto> toSettingDtosDefault(List<Setting> settings);
-
 }
