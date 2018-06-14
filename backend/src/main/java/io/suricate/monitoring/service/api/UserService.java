@@ -61,23 +61,31 @@ public class UserService {
     private final ProjectService projectService;
 
     /**
+     * The user setting service
+     */
+    private final UserSettingService userSettingService;
+
+    /**
      * Constructor
      *
-     * @param userRepository The user repository
-     * @param roleService    The role service
-     * @param projectService The projectService to inject
+     * @param userRepository     The user repository
+     * @param roleService        The role service
+     * @param projectService     The projectService to inject
+     * @param userSettingService The user setting service
      */
     @Autowired
     public UserService(final UserRepository userRepository,
                        final RoleService roleService,
-                       final ProjectService projectService) {
+                       final ProjectService projectService,
+                       final UserSettingService userSettingService) {
         this.userRepository = userRepository;
         this.roleService = roleService;
         this.projectService = projectService;
+        this.userSettingService = userSettingService;
     }
 
     /**
-     * Register a new user in the database
+     * Register a new user (DATABASE auth Mode)
      *
      * @param user User to register
      * @return The user registered
@@ -98,6 +106,9 @@ public class UserService {
 
         user.setRoles(Collections.singletonList(role.get()));
         userRepository.save(user);
+
+        // Set the default user settings
+        user.getUserSettings().addAll(userSettingService.createDefaultSettingsForUser(user));
 
         return Optional.of(user);
     }
@@ -137,6 +148,9 @@ public class UserService {
 
         user.getRoles().add(role.get());
         userRepository.save(user);  // Save user
+
+        // Set the default user settings
+        user.getUserSettings().addAll(userSettingService.createDefaultSettingsForUser(user));
 
         return Optional.of(user);
     }
