@@ -19,13 +19,14 @@ CREATE TABLE `allowed_setting_value` (
   `id`         bigint(20)   NOT NULL AUTO_INCREMENT,
   `title`      varchar(255) NOT NULL,
   `value`      varchar(255) NOT NULL,
+  `is_default` char(1)      NOT NULL,
   `setting_id` bigint(20)   NOT NULL,
   PRIMARY KEY (`id`),
   CONSTRAINT `FK_SETTING_ID_ALLOWED_SETTING_VALUE` FOREIGN KEY (`setting_id`) REFERENCES `setting` (`id`)
 );
 
-INSERT INTO allowed_setting_value (id, title, value, setting_id) values (1, 'Default', 'DEFAULT', 1);
-INSERT INTO allowed_setting_value (id, title, value, setting_id) values (2, 'Dark', 'DARK', 1);
+INSERT INTO allowed_setting_value (id, title, value, is_default, setting_id) values (1, 'Default', 'DEFAULT', 'Y', 1);
+INSERT INTO allowed_setting_value (id, title, value, is_default, setting_id) values (2, 'Dark', 'DARK', 'N', 1);
 
 
 /* *************************************************** */

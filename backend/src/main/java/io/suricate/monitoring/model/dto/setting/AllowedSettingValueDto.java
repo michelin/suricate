@@ -45,6 +45,11 @@ public class AllowedSettingValueDto extends AbstractDto {
     private String value;
 
     /**
+     * True if this setting is the default setting
+     */
+    private boolean isDefault;
+
+    /**
      * The related setting
      */
     private SettingDto setting;

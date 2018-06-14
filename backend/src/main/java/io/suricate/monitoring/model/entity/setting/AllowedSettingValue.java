@@ -17,6 +17,7 @@
 package io.suricate.monitoring.model.entity.setting;
 
 import lombok.*;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 
@@ -49,6 +50,13 @@ public class AllowedSettingValue {
      */
     @Column(nullable = false)
     private String value;
+
+    /**
+     * True if this setting is the default setting
+     */
+    @Column(name = "is_default", nullable = false)
+    @Type(type = "yes_no")
+    private boolean isDefault;
 
     /**
      * The related setting
