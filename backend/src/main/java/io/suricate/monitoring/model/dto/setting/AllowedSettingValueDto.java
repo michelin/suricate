@@ -14,46 +14,38 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.entity.setting;
+package io.suricate.monitoring.model.dto.setting;
 
+import io.suricate.monitoring.model.dto.AbstractDto;
 import lombok.*;
 
-import javax.persistence.*;
-
 /**
- * Contains every possible value for a setting
+ * The Allowed setting value DTO used for REST communication
  */
-@Entity(name = "allowed_setting_value")
 @Getter
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @ToString
-public class AllowedSettingValue {
+public class AllowedSettingValueDto extends AbstractDto {
 
     /**
      * The setting id
      */
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     /**
      * The title to display for the user
      */
-    @Column(nullable = false)
     private String title;
 
     /**
      * The value of the entry (used in the code)
      */
-    @Column(nullable = false)
     private String value;
 
     /**
      * The related setting
      */
-    @ManyToOne
-    @JoinColumn(name = "setting_id", referencedColumnName = "id", nullable = false)
-    private Setting setting;
+    private SettingDto setting;
 }

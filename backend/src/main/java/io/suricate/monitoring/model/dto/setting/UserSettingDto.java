@@ -14,55 +14,44 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.entity.setting;
+package io.suricate.monitoring.model.dto.setting;
 
-import io.suricate.monitoring.model.entity.user.User;
+import io.suricate.monitoring.model.dto.AbstractDto;
+import io.suricate.monitoring.model.dto.user.UserDto;
 import lombok.*;
 
-import javax.persistence.*;
-
 /**
- * Class linked the table user and settings
+ * The user setting DTO for REST communication
  */
-@Entity(name = "user_setting")
 @Getter
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @ToString
-public class UserSetting {
+public class UserSettingDto extends AbstractDto {
 
     /**
      * The user setting id
      */
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     /**
      * The related user
      */
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
-    private User user;
+    private UserDto user;
 
     /**
      * The setting reference
      */
-    @OneToOne
-    @JoinColumn(name = "setting_id", nullable = false)
-    private Setting setting;
+    private SettingDto setting;
 
     /**
      * The allowed setting value
      */
-    @OneToOne
-    @JoinColumn(name = "allowed_setting_value_id")
-    private AllowedSettingValue settingValue;
+    private AllowedSettingValueDto settingValue;
 
     /**
      * The unconstrained value
      */
-    @Column(name = "unconstrained_value")
     private String unconstrainedValue;
 }
