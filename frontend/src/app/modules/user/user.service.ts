@@ -25,6 +25,7 @@ import {Subject} from 'rxjs/Subject';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {TokenService} from '../../shared/auth/token.service';
 import {RoleEnum} from '../../shared/model/dto/enums/RoleEnum';
+import {UserSetting} from '../../shared/model/dto/UserSetting';
 
 /**
  * User service that manage users
@@ -106,6 +107,29 @@ export class UserService extends AbstractHttpService {
     return this
         .http
         .put<User>(`${UserService.USERS_BASE_URL}/${user.id}`, user)
+        .pipe(
+            map(userUpdated => {
+              if (userUpdated.id === this.connectedUserSubject.getValue().id) {
+                this.connectedUserSubject.next(userUpdated);
+              }
+              return userUpdated;
+            })
+        );
+  }
+
+  /**
+   * Update user settings
+   *
+   * @param {User} user The user to update
+   * @param {UserSetting[]} userSettings The new settings
+   * @returns {Observable<User>} The user updated
+   */
+  updateUserSettings(user: User, userSettings: UserSetting[]): Observable<User> {
+    const url = `${UserService.USERS_BASE_URL}/${user.id}/settings`;
+
+    return this
+        .http
+        .put<User>(url, userSettings)
         .pipe(
             map(userUpdated => {
               if (userUpdated.id === this.connectedUserSubject.getValue().id) {

@@ -28,12 +28,18 @@
           </mat-expansion-panel-header>
 
           <mat-nav-list class="submenu">
-            <div><a mat-list-item href="javascript:void(0)">
-              <mat-icon>settings</mat-icon>
-              Settings </a></div>
-            <div><a mat-list-item (click)="logout()">
-              <mat-icon>exit_to_app</mat-icon>
-              Logout </a></div>
+            <div>
+              <a mat-list-item routerLinkActive="active" [routerLink]="['/settings']">
+                <mat-icon>settings</mat-icon>
+                Settings
+              </a>
+            </div>
+            <div>
+              <a mat-list-item (click)="logout()">
+                <mat-icon>exit_to_app</mat-icon>
+                Logout
+              </a>
+            </div>
           </mat-nav-list>
         </mat-expansion-panel>
       </mat-accordion>
