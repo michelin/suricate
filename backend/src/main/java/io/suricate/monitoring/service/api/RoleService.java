@@ -16,13 +16,13 @@
 
 package io.suricate.monitoring.service.api;
 
-import io.suricate.monitoring.model.dto.user.RoleDto;
 import io.suricate.monitoring.model.entity.user.Role;
 import io.suricate.monitoring.repository.RoleRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -57,5 +57,20 @@ public class RoleService {
      */
     public Optional<Role> getRoleByName(String roleName) {
         return roleRepository.findByName(roleName);
+    }
+
+    /**
+     * Get the full list of roles
+     *
+     * @return
+     */
+    public Optional<List<Role>> getRoles() {
+        List<Role> roles = roleRepository.findAll();
+
+        if (roles == null || roles.isEmpty()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(roles);
     }
 }
