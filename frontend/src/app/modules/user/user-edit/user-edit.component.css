@@ -18,10 +18,6 @@
     width: 100%;
 }
 
-.mat-icon {
-    color: rgba(255, 255, 255, 0.70);
-}
-
 .mat-icon.prefix {
     margin-right: 10px;
 }
