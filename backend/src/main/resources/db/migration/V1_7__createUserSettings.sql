@@ -48,12 +48,8 @@ CREATE TABLE `user_setting` (
 );
 
 /* Insert the default setting for every users */
-INSERT IGNORE INTO user_setting (setting_id, allowed_setting_value_id, user_id)
-  SELECT
-    s.id,
-    asv.id,
-    u.id
+INSERT INTO user_setting (setting_id, allowed_setting_value_id, user_id)
+  SELECT s.id, asv.id, u.id
   FROM setting s, allowed_setting_value asv, user u
-  WHERE s.id = 1
-        and asv.id = 1
+  WHERE s.id = 1 and asv.id = 1
   ORDER BY u.id;
