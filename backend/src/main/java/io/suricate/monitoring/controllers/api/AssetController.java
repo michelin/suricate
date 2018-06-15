@@ -19,6 +19,9 @@ package io.suricate.monitoring.controllers.api;
 import io.suricate.monitoring.model.entity.Asset;
 import io.suricate.monitoring.service.api.AssetService;
 import io.suricate.monitoring.utils.IdUtils;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +39,7 @@ import org.springframework.web.context.request.WebRequest;
  * Asset controller
  */
 @RestController
+@Api(tags = {"Asset"})
 @RequestMapping("/api/asset")
 public class AssetController {
 
@@ -65,6 +69,8 @@ public class AssetController {
      * @return the asset data
      */
     @RequestMapping(path = "/{token}", method = RequestMethod.GET)
+    @ApiOperation(value = "Get asset details", consumes = MediaType.APPLICATION_JSON_VALUE, notes="", response = ResponseEntity.class)
+    @ApiResponse(code = 200, message = "Assets details fetched successfully.")
     public ResponseEntity<byte[]> getAsset(WebRequest webRequest, @PathVariable("token") String token) {
         Asset asset = assetService.findOne(IdUtils.decrypt(token));
         if (asset == null){
