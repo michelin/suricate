@@ -27,6 +27,7 @@ import {TokenService} from '../../shared/auth/token.service';
 import {RoleEnum} from '../../shared/model/dto/enums/RoleEnum';
 import {UserSetting} from '../../shared/model/dto/UserSetting';
 import {ThemeService} from '../../shared/services/theme.service';
+import {SettingType} from '../../shared/model/dto/enums/SettingType';
 
 /**
  * User service that manage users
@@ -189,9 +190,7 @@ export class UserService extends AbstractHttpService {
    * @returns {UserSetting} The user setting
    */
   getThemeUserSetting(user: User): UserSetting {
-    return user.userSettings.find(userSetting => {
-      return userSetting.setting.description.localeCompare('template', 'en', {sensitivity: 'base'}) === 0;
-    });
+    return user.userSettings.find(userSetting => userSetting.setting.type === SettingType.TEMPLATE);
   }
 
   /**
@@ -199,7 +198,6 @@ export class UserService extends AbstractHttpService {
    * @param {User} user The user use for set the settings
    */
   setUserSettings(user: User) {
-    const userSetting = this.getThemeUserSetting(user).settingValue.value;
-    this._themeService.setTheme(userSetting);
+    this._themeService.setTheme(this.getThemeUserSetting(user).settingValue.value);
   }
 }

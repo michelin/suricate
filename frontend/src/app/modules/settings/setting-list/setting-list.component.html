@@ -12,7 +12,7 @@
         <mat-form-field *ngIf="userSetting.setting.dataType === settingDataType.SELECT" fxFlex="100">
           <mat-select [required]="true"
                       [placeholder]="userSetting.setting.description"
-                      [name]="userSetting.id"
+                      [name]="userSetting.setting.type"
                       [ngModel]="userSetting.settingValue.value">
             <mat-option *ngFor="let allowedSettingValue of userSetting.setting.allowedSettingValues"
                         [value]="allowedSettingValue.value">

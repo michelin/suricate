@@ -72,7 +72,7 @@ export class SettingListComponent implements OnInit {
 
       const userSettings = currentUser.userSettings;
       userSettings.forEach(userSetting => {
-        const userValue = userSettingForm.get(`${userSetting.id}`).value;
+        const userValue = userSettingForm.get(userSetting.setting.type).value;
 
         if (userSetting.setting.constrained) {
           userSetting.settingValue = userSetting.setting.allowedSettingValues.find(allowedSettingValue => {

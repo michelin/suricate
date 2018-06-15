@@ -5,11 +5,12 @@ CREATE TABLE `setting` (
   `id`          bigint(20)   NOT NULL AUTO_INCREMENT,
   `constrained` char(1)      NOT NULL,
   `data_type`   varchar(255) NOT NULL,
+  `type`        varchar(255) NOT NULL,
   `description` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
 );
 
-INSERT INTO setting (id, constrained, data_type, description) values (1, 'Y', 'SELECT', 'Template');
+INSERT INTO setting (id, constrained, data_type, type, description) values (1, 'Y', 'SELECT', 'TEMPLATE', 'Template');
 
 
 /* *************************************************** */
@@ -25,8 +26,10 @@ CREATE TABLE `allowed_setting_value` (
   CONSTRAINT `FK_SETTING_ID_ALLOWED_SETTING_VALUE` FOREIGN KEY (`setting_id`) REFERENCES `setting` (`id`)
 );
 
-INSERT INTO allowed_setting_value (id, title, value, is_default, setting_id) values (1, 'Default', 'DEFAULT', 'Y', 1);
-INSERT INTO allowed_setting_value (id, title, value, is_default, setting_id) values (2, 'Dark', 'DARK', 'N', 1);
+INSERT INTO allowed_setting_value (id, title, value, is_default, setting_id)
+values (1, 'Default', 'default-theme', 'Y', 1);
+INSERT INTO allowed_setting_value (id, title, value, is_default, setting_id)
+values (2, 'Dark', 'dark-theme', 'N', 1);
 
 
 /* *************************************************** */

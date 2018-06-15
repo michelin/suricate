@@ -16,18 +16,6 @@
  *
  */
 
-import {SettingDataType} from './enums/SettingDataType';
-import {AllowedSettingValue} from './AllowedSettingValue';
-import {SettingType} from './enums/SettingType';
-
-/**
- * Represent a setting for the users
- */
-export class Setting {
-  id: number;
-  description: string;
-  constrained: boolean;
-  dataType: SettingDataType;
-  type: SettingType;
-  allowedSettingValues: AllowedSettingValue[];
+export enum SettingType {
+  TEMPLATE = 'TEMPLATE'
 }

@@ -17,6 +17,7 @@
 package io.suricate.monitoring.model.dto.setting;
 
 import io.suricate.monitoring.model.enums.SettingDataType;
+import io.suricate.monitoring.model.enums.SettingType;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -50,6 +51,11 @@ public class SettingDto {
      * The setting data type
      */
     private SettingDataType dataType;
+
+    /**
+     * The setting type
+     */
+    private SettingType type;
 
     /**
      * Hold the possible values (if we have a select setting for example)
