@@ -1,6 +1,6 @@
 <app-pages-header [secondTitle]="user?.fullname"></app-pages-header>
 
-<form [formGroup]="editUserForm" (ngSubmit)="saveUser()">
+<form *ngIf="editUserForm" [formGroup]="editUserForm" (ngSubmit)="saveUser()">
   <mat-card id="card-edit-user"
             class="mat-elevation-z8"
             fxLayout="column wrap"
@@ -77,6 +77,21 @@
       <!-- ROLE MANAGEMENT -->
       <h4 class="title" fxFlexAlign="start"> {{ 'Role Managements' | uppercase }} </h4>
 
+      <mat-form-field *ngIf="roles">
+        <mat-select id="roles"
+                    placeholder="User role"
+                    formControlName="roles"
+                    [required]="editUserForm.get('roles').errors && editUserForm.get('roles').errors.required"
+                    multiple>
+          <mat-option *ngFor="let role of roles"
+                      [value]="role.name">
+            {{ role.name }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="isFieldInvalid('roles')">
+          User role is mandatory
+        </mat-error>
+      </mat-form-field>
 
     </mat-card-content>
 
