@@ -1,7 +1,7 @@
 <app-pages-header [secondTitle]="'User Settings'"></app-pages-header>
 
 <form #formSettings="ngForm" (ngSubmit)="saveUserSettings(formSettings)" novalidate>
-  <mat-card fxLayout="row wrap" fxLayoutAlign="center center">
+  <mat-card fxLayout="row wrap" fxLayoutAlign="center center" class="mat-elevation-z8">
 
     <mat-card-content fxFlex="80">
       <div *ngFor="let userSetting of (currentUser$ | async)?.userSettings"

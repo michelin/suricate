@@ -26,6 +26,7 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {TokenService} from '../../shared/auth/token.service';
 import {RoleEnum} from '../../shared/model/dto/enums/RoleEnum';
 import {UserSetting} from '../../shared/model/dto/UserSetting';
+import {ThemeService} from '../../shared/services/theme.service';
 
 /**
  * User service that manage users
@@ -51,10 +52,18 @@ export class UserService extends AbstractHttpService {
    *
    * @param {HttpClient} http The http client service to inject
    * @param {TokenService} _tokenService The token service
+   * @param {ThemeService} _themeService The theme service
    */
-  constructor(private http: HttpClient, private _tokenService: TokenService) {
+  constructor(private http: HttpClient,
+              private _tokenService: TokenService,
+              private _themeService: ThemeService) {
     super();
   }
+
+  /* *************************************************************************************** */
+  /*                            HTTP Functions                                               */
+
+  /* *************************************************************************************** */
 
   /**
    * Get the list of users
@@ -150,6 +159,11 @@ export class UserService extends AbstractHttpService {
     return this.http.get<User[]>(`${UserService.USERS_BASE_URL}/search?username=${username}`);
   }
 
+  /* *************************************************************************************** */
+  /*                            Other Help Functions                                         */
+
+  /* *************************************************************************************** */
+
   /**
    * Get the initials of a user
    *
@@ -166,5 +180,26 @@ export class UserService extends AbstractHttpService {
    */
   isAdmin(): boolean {
     return this._tokenService.getUserRoles().includes(RoleEnum.ROLE_ADMIN);
+  }
+
+  /**
+   * Get the template user setting
+   *
+   * @param {User} user The user
+   * @returns {UserSetting} The user setting
+   */
+  getThemeUserSetting(user: User): UserSetting {
+    return user.userSettings.find(userSetting => {
+      return userSetting.setting.description.localeCompare('template', 'en', {sensitivity: 'base'}) === 0;
+    });
+  }
+
+  /**
+   * Set every user settings
+   * @param {User} user The user use for set the settings
+   */
+  setUserSettings(user: User) {
+    const userSetting = this.getThemeUserSetting(user).settingValue.value;
+    this._themeService.setTheme(userSetting);
   }
 }
