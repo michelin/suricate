@@ -17,12 +17,14 @@
 package io.suricate.monitoring.controllers.api;
 
 import io.suricate.monitoring.controllers.api.error.exception.ApiException;
+import io.suricate.monitoring.model.dto.setting.UserSettingDto;
 import io.suricate.monitoring.model.dto.user.UserDto;
 import io.suricate.monitoring.model.entity.user.User;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.model.enums.AuthenticationMethod;
 import io.suricate.monitoring.model.mapper.role.UserMapper;
 import io.suricate.monitoring.service.api.UserService;
+import io.suricate.monitoring.service.api.UserSettingService;
 import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,6 +61,11 @@ public class UserController {
     private final UserService userService;
 
     /**
+     * The user setting service
+     */
+    private final UserSettingService userSettingService;
+
+    /**
      * The user mapper
      */
     private final UserMapper userMapper;
@@ -67,24 +74,28 @@ public class UserController {
      * Constructor
      *
      * @param userService The user service to inject
-     * @param userMapper The user mapper to inject
+     * @param userMapper  The user mapper to inject
      */
     @Autowired
-    public UserController(final UserService userService, final UserMapper userMapper) {
+    public UserController(final UserService userService,
+                          final UserMapper userMapper,
+                          final UserSettingService userSettingService) {
         this.userService = userService;
         this.userMapper = userMapper;
+        this.userSettingService = userSettingService;
     }
 
     /**
      * List all user
+     *
      * @return The list of all users
      */
     @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<UserDto>> getAll() {
-        Optional<List<User>> users =  userService.getAllOrderByUsername();
+        Optional<List<User>> users = userService.getAllOrderByUsername();
 
-        if(!users.isPresent()) {
+        if (!users.isPresent()) {
             return ResponseEntity
                 .noContent()
                 .cacheControl(CacheControl.noCache())
@@ -104,12 +115,12 @@ public class UserController {
      * @param username The username query
      * @return The user that match with the query
      */
-    @RequestMapping(value="/search", method = RequestMethod.GET)
+    @RequestMapping(value = "/search", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<List<UserDto>> search(@RequestParam("username") String username) {
         Optional<List<User>> users = userService.getAllByUsernameStartWith(username);
 
-        if(!users.isPresent()) {
+        if (!users.isPresent()) {
             return ResponseEntity
                 .noContent()
                 .cacheControl(CacheControl.noCache())
@@ -135,7 +146,7 @@ public class UserController {
         User user = userMapper.toNewUser(userDto, AuthenticationMethod.DATABASE);
         Optional<User> userSaved = userService.registerNewUserAccount(user);
 
-        if(!userSaved.isPresent()) {
+        if (!userSaved.isPresent()) {
             throw new ApiException(ApiErrorEnum.USER_CREATION_ERROR);
         }
 
@@ -162,7 +173,7 @@ public class UserController {
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<UserDto> getOne(@PathVariable("id") Long id) {
         Optional<User> user = userService.getOne(id);
-        if (!user.isPresent()){
+        if (!user.isPresent()) {
             throw new ApiException(ApiErrorEnum.USER_NOT_FOUND);
         }
 
@@ -185,25 +196,25 @@ public class UserController {
     public ResponseEntity<UserDto> deleteOne(@PathVariable("userId") Long userId) {
         Optional<User> userOptional = userService.getOne(userId);
 
-        if(!userOptional.isPresent()) {
+        if (!userOptional.isPresent()) {
             return ResponseEntity
-                    .notFound()
-                    .cacheControl(CacheControl.noCache())
-                    .build();
+                .notFound()
+                .cacheControl(CacheControl.noCache())
+                .build();
         }
 
         userService.deleteUserByUserId(userOptional.get());
         return ResponseEntity
-                .ok()
-                .contentType(MediaType.APPLICATION_JSON)
-                .cacheControl(CacheControl.noCache())
-                .body(userMapper.toUserDtoDefault(userOptional.get()));
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .cacheControl(CacheControl.noCache())
+            .body(userMapper.toUserDtoDefault(userOptional.get()));
     }
 
     /**
      * Update a user
      *
-     * @param userId The user id
+     * @param userId  The user id
      * @param userDto The informations to update
      * @return The user updated
      */
@@ -218,7 +229,7 @@ public class UserController {
             userDto.getEmail()
         );
 
-        if(!userOptional.isPresent()) {
+        if (!userOptional.isPresent()) {
             return ResponseEntity
                 .notFound()
                 .cacheControl(CacheControl.noCache())
@@ -233,6 +244,38 @@ public class UserController {
     }
 
     /**
+     * Update the user settings for a user
+     *
+     * @param principal       The connected user
+     * @param userId          The user id used in the url
+     * @param userSettingDtos The new settings
+     * @return The user updated
+     */
+    @RequestMapping(value = "/{userId}/settings")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<UserDto> updateUserSettings(Principal principal,
+                                                      @PathVariable("userId") Long userId,
+                                                      @RequestBody List<UserSettingDto> userSettingDtos) {
+
+        Optional<User> userOptional = this.userService.getOneByUsername(principal.getName());
+        if (!userOptional.isPresent() || !userOptional.get().getId().equals(userId)) {
+            return ResponseEntity
+                .notFound()
+                .cacheControl(CacheControl.noCache())
+                .build();
+        }
+
+        User user = userOptional.get();
+        userSettingService.updateUserSettingsForUser(user, userSettingDtos);
+
+        return ResponseEntity
+            .ok()
+            .cacheControl(CacheControl.noCache())
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(userMapper.toUserDtoDefault(user));
+    }
+
+    /**
      * Get current user
      *
      * @param principal the user authenticated
@@ -243,7 +286,7 @@ public class UserController {
     public ResponseEntity<UserDto> getCurrentUser(Principal principal) {
         Optional<User> user = userService.getOneByUsername(principal.getName());
 
-        if(!user.isPresent()) {
+        if (!user.isPresent()) {
             throw new ApiException(ApiErrorEnum.USER_NOT_FOUND);
         }
 

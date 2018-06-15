@@ -1,11 +1,11 @@
-<h1 matDialogTitle class="little">Add new dashboard</h1>
+<h1 matDialogTitle class="little title"> {{ projectAdded ? 'Edit Dashboard' : 'Add Dashboard' }}</h1>
 
 <mat-dialog-content *ngIf="!isEditMode || (isEditMode && projectAdded)">
   <mat-horizontal-stepper #addDashboardStepper [linear]="true">
     <!-- Step 1 : Dashboard settings -->
     <mat-step [completed]="dashboardFormCompleted">
       <form [formGroup]="dashboardForm" (submit)="saveDashboard()" novalidate>
-        <ng-template matStepLabel> Dashboard Settings </ng-template>
+        <ng-template matStepLabel> Dashboard Settings</ng-template>
 
         <div fxLayout="column wrap"
              fxLayoutAlign="center start"
@@ -63,7 +63,7 @@
                    [cpPosition]="'top'"
                    [cpOutputFormat]="'hex'"
                    [cpAlphaChannel]="'always'"
-                   [cpPresetColors]="['#424242']"
+                   [cpPresetColors]="['#42424200']"
                    [readonly]="true">
           </mat-form-field>
 
@@ -79,39 +79,52 @@
 
     <!-- Step 2 : Add users -->
     <mat-step>
-      <ng-template matStepLabel> Add Users </ng-template>
+      <ng-template matStepLabel> Add Users</ng-template>
 
       <div fxLayout="column wrap" fxFlexAlign="start center" fxLayoutGap="50px">
-        <form id="user-form" fxFlexFill [formGroup]="addUserForm" fxLayout="row wrap" fxLayoutAlign="space-between start" fxLayoutGap="10px" (submit)="addUser()">
-        <mat-form-field fxFlex="80">
-          <mat-icon matPrefix style="margin-right: 10px">person_pin</mat-icon>
-          <input matInput
-                 type="text"
-                 formControlName="username"
-                 [required]="this.addUserForm.get('username').errors && this.addUserForm.get('username').errors.required"
-                 [matAutocomplete]="usernameAutoComplete">
-          <mat-hint align="start">Search by username</mat-hint>
-          <mat-autocomplete #usernameAutoComplete="matAutocomplete">
-            <mat-option *ngFor="let user of userAutoComplete | async" [value]="user.username">
-              {{user.username | uppercase}} - {{user.firstname}} {{user.lastname}}
-            </mat-option>
-          </mat-autocomplete>
-        </mat-form-field>
+        <form id="user-form"
+              fxFlexFill
+              [formGroup]="addUserForm"
+              fxLayout="row wrap"
+              fxLayoutAlign="space-between start"
+              fxLayoutGap="10px"
+              (submit)="addUser()">
+          <mat-form-field fxFlex="80">
+            <mat-icon matPrefix style="margin-right: 10px">person_pin</mat-icon>
+            <input matInput
+                   type="text"
+                   formControlName="username"
+                   [required]="this.addUserForm.get('username').errors && this.addUserForm.get('username').errors.required"
+                   [matAutocomplete]="usernameAutoComplete">
+            <mat-hint align="start">Search by username</mat-hint>
+            <mat-autocomplete #usernameAutoComplete="matAutocomplete">
+              <mat-option *ngFor="let user of userAutoComplete | async" [value]="user.username">
+                {{user.username | uppercase}} - {{user.firstname}} {{user.lastname}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
 
-        <button fxFlex="15" fxFlexAlign="center" mat-raised-button id="add-user-button" color="accent" type="submit" name="add-user">Add user</button>
-      </form>
+          <button fxFlex="15"
+                  fxFlexAlign="center"
+                  mat-raised-button
+                  id="add-user-button"
+                  color="accent"
+                  type="submit"
+                  name="add-user">Add user
+          </button>
+        </form>
 
         <div class="user-list">
           <h1 class="little">Users add to dashboard</h1>
           <mat-list role="list" *ngIf="projectAdded">
             <mat-list-item *ngFor="let user of projectAdded.users">
               <mat-icon style="display: block">account_box</mat-icon>
-              <div> {{user.firstname}} {{user.lastname}} ({{user.username | uppercase}}) </div>
+              <div> {{user.firstname}} {{user.lastname}} ({{user.username | uppercase}})</div>
               <button
-                      mat-icon-button
-                      matTooltip="Delete user"
-                      color="warn"
-                      (click)="deleteUser(user.id)">
+                  mat-icon-button
+                  matTooltip="Delete user"
+                  color="warn"
+                  (click)="deleteUser(user.id)">
                 <mat-icon>delete_forever</mat-icon>
               </button>
             </mat-list-item>

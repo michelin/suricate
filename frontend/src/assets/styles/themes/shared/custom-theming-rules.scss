@@ -1,0 +1,181 @@
+/*!
+ *  /*
+ *  * Copyright 2012-2018 the original author or authors.
+ *  *
+ *  * Licensed under the Apache License, Version 2.0 (the "License");
+ *  * you may not use this file except in compliance with the License.
+ *  * You may obtain a copy of the License at
+ *  *
+ *  *      http://www.apache.org/licenses/LICENSE-2.0
+ *  *
+ *  * Unless required by applicable law or agreed to in writing, software
+ *  * distributed under the License is distributed on an "AS IS" BASIS,
+ *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  * See the License for the specific language governing permissions and
+ *  * limitations under the License.
+ *
+ */
+@import '~@angular/material/theming';
+
+/* ****************************************** */
+/*          Retrieve Variables                */
+/* ****************************************** */
+
+// Retrieve Variables from theme
+@mixin mat-theme-variables($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, accent);
+  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
+}
+
+/* ****************************************** */
+/*              Custom rules                  */
+/* ****************************************** */
+
+/**
+ * CSS Style for main elements
+ */
+@mixin main-elements($theme, $customTheme) {
+  $background-color-content: map-get($customTheme, background-color-content);
+  $text-color: map-get($customTheme, text-color);
+  $text-color-title: map-get($customTheme, text-color-title);
+
+  body {
+    background-color: $background-color-content;
+    color: $text-color;
+    
+    .title {
+      color: $text-color-title;
+    }
+  }
+}
+
+/**
+ * Custom css rules for mat-sidenav
+ */
+@mixin custom-mat-sidenav($theme, $customTheme) {
+  $accent: map-get($theme, accent);
+  $background-color-content: map-get($customTheme, background-color-content);
+
+  mat-sidenav {
+    background-color: #424242 !important;
+
+    * {
+      color: #cfd2da;
+    }
+
+    mat-expansion-panel {
+      background-color: #424242 !important;
+
+      .mat-expansion-panel-content {
+        background-color: #5a5a5a;
+      }
+    }
+
+    mat-nav-list {
+      &.submenu {
+        background-color: #5a5a5a;
+      }
+
+      .mat-list-item {
+        &:hover {
+          background-color: #505050;
+
+          .mat-list-item-content {
+            color: #f7f9ff;
+          }
+        }
+
+        &.active {
+          &:hover {
+            background-color: mat-color($accent) !important;
+          }
+          background-color: mat-color($accent) !important;
+        }
+      }
+    }
+  }
+
+  mat-sidenav-content {
+    background-color: $background-color-content;
+  }
+}
+
+/**
+ * Custom colors for mat-input
+ */
+@mixin custom-mat-input($theme, $customTheme) {
+  $text-color: map-get($customTheme, text-color);
+
+  mat-form-field {
+    &.mat-focused {
+      .mat-input-element {
+        caret-color: $text-color;
+      }
+
+      .mat-form-field-label {
+        color: $text-color;
+      }
+
+      .mat-form-field-ripple {
+        background-color: $text-color;
+      }
+    }
+  }
+}
+
+@mixin custom-mat-table($theme, $customTheme) {
+  $table-hover-color: map-get($customTheme, table-hover-color);
+
+  mat-table {
+    mat-row {
+      &:hover {
+        background-color: $table-hover-color;
+      }
+    }
+  }
+}
+
+@mixin custom-mat-icon($theme, $customTheme) {
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+
+  .mat-icon-button {
+    &.mat-warn {
+      mat-icon {
+        color: mat-color($warn);
+      }
+    }
+    &.mat-accent {
+      mat-icon {
+        color: mat-color($accent);
+      }
+    }
+  }
+}
+
+@mixin custom-mat-slide-toggle($theme, $customTheme) {
+  $accent: map-get($theme, accent);
+
+  mat-slide-toggle {
+    &.mat-checked:not(.mat-disabled) {
+      .mat-slide-toggle-thumb {
+        background-color: mat-color($accent) !important;
+      }
+    }
+  }
+}
+
+/* ****************************************** */
+/*              Main Theming function         */
+/* ****************************************** */
+@mixin main-custom-theming($theme, $customTheme) {
+  @include main-elements($theme, $customTheme);
+  @include custom-mat-sidenav($theme, $customTheme);
+  @include custom-mat-input($theme, $customTheme);
+  @include custom-mat-table($theme, $customTheme);
+  @include custom-mat-icon($theme, $customTheme);
+  @include custom-mat-slide-toggle($theme, $customTheme);
+}

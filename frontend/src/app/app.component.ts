@@ -14,24 +14,86 @@
  * limitations under the License.
  */
 
-import {Component, OnInit} from '@angular/core';
+import {Component, HostBinding, OnDestroy, OnInit} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {AuthenticationService} from './modules/authentication/authentication.service';
+import {OverlayContainer} from '@angular/cdk/overlay';
+import {ThemeService} from './shared/services/theme.service';
+import {takeWhile} from 'rxjs/operators';
+import {UserService} from './modules/user/user.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
+
+  /**
+   * Observable that tell to the app if the user is connected
+   */
   isLoggedIn$: Observable<boolean>;
 
+  /**
+   * The title app
+   * @type {string}
+   */
   title = 'Dashboard - Monitoring';
 
-  constructor(private authenticationService: AuthenticationService) {
+  /**
+   * Used for setting the new class
+   */
+  @HostBinding('class') componentCssClass;
+
+  /**
+   * Tell if the component is instantiate or not
+   *
+   * @type {boolean}
+   * @private
+   */
+  private _isAlive = true;
+
+  /**
+   * The constructor
+   *
+   * @param {AuthenticationService} authenticationService Authentication service to inject
+   * @param {OverlayContainer} overlayContainer The overlay container service
+   * @param {ThemeService} themeService The theme service to inject
+   * @param {UserService} _userService The user service
+   */
+  constructor(private authenticationService: AuthenticationService,
+              private overlayContainer: OverlayContainer,
+              private themeService: ThemeService,
+              private _userService: UserService) {
   }
 
+  /**
+   * Called at the init of the app
+   */
   ngOnInit() {
     this.isLoggedIn$ = this.authenticationService.isLoggedIn();
+
+    this.themeService.getCurrentTheme()
+        .pipe(takeWhile(() => this._isAlive))
+        .subscribe((themeName: string) => this.onSetTheme(themeName));
+
+    this._userService.getConnectedUser().subscribe(user => this._userService.setUserSettings(user));
+  }
+
+  /**
+   * Set the theme
+   *
+   * @param theme The theme name
+   */
+  onSetTheme(theme) {
+    this.overlayContainer.getContainerElement().classList.add(theme);
+    this.componentCssClass = theme;
+  }
+
+  /**
+   * Called when the component is destroyed
+   */
+  ngOnDestroy() {
+    this._isAlive = false;
   }
 }

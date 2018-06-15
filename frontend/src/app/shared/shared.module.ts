@@ -40,6 +40,8 @@ import {TvManagementDialogComponent} from './components/pages-header/components/
 import {StompRService} from '@stomp/ng2-stompjs';
 import {AdminGuard} from './auth/guards/admin.guard';
 import {TokenService} from './auth/token.service';
+import {MaterialCDKModule} from './modules/metarialCDK.module';
+import {ThemeService} from './services/theme.service';
 
 @NgModule({
   imports: [
@@ -49,6 +51,7 @@ import {TokenService} from './auth/token.service';
     HttpClientModule,
     NgGridModule,
     MaterialModule,
+    MaterialCDKModule,
     FlexLayoutModule,
     RouterModule,
     CustomFormsModule,
@@ -75,6 +78,7 @@ import {TokenService} from './auth/token.service';
     HttpClientModule,
     NgGridModule,
     MaterialModule,
+    MaterialCDKModule,
     FlexLayoutModule,
     RouterModule,
     CustomFormsModule,
@@ -94,7 +98,8 @@ import {TokenService} from './auth/token.service';
     WebsocketService,
     ToastService,
     StompRService,
-    TokenService
+    TokenService,
+    ThemeService
   ]
 })
 export class SharedModule {

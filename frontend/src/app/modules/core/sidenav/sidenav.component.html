@@ -7,7 +7,7 @@
                mode="side"
                align="start"
                opened="true"
-               class="mat-elevation-z8">
+               class="mat-elevation-z15">
     <!-- User Section -->
     <div id="user-section" class="sidenav-section" *ngIf="connectedUser">
       <div class="avatar-container">
@@ -28,12 +28,18 @@
           </mat-expansion-panel-header>
 
           <mat-nav-list class="submenu">
-            <div><a mat-list-item href="javascript:void(0)">
-              <mat-icon>settings</mat-icon>
-              Settings </a></div>
-            <div><a mat-list-item (click)="logout()">
-              <mat-icon>exit_to_app</mat-icon>
-              Logout </a></div>
+            <div>
+              <a mat-list-item routerLinkActive="active" [routerLink]="['/settings']">
+                <mat-icon>settings</mat-icon>
+                Settings
+              </a>
+            </div>
+            <div>
+              <a mat-list-item (click)="logout()">
+                <mat-icon>exit_to_app</mat-icon>
+                Logout
+              </a>
+            </div>
           </mat-nav-list>
         </mat-expansion-panel>
       </mat-accordion>
@@ -42,7 +48,7 @@
     <div class="sidenav-section-container" fxLayout="column wrap" fxLayoutGap="8px">
       <!-- Admin Section -->
       <div *ngIf="isUserAdmin" class="sidenav-section">
-        <h1 class="little">Administration</h1>
+        <h1 class="little title">Administration</h1>
         <mat-nav-list>
           <a mat-list-item routerLinkActive="active" [routerLink]="['/users']"> Users </a>
           <a mat-list-item routerLinkActive="active" [routerLink]="['/configurations']">Configurations</a>
@@ -53,7 +59,7 @@
 
       <!-- Dashboard Section -->
       <div class="sidenav-section">
-        <h1 class="little">dashboards</h1>
+        <h1 class="little title">dashboards</h1>
         <mat-nav-list>
           <a mat-list-item routerLinkActive="active" *ngFor="let dashboard of dashboards"
              [routerLink]="['/dashboard', dashboard.id]">{{dashboard.name}}</a>

@@ -43,11 +43,11 @@ import {
   MatSlideToggleModule,
   MatSnackBarModule,
   MatSortModule,
+  MatStepperModule,
   MatTableModule,
   MatTabsModule,
   MatToolbarModule,
-  MatTooltipModule,
-  MatStepperModule
+  MatTooltipModule
 } from '@angular/material';
 
 
@@ -117,7 +117,7 @@ import {
     MatToolbarModule,
     MatTooltipModule,
     MatStepperModule
-  ],
-  declarations: []
+  ]
 })
-export class MaterialModule { }
+export class MaterialModule {
+}

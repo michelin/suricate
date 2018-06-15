@@ -1,22 +1,23 @@
 .container {
     height: 95vh;
 }
-.content{
+
+.content {
     width: 40%;
 }
+
 #register-form {
     width: 100%;
 }
+
 #card-register {
     width: 100%;
 }
+
 .registered-sentance {
-    color: rgba(255, 255, 255, 0.70);
     margin-left: 9%;
 }
-.mat-icon {
-    color: rgba(255, 255, 255, 0.70);
-}
+
 .mat-icon.prefix {
     margin-right: 10px;
 }

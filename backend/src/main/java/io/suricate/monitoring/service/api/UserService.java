@@ -18,12 +18,11 @@ package io.suricate.monitoring.service.api;
 
 import io.suricate.monitoring.configuration.security.ConnectedUser;
 import io.suricate.monitoring.controllers.api.error.exception.ApiException;
-import io.suricate.monitoring.model.entity.project.Project;
+import io.suricate.monitoring.model.entity.user.Role;
+import io.suricate.monitoring.model.entity.user.User;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.model.enums.AuthenticationMethod;
 import io.suricate.monitoring.model.enums.UserRoleEnum;
-import io.suricate.monitoring.model.entity.user.Role;
-import io.suricate.monitoring.model.entity.user.User;
 import io.suricate.monitoring.repository.UserRepository;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -44,7 +43,7 @@ public class UserService {
 
     /**
      * Class logger
-     * */
+     */
     private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
 
     /**
@@ -62,23 +61,31 @@ public class UserService {
     private final ProjectService projectService;
 
     /**
+     * The user setting service
+     */
+    private final UserSettingService userSettingService;
+
+    /**
      * Constructor
      *
-     * @param userRepository The user repository
-     * @param roleService The role service
-     * @param projectService The projectService to inject
+     * @param userRepository     The user repository
+     * @param roleService        The role service
+     * @param projectService     The projectService to inject
+     * @param userSettingService The user setting service
      */
     @Autowired
     public UserService(final UserRepository userRepository,
                        final RoleService roleService,
-                       final ProjectService projectService) {
+                       final ProjectService projectService,
+                       final UserSettingService userSettingService) {
         this.userRepository = userRepository;
         this.roleService = roleService;
         this.projectService = projectService;
+        this.userSettingService = userSettingService;
     }
 
     /**
-     * Register a new user in the database
+     * Register a new user (DATABASE auth Mode)
      *
      * @param user User to register
      * @return The user registered
@@ -86,19 +93,22 @@ public class UserService {
     public Optional<User> registerNewUserAccount(User user) {
         Optional<Role> role;
 
-        if(userRepository.count() > 0L) {
+        if (userRepository.count() > 0L) {
             role = roleService.getRoleByName(UserRoleEnum.ROLE_USER.name());
         } else {
             role = roleService.getRoleByName(UserRoleEnum.ROLE_ADMIN.name());
         }
 
-        if(!role.isPresent()) {
+        if (!role.isPresent()) {
             LOGGER.debug("Cannot find Role");
             return Optional.empty();
         }
 
         user.setRoles(Collections.singletonList(role.get()));
         userRepository.save(user);
+
+        // Set the default user settings
+        user.getUserSettings().addAll(userSettingService.createDefaultSettingsForUser(user));
 
         return Optional.of(user);
     }
@@ -110,9 +120,9 @@ public class UserService {
      * @return The user
      */
     @Transactional
-    public Optional<User> initUser(ConnectedUser connectedUser){
+    public Optional<User> initUser(ConnectedUser connectedUser) {
 
-        if (connectedUser == null){
+        if (connectedUser == null) {
             return Optional.empty();
         }
 
@@ -125,7 +135,7 @@ public class UserService {
         user.setAuthenticationMethod(AuthenticationMethod.LDAP);
 
         Optional<Role> role;
-        if(userRepository.count() > 0) {
+        if (userRepository.count() > 0) {
             role = roleService.getRoleByName(UserRoleEnum.ROLE_USER.name());
         } else {
             role = roleService.getRoleByName(UserRoleEnum.ROLE_ADMIN.name());
@@ -138,6 +148,9 @@ public class UserService {
 
         user.getRoles().add(role.get());
         userRepository.save(user);  // Save user
+
+        // Set the default user settings
+        user.getUserSettings().addAll(userSettingService.createDefaultSettingsForUser(user));
 
         return Optional.of(user);
     }
@@ -159,7 +172,7 @@ public class UserService {
      */
     public Optional<User> getOne(Long userId) {
         User user = userRepository.findOne(userId);
-        if(user == null) {
+        if (user == null) {
             return Optional.empty();
         }
         return Optional.of(user);
@@ -177,6 +190,7 @@ public class UserService {
 
     /**
      * Get the user id by username
+     *
      * @param username The username to find
      * @return The id
      */
@@ -195,16 +209,6 @@ public class UserService {
     }
 
     /**
-     * Get every user related to a project id
-     *
-     * @param project The project
-     * @return The list of users
-     */
-    public Optional<List<User>> getAllByProject(Project project) {
-        return userRepository.findByProjects_Id(project.getId());
-    }
-
-    /**
      * Delete a user
      *
      * @param user the user to delete
@@ -218,35 +222,35 @@ public class UserService {
     /**
      * Update a user
      *
-     * @param userId The user id
-     * @param username The username to update
+     * @param userId    The user id
+     * @param username  The username to update
      * @param firstname The firstname to update
-     * @param lastname The lastname to update
-     * @param email The email to update
+     * @param lastname  The lastname to update
+     * @param email     The email to update
      * @return The user updated
      */
     public Optional<User> updateUser(final Long userId, final String username, final String firstname, final String lastname, final String email) {
         Optional<User> userOpt = getOne(userId);
 
-        if(!userOpt.isPresent()) {
+        if (!userOpt.isPresent()) {
             return Optional.empty();
         }
 
         User user = userOpt.get();
 
-        if(StringUtils.isNotBlank(StringUtils.trimToEmpty(username))) {
+        if (StringUtils.isNotBlank(StringUtils.trimToEmpty(username))) {
             user.setUsername(username.trim());
         }
 
-        if(StringUtils.isNotBlank(StringUtils.trimToEmpty(firstname))) {
+        if (StringUtils.isNotBlank(StringUtils.trimToEmpty(firstname))) {
             user.setFirstname(firstname.trim());
         }
 
-        if(StringUtils.isNotBlank(StringUtils.trimToEmpty(lastname))) {
+        if (StringUtils.isNotBlank(StringUtils.trimToEmpty(lastname))) {
             user.setLastname(lastname.trim());
         }
 
-        if(StringUtils.isNotBlank(StringUtils.trimToEmpty(email))) {
+        if (StringUtils.isNotBlank(StringUtils.trimToEmpty(email))) {
             user.setEmail(email.trim());
         }
 

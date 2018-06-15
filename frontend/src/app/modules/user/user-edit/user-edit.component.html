@@ -2,7 +2,7 @@
 
 <form [formGroup]="editUserForm" (ngSubmit)="saveUser()">
   <mat-card id="card-edit-user"
-            class="container-body mat-elevation-z8"
+            class="mat-elevation-z8"
             fxLayout="column wrap"
             fxLayoutAlign="center center"
             fxLayoutGap="30px">
@@ -15,7 +15,8 @@
         <input matInput
                type="text"
                id="username"
-               placeholder="Username" formControlName="username"
+               placeholder="Username"
+               formControlName="username"
                [required]="editUserForm.get('username').errors && editUserForm.get('username').errors.required"/>
         <mat-error *ngIf="isFieldInvalid('username')">
           Username is mandatory with a min length of 3
@@ -29,7 +30,8 @@
         <input matInput
                type="text"
                id="firstname"
-               placeholder="Firstname"formControlName="firstname"
+               placeholder="Firstname"
+               formControlName="firstname"
                [required]="editUserForm.get('firstname').errors && editUserForm.get('firstname').errors.required"/>
         <mat-error *ngIf="isFieldInvalid('firstname')">
           Firstname is mandatory with a min length of 2

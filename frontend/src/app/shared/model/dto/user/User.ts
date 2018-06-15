@@ -15,6 +15,7 @@
  */
 
 import {Role} from './Role';
+import {UserSetting} from '../UserSetting';
 
 export class User {
   public id: number;
@@ -26,4 +27,5 @@ export class User {
   public password: string;
   public confirmPassword: string;
   public roles: Role[];
+  public userSettings: UserSetting[];
 }
