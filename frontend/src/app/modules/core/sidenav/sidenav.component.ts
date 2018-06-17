@@ -24,6 +24,7 @@ import {takeWhile} from 'rxjs/operators';
 import {MatSidenav} from '@angular/material';
 import {SidenavService} from './sidenav.service';
 import {AuthenticationService} from '../../authentication/authentication.service';
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-sidenav',

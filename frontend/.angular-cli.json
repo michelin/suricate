@@ -2,7 +2,7 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "project": {
     "name": "dashboard-frontend",
-    "ejected": true
+    "ejected": false
   },
   "apps": [
     {

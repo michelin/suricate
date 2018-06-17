@@ -17,6 +17,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {AuthenticationService} from './modules/authentication/authentication.service';
+import {TranslateService} from "@ngx-translate/core";
 
 @Component({
   selector: 'app-root',
@@ -28,10 +29,19 @@ export class AppComponent implements OnInit {
 
   title = 'Dashboard - Monitoring';
 
-  constructor(private authenticationService: AuthenticationService) {
+  constructor(private authenticationService: AuthenticationService, private translate: TranslateService) {
+      // this language will be used as a fallback when a translation isn't found in the current language
+      translate.setDefaultLang('fr');
+
+      // the lang to use, if the lang isn't available, it will use the current loader to get them
+      translate.use('fr');
   }
 
   ngOnInit() {
     this.isLoggedIn$ = this.authenticationService.isLoggedIn();
+  }
+
+  switchLanguage(language: string) {
+      this.translate.use(language);
   }
 }
