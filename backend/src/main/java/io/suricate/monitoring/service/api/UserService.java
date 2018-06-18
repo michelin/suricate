@@ -34,6 +34,7 @@ import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Service used to manage user
@@ -227,9 +228,15 @@ public class UserService {
      * @param firstname The firstname to update
      * @param lastname  The lastname to update
      * @param email     The email to update
+     * @param roleNames The list of role names for the user
      * @return The user updated
      */
-    public Optional<User> updateUser(final Long userId, final String username, final String firstname, final String lastname, final String email) {
+    public Optional<User> updateUser(final Long userId,
+                                     final String username,
+                                     final String firstname,
+                                     final String lastname,
+                                     final String email,
+                                     final List<String> roleNames) {
         Optional<User> userOpt = getOne(userId);
 
         if (!userOpt.isPresent()) {
@@ -254,8 +261,28 @@ public class UserService {
             user.setEmail(email.trim());
         }
 
+        if(roleNames != null && !roleNames.isEmpty()) {
+            this.updateUserRoles(user, roleNames);
+        }
+
         userRepository.save(user);
 
         return Optional.of(user);
+    }
+
+    /**
+     * Update the roles for a user
+     *
+     * @param user The user
+     * @param roleNames The roles to set
+     */
+    private void updateUserRoles(User user, List<String> roleNames) {
+        List<Role> rolesToSet = roleNames.stream()
+            .map(roleName -> roleService.getRoleByName(roleName).orElse(null))
+            .collect(Collectors.toList());
+
+        if(rolesToSet != null && !rolesToSet.isEmpty()) {
+            user.setRoles(rolesToSet);
+        }
     }
 }

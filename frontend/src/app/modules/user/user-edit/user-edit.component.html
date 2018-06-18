@@ -81,7 +81,7 @@
         <mat-select id="roles"
                     placeholder="User role"
                     formControlName="roles"
-                    [required]="editUserForm.get('roles').errors && editUserForm.get('roles').errors.required"
+                    required="true"
                     multiple>
           <mat-option *ngFor="let role of roles"
                       [value]="role.name">

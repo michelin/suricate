@@ -18,6 +18,7 @@ package io.suricate.monitoring.controllers.api;
 
 import io.suricate.monitoring.controllers.api.error.exception.ApiException;
 import io.suricate.monitoring.model.dto.setting.UserSettingDto;
+import io.suricate.monitoring.model.dto.user.RoleDto;
 import io.suricate.monitoring.model.dto.user.UserDto;
 import io.suricate.monitoring.model.entity.user.User;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
@@ -41,6 +42,7 @@ import java.net.URI;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * User controller
@@ -226,7 +228,8 @@ public class UserController {
             userDto.getUsername(),
             userDto.getFirstname(),
             userDto.getLastname(),
-            userDto.getEmail()
+            userDto.getEmail(),
+            userDto.getRoles().stream().map(RoleDto::getName).collect(Collectors.toList())
         );
 
         if (!userOptional.isPresent()) {

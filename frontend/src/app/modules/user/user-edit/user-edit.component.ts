@@ -24,6 +24,7 @@ import {ToastService} from '../../../shared/components/toast/toast.service';
 import {ToastType} from '../../../shared/model/toastNotification/ToastType';
 import {Role} from '../../../shared/model/dto/user/Role';
 import {RoleService} from '../role.service';
+import {RoleEnum} from '../../../shared/model/dto/enums/RoleEnum';
 
 /**
  * Component user the edition of a user
@@ -111,11 +112,19 @@ export class UserEditComponent implements OnInit {
   saveUser() {
     const userUpdated: User = this.editUserForm.value;
     userUpdated.id = this.user.id;
+    userUpdated.roles = [];
 
-    this
-        .userService
-        .updateUser(userUpdated)
-        .subscribe(() => this.toastService.sendMessage('User saved successfully', ToastType.SUCCESS));
+    const rolesSelected: RoleEnum[] = this.editUserForm.get('roles').value;
+    rolesSelected.forEach((roleName: RoleEnum) => {
+      const roleSelected = this.roles.find((role: Role) => role.name === roleName);
+      if (roleSelected) {
+        userUpdated.roles.push(roleSelected);
+      }
+    });
+
+    this.userService.updateUser(userUpdated).subscribe(() => {
+      this.toastService.sendMessage('User saved successfully', ToastType.SUCCESS);
+    });
   }
 
 }
