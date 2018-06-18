@@ -31,4 +31,5 @@ export abstract class AbstractHttpService {
   public static readonly ASSET_URL = 'asset';
   public static readonly WIDGETS_URL = 'widgets';
   public static readonly CONFIGURATIONS_URL = 'configurations';
+  public static readonly ROLES_URL = 'roles';
 }

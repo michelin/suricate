@@ -45,7 +45,7 @@
   body {
     background-color: $background-color-content;
     color: $text-color;
-    
+
     .title {
       color: $text-color-title;
     }
@@ -77,6 +77,10 @@
     mat-nav-list {
       &.submenu {
         background-color: #5a5a5a;
+      }
+
+      .mat-icon {
+        color: #cfd2da;
       }
 
       .mat-list-item {
@@ -141,6 +145,11 @@
 @mixin custom-mat-icon($theme, $customTheme) {
   $accent: map-get($theme, accent);
   $warn: map-get($theme, warn);
+  $text-color: map-get($customTheme, text-color);
+
+  mat-icon {
+    color: $text-color;
+  }
 
   .mat-icon-button {
     &.mat-warn {
