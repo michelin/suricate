@@ -5,7 +5,7 @@
     <!-- Step 1 : Dashboard settings -->
     <mat-step [completed]="dashboardFormCompleted">
       <form [formGroup]="dashboardForm" (submit)="saveDashboard()" novalidate>
-        <ng-template matStepLabel> Dashboard Settings </ng-template>
+        <ng-template matStepLabel> <app-translate [key]="'dashboard.settings'"></app-translate> </ng-template>
 
         <div fxLayout="column wrap"
              fxLayoutAlign="center start"
@@ -16,26 +16,26 @@
             <input matInput
                    type="text"
                    id="dashboard_name"
-                   placeholder="Dashboard Name"
+                   placeholder="{{ 'dashboard.name' | translate }}"
                    formControlName="name"
                    [required]="this.dashboardForm.get('name').errors && this.dashboardForm.get('name').errors.required">
 
             <mat-error *ngIf="isFieldInvalid('name')">
-              This field is required
+              <app-translate [key]="'field.required'"></app-translate>
             </mat-error>
           </mat-form-field>
 
-          <h1 fxFlexFill class="little">{{ 'Grid configuration' | uppercase}}</h1>
+          <h1 fxFlexFill class="little">{{ 'grid.configuration' | translate | uppercase}}</h1>
           <mat-form-field fxFlexFill>
             <input matInput
                    type="number"
                    id="widget_height"
-                   placeholder="Widget Height in px"
+                   placeholder="{{ 'widget.heigth.px' | translate}}"
                    formControlName="widgetHeight"
                    [required]="this.dashboardForm.get('widgetHeight').errors && this.dashboardForm.get('widgetHeight').errors.required">
 
             <mat-error *ngIf="isFieldInvalid('widgetHeight')">
-              This field is required and should be an integer > 0
+              <app-translate [key]="'field.required.int.length'"></app-translate>
             </mat-error>
           </mat-form-field>
 
@@ -43,20 +43,20 @@
             <input matInput
                    type="number"
                    id="nb_column"
-                   placeholder="Number of column (used for display widgets)"
+                   placeholder=""
                    formControlName="maxColumn"
                    [required]="this.dashboardForm.get('maxColumn').errors && this.dashboardForm.get('maxColumn').errors.required">
 
             <mat-error *ngIf="isFieldInvalid('maxColumn')">
-              This field is required and should be an integer > 0
+                <app-translate [key]="'field.required.int.length'"></app-translate>
             </mat-error>
           </mat-form-field>
 
-          <h1 fxFlexFill class="little">{{ 'Grid style' | uppercase}}</h1>
+          <h1 fxFlexFill class="little">{{ 'grid.style' | translate | uppercase}}</h1>
 
           <mat-form-field>
             <input matInput
-                   placeholder="Grid background color"
+                   placeholder="{{ 'grid.background.color' | translate }}"
                    value=" "
                    [style.background]="dashboardBackgroundColor"
                    [(colorPicker)]="dashboardBackgroundColor"
@@ -69,7 +69,7 @@
 
 
           <button fxFlexAlign="end" mat-raised-button color="accent">
-            Save and add users
+            <app-translate [key]="'save.and.assign'"></app-translate>
             <mat-icon matSuffix>keyboard_arrow_right</mat-icon>
           </button>
         </div>
@@ -79,7 +79,7 @@
 
     <!-- Step 2 : Add users -->
     <mat-step>
-      <ng-template matStepLabel> Add Users </ng-template>
+      <ng-template matStepLabel> <app-translate [key]="'users.add'"></app-translate> </ng-template>
 
       <div fxLayout="column wrap" fxFlexAlign="start center" fxLayoutGap="50px">
         <form id="user-form" fxFlexFill [formGroup]="addUserForm" fxLayout="row wrap" fxLayoutAlign="space-between start" fxLayoutGap="10px" (submit)="addUser()">
@@ -90,7 +90,7 @@
                  formControlName="username"
                  [required]="this.addUserForm.get('username').errors && this.addUserForm.get('username').errors.required"
                  [matAutocomplete]="usernameAutoComplete">
-          <mat-hint align="start">Search by username</mat-hint>
+          <mat-hint align="start"><app-translate [key]="'username.search'"></app-translate></mat-hint>
           <mat-autocomplete #usernameAutoComplete="matAutocomplete">
             <mat-option *ngFor="let user of userAutoComplete | async" [value]="user.username">
               {{user.username | uppercase}} - {{user.firstname}} {{user.lastname}}
@@ -98,11 +98,11 @@
           </mat-autocomplete>
         </mat-form-field>
 
-        <button fxFlex="15" fxFlexAlign="center" mat-raised-button id="add-user-button" color="accent" type="submit" name="add-user">Add user</button>
+        <button fxFlex="15" fxFlexAlign="center" mat-raised-button id="add-user-button" color="accent" type="submit" name="add-user"><app-translate [key]="'user.add'"></app-translate></button>
       </form>
 
         <div class="user-list">
-          <h1 class="little">Users add to dashboard</h1>
+          <h1 class="little"><app-translate [key]="'users.dashboard'"></app-translate></h1>
           <mat-list role="list" *ngIf="projectAdded">
             <mat-list-item *ngFor="let user of projectAdded.users">
               <mat-icon style="display: block">account_box</mat-icon>
@@ -124,5 +124,5 @@
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button mat-button mat-dialog-close>Close</button>
+  <button mat-button mat-dialog-close><app-translate [key]="'close'"></app-translate></button>
 </mat-dialog-actions>
