@@ -28,7 +28,7 @@
           </mat-expansion-panel-header>
 
           <mat-nav-list class="submenu">
-            <div><a mat-list-item href="javascript:void(0)">
+            <div><a mat-list-item routerLinkActive="active" [routerLink]="['/settings']">
               <mat-icon>settings</mat-icon>
               <app-translate [key]="'settings'"></app-translate></a></div>
             <div><a mat-list-item (click)="logout()">
