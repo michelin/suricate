@@ -1,4 +1,4 @@
-<h1 matDialogTitle class="little">Add new dashboard</h1>
+<h1 matDialogTitle class="little title"> {{ projectAdded ? 'Edit Dashboard' : 'Add Dashboard' }}</h1>
 
 <mat-dialog-content *ngIf="!isEditMode || (isEditMode && projectAdded)">
   <mat-horizontal-stepper #addDashboardStepper [linear]="true">
@@ -63,7 +63,7 @@
                    [cpPosition]="'top'"
                    [cpOutputFormat]="'hex'"
                    [cpAlphaChannel]="'always'"
-                   [cpPresetColors]="['#424242']"
+                   [cpPresetColors]="['#42424200']"
                    [readonly]="true">
           </mat-form-field>
 
@@ -100,18 +100,17 @@
 
         <button fxFlex="15" fxFlexAlign="center" mat-raised-button id="add-user-button" color="accent" type="submit" name="add-user"><app-translate [key]="'user.add'"></app-translate></button>
       </form>
-
         <div class="user-list">
           <h1 class="little"><app-translate [key]="'users.dashboard'"></app-translate></h1>
           <mat-list role="list" *ngIf="projectAdded">
             <mat-list-item *ngFor="let user of projectAdded.users">
               <mat-icon style="display: block">account_box</mat-icon>
-              <div> {{user.firstname}} {{user.lastname}} ({{user.username | uppercase}}) </div>
+              <div> {{user.firstname}} {{user.lastname}} ({{user.username | uppercase}})</div>
               <button
-                      mat-icon-button
-                      matTooltip="Delete user"
-                      color="warn"
-                      (click)="deleteUser(user.id)">
+                  mat-icon-button
+                  matTooltip="Delete user"
+                  color="warn"
+                  (click)="deleteUser(user.id)">
                 <mat-icon>delete_forever</mat-icon>
               </button>
             </mat-list-item>

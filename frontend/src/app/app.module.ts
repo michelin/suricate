@@ -31,6 +31,7 @@ import {WidgetModule} from './modules/widget/widget.module';
 import {HttpClient, HttpClientModule} from "@angular/common/http";
 import {TranslateLoader, TranslateModule} from "@ngx-translate/core";
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+import {SettingsModule} from './modules/settings/settings.module';
 
 const appRoutes: Routes = [
   {path: '', redirectTo: '/home', pathMatch: 'full'},
@@ -61,7 +62,8 @@ export function createTranslateLoader(http: HttpClient) {
             useFactory: (createTranslateLoader),
             deps: [HttpClient]
         }
-    })
+    }),
+    SettingsModule
   ],
   declarations: [
     AppComponent

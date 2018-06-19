@@ -25,6 +25,7 @@ import {SharedModule} from '../../shared/shared.module';
 import {DeleteUserDialogComponent} from './components/delete-user-dialog/delete-user-dialog.component';
 import {UserEditComponent} from './user-edit/user-edit.component';
 import {AdminGuard} from '../../shared/auth/guards/admin.guard';
+import {RoleService} from './role.service';
 
 const appRoutes: Routes = [
   {path: 'users', component: UserListComponent, data: {breadcrumb: 'User List'}, canActivate: [AuthGuard, AdminGuard]},
@@ -49,7 +50,8 @@ const appRoutes: Routes = [
     RouterModule
   ],
   providers: [
-    UserService
+    UserService,
+    RoleService
   ]
 })
 export class UserModule {

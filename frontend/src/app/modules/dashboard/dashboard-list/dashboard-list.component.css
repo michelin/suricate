@@ -1,7 +1,6 @@
 .table-container {
     display: flex;
     flex-direction: column;
-    max-height: 500px;
     min-width: 300px;
     position: relative;
 }
@@ -28,8 +27,4 @@
     color: #980000;
     max-width: 360px;
     text-align: center;
-}
-
-mat-row:hover {
-    background-color: #666;
 }

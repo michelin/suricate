@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {UserService} from '../user.service';
 import {ActivatedRoute} from '@angular/router';
 import {User} from '../../../shared/model/dto/user/User';
@@ -22,6 +22,9 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {CustomValidators} from 'ng2-validation';
 import {ToastService} from '../../../shared/components/toast/toast.service';
 import {ToastType} from '../../../shared/model/toastNotification/ToastType';
+import {Role} from '../../../shared/model/dto/user/Role';
+import {RoleService} from '../role.service';
+import {RoleEnum} from '../../../shared/model/dto/enums/RoleEnum';
 
 /**
  * Component user the edition of a user
@@ -44,34 +47,40 @@ export class UserEditComponent implements OnInit {
   user: User;
 
   /**
+   * The list of roles
+   */
+  roles: Role[];
+
+  /**
    * Constructor
    *
    * @param {UserService} userService The user service to inject
+   * @param {RoleService} _roleService The role service to inject
    * @param {ActivatedRoute} activatedRoute The activated route to inject
    * @param {FormBuilder} formBuilder The formBuilder service
    * @param {ToastService} toastService The service used for displayed Toast notification
    */
   constructor(private userService: UserService,
+              private _roleService: RoleService,
               private activatedRoute: ActivatedRoute,
               private formBuilder: FormBuilder,
-              private toastService: ToastService) { }
+              private toastService: ToastService) {
+  }
 
   /**
    * Called when the component is displayed
    */
   ngOnInit() {
-    this
-        .activatedRoute
-        .params
-        .subscribe( params => {
-          this
-              .userService
-              .getById(params['userId'])
-              .subscribe( user => {
-                this.user = user;
-                this.initUserEditForm();
-              });
-        });
+    this._roleService.getRoles().subscribe(roles => {
+      this.roles = roles;
+    });
+
+    this.activatedRoute.params.subscribe(params => {
+      this.userService.getById(params['userId']).subscribe(user => {
+        this.user = user;
+        this.initUserEditForm();
+      });
+    });
   }
 
   /**
@@ -82,7 +91,8 @@ export class UserEditComponent implements OnInit {
       username: [this.user.username, [Validators.required, Validators.minLength(3)]],
       firstname: [this.user.firstname, [Validators.required, Validators.minLength(2)]],
       lastname: [this.user.lastname, [Validators.required, Validators.minLength(2)]],
-      email: [this.user.email, [Validators.required, CustomValidators.email]]
+      email: [this.user.email, [Validators.required, CustomValidators.email]],
+      roles: [this._roleService.getRolesNameAsTable(this.user.roles), [Validators.required]]
     });
   }
 
@@ -102,11 +112,19 @@ export class UserEditComponent implements OnInit {
   saveUser() {
     const userUpdated: User = this.editUserForm.value;
     userUpdated.id = this.user.id;
+    userUpdated.roles = [];
 
-    this
-        .userService
-        .updateUser(userUpdated)
-        .subscribe(() => this.toastService.sendMessage('User saved successfully', ToastType.SUCCESS));
+    const rolesSelected: RoleEnum[] = this.editUserForm.get('roles').value;
+    rolesSelected.forEach((roleName: RoleEnum) => {
+      const roleSelected = this.roles.find((role: Role) => role.name === roleName);
+      if (roleSelected) {
+        userUpdated.roles.push(roleSelected);
+      }
+    });
+
+    this.userService.updateUser(userUpdated).subscribe(() => {
+      this.toastService.sendMessage('User saved successfully', ToastType.SUCCESS);
+    });
   }
 
 }

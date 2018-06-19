@@ -18,6 +18,7 @@ package io.suricate.monitoring.model.entity.user;
 
 import io.suricate.monitoring.model.entity.AbstractEntity;
 import io.suricate.monitoring.model.entity.project.Project;
+import io.suricate.monitoring.model.entity.setting.UserSetting;
 import io.suricate.monitoring.model.enums.AuthenticationMethod;
 import lombok.*;
 
@@ -88,5 +89,11 @@ public class User extends AbstractEntity<Long> {
      */
     @ManyToMany(mappedBy = "users")
     private List<Project> projects = new ArrayList<>();
+
+    /**
+     * The list of user settings
+     */
+    @OneToMany(mappedBy = "user")
+    private List<UserSetting> userSettings = new ArrayList<>();
 
 }

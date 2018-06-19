@@ -15,7 +15,7 @@
  */
 
 import {AfterViewInit, ChangeDetectorRef, Component, ViewChild} from '@angular/core';
-import {MatPaginator, MatSort, MatTableDataSource, MatDialog} from '@angular/material';
+import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 
 import {of as observableOf} from 'rxjs/observable/of';
 import {catchError} from 'rxjs/operators';
@@ -24,11 +24,12 @@ import {startWith} from 'rxjs/operators/startWith';
 import {switchMap} from 'rxjs/operators/switchMap';
 import {map} from 'rxjs/operators/map';
 import {UserService} from '../user.service';
-import {Role} from '../../../shared/model/dto/user/Role';
 import {DeleteUserDialogComponent} from '../components/delete-user-dialog/delete-user-dialog.component';
 import {User} from '../../../shared/model/dto/user/User';
 import {ToastService} from '../../../shared/components/toast/toast.service';
 import {ToastType} from '../../../shared/model/toastNotification/ToastType';
+import {RoleService} from '../role.service';
+import {Role} from 'app/shared/model/dto/user/Role';
 
 /**
  * This component is used for displaying the list of users
@@ -79,18 +80,21 @@ export class UserListComponent implements AfterViewInit {
    * The constructor
    *
    * @param {UserService} userService The user service to inject
+   * @param {RoleService} _roleService The role service to inject
    * @param {ChangeDetectorRef} changeDetectorRef The change detector service to inject
    * @param {MatDialog} matDialog The mat dialog service to inject
    * @param {ToastService} toastService The toast service to inject
    */
   constructor(private userService: UserService,
+              private _roleService: RoleService,
               private changeDetectorRef: ChangeDetectorRef,
               private matDialog: MatDialog,
-              private toastService: ToastService) { }
+              private toastService: ToastService) {
+  }
 
   /**
    * Called when the view has been init
-    */
+   */
   ngAfterViewInit() {
     this.initUsersTable();
   }
@@ -121,7 +125,7 @@ export class UserListComponent implements AfterViewInit {
               return observableOf([]);
             })
         )
-        .subscribe(data =>  {
+        .subscribe(data => {
           this.resultsLength = data.length;
           this.matTableDataSource.data = data;
           this.matTableDataSource.sort = this.matSort;
@@ -144,7 +148,7 @@ export class UserListComponent implements AfterViewInit {
    * @returns {string} The list of roles has string
    */
   getRolesName(roles: Role[]): string {
-    return roles.map(role => role.name).toString();
+    return this._roleService.getRolesNameAsString(roles);
   }
 
   /**

@@ -17,6 +17,7 @@
 package io.suricate.monitoring.model.dto.user;
 
 import io.suricate.monitoring.model.dto.AbstractDto;
+import io.suricate.monitoring.model.dto.setting.UserSettingDto;
 import io.suricate.monitoring.model.enums.AuthenticationMethod;
 import lombok.*;
 
@@ -24,9 +25,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Reprensent a user used for communication with the clients via webservices
+ * Represent a user used for communication with the clients via webservices
  */
-@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
+@Getter
+@Setter
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+@ToString
 public class UserDto extends AbstractDto {
 
     /**
@@ -50,12 +55,12 @@ public class UserDto extends AbstractDto {
     private String fullname;
 
     /**
-     *  username
+     * username
      */
     private String username;
 
     /**
-     *  Mail
+     * Mail
      */
     private String email;
 
@@ -78,4 +83,9 @@ public class UserDto extends AbstractDto {
      * User roles
      */
     private List<RoleDto> roles = new ArrayList<>();
+
+    /**
+     * User settings
+     */
+    private List<UserSettingDto> userSettings = new ArrayList<>();
 }

@@ -24,11 +24,12 @@ import {
   OnChanges,
   OnDestroy,
   OnInit,
-  QueryList, SimpleChanges,
+  QueryList,
+  SimpleChanges,
   ViewChildren
 } from '@angular/core';
 import {Project} from '../../../../shared/model/dto/Project';
-import {map, takeWhile, auditTime} from 'rxjs/operators';
+import {auditTime, map, takeWhile} from 'rxjs/operators';
 import {ProjectWidget} from '../../../../shared/model/dto/ProjectWidget';
 import {fromEvent} from 'rxjs/observable/fromEvent';
 import {DashboardService} from '../../dashboard.service';
@@ -136,7 +137,8 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
               private websocketService: WebsocketService,
               private matDialog: MatDialog,
               private router: Router,
-              private changeDetectorRef: ChangeDetectorRef) { }
+              private changeDetectorRef: ChangeDetectorRef) {
+  }
 
   /**
    * Call before ngOnInit and at every changes
@@ -171,7 +173,7 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
       this.websocketService
           .stompConnectionState
           .pipe(
-              takeWhile( () => this.isAlive),
+              takeWhile(() => this.isAlive),
               auditTime(10000)
           )
           .subscribe((stompState: StompState) => {
@@ -211,6 +213,7 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
 
   /* ******************************************************* */
   /*                  Grid Stack Management                  */
+
   /* ******************************************************* */
 
   /**
@@ -223,7 +226,7 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
       'max_cols': project.maxColumn,
       'min_cols': 1,
       'row_height': project.widgetHeight,
-      'margins': [2],
+      'margins': [4],
       'auto_resize': true
     };
 
@@ -367,7 +370,7 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
     return `
       <style>
         ${projectWidget.widget.cssContent}
-        ${projectWidget.customStyle ? projectWidget.customStyle  : '' }
+        ${projectWidget.customStyle ? projectWidget.customStyle : '' }
       </style>
 
       ${this.getWidgetHtml(projectWidget)}
@@ -397,9 +400,9 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
                     align-items: center;
                     justify-content: center">
           <span>
-            <mat-icon class="material-icons">warning</mat-icon>
+            <mat-icon class="material-icons" style="color: #cfd2da !important;">warning</mat-icon>
           </span>
-          <span style="display: inline-block">
+          <span style="display: inline-block; color: #cfd2da !important">
             Widget execution error
           </span>
         </div>
@@ -419,9 +422,9 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
                     align-items: center;
                     justify-content: center">
           <span>
-            <mat-icon class="material-icons">warning</mat-icon>
+            <mat-icon class="material-icons" style="color: #cfd2da !important;">warning</mat-icon>
           </span>
-          <span style="display: inline-block">
+          <span style="display: inline-block; color: #cfd2da !important">
             Issue with remote server. Retrying ...
           </span>
         </div>
@@ -450,13 +453,14 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
       .widget .btn-widget {
         position: absolute;
         background-color: rgba(66,66,66,0.6);
-        color: #cfd2da;
+        color: #cfd2da !important;
         border: none;
         cursor: pointer;
         z-index: 20;
       }
       .widget .btn-widget .material-icons {
         font-size: 16px;
+        color: #cfd2da !important;
       }
       .widget .btn-widget.btn-widget-delete {
         right: 0;
@@ -543,6 +547,7 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
 
   /* ******************************************************* */
   /*                  Websocket Management                   */
+
   /* ******************************************************* */
 
   /**
@@ -552,15 +557,15 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
     this.websocketSubscriptions.push(
         this.websocketService
             .subscribeToDestination(`/user/${this.project.token}-${this.screenCode}/queue/unique`)
-            .pipe( takeWhile( () => this.isAlive ) )
-            .subscribe((stompMessage: Stomp.Message) => this.handleUniqueScreenEvent(JSON.parse(stompMessage.body)) )
+            .pipe(takeWhile(() => this.isAlive))
+            .subscribe((stompMessage: Stomp.Message) => this.handleUniqueScreenEvent(JSON.parse(stompMessage.body)))
     );
 
     this.websocketSubscriptions.push(
         this.websocketService
             .subscribeToDestination(`/user/${this.project.token}/queue/live`)
-            .pipe( takeWhile( () => this.isAlive ) )
-            .subscribe((stompMessage: Stomp.Message) => this.handleGlobalScreenEvent(JSON.parse(stompMessage.body)) )
+            .pipe(takeWhile(() => this.isAlive))
+            .subscribe((stompMessage: Stomp.Message) => this.handleGlobalScreenEvent(JSON.parse(stompMessage.body)))
     );
   }
 
@@ -609,7 +614,7 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
     // DISPLAY SCREEN CODE
     if (updateEvent.type === WSUpdateType.DISPLAY_NUMBER) {
       this.displayScreenCode = true;
-      setTimeout( () => this.displayScreenCode = false, 10000);
+      setTimeout(() => this.displayScreenCode = false, 10000);
     }
 
     this.changeDetectorRef.detectChanges();
@@ -633,11 +638,19 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
    */
   sortProjectWidgets(projectWidgets: ProjectWidget[]) {
     projectWidgets.sort((left, right): number => {
-      if (left.widgetPosition.row < right.widgetPosition.row) { return -1; }
-      if (left.widgetPosition.row > right.widgetPosition.row) { return 1; }
+      if (left.widgetPosition.row < right.widgetPosition.row) {
+        return -1;
+      }
+      if (left.widgetPosition.row > right.widgetPosition.row) {
+        return 1;
+      }
       if (left.widgetPosition.row = right.widgetPosition.row) {
-        if (left.widgetPosition.col < right.widgetPosition.col) { return -1; }
-        if (left.widgetPosition.col > right.widgetPosition.col) { return 1; }
+        if (left.widgetPosition.col < right.widgetPosition.col) {
+          return -1;
+        }
+        if (left.widgetPosition.col > right.widgetPosition.col) {
+          return 1;
+        }
         return 0;
       }
     });
@@ -647,6 +660,7 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
 
   /* ******************************************************* */
   /*                  REST Management                        */
+
   /* ******************************************************* */
 
   /**

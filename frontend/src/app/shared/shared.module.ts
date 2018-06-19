@@ -42,6 +42,8 @@ import {AdminGuard} from './auth/guards/admin.guard';
 import {TokenService} from './auth/token.service';
 import {TranslateModule} from "@ngx-translate/core";
 import {TranslationComponent} from "./components/translations/translation.component";
+import {MaterialCDKModule} from './modules/metarialCDK.module';
+import {ThemeService} from './services/theme.service';
 
 @NgModule({
   imports: [
@@ -51,6 +53,7 @@ import {TranslationComponent} from "./components/translations/translation.compon
     HttpClientModule,
     NgGridModule,
     MaterialModule,
+    MaterialCDKModule,
     FlexLayoutModule,
     RouterModule,
     CustomFormsModule,
@@ -79,6 +82,7 @@ import {TranslationComponent} from "./components/translations/translation.compon
     HttpClientModule,
     NgGridModule,
     MaterialModule,
+    MaterialCDKModule,
     FlexLayoutModule,
     RouterModule,
     CustomFormsModule,
@@ -100,7 +104,8 @@ import {TranslationComponent} from "./components/translations/translation.compon
     WebsocketService,
     ToastService,
     StompRService,
-    TokenService
+    TokenService,
+    ThemeService
   ]
 })
 export class SharedModule {

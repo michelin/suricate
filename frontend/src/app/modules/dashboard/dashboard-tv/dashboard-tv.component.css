@@ -1,20 +1,30 @@
 .container {
     height: 97vh;
 }
-.content{
+
+.content {
     width: 40%;
 }
+
 .logo-container {
     height: 70%;
 }
+
 #tv-code-card {
     height: 50%;
 }
+
 #tv-code-card img {
     margin: 0 auto;
 }
+
 #tv-code-card #screen-code-wrapper {
     height: 26%;
     font-size: 3.2rem;
     background-color: #3030307a;
+}
+
+#tv-view {
+    margin: -10px -10px 0 -10px;
+    height: 100vh;
 }

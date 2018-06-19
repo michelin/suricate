@@ -21,9 +21,9 @@
       "prefix": "app",
       "styles": [
         "assets/styles/normalize.css",
-        "assets/styles/dashboard-dark-material-theme.scss",
         "../node_modules/material-design-icons-iconfont/dist/material-design-icons.css",
         "../node_modules/font-awesome/css/font-awesome.css",
+        "assets/styles/themes/dashboard-themes.scss",
         "styles.css"
       ],
       "scripts": [

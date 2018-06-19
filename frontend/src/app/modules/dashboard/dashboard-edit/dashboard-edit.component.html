@@ -2,7 +2,7 @@
 
 <form *ngIf="dashboard" [formGroup]="editDashboardForm" (ngSubmit)="saveDashboard()">
   <mat-card id="card-edit-dashboard"
-            class="container-body mat-elevation-z8"
+            class="mat-elevation-z8"
             fxLayout="column wrap"
             fxLayoutAlign="center center"
             fxLayoutGap="30px">
@@ -35,7 +35,7 @@
                placeholder="Token"
                formControlName="token"
                [required]="editDashboardForm.get('token').errors && editDashboardForm.get('token').errors.required"
-               readonly />
+               readonly/>
         <mat-error *ngIf="isFieldInvalid('token')">
           The dashboard token is mandatory
         </mat-error>
@@ -49,7 +49,7 @@
                id="widgetHeight"
                placeholder="Widget Height"
                formControlName="widgetHeight"
-               [required]="editDashboardForm.get('widgetHeight').errors && editDashboardForm.get('widgetHeight').errors.required" />
+               [required]="editDashboardForm.get('widgetHeight').errors && editDashboardForm.get('widgetHeight').errors.required"/>
         <mat-error *ngIf="isFieldInvalid('widgetHeight')">
           The dashboard widget height is mandatory and should be > 0
         </mat-error>
@@ -64,7 +64,7 @@
                id="maxColumn"
                placeholder="Max Column"
                formControlName="maxColumn"
-               [required]="editDashboardForm.get('maxColumn').errors && editDashboardForm.get('maxColumn').errors.required" />
+               [required]="editDashboardForm.get('maxColumn').errors && editDashboardForm.get('maxColumn').errors.required"/>
         <mat-error *ngIf="isFieldInvalid('maxColumn')">
           The maximum column field is mandatory and should be > 0
         </mat-error>
@@ -75,7 +75,7 @@
       <mat-list role="list" *ngIf="dashboard?.users">
         <mat-list-item *ngFor="let user of dashboard?.users">
           <mat-icon class="prefix">account_box</mat-icon>
-          <div class="user"> {{user.firstname}} {{user.lastname}} ({{user.username | uppercase}}) </div>
+          <div class="user"> {{user.firstname}} {{user.lastname}} ({{user.username | uppercase}})</div>
         </mat-list-item>
       </mat-list>
 

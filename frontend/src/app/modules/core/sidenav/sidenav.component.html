@@ -7,7 +7,7 @@
                mode="side"
                align="start"
                opened="true"
-               class="mat-elevation-z8">
+               class="mat-elevation-z15">
     <!-- User Section -->
     <div id="user-section" class="sidenav-section" *ngIf="connectedUser">
       <div class="avatar-container">
@@ -42,7 +42,8 @@
     <div class="sidenav-section-container" fxLayout="column wrap" fxLayoutGap="8px">
       <!-- Admin Section -->
       <div *ngIf="isUserAdmin" class="sidenav-section">
-        <h1 class="little"><app-translate [key]="'administration'"></app-translate></h1>
+        <h1 class="little title"><app-translate [key]="'administration'"></app-translate></h1>
+
         <mat-nav-list>
           <a mat-list-item routerLinkActive="active" [routerLink]="['/users']"> <app-translate [key]="'users'"></app-translate> </a>
           <a mat-list-item routerLinkActive="active" [routerLink]="['/configurations']"><app-translate [key]="'configurations'"></app-translate></a>
@@ -53,7 +54,7 @@
 
       <!-- Dashboard Section -->
       <div class="sidenav-section">
-        <h1 class="little"><app-translate [key]="'dashboards'"></app-translate></h1>
+        <h1 class="little title"><app-translate [key]="'dashboards'"></app-translate></h1>
         <mat-nav-list>
           <a mat-list-item routerLinkActive="active" *ngFor="let dashboard of dashboards"
              [routerLink]="['/dashboard', dashboard.id]">{{dashboard.name}}</a>

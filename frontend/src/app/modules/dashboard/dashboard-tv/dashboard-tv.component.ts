@@ -29,6 +29,7 @@ import {WSUpdateType} from '../../../shared/model/websocket/enums/WSUpdateType';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs/Subscription';
 import * as Stomp from '@stomp/stompjs';
+import {ThemeService} from '../../../shared/services/theme.service';
 
 /**
  * Dashboard TV Management
@@ -68,19 +69,23 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * @param {SidenavService} sidenavService The sidenav service to inject
    * @param {DashboardService} dashboardService The dashboard service to inject
    * @param {WebsocketService} websocketService The websocket service to inject
+   * @param {ThemeService} themeService The theme service
    * @param {ActivatedRoute} activatedRoute The activated route service
    * @param {Router} router The router service
    */
   constructor(private sidenavService: SidenavService,
               private dashboardService: DashboardService,
               private websocketService: WebsocketService,
+              private themeService: ThemeService,
               private activatedRoute: ActivatedRoute,
-              private router: Router) { }
+              private router: Router) {
+  }
 
   /**
    * Init of the component
    */
   ngOnInit() {
+    this.themeService.setTheme('dark-theme');
     this.sidenavService.closeSidenav();
     this.screenCode = this.websocketService.getscreenCode();
 
@@ -89,7 +94,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
         .pipe(takeWhile(() => this.isAlive))
         .subscribe(project => this.project$ = of(project));
 
-    this.activatedRoute.queryParams.subscribe( params => {
+    this.activatedRoute.queryParams.subscribe(params => {
       if (params['token']) {
         this.dashboardService.getOneByToken(params['token']).subscribe(project => {
           this.dashboardService.currendDashbordSubject.next(project);
@@ -111,7 +116,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
     this.screenSubscription = this
         .websocketService
         .subscribeToDestination(`/user/${this.screenCode}/queue/connect`)
-        .pipe( takeWhile( () => this.isAlive ) )
+        .pipe(takeWhile(() => this.isAlive))
         .subscribe((stompMessage: Stomp.Message) => {
           this.handleConnectEvent(JSON.parse(stompMessage.body));
         });
@@ -129,7 +134,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
       if (project) {
         this.unsubscribeListening();
         this.websocketService.disconnect();
-        this.router.navigate(['/tv'], {queryParams: {token: project.token} });
+        this.router.navigate(['/tv'], {queryParams: {token: project.token}});
       }
     }
   }
