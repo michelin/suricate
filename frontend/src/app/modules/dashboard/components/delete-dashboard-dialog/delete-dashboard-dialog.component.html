@@ -1,13 +1,13 @@
-<h2 mat-dialog-title> Delete Project </h2>
+<h2 mat-dialog-title> <app-translate [key]="'dashboard.delete'"></app-translate> </h2>
 <mat-dialog-content>
   <p>
-    Do you really want to delete :  {{ project.name | titlecase }}
+    <app-translate [key]="'delete.confirm'"></app-translate>  {{ project.name | titlecase }}
   </p>
   <p>
     There is {{ project.users.length }} users using this project
   </p>
 </mat-dialog-content>
 <mat-dialog-actions>
-  <button mat-button [mat-dialog-close]="false">No</button>
-  <button mat-button [mat-dialog-close]="true">Yes</button>
+  <button mat-button [mat-dialog-close]="false"><app-translate [key]="'no'"></app-translate></button>
+  <button mat-button [mat-dialog-close]="true"><app-translate [key]="'yes'"></app-translate></button>
 </mat-dialog-actions>

@@ -17,6 +17,7 @@
 import {Component, HostBinding, OnDestroy, OnInit} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {AuthenticationService} from './modules/authentication/authentication.service';
+import {TranslateService} from "@ngx-translate/core";
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {ThemeService} from './shared/services/theme.service';
 import {takeWhile} from 'rxjs/operators';
@@ -64,7 +65,12 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(private authenticationService: AuthenticationService,
               private overlayContainer: OverlayContainer,
               private themeService: ThemeService,
-              private _userService: UserService) {
+              private _userService: UserService, private translate: TranslateService) {
+      // this language will be used as a fallback when a translation isn't found in the current language
+      translate.setDefaultLang('fr');
+
+      // the lang to use, if the lang isn't available, it will use the current loader to get them
+      translate.use('fr');
   }
 
   /**
@@ -95,5 +101,9 @@ export class AppComponent implements OnInit, OnDestroy {
    */
   ngOnDestroy() {
     this._isAlive = false;
+  }
+
+  switchLanguage(language: string) {
+      this.translate.use(language);
   }
 }

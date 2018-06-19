@@ -32,6 +32,8 @@
     "@angular/platform-browser-dynamic": "^5.2.6",
     "@angular/router": "^5.2.6",
     "@auth0/angular-jwt": "^1.2.0",
+    "@ngx-translate/core": "^9.1.1",
+    "@ngx-translate/http-loader": "^2.0.1",
     "@stomp/ng2-stompjs": "^4.0.0",
     "@stomp/stompjs": "^4.0.6",
     "angular2-grid": "^2.1.0",

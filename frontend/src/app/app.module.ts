@@ -28,12 +28,19 @@ import {AppComponent} from './app.component';
 import {HomeModule} from './modules/home/home.module';
 import {ConfigurationModule} from './modules/configuration/configuration.module';
 import {WidgetModule} from './modules/widget/widget.module';
+import {HttpClient, HttpClientModule} from "@angular/common/http";
+import {TranslateLoader, TranslateModule} from "@ngx-translate/core";
+import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {SettingsModule} from './modules/settings/settings.module';
 
 const appRoutes: Routes = [
   {path: '', redirectTo: '/home', pathMatch: 'full'},
   {path: '**', redirectTo: 'home', pathMatch: 'full'}
 ];
+
+export function createTranslateLoader(http: HttpClient) {
+    return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
 
 @NgModule({
   imports: [
@@ -48,6 +55,14 @@ const appRoutes: Routes = [
     UserModule,
     ConfigurationModule,
     WidgetModule,
+    HttpClientModule,
+    TranslateModule.forRoot({
+        loader: {
+            provide: TranslateLoader,
+            useFactory: (createTranslateLoader),
+            deps: [HttpClient]
+        }
+    }),
     SettingsModule
   ],
   declarations: [

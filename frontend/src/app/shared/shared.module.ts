@@ -40,6 +40,8 @@ import {TvManagementDialogComponent} from './components/pages-header/components/
 import {StompRService} from '@stomp/ng2-stompjs';
 import {AdminGuard} from './auth/guards/admin.guard';
 import {TokenService} from './auth/token.service';
+import {TranslateModule} from "@ngx-translate/core";
+import {TranslationComponent} from "./components/translations/translation.component";
 import {MaterialCDKModule} from './modules/metarialCDK.module';
 import {ThemeService} from './services/theme.service';
 
@@ -55,7 +57,8 @@ import {ThemeService} from './services/theme.service';
     FlexLayoutModule,
     RouterModule,
     CustomFormsModule,
-    ColorPickerModule
+    ColorPickerModule,
+    TranslateModule
   ],
   declarations: [
     PagesHeaderComponent,
@@ -66,7 +69,8 @@ import {ThemeService} from './services/theme.service';
     SafeHtmlPipe,
     SafeUrlPipe,
     TvManagementDialogComponent,
-    RunScriptsDirective
+    RunScriptsDirective,
+    TranslationComponent
   ],
   entryComponents: [
     AddWidgetDialogComponent,
@@ -83,13 +87,15 @@ import {ThemeService} from './services/theme.service';
     RouterModule,
     CustomFormsModule,
     ColorPickerModule,
+    TranslateModule,
     PagesHeaderComponent,
     AddWidgetDialogComponent,
     ToastComponent,
     SafeHtmlPipe,
     SafeUrlPipe,
     RunScriptsDirective,
-    PagesFooterComponent
+    PagesFooterComponent,
+    TranslationComponent
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true},

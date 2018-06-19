@@ -5,7 +5,7 @@
     <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
 
     <div class="table-error" *ngIf="errorCatched">
-      An error as occured
+      <app-translate [key]="'error'"></app-translate>
     </div>
   </div>
 
@@ -14,17 +14,17 @@
 
     <!-- Username Column -->
     <ng-container matColumnDef="key">
-      <mat-header-cell *matHeaderCellDef mat-sort-header disableClear="true">Name</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header disableClear="true"><app-translate [key]="'key'"></app-translate></mat-header-cell>
       <mat-cell *matCellDef="let row">{{ row.key }}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="value">
-      <mat-header-cell *matHeaderCellDef mat-sort-header disableClear="true">Value</mat-header-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header disableClear="true"><app-translate [key]="'value'"></app-translate></mat-header-cell>
       <mat-cell *matCellDef="let row">{{ row.value }}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="edit">
-      <mat-header-cell *matHeaderCellDef> Edit </mat-header-cell>
+      <mat-header-cell *matHeaderCellDef> <app-translate [key]="'edit'"></app-translate> </mat-header-cell>
       <mat-cell *matCellDef="let row">
         <a [routerLink]="[row.id]">
           <button mat-icon-button color="accent">
