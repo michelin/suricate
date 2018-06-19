@@ -5,7 +5,7 @@
     <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
 
     <div class="table-error" *ngIf="errorCatched">
-        <app-translate [key]="'error'"></app-translate>
+      <app-translate [key]="'error'"></app-translate>
     </div>
   </div>
 
@@ -13,29 +13,39 @@
 
     <!-- Username Column -->
     <ng-container matColumnDef="username">
-        <mat-header-cell fxFlex="17" *matHeaderCellDef mat-sort-header><app-translate [key]="'username'"></app-translate></mat-header-cell>
-        <mat-cell fxFlex="17" *matCellDef="let row">{{ row.username | titlecase }}</mat-cell>
+      <mat-header-cell fxFlex="17" *matHeaderCellDef mat-sort-header>
+        <app-translate [key]="'username'"></app-translate>
+      </mat-header-cell>
+      <mat-cell fxFlex="17" *matCellDef="let row">{{ row.username | titlecase }}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="fullname">
-      <mat-header-cell fxFlex="20" *matHeaderCellDef mat-sort-header><app-translate [key]="'fullname'"></app-translate></mat-header-cell>
+      <mat-header-cell fxFlex="20" *matHeaderCellDef mat-sort-header>
+        <app-translate [key]="'fullname'"></app-translate>
+      </mat-header-cell>
       <mat-cell fxFlex="20" *matCellDef="let row">{{ row.fullname | titlecase }}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="mail">
-      <mat-header-cell *matHeaderCellDef><app-translate [key]="'email'"></app-translate></mat-header-cell>
+      <mat-header-cell *matHeaderCellDef>
+        <app-translate [key]="'email'"></app-translate>
+      </mat-header-cell>
       <mat-cell *matCellDef="let row">{{ row.email }}</mat-cell>
     </ng-container>
 
     <!-- Username Column -->
     <ng-container matColumnDef="roles">
-        <mat-header-cell *matHeaderCellDef mat-sort-header><app-translate [key]="'roles'"></app-translate></mat-header-cell>
-        <mat-cell *matCellDef="let row"> {{ getRolesName(row.roles) }} </mat-cell>
+      <mat-header-cell *matHeaderCellDef mat-sort-header>
+        <app-translate [key]="'roles'"></app-translate>
+      </mat-header-cell>
+      <mat-cell *matCellDef="let row"> {{ getRolesName(row.roles) }}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="edit">
-      <mat-header-cell fxFlex="5" *matHeaderCellDef> <app-translate [key]="'edit'"></app-translate> </mat-header-cell>
-      <mat-cell fxFlex="5" *matCellDef="let row">
+      <mat-header-cell fxFlex="8" *matHeaderCellDef>
+        <app-translate [key]="'edit'"></app-translate>
+      </mat-header-cell>
+      <mat-cell fxFlex="8" *matCellDef="let row">
         <a [routerLink]="[row.id, 'edit']">
           <button mat-icon-button color="accent">
             <mat-icon>edit</mat-icon>
@@ -45,8 +55,10 @@
     </ng-container>
 
     <ng-container matColumnDef="delete">
-      <mat-header-cell fxFlex="5" *matHeaderCellDef> <app-translate [key]="'delete'"></app-translate> </mat-header-cell>
-      <mat-cell fxFlex="5" *matCellDef="let row">
+      <mat-header-cell fxFlex="8" *matHeaderCellDef>
+        <app-translate [key]="'delete'"></app-translate>
+      </mat-header-cell>
+      <mat-cell fxFlex="8" *matCellDef="let row">
         <a (click)="openDialogDeleteUser(row)">
           <button mat-icon-button color="warn">
             <mat-icon>delete</mat-icon>
