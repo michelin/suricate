@@ -67,10 +67,10 @@ export class AppComponent implements OnInit, OnDestroy {
               private themeService: ThemeService,
               private _userService: UserService, private translate: TranslateService) {
       // this language will be used as a fallback when a translation isn't found in the current language
-      translate.setDefaultLang('fr');
+      translate.setDefaultLang('en');
 
       // the lang to use, if the lang isn't available, it will use the current loader to get them
-      translate.use('fr');
+      translate.use('en');
   }
 
   /**
