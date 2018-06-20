@@ -1,4 +1,4 @@
-<app-pages-header [secondTitle]="'User Settings'"></app-pages-header>
+<app-pages-header [secondTitle]="'user.settings'"></app-pages-header>
 
 <form #formSettings="ngForm" (ngSubmit)="saveUserSettings(formSettings)" novalidate>
   <mat-card fxLayout="row wrap" fxLayoutAlign="center center" class="mat-elevation-z8">
@@ -25,7 +25,7 @@
     </mat-card-content>
 
     <mat-card-actions fxFlex="80">
-      <button fxFill mat-raised-button type="submit" color="accent">Save</button>
+      <button fxFill mat-raised-button type="submit" color="accent"><app-translate [key]="'save'"></app-translate></button>
     </mat-card-actions>
   </mat-card>
 </form>

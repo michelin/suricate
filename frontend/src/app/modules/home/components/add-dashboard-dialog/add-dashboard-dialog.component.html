@@ -1,4 +1,4 @@
-<h1 matDialogTitle class="little title"> {{ projectAdded ? 'Edit Dashboard' : 'Add Dashboard' }}</h1>
+<h1 matDialogTitle class="little title"> {{ projectAdded ? ('dashboard.edit' | translate) : ('dashboard.add' | translate) }}</h1>
 
 <mat-dialog-content *ngIf="!isEditMode || (isEditMode && projectAdded)">
   <mat-horizontal-stepper #addDashboardStepper [linear]="true">
