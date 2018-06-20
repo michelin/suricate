@@ -19,6 +19,7 @@ package io.suricate.monitoring.model.mapper.widget;
 import io.suricate.monitoring.model.dto.widget.CategoryDto;
 import io.suricate.monitoring.model.entity.widget.Category;
 import io.suricate.monitoring.model.mapper.AssetMapper;
+import io.suricate.monitoring.model.mapper.ConfigurationMapper;
 import org.mapstruct.*;
 import org.springframework.stereotype.Component;
 
@@ -32,7 +33,8 @@ import java.util.List;
     componentModel = "spring",
     uses = {
         AssetMapper.class,
-        WidgetMapper.class
+        WidgetMapper.class,
+        ConfigurationMapper.class
     }
 )
 public abstract class CategoryMapper {
@@ -49,7 +51,8 @@ public abstract class CategoryMapper {
      */
     @Named("toCategoryDtoDefault")
     @Mappings({
-        @Mapping(target = "widgets", qualifiedByName = "toWidgetDtosWithoutCategory")
+        @Mapping(target = "widgets", qualifiedByName = "toWidgetDtosWithoutCategory"),
+        @Mapping(target = "configurations", qualifiedByName = "toConfigurationDtosWithoutCategory")
     })
     public abstract CategoryDto toCategoryDtoDefault(Category category);
 
@@ -61,9 +64,23 @@ public abstract class CategoryMapper {
      */
     @Named("toCategoryDtoWithoutWidgets")
     @Mappings({
-        @Mapping(target = "widgets", ignore = true)
+        @Mapping(target = "widgets", ignore = true),
+        @Mapping(target = "configurations", qualifiedByName = "toConfigurationDtosWithoutCategory")
     })
     public abstract CategoryDto toCategoryDtoWithoutWidgets(Category category);
+
+    /**
+     * Tranform a Category into a CategoryDto without configurations and without widgets
+     *
+     * @param category The category to transform
+     * @return The related category DTO
+     */
+    @Named("toCategoryDtoWithoutConfigurationsAndWithoutWidgets")
+    @Mappings({
+        @Mapping(target = "widgets", ignore = true),
+        @Mapping(target = "configurations", ignore = true)
+    })
+    public abstract CategoryDto toCategoryDtoWithoutConfigurationsAndWithoutWidgets(Category category);
 
     /* ******************************************************* */
     /*                    List Mapping                         */

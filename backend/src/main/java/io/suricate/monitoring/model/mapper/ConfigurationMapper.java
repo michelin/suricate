@@ -19,9 +19,8 @@ package io.suricate.monitoring.model.mapper;
 
 import io.suricate.monitoring.model.dto.ConfigurationDto;
 import io.suricate.monitoring.model.entity.Configuration;
-import org.mapstruct.IterableMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.Named;
+import io.suricate.monitoring.model.mapper.widget.CategoryMapper;
+import org.mapstruct.*;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -31,7 +30,10 @@ import java.util.List;
  */
 @Component
 @Mapper(
-    componentModel = "spring"
+    componentModel = "spring",
+    uses = {
+        CategoryMapper.class
+    }
 )
 public abstract class ConfigurationMapper {
 
@@ -46,7 +48,22 @@ public abstract class ConfigurationMapper {
      * @return The related configuration DTO
      */
     @Named("toConfigurationDtoDefault")
+    @Mappings({
+        @Mapping(target = "category", qualifiedByName = "toCategoryDtoWithoutConfigurationsAndWithoutWidgets")
+    })
     public abstract ConfigurationDto toConfigurationDtoDefault(Configuration configuration);
+
+    /**
+     * Get the configuration without category
+     *
+     * @param configuration The configuration
+     * @return The related DTO
+     */
+    @Named("toConfigurationDtoWithoutCategory")
+    @Mappings({
+        @Mapping(target = "category", ignore = true)
+    })
+    public abstract ConfigurationDto toConfigurationDtoWithoutCategory(Configuration configuration);
 
     /* ******************************************************* */
     /*                    List Mapping                         */
@@ -61,4 +78,14 @@ public abstract class ConfigurationMapper {
     @Named("toConfigurationDtosDefault")
     @IterableMapping(qualifiedByName = "toConfigurationDtoDefault")
     public abstract List<ConfigurationDto> toConfigurationDtosDefault(List<Configuration> configurations);
+
+    /**
+     * Tranform a list of configurations into a list of configurationDto without category
+     *
+     * @param configurations The configurations to transform
+     * @return The related list of configurations DTO
+     */
+    @Named("toConfigurationDtosWithoutCategory")
+    @IterableMapping(qualifiedByName = "toConfigurationDtoWithoutCategory")
+    public abstract List<ConfigurationDto> toConfigurationDtosWithoutCategory(List<Configuration> configurations);
 }

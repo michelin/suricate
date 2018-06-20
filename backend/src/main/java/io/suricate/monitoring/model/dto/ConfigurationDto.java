@@ -16,25 +16,42 @@
 
 package io.suricate.monitoring.model.dto;
 
+import io.suricate.monitoring.model.dto.widget.CategoryDto;
+import io.suricate.monitoring.model.enums.ConfigurationDataType;
 import lombok.*;
 
 /**
  * Configuration used for communication with the clients via webservices
  */
-@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
-public class ConfigurationDto extends AbstractDto  {
+@Getter
+@Setter
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+@ToString
+public class ConfigurationDto extends AbstractDto {
 
     /**
      * The configuration key
      */
     private String key;
+
     /**
      * The configuration value
      */
     private String value;
+
     /**
      * Export
      */
     private boolean export;
 
+    /**
+     * The data type of the configuration
+     */
+    private ConfigurationDataType dataType;
+
+    /**
+     * Make a link between category and configurations
+     */
+    private CategoryDto category;
 }
