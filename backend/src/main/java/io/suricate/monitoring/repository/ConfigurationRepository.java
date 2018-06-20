@@ -30,6 +30,7 @@ public interface ConfigurationRepository extends JpaRepository<Configuration, St
 
     /**
      * Method used to get all config linked to widget scripts
+     *
      * @return the list of configuration
      */
     @Cacheable("configuration")

@@ -16,30 +16,34 @@
 
 package io.suricate.monitoring.model.entity;
 
+import io.suricate.monitoring.model.entity.widget.Category;
+import io.suricate.monitoring.model.enums.ConfigurationDataType;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * The configuration entity
  */
 @Entity
-@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
+@Getter
+@Setter
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+@ToString
 public class Configuration extends AbstractAuditingEntity<String> {
 
     /**
      * The key of the configuration (used in JS Files)
      */
     @Id
-    @Column(name = "config_key",nullable = false, unique = true)
+    @Column(name = "config_key", nullable = false, unique = true)
     private String key;
 
     /**
      * The related value enter by the user
      */
-    @Column(name = "config_value", nullable = false)
+    @Column(name = "config_value")
     private String value;
 
     /**
@@ -47,6 +51,20 @@ public class Configuration extends AbstractAuditingEntity<String> {
      */
     @Column(name = "config_export")
     private boolean export;
+
+    /**
+     * The data type of the configuration
+     */
+    @Column(name = "data_type")
+    @Enumerated(value = EnumType.STRING)
+    private ConfigurationDataType dataType;
+
+    /**
+     * Make a link between category and configurations
+     */
+    @ManyToOne
+    @JoinColumn(name = "category_id", referencedColumnName = "id")
+    private Category category;
 
     @Override
     public String getId() {

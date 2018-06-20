@@ -21,7 +21,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheException;
 import com.github.mustachejava.MustacheFactory;
-import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
 import io.suricate.monitoring.model.dto.project.ProjectWidgetPositionDto;
 import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
 import io.suricate.monitoring.model.entity.project.Project;
@@ -32,7 +31,6 @@ import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.model.mapper.project.ProjectMapper;
 import io.suricate.monitoring.model.mapper.project.ProjectWidgetMapper;
 import io.suricate.monitoring.repository.ProjectWidgetRepository;
-import io.suricate.monitoring.service.nashorn.NashornService;
 import io.suricate.monitoring.service.scheduler.DashboardScheduleService;
 import io.suricate.monitoring.service.scheduler.NashornWidgetScheduler;
 import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
@@ -99,12 +97,12 @@ public class ProjectWidgetService {
     /**
      * Constructor
      *
-     * @param projectWidgetRepository The project widget repository
+     * @param projectWidgetRepository   The project widget repository
      * @param dashboardWebSocketService The dashboard websocket service
-     * @param dashboardScheduleService The dashboard scheduler
-     * @param mustacheFactory The mustache factory (HTML template)
-     * @param projectMapper The project mapper
-     * @param ctx The application context
+     * @param dashboardScheduleService  The dashboard scheduler
+     * @param mustacheFactory           The mustache factory (HTML template)
+     * @param projectMapper             The project mapper
+     * @param ctx                       The application context
      */
     @Autowired
     public ProjectWidgetService(final ProjectWidgetRepository projectWidgetRepository,
@@ -143,7 +141,7 @@ public class ProjectWidgetService {
     /**
      * Find a project widget by the project id and the project widget id
      *
-     * @param projectId The project id
+     * @param projectId       The project id
      * @param projectWidgetId The project widget id
      * @return The project widget as Optional
      */
@@ -176,10 +174,10 @@ public class ProjectWidgetService {
      * Update the position of a widget
      *
      * @param projectWidgetId The projectWidget id
-     * @param startCol The new start col
-     * @param startRow The new start row
-     * @param height The new Height
-     * @param width The new width
+     * @param startCol        The new start col
+     * @param startRow        The new start row
+     * @param height          The new Height
+     * @param width           The new width
      */
     public void updateWidgetPositionByProjectWidgetId(final Long projectWidgetId, final int startCol, final int startRow, final int height, final int width) {
         projectWidgetRepository.updateRowAndColAndWidthAndHeightById(startRow, startCol, width, height, projectWidgetId);
@@ -188,12 +186,12 @@ public class ProjectWidgetService {
     /**
      * Method used to update all widgets positions for a current project
      *
-     * @param project the project to update
+     * @param project   the project to update
      * @param positions lit of position
      */
     @Transactional
-    public void updateWidgetPositionByProject(Project project, final List<ProjectWidgetPositionDto> positions){
-        for (ProjectWidgetPositionDto projectWidgetPositionDto : positions){
+    public void updateWidgetPositionByProject(Project project, final List<ProjectWidgetPositionDto> positions) {
+        for (ProjectWidgetPositionDto projectWidgetPositionDto : positions) {
             updateWidgetPositionByProjectWidgetId(
                 projectWidgetPositionDto.getProjectWidgetId(),
                 projectWidgetPositionDto.getCol(),
@@ -212,11 +210,11 @@ public class ProjectWidgetService {
     /**
      * Method used to remove widget from the dashboard
      *
-     * @param project the project
+     * @param project         the project
      * @param projectWidgetId the projectwidget id
      */
     @Transactional
-    public void removeWidgetFromDashboard(Project project, Long projectWidgetId){
+    public void removeWidgetFromDashboard(Project project, Long projectWidgetId) {
         ctx.getBean(NashornWidgetScheduler.class).cancelWidgetInstance(projectWidgetId);
         projectWidgetRepository.deleteByProjectIdAndId(project.getId(), projectWidgetId);
         projectWidgetRepository.flush();
@@ -239,10 +237,10 @@ public class ProjectWidgetService {
      * Method used to update application state
      *
      * @param widgetState widget state
-     * @param id project widget id
+     * @param id          project widget id
      */
     @Transactional
-    public void updateState(WidgetState widgetState, Long id){
+    public void updateState(WidgetState widgetState, Long id) {
         updateState(widgetState, id, null);
     }
 
@@ -250,15 +248,15 @@ public class ProjectWidgetService {
      * Method used to update application state
      *
      * @param widgetState widget state
-     * @param id project widget id
-     * @param date The last execution date
+     * @param id          project widget id
+     * @param date        The last execution date
      */
     @Transactional
-    public void updateState(WidgetState widgetState, Long id, Date date){
+    public void updateState(WidgetState widgetState, Long id, Date date) {
         ProjectWidget projectWidget = getOne(id);
         projectWidget.setState(widgetState);
 
-        if(date != null ) {
+        if (date != null) {
             projectWidget.setLastExecutionDate(date);
         }
 
@@ -293,7 +291,7 @@ public class ProjectWidgetService {
             try {
                 Mustache mustache = mustacheFactory.compile(new StringReader(instantiateHtml), widget.getTechnicalName());
                 mustache.execute(stringWriter, map);
-            } catch (MustacheException me){
+            } catch (MustacheException me) {
                 LOGGER.error("Error with mustache template for widget {}", widget.getTechnicalName(), me);
             }
             stringWriter.flush();
@@ -307,11 +305,11 @@ public class ProjectWidgetService {
      * Method used to update the configuration and custom css for project widget
      *
      * @param projectWidget The project widget id
-     * @param customStyle The new css style
+     * @param customStyle   The new css style
      * @param backendConfig The new config
      */
     @Transactional
-    public void updateProjectWidget(ProjectWidget projectWidget, final String customStyle, final String backendConfig){
+    public void updateProjectWidget(ProjectWidget projectWidget, final String customStyle, final String backendConfig) {
         ctx.getBean(NashornWidgetScheduler.class).cancelWidgetInstance(projectWidget.getId());
 
         projectWidget.setCustomStyle(customStyle);
@@ -329,10 +327,10 @@ public class ProjectWidgetService {
     /**
      * Update nashorn execution log
      *
-     * @param executionDate The execution date
-     * @param log The message to log
+     * @param executionDate   The execution date
+     * @param log             The message to log
      * @param projectWidgetId The project widget id to update
-     * @param widgetState The widget sate
+     * @param widgetState     The widget sate
      */
     public void updateLogExecution(final Date executionDate, final String log, final Long projectWidgetId, final WidgetState widgetState) {
         projectWidgetRepository.updateExecutionLog(executionDate, log, projectWidgetId, widgetState);
@@ -342,12 +340,12 @@ public class ProjectWidgetService {
      * Update project widget when nashorn execution is a success
      *
      * @param projectWidgetId The projectWidget id
-     * @param executionDate The execution date
-     * @param executionLog The execution log
-     * @param data The data return by the execution
-     * @param widgetState The state of the widget
+     * @param executionDate   The execution date
+     * @param executionLog    The execution log
+     * @param data            The data return by the execution
+     * @param widgetState     The state of the widget
      */
     public void updateSuccessExecution(final Long projectWidgetId, final Date executionDate, final String executionLog, final String data, final WidgetState widgetState) {
-        projectWidgetRepository.updateSuccessExecution(executionDate,executionLog, data, projectWidgetId, widgetState);
+        projectWidgetRepository.updateSuccessExecution(executionDate, executionLog, data, projectWidgetId, widgetState);
     }
 }

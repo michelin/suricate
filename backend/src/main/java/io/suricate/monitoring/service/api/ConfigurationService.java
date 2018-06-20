@@ -17,12 +17,14 @@
 package io.suricate.monitoring.service.api;
 
 import io.suricate.monitoring.model.entity.Configuration;
+import io.suricate.monitoring.model.entity.widget.Category;
 import io.suricate.monitoring.repository.ConfigurationRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -60,7 +62,7 @@ public class ConfigurationService {
     public Optional<List<Configuration>> getAll() {
         List<Configuration> configurations = this.configurationRepository.findAll();
 
-        if(configurations == null || configurations.isEmpty()) {
+        if (configurations == null || configurations.isEmpty()) {
             return Optional.empty();
         }
 
@@ -74,5 +76,39 @@ public class ConfigurationService {
      */
     public List<Configuration> getConfigurationForWidgets() {
         return this.configurationRepository.findConfigurationForWidgets();
+    }
+
+    /**
+     * Add or update a single configuration
+     *
+     * @param configuration The configuration
+     * @param category      The related category
+     */
+    @Transactional
+    public void addOrUpdateConfiguration(Configuration configuration, Category category) {
+        if (configuration == null) {
+            return;
+        }
+
+        Configuration currentConfiguration = configurationRepository.findOne(configuration.getKey());
+        configuration.setCategory(category);
+
+        if (currentConfiguration != null) {
+            configuration.setValue(currentConfiguration.getValue());
+            configuration.setExport(currentConfiguration.isExport());
+        }
+
+        configurationRepository.save(configuration);
+    }
+
+    /**
+     * Add or update a list of configurations
+     *
+     * @param configurations The configurations
+     * @param category       The category
+     */
+    @Transactional
+    public void addOrUpdateConfigurations(List<Configuration> configurations, Category category) {
+        configurations.forEach(configuration -> this.addOrUpdateConfiguration(configuration, category));
     }
 }
