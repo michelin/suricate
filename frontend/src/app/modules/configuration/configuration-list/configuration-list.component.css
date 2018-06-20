@@ -23,3 +23,7 @@
     max-width: 360px;
     text-align: center;
 }
+
+.mat-cell, .mat-header-cell {
+    padding: 0 10px;
+}

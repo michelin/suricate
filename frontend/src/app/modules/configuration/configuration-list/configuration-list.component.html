@@ -9,29 +9,34 @@
     </div>
   </div>
 
-  <mat-table #table [dataSource]="matTableDataSource" class="table-show"
-             matSort matSortActive="created" matSortDisableClear matSortDirection="asc">
-
+  <mat-table #table [dataSource]="matTableDataSource" class="table-show" matSort>
     <!-- Username Column -->
     <ng-container matColumnDef="key">
-      <mat-header-cell *matHeaderCellDef mat-sort-header disableClear="true"><app-translate [key]="'key'"></app-translate></mat-header-cell>
-      <mat-cell *matCellDef="let row">{{ row.key }}</mat-cell>
+      <mat-header-cell fxFlex="32%" *matHeaderCellDef mat-sort-header disableClear="true">
+        <app-translate [key]="'key'"></app-translate>
+      </mat-header-cell>
+      <mat-cell fxFlex="32%" *matCellDef="let row">{{ row.key }}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="value">
-      <mat-header-cell *matHeaderCellDef mat-sort-header disableClear="true"><app-translate [key]="'value'"></app-translate></mat-header-cell>
-      <mat-cell *matCellDef="let row">{{ row.value }}</mat-cell>
+      <mat-header-cell fxFlex="28%" *matHeaderCellDef mat-sort-header disableClear="true">
+        <app-translate [key]="'value'"></app-translate>
+      </mat-header-cell>
+      <mat-cell fxFlex="28%" *matCellDef="let row">{{ row.value }}</mat-cell>
     </ng-container>
 
-    <ng-container matColumnDef="edit">
-      <mat-header-cell *matHeaderCellDef> <app-translate [key]="'edit'"></app-translate> </mat-header-cell>
-      <mat-cell *matCellDef="let row">
-        <a [routerLink]="[row.id]">
-          <button mat-icon-button color="accent">
-            <mat-icon>edit</mat-icon>
-          </button>
-        </a>
-      </mat-cell>
+    <ng-container matColumnDef="type">
+      <mat-header-cell fxFlex="15%" *matHeaderCellDef mat-sort-header disableClear="true">
+        <app-translate [key]="'type'"></app-translate>
+      </mat-header-cell>
+      <mat-cell fxFlex="15%" *matCellDef="let row">{{ row.dataType }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="category">
+      <mat-header-cell *matHeaderCellDef mat-sort-header disableClear="true">
+        <app-translate [key]="'widget.category'"></app-translate>
+      </mat-header-cell>
+      <mat-cell *matCellDef="let row">{{ row.category?.name }}</mat-cell>
     </ng-container>
 
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

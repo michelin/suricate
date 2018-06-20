@@ -37,13 +37,14 @@ export class ConfigurationListComponent implements OnInit {
   @ViewChild(MatPaginator) matPaginator: MatPaginator;
   matTableDataSource = new MatTableDataSource();
 
-  displayedColumns = ['key', 'value'];
+  displayedColumns = ['key', 'value', 'type', 'category'];
   isLoadingResults = false;
   errorCatched = false;
   resultsLength = 0;
 
   constructor(private configurationsService: ConfigurationService,
-              private changeDetectorRef: ChangeDetectorRef) { }
+              private changeDetectorRef: ChangeDetectorRef) {
+  }
 
   ngOnInit() {
     this.initTable();
@@ -71,10 +72,22 @@ export class ConfigurationListComponent implements OnInit {
               return observableOf([]);
             })
         )
-        .subscribe(data =>  {
+        .subscribe(data => {
           this.resultsLength = data.length;
           this.matTableDataSource.data = data;
+          this.matTableDataSource.sort = this.matSort;
         });
+
+    this.matTableDataSource.sortingDataAccessor = (item: any, property) => {
+      switch (property) {
+        case 'category':
+          return item.category ? item.category.name : '';
+        case 'type':
+          return item.dataType ? item.dataType : '';
+        default:
+          return item[property];
+      }
+    };
   }
 
 }

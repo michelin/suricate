@@ -13,19 +13,25 @@
 
     <!-- Name Column -->
     <ng-container matColumnDef="name">
-      <mat-header-cell fxFlex="20" *matHeaderCellDef mat-sort-header> <app-translate [key]="'name'"></app-translate> </mat-header-cell>
+      <mat-header-cell fxFlex="20" *matHeaderCellDef mat-sort-header>
+        <app-translate [key]="'name'"></app-translate>
+      </mat-header-cell>
       <mat-cell fxFlex="20" *matCellDef="let row">{{ row.name | titlecase }}</mat-cell>
     </ng-container>
 
     <!-- Token Column -->
     <ng-container matColumnDef="token">
-      <mat-header-cell fxFlex="70" *matHeaderCellDef mat-sort-header> <app-translate [key]="'token'"></app-translate> </mat-header-cell>
+      <mat-header-cell fxFlex="70" *matHeaderCellDef mat-sort-header>
+        <app-translate [key]="'token'"></app-translate>
+      </mat-header-cell>
       <mat-cell fxFlex="70" *matCellDef="let row">{{ row.token | titlecase }}</mat-cell>
     </ng-container>
 
     <!-- Edit column -->
     <ng-container matColumnDef="edit">
-      <mat-header-cell fxFlex="8" *matHeaderCellDef> <app-translate [key]="'edit'"></app-translate> </mat-header-cell>
+      <mat-header-cell fxFlex="8" *matHeaderCellDef>
+        <app-translate [key]="'edit'"></app-translate>
+      </mat-header-cell>
       <mat-cell fxFlex="8" *matCellDef="let row">
         <a [routerLink]="[row.id, 'edit']">
           <button mat-icon-button color="accent">
@@ -37,7 +43,9 @@
 
     <!-- Delete column -->
     <ng-container matColumnDef="delete">
-      <mat-header-cell fxFlex="8" *matHeaderCellDef> <app-translate [key]="'delete'"></app-translate> </mat-header-cell>
+      <mat-header-cell fxFlex="8" *matHeaderCellDef>
+        <app-translate [key]="'delete'"></app-translate>
+      </mat-header-cell>
       <mat-cell fxFlex="8" *matCellDef="let row">
         <a (click)="openDialogDeleteDashboard(row)">
           <button mat-icon-button color="warn">
