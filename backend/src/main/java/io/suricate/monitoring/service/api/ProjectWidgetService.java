@@ -279,7 +279,11 @@ public class ProjectWidgetService {
         String instantiateHtml = widget.getHtmlContent();
         if (StringUtils.isNotEmpty(projectWidget.getData())) {
             try {
-                map = objectMapper.readValue(projectWidget.getData(), new TypeReference<Map<String, Object>>() {});
+                map = objectMapper.readValue(
+                    projectWidget.getData(),
+                    new TypeReference<Map<String, Object>>() {
+                    }
+                );
                 // Add backend config
                 map.putAll(PropertiesUtils.getMap(projectWidget.getBackendConfig()));
                 map.put(JavascriptUtils.INSTANCE_ID_VARIABLE, projectWidget.getId());
