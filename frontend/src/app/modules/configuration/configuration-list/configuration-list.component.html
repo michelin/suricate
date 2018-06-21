@@ -12,17 +12,17 @@
   <mat-table #table [dataSource]="matTableDataSource" class="table-show" matSort>
     <!-- Username Column -->
     <ng-container matColumnDef="key">
-      <mat-header-cell fxFlex="32%" *matHeaderCellDef mat-sort-header disableClear="true">
+      <mat-header-cell fxFlex="37%" *matHeaderCellDef mat-sort-header disableClear="true">
         <app-translate [key]="'key'"></app-translate>
       </mat-header-cell>
-      <mat-cell fxFlex="32%" *matCellDef="let row">{{ row.key }}</mat-cell>
+      <mat-cell fxFlex="37%" *matCellDef="let row">{{ row.key }}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="value">
-      <mat-header-cell fxFlex="28%" *matHeaderCellDef mat-sort-header disableClear="true">
+      <mat-header-cell fxFlex="32%" *matHeaderCellDef mat-sort-header disableClear="true">
         <app-translate [key]="'value'"></app-translate>
       </mat-header-cell>
-      <mat-cell fxFlex="28%" *matCellDef="let row">{{ row.value }}</mat-cell>
+      <mat-cell fxFlex="32%" *matCellDef="let row">{{ row.value }}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="type">
@@ -33,10 +33,23 @@
     </ng-container>
 
     <ng-container matColumnDef="category">
-      <mat-header-cell *matHeaderCellDef mat-sort-header disableClear="true">
+      <mat-header-cell fxFlex="12%" *matHeaderCellDef mat-sort-header disableClear="true">
         <app-translate [key]="'widget.category'"></app-translate>
       </mat-header-cell>
-      <mat-cell *matCellDef="let row">{{ row.category?.name }}</mat-cell>
+      <mat-cell fxFlex="12%" *matCellDef="let row">{{ row.category?.name }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="edit">
+      <mat-header-cell fxFlex="8%" *matHeaderCellDef>
+        <app-translate [key]="'edit'"></app-translate>
+      </mat-header-cell>
+      <mat-cell fxFlex="8%" *matCellDef="let row">
+        <a [routerLink]="[row.key, 'edit']">
+          <button mat-icon-button color="accent">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </a>
+      </mat-cell>
     </ng-container>
 
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

@@ -37,7 +37,7 @@ export class ConfigurationListComponent implements OnInit {
   @ViewChild(MatPaginator) matPaginator: MatPaginator;
   matTableDataSource = new MatTableDataSource();
 
-  displayedColumns = ['key', 'value', 'type', 'category'];
+  displayedColumns = ['key', 'value', 'type', 'category', 'edit'];
   isLoadingResults = false;
   errorCatched = false;
   resultsLength = 0;
