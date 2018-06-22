@@ -16,7 +16,7 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {AbstractHttpService} from '../../shared/services/abstract-http.service';
 import {HttpClient} from '@angular/common/http';
 import {Configuration} from '../../shared/model/dto/Configuration';
@@ -41,7 +41,22 @@ export class ConfigurationService extends AbstractHttpService {
     super();
   }
 
+  /**
+   * Get the full list of configuration
+   *
+   * @returns {Observable<Configuration[]>} The configuration as observable
+   */
   getAll(): Observable<Configuration[]> {
     return this.httpClient.get<Configuration[]>(`${ConfigurationService.CONFIGURATIONS_BASE_URL}`);
+  }
+
+  /**
+   * Get a single configuration by key
+   *
+   * @param {string} key The key to find
+   * @returns {Observable<Configuration>} The configuration as observable
+   */
+  getOneByKey(key: string): Observable<Configuration> {
+    return this.httpClient.get<Configuration>(`${ConfigurationService.CONFIGURATIONS_BASE_URL}/${key}`);
   }
 }

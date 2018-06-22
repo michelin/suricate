@@ -28,7 +28,7 @@ import {ConfigurationEditComponent} from './configuration-edit/configuration-edi
 
 const configurationRoute: Routes = [
   {path: 'configurations', component: ConfigurationListComponent, canActivate: [AuthGuard, AdminGuard]},
-  {path: 'configurations/:key/edit', component: ConfigurationEditComponent, canActivate: [AuthGuard, AdminGuard]}
+  {path: 'configurations/:configurationKey/edit', component: ConfigurationEditComponent, canActivate: [AuthGuard, AdminGuard]}
 ];
 
 @NgModule({

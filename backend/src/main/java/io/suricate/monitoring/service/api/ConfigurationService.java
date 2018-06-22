@@ -70,6 +70,22 @@ public class ConfigurationService {
     }
 
     /**
+     * Get a configuration by key
+     *
+     * @param key The key to find
+     * @return The configuration as optional
+     */
+    public Optional<Configuration> getOneByKey(final String key) {
+        Configuration configuration = configurationRepository.findOne(key);
+
+        if (configuration == null) {
+            return Optional.empty();
+        }
+
+        return Optional.of(configuration);
+    }
+
+    /**
      * Get the configurations for widgets
      *
      * @return The list of config for the widgets

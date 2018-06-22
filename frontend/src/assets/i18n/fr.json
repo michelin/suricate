@@ -29,6 +29,7 @@
   "dashboard.add": "Ajouter un TdB",
   "dashboard.edit": "Editer le TdB",
   "dashboard.delete": "Supprimer TdB",
+  "field.readonly": "Ce champ est en lecture seule",
   "field.required": "Champ obligatoire",
   "field.required.int.length": "Nombre supérieur à 0 requis",
   "grid.configuration": "Configuration de la grille",
@@ -79,5 +80,6 @@
   "already.registered": "Déjà enregistré ?",
   "not.registered": "Pas de compte ?",
   "sign.in": "S'authentifier",
-  "sign.up": "Enregistrez vous"
+  "sign.up": "Enregistrez vous",
+  "configuration.category": "Catégorie"
 }
