@@ -27,10 +27,7 @@ import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -116,5 +113,35 @@ public class ConfigurationController {
             .contentType(MediaType.APPLICATION_JSON)
             .cacheControl(CacheControl.noCache())
             .body(configurationMapper.toConfigurationDtoDefault(configurationOptional.get()));
+    }
+
+    /**
+     * Update the configuration by the key
+     *
+     * @param key              The key of the config
+     * @param configurationDto The new configuration values
+     * @return The config updated
+     */
+    @RequestMapping(value = "/{key}", method = RequestMethod.PUT)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<ConfigurationDto> updateOneByKey(@PathVariable("key") final String key,
+                                                           @RequestBody final ConfigurationDto configurationDto) {
+        Optional<Configuration> configurationOptional = configurationService.getOneByKey(key);
+
+        if (!configurationOptional.isPresent()) {
+            return ResponseEntity
+                .notFound()
+                .cacheControl(CacheControl.noCache())
+                .build();
+        }
+
+        Configuration configuration = configurationOptional.get();
+        configuration = configurationService.updateConfiguration(configuration, configurationDto.getValue());
+
+        return ResponseEntity
+            .ok()
+            .cacheControl(CacheControl.noCache())
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(configurationMapper.toConfigurationDtoDefault(configuration));
     }
 }

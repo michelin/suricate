@@ -86,6 +86,18 @@ public class ConfigurationService {
     }
 
     /**
+     * Update a configuration
+     *
+     * @param configuration The config to update
+     * @param newValue      The new value
+     * @return The config updated
+     */
+    public Configuration updateConfiguration(Configuration configuration, final String newValue) {
+        configuration.setValue(newValue);
+        return configurationRepository.save(configuration);
+    }
+
+    /**
      * Get the configurations for widgets
      *
      * @return The list of config for the widgets

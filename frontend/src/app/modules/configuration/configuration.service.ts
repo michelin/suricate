@@ -59,4 +59,14 @@ export class ConfigurationService extends AbstractHttpService {
   getOneByKey(key: string): Observable<Configuration> {
     return this.httpClient.get<Configuration>(`${ConfigurationService.CONFIGURATIONS_BASE_URL}/${key}`);
   }
+
+  /**
+   * Update a configuration
+   *
+   * @param {Configuration} configuration The ocnfiguration to update
+   * @returns {Observable<Configuration>} The config updated
+   */
+  updateConfigurationByKey(configuration: Configuration): Observable<Configuration> {
+    return this.httpClient.put<Configuration>(`${ConfigurationService.CONFIGURATIONS_BASE_URL}/${configuration.key}`, configuration);
+  }
 }

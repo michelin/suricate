@@ -3,6 +3,8 @@ import {ConfigurationService} from '../configuration.service';
 import {ActivatedRoute} from '@angular/router';
 import {Configuration} from '../../../shared/model/dto/Configuration';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {ToastService} from '../../../shared/components/toast/toast.service';
+import {ToastType} from '../../../shared/model/toastNotification/ToastType';
 
 /**
  * Manage the edition of a configuration
@@ -29,10 +31,12 @@ export class ConfigurationEditComponent implements OnInit {
    *
    * @param {ActivatedRoute} _activatedRoute The activated route service
    * @param {FormBuilder} _formBuilder The form builder
+   * @param {ToastService} _toastService The toast service
    * @param {ConfigurationService} _configurationService The configuration service
    */
   constructor(private _activatedRoute: ActivatedRoute,
               private _formBuilder: FormBuilder,
+              private _toastService: ToastService,
               private _configurationService: ConfigurationService) {
   }
 
@@ -60,7 +64,16 @@ export class ConfigurationEditComponent implements OnInit {
    * Save the configuration
    */
   saveConfiguration() {
+    if (this.configurationForm.valid) {
+      const configuration = this.configuration;
+      configuration.value = this.configurationForm.get('value').value;
 
+      this._configurationService
+          .updateConfigurationByKey(this.configuration)
+          .subscribe(() => {
+            this._toastService.sendMessage('Configuration updated successfully', ToastType.SUCCESS);
+          });
+    }
   }
 
   /**
