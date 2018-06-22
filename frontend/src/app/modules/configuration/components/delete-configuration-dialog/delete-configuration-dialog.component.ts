@@ -25,7 +25,6 @@ import {Configuration} from 'jasmine-spec-reporter/built/configuration';
   templateUrl: './delete-configuration-dialog.component.html',
   styleUrls: ['./delete-configuration-dialog.component.css']
 })
-
 export class DeleteConfigurationDialogComponent implements OnInit {
 
   /**
