@@ -21,6 +21,7 @@
   "users": "Utilisateurs",
   "configurations": "Configurations",
   "configurations.list": "Liste des configurations",
+  "configuration.delete": "Supprimer une configuration",
   "widgets": "Widgets",
   "dashboards": "Tableaux de bords",
   "dashboard.name": "Libellé",

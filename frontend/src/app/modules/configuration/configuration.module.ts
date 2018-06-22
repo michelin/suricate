@@ -25,6 +25,7 @@ import {SharedModule} from '../../shared/shared.module';
 import {ConfigurationService} from './configuration.service';
 import {AdminGuard} from '../../shared/auth/guards/admin.guard';
 import {ConfigurationEditComponent} from './configuration-edit/configuration-edit.component';
+import {DeleteConfigurationDialogComponent} from './components/delete-configuration-dialog/delete-configuration-dialog.component';
 
 const configurationRoute: Routes = [
   {path: 'configurations', component: ConfigurationListComponent, canActivate: [AuthGuard, AdminGuard]},
@@ -39,10 +40,14 @@ const configurationRoute: Routes = [
   ],
   declarations: [
     ConfigurationListComponent,
-    ConfigurationEditComponent
+    ConfigurationEditComponent,
+    DeleteConfigurationDialogComponent
   ],
   providers: [
     ConfigurationService
+  ],
+  entryComponents: [
+    DeleteConfigurationDialogComponent
   ]
 })
 export class ConfigurationModule {

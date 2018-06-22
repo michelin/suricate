@@ -18,21 +18,21 @@
 
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {ConfigurationEditComponent} from './configuration-edit.component';
+import {DeleteConfigurationDialogComponent} from './delete-configuration-dialog.component';
 
-describe('ConfigurationEditComponent', () => {
-  let component: ConfigurationEditComponent;
-  let fixture: ComponentFixture<ConfigurationEditComponent>;
+describe('DeleteConfigurationDialogComponent', () => {
+  let component: DeleteConfigurationDialogComponent;
+  let fixture: ComponentFixture<DeleteConfigurationDialogComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ConfigurationEditComponent]
+      declarations: [DeleteConfigurationDialogComponent]
     })
         .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ConfigurationEditComponent);
+    fixture = TestBed.createComponent(DeleteConfigurationDialogComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

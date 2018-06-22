@@ -22,6 +22,7 @@
   "users": "Users",
   "configurations": "Configurations",
   "configurations.list": "List of configurations",
+  "configuration.delete": "Delete a configuration",
   "widgets": "Widgets",
   "dashboards": "Dashboards",
   "dashboard.name": "Dashboard name",

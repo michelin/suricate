@@ -69,4 +69,14 @@ export class ConfigurationService extends AbstractHttpService {
   updateConfigurationByKey(configuration: Configuration): Observable<Configuration> {
     return this.httpClient.put<Configuration>(`${ConfigurationService.CONFIGURATIONS_BASE_URL}/${configuration.key}`, configuration);
   }
+
+  /**
+   * Delete the configuration
+   *
+   * @param {Configuration} configuration The configuration to delete
+   * @returns {Observable<Configuration>} The configuration delete as observable
+   */
+  deleteConfiguration(configuration: Configuration): Observable<Configuration> {
+    return this.httpClient.delete<Configuration>(`${ConfigurationService.CONFIGURATIONS_BASE_URL}/${configuration.key}`);
+  }
 }

@@ -144,4 +144,30 @@ public class ConfigurationController {
             .contentType(MediaType.APPLICATION_JSON)
             .body(configurationMapper.toConfigurationDtoDefault(configuration));
     }
+
+    /**
+     * Delete a configuration by key
+     *
+     * @param key The configuration key
+     * @return The config deleted
+     */
+    @RequestMapping(value = "/{key}", method = RequestMethod.DELETE)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<ConfigurationDto> deleteOneByKey(@PathVariable("key") final String key) {
+        Optional<Configuration> configurationOptional = configurationService.getOneByKey(key);
+
+        if (!configurationOptional.isPresent()) {
+            return ResponseEntity
+                .notFound()
+                .cacheControl(CacheControl.noCache())
+                .build();
+        }
+
+        configurationService.deleteOneByKey(key);
+        return ResponseEntity
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .cacheControl(CacheControl.noCache())
+            .body(configurationMapper.toConfigurationDtoDefault(configurationOptional.get()));
+    }
 }

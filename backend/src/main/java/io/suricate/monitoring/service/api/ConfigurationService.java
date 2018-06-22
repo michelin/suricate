@@ -98,6 +98,15 @@ public class ConfigurationService {
     }
 
     /**
+     * Delete a configuration by the key
+     *
+     * @param key The key of the configuration
+     */
+    public void deleteOneByKey(String key) {
+        configurationRepository.delete(key);
+    }
+
+    /**
      * Get the configurations for widgets
      *
      * @return The list of config for the widgets
