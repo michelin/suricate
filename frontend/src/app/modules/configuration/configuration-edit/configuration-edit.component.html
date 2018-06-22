@@ -43,10 +43,10 @@
         </mat-error>
       </mat-form-field>
 
-      <mat-form-field>
+      <mat-form-field *ngIf="configuration.dataType === configurationDataType.INTEGER; else defaultValueInput">
         <mat-icon class="prefix" matPrefix>input</mat-icon>
         <input matInput
-               type="text"
+               type="number"
                id="value"
                placeholder="{{ 'value' | translate }}"
                formControlName="value"
@@ -55,6 +55,21 @@
           <app-translate [key]="'field.required'"></app-translate>
         </mat-error>
       </mat-form-field>
+
+      <ng-template #defaultValueInput>
+        <mat-form-field>
+          <mat-icon class="prefix" matPrefix>input</mat-icon>
+          <input matInput
+                 type="text"
+                 id="value"
+                 placeholder="{{ 'value' | translate }}"
+                 formControlName="value"
+                 [required]="true"/>
+          <mat-error *ngIf=" isFieldInvalid('value')">
+            <app-translate [key]="'field.required'"></app-translate>
+          </mat-error>
+        </mat-form-field>
+      </ng-template>
     </mat-card-content>
 
 

@@ -5,6 +5,7 @@ import {Configuration} from '../../../shared/model/dto/Configuration';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ToastService} from '../../../shared/components/toast/toast.service';
 import {ToastType} from '../../../shared/model/toastNotification/ToastType';
+import {ConfigurationDataType} from '../../../shared/model/dto/enums/ConfigurationDataType';
 
 /**
  * Manage the edition of a configuration
@@ -25,6 +26,13 @@ export class ConfigurationEditComponent implements OnInit {
    * The current configuration
    */
   configuration: Configuration;
+
+  /**
+   * The configuration data type
+   *
+   * @type {ConfigurationDataType}
+   */
+  configurationDataType = ConfigurationDataType;
 
   /**
    * Constructor
