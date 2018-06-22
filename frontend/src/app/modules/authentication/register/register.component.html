@@ -20,7 +20,7 @@
                 fxLayoutAlign="center"
                 class="mat-elevation-z12">
 
-        <mat-card-content fxFlex="88"
+        <mat-card-content fxFlex="84"
                           fxLayout="row wrap"
                           fxLayoutAlign="center center">
           <!-- When form has been submitted -->
@@ -120,12 +120,16 @@
                      id="confirm_password"
                      placeholder="{{ 'password.confirm' | translate }}"
                      formControlName="confirmPassword"
-                     [required]="registerForm.get('confirmPassword').errors && registerForm.get('confirmPassword').errors.required" />
-              <mat-icon matSuffix (click)="hidePassword = !hidePassword"> {{hidePassword ? 'visibility' : 'visibility_off'}} </mat-icon>
-              <mat-error *ngIf="isFieldInvalid('confirmPassword') && registerForm.get('confirmPassword').errors?.required">
+                     [required]="registerForm.get('confirmPassword').errors && registerForm.get('confirmPassword').errors.required"/>
+              <mat-icon matSuffix (click)="hidePassword = !hidePassword"> {{hidePassword ? 'visibility' :
+                'visibility_off'}}
+              </mat-icon>
+              <mat-error
+                  *ngIf="isFieldInvalid('confirmPassword') && registerForm.get('confirmPassword').errors?.required">
                 <app-translate [key]="'password.required.with.length'"></app-translate>
               </mat-error>
-              <mat-error *ngIf="isFieldInvalid('confirmPassword') && registerForm.get('confirmPassword').errors?.unmatchedPasswords">
+              <mat-error
+                  *ngIf="isFieldInvalid('confirmPassword') && registerForm.get('confirmPassword').errors?.unmatchedPasswords">
                 <app-translate [key]="'password.mismatch'"></app-translate>
               </mat-error>
             </mat-form-field>
@@ -133,19 +137,23 @@
           </div>
         </mat-card-content>
 
-        <mat-card-actions fxFlex="8"
+        <mat-card-actions fxFlex="11"
                           fxLayout="row wrap"
                           fxLayoutAlign="center"
                           fxLayoutGap="15px"
                           *ngIf="!formSubmitAttempt">
-          <button fxFlex="85" mat-raised-button class="mat-elevation-z2" color="accent" type="submit">{{ 'sign.up' | translate | uppercase}}</button>
+          <button fxFlex="85" mat-raised-button class="mat-elevation-z2" color="accent" type="submit">{{ 'sign.up' |
+            translate | uppercase}}
+          </button>
         </mat-card-actions>
       </mat-card>
     </form>
 
-    <div fxFlex="5" class="registered-sentance" fxFlexAlign="start">
+    <div fxFlex="5" class="registered-sentance" fxFlexAlign="start" fxLayout="col wrap" fxLayoutGap="6px">
       <app-translate [key]="'already.registered'"></app-translate>
-      <a [routerLink]="['/login']"><app-translate [key]="'sign.in'"></app-translate></a>
+      <a [routerLink]="['/login']">
+        <app-translate [key]="'sign.in'"></app-translate>
+      </a>
     </div>
   </div>
 </div>

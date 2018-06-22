@@ -18,13 +18,13 @@ package io.suricate.monitoring.service.api;
 
 import io.suricate.monitoring.model.dto.nashorn.WidgetVariableResponse;
 import io.suricate.monitoring.model.dto.widget.WidgetDto;
-import io.suricate.monitoring.model.entity.*;
+import io.suricate.monitoring.model.entity.Library;
 import io.suricate.monitoring.model.entity.widget.Category;
 import io.suricate.monitoring.model.entity.widget.Widget;
 import io.suricate.monitoring.model.entity.widget.WidgetParam;
 import io.suricate.monitoring.model.entity.widget.WidgetParamValue;
-import io.suricate.monitoring.model.enums.*;
-import io.suricate.monitoring.repository.*;
+import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
+import io.suricate.monitoring.repository.WidgetRepository;
 import io.suricate.monitoring.service.CacheService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -33,7 +33,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -71,9 +74,9 @@ public class WidgetService {
      * Constructor
      *
      * @param widgetRepository The widget repository
-     * @param categoryService The category service
-     * @param cacheService The cache service
-     * @param assetService The asset service
+     * @param categoryService  The category service
+     * @param cacheService     The cache service
+     * @param assetService     The asset service
      */
     @Autowired
     public WidgetService(final WidgetRepository widgetRepository,
@@ -95,7 +98,7 @@ public class WidgetService {
     public Optional<List<Widget>> getAll() {
         List<Widget> widgets = widgetRepository.findAllByOrderByCategory_NameAsc();
 
-        if(widgets == null || widgets.isEmpty()) {
+        if (widgets == null || widgets.isEmpty()) {
             return Optional.empty();
         }
 
@@ -104,6 +107,7 @@ public class WidgetService {
 
     /**
      * Find a widget by id
+     *
      * @param id The widget id
      * @return The related widget
      */
@@ -121,7 +125,7 @@ public class WidgetService {
     public Optional<List<Widget>> getWidgetsByCategory(final Long categoryId) {
         List<Widget> widgets = widgetRepository.findAllByCategory_IdOrderByNameAsc(categoryId);
 
-        if(widgets == null || widgets.isEmpty()) {
+        if (widgets == null || widgets.isEmpty()) {
             return Optional.empty();
         }
 
@@ -137,14 +141,14 @@ public class WidgetService {
     public List<WidgetVariableResponse> getWidgetVariables(final Widget widget) {
         List<WidgetVariableResponse> widgetVariableResponses = new ArrayList<>();
 
-        for(WidgetParam widgetParam: widget.getWidgetParams()) {
+        for (WidgetParam widgetParam : widget.getWidgetParams()) {
             WidgetVariableResponse widgetVariableResponse = new WidgetVariableResponse();
             widgetVariableResponse.setName(widgetParam.getName());
             widgetVariableResponse.setDescription(widgetParam.getDescription());
             widgetVariableResponse.setType(widgetParam.getType());
 
-            if(widgetVariableResponse.getType() != null) {
-                switch(widgetVariableResponse.getType()) {
+            if (widgetVariableResponse.getType() != null) {
+                switch (widgetVariableResponse.getType()) {
                     case COMBO:
                         widgetVariableResponse.setValues(getWidgetParamValuesAsMap(widgetParam.getPossibleValuesMap()));
                         break;
@@ -180,12 +184,12 @@ public class WidgetService {
     /**
      * Update a widget
      *
-     * @param widgetId The widget id to update
+     * @param widgetId             The widget id to update
      * @param widgetDtoWithchanges The object that holds changes
      * @return The widget update
      */
     public Optional<Widget> updateWidget(final Long widgetId, final WidgetDto widgetDtoWithchanges) {
-        if(!widgetRepository.exists(widgetId)) {
+        if (!widgetRepository.exists(widgetId)) {
             return Optional.empty();
         }
 
@@ -199,13 +203,14 @@ public class WidgetService {
     /**
      * Update categories and widgets in database with the new list
      *
-     * @param list The list of categories + widgets
+     * @param list       The list of categories + widgets
      * @param mapLibrary The libraries
      */
     @Transactional
-    public void updateWidgetInDatabase(List<Category> list, Map<String, Library> mapLibrary){
-        for (Category category : list){
+    public void updateWidgetInDatabase(List<Category> list, Map<String, Library> mapLibrary) {
+        for (Category category : list) {
             categoryService.addOrUpdateCategory(category);
+
             // Create/update widgets
             addOrUpdateWidgets(category, category.getWidgets(), mapLibrary);
         }
@@ -215,23 +220,23 @@ public class WidgetService {
     /**
      * Add or update a list of widgets in database
      *
-     * @param category The category
-     * @param widgets The related widgets
+     * @param category   The category
+     * @param widgets    The related widgets
      * @param mapLibrary The libraries
      */
     @Transactional
-    public void addOrUpdateWidgets(Category category, List<Widget> widgets, Map<String, Library> mapLibrary){
+    public void addOrUpdateWidgets(Category category, List<Widget> widgets, Map<String, Library> mapLibrary) {
         if (category == null || widgets == null) {
             return;
         }
-        for (Widget widget : widgets){
+        for (Widget widget : widgets) {
             if (widget.getLibraries() != null && mapLibrary != null) {
                 widget.getLibraries().replaceAll(x -> mapLibrary.get(x.getTechnicalName()));
             }
 
             // Find existing widget
             Widget currentWidget = widgetRepository.findByTechnicalName(widget.getTechnicalName());
-            if (widget.getImage() != null){
+            if (widget.getImage() != null) {
                 if (currentWidget != null && currentWidget.getImage() != null) {
                     widget.getImage().setId(currentWidget.getImage().getId());
                 }
@@ -239,33 +244,33 @@ public class WidgetService {
             }
 
             //Replace The existing list of params and values by the new one
-            if(widget.getWidgetParams() != null && !widget.getWidgetParams().isEmpty() &&
-                    currentWidget != null && currentWidget.getWidgetParams() != null && !currentWidget.getWidgetParams().isEmpty()) {
+            if (widget.getWidgetParams() != null && !widget.getWidgetParams().isEmpty() &&
+                currentWidget != null && currentWidget.getWidgetParams() != null && !currentWidget.getWidgetParams().isEmpty()) {
 
                 List<WidgetParam> currentWidgetParams = currentWidget.getWidgetParams();
 
                 //List of params
-                widget.getWidgetParams().forEach( widgetParam -> {
+                widget.getWidgetParams().forEach(widgetParam -> {
                     //Search in current list in DB
                     Optional<WidgetParam> widgetParamToFind = currentWidgetParams
-                                                                    .stream()
-                                                                    .filter(currentParam -> currentParam.getName().equals(widgetParam.getName()))
-                                                                    .findAny();
+                        .stream()
+                        .filter(currentParam -> currentParam.getName().equals(widgetParam.getName()))
+                        .findAny();
 
                     widgetParamToFind.ifPresent(currentWidgetParamFound -> {
                         //Set the ID of the new object with the current one
                         widgetParam.setId(currentWidgetParamFound.getId());
 
                         //Search params with the current WidgetParam in DB
-                        if(widgetParam.getPossibleValuesMap() != null && !widgetParam.getPossibleValuesMap().isEmpty() &&
-                                currentWidgetParamFound.getPossibleValuesMap() != null && !currentWidgetParamFound.getPossibleValuesMap().isEmpty()) {
+                        if (widgetParam.getPossibleValuesMap() != null && !widgetParam.getPossibleValuesMap().isEmpty() &&
+                            currentWidgetParamFound.getPossibleValuesMap() != null && !currentWidgetParamFound.getPossibleValuesMap().isEmpty()) {
 
                             widgetParam.getPossibleValuesMap().forEach(possibleValueMap -> {
                                 //Search the current widget possible values in DB
                                 Optional<WidgetParamValue> possibleValueMapToFind = currentWidgetParamFound.getPossibleValuesMap()
-                                                                                        .stream()
-                                                                                        .filter(currentPossibleValueMap -> currentPossibleValueMap.getJsKey().equals(possibleValueMap.getJsKey()) )
-                                                                                        .findAny();
+                                    .stream()
+                                    .filter(currentPossibleValueMap -> currentPossibleValueMap.getJsKey().equals(possibleValueMap.getJsKey()))
+                                    .findAny();
                                 //Set ID of the new object with the current one in DB
                                 possibleValueMapToFind.ifPresent(possibleValueMapFound -> possibleValueMap.setId(possibleValueMapFound.getId()));
                             });
@@ -280,7 +285,7 @@ public class WidgetService {
                 widget.setId(currentWidget.getId());
             }
             // Set activated state by default
-            if (widget.getWidgetAvailability() == null){
+            if (widget.getWidgetAvailability() == null) {
                 widget.setWidgetAvailability(WidgetAvailabilityEnum.ACTIVATED);
             }
 

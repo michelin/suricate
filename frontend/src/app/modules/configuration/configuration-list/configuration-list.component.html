@@ -9,26 +9,57 @@
     </div>
   </div>
 
-  <mat-table #table [dataSource]="matTableDataSource" class="table-show"
-             matSort matSortActive="created" matSortDisableClear matSortDirection="asc">
-
+  <mat-table #table [dataSource]="matTableDataSource" class="table-show" matSort>
     <!-- Username Column -->
     <ng-container matColumnDef="key">
-      <mat-header-cell *matHeaderCellDef mat-sort-header disableClear="true"><app-translate [key]="'key'"></app-translate></mat-header-cell>
-      <mat-cell *matCellDef="let row">{{ row.key }}</mat-cell>
+      <mat-header-cell fxFlex="33%" *matHeaderCellDef mat-sort-header disableClear="true">
+        <app-translate [key]="'key'"></app-translate>
+      </mat-header-cell>
+      <mat-cell fxFlex="33%" *matCellDef="let row">{{ row.key }}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="value">
-      <mat-header-cell *matHeaderCellDef mat-sort-header disableClear="true"><app-translate [key]="'value'"></app-translate></mat-header-cell>
-      <mat-cell *matCellDef="let row">{{ row.value }}</mat-cell>
+      <mat-header-cell fxFlex="28%" *matHeaderCellDef mat-sort-header disableClear="true">
+        <app-translate [key]="'value'"></app-translate>
+      </mat-header-cell>
+      <mat-cell fxFlex="28%" *matCellDef="let row">{{ row.value }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="type">
+      <mat-header-cell fxFlex="12%" *matHeaderCellDef mat-sort-header disableClear="true">
+        <app-translate [key]="'type'"></app-translate>
+      </mat-header-cell>
+      <mat-cell fxFlex="12%" *matCellDef="let row">{{ row.dataType }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="category">
+      <mat-header-cell fxFlex="11%" *matHeaderCellDef mat-sort-header disableClear="true">
+        <app-translate [key]="'configuration.category'"></app-translate>
+      </mat-header-cell>
+      <mat-cell fxFlex="11%" *matCellDef="let row">{{ row.category?.name }}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="edit">
-      <mat-header-cell *matHeaderCellDef> <app-translate [key]="'edit'"></app-translate> </mat-header-cell>
-      <mat-cell *matCellDef="let row">
-        <a [routerLink]="[row.id]">
+      <mat-header-cell fxFlex="8%" *matHeaderCellDef>
+        <app-translate [key]="'edit'"></app-translate>
+      </mat-header-cell>
+      <mat-cell fxFlex="8%" *matCellDef="let row">
+        <a [routerLink]="[row.key, 'edit']">
           <button mat-icon-button color="accent">
             <mat-icon>edit</mat-icon>
+          </button>
+        </a>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="delete">
+      <mat-header-cell fxFlex="8%" *matHeaderCellDef>
+        <app-translate [key]="'delete'"></app-translate>
+      </mat-header-cell>
+      <mat-cell fxFlex="8%" *matCellDef="let row">
+        <a (click)="openDialogDeleteConfiguration(row)">
+          <button mat-icon-button color="warn">
+            <mat-icon>delete</mat-icon>
           </button>
         </a>
       </mat-cell>

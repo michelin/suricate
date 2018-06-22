@@ -16,6 +16,7 @@
 
 package io.suricate.monitoring.model.dto.widget;
 
+import io.suricate.monitoring.model.dto.ConfigurationDto;
 import io.suricate.monitoring.model.entity.Asset;
 import lombok.*;
 
@@ -25,7 +26,11 @@ import java.util.List;
 /**
  * Represent a cateogry used for communication with the clients via webservices
  */
-@Getter @Setter @NoArgsConstructor @EqualsAndHashCode @ToString
+@Getter
+@Setter
+@NoArgsConstructor
+@EqualsAndHashCode
+@ToString
 public class CategoryDto {
     /**
      * The category id
@@ -48,4 +53,9 @@ public class CategoryDto {
      * The list of widgets related to this category
      */
     private List<WidgetDto> widgets;
+
+    /**
+     * The associated categories for this configuration
+     */
+    private List<ConfigurationDto> configurations;
 }

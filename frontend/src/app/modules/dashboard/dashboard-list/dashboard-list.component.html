@@ -1,4 +1,4 @@
-<app-pages-header [secondTitle]="'projects.list'"></app-pages-header>
+<app-pages-header [secondTitle]="'List of projects'"></app-pages-header>
 
 <div class="table-container mat-elevation-z8">
   <div class="table-loading-shade" *ngIf="isLoadingResults || errorCatched">
@@ -13,20 +13,26 @@
 
     <!-- Name Column -->
     <ng-container matColumnDef="name">
-      <mat-header-cell fxFlex="20" *matHeaderCellDef mat-sort-header> <app-translate [key]="'name'"></app-translate> </mat-header-cell>
+      <mat-header-cell fxFlex="20" *matHeaderCellDef mat-sort-header>
+        <app-translate [key]="'name'"></app-translate>
+      </mat-header-cell>
       <mat-cell fxFlex="20" *matCellDef="let row">{{ row.name | titlecase }}</mat-cell>
     </ng-container>
 
     <!-- Token Column -->
     <ng-container matColumnDef="token">
-      <mat-header-cell fxFlex="70" *matHeaderCellDef mat-sort-header> <app-translate [key]="'token'"></app-translate> </mat-header-cell>
+      <mat-header-cell fxFlex="70" *matHeaderCellDef mat-sort-header>
+        <app-translate [key]="'token'"></app-translate>
+      </mat-header-cell>
       <mat-cell fxFlex="70" *matCellDef="let row">{{ row.token | titlecase }}</mat-cell>
     </ng-container>
 
     <!-- Edit column -->
     <ng-container matColumnDef="edit">
-      <mat-header-cell fxFlex="5" *matHeaderCellDef> <app-translate [key]="'edit'"></app-translate> </mat-header-cell>
-      <mat-cell fxFlex="5" *matCellDef="let row">
+      <mat-header-cell fxFlex="8" *matHeaderCellDef>
+        <app-translate [key]="'edit'"></app-translate>
+      </mat-header-cell>
+      <mat-cell fxFlex="8" *matCellDef="let row">
         <a [routerLink]="[row.id, 'edit']">
           <button mat-icon-button color="accent">
             <mat-icon>edit</mat-icon>
@@ -37,8 +43,10 @@
 
     <!-- Delete column -->
     <ng-container matColumnDef="delete">
-      <mat-header-cell fxFlex="5" *matHeaderCellDef> <app-translate [key]="'delete'"></app-translate> </mat-header-cell>
-      <mat-cell fxFlex="5" *matCellDef="let row">
+      <mat-header-cell fxFlex="8" *matHeaderCellDef>
+        <app-translate [key]="'delete'"></app-translate>
+      </mat-header-cell>
+      <mat-cell fxFlex="8" *matCellDef="let row">
         <a (click)="openDialogDeleteDashboard(row)">
           <button mat-icon-button color="warn">
             <mat-icon>delete</mat-icon>

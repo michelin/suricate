@@ -15,10 +15,12 @@
  */
 
 import {Asset} from './Asset';
+import {Configuration} from './Configuration';
 
 export class Category {
   public id: number;
   public name: string;
   public technicalName: string;
   public image: Asset;
+  public configurations: Configuration[];
 }

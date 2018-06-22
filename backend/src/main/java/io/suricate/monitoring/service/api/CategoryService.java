@@ -16,6 +16,7 @@
 
 package io.suricate.monitoring.service.api;
 
+import io.suricate.monitoring.model.entity.Configuration;
 import io.suricate.monitoring.model.entity.widget.Category;
 import io.suricate.monitoring.repository.CategoryRepository;
 import org.slf4j.Logger;
@@ -25,6 +26,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -49,19 +51,30 @@ public class CategoryService {
     private final AssetService assetService;
 
     /**
+     * The configuration service
+     */
+    private final ConfigurationService configurationService;
+
+
+    /**
      * The contructor
      *
-     * @param categoryRepository The category repository to inject
-     * @param assetService The asset service
+     * @param categoryRepository   The category repository to inject
+     * @param assetService         The asset service
+     * @param configurationService The configuration service
      */
     @Autowired
-    public CategoryService(final CategoryRepository categoryRepository, final AssetService assetService) {
+    public CategoryService(final CategoryRepository categoryRepository,
+                           final AssetService assetService,
+                           final ConfigurationService configurationService) {
         this.categoryRepository = categoryRepository;
         this.assetService = assetService;
+        this.configurationService = configurationService;
     }
 
     /**
      * Get every categories order by name
+     *
      * @return The list of categories
      */
     @Transactional
@@ -82,27 +95,37 @@ public class CategoryService {
 
     /**
      * Method used to add or update an category
+     *
      * @param category the category to add
      */
     @Transactional
     public void addOrUpdateCategory(Category category) {
-        if (category == null){
+        if (category == null) {
             return;
         }
+
         // Find and existing category with the same id
         Category currentCateg = findByTechnicalName(category.getTechnicalName());
         if (category.getImage() != null) {
-            if (currentCateg != null && currentCateg.getImage() != null){
+            if (currentCateg != null && currentCateg.getImage() != null) {
                 category.getImage().setId(currentCateg.getImage().getId());
             }
             assetService.save(category.getImage());
         }
-
-        if (currentCateg != null){
+        if (currentCateg != null) {
             category.setId(currentCateg.getId());
         }
 
+        // Save the configurations
+        List<Configuration> configurations = category.getConfigurations();
+        category.setConfigurations(new ArrayList<>());
+
         // Create/Update category
         categoryRepository.save(category);
+
+        // Create/Update configurations
+        if (configurations != null && !configurations.isEmpty()) {
+            configurationService.addOrUpdateConfigurations(configurations, category);
+        }
     }
 }

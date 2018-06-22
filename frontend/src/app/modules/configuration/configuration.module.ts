@@ -24,9 +24,12 @@ import {AuthGuard} from '../../shared/auth/guards/auth.guard';
 import {SharedModule} from '../../shared/shared.module';
 import {ConfigurationService} from './configuration.service';
 import {AdminGuard} from '../../shared/auth/guards/admin.guard';
+import {ConfigurationEditComponent} from './configuration-edit/configuration-edit.component';
+import {DeleteConfigurationDialogComponent} from './components/delete-configuration-dialog/delete-configuration-dialog.component';
 
 const configurationRoute: Routes = [
-  {path: 'configurations', component: ConfigurationListComponent, canActivate: [AuthGuard, AdminGuard]}
+  {path: 'configurations', component: ConfigurationListComponent, canActivate: [AuthGuard, AdminGuard]},
+  {path: 'configurations/:configurationKey/edit', component: ConfigurationEditComponent, canActivate: [AuthGuard, AdminGuard]}
 ];
 
 @NgModule({
@@ -36,10 +39,15 @@ const configurationRoute: Routes = [
     RouterModule.forChild(configurationRoute)
   ],
   declarations: [
-    ConfigurationListComponent
+    ConfigurationListComponent,
+    ConfigurationEditComponent,
+    DeleteConfigurationDialogComponent
   ],
   providers: [
     ConfigurationService
+  ],
+  entryComponents: [
+    DeleteConfigurationDialogComponent
   ]
 })
 export class ConfigurationModule {

@@ -16,7 +16,7 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {AbstractHttpService} from '../../shared/services/abstract-http.service';
 import {HttpClient} from '@angular/common/http';
 import {Configuration} from '../../shared/model/dto/Configuration';
@@ -41,7 +41,42 @@ export class ConfigurationService extends AbstractHttpService {
     super();
   }
 
+  /**
+   * Get the full list of configuration
+   *
+   * @returns {Observable<Configuration[]>} The configuration as observable
+   */
   getAll(): Observable<Configuration[]> {
     return this.httpClient.get<Configuration[]>(`${ConfigurationService.CONFIGURATIONS_BASE_URL}`);
+  }
+
+  /**
+   * Get a single configuration by key
+   *
+   * @param {string} key The key to find
+   * @returns {Observable<Configuration>} The configuration as observable
+   */
+  getOneByKey(key: string): Observable<Configuration> {
+    return this.httpClient.get<Configuration>(`${ConfigurationService.CONFIGURATIONS_BASE_URL}/${key}`);
+  }
+
+  /**
+   * Update a configuration
+   *
+   * @param {Configuration} configuration The ocnfiguration to update
+   * @returns {Observable<Configuration>} The config updated
+   */
+  updateConfigurationByKey(configuration: Configuration): Observable<Configuration> {
+    return this.httpClient.put<Configuration>(`${ConfigurationService.CONFIGURATIONS_BASE_URL}/${configuration.key}`, configuration);
+  }
+
+  /**
+   * Delete the configuration
+   *
+   * @param {Configuration} configuration The configuration to delete
+   * @returns {Observable<Configuration>} The configuration delete as observable
+   */
+  deleteConfiguration(configuration: Configuration): Observable<Configuration> {
+    return this.httpClient.delete<Configuration>(`${ConfigurationService.CONFIGURATIONS_BASE_URL}/${configuration.key}`);
   }
 }

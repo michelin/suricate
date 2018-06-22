@@ -16,13 +16,11 @@
  *
  */
 
-import {ConfigurationDataType} from './enums/ConfigurationDataType';
-import {Category} from './Category';
-
-export class Configuration {
-  key: string;
-  value: string;
-  export: boolean;
-  dataType: ConfigurationDataType;
-  category: Category;
+/**
+ * Hold the data type for a configuration
+ */
+export enum ConfigurationDataType {
+  INTEGER = 'INTEGER',
+  STRING = 'STRING',
+  PASSWORD = 'PASSWORD'
 }

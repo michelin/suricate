@@ -14,13 +14,15 @@
   "settings": "Settings",
   "key": "Key",
   "value": "Value",
+  "type": "Type",
   "name": "Name",
   "token": "Token",
-  "logout" : "Logout",
+  "logout": "Logout",
   "administration": "Administration",
   "users": "Users",
   "configurations": "Configurations",
   "configurations.list": "List of configurations",
+  "configuration.delete": "Delete a configuration",
   "widgets": "Widgets",
   "dashboards": "Dashboards",
   "dashboard.name": "Dashboard name",
@@ -29,6 +31,7 @@
   "dashboard.add": "Add a new dashboard",
   "dashboard.edit": "Edit dashboard",
   "dashboard.delete": "Delete Project",
+  "field.readonly": "This field is readonly",
   "field.required": "This field is required",
   "field.required.int.length": "This field is required and should be an integer > 0",
   "grid.configuration": "Grid configuration",
@@ -78,5 +81,6 @@
   "already.registered": "Already registered ?",
   "not.registered": "Not registered ?",
   "sign.in": "Sign In",
-  "sign.up": "Sign up here !"
+  "sign.up": "Sign up here !",
+  "configuration.category": "Category"
 }

@@ -1,0 +1,83 @@
+<app-pages-header *ngIf="configuration" [secondTitle]="configuration.key"></app-pages-header>
+
+<form *ngIf="configurationForm" [formGroup]="configurationForm" (ngSubmit)="saveConfiguration()">
+  <mat-card id="card-edit-config"
+            class="mat-elevation-z8"
+            fxLayout="column wrap"
+            fxLayoutAlign="center center"
+            fxLayoutGap="30px">
+
+    <mat-card-content fxLayout="row wrap"
+                      fxLayoutAlign="center center">
+      <mat-form-field>
+        <mat-icon class="prefix" matPrefix>vpn_key</mat-icon>
+        <input matInput
+               type="text"
+               id="key"
+               placeholder="{{ 'key' | translate }}"
+               formControlName="key"
+               [required]="true"
+               readonly/>
+        <mat-hint align="start">
+          <app-translate [key]="'field.readonly'"></app-translate>
+        </mat-hint>
+        <mat-error *ngIf="isFieldInvalid('key')">
+          <app-translate [key]="'field.required'"></app-translate>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-icon class="prefix" matPrefix>widgets</mat-icon>
+        <input matInput
+               type="text"
+               id="category"
+               placeholder="{{ 'configuration.category' | translate }}"
+               formControlName="category"
+               [required]="true"
+               readonly/>
+        <mat-hint align="start">
+          <app-translate [key]="'field.readonly'"></app-translate>
+        </mat-hint>
+        <mat-error *ngIf="isFieldInvalid('category')">
+          <app-translate [key]="'field.required'"></app-translate>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field *ngIf="configuration.dataType === configurationDataType.INTEGER; else defaultValueInput">
+        <mat-icon class="prefix" matPrefix>input</mat-icon>
+        <input matInput
+               type="number"
+               id="value"
+               placeholder="{{ 'value' | translate }}"
+               formControlName="value"
+               [required]="true"/>
+        <mat-error *ngIf=" isFieldInvalid('value')">
+          <app-translate [key]="'field.required'"></app-translate>
+        </mat-error>
+      </mat-form-field>
+
+      <ng-template #defaultValueInput>
+        <mat-form-field>
+          <mat-icon class="prefix" matPrefix>input</mat-icon>
+          <input matInput
+                 type="text"
+                 id="value"
+                 placeholder="{{ 'value' | translate }}"
+                 formControlName="value"
+                 [required]="true"/>
+          <mat-error *ngIf=" isFieldInvalid('value')">
+            <app-translate [key]="'field.required'"></app-translate>
+          </mat-error>
+        </mat-form-field>
+      </ng-template>
+    </mat-card-content>
+
+
+    <mat-card-actions>
+      <!-- Submit action-->
+      <button mat-raised-button class="mat-elevation-z6" color="accent" type="submit">
+        {{ 'save' | translate | uppercase}}
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</form>

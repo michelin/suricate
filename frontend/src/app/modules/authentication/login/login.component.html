@@ -77,14 +77,18 @@
                           fxLayoutAlign="center"
                           fxLayoutGap="15px"
                           *ngIf="!formSubmitAttempt">
-          <button fxFlex="85" mat-raised-button class="mat-elevation-z2" color="accent" type="submit">{{ 'sign.in' | translate | uppercase}}</button>
+          <button fxFlex="85" mat-raised-button class="mat-elevation-z2" color="accent" type="submit">{{ 'sign.in' |
+            translate | uppercase}}
+          </button>
         </mat-card-actions>
       </mat-card>
     </form>
 
-    <div fxFlex="5" class="not-registered-sentance" fxFlexAlign="start">
+    <div fxFlex="5" class="not-registered-sentance" fxFlexAlign="start" fxLayout="col wrap" fxLayoutGap="6px">
       <app-translate [key]="'not.registered'"></app-translate>
-      <a [routerLink]="['/register']"><app-translate [key]="'sign.up'"></app-translate></a>
+      <a [routerLink]="['/register']">
+        <app-translate [key]="'sign.up'"></app-translate>
+      </a>
     </div>
   </div>
 </div>

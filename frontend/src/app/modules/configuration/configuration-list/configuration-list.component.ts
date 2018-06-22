@@ -17,7 +17,7 @@
  */
 
 import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
-import {MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
+import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import {startWith} from 'rxjs/operators/startWith';
 import {of as observableOf} from 'rxjs/observable/of';
 import {merge} from 'rxjs/observable/merge';
@@ -25,7 +25,14 @@ import {switchMap} from 'rxjs/operators/switchMap';
 import {catchError} from 'rxjs/operators';
 import {map} from 'rxjs/operators/map';
 import {ConfigurationService} from '../configuration.service';
+import {ToastType} from '../../../shared/model/toastNotification/ToastType';
+import {Configuration} from '../../../shared/model/dto/Configuration';
+import {DeleteConfigurationDialogComponent} from '../components/delete-configuration-dialog/delete-configuration-dialog.component';
+import {ToastService} from '../../../shared/components/toast/toast.service';
 
+/**
+ * The configuration list component
+ */
 @Component({
   selector: 'app-configuration-list',
   templateUrl: './configuration-list.component.html',
@@ -33,30 +40,72 @@ import {ConfigurationService} from '../configuration.service';
 })
 export class ConfigurationListComponent implements OnInit {
 
+  /**
+   * manage sort of the Mat table
+   */
   @ViewChild(MatSort) matSort: MatSort;
+  /**
+   * manage pagination of the Mat table
+   */
   @ViewChild(MatPaginator) matPaginator: MatPaginator;
+  /**
+   * Hold the data of the mat table
+   * @type {MatTableDataSource<any>}
+   */
   matTableDataSource = new MatTableDataSource();
-
-  displayedColumns = ['key', 'value'];
+  /**
+   * The column references of the mat table
+   * @type {string[]}
+   */
+  displayedColumns = ['key', 'value', 'type', 'category', 'edit', 'delete'];
+  /**
+   * Is the results are loading
+   * @type {boolean}
+   */
   isLoadingResults = false;
+  /**
+   * If we have an error
+   * @type {boolean}
+   */
   errorCatched = false;
+  /**
+   * The number of rows
+   * @type {number}
+   */
   resultsLength = 0;
 
-  constructor(private configurationsService: ConfigurationService,
-              private changeDetectorRef: ChangeDetectorRef) { }
+  /**
+   * The constructor
+   *
+   * @param {ConfigurationService} _configurationsService The configuration service
+   * @param {ChangeDetectorRef} _changeDetectorRef The change detector service
+   * @param {MatDialog} _matDialog The mat dialog service
+   * @param {ToastService} _toastService The toast service
+   */
+  constructor(private _configurationsService: ConfigurationService,
+              private _changeDetectorRef: ChangeDetectorRef,
+              private _matDialog: MatDialog,
+              private _toastService: ToastService) {
+  }
 
+  /**
+   * When the component is created
+   */
   ngOnInit() {
     this.initTable();
   }
 
+  /**
+   * Init the list table
+   */
   initTable() {
     merge(this.matSort.sortChange, this.matPaginator.page)
         .pipe(
             startWith(null),
             switchMap(() => {
               this.isLoadingResults = true;
-              this.changeDetectorRef.detectChanges();
-              return this.configurationsService.getAll();
+              this._changeDetectorRef.detectChanges();
+              return this._configurationsService.getAll();
             }),
             map(data => {
               this.isLoadingResults = false;
@@ -71,10 +120,44 @@ export class ConfigurationListComponent implements OnInit {
               return observableOf([]);
             })
         )
-        .subscribe(data =>  {
+        .subscribe(data => {
           this.resultsLength = data.length;
           this.matTableDataSource.data = data;
+          this.matTableDataSource.sort = this.matSort;
         });
+
+    this.matTableDataSource.sortingDataAccessor = (item: any, property) => {
+      switch (property) {
+        case 'category':
+          return item.category ? item.category.name : '';
+        case 'type':
+          return item.dataType ? item.dataType : '';
+        default:
+          return item[property];
+      }
+    };
+  }
+
+  /**
+   * Open the delete configuration dialog
+   * @param {Configuration} configuration The configuration to delete
+   */
+  openDialogDeleteConfiguration(configuration: Configuration) {
+    const deleteConfigurationDialog = this._matDialog.open(DeleteConfigurationDialogComponent, {
+      data: {configuration: configuration}
+    });
+
+    deleteConfigurationDialog.afterClosed().subscribe(shouldDeleteConfiguration => {
+      if (shouldDeleteConfiguration) {
+        this
+            ._configurationsService
+            .deleteConfiguration(configuration)
+            .subscribe(() => {
+              this._toastService.sendMessage('Configuration deleted successfully', ToastType.SUCCESS);
+              this.initTable();
+            });
+      }
+    });
   }
 
 }

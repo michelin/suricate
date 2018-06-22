@@ -18,11 +18,13 @@ package io.suricate.monitoring.model.entity.widget;
 
 import io.suricate.monitoring.model.entity.AbstractAuditingEntity;
 import io.suricate.monitoring.model.entity.Asset;
+import io.suricate.monitoring.model.entity.Configuration;
 import lombok.*;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -31,7 +33,11 @@ import java.util.List;
  */
 @Entity
 @Indexed
-@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
+@Getter
+@Setter
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+@ToString
 public class Category extends AbstractAuditingEntity<Long> {
 
     /**
@@ -43,7 +49,7 @@ public class Category extends AbstractAuditingEntity<Long> {
 
     /**
      * The category name
-      */
+     */
     @Column(nullable = false)
     @Field
     private String name;
@@ -65,4 +71,10 @@ public class Category extends AbstractAuditingEntity<Long> {
      */
     @OneToMany(mappedBy = "category")
     private List<Widget> widgets;
+
+    /**
+     * The associated categories for this configuration
+     */
+    @OneToMany(mappedBy = "category", cascade = CascadeType.REMOVE)
+    private List<Configuration> configurations = new ArrayList<>();
 }

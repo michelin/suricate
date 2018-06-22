@@ -27,9 +27,7 @@ import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -60,7 +58,7 @@ public class ConfigurationController {
      * Constructor
      *
      * @param configurationService Inject the configuration service
-     * @param configurationMapper The configuration mapper
+     * @param configurationMapper  The configuration mapper
      */
     @Autowired
     public ConfigurationController(final ConfigurationService configurationService,
@@ -71,6 +69,7 @@ public class ConfigurationController {
 
     /**
      * Get the full list of configurations
+     *
      * @return The list of configurations
      */
     @RequestMapping(method = RequestMethod.GET)
@@ -78,7 +77,7 @@ public class ConfigurationController {
     public ResponseEntity<List<ConfigurationDto>> getAll() {
         Optional<List<Configuration>> configurations = configurationService.getAll();
 
-        if(!configurations.isPresent()) {
+        if (!configurations.isPresent()) {
             LOGGER.debug("No configurations found");
 
             return ResponseEntity
@@ -92,5 +91,83 @@ public class ConfigurationController {
             .contentType(MediaType.APPLICATION_JSON)
             .cacheControl(CacheControl.noCache())
             .body(configurationMapper.toConfigurationDtosDefault(configurations.get()));
+    }
+
+    /**
+     * Get a configuration by the key (Id)
+     *
+     * @param key The key to find
+     * @return The related configuration
+     */
+    @RequestMapping(value = "/{key}", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<ConfigurationDto> getOneByKey(@PathVariable("key") final String key) {
+        Optional<Configuration> configurationOptional = configurationService.getOneByKey(key);
+
+        if (!configurationOptional.isPresent()) {
+            return ResponseEntity.notFound().cacheControl(CacheControl.noCache()).build();
+        }
+
+        return ResponseEntity
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .cacheControl(CacheControl.noCache())
+            .body(configurationMapper.toConfigurationDtoDefault(configurationOptional.get()));
+    }
+
+    /**
+     * Update the configuration by the key
+     *
+     * @param key              The key of the config
+     * @param configurationDto The new configuration values
+     * @return The config updated
+     */
+    @RequestMapping(value = "/{key}", method = RequestMethod.PUT)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<ConfigurationDto> updateOneByKey(@PathVariable("key") final String key,
+                                                           @RequestBody final ConfigurationDto configurationDto) {
+        Optional<Configuration> configurationOptional = configurationService.getOneByKey(key);
+
+        if (!configurationOptional.isPresent()) {
+            return ResponseEntity
+                .notFound()
+                .cacheControl(CacheControl.noCache())
+                .build();
+        }
+
+        Configuration configuration = configurationOptional.get();
+        configuration = configurationService.updateConfiguration(configuration, configurationDto.getValue());
+
+        return ResponseEntity
+            .ok()
+            .cacheControl(CacheControl.noCache())
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(configurationMapper.toConfigurationDtoDefault(configuration));
+    }
+
+    /**
+     * Delete a configuration by key
+     *
+     * @param key The configuration key
+     * @return The config deleted
+     */
+    @RequestMapping(value = "/{key}", method = RequestMethod.DELETE)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<ConfigurationDto> deleteOneByKey(@PathVariable("key") final String key) {
+        Optional<Configuration> configurationOptional = configurationService.getOneByKey(key);
+
+        if (!configurationOptional.isPresent()) {
+            return ResponseEntity
+                .notFound()
+                .cacheControl(CacheControl.noCache())
+                .build();
+        }
+
+        configurationService.deleteOneByKey(key);
+        return ResponseEntity
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .cacheControl(CacheControl.noCache())
+            .body(configurationMapper.toConfigurationDtoDefault(configurationOptional.get()));
     }
 }
