@@ -1,6 +1,6 @@
 # Suricate [![Open Source Love](https://badges.frapsoft.com/os/v3/open-source-150x25.png?v=103)](https://github.com/ellerbrock/open-source-badges/)
 
-[![Build Status](https://travis-ci.org/suricate-io/suricate.svg?branch=master)](https://travis-ci.org/suricate-io/suricate)
+[![Build Status](https://semaphoreci.com/api/v1/yodamad/suricate/branches/dev/badge.svg)](https://semaphoreci.com/yodamad/suricate)
 [![codecov](https://codecov.io/gh/suricate-io/suricate/branch/master/graph/badge.svg)](https://codecov.io/gh/suricate-io/suricate)
 [![Maintainability](https://api.codeclimate.com/v1/badges/093032ef74459c9f8a44/maintainability)](https://codeclimate.com/github/suricate-io/suricate/maintainability)
 [![GitHub issues](https://img.shields.io/github/issues/suricate-io/suricate.svg)](https://github.com/suricate-io/suricate/issues/)
