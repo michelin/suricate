@@ -27,7 +27,6 @@ import {TokenService} from '../../shared/auth/token.service';
 import {RoleEnum} from '../../shared/model/dto/enums/RoleEnum';
 import {UserSetting} from '../../shared/model/dto/UserSetting';
 import {SettingsService} from '../../shared/services/settings.service';
-import {SettingType} from '../../shared/model/dto/enums/SettingType';
 
 /**
  * User service that manage users
@@ -181,23 +180,5 @@ export class UserService extends AbstractHttpService {
    */
   isAdmin(): boolean {
     return this._tokenService.getUserRoles().includes(RoleEnum.ROLE_ADMIN);
-  }
-
-  /**
-   * Get the template user setting
-   *
-   * @param {User} user The user
-   * @returns {UserSetting} The user setting
-   */
-  getThemeUserSetting(user: User): UserSetting {
-    return user.userSettings.find(userSetting => userSetting.setting.type === SettingType.TEMPLATE);
-  }
-
-  /**
-   * Set every user settings
-   * @param {User} user The user use for set the settings
-   */
-  setUserSettings(user: User) {
-    this._themeService.setTheme(this.getThemeUserSetting(user).settingValue.value);
   }
 }

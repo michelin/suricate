@@ -17,7 +17,7 @@
 import {Component, HostBinding, OnDestroy, OnInit} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {AuthenticationService} from './modules/authentication/authentication.service';
-import {TranslateService} from "@ngx-translate/core";
+import {TranslateService} from '@ngx-translate/core';
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {SettingsService} from './shared/services/settings.service';
 import {takeWhile} from 'rxjs/operators';
@@ -61,16 +61,15 @@ export class AppComponent implements OnInit, OnDestroy {
    * @param {OverlayContainer} overlayContainer The overlay container service
    * @param {SettingsService} themeService The theme service to inject
    * @param {UserService} _userService The user service
+   * @param {TranslateService} _translateService The translation service
+   * @param {SettingsService} _settingsService The settings service to inject
    */
   constructor(private authenticationService: AuthenticationService,
               private overlayContainer: OverlayContainer,
               private themeService: SettingsService,
-              private _userService: UserService, private translate: TranslateService) {
-      // this language will be used as a fallback when a translation isn't found in the current language
-      translate.setDefaultLang('en');
-
-      // the lang to use, if the lang isn't available, it will use the current loader to get them
-      translate.use('en');
+              private _userService: UserService,
+              private _translateService: TranslateService,
+              private _settingsService: SettingsService) {
   }
 
   /**
@@ -83,7 +82,7 @@ export class AppComponent implements OnInit, OnDestroy {
         .pipe(takeWhile(() => this._isAlive))
         .subscribe((themeName: string) => this.onSetTheme(themeName));
 
-    this._userService.getConnectedUser().subscribe(user => this._userService.setUserSettings(user));
+    this._userService.getConnectedUser().subscribe(user => this._settingsService.initUserSettings(user));
   }
 
   /**
@@ -101,9 +100,5 @@ export class AppComponent implements OnInit, OnDestroy {
    */
   ngOnDestroy() {
     this._isAlive = false;
-  }
-
-  switchLanguage(language: string) {
-      this.translate.use(language);
   }
 }

@@ -22,6 +22,7 @@ import {SettingDataType} from '../../../shared/model/dto/enums/SettingDataType';
 import {Observable} from 'rxjs/Observable';
 import {ToastService} from '../../../shared/components/toast/toast.service';
 import {ToastType} from '../../../shared/model/toastNotification/ToastType';
+import {SettingsService} from '../../../shared/services/settings.service';
 
 @Component({
   selector: 'app-setting-list',
@@ -47,9 +48,11 @@ export class SettingListComponent implements OnInit {
    *
    * @param {UserService} _userService The user service to inject
    * @param {ToastService} _toastService The toast notification service
+   * @param {SettingsService} _settingsService The settings service to inject
    */
   constructor(private _userService: UserService,
-              private _toastService: ToastService) {
+              private _toastService: ToastService,
+              private _settingsService: SettingsService) {
   }
 
   /**
@@ -87,7 +90,7 @@ export class SettingListComponent implements OnInit {
           .updateUserSettings(currentUser, userSettings)
           .subscribe(user => {
             this._toastService.sendMessage('Settings saved succesfully', ToastType.SUCCESS);
-            this._userService.setUserSettings(user);
+            this._settingsService.setUserSettings(user);
           });
     }
   }
