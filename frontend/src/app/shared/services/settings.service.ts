@@ -22,7 +22,7 @@ import {Observable} from 'rxjs/Observable';
  * Manage the app theme
  */
 @Injectable()
-export class ThemeService {
+export class SettingsService {
 
   /**
    * Hold the current theme

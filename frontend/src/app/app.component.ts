@@ -19,7 +19,7 @@ import {Observable} from 'rxjs/Observable';
 import {AuthenticationService} from './modules/authentication/authentication.service';
 import {TranslateService} from "@ngx-translate/core";
 import {OverlayContainer} from '@angular/cdk/overlay';
-import {ThemeService} from './shared/services/theme.service';
+import {SettingsService} from './shared/services/settings.service';
 import {takeWhile} from 'rxjs/operators';
 import {UserService} from './modules/user/user.service';
 
@@ -59,12 +59,12 @@ export class AppComponent implements OnInit, OnDestroy {
    *
    * @param {AuthenticationService} authenticationService Authentication service to inject
    * @param {OverlayContainer} overlayContainer The overlay container service
-   * @param {ThemeService} themeService The theme service to inject
+   * @param {SettingsService} themeService The theme service to inject
    * @param {UserService} _userService The user service
    */
   constructor(private authenticationService: AuthenticationService,
               private overlayContainer: OverlayContainer,
-              private themeService: ThemeService,
+              private themeService: SettingsService,
               private _userService: UserService, private translate: TranslateService) {
       // this language will be used as a fallback when a translation isn't found in the current language
       translate.setDefaultLang('en');

@@ -29,7 +29,7 @@ import {WSUpdateType} from '../../../shared/model/websocket/enums/WSUpdateType';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Subscription} from 'rxjs/Subscription';
 import * as Stomp from '@stomp/stompjs';
-import {ThemeService} from '../../../shared/services/theme.service';
+import {SettingsService} from '../../../shared/services/settings.service';
 
 /**
  * Dashboard TV Management
@@ -69,14 +69,14 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * @param {SidenavService} sidenavService The sidenav service to inject
    * @param {DashboardService} dashboardService The dashboard service to inject
    * @param {WebsocketService} websocketService The websocket service to inject
-   * @param {ThemeService} themeService The theme service
+   * @param {SettingsService} themeService The theme service
    * @param {ActivatedRoute} activatedRoute The activated route service
    * @param {Router} router The router service
    */
   constructor(private sidenavService: SidenavService,
               private dashboardService: DashboardService,
               private websocketService: WebsocketService,
-              private themeService: ThemeService,
+              private themeService: SettingsService,
               private activatedRoute: ActivatedRoute,
               private router: Router) {
   }

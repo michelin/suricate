@@ -26,7 +26,7 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {TokenService} from '../../shared/auth/token.service';
 import {RoleEnum} from '../../shared/model/dto/enums/RoleEnum';
 import {UserSetting} from '../../shared/model/dto/UserSetting';
-import {ThemeService} from '../../shared/services/theme.service';
+import {SettingsService} from '../../shared/services/settings.service';
 import {SettingType} from '../../shared/model/dto/enums/SettingType';
 
 /**
@@ -53,11 +53,11 @@ export class UserService extends AbstractHttpService {
    *
    * @param {HttpClient} http The http client service to inject
    * @param {TokenService} _tokenService The token service
-   * @param {ThemeService} _themeService The theme service
+   * @param {SettingsService} _themeService The theme service
    */
   constructor(private http: HttpClient,
               private _tokenService: TokenService,
-              private _themeService: ThemeService) {
+              private _themeService: SettingsService) {
     super();
   }
 

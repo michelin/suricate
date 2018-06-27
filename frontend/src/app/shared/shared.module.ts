@@ -40,10 +40,10 @@ import {TvManagementDialogComponent} from './components/pages-header/components/
 import {StompRService} from '@stomp/ng2-stompjs';
 import {AdminGuard} from './auth/guards/admin.guard';
 import {TokenService} from './auth/token.service';
-import {TranslateModule} from "@ngx-translate/core";
-import {TranslationComponent} from "./components/translations/translation.component";
+import {TranslateModule} from '@ngx-translate/core';
+import {TranslationComponent} from './components/translations/translation.component';
 import {MaterialCDKModule} from './modules/metarialCDK.module';
-import {ThemeService} from './services/theme.service';
+import {SettingsService} from './services/settings.service';
 
 @NgModule({
   imports: [
@@ -105,7 +105,7 @@ import {ThemeService} from './services/theme.service';
     ToastService,
     StompRService,
     TokenService,
-    ThemeService
+    SettingsService
   ]
 })
 export class SharedModule {

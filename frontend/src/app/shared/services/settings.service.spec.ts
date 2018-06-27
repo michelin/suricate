@@ -16,16 +16,16 @@
 
 import {inject, TestBed} from '@angular/core/testing';
 
-import {ThemeService} from './theme.service';
+import {SettingsService} from './settings.service';
 
-describe('ThemeService', () => {
+describe('SettingsService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [ThemeService]
+      providers: [SettingsService]
     });
   });
 
-  it('should be created', inject([ThemeService], (service: ThemeService) => {
+  it('should be created', inject([SettingsService], (service: SettingsService) => {
     expect(service).toBeTruthy();
   }));
 });
