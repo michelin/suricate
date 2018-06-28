@@ -18,10 +18,9 @@ import {Component, HostBinding, OnDestroy, OnInit} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {AuthenticationService} from './modules/authentication/authentication.service';
 import {TranslateService} from '@ngx-translate/core';
-import {OverlayContainer} from '@angular/cdk/overlay';
 import {SettingsService} from './shared/services/settings.service';
-import {takeWhile} from 'rxjs/operators';
 import {UserService} from './modules/user/user.service';
+import {OverlayContainer} from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-root',
@@ -31,20 +30,9 @@ import {UserService} from './modules/user/user.service';
 export class AppComponent implements OnInit, OnDestroy {
 
   /**
-   * Observable that tell to the app if the user is connected
+   * The HTML class attribute
    */
-  isLoggedIn$: Observable<boolean>;
-
-  /**
-   * The title app
-   * @type {string}
-   */
-  title = 'Dashboard - Monitoring';
-
-  /**
-   * Used for setting the new class
-   */
-  @HostBinding('class') componentCssClass;
+  @HostBinding('class') appHtmlClass;
 
   /**
    * Tell if the component is instantiate or not
@@ -55,18 +43,28 @@ export class AppComponent implements OnInit, OnDestroy {
   private _isAlive = true;
 
   /**
+   * Observable that tell to the app if the user is connected
+   * @type {Observable<boolean>}
+   */
+  isLoggedIn$: Observable<boolean>;
+
+  /**
+   * The title app
+   * @type {string}
+   */
+  title = 'Dashboard - Monitoring';
+
+  /**
    * The constructor
    *
-   * @param {AuthenticationService} authenticationService Authentication service to inject
+   * @param {AuthenticationService} _authenticationService Authentication service to inject
    * @param {OverlayContainer} overlayContainer The overlay container service
-   * @param {SettingsService} themeService The theme service to inject
    * @param {UserService} _userService The user service
    * @param {TranslateService} _translateService The translation service
    * @param {SettingsService} _settingsService The settings service to inject
    */
-  constructor(private authenticationService: AuthenticationService,
+  constructor(private _authenticationService: AuthenticationService,
               private overlayContainer: OverlayContainer,
-              private themeService: SettingsService,
               private _userService: UserService,
               private _translateService: TranslateService,
               private _settingsService: SettingsService) {
@@ -76,24 +74,26 @@ export class AppComponent implements OnInit, OnDestroy {
    * Called at the init of the app
    */
   ngOnInit() {
-    this.isLoggedIn$ = this.authenticationService.isLoggedIn();
-    this._settingsService.initLanguageSettings();
+    this.isLoggedIn$ = this._authenticationService.isLoggedIn$;
+    this._settingsService.currentTheme$.subscribe(themeValue => this.switchTheme(themeValue));
 
-    this.themeService.getCurrentTheme()
-        .pipe(takeWhile(() => this._isAlive))
-        .subscribe((themeName: string) => this.onSetTheme(themeName));
-
-    this._userService.getConnectedUser().subscribe(user => this._settingsService.initUserSettings(user));
+    this._settingsService.initDefaultSettings();
+    this._userService.connectedUser$.subscribe(user => {
+      if (user) {
+        this._settingsService.initUserSettings(user);
+      } else {
+        this._settingsService.initDefaultSettings();
+      }
+    });
   }
 
   /**
-   * Set the theme
-   *
-   * @param theme The theme name
+   * Switch the theme
+   * @param {string} themeValue The new theme value
    */
-  onSetTheme(theme) {
-    this.overlayContainer.getContainerElement().classList.add(theme);
-    this.componentCssClass = theme;
+  switchTheme(themeValue: string) {
+    this.overlayContainer.getContainerElement().classList.add(themeValue);
+    this.appHtmlClass = themeValue;
   }
 
   /**

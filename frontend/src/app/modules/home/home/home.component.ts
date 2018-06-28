@@ -22,6 +22,9 @@ import {MatDialog, MatDialogRef} from '@angular/material';
 import {AddDashboardDialogComponent} from '../components/add-dashboard-dialog/add-dashboard-dialog.component';
 import {Router} from '@angular/router';
 
+/**
+ * Manage the home page
+ */
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -29,39 +32,41 @@ import {Router} from '@angular/router';
 })
 export class HomeComponent implements OnInit, OnDestroy {
   /**
+   * True while the component is instantiate
+   * @type {boolean}
+   */
+  private _isAlive = true;
+
+  /**
    * The add dashboard dialog
+   * @type {MatDialogRef<AddDashboardDialogComponent>}
    */
   addDashboardDialogRef: MatDialogRef<AddDashboardDialogComponent>;
 
   /**
-   * True while the component is instantiate
-   * @type {boolean}
-   */
-  private alive = true;
-
-  /**
    * The list of dashboards
+   * @type {Project[]}
    */
   dashboards: Project[];
 
   /**
    * The constructor
    *
-   * @param {DashboardService} dashboardService The dashboard service
-   * @param {MatDialog} matDialog The mat dialog service
-   * @param {Router} router The router service
+   * @param {DashboardService} _dashboardService The dashboard service
+   * @param {MatDialog} _matDialog The mat dialog service
+   * @param {Router} _router The router service
    */
-  constructor(private dashboardService: DashboardService,
-              private matDialog: MatDialog,
-              private router: Router) {
+  constructor(private _dashboardService: DashboardService,
+              private _matDialog: MatDialog,
+              private _router: Router) {
   }
 
   /**
    * Init objects
    */
   ngOnInit() {
-    this.dashboardService.currentDashboardList$
-        .pipe(takeWhile(() => this.alive))
+    this._dashboardService.currentDashboardList$
+        .pipe(takeWhile(() => this._isAlive))
         .subscribe(dashboards => this.dashboards = dashboards);
   }
 
@@ -69,7 +74,7 @@ export class HomeComponent implements OnInit, OnDestroy {
    * Open the add dashboard dialog
    */
   openAddDashboardDialog() {
-    this.addDashboardDialogRef = this.matDialog.open(AddDashboardDialogComponent, {
+    this.addDashboardDialogRef = this._matDialog.open(AddDashboardDialogComponent, {
       minWidth: 900,
       minHeight: 500,
     });
@@ -81,14 +86,14 @@ export class HomeComponent implements OnInit, OnDestroy {
    * @param {number} dashboardId The dashboard id
    */
   navigateToDashboard(dashboardId: number) {
-    this.router.navigate(['/dashboard', dashboardId]);
+    this._router.navigate(['/dashboard', dashboardId]);
   }
 
   /**
    * Called when the component is destroy
    */
   ngOnDestroy() {
-    this.alive = false;
+    this._isAlive = false;
   }
 
 }

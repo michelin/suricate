@@ -19,7 +19,7 @@ import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {CustomValidators} from 'ng2-validation';
 import {checkPasswordMatch} from '../../../shared/validators/CustomValidator';
 import {User} from '../../../shared/model/dto/user/User';
-import {ICredentials} from '../../../shared/model/dto/user/ICredentials';
+import {Credentials} from '../../../shared/model/dto/user/Credentials';
 import {Router} from '@angular/router';
 import {AuthenticationService} from '../authentication.service';
 
@@ -123,7 +123,7 @@ export class RegisterComponent implements OnInit {
         ._authenticationService
         .register(user)
         .subscribe(() => {
-          const credentials: ICredentials = {username: user.username, password: user.password};
+          const credentials: Credentials = {username: user.username, password: user.password};
           this
               ._authenticationService
               .authenticate(credentials)

@@ -14,20 +14,22 @@ export class DeleteUserDialogComponent implements OnInit {
 
   /**
    * The user we want to delete
+   * @type {User}
    */
   user: User;
 
   /**
    * The constructor
    *
-   * @param data The data passed to the Dialog
+   * @param _data The data passed to the Dialog
    */
-  constructor(@Inject(MAT_DIALOG_DATA) private data: any) { }
+  constructor(@Inject(MAT_DIALOG_DATA) private _data: any) {
+  }
 
   /**
    * Called when the component is init
    */
   ngOnInit() {
-    this.user = this.data.user;
+    this.user = this._data.user;
   }
 }

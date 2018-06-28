@@ -17,6 +17,9 @@
 import {WidgetVariableType} from './enums/WidgetVariableType';
 import {WidgetParamValue} from './WidgetParamValue';
 
+/**
+ * The widget param entity
+ */
 export class WidgetParam {
   public name: string;
   public description: string;

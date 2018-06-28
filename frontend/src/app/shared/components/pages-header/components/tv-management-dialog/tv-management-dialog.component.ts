@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {ChangeDetectorRef, Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA} from '@angular/material';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {DashboardService} from '../../../../../modules/dashboard/dashboard.service';
@@ -24,7 +24,6 @@ import {ScreenService} from '../../../../../modules/dashboard/screen.service';
 
 /**
  * Component that manage the popup for Dashboard TV Management
- *
  */
 @Component({
   selector: 'app-tv-management-dialog',
@@ -35,36 +34,39 @@ export class TvManagementDialogComponent implements OnInit {
 
   /**
    * The register screen form
+   * @type {FormGroup}
    */
   screenRegisterForm: FormGroup;
 
   /**
    * The current project
+   * @type {Project}
    */
   project: Project;
 
   /**
    * Constructor
    *
-   * @param data The data give to the modal
-   * @param {FormBuilder} formBuilder The formBuilder
-   * @param {DashboardService} dashboardService The dashboard service to inject
-   * @param {ScreenService} screenService The screen service
+   * @param _data The data give to the modal
+   * @param {FormBuilder} _formBuilder The formBuilder
+   * @param {DashboardService} _dashboardService The dashboard service to inject
+   * @param {ScreenService} _screenService The screen service
    */
-  constructor(@Inject(MAT_DIALOG_DATA) private data: any,
-              private formBuilder: FormBuilder,
-              private dashboardService: DashboardService,
-              private screenService: ScreenService) { }
+  constructor(@Inject(MAT_DIALOG_DATA) private _data: any,
+              private _formBuilder: FormBuilder,
+              private _dashboardService: DashboardService,
+              private _screenService: ScreenService) {
+  }
 
   /**
    * When the component is initialized
    */
   ngOnInit() {
-    this.dashboardService
-        .getOneById(this.data.projectId)
-        .subscribe(project => this.project = project );
+    this._dashboardService
+        .getOneById(this._data.projectId)
+        .subscribe(project => this.project = project);
 
-    this.screenRegisterForm = this.formBuilder.group({
+    this.screenRegisterForm = this._formBuilder.group({
       screenCode: ['']
     });
   }
@@ -75,7 +77,7 @@ export class TvManagementDialogComponent implements OnInit {
   registerScreen(): void {
     if (this.screenRegisterForm.valid) {
       const screenCode: string = this.screenRegisterForm.get('screenCode').value;
-      this.screenService.connectProjectToScreen(this.project.token, +screenCode);
+      this._screenService.connectProjectToScreen(this.project.token, +screenCode);
     }
   }
 
@@ -85,7 +87,7 @@ export class TvManagementDialogComponent implements OnInit {
    * @param {WebsocketClient} websocketClient The websocket to disconnect
    */
   disconnectScreen(websocketClient: WebsocketClient): void {
-    this.screenService.disconnectScreen(websocketClient);
+    this._screenService.disconnectScreen(websocketClient);
   }
 
   /**
@@ -94,7 +96,7 @@ export class TvManagementDialogComponent implements OnInit {
    */
   displayScreenCode(projectToken: string): void {
     if (projectToken) {
-      this.screenService.displayScreenCodeEveryConnectedScreensForProject(projectToken);
+      this._screenService.displayScreenCodeEveryConnectedScreensForProject(projectToken);
     }
   }
 }

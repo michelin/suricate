@@ -27,7 +27,6 @@ export class RunScriptsDirective implements OnInit {
 
   /**
    * Emit an event when the script rendering for childs are ended
-   *
    * @type {EventEmitter<any>}
    */
   @Output('scriptRenderingFinished') scriptRenderingFinished = new EventEmitter();
@@ -35,9 +34,10 @@ export class RunScriptsDirective implements OnInit {
   /**
    * The constructor
    *
-   * @param {ElementRef} elementRef Represent a reference for an HTML Element
+   * @param {ElementRef} _elementRef Represent a reference for an HTML Element
    */
-  constructor(private elementRef: ElementRef) { }
+  constructor(private _elementRef: ElementRef) {
+  }
 
   /**
    * Execute when the directive is init
@@ -53,7 +53,7 @@ export class RunScriptsDirective implements OnInit {
    * Reinsert scripts tag inside DOM for execution
    */
   reinsertScripts(): void {
-    let scripts: HTMLScriptElement[] = Array.from(this.elementRef.nativeElement.getElementsByTagName('script'));
+    let scripts: HTMLScriptElement[] = Array.from(this._elementRef.nativeElement.getElementsByTagName('script'));
     const scriptsWithSrc: HTMLScriptElement[] = scripts.filter(currentScript => currentScript.src);
     const scriptsInline: HTMLScriptElement[] = scripts.filter(currentScript => currentScript.innerHTML);
     scripts = [...scriptsWithSrc, ...scriptsInline];

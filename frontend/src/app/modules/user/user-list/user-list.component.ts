@@ -41,19 +41,30 @@ import {Role} from 'app/shared/model/dto/user/Role';
 })
 export class UserListComponent implements AfterViewInit {
   /**
+   * Management of the table sorting
+   * @type {MatSort}
+   */
+  @ViewChild(MatSort) matSort: MatSort;
+  /**
+   * Management of the table pagination
+   * @type {MatPaginator}
+   */
+  @ViewChild(MatPaginator) matPaginator: MatPaginator;
+
+  /**
    * The object that hold data management
-   * @type {MatTableDataSource<User>}  The mat table of users
+   * @type {MatTableDataSource<User>}
    */
   matTableDataSource = new MatTableDataSource<User>();
 
   /**
    * Column displayed on the mat table
-   * @type {string[]} The list of column references
+   * @type {string[]}
    */
   displayedColumns = ['username', 'fullname', 'mail', 'roles', 'edit', 'delete'];
   /**
    * Management of the spinner
-   * @type {boolean} True when we are loading result, false otherwise
+   * @type {boolean}
    */
   isLoadingResults = false;
   /**
@@ -68,28 +79,19 @@ export class UserListComponent implements AfterViewInit {
   resultsLength = 0;
 
   /**
-   * Management of the table sorting
-   */
-  @ViewChild(MatSort) matSort: MatSort;
-  /**
-   * Management of the table pagination
-   */
-  @ViewChild(MatPaginator) matPaginator: MatPaginator;
-
-  /**
    * The constructor
    *
-   * @param {UserService} userService The user service to inject
+   * @param {UserService} _userService The user service to inject
    * @param {RoleService} _roleService The role service to inject
-   * @param {ChangeDetectorRef} changeDetectorRef The change detector service to inject
-   * @param {MatDialog} matDialog The mat dialog service to inject
-   * @param {ToastService} toastService The toast service to inject
+   * @param {ChangeDetectorRef} _changeDetectorRef The change detector service to inject
+   * @param {MatDialog} _matDialog The mat dialog service to inject
+   * @param {ToastService} _toastService The toast service to inject
    */
-  constructor(private userService: UserService,
+  constructor(private _userService: UserService,
               private _roleService: RoleService,
-              private changeDetectorRef: ChangeDetectorRef,
-              private matDialog: MatDialog,
-              private toastService: ToastService) {
+              private _changeDetectorRef: ChangeDetectorRef,
+              private _matDialog: MatDialog,
+              private _toastService: ToastService) {
   }
 
   /**
@@ -109,8 +111,8 @@ export class UserListComponent implements AfterViewInit {
             startWith(null),
             switchMap(() => {
               this.isLoadingResults = true;
-              this.changeDetectorRef.detectChanges();
-              return this.userService.getAll();
+              this._changeDetectorRef.detectChanges();
+              return this._userService.getAll();
             }),
             map(data => {
               this.isLoadingResults = false;
@@ -156,17 +158,17 @@ export class UserListComponent implements AfterViewInit {
    * @param {User} user The user to delete
    */
   openDialogDeleteUser(user: User) {
-    const deleteUserDialogRef = this.matDialog.open(DeleteUserDialogComponent, {
+    const deleteUserDialogRef = this._matDialog.open(DeleteUserDialogComponent, {
       data: {user: user}
     });
 
     deleteUserDialogRef.afterClosed().subscribe(shouldDeleteUser => {
       if (shouldDeleteUser) {
         this
-            .userService
+            ._userService
             .deleteUser(user)
             .subscribe(() => {
-              this.toastService.sendMessage('User deleted successfully', ToastType.SUCCESS);
+              this._toastService.sendMessage('User deleted successfully', ToastType.SUCCESS);
               this.initUsersTable();
             });
       }

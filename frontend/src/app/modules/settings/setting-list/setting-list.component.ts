@@ -24,6 +24,9 @@ import {ToastService} from '../../../shared/components/toast/toast.service';
 import {ToastType} from '../../../shared/model/toastNotification/ToastType';
 import {SettingsService} from '../../../shared/services/settings.service';
 
+/**
+ * Represent the Admin Setting list page
+ */
 @Component({
   selector: 'app-setting-list',
   templateUrl: './setting-list.component.html',
@@ -33,12 +36,12 @@ export class SettingListComponent implements OnInit {
 
   /**
    * The current user
+   * @type {Observable<User>}
    */
   currentUser$: Observable<User>;
 
   /**
    * The setting data types
-   *
    * @type {SettingDataType}
    */
   settingDataType = SettingDataType;
@@ -59,7 +62,7 @@ export class SettingListComponent implements OnInit {
    * When the component is init
    */
   ngOnInit() {
-    this.currentUser$ = this._userService.connectedUserSubject.asObservable();
+    this.currentUser$ = this._userService.connectedUser$;
     this._userService.getConnectedUser().subscribe();
   }
 
@@ -71,7 +74,7 @@ export class SettingListComponent implements OnInit {
   saveUserSettings(formSettings: NgForm) {
     if (formSettings.valid) {
       const userSettingForm: FormGroup = formSettings.form;
-      const currentUser = this._userService.connectedUserSubject.getValue();
+      const currentUser = this._userService.connectedUser;
 
       const userSettings = currentUser.userSettings;
       userSettings.forEach(userSetting => {

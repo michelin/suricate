@@ -34,11 +34,13 @@ export class EditProjectWidgetDialogComponent implements OnInit {
 
   /**
    * The project widget to delete
+   * @type {ProjectWidget}
    */
   projectWidget: ProjectWidget;
 
   /**
    * The widget variable type
+   * @type {WidgetVariableType}
    */
   widgetVariableType = WidgetVariableType;
 

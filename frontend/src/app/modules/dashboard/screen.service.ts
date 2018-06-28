@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {AbstractHttpService} from '../../shared/services/abstract-http.service';
 import {HttpClient} from '@angular/common/http';
 import {WebsocketClient} from '../../shared/model/dto/WebsocketClient';
@@ -25,15 +25,16 @@ export class ScreenService extends AbstractHttpService {
   /**
    * Screen base url
    * @type {string}
+   * @private
    */
-  public static readonly SCREENS_BASE_URL = `${AbstractHttpService.BASE_API_URL}/${AbstractHttpService.SCREENS_URL}`;
+  private static readonly SCREENS_BASE_URL = `${AbstractHttpService.BASE_API_URL}/${AbstractHttpService.SCREENS_URL}`;
 
   /**
    * The constructor
    *
-   * @param {HttpClient} httpClient The http client service
+   * @param {HttpClient} _httpClient The http client service
    */
-  constructor(private httpClient: HttpClient) {
+  constructor(private _httpClient: HttpClient) {
     super();
   }
 
@@ -46,7 +47,7 @@ export class ScreenService extends AbstractHttpService {
    */
   connectProjectToScreen(projectToken: string, screenCode: number): void {
     const url = `${ScreenService.SCREENS_BASE_URL}/connect/${screenCode}/project/${projectToken}`;
-    this.httpClient.get<void>(url).subscribe();
+    this._httpClient.get<void>(url).subscribe();
   }
 
   /**
@@ -56,7 +57,7 @@ export class ScreenService extends AbstractHttpService {
    */
   disconnectScreen(websocketClient: WebsocketClient): void {
     const url = `${ScreenService.SCREENS_BASE_URL}/disconnect/`;
-    this.httpClient.put<void>(url, websocketClient).subscribe();
+    this._httpClient.put<void>(url, websocketClient).subscribe();
   }
 
   /**
@@ -66,7 +67,7 @@ export class ScreenService extends AbstractHttpService {
    */
   refreshEveryConnectedScreensForProject(projectToken: string): void {
     const url = `${ScreenService.SCREENS_BASE_URL}/refresh/${projectToken}`;
-    this.httpClient.get<void>(url).subscribe();
+    this._httpClient.get<void>(url).subscribe();
   }
 
   /**
@@ -75,6 +76,6 @@ export class ScreenService extends AbstractHttpService {
    */
   displayScreenCodeEveryConnectedScreensForProject(projectToken: string): void {
     const url = `${ScreenService.SCREENS_BASE_URL}/screencode/${projectToken}`;
-    this.httpClient.get<void>(url).subscribe();
+    this._httpClient.get<void>(url).subscribe();
   }
 }

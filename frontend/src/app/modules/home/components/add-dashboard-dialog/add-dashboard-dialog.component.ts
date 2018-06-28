@@ -35,62 +35,76 @@ import {ColorPickerService} from 'ngx-color-picker';
 export class AddDashboardDialogComponent implements OnInit {
   /**
    * Mat horizontal stepper
+   * @type {MatHorizontalStepper}
    */
   @ViewChild('addDashboardStepper') addDashboardStepper: MatHorizontalStepper;
 
   /**
    * Dashboard form group
+   * @type {FormGroup}
    */
   dashboardForm: FormGroup;
 
   /**
    * Tell if the form has been completed or not
+   * @type {boolean}
    */
   dashboardFormCompleted: boolean;
 
   /**
    * User form group
+   * @type {FormGroup}
    */
   addUserForm: FormGroup;
   /**
    * Observable of users (Used for auto completion
+   * @type {Observable<User[]>}
    */
-  userAutoComplete: Observable<User[]>;
+  userAutoComplete$: Observable<User[]>;
   /**
    * The current project
+   * @type {Project}
    */
   projectAdded: Project;
 
+  /**
+   * Tel if we open the dialog in edit mode or not
+   * @type {boolean}
+   */
   isEditMode = false;
 
-  dashboardBackgroundColor = '#424242';
+  /**
+   * The default dashboard background color
+   * @type {string}
+   */
+  dashboardBackgroundColor = '#42424200';
 
   /**
    * Constructor
    *
-   * @param data The data passed to the dialog
-   * @param {FormBuilder} formBuilder The formbuilder service
-   * @param {ChangeDetectorRef} changeDetectorRef The change detector service
-   * @param {DashboardService} dashboardService The dashboard service
-   * @param {UserService} userService The user service
-   * @param {ColorPickerService} colorPickerService The color picker service for dashboard background color
+   * @param _data The data passed to the dialog
+   * @param {FormBuilder} _formBuilder The formbuilder service
+   * @param {ChangeDetectorRef} _changeDetectorRef The change detector service
+   * @param {DashboardService} _dashboardService The dashboard service
+   * @param {UserService} _userService The user service
+   * @param {ColorPickerService} _colorPickerService The color picker service for dashboard background color
    */
-  constructor(@Inject(MAT_DIALOG_DATA) private data: any,
-              private formBuilder: FormBuilder,
-              private changeDetectorRef: ChangeDetectorRef,
-              private dashboardService: DashboardService,
-              private userService: UserService,
-              private colorPickerService: ColorPickerService) {
+  constructor(@Inject(MAT_DIALOG_DATA) private _data: any,
+              private _formBuilder: FormBuilder,
+              private _changeDetectorRef: ChangeDetectorRef,
+              private _dashboardService: DashboardService,
+              private _userService: UserService,
+              private _colorPickerService: ColorPickerService) {
   }
 
   /**
    * Initialisation of the component
    */
   ngOnInit() {
-    if (this.data && this.data.projectId) {
+    if (this._data && this._data.projectId) {
       this.isEditMode = true;
-      this.dashboardService
-          .getOneById(+this.data.projectId)
+      this._dashboardService
+          .getOneById(+this._data.projectId)
           .subscribe(project => {
             this.projectAdded = project;
             this.dashboardBackgroundColor = this.getPropertyFromGridCss('background-color');
@@ -114,7 +128,7 @@ export class AddDashboardDialogComponent implements OnInit {
    */
   private initDashboardForm(formCompleted: boolean) {
     this.dashboardFormCompleted = formCompleted;
-    this.dashboardForm = this.formBuilder.group({
+    this.dashboardForm = this._formBuilder.group({
       'name':
           [this.projectAdded ? this.projectAdded.name : '',
             [Validators.required]],
@@ -132,14 +146,14 @@ export class AddDashboardDialogComponent implements OnInit {
    */
   private initUserForm() {
     // Init Add user form
-    this.addUserForm = this.formBuilder.group({
+    this.addUserForm = this._formBuilder.group({
       'username': ['', [Validators.required]]
     });
     // Populate user autocomplete
-    this.userAutoComplete = this.addUserForm.get('username').valueChanges.pipe(
+    this.userAutoComplete$ = this.addUserForm.get('username').valueChanges.pipe(
         debounceTime(500),
         distinctUntilChanged(),
-        switchMap(username => username ? this.userService.searchUserByUsername(username) : empty<User[]>())
+        switchMap(username => username ? this._userService.searchUserByUsername(username) : empty<User[]>())
     );
   }
 
@@ -165,12 +179,12 @@ export class AddDashboardDialogComponent implements OnInit {
       this.projectAdded.cssStyle = this.getGridCss();
 
       if (!this.isEditMode) {
-        this.dashboardService
+        this._dashboardService
             .createProject(this.projectAdded)
             .subscribe(project => this.displayProject(project));
 
       } else {
-        this.dashboardService
+        this._dashboardService
             .editProject(this.projectAdded)
             .subscribe(project => this.displayProject(project));
       }
@@ -180,8 +194,8 @@ export class AddDashboardDialogComponent implements OnInit {
   displayProject(project: Project) {
     this.projectAdded = project;
     this.dashboardFormCompleted = true;
-    this.changeDetectorRef.detectChanges();
-    this.dashboardService.currentDisplayedDashboardValue = project;
+    this._changeDetectorRef.detectChanges();
+    this._dashboardService.currentDisplayedDashboardValue = project;
     this.addDashboardStepper.next();
   }
 
@@ -194,6 +208,12 @@ export class AddDashboardDialogComponent implements OnInit {
     return `background-color:${this.dashboardBackgroundColor};`;
   }
 
+  /**
+   * Get the CSS property
+   *
+   * @param {string} property The css property to find
+   * @returns {string} The related value
+   */
   private getPropertyFromGridCss(property: string): string {
     const propertyArray = this.projectAdded.cssStyle.split(';');
     return propertyArray
@@ -206,7 +226,7 @@ export class AddDashboardDialogComponent implements OnInit {
    */
   addUser() {
     if (this.addUserForm.valid) {
-      this.dashboardService
+      this._dashboardService
           .addUserToProject(this.projectAdded, this.addUserForm.value)
           .subscribe(project => this.projectAdded = project);
     }
@@ -218,7 +238,7 @@ export class AddDashboardDialogComponent implements OnInit {
    * @param {number} userId The user id
    */
   deleteUser(userId: number) {
-    this.dashboardService
+    this._dashboardService
         .deleteUserFromProject(this.projectAdded, userId)
         .subscribe(project => this.projectAdded = project);
   }

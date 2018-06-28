@@ -13,23 +13,60 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Injectable} from '@angular/core';
-import 'rxjs/add/observable/throw';
 
+import {Injectable} from '@angular/core';
+
+/**
+ * Hold the common Http informations
+ */
 @Injectable()
 export abstract class AbstractHttpService {
 
+  /**
+   * The base API url
+   * @type {string}
+   */
   public static readonly BASE_API_URL = process.env.BASE_URL + '/api';
+  /**
+   * The base WS url
+   * @type {string}
+   */
   public static readonly BASE_WS_URL = process.env.BASE_URL + '/ws';
 
+  /**
+   * Global endpoint for Authentication
+   * @type {string}
+   */
   public static readonly AUTHENTICATE_URL = 'oauth/token';
-  public static readonly SPRING_ACCESS_TOKEN_ENPOINT = 'access_token';
+
+  /**
+   * Global endpoint for Users
+   * @type {string}
+   */
   public static readonly USERS_URL = 'users';
+  /**
+   * Global endpoint for projects
+   * @type {string}
+   */
   public static readonly PROJECTS_URL = 'projects';
+  /**
+   * Global endpoint for screens
+   * @type {string}
+   */
   public static readonly SCREENS_URL = 'screens';
-  public static readonly PROJECT_WIDGETS_URL = 'project_widgets';
-  public static readonly ASSET_URL = 'asset';
+  /**
+   * Global endpoint for Widgets
+   * @type {string}
+   */
   public static readonly WIDGETS_URL = 'widgets';
+  /**
+   * Global configurations enpoint
+   * @type {string}
+   */
   public static readonly CONFIGURATIONS_URL = 'configurations';
+  /**
+   * Global roles endpoint
+   * @type {string}
+   */
   public static readonly ROLES_URL = 'roles';
 }

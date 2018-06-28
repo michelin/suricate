@@ -16,11 +16,13 @@ export class DashboardEditComponent implements OnInit {
 
   /**
    * The dashboard form
+   * @type {FormGroup}
    */
   editDashboardForm: FormGroup;
 
   /**
-   * The dashbaord to edit
+   * The dashboard to edit
+   * @type {Project}
    */
   dashboard: Project;
 

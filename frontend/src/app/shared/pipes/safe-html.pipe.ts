@@ -16,18 +16,32 @@
  *
  */
 
-import { Pipe, PipeTransform } from '@angular/core';
+import {Pipe, PipeTransform} from '@angular/core';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 
+/**
+ * Transform a string into a SafeHtml
+ */
 @Pipe({
   name: 'safeHtml'
 })
 export class SafeHtmlPipe implements PipeTransform {
 
-  constructor(private domSanitizer: DomSanitizer) {}
+  /**
+   * The constructor
+   * @param {DomSanitizer} _domSanitizer The dom sanitizer service
+   */
+  constructor(private _domSanitizer: DomSanitizer) {
+  }
 
+  /**
+   * The transform function
+   *
+   * @param {string} valueToSanitize The string value to sanitize
+   * @returns {SafeHtml}
+   */
   transform(valueToSanitize: string): SafeHtml {
-    return this.domSanitizer.bypassSecurityTrustHtml(valueToSanitize);
+    return this._domSanitizer.bypassSecurityTrustHtml(valueToSanitize);
   }
 
 }

@@ -14,9 +14,12 @@
  * limitations under the License.
  */
 
-import { Component, OnInit } from '@angular/core';
-import { environment } from '../../../../environments/environment';
+import {Component, OnInit} from '@angular/core';
+import {environment} from '../../../../environments/environment';
 
+/**
+ * The footer of the application
+ */
 @Component({
   selector: 'app-pages-footer',
   templateUrl: './pages-footer.component.html',
@@ -24,11 +27,27 @@ import { environment } from '../../../../environments/environment';
 })
 export class PagesFooterComponent implements OnInit {
 
-  public version: string = environment.VERSION;
-  public env: string = environment.ENVIRONMENT;
+  /**
+   * The app version
+   * @type {string}
+   */
+  version: string = environment.VERSION;
 
-  constructor() { }
+  /**
+   * The env type
+   * @type {string}
+   */
+  env: string = environment.ENVIRONMENT;
 
+  /**
+   * The constructor
+   */
+  constructor() {
+  }
+
+  /**
+   * When the component is init
+   */
   ngOnInit() {
   }
 

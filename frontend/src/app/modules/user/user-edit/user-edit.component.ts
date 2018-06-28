@@ -38,33 +38,36 @@ export class UserEditComponent implements OnInit {
 
   /**
    * The form group
+   * @type {FormGroup}
    */
   editUserForm: FormGroup;
 
   /**
    * The user to edit
+   * @type {User}
    */
   user: User;
 
   /**
    * The list of roles
+   * @type {Role[]}
    */
   roles: Role[];
 
   /**
    * Constructor
    *
-   * @param {UserService} userService The user service to inject
+   * @param {UserService} _userService The user service to inject
    * @param {RoleService} _roleService The role service to inject
-   * @param {ActivatedRoute} activatedRoute The activated route to inject
-   * @param {FormBuilder} formBuilder The formBuilder service
-   * @param {ToastService} toastService The service used for displayed Toast notification
+   * @param {ActivatedRoute} _activatedRoute The activated route to inject
+   * @param {FormBuilder} _formBuilder The formBuilder service
+   * @param {ToastService} _toastService The service used for displayed Toast notification
    */
-  constructor(private userService: UserService,
+  constructor(private _userService: UserService,
               private _roleService: RoleService,
-              private activatedRoute: ActivatedRoute,
-              private formBuilder: FormBuilder,
-              private toastService: ToastService) {
+              private _activatedRoute: ActivatedRoute,
+              private _formBuilder: FormBuilder,
+              private _toastService: ToastService) {
   }
 
   /**
@@ -75,8 +78,8 @@ export class UserEditComponent implements OnInit {
       this.roles = roles;
     });
 
-    this.activatedRoute.params.subscribe(params => {
-      this.userService.getById(params['userId']).subscribe(user => {
+    this._activatedRoute.params.subscribe(params => {
+      this._userService.getById(params['userId']).subscribe(user => {
         this.user = user;
         this.initUserEditForm();
       });
@@ -87,7 +90,7 @@ export class UserEditComponent implements OnInit {
    * Init the user edit form
    */
   initUserEditForm() {
-    this.editUserForm = this.formBuilder.group({
+    this.editUserForm = this._formBuilder.group({
       username: [this.user.username, [Validators.required, Validators.minLength(3)]],
       firstname: [this.user.firstname, [Validators.required, Validators.minLength(2)]],
       lastname: [this.user.lastname, [Validators.required, Validators.minLength(2)]],
@@ -122,8 +125,8 @@ export class UserEditComponent implements OnInit {
       }
     });
 
-    this.userService.updateUser(userUpdated).subscribe(() => {
-      this.toastService.sendMessage('User saved successfully', ToastType.SUCCESS);
+    this._userService.updateUser(userUpdated).subscribe(() => {
+      this._toastService.sendMessage('User saved successfully', ToastType.SUCCESS);
     });
   }
 

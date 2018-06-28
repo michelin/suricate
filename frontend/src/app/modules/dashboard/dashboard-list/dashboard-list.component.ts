@@ -41,27 +41,29 @@ export class DashboardListComponent implements AfterViewInit {
 
   /**
    * Management of the table sorting
+   * @type {MatSort}
    */
   @ViewChild(MatSort) matSort: MatSort;
   /**
    * Management of the table pagination
+   * @type {MatPaginator}
    */
   @ViewChild(MatPaginator) matPaginator: MatPaginator;
 
   /**
    * The object that hold data management
-   * @type {MatTableDataSource<User>}  The mat table of users
+   * @type {MatTableDataSource<User>}
    */
   matTableDataSource = new MatTableDataSource<Project>();
 
   /**
    * Column displayed on the mat table
-   * @type {string[]} The list of column references
+   * @type {string[]}
    */
   displayedColumns = ['name', 'token', 'edit', 'delete'];
   /**
    * Management of the spinner
-   * @type {boolean} True when we are loading result, false otherwise
+   * @type {boolean}
    */
   isLoadingResults = false;
   /**

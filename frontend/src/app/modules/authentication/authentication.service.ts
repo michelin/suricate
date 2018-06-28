@@ -22,11 +22,12 @@ import {Observable} from 'rxjs/Observable';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {map} from 'rxjs/operators';
 
-import {ICredentials} from '../../shared/model/dto/user/ICredentials';
+import {Credentials} from '../../shared/model/dto/user/Credentials';
 import {AbstractHttpService} from '../../shared/services/abstract-http.service';
 import {AuthenticationResponse} from '../../shared/model/dto/user/AuthenticationResponse';
 import {User} from '../../shared/model/dto/user/User';
 import {TokenService} from '../../shared/auth/token.service';
+import {UserService} from '../user/user.service';
 
 /**
  * The authentication service
@@ -38,35 +39,55 @@ export class AuthenticationService extends AbstractHttpService {
    * @type {BehaviorSubject<boolean>}
    * @private
    */
-  private _loggedIn$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(this._tokenService.hasToken());
+  private _loggedInSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(this._tokenService.hasToken());
 
   /**
    * Constructor
    *
    * @param {HttpClient} _httpClient The HttpClient service
    * @param {TokenService} _tokenService The token service
+   * @param {UserService} _userService The user service
    */
   constructor(private _httpClient: HttpClient,
-              private _tokenService: TokenService) {
+              private _tokenService: TokenService,
+              private _userService: UserService) {
     super();
   }
+
+  /* ******************************************************************* */
+  /*                      Subject Management Part                        */
+
+  /* ******************************************************************* */
 
   /**
    * Tell if the user is log or not
    *
    * @returns {Observable<boolean>}
    */
-  isLoggedIn(): Observable<boolean> {
-    return this._loggedIn$.asObservable();
+  get isLoggedIn$(): Observable<boolean> {
+    return this._loggedInSubject.asObservable();
   }
+
+  /**
+   * Set and send if the user is logged in or not
+   * @param {boolean} isLoggedIn
+   */
+  set isLoggedIn(isLoggedIn: boolean) {
+    this._loggedInSubject.next(isLoggedIn);
+  }
+
+  /* ******************************************************************* */
+  /*                 Authentication HTTP Management                      */
+
+  /* ******************************************************************* */
 
   /**
    * Authenticate the user throw OAuth2 Password grant
    *
-   * @param {ICredentials} credentials The user credentials
+   * @param {Credentials} credentials The user credentials
    * @returns {Observable<AuthenticationResponse>} The response as Observable
    */
-  authenticate(credentials: ICredentials): Observable<AuthenticationResponse> {
+  authenticate(credentials: Credentials): Observable<AuthenticationResponse> {
     let headers = new HttpHeaders();
     headers = headers.append('Content-Type', 'application/x-www-form-urlencoded');
     headers = headers.append('Authorization', `Basic ${btoa('suricateAngular:suricateAngularSecret')}`);
@@ -84,7 +105,7 @@ export class AuthenticationService extends AbstractHttpService {
             map(authenticationResponse => {
               if (authenticationResponse && authenticationResponse.access_token) {
                 this._tokenService.token = authenticationResponse.access_token;
-                this._loggedIn$.next(true);
+                this.isLoggedIn = true;
 
                 return authenticationResponse;
               }
@@ -108,6 +129,7 @@ export class AuthenticationService extends AbstractHttpService {
   logout(): void {
     // clear token remove user from local storage to log user out
     localStorage.removeItem('token');
-    this._loggedIn$.next(false);
+    this.isLoggedIn = false;
+    this._userService.connectedUser = null;
   }
 }

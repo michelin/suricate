@@ -30,6 +30,9 @@ export class TokenService {
    */
   private _jwtHelperService = new JwtHelperService();
 
+  /**
+   * Constructor
+   */
   constructor() {
   }
 
@@ -63,7 +66,6 @@ export class TokenService {
 
   /**
    * Tell if the user has a token or not
-   *
    * @returns {boolean} True if the user have a token store, false otherwise
    */
   hasToken(): boolean {

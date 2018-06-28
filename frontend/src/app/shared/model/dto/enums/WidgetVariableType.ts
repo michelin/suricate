@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+/**
+ * The widget variable types
+ */
 export enum WidgetVariableType {
   STRING = 'STRING',
   SECRET = 'SECRET',

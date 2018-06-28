@@ -38,26 +38,54 @@ export class UserService extends AbstractHttpService {
    * The base url for user API
    * @type {string} The user API url
    */
-  public static readonly USERS_BASE_URL = `${AbstractHttpService.BASE_API_URL}/${AbstractHttpService.USERS_URL}`;
+  private static readonly _USERS_BASE_URL = `${AbstractHttpService.BASE_API_URL}/${AbstractHttpService.USERS_URL}`;
 
   /**
    * The connected user subject
-   *
    * @type {Subject<User>}
    */
-  connectedUserSubject: BehaviorSubject<User> = new BehaviorSubject<User>(null);
+  private _connectedUserSubject: BehaviorSubject<User> = new BehaviorSubject<User>(null);
 
   /**
    * The constructor
    *
-   * @param {HttpClient} http The http client service to inject
+   * @param {HttpClient} _httpClient The http client service to inject
    * @param {TokenService} _tokenService The token service
    * @param {SettingsService} _themeService The theme service
    */
-  constructor(private http: HttpClient,
+  constructor(private _httpClient: HttpClient,
               private _tokenService: TokenService,
               private _themeService: SettingsService) {
     super();
+  }
+
+  /* *************************************************************************************** */
+  /*                            Subject Management                                           */
+
+  /* *************************************************************************************** */
+
+  /**
+   * Get the connected user event
+   * @returns {Observable<User>}
+   */
+  get connectedUser$(): Observable<User> {
+    return this._connectedUserSubject.asObservable();
+  }
+
+  /**
+   * Get the current connected user value
+   * @returns {User}
+   */
+  get connectedUser(): User {
+    return this._connectedUserSubject.getValue();
+  }
+
+  /**
+   * Set and send the new connected user
+   * @param {User} connectedUser
+   */
+  set connectedUser(connectedUser: User) {
+    this._connectedUserSubject.next(connectedUser);
   }
 
   /* *************************************************************************************** */
@@ -71,7 +99,7 @@ export class UserService extends AbstractHttpService {
    * @returns {Observable<User[]>} The list of users
    */
   getAll(): Observable<User[]> {
-    return this.http.get<User[]>(`${UserService.USERS_BASE_URL}`);
+    return this._httpClient.get<User[]>(`${UserService._USERS_BASE_URL}`);
   }
 
   /**
@@ -81,7 +109,7 @@ export class UserService extends AbstractHttpService {
    * @returns {Observable<User>} The user found
    */
   getById(userId: string): Observable<User> {
-    return this.http.get<User>(`${UserService.USERS_BASE_URL}/${userId}`);
+    return this._httpClient.get<User>(`${UserService._USERS_BASE_URL}/${userId}`);
   }
 
   /**
@@ -90,9 +118,9 @@ export class UserService extends AbstractHttpService {
    * @returns {Observable<User>} The connected user
    */
   getConnectedUser(): Observable<User> {
-    return this.http.get<User>(`${UserService.USERS_BASE_URL}/current`).pipe(
+    return this._httpClient.get<User>(`${UserService._USERS_BASE_URL}/current`).pipe(
         map(user => {
-          this.connectedUserSubject.next(user);
+          this.connectedUser = user;
           return user;
         })
     );
@@ -103,7 +131,7 @@ export class UserService extends AbstractHttpService {
    * @param {User} user The user to delete
    */
   deleteUser(user: User): Observable<User> {
-    return this.http.delete<User>(`${UserService.USERS_BASE_URL}/${user.id}`);
+    return this._httpClient.delete<User>(`${UserService._USERS_BASE_URL}/${user.id}`);
   }
 
   /**
@@ -113,13 +141,11 @@ export class UserService extends AbstractHttpService {
    * @returns {Observable<User>} The user updated
    */
   updateUser(user: User): Observable<User> {
-    return this
-        .http
-        .put<User>(`${UserService.USERS_BASE_URL}/${user.id}`, user)
+    return this._httpClient.put<User>(`${UserService._USERS_BASE_URL}/${user.id}`, user)
         .pipe(
             map(userUpdated => {
-              if (userUpdated.id === this.connectedUserSubject.getValue().id) {
-                this.connectedUserSubject.next(userUpdated);
+              if (userUpdated.id === this._connectedUserSubject.getValue().id) {
+                this.connectedUser = userUpdated;
               }
               return userUpdated;
             })
@@ -134,15 +160,15 @@ export class UserService extends AbstractHttpService {
    * @returns {Observable<User>} The user updated
    */
   updateUserSettings(user: User, userSettings: UserSetting[]): Observable<User> {
-    const url = `${UserService.USERS_BASE_URL}/${user.id}/settings`;
+    const url = `${UserService._USERS_BASE_URL}/${user.id}/settings`;
 
     return this
-        .http
+        ._httpClient
         .put<User>(url, userSettings)
         .pipe(
             map(userUpdated => {
-              if (userUpdated.id === this.connectedUserSubject.getValue().id) {
-                this.connectedUserSubject.next(userUpdated);
+              if (userUpdated.id === this._connectedUserSubject.getValue().id) {
+                this.connectedUser = userUpdated;
               }
               return userUpdated;
             })
@@ -156,7 +182,7 @@ export class UserService extends AbstractHttpService {
    * @returns {Observable<User[]>} The list of users that match the string
    */
   searchUserByUsername(username: string): Observable<User[]> {
-    return this.http.get<User[]>(`${UserService.USERS_BASE_URL}/search?username=${username}`);
+    return this._httpClient.get<User[]>(`${UserService._USERS_BASE_URL}/search?username=${username}`);
   }
 
   /* *************************************************************************************** */

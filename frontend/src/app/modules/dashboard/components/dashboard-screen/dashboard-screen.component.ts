@@ -175,7 +175,7 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
       this.subscribeToDestinations();
 
       this._websocketService
-          .stompConnectionState
+          .stompConnectionState$
           .pipe(
               takeWhile(() => this._isAlive),
               auditTime(10000)

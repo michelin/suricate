@@ -44,20 +44,22 @@ export class WidgetListComponent implements OnInit {
 
   /**
    * Manage the sort of each column on the table
+   * @type {MatSort}
    */
   @ViewChild(MatSort) matSort: MatSort;
   /**
    * Manage the pagination
+   * @type {MatPaginator}
    */
   @ViewChild(MatPaginator) matPaginator: MatPaginator;
   /**
    * The table data source
-   * @type {MatTableDataSource<any>} The datasource
+   * @type {MatTableDataSource<any>}
    */
   matTableDataSource = new MatTableDataSource();
   /**
    * The column displayed
-   * @type {string[]} The list a column name
+   * @type {string[]}
    */
   displayedColumns = ['image', 'name', 'description', 'category', 'status'];
   /**
@@ -78,27 +80,28 @@ export class WidgetListComponent implements OnInit {
 
   /**
    * The widget availability enums
-   * @type {WidgetAvailabilityEnum} The list of enums
+   * @type {WidgetAvailabilityEnum}
    */
   widgetAvailability = WidgetAvailabilityEnum;
 
   /**
    * The list of widgets
+   * @type {Widget[]}
    */
   widgets: Widget[];
 
   /**
    * Constructor
    *
-   * @param {WidgetService} widgetService The widgetService to inject
-   * @param {ChangeDetectorRef} changeDetectorRef enable the change detection after view init
-   * @param {DomSanitizer} domSanitizer The dom sanitizer service
-   * @param {ToastService} toastService The toast notificaiton service
+   * @param {WidgetService} _widgetService The widgetService to inject
+   * @param {ChangeDetectorRef} _changeDetectorRef enable the change detection after view init
+   * @param {DomSanitizer} _domSanitizer The dom sanitizer service
+   * @param {ToastService} _toastService The toast notificaiton service
    */
-  constructor(private widgetService: WidgetService,
-              private changeDetectorRef: ChangeDetectorRef,
-              private domSanitizer: DomSanitizer,
-              private toastService: ToastService) {
+  constructor(private _widgetService: WidgetService,
+              private _changeDetectorRef: ChangeDetectorRef,
+              private _domSanitizer: DomSanitizer,
+              private _toastService: ToastService) {
   }
 
   /**
@@ -117,8 +120,8 @@ export class WidgetListComponent implements OnInit {
             startWith(null),
             switchMap(() => {
               this.isLoadingResults = true;
-              this.changeDetectorRef.detectChanges();
-              return this.widgetService.getAll();
+              this._changeDetectorRef.detectChanges();
+              return this._widgetService.getAll();
             }),
             map(data => {
               this.isLoadingResults = false;
@@ -133,7 +136,7 @@ export class WidgetListComponent implements OnInit {
               return observableOf([]);
             })
         )
-        .subscribe(data =>  {
+        .subscribe(data => {
           this.resultsLength = data.length;
           this.matTableDataSource.data = data;
           this.matTableDataSource.sort = this.matSort;
@@ -158,7 +161,7 @@ export class WidgetListComponent implements OnInit {
     }
 
     return this
-        .domSanitizer
+        ._domSanitizer
         .bypassSecurityTrustHtml(imgHtml);
   }
 
@@ -183,10 +186,10 @@ export class WidgetListComponent implements OnInit {
     if (widgetToDisable) {
       widgetToDisable.widgetAvailability = changeEvent.checked ? WidgetAvailabilityEnum.ACTIVATED : WidgetAvailabilityEnum.DISABLED;
       this
-          .widgetService
+          ._widgetService
           .updateWidget(widgetToDisable)
-          .subscribe( (widgetResponse: Widget) => {
-            this.toastService.sendMessage(
+          .subscribe((widgetResponse: Widget) => {
+            this._toastService.sendMessage(
                 `The widget "${widgetResponse.name}" has been ${widgetResponse.widgetAvailability.toString()}`,
                 ToastType.SUCCESS
             );

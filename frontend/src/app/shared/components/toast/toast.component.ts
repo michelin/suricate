@@ -69,9 +69,14 @@ import {takeWhile} from 'rxjs/operators';
 export class ToastComponent implements OnInit, OnDestroy {
 
   /**
+   * Used for keep the subscription of subjects/Observables open
+   * @type {boolean}
+   */
+  private _isAlive = true;
+
+  /**
    * The component state
-   *
-   * @type {string} The status state
+   * @type {string}
    */
   animationState = 'in';
 
@@ -82,36 +87,34 @@ export class ToastComponent implements OnInit, OnDestroy {
   ToastType = ToastType;
 
   /**
-   * Used for keep the subscription of subjects/Obsevables open
-   *
-   * @type {boolean} True if we keep the connection, False if we have to unsubscribe
-   */
-  isAlive = true;
-
-  /**
    * The message to display
+   * @type {Observable<ToastMessage>}
    */
-  message: Observable<ToastMessage>;
+  message$: Observable<ToastMessage>;
 
   /**
    * The current timer for @function {hideWithinTimeout} function
+   * @type {NodeJS.Timer}
    */
   hideTimer: NodeJS.Timer;
 
   /**
    * Constructor
    *
-   * @param {ToastService} toastService The toast service to inject
+   * @param {ToastService} _toastService The toast service to inject
    */
-  constructor(private toastService: ToastService) { }
+  constructor(private _toastService: ToastService) {
+  }
 
   /**
    * Called when the component is init
    */
   ngOnInit() {
-    this.message = this.toastService.getMessage();
-    this.message
-        .pipe(takeWhile(() => this.isAlive))
+    this.message$ = this._toastService.toastMessage$;
+    this.message$
+        .pipe(
+            takeWhile(() => this._isAlive)
+        )
         .subscribe(() => this.showToast());
   }
 
@@ -150,7 +153,7 @@ export class ToastComponent implements OnInit, OnDestroy {
    * Called when the component is destroyed
    */
   ngOnDestroy() {
-    this.isAlive = false;
+    this._isAlive = false;
   }
 
 }

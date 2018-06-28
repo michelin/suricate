@@ -30,7 +30,7 @@ export class RoleService extends AbstractHttpService {
    * The base url for role API
    * @type {string} The role API url
    */
-  public static readonly ROLES_BASE_URL = `${AbstractHttpService.BASE_API_URL}/${AbstractHttpService.ROLES_URL}`;
+  private static readonly _ROLES_BASE_URL = `${AbstractHttpService.BASE_API_URL}/${AbstractHttpService.ROLES_URL}`;
 
   /**
    * Constructor
@@ -52,7 +52,7 @@ export class RoleService extends AbstractHttpService {
    * @returns {Observable<Role[]>}
    */
   getRoles(): Observable<Role[]> {
-    return this._httpClient.get<Role[]>(`${RoleService.ROLES_BASE_URL}`);
+    return this._httpClient.get<Role[]>(`${RoleService._ROLES_BASE_URL}`);
   }
 
 

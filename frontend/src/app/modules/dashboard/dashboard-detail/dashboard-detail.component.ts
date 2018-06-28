@@ -36,18 +36,21 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
 
   /**
    * The widget dialog ref
+   * @type {MatDialogRef<AddWidgetDialogComponent>}
+   * @private
    */
   private _addWidgetDialogRef: MatDialogRef<AddWidgetDialogComponent>;
 
   /**
    * Tell if the component is displayed
-   *
    * @type {boolean}
+   * @private
    */
   private _isAlive = true;
 
   /**
    * The project as observable
+   * @type {Observable<Project>}
    */
   project$: Observable<Project>;
 

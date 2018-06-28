@@ -29,19 +29,31 @@ import {SettingType} from '../model/dto/enums/SettingType';
 export class SettingsService {
 
   /**
+   * The default theme code
+   * @type {string}
+   */
+  public static readonly DEFAULT_THEME_CODE = 'default-theme';
+
+  /**
+   * The default language code
+   * @type {string}
+   */
+  public static readonly DEFAULT_LANGUAGE_CODE = 'en';
+
+  /**
    * Hold the current theme
    *
    * @type {BehaviorSubject<string>}
    * @private
    */
-  private _currentTheme$ = new BehaviorSubject<string>('default-theme');
+  private _currentThemeSubject = new BehaviorSubject<string>(SettingsService.DEFAULT_THEME_CODE);
 
   /**
    * Constructor
    *
    * @param {TranslateService} _translateService The translate service to inject
    */
-  constructor(private _translateService: TranslateService,) {
+  constructor(private _translateService: TranslateService) {
   }
 
   /* ************************************************************************ */
@@ -50,12 +62,19 @@ export class SettingsService {
   /* ************************************************************************ */
 
   /**
+   * When any user is not connected
+   */
+  initDefaultSettings() {
+    this.currentTheme = SettingsService.DEFAULT_THEME_CODE;
+    this.initLanguageSettings();
+  }
+
+  /**
    * init the user settings at connection
    * @param {User} user The user use for set the settings
    */
   initUserSettings(user: User) {
-    this.setTheme(this.getThemeUserSetting(user).settingValue.value);
-    this.initLanguageSettings();
+    this.currentTheme = this.getThemeUserSetting(user).settingValue.value;
   }
 
   /**
@@ -64,7 +83,7 @@ export class SettingsService {
    * @param {User} user The user used to set the settings
    */
   setUserSettings(user: User) {
-    this.setTheme(this.getThemeUserSetting(user).settingValue.value);
+    this.currentTheme = this.getThemeUserSetting(user).settingValue.value;
     // Add language here
   }
 
@@ -77,8 +96,8 @@ export class SettingsService {
    * The current theme as observable
    * @returns {Observable<string>}
    */
-  getCurrentTheme(): Observable<string> {
-    return this._currentTheme$.asObservable();
+  get currentTheme$(): Observable<string> {
+    return this._currentThemeSubject.asObservable();
   }
 
   /**
@@ -86,8 +105,8 @@ export class SettingsService {
    *
    * @param {string} themeName
    */
-  setTheme(themeName: string) {
-    this._currentTheme$.next(themeName);
+  set currentTheme(themeName: string) {
+    this._currentThemeSubject.next(themeName);
   }
 
   /**
@@ -110,10 +129,10 @@ export class SettingsService {
    */
   initLanguageSettings() {
     // this language will be used as a fallback when a translation isn't found in the current language
-    this._translateService.setDefaultLang('en');
+    this._translateService.setDefaultLang(SettingsService.DEFAULT_LANGUAGE_CODE);
 
     // the lang to use, if the lang isn't available, it will use the current loader to get them
-    this._translateService.use('en');
+    this._translateService.use(SettingsService.DEFAULT_LANGUAGE_CODE);
   }
 
   /**

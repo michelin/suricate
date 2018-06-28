@@ -31,7 +31,7 @@ export class SidenavService {
    * @type {Subject<boolean>} True open, false close
    * @private
    */
-  private _sidenavOpenCloseEventSubject$ = new Subject<boolean>();
+  private _sidenavOpenCloseEventSubject = new Subject<boolean>();
 
   /**
    * Constructor
@@ -45,20 +45,20 @@ export class SidenavService {
    * @returns {Observable<boolean>}
    */
   subscribeToSidenavOpenCloseEvent(): Observable<boolean> {
-    return this._sidenavOpenCloseEventSubject$.asObservable();
+    return this._sidenavOpenCloseEventSubject.asObservable();
   }
 
   /**
    * Send a close event
    */
   closeSidenav(): void {
-    this._sidenavOpenCloseEventSubject$.next(false);
+    this._sidenavOpenCloseEventSubject.next(false);
   }
 
   /**
    * Send an open event
    */
   openSidenav(): void {
-    this._sidenavOpenCloseEventSubject$.next(true);
+    this._sidenavOpenCloseEventSubject.next(true);
   }
 }

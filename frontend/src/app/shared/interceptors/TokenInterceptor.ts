@@ -29,9 +29,23 @@ import {TokenService} from '../auth/token.service';
 @Injectable()
 export class TokenInterceptor implements HttpInterceptor {
 
-  constructor(private authenticationService: AuthenticationService, private _tokenService: TokenService) {
+  /**
+   * Constructor
+   *
+   * @param {AuthenticationService} _authenticationService The authentication service to inject
+   * @param {TokenService} _tokenService The token service to inject
+   */
+  constructor(private _authenticationService: AuthenticationService,
+              private _tokenService: TokenService) {
   }
 
+  /**
+   * Method implemented from HttpInterceptor
+   *
+   * @param {HttpRequest<any>} request The request sent
+   * @param {HttpHandler} next The next interceptor
+   * @returns {Observable<HttpEvent<any>>}
+   */
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (!request ||
         !request.url ||

@@ -43,22 +43,26 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
 
   /**
    * Tell if the component is displayed
-   *
    * @type {boolean}
+   * @private
    */
   private _isAlive = true;
   /**
    * The screen subscription (Code View)
+   * @type {Subscription}
+   * @private
    */
   private _screenSubscription: Subscription;
 
   /**
    * The project as observable
+   * @type {Observable<Project>}
    */
   project$: Observable<Project>;
 
   /**
    * The screen code to display
+   * @type {number}
    */
   screenCode: number;
 
@@ -84,7 +88,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * Init of the component
    */
   ngOnInit() {
-    this._themeService.setTheme('dark-theme');
+    this._themeService.currentTheme = 'dark-theme';
     this._sidenavService.closeSidenav();
     this.screenCode = this._websocketService.getscreenCode();
 
