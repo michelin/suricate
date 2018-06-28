@@ -20,6 +20,9 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA} from '@angular/material';
 import {Configuration} from 'jasmine-spec-reporter/built/configuration';
 
+/**
+ * Dialog used to delete a configuration
+ */
 @Component({
   selector: 'app-delete-configuration-dialog',
   templateUrl: './delete-configuration-dialog.component.html',
@@ -29,19 +32,23 @@ export class DeleteConfigurationDialogComponent implements OnInit {
 
   /**
    * The configuration to delete
+   * @type {Configuration}
    */
   configuration: Configuration;
 
   /**
    * The constructor
    *
-   * @param data The data passed to the Dialog
+   * @param _data The data passed to the Dialog
    */
-  constructor(@Inject(MAT_DIALOG_DATA) private data: any) {
+  constructor(@Inject(MAT_DIALOG_DATA) private _data: any) {
   }
 
+  /**
+   * Called when the dialog is init
+   */
   ngOnInit() {
-    this.configuration = this.data.configuration;
+    this.configuration = this._data.configuration;
   }
 
 }

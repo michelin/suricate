@@ -36,6 +36,7 @@ export class AuthenticationService extends AbstractHttpService {
   /**
    * LoggedIn Subject (Hold if the user is logged in or not)
    * @type {BehaviorSubject<boolean>}
+   * @private
    */
   private _loggedIn$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(this._tokenService.hasToken());
 
@@ -45,7 +46,8 @@ export class AuthenticationService extends AbstractHttpService {
    * @param {HttpClient} _httpClient The HttpClient service
    * @param {TokenService} _tokenService The token service
    */
-  constructor(private _httpClient: HttpClient, private _tokenService: TokenService) {
+  constructor(private _httpClient: HttpClient,
+              private _tokenService: TokenService) {
     super();
   }
 

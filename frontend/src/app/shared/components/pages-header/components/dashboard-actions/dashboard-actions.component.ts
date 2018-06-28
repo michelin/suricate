@@ -69,7 +69,7 @@ export class DashboardActionsComponent implements OnInit {
    * When the component is init
    */
   ngOnInit() {
-    this.dashboardService.currendDashbordSubject.subscribe(project => this.project = project);
+    this.dashboardService.currentDisplayedDashboard$.subscribe(project => this.project = project);
   }
 
   /**

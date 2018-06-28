@@ -60,45 +60,49 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
 
   /**
    * The project to display
+   * @type {Project}
    */
   @Input('project') project: Project;
-
   /**
    * Tell if the dashboard should be on readOnly or not
+   * @type {boolean}
    */
   @Input('readOnly') readOnly = true;
-
   /**
    * The screen code
+   * @type {number}
    */
   @Input('screenCode') screenCode: number;
-
-  /**
-   * Used for keep the subscription of subjects/Obsevables open
-   *
-   * @type {boolean} True if we keep the connection, False if we have to unsubscribe
-   */
-  isAlive = true;
-
   /**
    * The list of projectWidgets rendered by the ngFor
+   * @type {QueryList<any>}
    */
   @ViewChildren('projectWidgetsRendered') projectWidgetsRendered: QueryList<any>;
 
   /**
-   * Save every web socket subscriptions event
+   * Used for keep the subscription of subjects/Obsevables open
+   * @type {boolean} True if we keep the connection, False if we have to unsubscribe
+   * @private
    */
-  websocketSubscriptions: Subscription[] = [];
+  private _isAlive = true;
+
+  /**
+   * Save every web socket subscriptions event
+   * @type {Subscription[]}
+   * @private
+   */
+  private _websocketSubscriptions: Subscription[] = [];
+
+  /**
+   * True if the grid items has been initialized false otherwise
+   * @type {boolean}
+   */
+  _isGridItemInit = false;
 
   /**
    * The options for the plugin angular2-grid
    */
   gridOptions: {};
-
-  /**
-   * True if the grid items has been initialized false otherwise
-   */
-  isGridItemInit = false;
 
   /**
    * True if the "src" scripts Are Rendered
@@ -108,12 +112,12 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
 
   /**
    * The current stomp connection state
+   * @type {StompState}
    */
   currentStompConnectionState: StompState;
 
   /**
    * The stomp state enum
-   *
    * @type {StompState}
    */
   stompStateEnum = StompState;
@@ -127,17 +131,17 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
   /**
    * constructor
    *
-   * @param {DashboardService} dashboardService The dashboard service
-   * @param {MatDialog} matDialog The material dialog service
-   * @param {WebsocketService} websocketService The websocket service
-   * @param {Router} router The router service
-   * @param {ChangeDetectorRef} changeDetectorRef The change detector ref service
+   * @param {DashboardService} _dashboardService The dashboard service
+   * @param {MatDialog} _matDialog The material dialog service
+   * @param {WebsocketService} _websocketService The websocket service
+   * @param {Router} _router The router service
+   * @param {ChangeDetectorRef} _changeDetectorRef The change detector ref service
    */
-  constructor(private dashboardService: DashboardService,
-              private websocketService: WebsocketService,
-              private matDialog: MatDialog,
-              private router: Router,
-              private changeDetectorRef: ChangeDetectorRef) {
+  constructor(private _dashboardService: DashboardService,
+              private _websocketService: WebsocketService,
+              private _matDialog: MatDialog,
+              private _router: Router,
+              private _changeDetectorRef: ChangeDetectorRef) {
   }
 
   /**
@@ -151,7 +155,7 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
       if (changes.project.previousValue && changes.project.previousValue.id !== changes.project.currentValue.id) {
         this.unsubscribeToDestinations();
         this.disconnect();
-        this.websocketService.startConnection();
+        this._websocketService.startConnection();
         this.subscribeToDestinations();
       }
     }
@@ -162,18 +166,18 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
    */
   ngOnInit() {
     if (!this.screenCode) {
-      this.screenCode = this.websocketService.getscreenCode();
+      this.screenCode = this._websocketService.getscreenCode();
     }
 
     if (this.project) {
       this.initGridStackOptions(this.project);
-      this.websocketService.startConnection();
+      this._websocketService.startConnection();
       this.subscribeToDestinations();
 
-      this.websocketService
+      this._websocketService
           .stompConnectionState
           .pipe(
-              takeWhile(() => this.isAlive),
+              takeWhile(() => this._isAlive),
               auditTime(10000)
           )
           .subscribe((stompState: StompState) => {
@@ -181,7 +185,6 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
           });
     }
   }
-
 
   /**
    * Called when the view has been init
@@ -192,7 +195,7 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
       this.projectWidgetsRendered
           .changes
           .subscribe((projectWidgetElements: QueryList<any>) => {
-            this.isGridItemInit = true;
+            this._isGridItemInit = true;
             this.bindDeleteProjectWidgetEvent(projectWidgetElements);
             this.bindEditProjectWidgetEvent(projectWidgetElements);
           });
@@ -208,7 +211,7 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
   ngOnDestroy() {
     this.unsubscribeToDestinations();
     this.disconnect();
-    this.isAlive = false;
+    this._isAlive = false;
   }
 
   /* ******************************************************* */
@@ -514,7 +517,7 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
       if (deleteButton) {
         fromEvent<MouseEvent>(deleteButton, 'click')
             .pipe(
-                takeWhile(() => this.isAlive && this.isGridItemInit),
+                takeWhile(() => this._isAlive && this._isGridItemInit),
                 map((mouseEvent: MouseEvent) => mouseEvent.toElement.closest('.widget').querySelector('.btn-widget-delete'))
             )
             .subscribe((deleteButtonElement: any) => {
@@ -535,7 +538,7 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
       if (editButton) {
         fromEvent<MouseEvent>(editButton, 'click')
             .pipe(
-                takeWhile(() => this.isAlive && this.isGridItemInit),
+                takeWhile(() => this._isAlive && this._isGridItemInit),
                 map((mouseEvent: MouseEvent) => mouseEvent.toElement.closest('.widget').querySelector('.btn-widget-edit'))
             )
             .subscribe((editButtonElement: any) => {
@@ -554,17 +557,17 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
    * Subscribe to destinations
    */
   subscribeToDestinations() {
-    this.websocketSubscriptions.push(
-        this.websocketService
+    this._websocketSubscriptions.push(
+        this._websocketService
             .subscribeToDestination(`/user/${this.project.token}-${this.screenCode}/queue/unique`)
-            .pipe(takeWhile(() => this.isAlive))
+            .pipe(takeWhile(() => this._isAlive))
             .subscribe((stompMessage: Stomp.Message) => this.handleUniqueScreenEvent(JSON.parse(stompMessage.body)))
     );
 
-    this.websocketSubscriptions.push(
-        this.websocketService
+    this._websocketSubscriptions.push(
+        this._websocketService
             .subscribeToDestination(`/user/${this.project.token}/queue/live`)
-            .pipe(takeWhile(() => this.isAlive))
+            .pipe(takeWhile(() => this._isAlive))
             .subscribe((stompMessage: Stomp.Message) => this.handleGlobalScreenEvent(JSON.parse(stompMessage.body)))
     );
   }
@@ -577,8 +580,8 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
   handleUniqueScreenEvent(updateEvent: WSUpdateEvent) {
     if (updateEvent.type === WSUpdateType.DISCONNECT) {
       this.unsubscribeToDestinations();
-      this.websocketService.disconnect();
-      this.router.navigate(['/tv']);
+      this._websocketService.disconnect();
+      this._router.navigate(['/tv']);
     }
   }
 
@@ -592,7 +595,7 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
     if (updateEvent.type === WSUpdateType.WIDGET) {
       const projectWidget: ProjectWidget = updateEvent.content;
       if (projectWidget) {
-        this.dashboardService
+        this._dashboardService
             .updateWidgetHtmlFromProjetWidgetId(updateEvent.content.id, projectWidget.instantiateHtml, projectWidget.state);
       }
     }
@@ -601,8 +604,8 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
     if (updateEvent.type === WSUpdateType.POSITION || updateEvent.type === WSUpdateType.GRID) {
       const projectUpdated: Project = updateEvent.content;
       if (projectUpdated) {
-        this.isGridItemInit = false;
-        this.dashboardService.currendDashbordSubject.next(projectUpdated);
+        this._isGridItemInit = false;
+        this._dashboardService.currentDisplayedDashboardValue = projectUpdated;
       }
     }
 
@@ -617,17 +620,17 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
       setTimeout(() => this.displayScreenCode = false, 10000);
     }
 
-    this.changeDetectorRef.detectChanges();
+    this._changeDetectorRef.detectChanges();
   }
 
   unsubscribeToDestinations() {
-    this.websocketSubscriptions.forEach((subscription: Subscription) => {
+    this._websocketSubscriptions.forEach((subscription: Subscription) => {
       subscription.unsubscribe();
     });
   }
 
   disconnect() {
-    this.websocketService.disconnect();
+    this._websocketService.disconnect();
   }
 
   /**
@@ -669,20 +672,19 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
    * @param {number} projectWidgetId The project widget id to delete
    */
   deleteProjectWidgetFromDashboard(projectWidgetId: number) {
-    const projectWidget: ProjectWidget = this.dashboardService.currendDashbordSubject.getValue()
-        .projectWidgets
+    const projectWidget: ProjectWidget = this._dashboardService.currentDisplayedDashboardValue.projectWidgets
         .find((currentProjectWidget: ProjectWidget) => {
           return currentProjectWidget.id === projectWidgetId;
         });
 
     if (projectWidget) {
-      const deleteProjectWidgetDialogRef = this.matDialog.open(DeleteProjectWidgetDialogComponent, {
+      const deleteProjectWidgetDialogRef = this._matDialog.open(DeleteProjectWidgetDialogComponent, {
         data: {projectWidget: projectWidget}
       });
 
       deleteProjectWidgetDialogRef.afterClosed().subscribe(shouldDeleteProjectWidget => {
         if (shouldDeleteProjectWidget) {
-          this.dashboardService
+          this._dashboardService
               .deleteProjectWidgetFromProject(projectWidget.project.id, projectWidget.id)
               .subscribe();
         }
@@ -696,14 +698,13 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
    * @param {number} projectWidgetId The project widget id to edit
    */
   editProjectWidgetFromDashboard(projectWidgetId: number) {
-    const projectWidget: ProjectWidget = this.dashboardService.currendDashbordSubject.getValue()
-        .projectWidgets
+    const projectWidget: ProjectWidget = this._dashboardService.currentDisplayedDashboardValue.projectWidgets
         .find((currentProjectWidget: ProjectWidget) => {
           return currentProjectWidget.id === projectWidgetId;
         });
 
     if (projectWidget) {
-      this.matDialog.open(EditProjectWidgetDialogComponent, {
+      this._matDialog.open(EditProjectWidgetDialogComponent, {
         minWidth: 700,
         data: {projectWidget: projectWidget}
       });
@@ -716,10 +717,10 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
    * @param {NgGridItemEvent[]} gridItemEvents The list of grid item events
    */
   updateProjectWidgetsPosition(gridItemEvents: NgGridItemEvent[]) {
-    const currentProject: Project = this.dashboardService.currendDashbordSubject.getValue();
+    const currentProject: Project = this._dashboardService.currentDisplayedDashboardValue;
 
     // update the position only if the grid item has been init
-    if (this.isGridItemInit) {
+    if (this._isGridItemInit) {
       const projectWidgetPositions: ProjectWidgetPosition[] = [];
 
       gridItemEvents.forEach(gridItemEvent => {
@@ -734,7 +735,7 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
         projectWidgetPositions.push(projectWidgetPosition);
       });
 
-      this.dashboardService
+      this._dashboardService
           .updateWidgetPositionForProject(currentProject.id, projectWidgetPositions)
           .subscribe();
     }
@@ -742,8 +743,8 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
     // We check if the grid item is init, if it's we change the boolean.
     // Without this the grid item plugin will send request to the server at the initialisation of the component
     // (probably a bug of the "OnItemChange" event)
-    if (!this.isGridItemInit && gridItemEvents.length === currentProject.projectWidgets.length) {
-      this.isGridItemInit = true;
+    if (!this._isGridItemInit && gridItemEvents.length === currentProject.projectWidgets.length) {
+      this._isGridItemInit = true;
     }
   }
 

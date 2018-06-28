@@ -42,12 +42,15 @@ export class ConfigurationListComponent implements OnInit {
 
   /**
    * manage sort of the Mat table
+   * @type {MatSort}
    */
   @ViewChild(MatSort) matSort: MatSort;
   /**
    * manage pagination of the Mat table
+   * @type {MatPaginator}
    */
   @ViewChild(MatPaginator) matPaginator: MatPaginator;
+
   /**
    * Hold the data of the mat table
    * @type {MatTableDataSource<any>}

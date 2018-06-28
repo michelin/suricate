@@ -41,7 +41,7 @@ export class AddDashboardDialogComponent implements OnInit {
   /**
    * Dashboard form group
    */
-  dashboardForm:      FormGroup;
+  dashboardForm: FormGroup;
 
   /**
    * Tell if the form has been completed or not
@@ -51,15 +51,15 @@ export class AddDashboardDialogComponent implements OnInit {
   /**
    * User form group
    */
-  addUserForm:        FormGroup;
+  addUserForm: FormGroup;
   /**
    * Observable of users (Used for auto completion
    */
-  userAutoComplete:   Observable<User[]>;
+  userAutoComplete: Observable<User[]>;
   /**
    * The current project
    */
-  projectAdded:       Project;
+  projectAdded: Project;
 
   isEditMode = false;
 
@@ -139,7 +139,7 @@ export class AddDashboardDialogComponent implements OnInit {
     this.userAutoComplete = this.addUserForm.get('username').valueChanges.pipe(
         debounceTime(500),
         distinctUntilChanged(),
-        switchMap( username => username ? this.userService.searchUserByUsername(username) : empty<User[]>())
+        switchMap(username => username ? this.userService.searchUserByUsername(username) : empty<User[]>())
     );
   }
 
@@ -158,8 +158,10 @@ export class AddDashboardDialogComponent implements OnInit {
    */
   saveDashboard() {
     if (this.dashboardForm.valid) {
-      this.projectAdded = { ...this.projectAdded,
-                            ...this.dashboardForm.value};
+      this.projectAdded = {
+        ...this.projectAdded,
+        ...this.dashboardForm.value
+      };
       this.projectAdded.cssStyle = this.getGridCss();
 
       if (!this.isEditMode) {
@@ -179,7 +181,7 @@ export class AddDashboardDialogComponent implements OnInit {
     this.projectAdded = project;
     this.dashboardFormCompleted = true;
     this.changeDetectorRef.detectChanges();
-    this.dashboardService.currendDashbordSubject.next(project);
+    this.dashboardService.currentDisplayedDashboardValue = project;
     this.addDashboardStepper.next();
   }
 
@@ -195,8 +197,8 @@ export class AddDashboardDialogComponent implements OnInit {
   private getPropertyFromGridCss(property: string): string {
     const propertyArray = this.projectAdded.cssStyle.split(';');
     return propertyArray
-            .filter((currentProperty: string) => currentProperty.split(':')[0] === property)[0]
-            .split(':')[1];
+        .filter((currentProperty: string) => currentProperty.split(':')[0] === property)[0]
+        .split(':')[1];
   }
 
   /**

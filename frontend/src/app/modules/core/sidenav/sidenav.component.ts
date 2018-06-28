@@ -24,8 +24,10 @@ import {takeWhile} from 'rxjs/operators';
 import {MatSidenav} from '@angular/material';
 import {SidenavService} from './sidenav.service';
 import {AuthenticationService} from '../../authentication/authentication.service';
-import {TranslateService} from "@ngx-translate/core";
 
+/**
+ * Hold the sidenav behavior
+ */
 @Component({
   selector: 'app-sidenav',
   templateUrl: './sidenav.component.html',
@@ -33,71 +35,82 @@ import {TranslateService} from "@ngx-translate/core";
 })
 export class SidenavComponent implements OnInit, AfterViewInit, OnDestroy {
 
+  /**
+   * The html sidenav
+   * @type {MatSidenav}
+   */
   @ViewChild('sidenav') sidenav: MatSidenav;
 
   /**
    * Used for close the observable subscription
-   *
    * @type {boolean}
+   * @private
    */
-  private alive = true;
+  private _isAlive = true;
 
   /**
    * The connected user
+   * @type {User}
    */
-  public connectedUser: User;
+  connectedUser: User;
 
   /**
    * True if the user is admin
+   * @type {boolean}
    */
-  public isUserAdmin: boolean;
+  isUserAdmin: boolean;
 
   /**
    * The list of dashboards
+   * @type {Project[]}
    */
-  public dashboards: Project[];
+  dashboards: Project[];
 
   /**
    * Constructor
    *
-   * @param {Router} router The router service
-   * @param {ChangeDetectorRef} changeDetectorRef The change detector service
-   * @param {DashboardService} dashboardService The dashboard service
-   * @param {UserService} userService The user service
-   * @param {AuthenticationService} authenticationService The authentication service
-   * @param {SidenavService} sidenavService The sidenav service
+   * @param {Router} _router The router service
+   * @param {ChangeDetectorRef} _changeDetectorRef The change detector service
+   * @param {DashboardService} _dashboardService The dashboard service
+   * @param {UserService} _userService The user service
+   * @param {AuthenticationService} _authenticationService The authentication service
+   * @param {SidenavService} _sidenavService The sidenav service
    */
-  constructor(private router: Router,
-              private changeDetectorRef: ChangeDetectorRef,
-              private dashboardService: DashboardService,
-              private userService: UserService,
-              private authenticationService: AuthenticationService,
-              private sidenavService: SidenavService) {
+  constructor(private _router: Router,
+              private _changeDetectorRef: ChangeDetectorRef,
+              private _dashboardService: DashboardService,
+              private _userService: UserService,
+              private _authenticationService: AuthenticationService,
+              private _sidenavService: SidenavService) {
   }
 
   /**
    * Init objects
    */
   ngOnInit() {
-    this.dashboardService
-        .dashboardsSubject
-        .pipe(takeWhile(() => this.alive))
-        .subscribe(projects => this.dashboards = this.dashboardService.sortByProjectName(projects));
+    this._dashboardService.currentDashboardList$
+        .pipe(
+            takeWhile(() => this._isAlive)
+        )
+        .subscribe(projects => this.dashboards = this._dashboardService.sortByProjectName(projects));
 
-    this.userService
+    this._userService
         .connectedUserSubject
-        .pipe(takeWhile(() => this.alive))
+        .pipe(takeWhile(() => this._isAlive))
         .subscribe(connectedUser => this.connectedUser = connectedUser);
 
-    this.dashboardService.getAllForCurrentUser().subscribe();
-    this.userService.getConnectedUser().subscribe();
-    this.isUserAdmin = this.userService.isAdmin();
+    this._dashboardService.getAllForCurrentUser().subscribe();
+    this._userService.getConnectedUser().subscribe();
+    this.isUserAdmin = this._userService.isAdmin();
   }
 
+  /**
+   * Called when the view has been init
+   */
   ngAfterViewInit() {
-    this.sidenavService
+    this._sidenavService
         .subscribeToSidenavOpenCloseEvent()
-        .pipe(takeWhile(() => this.alive))
+        .pipe(takeWhile(() => this._isAlive))
         .subscribe((shouldOpen: boolean) => {
           if (shouldOpen) {
             this.sidenav.open();
@@ -113,15 +126,15 @@ export class SidenavComponent implements OnInit, AfterViewInit, OnDestroy {
    * @returns {string} The initials
    */
   getConnectedUserInitial(): string {
-    return this.userService.getUserInitial(this.connectedUser);
+    return this._userService.getUserInitial(this.connectedUser);
   }
 
   /**
    * Logout the user
    */
   logout(): void {
-    this.authenticationService.logout();
-    this.router.navigate(['/login']);
+    this._authenticationService.logout();
+    this._router.navigate(['/login']);
   }
 
   /**
@@ -129,6 +142,6 @@ export class SidenavComponent implements OnInit, AfterViewInit, OnDestroy {
    * All the subscriptions are closed
    */
   ngOnDestroy() {
-    this.alive = false;
+    this._isAlive = false;
   }
 }

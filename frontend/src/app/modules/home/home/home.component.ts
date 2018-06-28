@@ -17,8 +17,8 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Project} from '../../../shared/model/dto/Project';
 import {DashboardService} from '../../dashboard/dashboard.service';
-import { takeWhile} from 'rxjs/operators';
-import {MatDialogRef, MatDialog} from '@angular/material';
+import {takeWhile} from 'rxjs/operators';
+import {MatDialog, MatDialogRef} from '@angular/material';
 import {AddDashboardDialogComponent} from '../components/add-dashboard-dialog/add-dashboard-dialog.component';
 import {Router} from '@angular/router';
 
@@ -53,16 +53,16 @@ export class HomeComponent implements OnInit, OnDestroy {
    */
   constructor(private dashboardService: DashboardService,
               private matDialog: MatDialog,
-              private router: Router) { }
+              private router: Router) {
+  }
 
   /**
    * Init objects
    */
   ngOnInit() {
-    this.dashboardService
-        .dashboardsSubject
+    this.dashboardService.currentDashboardList$
         .pipe(takeWhile(() => this.alive))
-        .subscribe( dashboards => this.dashboards = dashboards);
+        .subscribe(dashboards => this.dashboards = dashboards);
   }
 
   /**

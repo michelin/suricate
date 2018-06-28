@@ -37,17 +37,18 @@ export class ConfigurationEditComponent implements OnInit {
 
   /**
    * The edit form
+   * @type {FormGroup}
    */
   configurationForm: FormGroup;
 
   /**
    * The current configuration
+   * @type {Configuration}
    */
   configuration: Configuration;
 
   /**
    * The configuration data type
-   *
    * @type {ConfigurationDataType}
    */
   configurationDataType = ConfigurationDataType;
@@ -66,6 +67,9 @@ export class ConfigurationEditComponent implements OnInit {
               private _configurationService: ConfigurationService) {
   }
 
+  /**
+   * Called when the component is init
+   */
   ngOnInit() {
     this._activatedRoute.params.subscribe(params => {
       this._configurationService.getOneByKey(params['configurationKey']).subscribe(configuration => {

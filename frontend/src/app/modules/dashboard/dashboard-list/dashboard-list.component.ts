@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {ChangeDetectorRef, Component, ViewChild, AfterViewInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, ViewChild} from '@angular/core';
 import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import {Project} from '../../../shared/model/dto/Project';
 import {DashboardService} from '../dashboard.service';
@@ -38,6 +38,15 @@ import {DeleteDashboardDialogComponent} from '../components/delete-dashboard-dia
   styleUrls: ['./dashboard-list.component.css']
 })
 export class DashboardListComponent implements AfterViewInit {
+
+  /**
+   * Management of the table sorting
+   */
+  @ViewChild(MatSort) matSort: MatSort;
+  /**
+   * Management of the table pagination
+   */
+  @ViewChild(MatPaginator) matPaginator: MatPaginator;
 
   /**
    * The object that hold data management
@@ -67,26 +76,18 @@ export class DashboardListComponent implements AfterViewInit {
   resultsLength = 0;
 
   /**
-   * Management of the table sorting
-   */
-  @ViewChild(MatSort) matSort: MatSort;
-  /**
-   * Management of the table pagination
-   */
-  @ViewChild(MatPaginator) matPaginator: MatPaginator;
-
-  /**
    * Constructor
    *
-   * @param {DashboardService} dashboardService The dashboardService to inject
-   * @param {ChangeDetectorRef} changeDetectorRef The change detector ref
-   * @param {MatDialog} matDialog The matDialog service to inject
-   * @param {ToastService} toastService The toast service to inject
+   * @param {DashboardService} _dashboardService The dashboardService to inject
+   * @param {ChangeDetectorRef} _changeDetectorRef The change detector ref
+   * @param {MatDialog} _matDialog The matDialog service to inject
+   * @param {ToastService} _toastService The toast service to inject
    */
-  constructor(private dashboardService: DashboardService,
-              private changeDetectorRef: ChangeDetectorRef,
-              private matDialog: MatDialog,
-              private toastService: ToastService) { }
+  constructor(private _dashboardService: DashboardService,
+              private _changeDetectorRef: ChangeDetectorRef,
+              private _matDialog: MatDialog,
+              private _toastService: ToastService) {
+  }
 
   /**
    * Called when the view has been init
@@ -105,8 +106,8 @@ export class DashboardListComponent implements AfterViewInit {
             startWith(null),
             switchMap(() => {
               this.isLoadingResults = true;
-              this.changeDetectorRef.detectChanges();
-              return this.dashboardService.getAll();
+              this._changeDetectorRef.detectChanges();
+              return this._dashboardService.getAll();
             }),
             map(data => {
               this.isLoadingResults = false;
@@ -121,7 +122,7 @@ export class DashboardListComponent implements AfterViewInit {
               return observableOf([]);
             })
         )
-        .subscribe(data =>  {
+        .subscribe(data => {
           this.resultsLength = data.length;
           this.matTableDataSource.data = data;
           this.matTableDataSource.sort = this.matSort;
@@ -134,17 +135,17 @@ export class DashboardListComponent implements AfterViewInit {
    * @param {Project} project The dashboard to delete
    */
   openDialogDeleteDashboard(project: Project) {
-    const deleteUserDialogRef = this.matDialog.open(DeleteDashboardDialogComponent, {
+    const deleteUserDialogRef = this._matDialog.open(DeleteDashboardDialogComponent, {
       data: {project: project}
     });
 
     deleteUserDialogRef.afterClosed().subscribe(shouldDeleteDashboard => {
       if (shouldDeleteDashboard) {
         this
-            .dashboardService
+            ._dashboardService
             .deleteProject(project)
             .subscribe(() => {
-              this.toastService.sendMessage('Project deleted successfully', ToastType.SUCCESS);
+              this._toastService.sendMessage('Project deleted successfully', ToastType.SUCCESS);
               this.initProjectsTable();
             });
       }

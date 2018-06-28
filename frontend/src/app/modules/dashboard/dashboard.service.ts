@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {AbstractHttpService} from '../../shared/services/abstract-http.service';
 import {HttpClient} from '@angular/common/http';
 import {Project} from '../../shared/model/dto/Project';
@@ -27,21 +27,43 @@ import {User} from '../../shared/model/dto/user/User';
 import {ProjectWidgetPosition} from '../../shared/model/dto/ProjectWidgetPosition';
 import {WidgetStateEnum} from '../../shared/model/dto/enums/WidgetSateEnum';
 
+/**
+ * The dashboard service, manage http calls
+ */
 @Injectable()
 export class DashboardService extends AbstractHttpService {
 
-  public static readonly ACTION_DELETE = 'DELETE';
-  public static readonly ACTION_UPDATE = 'UPDATE';
-
-  public static readonly PROJECTS_BASE_URL = `${AbstractHttpService.BASE_API_URL}/${AbstractHttpService.PROJECTS_URL}`;
+  /**
+   * The action type DELETE
+   * @type {string}
+   * @private
+   */
+  private static readonly _ACTION_DELETE = 'DELETE';
+  /**
+   * The action type update
+   * @type {string}
+   * @private
+   */
+  private static readonly _ACTION_UPDATE = 'UPDATE';
 
   /**
-   * Hold the list of dashboards
-   *
+   * The base project url for http calls
+   * @type {string}
+   * @private
+   */
+  private static readonly _PROJECTS_BASE_URL = `${AbstractHttpService.BASE_API_URL}/${AbstractHttpService.PROJECTS_URL}`;
+
+  /**
+   * Hold the list of the user dashboards
    * @type {BehaviorSubject<Project[]>}
    */
-  dashboardsSubject = new BehaviorSubject<Project[]>([]);
-  currendDashbordSubject = new BehaviorSubject<Project>(null);
+  private _userDashboardsSubject$ = new BehaviorSubject<Project[]>([]);
+
+  /**
+   * Hold the dashboard currently displayed to the user
+   * @type {BehaviorSubject<Project>}
+   */
+  private _currendDashbordSubject$ = new BehaviorSubject<Project>(null);
 
   /**
    * The constructor
@@ -54,26 +76,80 @@ export class DashboardService extends AbstractHttpService {
     super();
   }
 
+  /* ******************************************************************* */
+  /*                      Subject Management Part                        */
+
+  /* ******************************************************************* */
+
+  /* ******* User Dashboards List Management **************** */
+  /**
+   * Get the list of user dashboards
+   * @returns {Observable<Project>}
+   */
+  get currentDashboardList$(): Observable<Project[]> {
+    return this._userDashboardsSubject$.asObservable();
+  }
+
+  /**
+   * Get the list of user dashboards
+   * @returns {Observable<Project>}
+   */
+  get currentDashboardListValues(): Project[] {
+    return this._userDashboardsSubject$.getValue();
+  }
+
+  /**
+   * Set and send the new list of current user dashboards
+   * @param {Project[]} newProjectsList
+   */
+  set currentDashboardListValues(newProjectsList: Project[]) {
+    this._userDashboardsSubject$.next(newProjectsList);
+  }
+
+  /* ******* Current displayed Dashboard Management **************** */
+  /**
+   * Get the current displayed dashboard
+   * @returns {Observable<Project>}
+   */
+  get currentDisplayedDashboard$(): Observable<Project> {
+    return this._currendDashbordSubject$.asObservable();
+  }
+
+  /**
+   * Get the current displayed dashboard value
+   * @returns {Project}
+   */
+  get currentDisplayedDashboardValue(): Project {
+    return this._currendDashbordSubject$.getValue();
+  }
+
+  /**
+   * Set and send the new informations on the current displayed dashboard
+   * @param {Project} project
+   */
+  set currentDisplayedDashboardValue(project: Project) {
+    this._currendDashbordSubject$.next(project);
+  }
+
   /**
    * Update the list hold by the subject
    *
    * @param {Project} project The project
    * @param {string} action The action performed
    */
-  private updateSubject(project: Project, action: string): void {
-    const currentList = this.dashboardsSubject.getValue();
-    const indexOfCurrentProject = currentList.findIndex(currentProject => currentProject.id === project.id);
+  private updateDashboardListSubject(project: Project, action: string): void {
+    const indexOfCurrentProject = this.currentDashboardListValues.findIndex(currentProject => currentProject.id === project.id);
 
     if (indexOfCurrentProject >= 0) {
-      currentList.splice(indexOfCurrentProject, 1);
+      this.currentDashboardListValues.splice(indexOfCurrentProject, 1);
     }
 
     const currentUser: User = this.userService.connectedUserSubject.getValue();
     if (project.users.findIndex(userLoop => userLoop.id === currentUser.id) >= 0) {
-      if (action === DashboardService.ACTION_UPDATE) {
-        this.dashboardsSubject.next([...currentList, project]);
+      if (action === DashboardService._ACTION_UPDATE) {
+        this.currentDashboardListValues = [...this.currentDashboardListValues, project];
       } else {
-        this.dashboardsSubject.next([...currentList]);
+        this.currentDashboardListValues = [...this.currentDashboardListValues];
       }
     }
   }
@@ -87,21 +163,23 @@ export class DashboardService extends AbstractHttpService {
    */
   public updateWidgetHtmlFromProjetWidgetId(projectWidgetId: number, newHtmlContent: string, widgetStatus: WidgetStateEnum): void {
     let projectWidgetToUpdate: ProjectWidget = null;
-    this.currendDashbordSubject
-        .getValue()
-        .projectWidgets
-        .filter( currentProjectWidget => {
-          if (currentProjectWidget.id === projectWidgetId) {
-            projectWidgetToUpdate = currentProjectWidget;
-          }
-        });
+
+    this.currentDisplayedDashboardValue.projectWidgets.filter(currentProjectWidget => {
+      if (currentProjectWidget.id === projectWidgetId) {
+        projectWidgetToUpdate = currentProjectWidget;
+      }
+    });
 
     if (projectWidgetToUpdate) {
       projectWidgetToUpdate.instantiateHtml = newHtmlContent;
       projectWidgetToUpdate.state = widgetStatus;
     }
-
   }
+
+  /* ******************************************************************* */
+  /*                      Dashboard HTTP Management                      */
+
+  /* ******************************************************************* */
 
   /**
    * Get every dashboards and update the list
@@ -109,7 +187,7 @@ export class DashboardService extends AbstractHttpService {
    * @returns {Observable<Project[]>} The list as observable
    */
   getAll(): Observable<Project[]> {
-    return this.httpClient.get<Project[]>(`${DashboardService.PROJECTS_BASE_URL}`);
+    return this.httpClient.get<Project[]>(`${DashboardService._PROJECTS_BASE_URL}`);
   }
 
   /**
@@ -118,12 +196,13 @@ export class DashboardService extends AbstractHttpService {
    * @returns {Observable<Project[]>} The list as observable
    */
   getAllForCurrentUser(): Observable<Project[]> {
-    return this.httpClient.get<Project[]>(`${DashboardService.PROJECTS_BASE_URL}/currentUser`).pipe(
-        map(projects => {
-          this.dashboardsSubject.next(projects);
-          return projects;
-        })
-    );
+    return this.httpClient.get<Project[]>(`${DashboardService._PROJECTS_BASE_URL}/currentUser`)
+        .pipe(
+            map(projects => {
+              this.currentDashboardListValues = projects;
+              return projects;
+            })
+        );
   }
 
   /**
@@ -133,7 +212,7 @@ export class DashboardService extends AbstractHttpService {
    * @returns {Observable<Project>} The dashboard as observable
    */
   getOneById(id: number): Observable<Project> {
-    return this.httpClient.get<Project>(`${DashboardService.PROJECTS_BASE_URL}/${id}`);
+    return this.httpClient.get<Project>(`${DashboardService._PROJECTS_BASE_URL}/${id}`);
   }
 
   /**
@@ -143,7 +222,7 @@ export class DashboardService extends AbstractHttpService {
    * @returns {Observable<Project>} The dashboard as observable
    */
   getOneByToken(token: string): Observable<Project> {
-    return this.httpClient.get<Project>(`${DashboardService.PROJECTS_BASE_URL}/project/${token}`);
+    return this.httpClient.get<Project>(`${DashboardService._PROJECTS_BASE_URL}/project/${token}`);
   }
 
   /**
@@ -153,12 +232,12 @@ export class DashboardService extends AbstractHttpService {
    * @returns {Observable<Project>} The project as observable
    */
   createProject(project: Project): Observable<Project> {
-    return this.httpClient.put<Project>(`${DashboardService.PROJECTS_BASE_URL}`, project)
+    return this.httpClient.put<Project>(`${DashboardService._PROJECTS_BASE_URL}`, project)
         .pipe(
-          map(projectAdded => {
-            this.updateSubject(projectAdded, DashboardService.ACTION_UPDATE);
-            return projectAdded;
-          })
+            map(projectAdded => {
+              this.updateDashboardListSubject(projectAdded, DashboardService._ACTION_UPDATE);
+              return projectAdded;
+            })
         );
   }
 
@@ -169,10 +248,10 @@ export class DashboardService extends AbstractHttpService {
    * @returns {Observable<Project>} The project as observable
    */
   editProject(project: Project): Observable<Project> {
-    return this.httpClient.put<Project>(`${DashboardService.PROJECTS_BASE_URL}/${project.id}`, project)
+    return this.httpClient.put<Project>(`${DashboardService._PROJECTS_BASE_URL}/${project.id}`, project)
         .pipe(
             map(projectAdded => {
-              this.updateSubject(projectAdded, DashboardService.ACTION_UPDATE);
+              this.updateDashboardListSubject(projectAdded, DashboardService._ACTION_UPDATE);
               return projectAdded;
             })
         );
@@ -187,10 +266,10 @@ export class DashboardService extends AbstractHttpService {
   addWidgetToProject(projectWidget: ProjectWidget): Observable<Project> {
     return this
         .httpClient
-        .put<Project>(`${DashboardService.PROJECTS_BASE_URL}/${projectWidget.project.id}/widgets`, projectWidget)
+        .put<Project>(`${DashboardService._PROJECTS_BASE_URL}/${projectWidget.project.id}/widgets`, projectWidget)
         .pipe(
-            map( project => {
-              this.currendDashbordSubject.next(project);
+            map(project => {
+              this._currendDashbordSubject$.next(project);
               return project;
             })
         );
@@ -204,10 +283,10 @@ export class DashboardService extends AbstractHttpService {
    * @returns {Observable<Project>} The project as observable
    */
   addUserToProject(project: Project, username: string): Observable<Project> {
-    return this.httpClient.put<Project>(`${DashboardService.PROJECTS_BASE_URL}/${project.id}/users`, username)
+    return this.httpClient.put<Project>(`${DashboardService._PROJECTS_BASE_URL}/${project.id}/users`, username)
         .pipe(
             map(projectUpdated => {
-              this.updateSubject(project, DashboardService.ACTION_UPDATE);
+              this.updateDashboardListSubject(project, DashboardService._ACTION_UPDATE);
               return projectUpdated;
             })
         );
@@ -221,10 +300,10 @@ export class DashboardService extends AbstractHttpService {
    * @returns {Observable<Project>} The project as observable
    */
   deleteUserFromProject(project: Project, userId: number): Observable<Project> {
-    return this.httpClient.delete<Project>(`${DashboardService.PROJECTS_BASE_URL}/${project.id}/users/${userId}`)
+    return this.httpClient.delete<Project>(`${DashboardService._PROJECTS_BASE_URL}/${project.id}/users/${userId}`)
         .pipe(
             map(projectUpdated => {
-              this.updateSubject(project, DashboardService.ACTION_UPDATE);
+              this.updateDashboardListSubject(project, DashboardService._ACTION_UPDATE);
               return projectUpdated;
             })
         );
@@ -237,12 +316,10 @@ export class DashboardService extends AbstractHttpService {
    * @returns {Observable<Project>}
    */
   deleteProject(project: Project): Observable<Project> {
-    return this
-        .httpClient
-        .delete<Project>(`${DashboardService.PROJECTS_BASE_URL}/${project.id}`)
+    return this.httpClient.delete<Project>(`${DashboardService._PROJECTS_BASE_URL}/${project.id}`)
         .pipe(
             map(projectDelete => {
-              this.updateSubject(projectDelete, DashboardService.ACTION_DELETE);
+              this.updateDashboardListSubject(projectDelete, DashboardService._ACTION_DELETE);
               return projectDelete;
             })
         );
@@ -256,13 +333,12 @@ export class DashboardService extends AbstractHttpService {
    * @returns {Observable<Project>} The project updated
    */
   updateWidgetPositionForProject(projectId: number, projectWidgetPositions: ProjectWidgetPosition[]): Observable<Project> {
-    return this
-        .httpClient
-        .put<Project>(`${DashboardService.PROJECTS_BASE_URL}/${projectId}/projectWidgetPositions`, projectWidgetPositions)
+    const url = `${DashboardService._PROJECTS_BASE_URL}/${projectId}/projectWidgetPositions`;
+
+    return this.httpClient.put<Project>(url, projectWidgetPositions)
         .pipe(
             map(project => {
-              this.updateSubject(project, DashboardService.ACTION_UPDATE);
-
+              this.updateDashboardListSubject(project, DashboardService._ACTION_UPDATE);
               return project;
             })
         );
@@ -276,15 +352,13 @@ export class DashboardService extends AbstractHttpService {
    * @returns {Observable<Project>} The project updated
    */
   deleteProjectWidgetFromProject(projectId: number, projectWidgetId: number): Observable<Project> {
-    const url = `${DashboardService.PROJECTS_BASE_URL}/${projectId}/projectWidgets/${projectWidgetId}`;
+    const url = `${DashboardService._PROJECTS_BASE_URL}/${projectId}/projectWidgets/${projectWidgetId}`;
 
-    return this
-        .httpClient
-        .delete<Project>(url)
+    return this.httpClient.delete<Project>(url)
         .pipe(
             map(project => {
-              this.updateSubject(project, DashboardService.ACTION_UPDATE);
-              this.currendDashbordSubject.next(project);
+              this.updateDashboardListSubject(project, DashboardService._ACTION_UPDATE);
+              this.currentDisplayedDashboardValue = project;
 
               return project;
             })
@@ -299,12 +373,15 @@ export class DashboardService extends AbstractHttpService {
    * @returns {Observable<Project>} The project updated
    */
   editProjectWidgetFromProject(projectId: number, projectWidget: ProjectWidget): Observable<Project> {
-    const url = `${DashboardService.PROJECTS_BASE_URL}/${projectId}/projectWidgets/${projectWidget.id}`;
+    const url = `${DashboardService._PROJECTS_BASE_URL}/${projectId}/projectWidgets/${projectWidget.id}`;
 
-    return this
-        .httpClient
-        .put<Project>(url, projectWidget);
+    return this.httpClient.put<Project>(url, projectWidget);
   }
+
+  /* ******************************************************************* */
+  /*                      Dashboard Other Management                     */
+
+  /* ******************************************************************* */
 
   /**
    * Sort list of project by name
@@ -313,8 +390,12 @@ export class DashboardService extends AbstractHttpService {
    */
   sortByProjectName(projects: Project[]): Project[] {
     return projects.sort((left, right): number => {
-      if (left.name < right.name) { return -1; }
-      if (left.name > right.name) { return 1; }
+      if (left.name < right.name) {
+        return -1;
+      }
+      if (left.name > right.name) {
+        return 1;
+      }
       return 0;
     });
   }

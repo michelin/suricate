@@ -77,6 +77,7 @@ export class AppComponent implements OnInit, OnDestroy {
    */
   ngOnInit() {
     this.isLoggedIn$ = this.authenticationService.isLoggedIn();
+    this._settingsService.initLanguageSettings();
 
     this.themeService.getCurrentTheme()
         .pipe(takeWhile(() => this._isAlive))

@@ -34,21 +34,25 @@ import {AuthenticationService} from '../authentication.service';
 export class RegisterComponent implements OnInit {
 
   /**
+   * The form control for the password confirmation
+   * @type {FormControl}
+   * @private
+   */
+  private _confirmPasswordControl: FormControl;
+  /**
+   * The form control for the password
+   * @type {FormControl}
+   * @private
+   */
+  private _passwordControl: FormControl;
+
+  /**
    * The register form
+   * @type {FormGroup}
    */
   registerForm: FormGroup;
   /**
-   * The form control for the password confirmation
-   */
-  confirmPasswordControl: FormControl;
-  /**
-   * The form control for the password
-   */
-  passwordControl: FormControl;
-
-  /**
    * Tell if the form has been submit or not
-   *
    * @type {boolean} true if the form is submitting, false otherwise
    */
   formSubmitAttempt = false;
@@ -61,40 +65,40 @@ export class RegisterComponent implements OnInit {
   /**
    * Constructor
    *
-   * @param {FormBuilder} formBuilder The formBuilder service to inject
-   * @param {AuthenticationService} authenticationService The authentication service to inject
-   * @param {Router} router The router service to inject
+   * @param {FormBuilder} _formBuilder The formBuilder service to inject
+   * @param {AuthenticationService} _authenticationService The authentication service to inject
+   * @param {Router} _router The router service to inject
    */
-  constructor(private formBuilder: FormBuilder,
-              private authenticationService: AuthenticationService,
-              private router: Router) {
+  constructor(private _formBuilder: FormBuilder,
+              private _authenticationService: AuthenticationService,
+              private _router: Router) {
   }
 
   /**
    * Called when the component is init
    */
   ngOnInit() {
-    this.authenticationService.logout();
+    this._authenticationService.logout();
 
-    this.passwordControl = this.formBuilder
+    this._passwordControl = this._formBuilder
         .control(
             '',
             [Validators.required, Validators.minLength(3)]
         );
 
-    this.confirmPasswordControl = this.formBuilder
+    this._confirmPasswordControl = this._formBuilder
         .control(
             '',
-            [Validators.required, Validators.minLength(3), checkPasswordMatch(this.passwordControl)]
+            [Validators.required, Validators.minLength(3), checkPasswordMatch(this._passwordControl)]
         );
 
-    this.registerForm = this.formBuilder.group({
+    this.registerForm = this._formBuilder.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
       firstname: ['', [Validators.required, Validators.minLength(2)]],
       lastname: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, CustomValidators.email]],
-      password: this.passwordControl,
-      confirmPassword: this.confirmPasswordControl
+      password: this._passwordControl,
+      confirmPassword: this._confirmPasswordControl
     });
   }
 
@@ -116,17 +120,17 @@ export class RegisterComponent implements OnInit {
 
     const user: User = this.registerForm.value;
     this
-        .authenticationService
+        ._authenticationService
         .register(user)
         .subscribe(() => {
           const credentials: ICredentials = {username: user.username, password: user.password};
           this
-              .authenticationService
+              ._authenticationService
               .authenticate(credentials)
               .subscribe(
                   () => {
                     // Authentication succeed
-                    this.router.navigate(['/home']);
+                    this._router.navigate(['/home']);
                   },
                   error => {
                     // Authentication failed

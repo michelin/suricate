@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {Component, OnInit, OnDestroy} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {DashboardService} from '../dashboard.service';
 import {takeWhile} from 'rxjs/operators';
@@ -37,14 +37,14 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
   /**
    * The widget dialog ref
    */
-  addWidgetDialogRef: MatDialogRef<AddWidgetDialogComponent>;
+  private _addWidgetDialogRef: MatDialogRef<AddWidgetDialogComponent>;
 
   /**
    * Tell if the component is displayed
    *
    * @type {boolean}
    */
-  isAlive = true;
+  private _isAlive = true;
 
   /**
    * The project as observable
@@ -54,38 +54,38 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
   /**
    * constructor
    *
-   * @param {ActivatedRoute} activatedRoute The activated route service
-   * @param {DashboardService} dashboardService The dashboard service
-   * @param {MatDialog} matDialog The mat dialog service
+   * @param {ActivatedRoute} _activatedRoute The activated route service
+   * @param {DashboardService} _dashboardService The dashboard service
+   * @param {MatDialog} _matDialog The mat dialog service
    */
-  constructor(private activatedRoute: ActivatedRoute,
-              private dashboardService: DashboardService,
-              private matDialog: MatDialog) { }
+  constructor(private _activatedRoute: ActivatedRoute,
+              private _dashboardService: DashboardService,
+              private _matDialog: MatDialog) {
+  }
 
   /**
    * Init objects
    */
   ngOnInit() {
     // Global init from project
-    this.activatedRoute.params.subscribe( params => {
-      this.dashboardService
+    this._activatedRoute.params.subscribe(params => {
+      this._dashboardService
           .getOneById(+params['id'])
           .subscribe(project => {
-            this.dashboardService.currendDashbordSubject.next(project);
+            this._dashboardService.currentDisplayedDashboardValue = project;
           });
     });
 
-    this.dashboardService
-        .currendDashbordSubject
-        .pipe(takeWhile(() => this.isAlive))
-        .subscribe(project => this.project$ = of(project) );
+    this._dashboardService.currentDisplayedDashboard$
+        .pipe(takeWhile(() => this._isAlive))
+        .subscribe(project => this.project$ = of(project));
   }
 
   /**
    * The add widget dialog ref
    */
   openAddWidgetDialog() {
-    this.addWidgetDialogRef = this.matDialog.open(AddWidgetDialogComponent, {
+    this._addWidgetDialogRef = this._matDialog.open(AddWidgetDialogComponent, {
       minWidth: 900,
       minHeight: 500,
     });
@@ -95,7 +95,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    * When the component is destroyed
    */
   ngOnDestroy() {
-    this.isAlive = false;
+    this._isAlive = false;
   }
 
 }

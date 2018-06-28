@@ -48,7 +48,8 @@ export class AddWidgetDialogComponent implements OnInit {
               private dashboardService: DashboardService,
               private domSanitizer: DomSanitizer,
               private addWidgetDialogRef: MatDialogRef<AddWidgetDialogComponent>,
-              private changeDetectorRef: ChangeDetectorRef) { }
+              private changeDetectorRef: ChangeDetectorRef) {
+  }
 
   ngOnInit() {
     this.widgetService
@@ -88,7 +89,7 @@ export class AddWidgetDialogComponent implements OnInit {
 
       const projectWidget: ProjectWidget = new ProjectWidget();
       projectWidget.backendConfig = backendConfig;
-      projectWidget.project = this.dashboardService.currendDashbordSubject.getValue();
+      projectWidget.project = this.dashboardService.currentDisplayedDashboardValue;
       projectWidget.widget = this.selectedWidget;
 
       this.dashboardService
