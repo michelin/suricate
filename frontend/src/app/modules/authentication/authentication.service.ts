@@ -105,7 +105,7 @@ export class AuthenticationService {
             map(authenticationResponse => {
               if (authenticationResponse && authenticationResponse.access_token) {
                 this.tokenService.token = authenticationResponse.access_token;
-                this.isLoggedIn = true;
+                this.isLoggedIn = this.tokenService.hasToken();
 
                 return authenticationResponse;
               }

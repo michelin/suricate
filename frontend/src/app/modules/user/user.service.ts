@@ -148,7 +148,7 @@ export class UserService {
     return this.httpClient.put<User>(url, user)
         .pipe(
             map(userUpdated => {
-              if (userUpdated.id === this.connectedUserSubject.getValue().id) {
+              if (userUpdated.id === this.connectedUser.id) {
                 this.connectedUser = userUpdated;
               }
               return userUpdated;
@@ -171,7 +171,7 @@ export class UserService {
         .put<User>(url, userSettings)
         .pipe(
             map(userUpdated => {
-              if (userUpdated.id === this.connectedUserSubject.getValue().id) {
+              if (userUpdated.id === this.connectedUser.id) {
                 this.connectedUser = userUpdated;
               }
               return userUpdated;

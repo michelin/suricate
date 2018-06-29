@@ -15,13 +15,14 @@
  */
 
 import {OverlayContainer} from '@angular/cdk/overlay';
-import {Component, HostBinding, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, HostBinding, OnDestroy, OnInit} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
 import {Observable} from 'rxjs/Observable';
 
 import {AuthenticationService} from './modules/authentication/authentication.service';
 import {SettingsService} from './shared/services/settings.service';
 import {UserService} from './modules/user/user.service';
+import {takeWhile} from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -63,19 +64,21 @@ export class AppComponent implements OnInit, OnDestroy {
    * @param {UserService} userService The user service
    * @param {TranslateService} translateService The translation service
    * @param {SettingsService} settingsService The settings service to inject
+   * @param {ChangeDetectorRef} changeDetectorRef The change detector ref service
    */
   constructor(private authenticationService: AuthenticationService,
               private overlayContainer: OverlayContainer,
               private userService: UserService,
               private translateService: TranslateService,
-              private settingsService: SettingsService) {
+              private settingsService: SettingsService,
+              private changeDetectorRef: ChangeDetectorRef) {
   }
 
   /**
    * Called at the init of the app
    */
   ngOnInit() {
-    this.isLoggedIn$ = this.authenticationService.isLoggedIn$;
+    this.isLoggedIn$ = this.authenticationService.isLoggedIn$.pipe(takeWhile(() => this.isAlive));
     this.settingsService.currentTheme$.subscribe(themeValue => this.switchTheme(themeValue));
 
     this.settingsService.initDefaultSettings();
@@ -95,6 +98,7 @@ export class AppComponent implements OnInit, OnDestroy {
   switchTheme(themeValue: string) {
     this.overlayContainer.getContainerElement().classList.add(themeValue);
     this.appHtmlClass = themeValue;
+    this.changeDetectorRef.detectChanges();
   }
 
   /**

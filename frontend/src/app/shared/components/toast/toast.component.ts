@@ -16,13 +16,14 @@
  *
  */
 
+import {animate, group, state, style, transition, trigger} from '@angular/animations';
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
+import {of} from 'rxjs/observable/of';
 import {takeWhile} from 'rxjs/operators';
 
 import {ToastService} from './toast.service';
 import {ToastMessage} from '../../model/toastNotification/ToastMessage';
-import {animate, group, state, style, transition, trigger} from '@angular/animations';
 import {ToastType} from '../../model/toastNotification/ToastType';
 
 /**
@@ -79,7 +80,7 @@ export class ToastComponent implements OnInit, OnDestroy {
    * The component state
    * @type {string}
    */
-  animationState = 'in';
+  animationState = 'out';
 
   /**
    * The enums of toast type
@@ -111,12 +112,14 @@ export class ToastComponent implements OnInit, OnDestroy {
    * Called when the component is init
    */
   ngOnInit() {
-    this.message$ = this.toastService.toastMessage$;
-    this.message$
-        .pipe(
-            takeWhile(() => this.isAlive)
-        )
-        .subscribe(() => this.showToast());
+    this.toastService.toastMessage$
+        .pipe(takeWhile(() => this.isAlive))
+        .subscribe((message: ToastMessage) => {
+          this.message$ = of(message);
+          if (message) {
+            this.showToast();
+          }
+        });
   }
 
   /**

@@ -59,29 +59,29 @@ export const authenticationApiEndpoint = `${baseApiEndpoint}/oauth/token`;
  * Global endpoint for Users
  * @type {string}
  */
-export const usersApiEndpoint = `${process.env.BASE_URL}/users`;
+export const usersApiEndpoint = `${baseApiEndpoint}/users`;
 /**
  * Global endpoint for projects
  * @type {string}
  */
-export const projectsApiEndpoint = `${process.env.BASE_URL}/projects`;
+export const projectsApiEndpoint = `${baseApiEndpoint}/projects`;
 /**
  * Global endpoint for screens
  * @type {string}
  */
-export const screensApiEndpoint = `${process.env.BASE_URL}/screens`;
+export const screensApiEndpoint = `${baseApiEndpoint}/screens`;
 /**
  * Global endpoint for Widgets
  * @type {string}
  */
-export const widgetsApiEndpoint = `${process.env.BASE_URL}/widgets`;
+export const widgetsApiEndpoint = `${baseApiEndpoint}/widgets`;
 /**
  * Global configurations enpoint
  * @type {string}
  */
-export const configurationsApiEndpoint = `${process.env.BASE_URL}/configurations`;
+export const configurationsApiEndpoint = `${baseApiEndpoint}/configurations`;
 /**
  * Global roles endpoint
  * @type {string}
  */
-export const rolesApiEndpoint = `${process.env.BASE_URL}/roles`;
+export const rolesApiEndpoint = `${baseApiEndpoint}/roles`;
