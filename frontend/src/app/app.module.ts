@@ -15,22 +15,22 @@
  */
 
 import {NgModule} from '@angular/core';
+import {HttpClient, HttpClientModule} from '@angular/common/http';
 import {BrowserModule} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {RouterModule, Routes} from '@angular/router';
+import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
+import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+
 import {CoreModule} from './modules/core/core.module';
 import {SharedModule} from './shared/shared.module';
 import {UserModule} from './modules/user/user.module';
 import {DashboardModule} from './modules/dashboard/dashboard.module';
 import {AuthenticationModule} from './modules/authentication/authentication.module';
-
 import {AppComponent} from './app.component';
 import {HomeModule} from './modules/home/home.module';
 import {ConfigurationModule} from './modules/configuration/configuration.module';
 import {WidgetModule} from './modules/widget/widget.module';
-import {HttpClient, HttpClientModule} from '@angular/common/http';
-import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
-import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 import {SettingsModule} from './modules/settings/settings.module';
 
 const appRoutes: Routes = [

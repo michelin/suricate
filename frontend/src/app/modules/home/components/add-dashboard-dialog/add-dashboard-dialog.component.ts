@@ -18,14 +18,15 @@ import {ChangeDetectorRef, Component, Inject, OnInit, ViewChild} from '@angular/
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatHorizontalStepper} from '@angular/material';
 import {CustomValidators} from 'ng2-validation';
-import {DashboardService} from '../../../dashboard/dashboard.service';
-import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
-import {User} from '../../../../shared/model/dto/user/User';
-import {UserService} from '../../../user/user.service';
+import {ColorPickerService} from 'ngx-color-picker';
 import {Observable} from 'rxjs/Observable';
 import {empty} from 'rxjs/observable/empty';
+import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
+
+import {DashboardService} from '../../../dashboard/dashboard.service';
+import {User} from '../../../../shared/model/dto/user/User';
+import {UserService} from '../../../user/user.service';
 import {Project} from '../../../../shared/model/dto/Project';
-import {ColorPickerService} from 'ngx-color-picker';
 
 @Component({
   selector: 'app-add-dashboard-dialog',

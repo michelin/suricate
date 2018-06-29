@@ -15,13 +15,14 @@
  */
 
 import {Injectable} from '@angular/core';
+import {StompConfig, StompRService, StompState} from '@stomp/ng2-stompjs';
 import {Observable} from 'rxjs/Observable';
+
 import {NumberUtils} from '../utils/NumberUtils';
+import {baseWsEndpoint} from '../../app.constant';
 
 import * as Stomp from '@stomp/stompjs';
 import * as SockJS from 'sockjs-client';
-import {StompConfig, StompRService, StompState} from '@stomp/ng2-stompjs';
-import {baseWsEndpoint} from '../../app.constant';
 
 /**
  * Service that manage the websockets connections

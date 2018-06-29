@@ -15,14 +15,15 @@
  */
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {DashboardService} from '../dashboard.service';
-import {takeWhile} from 'rxjs/operators';
-import {Project} from '../../../shared/model/dto/Project';
-import {AddWidgetDialogComponent} from '../../../shared/components/pages-header/components/add-widget-dialog/add-widget-dialog.component';
 import {MatDialog, MatDialogRef} from '@angular/material';
+import {ActivatedRoute} from '@angular/router';
 import {Observable} from 'rxjs/Observable';
 import {of} from 'rxjs/observable/of';
+import {takeWhile} from 'rxjs/operators';
+
+import {DashboardService} from '../dashboard.service';
+import {Project} from '../../../shared/model/dto/Project';
+import {AddWidgetDialogComponent} from '../../../shared/components/pages-header/components/add-widget-dialog/add-widget-dialog.component';
 
 /**
  * Component that display a specific dashboard

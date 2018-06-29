@@ -16,18 +16,19 @@
  *
  */
 
-import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Observable} from 'rxjs/Observable';
+import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {Observable} from 'rxjs/Observable';
 import {map} from 'rxjs/operators';
 
-import {Credentials} from '../../shared/model/dto/user/Credentials';
-import {AuthenticationResponse} from '../../shared/model/dto/user/AuthenticationResponse';
-import {User} from '../../shared/model/dto/user/User';
-import {TokenService} from '../../shared/auth/token.service';
 import {UserService} from '../user/user.service';
 import {authenticationApiEndpoint, usersApiEndpoint} from '../../app.constant';
+import {TokenService} from '../../shared/auth/token.service';
+import {AuthenticationResponse} from '../../shared/model/dto/user/AuthenticationResponse';
+import {Credentials} from '../../shared/model/dto/user/Credentials';
+import {User} from '../../shared/model/dto/user/User';
+
 
 /**
  * The authentication service

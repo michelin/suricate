@@ -18,7 +18,8 @@
 
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA} from '@angular/material';
-import {Configuration} from 'jasmine-spec-reporter/built/configuration';
+
+import {Configuration} from '../../../../shared/model/dto/Configuration';
 
 /**
  * Dialog used to delete a configuration

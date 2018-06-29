@@ -17,9 +17,10 @@
  */
 
 import {Injectable} from '@angular/core';
-import {ToastMessage} from '../../model/toastNotification/ToastMessage';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Observable} from 'rxjs/Observable';
+
+import {ToastMessage} from '../../model/toastNotification/ToastMessage';
 import {ToastType} from '../../model/toastNotification/ToastType';
 
 /**

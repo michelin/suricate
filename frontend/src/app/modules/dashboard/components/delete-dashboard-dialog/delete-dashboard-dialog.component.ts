@@ -15,8 +15,9 @@
  */
 
 import {Component, Inject, OnInit} from '@angular/core';
-import {Project} from '../../../../shared/model/dto/Project';
 import {MAT_DIALOG_DATA} from '@angular/material';
+
+import {Project} from '../../../../shared/model/dto/Project';
 
 /**
  * Dialog used for displaying "Yes / No" popup

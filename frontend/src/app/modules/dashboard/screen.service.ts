@@ -16,9 +16,13 @@
 
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
+
 import {WebsocketClient} from '../../shared/model/dto/WebsocketClient';
 import {screensApiEndpoint} from '../../app.constant';
 
+/**
+ * Screen that manage the Http calls for screens
+ */
 @Injectable()
 export class ScreenService {
 

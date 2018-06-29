@@ -17,12 +17,13 @@
  */
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ToastMessage} from '../../model/toastNotification/ToastMessage';
 import {Observable} from 'rxjs/Observable';
+import {takeWhile} from 'rxjs/operators';
+
 import {ToastService} from './toast.service';
+import {ToastMessage} from '../../model/toastNotification/ToastMessage';
 import {animate, group, state, style, transition, trigger} from '@angular/animations';
 import {ToastType} from '../../model/toastNotification/ToastType';
-import {takeWhile} from 'rxjs/operators';
 
 /**
  * Component that display toast notification messages

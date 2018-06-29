@@ -16,12 +16,13 @@
 
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {CustomValidators} from 'ng2-validation';
-import {checkPasswordMatch} from '../../../shared/validators/CustomValidator';
-import {User} from '../../../shared/model/dto/user/User';
-import {Credentials} from '../../../shared/model/dto/user/Credentials';
 import {Router} from '@angular/router';
+import {CustomValidators} from 'ng2-validation';
+
 import {AuthenticationService} from '../authentication.service';
+import {Credentials} from '../../../shared/model/dto/user/Credentials';
+import {User} from '../../../shared/model/dto/user/User';
+import {checkPasswordMatch} from '../../../shared/validators/CustomValidator';
 
 /**
  * Component that register a new user

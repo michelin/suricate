@@ -15,6 +15,7 @@
  */
 
 import {Component, OnInit} from '@angular/core';
+
 import {appEnv, appVersion} from '../../../app.constant';
 
 /**

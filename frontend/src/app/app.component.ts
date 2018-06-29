@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
+import {OverlayContainer} from '@angular/cdk/overlay';
 import {Component, HostBinding, OnDestroy, OnInit} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
-import {AuthenticationService} from './modules/authentication/authentication.service';
 import {TranslateService} from '@ngx-translate/core';
+import {Observable} from 'rxjs/Observable';
+
+import {AuthenticationService} from './modules/authentication/authentication.service';
 import {SettingsService} from './shared/services/settings.service';
 import {UserService} from './modules/user/user.service';
-import {OverlayContainer} from '@angular/cdk/overlay';
 
 @Component({
   selector: 'app-root',

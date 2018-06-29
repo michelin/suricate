@@ -20,6 +20,7 @@ import {Injectable} from '@angular/core';
 import {CanActivate, CanActivateChild, Router} from '@angular/router';
 import {Observable} from 'rxjs/Observable';
 import {of} from 'rxjs/observable/of';
+
 import {TokenService} from '../token.service';
 import {AuthenticationService} from '../../../modules/authentication/authentication.service';
 

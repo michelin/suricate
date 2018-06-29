@@ -18,17 +18,18 @@
 
 import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
 import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
-import {startWith} from 'rxjs/operators/startWith';
-import {of as observableOf} from 'rxjs/observable/of';
 import {merge} from 'rxjs/observable/merge';
-import {switchMap} from 'rxjs/operators/switchMap';
+import {of as observableOf} from 'rxjs/observable/of';
 import {catchError} from 'rxjs/operators';
 import {map} from 'rxjs/operators/map';
-import {ConfigurationService} from '../configuration.service';
-import {ToastType} from '../../../shared/model/toastNotification/ToastType';
-import {Configuration} from '../../../shared/model/dto/Configuration';
+import {startWith} from 'rxjs/operators/startWith';
+import {switchMap} from 'rxjs/operators/switchMap';
+
 import {DeleteConfigurationDialogComponent} from '../components/delete-configuration-dialog/delete-configuration-dialog.component';
+import {ConfigurationService} from '../configuration.service';
 import {ToastService} from '../../../shared/components/toast/toast.service';
+import {Configuration} from '../../../shared/model/dto/Configuration';
+import {ToastType} from '../../../shared/model/toastNotification/ToastType';
 
 /**
  * The configuration list component

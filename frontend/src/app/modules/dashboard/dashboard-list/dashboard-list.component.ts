@@ -16,14 +16,15 @@
 
 import {AfterViewInit, ChangeDetectorRef, Component, ViewChild} from '@angular/core';
 import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
+import {merge} from 'rxjs/observable/merge';
+import {of as observableOf} from 'rxjs/observable/of';
+import {catchError} from 'rxjs/operators';
+import {map} from 'rxjs/operators/map';
+import {startWith} from 'rxjs/operators/startWith';
+import {switchMap} from 'rxjs/operators/switchMap';
+
 import {Project} from '../../../shared/model/dto/Project';
 import {DashboardService} from '../dashboard.service';
-import {switchMap} from 'rxjs/operators/switchMap';
-import {catchError} from 'rxjs/operators';
-import {of as observableOf} from 'rxjs/observable/of';
-import {merge} from 'rxjs/observable/merge';
-import {startWith} from 'rxjs/operators/startWith';
-import {map} from 'rxjs/operators/map';
 import {ToastType} from '../../../shared/model/toastNotification/ToastType';
 import {User} from '../../../shared/model/dto/user/User';
 import {ToastService} from '../../../shared/components/toast/toast.service';

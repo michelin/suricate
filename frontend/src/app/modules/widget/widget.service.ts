@@ -19,6 +19,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
+
 import {Category} from '../../shared/model/dto/Category';
 import {Widget} from '../../shared/model/dto/Widget';
 import {widgetsApiEndpoint} from '../../app.constant';

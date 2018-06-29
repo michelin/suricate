@@ -28,25 +28,26 @@ import {
   SimpleChanges,
   ViewChildren
 } from '@angular/core';
-import {Project} from '../../../../shared/model/dto/Project';
-import {auditTime, map, takeWhile} from 'rxjs/operators';
-import {ProjectWidget} from '../../../../shared/model/dto/ProjectWidget';
+import {Router} from '@angular/router';
+import {MatDialog} from '@angular/material';
+import {StompState} from '@stomp/ng2-stompjs';
+import {NgGridItemEvent} from 'angular2-grid';
 import {fromEvent} from 'rxjs/observable/fromEvent';
+import {auditTime, map, takeWhile} from 'rxjs/operators';
+import {Subscription} from 'rxjs/Subscription';
+
+import {Project} from '../../../../shared/model/dto/Project';
+import {ProjectWidget} from '../../../../shared/model/dto/ProjectWidget';
 import {DashboardService} from '../../dashboard.service';
 import {WebsocketService} from '../../../../shared/services/websocket.service';
-import {NgGridItemEvent} from 'angular2-grid';
 import {ProjectWidgetPosition} from '../../../../shared/model/dto/ProjectWidgetPosition';
 import {DeleteProjectWidgetDialogComponent} from '../delete-project-widget-dialog/delete-project-widget-dialog.component';
 import {EditProjectWidgetDialogComponent} from '../edit-project-widget-dialog/edit-project-widget-dialog.component';
-import {MatDialog} from '@angular/material';
-import {Router} from '@angular/router';
-
-import * as Stomp from '@stomp/stompjs';
-import {Subscription} from 'rxjs/Subscription';
 import {WSUpdateEvent} from '../../../../shared/model/websocket/WSUpdateEvent';
 import {WSUpdateType} from '../../../../shared/model/websocket/enums/WSUpdateType';
-import {StompState} from '@stomp/ng2-stompjs';
 import {WidgetStateEnum} from '../../../../shared/model/dto/enums/WidgetSateEnum';
+
+import * as Stomp from '@stomp/stompjs';
 
 /**
  * Display the grid stack widgets

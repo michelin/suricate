@@ -17,19 +17,21 @@
  */
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {Observable} from 'rxjs/Observable';
+import {of} from 'rxjs/observable/of';
+import {takeWhile} from 'rxjs/operators';
+import {Subscription} from 'rxjs/Subscription';
+
 import {SidenavService} from '../../core/sidenav/sidenav.service';
 import {WebsocketService} from '../../../shared/services/websocket.service';
-import {takeWhile} from 'rxjs/operators';
-import {of} from 'rxjs/observable/of';
 import {Project} from '../../../shared/model/dto/Project';
-import {Observable} from 'rxjs/Observable';
 import {DashboardService} from '../dashboard.service';
 import {WSUpdateEvent} from '../../../shared/model/websocket/WSUpdateEvent';
 import {WSUpdateType} from '../../../shared/model/websocket/enums/WSUpdateType';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Subscription} from 'rxjs/Subscription';
-import * as Stomp from '@stomp/stompjs';
 import {SettingsService} from '../../../shared/services/settings.service';
+
+import * as Stomp from '@stomp/stompjs';
 
 /**
  * Dashboard TV Management

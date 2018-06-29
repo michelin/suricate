@@ -16,11 +16,12 @@
 
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Project} from '../../shared/model/dto/Project';
-import {Observable} from 'rxjs/Observable';
-import {ProjectWidget} from '../../shared/model/dto/ProjectWidget';
-import {map} from 'rxjs/operators/map';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+import {Observable} from 'rxjs/Observable';
+import {map} from 'rxjs/operators/map';
+
+import {Project} from '../../shared/model/dto/Project';
+import {ProjectWidget} from '../../shared/model/dto/ProjectWidget';
 import {UserService} from '../user/user.service';
 import {User} from '../../shared/model/dto/user/User';
 import {ProjectWidgetPosition} from '../../shared/model/dto/ProjectWidgetPosition';

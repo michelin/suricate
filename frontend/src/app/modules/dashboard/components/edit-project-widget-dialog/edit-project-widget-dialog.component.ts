@@ -15,11 +15,12 @@
  */
 
 import {Component, Inject, OnInit} from '@angular/core';
-import {ProjectWidget} from '../../../../shared/model/dto/ProjectWidget';
+import {FormGroup, NgForm} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+
+import {ProjectWidget} from '../../../../shared/model/dto/ProjectWidget';
 import {Asset} from '../../../../shared/model/dto/Asset';
 import {WidgetVariableType} from '../../../../shared/model/dto/enums/WidgetVariableType';
-import {FormGroup, NgForm} from '@angular/forms';
 import {WidgetParam} from '../../../../shared/model/dto/WidgetParam';
 import {DashboardService} from '../../dashboard.service';
 import {ToastService} from '../../../../shared/components/toast/toast.service';

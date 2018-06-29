@@ -17,15 +17,16 @@
  */
 
 import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
-import {WidgetService} from '../widget.service';
+import {MatPaginator, MatSlideToggleChange, MatSort, MatTableDataSource} from '@angular/material';
+import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
+import {merge} from 'rxjs/observable/merge';
+import {of as observableOf} from 'rxjs/observable/of';
 import {catchError} from 'rxjs/operators';
 import {map} from 'rxjs/operators/map';
 import {switchMap} from 'rxjs/operators/switchMap';
-import {merge} from 'rxjs/observable/merge';
 import {startWith} from 'rxjs/operators/startWith';
-import {of as observableOf} from 'rxjs/observable/of';
-import {MatPaginator, MatSlideToggleChange, MatSort, MatTableDataSource} from '@angular/material';
-import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
+
+import {WidgetService} from '../widget.service';
 import {Asset} from '../../../shared/model/dto/Asset';
 import {WidgetAvailabilityEnum} from '../../../shared/model/dto/enums/WidgetAvailabilityEnum';
 import {Widget} from '../../../shared/model/dto/Widget';

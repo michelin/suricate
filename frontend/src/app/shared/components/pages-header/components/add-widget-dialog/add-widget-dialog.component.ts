@@ -15,14 +15,15 @@
  */
 
 import {ChangeDetectorRef, Component, Inject, OnInit, ViewChild} from '@angular/core';
+import {FormGroup, NgForm} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef, MatHorizontalStepper} from '@angular/material';
+import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
+
 import {Category} from '../../../../model/dto/Category';
 import {WidgetService} from '../../../../../modules/widget/widget.service';
-import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import {Asset} from '../../../../model/dto/Asset';
 import {Widget} from '../../../../model/dto/Widget';
 import {WidgetVariableType} from '../../../../model/dto/enums/WidgetVariableType';
-import {FormGroup, NgForm} from '@angular/forms';
 import {DashboardService} from '../../../../../modules/dashboard/dashboard.service';
 import {ProjectWidget} from '../../../../model/dto/ProjectWidget';
 import {WidgetAvailabilityEnum} from '../../../../model/dto/enums/WidgetAvailabilityEnum';

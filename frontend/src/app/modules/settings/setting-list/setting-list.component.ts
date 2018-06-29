@@ -16,10 +16,11 @@
 
 import {Component, OnInit} from '@angular/core';
 import {FormGroup, NgForm} from '@angular/forms';
+import {Observable} from 'rxjs/Observable';
+
 import {UserService} from '../../user/user.service';
 import {User} from '../../../shared/model/dto/user/User';
 import {SettingDataType} from '../../../shared/model/dto/enums/SettingDataType';
-import {Observable} from 'rxjs/Observable';
 import {ToastService} from '../../../shared/components/toast/toast.service';
 import {ToastType} from '../../../shared/model/toastNotification/ToastType';
 import {SettingsService} from '../../../shared/services/settings.service';

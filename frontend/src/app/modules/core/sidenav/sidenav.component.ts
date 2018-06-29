@@ -16,13 +16,14 @@
 
 import {AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
+import {MatSidenav} from '@angular/material';
+import {takeWhile} from 'rxjs/operators';
+
+import {SidenavService} from './sidenav.service';
 import {User} from '../../../shared/model/dto/user/User';
 import {Project} from '../../../shared/model/dto/Project';
 import {DashboardService} from '../../dashboard/dashboard.service';
 import {UserService} from '../../user/user.service';
-import {takeWhile} from 'rxjs/operators';
-import {MatSidenav} from '@angular/material';
-import {SidenavService} from './sidenav.service';
 import {AuthenticationService} from '../../authentication/authentication.service';
 
 /**

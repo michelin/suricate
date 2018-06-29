@@ -15,12 +15,13 @@
  */
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
+import {MatDialog, MatDialogRef} from '@angular/material';
+import {Router} from '@angular/router';
+import {takeWhile} from 'rxjs/operators';
+
 import {Project} from '../../../shared/model/dto/Project';
 import {DashboardService} from '../../dashboard/dashboard.service';
-import {takeWhile} from 'rxjs/operators';
-import {MatDialog, MatDialogRef} from '@angular/material';
 import {AddDashboardDialogComponent} from '../components/add-dashboard-dialog/add-dashboard-dialog.component';
-import {Router} from '@angular/router';
 
 /**
  * Manage the home page

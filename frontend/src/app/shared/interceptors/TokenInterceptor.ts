@@ -22,7 +22,6 @@ import {AuthenticationService} from '../../modules/authentication/authentication
 import {TokenService} from '../auth/token.service';
 import {baseApiEndpoint} from '../../app.constant';
 
-
 /**
  * The token interceptor
  */

@@ -16,8 +16,9 @@
 
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Role} from '../../shared/model/dto/user/Role';
 import {Observable} from 'rxjs/Observable';
+
+import {Role} from '../../shared/model/dto/user/Role';
 import {rolesApiEndpoint} from '../../app.constant';
 
 /**

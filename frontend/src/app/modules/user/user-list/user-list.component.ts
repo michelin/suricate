@@ -16,20 +16,20 @@
 
 import {AfterViewInit, ChangeDetectorRef, Component, ViewChild} from '@angular/core';
 import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
-
+import {merge} from 'rxjs/observable/merge';
 import {of as observableOf} from 'rxjs/observable/of';
 import {catchError} from 'rxjs/operators';
-import {merge} from 'rxjs/observable/merge';
+import {map} from 'rxjs/operators/map';
 import {startWith} from 'rxjs/operators/startWith';
 import {switchMap} from 'rxjs/operators/switchMap';
-import {map} from 'rxjs/operators/map';
+
 import {UserService} from '../user.service';
 import {DeleteUserDialogComponent} from '../components/delete-user-dialog/delete-user-dialog.component';
 import {User} from '../../../shared/model/dto/user/User';
 import {ToastService} from '../../../shared/components/toast/toast.service';
 import {ToastType} from '../../../shared/model/toastNotification/ToastType';
 import {RoleService} from '../role.service';
-import {Role} from 'app/shared/model/dto/user/Role';
+import {Role} from '../../../shared/model/dto/user/Role';
 
 /**
  * This component is used for displaying the list of users

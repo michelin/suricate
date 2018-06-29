@@ -15,11 +15,12 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {UserService} from '../user.service';
-import {ActivatedRoute} from '@angular/router';
-import {User} from '../../../shared/model/dto/user/User';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {ActivatedRoute} from '@angular/router';
 import {CustomValidators} from 'ng2-validation';
+
+import {UserService} from '../user.service';
+import {User} from '../../../shared/model/dto/user/User';
 import {ToastService} from '../../../shared/components/toast/toast.service';
 import {ToastType} from '../../../shared/model/toastNotification/ToastType';
 import {Role} from '../../../shared/model/dto/user/Role';

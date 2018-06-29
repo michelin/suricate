@@ -17,13 +17,14 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {ConfigurationService} from '../configuration.service';
-import {ActivatedRoute} from '@angular/router';
-import {Configuration} from '../../../shared/model/dto/Configuration';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {ActivatedRoute} from '@angular/router';
+
+import {ConfigurationService} from '../configuration.service';
 import {ToastService} from '../../../shared/components/toast/toast.service';
-import {ToastType} from '../../../shared/model/toastNotification/ToastType';
+import {Configuration} from '../../../shared/model/dto/Configuration';
 import {ConfigurationDataType} from '../../../shared/model/dto/enums/ConfigurationDataType';
+import {ToastType} from '../../../shared/model/toastNotification/ToastType';
 
 /**
  * Manage the edition of a configuration

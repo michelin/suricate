@@ -18,8 +18,9 @@
 
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Configuration} from '../../shared/model/dto/Configuration';
 import {Observable} from 'rxjs/Observable';
+
+import {Configuration} from '../../shared/model/dto/Configuration';
 import {configurationsApiEndpoint} from '../../app.constant';
 
 /**

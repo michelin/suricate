@@ -16,12 +16,12 @@
 
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {User} from '../../shared/model/dto/user/User';
-
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Observable} from 'rxjs/Observable';
 import {map} from 'rxjs/operators';
 import {Subject} from 'rxjs/Subject';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+
+import {User} from '../../shared/model/dto/user/User';
 import {TokenService} from '../../shared/auth/token.service';
 import {RoleEnum} from '../../shared/model/dto/enums/RoleEnum';
 import {UserSetting} from '../../shared/model/dto/UserSetting';
