@@ -15,19 +15,19 @@
  */
 
 import {Injectable} from '@angular/core';
-import {AbstractHttpService} from './abstract-http.service';
 import {Observable} from 'rxjs/Observable';
 import {NumberUtils} from '../utils/NumberUtils';
 
 import * as Stomp from '@stomp/stompjs';
 import * as SockJS from 'sockjs-client';
 import {StompConfig, StompRService, StompState} from '@stomp/ng2-stompjs';
+import {baseWsEndpoint} from '../../app.constant';
 
 /**
  * Service that manage the websockets connections
  */
 @Injectable()
-export class WebsocketService extends AbstractHttpService {
+export class WebsocketService {
 
   /**
    * Define the min bound for the screen code random generation
@@ -47,7 +47,6 @@ export class WebsocketService extends AbstractHttpService {
    * @param {StompRService} stompRService The stomp Service to inject
    */
   constructor(private stompRService: StompRService) {
-    super();
   }
 
   /* ****************************************************************** */
@@ -84,7 +83,7 @@ export class WebsocketService extends AbstractHttpService {
    */
   getWebsocketConfig(): StompConfig {
     const stompConfig = new StompConfig();
-    stompConfig.url = () => new SockJS(AbstractHttpService.BASE_WS_URL);
+    stompConfig.url = () => new SockJS(baseWsEndpoint);
     stompConfig.heartbeat_in = 0;
     stompConfig.heartbeat_out = 20000;
     stompConfig.reconnect_delay = 1000;

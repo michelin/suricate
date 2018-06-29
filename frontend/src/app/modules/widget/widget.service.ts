@@ -17,25 +17,17 @@
  */
 
 import {Injectable} from '@angular/core';
-import {AbstractHttpService} from '../../shared/services/abstract-http.service';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
 import {Category} from '../../shared/model/dto/Category';
 import {Widget} from '../../shared/model/dto/Widget';
+import {widgetsApiEndpoint} from '../../app.constant';
 
 /**
  * Manage the widget Http calls
  */
 @Injectable()
-export class WidgetService extends AbstractHttpService {
-
-  /**
-   * Base URL for widgets
-   * @type {string}
-   * @private
-   */
-  private static readonly WIDGETS_BASE_URL = `${AbstractHttpService.BASE_API_URL}/${AbstractHttpService.WIDGETS_URL}`;
-
+export class WidgetService {
 
   /**
    * Constructor
@@ -43,7 +35,6 @@ export class WidgetService extends AbstractHttpService {
    * @param {HttpClient} _httpClient The http client service
    */
   constructor(private _httpClient: HttpClient) {
-    super();
   }
 
   /**
@@ -52,7 +43,9 @@ export class WidgetService extends AbstractHttpService {
    * @returns {Observable<Widget[]>} The list of widgets as observable
    */
   getAll(): Observable<Widget[]> {
-    return this._httpClient.get<Widget[]>(`${WidgetService.WIDGETS_BASE_URL}`);
+    const url = `${widgetsApiEndpoint}`;
+
+    return this._httpClient.get<Widget[]>(url);
   }
 
   /**
@@ -62,7 +55,9 @@ export class WidgetService extends AbstractHttpService {
    * @returns {Observable<Widget>} The widget updated
    */
   updateWidget(widget: Widget): Observable<Widget> {
-    return this._httpClient.post<Widget>(`${WidgetService.WIDGETS_BASE_URL}/${widget.id}`, widget);
+    const url = `${widgetsApiEndpoint}/${widget.id}`;
+
+    return this._httpClient.post<Widget>(url, widget);
   }
 
   /**
@@ -71,7 +66,9 @@ export class WidgetService extends AbstractHttpService {
    * @returns {Observable<Category[]>} The categories as observable
    */
   getCategories(): Observable<Category[]> {
-    return this._httpClient.get<Category[]>(`${WidgetService.WIDGETS_BASE_URL}/categories`);
+    const url = `${widgetsApiEndpoint}/categories`;
+
+    return this._httpClient.get<Category[]>(url);
   }
 
   /**
@@ -81,6 +78,8 @@ export class WidgetService extends AbstractHttpService {
    * @returns {Observable<Widget[]>} The widgets as observable
    */
   getWidgetsByCategoryId(categoryId: number): Observable<Widget[]> {
-    return this._httpClient.get<Widget[]>(`${WidgetService.WIDGETS_BASE_URL}/category/${categoryId}`);
+    const url = `${widgetsApiEndpoint}/category/${categoryId}`;
+
+    return this._httpClient.get<Widget[]>(url);
   }
 }

@@ -17,23 +17,16 @@
  */
 
 import {Injectable} from '@angular/core';
-import {AbstractHttpService} from '../../shared/services/abstract-http.service';
 import {HttpClient} from '@angular/common/http';
 import {Configuration} from '../../shared/model/dto/Configuration';
 import {Observable} from 'rxjs/Observable';
+import {configurationsApiEndpoint} from '../../app.constant';
 
 /**
  * Configuration services manage http calls
  */
 @Injectable()
-export class ConfigurationService extends AbstractHttpService {
-
-  /**
-   * Base URL for configurations
-   * @type {string}
-   * @private
-   */
-  private static readonly _CONFIGURATIONS_BASE_URL = `${AbstractHttpService.BASE_API_URL}/${AbstractHttpService.CONFIGURATIONS_URL}`;
+export class ConfigurationService {
 
   /**
    * Constructor
@@ -41,7 +34,6 @@ export class ConfigurationService extends AbstractHttpService {
    * @param {HttpClient} _httpClient The http client service
    */
   constructor(private _httpClient: HttpClient) {
-    super();
   }
 
   /**
@@ -50,7 +42,9 @@ export class ConfigurationService extends AbstractHttpService {
    * @returns {Observable<Configuration[]>} The configuration as observable
    */
   getAll(): Observable<Configuration[]> {
-    return this._httpClient.get<Configuration[]>(`${ConfigurationService._CONFIGURATIONS_BASE_URL}`);
+    const url = `${configurationsApiEndpoint}`;
+
+    return this._httpClient.get<Configuration[]>(url);
   }
 
   /**
@@ -60,7 +54,9 @@ export class ConfigurationService extends AbstractHttpService {
    * @returns {Observable<Configuration>} The configuration as observable
    */
   getOneByKey(key: string): Observable<Configuration> {
-    return this._httpClient.get<Configuration>(`${ConfigurationService._CONFIGURATIONS_BASE_URL}/${key}`);
+    const url = `${configurationsApiEndpoint}/${key}`;
+
+    return this._httpClient.get<Configuration>(url);
   }
 
   /**
@@ -70,7 +66,9 @@ export class ConfigurationService extends AbstractHttpService {
    * @returns {Observable<Configuration>} The config updated
    */
   updateConfigurationByKey(configuration: Configuration): Observable<Configuration> {
-    return this._httpClient.put<Configuration>(`${ConfigurationService._CONFIGURATIONS_BASE_URL}/${configuration.key}`, configuration);
+    const url = `${configurationsApiEndpoint}/${configuration.key}`;
+
+    return this._httpClient.put<Configuration>(url, configuration);
   }
 
   /**
@@ -80,6 +78,8 @@ export class ConfigurationService extends AbstractHttpService {
    * @returns {Observable<Configuration>} The configuration delete as observable
    */
   deleteConfiguration(configuration: Configuration): Observable<Configuration> {
-    return this._httpClient.delete<Configuration>(`${ConfigurationService._CONFIGURATIONS_BASE_URL}/${configuration.key}`);
+    const url = `${configurationsApiEndpoint}/${configuration.key}`;
+
+    return this._httpClient.delete<Configuration>(url);
   }
 }

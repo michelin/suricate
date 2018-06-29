@@ -31,14 +31,16 @@ export class SettingsService {
   /**
    * The default theme code
    * @type {string}
+   * @private
    */
-  public static readonly DEFAULT_THEME_CODE = 'default-theme';
+  private readonly defaultThemeCode = 'default-theme';
 
   /**
    * The default language code
    * @type {string}
+   * @private
    */
-  public static readonly DEFAULT_LANGUAGE_CODE = 'en';
+  private readonly defaultLanguageCode = 'en';
 
   /**
    * Hold the current theme
@@ -46,7 +48,7 @@ export class SettingsService {
    * @type {BehaviorSubject<string>}
    * @private
    */
-  private _currentThemeSubject = new BehaviorSubject<string>(SettingsService.DEFAULT_THEME_CODE);
+  private _currentThemeSubject = new BehaviorSubject<string>(this.defaultThemeCode);
 
   /**
    * Constructor
@@ -65,7 +67,7 @@ export class SettingsService {
    * When any user is not connected
    */
   initDefaultSettings() {
-    this.currentTheme = SettingsService.DEFAULT_THEME_CODE;
+    this.currentTheme = this.defaultThemeCode;
     this.initLanguageSettings();
   }
 
@@ -129,10 +131,10 @@ export class SettingsService {
    */
   initLanguageSettings() {
     // this language will be used as a fallback when a translation isn't found in the current language
-    this._translateService.setDefaultLang(SettingsService.DEFAULT_LANGUAGE_CODE);
+    this._translateService.setDefaultLang(this.defaultLanguageCode);
 
     // the lang to use, if the lang isn't available, it will use the current loader to get them
-    this._translateService.use(SettingsService.DEFAULT_LANGUAGE_CODE);
+    this._translateService.use(this.defaultLanguageCode);
   }
 
   /**

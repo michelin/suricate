@@ -19,7 +19,6 @@ import {HttpClient} from '@angular/common/http';
 import {User} from '../../shared/model/dto/user/User';
 
 import {Observable} from 'rxjs/Observable';
-import {AbstractHttpService} from '../../shared/services/abstract-http.service';
 import {map} from 'rxjs/operators';
 import {Subject} from 'rxjs/Subject';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
@@ -27,18 +26,13 @@ import {TokenService} from '../../shared/auth/token.service';
 import {RoleEnum} from '../../shared/model/dto/enums/RoleEnum';
 import {UserSetting} from '../../shared/model/dto/UserSetting';
 import {SettingsService} from '../../shared/services/settings.service';
+import {usersApiEndpoint} from '../../app.constant';
 
 /**
  * User service that manage users
  */
 @Injectable()
-export class UserService extends AbstractHttpService {
-
-  /**
-   * The base url for user API
-   * @type {string} The user API url
-   */
-  private static readonly _USERS_BASE_URL = `${AbstractHttpService.BASE_API_URL}/${AbstractHttpService.USERS_URL}`;
+export class UserService {
 
   /**
    * The connected user subject
@@ -56,7 +50,6 @@ export class UserService extends AbstractHttpService {
   constructor(private _httpClient: HttpClient,
               private _tokenService: TokenService,
               private _themeService: SettingsService) {
-    super();
   }
 
   /* *************************************************************************************** */
@@ -99,7 +92,9 @@ export class UserService extends AbstractHttpService {
    * @returns {Observable<User[]>} The list of users
    */
   getAll(): Observable<User[]> {
-    return this._httpClient.get<User[]>(`${UserService._USERS_BASE_URL}`);
+    const url = `${usersApiEndpoint}`;
+
+    return this._httpClient.get<User[]>(url);
   }
 
   /**
@@ -109,7 +104,9 @@ export class UserService extends AbstractHttpService {
    * @returns {Observable<User>} The user found
    */
   getById(userId: string): Observable<User> {
-    return this._httpClient.get<User>(`${UserService._USERS_BASE_URL}/${userId}`);
+    const url = `${usersApiEndpoint}/${userId}`;
+
+    return this._httpClient.get<User>(url);
   }
 
   /**
@@ -118,12 +115,15 @@ export class UserService extends AbstractHttpService {
    * @returns {Observable<User>} The connected user
    */
   getConnectedUser(): Observable<User> {
-    return this._httpClient.get<User>(`${UserService._USERS_BASE_URL}/current`).pipe(
-        map(user => {
-          this.connectedUser = user;
-          return user;
-        })
-    );
+    const url = `${usersApiEndpoint}/current`;
+
+    return this._httpClient.get<User>(url)
+        .pipe(
+            map(user => {
+              this.connectedUser = user;
+              return user;
+            })
+        );
   }
 
   /**
@@ -131,7 +131,9 @@ export class UserService extends AbstractHttpService {
    * @param {User} user The user to delete
    */
   deleteUser(user: User): Observable<User> {
-    return this._httpClient.delete<User>(`${UserService._USERS_BASE_URL}/${user.id}`);
+    const url = `${usersApiEndpoint}/${user.id}`;
+
+    return this._httpClient.delete<User>(url);
   }
 
   /**
@@ -141,7 +143,9 @@ export class UserService extends AbstractHttpService {
    * @returns {Observable<User>} The user updated
    */
   updateUser(user: User): Observable<User> {
-    return this._httpClient.put<User>(`${UserService._USERS_BASE_URL}/${user.id}`, user)
+    const url = `${usersApiEndpoint}/${user.id}`;
+
+    return this._httpClient.put<User>(url, user)
         .pipe(
             map(userUpdated => {
               if (userUpdated.id === this._connectedUserSubject.getValue().id) {
@@ -160,7 +164,7 @@ export class UserService extends AbstractHttpService {
    * @returns {Observable<User>} The user updated
    */
   updateUserSettings(user: User, userSettings: UserSetting[]): Observable<User> {
-    const url = `${UserService._USERS_BASE_URL}/${user.id}/settings`;
+    const url = `${usersApiEndpoint}/${user.id}/settings`;
 
     return this
         ._httpClient
@@ -182,7 +186,9 @@ export class UserService extends AbstractHttpService {
    * @returns {Observable<User[]>} The list of users that match the string
    */
   searchUserByUsername(username: string): Observable<User[]> {
-    return this._httpClient.get<User[]>(`${UserService._USERS_BASE_URL}/search?username=${username}`);
+    const url = `${usersApiEndpoint}/search?username=${username}`;
+
+    return this._httpClient.get<User[]>(url);
   }
 
   /* *************************************************************************************** */

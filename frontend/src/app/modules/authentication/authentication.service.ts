@@ -23,17 +23,17 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {map} from 'rxjs/operators';
 
 import {Credentials} from '../../shared/model/dto/user/Credentials';
-import {AbstractHttpService} from '../../shared/services/abstract-http.service';
 import {AuthenticationResponse} from '../../shared/model/dto/user/AuthenticationResponse';
 import {User} from '../../shared/model/dto/user/User';
 import {TokenService} from '../../shared/auth/token.service';
 import {UserService} from '../user/user.service';
+import {authenticationApiEndpoint, usersApiEndpoint} from '../../app.constant';
 
 /**
  * The authentication service
  */
 @Injectable()
-export class AuthenticationService extends AbstractHttpService {
+export class AuthenticationService {
   /**
    * LoggedIn Subject (Hold if the user is logged in or not)
    * @type {BehaviorSubject<boolean>}
@@ -51,7 +51,6 @@ export class AuthenticationService extends AbstractHttpService {
   constructor(private _httpClient: HttpClient,
               private _tokenService: TokenService,
               private _userService: UserService) {
-    super();
   }
 
   /* ******************************************************************* */
@@ -97,7 +96,7 @@ export class AuthenticationService extends AbstractHttpService {
     params.append('username', credentials.username);
     params.append('password', credentials.password);
 
-    const url = `${AbstractHttpService.BASE_API_URL}/${AbstractHttpService.AUTHENTICATE_URL}`;
+    const url = `${authenticationApiEndpoint}`;
 
     return this._httpClient
         .post<AuthenticationResponse>(url, params.toString(), {headers: headers})
@@ -120,7 +119,9 @@ export class AuthenticationService extends AbstractHttpService {
    * @returns {Observable<User>} The user registered
    */
   register(user: User): Observable<User> {
-    return this._httpClient.post<User>(`${AbstractHttpService.BASE_API_URL}/${AbstractHttpService.USERS_URL}/register`, user);
+    const url = `${usersApiEndpoint}/register`;
+
+    return this._httpClient.post<User>(url, user);
   }
 
   /**
