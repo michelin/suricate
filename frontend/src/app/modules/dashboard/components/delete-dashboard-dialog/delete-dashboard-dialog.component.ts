@@ -37,16 +37,16 @@ export class DeleteDashboardDialogComponent implements OnInit {
   /**
    * The constructor
    *
-   * @param _data The given data for the modal
+   * @param data The given data for the modal
    */
-  constructor(@Inject(MAT_DIALOG_DATA) private _data: any) {
+  constructor(@Inject(MAT_DIALOG_DATA) private data: any) {
   }
 
   /**
    * Called when the dialog is init
    */
   ngOnInit() {
-    this.project = this._data.project;
+    this.project = this.data.project;
   }
 
 }

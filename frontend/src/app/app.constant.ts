@@ -16,6 +16,24 @@
  *
  */
 
+import {environment} from '../environments/environment';
+
+/* ************************************************************************ */
+/*                  Global CONSTANTS                                        */
+/* ************************************************************************ */
+
+/**
+ * The global app version
+ * @type {string}
+ */
+export const appVersion = `${environment.VERSION}`;
+
+/**
+ * The global app environment
+ * @type {string}
+ */
+export const appEnv = `${environment.ENVIRONMENT}`;
+
 /* ************************************************************************ */
 /*                  HTTP CONSTANTS                                          */
 /* ************************************************************************ */

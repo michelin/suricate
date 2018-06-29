@@ -80,15 +80,15 @@ export class ConfigurationListComponent implements OnInit {
   /**
    * The constructor
    *
-   * @param {ConfigurationService} _configurationsService The configuration service
-   * @param {ChangeDetectorRef} _changeDetectorRef The change detector service
-   * @param {MatDialog} _matDialog The mat dialog service
-   * @param {ToastService} _toastService The toast service
+   * @param {ConfigurationService} configurationsService The configuration service
+   * @param {ChangeDetectorRef} changeDetectorRef The change detector service
+   * @param {MatDialog} matDialog The mat dialog service
+   * @param {ToastService} toastService The toast service
    */
-  constructor(private _configurationsService: ConfigurationService,
-              private _changeDetectorRef: ChangeDetectorRef,
-              private _matDialog: MatDialog,
-              private _toastService: ToastService) {
+  constructor(private configurationsService: ConfigurationService,
+              private changeDetectorRef: ChangeDetectorRef,
+              private matDialog: MatDialog,
+              private toastService: ToastService) {
   }
 
   /**
@@ -107,8 +107,8 @@ export class ConfigurationListComponent implements OnInit {
             startWith(null),
             switchMap(() => {
               this.isLoadingResults = true;
-              this._changeDetectorRef.detectChanges();
-              return this._configurationsService.getAll();
+              this.changeDetectorRef.detectChanges();
+              return this.configurationsService.getAll();
             }),
             map(data => {
               this.isLoadingResults = false;
@@ -146,17 +146,17 @@ export class ConfigurationListComponent implements OnInit {
    * @param {Configuration} configuration The configuration to delete
    */
   openDialogDeleteConfiguration(configuration: Configuration) {
-    const deleteConfigurationDialog = this._matDialog.open(DeleteConfigurationDialogComponent, {
+    const deleteConfigurationDialog = this.matDialog.open(DeleteConfigurationDialogComponent, {
       data: {configuration: configuration}
     });
 
     deleteConfigurationDialog.afterClosed().subscribe(shouldDeleteConfiguration => {
       if (shouldDeleteConfiguration) {
         this
-            ._configurationsService
+            .configurationsService
             .deleteConfiguration(configuration)
             .subscribe(() => {
-              this._toastService.sendMessage('Configuration deleted successfully', ToastType.SUCCESS);
+              this.toastService.sendMessage('Configuration deleted successfully', ToastType.SUCCESS);
               this.initTable();
             });
       }

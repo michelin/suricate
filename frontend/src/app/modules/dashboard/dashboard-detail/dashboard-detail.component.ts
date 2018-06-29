@@ -39,14 +39,14 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    * @type {MatDialogRef<AddWidgetDialogComponent>}
    * @private
    */
-  private _addWidgetDialogRef: MatDialogRef<AddWidgetDialogComponent>;
+  private addWidgetDialogRef: MatDialogRef<AddWidgetDialogComponent>;
 
   /**
    * Tell if the component is displayed
    * @type {boolean}
    * @private
    */
-  private _isAlive = true;
+  private isAlive = true;
 
   /**
    * The project as observable
@@ -57,13 +57,13 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
   /**
    * constructor
    *
-   * @param {ActivatedRoute} _activatedRoute The activated route service
-   * @param {DashboardService} _dashboardService The dashboard service
-   * @param {MatDialog} _matDialog The mat dialog service
+   * @param {ActivatedRoute} activatedRoute The activated route service
+   * @param {DashboardService} dashboardService The dashboard service
+   * @param {MatDialog} matDialog The mat dialog service
    */
-  constructor(private _activatedRoute: ActivatedRoute,
-              private _dashboardService: DashboardService,
-              private _matDialog: MatDialog) {
+  constructor(private activatedRoute: ActivatedRoute,
+              private dashboardService: DashboardService,
+              private matDialog: MatDialog) {
   }
 
   /**
@@ -71,16 +71,16 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    */
   ngOnInit() {
     // Global init from project
-    this._activatedRoute.params.subscribe(params => {
-      this._dashboardService
+    this.activatedRoute.params.subscribe(params => {
+      this.dashboardService
           .getOneById(+params['id'])
           .subscribe(project => {
-            this._dashboardService.currentDisplayedDashboardValue = project;
+            this.dashboardService.currentDisplayedDashboardValue = project;
           });
     });
 
-    this._dashboardService.currentDisplayedDashboard$
-        .pipe(takeWhile(() => this._isAlive))
+    this.dashboardService.currentDisplayedDashboard$
+        .pipe(takeWhile(() => this.isAlive))
         .subscribe(project => this.project$ = of(project));
   }
 
@@ -88,7 +88,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    * The add widget dialog ref
    */
   openAddWidgetDialog() {
-    this._addWidgetDialogRef = this._matDialog.open(AddWidgetDialogComponent, {
+    this.addWidgetDialogRef = this.matDialog.open(AddWidgetDialogComponent, {
       minWidth: 900,
       minHeight: 500,
     });
@@ -98,7 +98,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    * When the component is destroyed
    */
   ngOnDestroy() {
-    this._isAlive = false;
+    this.isAlive = false;
   }
 
 }

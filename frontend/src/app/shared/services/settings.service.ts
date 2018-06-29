@@ -48,14 +48,14 @@ export class SettingsService {
    * @type {BehaviorSubject<string>}
    * @private
    */
-  private _currentThemeSubject = new BehaviorSubject<string>(this.defaultThemeCode);
+  private currentThemeSubject = new BehaviorSubject<string>(this.defaultThemeCode);
 
   /**
    * Constructor
    *
-   * @param {TranslateService} _translateService The translate service to inject
+   * @param {TranslateService} translateService The translate service to inject
    */
-  constructor(private _translateService: TranslateService) {
+  constructor(private translateService: TranslateService) {
   }
 
   /* ************************************************************************ */
@@ -99,7 +99,7 @@ export class SettingsService {
    * @returns {Observable<string>}
    */
   get currentTheme$(): Observable<string> {
-    return this._currentThemeSubject.asObservable();
+    return this.currentThemeSubject.asObservable();
   }
 
   /**
@@ -108,7 +108,7 @@ export class SettingsService {
    * @param {string} themeName
    */
   set currentTheme(themeName: string) {
-    this._currentThemeSubject.next(themeName);
+    this.currentThemeSubject.next(themeName);
   }
 
   /**
@@ -131,10 +131,10 @@ export class SettingsService {
    */
   initLanguageSettings() {
     // this language will be used as a fallback when a translation isn't found in the current language
-    this._translateService.setDefaultLang(this.defaultLanguageCode);
+    this.translateService.setDefaultLang(this.defaultLanguageCode);
 
     // the lang to use, if the lang isn't available, it will use the current loader to get them
-    this._translateService.use(this.defaultLanguageCode);
+    this.translateService.use(this.defaultLanguageCode);
   }
 
   /**
@@ -143,6 +143,6 @@ export class SettingsService {
    * @param {string} language The new language
    */
   switchLanguage(language: string) {
-    this._translateService.use(language);
+    this.translateService.use(language);
   }
 }

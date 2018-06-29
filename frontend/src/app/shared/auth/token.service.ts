@@ -28,7 +28,7 @@ export class TokenService {
    * @type {JwtHelperService}
    * @private
    */
-  private _jwtHelperService = new JwtHelperService();
+  private jwtHelperService = new JwtHelperService();
 
   /**
    * Constructor
@@ -77,7 +77,7 @@ export class TokenService {
    * @returns {boolean}
    */
   isTokenExpired(): boolean {
-    return this._jwtHelperService.isTokenExpired(this.token);
+    return this.jwtHelperService.isTokenExpired(this.token);
   }
 
   /**
@@ -85,6 +85,6 @@ export class TokenService {
    * @returns {string[]} The list of roles
    */
   getUserRoles(): string[] {
-    return this._jwtHelperService.decodeToken(this.token).authorities;
+    return this.jwtHelperService.decodeToken(this.token).authorities;
   }
 }

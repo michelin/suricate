@@ -39,16 +39,16 @@ export class DeleteConfigurationDialogComponent implements OnInit {
   /**
    * The constructor
    *
-   * @param _data The data passed to the Dialog
+   * @param data The data passed to the Dialog
    */
-  constructor(@Inject(MAT_DIALOG_DATA) private _data: any) {
+  constructor(@Inject(MAT_DIALOG_DATA) private data: any) {
   }
 
   /**
    * Called when the dialog is init
    */
   ngOnInit() {
-    this.configuration = this._data.configuration;
+    this.configuration = this.data.configuration;
   }
 
 }

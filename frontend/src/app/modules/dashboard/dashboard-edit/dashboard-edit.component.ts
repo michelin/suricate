@@ -29,15 +29,15 @@ export class DashboardEditComponent implements OnInit {
   /**
    * Constructor
    *
-   * @param {DashboardService} _dashboardService The dashboard service to inject
-   * @param {ActivatedRoute} _activatedRoute The activated route to inject
-   * @param {FormBuilder} _formBuilder The formBuilder service
-   * @param {ToastService} _toastService The service used for displayed Toast notification
+   * @param {DashboardService} dashboardService The dashboard service to inject
+   * @param {ActivatedRoute} activatedRoute The activated route to inject
+   * @param {FormBuilder} formBuilder The formBuilder service
+   * @param {ToastService} toastService The service used for displayed Toast notification
    */
-  constructor(private _dashboardService: DashboardService,
-              private _activatedRoute: ActivatedRoute,
-              private _formBuilder: FormBuilder,
-              private _toastService: ToastService) {
+  constructor(private dashboardService: DashboardService,
+              private activatedRoute: ActivatedRoute,
+              private formBuilder: FormBuilder,
+              private toastService: ToastService) {
   }
 
   /**
@@ -45,11 +45,11 @@ export class DashboardEditComponent implements OnInit {
    */
   ngOnInit() {
     this
-        ._activatedRoute
+        .activatedRoute
         .params
         .subscribe(params => {
           this
-              ._dashboardService
+              .dashboardService
               .getOneById(+params['dashboardId'])
               .subscribe(dashboard => {
                 this.dashboard = dashboard;
@@ -62,7 +62,7 @@ export class DashboardEditComponent implements OnInit {
    * Init the dashboard edit form
    */
   initDashboardForm() {
-    this.editDashboardForm = this._formBuilder.group({
+    this.editDashboardForm = this.formBuilder.group({
       name: [this.dashboard.name, [Validators.required, Validators.minLength(3)]],
       token: [this.dashboard.token, [Validators.required]],
       widgetHeight: [this.dashboard.widgetHeight, [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]],
@@ -86,8 +86,8 @@ export class DashboardEditComponent implements OnInit {
    */
   saveDashboard() {
     this
-        ._dashboardService
+        .dashboardService
         .editProject({...this.dashboard, ...this.editDashboardForm.value})
-        .subscribe(() => this._toastService.sendMessage('Dashboard saved successfully', ToastType.SUCCESS));
+        .subscribe(() => this.toastService.sendMessage('Dashboard saved successfully', ToastType.SUCCESS));
   }
 }

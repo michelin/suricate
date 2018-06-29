@@ -38,13 +38,13 @@ export class RegisterComponent implements OnInit {
    * @type {FormControl}
    * @private
    */
-  private _confirmPasswordControl: FormControl;
+  private confirmPasswordControl: FormControl;
   /**
    * The form control for the password
    * @type {FormControl}
    * @private
    */
-  private _passwordControl: FormControl;
+  private passwordControl: FormControl;
 
   /**
    * The register form
@@ -65,40 +65,40 @@ export class RegisterComponent implements OnInit {
   /**
    * Constructor
    *
-   * @param {FormBuilder} _formBuilder The formBuilder service to inject
-   * @param {AuthenticationService} _authenticationService The authentication service to inject
-   * @param {Router} _router The router service to inject
+   * @param {FormBuilder} formBuilder The formBuilder service to inject
+   * @param {AuthenticationService} authenticationService The authentication service to inject
+   * @param {Router} router The router service to inject
    */
-  constructor(private _formBuilder: FormBuilder,
-              private _authenticationService: AuthenticationService,
-              private _router: Router) {
+  constructor(private formBuilder: FormBuilder,
+              private authenticationService: AuthenticationService,
+              private router: Router) {
   }
 
   /**
    * Called when the component is init
    */
   ngOnInit() {
-    this._authenticationService.logout();
+    this.authenticationService.logout();
 
-    this._passwordControl = this._formBuilder
+    this.passwordControl = this.formBuilder
         .control(
             '',
             [Validators.required, Validators.minLength(3)]
         );
 
-    this._confirmPasswordControl = this._formBuilder
+    this.confirmPasswordControl = this.formBuilder
         .control(
             '',
-            [Validators.required, Validators.minLength(3), checkPasswordMatch(this._passwordControl)]
+            [Validators.required, Validators.minLength(3), checkPasswordMatch(this.passwordControl)]
         );
 
-    this.registerForm = this._formBuilder.group({
+    this.registerForm = this.formBuilder.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
       firstname: ['', [Validators.required, Validators.minLength(2)]],
       lastname: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, CustomValidators.email]],
-      password: this._passwordControl,
-      confirmPassword: this._confirmPasswordControl
+      password: this.passwordControl,
+      confirmPassword: this.confirmPasswordControl
     });
   }
 
@@ -120,17 +120,17 @@ export class RegisterComponent implements OnInit {
 
     const user: User = this.registerForm.value;
     this
-        ._authenticationService
+        .authenticationService
         .register(user)
         .subscribe(() => {
           const credentials: Credentials = {username: user.username, password: user.password};
           this
-              ._authenticationService
+              .authenticationService
               .authenticate(credentials)
               .subscribe(
                   () => {
                     // Authentication succeed
-                    this._router.navigate(['/home']);
+                    this.router.navigate(['/home']);
                   },
                   error => {
                     // Authentication failed

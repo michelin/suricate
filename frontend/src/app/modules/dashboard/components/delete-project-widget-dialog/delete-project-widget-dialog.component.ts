@@ -37,16 +37,16 @@ export class DeleteProjectWidgetDialogComponent implements OnInit {
   /**
    * Constructor
    *
-   * @param _data The data give to the dialog
+   * @param data The data give to the dialog
    */
-  constructor(@Inject(MAT_DIALOG_DATA) private _data: any) {
+  constructor(@Inject(MAT_DIALOG_DATA) private data: any) {
   }
 
   /**
    * When the dialog is init
    */
   ngOnInit() {
-    this.projectWidget = this._data.projectWidget;
+    this.projectWidget = this.data.projectWidget;
   }
 
 }

@@ -35,7 +35,7 @@ export class HomeComponent implements OnInit, OnDestroy {
    * True while the component is instantiate
    * @type {boolean}
    */
-  private _isAlive = true;
+  private isAlive = true;
 
   /**
    * The add dashboard dialog
@@ -52,21 +52,21 @@ export class HomeComponent implements OnInit, OnDestroy {
   /**
    * The constructor
    *
-   * @param {DashboardService} _dashboardService The dashboard service
-   * @param {MatDialog} _matDialog The mat dialog service
-   * @param {Router} _router The router service
+   * @param {DashboardService} dashboardService The dashboard service
+   * @param {MatDialog} matDialog The mat dialog service
+   * @param {Router} router The router service
    */
-  constructor(private _dashboardService: DashboardService,
-              private _matDialog: MatDialog,
-              private _router: Router) {
+  constructor(private dashboardService: DashboardService,
+              private matDialog: MatDialog,
+              private router: Router) {
   }
 
   /**
    * Init objects
    */
   ngOnInit() {
-    this._dashboardService.currentDashboardList$
-        .pipe(takeWhile(() => this._isAlive))
+    this.dashboardService.currentDashboardList$
+        .pipe(takeWhile(() => this.isAlive))
         .subscribe(dashboards => this.dashboards = dashboards);
   }
 
@@ -74,7 +74,7 @@ export class HomeComponent implements OnInit, OnDestroy {
    * Open the add dashboard dialog
    */
   openAddDashboardDialog() {
-    this.addDashboardDialogRef = this._matDialog.open(AddDashboardDialogComponent, {
+    this.addDashboardDialogRef = this.matDialog.open(AddDashboardDialogComponent, {
       minWidth: 900,
       minHeight: 500,
     });
@@ -86,14 +86,14 @@ export class HomeComponent implements OnInit, OnDestroy {
    * @param {number} dashboardId The dashboard id
    */
   navigateToDashboard(dashboardId: number) {
-    this._router.navigate(['/dashboard', dashboardId]);
+    this.router.navigate(['/dashboard', dashboardId]);
   }
 
   /**
    * Called when the component is destroy
    */
   ngOnDestroy() {
-    this._isAlive = false;
+    this.isAlive = false;
   }
 
 }

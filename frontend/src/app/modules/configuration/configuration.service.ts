@@ -31,9 +31,9 @@ export class ConfigurationService {
   /**
    * Constructor
    *
-   * @param {HttpClient} _httpClient The http client service
+   * @param {HttpClient} httpClient The http client service
    */
-  constructor(private _httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient) {
   }
 
   /**
@@ -44,7 +44,7 @@ export class ConfigurationService {
   getAll(): Observable<Configuration[]> {
     const url = `${configurationsApiEndpoint}`;
 
-    return this._httpClient.get<Configuration[]>(url);
+    return this.httpClient.get<Configuration[]>(url);
   }
 
   /**
@@ -56,7 +56,7 @@ export class ConfigurationService {
   getOneByKey(key: string): Observable<Configuration> {
     const url = `${configurationsApiEndpoint}/${key}`;
 
-    return this._httpClient.get<Configuration>(url);
+    return this.httpClient.get<Configuration>(url);
   }
 
   /**
@@ -68,7 +68,7 @@ export class ConfigurationService {
   updateConfigurationByKey(configuration: Configuration): Observable<Configuration> {
     const url = `${configurationsApiEndpoint}/${configuration.key}`;
 
-    return this._httpClient.put<Configuration>(url, configuration);
+    return this.httpClient.put<Configuration>(url, configuration);
   }
 
   /**
@@ -80,6 +80,6 @@ export class ConfigurationService {
   deleteConfiguration(configuration: Configuration): Observable<Configuration> {
     const url = `${configurationsApiEndpoint}/${configuration.key}`;
 
-    return this._httpClient.delete<Configuration>(url);
+    return this.httpClient.delete<Configuration>(url);
   }
 }

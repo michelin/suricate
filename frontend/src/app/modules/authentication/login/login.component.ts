@@ -49,22 +49,22 @@ export class LoginComponent implements OnInit {
   /**
    * Constructor
    *
-   * @param {Router} _router The router service
-   * @param {AuthenticationService} _authenticationService The authentication service
-   * @param {FormBuilder} _formBuilder The form builder service
+   * @param {Router} router The router service
+   * @param {AuthenticationService} authenticationService The authentication service
+   * @param {FormBuilder} formBuilder The form builder service
    */
-  constructor(private _router: Router,
-              private _authenticationService: AuthenticationService,
-              private _formBuilder: FormBuilder) {
+  constructor(private router: Router,
+              private authenticationService: AuthenticationService,
+              private formBuilder: FormBuilder) {
   }
 
   /**
    * Init objects
    */
   ngOnInit() {
-    this._authenticationService.logout();
+    this.authenticationService.logout();
 
-    this.loginForm = this._formBuilder.group({
+    this.loginForm = this.formBuilder.group({
       'username': ['', [Validators.required]],
       'password': ['', [Validators.required]]
     });
@@ -89,12 +89,12 @@ export class LoginComponent implements OnInit {
       this.formSubmitAttempt = true;
 
       // Try to authenticate
-      this._authenticationService
+      this.authenticationService
           .authenticate(this.loginForm.value)
           .subscribe(
               () => {
                 // Authentication succeed
-                this._router.navigate(['/home']);
+                this.router.navigate(['/home']);
               },
               error => {
                 // Authentication failed

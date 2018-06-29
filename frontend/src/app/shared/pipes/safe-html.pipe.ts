@@ -29,9 +29,9 @@ export class SafeHtmlPipe implements PipeTransform {
 
   /**
    * The constructor
-   * @param {DomSanitizer} _domSanitizer The dom sanitizer service
+   * @param {DomSanitizer} domSanitizer The dom sanitizer service
    */
-  constructor(private _domSanitizer: DomSanitizer) {
+  constructor(private domSanitizer: DomSanitizer) {
   }
 
   /**
@@ -41,7 +41,7 @@ export class SafeHtmlPipe implements PipeTransform {
    * @returns {SafeHtml}
    */
   transform(valueToSanitize: string): SafeHtml {
-    return this._domSanitizer.bypassSecurityTrustHtml(valueToSanitize);
+    return this.domSanitizer.bypassSecurityTrustHtml(valueToSanitize);
   }
 
 }

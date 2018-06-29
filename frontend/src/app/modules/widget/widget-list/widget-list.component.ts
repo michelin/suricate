@@ -93,15 +93,15 @@ export class WidgetListComponent implements OnInit {
   /**
    * Constructor
    *
-   * @param {WidgetService} _widgetService The widgetService to inject
-   * @param {ChangeDetectorRef} _changeDetectorRef enable the change detection after view init
-   * @param {DomSanitizer} _domSanitizer The dom sanitizer service
-   * @param {ToastService} _toastService The toast notificaiton service
+   * @param {WidgetService} widgetService The widgetService to inject
+   * @param {ChangeDetectorRef} changeDetectorRef enable the change detection after view init
+   * @param {DomSanitizer} domSanitizer The dom sanitizer service
+   * @param {ToastService} toastService The toast notificaiton service
    */
-  constructor(private _widgetService: WidgetService,
-              private _changeDetectorRef: ChangeDetectorRef,
-              private _domSanitizer: DomSanitizer,
-              private _toastService: ToastService) {
+  constructor(private widgetService: WidgetService,
+              private changeDetectorRef: ChangeDetectorRef,
+              private domSanitizer: DomSanitizer,
+              private toastService: ToastService) {
   }
 
   /**
@@ -120,8 +120,8 @@ export class WidgetListComponent implements OnInit {
             startWith(null),
             switchMap(() => {
               this.isLoadingResults = true;
-              this._changeDetectorRef.detectChanges();
-              return this._widgetService.getAll();
+              this.changeDetectorRef.detectChanges();
+              return this.widgetService.getAll();
             }),
             map(data => {
               this.isLoadingResults = false;
@@ -161,7 +161,7 @@ export class WidgetListComponent implements OnInit {
     }
 
     return this
-        ._domSanitizer
+        .domSanitizer
         .bypassSecurityTrustHtml(imgHtml);
   }
 
@@ -186,10 +186,10 @@ export class WidgetListComponent implements OnInit {
     if (widgetToDisable) {
       widgetToDisable.widgetAvailability = changeEvent.checked ? WidgetAvailabilityEnum.ACTIVATED : WidgetAvailabilityEnum.DISABLED;
       this
-          ._widgetService
+          .widgetService
           .updateWidget(widgetToDisable)
           .subscribe((widgetResponse: Widget) => {
-            this._toastService.sendMessage(
+            this.toastService.sendMessage(
                 `The widget "${widgetResponse.name}" has been ${widgetResponse.widgetAvailability.toString()}`,
                 ToastType.SUCCESS
             );

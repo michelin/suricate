@@ -25,11 +25,10 @@ export class ScreenService {
   /**
    * The constructor
    *
-   * @param {HttpClient} _httpClient The http client service
+   * @param {HttpClient} httpClient The http client service
    */
-  constructor(private _httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient) {
   }
-
 
   /**
    * Send the notification for connect a new tv to this dashboard
@@ -40,7 +39,7 @@ export class ScreenService {
   connectProjectToScreen(projectToken: string, screenCode: number): void {
     const url = `${screensApiEndpoint}/connect/${screenCode}/project/${projectToken}`;
 
-    this._httpClient.get<void>(url).subscribe();
+    this.httpClient.get<void>(url).subscribe();
   }
 
   /**
@@ -51,7 +50,7 @@ export class ScreenService {
   disconnectScreen(websocketClient: WebsocketClient): void {
     const url = `${screensApiEndpoint}/disconnect/`;
 
-    this._httpClient.put<void>(url, websocketClient).subscribe();
+    this.httpClient.put<void>(url, websocketClient).subscribe();
   }
 
   /**
@@ -62,7 +61,7 @@ export class ScreenService {
   refreshEveryConnectedScreensForProject(projectToken: string): void {
     const url = `${screensApiEndpoint}/refresh/${projectToken}`;
 
-    this._httpClient.get<void>(url).subscribe();
+    this.httpClient.get<void>(url).subscribe();
   }
 
   /**
@@ -72,6 +71,6 @@ export class ScreenService {
   displayScreenCodeEveryConnectedScreensForProject(projectToken: string): void {
     const url = `${screensApiEndpoint}/screencode/${projectToken}`;
 
-    this._httpClient.get<void>(url).subscribe();
+    this.httpClient.get<void>(url).subscribe();
   }
 }

@@ -38,18 +38,18 @@ export class UserService {
    * The connected user subject
    * @type {Subject<User>}
    */
-  private _connectedUserSubject: BehaviorSubject<User> = new BehaviorSubject<User>(null);
+  private connectedUserSubject: BehaviorSubject<User> = new BehaviorSubject<User>(null);
 
   /**
    * The constructor
    *
-   * @param {HttpClient} _httpClient The http client service to inject
-   * @param {TokenService} _tokenService The token service
-   * @param {SettingsService} _themeService The theme service
+   * @param {HttpClient} httpClient The http client service to inject
+   * @param {TokenService} tokenService The token service
+   * @param {SettingsService} themeService The theme service
    */
-  constructor(private _httpClient: HttpClient,
-              private _tokenService: TokenService,
-              private _themeService: SettingsService) {
+  constructor(private httpClient: HttpClient,
+              private tokenService: TokenService,
+              private themeService: SettingsService) {
   }
 
   /* *************************************************************************************** */
@@ -62,7 +62,7 @@ export class UserService {
    * @returns {Observable<User>}
    */
   get connectedUser$(): Observable<User> {
-    return this._connectedUserSubject.asObservable();
+    return this.connectedUserSubject.asObservable();
   }
 
   /**
@@ -70,7 +70,7 @@ export class UserService {
    * @returns {User}
    */
   get connectedUser(): User {
-    return this._connectedUserSubject.getValue();
+    return this.connectedUserSubject.getValue();
   }
 
   /**
@@ -78,7 +78,7 @@ export class UserService {
    * @param {User} connectedUser
    */
   set connectedUser(connectedUser: User) {
-    this._connectedUserSubject.next(connectedUser);
+    this.connectedUserSubject.next(connectedUser);
   }
 
   /* *************************************************************************************** */
@@ -94,7 +94,7 @@ export class UserService {
   getAll(): Observable<User[]> {
     const url = `${usersApiEndpoint}`;
 
-    return this._httpClient.get<User[]>(url);
+    return this.httpClient.get<User[]>(url);
   }
 
   /**
@@ -106,7 +106,7 @@ export class UserService {
   getById(userId: string): Observable<User> {
     const url = `${usersApiEndpoint}/${userId}`;
 
-    return this._httpClient.get<User>(url);
+    return this.httpClient.get<User>(url);
   }
 
   /**
@@ -117,7 +117,7 @@ export class UserService {
   getConnectedUser(): Observable<User> {
     const url = `${usersApiEndpoint}/current`;
 
-    return this._httpClient.get<User>(url)
+    return this.httpClient.get<User>(url)
         .pipe(
             map(user => {
               this.connectedUser = user;
@@ -133,7 +133,7 @@ export class UserService {
   deleteUser(user: User): Observable<User> {
     const url = `${usersApiEndpoint}/${user.id}`;
 
-    return this._httpClient.delete<User>(url);
+    return this.httpClient.delete<User>(url);
   }
 
   /**
@@ -145,10 +145,10 @@ export class UserService {
   updateUser(user: User): Observable<User> {
     const url = `${usersApiEndpoint}/${user.id}`;
 
-    return this._httpClient.put<User>(url, user)
+    return this.httpClient.put<User>(url, user)
         .pipe(
             map(userUpdated => {
-              if (userUpdated.id === this._connectedUserSubject.getValue().id) {
+              if (userUpdated.id === this.connectedUserSubject.getValue().id) {
                 this.connectedUser = userUpdated;
               }
               return userUpdated;
@@ -167,11 +167,11 @@ export class UserService {
     const url = `${usersApiEndpoint}/${user.id}/settings`;
 
     return this
-        ._httpClient
+        .httpClient
         .put<User>(url, userSettings)
         .pipe(
             map(userUpdated => {
-              if (userUpdated.id === this._connectedUserSubject.getValue().id) {
+              if (userUpdated.id === this.connectedUserSubject.getValue().id) {
                 this.connectedUser = userUpdated;
               }
               return userUpdated;
@@ -188,7 +188,7 @@ export class UserService {
   searchUserByUsername(username: string): Observable<User[]> {
     const url = `${usersApiEndpoint}/search?username=${username}`;
 
-    return this._httpClient.get<User[]>(url);
+    return this.httpClient.get<User[]>(url);
   }
 
   /* *************************************************************************************** */
@@ -211,6 +211,6 @@ export class UserService {
    * @returns {boolean} True if the current user admin, false otherwise
    */
   isAdmin(): boolean {
-    return this._tokenService.getUserRoles().includes(RoleEnum.ROLE_ADMIN);
+    return this.tokenService.getUserRoles().includes(RoleEnum.ROLE_ADMIN);
   }
 }

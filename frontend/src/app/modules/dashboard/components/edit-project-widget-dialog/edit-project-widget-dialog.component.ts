@@ -47,22 +47,22 @@ export class EditProjectWidgetDialogComponent implements OnInit {
   /**
    * Constructor
    *
-   * @param _data The data give to the dialog
-   * @param _dialogRef The mat dialog ref
-   * @param _dashboardService The dashboard service to inject
-   * @param _toastService The notification service
+   * @param data The data give to the dialog
+   * @param dialogRef The mat dialog ref
+   * @param dashboardService The dashboard service to inject
+   * @param toastService The notification service
    */
-  constructor(@Inject(MAT_DIALOG_DATA) private _data: any,
-              private _dialogRef: MatDialogRef<EditProjectWidgetDialogComponent>,
-              private _dashboardService: DashboardService,
-              private _toastService: ToastService) {
+  constructor(@Inject(MAT_DIALOG_DATA) private data: any,
+              private dialogRef: MatDialogRef<EditProjectWidgetDialogComponent>,
+              private dashboardService: DashboardService,
+              private toastService: ToastService) {
   }
 
   /**
    * Init of the ocmponent
    */
   ngOnInit() {
-    this.projectWidget = this._data.projectWidget;
+    this.projectWidget = this.data.projectWidget;
   }
 
   /**
@@ -130,10 +130,10 @@ export class EditProjectWidgetDialogComponent implements OnInit {
       });
 
       this.projectWidget.backendConfig = backendConfig;
-      this._dashboardService
+      this.dashboardService
           .editProjectWidgetFromProject(this.projectWidget.project.id, this.projectWidget)
-          .subscribe(() => this._toastService.sendMessage('Widget Updated successfully', ToastType.SUCCESS));
-      this._dialogRef.close();
+          .subscribe(() => this.toastService.sendMessage('Widget Updated successfully', ToastType.SUCCESS));
+      this.dialogRef.close();
     }
   }
 

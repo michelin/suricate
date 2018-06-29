@@ -77,23 +77,23 @@ export class AddWidgetDialogComponent implements OnInit {
   /**
    * The constructor
    *
-   * @param _data The data send to the dialog
-   * @param {WidgetService} _widgetService The widget service
-   * @param {DashboardService} _dashboardService The dashboard service
-   * @param {DomSanitizer} _domSanitizer The domSanitizer
-   * @param {MatDialogRef<AddWidgetDialogComponent>} _addWidgetDialogRef The add widget dialog ref
-   * @param {ChangeDetectorRef} _changeDetectorRef The change detector service
+   * @param data The data send to the dialog
+   * @param {WidgetService} widgetService The widget service
+   * @param {DashboardService} dashboardService The dashboard service
+   * @param {DomSanitizer} domSanitizer The domSanitizer
+   * @param {MatDialogRef<AddWidgetDialogComponent>} addWidgetDialogRef The add widget dialog ref
+   * @param {ChangeDetectorRef} changeDetectorRef The change detector service
    */
-  constructor(@Inject(MAT_DIALOG_DATA) private _data: any,
-              private _widgetService: WidgetService,
-              private _dashboardService: DashboardService,
-              private _domSanitizer: DomSanitizer,
-              private _addWidgetDialogRef: MatDialogRef<AddWidgetDialogComponent>,
-              private _changeDetectorRef: ChangeDetectorRef) {
+  constructor(@Inject(MAT_DIALOG_DATA) private data: any,
+              private widgetService: WidgetService,
+              private dashboardService: DashboardService,
+              private domSanitizer: DomSanitizer,
+              private addWidgetDialogRef: MatDialogRef<AddWidgetDialogComponent>,
+              private changeDetectorRef: ChangeDetectorRef) {
   }
 
   ngOnInit() {
-    this._widgetService
+    this.widgetService
         .getCategories()
         .subscribe(categories => {
           this.categories = categories;
@@ -101,12 +101,12 @@ export class AddWidgetDialogComponent implements OnInit {
   }
 
   getWidgets(categoryId: number) {
-    this._widgetService
+    this.widgetService
         .getWidgetsByCategoryId(categoryId)
         .subscribe(widgets => {
           this.widgets = widgets.filter((widget: Widget) => widget.widgetAvailability === WidgetAvailabilityEnum.ACTIVATED);
           this.step1Completed = true;
-          this._changeDetectorRef.detectChanges();
+          this.changeDetectorRef.detectChanges();
           this.widgetStepper.next();
         });
 
@@ -115,7 +115,7 @@ export class AddWidgetDialogComponent implements OnInit {
   setSelectedWidget(selectedWidget: Widget) {
     this.selectedWidget = selectedWidget;
     this.step2Completed = true;
-    this._changeDetectorRef.detectChanges();
+    this.changeDetectorRef.detectChanges();
     this.widgetStepper.next();
   }
 
@@ -130,13 +130,13 @@ export class AddWidgetDialogComponent implements OnInit {
 
       const projectWidget: ProjectWidget = new ProjectWidget();
       projectWidget.backendConfig = backendConfig;
-      projectWidget.project = this._dashboardService.currentDisplayedDashboardValue;
+      projectWidget.project = this.dashboardService.currentDisplayedDashboardValue;
       projectWidget.widget = this.selectedWidget;
 
-      this._dashboardService
+      this.dashboardService
           .addWidgetToProject(projectWidget)
           .subscribe(data => {
-            this._addWidgetDialogRef.close();
+            this.addWidgetDialogRef.close();
           });
     }
   }
@@ -161,9 +161,9 @@ export class AddWidgetDialogComponent implements OnInit {
 
   getImageSrc(image: Asset): SafeUrl {
     if (image != null) {
-      return this._domSanitizer.bypassSecurityTrustUrl(`data:${image.contentType};base64,${image.content}`);
+      return this.domSanitizer.bypassSecurityTrustUrl(`data:${image.contentType};base64,${image.content}`);
     } else {
-      return this._domSanitizer.bypassSecurityTrustUrl(``);
+      return this.domSanitizer.bypassSecurityTrustUrl(``);
     }
 
   }

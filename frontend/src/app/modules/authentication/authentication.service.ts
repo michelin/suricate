@@ -39,18 +39,18 @@ export class AuthenticationService {
    * @type {BehaviorSubject<boolean>}
    * @private
    */
-  private _loggedInSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(this._tokenService.hasToken());
+  private loggedInSubject: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(this.tokenService.hasToken());
 
   /**
    * Constructor
    *
-   * @param {HttpClient} _httpClient The HttpClient service
-   * @param {TokenService} _tokenService The token service
-   * @param {UserService} _userService The user service
+   * @param {HttpClient} httpClient The HttpClient service
+   * @param {TokenService} tokenService The token service
+   * @param {UserService} userService The user service
    */
-  constructor(private _httpClient: HttpClient,
-              private _tokenService: TokenService,
-              private _userService: UserService) {
+  constructor(private httpClient: HttpClient,
+              private tokenService: TokenService,
+              private userService: UserService) {
   }
 
   /* ******************************************************************* */
@@ -64,7 +64,7 @@ export class AuthenticationService {
    * @returns {Observable<boolean>}
    */
   get isLoggedIn$(): Observable<boolean> {
-    return this._loggedInSubject.asObservable();
+    return this.loggedInSubject.asObservable();
   }
 
   /**
@@ -72,7 +72,7 @@ export class AuthenticationService {
    * @param {boolean} isLoggedIn
    */
   set isLoggedIn(isLoggedIn: boolean) {
-    this._loggedInSubject.next(isLoggedIn);
+    this.loggedInSubject.next(isLoggedIn);
   }
 
   /* ******************************************************************* */
@@ -98,12 +98,12 @@ export class AuthenticationService {
 
     const url = `${authenticationApiEndpoint}`;
 
-    return this._httpClient
+    return this.httpClient
         .post<AuthenticationResponse>(url, params.toString(), {headers: headers})
         .pipe(
             map(authenticationResponse => {
               if (authenticationResponse && authenticationResponse.access_token) {
-                this._tokenService.token = authenticationResponse.access_token;
+                this.tokenService.token = authenticationResponse.access_token;
                 this.isLoggedIn = true;
 
                 return authenticationResponse;
@@ -121,7 +121,7 @@ export class AuthenticationService {
   register(user: User): Observable<User> {
     const url = `${usersApiEndpoint}/register`;
 
-    return this._httpClient.post<User>(url, user);
+    return this.httpClient.post<User>(url, user);
   }
 
   /**
@@ -131,6 +131,6 @@ export class AuthenticationService {
     // clear token remove user from local storage to log user out
     localStorage.removeItem('token');
     this.isLoggedIn = false;
-    this._userService.connectedUser = null;
+    this.userService.connectedUser = null;
   }
 }

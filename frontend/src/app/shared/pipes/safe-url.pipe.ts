@@ -28,9 +28,9 @@ export class SafeUrlPipe implements PipeTransform {
   /**
    * Constructor
    *
-   * @param {DomSanitizer} _domSanitizer The dom sanitizer service
+   * @param {DomSanitizer} domSanitizer The dom sanitizer service
    */
-  constructor(private _domSanitizer: DomSanitizer) {
+  constructor(private domSanitizer: DomSanitizer) {
   }
 
   /**
@@ -40,7 +40,7 @@ export class SafeUrlPipe implements PipeTransform {
    * @returns {SafeUrl}
    */
   transform(valueToSanitize: string): SafeUrl {
-    return this._domSanitizer.bypassSecurityTrustUrl(valueToSanitize);
+    return this.domSanitizer.bypassSecurityTrustUrl(valueToSanitize);
   }
 
 }

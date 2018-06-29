@@ -32,11 +32,11 @@ export class TokenInterceptor {
   /**
    * Constructor
    *
-   * @param {AuthenticationService} _authenticationService The authentication service to inject
-   * @param {TokenService} _tokenService The token service to inject
+   * @param {AuthenticationService} authenticationService The authentication service to inject
+   * @param {TokenService} tokenService The token service to inject
    */
-  constructor(private _authenticationService: AuthenticationService,
-              private _tokenService: TokenService) {
+  constructor(private authenticationService: AuthenticationService,
+              private tokenService: TokenService) {
   }
 
   /**
@@ -55,7 +55,7 @@ export class TokenInterceptor {
       return next.handle(request);
     }
 
-    const token = this._tokenService.token || sessionStorage.getItem('token');
+    const token = this.tokenService.token || sessionStorage.getItem('token');
     if (!!token) {
       request = request.clone({
         setHeaders: {

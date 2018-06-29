@@ -40,15 +40,15 @@ export class PagesHeaderComponent implements OnInit {
 
   /**
    * The constructor
-   * @param {Router} _route The router service
+   * @param {Router} route The router service
    */
-  constructor(private _route: Router) {
+  constructor(private route: Router) {
   }
 
   /**
    * When the component is init
    */
   ngOnInit() {
-    this.pageName = this._route.url.split('/')[1];
+    this.pageName = this.route.url.split('/')[1];
   }
 }

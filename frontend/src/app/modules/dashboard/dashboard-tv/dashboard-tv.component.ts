@@ -46,13 +46,13 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * @type {boolean}
    * @private
    */
-  private _isAlive = true;
+  private isAlive = true;
   /**
    * The screen subscription (Code View)
    * @type {Subscription}
    * @private
    */
-  private _screenSubscription: Subscription;
+  private screenSubscription: Subscription;
 
   /**
    * The project as observable
@@ -69,41 +69,41 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   /**
    * The constructor
    *
-   * @param {SidenavService} _sidenavService The sidenav service to inject
-   * @param {DashboardService} _dashboardService The dashboard service to inject
-   * @param {WebsocketService} _websocketService The websocket service to inject
-   * @param {SettingsService} _themeService The theme service
-   * @param {ActivatedRoute} _activatedRoute The activated route service
-   * @param {Router} _router The router service
+   * @param {SidenavService} sidenavService The sidenav service to inject
+   * @param {DashboardService} dashboardService The dashboard service to inject
+   * @param {WebsocketService} websocketService The websocket service to inject
+   * @param {SettingsService} themeService The theme service
+   * @param {ActivatedRoute} activatedRoute The activated route service
+   * @param {Router} router The router service
    */
-  constructor(private _sidenavService: SidenavService,
-              private _dashboardService: DashboardService,
-              private _websocketService: WebsocketService,
-              private _themeService: SettingsService,
-              private _activatedRoute: ActivatedRoute,
-              private _router: Router) {
+  constructor(private sidenavService: SidenavService,
+              private dashboardService: DashboardService,
+              private websocketService: WebsocketService,
+              private themeService: SettingsService,
+              private activatedRoute: ActivatedRoute,
+              private router: Router) {
   }
 
   /**
    * Init of the component
    */
   ngOnInit() {
-    this._themeService.currentTheme = 'dark-theme';
-    this._sidenavService.closeSidenav();
-    this.screenCode = this._websocketService.getscreenCode();
+    this.themeService.currentTheme = 'dark-theme';
+    this.sidenavService.closeSidenav();
+    this.screenCode = this.websocketService.getscreenCode();
 
-    this._dashboardService.currentDisplayedDashboard$
-        .pipe(takeWhile(() => this._isAlive))
+    this.dashboardService.currentDisplayedDashboard$
+        .pipe(takeWhile(() => this.isAlive))
         .subscribe(project => this.project$ = of(project));
 
-    this._activatedRoute.queryParams.subscribe(params => {
+    this.activatedRoute.queryParams.subscribe(params => {
       if (params['token']) {
-        this._dashboardService.getOneByToken(params['token']).subscribe(project => {
-          this._dashboardService.currentDisplayedDashboardValue = project;
+        this.dashboardService.getOneByToken(params['token']).subscribe(project => {
+          this.dashboardService.currentDisplayedDashboardValue = project;
         });
 
       } else {
-        this._dashboardService.currentDisplayedDashboardValue = null;
+        this.dashboardService.currentDisplayedDashboardValue = null;
         this.listenForConnection();
       }
     });
@@ -114,11 +114,11 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * When on code view screen we wait for new connection
    */
   listenForConnection() {
-    this._websocketService.startConnection();
-    this._screenSubscription = this
-        ._websocketService
+    this.websocketService.startConnection();
+    this.screenSubscription = this
+        .websocketService
         .subscribeToDestination(`/user/${this.screenCode}/queue/connect`)
-        .pipe(takeWhile(() => this._isAlive))
+        .pipe(takeWhile(() => this.isAlive))
         .subscribe((stompMessage: Stomp.Message) => {
           this.handleConnectEvent(JSON.parse(stompMessage.body));
         });
@@ -135,8 +135,8 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
 
       if (project) {
         this.unsubscribeListening();
-        this._websocketService.disconnect();
-        this._router.navigate(['/tv'], {queryParams: {token: project.token}});
+        this.websocketService.disconnect();
+        this.router.navigate(['/tv'], {queryParams: {token: project.token}});
       }
     }
   }
@@ -145,8 +145,8 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * Unsubscribe to the listening event
    */
   unsubscribeListening() {
-    if (this._screenSubscription) {
-      this._screenSubscription.unsubscribe();
+    if (this.screenSubscription) {
+      this.screenSubscription.unsubscribe();
     }
   }
 
@@ -154,10 +154,10 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * When the component is destroyed
    */
   ngOnDestroy() {
-    this._isAlive = false;
-    this._sidenavService.openSidenav();
+    this.isAlive = false;
+    this.sidenavService.openSidenav();
 
     this.unsubscribeListening();
-    this._websocketService.disconnect();
+    this.websocketService.disconnect();
   }
 }

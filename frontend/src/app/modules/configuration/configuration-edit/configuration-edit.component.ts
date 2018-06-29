@@ -56,23 +56,23 @@ export class ConfigurationEditComponent implements OnInit {
   /**
    * Constructor
    *
-   * @param {ActivatedRoute} _activatedRoute The activated route service
-   * @param {FormBuilder} _formBuilder The form builder
-   * @param {ToastService} _toastService The toast service
-   * @param {ConfigurationService} _configurationService The configuration service
+   * @param {ActivatedRoute} activatedRoute The activated route service
+   * @param {FormBuilder} formBuilder The form builder
+   * @param {ToastService} toastService The toast service
+   * @param {ConfigurationService} configurationService The configuration service
    */
-  constructor(private _activatedRoute: ActivatedRoute,
-              private _formBuilder: FormBuilder,
-              private _toastService: ToastService,
-              private _configurationService: ConfigurationService) {
+  constructor(private activatedRoute: ActivatedRoute,
+              private formBuilder: FormBuilder,
+              private toastService: ToastService,
+              private configurationService: ConfigurationService) {
   }
 
   /**
    * Called when the component is init
    */
   ngOnInit() {
-    this._activatedRoute.params.subscribe(params => {
-      this._configurationService.getOneByKey(params['configurationKey']).subscribe(configuration => {
+    this.activatedRoute.params.subscribe(params => {
+      this.configurationService.getOneByKey(params['configurationKey']).subscribe(configuration => {
         this.configuration = configuration;
         this.initConfigForm();
       });
@@ -83,7 +83,7 @@ export class ConfigurationEditComponent implements OnInit {
    * Init the configuration form
    */
   initConfigForm() {
-    this.configurationForm = this._formBuilder.group({
+    this.configurationForm = this.formBuilder.group({
       key: [this.configuration.key, [Validators.required]],
       value: [this.configuration.value ? this.configuration.value : '', [Validators.required]],
       category: [this.configuration.category.name, [Validators.required]]
@@ -98,10 +98,10 @@ export class ConfigurationEditComponent implements OnInit {
       const configuration = this.configuration;
       configuration.value = this.configurationForm.get('value').value;
 
-      this._configurationService
+      this.configurationService
           .updateConfigurationByKey(this.configuration)
           .subscribe(() => {
-            this._toastService.sendMessage('Configuration updated successfully', ToastType.SUCCESS);
+            this.toastService.sendMessage('Configuration updated successfully', ToastType.SUCCESS);
           });
     }
   }

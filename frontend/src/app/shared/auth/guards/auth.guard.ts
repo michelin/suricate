@@ -32,13 +32,13 @@ export class AuthGuard implements CanActivate, CanActivateChild {
   /**
    * The constructor
    *
-   * @param {Router} _router The router
-   * @param {AuthenticationService} _authenticationService
-   * @param {TokenService} _tokenService The token service
+   * @param {Router} router The router
+   * @param {AuthenticationService} authenticationService
+   * @param {TokenService} tokenService The token service
    */
-  constructor(private _router: Router,
-              private _authenticationService: AuthenticationService,
-              private _tokenService: TokenService) {
+  constructor(private router: Router,
+              private authenticationService: AuthenticationService,
+              private tokenService: TokenService) {
   }
 
   /**
@@ -47,13 +47,13 @@ export class AuthGuard implements CanActivate, CanActivateChild {
    * @returns {Observable<boolean>}
    */
   canActivate(): Observable<boolean> {
-    if (this._tokenService.token && !this._tokenService.isTokenExpired()) {
+    if (this.tokenService.token && !this.tokenService.isTokenExpired()) {
       return of(true);
     }
 
     // not logged in so redirect to login page
-    this._authenticationService.logout();
-    this._router.navigate(['/login']);
+    this.authenticationService.logout();
+    this.router.navigate(['/login']);
 
     return of(false);
   }

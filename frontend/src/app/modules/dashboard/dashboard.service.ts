@@ -52,23 +52,23 @@ export class DashboardService {
    * @type {BehaviorSubject<Project[]>}
    * @private
    */
-  private _userDashboardsSubject = new BehaviorSubject<Project[]>([]);
+  private userDashboardsSubject = new BehaviorSubject<Project[]>([]);
 
   /**
    * Hold the dashboard currently displayed to the user
    * @type {BehaviorSubject<Project>}
    * @private
    */
-  private _currendDashbordSubject = new BehaviorSubject<Project>(null);
+  private currendDashbordSubject = new BehaviorSubject<Project>(null);
 
   /**
    * The constructor
    *
-   * @param {HttpClient} _httpClient The http client
-   * @param {UserService} _userService The user service to inject
+   * @param {HttpClient} httpClient The http client
+   * @param {UserService} userService The user service to inject
    */
-  constructor(private _httpClient: HttpClient,
-              private _userService: UserService) {
+  constructor(private httpClient: HttpClient,
+              private userService: UserService) {
   }
 
   /* ******************************************************************* */
@@ -82,7 +82,7 @@ export class DashboardService {
    * @returns {Observable<Project>}
    */
   get currentDashboardList$(): Observable<Project[]> {
-    return this._userDashboardsSubject.asObservable();
+    return this.userDashboardsSubject.asObservable();
   }
 
   /**
@@ -90,7 +90,7 @@ export class DashboardService {
    * @returns {Observable<Project>}
    */
   get currentDashboardListValues(): Project[] {
-    return this._userDashboardsSubject.getValue();
+    return this.userDashboardsSubject.getValue();
   }
 
   /**
@@ -98,7 +98,7 @@ export class DashboardService {
    * @param {Project[]} newProjectsList
    */
   set currentDashboardListValues(newProjectsList: Project[]) {
-    this._userDashboardsSubject.next(newProjectsList);
+    this.userDashboardsSubject.next(newProjectsList);
   }
 
   /* ******* Current displayed Dashboard Management **************** */
@@ -107,7 +107,7 @@ export class DashboardService {
    * @returns {Observable<Project>}
    */
   get currentDisplayedDashboard$(): Observable<Project> {
-    return this._currendDashbordSubject.asObservable();
+    return this.currendDashbordSubject.asObservable();
   }
 
   /**
@@ -115,7 +115,7 @@ export class DashboardService {
    * @returns {Project}
    */
   get currentDisplayedDashboardValue(): Project {
-    return this._currendDashbordSubject.getValue();
+    return this.currendDashbordSubject.getValue();
   }
 
   /**
@@ -123,7 +123,7 @@ export class DashboardService {
    * @param {Project} project
    */
   set currentDisplayedDashboardValue(project: Project) {
-    this._currendDashbordSubject.next(project);
+    this.currendDashbordSubject.next(project);
   }
 
   /**
@@ -139,7 +139,7 @@ export class DashboardService {
       this.currentDashboardListValues.splice(indexOfCurrentProject, 1);
     }
 
-    const currentUser: User = this._userService.connectedUser;
+    const currentUser: User = this.userService.connectedUser;
     if (project.users.findIndex(userLoop => userLoop.id === currentUser.id) >= 0) {
       if (action === this.dashboardActionUpdate) {
         this.currentDashboardListValues = [...this.currentDashboardListValues, project];
@@ -184,7 +184,7 @@ export class DashboardService {
   getAll(): Observable<Project[]> {
     const url = `${projectsApiEndpoint}`;
 
-    return this._httpClient.get<Project[]>(url);
+    return this.httpClient.get<Project[]>(url);
   }
 
   /**
@@ -195,7 +195,7 @@ export class DashboardService {
   getAllForCurrentUser(): Observable<Project[]> {
     const url = `${projectsApiEndpoint}/currentUser`;
 
-    return this._httpClient.get<Project[]>(url)
+    return this.httpClient.get<Project[]>(url)
         .pipe(
             map(projects => {
               this.currentDashboardListValues = projects;
@@ -213,7 +213,7 @@ export class DashboardService {
   getOneById(id: number): Observable<Project> {
     const url = `${projectsApiEndpoint}/${id}`;
 
-    return this._httpClient.get<Project>(url);
+    return this.httpClient.get<Project>(url);
   }
 
   /**
@@ -225,7 +225,7 @@ export class DashboardService {
   getOneByToken(token: string): Observable<Project> {
     const url = `${projectsApiEndpoint}/project/${token}`;
 
-    return this._httpClient.get<Project>(url);
+    return this.httpClient.get<Project>(url);
   }
 
   /**
@@ -237,7 +237,7 @@ export class DashboardService {
   createProject(project: Project): Observable<Project> {
     const url = `${projectsApiEndpoint}`;
 
-    return this._httpClient.put<Project>(url, project)
+    return this.httpClient.put<Project>(url, project)
         .pipe(
             map(projectAdded => {
               this.updateDashboardListSubject(projectAdded, this.dashboardActionUpdate);
@@ -255,7 +255,7 @@ export class DashboardService {
   editProject(project: Project): Observable<Project> {
     const url = `${projectsApiEndpoint}/${project.id}`;
 
-    return this._httpClient.put<Project>(url, project)
+    return this.httpClient.put<Project>(url, project)
         .pipe(
             map(projectAdded => {
               this.updateDashboardListSubject(projectAdded, this.dashboardActionUpdate);
@@ -274,11 +274,11 @@ export class DashboardService {
     const url = `${projectsApiEndpoint}/${projectWidget.project.id}/widgets`;
 
     return this
-        ._httpClient
+        .httpClient
         .put<Project>(url, projectWidget)
         .pipe(
             map(project => {
-              this._currendDashbordSubject.next(project);
+              this.currendDashbordSubject.next(project);
               return project;
             })
         );
@@ -294,7 +294,7 @@ export class DashboardService {
   addUserToProject(project: Project, username: string): Observable<Project> {
     const url = `${projectsApiEndpoint}/${project.id}/users`;
 
-    return this._httpClient.put<Project>(url, username)
+    return this.httpClient.put<Project>(url, username)
         .pipe(
             map(projectUpdated => {
               this.updateDashboardListSubject(project, this.dashboardActionUpdate);
@@ -313,7 +313,7 @@ export class DashboardService {
   deleteUserFromProject(project: Project, userId: number): Observable<Project> {
     const url = `${projectsApiEndpoint}/${project.id}/users/${userId}`;
 
-    return this._httpClient.delete<Project>(url)
+    return this.httpClient.delete<Project>(url)
         .pipe(
             map(projectUpdated => {
               this.updateDashboardListSubject(project, this.dashboardActionUpdate);
@@ -331,7 +331,7 @@ export class DashboardService {
   deleteProject(project: Project): Observable<Project> {
     const url = `${projectsApiEndpoint}/${project.id}`;
 
-    return this._httpClient.delete<Project>(url)
+    return this.httpClient.delete<Project>(url)
         .pipe(
             map(projectDelete => {
               this.updateDashboardListSubject(projectDelete, this.dashboardActionDelete);
@@ -350,7 +350,7 @@ export class DashboardService {
   updateWidgetPositionForProject(projectId: number, projectWidgetPositions: ProjectWidgetPosition[]): Observable<Project> {
     const url = `${projectsApiEndpoint}/${projectId}/projectWidgetPositions`;
 
-    return this._httpClient.put<Project>(url, projectWidgetPositions)
+    return this.httpClient.put<Project>(url, projectWidgetPositions)
         .pipe(
             map(project => {
               this.updateDashboardListSubject(project, this.dashboardActionUpdate);
@@ -369,7 +369,7 @@ export class DashboardService {
   deleteProjectWidgetFromProject(projectId: number, projectWidgetId: number): Observable<Project> {
     const url = `${projectsApiEndpoint}/${projectId}/projectWidgets/${projectWidgetId}`;
 
-    return this._httpClient.delete<Project>(url)
+    return this.httpClient.delete<Project>(url)
         .pipe(
             map(project => {
               this.updateDashboardListSubject(project, this.dashboardActionUpdate);
@@ -390,7 +390,7 @@ export class DashboardService {
   editProjectWidgetFromProject(projectId: number, projectWidget: ProjectWidget): Observable<Project> {
     const url = `${projectsApiEndpoint}/${projectId}/projectWidgets/${projectWidget.id}`;
 
-    return this._httpClient.put<Project>(url, projectWidget);
+    return this.httpClient.put<Project>(url, projectWidget);
   }
 
   /* ******************************************************************* */

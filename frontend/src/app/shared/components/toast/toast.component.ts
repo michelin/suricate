@@ -72,7 +72,7 @@ export class ToastComponent implements OnInit, OnDestroy {
    * Used for keep the subscription of subjects/Observables open
    * @type {boolean}
    */
-  private _isAlive = true;
+  private isAlive = true;
 
   /**
    * The component state
@@ -101,19 +101,19 @@ export class ToastComponent implements OnInit, OnDestroy {
   /**
    * Constructor
    *
-   * @param {ToastService} _toastService The toast service to inject
+   * @param {ToastService} toastService The toast service to inject
    */
-  constructor(private _toastService: ToastService) {
+  constructor(private toastService: ToastService) {
   }
 
   /**
    * Called when the component is init
    */
   ngOnInit() {
-    this.message$ = this._toastService.toastMessage$;
+    this.message$ = this.toastService.toastMessage$;
     this.message$
         .pipe(
-            takeWhile(() => this._isAlive)
+            takeWhile(() => this.isAlive)
         )
         .subscribe(() => this.showToast());
   }
@@ -153,7 +153,7 @@ export class ToastComponent implements OnInit, OnDestroy {
    * Called when the component is destroyed
    */
   ngOnDestroy() {
-    this._isAlive = false;
+    this.isAlive = false;
   }
 
 }

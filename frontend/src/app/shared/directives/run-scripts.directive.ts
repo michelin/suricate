@@ -34,9 +34,9 @@ export class RunScriptsDirective implements OnInit {
   /**
    * The constructor
    *
-   * @param {ElementRef} _elementRef Represent a reference for an HTML Element
+   * @param {ElementRef} elementRef Represent a reference for an HTML Element
    */
-  constructor(private _elementRef: ElementRef) {
+  constructor(private elementRef: ElementRef) {
   }
 
   /**
@@ -53,7 +53,7 @@ export class RunScriptsDirective implements OnInit {
    * Reinsert scripts tag inside DOM for execution
    */
   reinsertScripts(): void {
-    let scripts: HTMLScriptElement[] = Array.from(this._elementRef.nativeElement.getElementsByTagName('script'));
+    let scripts: HTMLScriptElement[] = Array.from(this.elementRef.nativeElement.getElementsByTagName('script'));
     const scriptsWithSrc: HTMLScriptElement[] = scripts.filter(currentScript => currentScript.src);
     const scriptsInline: HTMLScriptElement[] = scripts.filter(currentScript => currentScript.innerHTML);
     scripts = [...scriptsWithSrc, ...scriptsInline];

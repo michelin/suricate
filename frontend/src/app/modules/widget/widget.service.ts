@@ -32,9 +32,9 @@ export class WidgetService {
   /**
    * Constructor
    *
-   * @param {HttpClient} _httpClient The http client service
+   * @param {HttpClient} httpClient The http client service
    */
-  constructor(private _httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient) {
   }
 
   /**
@@ -45,7 +45,7 @@ export class WidgetService {
   getAll(): Observable<Widget[]> {
     const url = `${widgetsApiEndpoint}`;
 
-    return this._httpClient.get<Widget[]>(url);
+    return this.httpClient.get<Widget[]>(url);
   }
 
   /**
@@ -57,7 +57,7 @@ export class WidgetService {
   updateWidget(widget: Widget): Observable<Widget> {
     const url = `${widgetsApiEndpoint}/${widget.id}`;
 
-    return this._httpClient.post<Widget>(url, widget);
+    return this.httpClient.post<Widget>(url, widget);
   }
 
   /**
@@ -68,7 +68,7 @@ export class WidgetService {
   getCategories(): Observable<Category[]> {
     const url = `${widgetsApiEndpoint}/categories`;
 
-    return this._httpClient.get<Category[]>(url);
+    return this.httpClient.get<Category[]>(url);
   }
 
   /**
@@ -80,6 +80,6 @@ export class WidgetService {
   getWidgetsByCategoryId(categoryId: number): Observable<Widget[]> {
     const url = `${widgetsApiEndpoint}/category/${categoryId}`;
 
-    return this._httpClient.get<Widget[]>(url);
+    return this.httpClient.get<Widget[]>(url);
   }
 }

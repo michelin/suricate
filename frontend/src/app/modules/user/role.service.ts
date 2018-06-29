@@ -29,9 +29,9 @@ export class RoleService {
   /**
    * Constructor
    *
-   * @param {HttpClient} _httpClient The Http Client used for doing HTTP request
+   * @param {HttpClient} httpClient The Http Client used for doing HTTP request
    */
-  constructor(private _httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient) {
   }
 
   /* *************************************************************************************** */
@@ -47,7 +47,7 @@ export class RoleService {
   getRoles(): Observable<Role[]> {
     const url = `${rolesApiEndpoint}`;
 
-    return this._httpClient.get<Role[]>(url);
+    return this.httpClient.get<Role[]>(url);
   }
 
 

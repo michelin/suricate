@@ -40,7 +40,7 @@ export class AppComponent implements OnInit, OnDestroy {
    * @type {boolean}
    * @private
    */
-  private _isAlive = true;
+  private isAlive = true;
 
   /**
    * Observable that tell to the app if the user is connected
@@ -57,32 +57,32 @@ export class AppComponent implements OnInit, OnDestroy {
   /**
    * The constructor
    *
-   * @param {AuthenticationService} _authenticationService Authentication service to inject
+   * @param {AuthenticationService} authenticationService Authentication service to inject
    * @param {OverlayContainer} overlayContainer The overlay container service
-   * @param {UserService} _userService The user service
-   * @param {TranslateService} _translateService The translation service
-   * @param {SettingsService} _settingsService The settings service to inject
+   * @param {UserService} userService The user service
+   * @param {TranslateService} translateService The translation service
+   * @param {SettingsService} settingsService The settings service to inject
    */
-  constructor(private _authenticationService: AuthenticationService,
+  constructor(private authenticationService: AuthenticationService,
               private overlayContainer: OverlayContainer,
-              private _userService: UserService,
-              private _translateService: TranslateService,
-              private _settingsService: SettingsService) {
+              private userService: UserService,
+              private translateService: TranslateService,
+              private settingsService: SettingsService) {
   }
 
   /**
    * Called at the init of the app
    */
   ngOnInit() {
-    this.isLoggedIn$ = this._authenticationService.isLoggedIn$;
-    this._settingsService.currentTheme$.subscribe(themeValue => this.switchTheme(themeValue));
+    this.isLoggedIn$ = this.authenticationService.isLoggedIn$;
+    this.settingsService.currentTheme$.subscribe(themeValue => this.switchTheme(themeValue));
 
-    this._settingsService.initDefaultSettings();
-    this._userService.connectedUser$.subscribe(user => {
+    this.settingsService.initDefaultSettings();
+    this.userService.connectedUser$.subscribe(user => {
       if (user) {
-        this._settingsService.initUserSettings(user);
+        this.settingsService.initUserSettings(user);
       } else {
-        this._settingsService.initDefaultSettings();
+        this.settingsService.initDefaultSettings();
       }
     });
   }
@@ -100,6 +100,6 @@ export class AppComponent implements OnInit, OnDestroy {
    * Called when the component is destroyed
    */
   ngOnDestroy() {
-    this._isAlive = false;
+    this.isAlive = false;
   }
 }

@@ -81,17 +81,17 @@ export class UserListComponent implements AfterViewInit {
   /**
    * The constructor
    *
-   * @param {UserService} _userService The user service to inject
-   * @param {RoleService} _roleService The role service to inject
-   * @param {ChangeDetectorRef} _changeDetectorRef The change detector service to inject
-   * @param {MatDialog} _matDialog The mat dialog service to inject
-   * @param {ToastService} _toastService The toast service to inject
+   * @param {UserService} userService The user service to inject
+   * @param {RoleService} roleService The role service to inject
+   * @param {ChangeDetectorRef} changeDetectorRef The change detector service to inject
+   * @param {MatDialog} matDialog The mat dialog service to inject
+   * @param {ToastService} toastService The toast service to inject
    */
-  constructor(private _userService: UserService,
-              private _roleService: RoleService,
-              private _changeDetectorRef: ChangeDetectorRef,
-              private _matDialog: MatDialog,
-              private _toastService: ToastService) {
+  constructor(private userService: UserService,
+              private roleService: RoleService,
+              private changeDetectorRef: ChangeDetectorRef,
+              private matDialog: MatDialog,
+              private toastService: ToastService) {
   }
 
   /**
@@ -111,8 +111,8 @@ export class UserListComponent implements AfterViewInit {
             startWith(null),
             switchMap(() => {
               this.isLoadingResults = true;
-              this._changeDetectorRef.detectChanges();
-              return this._userService.getAll();
+              this.changeDetectorRef.detectChanges();
+              return this.userService.getAll();
             }),
             map(data => {
               this.isLoadingResults = false;
@@ -150,7 +150,7 @@ export class UserListComponent implements AfterViewInit {
    * @returns {string} The list of roles has string
    */
   getRolesName(roles: Role[]): string {
-    return this._roleService.getRolesNameAsString(roles);
+    return this.roleService.getRolesNameAsString(roles);
   }
 
   /**
@@ -158,17 +158,17 @@ export class UserListComponent implements AfterViewInit {
    * @param {User} user The user to delete
    */
   openDialogDeleteUser(user: User) {
-    const deleteUserDialogRef = this._matDialog.open(DeleteUserDialogComponent, {
+    const deleteUserDialogRef = this.matDialog.open(DeleteUserDialogComponent, {
       data: {user: user}
     });
 
     deleteUserDialogRef.afterClosed().subscribe(shouldDeleteUser => {
       if (shouldDeleteUser) {
         this
-            ._userService
+            .userService
             .deleteUser(user)
             .subscribe(() => {
-              this._toastService.sendMessage('User deleted successfully', ToastType.SUCCESS);
+              this.toastService.sendMessage('User deleted successfully', ToastType.SUCCESS);
               this.initUsersTable();
             });
       }

@@ -33,13 +33,13 @@ export class WebsocketService {
    * Define the min bound for the screen code random generation
    * @type {number}
    */
-  private readonly MIN_SCREEN_CODE_BOUND = 100000;
+  private readonly minScreenCodeBound = 100000;
 
   /**
    * Define the max bound for the screen code random generation
    * @type {number}
    */
-  private readonly MAX_SCREEN_CODE_BOUND = 999999;
+  private readonly maxScreenCodeBound = 999999;
 
   /**
    * The constructor
@@ -59,7 +59,7 @@ export class WebsocketService {
    * @returns {number} The screen code
    */
   getscreenCode(): number {
-    return NumberUtils.getRandomIntBetween(this.MIN_SCREEN_CODE_BOUND, this.MAX_SCREEN_CODE_BOUND);
+    return NumberUtils.getRandomIntBetween(this.minScreenCodeBound, this.maxScreenCodeBound);
   }
 
   /* ****************************************************************** */

@@ -49,21 +49,21 @@ export class SettingListComponent implements OnInit {
   /**
    * Constructor
    *
-   * @param {UserService} _userService The user service to inject
-   * @param {ToastService} _toastService The toast notification service
-   * @param {SettingsService} _settingsService The settings service to inject
+   * @param {UserService} userService The user service to inject
+   * @param {ToastService} toastService The toast notification service
+   * @param {SettingsService} settingsService The settings service to inject
    */
-  constructor(private _userService: UserService,
-              private _toastService: ToastService,
-              private _settingsService: SettingsService) {
+  constructor(private userService: UserService,
+              private toastService: ToastService,
+              private settingsService: SettingsService) {
   }
 
   /**
    * When the component is init
    */
   ngOnInit() {
-    this.currentUser$ = this._userService.connectedUser$;
-    this._userService.getConnectedUser().subscribe();
+    this.currentUser$ = this.userService.connectedUser$;
+    this.userService.getConnectedUser().subscribe();
   }
 
   /**
@@ -74,7 +74,7 @@ export class SettingListComponent implements OnInit {
   saveUserSettings(formSettings: NgForm) {
     if (formSettings.valid) {
       const userSettingForm: FormGroup = formSettings.form;
-      const currentUser = this._userService.connectedUser;
+      const currentUser = this.userService.connectedUser;
 
       const userSettings = currentUser.userSettings;
       userSettings.forEach(userSetting => {
@@ -89,11 +89,11 @@ export class SettingListComponent implements OnInit {
         }
       });
 
-      this._userService
+      this.userService
           .updateUserSettings(currentUser, userSettings)
           .subscribe(user => {
-            this._toastService.sendMessage('Settings saved succesfully', ToastType.SUCCESS);
-            this._settingsService.setUserSettings(user);
+            this.toastService.sendMessage('Settings saved succesfully', ToastType.SUCCESS);
+            this.settingsService.setUserSettings(user);
           });
     }
   }

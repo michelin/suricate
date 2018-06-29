@@ -61,29 +61,29 @@ export class DashboardActionsComponent implements OnInit {
   /**
    * The constructor
    *
-   * @param {MatDialog} _matDialog The mat dialog to inject
-   * @param {ActivatedRoute} _activatedRoute The activated route
-   * @param {ScreenService} _screenService The screen service
-   * @param {DashboardService} _dashboardService The dashboard service
+   * @param {MatDialog} matDialog The mat dialog to inject
+   * @param {ActivatedRoute} activatedRoute The activated route
+   * @param {ScreenService} screenService The screen service
+   * @param {DashboardService} dashboardService The dashboard service
    */
-  constructor(private _matDialog: MatDialog,
-              private _activatedRoute: ActivatedRoute,
-              private _screenService: ScreenService,
-              private _dashboardService: DashboardService) {
+  constructor(private matDialog: MatDialog,
+              private activatedRoute: ActivatedRoute,
+              private screenService: ScreenService,
+              private dashboardService: DashboardService) {
   }
 
   /**
    * When the component is init
    */
   ngOnInit() {
-    this._dashboardService.currentDisplayedDashboard$.subscribe(project => this.project = project);
+    this.dashboardService.currentDisplayedDashboard$.subscribe(project => this.project = project);
   }
 
   /**
    * Open the Add widget dialog
    */
   openAddWidgetDialog() {
-    this.addWidgetDialogRef = this._matDialog.open(AddWidgetDialogComponent, {
+    this.addWidgetDialogRef = this.matDialog.open(AddWidgetDialogComponent, {
       minWidth: 900,
       data: {projectId: this.project.id}
     });
@@ -93,7 +93,7 @@ export class DashboardActionsComponent implements OnInit {
    * Open the edit widget dialog
    */
   openEditDashboardDialog() {
-    this.editDashboardDialogRef = this._matDialog.open(AddDashboardDialogComponent, {
+    this.editDashboardDialogRef = this.matDialog.open(AddDashboardDialogComponent, {
       minWidth: 900,
       data: {projectId: this.project.id}
     });
@@ -103,7 +103,7 @@ export class DashboardActionsComponent implements OnInit {
    * Open the tv management dialog
    */
   openTvManagementDialog() {
-    this.tvManagementDialogRef = this._matDialog.open(TvManagementDialogComponent, {
+    this.tvManagementDialogRef = this.matDialog.open(TvManagementDialogComponent, {
       minWidth: 900,
       data: {projectId: this.project.id}
     });
@@ -113,6 +113,6 @@ export class DashboardActionsComponent implements OnInit {
    * Refresh every screens for the current dashboard
    */
   refreshConnectedScreens() {
-    this._screenService.refreshEveryConnectedScreensForProject(this.project.token);
+    this.screenService.refreshEveryConnectedScreensForProject(this.project.token);
   }
 }

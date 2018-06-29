@@ -80,15 +80,15 @@ export class DashboardListComponent implements AfterViewInit {
   /**
    * Constructor
    *
-   * @param {DashboardService} _dashboardService The dashboardService to inject
-   * @param {ChangeDetectorRef} _changeDetectorRef The change detector ref
-   * @param {MatDialog} _matDialog The matDialog service to inject
-   * @param {ToastService} _toastService The toast service to inject
+   * @param {DashboardService} dashboardService The dashboardService to inject
+   * @param {ChangeDetectorRef} changeDetectorRef The change detector ref
+   * @param {MatDialog} matDialog The matDialog service to inject
+   * @param {ToastService} toastService The toast service to inject
    */
-  constructor(private _dashboardService: DashboardService,
-              private _changeDetectorRef: ChangeDetectorRef,
-              private _matDialog: MatDialog,
-              private _toastService: ToastService) {
+  constructor(private dashboardService: DashboardService,
+              private changeDetectorRef: ChangeDetectorRef,
+              private matDialog: MatDialog,
+              private toastService: ToastService) {
   }
 
   /**
@@ -108,8 +108,8 @@ export class DashboardListComponent implements AfterViewInit {
             startWith(null),
             switchMap(() => {
               this.isLoadingResults = true;
-              this._changeDetectorRef.detectChanges();
-              return this._dashboardService.getAll();
+              this.changeDetectorRef.detectChanges();
+              return this.dashboardService.getAll();
             }),
             map(data => {
               this.isLoadingResults = false;
@@ -137,17 +137,17 @@ export class DashboardListComponent implements AfterViewInit {
    * @param {Project} project The dashboard to delete
    */
   openDialogDeleteDashboard(project: Project) {
-    const deleteUserDialogRef = this._matDialog.open(DeleteDashboardDialogComponent, {
+    const deleteUserDialogRef = this.matDialog.open(DeleteDashboardDialogComponent, {
       data: {project: project}
     });
 
     deleteUserDialogRef.afterClosed().subscribe(shouldDeleteDashboard => {
       if (shouldDeleteDashboard) {
         this
-            ._dashboardService
+            .dashboardService
             .deleteProject(project)
             .subscribe(() => {
-              this._toastService.sendMessage('Project deleted successfully', ToastType.SUCCESS);
+              this.toastService.sendMessage('Project deleted successfully', ToastType.SUCCESS);
               this.initProjectsTable();
             });
       }

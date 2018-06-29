@@ -33,7 +33,7 @@ export class ToastService {
    * @type {BehaviorSubject<ToastMessage>}
    * @private
    */
-  private _toastMessageSubject = new BehaviorSubject<ToastMessage>(null);
+  private toastMessageSubject = new BehaviorSubject<ToastMessage>(null);
 
   /**
    * The constructor
@@ -46,7 +46,7 @@ export class ToastService {
    * @returns {Observable<ToastMessage>}
    */
   get toastMessage$(): Observable<ToastMessage> {
-    return this._toastMessageSubject.asObservable();
+    return this.toastMessageSubject.asObservable();
   }
 
   /**
@@ -56,7 +56,7 @@ export class ToastService {
    * @param {string} content The content of the message
    */
   sendMessage(title: string, style?: ToastType, content?: string): void {
-    this._toastMessageSubject.next(new ToastMessage(title, content, style));
+    this.toastMessageSubject.next(new ToastMessage(title, content, style));
   }
 
 }
