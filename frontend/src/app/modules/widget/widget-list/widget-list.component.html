@@ -19,22 +19,30 @@
     </ng-container>
 
     <ng-container matColumnDef="name">
-      <mat-header-cell fxFlex="15%" *matHeaderCellDef mat-sort-header> <app-translate [key]="'widget.name'"></app-translate> </mat-header-cell>
-      <mat-cell  fxFlex="15%" *matCellDef="let row">{{ row.name }}</mat-cell>
+      <mat-header-cell fxFlex="15%" *matHeaderCellDef mat-sort-header>
+        <app-translate [key]="'widget.name'"></app-translate>
+      </mat-header-cell>
+      <mat-cell fxFlex="15%" *matCellDef="let row">{{ row.name }}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="description">
-      <mat-header-cell fxFlex="40%" *matHeaderCellDef><app-translate [key]="'widget.description'"></app-translate></mat-header-cell>
+      <mat-header-cell fxFlex="40%" *matHeaderCellDef>
+        <app-translate [key]="'widget.description'"></app-translate>
+      </mat-header-cell>
       <mat-cell fxFlex="40%" *matCellDef="let row">{{ row.description }}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="category">
-      <mat-header-cell fxFlex="15%" *matHeaderCellDef mat-sort-header><app-translate [key]="'widget.category'"></app-translate></mat-header-cell>
+      <mat-header-cell fxFlex="15%" *matHeaderCellDef mat-sort-header>
+        <app-translate [key]="'widget.category'"></app-translate>
+      </mat-header-cell>
       <mat-cell fxFlex="15%" *matCellDef="let row">{{ row.category.name }}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="status">
-      <mat-header-cell fxFlex="13%" *matHeaderCellDef mat-sort-header><app-translate [key]="'activation.status'"></app-translate></mat-header-cell>
+      <mat-header-cell fxFlex="13%" *matHeaderCellDef mat-sort-header>
+        <app-translate [key]="'activation.status'"></app-translate>
+      </mat-header-cell>
       <mat-cell fxFlex="13%" *matCellDef="let row">
         <mat-slide-toggle color="accent"
                           [checked]="row.widgetAvailability == widgetAvailability.ACTIVATED"
@@ -49,13 +57,17 @@
         <div fxFlex="17%" class="mat-header-cell" role="columnheader"></div>
         <div fxFlex="15%" class="mat-header-cell" role="columnheader">
           <mat-form-field>
-            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="{{ 'filter' | translate }}">
+            <input #nameInputFilter
+                   matInput
+                   placeholder="{{ 'filter' | translate }}">
           </mat-form-field>
         </div>
         <div fxFlex="40%" class="mat-header-cell" role="columnheader"></div>
         <div fxFlex="15%" class="mat-header-cell" role="columnheader">
           <mat-form-field>
-            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="{{ 'filter' | translate }}">
+            <input #categoryInputFilter
+                   matInput
+                   placeholder="{{ 'filter' | translate }}">
           </mat-form-field>
         </div>
         <div fxFlex="13%" class="mat-header-cell" role="columnheader"></div>

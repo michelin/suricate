@@ -133,12 +133,13 @@ export class UserListComponent implements AfterViewInit {
           this.matTableDataSource.sort = this.matSort;
         });
 
-    this.matTableDataSource.sortingDataAccessor = (item: any, property) => {
+    // Apply sort custom rules for user
+    this.matTableDataSource.sortingDataAccessor = (user: User, property: string) => {
       switch (property) {
         case 'roles':
-          return this.getRolesName(item.roles);
+          return this.getRolesName(user.roles);
         default:
-          return item[property];
+          return user[property];
       }
     };
   }

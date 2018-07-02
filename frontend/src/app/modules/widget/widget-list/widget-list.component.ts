@@ -16,15 +16,17 @@
  *
  */
 
-import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator, MatSlideToggleChange, MatSort, MatTableDataSource} from '@angular/material';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {merge} from 'rxjs/observable/merge';
 import {of as observableOf} from 'rxjs/observable/of';
-import {catchError} from 'rxjs/operators';
+import {fromEvent} from 'rxjs/observable/fromEvent';
+import {catchError, debounceTime, distinctUntilChanged} from 'rxjs/operators';
 import {map} from 'rxjs/operators/map';
 import {switchMap} from 'rxjs/operators/switchMap';
 import {startWith} from 'rxjs/operators/startWith';
+
 
 import {WidgetService} from '../widget.service';
 import {Asset} from '../../../shared/model/dto/Asset';
@@ -41,7 +43,7 @@ import {ToastType} from '../../../shared/model/toastNotification/ToastType';
   templateUrl: './widget-list.component.html',
   styleUrls: ['./widget-list.component.css']
 })
-export class WidgetListComponent implements OnInit {
+export class WidgetListComponent implements OnInit, AfterViewInit {
 
   /**
    * Manage the sort of each column on the table
@@ -53,6 +55,16 @@ export class WidgetListComponent implements OnInit {
    * @type {MatPaginator}
    */
   @ViewChild(MatPaginator) matPaginator: MatPaginator;
+
+  /**
+   * The input filter for name
+   */
+  @ViewChild('nameInputFilter') nameInputFilter: ElementRef;
+  /**
+   * The input filter for category
+   */
+  @ViewChild('categoryInputFilter') categoryInputFilter: ElementRef;
+
   /**
    * The table data source
    * @type {MatTableDataSource<any>}
@@ -113,6 +125,13 @@ export class WidgetListComponent implements OnInit {
   }
 
   /**
+   * When the view has been init
+   */
+  ngAfterViewInit() {
+    this.initFilterSubscription();
+  }
+
+  /**
    * Init the HTML table
    */
   initTable() {
@@ -144,6 +163,59 @@ export class WidgetListComponent implements OnInit {
           this.widgets = data;
         });
 
+    // Apply custom sort rules
+    this.matTableDataSource.sortingDataAccessor = (widget: Widget, property: string) => {
+      switch (property) {
+        case 'category':
+          return widget.category.name;
+        case 'status':
+          return widget.widgetAvailability;
+        default:
+          return widget[property];
+      }
+    };
+  }
+
+  /**
+   * Init the filter subscription
+   */
+  initFilterSubscription() {
+    // Filter for widget name input
+    fromEvent(this.nameInputFilter.nativeElement, 'keyup')
+        .pipe(
+            debounceTime(500),
+            distinctUntilChanged(),
+            map((keyboardEvent: any) => keyboardEvent.target.value)
+        )
+        .subscribe((inputValue: string) => {
+          this.matTableDataSource.filterPredicate = (widget: Widget, filter: string) => {
+            return widget.name.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) !== -1;
+          };
+          this.applyFilter(inputValue);
+        });
+
+    // Filter for widget category
+    fromEvent(this.categoryInputFilter.nativeElement, 'keyup')
+        .pipe(
+            debounceTime(500),
+            distinctUntilChanged(),
+            map((keyboardEvent: any) => keyboardEvent.target.value)
+        )
+        .subscribe((inputValue: string) => {
+          this.matTableDataSource.filterPredicate = (widget: Widget, filter: string) => {
+            return widget.category.name.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) !== -1;
+          };
+          this.applyFilter(inputValue);
+        });
+  }
+
+  /**
+   * Apply the column filter
+   * @param {string} filterValue The value to search
+   */
+  applyFilter(filterValue: string) {
+    filterValue = filterValue.trim();
+    this.matTableDataSource.filter = filterValue;
   }
 
   /**
@@ -164,15 +236,6 @@ export class WidgetListComponent implements OnInit {
     return this
         .domSanitizer
         .bypassSecurityTrustHtml(imgHtml);
-  }
-
-  /**
-   * Apply the column filter
-   * @param {string} filterValue The value to search
-   */
-  applyFilter(filterValue: string) {
-    filterValue = filterValue.trim(); // Remove whitespace
-    this.matTableDataSource.filter = filterValue;
   }
 
   /**
