@@ -99,5 +99,4 @@ public class User extends AbstractEntity<Long> {
      */
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<UserSetting> userSettings = new ArrayList<>();
-
 }
