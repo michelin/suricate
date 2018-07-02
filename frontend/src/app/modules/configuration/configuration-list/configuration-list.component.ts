@@ -130,6 +130,7 @@ export class ConfigurationListComponent implements OnInit {
           this.matTableDataSource.sort = this.matSort;
         });
 
+    // Apply sort custom rules for configuration
     this.matTableDataSource.sortingDataAccessor = (item: Configuration, property: string) => {
       switch (property) {
         case 'category':

@@ -131,6 +131,7 @@ export class DashboardListComponent implements AfterViewInit {
           this.matTableDataSource.sort = this.matSort;
         });
 
+    // Apply sort custom rules for dashboards
     this.matTableDataSource.sortingDataAccessor = (dashboard: Project, property: string) => {
       switch (property) {
         case 'name':
