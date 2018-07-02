@@ -270,8 +270,23 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
   getWidgetCommonCSS(): string {
     return `
       <style>
+        .grid-stack .icon-background {
+          pointer-events: none;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          width: 100% !important;
+          height: auto;
+          font-size: 11rem;
+          transform: translate(-50%, -50%);
+        }
         .grid-stack .widget {
           text-align: center;
+        }
+        .grid-stack .widget .fullwidget {
+          position: absolute;
+          width: 100%;
+          height: 100%;
         }
         .grid-stack .grid-stack-item-content {
           height: 100%;
@@ -315,7 +330,7 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
         }
         .grid-stack .widget .more-info {
           color: rgba(255, 255, 255, 0.5);
-          ont-size: 0.9rem;
+          font-size: 0.9rem;
           position: absolute;
           bottom: 17px;
           left: 0;
