@@ -130,6 +130,15 @@ export class DashboardListComponent implements AfterViewInit {
           this.matTableDataSource.data = data;
           this.matTableDataSource.sort = this.matSort;
         });
+
+    this.matTableDataSource.sortingDataAccessor = (dashboard: Project, property: string) => {
+      switch (property) {
+        case 'name':
+          return dashboard.name.toLocaleLowerCase();
+        default:
+          return dashboard[property];
+      }
+    };
   }
 
   /**

@@ -130,7 +130,7 @@ export class ConfigurationListComponent implements OnInit {
           this.matTableDataSource.sort = this.matSort;
         });
 
-    this.matTableDataSource.sortingDataAccessor = (item: any, property) => {
+    this.matTableDataSource.sortingDataAccessor = (item: Configuration, property: string) => {
       switch (property) {
         case 'category':
           return item.category ? item.category.name : '';
