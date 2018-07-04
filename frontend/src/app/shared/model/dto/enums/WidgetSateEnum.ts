@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+/**
+ * The list of the different widget states
+ */
 export enum WidgetStateEnum {
   /**
    * Widget is running normally

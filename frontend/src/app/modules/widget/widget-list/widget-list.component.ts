@@ -16,16 +16,19 @@
  *
  */
 
-import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
-import {WidgetService} from '../widget.service';
-import {catchError} from 'rxjs/operators';
-import {map} from 'rxjs/operators/map';
-import {switchMap} from 'rxjs/operators/switchMap';
-import {merge} from 'rxjs/observable/merge';
-import {startWith} from 'rxjs/operators/startWith';
-import {of as observableOf} from 'rxjs/observable/of';
+import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator, MatSlideToggleChange, MatSort, MatTableDataSource} from '@angular/material';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
+import {merge} from 'rxjs/observable/merge';
+import {of as observableOf} from 'rxjs/observable/of';
+import {fromEvent} from 'rxjs/observable/fromEvent';
+import {catchError, debounceTime, distinctUntilChanged} from 'rxjs/operators';
+import {map} from 'rxjs/operators/map';
+import {switchMap} from 'rxjs/operators/switchMap';
+import {startWith} from 'rxjs/operators/startWith';
+
+
+import {WidgetService} from '../widget.service';
 import {Asset} from '../../../shared/model/dto/Asset';
 import {WidgetAvailabilityEnum} from '../../../shared/model/dto/enums/WidgetAvailabilityEnum';
 import {Widget} from '../../../shared/model/dto/Widget';
@@ -40,24 +43,36 @@ import {ToastType} from '../../../shared/model/toastNotification/ToastType';
   templateUrl: './widget-list.component.html',
   styleUrls: ['./widget-list.component.css']
 })
-export class WidgetListComponent implements OnInit {
+export class WidgetListComponent implements OnInit, AfterViewInit {
 
   /**
    * Manage the sort of each column on the table
+   * @type {MatSort}
    */
   @ViewChild(MatSort) matSort: MatSort;
   /**
    * Manage the pagination
+   * @type {MatPaginator}
    */
   @ViewChild(MatPaginator) matPaginator: MatPaginator;
+
+  /**
+   * The input filter for name
+   */
+  @ViewChild('nameInputFilter') nameInputFilter: ElementRef;
+  /**
+   * The input filter for category
+   */
+  @ViewChild('categoryInputFilter') categoryInputFilter: ElementRef;
+
   /**
    * The table data source
-   * @type {MatTableDataSource<any>} The datasource
+   * @type {MatTableDataSource<any>}
    */
   matTableDataSource = new MatTableDataSource();
   /**
    * The column displayed
-   * @type {string[]} The list a column name
+   * @type {string[]}
    */
   displayedColumns = ['image', 'name', 'description', 'category', 'status'];
   /**
@@ -78,12 +93,13 @@ export class WidgetListComponent implements OnInit {
 
   /**
    * The widget availability enums
-   * @type {WidgetAvailabilityEnum} The list of enums
+   * @type {WidgetAvailabilityEnum}
    */
   widgetAvailability = WidgetAvailabilityEnum;
 
   /**
    * The list of widgets
+   * @type {Widget[]}
    */
   widgets: Widget[];
 
@@ -106,6 +122,13 @@ export class WidgetListComponent implements OnInit {
    */
   ngOnInit() {
     this.initTable();
+  }
+
+  /**
+   * When the view has been init
+   */
+  ngAfterViewInit() {
+    this.initFilterSubscription();
   }
 
   /**
@@ -133,13 +156,66 @@ export class WidgetListComponent implements OnInit {
               return observableOf([]);
             })
         )
-        .subscribe(data =>  {
+        .subscribe(data => {
           this.resultsLength = data.length;
           this.matTableDataSource.data = data;
           this.matTableDataSource.sort = this.matSort;
           this.widgets = data;
         });
 
+    // Apply custom sort rules
+    this.matTableDataSource.sortingDataAccessor = (widget: Widget, property: string) => {
+      switch (property) {
+        case 'category':
+          return widget.category.name;
+        case 'status':
+          return widget.widgetAvailability;
+        default:
+          return widget[property];
+      }
+    };
+  }
+
+  /**
+   * Init the filter subscription
+   */
+  initFilterSubscription() {
+    // Filter for widget name input
+    fromEvent(this.nameInputFilter.nativeElement, 'keyup')
+        .pipe(
+            debounceTime(500),
+            distinctUntilChanged(),
+            map((keyboardEvent: any) => keyboardEvent.target.value)
+        )
+        .subscribe((inputValue: string) => {
+          this.matTableDataSource.filterPredicate = (widget: Widget, filter: string) => {
+            return widget.name.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) !== -1;
+          };
+          this.applyFilter(inputValue);
+        });
+
+    // Filter for widget category
+    fromEvent(this.categoryInputFilter.nativeElement, 'keyup')
+        .pipe(
+            debounceTime(500),
+            distinctUntilChanged(),
+            map((keyboardEvent: any) => keyboardEvent.target.value)
+        )
+        .subscribe((inputValue: string) => {
+          this.matTableDataSource.filterPredicate = (widget: Widget, filter: string) => {
+            return widget.category.name.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) !== -1;
+          };
+          this.applyFilter(inputValue);
+        });
+  }
+
+  /**
+   * Apply the column filter
+   * @param {string} filterValue The value to search
+   */
+  applyFilter(filterValue: string) {
+    filterValue = filterValue.trim();
+    this.matTableDataSource.filter = filterValue;
   }
 
   /**
@@ -163,15 +239,6 @@ export class WidgetListComponent implements OnInit {
   }
 
   /**
-   * Apply the column filter
-   * @param {string} filterValue The value to search
-   */
-  applyFilter(filterValue: string) {
-    filterValue = filterValue.trim(); // Remove whitespace
-    this.matTableDataSource.filter = filterValue;
-  }
-
-  /**
    * Enable or disable a widget
    *
    * @param {Widget} widget The widget to disable
@@ -185,7 +252,7 @@ export class WidgetListComponent implements OnInit {
       this
           .widgetService
           .updateWidget(widgetToDisable)
-          .subscribe( (widgetResponse: Widget) => {
+          .subscribe((widgetResponse: Widget) => {
             this.toastService.sendMessage(
                 `The widget "${widgetResponse.name}" has been ${widgetResponse.widgetAvailability.toString()}`,
                 ToastType.SUCCESS

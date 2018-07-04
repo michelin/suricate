@@ -14,18 +14,10 @@
  * limitations under the License.
  */
 
-import {inject, TestBed} from '@angular/core/testing';
-
-import {ThemeService} from './theme.service';
-
-describe('ThemeService', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [ThemeService]
-    });
-  });
-
-  it('should be created', inject([ThemeService], (service: ThemeService) => {
-    expect(service).toBeTruthy();
-  }));
-});
+/**
+ * Hold the credentials at the connection
+ */
+export interface Credentials {
+  username: string;
+  password: string;
+}

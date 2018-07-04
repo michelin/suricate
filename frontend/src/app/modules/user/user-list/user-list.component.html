@@ -27,18 +27,18 @@
     </ng-container>
 
     <ng-container matColumnDef="mail">
-      <mat-header-cell *matHeaderCellDef>
+      <mat-header-cell fxFlex="27" *matHeaderCellDef>
         <app-translate [key]="'email'"></app-translate>
       </mat-header-cell>
-      <mat-cell *matCellDef="let row">{{ row.email }}</mat-cell>
+      <mat-cell fxFlex="27" *matCellDef="let row">{{ row.email }}</mat-cell>
     </ng-container>
 
     <!-- Username Column -->
     <ng-container matColumnDef="roles">
-      <mat-header-cell *matHeaderCellDef mat-sort-header>
+      <mat-header-cell fxFlex="20" *matHeaderCellDef mat-sort-header>
         <app-translate [key]="'roles'"></app-translate>
       </mat-header-cell>
-      <mat-cell *matCellDef="let row"> {{ getRolesName(row.roles) }}</mat-cell>
+      <mat-cell fxFlex="20" *matCellDef="let row"> {{ getRolesName(row.roles) }}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="edit">

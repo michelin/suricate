@@ -15,8 +15,9 @@
  */
 
 import {Component, Inject, OnInit} from '@angular/core';
-import {ProjectWidget} from '../../../../shared/model/dto/ProjectWidget';
 import {MAT_DIALOG_DATA} from '@angular/material';
+
+import {ProjectWidget} from '../../../../shared/model/dto/ProjectWidget';
 
 /**
  * Dialog used for displaying "Yes / No" popup
@@ -30,6 +31,7 @@ export class DeleteProjectWidgetDialogComponent implements OnInit {
 
   /**
    * The project widget to delete
+   * @type {ProjectWidget}
    */
   projectWidget: ProjectWidget;
 
@@ -38,8 +40,12 @@ export class DeleteProjectWidgetDialogComponent implements OnInit {
    *
    * @param data The data give to the dialog
    */
-  constructor(@Inject(MAT_DIALOG_DATA) private data: any) { }
+  constructor(@Inject(MAT_DIALOG_DATA) private data: any) {
+  }
 
+  /**
+   * When the dialog is init
+   */
   ngOnInit() {
     this.projectWidget = this.data.projectWidget;
   }

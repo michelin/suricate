@@ -17,17 +17,37 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 
+/**
+ * The page header component
+ */
 @Component({
   selector: 'app-pages-header',
   templateUrl: './pages-header.component.html',
   styleUrls: ['./pages-header.component.css']
 })
 export class PagesHeaderComponent implements OnInit {
-  pageName: string;
+  /**
+   * The second title
+   * @type {string}
+   */
   @Input('secondTitle') secondTitle: string;
 
-  constructor(private route: Router) {}
+  /**
+   * The page name
+   * @type {string}
+   */
+  pageName: string;
 
+  /**
+   * The constructor
+   * @param {Router} route The router service
+   */
+  constructor(private route: Router) {
+  }
+
+  /**
+   * When the component is init
+   */
   ngOnInit() {
     this.pageName = this.route.url.split('/')[1];
   }

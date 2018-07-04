@@ -14,13 +14,16 @@
  * limitations under the License.
  */
 
-import {RouterModule, Routes} from '@angular/router';
 import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {RouterModule, Routes} from '@angular/router';
+
 import {AuthGuard} from '../../shared/auth/guards/auth.guard';
+import {SharedModule} from '../../shared/shared.module';
+import {AdminGuard} from '../../shared/auth/guards/admin.guard';
+
 import {DashboardService} from './dashboard.service';
 import {DashboardDetailComponent} from './dashboard-detail/dashboard-detail.component';
-import {CommonModule} from '@angular/common';
-import {SharedModule} from '../../shared/shared.module';
 import {DashboardListComponent} from './dashboard-list/dashboard-list.component';
 import {DashboardEditComponent} from './dashboard-edit/dashboard-edit.component';
 import {DeleteDashboardDialogComponent} from './components/delete-dashboard-dialog/delete-dashboard-dialog.component';
@@ -29,7 +32,6 @@ import {EditProjectWidgetDialogComponent} from './components/edit-project-widget
 import {DashboardScreenComponent} from './components/dashboard-screen/dashboard-screen.component';
 import {DashboardTvComponent} from './dashboard-tv/dashboard-tv.component';
 import {ScreenService} from './screen.service';
-import {AdminGuard} from '../../shared/auth/guards/admin.guard';
 
 const dashboardRoutes: Routes = [
   {path: 'tv', component: DashboardTvComponent},

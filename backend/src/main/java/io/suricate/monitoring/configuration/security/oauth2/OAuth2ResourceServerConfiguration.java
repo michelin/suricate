@@ -47,7 +47,7 @@ public class OAuth2ResourceServerConfiguration extends ResourceServerConfigurerA
      * Constructor
      *
      * @param apiAuthenticationFailureHandler The authentication failure manager
-     * @param defaultTokenServices The default token service
+     * @param defaultTokenServices            The default token service
      */
     @Autowired
     public OAuth2ResourceServerConfiguration(ApiAuthenticationFailureHandler apiAuthenticationFailureHandler, DefaultTokenServices defaultTokenServices) {
@@ -71,27 +71,28 @@ public class OAuth2ResourceServerConfiguration extends ResourceServerConfigurerA
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()
-                .exceptionHandling()
-                .authenticationEntryPoint(apiAuthenticationFailureHandler)
-                .accessDeniedHandler(apiAuthenticationFailureHandler)
-                .and()
-                    .headers()
-                    .frameOptions().disable()
-                .and()
-                    .sessionManagement()
-                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                    .anonymous()
-                .and()
-                    .authorizeRequests()
-                    .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                    .antMatchers("/h2-console/**").permitAll()
-                    .antMatchers("/api/oauth/token").permitAll()
-                    .antMatchers("/api/users/register").permitAll()
-                    .antMatchers("/api/swagger-ui.html").permitAll()
-                    .antMatchers("/api/asset/**").permitAll()
-                    .antMatchers("/ws/**").permitAll()
-                    .antMatchers("/api/**").authenticated();
+            .csrf().disable()
+            .exceptionHandling()
+            .authenticationEntryPoint(apiAuthenticationFailureHandler)
+            .accessDeniedHandler(apiAuthenticationFailureHandler)
+            .and()
+            .headers()
+            .frameOptions().disable()
+            .and()
+            .sessionManagement()
+            .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            .and()
+            .anonymous()
+            .and()
+            .authorizeRequests()
+            .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+            .antMatchers("/h2-console/**").permitAll()
+            .antMatchers("/api/oauth/token").permitAll()
+            .antMatchers("/api/users/register").permitAll()
+            .antMatchers("/api/projects/project/{token}").permitAll()
+            .antMatchers("/api/swagger-ui.html").permitAll()
+            .antMatchers("/api/asset/**").permitAll()
+            .antMatchers("/ws/**").permitAll()
+            .antMatchers("/api/**").authenticated();
     }
 }

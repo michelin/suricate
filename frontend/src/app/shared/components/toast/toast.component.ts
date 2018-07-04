@@ -16,13 +16,15 @@
  *
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ToastMessage} from '../../model/toastNotification/ToastMessage';
-import {Observable} from 'rxjs/Observable';
-import {ToastService} from './toast.service';
 import {animate, group, state, style, transition, trigger} from '@angular/animations';
-import {ToastType} from '../../model/toastNotification/ToastType';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Observable} from 'rxjs/Observable';
+import {of} from 'rxjs/observable/of';
 import {takeWhile} from 'rxjs/operators';
+
+import {ToastService} from './toast.service';
+import {ToastMessage} from '../../model/toastNotification/ToastMessage';
+import {ToastType} from '../../model/toastNotification/ToastType';
 
 /**
  * Component that display toast notification messages
@@ -69,11 +71,16 @@ import {takeWhile} from 'rxjs/operators';
 export class ToastComponent implements OnInit, OnDestroy {
 
   /**
-   * The component state
-   *
-   * @type {string} The status state
+   * Used for keep the subscription of subjects/Observables open
+   * @type {boolean}
    */
-  animationState = 'in';
+  private isAlive = true;
+
+  /**
+   * The component state
+   * @type {string}
+   */
+  animationState = 'out';
 
   /**
    * The enums of toast type
@@ -82,19 +89,14 @@ export class ToastComponent implements OnInit, OnDestroy {
   ToastType = ToastType;
 
   /**
-   * Used for keep the subscription of subjects/Obsevables open
-   *
-   * @type {boolean} True if we keep the connection, False if we have to unsubscribe
-   */
-  isAlive = true;
-
-  /**
    * The message to display
+   * @type {Observable<ToastMessage>}
    */
-  message: Observable<ToastMessage>;
+  message$: Observable<ToastMessage>;
 
   /**
    * The current timer for @function {hideWithinTimeout} function
+   * @type {NodeJS.Timer}
    */
   hideTimer: NodeJS.Timer;
 
@@ -103,16 +105,21 @@ export class ToastComponent implements OnInit, OnDestroy {
    *
    * @param {ToastService} toastService The toast service to inject
    */
-  constructor(private toastService: ToastService) { }
+  constructor(private toastService: ToastService) {
+  }
 
   /**
    * Called when the component is init
    */
   ngOnInit() {
-    this.message = this.toastService.getMessage();
-    this.message
+    this.toastService.toastMessage$
         .pipe(takeWhile(() => this.isAlive))
-        .subscribe(() => this.showToast());
+        .subscribe((message: ToastMessage) => {
+          this.message$ = of(message);
+          if (message) {
+            this.showToast();
+          }
+        });
   }
 
   /**
