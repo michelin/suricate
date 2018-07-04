@@ -8,7 +8,8 @@
        fxLayoutAlign="center center"
        fxLayoutGap="7%">
 
-    <form id="register-form"
+    <form *ngIf="registerForm"
+          id="register-form"
           [formGroup]="registerForm"
           (ngSubmit)="signUp()"
           fxFlex="80"
