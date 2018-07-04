@@ -15,13 +15,17 @@
  */
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
+import {MatDialog, MatDialogRef} from '@angular/material';
+import {Router} from '@angular/router';
+import {takeWhile} from 'rxjs/operators';
+
 import {Project} from '../../../shared/model/dto/Project';
 import {DashboardService} from '../../dashboard/dashboard.service';
-import { takeWhile} from 'rxjs/operators';
-import {MatDialogRef, MatDialog} from '@angular/material';
 import {AddDashboardDialogComponent} from '../components/add-dashboard-dialog/add-dashboard-dialog.component';
-import {Router} from '@angular/router';
 
+/**
+ * Manage the home page
+ */
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
@@ -29,18 +33,20 @@ import {Router} from '@angular/router';
 })
 export class HomeComponent implements OnInit, OnDestroy {
   /**
+   * True while the component is instantiate
+   * @type {boolean}
+   */
+  private isAlive = true;
+
+  /**
    * The add dashboard dialog
+   * @type {MatDialogRef<AddDashboardDialogComponent>}
    */
   addDashboardDialogRef: MatDialogRef<AddDashboardDialogComponent>;
 
   /**
-   * True while the component is instantiate
-   * @type {boolean}
-   */
-  private alive = true;
-
-  /**
    * The list of dashboards
+   * @type {Project[]}
    */
   dashboards: Project[];
 
@@ -53,16 +59,16 @@ export class HomeComponent implements OnInit, OnDestroy {
    */
   constructor(private dashboardService: DashboardService,
               private matDialog: MatDialog,
-              private router: Router) { }
+              private router: Router) {
+  }
 
   /**
    * Init objects
    */
   ngOnInit() {
-    this.dashboardService
-        .dashboardsSubject
-        .pipe(takeWhile(() => this.alive))
-        .subscribe( dashboards => this.dashboards = dashboards);
+    this.dashboardService.currentDashboardList$
+        .pipe(takeWhile(() => this.isAlive))
+        .subscribe(dashboards => this.dashboards = dashboards);
   }
 
   /**
@@ -88,7 +94,7 @@ export class HomeComponent implements OnInit, OnDestroy {
    * Called when the component is destroy
    */
   ngOnDestroy() {
-    this.alive = false;
+    this.isAlive = false;
   }
 
 }

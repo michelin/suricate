@@ -15,17 +15,18 @@
  */
 
 import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
 import {RouterModule, Routes} from '@angular/router';
 
-import {UserListComponent} from './user-list/user-list.component';
+import {AdminGuard} from '../../shared/auth/guards/admin.guard';
 import {AuthGuard} from '../../shared/auth/guards/auth.guard';
-import {UserService} from './user.service';
-import {CommonModule} from '@angular/common';
 import {SharedModule} from '../../shared/shared.module';
+
+import {RoleService} from './role.service';
+import {UserService} from './user.service';
+import {UserListComponent} from './user-list/user-list.component';
 import {DeleteUserDialogComponent} from './components/delete-user-dialog/delete-user-dialog.component';
 import {UserEditComponent} from './user-edit/user-edit.component';
-import {AdminGuard} from '../../shared/auth/guards/admin.guard';
-import {RoleService} from './role.service';
 
 const appRoutes: Routes = [
   {path: 'users', component: UserListComponent, data: {breadcrumb: 'User List'}, canActivate: [AuthGuard, AdminGuard]},

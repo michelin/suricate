@@ -15,18 +15,22 @@
  */
 
 import {ChangeDetectorRef, Component, Inject, OnInit, ViewChild} from '@angular/core';
+import {FormGroup, NgForm} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef, MatHorizontalStepper} from '@angular/material';
+import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
+
 import {Category} from '../../../../model/dto/Category';
 import {WidgetService} from '../../../../../modules/widget/widget.service';
-import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 import {Asset} from '../../../../model/dto/Asset';
 import {Widget} from '../../../../model/dto/Widget';
 import {WidgetVariableType} from '../../../../model/dto/enums/WidgetVariableType';
-import {FormGroup, NgForm} from '@angular/forms';
 import {DashboardService} from '../../../../../modules/dashboard/dashboard.service';
 import {ProjectWidget} from '../../../../model/dto/ProjectWidget';
 import {WidgetAvailabilityEnum} from '../../../../model/dto/enums/WidgetAvailabilityEnum';
 
+/**
+ * Dialog used to add a widget
+ */
 @Component({
   selector: 'app-add-widget-dialog',
   templateUrl: './add-widget-dialog.component.html',
@@ -34,21 +38,60 @@ import {WidgetAvailabilityEnum} from '../../../../model/dto/enums/WidgetAvailabi
 })
 export class AddWidgetDialogComponent implements OnInit {
 
+  /**
+   * Hold the HTML Stepper
+   * @type {MatHorizontalStepper}
+   */
   @ViewChild('widgetStepper') widgetStepper: MatHorizontalStepper;
+  /**
+   * True if the step 1 has been completed, false otherwise
+   * @type {boolean}
+   */
   step1Completed = false;
+  /**
+   * True if the step 2 has been completed, false otherwise
+   * @type {boolean}
+   */
   step2Completed = false;
 
+  /**
+   * The widget param enum
+   * @type {WidgetVariableType}
+   */
   widgetParamEnum = WidgetVariableType;
+  /**
+   * The list of categories
+   * @type {Category[]}
+   */
   categories: Category[];
+  /**
+   * The list of widgets
+   * @type {Widget[]}
+   */
   widgets: Widget[];
+  /**
+   * The selected widget
+   * @type {Widget}
+   */
   selectedWidget: Widget;
 
+  /**
+   * The constructor
+   *
+   * @param data The data send to the dialog
+   * @param {WidgetService} widgetService The widget service
+   * @param {DashboardService} dashboardService The dashboard service
+   * @param {DomSanitizer} domSanitizer The domSanitizer
+   * @param {MatDialogRef<AddWidgetDialogComponent>} addWidgetDialogRef The add widget dialog ref
+   * @param {ChangeDetectorRef} changeDetectorRef The change detector service
+   */
   constructor(@Inject(MAT_DIALOG_DATA) private data: any,
               private widgetService: WidgetService,
               private dashboardService: DashboardService,
               private domSanitizer: DomSanitizer,
               private addWidgetDialogRef: MatDialogRef<AddWidgetDialogComponent>,
-              private changeDetectorRef: ChangeDetectorRef) { }
+              private changeDetectorRef: ChangeDetectorRef) {
+  }
 
   ngOnInit() {
     this.widgetService
@@ -88,7 +131,7 @@ export class AddWidgetDialogComponent implements OnInit {
 
       const projectWidget: ProjectWidget = new ProjectWidget();
       projectWidget.backendConfig = backendConfig;
-      projectWidget.project = this.dashboardService.currendDashbordSubject.getValue();
+      projectWidget.project = this.dashboardService.currentDisplayedDashboardValue;
       projectWidget.widget = this.selectedWidget;
 
       this.dashboardService

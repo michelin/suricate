@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-import {ChangeDetectorRef, Component, ViewChild, AfterViewInit} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, ViewChild} from '@angular/core';
 import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
+import {merge} from 'rxjs/observable/merge';
+import {of as observableOf} from 'rxjs/observable/of';
+import {catchError} from 'rxjs/operators';
+import {map} from 'rxjs/operators/map';
+import {startWith} from 'rxjs/operators/startWith';
+import {switchMap} from 'rxjs/operators/switchMap';
+
 import {Project} from '../../../shared/model/dto/Project';
 import {DashboardService} from '../dashboard.service';
-import {switchMap} from 'rxjs/operators/switchMap';
-import {catchError} from 'rxjs/operators';
-import {of as observableOf} from 'rxjs/observable/of';
-import {merge} from 'rxjs/observable/merge';
-import {startWith} from 'rxjs/operators/startWith';
-import {map} from 'rxjs/operators/map';
 import {ToastType} from '../../../shared/model/toastNotification/ToastType';
 import {User} from '../../../shared/model/dto/user/User';
 import {ToastService} from '../../../shared/components/toast/toast.service';
@@ -40,19 +41,30 @@ import {DeleteDashboardDialogComponent} from '../components/delete-dashboard-dia
 export class DashboardListComponent implements AfterViewInit {
 
   /**
+   * Management of the table sorting
+   * @type {MatSort}
+   */
+  @ViewChild(MatSort) matSort: MatSort;
+  /**
+   * Management of the table pagination
+   * @type {MatPaginator}
+   */
+  @ViewChild(MatPaginator) matPaginator: MatPaginator;
+
+  /**
    * The object that hold data management
-   * @type {MatTableDataSource<User>}  The mat table of users
+   * @type {MatTableDataSource<User>}
    */
   matTableDataSource = new MatTableDataSource<Project>();
 
   /**
    * Column displayed on the mat table
-   * @type {string[]} The list of column references
+   * @type {string[]}
    */
   displayedColumns = ['name', 'token', 'edit', 'delete'];
   /**
    * Management of the spinner
-   * @type {boolean} True when we are loading result, false otherwise
+   * @type {boolean}
    */
   isLoadingResults = false;
   /**
@@ -67,15 +79,6 @@ export class DashboardListComponent implements AfterViewInit {
   resultsLength = 0;
 
   /**
-   * Management of the table sorting
-   */
-  @ViewChild(MatSort) matSort: MatSort;
-  /**
-   * Management of the table pagination
-   */
-  @ViewChild(MatPaginator) matPaginator: MatPaginator;
-
-  /**
    * Constructor
    *
    * @param {DashboardService} dashboardService The dashboardService to inject
@@ -86,7 +89,8 @@ export class DashboardListComponent implements AfterViewInit {
   constructor(private dashboardService: DashboardService,
               private changeDetectorRef: ChangeDetectorRef,
               private matDialog: MatDialog,
-              private toastService: ToastService) { }
+              private toastService: ToastService) {
+  }
 
   /**
    * Called when the view has been init
@@ -121,11 +125,21 @@ export class DashboardListComponent implements AfterViewInit {
               return observableOf([]);
             })
         )
-        .subscribe(data =>  {
+        .subscribe(data => {
           this.resultsLength = data.length;
           this.matTableDataSource.data = data;
           this.matTableDataSource.sort = this.matSort;
         });
+
+    // Apply sort custom rules for dashboards
+    this.matTableDataSource.sortingDataAccessor = (dashboard: Project, property: string) => {
+      switch (property) {
+        case 'name':
+          return dashboard.name.toLocaleLowerCase();
+        default:
+          return dashboard[property];
+      }
+    };
   }
 
   /**

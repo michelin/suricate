@@ -18,10 +18,10 @@ package io.suricate.monitoring.controllers.api;
 
 import io.suricate.monitoring.controllers.api.error.exception.ApiException;
 import io.suricate.monitoring.model.dto.project.ProjectDto;
+import io.suricate.monitoring.model.dto.project.ProjectWidgetDto;
 import io.suricate.monitoring.model.dto.project.ProjectWidgetPositionDto;
 import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
-import io.suricate.monitoring.model.dto.project.ProjectWidgetDto;
 import io.suricate.monitoring.model.entity.user.User;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.model.mapper.project.ProjectMapper;
@@ -43,7 +43,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.security.Principal;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Project controller
@@ -85,11 +87,11 @@ public class ProjectController {
     /**
      * Constructor for dependency injection
      *
-     * @param projectService The project service to inject
+     * @param projectService       The project service to inject
      * @param projectWidgetService The project widget service
-     * @param userService The user service to inject
-     * @param projectMapper The project mapper
-     * @param projectWidgetMapper The project widget mapper
+     * @param userService          The user service to inject
+     * @param projectMapper        The project mapper
+     * @param projectWidgetMapper  The project widget mapper
      */
     @Autowired
     public ProjectController(final ProjectService projectService,
@@ -141,7 +143,7 @@ public class ProjectController {
     public ResponseEntity<List<ProjectDto>> getAllForCurrentUser(Principal principal) {
         Optional<User> user = userService.getOneByUsername(principal.getName());
 
-        if(!user.isPresent()) {
+        if (!user.isPresent()) {
             LOGGER.debug("No user with username : {}", principal.getName());
 
             return ResponseEntity
@@ -163,7 +165,7 @@ public class ProjectController {
     /**
      * Add a new project/dashboard for a user
      *
-     * @param principal The connected user
+     * @param principal  The connected user
      * @param projectDto The project to add
      * @return The saved project
      */
@@ -172,7 +174,7 @@ public class ProjectController {
     public ResponseEntity<ProjectDto> createProject(Principal principal, @RequestBody ProjectDto projectDto) {
         Optional<User> user = userService.getOneByUsername(principal.getName());
 
-        if(!user.isPresent()) {
+        if (!user.isPresent()) {
             return ResponseEntity
                 .notFound()
                 .cacheControl(CacheControl.noCache())
@@ -197,7 +199,7 @@ public class ProjectController {
     /**
      * Update an existing project
      *
-     * @param projectId The project id to update
+     * @param projectId  The project id to update
      * @param projectDto The informations to update
      * @return The project updated
      */
@@ -206,25 +208,25 @@ public class ProjectController {
     public ResponseEntity<ProjectDto> updateProject(@PathVariable("projectId") Long projectId, @RequestBody ProjectDto projectDto) {
         Optional<Project> projectOptional = projectService.getOneById(projectId);
 
-        if(!projectOptional.isPresent()) {
+        if (!projectOptional.isPresent()) {
             return ResponseEntity
-                    .notFound()
-                    .cacheControl(CacheControl.noCache())
-                    .build();
+                .notFound()
+                .cacheControl(CacheControl.noCache())
+                .build();
         }
 
         projectService.updateProject(
-                projectOptional.get(),
-                projectDto.getName(),
-                projectDto.getWidgetHeight(),
-                projectDto.getMaxColumn(),
-                projectDto.getCssStyle()
+            projectOptional.get(),
+            projectDto.getName(),
+            projectDto.getWidgetHeight(),
+            projectDto.getMaxColumn(),
+            projectDto.getCssStyle()
         );
         return ResponseEntity
-                .ok()
-                .cacheControl(CacheControl.noCache())
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(projectMapper.toProjectDtoDefault(projectOptional.get()));
+            .ok()
+            .cacheControl(CacheControl.noCache())
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(projectMapper.toProjectDtoDefault(projectOptional.get()));
     }
 
     /**
@@ -238,7 +240,7 @@ public class ProjectController {
     public ResponseEntity<ProjectDto> getOneById(@PathVariable("id") Long id) {
         Optional<Project> project = projectService.getOneById(id);
 
-        if(!project.isPresent()) {
+        if (!project.isPresent()) {
             return ResponseEntity
                 .notFound()
                 .cacheControl(CacheControl.noCache())
@@ -259,22 +261,21 @@ public class ProjectController {
      * @return The project
      */
     @RequestMapping(value = "/project/{token}", method = RequestMethod.GET)
-    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ProjectDto> getOneByToken(@PathVariable("token") String token) {
         Optional<Project> project = projectService.getOneByToken(token);
 
-        if(!project.isPresent()) {
+        if (!project.isPresent()) {
             return ResponseEntity
-                    .notFound()
-                    .cacheControl(CacheControl.noCache())
-                    .build();
+                .notFound()
+                .cacheControl(CacheControl.noCache())
+                .build();
         }
 
         return ResponseEntity
-                .ok()
-                .contentType(MediaType.APPLICATION_JSON)
-                .cacheControl(CacheControl.noCache())
-                .body(projectMapper.toProjectDtoDefault(project.get()));
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .cacheControl(CacheControl.noCache())
+            .body(projectMapper.toProjectDtoDefault(project.get()));
     }
 
     /**
@@ -289,25 +290,25 @@ public class ProjectController {
     public ResponseEntity<ProjectDto> deleteOneById(@PathVariable("projectId") Long projectId) {
         Optional<Project> projectOptional = projectService.getOneById(projectId);
 
-        if(!projectOptional.isPresent()) {
+        if (!projectOptional.isPresent()) {
             return ResponseEntity
-                    .notFound()
-                    .cacheControl(CacheControl.noCache())
-                    .build();
+                .notFound()
+                .cacheControl(CacheControl.noCache())
+                .build();
         }
 
         projectService.deleteProject(projectOptional.get());
         return ResponseEntity
-                .ok()
-                .contentType(MediaType.APPLICATION_JSON)
-                .cacheControl(CacheControl.noCache())
-                .body(projectMapper.toProjectDtoDefault(projectOptional.get()));
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .cacheControl(CacheControl.noCache())
+            .body(projectMapper.toProjectDtoDefault(projectOptional.get()));
     }
 
     /**
      * Add a user to a project
      *
-     * @param id Id of the project
+     * @param id          Id of the project
      * @param usernameMap Username of the user to add
      * @return The project
      */
@@ -318,10 +319,10 @@ public class ProjectController {
         Optional<User> user = userService.getOneByUsername(usernameMap.get("username"));
         Optional<Project> project = projectService.getOneById(id);
 
-        if(!user.isPresent()) {
+        if (!user.isPresent()) {
             throw new ApiException(ApiErrorEnum.USER_NOT_FOUND);
         }
-        if(!project.isPresent()) {
+        if (!project.isPresent()) {
             throw new ApiException(ApiErrorEnum.PROJECT_NOT_FOUND);
         }
 
@@ -336,7 +337,7 @@ public class ProjectController {
     /**
      * Delete a user from a dashboard
      *
-     * @param id The project/dashboard id
+     * @param id     The project/dashboard id
      * @param userId The user id to delete
      * @return The project
      */
@@ -346,10 +347,10 @@ public class ProjectController {
         Optional<User> user = userService.getOne(userId);
         Optional<Project> project = projectService.getOneById(id);
 
-        if(!user.isPresent()) {
+        if (!user.isPresent()) {
             throw new ApiException(ApiErrorEnum.USER_NOT_FOUND);
         }
-        if(!project.isPresent()) {
+        if (!project.isPresent()) {
             throw new ApiException(ApiErrorEnum.PROJECT_NOT_FOUND);
         }
 
@@ -365,7 +366,7 @@ public class ProjectController {
     /**
      * Add widget into the dashboard
      *
-     * @param id The project id
+     * @param id               The project id
      * @param projectWidgetDto The projectWidget to add
      * @return The project
      */
@@ -392,7 +393,7 @@ public class ProjectController {
     /**
      * Update the list of widget positions for a project
      *
-     * @param projectId The project id to update
+     * @param projectId                 The project id to update
      * @param projectWidgetPositionDtos The list of project widget positions
      * @return The project updated
      */
@@ -402,25 +403,25 @@ public class ProjectController {
                                                                              @RequestBody List<ProjectWidgetPositionDto> projectWidgetPositionDtos) {
         Optional<Project> projectOptional = projectService.getOneById(projectId);
 
-        if(!projectOptional.isPresent()) {
+        if (!projectOptional.isPresent()) {
             return ResponseEntity
-                    .notFound()
-                    .cacheControl(CacheControl.noCache())
-                    .build();
+                .notFound()
+                .cacheControl(CacheControl.noCache())
+                .build();
         }
 
         projectWidgetService.updateWidgetPositionByProject(projectOptional.get(), projectWidgetPositionDtos);
         return ResponseEntity
-                .ok()
-                .cacheControl(CacheControl.noCache())
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(projectMapper.toProjectDtoDefault(projectOptional.get()));
+            .ok()
+            .cacheControl(CacheControl.noCache())
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(projectMapper.toProjectDtoDefault(projectOptional.get()));
     }
 
     /**
      * Delete a project widget from a dashboard
      *
-     * @param projectId The project ID
+     * @param projectId       The project ID
      * @param projectWidgetId The project widget to delete
      * @return The dashboard updated
      */
@@ -429,7 +430,7 @@ public class ProjectController {
     public ResponseEntity<ProjectDto> deleteProjectWidgetFromProject(@PathVariable("projectId") Long projectId,
                                                                      @PathVariable("projectWidgetId") Long projectWidgetId) {
         Optional<Project> projectOptional = projectService.getOneById(projectId);
-        if(!projectOptional.isPresent()) {
+        if (!projectOptional.isPresent()) {
             return ResponseEntity.notFound().cacheControl(CacheControl.noCache()).build();
         }
 
@@ -445,8 +446,8 @@ public class ProjectController {
     /**
      * Edit a project widget for a project
      *
-     * @param projectId The project id
-     * @param projectWidgetId The project widget id
+     * @param projectId        The project id
+     * @param projectWidgetId  The project widget id
      * @param projectWidgetDto The project widget updated
      * @return The project updated
      */
@@ -457,12 +458,12 @@ public class ProjectController {
                                                                    @RequestBody ProjectWidgetDto projectWidgetDto) {
 
         Optional<ProjectWidget> projectWidgetOptional = projectWidgetService.findByProjectIdAndProjectWidgetId(projectId, projectWidgetId);
-        if(!projectWidgetOptional.isPresent()) {
+        if (!projectWidgetOptional.isPresent()) {
             return ResponseEntity.notFound().cacheControl(CacheControl.noCache()).build();
         }
 
         Optional<Project> projectOptional = projectService.getOneById(projectId);
-        if(!projectOptional.isPresent()) {
+        if (!projectOptional.isPresent()) {
             return ResponseEntity.notFound().cacheControl(CacheControl.noCache()).build();
         }
         ProjectWidget projectWidget = projectWidgetOptional.get();

@@ -16,6 +16,9 @@
  *
  */
 
+/**
+ * The list of possible update events
+ */
 export enum WSUpdateType {
   GRID = 'GRID',
   WIDGET = 'WIDGET',

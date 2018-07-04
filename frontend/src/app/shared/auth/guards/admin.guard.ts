@@ -17,8 +17,9 @@
 import {Injectable} from '@angular/core';
 import {CanActivate, CanActivateChild, Router} from '@angular/router';
 import {Observable} from 'rxjs/Observable';
-import {UserService} from '../../../modules/user/user.service';
 import {of} from 'rxjs/observable/of';
+
+import {UserService} from '../../../modules/user/user.service';
 
 /**
  * The admin guard
@@ -29,11 +30,11 @@ export class AdminGuard implements CanActivate, CanActivateChild {
   /**
    * The constructor
    *
-   * @param {UserService} _userService The user service
-   * @param {Router} _router The router
+   * @param {UserService} userService The user service
+   * @param {Router} router The router
    */
-  constructor(private _userService: UserService,
-              private _router: Router) {
+  constructor(private userService: UserService,
+              private router: Router) {
 
   }
 
@@ -42,11 +43,11 @@ export class AdminGuard implements CanActivate, CanActivateChild {
    * @returns {Observable<boolean>}
    */
   canActivate(): Observable<boolean> {
-    if (this._userService.isAdmin()) {
+    if (this.userService.isAdmin()) {
       return of(true);
     }
 
-    this._router.navigate(['home']);
+    this.router.navigate(['home']);
     return of(false);
   }
 

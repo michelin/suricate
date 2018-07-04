@@ -15,11 +15,12 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {UserService} from '../user.service';
-import {ActivatedRoute} from '@angular/router';
-import {User} from '../../../shared/model/dto/user/User';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {ActivatedRoute} from '@angular/router';
 import {CustomValidators} from 'ng2-validation';
+
+import {UserService} from '../user.service';
+import {User} from '../../../shared/model/dto/user/User';
 import {ToastService} from '../../../shared/components/toast/toast.service';
 import {ToastType} from '../../../shared/model/toastNotification/ToastType';
 import {Role} from '../../../shared/model/dto/user/Role';
@@ -38,16 +39,19 @@ export class UserEditComponent implements OnInit {
 
   /**
    * The form group
+   * @type {FormGroup}
    */
   editUserForm: FormGroup;
 
   /**
    * The user to edit
+   * @type {User}
    */
   user: User;
 
   /**
    * The list of roles
+   * @type {Role[]}
    */
   roles: Role[];
 
@@ -55,13 +59,13 @@ export class UserEditComponent implements OnInit {
    * Constructor
    *
    * @param {UserService} userService The user service to inject
-   * @param {RoleService} _roleService The role service to inject
+   * @param {RoleService} roleService The role service to inject
    * @param {ActivatedRoute} activatedRoute The activated route to inject
    * @param {FormBuilder} formBuilder The formBuilder service
    * @param {ToastService} toastService The service used for displayed Toast notification
    */
   constructor(private userService: UserService,
-              private _roleService: RoleService,
+              private roleService: RoleService,
               private activatedRoute: ActivatedRoute,
               private formBuilder: FormBuilder,
               private toastService: ToastService) {
@@ -71,7 +75,7 @@ export class UserEditComponent implements OnInit {
    * Called when the component is displayed
    */
   ngOnInit() {
-    this._roleService.getRoles().subscribe(roles => {
+    this.roleService.getRoles().subscribe(roles => {
       this.roles = roles;
     });
 
@@ -92,7 +96,7 @@ export class UserEditComponent implements OnInit {
       firstname: [this.user.firstname, [Validators.required, Validators.minLength(2)]],
       lastname: [this.user.lastname, [Validators.required, Validators.minLength(2)]],
       email: [this.user.email, [Validators.required, CustomValidators.email]],
-      roles: [this._roleService.getRolesNameAsTable(this.user.roles), [Validators.required]]
+      roles: [this.roleService.getRolesNameAsTable(this.user.roles), [Validators.required]]
     });
   }
 

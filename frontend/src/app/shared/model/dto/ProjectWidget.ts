@@ -22,6 +22,9 @@ import {ProjectWidgetPosition} from './ProjectWidgetPosition';
 import {Project} from './Project';
 import {Widget} from './Widget';
 
+/**
+ * The project widget entity
+ */
 export class ProjectWidget {
   public id: number;
   public data: string;

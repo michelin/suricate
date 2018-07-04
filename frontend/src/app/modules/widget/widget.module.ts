@@ -18,12 +18,14 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {WidgetService} from './widget.service';
-import {SharedModule} from '../../shared/shared.module';
-import {WidgetListComponent} from './widget-list/widget-list.component';
-import {AuthGuard} from '../../shared/auth/guards/auth.guard';
 import {RouterModule, Routes} from '@angular/router';
+
+import {SharedModule} from '../../shared/shared.module';
+import {AuthGuard} from '../../shared/auth/guards/auth.guard';
 import {AdminGuard} from '../../shared/auth/guards/admin.guard';
+
+import {WidgetService} from './widget.service';
+import {WidgetListComponent} from './widget-list/widget-list.component';
 
 const widgetRoutes: Routes = [
   {path: 'widgets', component: WidgetListComponent, canActivate: [AuthGuard, AdminGuard]}

@@ -19,6 +19,9 @@ import {WidgetParam} from './WidgetParam';
 import {Category} from './Category';
 import {WidgetAvailabilityEnum} from './enums/WidgetAvailabilityEnum';
 
+/**
+ * The widget entity
+ */
 export class Widget {
   id: number;
   name: string;

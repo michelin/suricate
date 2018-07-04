@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
+/**
+ * The widget param values
+ */
 export class WidgetParamValue {
-    public jsKey: string;
-    public value: string;
+  public jsKey: string;
+  public value: string;
 }
