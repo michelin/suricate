@@ -15,7 +15,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {HttpEvent, HttpHandler, HttpRequest} from '@angular/common/http';
+import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
 
 import {AuthenticationService} from '../../modules/authentication/authentication.service';
@@ -26,7 +26,7 @@ import {baseApiEndpoint} from '../../app.constant';
  * The token interceptor
  */
 @Injectable()
-export class TokenInterceptor {
+export class TokenInterceptor implements HttpInterceptor {
 
   /**
    * Constructor
@@ -47,10 +47,7 @@ export class TokenInterceptor {
    */
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (!request || !request.url ||
-        (/^http/.test(request.url) &&
-            !(baseApiEndpoint && request.url.startsWith(baseApiEndpoint))
-        )
-    ) {
+        (/^http/.test(request.url) && !(baseApiEndpoint && request.url.startsWith(baseApiEndpoint)))) {
       return next.handle(request);
     }
 

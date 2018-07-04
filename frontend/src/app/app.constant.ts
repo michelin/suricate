@@ -85,3 +85,9 @@ export const configurationsApiEndpoint = `${baseApiEndpoint}/configurations`;
  * @type {string}
  */
 export const rolesApiEndpoint = `${baseApiEndpoint}/roles`;
+
+/* ************************************************************************ */
+/*                  HTTP ERROR CONSTANTS                                    */
+/* ************************************************************************ */
+
+export const badCredentialError = 'invalid_grant';
