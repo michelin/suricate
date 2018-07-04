@@ -16,7 +16,7 @@
  *
  */
 
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {Subject} from 'rxjs/Subject';
 import {Observable} from 'rxjs/Observable';
 
@@ -27,22 +27,37 @@ import {Observable} from 'rxjs/Observable';
 export class SidenavService {
 
   /**
-   * The sidenav subject
-   *
+   * The side nav subject
    * @type {Subject<boolean>} True open, false close
+   * @private
    */
   private sidenavOpenCloseEventSubject = new Subject<boolean>();
 
-  constructor() { }
+  /**
+   * Constructor
+   */
+  constructor() {
+  }
 
+  /**
+   * Observable that hold events close/open events
+   *
+   * @returns {Observable<boolean>}
+   */
   subscribeToSidenavOpenCloseEvent(): Observable<boolean> {
     return this.sidenavOpenCloseEventSubject.asObservable();
   }
 
+  /**
+   * Send a close event
+   */
   closeSidenav(): void {
     this.sidenavOpenCloseEventSubject.next(false);
   }
 
+  /**
+   * Send an open event
+   */
   openSidenav(): void {
     this.sidenavOpenCloseEventSubject.next(true);
   }

@@ -30,7 +30,11 @@ import java.util.List;
  * The user entity in database
  */
 @Entity
-@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
+@Getter
+@Setter
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+@ToString
 public class User extends AbstractEntity<Long> {
 
     /**
@@ -81,7 +85,7 @@ public class User extends AbstractEntity<Long> {
      * The list of roles
      */
     @ManyToMany
-    @JoinTable(name="user_role", joinColumns={@JoinColumn(name="user_id")}, inverseJoinColumns={@JoinColumn(name="role_id")})
+    @JoinTable(name = "user_role", joinColumns = {@JoinColumn(name = "user_id")}, inverseJoinColumns = {@JoinColumn(name = "role_id")})
     private List<Role> roles = new ArrayList<>();
 
     /**
@@ -93,7 +97,6 @@ public class User extends AbstractEntity<Long> {
     /**
      * The list of user settings
      */
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<UserSetting> userSettings = new ArrayList<>();
-
 }

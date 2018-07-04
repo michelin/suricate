@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-import {Component, OnInit, OnDestroy} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
-import {DashboardService} from '../dashboard.service';
-import {takeWhile} from 'rxjs/operators';
-import {Project} from '../../../shared/model/dto/Project';
-import {AddWidgetDialogComponent} from '../../../shared/components/pages-header/components/add-widget-dialog/add-widget-dialog.component';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {MatDialog, MatDialogRef} from '@angular/material';
+import {ActivatedRoute} from '@angular/router';
 import {Observable} from 'rxjs/Observable';
 import {of} from 'rxjs/observable/of';
+import {takeWhile} from 'rxjs/operators';
+
+import {DashboardService} from '../dashboard.service';
+import {Project} from '../../../shared/model/dto/Project';
+import {AddWidgetDialogComponent} from '../../../shared/components/pages-header/components/add-widget-dialog/add-widget-dialog.component';
 
 /**
  * Component that display a specific dashboard
@@ -36,18 +37,21 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
 
   /**
    * The widget dialog ref
+   * @type {MatDialogRef<AddWidgetDialogComponent>}
+   * @private
    */
-  addWidgetDialogRef: MatDialogRef<AddWidgetDialogComponent>;
+  private addWidgetDialogRef: MatDialogRef<AddWidgetDialogComponent>;
 
   /**
    * Tell if the component is displayed
-   *
    * @type {boolean}
+   * @private
    */
-  isAlive = true;
+  private isAlive = true;
 
   /**
    * The project as observable
+   * @type {Observable<Project>}
    */
   project$: Observable<Project>;
 
@@ -60,25 +64,25 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    */
   constructor(private activatedRoute: ActivatedRoute,
               private dashboardService: DashboardService,
-              private matDialog: MatDialog) { }
+              private matDialog: MatDialog) {
+  }
 
   /**
    * Init objects
    */
   ngOnInit() {
     // Global init from project
-    this.activatedRoute.params.subscribe( params => {
+    this.activatedRoute.params.subscribe(params => {
       this.dashboardService
           .getOneById(+params['id'])
           .subscribe(project => {
-            this.dashboardService.currendDashbordSubject.next(project);
+            this.dashboardService.currentDisplayedDashboardValue = project;
           });
     });
 
-    this.dashboardService
-        .currendDashbordSubject
+    this.dashboardService.currentDisplayedDashboard$
         .pipe(takeWhile(() => this.isAlive))
-        .subscribe(project => this.project$ = of(project) );
+        .subscribe(project => this.project$ = of(project));
   }
 
   /**
