@@ -25,7 +25,7 @@ import {NgGridModule} from 'angular2-grid';
 import {CustomFormsModule} from 'ng2-validation';
 import {ColorPickerModule} from 'ngx-color-picker';
 
-import {TokenInterceptor} from './interceptors/TokenInterceptor';
+import {TokenInterceptor} from './interceptors/token.interceptor';
 import {AuthGuard} from './auth/guards/auth.guard';
 import {MaterialModule} from './modules/material.module';
 import {PagesHeaderComponent} from './components/pages-header/pages-header.component';
@@ -45,6 +45,7 @@ import {TranslateModule} from '@ngx-translate/core';
 import {TranslationComponent} from './components/translations/translation.component';
 import {MaterialCDKModule} from './modules/metarialCDK.module';
 import {SettingsService} from './services/settings.service';
+import {ErrorInterceptor} from './interceptors/error.interceptor';
 
 @NgModule({
   imports: [
@@ -100,6 +101,7 @@ import {SettingsService} from './services/settings.service';
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true},
+    {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},
     AuthGuard,
     AdminGuard,
     WebsocketService,
