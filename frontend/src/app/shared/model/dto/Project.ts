@@ -18,6 +18,9 @@ import {User} from './user/User';
 import {ProjectWidget} from './ProjectWidget';
 import {WebsocketClient} from './WebsocketClient';
 
+/**
+ * The project entity
+ */
 export class Project {
   id: number;
   name: string;

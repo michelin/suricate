@@ -16,10 +16,12 @@
  *
  */
 
-import { Injectable } from '@angular/core';
-import {ToastMessage} from '../../model/toastNotification/ToastMessage';
+import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Observable} from 'rxjs/Observable';
+
+import {ToastMessage} from '../../model/toastNotification/ToastMessage';
+import {ToastType} from '../../model/toastNotification/ToastType';
 
 /**
  * The service that manage toast notification message
@@ -27,15 +29,34 @@ import {Observable} from 'rxjs/Observable';
 @Injectable()
 export class ToastService {
 
+  /**
+   * The toast message subject
+   * @type {BehaviorSubject<ToastMessage>}
+   * @private
+   */
   private toastMessageSubject = new BehaviorSubject<ToastMessage>(null);
 
-  constructor() { }
+  /**
+   * The constructor
+   */
+  constructor() {
+  }
 
-  getMessage(): Observable<ToastMessage> {
+  /**
+   * get the toast message events
+   * @returns {Observable<ToastMessage>}
+   */
+  get toastMessage$(): Observable<ToastMessage> {
     return this.toastMessageSubject.asObservable();
   }
 
-  sendMessage(title, style?, content?): void {
+  /**
+   * A new message thru toast component
+   * @param {string} title The title of the message
+   * @param {ToastType} style The message style
+   * @param {string} content The content of the message
+   */
+  sendMessage(title: string, style?: ToastType, content?: string): void {
     this.toastMessageSubject.next(new ToastMessage(title, content, style));
   }
 

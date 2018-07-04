@@ -17,19 +17,21 @@
  */
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {Observable} from 'rxjs/Observable';
+import {of} from 'rxjs/observable/of';
+import {takeWhile} from 'rxjs/operators';
+import {Subscription} from 'rxjs/Subscription';
+
 import {SidenavService} from '../../core/sidenav/sidenav.service';
 import {WebsocketService} from '../../../shared/services/websocket.service';
-import {takeWhile} from 'rxjs/operators';
-import {of} from 'rxjs/observable/of';
 import {Project} from '../../../shared/model/dto/Project';
-import {Observable} from 'rxjs/Observable';
 import {DashboardService} from '../dashboard.service';
 import {WSUpdateEvent} from '../../../shared/model/websocket/WSUpdateEvent';
 import {WSUpdateType} from '../../../shared/model/websocket/enums/WSUpdateType';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Subscription} from 'rxjs/Subscription';
+import {SettingsService} from '../../../shared/services/settings.service';
+
 import * as Stomp from '@stomp/stompjs';
-import {ThemeService} from '../../../shared/services/theme.service';
 
 /**
  * Dashboard TV Management
@@ -43,25 +45,28 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
 
   /**
    * Tell if the component is displayed
-   *
    * @type {boolean}
+   * @private
    */
-  isAlive = true;
+  private isAlive = true;
+  /**
+   * The screen subscription (Code View)
+   * @type {Subscription}
+   * @private
+   */
+  private screenSubscription: Subscription;
 
   /**
    * The project as observable
+   * @type {Observable<Project>}
    */
   project$: Observable<Project>;
 
   /**
    * The screen code to display
+   * @type {number}
    */
   screenCode: number;
-
-  /**
-   * The screen subscription (Code View)
-   */
-  screenSubscription: Subscription;
 
   /**
    * The constructor
@@ -69,14 +74,14 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * @param {SidenavService} sidenavService The sidenav service to inject
    * @param {DashboardService} dashboardService The dashboard service to inject
    * @param {WebsocketService} websocketService The websocket service to inject
-   * @param {ThemeService} themeService The theme service
+   * @param {SettingsService} themeService The theme service
    * @param {ActivatedRoute} activatedRoute The activated route service
    * @param {Router} router The router service
    */
   constructor(private sidenavService: SidenavService,
               private dashboardService: DashboardService,
               private websocketService: WebsocketService,
-              private themeService: ThemeService,
+              private themeService: SettingsService,
               private activatedRoute: ActivatedRoute,
               private router: Router) {
   }
@@ -85,23 +90,22 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * Init of the component
    */
   ngOnInit() {
-    this.themeService.setTheme('dark-theme');
+    this.themeService.currentTheme = 'dark-theme';
     this.sidenavService.closeSidenav();
     this.screenCode = this.websocketService.getscreenCode();
 
-    this.dashboardService
-        .currendDashbordSubject
+    this.dashboardService.currentDisplayedDashboard$
         .pipe(takeWhile(() => this.isAlive))
         .subscribe(project => this.project$ = of(project));
 
     this.activatedRoute.queryParams.subscribe(params => {
       if (params['token']) {
         this.dashboardService.getOneByToken(params['token']).subscribe(project => {
-          this.dashboardService.currendDashbordSubject.next(project);
+          this.dashboardService.currentDisplayedDashboardValue = project;
         });
 
       } else {
-        this.dashboardService.currendDashbordSubject.next(null);
+        this.dashboardService.currentDisplayedDashboardValue = null;
         this.listenForConnection();
       }
     });

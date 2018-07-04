@@ -18,17 +18,18 @@
 
 import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
 import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
-import {startWith} from 'rxjs/operators/startWith';
-import {of as observableOf} from 'rxjs/observable/of';
 import {merge} from 'rxjs/observable/merge';
-import {switchMap} from 'rxjs/operators/switchMap';
+import {of as observableOf} from 'rxjs/observable/of';
 import {catchError} from 'rxjs/operators';
 import {map} from 'rxjs/operators/map';
-import {ConfigurationService} from '../configuration.service';
-import {ToastType} from '../../../shared/model/toastNotification/ToastType';
-import {Configuration} from '../../../shared/model/dto/Configuration';
+import {startWith} from 'rxjs/operators/startWith';
+import {switchMap} from 'rxjs/operators/switchMap';
+
 import {DeleteConfigurationDialogComponent} from '../components/delete-configuration-dialog/delete-configuration-dialog.component';
+import {ConfigurationService} from '../configuration.service';
 import {ToastService} from '../../../shared/components/toast/toast.service';
+import {Configuration} from '../../../shared/model/dto/Configuration';
+import {ToastType} from '../../../shared/model/toastNotification/ToastType';
 
 /**
  * The configuration list component
@@ -42,12 +43,15 @@ export class ConfigurationListComponent implements OnInit {
 
   /**
    * manage sort of the Mat table
+   * @type {MatSort}
    */
   @ViewChild(MatSort) matSort: MatSort;
   /**
    * manage pagination of the Mat table
+   * @type {MatPaginator}
    */
   @ViewChild(MatPaginator) matPaginator: MatPaginator;
+
   /**
    * Hold the data of the mat table
    * @type {MatTableDataSource<any>}
@@ -77,15 +81,15 @@ export class ConfigurationListComponent implements OnInit {
   /**
    * The constructor
    *
-   * @param {ConfigurationService} _configurationsService The configuration service
-   * @param {ChangeDetectorRef} _changeDetectorRef The change detector service
-   * @param {MatDialog} _matDialog The mat dialog service
-   * @param {ToastService} _toastService The toast service
+   * @param {ConfigurationService} configurationsService The configuration service
+   * @param {ChangeDetectorRef} changeDetectorRef The change detector service
+   * @param {MatDialog} matDialog The mat dialog service
+   * @param {ToastService} toastService The toast service
    */
-  constructor(private _configurationsService: ConfigurationService,
-              private _changeDetectorRef: ChangeDetectorRef,
-              private _matDialog: MatDialog,
-              private _toastService: ToastService) {
+  constructor(private configurationsService: ConfigurationService,
+              private changeDetectorRef: ChangeDetectorRef,
+              private matDialog: MatDialog,
+              private toastService: ToastService) {
   }
 
   /**
@@ -104,8 +108,8 @@ export class ConfigurationListComponent implements OnInit {
             startWith(null),
             switchMap(() => {
               this.isLoadingResults = true;
-              this._changeDetectorRef.detectChanges();
-              return this._configurationsService.getAll();
+              this.changeDetectorRef.detectChanges();
+              return this.configurationsService.getAll();
             }),
             map(data => {
               this.isLoadingResults = false;
@@ -126,7 +130,8 @@ export class ConfigurationListComponent implements OnInit {
           this.matTableDataSource.sort = this.matSort;
         });
 
-    this.matTableDataSource.sortingDataAccessor = (item: any, property) => {
+    // Apply sort custom rules for configuration
+    this.matTableDataSource.sortingDataAccessor = (item: Configuration, property: string) => {
       switch (property) {
         case 'category':
           return item.category ? item.category.name : '';
@@ -143,17 +148,17 @@ export class ConfigurationListComponent implements OnInit {
    * @param {Configuration} configuration The configuration to delete
    */
   openDialogDeleteConfiguration(configuration: Configuration) {
-    const deleteConfigurationDialog = this._matDialog.open(DeleteConfigurationDialogComponent, {
+    const deleteConfigurationDialog = this.matDialog.open(DeleteConfigurationDialogComponent, {
       data: {configuration: configuration}
     });
 
     deleteConfigurationDialog.afterClosed().subscribe(shouldDeleteConfiguration => {
       if (shouldDeleteConfiguration) {
         this
-            ._configurationsService
+            .configurationsService
             .deleteConfiguration(configuration)
             .subscribe(() => {
-              this._toastService.sendMessage('Configuration deleted successfully', ToastType.SUCCESS);
+              this.toastService.sendMessage('Configuration deleted successfully', ToastType.SUCCESS);
               this.initTable();
             });
       }

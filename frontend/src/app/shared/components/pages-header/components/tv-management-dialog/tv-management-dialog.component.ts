@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-import {ChangeDetectorRef, Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA} from '@angular/material';
 import {FormBuilder, FormGroup} from '@angular/forms';
+
 import {DashboardService} from '../../../../../modules/dashboard/dashboard.service';
 import {Project} from '../../../../model/dto/Project';
 import {WebsocketClient} from '../../../../model/dto/WebsocketClient';
@@ -24,7 +25,6 @@ import {ScreenService} from '../../../../../modules/dashboard/screen.service';
 
 /**
  * Component that manage the popup for Dashboard TV Management
- *
  */
 @Component({
   selector: 'app-tv-management-dialog',
@@ -35,11 +35,13 @@ export class TvManagementDialogComponent implements OnInit {
 
   /**
    * The register screen form
+   * @type {FormGroup}
    */
   screenRegisterForm: FormGroup;
 
   /**
    * The current project
+   * @type {Project}
    */
   project: Project;
 
@@ -54,7 +56,8 @@ export class TvManagementDialogComponent implements OnInit {
   constructor(@Inject(MAT_DIALOG_DATA) private data: any,
               private formBuilder: FormBuilder,
               private dashboardService: DashboardService,
-              private screenService: ScreenService) { }
+              private screenService: ScreenService) {
+  }
 
   /**
    * When the component is initialized
@@ -62,7 +65,7 @@ export class TvManagementDialogComponent implements OnInit {
   ngOnInit() {
     this.dashboardService
         .getOneById(this.data.projectId)
-        .subscribe(project => this.project = project );
+        .subscribe(project => this.project = project);
 
     this.screenRegisterForm = this.formBuilder.group({
       screenCode: ['']

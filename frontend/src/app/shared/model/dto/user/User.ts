@@ -17,6 +17,9 @@
 import {Role} from './Role';
 import {UserSetting} from '../UserSetting';
 
+/**
+ * The user entity
+ */
 export class User {
   public id: number;
   public username: string;

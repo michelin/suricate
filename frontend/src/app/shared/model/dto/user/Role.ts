@@ -16,6 +16,9 @@
 
 import {RoleEnum} from '../enums/RoleEnum';
 
+/**
+ * The Role entity
+ */
 export class Role {
   id: number;
   name: RoleEnum;

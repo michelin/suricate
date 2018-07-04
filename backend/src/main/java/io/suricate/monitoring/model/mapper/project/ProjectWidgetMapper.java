@@ -79,7 +79,8 @@ public abstract class ProjectWidgetMapper {
         @Mapping(target = "widgetPosition.width", source = "projectWidget.width"),
         @Mapping(target = "instantiateHtml", expression = "java(projectWidgetService.instantiateProjectWidgetHtml(projectWidget))"),
         @Mapping(target = "project", qualifiedByName = "toProjectDtoWithoutProjectWidget"),
-        @Mapping(target = "widget", qualifiedByName = "toWidgetDtoDefault")
+        @Mapping(target = "widget", qualifiedByName = "toWidgetDtoDefault"),
+        @Mapping(target = "backendConfig", expression = "java(projectWidgetService.decryptSecretParamsIfNeeded(projectWidget.getWidget().getWidgetParams(), projectWidget.getBackendConfig()))")
     })
     public abstract ProjectWidgetDto toProjectWidgetDtoDefault(ProjectWidget projectWidget);
 
@@ -112,7 +113,7 @@ public abstract class ProjectWidgetMapper {
     @Named("toNewProjectWidget")
     @Mappings({
         @Mapping(target = "col", expression = "java(0)"),
-        @Mapping(target = "row",  expression = "java(0)"),
+        @Mapping(target = "row", expression = "java(0)"),
         @Mapping(target = "height", expression = "java(1)"),
         @Mapping(target = "width", expression = "java(1)"),
         @Mapping(target = "project", expression = "java( projectService.getOneById(projectId).get())"),

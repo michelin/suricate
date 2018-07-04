@@ -18,12 +18,14 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {ConfigurationListComponent} from './configuration-list/configuration-list.component';
 import {RouterModule, Routes} from '@angular/router';
+
 import {AuthGuard} from '../../shared/auth/guards/auth.guard';
 import {SharedModule} from '../../shared/shared.module';
-import {ConfigurationService} from './configuration.service';
 import {AdminGuard} from '../../shared/auth/guards/admin.guard';
+
+import {ConfigurationListComponent} from './configuration-list/configuration-list.component';
+import {ConfigurationService} from './configuration.service';
 import {ConfigurationEditComponent} from './configuration-edit/configuration-edit.component';
 import {DeleteConfigurationDialogComponent} from './components/delete-configuration-dialog/delete-configuration-dialog.component';
 
