@@ -27,7 +27,6 @@ export class RunScriptsDirective implements OnInit {
 
   /**
    * Emit an event when the script rendering for childs are ended
-   *
    * @type {EventEmitter<any>}
    */
   @Output('scriptRenderingFinished') scriptRenderingFinished = new EventEmitter();
@@ -37,7 +36,8 @@ export class RunScriptsDirective implements OnInit {
    *
    * @param {ElementRef} elementRef Represent a reference for an HTML Element
    */
-  constructor(private elementRef: ElementRef) { }
+  constructor(private elementRef: ElementRef) {
+  }
 
   /**
    * Execute when the directive is init

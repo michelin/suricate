@@ -15,30 +15,24 @@
  */
 
 import {Injectable} from '@angular/core';
-import {AbstractHttpService} from '../../shared/services/abstract-http.service';
 import {HttpClient} from '@angular/common/http';
-import {Role} from '../../shared/model/dto/user/Role';
 import {Observable} from 'rxjs/Observable';
+
+import {Role} from '../../shared/model/dto/user/Role';
+import {rolesApiEndpoint} from '../../app.constant';
 
 /**
  * The role service
  */
 @Injectable()
-export class RoleService extends AbstractHttpService {
-
-  /**
-   * The base url for role API
-   * @type {string} The role API url
-   */
-  public static readonly ROLES_BASE_URL = `${AbstractHttpService.BASE_API_URL}/${AbstractHttpService.ROLES_URL}`;
+export class RoleService {
 
   /**
    * Constructor
    *
-   * @param {HttpClient} _httpClient The Http Client used for doing HTTP request
+   * @param {HttpClient} httpClient The Http Client used for doing HTTP request
    */
-  constructor(private _httpClient: HttpClient) {
-    super();
+  constructor(private httpClient: HttpClient) {
   }
 
   /* *************************************************************************************** */
@@ -52,7 +46,9 @@ export class RoleService extends AbstractHttpService {
    * @returns {Observable<Role[]>}
    */
   getRoles(): Observable<Role[]> {
-    return this._httpClient.get<Role[]>(`${RoleService.ROLES_BASE_URL}`);
+    const url = `${rolesApiEndpoint}`;
+
+    return this.httpClient.get<Role[]>(url);
   }
 
 

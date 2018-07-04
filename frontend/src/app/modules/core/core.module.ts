@@ -14,25 +14,28 @@
  * limitations under the License.
  */
 
-import { NgModule } from '@angular/core';
-import { SidenavComponent } from './sidenav/sidenav.component';
+import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+
 import {SharedModule} from '../../shared/shared.module';
+
+import {SidenavComponent} from './sidenav/sidenav.component';
 import {SidenavService} from './sidenav/sidenav.service';
 
 @NgModule({
   imports: [
-      CommonModule,
-      SharedModule
+    CommonModule,
+    SharedModule
   ],
   declarations: [
-      SidenavComponent
+    SidenavComponent
   ],
   providers: [
-      SidenavService,
+    SidenavService,
   ],
   exports: [
-      SidenavComponent
+    SidenavComponent
   ]
 })
-export class CoreModule { }
+export class CoreModule {
+}

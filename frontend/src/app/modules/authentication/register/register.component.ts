@@ -16,12 +16,13 @@
 
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {CustomValidators} from 'ng2-validation';
-import {checkPasswordMatch} from '../../../shared/validators/CustomValidator';
-import {User} from '../../../shared/model/dto/user/User';
-import {ICredentials} from '../../../shared/model/dto/user/ICredentials';
 import {Router} from '@angular/router';
+import {CustomValidators} from 'ng2-validation';
+
 import {AuthenticationService} from '../authentication.service';
+import {Credentials} from '../../../shared/model/dto/user/Credentials';
+import {User} from '../../../shared/model/dto/user/User';
+import {checkPasswordMatch} from '../../../shared/validators/CustomValidator';
 
 /**
  * Component that register a new user
@@ -34,21 +35,25 @@ import {AuthenticationService} from '../authentication.service';
 export class RegisterComponent implements OnInit {
 
   /**
+   * The form control for the password confirmation
+   * @type {FormControl}
+   * @private
+   */
+  private confirmPasswordControl: FormControl;
+  /**
+   * The form control for the password
+   * @type {FormControl}
+   * @private
+   */
+  private passwordControl: FormControl;
+
+  /**
    * The register form
+   * @type {FormGroup}
    */
   registerForm: FormGroup;
   /**
-   * The form control for the password confirmation
-   */
-  confirmPasswordControl: FormControl;
-  /**
-   * The form control for the password
-   */
-  passwordControl: FormControl;
-
-  /**
    * Tell if the form has been submit or not
-   *
    * @type {boolean} true if the form is submitting, false otherwise
    */
   formSubmitAttempt = false;
@@ -119,7 +124,7 @@ export class RegisterComponent implements OnInit {
         .authenticationService
         .register(user)
         .subscribe(() => {
-          const credentials: ICredentials = {username: user.username, password: user.password};
+          const credentials: Credentials = {username: user.username, password: user.password};
           this
               .authenticationService
               .authenticate(credentials)

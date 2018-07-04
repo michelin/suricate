@@ -17,8 +17,10 @@
  */
 
 import {WSUpdateType} from './enums/WSUpdateType';
-import {ProjectWidget} from '../dto/ProjectWidget';
 
+/**
+ * The object WS Event
+ */
 export class WSUpdateEvent {
   date: Date;
   type: WSUpdateType;

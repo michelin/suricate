@@ -15,8 +15,9 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Router} from '@angular/router';
+
 import {AuthenticationService} from '../authentication.service';
 
 /**
@@ -30,19 +31,18 @@ import {AuthenticationService} from '../authentication.service';
 export class LoginComponent implements OnInit {
   /**
    * The login form
+   * @type {FormGroup}
    */
   loginForm: FormGroup;
 
   /**
    * If the password field is hidden or not
-   *
    * @type {boolean}
    */
   hidePassword = true;
 
   /**
    * Used for display spinner when form has been submitted
-   *
    * @type {boolean}
    */
   formSubmitAttempt = false;

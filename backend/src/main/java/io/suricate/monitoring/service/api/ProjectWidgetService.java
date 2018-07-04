@@ -26,8 +26,10 @@ import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
 import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.entity.widget.Widget;
+import io.suricate.monitoring.model.entity.widget.WidgetParam;
 import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.model.enums.WidgetState;
+import io.suricate.monitoring.model.enums.WidgetVariableType;
 import io.suricate.monitoring.model.mapper.project.ProjectMapper;
 import io.suricate.monitoring.model.mapper.project.ProjectWidgetMapper;
 import io.suricate.monitoring.repository.ProjectWidgetRepository;
@@ -37,9 +39,11 @@ import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
 import io.suricate.monitoring.utils.JavascriptUtils;
 import io.suricate.monitoring.utils.PropertiesUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.jasypt.encryption.StringEncryptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -52,6 +56,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Project widget service
@@ -95,6 +100,11 @@ public class ProjectWidgetService {
     private final ApplicationContext ctx;
 
     /**
+     * The string encryptor
+     */
+    private StringEncryptor stringEncryptor;
+
+    /**
      * Constructor
      *
      * @param projectWidgetRepository   The project widget repository
@@ -103,6 +113,7 @@ public class ProjectWidgetService {
      * @param mustacheFactory           The mustache factory (HTML template)
      * @param projectMapper             The project mapper
      * @param ctx                       The application context
+     * @param stringEncryptor           The string encryptor
      */
     @Autowired
     public ProjectWidgetService(final ProjectWidgetRepository projectWidgetRepository,
@@ -110,13 +121,15 @@ public class ProjectWidgetService {
                                 final DashboardWebSocketService dashboardWebSocketService,
                                 @Lazy final DashboardScheduleService dashboardScheduleService,
                                 final ProjectMapper projectMapper,
-                                final ApplicationContext ctx) {
+                                final ApplicationContext ctx,
+                                @Qualifier("jasyptStringEncryptor") final StringEncryptor stringEncryptor) {
         this.projectWidgetRepository = projectWidgetRepository;
         this.dashboardWebsocketService = dashboardWebSocketService;
         this.dashboardScheduleService = dashboardScheduleService;
         this.mustacheFactory = mustacheFactory;
         this.projectMapper = projectMapper;
         this.ctx = ctx;
+        this.stringEncryptor = stringEncryptor;
     }
 
     /**
@@ -157,6 +170,10 @@ public class ProjectWidgetService {
      */
     @Transactional
     public ProjectWidget addProjectWidget(ProjectWidget projectWidget) {
+        //Encrypt Secret params
+        projectWidget.setBackendConfig(
+            encryptSecretParamsIfNeeded(projectWidget.getWidget().getWidgetParams(), projectWidget.getBackendConfig())
+        );
 
         // Add project widget
         projectWidget = projectWidgetRepository.saveAndFlush(projectWidget);
@@ -317,7 +334,7 @@ public class ProjectWidgetService {
         ctx.getBean(NashornWidgetScheduler.class).cancelWidgetInstance(projectWidget.getId());
 
         projectWidget.setCustomStyle(customStyle);
-        projectWidget.setBackendConfig(backendConfig);
+        projectWidget.setBackendConfig(encryptSecretParamsIfNeeded(projectWidget.getWidget().getWidgetParams(), backendConfig));
         projectWidgetRepository.save(projectWidget);
 
         dashboardScheduleService.scheduleWidget(projectWidget.getId());
@@ -351,5 +368,59 @@ public class ProjectWidgetService {
      */
     public void updateSuccessExecution(final Long projectWidgetId, final Date executionDate, final String executionLog, final String data, final WidgetState widgetState) {
         projectWidgetRepository.updateSuccessExecution(executionDate, executionLog, data, projectWidgetId, widgetState);
+    }
+
+    /**
+     * decrypt the secret params if exists
+     *
+     * @param widgetParams  list of params for this widget
+     * @param backendConfig The related backend config
+     * @return The list of param decrypted
+     */
+    public String decryptSecretParamsIfNeeded(final List<WidgetParam> widgetParams, String backendConfig) {
+        Map<String, String> backendConfigAsMap = PropertiesUtils.getMap(backendConfig);
+
+        for (WidgetParam widgetParam : widgetParams) {
+            if (widgetParam.getType() == WidgetVariableType.SECRET) {
+                String valueToEncrypt = StringUtils.trimToNull(backendConfigAsMap.get(widgetParam.getName()));
+
+                if (valueToEncrypt != null) {
+                    backendConfigAsMap.put(widgetParam.getName(), stringEncryptor.decrypt(valueToEncrypt));
+                }
+            }
+        }
+
+        return backendConfigAsMap
+            .entrySet()
+            .stream()
+            .map(backendConfigEntrySet -> backendConfigEntrySet.getKey() + "=" + backendConfigEntrySet.getValue())
+            .collect(Collectors.joining("\n"));
+    }
+
+    /**
+     * Method that encrypt secret params if need
+     *
+     * @param widgetParams  The list of widget params of the related project widget
+     * @param backendConfig The backend config of project widget
+     * @return The backend config with the secret params encrypted
+     */
+    private String encryptSecretParamsIfNeeded(final List<WidgetParam> widgetParams, String backendConfig) {
+        Map<String, String> backendConfigAsMap = PropertiesUtils.getMap(backendConfig);
+
+        for (WidgetParam widgetParam : widgetParams) {
+            if (widgetParam.getType() == WidgetVariableType.SECRET) {
+                String valueToEncrypt = StringUtils.trimToNull(backendConfigAsMap.get(widgetParam.getName()));
+
+                if (valueToEncrypt != null) {
+                    backendConfigAsMap.put(widgetParam.getName(), stringEncryptor.encrypt(valueToEncrypt));
+                }
+            }
+        }
+
+        return backendConfigAsMap
+            .entrySet()
+            .stream()
+            .map(backendConfigEntrySet -> backendConfigEntrySet.getKey() + "=" + backendConfigEntrySet.getValue())
+            .collect(Collectors.joining("\n"));
     }
 }
