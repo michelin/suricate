@@ -17,18 +17,20 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
+import {FlexLayoutModule} from '@angular/flex-layout';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {RouterModule} from '@angular/router';
+import {StompRService} from '@stomp/ng2-stompjs';
 import {NgGridModule} from 'angular2-grid';
+import {CustomFormsModule} from 'ng2-validation';
+import {ColorPickerModule} from 'ngx-color-picker';
+
 import {TokenInterceptor} from './interceptors/TokenInterceptor';
 import {AuthGuard} from './auth/guards/auth.guard';
 import {MaterialModule} from './modules/material.module';
 import {PagesHeaderComponent} from './components/pages-header/pages-header.component';
 import {AddWidgetDialogComponent} from './components/pages-header/components/add-widget-dialog/add-widget-dialog.component';
-import {FlexLayoutModule} from '@angular/flex-layout';
-import {RouterModule} from '@angular/router';
 import {DashboardActionsComponent} from './components/pages-header/components/dashboard-actions/dashboard-actions.component';
-import {CustomFormsModule} from 'ng2-validation';
-import {ColorPickerModule} from 'ngx-color-picker';
 import {WebsocketService} from './services/websocket.service';
 import {ToastComponent} from './components/toast/toast.component';
 import {ToastService} from './components/toast/toast.service';
@@ -37,13 +39,12 @@ import {SafeHtmlPipe} from './pipes/safe-html.pipe';
 import {SafeUrlPipe} from './pipes/safe-url.pipe';
 import {RunScriptsDirective} from './directives/run-scripts.directive';
 import {TvManagementDialogComponent} from './components/pages-header/components/tv-management-dialog/tv-management-dialog.component';
-import {StompRService} from '@stomp/ng2-stompjs';
 import {AdminGuard} from './auth/guards/admin.guard';
 import {TokenService} from './auth/token.service';
-import {TranslateModule} from "@ngx-translate/core";
-import {TranslationComponent} from "./components/translations/translation.component";
+import {TranslateModule} from '@ngx-translate/core';
+import {TranslationComponent} from './components/translations/translation.component';
 import {MaterialCDKModule} from './modules/metarialCDK.module';
-import {ThemeService} from './services/theme.service';
+import {SettingsService} from './services/settings.service';
 
 @NgModule({
   imports: [
@@ -105,7 +106,7 @@ import {ThemeService} from './services/theme.service';
     ToastService,
     StompRService,
     TokenService,
-    ThemeService
+    SettingsService
   ]
 })
 export class SharedModule {

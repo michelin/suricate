@@ -16,6 +16,9 @@
  *
  */
 
+/**
+ * The project widget position
+ */
 export class ProjectWidgetPosition {
   projectWidgetId: number;
   col: number;

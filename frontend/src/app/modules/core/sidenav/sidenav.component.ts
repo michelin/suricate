@@ -16,16 +16,19 @@
 
 import {AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
+import {MatSidenav} from '@angular/material';
+import {takeWhile} from 'rxjs/operators';
+
+import {SidenavService} from './sidenav.service';
 import {User} from '../../../shared/model/dto/user/User';
 import {Project} from '../../../shared/model/dto/Project';
 import {DashboardService} from '../../dashboard/dashboard.service';
 import {UserService} from '../../user/user.service';
-import {takeWhile} from 'rxjs/operators';
-import {MatSidenav} from '@angular/material';
-import {SidenavService} from './sidenav.service';
 import {AuthenticationService} from '../../authentication/authentication.service';
-import {TranslateService} from "@ngx-translate/core";
 
+/**
+ * Hold the sidenav behavior
+ */
 @Component({
   selector: 'app-sidenav',
   templateUrl: './sidenav.component.html',
@@ -33,29 +36,36 @@ import {TranslateService} from "@ngx-translate/core";
 })
 export class SidenavComponent implements OnInit, AfterViewInit, OnDestroy {
 
+  /**
+   * The html sidenav
+   * @type {MatSidenav}
+   */
   @ViewChild('sidenav') sidenav: MatSidenav;
 
   /**
    * Used for close the observable subscription
-   *
    * @type {boolean}
+   * @private
    */
-  private alive = true;
+  private isAlive = true;
 
   /**
    * The connected user
+   * @type {User}
    */
-  public connectedUser: User;
+  connectedUser: User;
 
   /**
    * True if the user is admin
+   * @type {boolean}
    */
-  public isUserAdmin: boolean;
+  isUserAdmin: boolean;
 
   /**
    * The list of dashboards
+   * @type {Project[]}
    */
-  public dashboards: Project[];
+  dashboards: Project[];
 
   /**
    * Constructor
@@ -79,25 +89,26 @@ export class SidenavComponent implements OnInit, AfterViewInit, OnDestroy {
    * Init objects
    */
   ngOnInit() {
-    this.dashboardService
-        .dashboardsSubject
-        .pipe(takeWhile(() => this.alive))
+    this.dashboardService.currentDashboardList$
+        .pipe(takeWhile(() => this.isAlive))
         .subscribe(projects => this.dashboards = this.dashboardService.sortByProjectName(projects));
 
-    this.userService
-        .connectedUserSubject
-        .pipe(takeWhile(() => this.alive))
+    this.userService.connectedUser$
+        .pipe(takeWhile(() => this.isAlive))
         .subscribe(connectedUser => this.connectedUser = connectedUser);
 
-    this.dashboardService.getAllForCurrentUser().subscribe();
     this.userService.getConnectedUser().subscribe();
     this.isUserAdmin = this.userService.isAdmin();
+    this.dashboardService.getAllForCurrentUser().subscribe();
   }
 
+  /**
+   * Called when the view has been init
+   */
   ngAfterViewInit() {
     this.sidenavService
         .subscribeToSidenavOpenCloseEvent()
-        .pipe(takeWhile(() => this.alive))
+        .pipe(takeWhile(() => this.isAlive))
         .subscribe((shouldOpen: boolean) => {
           if (shouldOpen) {
             this.sidenav.open();
@@ -129,6 +140,6 @@ export class SidenavComponent implements OnInit, AfterViewInit, OnDestroy {
    * All the subscriptions are closed
    */
   ngOnDestroy() {
-    this.alive = false;
+    this.isAlive = false;
   }
 }

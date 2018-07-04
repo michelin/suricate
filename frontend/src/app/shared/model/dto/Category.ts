@@ -17,6 +17,9 @@
 import {Asset} from './Asset';
 import {Configuration} from './Configuration';
 
+/**
+ * The category representation
+ */
 export class Category {
   public id: number;
   public name: string;
