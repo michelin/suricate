@@ -34,7 +34,7 @@ export class ToastMessage {
   /**
    * The style to apply (success, info, ...)
    */
-  style: string;
+  style: ToastType;
   /**
    * Triggered by the user to hide the message
    *
@@ -49,7 +49,7 @@ export class ToastMessage {
    * @param content The message content
    * @param style The style
    */
-  constructor(title, content?, style?) {
+  constructor(title: string, content?: string, style?: ToastType) {
     this.title = title;
     this.content = content || '';
     this.style = style || ToastType.INFO;

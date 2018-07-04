@@ -14,14 +14,15 @@
  * limitations under the License.
  */
 
-import {Component, HostBinding, OnDestroy, OnInit} from '@angular/core';
-import {Observable} from 'rxjs/Observable';
-import {AuthenticationService} from './modules/authentication/authentication.service';
-import {TranslateService} from "@ngx-translate/core";
 import {OverlayContainer} from '@angular/cdk/overlay';
-import {ThemeService} from './shared/services/theme.service';
-import {takeWhile} from 'rxjs/operators';
+import {ChangeDetectorRef, Component, HostBinding, OnDestroy, OnInit} from '@angular/core';
+import {TranslateService} from '@ngx-translate/core';
+import {Observable} from 'rxjs/Observable';
+
+import {AuthenticationService} from './modules/authentication/authentication.service';
+import {SettingsService} from './shared/services/settings.service';
 import {UserService} from './modules/user/user.service';
+import {takeWhile} from 'rxjs/operators';
 
 @Component({
   selector: 'app-root',
@@ -31,7 +32,21 @@ import {UserService} from './modules/user/user.service';
 export class AppComponent implements OnInit, OnDestroy {
 
   /**
+   * The HTML class attribute
+   */
+  @HostBinding('class') appHtmlClass;
+
+  /**
+   * Tell if the component is instantiate or not
+   *
+   * @type {boolean}
+   * @private
+   */
+  private isAlive = true;
+
+  /**
    * Observable that tell to the app if the user is connected
+   * @type {Observable<boolean>}
    */
   isLoggedIn$: Observable<boolean>;
 
@@ -42,68 +57,54 @@ export class AppComponent implements OnInit, OnDestroy {
   title = 'Dashboard - Monitoring';
 
   /**
-   * Used for setting the new class
-   */
-  @HostBinding('class') componentCssClass;
-
-  /**
-   * Tell if the component is instantiate or not
-   *
-   * @type {boolean}
-   * @private
-   */
-  private _isAlive = true;
-
-  /**
    * The constructor
    *
    * @param {AuthenticationService} authenticationService Authentication service to inject
    * @param {OverlayContainer} overlayContainer The overlay container service
-   * @param {ThemeService} themeService The theme service to inject
-   * @param {UserService} _userService The user service
+   * @param {UserService} userService The user service
+   * @param {TranslateService} translateService The translation service
+   * @param {SettingsService} settingsService The settings service to inject
+   * @param {ChangeDetectorRef} changeDetectorRef The change detector ref service
    */
   constructor(private authenticationService: AuthenticationService,
               private overlayContainer: OverlayContainer,
-              private themeService: ThemeService,
-              private _userService: UserService, private translate: TranslateService) {
-      // this language will be used as a fallback when a translation isn't found in the current language
-      translate.setDefaultLang('en');
-
-      // the lang to use, if the lang isn't available, it will use the current loader to get them
-      translate.use('en');
+              private userService: UserService,
+              private translateService: TranslateService,
+              private settingsService: SettingsService,
+              private changeDetectorRef: ChangeDetectorRef) {
   }
 
   /**
    * Called at the init of the app
    */
   ngOnInit() {
-    this.isLoggedIn$ = this.authenticationService.isLoggedIn();
+    this.isLoggedIn$ = this.authenticationService.isLoggedIn$.pipe(takeWhile(() => this.isAlive));
+    this.settingsService.currentTheme$.subscribe(themeValue => this.switchTheme(themeValue));
 
-    this.themeService.getCurrentTheme()
-        .pipe(takeWhile(() => this._isAlive))
-        .subscribe((themeName: string) => this.onSetTheme(themeName));
-
-    this._userService.getConnectedUser().subscribe(user => this._userService.setUserSettings(user));
+    this.settingsService.initDefaultSettings();
+    this.userService.connectedUser$.subscribe(user => {
+      if (user) {
+        this.settingsService.initUserSettings(user);
+      } else {
+        this.settingsService.initDefaultSettings();
+      }
+    });
   }
 
   /**
-   * Set the theme
-   *
-   * @param theme The theme name
+   * Switch the theme
+   * @param {string} themeValue The new theme value
    */
-  onSetTheme(theme) {
-    this.overlayContainer.getContainerElement().classList.add(theme);
-    this.componentCssClass = theme;
+  switchTheme(themeValue: string) {
+    this.overlayContainer.getContainerElement().classList.add(themeValue);
+    this.appHtmlClass = themeValue;
+    this.changeDetectorRef.detectChanges();
   }
 
   /**
    * Called when the component is destroyed
    */
   ngOnDestroy() {
-    this._isAlive = false;
-  }
-
-  switchLanguage(language: string) {
-      this.translate.use(language);
+    this.isAlive = false;
   }
 }

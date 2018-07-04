@@ -16,49 +16,69 @@
 
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {User} from '../../shared/model/dto/user/User';
-
+import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Observable} from 'rxjs/Observable';
-import {AbstractHttpService} from '../../shared/services/abstract-http.service';
 import {map} from 'rxjs/operators';
 import {Subject} from 'rxjs/Subject';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
+
+import {User} from '../../shared/model/dto/user/User';
 import {TokenService} from '../../shared/auth/token.service';
 import {RoleEnum} from '../../shared/model/dto/enums/RoleEnum';
 import {UserSetting} from '../../shared/model/dto/UserSetting';
-import {ThemeService} from '../../shared/services/theme.service';
-import {SettingType} from '../../shared/model/dto/enums/SettingType';
+import {SettingsService} from '../../shared/services/settings.service';
+import {usersApiEndpoint} from '../../app.constant';
 
 /**
  * User service that manage users
  */
 @Injectable()
-export class UserService extends AbstractHttpService {
-
-  /**
-   * The base url for user API
-   * @type {string} The user API url
-   */
-  public static readonly USERS_BASE_URL = `${AbstractHttpService.BASE_API_URL}/${AbstractHttpService.USERS_URL}`;
+export class UserService {
 
   /**
    * The connected user subject
-   *
    * @type {Subject<User>}
    */
-  connectedUserSubject: BehaviorSubject<User> = new BehaviorSubject<User>(null);
+  private connectedUserSubject: BehaviorSubject<User> = new BehaviorSubject<User>(null);
 
   /**
    * The constructor
    *
-   * @param {HttpClient} http The http client service to inject
-   * @param {TokenService} _tokenService The token service
-   * @param {ThemeService} _themeService The theme service
+   * @param {HttpClient} httpClient The http client service to inject
+   * @param {TokenService} tokenService The token service
+   * @param {SettingsService} themeService The theme service
    */
-  constructor(private http: HttpClient,
-              private _tokenService: TokenService,
-              private _themeService: ThemeService) {
-    super();
+  constructor(private httpClient: HttpClient,
+              private tokenService: TokenService,
+              private themeService: SettingsService) {
+  }
+
+  /* *************************************************************************************** */
+  /*                            Subject Management                                           */
+
+  /* *************************************************************************************** */
+
+  /**
+   * Get the connected user event
+   * @returns {Observable<User>}
+   */
+  get connectedUser$(): Observable<User> {
+    return this.connectedUserSubject.asObservable();
+  }
+
+  /**
+   * Get the current connected user value
+   * @returns {User}
+   */
+  get connectedUser(): User {
+    return this.connectedUserSubject.getValue();
+  }
+
+  /**
+   * Set and send the new connected user
+   * @param {User} connectedUser
+   */
+  set connectedUser(connectedUser: User) {
+    this.connectedUserSubject.next(connectedUser);
   }
 
   /* *************************************************************************************** */
@@ -72,7 +92,9 @@ export class UserService extends AbstractHttpService {
    * @returns {Observable<User[]>} The list of users
    */
   getAll(): Observable<User[]> {
-    return this.http.get<User[]>(`${UserService.USERS_BASE_URL}`);
+    const url = `${usersApiEndpoint}`;
+
+    return this.httpClient.get<User[]>(url);
   }
 
   /**
@@ -82,7 +104,9 @@ export class UserService extends AbstractHttpService {
    * @returns {Observable<User>} The user found
    */
   getById(userId: string): Observable<User> {
-    return this.http.get<User>(`${UserService.USERS_BASE_URL}/${userId}`);
+    const url = `${usersApiEndpoint}/${userId}`;
+
+    return this.httpClient.get<User>(url);
   }
 
   /**
@@ -91,12 +115,15 @@ export class UserService extends AbstractHttpService {
    * @returns {Observable<User>} The connected user
    */
   getConnectedUser(): Observable<User> {
-    return this.http.get<User>(`${UserService.USERS_BASE_URL}/current`).pipe(
-        map(user => {
-          this.connectedUserSubject.next(user);
-          return user;
-        })
-    );
+    const url = `${usersApiEndpoint}/current`;
+
+    return this.httpClient.get<User>(url)
+        .pipe(
+            map(user => {
+              this.connectedUser = user;
+              return user;
+            })
+        );
   }
 
   /**
@@ -104,7 +131,9 @@ export class UserService extends AbstractHttpService {
    * @param {User} user The user to delete
    */
   deleteUser(user: User): Observable<User> {
-    return this.http.delete<User>(`${UserService.USERS_BASE_URL}/${user.id}`);
+    const url = `${usersApiEndpoint}/${user.id}`;
+
+    return this.httpClient.delete<User>(url);
   }
 
   /**
@@ -114,13 +143,13 @@ export class UserService extends AbstractHttpService {
    * @returns {Observable<User>} The user updated
    */
   updateUser(user: User): Observable<User> {
-    return this
-        .http
-        .put<User>(`${UserService.USERS_BASE_URL}/${user.id}`, user)
+    const url = `${usersApiEndpoint}/${user.id}`;
+
+    return this.httpClient.put<User>(url, user)
         .pipe(
             map(userUpdated => {
-              if (userUpdated.id === this.connectedUserSubject.getValue().id) {
-                this.connectedUserSubject.next(userUpdated);
+              if (userUpdated.id === this.connectedUser.id) {
+                this.connectedUser = userUpdated;
               }
               return userUpdated;
             })
@@ -135,15 +164,15 @@ export class UserService extends AbstractHttpService {
    * @returns {Observable<User>} The user updated
    */
   updateUserSettings(user: User, userSettings: UserSetting[]): Observable<User> {
-    const url = `${UserService.USERS_BASE_URL}/${user.id}/settings`;
+    const url = `${usersApiEndpoint}/${user.id}/settings`;
 
     return this
-        .http
+        .httpClient
         .put<User>(url, userSettings)
         .pipe(
             map(userUpdated => {
-              if (userUpdated.id === this.connectedUserSubject.getValue().id) {
-                this.connectedUserSubject.next(userUpdated);
+              if (userUpdated.id === this.connectedUser.id) {
+                this.connectedUser = userUpdated;
               }
               return userUpdated;
             })
@@ -157,7 +186,9 @@ export class UserService extends AbstractHttpService {
    * @returns {Observable<User[]>} The list of users that match the string
    */
   searchUserByUsername(username: string): Observable<User[]> {
-    return this.http.get<User[]>(`${UserService.USERS_BASE_URL}/search?username=${username}`);
+    const url = `${usersApiEndpoint}/search?username=${username}`;
+
+    return this.httpClient.get<User[]>(url);
   }
 
   /* *************************************************************************************** */
@@ -180,24 +211,6 @@ export class UserService extends AbstractHttpService {
    * @returns {boolean} True if the current user admin, false otherwise
    */
   isAdmin(): boolean {
-    return this._tokenService.getUserRoles().includes(RoleEnum.ROLE_ADMIN);
-  }
-
-  /**
-   * Get the template user setting
-   *
-   * @param {User} user The user
-   * @returns {UserSetting} The user setting
-   */
-  getThemeUserSetting(user: User): UserSetting {
-    return user.userSettings.find(userSetting => userSetting.setting.type === SettingType.TEMPLATE);
-  }
-
-  /**
-   * Set every user settings
-   * @param {User} user The user use for set the settings
-   */
-  setUserSettings(user: User) {
-    this._themeService.setTheme(this.getThemeUserSetting(user).settingValue.value);
+    return this.tokenService.getUserRoles().includes(RoleEnum.ROLE_ADMIN);
   }
 }

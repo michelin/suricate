@@ -1,4 +1,6 @@
-<h2 mat-dialog-title> <app-translate [key]="'widget.edit'"></app-translate> </h2>
+<h2 mat-dialog-title>
+  <app-translate [key]="'widget.edit'"></app-translate>
+</h2>
 
 <mat-dialog-content>
   <div class="widget-dialog">
@@ -49,7 +51,9 @@
                    [name]="param.name"
                    [required]="param.required"
                    [placeholder]="param.description"
-                   [ngModel]="param.defaultValue ? param.defaultValue : param.usageExample">
+                   [ngModel]="getParamValueByParamName(projectWidget.backendConfig, param) ? getParamValueByParamName(projectWidget.backendConfig, param)
+                                : param.defaultValue ? param.defaultValue
+                                : param.usageExample">
           </mat-form-field>
 
           <!-- STRING Type -->
@@ -97,7 +101,8 @@
             <!-- Used for display file selection window -->
             <button mat-raised-button class="file_upload_button mat-elevation-z8" type="button" (click)="file.click()">
               <mat-icon>attach_file</mat-icon>
-              <span [class]="'file-selection-sentence-' + param.name" ><app-translate [key]="'uploadyarn star'"></app-translate></span>
+              <span [class]="'file-selection-sentence-' + param.name"><app-translate
+                  [key]="'uploadyarn star'"></app-translate></span>
             </button>
             <!-- Used for retrieve the file -->
             <input #file
@@ -109,7 +114,9 @@
             <input type="text" style="display:none;" [name]="param.name" [required]="param.required" ngModel>
           </div>
         </div>
-        <button mat-raised-button class="mat-elevation-z4" color="accent" type="submit"><app-translate [key]="'save'"></app-translate></button>
+        <button mat-raised-button class="mat-elevation-z4" color="accent" type="submit">
+          <app-translate [key]="'save'"></app-translate>
+        </button>
       </form>
     </div>
   </div>

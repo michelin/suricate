@@ -14,44 +14,45 @@
  * limitations under the License.
  */
 
-import { Injectable } from '@angular/core';
-import {AbstractHttpService} from './abstract-http.service';
+import {Injectable} from '@angular/core';
+import {StompConfig, StompRService, StompState} from '@stomp/ng2-stompjs';
 import {Observable} from 'rxjs/Observable';
+
 import {NumberUtils} from '../utils/NumberUtils';
+import {baseWsEndpoint} from '../../app.constant';
 
 import * as Stomp from '@stomp/stompjs';
 import * as SockJS from 'sockjs-client';
-import {StompConfig, StompRService, StompState} from '@stomp/ng2-stompjs';
 
 /**
  * Service that manage the websockets connections
  */
 @Injectable()
-export class WebsocketService extends AbstractHttpService {
+export class WebsocketService {
 
   /**
    * Define the min bound for the screen code random generation
-   *
-   * @type {number} The min bound
+   * @type {number}
    */
-  private readonly MIN_SCREEN_CODE_BOUND = 100000;
+  private readonly minScreenCodeBound = 100000;
 
   /**
    * Define the max bound for the screen code random generation
-   *
-   * @type {number} The max bound
+   * @type {number}
    */
-  private readonly MAX_SCREEN_CODE_BOUND = 999999;
+  private readonly maxScreenCodeBound = 999999;
 
   /**
-   * The constructor of the service
+   * The constructor
+   *
+   * @param {StompRService} stompRService The stomp Service to inject
    */
   constructor(private stompRService: StompRService) {
-    super();
   }
 
   /* ****************************************************************** */
   /*                    Screen code management                          */
+
   /* ****************************************************************** */
 
   /**
@@ -59,11 +60,12 @@ export class WebsocketService extends AbstractHttpService {
    * @returns {number} The screen code
    */
   getscreenCode(): number {
-    return NumberUtils.getRandomIntBetween(this.MIN_SCREEN_CODE_BOUND, this.MAX_SCREEN_CODE_BOUND);
+    return NumberUtils.getRandomIntBetween(this.minScreenCodeBound, this.maxScreenCodeBound);
   }
 
   /* ****************************************************************** */
   /*                    WebSocket Management                            */
+
   /* ****************************************************************** */
 
   /**
@@ -71,7 +73,7 @@ export class WebsocketService extends AbstractHttpService {
    *
    * @returns {Observable<StompState>}
    */
-  get stompConnectionState(): Observable<StompState> {
+  get stompConnectionState$(): Observable<StompState> {
     return this.stompRService.state.asObservable();
   }
 
@@ -82,7 +84,7 @@ export class WebsocketService extends AbstractHttpService {
    */
   getWebsocketConfig(): StompConfig {
     const stompConfig = new StompConfig();
-    stompConfig.url = () => new SockJS(AbstractHttpService.BASE_WS_URL);
+    stompConfig.url = () => new SockJS(baseWsEndpoint);
     stompConfig.heartbeat_in = 0;
     stompConfig.heartbeat_out = 20000;
     stompConfig.reconnect_delay = 1000;
@@ -108,6 +110,9 @@ export class WebsocketService extends AbstractHttpService {
     return this.stompRService.subscribe(destination);
   }
 
+  /**
+   * Disconnect the client
+   */
   disconnect() {
     this.stompRService.disconnect();
   }

@@ -16,20 +16,20 @@
 
 import {AfterViewInit, ChangeDetectorRef, Component, ViewChild} from '@angular/core';
 import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
-
+import {merge} from 'rxjs/observable/merge';
 import {of as observableOf} from 'rxjs/observable/of';
 import {catchError} from 'rxjs/operators';
-import {merge} from 'rxjs/observable/merge';
+import {map} from 'rxjs/operators/map';
 import {startWith} from 'rxjs/operators/startWith';
 import {switchMap} from 'rxjs/operators/switchMap';
-import {map} from 'rxjs/operators/map';
+
 import {UserService} from '../user.service';
 import {DeleteUserDialogComponent} from '../components/delete-user-dialog/delete-user-dialog.component';
 import {User} from '../../../shared/model/dto/user/User';
 import {ToastService} from '../../../shared/components/toast/toast.service';
 import {ToastType} from '../../../shared/model/toastNotification/ToastType';
 import {RoleService} from '../role.service';
-import {Role} from 'app/shared/model/dto/user/Role';
+import {Role} from '../../../shared/model/dto/user/Role';
 
 /**
  * This component is used for displaying the list of users
@@ -41,19 +41,30 @@ import {Role} from 'app/shared/model/dto/user/Role';
 })
 export class UserListComponent implements AfterViewInit {
   /**
+   * Management of the table sorting
+   * @type {MatSort}
+   */
+  @ViewChild(MatSort) matSort: MatSort;
+  /**
+   * Management of the table pagination
+   * @type {MatPaginator}
+   */
+  @ViewChild(MatPaginator) matPaginator: MatPaginator;
+
+  /**
    * The object that hold data management
-   * @type {MatTableDataSource<User>}  The mat table of users
+   * @type {MatTableDataSource<User>}
    */
   matTableDataSource = new MatTableDataSource<User>();
 
   /**
    * Column displayed on the mat table
-   * @type {string[]} The list of column references
+   * @type {string[]}
    */
   displayedColumns = ['username', 'fullname', 'mail', 'roles', 'edit', 'delete'];
   /**
    * Management of the spinner
-   * @type {boolean} True when we are loading result, false otherwise
+   * @type {boolean}
    */
   isLoadingResults = false;
   /**
@@ -68,25 +79,16 @@ export class UserListComponent implements AfterViewInit {
   resultsLength = 0;
 
   /**
-   * Management of the table sorting
-   */
-  @ViewChild(MatSort) matSort: MatSort;
-  /**
-   * Management of the table pagination
-   */
-  @ViewChild(MatPaginator) matPaginator: MatPaginator;
-
-  /**
    * The constructor
    *
    * @param {UserService} userService The user service to inject
-   * @param {RoleService} _roleService The role service to inject
+   * @param {RoleService} roleService The role service to inject
    * @param {ChangeDetectorRef} changeDetectorRef The change detector service to inject
    * @param {MatDialog} matDialog The mat dialog service to inject
    * @param {ToastService} toastService The toast service to inject
    */
   constructor(private userService: UserService,
-              private _roleService: RoleService,
+              private roleService: RoleService,
               private changeDetectorRef: ChangeDetectorRef,
               private matDialog: MatDialog,
               private toastService: ToastService) {
@@ -131,12 +133,13 @@ export class UserListComponent implements AfterViewInit {
           this.matTableDataSource.sort = this.matSort;
         });
 
-    this.matTableDataSource.sortingDataAccessor = (item: any, property) => {
+    // Apply sort custom rules for user
+    this.matTableDataSource.sortingDataAccessor = (user: User, property: string) => {
       switch (property) {
         case 'roles':
-          return this.getRolesName(item.roles);
+          return this.getRolesName(user.roles);
         default:
-          return item[property];
+          return user[property];
       }
     };
   }
@@ -148,7 +151,7 @@ export class UserListComponent implements AfterViewInit {
    * @returns {string} The list of roles has string
    */
   getRolesName(roles: Role[]): string {
-    return this._roleService.getRolesNameAsString(roles);
+    return this.roleService.getRolesNameAsString(roles);
   }
 
   /**

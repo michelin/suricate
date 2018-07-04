@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+/**
+ * The list of widget availability types
+ */
 export enum WidgetAvailabilityEnum {
   ACTIVATED = 'ACTIVATED',
   DISABLED = 'DISABLED',

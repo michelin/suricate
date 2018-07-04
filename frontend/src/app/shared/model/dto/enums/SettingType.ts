@@ -16,6 +16,9 @@
  *
  */
 
+/**
+ * The list of settings type
+ */
 export enum SettingType {
   TEMPLATE = 'TEMPLATE'
 }

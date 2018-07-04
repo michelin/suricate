@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+/**
+ * The asset representation
+ */
 export class Asset {
   id: string;
   content: string;

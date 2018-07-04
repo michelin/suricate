@@ -18,14 +18,15 @@ import {ChangeDetectorRef, Component, Inject, OnInit, ViewChild} from '@angular/
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatHorizontalStepper} from '@angular/material';
 import {CustomValidators} from 'ng2-validation';
-import {DashboardService} from '../../../dashboard/dashboard.service';
-import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
-import {User} from '../../../../shared/model/dto/user/User';
-import {UserService} from '../../../user/user.service';
+import {ColorPickerService} from 'ngx-color-picker';
 import {Observable} from 'rxjs/Observable';
 import {empty} from 'rxjs/observable/empty';
+import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
+
+import {DashboardService} from '../../../dashboard/dashboard.service';
+import {User} from '../../../../shared/model/dto/user/User';
+import {UserService} from '../../../user/user.service';
 import {Project} from '../../../../shared/model/dto/Project';
-import {ColorPickerService} from 'ngx-color-picker';
 
 @Component({
   selector: 'app-add-dashboard-dialog',
@@ -35,35 +36,49 @@ import {ColorPickerService} from 'ngx-color-picker';
 export class AddDashboardDialogComponent implements OnInit {
   /**
    * Mat horizontal stepper
+   * @type {MatHorizontalStepper}
    */
   @ViewChild('addDashboardStepper') addDashboardStepper: MatHorizontalStepper;
 
   /**
    * Dashboard form group
+   * @type {FormGroup}
    */
-  dashboardForm:      FormGroup;
+  dashboardForm: FormGroup;
 
   /**
    * Tell if the form has been completed or not
+   * @type {boolean}
    */
   dashboardFormCompleted: boolean;
 
   /**
    * User form group
+   * @type {FormGroup}
    */
-  addUserForm:        FormGroup;
+  addUserForm: FormGroup;
   /**
    * Observable of users (Used for auto completion
+   * @type {Observable<User[]>}
    */
-  userAutoComplete:   Observable<User[]>;
+  userAutoComplete$: Observable<User[]>;
   /**
    * The current project
+   * @type {Project}
    */
-  projectAdded:       Project;
+  projectAdded: Project;
 
+  /**
+   * Tel if we open the dialog in edit mode or not
+   * @type {boolean}
+   */
   isEditMode = false;
 
-  dashboardBackgroundColor = '#424242';
+  /**
+   * The default dashboard background color
+   * @type {string}
+   */
+  dashboardBackgroundColor = '#42424200';
 
   /**
    * Constructor
@@ -136,10 +151,10 @@ export class AddDashboardDialogComponent implements OnInit {
       'username': ['', [Validators.required]]
     });
     // Populate user autocomplete
-    this.userAutoComplete = this.addUserForm.get('username').valueChanges.pipe(
+    this.userAutoComplete$ = this.addUserForm.get('username').valueChanges.pipe(
         debounceTime(500),
         distinctUntilChanged(),
-        switchMap( username => username ? this.userService.searchUserByUsername(username) : empty<User[]>())
+        switchMap(username => username ? this.userService.searchUserByUsername(username) : empty<User[]>())
     );
   }
 
@@ -158,8 +173,10 @@ export class AddDashboardDialogComponent implements OnInit {
    */
   saveDashboard() {
     if (this.dashboardForm.valid) {
-      this.projectAdded = { ...this.projectAdded,
-                            ...this.dashboardForm.value};
+      this.projectAdded = {
+        ...this.projectAdded,
+        ...this.dashboardForm.value
+      };
       this.projectAdded.cssStyle = this.getGridCss();
 
       if (!this.isEditMode) {
@@ -179,7 +196,7 @@ export class AddDashboardDialogComponent implements OnInit {
     this.projectAdded = project;
     this.dashboardFormCompleted = true;
     this.changeDetectorRef.detectChanges();
-    this.dashboardService.currendDashbordSubject.next(project);
+    this.dashboardService.currentDisplayedDashboardValue = project;
     this.addDashboardStepper.next();
   }
 
@@ -192,11 +209,17 @@ export class AddDashboardDialogComponent implements OnInit {
     return `background-color:${this.dashboardBackgroundColor};`;
   }
 
+  /**
+   * Get the CSS property
+   *
+   * @param {string} property The css property to find
+   * @returns {string} The related value
+   */
   private getPropertyFromGridCss(property: string): string {
     const propertyArray = this.projectAdded.cssStyle.split(';');
     return propertyArray
-            .filter((currentProperty: string) => currentProperty.split(':')[0] === property)[0]
-            .split(':')[1];
+        .filter((currentProperty: string) => currentProperty.split(':')[0] === property)[0]
+        .split(':')[1];
   }
 
   /**

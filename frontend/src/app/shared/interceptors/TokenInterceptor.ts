@@ -15,34 +15,46 @@
  */
 
 import {Injectable} from '@angular/core';
-import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
+import {HttpEvent, HttpHandler, HttpRequest} from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
 
 import {AuthenticationService} from '../../modules/authentication/authentication.service';
-import {AbstractHttpService} from '../services/abstract-http.service';
 import {TokenService} from '../auth/token.service';
-
+import {baseApiEndpoint} from '../../app.constant';
 
 /**
  * The token interceptor
  */
 @Injectable()
-export class TokenInterceptor implements HttpInterceptor {
+export class TokenInterceptor {
 
-  constructor(private authenticationService: AuthenticationService, private _tokenService: TokenService) {
+  /**
+   * Constructor
+   *
+   * @param {AuthenticationService} authenticationService The authentication service to inject
+   * @param {TokenService} tokenService The token service to inject
+   */
+  constructor(private authenticationService: AuthenticationService,
+              private tokenService: TokenService) {
   }
 
+  /**
+   * Method implemented from HttpInterceptor
+   *
+   * @param {HttpRequest<any>} request The request sent
+   * @param {HttpHandler} next The next interceptor
+   * @returns {Observable<HttpEvent<any>>}
+   */
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (!request ||
-        !request.url ||
-        (
-            /^http/.test(request.url) &&
-            !(AbstractHttpService.BASE_API_URL && request.url.startsWith(AbstractHttpService.BASE_API_URL))
-        )) {
+    if (!request || !request.url ||
+        (/^http/.test(request.url) &&
+            !(baseApiEndpoint && request.url.startsWith(baseApiEndpoint))
+        )
+    ) {
       return next.handle(request);
     }
 
-    const token = this._tokenService.token || sessionStorage.getItem('token');
+    const token = this.tokenService.token || sessionStorage.getItem('token');
     if (!!token) {
       request = request.clone({
         setHeaders: {
