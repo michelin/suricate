@@ -25,6 +25,9 @@ import {User} from '../../../shared/model/dto/user/User';
 import {checkPasswordMatch} from '../../../shared/validators/CustomValidator';
 import {ToastService} from '../../../shared/components/toast/toast.service';
 import {ToastType} from '../../../shared/model/toastNotification/ToastType';
+import {authenticationProviderKey, authenticationProviderLDAP} from '../../../app.constant';
+import {ApplicationProperties} from '../../../shared/model/ApplicationProperties';
+import {ConfigurationService} from '../../configuration/configuration.service';
 
 /**
  * Component that register a new user
@@ -72,17 +75,26 @@ export class RegisterComponent implements OnInit {
    * @param {AuthenticationService} authenticationService The authentication service to inject
    * @param {Router} router The router service to inject
    * @param {ToastService} toastService The toast service to inject
+   * @param {ConfigurationService} configurationService The configuration service to inject
    */
   constructor(private formBuilder: FormBuilder,
               private authenticationService: AuthenticationService,
               private router: Router,
-              private toastService: ToastService) {
+              private toastService: ToastService,
+              private configurationService: ConfigurationService) {
   }
 
   /**
    * Called when the component is init
    */
   ngOnInit() {
+    this.configurationService.getServerConfigurations().subscribe((applicationProperties: ApplicationProperties[]) => {
+      const authenticationProvider = applicationProperties.find(applicationProp => applicationProp.key === authenticationProviderKey);
+      if (authenticationProvider.value.toLowerCase() === authenticationProviderLDAP) {
+        this.router.navigate(['/login']);
+      }
+    });
+
     this.authenticationService.logout();
 
     this.passwordControl = this.formBuilder

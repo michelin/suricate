@@ -90,4 +90,30 @@ export const rolesApiEndpoint = `${baseApiEndpoint}/roles`;
 /*                  HTTP ERROR CONSTANTS                                    */
 /* ************************************************************************ */
 
+/**
+ * Invalid grant error returned by spring oauth2
+ * @type {string}
+ */
 export const badCredentialError = 'invalid_grant';
+
+/* ************************************************************************ */
+/*                Server Configuration CONSTANTS                            */
+/* ************************************************************************ */
+
+/**
+ * LDAP authentication provider
+ * @type {string}
+ */
+export const authenticationProviderLDAP = 'ldap';
+
+/**
+ * Database authentication provider
+ * @type {string}
+ */
+export const authenticationProviderDatabase = 'database';
+
+/**
+ * Authentication provider key on config properties
+ * @type {string}
+ */
+export const authenticationProviderKey = 'authentication.provider';

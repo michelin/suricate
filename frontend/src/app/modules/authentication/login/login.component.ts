@@ -19,6 +19,9 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 
 import {AuthenticationService} from '../authentication.service';
+import {ConfigurationService} from '../../configuration/configuration.service';
+import {ApplicationProperties} from '../../../shared/model/ApplicationProperties';
+import {authenticationProviderKey, authenticationProviderLDAP} from '../../../app.constant';
 
 /**
  * Manage the login page
@@ -48,21 +51,33 @@ export class LoginComponent implements OnInit {
   formSubmitAttempt = false;
 
   /**
+   * True if the user provider is LDAP
+   */
+  isLdapServerUserProvider: boolean;
+
+  /**
    * Constructor
    *
    * @param {Router} router The router service
    * @param {AuthenticationService} authenticationService The authentication service
    * @param {FormBuilder} formBuilder The form builder service
+   * @param {ConfigurationService} configurationService The configuration service to inject
    */
   constructor(private router: Router,
               private authenticationService: AuthenticationService,
-              private formBuilder: FormBuilder) {
+              private formBuilder: FormBuilder,
+              private configurationService: ConfigurationService) {
   }
 
   /**
    * Init objects
    */
   ngOnInit() {
+    this.configurationService.getServerConfigurations().subscribe((applicationProperties: ApplicationProperties[]) => {
+      const authenticationProvider = applicationProperties.find(applicationProp => applicationProp.key === authenticationProviderKey);
+      this.isLdapServerUserProvider = authenticationProvider.value.toLowerCase() === authenticationProviderLDAP;
+    });
+
     this.authenticationService.logout();
 
     this.loginForm = this.formBuilder.group({

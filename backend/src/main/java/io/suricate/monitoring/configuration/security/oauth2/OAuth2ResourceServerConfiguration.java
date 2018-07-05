@@ -89,6 +89,7 @@ public class OAuth2ResourceServerConfiguration extends ResourceServerConfigurerA
             .antMatchers("/h2-console/**").permitAll()
             .antMatchers("/api/oauth/token").permitAll()
             .antMatchers("/api/users/register").permitAll()
+            .antMatchers("/api/configurations/application").permitAll()
             .antMatchers("/api/projects/project/{token}").permitAll()
             .antMatchers("/api/swagger-ui.html").permitAll()
             .antMatchers("/api/asset/**").permitAll()

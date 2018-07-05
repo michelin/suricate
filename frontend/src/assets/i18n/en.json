@@ -82,5 +82,6 @@
   "not.registered": "Not registered ?",
   "sign.in": "Sign In",
   "sign.up": "Sign up here !",
+  "login.ldap.auth": "You can use your LDAP account to Sign in",
   "configuration.category": "Category"
 }
