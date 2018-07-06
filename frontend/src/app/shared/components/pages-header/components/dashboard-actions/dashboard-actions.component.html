@@ -2,7 +2,8 @@
   <mat-icon>add</mat-icon>
 </button>
 
-<button mat-mini-fab color="accent" matTooltip="{{ 'dashboard.settings' | translate }}" (click)="openEditDashboardDialog()">
+<button mat-mini-fab color="accent" matTooltip="{{ 'dashboard.settings' | translate }}"
+        (click)="openEditDashboardDialog()">
   <mat-icon>settings_applications</mat-icon>
 </button>
 
@@ -10,12 +11,13 @@
   <mat-icon>refresh</mat-icon>
 </button>
 
-<a [routerLink]="['/tv']" [queryParams]="{token: project.token}" target="_blank" >
-  <button mat-mini-fab  color="accent" matTooltip="{{ 'tv.view' | translate }}">
+<a *ngIf="project" [routerLink]="['/tv']" [queryParams]="{token: project.token}" target="_blank">
+  <button mat-mini-fab color="accent" matTooltip="{{ 'tv.view' | translate }}">
     <mat-icon>tv</mat-icon>
   </button>
 </a>
 
-<button mat-mini-fab  color="accent" matTooltip="{{ 'screen.management' | translate }}" (click)="openTvManagementDialog()">
+<button mat-mini-fab color="accent" matTooltip="{{ 'screen.management' | translate }}"
+        (click)="openTvManagementDialog()">
   <mat-icon>live_tv</mat-icon>
 </button>
