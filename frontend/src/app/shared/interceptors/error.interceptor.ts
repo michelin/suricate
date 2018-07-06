@@ -76,6 +76,6 @@ export class ErrorInterceptor implements HttpInterceptor {
    * Display the message when an unknown error occured
    */
   displayUnknowErrorMessage() {
-    this.toastService.sendMessage('Unknown error', ToastType.DANGER, 'An unknow error has occured, please contact an administrator');
+    this.toastService.sendMessage('Server Unavailable', ToastType.DANGER, 'The server is not responsding, please contact an administrator');
   }
 }
