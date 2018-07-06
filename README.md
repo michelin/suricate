@@ -7,9 +7,13 @@
 [![GitHub PR](https://img.shields.io/github/issues-pr/suricate-io/suricate.svg)](https://github.com/suricate-io/suricate/pulls/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-## ⚡️ Global information
+:construction_worker: **Work in progress... First release in plan for July 2018 but feel free to help** :construction_worker:
 
-:construction_worker: **Work in progress... First release in plan for June 2018 but feel free to help** :construction_worker:
+## 📚 Wiki :construction_worker:
+
+Brand new wiki is in construction talking about few things but much more to come 🙌
+
+👉 [I wanna see it](https://github.com/suricate-io/suricate/wiki)
 
 ## :beers: Contribution
 
@@ -19,8 +23,4 @@ Everyone is welcome to contribute to Suricate. You have several possibilities:
 * Suggest a [feature](https://github.com/suricate-io/suricate/issues/new?template=improvement.md)
 * Developp a feature and create a [pull request](https://github.com/suricate-io/suricate/pulls)
 
-## 📚 Wiki :construction_worker:
-
-Brand new wiki is in construction talking about installation, configuration and much more
-
-👉 [I wanna see it](https://github.com/suricate-io/suricate/wiki)
+But you need to read our [Contribution guide](https://github.com/suricate-io/suricate/blob/dev/CONTRIBUTING.md) first 🙏
