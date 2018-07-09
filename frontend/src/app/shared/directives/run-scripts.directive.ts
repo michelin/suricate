@@ -46,7 +46,7 @@ export class RunScriptsDirective implements OnInit {
     setTimeout(() => {
       // Wait for DOM rendering
       this.reinsertScripts();
-    });
+    }, 0);
   }
 
   /**
@@ -81,6 +81,6 @@ export class RunScriptsDirective implements OnInit {
     // Wait for DOM rendering
     setTimeout(() => {
       this.scriptRenderingFinished.emit(true);
-    }, 300);
+    }, 500);
   }
 }

@@ -58,12 +58,10 @@ export class ErrorInterceptor implements HttpInterceptor {
                       case 400:
                         if (httpError.error.error === badCredentialError) {
                           this.toastService.sendMessage('Bad credentials', ToastType.DANGER, 'Wrong login or password');
-                        } else {
-                          this.displayUnknowErrorMessage();
                         }
                         break;
 
-                      default:
+                      case 0:
                         this.displayUnknowErrorMessage();
                         break;
                     }
