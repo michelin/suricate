@@ -548,7 +548,7 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
             fromEvent<MouseEvent>(deleteButton, 'click')
                 .pipe(
                     takeWhile(() => this.isAlive && this._isGridItemInit),
-                    map((mouseEvent: MouseEvent) => mouseEvent.toElement.closest('.widget').querySelector('.btn-widget-delete'))
+                    map((mouseEvent: any) => mouseEvent.target.closest('.widget').querySelector('.btn-widget-delete'))
                 )
                 .subscribe((deleteButtonElement: any) => {
                   this.deleteProjectWidgetFromDashboard(+deleteButtonElement.getAttribute('data-project-widget-id'));
@@ -575,7 +575,7 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
             fromEvent<MouseEvent>(editButton, 'click')
                 .pipe(
                     takeWhile(() => this.isAlive && this._isGridItemInit),
-                    map((mouseEvent: MouseEvent) => mouseEvent.toElement.closest('.widget').querySelector('.btn-widget-edit'))
+                    map((mouseEvent: any) => mouseEvent.target.closest('.widget').querySelector('.btn-widget-edit'))
                 )
                 .subscribe((editButtonElement: any) => {
                   this.editProjectWidgetFromDashboard(+editButtonElement.getAttribute('data-project-widget-id'));
