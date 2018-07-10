@@ -16,31 +16,31 @@
 
 package io.suricate.monitoring.controllers.api;
 
+import io.suricate.monitoring.controllers.api.error.exception.ApiException;
 import io.suricate.monitoring.model.entity.Asset;
 import io.suricate.monitoring.service.api.AssetService;
 import io.suricate.monitoring.utils.IdUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.context.request.WebRequest;
 
 /**
  * Asset controller
  */
 @RestController
-@Api(tags = {"Asset"})
 @RequestMapping("/api/asset")
+@Api(value = "Asset Controller", tags = {"Asset"})
 public class AssetController {
 
     /**
@@ -65,19 +65,23 @@ public class AssetController {
 
     /**
      * Get asset for the specified token
+     *
      * @param token the asset token used to identify the asset
      * @return the asset data
      */
     @RequestMapping(path = "/{token}", method = RequestMethod.GET)
-    @ApiOperation(value = "Get asset details", consumes = MediaType.APPLICATION_JSON_VALUE, notes="", response = ResponseEntity.class)
-    @ApiResponse(code = 200, message = "Assets details fetched successfully.")
-    public ResponseEntity<byte[]> getAsset(WebRequest webRequest, @PathVariable("token") String token) {
+    @ApiOperation(value = "Get an asset by its token", response = byte.class)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, response = byte.class, message = "Ok", responseContainer = "List"),
+        @ApiResponse(code = 401, response = ApiException.class, message = "Invalid token")
+    })
+    public ResponseEntity<byte[]> getAsset(@PathVariable("token") String token) {
         Asset asset = assetService.findOne(IdUtils.decrypt(token));
-        if (asset == null){
+
+        if (asset == null) {
             return ResponseEntity.notFound().build();
-        } else if (webRequest.checkNotModified(asset.getLastModifiedDate().getTime())){
-            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
         }
+
         return ResponseEntity
             .ok()
             .contentType(MediaType.parseMediaType(asset.getContentType()))
