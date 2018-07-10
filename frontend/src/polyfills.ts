@@ -70,3 +70,19 @@ import 'web-animations-js'; // Run `npm install --save web-animations-js`.
 /***************************************************************************************************
  * APPLICATION IMPORTS
  */
+
+/** IE11 polyfill */
+import 'core-js/es7/array';
+import 'core-js/es7/reflect';
+
+/** IE11 requires to enable URLSearchParams. */
+import 'url-search-params-polyfill'; // Run `npm install --save url-search-params-polyfill`
+
+/**
+ * Date, currency, decimal and percent pipes.
+ * Needed for: All but Chrome, Firefox, Edge, IE11 and Safari 10
+ */
+// Run `npm install --save intl`.
+import 'intl';
+import 'intl/locale-data/complete.js';
+import 'intl/locale-data/jsonp/en.js';
