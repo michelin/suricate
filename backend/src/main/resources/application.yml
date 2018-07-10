@@ -1,6 +1,9 @@
 ### App Info ###
 info.app.version: 1.0-SNAPSHOT
 
+## tomcat server port
+server.port: 8080
+
 ## Spring modules info ##
 spring:
   ### Database ###
@@ -112,10 +115,20 @@ application:
       url: https://github.com/suricate-io/widgets
       branch: master
     updateEnable: true
-
-app:
-  trust-store:
-  trust-store-password:
+  ### Swagger Springfox properties ###
+  swagger:
+    title: Suricate API
+    description: Rest API for integrating with backend layer.
+    version: 1.0
+    termsOfServiceUrl:
+    license: Apache 2.0
+    licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.html
+    groupName: suricate-api
+    protocols: http,https
+    defaultIncludePattern: /api/.*
+    contactName: Suricate-io
+    contactUrl: https://github.com/suricate-io/suricate
+    contactEmail:
 
 ### proxy ###
 #proxy.host:

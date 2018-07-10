@@ -29,141 +29,289 @@ import org.springframework.web.cors.CorsConfiguration;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
+/**
+ * Hold the custom properties from "properties.yml" files
+ */
 @Configuration
 @PropertySource("classpath:application.yml")
 @ConfigurationProperties(prefix = "application", ignoreUnknownFields = false)
-@Getter @Setter
+@Getter
+@Setter
 public class ApplicationProperties {
 
     /**
-     * Cors configuration
+     * Cors properties
      */
     public final CorsConfiguration cors = new CorsConfiguration();
 
     /**
-     * Authentification configuration
+     * Authentication properties
      */
     public final Authentication authentication = new Authentication();
 
     /**
-     * SSL configuration
+     * SSL properties
      */
     public final Ssl ssl = new Ssl();
 
     /**
-     * Widgets configuration
+     * Widgets properties
      */
     public final Widgets widgets = new Widgets();
 
+    /**
+     * The swagger properties
+     */
+    public final Swagger swagger = new Swagger();
 
 
-
-
-    @Getter @Setter
+    /**
+     * Hold the Authentication properties info
+     */
+    @Getter
+    @Setter
     public static class Authentication {
-        /** LDAP configuration */
+        /**
+         * LDAP configuration
+         */
         public final Ldap ldap = new Ldap();
 
-        /** JWT Configuration */
+        /**
+         * JWT Configuration
+         */
         public final Jwt jwt = new Jwt();
 
-        /** Authentication provider */
+        /**
+         * Authentication provider
+         */
         @NotNull
         @Pattern(regexp = "ldap|database")
         public String provider;
     }
 
-    @Getter @Setter
+    /**
+     * Hold the LDAP properties info
+     */
+    @Getter
+    @Setter
     public static class Ldap {
-        /** LDAP Url */
+        /**
+         * LDAP Url
+         */
         public String url;
 
-        /** User search filter */
+        /**
+         * User search filter
+         */
         public String userSearchFilter;
 
-        /** LDAP FirstName attribut */
+        /**
+         * LDAP FirstName attribut
+         */
         public String firstNameAttributName;
 
-        /** LDAP LastName attribut */
+        /**
+         * LDAP LastName attribut
+         */
         public String lastNameAttributName;
 
-        /** LDAP mail attribut */
+        /**
+         * LDAP mail attribut
+         */
         public String mailAttributName;
     }
 
-    @Getter @Setter
+    /**
+     * Hold the JWT properties info
+     */
+    @Getter
+    @Setter
     public static class Jwt {
 
-        /** Token validity in second */
+        /**
+         * Token validity in second
+         */
         @NotNull
         public long tokenValidity;
 
-        /** Token validity in second remember me */
+        /**
+         * Token validity in second remember me
+         */
         @NotNull
         public long tokenValidityRememberMe;
 
-        /** Jwt secret */
+        /**
+         * Jwt secret
+         */
         @NotNull
         public String secret;
     }
 
-    @Getter @Setter
+    /**
+     * Hold the SSL properties info
+     */
+    @Getter
+    @Setter
     public static class Ssl {
-        /** Key Store configuration */
+        /**
+         * Key Store configuration
+         */
         public final KeyStore keyStore = new KeyStore();
 
-        /** Trust store configuration */
+        /**
+         * Trust store configuration
+         */
         public final TrustStore trustStore = new TrustStore();
     }
 
-    @Getter @Setter
+    /**
+     * Hold the KeyStore properties info
+     */
+    @Getter
+    @Setter
     public static class KeyStore {
-        /** Key Store path */
+        /**
+         * Key Store path
+         */
         public String path;
 
-        /** Key Store password */
+        /**
+         * Key Store password
+         */
         public String password;
 
-        /** Key Store type */
+        /**
+         * Key Store type
+         */
         public String type;
     }
 
-    @Getter @Setter
+    /**
+     * Hold the TrustStore properties info
+     */
+    @Getter
+    @Setter
     public static class TrustStore {
-        /** Trust Store path */
+        /**
+         * Trust Store path
+         */
         public String path;
 
-        /** Trust Store password */
+        /**
+         * Trust Store password
+         */
         public String password;
 
-        /** Trust Store type */
+        /**
+         * Trust Store type
+         */
         public String type;
     }
 
-    @Getter @Setter
+    /**
+     * Hold the Widgets properties info
+     */
+    @Getter
+    @Setter
     public static class Widgets {
-        /** Widgets configuration in local folder **/
+        /**
+         * Widgets configuration in local folder
+         **/
         public final Local local = new Local();
 
-        /** Git widgets configuration */
+        /**
+         * Git widgets configuration
+         */
         public final Git git = new Git();
 
-        /** Enable the the widget update (Local and Git) */
+        /**
+         * Enable the the widget update (Local and Git)
+         */
         @NotNull
         public boolean updateEnable;
     }
 
-    @Getter @Setter
+    /**
+     * Hold the widgets Local properties info
+     */
+    @Getter
+    @Setter
     public static class Local {
-        /** The Local folder path */
+        /**
+         * The Local folder path
+         */
         public String folderPath;
     }
 
-    @Getter @Setter
+    /**
+     * Hold the Widgets Git properties info
+     */
+    @Getter
+    @Setter
     public static class Git {
-        /** The Git repository url */
+        /**
+         * The Git repository url
+         */
         public String url;
-        /** The git branch to scan */
+        /**
+         * The git branch to scan
+         */
         public String branch;
+    }
+
+    /**
+     * Hold the swagger properties info
+     */
+    @Getter
+    @Setter
+    public static class Swagger {
+        /**
+         * The Swagger API Title
+         */
+        public String title;
+        /**
+         * The Swagger API Description
+         */
+        public String description;
+        /**
+         * The API Version
+         */
+        public String version;
+        /**
+         * The site url for terms of service
+         */
+        public String termsOfServiceUrl;
+        /**
+         * The licence name
+         */
+        public String license;
+        /**
+         * The licence URL
+         */
+        public String licenseUrl;
+        /**
+         * The API group name
+         */
+        public String groupName;
+        /**
+         * The list of protocols
+         */
+        public String protocols;
+        /**
+         * The default include pattern
+         */
+        public String defaultIncludePattern;
+        /**
+         * The swagger contact name
+         */
+        public String contactName;
+        /**
+         * The swagger contact url
+         */
+        public String contactUrl;
+        /**
+         * The swagger contact email
+         */
+        public String contactEmail;
     }
 }
