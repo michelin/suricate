@@ -17,13 +17,14 @@
 package io.suricate.monitoring.service;
 
 import io.suricate.monitoring.configuration.ApplicationProperties;
-import io.suricate.monitoring.model.entity.widget.Category;
 import io.suricate.monitoring.model.entity.Library;
+import io.suricate.monitoring.model.entity.widget.Category;
 import io.suricate.monitoring.service.api.LibraryService;
 import io.suricate.monitoring.service.api.WidgetService;
-import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
 import io.suricate.monitoring.service.scheduler.NashornWidgetScheduler;
+import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
 import io.suricate.monitoring.utils.WidgetUtils;
+import io.suricate.monitoring.utils.exception.ConfigurationException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
@@ -36,7 +37,6 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
@@ -53,7 +53,9 @@ public class GitService {
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(GitService.class);
 
-    /** The application properties */
+    /**
+     * The application properties
+     */
     private final ApplicationProperties applicationProperties;
 
     /**
@@ -78,10 +80,11 @@ public class GitService {
 
     /**
      * Contructor using fields
-     * @param widgetService widget service
-     * @param libraryService library service
+     *
+     * @param widgetService             widget service
+     * @param libraryService            library service
      * @param dashboardWebSocketService socket service
-     * @param nashornWidgetScheduler widget executor
+     * @param nashornWidgetScheduler    widget executor
      */
     @Autowired
     public GitService(final WidgetService widgetService,
@@ -98,8 +101,8 @@ public class GitService {
 
     /**
      * Methods used to clone widget repo
+     *
      * @return the folder containing the widget repo
-     * @throws IOException
      */
     public File cloneWidgetRepo() throws Exception {
         if (StringUtils.isNotBlank(applicationProperties.widgets.local.folderPath)) {
@@ -107,12 +110,19 @@ public class GitService {
             return new File(applicationProperties.widgets.local.folderPath);
         }
 
+        if (StringUtils.isBlank(applicationProperties.widgets.git.url)) {
+            throw new ConfigurationException("A git url is mandatory when no widget local folder is set", "application.widgets.git.url");
+        }
+        if (StringUtils.isBlank(applicationProperties.widgets.git.branch)) {
+            throw new ConfigurationException("A git branch is mandatory when no widget local folder is set", "application.widgets.git.branch");
+        }
         return cloneRepo(applicationProperties.widgets.git.url, applicationProperties.widgets.git.branch);
     }
 
     /**
      * Clone a remote repository on local system.
-     * @param url git repository url
+     *
+     * @param url    git repository url
      * @param branch git branch
      * @return File object on local repo
      */
@@ -129,16 +139,16 @@ public class GitService {
 
             String remoteRepo = new URL(url).toExternalForm();
             git = Git.cloneRepository()
-                    .setURI(remoteRepo)
-                    .setBranch(branch)
-                    .setDirectory(localRepo)
-                    .call();
+                .setURI(remoteRepo)
+                .setBranch(branch)
+                .setDirectory(localRepo)
+                .call();
         } catch (Exception e) {
-            LOGGER.error(e.getMessage(),e);
+            LOGGER.error(e.getMessage(), e);
             FileUtils.deleteQuietly(localRepo);
             throw e;
         } finally {
-            if (git != null){
+            if (git != null) {
                 git.getRepository().close();
             }
         }
@@ -151,9 +161,9 @@ public class GitService {
      */
     @Async
     @Transactional
-    public void updateWidgetFromGit(){
+    public void updateWidgetFromGit() {
         LOGGER.info("Update widgets from Git repo");
-        if (!applicationProperties.widgets.updateEnable){
+        if (!applicationProperties.widgets.updateEnable) {
             LOGGER.info("Widget update disabled");
             return;
         }
@@ -162,13 +172,13 @@ public class GitService {
             folder = cloneWidgetRepo();
             if (folder != null) {
                 // Libraries
-                File libraryFolder = new File(folder.getAbsoluteFile().getAbsolutePath() + SystemUtils.FILE_SEPARATOR + "libraries"+ SystemUtils.FILE_SEPARATOR);
+                File libraryFolder = new File(folder.getAbsoluteFile().getAbsolutePath() + SystemUtils.FILE_SEPARATOR + "libraries" + SystemUtils.FILE_SEPARATOR);
                 List<Library> libraries = WidgetUtils.parseLibraryFolder(libraryFolder);
                 libraries = libraryService.updateLibraryInDatabase(libraries);
-                Map<String, Library> mapLib = libraries.stream().collect(Collectors.toMap(item -> ((Library)item).getTechnicalName(), item -> item));
+                Map<String, Library> mapLib = libraries.stream().collect(Collectors.toMap(item -> ((Library) item).getTechnicalName(), item -> item));
 
                 // Parse folder
-                File widgetFolder = new File(folder.getAbsoluteFile().getAbsolutePath() + SystemUtils.FILE_SEPARATOR + "content"+ SystemUtils.FILE_SEPARATOR);
+                File widgetFolder = new File(folder.getAbsoluteFile().getAbsolutePath() + SystemUtils.FILE_SEPARATOR + "content" + SystemUtils.FILE_SEPARATOR);
                 List<Category> list = WidgetUtils.parseWidgetFolder(widgetFolder);
                 widgetService.updateWidgetInDatabase(list, mapLib);
             }
