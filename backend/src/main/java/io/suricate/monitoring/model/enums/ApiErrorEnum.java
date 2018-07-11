@@ -31,6 +31,7 @@ public enum ApiErrorEnum {
     /**
      * Enums
      */
+    NO_CONTENT("No Content", "no.content", HttpStatus.NO_CONTENT),
     BAD_REQUEST("Bad Request", "bad.request", HttpStatus.BAD_REQUEST),
     PROJECT_TOKEN_INVALID("Cannot decrypt project token", "project.token.invalid", HttpStatus.BAD_REQUEST),
     AUTHENTICATION_ERROR("Authentication error, token expired or invalid", "authentication.error", HttpStatus.UNAUTHORIZED),
