@@ -20,6 +20,7 @@ import io.suricate.monitoring.model.dto.websocket.WebsocketClient;
 import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.service.api.ProjectService;
 import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
+import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -54,7 +55,7 @@ public class ScreenController {
     /**
      * Constructor
      *
-     * @param projectService The project service to inject
+     * @param projectService            The project service to inject
      * @param dashboardWebSocketService The dashboard websocket to inject
      */
     public ScreenController(final ProjectService projectService,
@@ -67,7 +68,7 @@ public class ScreenController {
      * connect a new Screen for a dashboard by screen code
      *
      * @param projectToken The project id we want to display
-     * @param screenCode The screen code to enroll
+     * @param screenCode   The screen code to enroll
      */
     @RequestMapping(value = "connect/{screenCode}/project/{projectToken}", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -75,7 +76,12 @@ public class ScreenController {
     public void connectProjectToScreen(@PathVariable("projectToken") String projectToken,
                                        @PathVariable("screenCode") String screenCode) {
         Optional<Project> projectOptional = projectService.getOneByToken(projectToken);
-        projectOptional.ifPresent(project -> this.dashboardWebSocketService.connectUniqueScreen(project, screenCode));
+
+        if (!projectOptional.isPresent()) {
+            throw new ObjectNotFoundException(Project.class, projectOptional);
+        }
+
+        this.dashboardWebSocketService.connectUniqueScreen(projectOptional.get(), screenCode);
     }
 
     /**

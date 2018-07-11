@@ -20,6 +20,7 @@ import io.suricate.monitoring.model.dto.setting.SettingDto;
 import io.suricate.monitoring.model.entity.setting.Setting;
 import io.suricate.monitoring.model.mapper.setting.SettingMapper;
 import io.suricate.monitoring.service.api.SettingService;
+import io.suricate.monitoring.utils.exception.NoContentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,10 +81,7 @@ public class SettingController {
         Optional<List<Setting>> settingsOptional = settingService.getAll();
 
         if (!settingsOptional.isPresent()) {
-            return ResponseEntity
-                .noContent()
-                .cacheControl(CacheControl.noCache())
-                .build();
+            throw new NoContentException(Setting.class);
         }
 
         return ResponseEntity

@@ -21,6 +21,8 @@ import io.suricate.monitoring.model.dto.ConfigurationDto;
 import io.suricate.monitoring.model.entity.Configuration;
 import io.suricate.monitoring.model.mapper.ConfigurationMapper;
 import io.suricate.monitoring.service.api.ConfigurationService;
+import io.suricate.monitoring.utils.exception.NoContentException;
+import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -79,12 +81,7 @@ public class ConfigurationController {
         Optional<List<Configuration>> configurations = configurationService.getAll();
 
         if (!configurations.isPresent()) {
-            LOGGER.debug("No configurations found");
-
-            return ResponseEntity
-                .noContent()
-                .cacheControl(CacheControl.noCache())
-                .build();
+            throw new NoContentException(Configuration.class);
         }
 
         return ResponseEntity
@@ -106,7 +103,7 @@ public class ConfigurationController {
         Optional<Configuration> configurationOptional = configurationService.getOneByKey(key);
 
         if (!configurationOptional.isPresent()) {
-            return ResponseEntity.notFound().cacheControl(CacheControl.noCache()).build();
+            throw new ObjectNotFoundException(Configuration.class, key);
         }
 
         return ResponseEntity
@@ -130,10 +127,7 @@ public class ConfigurationController {
         Optional<Configuration> configurationOptional = configurationService.getOneByKey(key);
 
         if (!configurationOptional.isPresent()) {
-            return ResponseEntity
-                .notFound()
-                .cacheControl(CacheControl.noCache())
-                .build();
+            throw new ObjectNotFoundException(Configuration.class, key);
         }
 
         Configuration configuration = configurationOptional.get();
@@ -158,10 +152,7 @@ public class ConfigurationController {
         Optional<Configuration> configurationOptional = configurationService.getOneByKey(key);
 
         if (!configurationOptional.isPresent()) {
-            return ResponseEntity
-                .notFound()
-                .cacheControl(CacheControl.noCache())
-                .build();
+            throw new ObjectNotFoundException(Configuration.class, key);
         }
 
         configurationService.deleteOneByKey(key);

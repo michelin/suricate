@@ -27,6 +27,7 @@ import io.suricate.monitoring.model.mapper.project.ProjectWidgetMapper;
 import io.suricate.monitoring.service.api.ProjectService;
 import io.suricate.monitoring.service.api.ProjectWidgetService;
 import io.suricate.monitoring.service.api.UserService;
+import io.suricate.monitoring.utils.exception.NoContentException;
 import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -123,12 +124,9 @@ public class ProjectController {
                     .cacheControl(CacheControl.noCache())
                     .body(projectMapper.toProjectDtosDefault(projects))
             )
-            .orElseGet(() ->
-                ResponseEntity
-                    .noContent()
-                    .cacheControl(CacheControl.noCache())
-                    .build()
-            );
+            .orElseGet(() -> {
+                throw new NoContentException(Project.class);
+            });
     }
 
     /**
@@ -143,12 +141,7 @@ public class ProjectController {
         Optional<User> user = userService.getOneByUsername(principal.getName());
 
         if (!user.isPresent()) {
-            LOGGER.debug("No user with username : {}", principal.getName());
-
-            return ResponseEntity
-                .notFound()
-                .cacheControl(CacheControl.noCache())
-                .build();
+            throw new ObjectNotFoundException(User.class, principal.getName());
         }
 
         List<Project> projects = projectService.getAllByUser(user.get());
@@ -174,10 +167,7 @@ public class ProjectController {
         Optional<User> user = userService.getOneByUsername(principal.getName());
 
         if (!user.isPresent()) {
-            return ResponseEntity
-                .notFound()
-                .cacheControl(CacheControl.noCache())
-                .build();
+            throw new ObjectNotFoundException(User.class, principal.getName());
         }
 
         Project project = projectService.createProject(user.get(), projectMapper.toNewProject(projectDto));
@@ -208,10 +198,7 @@ public class ProjectController {
         Optional<Project> projectOptional = projectService.getOneById(projectId);
 
         if (!projectOptional.isPresent()) {
-            return ResponseEntity
-                .notFound()
-                .cacheControl(CacheControl.noCache())
-                .build();
+            throw new ObjectNotFoundException(Project.class, projectId);
         }
 
         projectService.updateProject(
@@ -240,10 +227,7 @@ public class ProjectController {
         Optional<Project> project = projectService.getOneById(id);
 
         if (!project.isPresent()) {
-            return ResponseEntity
-                .notFound()
-                .cacheControl(CacheControl.noCache())
-                .build();
+            throw new ObjectNotFoundException(Project.class, id);
         }
 
         return ResponseEntity
@@ -264,10 +248,7 @@ public class ProjectController {
         Optional<Project> project = projectService.getOneByToken(token);
 
         if (!project.isPresent()) {
-            return ResponseEntity
-                .notFound()
-                .cacheControl(CacheControl.noCache())
-                .build();
+            throw new ObjectNotFoundException(Project.class, token);
         }
 
         return ResponseEntity
@@ -290,10 +271,7 @@ public class ProjectController {
         Optional<Project> projectOptional = projectService.getOneById(projectId);
 
         if (!projectOptional.isPresent()) {
-            return ResponseEntity
-                .notFound()
-                .cacheControl(CacheControl.noCache())
-                .build();
+            throw new ObjectNotFoundException(Project.class, projectId);
         }
 
         projectService.deleteProject(projectOptional.get());
@@ -404,10 +382,7 @@ public class ProjectController {
         Optional<Project> projectOptional = projectService.getOneById(projectId);
 
         if (!projectOptional.isPresent()) {
-            return ResponseEntity
-                .notFound()
-                .cacheControl(CacheControl.noCache())
-                .build();
+            throw new ObjectNotFoundException(Project.class, projectId);
         }
 
         projectWidgetService.updateWidgetPositionByProject(projectOptional.get(), projectWidgetPositionDtos);
@@ -431,7 +406,7 @@ public class ProjectController {
                                                                      @PathVariable("projectWidgetId") Long projectWidgetId) {
         Optional<Project> projectOptional = projectService.getOneById(projectId);
         if (!projectOptional.isPresent()) {
-            return ResponseEntity.notFound().cacheControl(CacheControl.noCache()).build();
+            throw new ObjectNotFoundException(Project.class, projectId);
         }
 
         projectWidgetService.removeWidgetFromDashboard(projectOptional.get(), projectWidgetId);
@@ -459,12 +434,12 @@ public class ProjectController {
 
         Optional<ProjectWidget> projectWidgetOptional = projectWidgetService.findByProjectIdAndProjectWidgetId(projectId, projectWidgetId);
         if (!projectWidgetOptional.isPresent()) {
-            return ResponseEntity.notFound().cacheControl(CacheControl.noCache()).build();
+            throw new ObjectNotFoundException(ProjectWidget.class, projectWidgetId);
         }
 
         Optional<Project> projectOptional = projectService.getOneById(projectId);
         if (!projectOptional.isPresent()) {
-            return ResponseEntity.notFound().cacheControl(CacheControl.noCache()).build();
+            throw new ObjectNotFoundException(Project.class, projectId);
         }
         ProjectWidget projectWidget = projectWidgetOptional.get();
         projectWidgetService.updateProjectWidget(projectWidget, projectWidgetDto.getCustomStyle(), projectWidgetDto.getBackendConfig());

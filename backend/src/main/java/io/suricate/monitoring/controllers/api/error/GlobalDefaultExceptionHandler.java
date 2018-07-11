@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -72,6 +73,26 @@ public class GlobalDefaultExceptionHandler {
             .body(new ApiErrorDto(extractMessage(ex.getBindingResult()), ApiErrorEnum.BAD_REQUEST));
     }
 
+    /**
+     * Throw when a user try access a resource that he can't
+     *
+     * @param ex the exception
+     * @return The related response entity
+     */
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<?> handleAccessDeniedException(AccessDeniedException ex) {
+        LOGGER.debug(ex.getMessage());
+        return ResponseEntity
+            .status(ApiErrorEnum.FORBIDDEN.getStatus())
+            .body(new ApiErrorDto(ApiErrorEnum.FORBIDDEN));
+    }
+
+    /**
+     * Manage the unknown exception
+     *
+     * @param ex the exception
+     * @return The related response entity
+     */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleException(Exception ex) {
         LOGGER.error(ex.getMessage(), ex);

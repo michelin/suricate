@@ -24,6 +24,8 @@ import io.suricate.monitoring.model.mapper.widget.CategoryMapper;
 import io.suricate.monitoring.model.mapper.widget.WidgetMapper;
 import io.suricate.monitoring.service.api.CategoryService;
 import io.suricate.monitoring.service.api.WidgetService;
+import io.suricate.monitoring.utils.exception.NoContentException;
+import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,10 +73,10 @@ public class WidgetController {
     /**
      * Constructor
      *
-     * @param widgetService Widget service to inject
+     * @param widgetService   Widget service to inject
      * @param categoryService The category service
-     * @param categoryMapper The category mapper
-     * @param widgetMapper The widget mapper
+     * @param categoryMapper  The category mapper
+     * @param widgetMapper    The widget mapper
      */
     @Autowired
     public WidgetController(final WidgetService widgetService,
@@ -97,11 +99,8 @@ public class WidgetController {
     public ResponseEntity<List<WidgetDto>> getWidgets() {
         Optional<List<Widget>> widgets = widgetService.getAll();
 
-        if(!widgets.isPresent()) {
-            return ResponseEntity
-                .noContent()
-                .cacheControl(CacheControl.noCache())
-                .build();
+        if (!widgets.isPresent()) {
+            throw new NoContentException(Widget.class);
         }
 
         return ResponseEntity
@@ -115,21 +114,18 @@ public class WidgetController {
     /**
      * Update a widget
      *
-     * @param widgetId The widget id to update
+     * @param widgetId             The widget id to update
      * @param widgetDtoWithChanges The object holding changes
      * @return The widget dto changed
      */
     @RequestMapping(value = "/{widgetId}", method = RequestMethod.POST)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<WidgetDto> updateWidget(@PathVariable("widgetId") Long widgetId,
-                                  @RequestBody WidgetDto widgetDtoWithChanges) {
+                                                  @RequestBody WidgetDto widgetDtoWithChanges) {
         Optional<Widget> widgetOpt = widgetService.updateWidget(widgetId, widgetDtoWithChanges);
 
-        if(!widgetOpt.isPresent()) {
-            return ResponseEntity
-                .notFound()
-                .cacheControl(CacheControl.noCache())
-                .build();
+        if (!widgetOpt.isPresent()) {
+            throw new ObjectNotFoundException(Widget.class, widgetId);
         }
 
         return ResponseEntity
@@ -148,6 +144,11 @@ public class WidgetController {
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<List<CategoryDto>> getCategories() {
         List<Category> categories = categoryService.getCategoriesOrderByName();
+
+        if (categories == null || !categories.isEmpty()) {
+            throw new NoContentException(Category.class);
+        }
+
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
@@ -167,11 +168,8 @@ public class WidgetController {
     public ResponseEntity<List<WidgetDto>> getWidgetByCategory(@PathVariable("id") Long id) {
         Optional<List<Widget>> widgets = widgetService.getWidgetsByCategory(id);
 
-        if(!widgets.isPresent()) {
-            ResponseEntity
-                .noContent()
-                .cacheControl(CacheControl.noCache())
-                .build();
+        if (!widgets.isPresent()) {
+            throw new NoContentException(Widget.class);
         }
 
         return ResponseEntity

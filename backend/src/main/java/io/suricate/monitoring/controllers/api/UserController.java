@@ -25,6 +25,7 @@ import io.suricate.monitoring.model.enums.AuthenticationMethod;
 import io.suricate.monitoring.model.mapper.role.UserMapper;
 import io.suricate.monitoring.service.api.UserService;
 import io.suricate.monitoring.service.api.UserSettingService;
+import io.suricate.monitoring.utils.exception.NoContentException;
 import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -36,6 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -106,10 +108,7 @@ public class UserController {
         Optional<List<User>> users = userService.getAllOrderByUsername();
 
         if (!users.isPresent()) {
-            return ResponseEntity
-                .noContent()
-                .cacheControl(CacheControl.noCache())
-                .build();
+            throw new NoContentException(User.class);
         }
 
         return ResponseEntity
@@ -131,10 +130,7 @@ public class UserController {
         Optional<List<User>> users = userService.getAllByUsernameStartWith(username);
 
         if (!users.isPresent()) {
-            return ResponseEntity
-                .noContent()
-                .cacheControl(CacheControl.noCache())
-                .build();
+            throw new NoContentException(User.class);
         }
 
         return ResponseEntity
@@ -203,10 +199,7 @@ public class UserController {
         Optional<User> userOptional = userService.getOne(userId);
 
         if (!userOptional.isPresent()) {
-            return ResponseEntity
-                .notFound()
-                .cacheControl(CacheControl.noCache())
-                .build();
+            throw new ObjectNotFoundException(User.class, userId);
         }
 
         userService.deleteUserByUserId(userOptional.get());
@@ -237,10 +230,7 @@ public class UserController {
         );
 
         if (!userOptional.isPresent()) {
-            return ResponseEntity
-                .notFound()
-                .cacheControl(CacheControl.noCache())
-                .build();
+            throw new ObjectNotFoundException(User.class, userId);
         }
 
         return ResponseEntity
@@ -265,11 +255,11 @@ public class UserController {
                                                       @RequestBody List<UserSettingDto> userSettingDtos) {
 
         Optional<User> userOptional = this.userService.getOneByUsername(principal.getName());
-        if (!userOptional.isPresent() || !userOptional.get().getId().equals(userId)) {
-            return ResponseEntity
-                .notFound()
-                .cacheControl(CacheControl.noCache())
-                .build();
+        if (!userOptional.isPresent()) {
+            throw new ObjectNotFoundException(User.class, userId);
+        }
+        if (!userOptional.get().getId().equals(userId)) {
+            throw new AccessDeniedException(String.format("User %s is not allowed to modify this resource", principal.getName()));
         }
 
         User user = userOptional.get();

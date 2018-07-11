@@ -20,6 +20,7 @@ import io.suricate.monitoring.model.dto.user.RoleDto;
 import io.suricate.monitoring.model.entity.user.Role;
 import io.suricate.monitoring.model.mapper.role.RoleMapper;
 import io.suricate.monitoring.service.api.RoleService;
+import io.suricate.monitoring.utils.exception.NoContentException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,10 +81,7 @@ public class RoleController {
         Optional<List<Role>> rolesOptional = roleService.getRoles();
 
         if (!rolesOptional.isPresent()) {
-            return ResponseEntity
-                .noContent()
-                .cacheControl(CacheControl.noCache())
-                .build();
+            throw new NoContentException(Role.class);
         }
 
         return ResponseEntity
