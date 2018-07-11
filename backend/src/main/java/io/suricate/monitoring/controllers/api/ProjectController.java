@@ -16,19 +16,18 @@
 
 package io.suricate.monitoring.controllers.api;
 
-import io.suricate.monitoring.controllers.api.error.exception.ApiException;
 import io.suricate.monitoring.model.dto.project.ProjectDto;
 import io.suricate.monitoring.model.dto.project.ProjectWidgetDto;
 import io.suricate.monitoring.model.dto.project.ProjectWidgetPositionDto;
 import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.entity.user.User;
-import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.model.mapper.project.ProjectMapper;
 import io.suricate.monitoring.model.mapper.project.ProjectWidgetMapper;
 import io.suricate.monitoring.service.api.ProjectService;
 import io.suricate.monitoring.service.api.ProjectWidgetService;
 import io.suricate.monitoring.service.api.UserService;
+import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -320,10 +319,10 @@ public class ProjectController {
         Optional<Project> project = projectService.getOneById(id);
 
         if (!user.isPresent()) {
-            throw new ApiException(ApiErrorEnum.USER_NOT_FOUND);
+            throw new ObjectNotFoundException(User.class, usernameMap.get("username"));
         }
         if (!project.isPresent()) {
-            throw new ApiException(ApiErrorEnum.PROJECT_NOT_FOUND);
+            throw new ObjectNotFoundException(Project.class, id);
         }
 
         projectService.addUserToProject(user.get(), project.get());
@@ -343,15 +342,16 @@ public class ProjectController {
      */
     @RequestMapping(value = "/{id}/users/{userId}", method = RequestMethod.DELETE)
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ProjectDto> deleteUserToProject(@PathVariable("id") Long id, @PathVariable("userId") Long userId) {
+    public ResponseEntity<ProjectDto> deleteUserToProject(@PathVariable("id") Long id,
+                                                          @PathVariable("userId") Long userId) {
         Optional<User> user = userService.getOne(userId);
         Optional<Project> project = projectService.getOneById(id);
 
         if (!user.isPresent()) {
-            throw new ApiException(ApiErrorEnum.USER_NOT_FOUND);
+            throw new ObjectNotFoundException(User.class, userId);
         }
         if (!project.isPresent()) {
-            throw new ApiException(ApiErrorEnum.PROJECT_NOT_FOUND);
+            throw new ObjectNotFoundException(Project.class, id);
         }
 
         projectService.deleteUserFromProject(user.get(), project.get());

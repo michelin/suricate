@@ -17,17 +17,21 @@
 package io.suricate.monitoring.model.dto.error;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.suricate.monitoring.model.dto.AbstractDto;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import lombok.*;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
 
 /**
  * Used for send errors through webservices
  */
-@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
+@Getter
+@Setter
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+@ToString
 public class ApiErrorDto extends AbstractDto {
     /**
      * The error message to send
@@ -54,4 +58,10 @@ public class ApiErrorDto extends AbstractDto {
         this.timestamp = new Date();
         this.status = apiErrorEnum.getStatus().value();
     }
+
+    public ApiErrorDto(String message, ApiErrorEnum apiError) {
+        this(apiError);
+        this.message = StringUtils.isBlank(message) ? apiError.getMessage() : message;
+    }
+
 }

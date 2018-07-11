@@ -16,17 +16,20 @@
 
 package io.suricate.monitoring.controllers.api;
 
-import io.suricate.monitoring.controllers.api.error.exception.ApiException;
+import io.suricate.monitoring.model.dto.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.setting.UserSettingDto;
 import io.suricate.monitoring.model.dto.user.RoleDto;
 import io.suricate.monitoring.model.dto.user.UserDto;
 import io.suricate.monitoring.model.entity.user.User;
-import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.model.enums.AuthenticationMethod;
 import io.suricate.monitoring.model.mapper.role.UserMapper;
 import io.suricate.monitoring.service.api.UserService;
 import io.suricate.monitoring.service.api.UserSettingService;
+import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +51,7 @@ import java.util.stream.Collectors;
  * User controller
  */
 @RestController
-@Api(tags = {"User"})
+@Api(value = "User Controller", tags = {"User"})
 @RequestMapping("/api/users")
 public class UserController {
 
@@ -92,6 +95,11 @@ public class UserController {
      *
      * @return The list of all users
      */
+    @ApiOperation(value = "Get the full list of users", response = UserDto.class)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, response = UserDto.class, message = "Ok", responseContainer = "List"),
+        @ApiResponse(code = 401, response = ApiErrorDto.class, message = "Authentication error : Token expired or invalid")
+    })
     @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<UserDto>> getAll() {
@@ -148,10 +156,6 @@ public class UserController {
         User user = userMapper.toNewUser(userDto, AuthenticationMethod.DATABASE);
         Optional<User> userSaved = userService.registerNewUserAccount(user);
 
-        if (!userSaved.isPresent()) {
-            throw new ApiException(ApiErrorEnum.USER_CREATION_ERROR);
-        }
-
         URI resourceLocation = ServletUriComponentsBuilder
             .fromCurrentContextPath()
             .path("/api/users/" + user.getId())
@@ -176,7 +180,7 @@ public class UserController {
     public ResponseEntity<UserDto> getOne(@PathVariable("id") Long id) {
         Optional<User> user = userService.getOne(id);
         if (!user.isPresent()) {
-            throw new ApiException(ApiErrorEnum.USER_NOT_FOUND);
+            throw new ObjectNotFoundException(User.class, id);
         }
 
         return ResponseEntity
@@ -290,7 +294,7 @@ public class UserController {
         Optional<User> user = userService.getOneByUsername(principal.getName());
 
         if (!user.isPresent()) {
-            throw new ApiException(ApiErrorEnum.USER_NOT_FOUND);
+            throw new ObjectNotFoundException(User.class, principal.getName());
         }
 
         return ResponseEntity

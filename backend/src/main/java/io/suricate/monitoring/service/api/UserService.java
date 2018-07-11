@@ -17,13 +17,12 @@
 package io.suricate.monitoring.service.api;
 
 import io.suricate.monitoring.configuration.security.ConnectedUser;
-import io.suricate.monitoring.controllers.api.error.exception.ApiException;
 import io.suricate.monitoring.model.entity.user.Role;
 import io.suricate.monitoring.model.entity.user.User;
-import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.model.enums.AuthenticationMethod;
 import io.suricate.monitoring.model.enums.UserRoleEnum;
 import io.suricate.monitoring.repository.UserRepository;
+import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -135,16 +134,17 @@ public class UserService {
         user.setEmail(connectedUser.getMail());
         user.setAuthenticationMethod(AuthenticationMethod.LDAP);
 
-        Optional<Role> role;
+        UserRoleEnum roleEnumToFind;
         if (userRepository.count() > 0) {
-            role = roleService.getRoleByName(UserRoleEnum.ROLE_USER.name());
+            roleEnumToFind = UserRoleEnum.ROLE_USER;
         } else {
-            role = roleService.getRoleByName(UserRoleEnum.ROLE_ADMIN.name());
+            roleEnumToFind = UserRoleEnum.ROLE_ADMIN;
         }
 
+        Optional<Role> role = roleService.getRoleByName(roleEnumToFind.name());
         if (!role.isPresent()) {
             LOGGER.error("Role {} not available in database", UserRoleEnum.ROLE_USER);
-            throw new ApiException(ApiErrorEnum.DATABASE_INIT_ISSUE);
+            throw new ObjectNotFoundException(Role.class, roleEnumToFind);
         }
 
         user.getRoles().add(role.get());
@@ -261,7 +261,7 @@ public class UserService {
             user.setEmail(email.trim());
         }
 
-        if(roleNames != null && !roleNames.isEmpty()) {
+        if (roleNames != null && !roleNames.isEmpty()) {
             this.updateUserRoles(user, roleNames);
         }
 
@@ -273,7 +273,7 @@ public class UserService {
     /**
      * Update the roles for a user
      *
-     * @param user The user
+     * @param user      The user
      * @param roleNames The roles to set
      */
     private void updateUserRoles(User user, List<String> roleNames) {
@@ -281,7 +281,7 @@ public class UserService {
             .map(roleName -> roleService.getRoleByName(roleName).orElse(null))
             .collect(Collectors.toList());
 
-        if(rolesToSet != null && !rolesToSet.isEmpty()) {
+        if (rolesToSet != null && !rolesToSet.isEmpty()) {
             user.setRoles(rolesToSet);
         }
     }
