@@ -99,7 +99,7 @@ public class SwaggerConfiguration {
         return new Docket(DocumentationType.SWAGGER_2)
             .host(
                 String.format(
-                    "%s:%s/api",
+                    "%s:%s",
                     InetAddress.getLoopbackAddress().getHostName(),
                     environment.getProperty("server.port")
                 )
