@@ -248,7 +248,7 @@ public class UserController {
      * @param userSettingDtos The new settings
      * @return The user updated
      */
-    @RequestMapping(value = "/{userId}/settings")
+    @RequestMapping(value = "/{userId}/settings", method = RequestMethod.PUT)
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<UserDto> updateUserSettings(Principal principal,
                                                       @PathVariable("userId") Long userId,
