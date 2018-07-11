@@ -16,6 +16,7 @@
 
 package io.suricate.monitoring.controllers.api;
 
+import io.suricate.monitoring.model.dto.ApplicationPropertiesDto;
 import io.suricate.monitoring.model.dto.ConfigurationDto;
 import io.suricate.monitoring.model.entity.Configuration;
 import io.suricate.monitoring.model.mapper.ConfigurationMapper;
@@ -169,5 +170,17 @@ public class ConfigurationController {
             .contentType(MediaType.APPLICATION_JSON)
             .cacheControl(CacheControl.noCache())
             .body(configurationMapper.toConfigurationDtoDefault(configurationOptional.get()));
+    }
+
+    /**
+     * Return the value needed for the frontend on the server configuration
+     */
+    @RequestMapping(value = "/application", method = RequestMethod.GET)
+    public ResponseEntity<List<ApplicationPropertiesDto>> getServerConfigurations() {
+        return ResponseEntity
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .cacheControl(CacheControl.noCache())
+            .body(configurationService.getServerConfigurations());
     }
 }

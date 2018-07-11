@@ -22,6 +22,7 @@ import {Observable} from 'rxjs/Observable';
 
 import {Configuration} from '../../shared/model/dto/Configuration';
 import {configurationsApiEndpoint} from '../../app.constant';
+import {ApplicationProperties} from '../../shared/model/ApplicationProperties';
 
 /**
  * Configuration services manage http calls
@@ -82,5 +83,16 @@ export class ConfigurationService {
     const url = `${configurationsApiEndpoint}/${configuration.key}`;
 
     return this.httpClient.delete<Configuration>(url);
+  }
+
+  /**
+   * Get the server configurations properties
+   *
+   * @return {Observable<ApplicationProperties>} The list of configurations
+   */
+  getServerConfigurations(): Observable<ApplicationProperties[]> {
+    const url = `${configurationsApiEndpoint}/application`;
+
+    return this.httpClient.get<ApplicationProperties[]>(url);
   }
 }

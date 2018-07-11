@@ -16,6 +16,8 @@
 
 package io.suricate.monitoring.service.api;
 
+import io.suricate.monitoring.configuration.ApplicationProperties;
+import io.suricate.monitoring.model.dto.ApplicationPropertiesDto;
 import io.suricate.monitoring.model.entity.Configuration;
 import io.suricate.monitoring.model.entity.widget.Category;
 import io.suricate.monitoring.repository.ConfigurationRepository;
@@ -25,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,13 +48,21 @@ public class ConfigurationService {
     private final ConfigurationRepository configurationRepository;
 
     /**
+     * The application properties
+     */
+    private final ApplicationProperties applicationProperties;
+
+    /**
      * Constructor
      *
      * @param configurationRepository Inject the configuration repository
+     * @param applicationProperties   The application properties to inject
      */
     @Autowired
-    public ConfigurationService(final ConfigurationRepository configurationRepository) {
+    public ConfigurationService(final ConfigurationRepository configurationRepository,
+                                final ApplicationProperties applicationProperties) {
         this.configurationRepository = configurationRepository;
+        this.applicationProperties = applicationProperties;
     }
 
     /**
@@ -113,6 +124,18 @@ public class ConfigurationService {
      */
     public List<Configuration> getConfigurationForWidgets() {
         return this.configurationRepository.findConfigurationForWidgets();
+    }
+
+    /**
+     * Get the server configuration properties
+     *
+     * @return The list of usefull server configuration properties
+     */
+    public List<ApplicationPropertiesDto> getServerConfigurations() {
+        List<ApplicationPropertiesDto> applicationPropertiesDtos = new ArrayList<>();
+        applicationPropertiesDtos.add(new ApplicationPropertiesDto("authentication.provider", applicationProperties.authentication.provider, "The user provider source (Database or LDAP)"));
+
+        return applicationPropertiesDtos;
     }
 
     /**

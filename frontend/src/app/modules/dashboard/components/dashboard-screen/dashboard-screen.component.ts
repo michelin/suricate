@@ -95,6 +95,16 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
   private websocketSubscriptions: Subscription[] = [];
 
   /**
+   * Hold the delete button subscriptions
+   */
+  private deleteButtonSubscriptions: any[] = [];
+
+  /**
+   * Hold the edit button subscriptions
+   */
+  private editButtonSubscriptions: any[] = [];
+
+  /**
    * True if the grid items has been initialized false otherwise
    * @type {boolean}
    */
@@ -530,15 +540,20 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
   bindDeleteProjectWidgetEvent(projectWidgetElements: QueryList<any>) {
     projectWidgetElements.forEach((projectWidgetElement: ElementRef) => {
       const deleteButton: any = projectWidgetElement.nativeElement.querySelector('.btn-widget-delete');
+
       if (deleteButton) {
-        fromEvent<MouseEvent>(deleteButton, 'click')
-            .pipe(
-                takeWhile(() => this.isAlive && this._isGridItemInit),
-                map((mouseEvent: MouseEvent) => mouseEvent.toElement.closest('.widget').querySelector('.btn-widget-delete'))
-            )
-            .subscribe((deleteButtonElement: any) => {
-              this.deleteProjectWidgetFromDashboard(+deleteButtonElement.getAttribute('data-project-widget-id'));
-            });
+        const projectWidgetNumber: number = deleteButton.getAttribute('data-project-widget-id');
+        this.deleteButtonSubscriptions.push(
+            projectWidgetNumber,
+            fromEvent<MouseEvent>(deleteButton, 'click')
+                .pipe(
+                    takeWhile(() => this.isAlive && this._isGridItemInit),
+                    map((mouseEvent: any) => mouseEvent.target.closest('.widget').querySelector('.btn-widget-delete'))
+                )
+                .subscribe((deleteButtonElement: any) => {
+                  this.deleteProjectWidgetFromDashboard(+deleteButtonElement.getAttribute('data-project-widget-id'));
+                })
+        );
       }
     });
   }
@@ -551,15 +566,21 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
   bindEditProjectWidgetEvent(projectWidgetElements: QueryList<any>) {
     projectWidgetElements.forEach((projectWidgetElement: ElementRef) => {
       const editButton: any = projectWidgetElement.nativeElement.querySelector('.btn-widget-edit');
+
       if (editButton) {
-        fromEvent<MouseEvent>(editButton, 'click')
-            .pipe(
-                takeWhile(() => this.isAlive && this._isGridItemInit),
-                map((mouseEvent: MouseEvent) => mouseEvent.toElement.closest('.widget').querySelector('.btn-widget-edit'))
-            )
-            .subscribe((editButtonElement: any) => {
-              this.editProjectWidgetFromDashboard(+editButtonElement.getAttribute('data-project-widget-id'));
-            });
+        const projectWidgetNumber: number = editButton.getAttribute('data-project-widget-id');
+
+        this.editButtonSubscriptions.push(
+            projectWidgetNumber,
+            fromEvent<MouseEvent>(editButton, 'click')
+                .pipe(
+                    takeWhile(() => this.isAlive && this._isGridItemInit),
+                    map((mouseEvent: any) => mouseEvent.target.closest('.widget').querySelector('.btn-widget-edit'))
+                )
+                .subscribe((editButtonElement: any) => {
+                  this.editProjectWidgetFromDashboard(+editButtonElement.getAttribute('data-project-widget-id'));
+                })
+        );
       }
     });
   }
@@ -612,7 +633,7 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
       const projectWidget: ProjectWidget = updateEvent.content;
       if (projectWidget) {
         this.dashboardService
-            .updateWidgetHtmlFromProjetWidgetId(updateEvent.content.id, projectWidget.instantiateHtml, projectWidget.state);
+            .updateWidgetHtmlFromProjetWidgetId(projectWidget.id, projectWidget.instantiateHtml, projectWidget.state);
       }
     }
 

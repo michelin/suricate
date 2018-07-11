@@ -90,7 +90,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * Init of the component
    */
   ngOnInit() {
-    this.themeService.currentTheme = 'dark-theme';
+    setTimeout(() => this.themeService.currentTheme = 'dark-theme', 0);
     this.sidenavService.closeSidenav();
     this.screenCode = this.websocketService.getscreenCode();
 
@@ -109,8 +109,13 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
         this.listenForConnection();
       }
     });
-
   }
+
+  //
+  //
+  // () {
+  //   this.themeService.currentTheme = 'dark-theme';
+  // }
 
   /**
    * When on code view screen we wait for new connection
