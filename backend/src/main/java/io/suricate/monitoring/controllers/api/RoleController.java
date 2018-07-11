@@ -21,6 +21,7 @@ import io.suricate.monitoring.model.entity.user.Role;
 import io.suricate.monitoring.model.mapper.role.RoleMapper;
 import io.suricate.monitoring.service.api.RoleService;
 import io.suricate.monitoring.utils.exception.NoContentException;
+import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,7 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping(value = "/api/roles")
+@Api(value = "Role Controller", tags = {"Role"})
 public class RoleController {
 
     /**

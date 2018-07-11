@@ -26,6 +26,7 @@ import io.suricate.monitoring.service.api.CategoryService;
 import io.suricate.monitoring.service.api.WidgetService;
 import io.suricate.monitoring.utils.exception.NoContentException;
 import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
+import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,7 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/api/widgets")
+@Api(value = "Widget Controller", tags = {"Widget"})
 public class WidgetController {
 
     /**

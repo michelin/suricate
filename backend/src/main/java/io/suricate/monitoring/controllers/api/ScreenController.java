@@ -21,6 +21,7 @@ import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.service.api.ProjectService;
 import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
 import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
+import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -34,6 +35,7 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/api/screens")
+@Api(value = "Screen controller", tags = {"Screen"})
 public class ScreenController {
 
     /**

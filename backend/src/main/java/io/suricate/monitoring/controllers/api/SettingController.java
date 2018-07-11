@@ -21,6 +21,7 @@ import io.suricate.monitoring.model.entity.setting.Setting;
 import io.suricate.monitoring.model.mapper.setting.SettingMapper;
 import io.suricate.monitoring.service.api.SettingService;
 import io.suricate.monitoring.utils.exception.NoContentException;
+import io.swagger.annotations.Api;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,7 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/api/settings")
+@Api(value = "Setting Controller", tags = {"Setting"})
 public class SettingController {
 
     /**
