@@ -18,6 +18,8 @@ package io.suricate.monitoring.model.dto.setting;
 
 import io.suricate.monitoring.model.dto.AbstractDto;
 import io.suricate.monitoring.model.dto.user.UserDto;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 /**
@@ -28,30 +30,36 @@ import lombok.*;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @ToString
+@ApiModel(value = "UserSetting", description = "The setting saved for the user")
 public class UserSettingDto extends AbstractDto {
 
     /**
      * The user setting id
      */
+    @ApiModelProperty(value = "The id line")
     private Long id;
 
     /**
      * The related user
      */
+    @ApiModelProperty(value = "The user related to this setting")
     private UserDto user;
 
     /**
      * The setting reference
      */
+    @ApiModelProperty(value = "The related setting")
     private SettingDto setting;
 
     /**
      * The allowed setting value
      */
+    @ApiModelProperty(value = "The selected value if it's a constrained setting")
     private AllowedSettingValueDto settingValue;
 
     /**
      * The unconstrained value
      */
+    @ApiModelProperty(value = "The value typed by the user it's an unconstrained field")
     private String unconstrainedValue;
 }
