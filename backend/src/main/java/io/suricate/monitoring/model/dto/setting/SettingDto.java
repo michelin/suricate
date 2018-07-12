@@ -18,6 +18,8 @@ package io.suricate.monitoring.model.dto.setting;
 
 import io.suricate.monitoring.model.enums.SettingDataType;
 import io.suricate.monitoring.model.enums.SettingType;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -31,34 +33,41 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @ToString
+@ApiModel(value = "Setting", description = "Describe a setting")
 public class SettingDto {
     /**
      * The setting id
      */
+    @ApiModelProperty(value = "The setting id")
     private Long id;
 
     /**
      * The setting name/description
      */
+    @ApiModelProperty(value = "The description/name of the setting")
     private String description;
 
     /**
      * Tell if the settings have constrained values
      */
+    @ApiModelProperty(value = "True if the setting have constrained values, or if it's a free field")
     private boolean constrained;
 
     /**
      * The setting data type
      */
+    @ApiModelProperty(value = "The data type for this setting")
     private SettingDataType dataType;
 
     /**
      * The setting type
      */
+    @ApiModelProperty(value = "The setting type")
     private SettingType type;
 
     /**
      * Hold the possible values (if we have a select setting for example)
      */
+    @ApiModelProperty(value = "The possible values for this setting if it's a constrained field")
     private List<AllowedSettingValueDto> allowedSettingValues = new ArrayList<>();
 }
