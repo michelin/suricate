@@ -16,10 +16,10 @@
 
 package io.suricate.monitoring.service.api;
 
-import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
-import io.suricate.monitoring.model.enums.UpdateType;
+import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.entity.user.User;
+import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.repository.ProjectRepository;
 import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
 import io.suricate.monitoring.utils.logging.LogExecutionTime;
@@ -65,8 +65,8 @@ public class ProjectService {
     /**
      * Constructor
      *
-     * @param stringEncryptor The string encryptor to inject
-     * @param projectRepository The project repository to inject
+     * @param stringEncryptor           The string encryptor to inject
+     * @param projectRepository         The project repository to inject
      * @param dashboardWebSocketService The dashboard web socket service to inject
      */
     @Autowired
@@ -94,6 +94,16 @@ public class ProjectService {
     }
 
     /**
+     * Test if the project exists by id
+     *
+     * @param id The project id
+     * @return True id the project exists false otherwise
+     */
+    public boolean isProjectExists(final Long id) {
+        return this.projectRepository.exists(id);
+    }
+
+    /**
      * Get a project by the project id
      *
      * @param id The id of the project
@@ -101,10 +111,10 @@ public class ProjectService {
      */
     @LogExecutionTime
     @Transactional
-    public Optional<Project> getOneById(Long id){
+    public Optional<Project> getOneById(Long id) {
         Project project = projectRepository.findOne(id);
 
-        if(project == null) {
+        if (project == null) {
             return Optional.empty();
         }
         return Optional.of(project);
@@ -123,7 +133,7 @@ public class ProjectService {
     /**
      * Create a new project for a user
      *
-     * @param user The user how create the project
+     * @param user    The user how create the project
      * @param project The project to instantiate
      * @return The project instantiate
      */
@@ -131,7 +141,7 @@ public class ProjectService {
     public Project createProject(User user, Project project) {
         project.getUsers().add(user);
 
-        if(StringUtils.isBlank(project.getToken())) {
+        if (StringUtils.isBlank(project.getToken())) {
             project.setToken(stringEncryptor.encrypt(UUID.randomUUID().toString()));
         }
 
@@ -141,10 +151,10 @@ public class ProjectService {
     /**
      * Method used to update a project
      *
-     * @param project the project to update
-     * @param newName the new name
+     * @param project      the project to update
+     * @param newName      the new name
      * @param widgetHeight The new widget height
-     * @param maxColumn The new max column
+     * @param maxColumn    The new max column
      */
     @Transactional
     public void updateProject(Project project,
@@ -152,17 +162,17 @@ public class ProjectService {
                               final int widgetHeight,
                               final int maxColumn,
                               final String customCss) {
-        if(StringUtils.isNotBlank(newName)) {
+        if (StringUtils.isNotBlank(newName)) {
             project.setName(newName);
         }
-        if(widgetHeight > 0) {
+        if (widgetHeight > 0) {
             project.setWidgetHeight(widgetHeight);
         }
-        if(maxColumn > 0) {
+        if (maxColumn > 0) {
             project.setMaxColumn(maxColumn);
         }
 
-        if(StringUtils.isNotBlank(customCss)) {
+        if (StringUtils.isNotBlank(customCss)) {
             project.setCssStyle(customCss);
         }
 
@@ -174,7 +184,7 @@ public class ProjectService {
     /**
      * Add a user to a project
      *
-     * @param user The user to add
+     * @param user    The user to add
      * @param project The project to edit
      * @return The project with the user
      */
@@ -187,7 +197,7 @@ public class ProjectService {
     /**
      * Delete a user from a project
      *
-     * @param user The user to delete
+     * @param user    The user to delete
      * @param project The project related
      * @return The project with user deleted
      */
@@ -212,7 +222,7 @@ public class ProjectService {
      * @param project the project to delete
      */
     @Transactional
-    public void deleteProject(Project project){
+    public void deleteProject(Project project) {
         // notify clients
         dashboardWebsocketService.updateGlobalScreensByProjectId(project.getId(), new UpdateEvent(UpdateType.DISCONNECT));
         // delete project
