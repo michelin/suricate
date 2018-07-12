@@ -149,6 +149,7 @@ public class SwaggerConfiguration {
                     Predicates.not(regex("/api/users/register")),
                     Predicates.not(regex("/api/projects/project/.*")),
                     Predicates.not(regex("/api/asset/.*")),
+                    Predicates.not(regex("/api/configurations/application")),
                     regex("/api/.*")
                 )
             )
