@@ -19,6 +19,8 @@ package io.suricate.monitoring.model.dto.error;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.suricate.monitoring.model.dto.AbstractDto;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 
@@ -32,22 +34,27 @@ import java.util.Date;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @ToString
+@ApiModel(value = "ApiError", description = "Api error response")
 public class ApiErrorDto extends AbstractDto {
     /**
      * The error message to send
      */
+    @ApiModelProperty(value = "Error message")
     private String message;
     /**
      * The key code
      */
+    @ApiModelProperty(value = "Error key")
     private String key;
     /**
      * The HttpStatus number
      */
+    @ApiModelProperty(value = "HttpStatus number")
     private int status;
     /**
      * The datetime of the error
      */
+    @ApiModelProperty(value = "Date of the error")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date timestamp;
 
