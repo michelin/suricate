@@ -81,6 +81,7 @@ public class ConfigurationController {
     @ApiOperation(value = "Get the full list of configurations", response = ConfigurationDto.class)
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Ok", response = ConfigurationDto.class, responseContainer = "List"),
+        @ApiResponse(code = 204, message = "No Content"),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
