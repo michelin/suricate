@@ -17,6 +17,8 @@
 package io.suricate.monitoring.model.dto.user;
 
 import io.suricate.monitoring.model.dto.AbstractDto;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -25,24 +27,33 @@ import java.util.List;
 /**
  * Represent a role used for communication with the clients via webservices
  */
-@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
+@Getter
+@Setter
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+@ToString
+@ApiModel(value = "Role", description = "Describe a user role")
 public class RoleDto extends AbstractDto {
 
     /**
      * The role id
      */
+    @ApiModelProperty(value = "The id")
     private Long id;
     /**
      * The role name
      */
+    @ApiModelProperty(value = "The Role name")
     private String name;
     /**
      * The role description
      */
+    @ApiModelProperty(value = "The description of the role")
     private String description;
 
     /**
      * The list of user for this role
      */
+    @ApiModelProperty(value = "The list of users with this role")
     private List<UserDto> users = new ArrayList<>();
 }
