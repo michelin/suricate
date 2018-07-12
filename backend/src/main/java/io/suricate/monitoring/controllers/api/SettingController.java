@@ -17,7 +17,6 @@
 package io.suricate.monitoring.controllers.api;
 
 import io.suricate.monitoring.model.dto.error.ApiErrorDto;
-import io.suricate.monitoring.model.dto.project.ProjectDto;
 import io.suricate.monitoring.model.dto.setting.SettingDto;
 import io.suricate.monitoring.model.entity.setting.Setting;
 import io.suricate.monitoring.model.mapper.setting.SettingMapper;
