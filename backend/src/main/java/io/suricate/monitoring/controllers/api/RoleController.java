@@ -81,7 +81,7 @@ public class RoleController {
      *
      * @return The list of roles
      */
-    @ApiOperation(value = "Add a user to a project", response = RoleDto.class)
+    @ApiOperation(value = "Get the full list of roles", response = RoleDto.class)
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Ok", response = RoleDto.class),
         @ApiResponse(code = 204, message = "No Content"),
