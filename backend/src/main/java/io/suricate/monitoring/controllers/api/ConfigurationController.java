@@ -200,6 +200,10 @@ public class ConfigurationController {
     /**
      * Return the value needed for the frontend on the server configuration
      */
+    @ApiOperation(value = "Get the server configuration", response = ApplicationPropertiesDto.class)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Ok", response = ConfigurationDto.class, responseContainer = "List")
+    })
     @RequestMapping(value = "/application", method = RequestMethod.GET)
     public ResponseEntity<List<ApplicationPropertiesDto>> getServerConfigurations() {
         return ResponseEntity
