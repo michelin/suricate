@@ -32,6 +32,7 @@ import {WSUpdateType} from '../../../shared/model/websocket/enums/WSUpdateType';
 import {SettingsService} from '../../../shared/services/settings.service';
 
 import * as Stomp from '@stomp/stompjs';
+import {UserService} from '../../user/user.service';
 
 /**
  * Dashboard TV Management
@@ -77,13 +78,17 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * @param {SettingsService} themeService The theme service
    * @param {ActivatedRoute} activatedRoute The activated route service
    * @param {Router} router The router service
+   * @param {SettingsService} settingsService The settings service
+   * @param {UserService} userService The user service
    */
   constructor(private sidenavService: SidenavService,
               private dashboardService: DashboardService,
               private websocketService: WebsocketService,
               private themeService: SettingsService,
               private activatedRoute: ActivatedRoute,
-              private router: Router) {
+              private router: Router,
+              private settingsService: SettingsService,
+              private userService: UserService) {
   }
 
   /**
@@ -110,12 +115,6 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
       }
     });
   }
-
-  //
-  //
-  // () {
-  //   this.themeService.currentTheme = 'dark-theme';
-  // }
 
   /**
    * When on code view screen we wait for new connection
@@ -161,6 +160,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * When the component is destroyed
    */
   ngOnDestroy() {
+    this.settingsService.initUserThemeSetting(this.userService.connectedUser);
     this.isAlive = false;
     this.sidenavService.openSidenav();
 
