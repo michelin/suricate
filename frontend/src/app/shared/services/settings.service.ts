@@ -68,7 +68,7 @@ export class SettingsService {
    * When any user is not connected
    */
   initDefaultSettings() {
-    this.currentTheme = this.defaultThemeCode;
+    this.initDefaultThemeSetting();
     this.initLanguageSettings();
   }
 
@@ -77,7 +77,7 @@ export class SettingsService {
    * @param {User} user The user use for set the settings
    */
   initUserSettings(user: User) {
-    this.currentTheme = this.getThemeUserSetting(user).settingValue.value;
+    this.initUserThemeSetting(user);
   }
 
   /**
@@ -120,6 +120,25 @@ export class SettingsService {
    */
   getThemeUserSetting(user: User): UserSetting {
     return user.userSettings.find(userSetting => userSetting.setting.type === SettingType.TEMPLATE);
+  }
+
+  /**
+   * Init the theme user settings
+   * @param {User} user The user
+   */
+  initUserThemeSetting(user: User) {
+    if (user) {
+      this.currentTheme = this.getThemeUserSetting(user).settingValue.value;
+    } else {
+      this.initDefaultThemeSetting();
+    }
+  }
+
+  /**
+   * Init the default theme settings
+   */
+  initDefaultThemeSetting() {
+    this.currentTheme = this.defaultThemeCode;
   }
 
   /* ************************************************************************ */
