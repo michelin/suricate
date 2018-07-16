@@ -12,6 +12,11 @@ mat-sidenav > .sidenav-section-container {
     margin-left: 20px;
 }
 
+mat-sidenav > .sidenav-section-container > mat-divider {
+    width: 90%;
+    border-top-color: rgba(255, 255, 255, 0.12);
+}
+
 /** Global Section **/
 mat-sidenav .sidenav-section {
     width: 100%;
@@ -80,12 +85,19 @@ mat-sidenav-content {
 }
 
 #common-section {
-    margin-bottom: 24px !important;
-    margin-top: 6px;
+    margin-bottom: 7px !important;
+    margin-top: 0px;
+    width: 90%;
+}
+
+#common-section > a {
+    display: block;
+    width: 40%;
 }
 
 .common-icon-button {
     height: 33px;
+    width: 40%;
 }
 
 .common-icon-button:hover {

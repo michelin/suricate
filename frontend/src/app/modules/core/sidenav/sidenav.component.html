@@ -46,13 +46,20 @@
     </div>
 
     <div class="sidenav-section-container" fxLayout="column wrap" fxLayoutGap="8px">
-      <div id="common-section" class="sidenav-section">
-        <a routerLinkActive="active" [routerLink]="['/home']">
-          <div class="common-icon-button" fxLayout="row wrap" fxLayoutAlign="center center" fxFlex="90%">
+      <mat-divider></mat-divider>
+      <div id="common-section" class="sidenav-section" fxLayout="row wrap" fxLayoutAlign="start center">
+        <a fxFlex="40" routerLinkActive="active" [routerLink]="['/home']" [matTooltip]=" 'home' | translate">
+          <div fxFlex="100" class="common-icon-button" fxLayout="row wrap" fxLayoutAlign="center center">
             <mat-icon>home</mat-icon>
           </div>
         </a>
+        <a fxFlex="40" routerLinkActive="active" [routerLink]="['/tv']" [matTooltip]=" 'tv.view' | translate">
+          <div fxFlex="100" class="common-icon-button" fxLayout="row wrap" fxLayoutAlign="center center">
+            <mat-icon>tv</mat-icon>
+          </div>
+        </a>
       </div>
+      <mat-divider></mat-divider>
 
       <!-- Admin Section -->
       <div *ngIf="isUserAdmin" class="sidenav-section">
