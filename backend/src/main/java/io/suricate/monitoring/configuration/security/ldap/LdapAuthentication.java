@@ -20,6 +20,7 @@ package io.suricate.monitoring.configuration.security.ldap;
 import io.suricate.monitoring.configuration.ApplicationProperties;
 import io.suricate.monitoring.configuration.security.ConnectedUser;
 import io.suricate.monitoring.service.api.UserService;
+import io.suricate.monitoring.utils.exception.ConfigurationException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -35,7 +36,6 @@ import javax.annotation.PostConstruct;
 
 /**
  * The LDAP authentication
- *
  */
 @Configuration
 @ConditionalOnProperty(name = "application.authentication.provider", havingValue = "ldap")
@@ -61,27 +61,29 @@ public class LdapAuthentication {
     @PostConstruct
     private void checkLdapConfiguration() {
         if (StringUtils.isBlank(applicationProperties.authentication.ldap.url)) {
-            throw new IllegalArgumentException("The Ldap url is mandatory when the provider is ldap");
+            throw new ConfigurationException("The Ldap url is mandatory when the provider is ldap", "application.authentication.ldap.url");
         }
     }
 
     /**
      * Method used to configure the ldap
+     *
      * @param auth the authentication manager
      * @throws Exception
      */
     @Autowired
     public void configureLdap(AuthenticationManagerBuilder auth) throws Exception {
         auth.ldapAuthentication()
-                .userDetailsContextMapper(userDetailsContextMapper())
-                .ldapAuthoritiesPopulator(userDetailsServiceLdapAuthoritiesPopulator)
-                .userSearchFilter(applicationProperties.authentication.ldap.userSearchFilter)
+            .userDetailsContextMapper(userDetailsContextMapper())
+            .ldapAuthoritiesPopulator(userDetailsServiceLdapAuthoritiesPopulator)
+            .userSearchFilter(applicationProperties.authentication.ldap.userSearchFilter)
             .contextSource()
             .url(applicationProperties.authentication.ldap.url);
     }
 
     /**
      * Method used to store all user Ldap attribute inside the Security context holder
+     *
      * @return the userDetails context
      */
     public UserDetailsContextMapper userDetailsContextMapper() {

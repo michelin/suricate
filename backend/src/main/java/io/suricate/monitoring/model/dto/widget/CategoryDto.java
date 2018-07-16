@@ -18,6 +18,8 @@ package io.suricate.monitoring.model.dto.widget;
 
 import io.suricate.monitoring.model.dto.ConfigurationDto;
 import io.suricate.monitoring.model.entity.Asset;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import java.util.List;
@@ -31,31 +33,38 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode
 @ToString
+@ApiModel(value = "Category", description = "Describe a widget category")
 public class CategoryDto {
     /**
      * The category id
      */
+    @ApiModelProperty(value = "The category id")
     private Long id;
     /**
      * The category name
      */
+    @ApiModelProperty(value = "Category name")
     private String name;
     /**
      * The technical name of the category
      */
+    @ApiModelProperty(value = "Category technical name, should be unique in table")
     private String technicalName;
     /**
      * The image related to this category
      */
+    @ApiModelProperty(value = "Related category image")
     private Asset image;
 
     /**
      * The list of widgets related to this category
      */
+    @ApiModelProperty(value = "List of related widgets", dataType = "List")
     private List<WidgetDto> widgets;
 
     /**
      * The associated categories for this configuration
      */
+    @ApiModelProperty(value = "Related configurations for this category", dataType = "List")
     private List<ConfigurationDto> configurations;
 }

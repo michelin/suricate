@@ -16,10 +16,16 @@
 
 package io.suricate.monitoring.controllers.api;
 
+import io.suricate.monitoring.model.dto.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.user.RoleDto;
 import io.suricate.monitoring.model.entity.user.Role;
 import io.suricate.monitoring.model.mapper.role.RoleMapper;
 import io.suricate.monitoring.service.api.RoleService;
+import io.suricate.monitoring.utils.exception.NoContentException;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +45,7 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping(value = "/api/roles")
+@Api(value = "Role Controller", tags = {"Role"})
 public class RoleController {
 
     /**
@@ -74,16 +81,20 @@ public class RoleController {
      *
      * @return The list of roles
      */
+    @ApiOperation(value = "Get the full list of roles", response = RoleDto.class)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Ok", response = RoleDto.class),
+        @ApiResponse(code = 204, message = "No Content"),
+        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
+    })
     @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<RoleDto>> getRoles() {
         Optional<List<Role>> rolesOptional = roleService.getRoles();
 
         if (!rolesOptional.isPresent()) {
-            return ResponseEntity
-                .noContent()
-                .cacheControl(CacheControl.noCache())
-                .build();
+            throw new NoContentException(Role.class);
         }
 
         return ResponseEntity

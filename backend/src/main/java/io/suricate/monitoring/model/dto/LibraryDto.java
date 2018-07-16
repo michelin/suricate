@@ -17,6 +17,8 @@
 package io.suricate.monitoring.model.dto;
 
 import io.suricate.monitoring.model.dto.widget.WidgetDto;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import java.util.List;
@@ -24,26 +26,35 @@ import java.util.List;
 /**
  * Library used for communication with the clients via webservices
  */
-@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
+@Getter
+@Setter
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+@ToString
+@ApiModel(value = "Library", description = "Describe a JS Library")
 public class LibraryDto extends AbstractDto {
 
     /**
      * The library id
      */
+    @ApiModelProperty(value = "The database id")
     private Long id;
 
     /**
      * The library technical name
      */
+    @ApiModelProperty(value = "A unique technical name")
     private String technicalName;
 
     /**
      * The related asset
      */
+    @ApiModelProperty(value = "The related asset for this library")
     private AssetDto asset;
 
     /**
      * List of widgets related to it
      */
+    @ApiModelProperty(value = "The list of widgets that use this library", dataType = "List")
     private List<WidgetDto> widgets;
 }

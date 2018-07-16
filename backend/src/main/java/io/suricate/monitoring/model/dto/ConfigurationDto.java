@@ -18,6 +18,8 @@ package io.suricate.monitoring.model.dto;
 
 import io.suricate.monitoring.model.dto.widget.CategoryDto;
 import io.suricate.monitoring.model.enums.ConfigurationDataType;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 /**
@@ -28,16 +30,19 @@ import lombok.*;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @ToString
+@ApiModel(value = "Configuration", description = "Describe a configuration")
 public class ConfigurationDto extends AbstractDto {
 
     /**
      * The configuration key
      */
+    @ApiModelProperty(value = "The configuration key")
     private String key;
 
     /**
      * The configuration value
      */
+    @ApiModelProperty(value = "The configuration value")
     private String value;
 
     /**
@@ -48,10 +53,12 @@ public class ConfigurationDto extends AbstractDto {
     /**
      * The data type of the configuration
      */
+    @ApiModelProperty(value = "Configuration data type")
     private ConfigurationDataType dataType;
 
     /**
      * Make a link between category and configurations
      */
+    @ApiModelProperty(value = "Related category for this config")
     private CategoryDto category;
 }

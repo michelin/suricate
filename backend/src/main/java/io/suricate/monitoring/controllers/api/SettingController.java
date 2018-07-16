@@ -16,10 +16,16 @@
 
 package io.suricate.monitoring.controllers.api;
 
+import io.suricate.monitoring.model.dto.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.setting.SettingDto;
 import io.suricate.monitoring.model.entity.setting.Setting;
 import io.suricate.monitoring.model.mapper.setting.SettingMapper;
 import io.suricate.monitoring.service.api.SettingService;
+import io.suricate.monitoring.utils.exception.NoContentException;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +45,7 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/api/settings")
+@Api(value = "Setting Controller", tags = {"Setting"})
 public class SettingController {
 
     /**
@@ -74,16 +81,20 @@ public class SettingController {
      *
      * @return The full list of settings
      */
+    @ApiOperation(value = "Get the full list of settings", response = SettingDto.class)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Ok", response = SettingDto.class, responseContainer = "List"),
+        @ApiResponse(code = 204, message = "No Content"),
+        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
+    })
     @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<List<SettingDto>> getAll() {
         Optional<List<Setting>> settingsOptional = settingService.getAll();
 
         if (!settingsOptional.isPresent()) {
-            return ResponseEntity
-                .noContent()
-                .cacheControl(CacheControl.noCache())
-                .build();
+            throw new NoContentException(Setting.class);
         }
 
         return ResponseEntity

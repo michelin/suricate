@@ -142,6 +142,16 @@ public class ProjectWidgetService {
     }
 
     /**
+     * Test if a project widget exists
+     *
+     * @param projectWidgetId The project widget id
+     * @return True if exists false otherwise
+     */
+    public boolean isProjectWidgetExists(final Long projectWidgetId) {
+        return this.projectWidgetRepository.exists(projectWidgetId);
+    }
+
+    /**
      * Get the project widget by id
      *
      * @param projectWidgetId The project widget id

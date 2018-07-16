@@ -84,6 +84,16 @@ public class CategoryService {
     }
 
     /**
+     * Check if the category exists
+     *
+     * @param categoryId The category id
+     * @return Tru if exists false otherwise
+     */
+    public boolean isCategoryExists(final Long categoryId) {
+        return this.categoryRepository.exists(categoryId);
+    }
+
+    /**
      * Find a category by technical name
      *
      * @param technicalName The technical name of the category

@@ -16,6 +16,7 @@
 
 package io.suricate.monitoring.controllers.api;
 
+import io.suricate.monitoring.model.dto.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.widget.CategoryDto;
 import io.suricate.monitoring.model.dto.widget.WidgetDto;
 import io.suricate.monitoring.model.entity.widget.Category;
@@ -24,6 +25,9 @@ import io.suricate.monitoring.model.mapper.widget.CategoryMapper;
 import io.suricate.monitoring.model.mapper.widget.WidgetMapper;
 import io.suricate.monitoring.service.api.CategoryService;
 import io.suricate.monitoring.service.api.WidgetService;
+import io.suricate.monitoring.utils.exception.NoContentException;
+import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
+import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +45,7 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/api/widgets")
+@Api(value = "Widget Controller", tags = {"Widget"})
 public class WidgetController {
 
     /**
@@ -71,10 +76,10 @@ public class WidgetController {
     /**
      * Constructor
      *
-     * @param widgetService Widget service to inject
+     * @param widgetService   Widget service to inject
      * @param categoryService The category service
-     * @param categoryMapper The category mapper
-     * @param widgetMapper The widget mapper
+     * @param categoryMapper  The category mapper
+     * @param widgetMapper    The widget mapper
      */
     @Autowired
     public WidgetController(final WidgetService widgetService,
@@ -92,16 +97,20 @@ public class WidgetController {
      *
      * @return The list of widgets
      */
+    @ApiOperation(value = "Get the full list of widgets", response = WidgetDto.class)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Ok", response = WidgetDto.class, responseContainer = "List"),
+        @ApiResponse(code = 204, message = "No Content"),
+        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
+    })
     @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<List<WidgetDto>> getWidgets() {
         Optional<List<Widget>> widgets = widgetService.getAll();
 
-        if(!widgets.isPresent()) {
-            return ResponseEntity
-                .noContent()
-                .cacheControl(CacheControl.noCache())
-                .build();
+        if (!widgets.isPresent()) {
+            throw new NoContentException(Widget.class);
         }
 
         return ResponseEntity
@@ -115,21 +124,27 @@ public class WidgetController {
     /**
      * Update a widget
      *
-     * @param widgetId The widget id to update
-     * @param widgetDtoWithChanges The object holding changes
+     * @param widgetId  The widget id to update
+     * @param widgetDto The object holding changes
      * @return The widget dto changed
      */
+    @ApiOperation(value = "Update a widget by id", response = WidgetDto.class)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Ok", response = WidgetDto.class),
+        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
+        @ApiResponse(code = 404, message = "Widget not found", response = ApiErrorDto.class)
+    })
     @RequestMapping(value = "/{widgetId}", method = RequestMethod.POST)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<WidgetDto> updateWidget(@PathVariable("widgetId") Long widgetId,
-                                  @RequestBody WidgetDto widgetDtoWithChanges) {
-        Optional<Widget> widgetOpt = widgetService.updateWidget(widgetId, widgetDtoWithChanges);
+    public ResponseEntity<WidgetDto> updateWidget(@ApiParam(name = "widgetId", value = "The widget id", required = true)
+                                                  @PathVariable("widgetId") Long widgetId,
+                                                  @ApiParam(name = "widgetDto", value = "The widget with modifications", required = true)
+                                                  @RequestBody WidgetDto widgetDto) {
+        Optional<Widget> widgetOpt = widgetService.updateWidget(widgetId, widgetDto);
 
-        if(!widgetOpt.isPresent()) {
-            return ResponseEntity
-                .notFound()
-                .cacheControl(CacheControl.noCache())
-                .build();
+        if (!widgetOpt.isPresent()) {
+            throw new ObjectNotFoundException(Widget.class, widgetId);
         }
 
         return ResponseEntity
@@ -144,10 +159,22 @@ public class WidgetController {
      *
      * @return A list of category
      */
+    @ApiOperation(value = "Get the full list of widget categories", response = CategoryDto.class)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Ok", response = CategoryDto.class, responseContainer = "List"),
+        @ApiResponse(code = 204, message = "No Content"),
+        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
+    })
     @RequestMapping(value = "/categories", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<List<CategoryDto>> getCategories() {
         List<Category> categories = categoryService.getCategoriesOrderByName();
+
+        if (categories == null || categories.isEmpty()) {
+            throw new NoContentException(Category.class);
+        }
+
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
@@ -159,19 +186,28 @@ public class WidgetController {
     /**
      * Get every widget for a category
      *
-     * @param id The category id
+     * @param categoryId The category id
      * @return The list of related widgets
      */
-    @RequestMapping(value = "/category/{id}", method = RequestMethod.GET)
+    @ApiOperation(value = "Get the list of widgets by category id", response = WidgetDto.class)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Ok", response = WidgetDto.class, responseContainer = "List"),
+        @ApiResponse(code = 204, message = "No Content"),
+        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
+        @ApiResponse(code = 404, message = "Category not found", response = ApiErrorDto.class)
+    })
+    @RequestMapping(value = "/category/{categoryId}", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<List<WidgetDto>> getWidgetByCategory(@PathVariable("id") Long id) {
-        Optional<List<Widget>> widgets = widgetService.getWidgetsByCategory(id);
+    public ResponseEntity<List<WidgetDto>> getWidgetByCategory(@ApiParam(name = "categoryId", value = "The category id", required = true)
+                                                               @PathVariable("categoryId") Long categoryId) {
+        if (!this.categoryService.isCategoryExists(categoryId)) {
+            throw new ObjectNotFoundException(Category.class, categoryId);
+        }
 
-        if(!widgets.isPresent()) {
-            ResponseEntity
-                .noContent()
-                .cacheControl(CacheControl.noCache())
-                .build();
+        Optional<List<Widget>> widgets = widgetService.getWidgetsByCategory(categoryId);
+        if (!widgets.isPresent()) {
+            throw new NoContentException(Widget.class);
         }
 
         return ResponseEntity

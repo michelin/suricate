@@ -289,6 +289,7 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
           height: auto;
           font-size: 11rem;
           transform: translate(-50%, -50%);
+          opacity: 0.05;
         }
         .grid-stack .widget {
           text-align: center;

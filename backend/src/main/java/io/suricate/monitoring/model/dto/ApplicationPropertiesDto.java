@@ -16,6 +16,8 @@
 
 package io.suricate.monitoring.model.dto;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 /**
@@ -26,9 +28,25 @@ import lombok.*;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @ToString
+@ApiModel(value = "ApplicationProperties", description = "Hold application properties information")
 public class ApplicationPropertiesDto extends AbstractDto {
+
+    /**
+     * The propertie key
+     */
+    @ApiModelProperty(value = "The propertie key")
     private String key;
+
+    /**
+     * The current value
+     */
+    @ApiModelProperty(value = "The current value")
     private String value;
+
+    /**
+     * A little description of this param
+     */
+    @ApiModelProperty(value = "A little description of this param")
     private String description;
 
     /**

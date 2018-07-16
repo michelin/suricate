@@ -14,36 +14,51 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.controllers.api.error.exception;
+package io.suricate.monitoring.utils.exception;
 
 
 import io.suricate.monitoring.model.dto.error.ApiErrorDto;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * API Exception management
  */
-public class ApiException extends RuntimeException{
+public class ApiException extends RuntimeException {
 
     /**
      * API error
      */
-    private final ApiErrorDto error;
+    private final ApiErrorEnum error;
 
     /**
      * Default constructor using field
+     *
      * @param error the API error object to store into the exception
      */
     public ApiException(ApiErrorEnum error) {
         super(error.getMessage());
-        this.error = new ApiErrorDto(error);
+        this.error = error;
     }
 
     /**
+     * Default constructor using field
+     *
+     * @param message custom message
+     * @param error   the API error object to store into the exception
+     */
+    public ApiException(String message, ApiErrorEnum error) {
+        super(StringUtils.isBlank(message) ? error.getMessage() : message);
+        this.error = error;
+    }
+
+
+    /**
      * Method used to retrieve the error
+     *
      * @return the APi error
      */
     public ApiErrorDto getError() {
-        return error;
+        return error.toResponse(getMessage());
     }
 }
