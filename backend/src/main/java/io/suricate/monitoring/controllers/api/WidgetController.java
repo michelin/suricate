@@ -171,7 +171,7 @@ public class WidgetController {
     public ResponseEntity<List<CategoryDto>> getCategories() {
         List<Category> categories = categoryService.getCategoriesOrderByName();
 
-        if (categories == null || !categories.isEmpty()) {
+        if (categories == null || categories.isEmpty()) {
             throw new NoContentException(Category.class);
         }
 
