@@ -54,8 +54,9 @@ mat-nav-list.submenu {
 }
 
 mat-nav-list.submenu .mat-list-item {
-    height: 20px;
+    height: 23px;
     margin: auto;
+    padding-bottom: 2px;
 }
 
 mat-nav-list.submenu .mat-list-item mat-icon {
@@ -76,4 +77,22 @@ mat-nav-list .mat-list-item.active {
 mat-sidenav-content {
     padding: 10px 10px 0 10px;
     min-height: 100vh;
+}
+
+#common-section {
+    margin-bottom: 24px !important;
+    margin-top: 6px;
+}
+
+.common-icon-button {
+    height: 33px;
+}
+
+.common-icon-button:hover {
+    box-shadow: 0 3px 1px -2px rgba(0, 0, 0, .2), 0 2px 2px 0 rgba(0, 0, 0, .14), 0 1px 5px 0 rgba(0, 0, 0, .12);
+    background-color: #4d4d4d;
+}
+
+.common-icon-button mat-icon {
+    font-size: 24px;
 }
