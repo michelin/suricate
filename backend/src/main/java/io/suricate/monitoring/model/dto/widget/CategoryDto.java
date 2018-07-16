@@ -59,12 +59,12 @@ public class CategoryDto {
     /**
      * The list of widgets related to this category
      */
-    @ApiModelProperty(value = "List of related widgets")
+    @ApiModelProperty(value = "List of related widgets", dataType = "List")
     private List<WidgetDto> widgets;
 
     /**
      * The associated categories for this configuration
      */
-    @ApiModelProperty(value = "Related configurations for this category")
+    @ApiModelProperty(value = "Related configurations for this category", dataType = "List")
     private List<ConfigurationDto> configurations;
 }

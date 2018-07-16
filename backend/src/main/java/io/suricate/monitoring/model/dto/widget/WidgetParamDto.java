@@ -79,6 +79,6 @@ public class WidgetParamDto {
     /**
      * The list of param values if the type is COMBO or a MULTIPLE
      */
-    @ApiModelProperty(value = "The list of possible values if the type is COMBO or MULTIPLE")
+    @ApiModelProperty(value = "The list of possible values if the type is COMBO or MULTIPLE", dataType = "List")
     private List<WidgetParamValueDto> values = new ArrayList<>();
 }

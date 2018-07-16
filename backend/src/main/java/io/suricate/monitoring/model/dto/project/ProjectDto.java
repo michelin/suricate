@@ -40,12 +40,12 @@ public class ProjectDto extends AbstractDto {
     /**
      * The id
      */
-    @ApiModelProperty(value = "The project id")
+    @ApiModelProperty(value = "The project id", required = true)
     private Long id;
     /**
      * The project name
      */
-    @ApiModelProperty(value = "The project name")
+    @ApiModelProperty(value = "The project name", required = true)
     private String name;
     /**
      * Number of column in the dashboard
@@ -65,7 +65,7 @@ public class ProjectDto extends AbstractDto {
     /**
      * The dashboard token
      */
-    @ApiModelProperty(value = "The project token")
+    @ApiModelProperty(value = "The project token", required = true)
     private String token;
     /**
      * The list of widgets

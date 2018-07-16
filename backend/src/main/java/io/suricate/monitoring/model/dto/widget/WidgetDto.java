@@ -91,7 +91,7 @@ public class WidgetDto extends AbstractDto {
     /**
      * The list of related libraries
      */
-    @ApiModelProperty(value = "List of related JS libraries")
+    @ApiModelProperty(value = "List of related JS libraries", dataType = "List")
     private List<LibraryDto> libraries = new ArrayList<>();
 
     /**
@@ -109,6 +109,6 @@ public class WidgetDto extends AbstractDto {
     /**
      * The list of the params for this widget
      */
-    @ApiModelProperty(value = "List of params for this widget")
+    @ApiModelProperty(value = "List of params for this widget", dataType = "List")
     private List<WidgetParamDto> widgetParams = new ArrayList<>();
 }

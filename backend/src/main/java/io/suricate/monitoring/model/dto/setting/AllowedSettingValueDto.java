@@ -35,30 +35,30 @@ public class AllowedSettingValueDto extends AbstractDto {
     /**
      * The setting id
      */
-    @ApiModelProperty(value = "The setting value id")
+    @ApiModelProperty(value = "The setting value id", required = true)
     private Long id;
 
     /**
      * The title to display for the user
      */
-    @ApiModelProperty(value = "The title displayed to the user")
+    @ApiModelProperty(value = "The title displayed to the user", required = true)
     private String title;
 
     /**
      * The value of the entry (used in the code)
      */
-    @ApiModelProperty(value = "The value that will be used on the code for this setting")
+    @ApiModelProperty(value = "The value that will be used on the code for this setting", required = true)
     private String value;
 
     /**
      * True if this setting is the default setting
      */
-    @ApiModelProperty(value = "True if this value should be used as default")
+    @ApiModelProperty(value = "True if this value should be used as default", required = true)
     private boolean isDefault;
 
     /**
      * The related setting
      */
-    @ApiModelProperty(value = "The related setting")
+    @ApiModelProperty(value = "The related setting", required = true)
     private SettingDto setting;
 }
