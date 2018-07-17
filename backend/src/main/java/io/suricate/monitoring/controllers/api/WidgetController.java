@@ -21,6 +21,7 @@ import io.suricate.monitoring.model.dto.widget.CategoryDto;
 import io.suricate.monitoring.model.dto.widget.WidgetDto;
 import io.suricate.monitoring.model.entity.widget.Category;
 import io.suricate.monitoring.model.entity.widget.Widget;
+import io.suricate.monitoring.model.enums.ApiActionEnum;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.model.mapper.widget.CategoryMapper;
 import io.suricate.monitoring.model.mapper.widget.WidgetMapper;
@@ -119,9 +120,9 @@ public class WidgetController {
     })
     @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<List<WidgetDto>> getWidgets(@ApiParam(name = "refreshWidgets", value = "True if we have to refresh the full list of widgets")
-                                                      @RequestParam(value = "refresh-widgets", required = false, defaultValue = "false") boolean refreshWidgets) {
-        if (refreshWidgets) {
+    public ResponseEntity<List<WidgetDto>> getWidgets(@ApiParam(name = "action", value = "REFRESH if we have to refresh widgets from GIT Repository", allowableValues = "REFRESH")
+                                                      @RequestParam(value = "action", required = false) ApiActionEnum action) {
+        if (action != null && action == ApiActionEnum.REFRESH) {
             Future<Boolean> isDone = this.gitService.updateWidgetFromGit();
 
             try {

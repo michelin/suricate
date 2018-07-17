@@ -19,6 +19,7 @@ import {Component} from '@angular/core';
 import {WidgetService} from '../../../../../modules/widget/widget.service';
 import {ToastService} from '../../../toast/toast.service';
 import {ToastType} from '../../../../model/toastNotification/ToastType';
+import {ApiActionEnum} from '../../../../model/dto/enums/ApiActionEnum';
 
 /**
  * Hold the widget list actions
@@ -44,7 +45,7 @@ export class WidgetListActionsComponent {
    * Method used to reload widgets from repository
    */
   reloadWidgets() {
-    this.widgetService.getAll(true).subscribe(() => {
+    this.widgetService.getAll(ApiActionEnum.REFRESH).subscribe(() => {
       this.toastService.sendMessage('Widget successfully reloads', ToastType.SUCCESS);
     });
   }

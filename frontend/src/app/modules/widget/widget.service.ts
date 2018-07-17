@@ -25,6 +25,7 @@ import {tap} from 'rxjs/operators';
 import {Category} from '../../shared/model/dto/Category';
 import {Widget} from '../../shared/model/dto/Widget';
 import {widgetsApiEndpoint} from '../../app.constant';
+import {ApiActionEnum} from '../../shared/model/dto/enums/ApiActionEnum';
 
 /**
  * Manage the widget Http calls
@@ -78,15 +79,18 @@ export class WidgetService {
   /**
    * Get the list of widgets
    *
-   * @param {boolean} refreshWidgets True if we should refresh the widgets false otherwise
+   * @param {ApiActionEnum} action Action to be executed by the backend
    * @returns {Observable<Widget[]>} The list of widgets as observable
    */
-  getAll(refreshWidgets = false): Observable<Widget[]> {
-    const url = `${widgetsApiEndpoint}?refresh-widgets=${refreshWidgets}`;
+  getAll(action?: ApiActionEnum): Observable<Widget[]> {
+    let url = `${widgetsApiEndpoint}`;
+    if (action) {
+      url = url.concat(`?action=${action}`);
+    }
 
     return this.httpClient.get<Widget[]>(url).pipe(
         tap(widgets => {
-          if (refreshWidgets) {
+          if (action && action === ApiActionEnum.REFRESH) {
             this.widgets = widgets;
           }
         })
