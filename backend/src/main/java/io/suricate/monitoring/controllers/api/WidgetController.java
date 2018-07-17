@@ -21,10 +21,14 @@ import io.suricate.monitoring.model.dto.widget.CategoryDto;
 import io.suricate.monitoring.model.dto.widget.WidgetDto;
 import io.suricate.monitoring.model.entity.widget.Category;
 import io.suricate.monitoring.model.entity.widget.Widget;
+import io.suricate.monitoring.model.enums.ApiActionEnum;
+import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.model.mapper.widget.CategoryMapper;
 import io.suricate.monitoring.model.mapper.widget.WidgetMapper;
+import io.suricate.monitoring.service.GitService;
 import io.suricate.monitoring.service.api.CategoryService;
 import io.suricate.monitoring.service.api.WidgetService;
+import io.suricate.monitoring.utils.exception.ApiException;
 import io.suricate.monitoring.utils.exception.NoContentException;
 import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
 import io.swagger.annotations.*;
@@ -39,6 +43,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 /**
  * The widget controller
@@ -64,6 +70,11 @@ public class WidgetController {
     private final CategoryService categoryService;
 
     /**
+     * The GIT service
+     */
+    private final GitService gitService;
+
+    /**
      * Mapper domain/DTO for categories
      */
     private final CategoryMapper categoryMapper;
@@ -78,16 +89,19 @@ public class WidgetController {
      *
      * @param widgetService   Widget service to inject
      * @param categoryService The category service
+     * @param gitService      The git service
      * @param categoryMapper  The category mapper
      * @param widgetMapper    The widget mapper
      */
     @Autowired
     public WidgetController(final WidgetService widgetService,
                             final CategoryService categoryService,
+                            final GitService gitService,
                             final CategoryMapper categoryMapper,
                             final WidgetMapper widgetMapper) {
         this.widgetService = widgetService;
         this.categoryService = categoryService;
+        this.gitService = gitService;
         this.categoryMapper = categoryMapper;
         this.widgetMapper = widgetMapper;
     }
@@ -106,9 +120,23 @@ public class WidgetController {
     })
     @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<List<WidgetDto>> getWidgets() {
-        Optional<List<Widget>> widgets = widgetService.getAll();
+    public ResponseEntity<List<WidgetDto>> getWidgets(@ApiParam(name = "action", value = "REFRESH if we have to refresh widgets from GIT Repository", allowableValues = "refresh")
+                                                      @RequestParam(value = "action", required = false) String action) {
+        if (ApiActionEnum.REFRESH.getPropertyValue().equalsIgnoreCase(action)) {
+            Future<Boolean> isDone = this.gitService.updateWidgetFromGit();
 
+            try {
+                if (!isDone.get()) {
+                    throw new ApiException("Error while retrieving widgets from repository", ApiErrorEnum.INTERNAL_SERVER_ERROR);
+                }
+            } catch (InterruptedException e) {
+                throw new ApiException("Execution interrupted while retrieving widgets from repository", ApiErrorEnum.INTERNAL_SERVER_ERROR);
+            } catch (ExecutionException e) {
+                throw new ApiException("Unknown execution error while retrieving widgets from repository", ApiErrorEnum.INTERNAL_SERVER_ERROR);
+            }
+        }
+
+        Optional<List<Widget>> widgets = widgetService.getAll();
         if (!widgets.isPresent()) {
             throw new NoContentException(Widget.class);
         }
@@ -118,7 +146,6 @@ public class WidgetController {
             .contentType(MediaType.APPLICATION_JSON)
             .cacheControl(CacheControl.noCache())
             .body(widgetMapper.toWidgetDtosDefault(widgets.get()));
-
     }
 
     /**

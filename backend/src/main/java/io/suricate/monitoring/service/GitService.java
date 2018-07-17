@@ -33,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -40,6 +41,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 /**
@@ -158,14 +160,16 @@ public class GitService {
 
     /**
      * Async method used to update widget from git
+     *
+     * @return True as Future when the process has been done
      */
     @Async
     @Transactional
-    public void updateWidgetFromGit() {
+    public Future<Boolean> updateWidgetFromGit() {
         LOGGER.info("Update widgets from Git repo");
         if (!applicationProperties.widgets.updateEnable) {
             LOGGER.info("Widget update disabled");
-            return;
+            return null;
         }
         File folder = null;
         try {
@@ -181,6 +185,8 @@ public class GitService {
                 File widgetFolder = new File(folder.getAbsoluteFile().getAbsolutePath() + SystemUtils.FILE_SEPARATOR + "content" + SystemUtils.FILE_SEPARATOR);
                 List<Category> list = WidgetUtils.parseWidgetFolder(widgetFolder);
                 widgetService.updateWidgetInDatabase(list, mapLib);
+
+                return new AsyncResult<>(true);
             }
         } catch (Exception ioe) {
             LOGGER.error(ioe.getMessage(), ioe);
@@ -191,5 +197,7 @@ public class GitService {
             nashornWidgetScheduler.initScheduler();
             dashboardWebSocketService.reloadAllConnectedDashboard();
         }
+
+        return new AsyncResult<>(false);
     }
 }

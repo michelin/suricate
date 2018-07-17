@@ -19,16 +19,26 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs/Observable';
+import {Subject} from 'rxjs/Subject';
+import {tap} from 'rxjs/operators';
 
 import {Category} from '../../shared/model/dto/Category';
 import {Widget} from '../../shared/model/dto/Widget';
 import {widgetsApiEndpoint} from '../../app.constant';
+import {ApiActionEnum} from '../../shared/model/dto/enums/ApiActionEnum';
 
 /**
  * Manage the widget Http calls
  */
 @Injectable()
 export class WidgetService {
+
+  /**
+   * Subject that hold events when list has been reloaded
+   *
+   * @type {Subject<Widget[]>}
+   */
+  private widgetsSubject = new Subject<Widget[]>();
 
   /**
    * Constructor
@@ -38,15 +48,53 @@ export class WidgetService {
   constructor(private httpClient: HttpClient) {
   }
 
+  /* ******************************************************************* */
+  /*                      Subject Management Part                        */
+
+  /* ******************************************************************* */
+
+  /**
+   * Subscribe to widgets event
+   *
+   * @return {Observable<Widget[]>}
+   */
+  get widgets$(): Observable<Widget[]> {
+    return this.widgetsSubject.asObservable();
+  }
+
+  /**
+   * Send an event with the new list of widgets
+   *
+   * @param {Widget[]} widgets
+   */
+  set widgets(widgets: Widget[]) {
+    this.widgetsSubject.next(widgets);
+  }
+
+  /* ******************************************************************* */
+  /*                        Widget HTTP Management                       */
+
+  /* ******************************************************************* */
+
   /**
    * Get the list of widgets
    *
+   * @param {ApiActionEnum} action Action to be executed by the backend
    * @returns {Observable<Widget[]>} The list of widgets as observable
    */
-  getAll(): Observable<Widget[]> {
-    const url = `${widgetsApiEndpoint}`;
+  getAll(action?: ApiActionEnum): Observable<Widget[]> {
+    let url = `${widgetsApiEndpoint}`;
+    if (action) {
+      url = url.concat(`?action=${action}`);
+    }
 
-    return this.httpClient.get<Widget[]>(url);
+    return this.httpClient.get<Widget[]>(url).pipe(
+        tap(widgets => {
+          if (action && action === ApiActionEnum.REFRESH) {
+            this.widgets = widgets;
+          }
+        })
+    );
   }
 
   /**
