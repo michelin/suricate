@@ -17,5 +17,5 @@
  */
 
 export enum ApiActionEnum {
-  REFRESH = 'REFRESH'
+  REFRESH = 'refresh'
 }

@@ -16,9 +16,26 @@
 
 package io.suricate.monitoring.model.enums;
 
+import lombok.Getter;
+
 /**
  * Hold the possibles actions for the API endpoints
  */
+@Getter
 public enum ApiActionEnum {
-    REFRESH
+    REFRESH("refresh");
+
+    /**
+     * The API value
+     */
+    private String propertyValue;
+
+    /**
+     * Constructor
+     *
+     * @param propertyValue The API property value
+     */
+    ApiActionEnum(final String propertyValue) {
+        this.propertyValue = propertyValue;
+    }
 }
