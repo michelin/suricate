@@ -201,16 +201,32 @@ public class ConfigurationController {
     /**
      * Return the value needed for the frontend on the server configuration
      */
-    @ApiOperation(value = "Get the server configuration", response = ApplicationPropertiesDto.class)
+    @ApiOperation(value = "Get the server configuration for authentication provider (DB, LDAP...)", response = ApplicationPropertiesDto.class)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = ConfigurationDto.class, responseContainer = "List")
+        @ApiResponse(code = 200, message = "Ok", response = ApplicationPropertiesDto.class)
     })
-    @RequestMapping(value = "/application", method = RequestMethod.GET)
-    public ResponseEntity<List<ApplicationPropertiesDto>> getServerConfigurations() {
+    @RequestMapping(value = "/authentication-provider", method = RequestMethod.GET)
+    public ResponseEntity<ApplicationPropertiesDto> getAuthenticationProvider() {
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
             .cacheControl(CacheControl.noCache())
-            .body(configurationService.getServerConfigurations());
+            .body(configurationService.getAuthenticationProvider());
+    }
+
+    /**
+     * Return the value needed for the frontend on the server configuration
+     */
+    @ApiOperation(value = "Get the server full configuration", response = ApplicationPropertiesDto.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok", response = ApplicationPropertiesDto.class, responseContainer = "List")
+    })
+    @RequestMapping(value = "/server", method = RequestMethod.GET)
+    public ResponseEntity<List<ApplicationPropertiesDto>> getServerConfiguration() {
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .cacheControl(CacheControl.noCache())
+                .body(configurationService.getServerConfiguration());
     }
 }

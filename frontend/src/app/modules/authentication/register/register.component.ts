@@ -88,9 +88,8 @@ export class RegisterComponent implements OnInit {
    * Called when the component is init
    */
   ngOnInit() {
-    this.configurationService.getServerConfigurations().subscribe((applicationProperties: ApplicationProperties[]) => {
-      const authenticationProvider = applicationProperties.find(applicationProp => applicationProp.key === authenticationProviderKey);
-      if (authenticationProvider.value.toLowerCase() === authenticationProviderLDAP) {
+    this.configurationService.getAuthenticationProvider().subscribe((applicationProperties: ApplicationProperties) => {
+      if (applicationProperties.value.toLowerCase() === authenticationProviderLDAP) {
         this.router.navigate(['/login']);
       }
     });

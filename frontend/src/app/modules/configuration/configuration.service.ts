@@ -86,13 +86,13 @@ export class ConfigurationService {
   }
 
   /**
-   * Get the server configurations properties
+   * Get the server configuration for authentication provider
    *
-   * @return {Observable<ApplicationProperties>} The list of configurations
+   * @return {Observable<ApplicationProperties>} Configuration for Authentication Provider
    */
-  getServerConfigurations(): Observable<ApplicationProperties[]> {
-    const url = `${configurationsApiEndpoint}/application`;
+  getAuthenticationProvider(): Observable<ApplicationProperties> {
+    const url = `${configurationsApiEndpoint}/authentication-provider`;
 
-    return this.httpClient.get<ApplicationProperties[]>(url);
+    return this.httpClient.get<ApplicationProperties>(url);
   }
 }

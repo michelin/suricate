@@ -73,9 +73,8 @@ export class LoginComponent implements OnInit {
    * Init objects
    */
   ngOnInit() {
-    this.configurationService.getServerConfigurations().subscribe((applicationProperties: ApplicationProperties[]) => {
-      const authenticationProvider = applicationProperties.find(applicationProp => applicationProp.key === authenticationProviderKey);
-      this.isLdapServerUserProvider = authenticationProvider.value.toLowerCase() === authenticationProviderLDAP;
+    this.configurationService.getAuthenticationProvider().subscribe((applicationProperties: ApplicationProperties) => {
+      this.isLdapServerUserProvider = applicationProperties.value.toLowerCase() === authenticationProviderLDAP;
     });
 
     this.authenticationService.logout();
