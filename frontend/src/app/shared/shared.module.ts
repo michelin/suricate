@@ -46,6 +46,7 @@ import {TranslationComponent} from './components/translations/translation.compon
 import {MaterialCDKModule} from './modules/metarialCDK.module';
 import {SettingsService} from './services/settings.service';
 import {ErrorInterceptor} from './interceptors/error.interceptor';
+import { WidgetListActionsComponent } from './components/pages-header/components/widget-list-actions/widget-list-actions.component';
 
 @NgModule({
   imports: [
@@ -72,7 +73,8 @@ import {ErrorInterceptor} from './interceptors/error.interceptor';
     SafeUrlPipe,
     TvManagementDialogComponent,
     RunScriptsDirective,
-    TranslationComponent
+    TranslationComponent,
+    WidgetListActionsComponent
   ],
   entryComponents: [
     AddWidgetDialogComponent,

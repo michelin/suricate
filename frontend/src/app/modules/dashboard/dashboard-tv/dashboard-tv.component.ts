@@ -30,9 +30,9 @@ import {DashboardService} from '../dashboard.service';
 import {WSUpdateEvent} from '../../../shared/model/websocket/WSUpdateEvent';
 import {WSUpdateType} from '../../../shared/model/websocket/enums/WSUpdateType';
 import {SettingsService} from '../../../shared/services/settings.service';
+import {UserService} from '../../user/user.service';
 
 import * as Stomp from '@stomp/stompjs';
-import {UserService} from '../../user/user.service';
 
 /**
  * Dashboard TV Management

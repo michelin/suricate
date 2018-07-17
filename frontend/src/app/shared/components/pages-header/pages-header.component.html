@@ -1,13 +1,18 @@
 <div class="header-container">
   <div class="titles">
     <h1 class="little title">{{pageName}}</h1>
-    <h2 class="header"><app-translate [key]="secondTitle"></app-translate></h2>
+    <h2 class="header">
+      <app-translate [key]="secondTitle"></app-translate>
+    </h2>
   </div>
 
   <div class="actions">
     <!-- Dashboard actions -->
     <div class="dashboard-actions" *ngIf="pageName === 'dashboard'">
       <app-dashboard-actions></app-dashboard-actions>
+    </div>
+    <div *ngIf="pageName === 'widgets'">
+      <app-widget-list-actions></app-widget-list-actions>
     </div>
   </div>
 

@@ -16,13 +16,13 @@
  *
  */
 
-import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator, MatSlideToggleChange, MatSort, MatTableDataSource} from '@angular/material';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {merge} from 'rxjs/observable/merge';
 import {of as observableOf} from 'rxjs/observable/of';
 import {fromEvent} from 'rxjs/observable/fromEvent';
-import {catchError, debounceTime, distinctUntilChanged} from 'rxjs/operators';
+import {catchError, debounceTime, distinctUntilChanged, takeWhile} from 'rxjs/operators';
 import {map} from 'rxjs/operators/map';
 import {switchMap} from 'rxjs/operators/switchMap';
 import {startWith} from 'rxjs/operators/startWith';
@@ -43,7 +43,7 @@ import {ToastType} from '../../../shared/model/toastNotification/ToastType';
   templateUrl: './widget-list.component.html',
   styleUrls: ['./widget-list.component.css']
 })
-export class WidgetListComponent implements OnInit, AfterViewInit {
+export class WidgetListComponent implements OnInit, AfterViewInit, OnDestroy {
 
   /**
    * Manage the sort of each column on the table
@@ -104,6 +104,12 @@ export class WidgetListComponent implements OnInit, AfterViewInit {
   widgets: Widget[];
 
   /**
+   * True while the component is alive
+   * @type {boolean}
+   */
+  private isAlive = true;
+
+  /**
    * Constructor
    *
    * @param {WidgetService} widgetService The widgetService to inject
@@ -121,6 +127,12 @@ export class WidgetListComponent implements OnInit, AfterViewInit {
    * Steps when the component is init
    */
   ngOnInit() {
+    this.widgetService.widgets$.pipe(
+        takeWhile(() => this.isAlive)
+    ).subscribe(() => {
+      this.initTable();
+    });
+
     this.initTable();
   }
 
@@ -259,6 +271,13 @@ export class WidgetListComponent implements OnInit, AfterViewInit {
             );
           });
     }
+  }
+
+  /**
+   * Called when the component is destroyed
+   */
+  ngOnDestroy() {
+    this.isAlive = false;
   }
 
 }
