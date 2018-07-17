@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { WidgetListActionsComponent } from './widget-list-actions.component';
+import {WidgetListActionsComponent} from './widget-list-actions.component';
 
 describe('WidgetListActionsComponent', () => {
   let component: WidgetListActionsComponent;
@@ -24,9 +24,9 @@ describe('WidgetListActionsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ WidgetListActionsComponent ]
+      declarations: [WidgetListActionsComponent]
     })
-    .compileComponents();
+        .compileComponents();
   }));
 
   beforeEach(() => {
