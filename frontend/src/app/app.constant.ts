@@ -38,16 +38,19 @@ export const appEnv = `${environment.ENVIRONMENT}`;
 /*                  HTTP CONSTANTS                                          */
 /* ************************************************************************ */
 
+
+export const baseEndpoint = `${process.env.BASE_URL}`;
+
 /**
  * The base API url
  * @type {string}
  */
-export const baseApiEndpoint = `${process.env.BASE_URL}/api`;
+export const baseApiEndpoint = `${baseEndpoint}/api`;
 /**
  * The base WS url
  * @type {string}
  */
-export const baseWsEndpoint = `${process.env.BASE_URL}/ws`;
+export const baseWsEndpoint = `${baseEndpoint}/ws`;
 
 /**
  * Global endpoint for Authentication
@@ -111,9 +114,3 @@ export const authenticationProviderLDAP = 'ldap';
  * @type {string}
  */
 export const authenticationProviderDatabase = 'database';
-
-/**
- * Authentication provider key on config properties
- * @type {string}
- */
-export const authenticationProviderKey = 'authentication.provider';

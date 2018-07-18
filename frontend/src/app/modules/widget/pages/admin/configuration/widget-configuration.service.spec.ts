@@ -16,26 +16,18 @@
  *
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {RouterModule} from '@angular/router';
+import {inject, TestBed} from '@angular/core/testing';
 
-import {SharedModule} from '../../shared/shared.module';
+import {WidgetConfigurationService} from './configuration.service';
 
-import {SettingsListComponent} from './pages/settings-list/settings-list.component';
-import {LayoutModule} from "../../layout/layout.module";
-import {settingsRoutes} from "./settings.route";
+describe('WidgetConfigurationService', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      providers: [WidgetConfigurationService]
+    });
+  });
 
-@NgModule({
-  imports: [
-    CommonModule,
-    RouterModule.forChild(settingsRoutes),
-    LayoutModule,
-    SharedModule
-  ],
-  declarations: [
-    SettingsListComponent
-  ]
-})
-export class SettingsModule {
-}
+  it('should be created', inject([WidgetConfigurationService], (service: WidgetConfigurationService) => {
+    expect(service).toBeTruthy();
+  }));
+});

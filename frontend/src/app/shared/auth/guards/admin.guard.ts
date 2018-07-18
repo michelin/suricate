@@ -19,7 +19,7 @@ import {CanActivate, CanActivateChild, Router} from '@angular/router';
 import {Observable} from 'rxjs/Observable';
 import {of} from 'rxjs/observable/of';
 
-import {UserService} from '../../../modules/user/user.service';
+import {UserService} from '../../../modules/security/user/user.service';
 
 /**
  * The admin guard

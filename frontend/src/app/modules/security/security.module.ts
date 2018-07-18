@@ -14,33 +14,41 @@
  * limitations under the License.
  */
 
-import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
+import {CommonModule} from '@angular/common';
+import {RouterModule} from '@angular/router';
 
-
-import {SharedModule} from '../../shared/shared.module';
-
-import {AuthenticationService} from './authentication.service';
-import {LoginComponent} from './pages/login/login.component';
-import {RegisterComponent} from './pages/register/register.component';
+import {RoleService} from './user/role.service';
+import {UserService} from './user/user.service';
+import {UserListComponent} from './user/pages/user-list/user-list.component';
+import {DeleteUserDialogComponent} from './user/components/delete-user-dialog/delete-user-dialog.component';
+import {UserEditComponent} from './user/pages/user-edit/user-edit.component';
 import {LayoutModule} from "../../layout/layout.module";
-import {authRoutes} from "./authentication.route";
+import {SharedModule} from "../../shared/shared.module";
+import {securityRoutes} from "./security.route";
 
 @NgModule({
   imports: [
     CommonModule,
-    RouterModule.forChild(authRoutes),
+    RouterModule.forChild(securityRoutes),
     LayoutModule,
     SharedModule
   ],
   declarations: [
-    LoginComponent,
-    RegisterComponent
+    UserListComponent,
+    DeleteUserDialogComponent,
+    UserEditComponent
+  ],
+  entryComponents: [
+    DeleteUserDialogComponent
+  ],
+  exports: [
+    RouterModule
   ],
   providers: [
-    AuthenticationService
+    UserService,
+    RoleService
   ]
 })
-export class AuthenticationModule {
+export class SecurityModule {
 }

@@ -21,7 +21,7 @@ import {Observable} from 'rxjs/Observable';
 
 import {AuthenticationService} from './modules/authentication/authentication.service';
 import {SettingsService} from './shared/services/settings.service';
-import {UserService} from './modules/user/user.service';
+import {UserService} from './modules/security/user/user.service';
 import {takeWhile} from 'rxjs/operators';
 
 @Component({

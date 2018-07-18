@@ -23,32 +23,23 @@ import {SharedModule} from '../../shared/shared.module';
 import {AdminGuard} from '../../shared/auth/guards/admin.guard';
 
 import {DashboardService} from './dashboard.service';
-import {DashboardDetailComponent} from './dashboard-detail/dashboard-detail.component';
-import {DashboardListComponent} from './dashboard-list/dashboard-list.component';
-import {DashboardEditComponent} from './dashboard-edit/dashboard-edit.component';
+import {DashboardDetailComponent} from './pages/dashboard-detail/dashboard-detail.component';
+import {DashboardListComponent} from './pages/admin/dashboard-list/dashboard-list.component';
+import {DashboardEditComponent} from './pages/admin/dashboard-edit/dashboard-edit.component';
 import {DeleteDashboardDialogComponent} from './components/delete-dashboard-dialog/delete-dashboard-dialog.component';
 import {DeleteProjectWidgetDialogComponent} from './components/delete-project-widget-dialog/delete-project-widget-dialog.component';
 import {EditProjectWidgetDialogComponent} from './components/edit-project-widget-dialog/edit-project-widget-dialog.component';
 import {DashboardScreenComponent} from './components/dashboard-screen/dashboard-screen.component';
-import {DashboardTvComponent} from './dashboard-tv/dashboard-tv.component';
+import {DashboardTvComponent} from './pages/dashboard-tv/dashboard-tv.component';
 import {ScreenService} from './screen.service';
-
-const dashboardRoutes: Routes = [
-  {path: 'tv', component: DashboardTvComponent},
-  {path: 'dashboard/:id', component: DashboardDetailComponent, canActivate: [AuthGuard]},
-  {path: 'dashboards', component: DashboardListComponent, canActivate: [AuthGuard, AdminGuard]},
-  {
-    path: 'dashboards/:dashboardId/edit',
-    component: DashboardEditComponent,
-    data: {breadcrumb: 'Edit Dashboard'},
-    canActivate: [AuthGuard, AdminGuard]
-  }
-];
+import {LayoutModule} from "../../layout/layout.module";
+import {dashboardRoutes} from "./dashboard.route";
 
 @NgModule({
   imports: [
     CommonModule,
     RouterModule.forChild(dashboardRoutes),
+    LayoutModule,
     SharedModule
   ],
   declarations: [

@@ -15,27 +15,11 @@
  *  * limitations under the License.
  *
  */
+import {Routes} from "@angular/router";
+import {AuthGuard} from "../../shared/auth/guards/auth.guard";
+import {AdminGuard} from "../../shared/auth/guards/admin.guard";
+import {WidgetListComponent} from "./pages/widget-list/widget-list.component";
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {RouterModule} from '@angular/router';
-
-import {SharedModule} from '../../shared/shared.module';
-
-import {SettingsListComponent} from './pages/settings-list/settings-list.component';
-import {LayoutModule} from "../../layout/layout.module";
-import {settingsRoutes} from "./settings.route";
-
-@NgModule({
-  imports: [
-    CommonModule,
-    RouterModule.forChild(settingsRoutes),
-    LayoutModule,
-    SharedModule
-  ],
-  declarations: [
-    SettingsListComponent
-  ]
-})
-export class SettingsModule {
-}
+export const widgetRoutes: Routes = [
+    {path: 'widgets', component: WidgetListComponent, canActivate: [AuthGuard, AdminGuard]}
+];
