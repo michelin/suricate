@@ -16,26 +16,12 @@
 
 package io.suricate.monitoring.model.enums;
 
-import lombok.Getter;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Hold the possibles actions for the API endpoints
  */
-@Getter
 public enum ApiActionEnum {
-    REFRESH("refresh");
-
-    /**
-     * The API value
-     */
-    private String propertyValue;
-
-    /**
-     * Constructor
-     *
-     * @param propertyValue The API property value
-     */
-    ApiActionEnum(final String propertyValue) {
-        this.propertyValue = propertyValue;
-    }
+    @JsonProperty("refresh")
+    REFRESH
 }
