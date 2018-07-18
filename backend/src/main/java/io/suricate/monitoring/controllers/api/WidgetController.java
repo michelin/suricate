@@ -122,7 +122,7 @@ public class WidgetController {
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<List<WidgetDto>> getWidgets(@ApiParam(name = "action", value = "REFRESH if we have to refresh widgets from GIT Repository", allowableValues = "refresh")
                                                       @RequestParam(value = "action", required = false) String action) {
-        if (ApiActionEnum.REFRESH.getPropertyValue().equalsIgnoreCase(action)) {
+        if (ApiActionEnum.REFRESH.name().equalsIgnoreCase(action)) {
             Future<Boolean> isDone = this.gitService.updateWidgetFromGit();
 
             try {
