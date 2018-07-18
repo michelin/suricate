@@ -28,17 +28,12 @@ import {ColorPickerModule} from 'ngx-color-picker';
 import {TokenInterceptor} from './interceptors/token.interceptor';
 import {AuthGuard} from './auth/guards/auth.guard';
 import {MaterialModule} from './modules/material.module';
-import {PagesHeaderComponent} from './components/pages-header/pages-header.component';
-import {AddWidgetDialogComponent} from './components/pages-header/components/add-widget-dialog/add-widget-dialog.component';
-import {DashboardActionsComponent} from './components/pages-header/components/dashboard-actions/dashboard-actions.component';
 import {WebsocketService} from './services/websocket.service';
 import {ToastComponent} from './components/toast/toast.component';
 import {ToastService} from './components/toast/toast.service';
-import {PagesFooterComponent} from './components/pages-footer/pages-footer.component';
 import {SafeHtmlPipe} from './pipes/safe-html.pipe';
 import {SafeUrlPipe} from './pipes/safe-url.pipe';
 import {RunScriptsDirective} from './directives/run-scripts.directive';
-import {TvManagementDialogComponent} from './components/pages-header/components/tv-management-dialog/tv-management-dialog.component';
 import {AdminGuard} from './auth/guards/admin.guard';
 import {TokenService} from './auth/token.service';
 import {TranslateModule} from '@ngx-translate/core';
@@ -46,7 +41,6 @@ import {TranslationComponent} from './components/translations/translation.compon
 import {MaterialCDKModule} from './modules/metarialCDK.module';
 import {SettingsService} from './services/settings.service';
 import {ErrorInterceptor} from './interceptors/error.interceptor';
-import { WidgetListActionsComponent } from './components/pages-header/components/widget-list-actions/widget-list-actions.component';
 
 @NgModule({
   imports: [
@@ -64,21 +58,11 @@ import { WidgetListActionsComponent } from './components/pages-header/components
     TranslateModule
   ],
   declarations: [
-    PagesHeaderComponent,
-    AddWidgetDialogComponent,
-    DashboardActionsComponent,
     ToastComponent,
-    PagesFooterComponent,
     SafeHtmlPipe,
     SafeUrlPipe,
-    TvManagementDialogComponent,
     RunScriptsDirective,
-    TranslationComponent,
-    WidgetListActionsComponent
-  ],
-  entryComponents: [
-    AddWidgetDialogComponent,
-    TvManagementDialogComponent
+    TranslationComponent
   ],
   exports: [
     FormsModule,
@@ -92,13 +76,10 @@ import { WidgetListActionsComponent } from './components/pages-header/components
     CustomFormsModule,
     ColorPickerModule,
     TranslateModule,
-    PagesHeaderComponent,
-    AddWidgetDialogComponent,
     ToastComponent,
     SafeHtmlPipe,
     SafeUrlPipe,
     RunScriptsDirective,
-    PagesFooterComponent,
     TranslationComponent
   ],
   providers: [

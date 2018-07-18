@@ -22,7 +22,7 @@ import {map} from 'rxjs/operators/map';
 
 import {Project} from '../../shared/model/dto/Project';
 import {ProjectWidget} from '../../shared/model/dto/ProjectWidget';
-import {UserService} from '../user/user.service';
+import {UserService} from '../security/user/user.service';
 import {User} from '../../shared/model/dto/user/User';
 import {ProjectWidgetPosition} from '../../shared/model/dto/ProjectWidgetPosition';
 import {WidgetStateEnum} from '../../shared/model/dto/enums/WidgetSateEnum';

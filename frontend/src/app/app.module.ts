@@ -22,16 +22,16 @@ import {RouterModule, Routes} from '@angular/router';
 import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
 import {TranslateHttpLoader} from '@ngx-translate/http-loader';
 
-import {CoreModule} from './modules/core/core.module';
 import {SharedModule} from './shared/shared.module';
-import {UserModule} from './modules/user/user.module';
+import {SecurityModule} from './modules/security/security.module';
 import {DashboardModule} from './modules/dashboard/dashboard.module';
 import {AuthenticationModule} from './modules/authentication/authentication.module';
 import {AppComponent} from './app.component';
-import {HomeModule} from './modules/home/home.module';
-import {ConfigurationModule} from './modules/configuration/configuration.module';
+import {HomeModule} from './home/home.module';
+import {WidgetConfigurationModule} from './modules/widget/pages/admin/configuration/widget-configuration.module';
 import {WidgetModule} from './modules/widget/widget.module';
 import {SettingsModule} from './modules/settings/settings.module';
+import {LayoutModule} from "./layout/layout.module";
 
 const appRoutes: Routes = [
   {path: '', redirectTo: '/home', pathMatch: 'full'},
@@ -45,15 +45,15 @@ export function createTranslateLoader(http: HttpClient) {
 @NgModule({
   imports: [
     BrowserModule,
+    LayoutModule,
     BrowserAnimationsModule,
     RouterModule.forRoot(appRoutes),
     SharedModule,
-    CoreModule,
     HomeModule,
     AuthenticationModule,
     DashboardModule,
-    UserModule,
-    ConfigurationModule,
+    SecurityModule,
+    WidgetConfigurationModule,
     WidgetModule,
     HttpClientModule,
     TranslateModule.forRoot({

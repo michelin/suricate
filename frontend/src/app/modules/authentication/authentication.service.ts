@@ -22,7 +22,7 @@ import {BehaviorSubject} from 'rxjs/BehaviorSubject';
 import {Observable} from 'rxjs/Observable';
 import {map} from 'rxjs/operators';
 
-import {UserService} from '../user/user.service';
+import {UserService} from '../security/user/user.service';
 import {authenticationApiEndpoint, usersApiEndpoint} from '../../app.constant';
 import {TokenService} from '../../shared/auth/token.service';
 import {AuthenticationResponse} from '../../shared/model/dto/user/AuthenticationResponse';

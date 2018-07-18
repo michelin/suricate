@@ -18,25 +18,23 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {RouterModule, Routes} from '@angular/router';
+import {RouterModule} from '@angular/router';
 
-import {AuthGuard} from '../../shared/auth/guards/auth.guard';
 import {SharedModule} from '../../shared/shared.module';
 
-import {SettingListComponent} from './setting-list/setting-list.component';
-
-const settingsRoutes: Routes = [
-  {path: 'settings', component: SettingListComponent, canActivate: [AuthGuard]}
-];
+import {SettingsListComponent} from './pages/settings-list/settings-list.component';
+import {LayoutModule} from "../../layout/layout.module";
+import {settingsRoutes} from "./settings.route";
 
 @NgModule({
   imports: [
     CommonModule,
     RouterModule.forChild(settingsRoutes),
+    LayoutModule,
     SharedModule
   ],
   declarations: [
-    SettingListComponent
+    SettingsListComponent
   ]
 })
 export class SettingsModule {

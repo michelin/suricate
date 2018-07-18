@@ -131,11 +131,13 @@ public class ConfigurationService {
      *
      * @return The list of usefull server configuration properties
      */
-    public List<ApplicationPropertiesDto> getServerConfigurations() {
-        List<ApplicationPropertiesDto> applicationPropertiesDtos = new ArrayList<>();
-        applicationPropertiesDtos.add(new ApplicationPropertiesDto("authentication.provider", applicationProperties.authentication.provider, "The user provider source (Database or LDAP)"));
+    public ApplicationPropertiesDto getAuthenticationProvider() {
+        return new ApplicationPropertiesDto("authentication.provider", applicationProperties.authentication.provider, "The user provider source (Database or LDAP)");
+    }
 
-        return applicationPropertiesDtos;
+    public List<ApplicationPropertiesDto> getServerConfiguration() {
+        // TODO
+        return null;
     }
 
     /**
