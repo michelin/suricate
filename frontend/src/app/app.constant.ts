@@ -39,7 +39,7 @@ export const appEnv = `${environment.ENVIRONMENT}`;
 /* ************************************************************************ */
 
 
-export const baseEndpoint = `${process.env.BASE_URL}`;
+export const baseEndpoint = `${environment.BASE_URL}`;
 
 /**
  * The base API url
