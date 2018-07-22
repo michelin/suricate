@@ -16,8 +16,7 @@
 
 import {Injectable} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {Observable} from 'rxjs/Observable';
+import {BehaviorSubject, Observable} from 'rxjs';
 
 import {UserSetting} from '../model/dto/UserSetting';
 import {User} from '../model/dto/user/User';

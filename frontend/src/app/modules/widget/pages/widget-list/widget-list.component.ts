@@ -19,13 +19,8 @@
 import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator, MatSlideToggleChange, MatSort, MatTableDataSource} from '@angular/material';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
-import {merge} from 'rxjs/observable/merge';
-import {of as observableOf} from 'rxjs/observable/of';
-import {fromEvent} from 'rxjs/observable/fromEvent';
-import {catchError, debounceTime, distinctUntilChanged, takeWhile} from 'rxjs/operators';
-import {map} from 'rxjs/operators/map';
-import {switchMap} from 'rxjs/operators/switchMap';
-import {startWith} from 'rxjs/operators/startWith';
+import {merge, of as observableOf, fromEvent} from 'rxjs';
+import {catchError, debounceTime, distinctUntilChanged, takeWhile, map, switchMap, startWith} from 'rxjs/operators';
 
 
 import {WidgetService} from '../../widget.service';

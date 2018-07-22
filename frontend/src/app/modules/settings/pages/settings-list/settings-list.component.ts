@@ -16,7 +16,7 @@
 
 import {Component, OnInit} from '@angular/core';
 import {FormGroup, NgForm} from '@angular/forms';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 
 import {UserService} from '../../../security/user/user.service';
 import {User} from '../../../../shared/model/dto/user/User';
