@@ -26,6 +26,8 @@ import {UserEditComponent} from './user/pages/user-edit/user-edit.component';
 import {LayoutModule} from "../../layout/layout.module";
 import {SharedModule} from "../../shared/shared.module";
 import {securityRoutes} from "./security.route";
+import {ConfigService} from "./config/config.service";
+import {ConfigListComponent} from "./config/pages/config-list/config-list.component";
 
 @NgModule({
   imports: [
@@ -37,7 +39,8 @@ import {securityRoutes} from "./security.route";
   declarations: [
     UserListComponent,
     DeleteUserDialogComponent,
-    UserEditComponent
+    UserEditComponent,
+    ConfigListComponent
   ],
   entryComponents: [
     DeleteUserDialogComponent
@@ -47,7 +50,8 @@ import {securityRoutes} from "./security.route";
   ],
   providers: [
     UserService,
-    RoleService
+    RoleService,
+    ConfigService
   ]
 })
 export class SecurityModule {
