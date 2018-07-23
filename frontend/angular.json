@@ -56,18 +56,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "mvt:build"
+            "browserTarget": "suricate-frontend:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "mvt:build:production"
+              "browserTarget": "suricate-frontend:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "mvt:build"
+            "browserTarget": "suricate-frontend:build"
           }
         },
         "test": {
@@ -109,7 +109,7 @@
         }
       }
     },
-    "mvt-e2e": {
+    "suricate-frontend-e2e": {
       "root": "",
       "sourceRoot": "e2e",
       "projectType": "application",
@@ -118,7 +118,7 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "./protractor.conf.js",
-            "devServerTarget": "mvt:serve"
+            "devServerTarget": "suricate-frontend:serve"
           }
         },
         "lint": {
@@ -135,7 +135,7 @@
       }
     }
   },
-  "defaultProject": "mvt",
+  "defaultProject": "suricate-frontend",
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "app",
