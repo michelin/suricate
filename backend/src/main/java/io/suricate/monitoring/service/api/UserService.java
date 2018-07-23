@@ -172,7 +172,7 @@ public class UserService {
      * @return The user as optional
      */
     public Optional<User> getOne(Long userId) {
-        User user = userRepository.findOne(userId);
+        User user = userRepository.getOne(userId);
         if (user == null) {
             return Optional.empty();
         }

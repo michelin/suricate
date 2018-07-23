@@ -148,7 +148,7 @@ public class ProjectWidgetService {
      * @return True if exists false otherwise
      */
     public boolean isProjectWidgetExists(final Long projectWidgetId) {
-        return this.projectWidgetRepository.exists(projectWidgetId);
+        return this.projectWidgetRepository.existsById(projectWidgetId);
     }
 
     /**

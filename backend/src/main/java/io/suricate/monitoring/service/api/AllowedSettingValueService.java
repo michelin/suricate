@@ -55,7 +55,7 @@ public class AllowedSettingValueService {
      * @return The related allowed setting value
      */
     public Optional<AllowedSettingValue> getOneById(final Long id) {
-        AllowedSettingValue allowedSettingValue = allowedSettingValueRepository.findOne(id);
+        AllowedSettingValue allowedSettingValue = allowedSettingValueRepository.getOne(id);
 
         if (allowedSettingValue == null) {
             return Optional.empty();
