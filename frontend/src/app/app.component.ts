@@ -17,7 +17,7 @@
 import {OverlayContainer} from '@angular/cdk/overlay';
 import {ChangeDetectorRef, Component, HostBinding, OnDestroy, OnInit} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 
 import {AuthenticationService} from './modules/authentication/authentication.service';
 import {SettingsService} from './shared/services/settings.service';

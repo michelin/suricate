@@ -16,9 +16,8 @@
 
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {Observable} from 'rxjs/Observable';
-import {map} from 'rxjs/operators/map';
+import {BehaviorSubject, Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 
 import {Project} from '../../shared/model/dto/Project';
 import {ProjectWidget} from '../../shared/model/dto/ProjectWidget';
@@ -405,6 +404,7 @@ export class DashboardService {
    * @param {Project[]} projects The list of projects to sort
    */
   sortByProjectName(projects: Project[]): Project[] {
+    if (projects === null) return projects;
     return projects.sort((left, right): number => {
       if (left.name < right.name) {
         return -1;

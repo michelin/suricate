@@ -60,6 +60,7 @@ import 'web-animations-js';  // Run `npm install --save web-animations-js`.
  // (window as any).__Zone_disable_requestAnimationFrame = true; // disable patch requestAnimationFrame
  // (window as any).__Zone_disable_on_property = true; // disable patch onProperty such as onclick
  // (window as any).__zone_symbol__BLACK_LISTED_EVENTS = ['scroll', 'mousemove']; // disable patch specified eventNames
+(window as any).global = window;
 
  /*
  * in IE/Edge developer tools, the addEventListener will also be wrapped by zone.js
@@ -90,6 +91,4 @@ import 'url-search-params-polyfill'; // Run `npm install --save url-search-param
  * Needed for: All but Chrome, Firefox, Edge, IE11 and Safari 10
  */
 // Run `npm install --save intl`.
-import 'intl';
-import 'intl/locale-data/complete.js';
-import 'intl/locale-data/jsonp/en.js';
+

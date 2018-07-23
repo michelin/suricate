@@ -16,7 +16,7 @@
 
 import {Injectable} from '@angular/core';
 import {StompConfig, StompRService, StompState} from '@stomp/ng2-stompjs';
-import {Observable} from 'rxjs/Observable';
+import {Observable} from 'rxjs';
 
 import {NumberUtils} from '../utils/NumberUtils';
 import {baseWsEndpoint} from '../../app.constant';

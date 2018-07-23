@@ -19,8 +19,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatHorizontalStepper} from '@angular/material';
 import {CustomValidators} from 'ng2-validation';
 import {ColorPickerService} from 'ngx-color-picker';
-import {Observable} from 'rxjs/Observable';
-import {empty} from 'rxjs/observable/empty';
+import {Observable, EMPTY as empty} from 'rxjs';
 import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
 
 import {DashboardService} from '../../../modules/dashboard/dashboard.service';
@@ -154,7 +153,7 @@ export class AddDashboardDialogComponent implements OnInit {
     this.userAutoComplete$ = this.addUserForm.get('username').valueChanges.pipe(
         debounceTime(500),
         distinctUntilChanged(),
-        switchMap(username => username ? this.userService.searchUserByUsername(username) : empty<User[]>())
+        switchMap(username => username ? this.userService.searchUserByUsername(username) : new Observable<User[]>())
     );
   }
 

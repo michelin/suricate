@@ -18,8 +18,7 @@
 
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs/Observable';
-import {Subject} from 'rxjs/Subject';
+import {Observable, Subject} from 'rxjs';
 import {tap} from 'rxjs/operators';
 
 import {Category} from '../../shared/model/dto/Category';

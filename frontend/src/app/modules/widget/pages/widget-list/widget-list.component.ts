@@ -19,13 +19,8 @@
 import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator, MatSlideToggleChange, MatSort, MatTableDataSource} from '@angular/material';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
-import {merge} from 'rxjs/observable/merge';
-import {of as observableOf} from 'rxjs/observable/of';
-import {fromEvent} from 'rxjs/observable/fromEvent';
-import {catchError, debounceTime, distinctUntilChanged, takeWhile} from 'rxjs/operators';
-import {map} from 'rxjs/operators/map';
-import {switchMap} from 'rxjs/operators/switchMap';
-import {startWith} from 'rxjs/operators/startWith';
+import {merge, of as observableOf, fromEvent} from 'rxjs';
+import {catchError, debounceTime, distinctUntilChanged, takeWhile, map, switchMap, startWith} from 'rxjs/operators';
 
 
 import {WidgetService} from '../../widget.service';
@@ -193,32 +188,36 @@ export class WidgetListComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   initFilterSubscription() {
     // Filter for widget name input
-    fromEvent(this.nameInputFilter.nativeElement, 'keyup')
-        .pipe(
-            debounceTime(500),
-            distinctUntilChanged(),
-            map((keyboardEvent: any) => keyboardEvent.target.value)
-        )
-        .subscribe((inputValue: string) => {
-          this.matTableDataSource.filterPredicate = (widget: Widget, filter: string) => {
-            return widget.name.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) !== -1;
-          };
-          this.applyFilter(inputValue);
-        });
+    if (this.nameInputFilter !== undefined) {
+        fromEvent(this.nameInputFilter.nativeElement, 'keyup')
+            .pipe(
+                debounceTime(500),
+                distinctUntilChanged(),
+                map((keyboardEvent: any) => keyboardEvent.target.value)
+            )
+            .subscribe((inputValue: string) => {
+                this.matTableDataSource.filterPredicate = (widget: Widget, filter: string) => {
+                    return widget.name.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) !== -1;
+                };
+                this.applyFilter(inputValue);
+            });
+    }
 
-    // Filter for widget category
-    fromEvent(this.categoryInputFilter.nativeElement, 'keyup')
-        .pipe(
-            debounceTime(500),
-            distinctUntilChanged(),
-            map((keyboardEvent: any) => keyboardEvent.target.value)
-        )
-        .subscribe((inputValue: string) => {
-          this.matTableDataSource.filterPredicate = (widget: Widget, filter: string) => {
-            return widget.category.name.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) !== -1;
-          };
-          this.applyFilter(inputValue);
-        });
+      if (this.categoryInputFilter !== undefined) {
+          // Filter for widget category
+          fromEvent(this.categoryInputFilter.nativeElement, 'keyup')
+              .pipe(
+                  debounceTime(500),
+                  distinctUntilChanged(),
+                  map((keyboardEvent: any) => keyboardEvent.target.value)
+              )
+              .subscribe((inputValue: string) => {
+                  this.matTableDataSource.filterPredicate = (widget: Widget, filter: string) => {
+                      return widget.category.name.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) !== -1;
+                  };
+                  this.applyFilter(inputValue);
+              });
+      }
   }
 
   /**
@@ -226,7 +225,7 @@ export class WidgetListComponent implements OnInit, AfterViewInit, OnDestroy {
    * @param {string} filterValue The value to search
    */
   applyFilter(filterValue: string) {
-    filterValue = filterValue.trim();
+    filterValue = filterValue.trim().toLocaleLowerCase();
     this.matTableDataSource.filter = filterValue;
   }
 

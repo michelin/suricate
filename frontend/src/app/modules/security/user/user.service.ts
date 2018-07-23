@@ -16,10 +16,8 @@
 
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {BehaviorSubject} from 'rxjs/BehaviorSubject';
-import {Observable} from 'rxjs/Observable';
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {map} from 'rxjs/operators';
-import {Subject} from 'rxjs/Subject';
 
 import {User} from '../../../shared/model/dto/user/User';
 import {TokenService} from '../../../shared/auth/token.service';

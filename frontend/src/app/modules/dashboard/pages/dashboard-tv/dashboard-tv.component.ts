@@ -18,10 +18,8 @@
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Observable} from 'rxjs/Observable';
-import {of} from 'rxjs/observable/of';
+import {Observable, of, Subscription} from 'rxjs';
 import {takeWhile} from 'rxjs/operators';
-import {Subscription} from 'rxjs/Subscription';
 
 import {SidenavService} from '../../../../layout/sidenav/sidenav.service';
 import {WebsocketService} from '../../../../shared/services/websocket.service';

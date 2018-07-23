@@ -32,9 +32,8 @@ import {Router} from '@angular/router';
 import {MatDialog} from '@angular/material';
 import {StompState} from '@stomp/ng2-stompjs';
 import {NgGridItemEvent} from 'angular2-grid';
-import {fromEvent} from 'rxjs/observable/fromEvent';
+import {fromEvent, Subscription} from 'rxjs';
 import {auditTime, map, takeWhile} from 'rxjs/operators';
-import {Subscription} from 'rxjs/Subscription';
 
 import {Project} from '../../../../shared/model/dto/Project';
 import {ProjectWidget} from '../../../../shared/model/dto/ProjectWidget';
