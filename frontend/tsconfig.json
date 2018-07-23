@@ -1,8 +1,4 @@
 {
-  "include": [
-    "src/**/*",
-    "node_modules/ng2-stomp-service/**/*.ts"
-  ],
   "compileOnSave": false,
   "compilerOptions": {
     "outDir": "./dist/out-tsc",

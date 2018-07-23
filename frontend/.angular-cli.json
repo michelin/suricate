@@ -1,8 +1,7 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "project": {
-    "name": "dashboard-frontend",
-    "ejected": false
+    "name": "suricate-frontend"
   },
   "apps": [
     {
@@ -27,8 +26,10 @@
         "styles.css"
       ],
       "scripts": [
-        "../node_modules/jquery/dist/jquery.min.js"
-      ],
+	    "../node_modules/jquery/dist/jquery.min.js",
+	    "../node_modules/lodash/lodash.min.js",
+	    "../node_modules/moment/min/moment-with-locales.min.js"
+	  ],
       "environmentSource": "environments/environment.ts",
       "environments": {
         "dev": "environments/environment.ts",
@@ -62,7 +63,6 @@
   },
   "defaults": {
     "styleExt": "css",
-    "component": {
-    }
+    "component": {}
   }
 }
