@@ -9,7 +9,12 @@
     </div>
   </div>
 
-  <mat-table #table [dataSource]="matTableDataSource" class="table-show" matSort>
+   <!-- Temporary filter -->
+    <mat-form-field>
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="{{ 'filter' | translate }}">
+    </mat-form-field>
+
+  <table mat-table [dataSource]="matTableDataSource" class="table-show" matSort>
 
     <ng-container matColumnDef="image">
       <mat-header-cell fxFlex="17%" *matHeaderCellDef></mat-header-cell>
@@ -50,9 +55,9 @@
       </mat-cell>
     </ng-container>
 
-    <ng-container *matHeaderRowDef="displayedColumns">
+    <!-- FIXME :  Uncomment when correction Angular6 regression -->
+    <!-- <ng-container *matHeaderRowDef="displayedColumns">
       <mat-header-row></mat-header-row>
-      <!-- Filter row -->
       <div class="mat-header-row">
         <div fxFlex="17%" class="mat-header-cell" role="columnheader"></div>
         <div fxFlex="15%" class="mat-header-cell" role="columnheader">
@@ -72,9 +77,12 @@
         </div>
         <div fxFlex="13%" class="mat-header-cell" role="columnheader"></div>
       </div>
-    </ng-container>
+    </ng-container> -->
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+
     <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-  </mat-table>
+  </table>
 
   <mat-paginator [length]="resultsLength" [pageSize]="30">
   </mat-paginator>

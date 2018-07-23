@@ -4,3 +4,4 @@ target
 h2/
 *.db
 backend/.gradle/
+frontend/yarn.lock
