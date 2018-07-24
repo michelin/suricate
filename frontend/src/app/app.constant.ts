@@ -88,6 +88,11 @@ export const configurationsApiEndpoint = `${baseApiEndpoint}/configurations`;
  * @type {string}
  */
 export const rolesApiEndpoint = `${baseApiEndpoint}/roles`;
+/**
+ * Global config endpoint
+ * @type {string}
+ */
+export const configApiEndpoint = `${baseApiEndpoint}/manage`;
 
 /* ************************************************************************ */
 /*                  HTTP ERROR CONSTANTS                                    */
