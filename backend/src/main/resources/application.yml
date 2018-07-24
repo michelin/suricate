@@ -47,7 +47,11 @@ spring:
 server.error.whitelabel.enabled: false
 
 ### Security ###
-security.oauth2.resource.filter-order :  3
+security.oauth2:
+  client:
+    client-id: suricateAngular
+    client-secret: suricateAngularSecret
+  resource.filter-order :  3
 
 ### Actuator ###
 management:
@@ -60,6 +64,9 @@ management:
       exposure:
         include: env
         exclude: beans
+    web:
+      exposure:
+        include: configprops
   server:
     servlet:
       context-path: /api/manage
@@ -107,6 +114,10 @@ application:
     allowed-methods:  GET,POST,OPTIONS,DELETE,PUT
     allowed-origins:  "*"
     max-age:  3600
+  ### OAuth ###
+  oauth:
+    client: suricateAngular
+    secret: suricateAngularSecret
   ### SSL Properties ###
   ssl:
     ## Key store
@@ -142,6 +153,6 @@ application:
     contactEmail:
 
 ### proxy ###
-#proxy.host:
-#proxy.port:
+#proxy.host: ptx.proxy.corp.sopra
+#proxy.port: 8080
 #proxy.noProxyDomains:
