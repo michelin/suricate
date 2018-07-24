@@ -152,12 +152,12 @@ public class ConfigurationService {
             return;
         }
 
-        Configuration currentConfiguration = configurationRepository.getOne(configuration.getKey());
+        Optional<Configuration> currentConfiguration = configurationRepository.findById(configuration.getKey());
         configuration.setCategory(category);
 
-        if (currentConfiguration != null) {
-            configuration.setValue(currentConfiguration.getValue());
-            configuration.setExport(currentConfiguration.isExport());
+        if (currentConfiguration.isPresent()) {
+            configuration.setValue(currentConfiguration.get().getValue());
+            configuration.setExport(currentConfiguration.get().isExport());
         }
 
         configurationRepository.save(configuration);
