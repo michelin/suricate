@@ -112,7 +112,7 @@ public class WidgetService {
      * @return The related widget
      */
     public Widget findOne(final Long id) {
-        return widgetRepository.getOne(id);
+        return widgetRepository.findById(id).get();
     }
 
     /**

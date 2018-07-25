@@ -112,12 +112,7 @@ public class ProjectService {
     @LogExecutionTime
     @Transactional
     public Optional<Project> getOneById(Long id) {
-        Project project = projectRepository.getOne(id);
-
-        if (project == null) {
-            return Optional.empty();
-        }
-        return Optional.of(project);
+        return projectRepository.findById(id);
     }
 
     /**

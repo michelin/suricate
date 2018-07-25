@@ -158,7 +158,7 @@ public class ProjectWidgetService {
      * @return The project widget
      */
     public ProjectWidget getOne(final Long projectWidgetId) {
-        return projectWidgetRepository.getOne(projectWidgetId);
+        return projectWidgetRepository.findById(projectWidgetId).get();
     }
 
     /**

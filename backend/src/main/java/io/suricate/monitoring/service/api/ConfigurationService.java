@@ -87,13 +87,7 @@ public class ConfigurationService {
      * @return The configuration as optional
      */
     public Optional<Configuration> getOneByKey(final String key) {
-        Configuration configuration = configurationRepository.getOne(key);
-
-        if (configuration == null) {
-            return Optional.empty();
-        }
-
-        return Optional.of(configuration);
+        return configurationRepository.findById(key);
     }
 
     /**

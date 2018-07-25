@@ -71,8 +71,6 @@ management:
     servlet:
       context-path: /api/manage
 
-
-
 ### logging ###
 ## Keep this enable to see csrf issues
 logging:
