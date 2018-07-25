@@ -87,7 +87,6 @@ public class OAuth2ResourceServerConfiguration extends ResourceServerConfigurerA
             .and()
             .authorizeRequests()
             .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-            .requestMatchers(EndpointRequest.toAnyEndpoint()).permitAll()
             .antMatchers("/h2-console/**").permitAll()
             .antMatchers("/api/oauth/token").permitAll()
             .antMatchers("/api/users/register").permitAll()

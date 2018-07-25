@@ -151,6 +151,6 @@ application:
     contactEmail:
 
 ### proxy ###
-#proxy.host: ptx.proxy.corp.sopra
-#proxy.port: 8080
+#proxy.host:
+#proxy.port:
 #proxy.noProxyDomains:
