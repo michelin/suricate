@@ -135,7 +135,7 @@ export class DashboardService {
   private updateDashboardListSubject(project: Project, action: string): void {
     var indexOfCurrentProject = 0;
 
-    if (this.currendDashbordSubject !== null) {
+    if (this.currendDashbordSubject != null) {
         this.currentDashboardListValues.findIndex(currentProject => currentProject.id === project.id);
     }
 
