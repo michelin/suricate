@@ -33,12 +33,12 @@ import {DashboardScreenComponent} from './components/dashboard-screen/dashboard-
 import {DashboardTvComponent} from './pages/dashboard-tv/dashboard-tv.component';
 import {ScreenService} from './screen.service';
 import {LayoutModule} from "../../layout/layout.module";
-import {dashboardRoutes} from "./dashboard.route";
+import {DashboardRoutes} from "./dashboard.route";
 
 @NgModule({
   imports: [
     CommonModule,
-    RouterModule.forChild(dashboardRoutes),
+    RouterModule.forChild(DashboardRoutes),
     LayoutModule,
     SharedModule
   ],
