@@ -5,7 +5,6 @@ CREATE TABLE `repository` (
   `login` varchar(255),
   `password` varchar(255),
   `enabled` char(1) NOT NULL,
-  `type` varchar(255) NOT NULL,
   PRIMARY KEY (`name`)
 );
 
