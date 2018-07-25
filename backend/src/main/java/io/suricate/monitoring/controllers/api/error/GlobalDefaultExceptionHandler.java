@@ -27,6 +27,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -85,6 +86,20 @@ public class GlobalDefaultExceptionHandler {
         return ResponseEntity
             .status(ApiErrorEnum.FORBIDDEN.getStatus())
             .body(new ApiErrorDto(ApiErrorEnum.FORBIDDEN));
+    }
+
+    /**
+     * Throw when a user try to access a resource with a not supported Http Verb
+     *
+     * @param ex The exception
+     * @return The response
+     */
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<?> handleRequestException(HttpRequestMethodNotSupportedException ex) {
+        LOGGER.debug(ex.getMessage());
+        return ResponseEntity
+            .status(ApiErrorEnum.BAD_REQUEST.getStatus())
+            .body(new ApiErrorDto(ex.getMessage(), ApiErrorEnum.BAD_REQUEST));
     }
 
     /**
