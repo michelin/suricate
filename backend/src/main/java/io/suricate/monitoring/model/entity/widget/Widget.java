@@ -34,7 +34,11 @@ import java.util.List;
  */
 @Entity
 @Indexed
-@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
+@Getter
+@Setter
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+@ToString
 public class Widget extends AbstractAuditingEntity<Long> {
 
     /**
@@ -49,7 +53,8 @@ public class Widget extends AbstractAuditingEntity<Long> {
      */
     @Column(nullable = false)
     @SortableField
-    @Field @Boost(3)
+    @Field
+    @Boost(3)
     private String name;
 
     /**
@@ -117,13 +122,13 @@ public class Widget extends AbstractAuditingEntity<Long> {
      * The related JS librairie used for displaying it on the clients
      */
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinTable(name="widget_library", joinColumns={@JoinColumn(name="widget_id")}, inverseJoinColumns={@JoinColumn(name="library_id")})
+    @JoinTable(name = "widget_library", joinColumns = {@JoinColumn(name = "widget_id")}, inverseJoinColumns = {@JoinColumn(name = "library_id")})
     private List<Library> libraries = new ArrayList<>();
 
     /**
      * The category of this widget
      */
-    @ManyToOne(fetch=FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @IndexedEmbedded(depth = 1)
     private Category category;
 
@@ -136,6 +141,13 @@ public class Widget extends AbstractAuditingEntity<Long> {
     private WidgetAvailabilityEnum widgetAvailability;
 
     /**
+     * The related repository
+     */
+    @ManyToOne
+    @JoinColumn(name = "repository_name")
+    private Repository repository;
+
+    /**
      * The list of params for this widget
      */
     @OneToMany(mappedBy = "widget", cascade = CascadeType.ALL)
@@ -143,6 +155,7 @@ public class Widget extends AbstractAuditingEntity<Long> {
 
     /**
      * Widget params setter
+     *
      * @param widgetParams The list of params to set
      */
     public void setWidgetParams(List<WidgetParam> widgetParams) {
@@ -151,10 +164,11 @@ public class Widget extends AbstractAuditingEntity<Long> {
 
     /**
      * The list of widget params to add
+     *
      * @param widgetParams The list of widget params
      */
     public void addWidgetParams(List<WidgetParam> widgetParams) {
-        widgetParams.forEach( widgetParam -> this.addWidgetParam(widgetParam));
+        widgetParams.forEach(widgetParam -> this.addWidgetParam(widgetParam));
     }
 
     /**

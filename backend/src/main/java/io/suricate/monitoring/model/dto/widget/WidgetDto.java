@@ -107,6 +107,12 @@ public class WidgetDto extends AbstractDto {
     private WidgetAvailabilityEnum widgetAvailability;
 
     /**
+     * The repository used for this widget
+     */
+    @ApiModelProperty(value = "The repository of this widget")
+    private RepositoryDto repository;
+
+    /**
      * The list of the params for this widget
      */
     @ApiModelProperty(value = "List of params for this widget", dataType = "List")

@@ -1,10 +1,14 @@
 package io.suricate.monitoring.model.entity.widget;
 
-import io.suricate.monitoring.model.enums.RepositoryTypeEnum;
 import lombok.*;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Describe a repository
@@ -36,6 +40,18 @@ public class Repository {
     private String branch;
 
     /**
+     * The login to use for the connection to the remote repository
+     */
+    @Column
+    private String login;
+
+    /**
+     * The password to use for the connection to the remote repository
+     */
+    @Column
+    private String password;
+
+    /**
      * If the repository is enable or not
      */
     @Column(nullable = false)
@@ -43,9 +59,8 @@ public class Repository {
     private boolean enabled = true;
 
     /**
-     * The type of the repository
+     * The list of widgets for this repository
      */
-    @Column(nullable = false)
-    @Enumerated(value = EnumType.STRING)
-    private RepositoryTypeEnum type;
+    @OneToMany(mappedBy = "repository")
+    private List<Widget> widgets = new ArrayList<>();
 }
