@@ -12,7 +12,6 @@ spring:
     driver-class-name: org.h2.Driver
     username: sa
     password:
-    initialize: true
     continueOnError: true
     type: com.zaxxer.hikari.HikariDataSource
     hikari:
@@ -21,6 +20,7 @@ spring:
         prepStmtCacheSize: 250
         prepStmtCacheSqlLimit: 2048
         useServerPrepStmts: true
+    initialization-mode: always
   ### JPA ###
   jpa:
     ###   DDL   ###
@@ -33,34 +33,43 @@ spring:
       # base directory for all indexes (make sure that the application have write
       # permissions on such directory)
       indexBase: /tmp/suricate-io/suricate/lucene/indexes/
-  ### Multipart configuration ###
-  http.multipart:
-    max-file-size: 10Mb
-    max-request-size: 10Mb
   ### Mustache ###
   mustache.check-template-location: false
   ### Enable cache ###
   cache.jcache.config: classpath:ehcache3.xml
+  ### Servlet
+  servlet:
+    multipart:
+      max-file-size: 10Mb
+      max-request-size: 10Mb
 
 ### Default error page ###
 server.error.whitelabel.enabled: false
 
 ### Security ###
-security.oauth2.resource.filter-order :  3
+security.oauth2:
+  client:
+    client-id: suricateAngular
+    client-secret: suricateAngularSecret
+  resource.filter-order :  3
 
 ### Actuator ###
 management:
-  context-path: /api/manage
-  security:
-    roles: ROLE_ADMIN
-
-endpoints:
-  enabled: false
-  health.enabled: true
-  flyway.web.enabled: true
-  configprops.enabled: true
-
-
+  endpoints:
+    health.enabled: true
+    flyway.web.enabled: true
+    configprops;enabled: true
+    enabled-by-default: false
+    jmx:
+      exposure:
+        include: env
+        exclude: beans
+    web:
+      exposure:
+        include: configprops
+  server:
+    servlet:
+      context-path: /api/manage
 
 ### logging ###
 ## Keep this enable to see csrf issues
@@ -103,6 +112,10 @@ application:
     allowed-methods:  GET,POST,OPTIONS,DELETE,PUT
     allowed-origins:  "*"
     max-age:  3600
+  ### OAuth ###
+  oauth:
+    client: suricateAngular
+    secret: suricateAngularSecret
   ### SSL Properties ###
   ssl:
     ## Key store
