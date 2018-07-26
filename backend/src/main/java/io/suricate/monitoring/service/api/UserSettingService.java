@@ -93,7 +93,7 @@ public class UserSettingService {
                     .collect(Collectors.toList())
             ));
 
-        this.userSettingRepository.save(userSettings);
+        this.userSettingRepository.saveAll(userSettings);
         this.userSettingRepository.flush();
 
         return userSettings;
@@ -125,7 +125,7 @@ public class UserSettingService {
      */
     public List<UserSetting> updateUserSettingsForUser(User user, final List<UserSettingDto> userSettingDtos) {
         for (UserSettingDto userSettingDto : userSettingDtos) {
-            UserSetting userSetting = userSettingRepository.findOne(userSettingDto.getId());
+            UserSetting userSetting = userSettingRepository.findById(userSettingDto.getId()).get();
 
             if (userSetting.getSetting().isConstrained()) {
                 // Constrained case

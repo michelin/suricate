@@ -16,9 +16,11 @@
 
 package io.suricate.monitoring.configuration.security.oauth2;
 
+import io.suricate.monitoring.configuration.ApplicationProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.config.annotation.configurers.ClientDetailsServiceConfigurer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
@@ -48,6 +50,16 @@ public class OAuth2AuthorizationServerConfiguration extends AuthorizationServerC
     private final JwtAccessTokenConverter jwtAccessTokenConverter;
 
     /**
+     * Application properties
+     */
+    private final ApplicationProperties applicationProperties;
+
+    /**
+     * Password encoder
+     */
+    private final PasswordEncoder passwordEncoder;
+
+    /**
      * Constructor
      *
      * @param authenticationManager Authentication manager
@@ -55,11 +67,14 @@ public class OAuth2AuthorizationServerConfiguration extends AuthorizationServerC
      * @param jwtAccessTokenConverter Token converter service
      */
     @Autowired
-    public OAuth2AuthorizationServerConfiguration(AuthenticationManager authenticationManager, TokenStore tokenStore, JwtAccessTokenConverter jwtAccessTokenConverter) {
+    public OAuth2AuthorizationServerConfiguration(AuthenticationManager authenticationManager, TokenStore tokenStore,
+                                                  JwtAccessTokenConverter jwtAccessTokenConverter, ApplicationProperties applicationProperties,
+                                                  PasswordEncoder passwordEncoder) {
         this.authenticationManager = authenticationManager;
         this.tokenStore = tokenStore;
         this.jwtAccessTokenConverter = jwtAccessTokenConverter;
-
+        this.applicationProperties = applicationProperties;
+        this.passwordEncoder = passwordEncoder;
     }
 
     /**
@@ -99,8 +114,8 @@ public class OAuth2AuthorizationServerConfiguration extends AuthorizationServerC
         clients
             .inMemory()
                 //TODO: Refactor this with properties
-                .withClient("suricateAngular")
-                .secret("suricateAngularSecret")
+                .withClient(applicationProperties.oauth.client)
+                .secret(passwordEncoder.encode(applicationProperties.oauth.secret))
                 .authorizedGrantTypes("password", "refresh_token")
                 .scopes("read", "write")
                 .accessTokenValiditySeconds(10000);

@@ -26,6 +26,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -61,6 +62,7 @@ public class UserDetailsDatabaseService implements UserDetailsService {
      * @throws UsernameNotFoundException When no user has been found
      */
     @Override
+    @Transactional
     public ConnectedUser loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> currentUser = userService.getOneByUsername(username);
 
