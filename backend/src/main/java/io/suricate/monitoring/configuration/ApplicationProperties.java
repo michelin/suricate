@@ -64,6 +64,10 @@ public class ApplicationProperties {
      */
     public final Swagger swagger = new Swagger();
 
+    /**
+     * The OAuth properties
+     */
+    public final OAuth oauth = new OAuth();
 
     /**
      * Hold the Authentication properties info
@@ -313,5 +317,22 @@ public class ApplicationProperties {
          * The swagger contact email
          */
         public String contactEmail;
+    }
+
+    /**
+     * Hold the OAuth properties info
+     */
+    @Getter
+    @Setter
+    public static class OAuth {
+        /**
+         * The client id
+         */
+        public String client;
+        /**
+         * The client secret
+         */
+        public String secret;
+
     }
 }

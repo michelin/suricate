@@ -18,6 +18,7 @@ package io.suricate.monitoring.configuration.security.oauth2;
 
 import io.suricate.monitoring.controllers.api.error.ApiAuthenticationFailureHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;

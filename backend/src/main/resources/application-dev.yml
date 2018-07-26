@@ -6,7 +6,7 @@ spring:
     enabled: true
     path: /h2-console
   ###   DDL   ###
-  jpa.hibernate.ddl-auto: validate
+  jpa.hibernate.ddl-auto: update
   ###   DATASOURCES   ###
   ## You can override datasource by uncommented and fill these lines
   # datasource:

@@ -101,7 +101,7 @@ public class LibraryService {
                 library.setId(lib.getId());
             }
         }
-        libraryRepository.save(list);
+        libraryRepository.saveAll(list);
         return libraryRepository.findAll();
     }
 
