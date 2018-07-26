@@ -133,7 +133,12 @@ export class DashboardService {
    * @param {string} action The action performed
    */
   private updateDashboardListSubject(project: Project, action: string): void {
-    const indexOfCurrentProject = this.currentDashboardListValues.findIndex(currentProject => currentProject.id === project.id);
+    // Initialize search index
+    var indexOfCurrentProject = -1;
+
+    if (this.currendDashbordSubject != null) {
+        this.currentDashboardListValues.findIndex(currentProject => currentProject.id === project.id);
+    }
 
     if (indexOfCurrentProject >= 0) {
       this.currentDashboardListValues.splice(indexOfCurrentProject, 1);

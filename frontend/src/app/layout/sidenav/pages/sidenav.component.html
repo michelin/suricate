@@ -83,7 +83,7 @@
               <app-translate [key]="'widgets'"></app-translate>
           </h1>
           <mat-nav-list>
-              <a mat-list-item routerLinkActive="active" [routerLink]="['/widgets/admin/configurations']">
+              <a mat-list-item *ngIf="isUserAdmin" routerLinkActive="active" [routerLink]="['/widgets/admin/configurations']">
                   <app-translate [key]="'configurations'"></app-translate>
               </a>
               <a mat-list-item routerLinkActive="active" [routerLink]="['/widgets']">

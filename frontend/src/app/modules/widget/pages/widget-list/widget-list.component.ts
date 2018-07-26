@@ -29,6 +29,7 @@ import {WidgetAvailabilityEnum} from '../../../../shared/model/dto/enums/WidgetA
 import {Widget} from '../../../../shared/model/dto/Widget';
 import {ToastService} from '../../../../shared/components/toast/toast.service';
 import {ToastType} from '../../../../shared/model/toastNotification/ToastType';
+import {UserService} from "../../../security/user/user.service";
 
 /**
  * Component that display the list of widgets (admin part)
@@ -59,6 +60,12 @@ export class WidgetListComponent implements OnInit, AfterViewInit, OnDestroy {
    * The input filter for category
    */
   @ViewChild('categoryInputFilter') categoryInputFilter: ElementRef;
+
+   /**
+    * True if the user is admin
+    * @type {boolean}
+   */
+   isUserAdmin: boolean;
 
   /**
    * The table data source
@@ -112,7 +119,8 @@ export class WidgetListComponent implements OnInit, AfterViewInit, OnDestroy {
    * @param {DomSanitizer} domSanitizer The dom sanitizer service
    * @param {ToastService} toastService The toast notificaiton service
    */
-  constructor(private widgetService: WidgetService,
+  constructor(private userService: UserService,
+              private widgetService: WidgetService,
               private changeDetectorRef: ChangeDetectorRef,
               private domSanitizer: DomSanitizer,
               private toastService: ToastService) {
@@ -122,6 +130,7 @@ export class WidgetListComponent implements OnInit, AfterViewInit, OnDestroy {
    * Steps when the component is init
    */
   ngOnInit() {
+    this.isUserAdmin = this.userService.isAdmin();
     this.widgetService.widgets$.pipe(
         takeWhile(() => this.isAlive)
     ).subscribe(() => {
@@ -129,6 +138,7 @@ export class WidgetListComponent implements OnInit, AfterViewInit, OnDestroy {
     });
 
     this.initTable();
+
   }
 
   /**

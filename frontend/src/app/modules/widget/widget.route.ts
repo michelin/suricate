@@ -21,5 +21,6 @@ import {AdminGuard} from "../../shared/auth/guards/admin.guard";
 import {WidgetListComponent} from "./pages/widget-list/widget-list.component";
 
 export const widgetRoutes: Routes = [
-    {path: 'widgets', component: WidgetListComponent, canActivate: [AuthGuard, AdminGuard]}
+    {path: 'widgets', component: WidgetListComponent, canActivate: [AuthGuard]},
+    {path: 'widgets/admin/configurations', component: WidgetListComponent, canActivate: [AuthGuard, AdminGuard]}
 ];
