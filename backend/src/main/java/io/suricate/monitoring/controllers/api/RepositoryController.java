@@ -47,6 +47,7 @@ import java.util.Optional;
 @RequestMapping(value = "/api/repositories")
 @Api(value = "Repository Controller", tags = {"Repository"})
 public class RepositoryController {
+    
     /**
      * Class logger
      */

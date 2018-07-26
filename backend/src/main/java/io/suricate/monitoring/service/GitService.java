@@ -20,6 +20,7 @@ import io.suricate.monitoring.configuration.ApplicationProperties;
 import io.suricate.monitoring.model.entity.Library;
 import io.suricate.monitoring.model.entity.widget.Category;
 import io.suricate.monitoring.service.api.LibraryService;
+import io.suricate.monitoring.service.api.RepositoryService;
 import io.suricate.monitoring.service.api.WidgetService;
 import io.suricate.monitoring.service.scheduler.NashornWidgetScheduler;
 import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
@@ -71,6 +72,11 @@ public class GitService {
     private final LibraryService libraryService;
 
     /**
+     * The repository service
+     */
+    private final RepositoryService repositoryService;
+
+    /**
      * The dashboard websocket service
      */
     private final DashboardWebSocketService dashboardWebSocketService;
@@ -85,17 +91,21 @@ public class GitService {
      *
      * @param widgetService             widget service
      * @param libraryService            library service
+     * @param repositoryService         The repository service
      * @param dashboardWebSocketService socket service
      * @param nashornWidgetScheduler    widget executor
+     * @param applicationProperties     The application properties
      */
     @Autowired
     public GitService(final WidgetService widgetService,
                       final LibraryService libraryService,
+                      final RepositoryService repositoryService,
                       final DashboardWebSocketService dashboardWebSocketService,
                       final NashornWidgetScheduler nashornWidgetScheduler,
                       final ApplicationProperties applicationProperties) {
         this.widgetService = widgetService;
         this.libraryService = libraryService;
+        this.repositoryService = repositoryService;
         this.dashboardWebSocketService = dashboardWebSocketService;
         this.nashornWidgetScheduler = nashornWidgetScheduler;
         this.applicationProperties = applicationProperties;
@@ -165,12 +175,14 @@ public class GitService {
      */
     @Async
     @Transactional
-    public Future<Boolean> updateWidgetFromGit() {
+    public Future<Boolean> updateWidgetFromGitRepositories() {
         LOGGER.info("Update widgets from Git repo");
         if (!applicationProperties.widgets.updateEnable) {
             LOGGER.info("Widget update disabled");
             return null;
         }
+
+
         File folder = null;
         try {
             folder = cloneWidgetRepo();
