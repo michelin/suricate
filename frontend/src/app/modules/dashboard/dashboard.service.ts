@@ -133,7 +133,8 @@ export class DashboardService {
    * @param {string} action The action performed
    */
   private updateDashboardListSubject(project: Project, action: string): void {
-    var indexOfCurrentProject = 0;
+    // Initialize search index
+    var indexOfCurrentProject = -1;
 
     if (this.currendDashbordSubject != null) {
         this.currentDashboardListValues.findIndex(currentProject => currentProject.id === project.id);
