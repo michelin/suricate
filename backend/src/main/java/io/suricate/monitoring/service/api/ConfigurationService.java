@@ -87,13 +87,7 @@ public class ConfigurationService {
      * @return The configuration as optional
      */
     public Optional<Configuration> getOneByKey(final String key) {
-        Configuration configuration = configurationRepository.findOne(key);
-
-        if (configuration == null) {
-            return Optional.empty();
-        }
-
-        return Optional.of(configuration);
+        return configurationRepository.findById(key);
     }
 
     /**
@@ -114,7 +108,7 @@ public class ConfigurationService {
      * @param key The key of the configuration
      */
     public void deleteOneByKey(String key) {
-        configurationRepository.delete(key);
+        configurationRepository.deleteById(key);
     }
 
     /**
@@ -152,12 +146,12 @@ public class ConfigurationService {
             return;
         }
 
-        Configuration currentConfiguration = configurationRepository.findOne(configuration.getKey());
+        Optional<Configuration> currentConfiguration = configurationRepository.findById(configuration.getKey());
         configuration.setCategory(category);
 
-        if (currentConfiguration != null) {
-            configuration.setValue(currentConfiguration.getValue());
-            configuration.setExport(currentConfiguration.isExport());
+        if (currentConfiguration.isPresent()) {
+            configuration.setValue(currentConfiguration.get().getValue());
+            configuration.setExport(currentConfiguration.get().isExport());
         }
 
         configurationRepository.save(configuration);

@@ -90,7 +90,7 @@ public class CategoryService {
      * @return Tru if exists false otherwise
      */
     public boolean isCategoryExists(final Long categoryId) {
-        return this.categoryRepository.exists(categoryId);
+        return this.categoryRepository.existsById(categoryId);
     }
 
     /**

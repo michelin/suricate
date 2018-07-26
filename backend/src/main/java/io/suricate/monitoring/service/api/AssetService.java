@@ -56,7 +56,7 @@ public class AssetService {
      * @return The related asset
      */
     public Asset findOne(final Long id) {
-        return assetRepository.findOne(id);
+        return assetRepository.findById(id).get();
     }
 
     /**

@@ -112,7 +112,7 @@ public class WidgetService {
      * @return The related widget
      */
     public Widget findOne(final Long id) {
-        return widgetRepository.findOne(id);
+        return widgetRepository.findById(id).get();
     }
 
     /**
@@ -189,7 +189,7 @@ public class WidgetService {
      * @return The widget update
      */
     public Optional<Widget> updateWidget(final Long widgetId, final WidgetDto widgetDtoWithchanges) {
-        if (!widgetRepository.exists(widgetId)) {
+        if (!widgetRepository.existsById(widgetId)) {
             return Optional.empty();
         }
 

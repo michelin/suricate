@@ -100,7 +100,7 @@ public class ProjectService {
      * @return True id the project exists false otherwise
      */
     public boolean isProjectExists(final Long id) {
-        return this.projectRepository.exists(id);
+        return this.projectRepository.existsById(id);
     }
 
     /**
@@ -112,12 +112,7 @@ public class ProjectService {
     @LogExecutionTime
     @Transactional
     public Optional<Project> getOneById(Long id) {
-        Project project = projectRepository.findOne(id);
-
-        if (project == null) {
-            return Optional.empty();
-        }
-        return Optional.of(project);
+        return projectRepository.findById(id);
     }
 
     /**
