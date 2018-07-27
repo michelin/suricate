@@ -26,16 +26,19 @@ import {WidgetService} from './widget.service';
 import {WidgetListComponent} from './pages/widget-list/widget-list.component';
 import {LayoutModule} from '../../layout/layout.module';
 import {widgetRoutes} from './widget.route';
+import {RepositoryModule} from './pages/admin/repository/repository.module';
 
 @NgModule({
   imports: [
     CommonModule,
     LayoutModule,
     SharedModule,
-    RouterModule.forChild(widgetRoutes)
+    RouterModule.forChild(widgetRoutes),
+    RepositoryModule
   ],
   declarations: [
-    WidgetListComponent],
+    WidgetListComponent
+  ],
   providers: [
     WidgetService
   ]
