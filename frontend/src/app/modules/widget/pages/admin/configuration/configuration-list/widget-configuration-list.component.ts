@@ -21,7 +21,9 @@ import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from '@angular/mat
 import {merge, of as observableOf} from 'rxjs';
 import {catchError, map, startWith, switchMap} from 'rxjs/operators';
 
-import {DeleteWidgetConfigurationDialogComponent} from '../../../../components/delete-configuration-dialog/delete-widget-configuration-dialog.component';
+import {
+  DeleteWidgetConfigurationDialogComponent
+} from '../../../../components/delete-configuration-dialog/delete-widget-configuration-dialog.component';
 import {WidgetConfigurationService} from '../widget-configuration.service';
 import {ToastService} from '../../../../../../shared/components/toast/toast.service';
 import {Configuration} from '../../../../../../shared/model/dto/Configuration';

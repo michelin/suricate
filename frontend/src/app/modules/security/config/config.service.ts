@@ -16,30 +16,30 @@
 /**
  * Manage the app theme
  */
-import {Injectable} from "@angular/core";
-import {HttpClient} from "@angular/common/http";
-import {configApiEndpoint} from "../../../app.constant";
-import {Observable} from "rxjs/index";
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {configApiEndpoint} from '../../../app.constant';
+import {Observable} from 'rxjs/index';
 
 @Injectable()
 export class ConfigService {
 
-    /**
-     * The constructor
-     *
-     * @param {HttpClient} httpClient The http client service to inject
-     */
-    constructor(private httpClient: HttpClient) {
-    }
+  /**
+   * The constructor
+   *
+   * @param {HttpClient} httpClient The http client service to inject
+   */
+  constructor(private httpClient: HttpClient) {
+  }
 
-    /**
-     * Get the list of configuration keys
-     *
-     * @returns {Observable<string>} The list of configuration keys
-     */
-    getAll(): Observable<Object> {
-        const url = `${configApiEndpoint}/configprops`;
+  /**
+   * Get the list of configuration keys
+   *
+   * @returns {Observable<string>} The list of configuration keys
+   */
+  getAll(): Observable<Object> {
+    const url = `${configApiEndpoint}/configprops`;
 
-        return this.httpClient.get<Object>(url);
-    }
+    return this.httpClient.get<Object>(url);
+  }
 }

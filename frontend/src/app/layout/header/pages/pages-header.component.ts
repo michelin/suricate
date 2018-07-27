@@ -30,7 +30,7 @@ export class PagesHeaderComponent implements OnInit {
    * The second title
    * @type {string}
    */
-  @Input('secondTitle') secondTitle: string;
+  @Input() secondTitle: string;
 
   /**
    * The page name

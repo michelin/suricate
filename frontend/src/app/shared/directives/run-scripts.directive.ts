@@ -29,7 +29,7 @@ export class RunScriptsDirective implements OnInit {
    * Emit an event when the script rendering for childs are ended
    * @type {EventEmitter<any>}
    */
-  @Output('scriptRenderingFinished') scriptRenderingFinished = new EventEmitter();
+  @Output() scriptRenderingFinished = new EventEmitter();
 
   /**
    * The constructor

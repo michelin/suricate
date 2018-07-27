@@ -13,10 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Routes} from "@angular/router";
-import {HomeComponent} from "./home.component";
-import {AuthGuard} from "../shared/auth/guards/auth.guard";
+import {Routes} from '@angular/router';
+import {HomeComponent} from './home.component';
+import {AuthGuard} from '../shared/auth/guards/auth.guard';
 
 export const homeRoutes: Routes = [
-    {path: 'home', component: HomeComponent, canActivate: [AuthGuard]}
+  {path: 'home', component: HomeComponent, canActivate: [AuthGuard]}
 ];

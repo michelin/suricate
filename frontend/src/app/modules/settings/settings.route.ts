@@ -15,10 +15,10 @@
  *  * limitations under the License.
  *
  */
-import {Routes} from "@angular/router";
-import {AuthGuard} from "../../shared/auth/guards/auth.guard";
-import {SettingsListComponent} from "./pages/settings-list/settings-list.component";
+import {Routes} from '@angular/router';
+import {AuthGuard} from '../../shared/auth/guards/auth.guard';
+import {SettingsListComponent} from './pages/settings-list/settings-list.component';
 
 export const settingsRoutes: Routes = [
-    {path: 'settings', component: SettingsListComponent, canActivate: [AuthGuard]}
+  {path: 'settings', component: SettingsListComponent, canActivate: [AuthGuard]}
 ];

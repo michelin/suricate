@@ -19,8 +19,8 @@
 import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator, MatSlideToggleChange, MatSort, MatTableDataSource} from '@angular/material';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
-import {merge, of as observableOf, fromEvent} from 'rxjs';
-import {catchError, debounceTime, distinctUntilChanged, takeWhile, map, switchMap, startWith} from 'rxjs/operators';
+import {fromEvent, merge, of as observableOf} from 'rxjs';
+import {catchError, debounceTime, distinctUntilChanged, map, startWith, switchMap, takeWhile} from 'rxjs/operators';
 
 
 import {WidgetService} from '../../widget.service';
@@ -29,7 +29,7 @@ import {WidgetAvailabilityEnum} from '../../../../shared/model/dto/enums/WidgetA
 import {Widget} from '../../../../shared/model/dto/Widget';
 import {ToastService} from '../../../../shared/components/toast/toast.service';
 import {ToastType} from '../../../../shared/model/toastNotification/ToastType';
-import {UserService} from "../../../security/user/user.service";
+import {UserService} from '../../../security/user/user.service';
 
 /**
  * Component that display the list of widgets (admin part)
@@ -61,11 +61,11 @@ export class WidgetListComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   @ViewChild('categoryInputFilter') categoryInputFilter: ElementRef;
 
-   /**
-    * True if the user is admin
-    * @type {boolean}
+  /**
+   * True if the user is admin
+   * @type {boolean}
    */
-   isUserAdmin: boolean;
+  isUserAdmin: boolean;
 
   /**
    * The table data source
@@ -199,35 +199,35 @@ export class WidgetListComponent implements OnInit, AfterViewInit, OnDestroy {
   initFilterSubscription() {
     // Filter for widget name input
     if (this.nameInputFilter !== undefined) {
-        fromEvent(this.nameInputFilter.nativeElement, 'keyup')
-            .pipe(
-                debounceTime(500),
-                distinctUntilChanged(),
-                map((keyboardEvent: any) => keyboardEvent.target.value)
-            )
-            .subscribe((inputValue: string) => {
-                this.matTableDataSource.filterPredicate = (widget: Widget, filter: string) => {
-                    return widget.name.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) !== -1;
-                };
-                this.applyFilter(inputValue);
-            });
+      fromEvent(this.nameInputFilter.nativeElement, 'keyup')
+          .pipe(
+              debounceTime(500),
+              distinctUntilChanged(),
+              map((keyboardEvent: any) => keyboardEvent.target.value)
+          )
+          .subscribe((inputValue: string) => {
+            this.matTableDataSource.filterPredicate = (widget: Widget, filter: string) => {
+              return widget.name.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) !== -1;
+            };
+            this.applyFilter(inputValue);
+          });
     }
 
-      if (this.categoryInputFilter !== undefined) {
-          // Filter for widget category
-          fromEvent(this.categoryInputFilter.nativeElement, 'keyup')
-              .pipe(
-                  debounceTime(500),
-                  distinctUntilChanged(),
-                  map((keyboardEvent: any) => keyboardEvent.target.value)
-              )
-              .subscribe((inputValue: string) => {
-                  this.matTableDataSource.filterPredicate = (widget: Widget, filter: string) => {
-                      return widget.category.name.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) !== -1;
-                  };
-                  this.applyFilter(inputValue);
-              });
-      }
+    if (this.categoryInputFilter !== undefined) {
+      // Filter for widget category
+      fromEvent(this.categoryInputFilter.nativeElement, 'keyup')
+          .pipe(
+              debounceTime(500),
+              distinctUntilChanged(),
+              map((keyboardEvent: any) => keyboardEvent.target.value)
+          )
+          .subscribe((inputValue: string) => {
+            this.matTableDataSource.filterPredicate = (widget: Widget, filter: string) => {
+              return widget.category.name.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) !== -1;
+            };
+            this.applyFilter(inputValue);
+          });
+    }
   }
 
   /**

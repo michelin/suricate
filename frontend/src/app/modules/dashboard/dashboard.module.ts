@@ -16,11 +16,8 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {RouterModule, Routes} from '@angular/router';
-
-import {AuthGuard} from '../../shared/auth/guards/auth.guard';
+import {RouterModule} from '@angular/router';
 import {SharedModule} from '../../shared/shared.module';
-import {AdminGuard} from '../../shared/auth/guards/admin.guard';
 
 import {DashboardService} from './dashboard.service';
 import {DashboardDetailComponent} from './pages/dashboard-detail/dashboard-detail.component';
@@ -32,8 +29,8 @@ import {EditProjectWidgetDialogComponent} from './components/edit-project-widget
 import {DashboardScreenComponent} from './components/dashboard-screen/dashboard-screen.component';
 import {DashboardTvComponent} from './pages/dashboard-tv/dashboard-tv.component';
 import {ScreenService} from './screen.service';
-import {LayoutModule} from "../../layout/layout.module";
-import {DashboardRoutes} from "./dashboard.route";
+import {LayoutModule} from '../../layout/layout.module';
+import {DashboardRoutes} from './dashboard.route';
 
 @NgModule({
   imports: [

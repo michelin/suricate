@@ -31,7 +31,7 @@ import {HomeModule} from './home/home.module';
 import {WidgetConfigurationModule} from './modules/widget/pages/admin/configuration/widget-configuration.module';
 import {WidgetModule} from './modules/widget/widget.module';
 import {SettingsModule} from './modules/settings/settings.module';
-import {LayoutModule} from "./layout/layout.module";
+import {LayoutModule} from './layout/layout.module';
 
 const appRoutes: Routes = [
   {path: '', redirectTo: '/home', pathMatch: 'full'},

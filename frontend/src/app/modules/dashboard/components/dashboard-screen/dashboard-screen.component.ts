@@ -62,17 +62,17 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
    * The project to display
    * @type {Project}
    */
-  @Input('project') project: Project;
+  @Input() project: Project;
   /**
    * Tell if the dashboard should be on readOnly or not
    * @type {boolean}
    */
-  @Input('readOnly') readOnly = true;
+  @Input() readOnly = true;
   /**
    * The screen code
    * @type {number}
    */
-  @Input('screenCode') screenCode: number;
+  @Input() screenCode: number;
   /**
    * The list of projectWidgets rendered by the ngFor
    * @type {QueryList<any>}
