@@ -58,6 +58,16 @@ public class RepositoryService {
      * @return The list of repositories ordered by name
      */
     public Optional<List<Repository>> getAllOrderByName() {
-        return this.repositoryRepository.findAllByOrderByName();
+        return repositoryRepository.findAllByOrderByName();
+    }
+
+    /**
+     * Get the full list of repository by enabled
+     *
+     * @param enabled Tru if we want every enabled repositories
+     * @return The related list
+     */
+    public Optional<List<Repository>> getAllByEnabledOrderByName(final boolean enabled) {
+        return repositoryRepository.findAllByEnabledOrderByName(enabled);
     }
 }

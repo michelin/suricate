@@ -1,12 +1,29 @@
+/*
+ *  /*
+ *  * Copyright 2012-2018 the original author or authors.
+ *  *
+ *  * Licensed under the Apache License, Version 2.0 (the "License");
+ *  * you may not use this file except in compliance with the License.
+ *  * You may obtain a copy of the License at
+ *  *
+ *  *      http://www.apache.org/licenses/LICENSE-2.0
+ *  *
+ *  * Unless required by applicable law or agreed to in writing, software
+ *  * distributed under the License is distributed on an "AS IS" BASIS,
+ *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  * See the License for the specific language governing permissions and
+ *  * limitations under the License.
+ *
+ *
+ */
+
 package io.suricate.monitoring.model.entity.widget;
 
+import io.suricate.monitoring.model.enums.RepositoryTypeEnum;
 import lombok.*;
 import org.hibernate.annotations.Type;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,13 +47,13 @@ public class Repository {
     /**
      * The repository url
      */
-    @Column(nullable = false)
+    @Column
     private String url;
 
     /**
      * The repository branch to clone
      */
-    @Column(nullable = false)
+    @Column
     private String branch;
 
     /**
@@ -50,6 +67,19 @@ public class Repository {
      */
     @Column
     private String password;
+
+    /**
+     * The path of the repository in case of a local folder
+     */
+    @Column
+    private String localPath;
+
+    /**
+     * The type of repository
+     */
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private RepositoryTypeEnum type;
 
     /**
      * If the repository is enable or not

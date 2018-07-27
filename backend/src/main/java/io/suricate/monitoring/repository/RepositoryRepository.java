@@ -33,4 +33,12 @@ public interface RepositoryRepository extends JpaRepository<Repository, String> 
      * @return The list of repositories order by name
      */
     Optional<List<Repository>> findAllByOrderByName();
+
+    /**
+     * Find All by enabled order by name
+     *
+     * @param enabled True if the we want every enabled repository, false otherwise
+     * @return The list of repositories
+     */
+    Optional<List<Repository>> findAllByEnabledOrderByName(final boolean enabled);
 }

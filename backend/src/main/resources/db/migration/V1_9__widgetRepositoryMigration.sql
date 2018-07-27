@@ -1,10 +1,12 @@
 CREATE TABLE `repository` (
   `name` varchar(255) NOT NULL,
-  `url` varchar(255) NOT NULL,
-  `branch` varchar(255) NOT NULL,
-  `login` varchar(255),
-  `password` varchar(255),
+  `url` varchar(255) DEFAULT NULL,
+  `branch` varchar(255) DEFAULT NULL,
+  `login` varchar(255) DEFAULT NULL,
+  `password` varchar(255) DEFAULT NULL,
   `enabled` char(1) NOT NULL,
+  `local_path` varchar(255) DEFAULT NULL,
+  `type` varchar(255) NOT NULL,
   PRIMARY KEY (`name`)
 );
 
