@@ -70,4 +70,13 @@ public class RepositoryService {
     public Optional<List<Repository>> getAllByEnabledOrderByName(final boolean enabled) {
         return repositoryRepository.findAllByEnabledOrderByName(enabled);
     }
+
+    /**
+     * Add or update a repository
+     *
+     * @param repository The repository to process
+     */
+    public void addOrUpdateRepository(Repository repository) {
+        repositoryRepository.save(repository);
+    }
 }

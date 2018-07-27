@@ -247,7 +247,7 @@ public class WidgetService {
             }
 
             if (widget.getImage() != null) {
-                if (currentWidget.getImage() != null) {
+                if (currentWidget != null && currentWidget.getImage() != null) {
                     widget.getImage().setId(currentWidget.getImage().getId());
                 }
                 assetService.save(widget.getImage());
