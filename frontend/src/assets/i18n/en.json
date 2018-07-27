@@ -23,6 +23,7 @@
   "configurations": "Configurations",
   "configurations.list": "List of configurations",
   "configuration.delete": "Delete a configuration",
+  "repositories": "Repositories",
   "widgets": "Widgets",
   "dashboards": "Dashboards",
   "dashboards.list": "All",
