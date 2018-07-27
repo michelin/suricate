@@ -18,16 +18,21 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {RepositoryListComponent} from './repository-list/repository-list.component';
-import {RepositoryService} from './repository.service';
+
 import {SharedModule} from '../../../../../shared/shared.module';
 import {LayoutModule} from '../../../../../layout/layout.module';
+
+import {RepositoryListComponent} from './repository-list/repository-list.component';
+import {RepositoryService} from './repository.service';
+import {RouterModule} from '@angular/router';
+import {repositoryRoutes} from './repository.route';
 
 @NgModule({
   imports: [
     CommonModule,
     LayoutModule,
-    SharedModule
+    SharedModule,
+    RouterModule.forChild(repositoryRoutes)
   ],
   declarations: [
     RepositoryListComponent
