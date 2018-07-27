@@ -16,18 +16,19 @@
  *
  */
 
-import {inject, TestBed} from '@angular/core/testing';
+import {Component, OnInit} from '@angular/core';
 
-import {RepositoryService} from './repository.service';
+@Component({
+  selector: 'app-repository-list',
+  templateUrl: './repository-list.component.html',
+  styleUrls: ['./repository-list.component.css']
+})
+export class RepositoryListComponent implements OnInit {
 
-describe('RepositoryService', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [RepositoryService]
-    });
-  });
+  constructor() {
+  }
 
-  it('should be created', inject([RepositoryService], (service: RepositoryService) => {
-    expect(service).toBeTruthy();
-  }));
-});
+  ngOnInit() {
+  }
+
+}

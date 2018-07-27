@@ -16,18 +16,28 @@
  *
  */
 
-import {inject, TestBed} from '@angular/core/testing';
+import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {RepositoryService} from './repository.service';
+import {RepositoryListComponent} from './repository-list.component';
 
-describe('RepositoryService', () => {
-  beforeEach(() => {
+describe('RepositoryListComponent', () => {
+  let component: RepositoryListComponent;
+  let fixture: ComponentFixture<RepositoryListComponent>;
+
+  beforeEach(async(() => {
     TestBed.configureTestingModule({
-      providers: [RepositoryService]
-    });
+      declarations: [RepositoryListComponent]
+    })
+        .compileComponents();
+  }));
+
+  beforeEach(() => {
+    fixture = TestBed.createComponent(RepositoryListComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
-  it('should be created', inject([RepositoryService], (service: RepositoryService) => {
-    expect(service).toBeTruthy();
-  }));
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
 });

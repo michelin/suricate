@@ -16,18 +16,11 @@
  *
  */
 
-import {inject, TestBed} from '@angular/core/testing';
+import {Routes} from '@angular/router';
+import {AuthGuard} from '../../../../../shared/auth/guards/auth.guard';
+import {AdminGuard} from '../../../../../shared/auth/guards/admin.guard';
+import {RepositoryListComponent} from './repository-list/repository-list.component';
 
-import {RepositoryService} from './repository.service';
-
-describe('RepositoryService', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [RepositoryService]
-    });
-  });
-
-  it('should be created', inject([RepositoryService], (service: RepositoryService) => {
-    expect(service).toBeTruthy();
-  }));
-});
+export const repositoryRoutes: Routes = [
+  {path: 'widgets/admin/repositories', component: RepositoryListComponent, canActivate: [AuthGuard, AdminGuard]},
+];
