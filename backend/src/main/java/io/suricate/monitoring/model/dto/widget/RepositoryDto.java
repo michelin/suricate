@@ -1,5 +1,6 @@
 package io.suricate.monitoring.model.dto.widget;
 
+import io.suricate.monitoring.model.enums.RepositoryTypeEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -26,13 +27,13 @@ public class RepositoryDto {
     /**
      * The repository url
      */
-    @ApiModelProperty(value = "The repository url", required = true)
+    @ApiModelProperty(value = "The repository url")
     private String url;
 
     /**
      * The repository branch to clone
      */
-    @ApiModelProperty(value = "The repository branch to clone", required = true)
+    @ApiModelProperty(value = "The repository branch to clone")
     private String branch;
 
     /**
@@ -46,6 +47,18 @@ public class RepositoryDto {
      */
     @ApiModelProperty(value = "The password to use for the connection to the remote repository")
     private String password;
+
+    /**
+     * The path of the repository in case of a local folder
+     */
+    @ApiModelProperty(value = "The path of the repository in case of a local folder")
+    private String localPath;
+
+    /**
+     * The type of repository
+     */
+    @ApiModelProperty(value = "The type of repository")
+    private RepositoryTypeEnum type;
 
     /**
      * If the repository is enable or not
