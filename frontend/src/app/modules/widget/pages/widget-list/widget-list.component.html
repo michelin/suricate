@@ -50,7 +50,7 @@
       </mat-header-cell>
       <mat-cell fxFlex="13%" *matCellDef="let row">
         <mat-slide-toggle color="accent"
-                          disabled="!isUserAdmin"
+                          [disabled]="!isUserAdmin"
                           [checked]="row.widgetAvailability == widgetAvailability.ACTIVATED"
                           (change)="toggleWidgetActivation(row, $event)"></mat-slide-toggle>
       </mat-cell>

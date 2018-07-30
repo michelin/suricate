@@ -57,6 +57,19 @@ public abstract class RepositoryMapper {
     })
     public abstract RepositoryDto toRepositoryDtoWithoutWidgets(Repository repository);
 
+
+    /**
+     * Create a repository with a dto without widgets
+     *
+     * @param repositoryDto The repository dto to transform
+     * @return The repository
+     */
+    @Named("toRepositoryWithoutWidgets")
+    @Mappings({
+        @Mapping(target = "widgets", ignore = true)
+    })
+    public abstract Repository toRepositoryWithoutWidgets(RepositoryDto repositoryDto);
+
     /* ******************************************************* */
     /*                    List Mapping                         */
     /* ******************************************************* */

@@ -72,6 +72,16 @@ public class RepositoryService {
     }
 
     /**
+     * Check if the repository exists
+     *
+     * @param repositoryName The repository name to check
+     * @return True if exist false otherwise
+     */
+    public boolean existsByName(final String repositoryName) {
+        return this.repositoryRepository.existsById(repositoryName);
+    }
+
+    /**
      * Add or update a repository
      *
      * @param repository The repository to process

@@ -57,7 +57,8 @@
       </mat-header-cell>
       <mat-cell fxFlex="9%" *matCellDef="let row">
         <mat-slide-toggle color="accent"
-                          [checked]="row.enabled">
+                          [checked]="row.enabled"
+                          (change)="toggleWidgetActivation(row, $event)">
         </mat-slide-toggle>
       </mat-cell>
     </ng-container>

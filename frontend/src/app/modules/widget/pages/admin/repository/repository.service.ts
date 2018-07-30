@@ -23,6 +23,9 @@ import {Observable} from 'rxjs/internal/Observable';
 import {Repository} from '../../../../../shared/model/dto/Repository';
 import {repositoriesApiEndpoint} from '../../../../../app.constant';
 
+/**
+ * Service that manage HTTP repository calls
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -36,9 +39,22 @@ export class RepositoryService {
   constructor(private httpClient: HttpClient) {
   }
 
+  /**
+   * Return the list of every repositories
+   */
   getAll(): Observable<Repository[]> {
     const url = `${repositoriesApiEndpoint}`;
 
     return this.httpClient.get<Repository[]>(url);
+  }
+
+  /**
+   * Update a repository
+   * @param repository
+   */
+  updateOne(repository: Repository): Observable<Repository> {
+    const url = `${repositoriesApiEndpoint}/${repository.name}`;
+
+    return this.httpClient.put<Repository>(url, repository);
   }
 }
