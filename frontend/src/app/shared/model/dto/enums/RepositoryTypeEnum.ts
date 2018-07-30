@@ -16,29 +16,10 @@
  *
  */
 
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs/internal/Observable';
-
-import {Repository} from '../../../../../shared/model/dto/Repository';
-import {repositoriesApiEndpoint} from '../../../../../app.constant';
-
-@Injectable({
-  providedIn: 'root'
-})
-export class RepositoryService {
-
-  /**
-   * Constructor
-   *
-   * @param {HttpClient} httpClient The http client to inject
-   */
-  constructor(private httpClient: HttpClient) {
-  }
-
-  getAll(): Observable<Repository[]> {
-    const url = `${repositoriesApiEndpoint}`;
-
-    return this.httpClient.get<Repository[]>(url);
-  }
+/**
+ * Hold the repository types
+ */
+export enum RepositoryTypeEnum {
+  REMOTE = 'REMOTE',
+  LOCAL = 'LOCAL'
 }

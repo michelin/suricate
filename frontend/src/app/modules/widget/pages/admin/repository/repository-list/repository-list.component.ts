@@ -16,7 +16,12 @@
  *
  */
 
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
+import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
+import {merge, of} from 'rxjs/index';
+import {catchError, map, startWith, switchMap} from 'rxjs/operators';
+
+import {RepositoryService} from '../repository.service';
 
 @Component({
   selector: 'app-repository-list',
@@ -25,10 +30,91 @@ import {Component, OnInit} from '@angular/core';
 })
 export class RepositoryListComponent implements OnInit {
 
-  constructor() {
+  /**
+   * manage sort of the Mat table
+   * @type {MatSort}
+   */
+  @ViewChild(MatSort) matSort: MatSort;
+  /**
+   * manage pagination of the Mat table
+   * @type {MatPaginator}
+   */
+  @ViewChild(MatPaginator) matPaginator: MatPaginator;
+
+  /**
+   * Hold the data of the mat table
+   * @type {MatTableDataSource<any>}
+   */
+  matTableDataSource = new MatTableDataSource();
+  /**
+   * The column references of the mat table
+   * @type {string[]}
+   */
+  displayedColumns = ['name', 'localPath', 'url', 'branch', 'type', 'status'];
+  /**
+   * Is the results are loading
+   * @type {boolean}
+   */
+  isLoadingResults = false;
+  /**
+   * If we have an error
+   * @type {boolean}
+   */
+  errorCatched = false;
+  /**
+   * The number of rows
+   * @type {number}
+   */
+  resultsLength = 0;
+
+  /**
+   * Constructor
+   *
+   * @param {MatDialog} matDialog The mat dialog service
+   * @param {ChangeDetectorRef} changeDetectorRef The change detector ref to inject
+   * @param {RepositoryService} repositoryService The repository service
+   */
+  constructor(private matDialog: MatDialog,
+              private changeDetectorRef: ChangeDetectorRef,
+              private repositoryService: RepositoryService) {
   }
 
+  /**
+   * Called when the component is created
+   */
   ngOnInit() {
+    this.initTable();
   }
 
+  /**
+   * Init the list of repo
+   */
+  initTable() {
+    merge(this.matSort.sortChange, this.matPaginator.page)
+        .pipe(
+            startWith(null),
+            switchMap(() => {
+              this.isLoadingResults = true;
+              this.changeDetectorRef.detectChanges();
+              return this.repositoryService.getAll();
+            }),
+            map(data => {
+              this.isLoadingResults = false;
+              this.errorCatched = false;
+
+              return data;
+            }),
+            catchError(() => {
+              this.isLoadingResults = false;
+              this.errorCatched = true;
+
+              return of([]);
+            })
+        )
+        .subscribe(data => {
+          this.resultsLength = data.length;
+          this.matTableDataSource.data = data;
+          this.matTableDataSource.sort = this.matSort;
+        });
+  }
 }
