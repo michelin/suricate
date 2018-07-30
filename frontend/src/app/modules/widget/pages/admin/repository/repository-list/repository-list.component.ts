@@ -53,7 +53,7 @@ export class RepositoryListComponent implements OnInit {
    * The column references of the mat table
    * @type {string[]}
    */
-  displayedColumns = ['name', 'localPath', 'url', 'branch', 'type', 'status'];
+  displayedColumns = ['name', 'localPath', 'url', 'branch', 'type', 'status', 'edit'];
   /**
    * Is the results are loading
    * @type {boolean}
