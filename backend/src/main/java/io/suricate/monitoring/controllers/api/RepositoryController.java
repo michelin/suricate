@@ -100,6 +100,30 @@ public class RepositoryController {
             .body(repositoryMapper.toRepositoryDtosDefault(optionalRepositories.get()));
     }
 
+    @ApiOperation(value = "Retrieve an existing repository by name", response = RepositoryDto.class)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Ok", response = RepositoryDto.class),
+        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
+        @ApiResponse(code = 404, message = "Repository not found", response = ApiErrorDto.class)
+    })
+    @RequestMapping(value = "/{repositoryName}", method = RequestMethod.GET)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<RepositoryDto> getOneByName(@ApiParam(name = "repositoryName", value = "The repository name", required = true)
+                                                      @PathVariable String repositoryName) {
+        Optional<Repository> optionalRepository = repositoryService.getOneByName(repositoryName);
+
+        if (!optionalRepository.isPresent()) {
+            throw new ObjectNotFoundException(Repository.class, repositoryName);
+        }
+
+        return ResponseEntity
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .cacheControl(CacheControl.noCache())
+            .body(repositoryMapper.toRepositoryDtoDefault(optionalRepository.get()));
+    }
+
     /**
      * Update a repository by the name
      *
@@ -112,7 +136,7 @@ public class RepositoryController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Repository not found", response = ApiErrorDto.class)
     })
-    @RequestMapping(value = "/{repositoryName}")
+    @RequestMapping(value = "/{repositoryName}", method = RequestMethod.PUT)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<RepositoryDto> updateOneByName(@ApiParam(name = "repositoryName", value = "The repository name", required = true)
                                                          @PathVariable String repositoryName,

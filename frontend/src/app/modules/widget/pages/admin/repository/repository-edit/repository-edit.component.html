@@ -1,3 +1,111 @@
-<p>
-  repository-edit works!
-</p>
+<app-pages-header *ngIf="repository" [secondTitle]="repository.name"></app-pages-header>
+
+<form *ngIf="repositoryForm" [formGroup]="repositoryForm" (ngSubmit)="saveRepository()">
+  <mat-card id="card-edit"
+            class="mat-elevation-z8"
+            fxLayout="column wrap"
+            fxLayoutAlign="center center"
+            fxLayoutGap="30px">
+
+    <mat-card-content fxLayout="row wrap" fxLayoutAlign="center center">
+      <mat-form-field>
+        <input matInput
+               type="text"
+               id="key"
+               placeholder="{{ 'name' | translate }}"
+               formControlName="name"
+               [required]="true"/>
+        <mat-error *ngIf="isFieldInvalid('name')">
+          <app-translate [key]="'field.required'"></app-translate>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput
+               type="text"
+               id="url"
+               placeholder="{{ 'url' | translate }}"
+               formControlName="url"/>
+        <mat-error *ngIf="isFieldInvalid('url')">
+          <app-translate [key]="'field.required'"></app-translate>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput
+               type="text"
+               id="branch"
+               placeholder="{{ 'branch' | translate }}"
+               formControlName="branch"/>
+        <mat-error *ngIf=" isFieldInvalid('branch')">
+          <app-translate [key]="'field.required'"></app-translate>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput
+               type="text"
+               id="login"
+               placeholder="{{ 'login' | translate }}"
+               formControlName="login"/>
+        <mat-error *ngIf=" isFieldInvalid('login')">
+          <app-translate [key]="'field.required'"></app-translate>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput
+               type="text"
+               id="password"
+               placeholder="{{ 'password' | translate }}"
+               formControlName="password"/>
+        <mat-error *ngIf=" isFieldInvalid('password')">
+          <app-translate [key]="'field.required'"></app-translate>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput
+               type="text"
+               id="localPath"
+               placeholder="{{ 'localPath' | translate }}"
+               formControlName="localPath"/>
+        <mat-error *ngIf=" isFieldInvalid('localPath')">
+          <app-translate [key]="'field.required'"></app-translate>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput
+               type="text"
+               id="type"
+               placeholder="{{ 'type' | translate }}"
+               formControlName="type"
+               [required]="true"/>
+        <mat-error *ngIf=" isFieldInvalid('type')">
+          <app-translate [key]="'field.required'"></app-translate>
+        </mat-error>
+      </mat-form-field>
+
+      <mat-form-field>
+        <input matInput
+               type="text"
+               id="enabled"
+               placeholder="{{ 'enabled' | translate }}"
+               formControlName="enabled"
+               [required]="true"/>
+        <mat-error *ngIf=" isFieldInvalid('enabled')">
+          <app-translate [key]="'field.required'"></app-translate>
+        </mat-error>
+      </mat-form-field>
+    </mat-card-content>
+
+
+    <mat-card-actions>
+      <!-- Submit action-->
+      <button mat-raised-button class="mat-elevation-z6" color="accent" type="submit">
+        {{ 'save' | translate | uppercase}}
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</form>

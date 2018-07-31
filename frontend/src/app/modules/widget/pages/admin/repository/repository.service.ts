@@ -49,6 +49,17 @@ export class RepositoryService {
   }
 
   /**
+   * Get the repository by name
+   *
+   * @param repositoryName The repository name
+   */
+  getOneByName(repositoryName: string): Observable<Repository> {
+    const url = `${repositoriesApiEndpoint}/${repositoryName}`;
+
+    return this.httpClient.get<Repository>(url);
+  }
+
+  /**
    * Update a repository
    * @param repository
    */

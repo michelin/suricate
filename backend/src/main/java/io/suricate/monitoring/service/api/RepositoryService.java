@@ -72,6 +72,16 @@ public class RepositoryService {
     }
 
     /**
+     * Get the repository by name
+     *
+     * @param repositoryName The repository name to find
+     * @return The repository as optional
+     */
+    public Optional<Repository> getOneByName(final String repositoryName) {
+        return repositoryRepository.findById(repositoryName);
+    }
+
+    /**
      * Check if the repository exists
      *
      * @param repositoryName The repository name to check
