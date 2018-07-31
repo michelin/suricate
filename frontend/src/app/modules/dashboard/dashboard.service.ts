@@ -137,7 +137,7 @@ export class DashboardService {
     var indexOfCurrentProject = -1;
 
     if (this.currentDashboardListValues != null) {
-        this.currentDashboardListValues.findIndex(currentProject => currentProject.id === project.id);
+        indexOfCurrentProject = this.currentDashboardListValues.findIndex(currentProject => currentProject.id === project.id);
     }
 
     if (indexOfCurrentProject >= 0) {
