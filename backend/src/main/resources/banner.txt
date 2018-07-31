@@ -1,0 +1,27 @@
+                 .${AnsiColor.YELLOW}o::${AnsiColor.DEFAULT}
+               8888888&${AnsiColor.RED}&&${AnsiColor.DEFAULT}
+              88888${AnsiColor.RED}ooo${AnsiColor.DEFAULT}&&${AnsiColor.RED}&&ooo${AnsiColor.DEFAULT}
+              888888888&${AnsiColor.RED}&&o${AnsiColor.DEFAULT}
+              888888888
+              8888888             _______. __    __  .______       __    ______     ___   .___________. _______
+              ${AnsiColor.YELLOW}&${AnsiColor.DEFAULT}#88888            /       ||  |  |  | |   _  \     |  |  /      |   /   \  |           ||   ____|
+               8##888           |   (----`|  |  |  | |  |_)  |    |  | |  ,----'  /  ^  \ `---|  |----`|  |__
+               888##88           \   \    |  |  |  | |      /     |  | |  |      /  /_\  \    |  |     |   __|
+               88888##8      .----)   |   |  `--'  | |  |\  \----.|  | |  `----./  _____  \   |  |     |  |____
+               ${AnsiColor.RED}&${AnsiColor.YELLOW}o${AnsiColor.DEFAULT}&8888##     |_______/     \______/  | _| `._____||__|  \______/__/     \__\  |__|     |_______|
+               8888${AnsiColor.RED}o${AnsiColor.YELLOW}::${AnsiColor.DEFAULT}888#                                                built with ${AnsiColor.GREEN}Spring Boot${AnsiColor.DEFAULT} v${spring-boot.version}
+               888888${AnsiColor.RED}&oo${AnsiColor.DEFAULT}88#*
+               ${AnsiColor.RED}ooo${AnsiColor.DEFAULT}&8888${AnsiColor.RED}oo${AnsiColor.DEFAULT}888
+               888888888&${AnsiColor.RED}&${AnsiColor.DEFAULT}888
+               ${AnsiColor.RED}oo${AnsiColor.DEFAULT}88888888${AnsiColor.RED}&&${AnsiColor.DEFAULT}88
+               88888888888${AnsiColor.YELLOW}o${AnsiColor.DEFAULT}8&
+               &8888888888${AnsiColor.YELLOW}o${AnsiColor.DEFAULT}8
+               ${AnsiColor.RED}oo${AnsiColor.DEFAULT}&88888888${AnsiColor.YELLOW}o${AnsiColor.DEFAULT}
+               88888888888
+               88888888888
+              88888&  8888
+              88888    888
+             #8*888    &88
+            ##8*888    &88
+         ${AnsiColor.YELLOW}:8${AnsiColor.DEFAULT}8##  888    &88
+  ${AnsiColor.RED}&&&&&&&&&&     &&&&&&.${AnsiColor.YELLOW}o${AnsiColor.DEFAULT}&&&${AnsiColor.YELLOW}88&${AnsiColor.DEFAULT}
