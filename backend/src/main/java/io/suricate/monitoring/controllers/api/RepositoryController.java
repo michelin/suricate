@@ -100,21 +100,27 @@ public class RepositoryController {
             .body(repositoryMapper.toRepositoryDtosDefault(optionalRepositories.get()));
     }
 
-    @ApiOperation(value = "Retrieve an existing repository by name", response = RepositoryDto.class)
+    /**
+     * Retrieve an existing repository by id
+     *
+     * @param repositoryId The repository Id
+     * @return The repository
+     */
+    @ApiOperation(value = "Retrieve an existing repository by id", response = RepositoryDto.class)
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Ok", response = RepositoryDto.class),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Repository not found", response = ApiErrorDto.class)
     })
-    @RequestMapping(value = "/{repositoryName}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{repositoryId}", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<RepositoryDto> getOneByName(@ApiParam(name = "repositoryName", value = "The repository name", required = true)
-                                                      @PathVariable String repositoryName) {
-        Optional<Repository> optionalRepository = repositoryService.getOneByName(repositoryName);
+    public ResponseEntity<RepositoryDto> getOneById(@ApiParam(name = "repositoryId", value = "The repository id", required = true)
+                                                    @PathVariable Long repositoryId) {
+        Optional<Repository> optionalRepository = repositoryService.getOneById(repositoryId);
 
         if (!optionalRepository.isPresent()) {
-            throw new ObjectNotFoundException(Repository.class, repositoryName);
+            throw new ObjectNotFoundException(Repository.class, repositoryId);
         }
 
         return ResponseEntity
@@ -125,27 +131,27 @@ public class RepositoryController {
     }
 
     /**
-     * Update a repository by the name
+     * Update a repository by id
      *
      * @return The repository updated
      */
-    @ApiOperation(value = "Update an existing repository by name", response = RepositoryDto.class)
+    @ApiOperation(value = "Update an existing repository by id", response = RepositoryDto.class)
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Ok", response = RepositoryDto.class),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Repository not found", response = ApiErrorDto.class)
     })
-    @RequestMapping(value = "/{repositoryName}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{repositoryId}", method = RequestMethod.PUT)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<RepositoryDto> updateOneByName(@ApiParam(name = "repositoryName", value = "The repository name", required = true)
-                                                         @PathVariable String repositoryName,
-                                                         @ApiParam(name = "repositoryDto", value = "The repository with the new info's to update", required = true)
-                                                         @RequestBody RepositoryDto repositoryDto) {
-        if (!repositoryService.existsByName(repositoryName)) {
-            throw new ObjectNotFoundException(Repository.class, repositoryName);
+    public ResponseEntity<RepositoryDto> updateOneById(@ApiParam(name = "repositoryId", value = "The repository id", required = true)
+                                                       @PathVariable Long repositoryId,
+                                                       @ApiParam(name = "repositoryDto", value = "The repository with the new info's to update", required = true)
+                                                       @RequestBody RepositoryDto repositoryDto) {
+        if (!repositoryService.existsById(repositoryId)) {
+            throw new ObjectNotFoundException(Repository.class, repositoryId);
         }
-        repositoryDto.setName(repositoryName);
+        repositoryDto.setId(repositoryId);
 
         Repository repository = repositoryMapper.toRepositoryWithoutWidgets(repositoryDto);
         this.repositoryService.addOrUpdateRepository(repository);

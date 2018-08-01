@@ -74,21 +74,21 @@ public class RepositoryService {
     /**
      * Get the repository by name
      *
-     * @param repositoryName The repository name to find
+     * @param repositoryId The repository id to find
      * @return The repository as optional
      */
-    public Optional<Repository> getOneByName(final String repositoryName) {
-        return repositoryRepository.findById(repositoryName);
+    public Optional<Repository> getOneById(final Long repositoryId) {
+        return repositoryRepository.findById(repositoryId);
     }
 
     /**
      * Check if the repository exists
      *
-     * @param repositoryName The repository name to check
+     * @param repositoryId The repository id to check
      * @return True if exist false otherwise
      */
-    public boolean existsByName(final String repositoryName) {
-        return this.repositoryRepository.existsById(repositoryName);
+    public boolean existsById(final Long repositoryId) {
+        return this.repositoryRepository.existsById(repositoryId);
     }
 
     /**

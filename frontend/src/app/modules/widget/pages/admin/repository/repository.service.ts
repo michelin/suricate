@@ -49,22 +49,24 @@ export class RepositoryService {
   }
 
   /**
-   * Get the repository by name
+   * Get the repository id
    *
-   * @param repositoryName The repository name
+   * @param repositoryId The repository id
    */
-  getOneByName(repositoryName: string): Observable<Repository> {
-    const url = `${repositoriesApiEndpoint}/${repositoryName}`;
+  getOneById(repositoryId: number): Observable<Repository> {
+    const url = `${repositoriesApiEndpoint}/${repositoryId}`;
 
     return this.httpClient.get<Repository>(url);
   }
 
   /**
    * Update a repository
-   * @param repository
+   *
+   * @param repositoryId The repository id
+   * @param repository The repository with informations updated
    */
-  updateOne(repository: Repository): Observable<Repository> {
-    const url = `${repositoriesApiEndpoint}/${repository.name}`;
+  updateOneById(repositoryId: number, repository: Repository): Observable<Repository> {
+    const url = `${repositoriesApiEndpoint}/${repositoryId}`;
 
     return this.httpClient.put<Repository>(url, repository);
   }

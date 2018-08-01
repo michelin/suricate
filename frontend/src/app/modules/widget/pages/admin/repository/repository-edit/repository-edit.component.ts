@@ -24,6 +24,7 @@ import {Repository} from '../../../../../../shared/model/dto/Repository';
 import {RepositoryService} from '../repository.service';
 import {RepositoryTypeEnum} from '../../../../../../shared/model/dto/enums/RepositoryTypeEnum';
 import {FormUtils} from '../../../../../../shared/utils/FormUtils';
+import {ToastService} from '../../../../../../shared/components/toast/toast.service';
 
 /**
  * Edit a repository
@@ -58,10 +59,12 @@ export class RepositoryEditComponent implements OnInit {
    * @param {ActivatedRoute} activatedRoute The activated route service
    * @param {FormBuilder} formBuilder The form builder service
    * @param {RepositoryService} repositoryService The repository service to inject
+   * @param {ToastService} toastService The toast service
    */
   constructor(private activatedRoute: ActivatedRoute,
               private formBuilder: FormBuilder,
-              private repositoryService: RepositoryService) {
+              private repositoryService: RepositoryService,
+              private toastService: ToastService) {
   }
 
   /**
@@ -69,7 +72,7 @@ export class RepositoryEditComponent implements OnInit {
    */
   ngOnInit() {
     this.activatedRoute.params.subscribe(params => {
-      this.repositoryService.getOneByName(params['repositoryName']).subscribe(repository => {
+      this.repositoryService.getOneById(params['repositoryId']).subscribe(repository => {
         this.repository = repository;
         this.initRepoForm();
       });
@@ -123,9 +126,9 @@ export class RepositoryEditComponent implements OnInit {
    */
   saveRepository() {
     if (this.repositoryForm.valid) {
-      console.log('valid');
-    } else {
-      console.log('invalid');
+      this.repositoryService
+          .updateOneById(this.repository.id, this.repositoryForm.value)
+          .subscribe(() => console.log('ok'));
     }
   }
 }

@@ -25,7 +25,7 @@ import java.util.Optional;
 /**
  * Repository used to manage Répository Data from DB
  */
-public interface RepositoryRepository extends JpaRepository<Repository, String> {
+public interface RepositoryRepository extends JpaRepository<Repository, Long> {
 
     /**
      * Find every repositories order by name

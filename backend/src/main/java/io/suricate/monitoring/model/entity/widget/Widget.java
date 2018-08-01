@@ -144,7 +144,7 @@ public class Widget extends AbstractAuditingEntity<Long> {
      * The related repository
      */
     @ManyToOne
-    @JoinColumn(name = "repository_name")
+    @JoinColumn(name = "repository_id")
     private Repository repository;
 
     /**

@@ -25,6 +25,11 @@ import {Widget} from './Widget';
 export class Repository {
 
   /**
+   * The repository id
+   */
+  id: number;
+
+  /**
    * The repository name
    */
   name: string;

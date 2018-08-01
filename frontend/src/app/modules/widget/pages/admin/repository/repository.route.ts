@@ -26,5 +26,5 @@ import {RepositoryEditComponent} from './repository-edit/repository-edit.compone
 
 export const repositoryRoutes: Routes = [
   {path: 'widgets/admin/repositories', component: RepositoryListComponent, canActivate: [AuthGuard, AdminGuard]},
-  {path: 'widgets/admin/repositories/:repositoryName/edit', component: RepositoryEditComponent, canActivate: [AuthGuard, AdminGuard]}
+  {path: 'widgets/admin/repositories/:repositoryId/edit', component: RepositoryEditComponent, canActivate: [AuthGuard, AdminGuard]}
 ];

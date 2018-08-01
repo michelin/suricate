@@ -18,6 +18,13 @@ import java.util.List;
 @ToString
 @ApiModel(value = "Repository", description = "Describe a widget repository")
 public class RepositoryDto {
+
+    /**
+     * The repository id
+     */
+    @ApiModelProperty(value = "The repository id", required = true)
+    private Long id;
+
     /**
      * The repository name
      */

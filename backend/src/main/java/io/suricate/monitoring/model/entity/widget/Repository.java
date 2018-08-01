@@ -39,9 +39,16 @@ import java.util.List;
 public class Repository {
 
     /**
-     * The repository name
+     * The repository id
      */
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
+    /**
+     * The repository name
+     */
+    @Column(unique = true)
     private String name;
 
     /**

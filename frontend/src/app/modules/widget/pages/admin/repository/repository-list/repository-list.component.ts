@@ -133,7 +133,7 @@ export class RepositoryListComponent implements OnInit {
     repository.enabled = changeEvent.checked;
 
     this.repositoryService
-        .updateOne(repository)
+        .updateOneById(repository.id, repository)
         .subscribe(repositoryUpdate => {
           const repoStatusAsString: string = repositoryUpdate.enabled ? 'activated' : 'disabled';
           this.toastService
