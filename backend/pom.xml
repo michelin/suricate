@@ -258,7 +258,7 @@
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
-            <version>3.10.0</version>
+            <version>3.11.0</version>
         </dependency>
 
         <dependency>
@@ -308,7 +308,7 @@
         <dependency>
             <groupId>com.google.truth</groupId>
             <artifactId>truth</artifactId>
-            <version>0.41</version>
+            <version>0.42</version>
             <scope>test</scope>
         </dependency>
 
