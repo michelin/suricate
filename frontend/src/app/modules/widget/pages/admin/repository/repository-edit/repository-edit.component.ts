@@ -22,6 +22,8 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 import {Repository} from '../../../../../../shared/model/dto/Repository';
 import {RepositoryService} from '../repository.service';
+import {RepositoryTypeEnum} from '../../../../../../shared/model/dto/enums/RepositoryTypeEnum';
+import {FormUtils} from '../../../../../../shared/utils/FormUtils';
 
 /**
  * Edit a repository
@@ -44,6 +46,11 @@ export class RepositoryEditComponent implements OnInit {
    * @type Repository
    */
   repository: Repository;
+
+  /**
+   * The list of repository types
+   */
+  repositoryTypeEnum = RepositoryTypeEnum;
 
   /**
    * Constructor
@@ -75,13 +82,13 @@ export class RepositoryEditComponent implements OnInit {
   initRepoForm() {
     this.repositoryForm = this.formBuilder.group({
       name: [this.repository.name, [Validators.required, Validators.pattern(/^[a-zA-Z1-9-_]+$/)]],
-      url: [this.repository.url],
-      branch: [this.repository.branch],
-      login: [this.repository.login],
-      password: [this.repository.password],
-      localPath: [this.repository.localPath],
+      url: this.repository.url,
+      branch: this.repository.branch,
+      login: this.repository.login,
+      password: this.repository.password,
+      localPath: this.repository.localPath,
       type: [this.repository.type],
-      enabled: [this.repository.enabled]
+      enabled: this.repository.enabled
     });
   }
 
@@ -91,14 +98,34 @@ export class RepositoryEditComponent implements OnInit {
    * @param {string} field The field to check
    * @returns {boolean} False if the field valid, true otherwise
    */
-  isFieldInvalid(field: string) {
-    return this.repositoryForm.invalid && (this.repositoryForm.get(field).dirty || this.repositoryForm.get(field).touched);
+  isFieldInvalid(field: string): boolean {
+    return FormUtils.isFieldInvalid(this.repositoryForm, field);
+  }
+
+  /**
+   * Reset the form when the repository type as changed
+   */
+  updateFormValidators() {
+    if (this.repositoryForm.get('type').value === RepositoryTypeEnum.REMOTE) {
+      this.repositoryForm.get('url').validator = Validators.required;
+      this.repositoryForm.get('branch').validator = Validators.required;
+      FormUtils.resetValidatorsAndErrorsForField(this.repositoryForm, 'localPath');
+
+    } else {
+      FormUtils.resetValidatorsAndErrorsForField(this.repositoryForm, 'url');
+      FormUtils.resetValidatorsAndErrorsForField(this.repositoryForm, 'branch');
+      this.repositoryForm.get('localPath').validator = Validators.required;
+    }
   }
 
   /**
    * action that save the new repository
    */
   saveRepository() {
-
+    if (this.repositoryForm.valid) {
+      console.log('valid');
+    } else {
+      console.log('invalid');
+    }
   }
 }

@@ -2,6 +2,12 @@
     width: 100%;
 }
 
+#card-edit .title {
+    margin-left: -80px;
+    font-weight: 300;
+    line-height: 1.4rem;
+}
+
 #card-edit > * {
     width: 70%;
     margin: 5px 0;
@@ -19,4 +25,8 @@
 .mat-form-field {
     width: 100%;
     margin: 10px 0;
+}
+
+form div {
+    width: 100%;
 }

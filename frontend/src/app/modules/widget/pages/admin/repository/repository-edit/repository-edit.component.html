@@ -1,17 +1,21 @@
 <app-pages-header *ngIf="repository" [secondTitle]="repository.name"></app-pages-header>
 
-<form *ngIf="repositoryForm" [formGroup]="repositoryForm" (ngSubmit)="saveRepository()">
+<form *ngIf="repositoryForm" [formGroup]="repositoryForm" #formDirective="ngForm" (ngSubmit)="saveRepository()">
   <mat-card id="card-edit"
             class="mat-elevation-z8"
             fxLayout="column wrap"
             fxLayoutAlign="center center"
             fxLayoutGap="30px">
 
-    <mat-card-content fxLayout="row wrap" fxLayoutAlign="center center">
+    <mat-card-content fxLayout="column wrap" fxLayoutAlign="center center">
+      <!-- GENERAL INFORMATIONS -->
+      <h4 class="title" fxFlexAlign="start"> {{ 'General informations' | uppercase }} </h4>
+
+      <!-- Repo Name -->
       <mat-form-field>
         <input matInput
                type="text"
-               id="key"
+               id="name"
                placeholder="{{ 'name' | translate }}"
                formControlName="name"
                [required]="true"/>
@@ -20,84 +24,96 @@
         </mat-error>
       </mat-form-field>
 
+      <!-- Enable repo checkbox -->
+      <mat-checkbox fxFlexAlign="start" formControlName="enabled">
+        Enable this repository
+      </mat-checkbox>
+
+      <!-- Repository intformations -->
+      <h4 class="title" fxFlexAlign="start"> {{ 'Repository Informations' | uppercase }} </h4>
+
+      <!-- Repo type -->
       <mat-form-field>
-        <input matInput
-               type="text"
-               id="url"
-               placeholder="{{ 'url' | translate }}"
-               formControlName="url"/>
-        <mat-error *ngIf="isFieldInvalid('url')">
-          <app-translate [key]="'field.required'"></app-translate>
-        </mat-error>
+        <mat-select id="type"
+                    placeholder="{{ 'type' | translate }}"
+                    [formControlName]="'type'"
+                    (selectionChange)="updateFormValidators()"
+                    [required]="true">
+          <mat-option *ngFor="let repositoryType of (repositoryTypeEnum | enumKeys)"
+                      [value]="repositoryType">
+            {{ repositoryType }}
+          </mat-option>
+        </mat-select>
       </mat-form-field>
 
-      <mat-form-field>
-        <input matInput
-               type="text"
-               id="branch"
-               placeholder="{{ 'branch' | translate }}"
-               formControlName="branch"/>
-        <mat-error *ngIf=" isFieldInvalid('branch')">
-          <app-translate [key]="'field.required'"></app-translate>
-        </mat-error>
-      </mat-form-field>
+      <!-- Remote Repository type -->
+      <div *ngIf="repositoryForm.get('type').value === repositoryTypeEnum.REMOTE">
+        <!-- Repo url -->
+        <mat-form-field>
+          <input matInput
+                 type="text"
+                 id="url"
+                 placeholder="{{ 'url' | translate }}"
+                 formControlName="url"
+                 [required]="true"/>
+          <mat-error *ngIf="isFieldInvalid('url')">
+            <app-translate [key]="'field.required'"></app-translate>
+          </mat-error>
+        </mat-form-field>
 
-      <mat-form-field>
-        <input matInput
-               type="text"
-               id="login"
-               placeholder="{{ 'login' | translate }}"
-               formControlName="login"/>
-        <mat-error *ngIf=" isFieldInvalid('login')">
-          <app-translate [key]="'field.required'"></app-translate>
-        </mat-error>
-      </mat-form-field>
+        <!-- Repo Branch -->
+        <mat-form-field>
+          <input matInput
+                 type="text"
+                 id="branch"
+                 placeholder="{{ 'branch' | translate }}"
+                 formControlName="branch"
+                 [required]="true"/>
+          <mat-error *ngIf=" isFieldInvalid('branch')">
+            <app-translate [key]="'field.required'"></app-translate>
+          </mat-error>
+        </mat-form-field>
 
-      <mat-form-field>
-        <input matInput
-               type="text"
-               id="password"
-               placeholder="{{ 'password' | translate }}"
-               formControlName="password"/>
-        <mat-error *ngIf=" isFieldInvalid('password')">
-          <app-translate [key]="'field.required'"></app-translate>
-        </mat-error>
-      </mat-form-field>
+        <!-- Repo login -->
+        <mat-form-field>
+          <input matInput
+                 type="text"
+                 id="login"
+                 placeholder="{{ 'login' | translate }}"
+                 formControlName="login"/>
+          <mat-error *ngIf=" isFieldInvalid('login')">
+            <app-translate [key]="'field.required'"></app-translate>
+          </mat-error>
+        </mat-form-field>
 
-      <mat-form-field>
-        <input matInput
-               type="text"
-               id="localPath"
-               placeholder="{{ 'localPath' | translate }}"
-               formControlName="localPath"/>
-        <mat-error *ngIf=" isFieldInvalid('localPath')">
-          <app-translate [key]="'field.required'"></app-translate>
-        </mat-error>
-      </mat-form-field>
+        <!-- Repo password -->
+        <mat-form-field>
+          <input matInput
+                 type="text"
+                 id="password"
+                 placeholder="{{ 'password' | translate }}"
+                 formControlName="password"/>
+          <mat-error *ngIf=" isFieldInvalid('password')">
+            <app-translate [key]="'field.required'"></app-translate>
+          </mat-error>
+        </mat-form-field>
+      </div>
 
-      <mat-form-field>
-        <input matInput
-               type="text"
-               id="type"
-               placeholder="{{ 'type' | translate }}"
-               formControlName="type"
-               [required]="true"/>
-        <mat-error *ngIf=" isFieldInvalid('type')">
-          <app-translate [key]="'field.required'"></app-translate>
-        </mat-error>
-      </mat-form-field>
-
-      <mat-form-field>
-        <input matInput
-               type="text"
-               id="enabled"
-               placeholder="{{ 'enabled' | translate }}"
-               formControlName="enabled"
-               [required]="true"/>
-        <mat-error *ngIf=" isFieldInvalid('enabled')">
-          <app-translate [key]="'field.required'"></app-translate>
-        </mat-error>
-      </mat-form-field>
+      <!-- Local Repository type -->
+      <div *ngIf="repositoryForm.get('type').value === repositoryTypeEnum.LOCAL">
+        <!-- Repo local path -->
+        <mat-form-field>
+          <input matInput
+                 type="text"
+                 id="localPath"
+                 placeholder="{{ 'local.path' | translate }}"
+                 formControlName="localPath"
+                 [required]="true"/>
+          <mat-error *ngIf=" isFieldInvalid('localPath')">
+            <app-translate [key]="'field.required'"></app-translate>
+          </mat-error>
+        </mat-form-field>
+      </div>
     </mat-card-content>
 
 

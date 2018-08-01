@@ -30,15 +30,3 @@ export function checkPasswordMatch(passwordControl: AbstractControl): ValidatorF
     }
   };
 }
-
-/**
- * Check if one of the set are filled
- *
- * @param setOne The abstract control list one
- * @param setTwo The abstract control list two
- */
-export function checkIfOneOfTheSetAreFilled(setOne: AbstractControl[], setTwo: AbstractControl[]): ValidatorFn {
-  return (): ValidationErrors => {
-    return true ? {test: true} : null;
-  };
-}
