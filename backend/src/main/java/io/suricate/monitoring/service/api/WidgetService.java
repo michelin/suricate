@@ -19,10 +19,7 @@ package io.suricate.monitoring.service.api;
 import io.suricate.monitoring.model.dto.nashorn.WidgetVariableResponse;
 import io.suricate.monitoring.model.dto.widget.WidgetDto;
 import io.suricate.monitoring.model.entity.Library;
-import io.suricate.monitoring.model.entity.widget.Category;
-import io.suricate.monitoring.model.entity.widget.Widget;
-import io.suricate.monitoring.model.entity.widget.WidgetParam;
-import io.suricate.monitoring.model.entity.widget.WidgetParamValue;
+import io.suricate.monitoring.model.entity.widget.*;
 import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
 import io.suricate.monitoring.repository.WidgetRepository;
 import io.suricate.monitoring.service.CacheService;
@@ -205,14 +202,15 @@ public class WidgetService {
      *
      * @param list       The list of categories + widgets
      * @param mapLibrary The libraries
+     * @param repository The Git Repository
      */
     @Transactional
-    public void updateWidgetInDatabase(List<Category> list, Map<String, Library> mapLibrary) {
+    public void updateWidgetInDatabase(List<Category> list, Map<String, Library> mapLibrary, final Repository repository) {
         for (Category category : list) {
             categoryService.addOrUpdateCategory(category);
 
             // Create/update widgets
-            addOrUpdateWidgets(category, category.getWidgets(), mapLibrary);
+            addOrUpdateWidgets(category, category.getWidgets(), mapLibrary, repository);
         }
         cacheService.clearAllCache();
     }
@@ -223,9 +221,10 @@ public class WidgetService {
      * @param category   The category
      * @param widgets    The related widgets
      * @param mapLibrary The libraries
+     * @param repository The git repository
      */
     @Transactional
-    public void addOrUpdateWidgets(Category category, List<Widget> widgets, Map<String, Library> mapLibrary) {
+    public void addOrUpdateWidgets(Category category, List<Widget> widgets, Map<String, Library> mapLibrary, final Repository repository) {
         if (category == null || widgets == null) {
             return;
         }
@@ -236,6 +235,17 @@ public class WidgetService {
 
             // Find existing widget
             Widget currentWidget = widgetRepository.findByTechnicalName(widget.getTechnicalName());
+            if (currentWidget != null && !repository.equals(currentWidget.getRepository())) {
+                LOGGER.info(
+                    "The widget {} has been found on another repository ''{}'' and will be replace by {}",
+                    currentWidget.getTechnicalName(),
+                    currentWidget.getRepository() != null ? currentWidget.getRepository().getName() : StringUtils.EMPTY,
+                    repository.getName()
+                );
+
+                widget.setRepository(repository);
+            }
+
             if (widget.getImage() != null) {
                 if (currentWidget != null && currentWidget.getImage() != null) {
                     widget.getImage().setId(currentWidget.getImage().getId());

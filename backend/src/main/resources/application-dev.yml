@@ -27,5 +27,3 @@ application:
     #  firstNameAttributName:
     #  lastNameAttributName:
     #  mailAttributName:
-  ### Widgets Repo ###
-  widgets.local.folderPath:

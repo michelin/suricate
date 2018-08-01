@@ -21,10 +21,15 @@ spring:
         prepStmtCacheSqlLimit: 2048
         useServerPrepStmts: true
     initialization-mode: always
+  ### Flyway ###
+  flyway:
+    table: schema_version
   ### JPA ###
   jpa:
     ###   DDL   ###
-    hibernate.ddl-auto: validate
+    hibernate:
+      ddl-auto: validate
+      use-new-id-generator-mappings: false
     ## Hibernate Search
     # Specify the DirectoryProvider to use (the Lucene Directory)
     properties.hibernate.search.default:
@@ -130,11 +135,8 @@ application:
       type:
   ### Widgets Repo ###
   # Widget Repo
-  widgets:
-    git:
-      url: https://github.com/suricate-io/widgets
-      branch: master
-    updateEnable: true
+  widgets.updateEnable: true
+
   ### Swagger Springfox properties ###
   swagger:
     title: Suricate API

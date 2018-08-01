@@ -219,48 +219,10 @@ public class ApplicationProperties {
     @Setter
     public static class Widgets {
         /**
-         * Widgets configuration in local folder
-         **/
-        public final Local local = new Local();
-
-        /**
-         * Git widgets configuration
-         */
-        public final Git git = new Git();
-
-        /**
-         * Enable the the widget update (Local and Git)
+         * Enable the widget update (Local and Git)
          */
         @NotNull
         public boolean updateEnable;
-    }
-
-    /**
-     * Hold the widgets Local properties info
-     */
-    @Getter
-    @Setter
-    public static class Local {
-        /**
-         * The Local folder path
-         */
-        public String folderPath;
-    }
-
-    /**
-     * Hold the Widgets Git properties info
-     */
-    @Getter
-    @Setter
-    public static class Git {
-        /**
-         * The Git repository url
-         */
-        public String url;
-        /**
-         * The git branch to scan
-         */
-        public String branch;
     }
 
     /**

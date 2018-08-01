@@ -1,15 +1,15 @@
 package io.suricate.monitoring.service.api;
 
-import io.suricate.monitoring.model.entity.*;
+import io.suricate.monitoring.model.entity.Asset;
+import io.suricate.monitoring.model.entity.Library;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.entity.widget.Category;
+import io.suricate.monitoring.model.entity.widget.Repository;
 import io.suricate.monitoring.model.entity.widget.Widget;
+import io.suricate.monitoring.model.enums.RepositoryTypeEnum;
 import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
 import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.repository.*;
-import io.suricate.monitoring.service.api.LibraryService;
-import io.suricate.monitoring.service.api.ProjectWidgetService;
-import io.suricate.monitoring.service.api.WidgetService;
 import io.suricate.monitoring.utils.EntityUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -59,15 +59,21 @@ public class WidgetServiceTest {
     @Autowired
     LibraryRepository libraryRepository;
 
+    @Autowired
+    RepositoryService repositoryService;
+
+    @Autowired
+    RepositoryRepository repositoryRepository;
+
     @Test
-    public void updateStateTest(){
+    public void updateStateTest() {
         ProjectWidget projectWidget = new ProjectWidget();
         projectWidget.setState(WidgetState.STOPPED);
         projectWidgetRepository.save(projectWidget);
         assertThat(projectWidgetRepository.count()).isEqualTo(1);
 
         Date date = new Date();
-        projectWidgetService.updateState(WidgetState.RUNNING,projectWidget.getId(),date);
+        projectWidgetService.updateState(WidgetState.RUNNING, projectWidget.getId(), date);
         ProjectWidget currentPw = projectWidgetRepository.findAll().get(0);
         assertThat(currentPw.getState()).isEqualTo(WidgetState.RUNNING);
         assertThat(currentPw.getLastExecutionDate().getTime()).isEqualTo(date.getTime());
@@ -76,9 +82,9 @@ public class WidgetServiceTest {
     @Test
     public void addOrUpdateWidgetNullTest() {
         assertThat(widgetRepository.count()).isEqualTo(0);
-        widgetService.addOrUpdateWidgets(null,null, null);
+        widgetService.addOrUpdateWidgets(null, null, null, null);
         assertThat(widgetRepository.count()).isEqualTo(0);
-        widgetService.addOrUpdateWidgets(new Category(),null, null);
+        widgetService.addOrUpdateWidgets(new Category(), null, null, null);
         assertThat(widgetRepository.count()).isEqualTo(0);
     }
 
@@ -93,6 +99,7 @@ public class WidgetServiceTest {
         category.setTechnicalName("test");
         categoryService.addOrUpdateCategory(category);
 
+
         // Create widget list
         Widget widget = new Widget();
         widget.setBackendJs("bakendjs");
@@ -103,19 +110,29 @@ public class WidgetServiceTest {
         widget.setTechnicalName("widget1");
         widget.setName("Widget 1");
 
+        // Create an asset
         Asset asset = new Asset();
         asset.setContent(new byte[]{0x12});
         asset.setSize(10);
         widget.setImage(asset);
 
+        // Create a repository
+        Repository repository = new Repository();
+        repository.setName("testRepo");
+        repository.setEnabled(true);
+        repository.setType(RepositoryTypeEnum.LOCAL);
+        repository.setLocalPath("C:/test");
+        repositoryService.addOrUpdateRepository(repository);
 
-        widgetService.addOrUpdateWidgets(category, Collections.singletonList(widget), null);
+        widgetService.addOrUpdateWidgets(category, Collections.singletonList(widget), null, repository);
         assetRepository.flush();
         widgetRepository.flush();
+        repositoryRepository.flush();
 
         assertThat(categoryRepository.count()).isEqualTo(1);
         assertThat(widgetRepository.count()).isEqualTo(1);
         assertThat(assetRepository.count()).isEqualTo(1);
+        assertThat(repositoryRepository.count()).isEqualTo(1);
 
         Widget currentWidget = widgetRepository.findByTechnicalName("widget1");
         assertThat(currentWidget).isNotNull();
@@ -137,11 +154,12 @@ public class WidgetServiceTest {
         widget2.setName("Widget 1");
         widget2.setImage(asset1);
 
-        widgetService.addOrUpdateWidgets(category, Collections.singletonList(widget2), null);
+        widgetService.addOrUpdateWidgets(category, Collections.singletonList(widget2), null, repository);
 
         assertThat(categoryRepository.count()).isEqualTo(1);
         assertThat(widgetRepository.count()).isEqualTo(1);
         assertThat(assetRepository.count()).isEqualTo(1);
+        assertThat(repositoryRepository.count()).isEqualTo(1);
 
         currentWidget = widgetRepository.findByTechnicalName("widget1");
         assertThat(currentWidget).isNotNull();
@@ -179,11 +197,20 @@ public class WidgetServiceTest {
         widget2.setTechnicalName("widget2");
         widget2.setName("Widget 2");
 
+        // Create a repository
+        Repository repository = new Repository();
+        repository.setName("testRepo");
+        repository.setEnabled(true);
+        repository.setType(RepositoryTypeEnum.LOCAL);
+        repository.setLocalPath("C:/test");
+        repositoryService.addOrUpdateRepository(repository);
 
-        widgetService.addOrUpdateWidgets(category,Arrays.asList(widget,widget2), null);
+        widgetService.addOrUpdateWidgets(category, Arrays.asList(widget, widget2), null, repository);
 
         assertThat(categoryRepository.count()).isEqualTo(1);
         assertThat(widgetRepository.count()).isEqualTo(2);
+        assertThat(repositoryRepository.count()).isEqualTo(1);
+
         Widget currentWidget = widgetRepository.findByTechnicalName("widget1");
         assertThat(currentWidget).isNotNull();
         assertThat(currentWidget.getBackendJs()).isEqualTo("bakendjs");
@@ -224,9 +251,11 @@ public class WidgetServiceTest {
 
         widget2.setId(null);
 
-        widgetService.addOrUpdateWidgets(category,Arrays.asList(widget,widget2), null);
+        widgetService.addOrUpdateWidgets(category, Arrays.asList(widget, widget2), null, repository);
         assertThat(categoryRepository.count()).isEqualTo(1);
         assertThat(widgetRepository.count()).isEqualTo(2);
+        assertThat(repositoryRepository.count()).isEqualTo(1);
+
         currentWidget = widgetRepository.findByTechnicalName("widget1");
         assertThat(currentWidget).isNotNull();
         assertThat(currentWidget.getWidgetAvailability()).isEqualTo(WidgetAvailabilityEnum.DISABLED);
@@ -277,13 +306,22 @@ public class WidgetServiceTest {
         asset.setSize(10);
         widget.setImage(asset);
 
-        Map<String, Library> libraryMap = libs.stream().collect(Collectors.toMap(item -> ((Library)item).getTechnicalName(), item -> item));
-        widgetService.addOrUpdateWidgets(category, Collections.singletonList(widget), libraryMap);
+        // Create a repository
+        Repository repository = new Repository();
+        repository.setName("testRepo");
+        repository.setEnabled(true);
+        repository.setType(RepositoryTypeEnum.LOCAL);
+        repository.setLocalPath("C:/test");
+        repositoryService.addOrUpdateRepository(repository);
+
+        Map<String, Library> libraryMap = libs.stream().collect(Collectors.toMap(item -> ((Library) item).getTechnicalName(), item -> item));
+        widgetService.addOrUpdateWidgets(category, Collections.singletonList(widget), libraryMap, repository);
 
         assertThat(categoryRepository.count()).isEqualTo(1);
         assertThat(widgetRepository.count()).isEqualTo(1);
         assertThat(assetRepository.count()).isEqualTo(2);
         assertThat(libraryRepository.count()).isEqualTo(1);
+        assertThat(repositoryRepository.count()).isEqualTo(1);
 
         Widget currentWidget = widgetRepository.findByTechnicalName("widget1");
         assertThat(currentWidget).isNotNull();

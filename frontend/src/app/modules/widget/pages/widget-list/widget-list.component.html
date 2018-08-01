@@ -1,5 +1,10 @@
 <app-pages-header [secondTitle]="'widgets.list'"></app-pages-header>
 
+<!-- Temporary filter -->
+<mat-form-field class="general-filter">
+  <input matInput (keyup)="applyFilter($event.target.value)" placeholder="{{ 'filter' | translate }}">
+</mat-form-field>
+
 <div class="table-container mat-elevation-z8">
   <div class="table-loading-shade" *ngIf="isLoadingResults || errorCatched">
     <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
@@ -8,11 +13,6 @@
       <app-translate [key]="'error'"></app-translate>
     </div>
   </div>
-
-   <!-- Temporary filter -->
-    <mat-form-field>
-        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="{{ 'filter' | translate }}">
-    </mat-form-field>
 
   <table mat-table [dataSource]="matTableDataSource" class="table-show" matSort>
 
@@ -50,7 +50,7 @@
       </mat-header-cell>
       <mat-cell fxFlex="13%" *matCellDef="let row">
         <mat-slide-toggle color="accent"
-                          disabled="!isUserAdmin"
+                          [disabled]="!isUserAdmin"
                           [checked]="row.widgetAvailability == widgetAvailability.ACTIVATED"
                           (change)="toggleWidgetActivation(row, $event)"></mat-slide-toggle>
       </mat-cell>

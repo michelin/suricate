@@ -16,7 +16,7 @@
  *
  */
 
-import {AbstractControl, ValidatorFn} from '@angular/forms';
+import {AbstractControl, ValidationErrors, ValidatorFn} from '@angular/forms';
 
 /**
  * Custom validator that check if the two passwords match
@@ -24,11 +24,9 @@ import {AbstractControl, ValidatorFn} from '@angular/forms';
  * @return {ValidatorFn} True if the passwords are different
  */
 export function checkPasswordMatch(passwordControl: AbstractControl): ValidatorFn {
-
-  return (confirmPasswordControl: AbstractControl): { [key: string]: any } => {
+  return (confirmPasswordControl: AbstractControl): ValidationErrors => {
     if (passwordControl.dirty && passwordControl.touched && confirmPasswordControl.dirty && confirmPasswordControl.touched) {
       return passwordControl.value !== confirmPasswordControl.value ? {unmatchedPasswords: true} : null;
     }
   };
-
 }

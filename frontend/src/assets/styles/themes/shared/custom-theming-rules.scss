@@ -18,19 +18,6 @@
 @import '~@angular/material/theming';
 
 /* ****************************************** */
-/*          Retrieve Variables                */
-/* ****************************************** */
-
-// Retrieve Variables from theme
-@mixin mat-theme-variables($theme) {
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, accent);
-  $foreground: map-get($theme, foreground);
-  $background: map-get($theme, background);
-}
-
-/* ****************************************** */
 /*              Custom rules                  */
 /* ****************************************** */
 
@@ -172,8 +159,13 @@
 
   mat-slide-toggle {
     &.mat-checked:not(.mat-disabled) {
-      .mat-slide-toggle-thumb {
-        background-color: mat-color($accent) !important;
+      &[color=accent] {
+        .mat-slide-toggle-bar {
+          background-color: mat-color($accent, 0.5) !important;
+        }
+        .mat-slide-toggle-thumb {
+          background-color: mat-color($accent) !important;
+        }
       }
     }
   }

@@ -21,11 +21,11 @@ import {AddWidgetDialogComponent} from './header/components/add-widget-dialog/ad
 import {DashboardActionsComponent} from './header/components/dashboard-actions/dashboard-actions.component';
 import {PagesFooterComponent} from './footer/pages/pages-footer.component';
 import {TvManagementDialogComponent} from './header/components/tv-management-dialog/tv-management-dialog.component';
-import { WidgetListActionsComponent } from './header/components/widget-list-actions/widget-list-actions.component';
-import {SharedModule} from "../shared/shared.module";
-import {PagesHeaderComponent} from "./header/pages/pages-header.component";
-import {SidenavComponent} from "./sidenav/pages/sidenav.component";
-import {SidenavService} from "./sidenav/sidenav.service";
+import {WidgetListActionsComponent} from './header/components/widget-list-actions/widget-list-actions.component';
+import {SharedModule} from '../shared/shared.module';
+import {PagesHeaderComponent} from './header/pages/pages-header.component';
+import {SidenavComponent} from './sidenav/pages/sidenav.component';
+import {SidenavService} from './sidenav/sidenav.service';
 
 @NgModule({
   imports: [

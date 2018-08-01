@@ -134,10 +134,10 @@ export class DashboardService {
    */
   private updateDashboardListSubject(project: Project, action: string): void {
     // Initialize search index
-    var indexOfCurrentProject = -1;
+    let indexOfCurrentProject = -1;
 
     if (this.currentDashboardListValues != null) {
-        indexOfCurrentProject = this.currentDashboardListValues.findIndex(currentProject => currentProject.id === project.id);
+      indexOfCurrentProject = this.currentDashboardListValues.findIndex(currentProject => currentProject.id === project.id);
     }
 
     if (indexOfCurrentProject >= 0) {
@@ -409,7 +409,9 @@ export class DashboardService {
    * @param {Project[]} projects The list of projects to sort
    */
   sortByProjectName(projects: Project[]): Project[] {
-    if (projects === null) return projects;
+    if (projects === null) {
+      return projects;
+    }
     return projects.sort((left, right): number => {
       if (left.name < right.name) {
         return -1;

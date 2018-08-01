@@ -33,6 +33,7 @@ import {ToastComponent} from './components/toast/toast.component';
 import {ToastService} from './components/toast/toast.service';
 import {SafeHtmlPipe} from './pipes/safe-html.pipe';
 import {SafeUrlPipe} from './pipes/safe-url.pipe';
+import {EnumKeysPipe} from './pipes/enum-keys.pipe';
 import {RunScriptsDirective} from './directives/run-scripts.directive';
 import {AdminGuard} from './auth/guards/admin.guard';
 import {TokenService} from './auth/token.service';
@@ -61,6 +62,7 @@ import {ErrorInterceptor} from './interceptors/error.interceptor';
     ToastComponent,
     SafeHtmlPipe,
     SafeUrlPipe,
+    EnumKeysPipe,
     RunScriptsDirective,
     TranslationComponent
   ],
@@ -79,6 +81,7 @@ import {ErrorInterceptor} from './interceptors/error.interceptor';
     ToastComponent,
     SafeHtmlPipe,
     SafeUrlPipe,
+    EnumKeysPipe,
     RunScriptsDirective,
     TranslationComponent
   ],

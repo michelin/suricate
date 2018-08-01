@@ -13,22 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Routes} from "@angular/router";
-import {DashboardTvComponent} from "./pages/dashboard-tv/dashboard-tv.component";
-import {AuthGuard} from "../../shared/auth/guards/auth.guard";
-import {DashboardListComponent} from "./pages/admin/dashboard-list/dashboard-list.component";
-import {AdminGuard} from "../../shared/auth/guards/admin.guard";
-import {DashboardEditComponent} from "./pages/admin/dashboard-edit/dashboard-edit.component";
-import {DashboardDetailComponent} from "./pages/dashboard-detail/dashboard-detail.component";
+import {Routes} from '@angular/router';
+import {DashboardTvComponent} from './pages/dashboard-tv/dashboard-tv.component';
+import {AuthGuard} from '../../shared/auth/guards/auth.guard';
+import {DashboardListComponent} from './pages/admin/dashboard-list/dashboard-list.component';
+import {AdminGuard} from '../../shared/auth/guards/admin.guard';
+import {DashboardEditComponent} from './pages/admin/dashboard-edit/dashboard-edit.component';
+import {DashboardDetailComponent} from './pages/dashboard-detail/dashboard-detail.component';
 
 export const DashboardRoutes: Routes = [
-    {path: 'tv', component: DashboardTvComponent},
-    {path: 'dashboards/:id', component: DashboardDetailComponent, canActivate: [AuthGuard]},
-    {path: 'dashboards', component: DashboardListComponent, canActivate: [AuthGuard, AdminGuard]},
-    {
-        path: 'dashboards/:dashboardId/edit',
-        component: DashboardEditComponent,
-        data: {breadcrumb: 'Edit Dashboard'},
-        canActivate: [AuthGuard, AdminGuard]
-    }
+  {path: 'tv', component: DashboardTvComponent},
+  {path: 'dashboards/:id', component: DashboardDetailComponent, canActivate: [AuthGuard]},
+  {path: 'dashboards', component: DashboardListComponent, canActivate: [AuthGuard, AdminGuard]},
+  {
+    path: 'dashboards/:dashboardId/edit',
+    component: DashboardEditComponent,
+    data: {breadcrumb: 'Edit Dashboard'},
+    canActivate: [AuthGuard, AdminGuard]
+  }
 ];

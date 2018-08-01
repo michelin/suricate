@@ -16,7 +16,7 @@
 
 import {CommonModule} from '@angular/common';
 import {NgModule} from '@angular/core';
-import {RouterModule, Routes} from '@angular/router';
+import {RouterModule} from '@angular/router';
 
 
 import {SharedModule} from '../../shared/shared.module';
@@ -24,8 +24,8 @@ import {SharedModule} from '../../shared/shared.module';
 import {AuthenticationService} from './authentication.service';
 import {LoginComponent} from './pages/login/login.component';
 import {RegisterComponent} from './pages/register/register.component';
-import {LayoutModule} from "../../layout/layout.module";
-import {authRoutes} from "./authentication.route";
+import {LayoutModule} from '../../layout/layout.module';
+import {authRoutes} from './authentication.route';
 
 @NgModule({
   imports: [

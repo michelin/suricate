@@ -15,43 +15,43 @@
  */
 import {FlatTreeControl} from '@angular/cdk/tree';
 import {Component} from '@angular/core';
-import {ConfigDb, FileFlatNode, FileNode} from "../../config.db";
-import {MatTreeFlatDataSource, MatTreeFlattener} from "@angular/material";
-import {Observable, of as observableOf} from "rxjs/index";
+import {ConfigDb, FileFlatNode, FileNode} from '../../config.db';
+import {MatTreeFlatDataSource, MatTreeFlattener} from '@angular/material';
+import {Observable, of as observableOf} from 'rxjs/index';
 
 /**
  * @title Tree with nested nodes
  */
 @Component({
-    selector: 'config-list.component',
-    templateUrl: 'config-list.component.html',
-    styleUrls: ['config-list.component.css'],
-    providers: [ConfigDb]
+  selector: 'app-config-list',
+  templateUrl: 'config-list.component.html',
+  styleUrls: ['config-list.component.css'],
+  providers: [ConfigDb]
 })
 export class ConfigListComponent {
 
-    configTreeControl: FlatTreeControl<FileFlatNode>;
-    treeFlattener: MatTreeFlattener<FileNode, FileFlatNode>;
-    configDataSource: MatTreeFlatDataSource<FileNode, FileFlatNode>;
+  configTreeControl: FlatTreeControl<FileFlatNode>;
+  treeFlattener: MatTreeFlattener<FileNode, FileFlatNode>;
+  configDataSource: MatTreeFlatDataSource<FileNode, FileFlatNode>;
 
-    constructor(database: ConfigDb) {
-        this.treeFlattener = new MatTreeFlattener(this.transformer, this._getLevel,
-            this._isExpandable, this._getChildren);
-        this.configTreeControl = new FlatTreeControl<FileFlatNode>(this._getLevel, this._isExpandable);
-        this.configDataSource = new MatTreeFlatDataSource(this.configTreeControl, this.treeFlattener);
+  constructor(database: ConfigDb) {
+    this.treeFlattener = new MatTreeFlattener(this.transformer, this._getLevel,
+        this._isExpandable, this._getChildren);
+    this.configTreeControl = new FlatTreeControl<FileFlatNode>(this._getLevel, this._isExpandable);
+    this.configDataSource = new MatTreeFlatDataSource(this.configTreeControl, this.treeFlattener);
 
-        database.dataChange.subscribe(data => this.configDataSource.data = data);
-    }
+    database.dataChange.subscribe(data => this.configDataSource.data = data);
+  }
 
-    transformer = (node: FileNode, level: number) => {
-        return new FileFlatNode(!!node.children, node.filename, level, node.type);
-    }
+  transformer = (node: FileNode, level: number) => {
+    return new FileFlatNode(!!node.children, node.filename, level, node.type);
+  }
 
-    private _getLevel = (node: FileFlatNode) => node.level;
+  private _getLevel = (node: FileFlatNode) => node.level;
 
-    private _isExpandable = (node: FileFlatNode) => node.expandable;
+  private _isExpandable = (node: FileFlatNode) => node.expandable;
 
-    private _getChildren = (node: FileNode): Observable<FileNode[]> => observableOf(node.children);
+  private _getChildren = (node: FileNode): Observable<FileNode[]> => observableOf(node.children);
 
-    hasChild = (_: number, _nodeData: FileFlatNode) => _nodeData.expandable;
+  hasChild = (_: number, _nodeData: FileFlatNode) => _nodeData.expandable;
 }

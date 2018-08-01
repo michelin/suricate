@@ -16,15 +16,14 @@
 
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {RouterModule, Routes} from '@angular/router';
+import {RouterModule} from '@angular/router';
 
 import {SharedModule} from '../shared/shared.module';
-import {AuthGuard} from '../shared/auth/guards/auth.guard';
 
 import {HomeComponent} from './home.component';
 import {AddDashboardDialogComponent} from './components/add-dashboard-dialog/add-dashboard-dialog.component';
-import {LayoutModule} from "../layout/layout.module";
-import {homeRoutes} from "./home.route";
+import {LayoutModule} from '../layout/layout.module';
+import {homeRoutes} from './home.route';
 
 @NgModule({
   imports: [

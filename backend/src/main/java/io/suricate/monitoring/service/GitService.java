@@ -19,14 +19,15 @@ package io.suricate.monitoring.service;
 import io.suricate.monitoring.configuration.ApplicationProperties;
 import io.suricate.monitoring.model.entity.Library;
 import io.suricate.monitoring.model.entity.widget.Category;
+import io.suricate.monitoring.model.entity.widget.Repository;
+import io.suricate.monitoring.model.enums.RepositoryTypeEnum;
 import io.suricate.monitoring.service.api.LibraryService;
+import io.suricate.monitoring.service.api.RepositoryService;
 import io.suricate.monitoring.service.api.WidgetService;
 import io.suricate.monitoring.service.scheduler.NashornWidgetScheduler;
 import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
 import io.suricate.monitoring.utils.WidgetUtils;
-import io.suricate.monitoring.utils.exception.ConfigurationException;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
 import org.eclipse.jgit.api.Git;
 import org.slf4j.Logger;
@@ -41,6 +42,7 @@ import java.io.File;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
@@ -71,6 +73,11 @@ public class GitService {
     private final LibraryService libraryService;
 
     /**
+     * The repository service
+     */
+    private final RepositoryService repositoryService;
+
+    /**
      * The dashboard websocket service
      */
     private final DashboardWebSocketService dashboardWebSocketService;
@@ -85,40 +92,76 @@ public class GitService {
      *
      * @param widgetService             widget service
      * @param libraryService            library service
+     * @param repositoryService         The repository service
      * @param dashboardWebSocketService socket service
      * @param nashornWidgetScheduler    widget executor
+     * @param applicationProperties     The application properties
      */
     @Autowired
     public GitService(final WidgetService widgetService,
                       final LibraryService libraryService,
+                      final RepositoryService repositoryService,
                       final DashboardWebSocketService dashboardWebSocketService,
                       final NashornWidgetScheduler nashornWidgetScheduler,
                       final ApplicationProperties applicationProperties) {
         this.widgetService = widgetService;
         this.libraryService = libraryService;
+        this.repositoryService = repositoryService;
         this.dashboardWebSocketService = dashboardWebSocketService;
         this.nashornWidgetScheduler = nashornWidgetScheduler;
         this.applicationProperties = applicationProperties;
     }
 
+
+    /**
+     * Async method used to update widget from git
+     *
+     * @return True as Future when the process has been done
+     */
+    @Async
+    @Transactional
+    public Future<Boolean> updateWidgetFromGitRepositories() {
+        LOGGER.info("Update widgets from Git repo");
+        if (!applicationProperties.widgets.updateEnable) {
+            LOGGER.info("Widget update disabled");
+            return null;
+        }
+
+        return new AsyncResult<>(cloneAndUpdateWidgetRepo());
+    }
+
     /**
      * Methods used to clone widget repo
      *
-     * @return the folder containing the widget repo
+     * @return true if the update has been done correctly
      */
-    public File cloneWidgetRepo() throws Exception {
-        if (StringUtils.isNotBlank(applicationProperties.widgets.local.folderPath)) {
-            LOGGER.info("Loading widget from local folder {}", applicationProperties.widgets.local.folderPath);
-            return new File(applicationProperties.widgets.local.folderPath);
+    public boolean cloneAndUpdateWidgetRepo() {
+        try {
+            Optional<List<Repository>> optionalRepositories = repositoryService.getAllByEnabledOrderByName(true);
+            if (!optionalRepositories.isPresent()) {
+                LOGGER.info("No remote or local repository found");
+            } else {
+                for (Repository repository : optionalRepositories.get()) {
+                    if (repository.getType() == RepositoryTypeEnum.LOCAL) {
+                        LOGGER.info("Loading widget from local folder {}", repository.getLocalPath());
+                        updateWidgetFromFile(new File(repository.getLocalPath()), true, repository);
+                    } else {
+                        File remoteFolder = cloneRepo(repository.getUrl(), repository.getBranch());
+                        updateWidgetFromFile(remoteFolder, false, repository);
+                    }
+                }
+            }
+            return true;
+
+        } catch (Exception ioe) {
+            LOGGER.error(ioe.getMessage(), ioe);
+
+        } finally {
+            nashornWidgetScheduler.initScheduler();
+            dashboardWebSocketService.reloadAllConnectedDashboard();
         }
 
-        if (StringUtils.isBlank(applicationProperties.widgets.git.url)) {
-            throw new ConfigurationException("A git url is mandatory when no widget local folder is set", "application.widgets.git.url");
-        }
-        if (StringUtils.isBlank(applicationProperties.widgets.git.branch)) {
-            throw new ConfigurationException("A git branch is mandatory when no widget local folder is set", "application.widgets.git.branch");
-        }
-        return cloneRepo(applicationProperties.widgets.git.url, applicationProperties.widgets.git.branch);
+        return false;
     }
 
     /**
@@ -145,6 +188,7 @@ public class GitService {
                 .setBranch(branch)
                 .setDirectory(localRepo)
                 .call();
+
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
             FileUtils.deleteQuietly(localRepo);
@@ -159,22 +203,15 @@ public class GitService {
     }
 
     /**
-     * Async method used to update widget from git
+     * Update the widget in database from cloned folder
      *
-     * @return True as Future when the process has been done
+     * @param folder            The folder to process
+     * @param isLocalRepository True if the folder come from local repository, false if it's a remote repo
+     * @param repository        The repository
      */
-    @Async
-    @Transactional
-    public Future<Boolean> updateWidgetFromGit() {
-        LOGGER.info("Update widgets from Git repo");
-        if (!applicationProperties.widgets.updateEnable) {
-            LOGGER.info("Widget update disabled");
-            return null;
-        }
-        File folder = null;
-        try {
-            folder = cloneWidgetRepo();
-            if (folder != null) {
+    private void updateWidgetFromFile(File folder, boolean isLocalRepository, final Repository repository) throws Exception {
+        if (folder != null) {
+            try {
                 // Libraries
                 File libraryFolder = new File(folder.getAbsoluteFile().getAbsolutePath() + SystemUtils.FILE_SEPARATOR + "libraries" + SystemUtils.FILE_SEPARATOR);
                 List<Library> libraries = WidgetUtils.parseLibraryFolder(libraryFolder);
@@ -184,20 +221,14 @@ public class GitService {
                 // Parse folder
                 File widgetFolder = new File(folder.getAbsoluteFile().getAbsolutePath() + SystemUtils.FILE_SEPARATOR + "content" + SystemUtils.FILE_SEPARATOR);
                 List<Category> list = WidgetUtils.parseWidgetFolder(widgetFolder);
-                widgetService.updateWidgetInDatabase(list, mapLib);
+                widgetService.updateWidgetInDatabase(list, mapLib, repository);
 
-                return new AsyncResult<>(true);
+            } finally {
+                if (!isLocalRepository) {
+                    FileUtils.deleteQuietly(folder);
+                }
             }
-        } catch (Exception ioe) {
-            LOGGER.error(ioe.getMessage(), ioe);
-        } finally {
-            if (StringUtils.isBlank(applicationProperties.widgets.local.folderPath)) {
-                FileUtils.deleteQuietly(folder);
-            }
-            nashornWidgetScheduler.initScheduler();
-            dashboardWebSocketService.reloadAllConnectedDashboard();
         }
-
-        return new AsyncResult<>(false);
     }
+
 }

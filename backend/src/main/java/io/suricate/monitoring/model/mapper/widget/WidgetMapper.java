@@ -35,7 +35,8 @@ import java.util.List;
         AssetMapper.class,
         LibraryMapper.class,
         CategoryMapper.class,
-        WidgetParamMapper.class
+        WidgetParamMapper.class,
+        RepositoryMapper.class
     }
 )
 public abstract class WidgetMapper {
@@ -54,25 +55,55 @@ public abstract class WidgetMapper {
     @Mappings({
         @Mapping(target = "category", qualifiedByName = "toCategoryDtoWithoutWidgets"),
         @Mapping(target = "libraries", qualifiedByName = "toLibraryDtosWithoutWidgets"),
-        @Mapping(target = "widgetParams", qualifiedByName = "toWidgetParamDtosDefault")
+        @Mapping(target = "widgetParams", qualifiedByName = "toWidgetParamDtosDefault"),
+        @Mapping(target = "repository", qualifiedByName = "toRepositoryDtoWithoutWidgets")
     })
     public abstract WidgetDto toWidgetDtoDefault(Widget widget);
 
+    /**
+     * Tranform a Widget into a WidgetDto without libraries
+     *
+     * @param widget The widget to transform
+     * @return The related widget DTO
+     */
     @Named("toWidgetDtoWithoutLibraries")
     @Mappings({
         @Mapping(target = "category", qualifiedByName = "toCategoryDtoWithoutWidgets"),
         @Mapping(target = "libraries", ignore = true),
-        @Mapping(target = "widgetParams", qualifiedByName = "toWidgetParamDtosDefault")
+        @Mapping(target = "widgetParams", qualifiedByName = "toWidgetParamDtosDefault"),
+        @Mapping(target = "repository", qualifiedByName = "toRepositoryDtoWithoutWidgets")
     })
     public abstract WidgetDto toWidgetDtoWithoutLibraries(Widget widget);
 
+    /**
+     * Tranform a Widget into a WidgetDto without category
+     *
+     * @param widget The widget to transform
+     * @return The related widget DTO
+     */
     @Named("toWidgetDtoWithoutCategory")
     @Mappings({
         @Mapping(target = "category", ignore = true),
         @Mapping(target = "libraries", qualifiedByName = "toLibraryDtosWithoutWidgets"),
-        @Mapping(target = "widgetParams", qualifiedByName = "toWidgetParamDtosDefault")
+        @Mapping(target = "widgetParams", qualifiedByName = "toWidgetParamDtosDefault"),
+        @Mapping(target = "repository", qualifiedByName = "toRepositoryDtoWithoutWidgets")
     })
     public abstract WidgetDto toWidgetDtoWithoutCategory(Widget widget);
+
+    /**
+     * Tranform a Widget into a WidgetDto without repository
+     *
+     * @param widget The widget to transform
+     * @return The related widget DTO
+     */
+    @Named("toWidgetDtoWithoutRepository")
+    @Mappings({
+        @Mapping(target = "category", qualifiedByName = "toCategoryDtoWithoutWidgets"),
+        @Mapping(target = "libraries", qualifiedByName = "toLibraryDtosWithoutWidgets"),
+        @Mapping(target = "widgetParams", qualifiedByName = "toWidgetParamDtosDefault"),
+        @Mapping(target = "repository", ignore = true)
+    })
+    public abstract WidgetDto toWidgetDtoWithoutRepository(Widget widget);
 
 
     /* ******************************************************* */
@@ -108,4 +139,14 @@ public abstract class WidgetMapper {
     @Named("toWidgetDtosWithoutLibraries")
     @IterableMapping(qualifiedByName = "toWidgetDtoWithoutLibraries")
     public abstract List<WidgetDto> toWidgetDtosWithoutLibraries(List<Widget> widgets);
+
+    /**
+     * Tranform a list of widgets into a list of widgetDto without repositories
+     *
+     * @param widgets The list of widget to transform
+     * @return The related DTOs
+     */
+    @Named("toWidgetDtosWithoutRepositories")
+    @IterableMapping(qualifiedByName = "toWidgetDtoWithoutRepository")
+    public abstract List<WidgetDto> toWidgetDtosWithoutRepositories(List<Widget> widgets);
 }
