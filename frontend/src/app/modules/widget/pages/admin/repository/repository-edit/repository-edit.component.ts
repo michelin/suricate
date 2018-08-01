@@ -25,6 +25,7 @@ import {RepositoryService} from '../repository.service';
 import {RepositoryTypeEnum} from '../../../../../../shared/model/dto/enums/RepositoryTypeEnum';
 import {FormUtils} from '../../../../../../shared/utils/FormUtils';
 import {ToastService} from '../../../../../../shared/components/toast/toast.service';
+import {ToastType} from '../../../../../../shared/model/toastNotification/ToastType';
 
 /**
  * Edit a repository
@@ -128,7 +129,7 @@ export class RepositoryEditComponent implements OnInit {
     if (this.repositoryForm.valid) {
       this.repositoryService
           .updateOneById(this.repository.id, this.repositoryForm.value)
-          .subscribe(() => console.log('ok'));
+          .subscribe(() => this.toastService.sendMessage(`Repository ${this.repository.name} updated successfully`, ToastType.SUCCESS));
     }
   }
 }

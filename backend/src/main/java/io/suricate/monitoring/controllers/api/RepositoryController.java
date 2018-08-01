@@ -151,9 +151,10 @@ public class RepositoryController {
         if (!repositoryService.existsById(repositoryId)) {
             throw new ObjectNotFoundException(Repository.class, repositoryId);
         }
-        repositoryDto.setId(repositoryId);
 
         Repository repository = repositoryMapper.toRepositoryWithoutWidgets(repositoryDto);
+        repository.setId(repositoryId);
+        
         this.repositoryService.addOrUpdateRepository(repository);
 
         return ResponseEntity
