@@ -1,4 +1,4 @@
-<app-pages-header [secondTitle]="repository ? repository.name : 'Add a new repository'"></app-pages-header>
+<app-pages-header [secondTitle]="repository ? repository.name : 'repository.new'"></app-pages-header>
 
 <form *ngIf="repositoryForm" [formGroup]="repositoryForm" #formDirective="ngForm" (ngSubmit)="saveRepository()">
   <mat-card id="card-edit"
@@ -9,7 +9,7 @@
 
     <mat-card-content fxLayout="column wrap" fxLayoutAlign="center center">
       <!-- GENERAL INFORMATIONS -->
-      <h4 class="title" fxFlexAlign="start"> {{ 'General informations' | uppercase }} </h4>
+      <h4 class="title" fxFlexAlign="start"> {{ 'general.informations' | translate | uppercase }} </h4>
 
       <!-- Repo Name -->
       <mat-form-field>
@@ -30,7 +30,7 @@
       </mat-checkbox>
 
       <!-- Repository intformations -->
-      <h4 class="title" fxFlexAlign="start"> {{ 'Repository Informations' | uppercase }} </h4>
+      <h4 class="title" fxFlexAlign="start"> {{ 'repository.info' | translate | uppercase }} </h4>
 
       <!-- Repo type -->
       <mat-form-field>
