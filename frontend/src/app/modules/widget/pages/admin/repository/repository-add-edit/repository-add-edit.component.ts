@@ -61,6 +61,7 @@ export class RepositoryAddEditComponent implements OnInit {
    * @param {FormBuilder} formBuilder The form builder service
    * @param {RepositoryService} repositoryService The repository service to inject
    * @param {ToastService} toastService The toast service
+   * @param {ChangeDetectorRef} changeDetectorRef The change detector service
    */
   constructor(private activatedRoute: ActivatedRoute,
               private formBuilder: FormBuilder,

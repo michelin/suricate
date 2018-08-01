@@ -86,19 +86,18 @@
           <a mat-list-item
              *ngIf="isUserAdmin"
              routerLinkActive="active"
-             [routerLink]="['/widgets/admin/repositories']">
+             [routerLink]="['/repositories']">
             <app-translate [key]="'repositories'"></app-translate>
           </a>
           <a mat-list-item
              *ngIf="isUserAdmin"
              routerLinkActive="active"
-             [routerLink]="['/widgets/admin/configurations']">
+             [routerLink]="['/widget-configurations']">
             <app-translate [key]="'configurations'"></app-translate>
           </a>
           <a mat-list-item
              routerLinkActive="active"
-             [routerLink]="['/widgets']"
-             [routerLinkActiveOptions]="{exact:true}">
+             [routerLink]="['/widgets']">
             <app-translate [key]="'widgets.list'"></app-translate>
           </a>
         </mat-nav-list>

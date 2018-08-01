@@ -14,46 +14,32 @@
  * limitations under the License.
  */
 
-import {Component, Input, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {Router} from '@angular/router';
 
 /**
- * The page header component
+ * Manage repository actions
  */
 @Component({
-  selector: 'app-pages-header',
-  templateUrl: './pages-header.component.html',
-  styleUrls: ['./pages-header.component.css']
+  selector: 'app-repository-actions',
+  templateUrl: './repository-actions.component.html',
+  styleUrls: ['./repository-actions.component.css']
 })
-export class PagesHeaderComponent implements OnInit {
-  /**
-   * The second title
-   * @type {string}
-   */
-  @Input() secondTitle: string;
-  
-  /**
-   * True if the menu should be display on the page
-   */
-  @Input() showMenu = true;
+export class RepositoryActionsComponent {
 
   /**
-   * The page name
-   * @type {string}
+   * Constructor
+   *
+   * @param router The router service
    */
-  pageName: string;
-
-  /**
-   * The constructor
-   * @param {Router} route The router service
-   */
-  constructor(private route: Router) {
+  constructor(private router: Router) {
   }
 
   /**
-   * When the component is init
+   * Navigate to the add repository page
    */
-  ngOnInit() {
-    this.pageName = this.route.url.split('/')[1];
+  addRepository() {
+    this.router.navigate(['/repositories', 'add']);
   }
+
 }

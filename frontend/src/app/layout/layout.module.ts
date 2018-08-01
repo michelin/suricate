@@ -26,6 +26,7 @@ import {SharedModule} from '../shared/shared.module';
 import {PagesHeaderComponent} from './header/pages/pages-header.component';
 import {SidenavComponent} from './sidenav/pages/sidenav.component';
 import {SidenavService} from './sidenav/sidenav.service';
+import {RepositoryActionsComponent} from './header/components/repository-actions/repository-actions.component';
 
 @NgModule({
   imports: [
@@ -39,7 +40,8 @@ import {SidenavService} from './sidenav/sidenav.service';
     PagesHeaderComponent,
     SidenavComponent,
     TvManagementDialogComponent,
-    WidgetListActionsComponent
+    WidgetListActionsComponent,
+    RepositoryActionsComponent
   ],
   entryComponents: [
     AddWidgetDialogComponent,

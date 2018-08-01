@@ -6,13 +6,16 @@
     </h2>
   </div>
 
-  <div class="actions">
+  <div class="actions" *ngIf="showMenu">
     <!-- Dashboard actions -->
-    <div class="dashboard-actions" *ngIf="pageName === 'dashboards'">
+    <div *ngIf="pageName === 'dashboards'">
       <app-dashboard-actions></app-dashboard-actions>
     </div>
     <div *ngIf="pageName === 'widgets'">
       <app-widget-list-actions></app-widget-list-actions>
+    </div>
+    <div *ngIf="pageName === 'repositories'">
+      <app-repository-actions></app-repository-actions>
     </div>
   </div>
 
