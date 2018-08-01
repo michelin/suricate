@@ -26,7 +26,7 @@ import {RepositoryListComponent} from './repository-list/repository-list.compone
 import {RepositoryService} from './repository.service';
 import {RouterModule} from '@angular/router';
 import {repositoryRoutes} from './repository.route';
-import {RepositoryEditComponent} from './repository-edit/repository-edit.component';
+import {RepositoryAddEditComponent} from './repository-add-edit/repository-add-edit.component';
 
 @NgModule({
   imports: [
@@ -37,7 +37,7 @@ import {RepositoryEditComponent} from './repository-edit/repository-edit.compone
   ],
   declarations: [
     RepositoryListComponent,
-    RepositoryEditComponent
+    RepositoryAddEditComponent
   ],
   providers: [
     RepositoryService

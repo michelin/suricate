@@ -18,21 +18,21 @@
 
 import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {RepositoryEditComponent} from './repository-edit.component';
+import {RepositoryAddEditComponent} from './repository-add-edit.component';
 
-describe('RepositoryEditComponent', () => {
-  let component: RepositoryEditComponent;
-  let fixture: ComponentFixture<RepositoryEditComponent>;
+describe('RepositoryAddEditComponent', () => {
+  let component: RepositoryAddEditComponent;
+  let fixture: ComponentFixture<RepositoryAddEditComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [RepositoryEditComponent]
+      declarations: [RepositoryAddEditComponent]
     })
         .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(RepositoryEditComponent);
+    fixture = TestBed.createComponent(RepositoryAddEditComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

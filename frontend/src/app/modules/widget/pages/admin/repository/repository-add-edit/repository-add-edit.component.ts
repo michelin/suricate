@@ -16,7 +16,7 @@
  *
  */
 
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
@@ -31,11 +31,11 @@ import {ToastType} from '../../../../../../shared/model/toastNotification/ToastT
  * Edit a repository
  */
 @Component({
-  selector: 'app-repository-edit',
-  templateUrl: './repository-edit.component.html',
-  styleUrls: ['./repository-edit.component.css']
+  selector: 'app-repository-add-edit',
+  templateUrl: './repository-add-edit.component.html',
+  styleUrls: ['./repository-add-edit.component.css']
 })
-export class RepositoryEditComponent implements OnInit {
+export class RepositoryAddEditComponent implements OnInit {
 
   /**
    * The edit form
@@ -65,7 +65,8 @@ export class RepositoryEditComponent implements OnInit {
   constructor(private activatedRoute: ActivatedRoute,
               private formBuilder: FormBuilder,
               private repositoryService: RepositoryService,
-              private toastService: ToastService) {
+              private toastService: ToastService,
+              private changeDetectorRef: ChangeDetectorRef) {
   }
 
   /**
@@ -73,10 +74,17 @@ export class RepositoryEditComponent implements OnInit {
    */
   ngOnInit() {
     this.activatedRoute.params.subscribe(params => {
-      this.repositoryService.getOneById(params['repositoryId']).subscribe(repository => {
-        this.repository = repository;
+      if (params['repositoryId']) {
+        this.repositoryService.getOneById(params['repositoryId']).subscribe(repository => {
+          this.repository = repository;
+          this.initRepoForm();
+        });
+
+      } else {
         this.initRepoForm();
-      });
+      }
+
+      this.changeDetectorRef.detectChanges();
     });
   }
 
@@ -85,14 +93,14 @@ export class RepositoryEditComponent implements OnInit {
    */
   initRepoForm() {
     this.repositoryForm = this.formBuilder.group({
-      name: [this.repository.name, [Validators.required, Validators.pattern(/^[a-zA-Z1-9-_]+$/)]],
-      url: this.repository.url,
-      branch: this.repository.branch,
-      login: this.repository.login,
-      password: this.repository.password,
-      localPath: this.repository.localPath,
-      type: [this.repository.type],
-      enabled: this.repository.enabled
+      name: [this.repository ? this.repository.name : '', [Validators.required]],
+      url: [this.repository ? this.repository.url : ''],
+      branch: [this.repository ? this.repository.branch : ''],
+      login: [this.repository ? this.repository.login : ''],
+      password: [this.repository ? this.repository.password : ''],
+      localPath: [this.repository ? this.repository.localPath : ''],
+      type: [this.repository ? this.repository.type : ''],
+      enabled: [this.repository ? this.repository.enabled : false]
     });
   }
 
@@ -120,6 +128,8 @@ export class RepositoryEditComponent implements OnInit {
       FormUtils.resetValidatorsAndErrorsForField(this.repositoryForm, 'branch');
       this.repositoryForm.get('localPath').validator = Validators.required;
     }
+
+    this.changeDetectorRef.detectChanges();
   }
 
   /**
@@ -127,9 +137,22 @@ export class RepositoryEditComponent implements OnInit {
    */
   saveRepository() {
     if (this.repositoryForm.valid) {
-      this.repositoryService
-          .updateOneById(this.repository.id, this.repositoryForm.value)
-          .subscribe(() => this.toastService.sendMessage(`Repository ${this.repository.name} updated successfully`, ToastType.SUCCESS));
+      const repositoryToAddEdit: Repository = this.repositoryForm.value;
+
+      if (this.repository) {
+        this.repositoryService
+            .updateOneById(this.repository.id, repositoryToAddEdit)
+            .subscribe((repositoryAdded: Repository) => {
+              this.toastService.sendMessage(`Repository ${repositoryAdded.name} updated successfully`, ToastType.SUCCESS);
+            });
+
+      } else {
+        this.repositoryService
+            .addOne(repositoryToAddEdit)
+            .subscribe((repositoryAdded: Repository) => {
+              this.toastService.sendMessage(`Repository ${repositoryAdded.name} added successfully`, ToastType.SUCCESS);
+            });
+      }
     }
   }
 }

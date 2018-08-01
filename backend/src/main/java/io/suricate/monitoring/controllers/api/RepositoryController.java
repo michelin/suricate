@@ -32,7 +32,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -101,6 +103,38 @@ public class RepositoryController {
     }
 
     /**
+     * Create a new repository
+     *
+     * @param repositoryDto The repository to create
+     * @return The repository created
+     */
+    @ApiOperation(value = "Create a new repository", response = RepositoryDto.class)
+    @ApiResponses(value = {
+        @ApiResponse(code = 201, message = "Created", response = RepositoryDto.class),
+        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
+    })
+    @RequestMapping(method = RequestMethod.PUT)
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<RepositoryDto> createOne(@ApiParam(name = "repositoryDto", value = "The repository to create", required = true)
+                                                   @RequestBody RepositoryDto repositoryDto) {
+        Repository repository = repositoryMapper.toRepositoryWithoutWidgets(repositoryDto);
+        repositoryService.addOrUpdateRepository(repository);
+
+        URI resourceLocation = ServletUriComponentsBuilder
+            .fromCurrentContextPath()
+            .path("/api/repositories/" + repository.getId())
+            .build()
+            .toUri();
+
+        return ResponseEntity
+            .created(resourceLocation)
+            .contentType(MediaType.APPLICATION_JSON)
+            .cacheControl(CacheControl.noCache())
+            .body(repositoryMapper.toRepositoryDtoDefault(repository));
+    }
+
+    /**
      * Retrieve an existing repository by id
      *
      * @param repositoryId The repository Id
@@ -154,7 +188,7 @@ public class RepositoryController {
 
         Repository repository = repositoryMapper.toRepositoryWithoutWidgets(repositoryDto);
         repository.setId(repositoryId);
-        
+
         this.repositoryService.addOrUpdateRepository(repository);
 
         return ResponseEntity

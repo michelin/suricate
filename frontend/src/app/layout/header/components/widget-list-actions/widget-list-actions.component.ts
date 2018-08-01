@@ -20,6 +20,7 @@ import {WidgetService} from '../../../../modules/widget/widget.service';
 import {ToastService} from '../../../../shared/components/toast/toast.service';
 import {ToastType} from '../../../../shared/model/toastNotification/ToastType';
 import {ApiActionEnum} from '../../../../shared/model/dto/enums/ApiActionEnum';
+import {Router} from '@angular/router';
 
 /**
  * Hold the widget list actions
@@ -37,7 +38,8 @@ export class WidgetListActionsComponent {
    * @param {WidgetService} widgetService The widget service
    * @param {ToastService} toastService The toast service
    */
-  constructor(private widgetService: WidgetService,
+  constructor(private router: Router,
+              private widgetService: WidgetService,
               private toastService: ToastService) {
   }
 
@@ -48,5 +50,12 @@ export class WidgetListActionsComponent {
     this.widgetService.getAll(ApiActionEnum.REFRESH).subscribe(() => {
       this.toastService.sendMessage('Widget successfully reloads', ToastType.SUCCESS);
     });
+  }
+
+  /**
+   * Navigate to the add repository page
+   */
+  addRepository() {
+    this.router.navigate(['/widgets', 'admin', 'repositories', 'add']);
   }
 }

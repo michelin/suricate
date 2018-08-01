@@ -60,10 +60,22 @@ export class RepositoryService {
   }
 
   /**
+   * Add a repo
+   *
+   * @param repository The repository to add
+   */
+  addOne(repository: Repository): Observable<Repository> {
+    const url = `${repositoriesApiEndpoint}`;
+
+    return this.httpClient.put<Repository>(url, repository);
+  }
+
+  /**
    * Update a repository
    *
    * @param repositoryId The repository id
    * @param repository The repository with informations updated
+   * @returns The repository as observable
    */
   updateOneById(repositoryId: number, repository: Repository): Observable<Repository> {
     const url = `${repositoriesApiEndpoint}/${repositoryId}`;

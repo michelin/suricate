@@ -1,4 +1,4 @@
-<app-pages-header *ngIf="repository" [secondTitle]="repository.name"></app-pages-header>
+<app-pages-header [secondTitle]="repository ? repository.name : 'Add a new repository'"></app-pages-header>
 
 <form *ngIf="repositoryForm" [formGroup]="repositoryForm" #formDirective="ngForm" (ngSubmit)="saveRepository()">
   <mat-card id="card-edit"
