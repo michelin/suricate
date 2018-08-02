@@ -109,7 +109,7 @@
           <app-translate [key]="'dashboards'"></app-translate>
         </h1>
         <mat-nav-list>
-          <a mat-list-item routerLinkActive="active" [routerLink]="['/dashboards']">
+          <a mat-list-item *ngIf="isUserAdmin" routerLinkActive="active" [routerLink]="['/dashboards', 'all']">
             <app-translate [key]="'dashboards.list'"></app-translate>
           </a>
           <a mat-list-item routerLinkActive="active" *ngFor="let dashboard of dashboards"
