@@ -22,9 +22,9 @@ import {WidgetConfigurationEditComponent} from './configuration-edit/widget-conf
 import {WidgetConfigurationListComponent} from './configuration-list/widget-configuration-list.component';
 
 export const widgetConfigurationRoute: Routes = [
-  {path: 'widget-configurations', component: WidgetConfigurationListComponent, canActivate: [AuthGuard, AdminGuard]},
+  {path: 'widgets/configurations', component: WidgetConfigurationListComponent, canActivate: [AuthGuard, AdminGuard]},
   {
-    path: 'widget-configurations/:configurationKey/edit',
+    path: 'widgets/configurations/:configurationKey/edit',
     component: WidgetConfigurationEditComponent,
     canActivate: [AuthGuard, AdminGuard]
   }

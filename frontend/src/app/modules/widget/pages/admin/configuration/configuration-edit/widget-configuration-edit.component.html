@@ -1,4 +1,4 @@
-<app-pages-header *ngIf="configuration" [secondTitle]="configuration.key"></app-pages-header>
+<app-pages-header *ngIf="configuration" [secondTitle]="configuration.key" [showMenu]="false"></app-pages-header>
 
 <form *ngIf="configurationForm" [formGroup]="configurationForm" (ngSubmit)="saveConfiguration()">
   <mat-card id="card-edit-config"
