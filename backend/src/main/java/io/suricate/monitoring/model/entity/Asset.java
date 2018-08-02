@@ -16,61 +16,48 @@
 
 package io.suricate.monitoring.model.entity;
 
-import org.springframework.data.annotation.LastModifiedDate;
+
+import lombok.*;
 
 import javax.persistence.*;
-import java.util.Date;
 
 /**
  * Library entity
  */
 @Entity
+@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
 public class Asset extends AbstractAuditingEntity<Long> {
 
+    /**
+     * The id
+     */
     @Id
     @GeneratedValue
     private Long id;
 
+    /**
+     * The content of this asset
+     */
     @Lob
     @Basic(fetch = FetchType.LAZY)
     @Column(columnDefinition = "LONGBLOB")
     private byte[] content;
 
+    /**
+     * The content type
+     */
     @Column(length = 100)
     private String contentType;
 
+    /**
+     * The size
+     */
     @Column
     private long size;
 
-    public Asset() {}
 
-    @Override
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public byte[] getContent() {
-        return content;
-    }
     public void setContent(byte[] content) {
         this.content = content;
         this.size = content.length;
-    }
-
-    public String getContentType() {
-        return contentType;
-    }
-    public void setContentType(String contentType) {
-        this.contentType = contentType;
-    }
-
-    public long getSize() {
-        return size;
-    }
-    public void setSize(long size) {
-        this.size = size;
     }
 }

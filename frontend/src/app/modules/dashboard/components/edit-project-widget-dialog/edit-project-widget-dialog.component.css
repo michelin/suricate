@@ -1,0 +1,70 @@
+img {
+    display: flex;
+    width: auto;
+    height: auto;
+    max-height: 220px;
+    max-width: 171px;
+    padding: 4px;
+}
+.widget-dialog {
+    width: auto !important;
+    margin: 10px auto;
+    padding-left: 30px;
+    min-height: 300px;
+}
+.widget-dialog > h1 {
+    text-align: center;
+    font-size: 1.6em;
+}
+.widget-dialog > .container {
+    display: flex;
+}
+.widget-dialog .image-container {
+    margin: 10px 50px 0 0;
+    width: auto;
+    height: auto;
+}
+.widget-dialog .description-container {
+    margin: auto;
+}
+.widget-dialog .settings-container {
+    margin-top: 30px;
+}
+.widget-dialog .settings-container * {
+    width: 100%;
+}
+.widget-dialog #formSettings button {
+    margin-top: 40px;
+}
+
+#formSettings .button-wrapper {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 1.25em;
+}
+#formSettings .button-wrapper .file_upload_button {
+    height: 45px;
+    width: 100%;
+    background-color: transparent;
+}
+#formSettings .button-wrapper .file_upload_button mat-icon {
+    float: left;
+    height: auto;
+    width: auto;
+    font-size: 2.2em;
+    color: #cfd2da;
+    margin-top: 4px;
+}
+#formSettings .button-wrapper .file_upload_button span {
+    color: #cfd2da;
+    font-size: 1.3em;
+}
+
+#widget-info {
+    text-align: center;
+    color: #cfd2da;
+    margin-top: 30px;
+    padding: 30px 0 30px 0;
+    background-color: #565656;
+    border-radius: 4px;
+}

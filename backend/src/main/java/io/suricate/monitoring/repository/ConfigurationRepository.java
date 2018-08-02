@@ -23,10 +23,14 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
+/**
+ * Repository used for request Configurations in database
+ */
 public interface ConfigurationRepository extends JpaRepository<Configuration, String> {
 
     /**
      * Method used to get all config linked to widget scripts
+     *
      * @return the list of configuration
      */
     @Cacheable("configuration")

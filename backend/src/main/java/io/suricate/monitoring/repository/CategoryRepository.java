@@ -21,6 +21,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
+/**
+ * Repository used for request categories in database
+ */
 public interface CategoryRepository extends JpaRepository<Category, Long> {
 
     /**

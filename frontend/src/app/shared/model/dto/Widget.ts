@@ -16,23 +16,25 @@
 
 import {Asset} from './Asset';
 import {WidgetParam} from './WidgetParam';
+import {Category} from './Category';
+import {WidgetAvailabilityEnum} from './enums/WidgetAvailabilityEnum';
 
+/**
+ * The widget entity
+ */
 export class Widget {
-  id: string;
+  id: number;
   name: string;
-  html: string;
-  css: string;
-  customCss: string;
-  col: number;
-  row: number;
-  width: number;
-  height: number;
-  projectWidgetId: number;
-  widgetId: number;
-  error: boolean;
-  image: Asset;
-  warning: boolean;
   description: string;
+  technicalName: string;
+  htmlContent: string;
+  cssContent: string;
+  backendJs: string;
   info: string;
+  delay: number;
+  timeout: string;
+  image: Asset;
+  category: Category;
+  widgetAvailability: WidgetAvailabilityEnum;
   widgetParams: WidgetParam[];
 }

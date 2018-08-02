@@ -1,0 +1,103 @@
+<app-pages-header [secondTitle]="user?.fullname"></app-pages-header>
+
+<form *ngIf="editUserForm" [formGroup]="editUserForm" (ngSubmit)="saveUser()">
+  <mat-card id="card-edit-user"
+            class="mat-elevation-z8"
+            fxLayout="column wrap"
+            fxLayoutAlign="center center"
+            fxLayoutGap="30px">
+
+    <mat-card-content fxLayout="column wrap"
+                      fxLayoutAlign="center center">
+
+      <!-- GENERAL INFORMATIONS -->
+      <h4 class="title" fxFlexAlign="start"> {{ 'General informations' | uppercase }} </h4>
+
+      <!-- Username Input -->
+      <mat-form-field>
+        <mat-icon class="prefix" matPrefix>android</mat-icon>
+        <input matInput
+               type="text"
+               id="username"
+               placeholder="{{ 'username' | translate }}"
+               formControlName="username"
+               [required]="editUserForm.get('username').errors && editUserForm.get('username').errors.required"/>
+        <mat-error *ngIf="isFieldInvalid('username')">
+          <app-translate [key]="'username.required.with.length'"></app-translate>
+        </mat-error>
+      </mat-form-field>
+
+
+      <!-- Firstname Input -->
+      <mat-form-field>
+        <mat-icon class="prefix" matPrefix>person</mat-icon>
+        <input matInput
+               type="text"
+               id="firstname"
+               placeholder="{{ 'firstname' | translate }}"
+               formControlName="firstname"
+               [required]="editUserForm.get('firstname').errors && editUserForm.get('firstname').errors.required"/>
+        <mat-error *ngIf="isFieldInvalid('firstname')">
+          <app-translate [key]="'firstname.length'"></app-translate>
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Lastname Input -->
+      <mat-form-field>
+        <mat-icon class="prefix" matPrefix>person</mat-icon>
+        <input matInput
+               type="text"
+               id="lastname"
+               [value]="user?.lastname"
+               placeholder="{{ 'lastname' | translate }}" formControlName="lastname"
+               [required]="editUserForm.get('lastname').errors && editUserForm.get('lastname').errors.required"/>
+        <mat-error *ngIf="isFieldInvalid('lastname')">
+          <app-translate [key]="'lastname.length'"></app-translate>
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Email Input -->
+      <mat-form-field>
+        <mat-icon class="prefix" matPrefix>email</mat-icon>
+        <input matInput
+               type="text"
+               id="email"
+               placeholder="{{ 'email' | translate }}"
+               formControlName="email"
+               [required]="editUserForm.get('email').errors && editUserForm.get('email').errors.required"/>
+        <mat-error *ngIf="isFieldInvalid('email') && editUserForm.get('email').errors?.required">
+          <app-translate [key]="'email.required'"></app-translate>
+        </mat-error>
+        <mat-error *ngIf="isFieldInvalid('email') && editUserForm.get('email').errors?.email">
+          <app-translate [key]="'email.invalid.format'"></app-translate>
+        </mat-error>
+      </mat-form-field>
+
+
+      <!-- ROLE MANAGEMENT -->
+      <h4 class="title" fxFlexAlign="start"> {{ 'Role Managements' | uppercase }} </h4>
+
+      <mat-form-field *ngIf="roles">
+        <mat-select id="roles"
+                    placeholder="User role"
+                    formControlName="roles"
+                    required="true"
+                    multiple>
+          <mat-option *ngFor="let role of roles"
+                      [value]="role.name">
+            {{ role.name }}
+          </mat-option>
+        </mat-select>
+        <mat-error *ngIf="isFieldInvalid('roles')">
+          User role is mandatory
+        </mat-error>
+      </mat-form-field>
+
+    </mat-card-content>
+
+    <mat-card-actions>
+      <button mat-raised-button class="mat-elevation-z2" color="accent" type="submit">{{ 'save' | translate | uppercase}}</button>
+    </mat-card-actions>
+
+  </mat-card>
+</form>

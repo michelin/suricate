@@ -42,11 +42,12 @@ public class MonitorProxySelector extends ProxySelector {
     public List<Proxy> select(URI uri) {
         Proxy ret = Proxy.NO_PROXY;
         ProxyConfiguration config = SpringContextHolder.getApplicationContext().getBean(ProxyConfiguration.class);
-        try (Stream<String> stream = Arrays.stream(config.getNoProxyDomains().split(","))){
-            if (StringUtils.isNotBlank(config.getNoProxyDomains())
-                    && stream.filter(h -> StringUtils.containsIgnoreCase(uri.getHost(), h))
-                    .count() == 0){
-                ret = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(config.getHost(), config.getPort()));
+        if(StringUtils.isNotBlank(config.getNoProxyDomains())) {
+            try (Stream<String> stream = Arrays.stream(config.getNoProxyDomains().split(","))) {
+                if ( StringUtils.isNotBlank(config.getNoProxyDomains()) &&
+                     stream.noneMatch(h -> StringUtils.containsIgnoreCase(uri.getHost(), h)) ) {
+                    ret = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(config.getHost(), config.getPort()));
+                }
             }
         }
         return Collections.singletonList(ret);

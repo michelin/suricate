@@ -19,7 +19,8 @@ package io.suricate.monitoring.configuration.security.ldap;
 
 import io.suricate.monitoring.configuration.ApplicationProperties;
 import io.suricate.monitoring.configuration.security.ConnectedUser;
-import io.suricate.monitoring.repository.UserRepository;
+import io.suricate.monitoring.service.api.UserService;
+import io.suricate.monitoring.utils.exception.ConfigurationException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -33,17 +34,23 @@ import org.springframework.security.ldap.userdetails.UserDetailsContextMapper;
 
 import javax.annotation.PostConstruct;
 
+/**
+ * The LDAP authentication
+ */
 @Configuration
 @ConditionalOnProperty(name = "application.authentication.provider", havingValue = "ldap")
 public class LdapAuthentication {
 
-    private final UserRepository userRepository;
+    /**
+     * The user service
+     */
+    private final UserService userService;
     private final ApplicationProperties applicationProperties;
     private final UserDetailsServiceLdapAuthoritiesPopulator userDetailsServiceLdapAuthoritiesPopulator;
 
     @Autowired
-    public LdapAuthentication(UserRepository userRepository, ApplicationProperties applicationProperties, UserDetailsServiceLdapAuthoritiesPopulator userDetailsServiceLdapAuthoritiesPopulator) {
-        this.userRepository = userRepository;
+    public LdapAuthentication(UserService userService, ApplicationProperties applicationProperties, UserDetailsServiceLdapAuthoritiesPopulator userDetailsServiceLdapAuthoritiesPopulator) {
+        this.userService = userService;
         this.applicationProperties = applicationProperties;
         this.userDetailsServiceLdapAuthoritiesPopulator = userDetailsServiceLdapAuthoritiesPopulator;
     }
@@ -54,34 +61,36 @@ public class LdapAuthentication {
     @PostConstruct
     private void checkLdapConfiguration() {
         if (StringUtils.isBlank(applicationProperties.authentication.ldap.url)) {
-            throw new IllegalArgumentException("The Ldap url is mandatory when the provider is ldap");
+            throw new ConfigurationException("The Ldap url is mandatory when the provider is ldap", "application.authentication.ldap.url");
         }
     }
 
     /**
      * Method used to configure the ldap
+     *
      * @param auth the authentication manager
      * @throws Exception
      */
     @Autowired
     public void configureLdap(AuthenticationManagerBuilder auth) throws Exception {
         auth.ldapAuthentication()
-                .userDetailsContextMapper(userDetailsContextMapper())
-                .ldapAuthoritiesPopulator(userDetailsServiceLdapAuthoritiesPopulator)
-                .userSearchFilter(applicationProperties.authentication.ldap.userSearchFilter)
+            .userDetailsContextMapper(userDetailsContextMapper())
+            .ldapAuthoritiesPopulator(userDetailsServiceLdapAuthoritiesPopulator)
+            .userSearchFilter(applicationProperties.authentication.ldap.userSearchFilter)
             .contextSource()
             .url(applicationProperties.authentication.ldap.url);
     }
 
     /**
      * Method used to store all user Ldap attribute inside the Security context holder
+     *
      * @return the userDetails context
      */
     public UserDetailsContextMapper userDetailsContextMapper() {
         return new LdapUserDetailsMapper() {
             @Override
             public UserDetails mapUserFromContext(DirContextOperations ctx, String username, java.util.Collection<? extends GrantedAuthority> authorities) {
-                Long userId = userRepository.getIdByUsername(username);
+                Long userId = userService.getIdByUsername(username);
                 return new ConnectedUser(username, ctx, authorities, userId, applicationProperties.authentication.ldap);
             }
         };

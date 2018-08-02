@@ -1,0 +1,33 @@
+###     Properties for test     ###
+##########################################
+
+###   DATASOURCES   ###
+spring:
+  ###   DDL   ###
+  jpa.hibernate.ddl-auto: create-drop
+  ###   DATASOURCES   ###
+  datasource:
+    url: "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE"
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+### Actuator ###
+management:
+  port: 8081
+  security.enabled: true
+
+### logging ###
+logging.level:
+  org.hibernate.SQL: INFO
+  ## Custom logging
+  io.suricate.monitoring: INFO
+
+##########################################
+###       Application properties       ###
+##########################################
+application:
+  authentication:
+    ### Authentication Management (ldap | database) ###
+    provider: database
+  widgets.updateEnable: false

@@ -19,6 +19,7 @@ package io.suricate.monitoring.model.entity.project;
 import io.suricate.monitoring.model.entity.AbstractAuditingEntity;
 import io.suricate.monitoring.model.entity.widget.Widget;
 import io.suricate.monitoring.model.enums.WidgetState;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -27,153 +28,95 @@ import java.util.Date;
  * Project_widget entity
  */
 @Entity(name = "ProjectWidget")
+@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
 public class ProjectWidget extends AbstractAuditingEntity<Long> {
 
+    /**
+     * The project widget id
+     */
     @Id
     @GeneratedValue
     private Long id;
 
+    /**
+     * The data of the widget (result of nashorn execution)
+     */
     @Column
     @Lob
     private String data;
 
+    /**
+     * The starting row
+     */
     @Column
     private int row;
 
+    /**
+     * The starting column
+     */
     @Column
     private int col;
 
+    /**
+     * The number of rows taken by the widget
+     */
     @Column
     private int width;
 
+    /**
+     * The number of columns taken by the widget
+     */
     @Column
     private int height;
 
+    /**
+     * The css style added by the user
+     */
     @Lob
     private String customStyle;
 
+    /**
+     * The configuration of the widget (Result of the widget params)
+     */
     @Lob
     private String backendConfig;
 
+    /**
+     * The nashorn execution log
+     */
     @Lob
     private String log;
 
+    /**
+     * The last execution date
+     */
     @Column
     private Date lastExecutionDate;
 
+    /**
+     * The last success execution date
+     */
     @Column
     private Date lastSuccessDate;
 
+    /**
+     * The widget state {@link WidgetState}
+     */
     @Column
     @Enumerated(EnumType.STRING)
     private WidgetState state;
 
+    /**
+     * The related project
+     */
     @ManyToOne
     @PrimaryKeyJoinColumn(name="projectId",referencedColumnName = "ID")
     private Project project;
 
+    /**
+     * The related widget
+     */
     @ManyToOne
     @PrimaryKeyJoinColumn(name = "widgetId" ,referencedColumnName = "ID")
     private Widget widget;
-
-    public ProjectWidget() {}
-
-    @Override
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getData() {
-        return data;
-    }
-    public void setData(String data) {
-        this.data = data;
-    }
-
-    public int getRow() {
-        return row;
-    }
-    public void setRow(int row) {
-        this.row = row;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-    public void setHeight(int height) {
-        this.height = height;
-    }
-
-    public Project getProject() {
-        return project;
-    }
-    public void setProject(Project project) {
-        this.project = project;
-    }
-
-    public Widget getWidget() {
-        return widget;
-    }
-    public void setWidget(Widget widget) {
-        this.widget = widget;
-    }
-
-    public String getCustomStyle() {
-        return customStyle;
-    }
-    public void setCustomStyle(String customStyle) {
-        this.customStyle = customStyle;
-    }
-
-    public String getBackendConfig() {
-        return backendConfig;
-    }
-    public void setBackendConfig(String backendConfig) {
-        this.backendConfig = backendConfig;
-    }
-
-    public int getCol() {
-        return col;
-    }
-    public void setCol(int col) {
-        this.col = col;
-    }
-
-    public String getLog() {
-        return log;
-    }
-    public void setLog(String log) {
-        this.log = log;
-    }
-
-    public Date getLastExecutionDate() {
-        return lastExecutionDate;
-    }
-    public void setLastExecutionDate(Date lastExecutionDate) {
-        this.lastExecutionDate = lastExecutionDate;
-    }
-
-    public Date getLastSuccessDate() {
-        return lastSuccessDate;
-    }
-    public void setLastSuccessDate(Date lastSuccessDate) {
-        this.lastSuccessDate = lastSuccessDate;
-    }
-
-    public WidgetState getState() {
-        return state;
-    }
-    public void setState(WidgetState state) {
-        this.state = state;
-    }
 }

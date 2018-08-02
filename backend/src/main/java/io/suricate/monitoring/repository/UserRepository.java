@@ -24,10 +24,32 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Repository used for request Users in database
+ */
 public interface UserRepository extends JpaRepository<User, Long> {
 
+	/**
+	 * Find every user by username
+	 *
+	 * @return The list of users by username
+	 */
+	Optional<List<User>> findAllByOrderByUsername();
+
+	/**
+	 * Find a user by the username without taking case into account
+	 *
+	 * @param username The username
+	 * @return The user as optional
+	 */
 	Optional<User> findByUsernameIgnoreCase(String username);
 
+	/**
+	 * Search users with username starting by the username in params
+	 *
+	 * @param username The part of the username to search
+	 * @return The list of related users
+	 */
 	@Query("SELECT u FROM User u " +
 			"WHERE lower(u.username) LIKE lower(concat(:username, '%'))")
 	Optional<List<User>> findByUsernameIgnoreCaseAndStartingWith(@Param("username") String username);

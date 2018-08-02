@@ -16,96 +16,76 @@
 
 package io.suricate.monitoring.model.dto.project;
 
+import io.suricate.monitoring.model.dto.AbstractDto;
 import io.suricate.monitoring.model.dto.user.UserDto;
-import io.suricate.monitoring.model.dto.widget.WidgetResponse;
+import io.suricate.monitoring.model.dto.websocket.WebsocketClient;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ProjectDto {
+/**
+ * Project object used for communication with clients of the webservice
+ */
+@Getter
+@Setter
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+@ToString
+@ApiModel(value = "Project", description = "Describe a project/dashboard")
+public class ProjectDto extends AbstractDto {
 
+    /**
+     * The id
+     */
+    @ApiModelProperty(value = "The project id", required = true)
     private Long id;
+    /**
+     * The project name
+     */
+    @ApiModelProperty(value = "The project name", required = true)
     private String name;
+    /**
+     * Number of column in the dashboard
+     */
+    @ApiModelProperty(value = "The number of columns in the dashboard")
     private Integer maxColumn;
+    /**
+     * The height for widgets contained
+     */
+    @ApiModelProperty(value = "The height in pixel of the widget")
     private Integer widgetHeight;
+    /**
+     * The global css for the dashboard
+     */
+    @ApiModelProperty(value = "The css style of the dashboard grid")
     private String cssStyle;
+    /**
+     * The dashboard token
+     */
+    @ApiModelProperty(value = "The project token", required = true)
     private String token;
-    private List<WidgetResponse> widgets = new ArrayList<>();
+    /**
+     * The list of widgets
+     */
+    @ApiModelProperty(value = "The list of related instantiate widgets", dataType = "List")
+    private List<ProjectWidgetDto> projectWidgets = new ArrayList<>();
+    /**
+     * The librairies related
+     */
+    @ApiModelProperty(value = "The list of the related JS libraries used for the execution of the widgets", dataType = "List")
     private List<String> librariesToken = new ArrayList<>();
+    /**
+     * The users added to the widget
+     */
+    @ApiModelProperty(value = "The list of users of the dashboard", dataType = "List")
     private List<UserDto> users = new ArrayList<>();
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public List<WidgetResponse> getWidgets() {
-        return widgets;
-    }
-
-    public void setWidgets(List<WidgetResponse> widgets) {
-        this.widgets = widgets;
-    }
-
-    public Integer getWidgetHeight() {
-        return widgetHeight;
-    }
-
-    public void setWidgetHeight(Integer widgetHeight) {
-        this.widgetHeight = widgetHeight;
-    }
-
-    public Integer getMaxColumn() {
-        return maxColumn;
-    }
-
-    public void setMaxColumn(Integer maxColumn) {
-        this.maxColumn = maxColumn;
-    }
-
-    public String getCssStyle() {
-        return cssStyle;
-    }
-
-    public void setCssStyle(String cssStyle) {
-        this.cssStyle = cssStyle;
-    }
-
-    public List<String> getLibrariesToken() {
-        return librariesToken;
-    }
-
-    public void setLibrariesToken(List<String> librariesToken) {
-        this.librariesToken = librariesToken;
-    }
-
-    public List<UserDto> getUsers() {
-        if(users == null) {
-            users = new ArrayList<>();
-        }
-        return users;
-    }
-
-    public void setUsers(List<UserDto> users) {
-        this.users = users;
-    }
+    /**
+     * The list of every connected clients through web socket
+     */
+    @ApiModelProperty(value = "The list of the current connected screens", dataType = "List")
+    private List<WebsocketClient> websocketClients = new ArrayList<>();
 }

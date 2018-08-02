@@ -25,7 +25,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Aspect
-@Profile("dev")
+@Profile("prod")
 @Component
 public class LoggingAspect {
 

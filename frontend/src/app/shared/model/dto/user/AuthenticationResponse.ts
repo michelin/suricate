@@ -16,6 +16,9 @@
  *
  */
 
+/**
+ * Represent the authentication response
+ */
 export class AuthenticationResponse {
   access_token: string;
   token_type: string;

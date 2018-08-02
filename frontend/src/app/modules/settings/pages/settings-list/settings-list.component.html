@@ -1,0 +1,31 @@
+<app-pages-header [secondTitle]="'user.settings'"></app-pages-header>
+
+<form #formSettings="ngForm" (ngSubmit)="saveUserSettings(formSettings)" novalidate>
+  <mat-card fxLayout="row wrap" fxLayoutAlign="center center" class="mat-elevation-z8">
+
+    <mat-card-content fxFlex="80">
+      <div *ngFor="let userSetting of (currentUser$ | async)?.userSettings"
+           fxLayout="row wrap"
+           fxLayoutAlign="center center">
+
+        <!-- SELECT Type -->
+        <mat-form-field *ngIf="userSetting.setting.dataType === settingDataType.SELECT" fxFlex="100">
+          <mat-select [required]="true"
+                      [placeholder]="userSetting.setting.description"
+                      [name]="userSetting.setting.type"
+                      [ngModel]="userSetting.settingValue.value">
+            <mat-option *ngFor="let allowedSettingValue of userSetting.setting.allowedSettingValues"
+                        [value]="allowedSettingValue.value">
+              {{ allowedSettingValue.title }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+      </div>
+    </mat-card-content>
+
+    <mat-card-actions fxFlex="80">
+      <button fxFill mat-raised-button type="submit" color="accent"><app-translate [key]="'save'"></app-translate></button>
+    </mat-card-actions>
+  </mat-card>
+</form>
