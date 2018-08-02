@@ -23,12 +23,12 @@ import {DashboardDetailComponent} from './pages/dashboard-detail/dashboard-detai
 
 export const DashboardRoutes: Routes = [
   {path: 'tv', component: DashboardTvComponent},
-  {path: 'dashboards/:id', component: DashboardDetailComponent, canActivate: [AuthGuard]},
-  {path: 'dashboards', component: DashboardListComponent, canActivate: [AuthGuard, AdminGuard]},
+  {path: 'dashboards/all', component: DashboardListComponent, canActivate: [AuthGuard, AdminGuard]},
   {
-    path: 'dashboards/:dashboardId/edit',
+    path: 'dashboards/all/:dashboardId/edit',
     component: DashboardEditComponent,
     data: {breadcrumb: 'Edit Dashboard'},
     canActivate: [AuthGuard, AdminGuard]
-  }
+  },
+  {path: 'dashboards/:id', component: DashboardDetailComponent, canActivate: [AuthGuard]},
 ];
