@@ -19,10 +19,15 @@ package io.suricate.monitoring.model.dto.nashorn;
 import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.model.dto.AbstractDto;
 import io.suricate.monitoring.utils.JsonUtils;
+import lombok.*;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
 
+/**
+ * Represent a nashorn request (used for execute the widget JS, with nashorn)
+ */
+@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
 public class NashornRequest extends AbstractDto {
 
 
@@ -73,12 +78,18 @@ public class NashornRequest extends AbstractDto {
     private Long timeout;
 
     /**
-     * Default constructor
+     * Full constructor
+     *
+     * @param properties The project widget backend config
+     * @param script The widget js script
+     * @param previousData The data of the last execution
+     * @param projectId The project id
+     * @param technicalId The project widget id
+     * @param delay The delay before the next run
+     * @param timeout The timeout before interruption of the run
+     * @param state The project widget state
+     * @param lastSuccess The last success date
      */
-    public NashornRequest() {
-        // Empty constructor
-    }
-
     public NashornRequest(String properties, String script, String previousData, Long projectId, Long technicalId, Long delay, Long timeout, WidgetState state, Date lastSuccess) {
         this.properties = properties;
         this.script = script;
@@ -93,7 +104,7 @@ public class NashornRequest extends AbstractDto {
 
     /**
      * Method used to validate all bean data
-     * @return true if all data are isValid, false otherwise
+     * @return true if all data are Valid, false otherwise
      */
     public boolean isValid(){
         return projectId != null
@@ -101,77 +112,5 @@ public class NashornRequest extends AbstractDto {
                 && JsonUtils.isJsonValid(previousData)
                 && StringUtils.isNotEmpty(script)
                 && delay != null;
-    }
-
-    public String getProperties() {
-        return properties;
-    }
-
-    public void setProperties(String properties) {
-        this.properties = properties;
-    }
-
-    public String getScript() {
-        return script;
-    }
-
-    public void setScript(String script) {
-        this.script = script;
-    }
-
-    public Long getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
-    }
-
-    public String getPreviousData() {
-        return previousData;
-    }
-
-    public void setPreviousData(String previousData) {
-        this.previousData = previousData;
-    }
-
-    public Long getDelay() {
-        return delay;
-    }
-
-    public void setDelay(Long delay) {
-        this.delay = delay;
-    }
-
-    public Long getProjectWidgetId() {
-        return projectWidgetId;
-    }
-
-    public void setProjectWidgetId(Long projectWidgetId) {
-        this.projectWidgetId = projectWidgetId;
-    }
-
-    public WidgetState getWidgetState() {
-        return widgetState;
-    }
-
-    public void setWidgetState(WidgetState widgetState) {
-        this.widgetState = widgetState;
-    }
-
-    public boolean isAlreadySuccess() {
-        return alreadySuccess;
-    }
-
-    public void setAlreadySuccess(boolean alreadySuccess) {
-        this.alreadySuccess = alreadySuccess;
-    }
-
-    public Long getTimeout() {
-        return timeout;
-    }
-
-    public void setTimeout(Long timeout) {
-        this.timeout = timeout;
     }
 }

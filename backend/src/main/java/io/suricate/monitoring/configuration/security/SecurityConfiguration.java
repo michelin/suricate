@@ -17,7 +17,6 @@
 package io.suricate.monitoring.configuration.security;
 
 import io.suricate.monitoring.configuration.ApplicationProperties;
-import io.suricate.monitoring.controllers.api.error.ApiAuthenticationFailureHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,26 +24,42 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.cors.CorsUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
+/**
+ * Global Security configurations
+ */
 @Configuration
 @EnableWebSecurity
+@EnableOAuth2Client
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
+    /**
+     * The logger
+     */
     private static final Logger LOGGER = LoggerFactory.getLogger(SecurityConfiguration.class);
+    /**
+     * Application properties from properties file
+     */
     private final ApplicationProperties applicationProperties;
 
+    /**
+     * Constructor
+     *
+     * @param applicationProperties Application properties
+     */
     @Autowired
     public SecurityConfiguration(ApplicationProperties applicationProperties) {
         this.applicationProperties = applicationProperties;
@@ -73,7 +88,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     /**
      * Application Role hierarchy for security management
-     * @return
      */
     @Bean
     protected RoleHierarchyImpl roleHierarchy() {
@@ -82,6 +96,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return roleHierarchy;
     }
 
+    /**
+     * Cors filter policy from Application properties
+     */
     @Bean
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
@@ -90,5 +107,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
             source.registerCorsConfiguration("/api/**", applicationProperties.cors);
         }
         return new CorsFilter(source);
+    }
+
+    /**
+     *
+     * @return Default authentication manager
+     * @throws Exception
+     */
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 }

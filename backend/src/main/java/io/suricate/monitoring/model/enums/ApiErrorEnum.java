@@ -17,55 +17,65 @@
 package io.suricate.monitoring.model.enums;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import io.suricate.monitoring.model.dto.error.ApiErrorDto;
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
+/**
+ * Api Errors
+ */
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
+@Getter
 public enum ApiErrorEnum {
 
-    TOKEN_MISSING("Missing or invalid Authorization header", "token.missing", HttpStatus.BAD_REQUEST),
-    TOKEN_EXPIRED("Token expired", "token.expired", HttpStatus.UNAUTHORIZED),
-    TOKEN_INVALID("Invalid token", "token.invalid", HttpStatus.UNAUTHORIZED),
-    USER_NOT_FOUND("User not found","user.not.found", HttpStatus.NOT_FOUND),
-    PROJECT_NOT_FOUND("Project not found","project.not.found", HttpStatus.NOT_FOUND),
-    PROJECT_INVALID_CONSTANCY("Project invalid consistency","project.invalid.consistency", HttpStatus.CONFLICT),
-    AUTHENTICATION_ERROR("Authentication error : Token expired or invalid", "authentication.error", HttpStatus.UNAUTHORIZED),
-    OPERATION_NOT_AUTHORIZED("Operation not authorized", "operation.not.authorized", HttpStatus.UNAUTHORIZED),
-    DATABASE_INIT_ISSUE("Database Init error", "database.init.error", HttpStatus.INTERNAL_SERVER_ERROR);
+    /**
+     * Enums
+     */
+    NO_CONTENT("No Content", "no.content", HttpStatus.NO_CONTENT),
+    BAD_REQUEST("Bad Request", "bad.request", HttpStatus.BAD_REQUEST),
+    PROJECT_TOKEN_INVALID("Cannot decrypt project token", "project.token.invalid", HttpStatus.BAD_REQUEST),
+    AUTHENTICATION_ERROR("Authentication error, token expired or invalid", "authentication.error", HttpStatus.UNAUTHORIZED),
+    NOT_AUTHORIZED("User not authorized", "not.authorized", HttpStatus.UNAUTHORIZED),
+    BAD_CREDENTIALS_ERROR("Bad credentials", "authentication.bad.credentials", HttpStatus.UNAUTHORIZED),
+    FORBIDDEN("You don't have permission to access to this resource", "user.forbidden", HttpStatus.FORBIDDEN),
+    OBJECT_NOT_FOUND("Object not found", "object.not.found", HttpStatus.NOT_FOUND),
+    OBJECT_ALREADY_EXIST("Object already exist", "object.already.exist", HttpStatus.CONFLICT),
+    PRECONDITION_FAILED("Precondition failed for this request", "precondition.failed", HttpStatus.PRECONDITION_FAILED),
+    INTERNAL_SERVER_ERROR("Internal Server Error", "internal.server.error", HttpStatus.INTERNAL_SERVER_ERROR);
 
+    /**
+     * The Error Message
+     */
+    private String message;
+    /**
+     * The HttpStatus ordinal
+     */
+    private int ordinal;
+    /**
+     * The Error key
+     */
+    private String key;
+    /**
+     * The related HttpStatus
+     */
+    private HttpStatus status;
+
+    /**
+     * The Constructor
+     *
+     * @param message The message
+     * @param key     The key
+     * @param status  The HttpStatus
+     */
     ApiErrorEnum(String message, String key, HttpStatus status) {
         this.status = status;
         this.message = message;
-        this.code = ordinal();
+        this.ordinal = ordinal();
         this.key = key;
     }
 
-    private String message;
-
-    private int code;
-
-    private String key;
-
-    private HttpStatus status;
-
-    @JsonProperty
-    public String getMessage() {
-        return message;
+    public ApiErrorDto toResponse(String message) {
+        return new ApiErrorDto(message, this);
     }
 
-    @JsonProperty
-    public int getCode() {
-        return code;
-    }
-
-    @JsonProperty
-    public String getKey() {
-        return key;
-    }
-
-    @JsonIgnore
-    public HttpStatus getStatus() {
-        return status;
-    }
 }

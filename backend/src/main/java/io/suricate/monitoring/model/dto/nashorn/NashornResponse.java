@@ -19,10 +19,14 @@ package io.suricate.monitoring.model.dto.nashorn;
 import io.suricate.monitoring.model.dto.AbstractDto;
 import io.suricate.monitoring.model.enums.NashornErrorTypeEnum;
 import io.suricate.monitoring.utils.JsonUtils;
-import org.apache.commons.lang3.StringUtils;
+import lombok.*;
 
 import java.util.Date;
 
+/**
+ * Represent the response after nashorn execution
+ */
+@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
 public class NashornResponse extends AbstractDto {
 
     /**
@@ -63,55 +67,7 @@ public class NashornResponse extends AbstractDto {
         return JsonUtils.isJsonValid(data) && projectId != null && projectWidgetId != null && error == null;
     }
 
-    public String getData() {
-        return data;
-    }
-
-    public void setData(String data) {
-        this.data = data;
-    }
-
-    public String getLog() {
-        return log;
-    }
-
-    public void setLog(String log) {
-        this.log = StringUtils.trimToNull(log);
-    }
-
-    public Long getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
-    }
-
-    public Date getLaunchDate() {
-        return launchDate;
-    }
-
-    public void setLaunchDate(Date launchDate) {
-        this.launchDate = launchDate;
-    }
-
     public boolean isFatal() {
         return NashornErrorTypeEnum.FATAL == error;
-    }
-
-    public void setError(NashornErrorTypeEnum error) {
-        this.error = error;
-    }
-
-    public Long getProjectWidgetId() {
-        return projectWidgetId;
-    }
-
-    public void setProjectWidgetId(Long projectWidgetId) {
-        this.projectWidgetId = projectWidgetId;
-    }
-
-    public NashornErrorTypeEnum getError() {
-        return error;
     }
 }

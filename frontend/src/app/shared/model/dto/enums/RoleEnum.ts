@@ -14,6 +14,9 @@
  * limitations under the License.
  */
 
+/**
+ * The list of roles
+ */
 export enum RoleEnum {
   ROLE_ADMIN = 'ROLE_ADMIN',
   ROLE_USER = 'ROLE_USER'

@@ -19,6 +19,9 @@
 
 package io.suricate.monitoring.model.enums;
 
+/**
+ * Widget variable types
+ */
 public enum WidgetVariableType {
 
     STRING,

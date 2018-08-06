@@ -14,17 +14,22 @@
  * limitations under the License.
  */
 
-import {Widget} from './Widget';
 import {User} from './user/User';
+import {ProjectWidget} from './ProjectWidget';
+import {WebsocketClient} from './WebsocketClient';
 
+/**
+ * The project entity
+ */
 export class Project {
   id: number;
   name: string;
-  token: string;
-  widgetHeight: number;
   maxColumn: number;
+  widgetHeight: number;
   cssStyle: string;
-  widgets: Widget[];
+  token: string;
+  projectWidgets: ProjectWidget[];
   librariesToken: string[];
   users: User[];
+  websocketClients: WebsocketClient[];
 }

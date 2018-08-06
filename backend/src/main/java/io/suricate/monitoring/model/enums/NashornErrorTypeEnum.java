@@ -16,6 +16,9 @@
 
 package io.suricate.monitoring.model.enums;
 
+/**
+ * Nashorn error type
+ */
 public enum NashornErrorTypeEnum {
     /**
      * Stop the process execution

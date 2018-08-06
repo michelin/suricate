@@ -17,54 +17,50 @@
 package io.suricate.monitoring.model.entity;
 
 import io.suricate.monitoring.model.entity.widget.Widget;
+import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Library entity
  */
 @Entity
+@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
 public class Library extends AbstractAuditingEntity<Long>{
 
+    /**
+     * The id
+     */
     @Id
     @GeneratedValue
     private Long id;
 
+    /**
+     * The technical name
+     */
     @Column(nullable = false, unique = true)
     private String technicalName;
 
+    /**
+     * The asset
+     */
     @OneToOne(cascade = {CascadeType.REMOVE, CascadeType.DETACH})
     private Asset asset;
 
+    /**
+     * The list of widgets related to it
+     */
     @ManyToMany(mappedBy = "libraries")
-    private List<Widget> widgets;
+    private List<Widget> widgets = new ArrayList<>();
 
-    public Library() {}
+    /**
+     * Constructor minimal
+     *
+     * @param technicalName The technical name
+     */
     public Library(String technicalName) {
         this.technicalName = technicalName;
-    }
-
-
-    @Override
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getTechnicalName() {
-        return technicalName;
-    }
-    public void setTechnicalName(String technicalName) {
-        this.technicalName = technicalName;
-    }
-
-    public Asset getAsset() {
-        return asset;
-    }
-    public void setAsset(Asset asset) {
-        this.asset = asset;
     }
 }

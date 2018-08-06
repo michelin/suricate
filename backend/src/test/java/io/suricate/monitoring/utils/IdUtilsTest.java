@@ -1,6 +1,6 @@
 package io.suricate.monitoring.utils;
 
-import io.suricate.monitoring.controllers.api.error.exception.ApiException;
+import io.suricate.monitoring.utils.exception.ApiException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -19,12 +19,12 @@ public class IdUtilsTest {
         assertThat(IdUtils.encrypt(null)).isNull();
     }
 
-    @Test(expected = ApiException.class )
+    @Test(expected = ApiException.class)
     public void testDecryptNull() throws Exception {
         IdUtils.decrypt(null);
     }
 
-    @Test(expected = ApiException.class )
+    @Test(expected = ApiException.class)
     public void testDecryptBadToken() throws Exception {
         IdUtils.decrypt("dfdfrgregregae");
     }

@@ -1,9 +1,0 @@
-<app-pages-header [secondTitle]="'My Dashboards'"></app-pages-header>
-
-<div *ngIf="dashboards; else noDashboards">
-
-</div>
-
-<ng-template #noDashboards>
-  Cannot found dashboard associated to your account, try to create one
-</ng-template>

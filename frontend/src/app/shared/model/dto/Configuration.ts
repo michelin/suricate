@@ -16,8 +16,16 @@
  *
  */
 
+import {ConfigurationDataType} from './enums/ConfigurationDataType';
+import {Category} from './Category';
+
+/**
+ * The configuration entity
+ */
 export class Configuration {
   key: string;
   value: string;
   export: boolean;
+  dataType: ConfigurationDataType;
+  category: Category;
 }

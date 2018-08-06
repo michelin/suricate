@@ -21,129 +21,109 @@ package io.suricate.monitoring.model.entity.widget;
 
 import io.suricate.monitoring.model.entity.AbstractAuditingEntity;
 import io.suricate.monitoring.model.enums.WidgetVariableType;
+import lombok.*;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Entity representing a param for a widget in database
+ */
 @Entity
+@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
 public class WidgetParam extends AbstractAuditingEntity<Long> {
 
+    /**
+     * The widget param id
+     */
     @Id
     @GeneratedValue
     private Long id;
 
+    /**
+     * The name of the param
+     */
     @Column(nullable = false)
     private String name;
 
+    /**
+     * The description of this params
+     */
     @Column(nullable = false)
     private String description;
 
+    /**
+     * The default value
+     */
     @Column
     private String defaultValue;
 
+    /**
+     * The variable type {@link WidgetVariableType}
+     */
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private WidgetVariableType type;
 
+    /**
+     * The regex used for accept the file uploaded (if the type is FILE)
+     */
     @Column
     private String acceptFileRegex;
 
+    /**
+     * An example of the usage
+     */
     @Column
     private String usageExample;
 
+    /**
+     * If this param is required or not
+     */
     @Column(nullable = false)
     @Type(type = "yes_no")
     private boolean required = true;
 
+    /**
+     * The list of possible values (if the type is COMBO or MULTIPLE)
+     */
     @OneToMany(mappedBy = "widgetParam", cascade = CascadeType.ALL)
     private List<WidgetParamValue> possibleValuesMap = new ArrayList<>();
 
+    /**
+     * The related widget
+     */
     @ManyToOne
     @JoinColumn(name = "widget_id")
     private Widget widget;
 
-
-
-    public WidgetParam() {}
-
-
-    @Override
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getDefaultValue() {
-        return defaultValue;
-    }
-    public void setDefaultValue(String defaultValue) {
-        this.defaultValue = defaultValue;
-    }
-
-    public WidgetVariableType getType() {
-        return type;
-    }
-    public void setType(WidgetVariableType type) {
-        this.type = type;
-    }
-
-    public String getAcceptFileRegex() {
-        return acceptFileRegex;
-    }
-    public void setAcceptFileRegex(String acceptFileRegex) {
-        this.acceptFileRegex = acceptFileRegex;
-    }
-
-    public String getUsageExample() {
-        return usageExample;
-    }
-    public void setUsageExample(String usageExample) {
-        this.usageExample = usageExample;
-    }
-
-    public boolean isRequired() {
-        return required;
-    }
-    public void setRequired(boolean required) {
-        this.required = required;
-    }
-
-    public Widget getWidget() {
-        return widget;
-    }
-    public void setWidget(Widget widget) {
-        this.widget = widget;
-    }
-
-
-    public List<WidgetParamValue> getPossibleValuesMap() {
-        return possibleValuesMap;
-    }
+    /**
+     * Add a list of possible values
+     *
+     * @param possibleValuesMap The list values to add
+     */
     public void setPossibleValuesMap(List<WidgetParamValue> possibleValuesMap) {
         this.addPossibleValuesMap(possibleValuesMap);
     }
+
+    /**
+     * Add a list of possible values
+     *
+     * @param possibleValuesMap The list values to add
+     */
     public void addPossibleValuesMap(List<WidgetParamValue> possibleValuesMap) {
-        possibleValuesMap.forEach( possibleValueMap -> {
-            this.possibleValuesMap.add(possibleValueMap);
-            possibleValueMap.setWidgetParam(this);
-        });
+        possibleValuesMap.forEach( possibleValueMap -> this.addPossibleValueMap(possibleValueMap));
+    }
+
+    /**
+     * Add a value into the list
+     *
+     * @param possibleValueMap The param value to add
+     */
+    public void addPossibleValueMap(WidgetParamValue possibleValueMap) {
+        this.possibleValuesMap.add(possibleValueMap);
+        possibleValueMap.setWidgetParam(this);
     }
 }

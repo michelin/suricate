@@ -1,0 +1,32 @@
+.general-filter {
+    width: 100%;
+}
+
+.table-container {
+    display: flex;
+    flex-direction: column;
+    min-width: 300px;
+    position: relative;
+}
+
+.mat-cell, .mat-header-cell {
+    padding: 0 10px;
+}
+
+.table-loading-shade {
+    position: absolute;
+    left: 0;
+    bottom: 56px;
+    right: 0;
+    background: rgba(0, 0, 0, 0.15);
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.table-error {
+    color: #980000;
+    max-width: 360px;
+    text-align: center;
+}

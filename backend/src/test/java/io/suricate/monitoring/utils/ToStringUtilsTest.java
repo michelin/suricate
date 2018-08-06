@@ -16,7 +16,7 @@ public class ToStringUtilsTest {
 
     @Test
     public void testToStringUtilsNull() throws Exception {
-        Assert.assertEquals(null, ToStringUtils.toStringEntity(null));
+        Assert.assertNull(ToStringUtils.toStringEntity(null));
     }
 
     public static class SimpleEntity {
@@ -63,7 +63,7 @@ public class ToStringUtilsTest {
 
     @Test
     public void testHideLog() throws Exception {
-        assertThat(ToStringUtils.hideConfig("test mypassword ok", Arrays.asList("mypassword"))).isEqualTo("test ********** ok");
+        assertThat(ToStringUtils.hideConfig("test mypassword ok", Collections.singletonList("mypassword"))).isEqualTo("test ********** ok");
     }
 
 }

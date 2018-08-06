@@ -16,75 +16,65 @@
 
 package io.suricate.monitoring.model.entity.widget;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.suricate.monitoring.model.entity.AbstractAuditingEntity;
 import io.suricate.monitoring.model.entity.Asset;
-import io.suricate.monitoring.model.entity.widget.Widget;
+import io.suricate.monitoring.model.entity.Configuration;
+import lombok.*;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Project entity
+ * Category entity in database
+ * (Retrieve from the widget repo)
  */
 @Entity
 @Indexed
+@Getter
+@Setter
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+@ToString
 public class Category extends AbstractAuditingEntity<Long> {
 
+    /**
+     * The category id
+     */
     @Id
     @GeneratedValue
     private Long id;
 
+    /**
+     * The category name
+     */
     @Column(nullable = false)
     @Field
     private String name;
 
+    /**
+     * The technical name
+     */
     @Column(nullable = false, unique = true)
     private String technicalName;
 
+    /**
+     * The image related to this category
+     */
     @OneToOne(cascade = CascadeType.REMOVE)
     private Asset image;
 
+    /**
+     * The list of widgets in this category
+     */
     @OneToMany(mappedBy = "category")
     private List<Widget> widgets;
 
-    public Category() {}
-
-    @Override
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<Widget> getWidgets() {
-        return widgets;
-    }
-    public void setWidgets(List<Widget> widgets) {
-        this.widgets = widgets;
-    }
-
-    public String getTechnicalName() {
-        return technicalName;
-    }
-    public void setTechnicalName(String technicalName) {
-        this.technicalName = technicalName;
-    }
-
-    public Asset getImage() {
-        return image;
-    }
-    public void setImage(Asset image) {
-        this.image = image;
-    }
+    /**
+     * The associated categories for this configuration
+     */
+    @OneToMany(mappedBy = "category", cascade = CascadeType.REMOVE)
+    private List<Configuration> configurations = new ArrayList<>();
 }

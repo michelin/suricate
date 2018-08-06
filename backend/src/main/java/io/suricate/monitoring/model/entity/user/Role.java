@@ -17,63 +17,47 @@
 package io.suricate.monitoring.model.entity.user;
 
 import io.suricate.monitoring.model.entity.AbstractEntity;
+import lombok.*;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The role entity in database
+ */
 @Entity(name = "Role")
+@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
 public class Role extends AbstractEntity<Long> {
 
+    /**
+     * The id
+     */
     @Id
     @GeneratedValue
     private Long id;
 
+    /**
+     * The role name
+     */
     @NotNull
     @Size(max = 50)
     @Column(nullable = false, unique = true)
     private String name;
 
+    /**
+     * The role description
+     */
     @NotNull
     @Size(max = 100)
     @Column(nullable = false)
     private String description;
 
+    /**
+     * The list of user related to it
+     */
     @ManyToMany(mappedBy = "roles")
-    private List<User> users;
-
-
-    public Role() {}
-
-
-
-    @Override
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public List<User> getUsers() {
-        return users;
-    }
-    public void setUsers(List<User> users) {
-        this.users = users;
-    }
+    private List<User> users = new ArrayList<>();
 }
