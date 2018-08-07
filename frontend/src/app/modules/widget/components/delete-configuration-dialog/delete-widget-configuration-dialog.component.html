@@ -1,0 +1,17 @@
+<h2 mat-dialog-title>
+  <app-translate [key]="'configuration.delete'"></app-translate>
+</h2>
+<mat-dialog-content>
+  <p>
+    <app-translate [key]="'delete.confirm'"></app-translate>
+    {{ configuration.key | titlecase }}
+  </p>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button [mat-dialog-close]="false">
+    <app-translate [key]="'no'"></app-translate>
+  </button>
+  <button mat-button [mat-dialog-close]="true">
+    <app-translate [key]="'yes'"></app-translate>
+  </button>
+</mat-dialog-actions>

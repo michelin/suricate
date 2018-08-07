@@ -16,6 +16,9 @@
 
 package io.suricate.monitoring.model.enums;
 
+/**
+ * States of a widget instantiate
+ */
 public enum WidgetState {
     /**
      * Widget is running normally

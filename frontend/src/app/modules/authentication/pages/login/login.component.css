@@ -1,0 +1,33 @@
+.container {
+    height: 95vh;
+}
+
+.content {
+    width: 40%;
+}
+
+#login-form {
+    width: 100%;
+}
+
+#card-login {
+    width: 100%;
+}
+
+#card-login .mat-form-field {
+    margin-top: 15px;
+}
+
+.not-registered-sentance {
+    margin-left: 9%;
+}
+
+.mat-icon.prefix {
+    margin-right: 10px;
+}
+
+#login-div img {
+    width: 185px;
+    height: auto;
+    margin: 0 auto;
+}

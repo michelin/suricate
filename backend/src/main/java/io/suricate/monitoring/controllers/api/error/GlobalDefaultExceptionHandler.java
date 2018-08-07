@@ -16,41 +16,147 @@
 
 package io.suricate.monitoring.controllers.api.error;
 
-import io.suricate.monitoring.controllers.api.error.exception.ApiException;
-import io.suricate.monitoring.model.dto.error.CustomError;
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
-import org.springframework.http.HttpStatus;
+import io.suricate.monitoring.model.dto.error.ApiErrorDto;
+import io.suricate.monitoring.model.enums.ApiErrorEnum;
+import io.suricate.monitoring.utils.exception.ApiException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-@ControllerAdvice("io.suricate.monitoring.controllers.api")
+import javax.validation.ConstraintViolationException;
+
+/**
+ * Manage Rest exceptions
+ */
+@RestControllerAdvice
 public class GlobalDefaultExceptionHandler {
 
-    @ExceptionHandler(ApiException.class)
-    @ResponseBody
-    public ResponseEntity<?> handleApiException(HttpServletRequest request, ApiException ex) {
-        return ResponseEntity.status(ex.getError().getStatus()).body(ex.getError());
-    }
+    /**
+     * The Logger
+     */
+    public static final Logger LOGGER = LoggerFactory.getLogger(GlobalDefaultExceptionHandler.class);
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    @ResponseBody
-    public ResponseEntity<?> handleRequestException(HttpServletRequest request, MethodArgumentNotValidException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new CustomError(extractMessage(ex), "request.parameter.error" , HttpStatus.BAD_REQUEST.value()));
+    /**
+     * Constructor
+     */
+    @Autowired
+    public GlobalDefaultExceptionHandler() {
     }
 
     /**
+     * Manage the API Exception
+     *
+     * @param ex The exception
+     * @return The exception as Response Entity
+     */
+    @ExceptionHandler(ApiException.class)
+    public ResponseEntity<?> handleApiException(ApiException ex) {
+        LOGGER.debug(ex.getMessage());
+        return ResponseEntity
+            .status(ex.getError().getStatus())
+            .body(ex.getError());
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<?> handleRequestException(MethodArgumentNotValidException ex) {
+        LOGGER.debug(ex.getMessage());
+        return ResponseEntity
+            .status(ApiErrorEnum.BAD_REQUEST.getStatus())
+            .body(new ApiErrorDto(extractMessage(ex.getBindingResult()), ApiErrorEnum.BAD_REQUEST));
+    }
+
+    /**
+     * Throw when a user try access a resource that he can't
+     *
+     * @param ex the exception
+     * @return The related response entity
+     */
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<?> handleAccessDeniedException(AccessDeniedException ex) {
+        LOGGER.debug(ex.getMessage());
+        return ResponseEntity
+            .status(ApiErrorEnum.FORBIDDEN.getStatus())
+            .body(new ApiErrorDto(ApiErrorEnum.FORBIDDEN));
+    }
+
+    /**
+     * Throw when a user try to access a resource with a not supported Http Verb
+     *
+     * @param ex The exception
+     * @return The response
+     */
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<?> handleRequestException(HttpRequestMethodNotSupportedException ex) {
+        LOGGER.debug(ex.getMessage());
+        return ResponseEntity
+            .status(ApiErrorEnum.BAD_REQUEST.getStatus())
+            .body(new ApiErrorDto(ex.getMessage(), ApiErrorEnum.BAD_REQUEST));
+    }
+
+    /**
+     * Manage the unknown exception
+     *
+     * @param ex the exception
+     * @return The related response entity
+     */
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<?> handleException(Exception ex) {
+        LOGGER.error(ex.getMessage(), ex);
+        return ResponseEntity
+            .status(ApiErrorEnum.INTERNAL_SERVER_ERROR.getStatus())
+            .body(new ApiErrorDto(ApiErrorEnum.INTERNAL_SERVER_ERROR));
+    }
+
+    /**
+     * Exception handler for {@link ConstraintViolationException} raised when
+     * Spring fails to validate a bean in the service layer.
+     *
+     * @param ex the exception being raised
+     * @return the response entity
+     */
+    @ExceptionHandler({ConstraintViolationException.class})
+    public ResponseEntity<?> handleRequestException(ConstraintViolationException ex) {
+        LOGGER.debug(ex.getMessage());
+        return ResponseEntity
+            .status(ApiErrorEnum.BAD_REQUEST.getStatus())
+            .body(new ApiErrorDto(ex.getMessage(), ApiErrorEnum.BAD_REQUEST));
+    }
+
+    /**
+     * Exception handler for {@link DataIntegrityViolationException} raised when
+     * Hibernate validators fail to validate a bean in the JPA layer.
+     *
+     * @param ex the exception being raised
+     * @return the response entity
+     */
+    @ExceptionHandler({DataIntegrityViolationException.class})
+    public ResponseEntity<?> handleRequestException(DataIntegrityViolationException ex) {
+        LOGGER.debug(ex.getMessage());
+        return ResponseEntity
+            .status(ApiErrorEnum.BAD_REQUEST.getStatus())
+            .body(new ApiErrorDto(ex.getRootCause().getMessage(), ApiErrorEnum.BAD_REQUEST));
+    }
+
+
+    /**
      * Method used to extract message from MethodArgumentNotValidException exception
-     * @param ex exception used to extract error fields
+     *
+     * @param bindingResult Binding result
      * @return an error string
      */
-    private static String extractMessage(MethodArgumentNotValidException ex){
+    private static String extractMessage(BindingResult bindingResult) {
         StringBuilder builder = new StringBuilder();
-        for (FieldError error : ex.getBindingResult().getFieldErrors()) {
-            if (builder.length()>0){
+        for (FieldError error : bindingResult.getFieldErrors()) {
+            if (builder.length() > 0) {
                 builder.append(", ");
             }
             builder.append(error.getField()).append(' ').append(error.getDefaultMessage());
@@ -58,10 +164,5 @@ public class GlobalDefaultExceptionHandler {
         return builder.toString();
     }
 
-    @ExceptionHandler(Exception.class)
-    @ResponseBody
-    public ResponseEntity<?> handleException(HttpServletRequest request, Exception ex) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new CustomError(ex.getMessage(), "server.error" , HttpStatus.INTERNAL_SERVER_ERROR.value()));
-    }
 
 }

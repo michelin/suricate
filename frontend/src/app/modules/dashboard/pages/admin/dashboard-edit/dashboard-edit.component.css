@@ -1,0 +1,37 @@
+#card-edit-dashboard {
+    width: 100%;
+}
+
+#card-edit-dashboard .title {
+    margin-left: -80px;
+    font-weight: 300;
+    line-height: 1.4rem;
+}
+
+#card-edit-dashboard > * {
+    width: 70%;
+    margin: 5px 0;
+}
+
+#card-edit-dashboard .mat-card-content .mat-list {
+    width: 100%;
+    margin-left: -16px;
+}
+
+#card-edit-dashboard .mat-card-content .mat-list .user {
+    width: 50%;
+}
+
+#card-edit-dashboard .mat-card-actions button {
+    display: block;
+    width: 100%;
+}
+
+.mat-form-field {
+    width: 100%;
+    margin: 10px 0;
+}
+
+.mat-icon.prefix {
+    margin-right: 10px;
+}

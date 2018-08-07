@@ -20,56 +20,40 @@
 package io.suricate.monitoring.model.entity.widget;
 
 import io.suricate.monitoring.model.entity.AbstractAuditingEntity;
+import lombok.*;
 
 import javax.persistence.*;
 
+/**
+ * The widget param value entity in database
+ */
 @Entity
+@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
 public class WidgetParamValue extends AbstractAuditingEntity<Long> {
 
+    /**
+     * The id
+     */
     @Id
     @GeneratedValue
     private Long id;
 
+    /**
+     * The param key used in the JS File of the widget
+     */
     @Column(nullable = false)
     private String jsKey;
 
+    /**
+     * The related value (for display)
+     */
     @Column(nullable = false)
     private String value;
 
+    /**
+     * The related widget param
+     */
     @ManyToOne
     @JoinColumn(name = "widget_param_id")
     private WidgetParam widgetParam;
-
-
-    public WidgetParamValue() {}
-
-
-    @Override
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getJsKey() {
-        return jsKey;
-    }
-    public void setJsKey(String jsKey) {
-        this.jsKey = jsKey;
-    }
-
-    public String getValue() {
-        return value;
-    }
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    public WidgetParam getWidgetParam() {
-        return widgetParam;
-    }
-    public void setWidgetParam(WidgetParam widgetParam) {
-        this.widgetParam = widgetParam;
-    }
 }

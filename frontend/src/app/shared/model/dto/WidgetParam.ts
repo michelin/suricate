@@ -14,14 +14,17 @@
  * limitations under the License.
  */
 
-import {WidgetParamEnum} from './enums/WidgetParamEnum';
+import {WidgetVariableType} from './enums/WidgetVariableType';
 import {WidgetParamValue} from './WidgetParamValue';
 
+/**
+ * The widget param entity
+ */
 export class WidgetParam {
   public name: string;
   public description: string;
   public defaultValue: string;
-  public type: WidgetParamEnum;
+  public type: WidgetVariableType;
   public acceptFileRegex: string;
   public usageExample: string;
   public required: boolean;

@@ -26,16 +26,17 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
+/**
+ * Repository used for request Libraries in database
+ */
 public interface LibraryRepository extends JpaRepository<Library, Long> {
 
 	/**
 	 * Method used to update library
 	 * 
-	 * @param technicalName
-	 *            widget technical name
-	 * @param content
-	 *            widget content
-	 * @return
+	 * @param technicalName widget technical name
+	 * @param content widget content
+	 * @return State
 	 */
 	@Modifying
 	@Query("UPDATE Library " +
@@ -55,8 +56,18 @@ public interface LibraryRepository extends JpaRepository<Library, Long> {
 			"WHERE w.id in (:ids) ")
 	List<Long> getLibs(@Param("ids") List<Long> widgetIds);
 
+	/**
+	 * Find a list of librairies by widget id
+	 * @param id The widget id
+	 * @return The list of related librairies
+	 */
 	List<Library> findByWidgets_Id(Long id);
 
+	/**
+	 * Find a librairie by technical name
+	 * @param technicalname The technical name
+	 * @return The related library
+	 */
 	Library findByTechnicalName(String technicalname);
 
 }

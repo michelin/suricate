@@ -31,6 +31,9 @@ import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileNotFoundException;
 
+/**
+ * Main java class
+ */
 @SpringBootApplication
 @EnableAsync
 @EnableCaching
@@ -41,17 +44,28 @@ public class BackendApplication {
     /**
      * Application properties
      */
-    @Autowired
-    private ApplicationProperties applicationProperties;
+    private final ApplicationProperties applicationProperties;
 
     /**
      * Git Service
      */
+    private final GitService gitService;
+
+    /**
+     * The constructor
+     *
+     * @param applicationProperties application properties to inject
+     * @param gitService            git service to inject
+     */
     @Autowired
-    private GitService gitService;
+    public BackendApplication(final ApplicationProperties applicationProperties, final GitService gitService) {
+        this.applicationProperties = applicationProperties;
+        this.gitService = gitService;
+    }
 
     /**
      * Main springboot class
+     *
      * @param args command line arguments
      */
     public static void main(String[] args) {
@@ -64,32 +78,32 @@ public class BackendApplication {
     @PostConstruct
     protected void init() throws FileNotFoundException {
         // Define Trust Store properties
-        if(StringUtils.isNotBlank(applicationProperties.ssl.trustStore.path)) {
+        if (StringUtils.isNotBlank(applicationProperties.ssl.trustStore.path)) {
             if (!new File(applicationProperties.ssl.trustStore.path).exists()) {
                 throw new FileNotFoundException("Trust store not found under path : '" + applicationProperties.ssl.trustStore.path);
             }
             System.setProperty("javax.net.ssl.trustStore", applicationProperties.ssl.trustStore.path);
             System.setProperty("javax.net.ssl.trustStorePassword", applicationProperties.ssl.trustStore.password);
 
-            if(StringUtils.isNotBlank(applicationProperties.ssl.trustStore.type)) {
+            if (StringUtils.isNotBlank(applicationProperties.ssl.trustStore.type)) {
                 System.setProperty("javax.net.ssl.trustStoreType", applicationProperties.ssl.trustStore.type);
             }
         }
 
         //Define Key Store properties
-        if(StringUtils.isNotBlank(applicationProperties.ssl.keyStore.path)) {
-            if(!new File(applicationProperties.ssl.keyStore.path).exists()) {
+        if (StringUtils.isNotBlank(applicationProperties.ssl.keyStore.path)) {
+            if (!new File(applicationProperties.ssl.keyStore.path).exists()) {
                 throw new FileNotFoundException("Key store not found under path : '" + applicationProperties.ssl.keyStore.path);
             }
             System.setProperty("javax.net.ssl.keyStore", applicationProperties.ssl.keyStore.path);
             System.setProperty("javax.net.ssl.keyStorePassword", applicationProperties.ssl.keyStore.password);
 
-            if(StringUtils.isNotBlank(applicationProperties.ssl.keyStore.type)) {
+            if (StringUtils.isNotBlank(applicationProperties.ssl.keyStore.type)) {
                 System.setProperty("javax.net.ssl.keyStoreType", applicationProperties.ssl.keyStore.type);
             }
         }
 
         // Update widgets
-        gitService.updateWidgetFromGit();
+        gitService.updateWidgetFromGitRepositories();
     }
 }

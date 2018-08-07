@@ -15,13 +15,20 @@
  */
 
 import {Role} from './Role';
+import {UserSetting} from '../UserSetting';
 
+/**
+ * The user entity
+ */
 export class User {
   public id: number;
   public username: string;
   public firstname: string;
   public lastname: string;
   public fullname: string;
-  public mail: string;
+  public email: string;
+  public password: string;
+  public confirmPassword: string;
   public roles: Role[];
+  public userSettings: UserSetting[];
 }

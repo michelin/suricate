@@ -16,45 +16,55 @@
 
 package io.suricate.monitoring.model.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import io.suricate.monitoring.model.entity.widget.Category;
+import io.suricate.monitoring.model.enums.ConfigurationDataType;
+import lombok.*;
 
+import javax.persistence.*;
+
+/**
+ * The configuration entity
+ */
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+@ToString
 public class Configuration extends AbstractAuditingEntity<String> {
 
+    /**
+     * The key of the configuration (used in JS Files)
+     */
     @Id
-    @Column(name = "config_key",nullable = false, unique = true)
+    @Column(name = "config_key", nullable = false, unique = true)
     private String key;
 
-    @Column(name = "config_value", nullable = false)
+    /**
+     * The related value enter by the user
+     */
+    @Column(name = "config_value")
     private String value;
 
+    /**
+     * export
+     */
     @Column(name = "config_export")
     private boolean export;
 
-    public Configuration() {}
+    /**
+     * The data type of the configuration
+     */
+    @Column(name = "data_type")
+    @Enumerated(value = EnumType.STRING)
+    private ConfigurationDataType dataType;
 
-    public String getKey() {
-        return key;
-    }
-    public void setKey(String key) {
-        this.key = key;
-    }
-
-    public String getValue() {
-        return value;
-    }
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    public boolean isExport() {
-        return export;
-    }
-    public void setExport(boolean export) {
-        this.export = export;
-    }
+    /**
+     * Make a link between category and configurations
+     */
+    @ManyToOne
+    @JoinColumn(name = "category_id", referencedColumnName = "id")
+    private Category category;
 
     @Override
     public String getId() {

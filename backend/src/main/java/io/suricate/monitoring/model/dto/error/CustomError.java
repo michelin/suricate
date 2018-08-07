@@ -23,9 +23,10 @@ public class CustomError {
 
     /**
      * Constructor using fields
+     *
      * @param message the error message
-     * @param key the error key
-     * @param code the error code
+     * @param key     the error key
+     * @param code    the error code
      */
     public CustomError(String message, String key, int code) {
         this.message = message;
@@ -35,11 +36,12 @@ public class CustomError {
 
     /**
      * Constructor with ApiErrorEnum object
+     *
      * @param apiErrorEnum api error object
      */
     public CustomError(ApiErrorEnum apiErrorEnum) {
         this.message = apiErrorEnum.getMessage();
-        this.code = apiErrorEnum.getCode();
+        this.code = apiErrorEnum.getOrdinal();
         this.key = apiErrorEnum.getKey();
     }
 

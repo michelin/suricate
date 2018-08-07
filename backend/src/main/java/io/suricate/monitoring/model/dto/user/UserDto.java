@@ -17,119 +17,89 @@
 package io.suricate.monitoring.model.dto.user;
 
 import io.suricate.monitoring.model.dto.AbstractDto;
-import io.suricate.monitoring.model.entity.user.Role;
-import io.suricate.monitoring.model.entity.user.User;
+import io.suricate.monitoring.model.dto.setting.UserSettingDto;
+import io.suricate.monitoring.model.enums.AuthenticationMethod;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
- * User dto used to manage user rights
+ * Represent a user used for communication with the clients via webservices
  */
+@Getter
+@Setter
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+@ToString
+@ApiModel(value = "User", description = "Describe a user of the app")
 public class UserDto extends AbstractDto {
 
     /**
-     * Data base id
+     * Database id
      */
+    @ApiModelProperty(value = "The id of the user")
     private Long id;
 
     /**
      * User firstname
      */
+    @ApiModelProperty(value = "The firstname of the user")
     private String firstname;
 
     /**
      * User lastname
      */
+    @ApiModelProperty(value = "The lastname of the user")
     private String lastname;
 
     /**
      * User fullname
      */
+    @ApiModelProperty(value = "The fullname of the user")
     private String fullname;
 
     /**
-     * Ldap username
+     * username
      */
+    @ApiModelProperty(value = "The username used as login in the credentials")
     private String username;
 
     /**
-     * Ldap Mail
+     * Mail
      */
-    private String mail;
+    @ApiModelProperty(value = "The user email")
+    private String email;
+
+    /**
+     * Password of the user
+     */
+    @ApiModelProperty(value = "The user password")
+    private String password;
+
+    /**
+     * The confirmation password
+     */
+    @ApiModelProperty(value = "The user password confirmation")
+    private String confirmPassword;
+
+    /**
+     * The authentication method
+     */
+    @ApiModelProperty(value = "The authentication method for this user")
+    private AuthenticationMethod authenticationMethod;
 
     /**
      * User roles
      */
-    private List<RoleDto> roles;
-
-    public UserDto() {}
+    @ApiModelProperty(value = "The list of related roles", dataType = "List")
+    private List<RoleDto> roles = new ArrayList<>();
 
     /**
-     * Constructor of UserDto
-     * @param user database user
+     * User settings
      */
-    public UserDto(User user) {
-        this.id = user.getId();
-        this.roles = user.getRoles().stream().map(role -> new RoleDto(role)).collect(Collectors.toList());
-        this.firstname = user.getFirstname();
-        this.username = user.getUsername();
-        this.fullname = user.getFirstname() + " " + user.getLastname();
-        this.lastname = user.getLastname();
-        this.mail = user.getEmail();
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getFirstname() {
-        return firstname;
-    }
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getFullname() {
-        return fullname;
-    }
-
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
-    }
-
-    public String getMail() {
-        return mail;
-    }
-
-    public void setMail(String mail) {
-        this.mail = mail;
-    }
-
-    public List<RoleDto> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<RoleDto> roles) {
-        this.roles = roles;
-    }
+    @ApiModelProperty(value = "The user setting", dataType = "List")
+    private List<UserSettingDto> userSettings = new ArrayList<>();
 }

@@ -18,115 +18,85 @@ package io.suricate.monitoring.model.entity.user;
 
 import io.suricate.monitoring.model.entity.AbstractEntity;
 import io.suricate.monitoring.model.entity.project.Project;
+import io.suricate.monitoring.model.entity.setting.UserSetting;
 import io.suricate.monitoring.model.enums.AuthenticationMethod;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The user entity in database
+ */
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+@ToString
 public class User extends AbstractEntity<Long> {
 
+    /**
+     * The user id
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
+    /**
+     * The username (login) of the user
+     */
     @Column(nullable = false, unique = true)
     private String username;
 
+    /**
+     * The encrypted password of the user
+     */
     @Column
     private String password;
 
+    /**
+     * The authentication method {@link AuthenticationMethod}
+     */
     @Enumerated(value = EnumType.STRING)
     @Column(name = "auth_mode", nullable = false, length = 20)
     private AuthenticationMethod authenticationMethod;
 
+    /**
+     * The fistname of the user
+     */
     @Column
     private String firstname;
 
+    /**
+     * The lastname of the user
+     */
     @Column
     private String lastname;
 
+    /**
+     * The mail of the user
+     */
     @Column(unique = true)
     private String email;
 
+    /**
+     * The list of roles
+     */
     @ManyToMany
-    @JoinTable(name="user_role", joinColumns={@JoinColumn(name="user_id")}, inverseJoinColumns={@JoinColumn(name="role_id")})
-    private List<Role> roles;
+    @JoinTable(name = "user_role", joinColumns = {@JoinColumn(name = "user_id")}, inverseJoinColumns = {@JoinColumn(name = "role_id")})
+    private List<Role> roles = new ArrayList<>();
 
+    /**
+     * The projects of the user (as creator or guest)
+     */
     @ManyToMany(mappedBy = "users")
-    private List<Project> projects;
+    private List<Project> projects = new ArrayList<>();
 
-
-    public User() {}
-
-
-    public Long getId() {
-        return id;
-    }
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public AuthenticationMethod getAuthenticationMethod() {
-        return authenticationMethod;
-    }
-    public void setAuthenticationMethod(AuthenticationMethod authenticationMethod) {
-        this.authenticationMethod = authenticationMethod;
-    }
-
-    public List<Role> getRoles() {
-        if(roles == null) {
-            this.roles = new ArrayList<>();
-        }
-        return roles;
-    }
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
-    }
-
-    public List<Project> getProjects() {
-        if(projects == null) {
-            projects = new ArrayList<>();
-        }
-        return projects;
-    }
-    public void setProjects(List<Project> projects) {
-        this.projects = projects;
-    }
-
-    public String getFirstname() {
-        return firstname;
-    }
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    /**
+     * The list of user settings
+     */
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<UserSetting> userSettings = new ArrayList<>();
 }

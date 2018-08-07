@@ -16,8 +16,7 @@
 
 package io.suricate.monitoring.utils;
 
-import io.suricate.monitoring.controllers.api.error.exception.ApiException;
-import io.suricate.monitoring.model.enums.ApiErrorEnum;
+import io.suricate.monitoring.utils.exception.ProjectTokenInvalidException;
 import org.jasypt.encryption.StringEncryptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,23 +30,25 @@ public final class IdUtils {
 
     /**
      * Method used to decode id without salt
+     *
      * @param token token to decode
      * @return the decoded id or null
      */
     public static Long decrypt(String token) {
         StringEncryptor stringEncryptor = (StringEncryptor) SpringContextHolder.getApplicationContext().getBean("noSaltEncrypter");
         Long id = null;
-        try{
+        try {
             id = Long.parseLong(stringEncryptor.decrypt(token));
-        } catch (Exception e){
+        } catch (Exception e) {
             LOGGER.debug(e.getMessage(), e);
-            throw new ApiException(ApiErrorEnum.TOKEN_INVALID);
+            throw new ProjectTokenInvalidException(token);
         }
         return id;
     }
 
     /**
      * Method used to encrypt id without salt
+     *
      * @param id to encrypt
      * @return the encrypted id
      */

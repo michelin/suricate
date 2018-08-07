@@ -20,5 +20,8 @@
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  VERSION: require('../../package.json').version,
+  ENVIRONMENT: require('../../package.json').environment,
+  BASE_URL: 'http://localhost:8080'
 };

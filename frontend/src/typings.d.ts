@@ -16,7 +16,8 @@
 
 /* SystemJS module definition */
 declare var module: NodeModule;
-declare var $: any;
+declare module 'stompjs';
+declare module 'sockjs-client';
 
 interface NodeModule {
   id: string;

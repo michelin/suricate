@@ -75,8 +75,7 @@ public final class OkHttpClientUtils {
             final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
 
             HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-            boolean activate = SpringContextHolder.getApplicationContext().getEnvironment().getProperty("log.widget.network.call",boolean.class);
-            loggingInterceptor.setLevel(activate ? HttpLoggingInterceptor.Level.BASIC : HttpLoggingInterceptor.Level.NONE);
+            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
 
             OkHttpClient.Builder builder = new OkHttpClient.Builder()
                     .sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0])
