@@ -131,7 +131,7 @@ public class RepositoryController {
         repositoryService.addOrUpdateRepository(repository);
 
         if (repository.isEnabled()) {
-            this.gitService.cloneAndUpdateWidgetRepository(repository);
+            this.gitService.updateWidgetFromGitRepository(repository);
         }
 
         URI resourceLocation = ServletUriComponentsBuilder
@@ -205,7 +205,7 @@ public class RepositoryController {
         this.repositoryService.addOrUpdateRepository(repository);
 
         if (repository.isEnabled()) {
-            this.gitService.cloneAndUpdateWidgetRepository(repository);
+            this.gitService.updateWidgetFromGitRepository(repository);
         }
 
         return ResponseEntity

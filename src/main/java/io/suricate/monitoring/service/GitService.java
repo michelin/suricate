@@ -170,7 +170,7 @@ public class GitService {
      *
      * @return true if the update has been done correctly
      */
-    public boolean cloneAndUpdateWidgetRepositories(final List<Repository> repositories) {
+    private boolean cloneAndUpdateWidgetRepositories(final List<Repository> repositories) {
         try {
             for (Repository repository : repositories) {
                 if (repository.getType() == RepositoryTypeEnum.LOCAL) {
@@ -193,15 +193,6 @@ public class GitService {
         }
 
         return false;
-    }
-
-    /**
-     * Clone and update one widget repositor
-     *
-     * @param repository
-     */
-    public void cloneAndUpdateWidgetRepository(final Repository repository) {
-
     }
 
     /**
