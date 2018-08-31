@@ -16,7 +16,7 @@
 
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {CustomValidators} from 'ng2-validation';
 
 import {UserService} from '../../user.service';
@@ -59,12 +59,14 @@ export class UserEditComponent implements OnInit {
    * Constructor
    *
    * @param {UserService} userService The user service to inject
+   * @param {Router} router The router service to inject
    * @param {RoleService} roleService The role service to inject
    * @param {ActivatedRoute} activatedRoute The activated route to inject
    * @param {FormBuilder} formBuilder The formBuilder service
    * @param {ToastService} toastService The service used for displayed Toast notification
    */
   constructor(private userService: UserService,
+              private router: Router,
               private roleService: RoleService,
               private activatedRoute: ActivatedRoute,
               private formBuilder: FormBuilder,
@@ -128,7 +130,15 @@ export class UserEditComponent implements OnInit {
 
     this.userService.updateUser(userUpdated).subscribe(() => {
       this.toastService.sendMessage('User saved successfully', ToastType.SUCCESS);
+      this.redirectToUserList();
     });
+  }
+
+  /**
+   * Redirect to the user list after editing succesfully
+   */
+  redirectToUserList() {
+    this.router.navigate(['/security/users']);
   }
 
 }
