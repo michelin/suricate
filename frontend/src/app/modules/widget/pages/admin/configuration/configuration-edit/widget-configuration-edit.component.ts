@@ -18,7 +18,7 @@
 
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 
 import {WidgetConfigurationService} from '../widget-configuration.service';
 import {ToastService} from '../../../../../../shared/components/toast/toast.service';
@@ -58,11 +58,13 @@ export class WidgetConfigurationEditComponent implements OnInit {
    * Constructor
    *
    * @param {ActivatedRoute} activatedRoute The activated route service
+   * @param {Router} router The router service to inject
    * @param {FormBuilder} formBuilder The form builder
    * @param {ToastService} toastService The toast service
    * @param {WidgetConfigurationService} configurationService The configuration service
    */
   constructor(private activatedRoute: ActivatedRoute,
+              private router: Router,
               private formBuilder: FormBuilder,
               private toastService: ToastService,
               private configurationService: WidgetConfigurationService) {
@@ -103,6 +105,7 @@ export class WidgetConfigurationEditComponent implements OnInit {
           .updateConfigurationByKey(this.configuration)
           .subscribe(() => {
             this.toastService.sendMessage('Configuration updated successfully', ToastType.SUCCESS);
+            this.redirectToWidgetConfigurationList();
           });
     }
   }
@@ -115,6 +118,13 @@ export class WidgetConfigurationEditComponent implements OnInit {
    */
   isFieldInvalid(field: string) {
     return this.configurationForm.invalid && (this.configurationForm.get(field).dirty || this.configurationForm.get(field).touched);
+  }
+
+  /**
+   * Redirect to widget configuration list when editing succesfully
+   */
+  redirectToWidgetConfigurationList() {
+    this.router.navigate(['/widgets/configurations']);
   }
 
 }
