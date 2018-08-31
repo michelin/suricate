@@ -17,7 +17,7 @@
  */
 
 import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 import {Repository} from '../../../../../../shared/model/dto/Repository';
@@ -58,12 +58,14 @@ export class RepositoryAddEditComponent implements OnInit {
    * Constructor
    *
    * @param {ActivatedRoute} activatedRoute The activated route service
+   * @param {Router} router The router service to inject
    * @param {FormBuilder} formBuilder The form builder service
    * @param {RepositoryService} repositoryService The repository service to inject
    * @param {ToastService} toastService The toast service
    * @param {ChangeDetectorRef} changeDetectorRef The change detector service
    */
   constructor(private activatedRoute: ActivatedRoute,
+              private router: Router,
               private formBuilder: FormBuilder,
               private repositoryService: RepositoryService,
               private toastService: ToastService,
@@ -145,6 +147,7 @@ export class RepositoryAddEditComponent implements OnInit {
             .updateOneById(this.repository.id, repositoryToAddEdit)
             .subscribe((repositoryAdded: Repository) => {
               this.toastService.sendMessage(`Repository ${repositoryAdded.name} updated successfully`, ToastType.SUCCESS);
+              this.redirectToRepositoryList();
             });
 
       } else {
@@ -152,8 +155,16 @@ export class RepositoryAddEditComponent implements OnInit {
             .addOne(repositoryToAddEdit)
             .subscribe((repositoryAdded: Repository) => {
               this.toastService.sendMessage(`Repository ${repositoryAdded.name} added successfully`, ToastType.SUCCESS);
+              this.redirectToRepositoryList();
             });
       }
     }
+  }
+
+  /**
+   * Redirect to repository list when adding or edit successfully
+   */
+  redirectToRepositoryList() {
+    this.router.navigate(['/repositories']);
   }
 }
