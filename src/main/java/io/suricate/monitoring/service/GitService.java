@@ -128,29 +128,59 @@ public class GitService {
             return null;
         }
 
-        return new AsyncResult<>(cloneAndUpdateWidgetRepo());
+        Optional<List<Repository>> optionalRepositories = repositoryService.getAllByEnabledOrderByName(true);
+        if (!optionalRepositories.isPresent()) {
+            LOGGER.info("No remote or local repository found");
+            return new AsyncResult<>(true);
+        }
+
+        return new AsyncResult<>(cloneAndUpdateWidgetRepositories(optionalRepositories.get()));
     }
 
     /**
-     * Methods used to clone widget repo
+     * Async method used to update widgets from the one specific git repository
+     *
+     * @param repository The repository to update
+     * @return True if the update has been done correctly, false otherwise
+     */
+    @Async
+    @Transactional
+    public Future<Boolean> updateWidgetFromGitRepository(Repository repository) {
+        if (repository == null) {
+            LOGGER.debug("The repository can't be null");
+            return new AsyncResult<>(false);
+        }
+
+        LOGGER.info("Update widgets from Git repo {}", repository.getName());
+        if (!applicationProperties.widgets.updateEnable) {
+            LOGGER.info("Widget update disabled");
+            return null;
+        }
+
+        if (!repository.isEnabled()) {
+            LOGGER.info("The repository {} is not enabled", repository.getName());
+            return null;
+        }
+
+        return new AsyncResult<>(cloneAndUpdateWidgetRepositories(Collections.singletonList(repository)));
+    }
+
+    /**
+     * Methods used to clone and update the full list of widget repositories
      *
      * @return true if the update has been done correctly
      */
     public boolean cloneAndUpdateWidgetRepositories(final List<Repository> repositories) {
         try {
-            Optional<List<Repository>> optionalRepositories = repositoryService.getAllByEnabledOrderByName(true);
-            if (!optionalRepositories.isPresent()) {
-                LOGGER.info("No remote or local repository found");
-            } else {
-                for (Repository repository : optionalRepositories.get()) {
-                    if (repository.getType() == RepositoryTypeEnum.LOCAL) {
-                        LOGGER.info("Loading widget from local folder {}", repository.getLocalPath());
-                        updateWidgetFromFile(new File(repository.getLocalPath()), true, repository);
-                    } else {
-                        File remoteFolder = cloneRepo(repository.getUrl(), repository.getBranch());
-                        updateWidgetFromFile(remoteFolder, false, repository);
-                    }
+            for (Repository repository : repositories) {
+                if (repository.getType() == RepositoryTypeEnum.LOCAL) {
+                    LOGGER.info("Loading widget from local folder {}", repository.getLocalPath());
+                    updateWidgetFromFile(new File(repository.getLocalPath()), true, repository);
+                } else {
+                    File remoteFolder = cloneRepo(repository.getUrl(), repository.getBranch());
+                    updateWidgetFromFile(remoteFolder, false, repository);
                 }
+
             }
             return true;
 
@@ -163,6 +193,15 @@ public class GitService {
         }
 
         return false;
+    }
+
+    /**
+     * Clone and update one widget repositor
+     *
+     * @param repository
+     */
+    public void cloneAndUpdateWidgetRepository(final Repository repository) {
+
     }
 
     /**
