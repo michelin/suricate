@@ -40,6 +40,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.io.File;
 import java.net.URL;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -114,13 +115,13 @@ public class GitService {
 
 
     /**
-     * Async method used to update widget from git
+     * Async method used to update widgets from the full list of git repositories
      *
      * @return True as Future when the process has been done
      */
     @Async
     @Transactional
-    public Future<Boolean> updateWidgetFromGitRepositories() {
+    public Future<Boolean> updateWidgetFromEnabledGitRepositories() {
         LOGGER.info("Update widgets from Git repo");
         if (!applicationProperties.widgets.updateEnable) {
             LOGGER.info("Widget update disabled");
@@ -135,7 +136,7 @@ public class GitService {
      *
      * @return true if the update has been done correctly
      */
-    public boolean cloneAndUpdateWidgetRepo() {
+    public boolean cloneAndUpdateWidgetRepositories(final List<Repository> repositories) {
         try {
             Optional<List<Repository>> optionalRepositories = repositoryService.getAllByEnabledOrderByName(true);
             if (!optionalRepositories.isPresent()) {
