@@ -215,7 +215,7 @@
         <dependency>
             <groupId>org.eclipse.jgit</groupId>
             <artifactId>org.eclipse.jgit</artifactId>
-            <version>5.0.1.201806211838-r</version>
+            <version>5.0.2.201807311906-r</version>
         </dependency>
 
         <dependency>
@@ -271,7 +271,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>24.1-jre</version>
+            <version>26.0-jre</version>
         </dependency>
 
         <dependency>
@@ -356,7 +356,7 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.1</version>
+                <version>0.8.2</version>
                 <executions>
                     <execution>
                         <id>jacoco-initialize</id>
