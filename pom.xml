@@ -391,7 +391,6 @@
     <profiles>
         <profile>
             <id>build-prod</id>
-            <activation>prod</activation>
             <build>
                 <plugins>
                     <plugin>
