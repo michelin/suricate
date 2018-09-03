@@ -2,8 +2,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.suricate</groupId>
-    <artifactId>monitoring</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <artifactId>suricate</artifactId>
+    <version>1.0</version>
     <packaging>jar</packaging>
     <name>[Suricate] Backend</name>
 
