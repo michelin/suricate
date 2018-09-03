@@ -40,6 +40,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.io.File;
 import java.net.URL;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -114,42 +115,72 @@ public class GitService {
 
 
     /**
-     * Async method used to update widget from git
+     * Async method used to update widgets from the full list of git repositories
      *
      * @return True as Future when the process has been done
      */
     @Async
     @Transactional
-    public Future<Boolean> updateWidgetFromGitRepositories() {
+    public Future<Boolean> updateWidgetFromEnabledGitRepositories() {
         LOGGER.info("Update widgets from Git repo");
         if (!applicationProperties.widgets.updateEnable) {
             LOGGER.info("Widget update disabled");
             return null;
         }
 
-        return new AsyncResult<>(cloneAndUpdateWidgetRepo());
+        Optional<List<Repository>> optionalRepositories = repositoryService.getAllByEnabledOrderByName(true);
+        if (!optionalRepositories.isPresent()) {
+            LOGGER.info("No remote or local repository found");
+            return new AsyncResult<>(true);
+        }
+
+        return new AsyncResult<>(cloneAndUpdateWidgetRepositories(optionalRepositories.get()));
     }
 
     /**
-     * Methods used to clone widget repo
+     * Async method used to update widgets from the one specific git repository
+     *
+     * @param repository The repository to update
+     * @return True if the update has been done correctly, false otherwise
+     */
+    @Async
+    @Transactional
+    public Future<Boolean> updateWidgetFromGitRepository(Repository repository) {
+        if (repository == null) {
+            LOGGER.debug("The repository can't be null");
+            return new AsyncResult<>(false);
+        }
+
+        LOGGER.info("Update widgets from Git repo {}", repository.getName());
+        if (!applicationProperties.widgets.updateEnable) {
+            LOGGER.info("Widget update disabled");
+            return null;
+        }
+
+        if (!repository.isEnabled()) {
+            LOGGER.info("The repository {} is not enabled", repository.getName());
+            return null;
+        }
+
+        return new AsyncResult<>(cloneAndUpdateWidgetRepositories(Collections.singletonList(repository)));
+    }
+
+    /**
+     * Methods used to clone and update the full list of widget repositories
      *
      * @return true if the update has been done correctly
      */
-    public boolean cloneAndUpdateWidgetRepo() {
+    private boolean cloneAndUpdateWidgetRepositories(final List<Repository> repositories) {
         try {
-            Optional<List<Repository>> optionalRepositories = repositoryService.getAllByEnabledOrderByName(true);
-            if (!optionalRepositories.isPresent()) {
-                LOGGER.info("No remote or local repository found");
-            } else {
-                for (Repository repository : optionalRepositories.get()) {
-                    if (repository.getType() == RepositoryTypeEnum.LOCAL) {
-                        LOGGER.info("Loading widget from local folder {}", repository.getLocalPath());
-                        updateWidgetFromFile(new File(repository.getLocalPath()), true, repository);
-                    } else {
-                        File remoteFolder = cloneRepo(repository.getUrl(), repository.getBranch());
-                        updateWidgetFromFile(remoteFolder, false, repository);
-                    }
+            for (Repository repository : repositories) {
+                if (repository.getType() == RepositoryTypeEnum.LOCAL) {
+                    LOGGER.info("Loading widget from local folder {}", repository.getLocalPath());
+                    updateWidgetFromFile(new File(repository.getLocalPath()), true, repository);
+                } else {
+                    File remoteFolder = cloneRepo(repository.getUrl(), repository.getBranch());
+                    updateWidgetFromFile(remoteFolder, false, repository);
                 }
+
             }
             return true;
 

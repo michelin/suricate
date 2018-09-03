@@ -104,6 +104,6 @@ public class BackendApplication {
         }
 
         // Update widgets
-        gitService.updateWidgetFromGitRepositories();
+        gitService.updateWidgetFromEnabledGitRepositories();
     }
 }

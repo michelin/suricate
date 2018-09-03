@@ -20,6 +20,7 @@ import io.suricate.monitoring.model.dto.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.widget.RepositoryDto;
 import io.suricate.monitoring.model.entity.widget.Repository;
 import io.suricate.monitoring.model.mapper.widget.RepositoryMapper;
+import io.suricate.monitoring.service.GitService;
 import io.suricate.monitoring.service.api.RepositoryService;
 import io.suricate.monitoring.utils.exception.NoContentException;
 import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
@@ -57,6 +58,11 @@ public class RepositoryController {
     private final RepositoryService repositoryService;
 
     /**
+     * The git service
+     */
+    private final GitService gitService;
+
+    /**
      * The repository mapper tranform Domain object into DTO
      */
     private final RepositoryMapper repositoryMapper;
@@ -65,12 +71,15 @@ public class RepositoryController {
      * Constructor
      *
      * @param repositoryService The repository service to inject
+     * @param gitService        The git service to inject
      * @param repositoryMapper  The repository mapper to inject
      */
     @Autowired
     public RepositoryController(final RepositoryService repositoryService,
+                                final GitService gitService,
                                 final RepositoryMapper repositoryMapper) {
         this.repositoryService = repositoryService;
+        this.gitService = gitService;
         this.repositoryMapper = repositoryMapper;
     }
 
@@ -108,7 +117,7 @@ public class RepositoryController {
      * @param repositoryDto The repository to create
      * @return The repository created
      */
-    @ApiOperation(value = "Create a new repository", response = RepositoryDto.class)
+    @ApiOperation(value = "Create a new repository, and load it automatically if enable is selected", response = RepositoryDto.class)
     @ApiResponses(value = {
         @ApiResponse(code = 201, message = "Created", response = RepositoryDto.class),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
@@ -120,6 +129,10 @@ public class RepositoryController {
                                                    @RequestBody RepositoryDto repositoryDto) {
         Repository repository = repositoryMapper.toRepositoryWithoutWidgets(repositoryDto);
         repositoryService.addOrUpdateRepository(repository);
+
+        if (repository.isEnabled()) {
+            this.gitService.updateWidgetFromGitRepository(repository);
+        }
 
         URI resourceLocation = ServletUriComponentsBuilder
             .fromCurrentContextPath()
@@ -169,7 +182,7 @@ public class RepositoryController {
      *
      * @return The repository updated
      */
-    @ApiOperation(value = "Update an existing repository by id", response = RepositoryDto.class)
+    @ApiOperation(value = "Update an existing repository by id, and load it automatically if enable is selected", response = RepositoryDto.class)
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Ok", response = RepositoryDto.class),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
@@ -190,6 +203,10 @@ public class RepositoryController {
         repository.setId(repositoryId);
 
         this.repositoryService.addOrUpdateRepository(repository);
+
+        if (repository.isEnabled()) {
+            this.gitService.updateWidgetFromGitRepository(repository);
+        }
 
         return ResponseEntity
             .ok()
