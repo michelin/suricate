@@ -29,28 +29,28 @@
       }
     },
     "suricate-frontend": {
-      "root": "",
-      "sourceRoot": "src",
+      "root": "src/main/webapp",
+      "sourceRoot": "src/main/webapp",
       "projectType": "application",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist",
-            "index": "src/index.html",
-            "main": "src/main.ts",
-            "tsConfig": "src/tsconfig.app.json",
-            "polyfills": "src/polyfills.ts",
+            "outputPath": "target/dist",
+            "index": "src/main/webapp/index.html",
+            "main": "src/main/webapp/main.ts",
+            "tsConfig": "src/main/webapp/tsconfig.app.json",
+            "polyfills": "src/main/webapp/polyfills.ts",
             "assets": [
-              "src/assets",
-              "src/favicon.ico"
+              "src/main/webapp/assets",
+              "src/main/webapp/favicon.ico"
             ],
             "styles": [
-              "src/assets/styles/normalize.css",
+              "src/main/webapp/assets/styles/normalize.css",
               "node_modules/material-design-icons-iconfont/dist/material-design-icons.css",
               "node_modules/font-awesome/css/font-awesome.css",
-              "src/assets/styles/themes/dashboard-themes.scss",
-              "src/styles.css"
+              "src/main/webapp/assets/styles/themes/dashboard-themes.scss",
+              "src/main/webapp/styles.css"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
@@ -71,8 +71,8 @@
               "buildOptimizer": true,
               "fileReplacements": [
                 {
-                  "replace": "src/environments/environment.ts",
-                  "with": "src/environments/environment.prod.ts"
+                  "replace": "src/main/webapp/environments/environment.ts",
+                  "with": "src/main/webapp/environments/environment.prod.ts"
                 }
               ]
             }
@@ -98,25 +98,25 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "main": "src/test.ts",
+            "main": "src/main/webapp/test.ts",
             "karmaConfig": "./karma.conf.js",
-            "polyfills": "src/polyfills.ts",
-            "tsConfig": "src/tsconfig.spec.json",
+            "polyfills": "src/main/webapp/polyfills.ts",
+            "tsConfig": "src/main/webapp/tsconfig.spec.json",
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
               "node_modules/lodash/lodash.min.js",
               "node_modules/moment/min/moment-with-locales.min.js"
             ],
             "styles": [
-              "src/assets/styles/normalize.css",
+              "src/main/webapp/assets/styles/normalize.css",
               "node_modules/material-design-icons-iconfont/dist/material-design-icons.css",
               "node_modules/font-awesome/css/font-awesome.css",
-              "src/assets/styles/themes/dashboard-themes.scss",
-              "src/styles.css"
+              "src/main/webapp/assets/styles/themes/dashboard-themes.scss",
+              "src/main/webapp/styles.css"
             ],
             "assets": [
-              "src/assets",
-              "src/favicon.ico"
+              "src/main/webapp/assets",
+              "src/main/webapp/favicon.ico"
             ]
           }
         },
@@ -124,8 +124,8 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": [
-              "src/tsconfig.app.json",
-              "src/tsconfig.spec.json"
+              "src/main/webapp/tsconfig.app.json",
+              "src/main/webapp/tsconfig.spec.json"
             ],
             "exclude": [
               "**/node_modules/**"

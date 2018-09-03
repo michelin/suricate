@@ -2,9 +2,9 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.suricate</groupId>
-    <artifactId>monitoring</artifactId>
-    <version>1.1-SNAPSHOT</version>
-    <packaging>jar</packaging>
+    <artifactId>suricate</artifactId>
+    <version>1.0</version>
+    <packaging>war</packaging>
     <name>[Suricate] Backend</name>
 
     <scm>
@@ -387,6 +387,43 @@
                 </executions>
             </plugin>
         </plugins>
-
     </build>
+    <profiles>
+        <profile>
+            <id>build-prod</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>1.6.0</version>
+                        <executions>
+                            <execution>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <executable>yarn</executable>
+                            <arguments>
+                                <argument>build</argument>
+                            </arguments>
+                            <successCodes>
+                                <successCode>1</successCode>
+                            </successCodes>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-war-plugin</artifactId>
+                        <configuration>
+                            <warSourceDirectory>target/dist/</warSourceDirectory>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
