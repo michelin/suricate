@@ -95,7 +95,7 @@ public class UserController {
      *
      * @return The list of all users
      */
-    @ApiOperation(value = "Get the full list of users", response = UserDto.class)
+    @ApiOperation(value = "Get the full list of users", response = UserDto.class, nickname = "getAllUsers")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Ok", response = UserDto.class, responseContainer = "List"),
         @ApiResponse(code = 204, message = "No Content"),

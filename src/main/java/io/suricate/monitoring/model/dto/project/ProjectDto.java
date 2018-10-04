@@ -70,22 +70,22 @@ public class ProjectDto extends AbstractDto {
     /**
      * The list of widgets
      */
-    @ApiModelProperty(value = "The list of related instantiate widgets", dataType = "List")
+    @ApiModelProperty(value = "The list of related instantiate widgets", dataType = "java.util.List")
     private List<ProjectWidgetDto> projectWidgets = new ArrayList<>();
     /**
      * The librairies related
      */
-    @ApiModelProperty(value = "The list of the related JS libraries used for the execution of the widgets", dataType = "List")
+    @ApiModelProperty(value = "The list of the related JS libraries used for the execution of the widgets", dataType = "java.util.List")
     private List<String> librariesToken = new ArrayList<>();
     /**
      * The users added to the widget
      */
-    @ApiModelProperty(value = "The list of users of the dashboard", dataType = "List")
+    @ApiModelProperty(value = "The list of users of the dashboard", dataType = "java.util.List")
     private List<UserDto> users = new ArrayList<>();
 
     /**
      * The list of every connected clients through web socket
      */
-    @ApiModelProperty(value = "The list of the current connected screens", dataType = "List")
+    @ApiModelProperty(value = "The list of the current connected screens", dataType = "java.util.List")
     private List<WebsocketClient> websocketClients = new ArrayList<>();
 }
