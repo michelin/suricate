@@ -78,7 +78,7 @@ public class ConfigurationController {
      *
      * @return The list of configurations
      */
-    @ApiOperation(value = "Get the full list of configurations", response = ConfigurationDto.class)
+    @ApiOperation(value = "Get the full list of configurations", response = ConfigurationDto.class, nickname = "getAllConfigs")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Ok", response = ConfigurationDto.class, responseContainer = "List"),
         @ApiResponse(code = 204, message = "No Content"),
