@@ -81,7 +81,7 @@ public class SettingController {
      *
      * @return The full list of settings
      */
-    @ApiOperation(value = "Get the full list of settings", response = SettingDto.class)
+    @ApiOperation(value = "Get the full list of settings", response = SettingDto.class, nickname = "getAllSettings")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Ok", response = SettingDto.class, responseContainer = "List"),
         @ApiResponse(code = 204, message = "No Content"),

@@ -88,7 +88,7 @@ public class RepositoryController {
      *
      * @return The list of repositories
      */
-    @ApiOperation(value = "Get the full list of repositories", response = RepositoryDto.class)
+    @ApiOperation(value = "Get the full list of repositories", response = RepositoryDto.class, nickname = "getAllRepos")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Ok", response = RepositoryDto.class, responseContainer = "List"),
         @ApiResponse(code = 204, message = "No Content"),
@@ -153,7 +153,7 @@ public class RepositoryController {
      * @param repositoryId The repository Id
      * @return The repository
      */
-    @ApiOperation(value = "Retrieve an existing repository by id", response = RepositoryDto.class)
+    @ApiOperation(value = "Retrieve an existing repository by id", response = RepositoryDto.class, nickname = "getRepoById")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Ok", response = RepositoryDto.class),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),

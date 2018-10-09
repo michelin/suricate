@@ -115,7 +115,7 @@ public class ProjectController {
      *
      * @return The whole list of projects
      */
-    @ApiOperation(value = "Get the full list of projects", response = ProjectDto.class)
+    @ApiOperation(value = "Get the full list of projects", response = ProjectDto.class, nickname = "getAllProjects")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Ok", response = ProjectDto.class, responseContainer = "List"),
         @ApiResponse(code = 204, message = "No Content"),
@@ -262,7 +262,7 @@ public class ProjectController {
      * @param projectId The id of the project
      * @return The project
      */
-    @ApiOperation(value = "Retrieve the project information by id", response = ProjectDto.class)
+    @ApiOperation(value = "Retrieve the project information by id", response = ProjectDto.class, nickname = "getProjectById")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Ok", response = ProjectDto.class),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
@@ -405,7 +405,7 @@ public class ProjectController {
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ProjectDto> deleteUserToProject(@ApiParam(name = "projectId", value = "The project id", required = true)
                                                           @PathVariable("projectId") Long projectId,
-                                                          @ApiParam(name = "projectId", value = "The user id", required = true)
+                                                          @ApiParam(name = "userId", value = "The user id", required = true)
                                                           @PathVariable("userId") Long userId) {
         Optional<User> user = userService.getOne(userId);
         Optional<Project> project = projectService.getOneById(projectId);

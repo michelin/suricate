@@ -54,6 +54,6 @@ public class RoleDto extends AbstractDto {
     /**
      * The list of user for this role
      */
-    @ApiModelProperty(value = "The list of users with this role", dataType = "List")
+    @ApiModelProperty(value = "The list of users with this role", dataType = "java.util.List")
     private List<UserDto> users = new ArrayList<>();
 }
