@@ -406,9 +406,10 @@
                         <configuration>
                             <executable>yarn</executable>
                             <arguments>
-                                <argument>build</argument>
+                                <argument>build-all</argument>
                             </arguments>
                             <successCodes>
+                                <successCode>0</successCode>
                                 <successCode>1</successCode>
                             </successCodes>
                         </configuration>
