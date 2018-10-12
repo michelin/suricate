@@ -47,6 +47,8 @@ spring:
     multipart:
       max-file-size: 10Mb
       max-request-size: 10Mb
+  profiles:
+    active: sopra
 
 ### Default error page ###
 server.error.whitelabel.enabled: false
@@ -105,6 +107,10 @@ application:
       firstNameAttributName:
       lastNameAttributName:
       mailAttributName:
+      username:
+      password:
+      userSearchBase:
+      referral:
     ### JWT Configuration ###
     jwt:
       secret:  ${random.value}
@@ -156,4 +162,5 @@ application:
 #proxy.host:
 #proxy.port:
 #proxy.noProxyDomains:
+
 

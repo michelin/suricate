@@ -123,6 +123,26 @@ public class ApplicationProperties {
          * LDAP mail attribut
          */
         public String mailAttributName;
+
+        /**
+         * LDAP user for authentication
+         */
+        public String username;
+
+        /**
+         * LDAP password for authentication
+         */
+        public String password;
+
+        /**
+         * LDAP search base
+         */
+        public String userSearchBase;
+
+        /**
+         * LDAP referral mode
+         */
+        public String referral;
     }
 
     /**
