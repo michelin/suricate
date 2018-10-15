@@ -250,7 +250,7 @@ public class WidgetController {
         }
 
         // Also add global configuration for each widget
-        List<WidgetParam> confs = configurationService.getConfigurationForWidgets().stream().filter(c -> c.getCategory().getId() == categoryId).map(c -> initParamFromConfiguration(c)).collect(Collectors.toList());
+        List<WidgetParam> confs = configurationService.getConfigurationForWidgets().stream().filter(c -> c.getCategory().getId() == categoryId).map(ConfigurationService::initParamFromConfiguration).collect(Collectors.toList());
         widgets.get().stream().forEach(w -> w.getWidgetParams().addAll(confs));
 
         return ResponseEntity
@@ -258,19 +258,5 @@ public class WidgetController {
             .contentType(MediaType.APPLICATION_JSON)
             .cacheControl(CacheControl.noCache())
             .body(widgetMapper.toWidgetDtosDefault(widgets.get()));
-    }
-
-    /**
-     * Convert configuration to widget param
-     * @param configuration Configuration to convert
-     * @return widget param newly created
-     */
-    private static WidgetParam initParamFromConfiguration(Configuration configuration) {
-        WidgetParam param = new WidgetParam();
-        param.setName(configuration.getKey());
-        param.setDefaultValue(configuration.getValue());
-        param.setType(WidgetVariableType.valueOf(configuration.getDataType().toString()));
-        param.setDescription(configuration.getKey());
-        return param;
     }
 }
