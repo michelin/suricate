@@ -50,7 +50,7 @@
         <dependency>
             <groupId>org.springframework.security.oauth.boot</groupId>
             <artifactId>spring-security-oauth2-autoconfigure</artifactId>
-            <version>2.0.4.RELEASE</version>
+            <version>2.0.5.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.security</groupId>
@@ -135,7 +135,7 @@
         <dependency>
             <groupId>org.ehcache</groupId>
             <artifactId>ehcache</artifactId>
-            <version>3.6.0</version>
+            <version>3.6.1</version>
         </dependency>
         <dependency>
             <groupId>javax.cache</groupId>
@@ -174,12 +174,12 @@
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi</artifactId>
-            <version>3.17</version>
+            <version>4.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.poi</groupId>
             <artifactId>poi-ooxml</artifactId>
-            <version>3.17</version>
+            <version>4.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.lowagie</groupId>
@@ -202,7 +202,7 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.8</version>
+            <version>3.8.1</version>
         </dependency>
 
         <dependency>
@@ -214,7 +214,7 @@
         <dependency>
             <groupId>org.eclipse.jgit</groupId>
             <artifactId>org.eclipse.jgit</artifactId>
-            <version>5.0.2.201807311906-r</version>
+            <version>5.1.2.201810061102-r</version>
         </dependency>
 
         <dependency>
@@ -429,7 +429,7 @@
                     <dependency>
                         <groupId>io.swagger</groupId>
                         <artifactId>swagger-hibernate-validations</artifactId>
-                        <version>1.5.6</version>
+                        <version>1.5.21</version>
                     </dependency>
                 </dependencies>
             </plugin>

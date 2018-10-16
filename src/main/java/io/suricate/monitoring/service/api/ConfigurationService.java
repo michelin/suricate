@@ -20,6 +20,8 @@ import io.suricate.monitoring.configuration.ApplicationProperties;
 import io.suricate.monitoring.model.dto.ApplicationPropertiesDto;
 import io.suricate.monitoring.model.entity.Configuration;
 import io.suricate.monitoring.model.entity.widget.Category;
+import io.suricate.monitoring.model.entity.widget.WidgetParam;
+import io.suricate.monitoring.model.enums.WidgetVariableType;
 import io.suricate.monitoring.repository.ConfigurationRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -129,9 +131,18 @@ public class ConfigurationService {
         return new ApplicationPropertiesDto("authentication.provider", applicationProperties.authentication.provider, "The user provider source (Database or LDAP)");
     }
 
+    /**
+     * FIXME : MVT
+     * @return
+     */
     public List<ApplicationPropertiesDto> getServerConfiguration() {
-        // TODO
+        // FIXME : MVT
         return null;
+    }
+
+    @Transactional
+    public List<Configuration> getConfigurationForCategory(Long categoryId) {
+        return configurationRepository.findConfigurationByCategoryId(categoryId);
     }
 
     /**
@@ -166,5 +177,20 @@ public class ConfigurationService {
     @Transactional
     public void addOrUpdateConfigurations(List<Configuration> configurations, Category category) {
         configurations.forEach(configuration -> this.addOrUpdateConfiguration(configuration, category));
+    }
+
+
+    /**
+     * Convert configuration to widget param
+     * @param configuration Configuration to convert
+     * @return widget param newly created
+     */
+    public static WidgetParam initParamFromConfiguration(Configuration configuration) {
+        WidgetParam param = new WidgetParam();
+        param.setName(configuration.getKey());
+        param.setDefaultValue(configuration.getValue());
+        param.setType(WidgetVariableType.valueOf(configuration.getDataType().toString()));
+        param.setDescription(configuration.getKey());
+        return param;
     }
 }
