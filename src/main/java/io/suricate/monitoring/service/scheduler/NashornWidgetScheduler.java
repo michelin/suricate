@@ -203,9 +203,6 @@ public class NashornWidgetScheduler implements Schedulable {
             delay = SMALL_DELAY;
         }
 
-        // Add Global application config
-        addGlobalConfiguration(nashornRequest);
-
         ProjectWidget projectWidget = projectWidgetService.getOne(nashornRequest.getProjectWidgetId());
         List<WidgetVariableResponse> widgetVariableResponses = widgetService.getWidgetVariables(projectWidget.getWidget());
 
@@ -272,14 +269,5 @@ public class NashornWidgetScheduler implements Schedulable {
                 scheduledFuture.cancel(true);
             }
         }
-    }
-
-    /**
-     * Method used to inject global configuration to widget execution
-     * @param nashornRequest the request to launch a job
-     */
-    private void addGlobalConfiguration(NashornRequest nashornRequest) {
-        List<Configuration> configurations = configurationService.getConfigurationForWidgets();
-        nashornService.injectWidgetsConfigurations(nashornRequest, configurations);
     }
 }
