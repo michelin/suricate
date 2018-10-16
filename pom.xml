@@ -3,14 +3,14 @@
 
     <groupId>io.suricate</groupId>
     <artifactId>suricate</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
     <packaging>war</packaging>
-    <name>[Suricate] Backend</name>
+    <name>Suricate Application</name>
 
     <scm>
-        <connection>scm:git:https://github.com/suricate-io/monitoring.git</connection>
-        <url>scm:git:https://github.com/suricate-io/monitoring.git</url>
-        <developerConnection>scm:git:https://github.com/suricate-io/monitoring.git</developerConnection>
+	<connection>scm:git:https://github.com/suricate-io/suricate.git</connection>
+        <url>scm:git:https://github.com/suricate-io/suricate.git</url>
+        <developerConnection>scm:git:https://github.com/suricate-io/suricate.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 
