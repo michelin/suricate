@@ -18,6 +18,7 @@ package io.suricate.monitoring.service.api;
 
 import io.suricate.monitoring.model.dto.nashorn.WidgetVariableResponse;
 import io.suricate.monitoring.model.dto.widget.WidgetDto;
+import io.suricate.monitoring.model.entity.Configuration;
 import io.suricate.monitoring.model.entity.Library;
 import io.suricate.monitoring.model.entity.widget.*;
 import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;

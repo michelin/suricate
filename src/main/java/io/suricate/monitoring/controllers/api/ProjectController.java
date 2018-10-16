@@ -20,11 +20,17 @@ import io.suricate.monitoring.model.dto.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.project.ProjectDto;
 import io.suricate.monitoring.model.dto.project.ProjectWidgetDto;
 import io.suricate.monitoring.model.dto.project.ProjectWidgetPositionDto;
+import io.suricate.monitoring.model.entity.Configuration;
 import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.entity.user.User;
+import io.suricate.monitoring.model.entity.widget.Category;
+import io.suricate.monitoring.model.entity.widget.Widget;
+import io.suricate.monitoring.model.entity.widget.WidgetParam;
+import io.suricate.monitoring.model.enums.WidgetVariableType;
 import io.suricate.monitoring.model.mapper.project.ProjectMapper;
 import io.suricate.monitoring.model.mapper.project.ProjectWidgetMapper;
+import io.suricate.monitoring.service.api.ConfigurationService;
 import io.suricate.monitoring.service.api.ProjectService;
 import io.suricate.monitoring.service.api.ProjectWidgetService;
 import io.suricate.monitoring.service.api.UserService;
@@ -49,6 +55,7 @@ import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Project controller
@@ -62,6 +69,11 @@ public class ProjectController {
      * Class logger
      */
     private final static Logger LOGGER = LoggerFactory.getLogger(ProjectController.class);
+
+    /**
+     * Configuration service
+     */
+    private final ConfigurationService configurationService;
 
     /**
      * Project service
@@ -102,12 +114,14 @@ public class ProjectController {
                              @Lazy final ProjectWidgetService projectWidgetService,
                              final UserService userService,
                              final ProjectMapper projectMapper,
-                             final ProjectWidgetMapper projectWidgetMapper) {
+                             final ProjectWidgetMapper projectWidgetMapper,
+                             final ConfigurationService configurationService) {
         this.projectService = projectService;
         this.projectWidgetService = projectWidgetService;
         this.userService = userService;
         this.projectMapper = projectMapper;
         this.projectWidgetMapper = projectWidgetMapper;
+        this.configurationService = configurationService;
     }
 
     /**
@@ -279,11 +293,23 @@ public class ProjectController {
             throw new ObjectNotFoundException(Project.class, projectId);
         }
 
+        // Add configuration for widgets
+        project.get().getWidgets().forEach(this::addCOnfiguration);
+
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
             .cacheControl(CacheControl.noCache())
             .body(projectMapper.toProjectDtoDefault(project.get()));
+    }
+
+    private void addCOnfiguration(ProjectWidget widget) {
+        Category widgetCat = widget.getWidget().getCategory();
+        List<Configuration> confs = configurationService.getConfigurationForCategory(widgetCat.getId());
+
+        List<WidgetParam> params = confs.stream().map(ConfigurationService::initParamFromConfiguration).collect(Collectors.toList());
+
+        widget.getWidget().getWidgetParams().addAll(params);
     }
 
     /**

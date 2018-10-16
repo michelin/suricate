@@ -64,72 +64,70 @@
         <div class="settings-container">
           <form id="formSettings" #formSettings="ngForm" (ngSubmit)="addWidget(formSettings)" novalidate>
             <div *ngFor="let param of selectedWidget.widgetParams">
+                <!-- Boolean Type -->
+                <mat-checkbox *ngIf="param.type == widgetParamEnum.BOOLEAN"
+                              color="accent"
+                              [name]="param.name"
+                              [required]="param.required"
+                              [ngModel]="param.defaultValue ? param.defaultValue : param.usageExample">
+                  {{param.description}}
+                </mat-checkbox>
 
-              <!-- Boolean Type -->
-              <mat-checkbox *ngIf="param.type == widgetParamEnum.BOOLEAN"
-                            color="accent"
-                            [name]="param.name"
-                            [required]="param.required"
-                            [ngModel]="param.defaultValue ? param.defaultValue : param.usageExample">
-                {{param.description}}
-              </mat-checkbox>
+                <!-- INTEGER Type -->
+                <mat-form-field *ngIf="param.type == widgetParamEnum.INTEGER">
+                  <input matInput
+                         type="number"
+                         [name]="param.name"
+                         [required]="param.required"
+                         [placeholder]="param.description"
+                         [ngModel]="param.defaultValue ? param.defaultValue : param.usageExample">
+                </mat-form-field>
 
-              <!-- INTEGER Type -->
-              <mat-form-field *ngIf="param.type == widgetParamEnum.INTEGER">
-                <input matInput
-                       type="number"
-                       [name]="param.name"
-                       [required]="param.required"
-                       [placeholder]="param.description"
-                       [ngModel]="param.defaultValue ? param.defaultValue : param.usageExample">
-              </mat-form-field>
+                <!-- SECRET Type -->
+                <mat-form-field *ngIf="param.type == widgetParamEnum.SECRET">
+                  <input matInput
+                         type="password"
+                         [name]="param.name"
+                         [required]="param.required"
+                         [placeholder]="param.description"
+                         [ngModel]="param.defaultValue ? param.defaultValue : param.usageExample">
+                </mat-form-field>
 
-              <!-- SECRET Type -->
-              <mat-form-field *ngIf="param.type == widgetParamEnum.SECRET">
-                <input matInput
-                       type="password"
-                       [name]="param.name"
-                       [required]="param.required"
-                       [placeholder]="param.description"
-                       [ngModel]="param.defaultValue ? param.defaultValue : param.usageExample">
-              </mat-form-field>
+                <!-- STRING Type -->
+                <mat-form-field *ngIf="param.type == widgetParamEnum.STRING">
+                  <input matInput
+                         type="text"
+                         [name]="param.name"
+                         [required]="param.required"
+                         [placeholder]="param.description"
+                         [ngModel]="param.defaultValue ? param.defaultValue : param.usageExample">
+                </mat-form-field>
 
-              <!-- STRING Type -->
-              <mat-form-field *ngIf="param.type == widgetParamEnum.STRING">
-                <input matInput
-                       type="text"
-                       [name]="param.name"
-                       [required]="param.required"
-                       [placeholder]="param.description"
-                       [ngModel]="param.defaultValue ? param.defaultValue : param.usageExample">
-              </mat-form-field>
+                <!-- COMBO Type -->
+                <mat-form-field *ngIf="param.type == widgetParamEnum.COMBO">
+                  <mat-select [required]="param.required"
+                              [placeholder]="param.description"
+                              [name]="param.name"
+                              [ngModel]="param.defaultValue ? param.defaultValue : param.usageExample">
+                    <mat-option *ngFor="let paramValue of param.values" [value]="paramValue.jsKey">
+                      {{ paramValue.value }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
 
-              <!-- COMBO Type -->
-              <mat-form-field *ngIf="param.type == widgetParamEnum.COMBO">
-                <mat-select [required]="param.required"
-                            [placeholder]="param.description"
-                            [name]="param.name"
-                            [ngModel]="param.defaultValue ? param.defaultValue : param.usageExample">
-                  <mat-option *ngFor="let paramValue of param.values" [value]="paramValue.jsKey">
-                    {{ paramValue.value }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-
-              <!-- MULTIPLE Type -->
-              <mat-form-field *ngIf="param.type == widgetParamEnum.MULTIPLE">
-                <mat-select [required]="param.required"
-                            [placeholder]="param.description"
-                            [name]="param.name"
-                            [ngModel]="param.defaultValue ? param.defaultValue : param.usageExample"
-                            panelClass="widget-param-multiple"
-                            multiple>
-                  <mat-option *ngFor="let paramValue of param.values" [value]="paramValue.jsKey">
-                    {{ paramValue.value }}
-                  </mat-option>
-                </mat-select>
-              </mat-form-field>
-
+                <!-- MULTIPLE Type -->
+                <mat-form-field *ngIf="param.type == widgetParamEnum.MULTIPLE">
+                  <mat-select [required]="param.required"
+                              [placeholder]="param.description"
+                              [name]="param.name"
+                              [ngModel]="param.defaultValue ? param.defaultValue : param.usageExample"
+                              panelClass="widget-param-multiple"
+                              multiple>
+                    <mat-option *ngFor="let paramValue of param.values" [value]="paramValue.jsKey">
+                      {{ paramValue.value }}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
               <!-- FILE Type -->
               <div class="button-wrapper" *ngIf="param.type == widgetParamEnum.FILE">
                 <!-- Used for display file selection window -->

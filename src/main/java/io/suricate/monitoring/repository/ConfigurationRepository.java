@@ -37,4 +37,6 @@ public interface ConfigurationRepository extends JpaRepository<Configuration, St
     @Query("SELECT c FROM Configuration c WHERE c.key LIKE 'WIDGET_CONFIG_%'")
     List<Configuration> findConfigurationForWidgets();
 
+    List<Configuration> findConfigurationByCategoryId(Long categoryId);
+
 }
