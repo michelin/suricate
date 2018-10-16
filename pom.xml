@@ -135,7 +135,7 @@
         <dependency>
             <groupId>org.ehcache</groupId>
             <artifactId>ehcache</artifactId>
-            <version>3.6.0</version>
+            <version>3.6.1</version>
         </dependency>
         <dependency>
             <groupId>javax.cache</groupId>
@@ -214,7 +214,7 @@
         <dependency>
             <groupId>org.eclipse.jgit</groupId>
             <artifactId>org.eclipse.jgit</artifactId>
-            <version>5.0.2.201807311906-r</version>
+            <version>5.1.2.201810061102-r</version>
         </dependency>
 
         <dependency>

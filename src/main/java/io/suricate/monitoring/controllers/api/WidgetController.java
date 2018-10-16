@@ -19,14 +19,18 @@ package io.suricate.monitoring.controllers.api;
 import io.suricate.monitoring.model.dto.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.widget.CategoryDto;
 import io.suricate.monitoring.model.dto.widget.WidgetDto;
+import io.suricate.monitoring.model.entity.Configuration;
 import io.suricate.monitoring.model.entity.widget.Category;
 import io.suricate.monitoring.model.entity.widget.Widget;
+import io.suricate.monitoring.model.entity.widget.WidgetParam;
 import io.suricate.monitoring.model.enums.ApiActionEnum;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
+import io.suricate.monitoring.model.enums.WidgetVariableType;
 import io.suricate.monitoring.model.mapper.widget.CategoryMapper;
 import io.suricate.monitoring.model.mapper.widget.WidgetMapper;
 import io.suricate.monitoring.service.GitService;
 import io.suricate.monitoring.service.api.CategoryService;
+import io.suricate.monitoring.service.api.ConfigurationService;
 import io.suricate.monitoring.service.api.WidgetService;
 import io.suricate.monitoring.utils.exception.ApiException;
 import io.suricate.monitoring.utils.exception.NoContentException;
@@ -45,6 +49,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 /**
  * The widget controller
@@ -68,6 +73,11 @@ public class WidgetController {
      * Category service
      */
     private final CategoryService categoryService;
+
+    /**
+     * Configuration service
+     */
+    private final ConfigurationService configurationService;
 
     /**
      * The GIT service
@@ -98,12 +108,14 @@ public class WidgetController {
                             final CategoryService categoryService,
                             final GitService gitService,
                             final CategoryMapper categoryMapper,
-                            final WidgetMapper widgetMapper) {
+                            final WidgetMapper widgetMapper,
+                            final ConfigurationService configurationService) {
         this.widgetService = widgetService;
         this.categoryService = categoryService;
         this.gitService = gitService;
         this.categoryMapper = categoryMapper;
         this.widgetMapper = widgetMapper;
+        this.configurationService = configurationService;
     }
 
     /**
@@ -236,6 +248,10 @@ public class WidgetController {
         if (!widgets.isPresent()) {
             throw new NoContentException(Widget.class);
         }
+
+        // Also add global configuration for each widget
+        List<WidgetParam> confs = configurationService.getConfigurationForWidgets().stream().filter(c -> c.getCategory().getId() == categoryId).map(ConfigurationService::initParamFromConfiguration).collect(Collectors.toList());
+        widgets.get().stream().forEach(w -> w.getWidgetParams().addAll(confs));
 
         return ResponseEntity
             .ok()
