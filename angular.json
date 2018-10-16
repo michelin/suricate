@@ -1,0 +1,148 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "suricate-frontend-e2e": {
+      "root": "",
+      "sourceRoot": "e2e",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "./protractor.conf.js",
+            "devServerTarget": "suricate-frontend:serve"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "e2e/tsconfig.e2e.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    },
+    "suricate-frontend": {
+      "root": "src/main/webapp",
+      "sourceRoot": "src/main/webapp",
+      "projectType": "application",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "target/dist",
+            "index": "src/main/webapp/index.html",
+            "main": "src/main/webapp/main.ts",
+            "tsConfig": "src/main/webapp/tsconfig.app.json",
+            "polyfills": "src/main/webapp/polyfills.ts",
+            "assets": [
+              "src/main/webapp/assets",
+              "src/main/webapp/favicon.ico"
+            ],
+            "styles": [
+              "src/main/webapp/assets/styles/normalize.css",
+              "node_modules/material-design-icons-iconfont/dist/material-design-icons.css",
+              "node_modules/font-awesome/css/font-awesome.css",
+              "src/main/webapp/assets/styles/themes/dashboard-themes.scss",
+              "src/main/webapp/styles.css"
+            ],
+            "scripts": [
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/lodash/lodash.min.js",
+              "node_modules/moment/min/moment-with-locales.min.js"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "fileReplacements": [
+                {
+                  "replace": "src/main/webapp/environments/environment.ts",
+                  "with": "src/main/webapp/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "suricate-frontend:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "suricate-frontend:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "suricate-frontend:build"
+          }
+        },
+        "test": {
+          "builder": "@angular-devkit/build-angular:karma",
+          "options": {
+            "main": "src/main/webapp/test.ts",
+            "karmaConfig": "./karma.conf.js",
+            "polyfills": "src/main/webapp/polyfills.ts",
+            "tsConfig": "src/main/webapp/tsconfig.spec.json",
+            "scripts": [
+              "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/lodash/lodash.min.js",
+              "node_modules/moment/min/moment-with-locales.min.js"
+            ],
+            "styles": [
+              "src/main/webapp/assets/styles/normalize.css",
+              "node_modules/material-design-icons-iconfont/dist/material-design-icons.css",
+              "node_modules/font-awesome/css/font-awesome.css",
+              "src/main/webapp/assets/styles/themes/dashboard-themes.scss",
+              "src/main/webapp/styles.css"
+            ],
+            "assets": [
+              "src/main/webapp/assets",
+              "src/main/webapp/favicon.ico"
+            ]
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "src/main/webapp/tsconfig.app.json",
+              "src/main/webapp/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "defaultProject": "suricate-frontend",
+  "schematics": {
+    "@schematics/angular:component": {
+      "prefix": "app",
+      "styleext": "css"
+    },
+    "@schematics/angular:directive": {
+      "prefix": "app"
+    }
+  }
+}
