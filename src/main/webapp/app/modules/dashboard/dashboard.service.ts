@@ -146,7 +146,9 @@ export class DashboardService {
 
     const currentUser: User = this.userService.connectedUser;
     if (project.users.findIndex(userLoop => userLoop.id === currentUser.id) >= 0) {
-      if (action === this.dashboardActionUpdate) {
+      if (this.currentDashboardListValues == undefined) {
+        this.currentDashboardListValues = [project];
+      } else if (action === this.dashboardActionUpdate) {
         this.currentDashboardListValues = [...this.currentDashboardListValues, project];
       } else {
         this.currentDashboardListValues = [...this.currentDashboardListValues];
