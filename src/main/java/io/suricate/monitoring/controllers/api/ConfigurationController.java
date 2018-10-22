@@ -21,6 +21,7 @@ import io.suricate.monitoring.model.dto.ConfigurationDto;
 import io.suricate.monitoring.model.dto.error.ApiErrorDto;
 import io.suricate.monitoring.model.entity.Configuration;
 import io.suricate.monitoring.model.mapper.ConfigurationMapper;
+import io.suricate.monitoring.service.CacheService;
 import io.suricate.monitoring.service.api.ConfigurationService;
 import io.suricate.monitoring.utils.exception.NoContentException;
 import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
@@ -60,6 +61,8 @@ public class ConfigurationController {
      */
     private final ConfigurationMapper configurationMapper;
 
+    private final CacheService cacheService;
+
     /**
      * Constructor
      *
@@ -68,9 +71,11 @@ public class ConfigurationController {
      */
     @Autowired
     public ConfigurationController(final ConfigurationService configurationService,
-                                   final ConfigurationMapper configurationMapper) {
+                                   final ConfigurationMapper configurationMapper,
+                                   final CacheService cacheService) {
         this.configurationService = configurationService;
         this.configurationMapper = configurationMapper;
+        this.cacheService = cacheService;
     }
 
     /**
@@ -159,6 +164,8 @@ public class ConfigurationController {
 
         Configuration configuration = configurationOptional.get();
         configuration = configurationService.updateConfiguration(configuration, configurationDto.getValue());
+
+        cacheService.clearCache("configuration");
 
         return ResponseEntity
             .ok()
