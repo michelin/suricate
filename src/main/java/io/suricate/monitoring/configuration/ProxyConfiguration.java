@@ -51,10 +51,12 @@ public class ProxyConfiguration {
      */
     private String noProxyDomains;
 
+    /**
+     * Set JVM settings for http proxy
+     */
     public void setProxy() {
         if (!StringUtils.isAllEmpty(host, port) && StringUtils.isNumeric(port)) {
             ProxySelector.setDefault(new ProxySelector() {
-                final ProxySelector delegate = ProxySelector.getDefault();
 
                 @Override
                 public List<Proxy> select(URI uri) {
