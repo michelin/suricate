@@ -17,6 +17,7 @@
 package io.suricate.monitoring;
 
 import io.suricate.monitoring.configuration.ApplicationProperties;
+import io.suricate.monitoring.configuration.ProxyConfiguration;
 import io.suricate.monitoring.service.GitService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,15 +53,21 @@ public class BackendApplication {
     private final GitService gitService;
 
     /**
+     * Proxy configuration
+     */
+    private final ProxyConfiguration proxyConfiguration;
+
+    /**
      * The constructor
      *
      * @param applicationProperties application properties to inject
      * @param gitService            git service to inject
      */
     @Autowired
-    public BackendApplication(final ApplicationProperties applicationProperties, final GitService gitService) {
+    public BackendApplication(final ApplicationProperties applicationProperties, final GitService gitService, final ProxyConfiguration proxyConfiguration) {
         this.applicationProperties = applicationProperties;
         this.gitService = gitService;
+        this.proxyConfiguration = proxyConfiguration;
     }
 
     /**
@@ -102,6 +109,9 @@ public class BackendApplication {
                 System.setProperty("javax.net.ssl.keyStoreType", applicationProperties.ssl.keyStore.type);
             }
         }
+
+        // Set proxy
+        proxyConfiguration.setProxy();
 
         // Update widgets
         gitService.updateWidgetFromEnabledGitRepositories();

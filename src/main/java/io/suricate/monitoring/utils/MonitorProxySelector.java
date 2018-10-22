@@ -46,7 +46,7 @@ public class MonitorProxySelector extends ProxySelector {
             try (Stream<String> stream = Arrays.stream(config.getNoProxyDomains().split(","))) {
                 if ( StringUtils.isNotBlank(config.getNoProxyDomains()) &&
                      stream.noneMatch(h -> StringUtils.containsIgnoreCase(uri.getHost(), h)) ) {
-                    ret = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(config.getHost(), config.getPort()));
+                    ret = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(config.getHost(), Integer.valueOf(config.getPort())));
                 }
             }
         }

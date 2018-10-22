@@ -19,8 +19,14 @@ package io.suricate.monitoring.configuration;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
+
+import java.io.IOException;
+import java.net.*;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Bean used to manage proxy configuration
@@ -38,10 +44,32 @@ public class ProxyConfiguration {
     /**
      * Proxy port
      */
-    private int port;
+    private String port;
 
     /**
      * List of all proxy domain to ignore
      */
     private String noProxyDomains;
+
+    /**
+     * Set JVM settings for http proxy
+     */
+    public void setProxy() {
+        if (!StringUtils.isAllEmpty(host, port) && StringUtils.isNumeric(port)) {
+            ProxySelector.setDefault(new ProxySelector() {
+
+                @Override
+                public List<Proxy> select(URI uri) {
+                    return Arrays.asList(new Proxy(Proxy.Type.HTTP, InetSocketAddress.createUnresolved(host, Integer.valueOf(port))));
+                }
+
+                @Override
+                public void connectFailed(URI uri, SocketAddress sa, IOException ioe) {
+                    if (uri == null || sa == null || ioe == null) {
+                        throw new IllegalArgumentException("Arguments can't be null.");
+                    }
+                }
+            });
+        }
+    }
 }
