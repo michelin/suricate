@@ -391,7 +391,7 @@ public class ProjectWidgetService {
         Map<String, String> backendConfigAsMap = PropertiesUtils.getMap(backendConfig);
 
         for (WidgetParam widgetParam : widgetParams) {
-            if (widgetParam.getType() == WidgetVariableType.SECRET) {
+            if (widgetParam.getType() == WidgetVariableType.SECRET || widgetParam.getType() == WidgetVariableType.PASSWORD) {
                 String valueToEncrypt = StringUtils.trimToNull(backendConfigAsMap.get(widgetParam.getName()));
 
                 if (valueToEncrypt != null) {
@@ -418,7 +418,7 @@ public class ProjectWidgetService {
         Map<String, String> backendConfigAsMap = PropertiesUtils.getMap(backendConfig);
 
         for (WidgetParam widgetParam : widgetParams) {
-            if (widgetParam.getType() == WidgetVariableType.SECRET) {
+            if (widgetParam.getType() == WidgetVariableType.SECRET || widgetParam.getType() == WidgetVariableType.PASSWORD) {
                 String valueToEncrypt = StringUtils.trimToNull(backendConfigAsMap.get(widgetParam.getName()));
 
                 if (valueToEncrypt != null) {
