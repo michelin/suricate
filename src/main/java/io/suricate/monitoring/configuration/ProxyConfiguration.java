@@ -21,7 +21,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.io.IOException;
@@ -45,7 +44,7 @@ public class ProxyConfiguration {
     /**
      * Proxy port
      */
-    private int port;
+    private String port;
 
     /**
      * List of all proxy domain to ignore
@@ -53,13 +52,13 @@ public class ProxyConfiguration {
     private String noProxyDomains;
 
     public void setProxy() {
-        if (!StringUtils.isAllEmpty(host, Integer.toString(port))) {
+        if (!StringUtils.isAllEmpty(host, port) && StringUtils.isNumeric(port)) {
             ProxySelector.setDefault(new ProxySelector() {
                 final ProxySelector delegate = ProxySelector.getDefault();
 
                 @Override
                 public List<Proxy> select(URI uri) {
-                    return Arrays.asList(new Proxy(Proxy.Type.HTTP, InetSocketAddress.createUnresolved(host, port)));
+                    return Arrays.asList(new Proxy(Proxy.Type.HTTP, InetSocketAddress.createUnresolved(host, Integer.valueOf(port))));
                 }
 
                 @Override
