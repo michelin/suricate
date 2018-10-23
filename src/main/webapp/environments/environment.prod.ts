@@ -18,5 +18,5 @@ export const environment = {
   production: true,
     VERSION: require('../../../../package.json').version,
     ENVIRONMENT: require('../../../../package.json').environment,
-    BASE_URL: 'http://localhost:8080'
+    BASE_URL: 'http://slnxarchi116.ptx.fr.sopra:8080'
 };
