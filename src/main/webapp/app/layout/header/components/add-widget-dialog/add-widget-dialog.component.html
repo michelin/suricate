@@ -84,7 +84,7 @@
                 </mat-form-field>
 
                 <!-- SECRET Type -->
-                <mat-form-field *ngIf="param.type == widgetParamEnum.SECRET">
+                <mat-form-field *ngIf="param.type == widgetParamEnum.SECRET || param.type == widgetParamEnum.PASSWORD">
                   <input matInput
                          type="password"
                          [name]="param.name"

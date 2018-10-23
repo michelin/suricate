@@ -22,7 +22,7 @@
       <mat-header-cell fxFlex="28%" *matHeaderCellDef mat-sort-header disableClear="true">
         <app-translate [key]="'value'"></app-translate>
       </mat-header-cell>
-      <mat-cell fxFlex="28%" *matCellDef="let row">{{ row.value }}</mat-cell>
+      <mat-cell fxFlex="28%" *matCellDef="let row">{{ row  | password }}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="type">
