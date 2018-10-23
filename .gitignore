@@ -5,3 +5,4 @@ h2/
 *.db
 lucene/
 node_modules/
+*.log
