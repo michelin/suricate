@@ -42,6 +42,7 @@ import {TranslationComponent} from './components/translations/translation.compon
 import {MaterialCDKModule} from './modules/metarialCDK.module';
 import {SettingsService} from './services/settings.service';
 import {ErrorInterceptor} from './interceptors/error.interceptor';
+import {PasswordPipe} from "./pipes/password-pipe";
 
 @NgModule({
   imports: [
@@ -64,7 +65,8 @@ import {ErrorInterceptor} from './interceptors/error.interceptor';
     SafeUrlPipe,
     EnumKeysPipe,
     RunScriptsDirective,
-    TranslationComponent
+    TranslationComponent,
+      PasswordPipe
   ],
   exports: [
     FormsModule,
@@ -83,7 +85,8 @@ import {ErrorInterceptor} from './interceptors/error.interceptor';
     SafeUrlPipe,
     EnumKeysPipe,
     RunScriptsDirective,
-    TranslationComponent
+    TranslationComponent,
+      PasswordPipe
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true},

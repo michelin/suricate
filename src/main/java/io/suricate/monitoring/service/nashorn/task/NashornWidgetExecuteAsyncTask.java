@@ -18,10 +18,10 @@ package io.suricate.monitoring.service.nashorn.task;
 
 import io.suricate.monitoring.model.dto.error.RemoteError;
 import io.suricate.monitoring.model.dto.error.RequestException;
-import io.suricate.monitoring.model.enums.NashornErrorTypeEnum;
 import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
 import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
 import io.suricate.monitoring.model.dto.nashorn.WidgetVariableResponse;
+import io.suricate.monitoring.model.enums.NashornErrorTypeEnum;
 import io.suricate.monitoring.model.enums.WidgetVariableType;
 import io.suricate.monitoring.service.nashorn.JavaClassFilter;
 import io.suricate.monitoring.utils.JavascriptUtils;
@@ -37,7 +37,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.script.*;
 import java.io.StringWriter;
-import java.net.ConnectException;
 import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.List;
@@ -170,7 +169,7 @@ public class NashornWidgetExecuteAsyncTask implements Callable<NashornResponse>{
         if (widgetVariableResponses != null) {
             for (WidgetVariableResponse widgetVariableResponse : widgetVariableResponses){
                 // decrypt encrypted property
-                if (WidgetVariableType.SECRET == widgetVariableResponse.getType()){
+                if (WidgetVariableType.SECRET == widgetVariableResponse.getType() || widgetVariableResponse.getType() == WidgetVariableType.PASSWORD){
                     mapProperties.put(widgetVariableResponse.getName(), stringEncryptor.decrypt(mapProperties.get(widgetVariableResponse.getName())));
                 }
             }

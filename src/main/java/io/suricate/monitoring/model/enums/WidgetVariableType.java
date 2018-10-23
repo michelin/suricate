@@ -30,5 +30,6 @@ public enum WidgetVariableType {
     INTEGER,
     COMBO,
     MULTIPLE,
-    FILE
+    FILE,
+    PASSWORD
 }

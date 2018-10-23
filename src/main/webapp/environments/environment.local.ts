@@ -14,16 +14,9 @@
  * limitations under the License.
  */
 
-/**
- * The widget variable types
- */
-export enum WidgetVariableType {
-  STRING = 'STRING',
-  SECRET = 'SECRET',
-  BOOLEAN = 'BOOLEAN',
-  INTEGER = 'INTEGER',
-  COMBO = 'COMBO',
-  MULTIPLE = 'MULTIPLE',
-  FILE = 'FILE',
-  PASSWORD = 'PASSWORD'
-}
+export const environment = {
+  production: true,
+    VERSION: require('../../../../package.json').version,
+    ENVIRONMENT: require('../../../../package.json').environment,
+    BASE_URL: 'http://localhost:8080'
+};
