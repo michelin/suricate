@@ -11,16 +11,16 @@
 
 ## 📚 Wiki :construction_worker:
 
-Brand new wiki is in construction talking about few things but much more to come 🙌
+Brand new wiki is in construction talking about a few things but much more to come 🙌
 
 👉 [I wanna see it](https://github.com/suricate-io/suricate/wiki)
 
 ## :beers: Contribution
 
-Everyone is welcome to contribute to Suricate. You have several possibilities:
+Everyone is welcome to contribute. Here's how:
 
 * Report a [bug](https://github.com/suricate-io/suricate/issues/new?template=bug.md)
 * Suggest a [feature](https://github.com/suricate-io/suricate/issues/new?template=improvement.md)
-* Developp a feature and create a [pull request](https://github.com/suricate-io/suricate/pulls)
+* Develop a feature and create a [pull request](https://github.com/suricate-io/suricate/pulls)
 
-But you need to read our [Contribution guide](https://github.com/suricate-io/suricate/blob/dev/CONTRIBUTING.md) first 🙏
+Please read our [Contribution guide](https://github.com/suricate-io/suricate/blob/dev/CONTRIBUTING.md) before contributing 🙏
