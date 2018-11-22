@@ -8,7 +8,7 @@ server.port: 8080
 spring:
   ### Database ###
   datasource:
-    url: "jdbc:h2:file:./h2/suricate;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE"
+    url: "jdbc:h2:file:./h2/suricate;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=PostgreSQL"
     driver-class-name: org.h2.Driver
     username: sa
     password:
@@ -24,6 +24,8 @@ spring:
   ### Flyway ###
   flyway:
     table: schema_version
+    locations: ["classpath:db/migration/postgresql"]
+
   ### JPA ###
   jpa:
     ###   DDL   ###
