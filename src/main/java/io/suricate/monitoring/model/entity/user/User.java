@@ -30,6 +30,7 @@ import java.util.List;
  * The user entity in database
  */
 @Entity
+@Table(name = "users")
 @Getter
 @Setter
 @NoArgsConstructor
