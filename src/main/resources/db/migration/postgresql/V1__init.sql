@@ -2,7 +2,7 @@ CREATE SEQUENCE hibernate_sequence;
 
 CREATE TABLE asset (
   id                bigserial     NOT NULL,
-  content           BYTEA,
+  content           bytea,
   content_type      VARCHAR(100),
   last_update_date  timestamp,
   size              bigint,

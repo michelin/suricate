@@ -35,6 +35,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.transaction.Transactional;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -97,6 +98,7 @@ public class RepositoryController {
     })
     @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @Transactional
     public ResponseEntity<List<RepositoryDto>> getAll() {
         Optional<List<Repository>> optionalRepositories = repositoryService.getAllOrderByName();
 
@@ -162,6 +164,7 @@ public class RepositoryController {
     })
     @RequestMapping(value = "/{repositoryId}", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @Transactional
     public ResponseEntity<RepositoryDto> getOneById(@ApiParam(name = "repositoryId", value = "The repository id", required = true)
                                                     @PathVariable Long repositoryId) {
         Optional<Repository> optionalRepository = repositoryService.getOneById(repositoryId);

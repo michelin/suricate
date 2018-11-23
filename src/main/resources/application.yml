@@ -34,12 +34,15 @@ spring:
       use-new-id-generator-mappings: false
     ## Hibernate Search
     # Specify the DirectoryProvider to use (the Lucene Directory)
-    properties.hibernate.search.default:
-      directory_provider: filesystem
-      # Using the filesystem DirectoryProvider you also have to specify the default
-      # base directory for all indexes (make sure that the application have write
-      # permissions on such directory)
-      indexBase: /tmp/suricate-io/suricate/lucene/indexes/
+    properties.hibernate:
+      temp:
+        use_jdbc_metadata_defaults: false
+      search.default:
+        directory_provider: filesystem
+        # Using the filesystem DirectoryProvider you also have to specify the default
+        # base directory for all indexes (make sure that the application have write
+        # permissions on such directory)
+        indexBase: /tmp/suricate-io/suricate/lucene/indexes/
   ### Mustache ###
   mustache.check-template-location: false
   ### Enable cache ###

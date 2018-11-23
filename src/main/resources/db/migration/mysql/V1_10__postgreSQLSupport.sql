@@ -1,0 +1,1 @@
+RENAME TABLE user to users;

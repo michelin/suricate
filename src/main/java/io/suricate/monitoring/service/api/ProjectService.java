@@ -89,6 +89,7 @@ public class ProjectService {
      * @param user The user
      * @return The project list associated to the user
      */
+    @Transactional
     public List<Project> getAllByUser(User user) {
         return projectRepository.findByUsers_IdOrderByName(user.getId());
     }

@@ -93,6 +93,7 @@ public class WidgetService {
      *
      * @return The list of widgets order by category name
      */
+    @Transactional
     public Optional<List<Widget>> getAll() {
         List<Widget> widgets = widgetRepository.findAllByOrderByCategory_NameAsc();
 
