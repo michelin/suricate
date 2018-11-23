@@ -50,6 +50,7 @@ public class CategoryServiceTest {
         category.setTechnicalName("categ1");
 
         Asset asset = new Asset();
+        asset.setContent(new byte[1]);
         asset.setContentType("text/plain");
         asset.setSize(10);
 
