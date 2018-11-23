@@ -1,3 +1,5 @@
+CREATE SEQUENCE hibernate_sequence;
+
 CREATE TABLE asset (
   id                bigserial     NOT NULL,
   content           BYTEA,
@@ -19,7 +21,7 @@ CREATE TABLE category (
 
 CREATE TABLE configuration (
   config_key    VARCHAR(255) NOT NULL,
-  config_export BIT,
+  config_export boolean,
   config_value  VARCHAR(255) NOT NULL,
   CONSTRAINT PK_CONFIGURATION_CONFIG_KEY PRIMARY KEY (config_key)
 );
