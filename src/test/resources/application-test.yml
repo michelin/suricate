@@ -11,6 +11,13 @@ spring:
     driver-class-name: org.h2.Driver
     username: sa
     password:
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+  ### Flyway ###
+  flyway:
+    locations: ["classpath:db/migration/postgresql", "classpath:db/migration/h2"]
 
 ### Actuator ###
 management:
