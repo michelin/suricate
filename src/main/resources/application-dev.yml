@@ -1,11 +1,6 @@
 ###     Properties for development     ###
 ##########################################
 spring:
-  profiles:
-    active: dev
-  h2.console:
-    enabled: true
-    path: /h2-console
   ###   DDL   ###
   jpa.hibernate.ddl-auto: update
   ###   DATASOURCES   ###
@@ -15,9 +10,6 @@ spring:
   #  driverClassName:
   #  username:
   #  password:
-  ###   FLYWAY    ###
-  # flyway:
-    # locations:
 
 application:
   authentication:
