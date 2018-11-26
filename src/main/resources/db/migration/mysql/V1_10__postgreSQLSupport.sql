@@ -1,1 +1,1 @@
-RENAME TABLE user to users;
+ALTER TABLE user RENAME TO users;
