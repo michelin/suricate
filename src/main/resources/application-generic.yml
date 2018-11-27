@@ -4,12 +4,15 @@
 ###   DATASOURCES   ###
 ## You can override datasource by uncommented and fill these lines
 spring:
-  profiles: generic
+  profiles:
+    active: generic
   datasource:
     url: ${SURICATE_DB_URL}
     driverClassName: com.mysql.jdbc.Driver
     username: ${SURICATE_DB_USER}
     password: ${SURICATE_DB_PASSWORD}
+  flyway:
+    locations: ["classpath:db/migration/mysql"]
   ###   DDL   ###
   jpa.hibernate.ddl-auto: validate
 

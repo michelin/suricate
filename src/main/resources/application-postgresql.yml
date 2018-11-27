@@ -1,0 +1,15 @@
+## Spring modules info ##
+spring:
+  ### Database ###
+  datasource:
+    driverClassName: org.postgresql.Driver
+  ### Flyway ###
+  flyway:
+    locations: ["classpath:db/migration/postgresql"]
+  ### JPA ###
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        temp:
+          use_jdbc_metadata_defaults: false
