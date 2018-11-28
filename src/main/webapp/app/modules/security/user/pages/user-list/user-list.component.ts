@@ -26,6 +26,7 @@ import {ToastService} from '../../../../../shared/components/toast/toast.service
 import {ToastType} from '../../../../../shared/model/toastNotification/ToastType';
 import {RoleService} from '../../role.service';
 import {Role} from '../../../../../shared/model/dto/user/Role';
+import {ConfirmDialogComponent} from "../../../../../shared/components/confirm-dialog/confirm-dialog.component";
 
 /**
  * This component is used for displaying the list of users
@@ -155,14 +156,16 @@ export class UserListComponent implements AfterViewInit {
    * @param {User} user The user to delete
    */
   openDialogDeleteUser(user: User) {
-    const deleteUserDialogRef = this.matDialog.open(DeleteUserDialogComponent, {
-      data: {user: user}
+    const deleteUserDialogRef = this.matDialog.open(ConfirmDialogComponent, {
+      data: {
+        title: `Delete User`,
+        message: `Do you really want to delete : ${user.username}`
+      }
     });
 
     deleteUserDialogRef.afterClosed().subscribe(shouldDeleteUser => {
       if (shouldDeleteUser) {
-        this
-            .userService
+        this.userService
             .deleteUser(user)
             .subscribe(() => {
               this.toastService.sendMessage('User deleted successfully', ToastType.SUCCESS);
