@@ -43,6 +43,7 @@ import {MaterialCDKModule} from './modules/metarialCDK.module';
 import {SettingsService} from './services/settings.service';
 import {ErrorInterceptor} from './interceptors/error.interceptor';
 import {PasswordPipe} from "./pipes/password-pipe";
+import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 
 @NgModule({
   imports: [
@@ -66,7 +67,8 @@ import {PasswordPipe} from "./pipes/password-pipe";
     EnumKeysPipe,
     RunScriptsDirective,
     TranslationComponent,
-      PasswordPipe
+    PasswordPipe,
+    ConfirmDialogComponent
   ],
   exports: [
     FormsModule,
@@ -86,7 +88,11 @@ import {PasswordPipe} from "./pipes/password-pipe";
     EnumKeysPipe,
     RunScriptsDirective,
     TranslationComponent,
-      PasswordPipe
+    PasswordPipe,
+    ConfirmDialogComponent
+  ],
+  entryComponents: [
+    ConfirmDialogComponent
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true},
