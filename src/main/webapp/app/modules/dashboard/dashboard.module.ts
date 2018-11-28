@@ -24,7 +24,6 @@ import {DashboardDetailComponent} from './pages/dashboard-detail/dashboard-detai
 import {DashboardListComponent} from './pages/admin/dashboard-list/dashboard-list.component';
 import {DashboardEditComponent} from './pages/admin/dashboard-edit/dashboard-edit.component';
 import {DeleteDashboardDialogComponent} from './components/delete-dashboard-dialog/delete-dashboard-dialog.component';
-import {DeleteProjectWidgetDialogComponent} from './components/delete-project-widget-dialog/delete-project-widget-dialog.component';
 import {EditProjectWidgetDialogComponent} from './components/edit-project-widget-dialog/edit-project-widget-dialog.component';
 import {DashboardScreenComponent} from './components/dashboard-screen/dashboard-screen.component';
 import {DashboardTvComponent} from './pages/dashboard-tv/dashboard-tv.component';
@@ -44,7 +43,6 @@ import {DashboardRoutes} from './dashboard.route';
     DashboardListComponent,
     DashboardEditComponent,
     DeleteDashboardDialogComponent,
-    DeleteProjectWidgetDialogComponent,
     EditProjectWidgetDialogComponent,
     DashboardScreenComponent,
     DashboardTvComponent
@@ -58,7 +56,6 @@ import {DashboardRoutes} from './dashboard.route';
   ],
   entryComponents: [
     DeleteDashboardDialogComponent,
-    DeleteProjectWidgetDialogComponent,
     EditProjectWidgetDialogComponent
   ]
 })

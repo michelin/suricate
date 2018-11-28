@@ -19,6 +19,7 @@ import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from '@angular/mat
 import {merge, of as observableOf} from 'rxjs';
 import {catchError, map, startWith, switchMap} from 'rxjs/operators';
 import {TitleCasePipe} from "@angular/common";
+import {TranslateService} from "@ngx-translate/core";
 
 import {UserService} from '../../user.service';
 import {User} from '../../../../../shared/model/dto/user/User';
@@ -27,7 +28,6 @@ import {ToastType} from '../../../../../shared/model/toastNotification/ToastType
 import {RoleService} from '../../role.service';
 import {Role} from '../../../../../shared/model/dto/user/Role';
 import {ConfirmDialogComponent} from "../../../../../shared/components/confirm-dialog/confirm-dialog.component";
-import {TranslateService} from "@ngx-translate/core";
 
 
 /**
@@ -175,12 +175,10 @@ export class UserListComponent implements AfterViewInit {
 
     deleteUserDialogRef.afterClosed().subscribe(shouldDeleteUser => {
       if (shouldDeleteUser) {
-        this.userService
-          .deleteUser(user)
-          .subscribe(() => {
-            this.toastService.sendMessage('User deleted successfully', ToastType.SUCCESS);
-            this.initUsersTable();
-          });
+        this.userService.deleteUser(user).subscribe(() => {
+          this.toastService.sendMessage('User deleted successfully', ToastType.SUCCESS);
+          this.initUsersTable();
+        });
       }
     });
   }
