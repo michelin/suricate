@@ -18,15 +18,17 @@ import {AfterViewInit, ChangeDetectorRef, Component, ViewChild} from '@angular/c
 import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import {merge, of as observableOf} from 'rxjs';
 import {catchError, map, startWith, switchMap} from 'rxjs/operators';
+import {TitleCasePipe} from "@angular/common";
 
 import {UserService} from '../../user.service';
-import {DeleteUserDialogComponent} from '../../components/delete-user-dialog/delete-user-dialog.component';
 import {User} from '../../../../../shared/model/dto/user/User';
 import {ToastService} from '../../../../../shared/components/toast/toast.service';
 import {ToastType} from '../../../../../shared/model/toastNotification/ToastType';
 import {RoleService} from '../../role.service';
 import {Role} from '../../../../../shared/model/dto/user/Role';
 import {ConfirmDialogComponent} from "../../../../../shared/components/confirm-dialog/confirm-dialog.component";
+import {TranslateService} from "@ngx-translate/core";
+
 
 /**
  * This component is used for displaying the list of users
@@ -82,12 +84,14 @@ export class UserListComponent implements AfterViewInit {
    * @param {RoleService} roleService The role service to inject
    * @param {ChangeDetectorRef} changeDetectorRef The change detector service to inject
    * @param {MatDialog} matDialog The mat dialog service to inject
+   * @param {TranslateService} translateService The translate service to inject
    * @param {ToastService} toastService The toast service to inject
    */
   constructor(private userService: UserService,
               private roleService: RoleService,
               private changeDetectorRef: ChangeDetectorRef,
               private matDialog: MatDialog,
+              private translateService: TranslateService,
               private toastService: ToastService) {
   }
 
@@ -156,21 +160,27 @@ export class UserListComponent implements AfterViewInit {
    * @param {User} user The user to delete
    */
   openDialogDeleteUser(user: User) {
-    const deleteUserDialogRef = this.matDialog.open(ConfirmDialogComponent, {
-      data: {
-        title: `Delete User`,
-        message: `Do you really want to delete : ${user.username}`
-      }
+    let deleteUserDialogRef = null;
+
+    this.translateService.get(["user.delete", "delete.confirm"]).subscribe(translations => {
+      const titlecasePipe = new TitleCasePipe();
+
+      deleteUserDialogRef = this.matDialog.open(ConfirmDialogComponent, {
+        data: {
+          title: translations["user.delete"],
+          message: `${translations["delete.confirm"]} ${titlecasePipe.transform(user.username)}`
+        }
+      });
     });
 
     deleteUserDialogRef.afterClosed().subscribe(shouldDeleteUser => {
       if (shouldDeleteUser) {
         this.userService
-            .deleteUser(user)
-            .subscribe(() => {
-              this.toastService.sendMessage('User deleted successfully', ToastType.SUCCESS);
-              this.initUsersTable();
-            });
+          .deleteUser(user)
+          .subscribe(() => {
+            this.toastService.sendMessage('User deleted successfully', ToastType.SUCCESS);
+            this.initUsersTable();
+          });
       }
     });
   }
