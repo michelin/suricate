@@ -713,10 +713,10 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
    * @param {number} projectWidgetId The project widget id to delete
    */
   deleteProjectWidgetFromDashboard(projectWidgetId: number) {
-    const projectWidget = this.dashboardService.currentDisplayedDashboardValue.projectWidgets
-        .find((currentProjectWidget: ProjectWidget) => {
-          return currentProjectWidget.id === projectWidgetId;
-        });
+    const projectWidget: ProjectWidget = this.dashboardService.currentDisplayedDashboardValue.projectWidgets
+      .find((currentProjectWidget: ProjectWidget) => {
+        return currentProjectWidget.id === projectWidgetId;
+      });
 
     if (projectWidget) {
       let deleteProjectWidgetDialog = null;
