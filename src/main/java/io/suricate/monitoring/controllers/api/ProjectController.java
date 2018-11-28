@@ -170,6 +170,7 @@ public class ProjectController {
     })
     @RequestMapping(value = "/currentUser", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
+    @Transactional
     public ResponseEntity<List<ProjectDto>> getAllForCurrentUser(@ApiIgnore Principal principal) {
         Optional<User> user = userService.getOneByUsername(principal.getName());
 
@@ -285,6 +286,7 @@ public class ProjectController {
     })
     @RequestMapping(value = "/{projectId}", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
+    @Transactional
     public ResponseEntity<ProjectDto> getOneById(@ApiParam(name = "projectId", value = "The project id", required = true)
                                                  @PathVariable("projectId") Long projectId) {
         Optional<Project> project = projectService.getOneById(projectId);
