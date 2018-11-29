@@ -138,6 +138,7 @@ public class ProjectController {
     })
     @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @Transactional
     public ResponseEntity<List<ProjectDto>> getAll() {
 
         return Optional
