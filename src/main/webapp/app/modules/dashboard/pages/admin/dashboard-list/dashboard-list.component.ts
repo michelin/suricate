@@ -18,13 +18,15 @@ import {AfterViewInit, ChangeDetectorRef, Component, ViewChild} from '@angular/c
 import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import {merge, of as observableOf} from 'rxjs';
 import {catchError, map, startWith, switchMap} from 'rxjs/operators';
+import {TitleCasePipe} from "@angular/common";
+import {TranslateService} from "@ngx-translate/core";
 
 import {Project} from '../../../../../shared/model/dto/Project';
 import {DashboardService} from '../../../dashboard.service';
 import {ToastType} from '../../../../../shared/model/toastNotification/ToastType';
 import {User} from '../../../../../shared/model/dto/user/User';
 import {ToastService} from '../../../../../shared/components/toast/toast.service';
-import {DeleteDashboardDialogComponent} from '../../../components/delete-dashboard-dialog/delete-dashboard-dialog.component';
+import {ConfirmDialogComponent} from "../../../../../shared/components/confirm-dialog/confirm-dialog.component";
 
 /**
  * Component that manage the dashboard list for admin part
@@ -78,11 +80,13 @@ export class DashboardListComponent implements AfterViewInit {
    * Constructor
    *
    * @param {DashboardService} dashboardService The dashboardService to inject
+   * @param {TranslateService} translateService The translate service to inject
    * @param {ChangeDetectorRef} changeDetectorRef The change detector ref
    * @param {MatDialog} matDialog The matDialog service to inject
    * @param {ToastService} toastService The toast service to inject
    */
   constructor(private dashboardService: DashboardService,
+              private translateService: TranslateService,
               private changeDetectorRef: ChangeDetectorRef,
               private matDialog: MatDialog,
               private toastService: ToastService) {
@@ -144,19 +148,25 @@ export class DashboardListComponent implements AfterViewInit {
    * @param {Project} project The dashboard to delete
    */
   openDialogDeleteDashboard(project: Project) {
-    const deleteUserDialogRef = this.matDialog.open(DeleteDashboardDialogComponent, {
-      data: {project: project}
+    let deleteUserDialog = null;
+
+    this.translateService.get(["dashboard.delete", "delete.confirm"]).subscribe(translations => {
+      const titleCasePipe = new TitleCasePipe();
+
+      deleteUserDialog = this.matDialog.open(ConfirmDialogComponent, {
+        data: {
+          title: translations["dashboard.delete"],
+          message: `${translations["delete.confirm"]} ${titleCasePipe.transform(project.name)}`
+        }
+      });
     });
 
-    deleteUserDialogRef.afterClosed().subscribe(shouldDeleteDashboard => {
+    deleteUserDialog.afterClosed().subscribe(shouldDeleteDashboard => {
       if (shouldDeleteDashboard) {
-        this
-            .dashboardService
-            .deleteProject(project)
-            .subscribe(() => {
-              this.toastService.sendMessage('Project deleted successfully', ToastType.SUCCESS);
-              this.initProjectsTable();
-            });
+        this.dashboardService.deleteProject(project).subscribe(() => {
+          this.toastService.sendMessage('Project deleted successfully', ToastType.SUCCESS);
+          this.initProjectsTable();
+        });
       }
     });
   }

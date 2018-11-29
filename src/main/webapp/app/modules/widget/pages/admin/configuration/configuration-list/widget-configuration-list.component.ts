@@ -20,14 +20,13 @@ import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
 import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import {merge, of as observableOf} from 'rxjs';
 import {catchError, map, startWith, switchMap} from 'rxjs/operators';
+import {TranslateService} from "@ngx-translate/core";
 
-import {
-  DeleteWidgetConfigurationDialogComponent
-} from '../../../../components/delete-configuration-dialog/delete-widget-configuration-dialog.component';
 import {WidgetConfigurationService} from '../widget-configuration.service';
 import {ToastService} from '../../../../../../shared/components/toast/toast.service';
 import {Configuration} from '../../../../../../shared/model/dto/Configuration';
 import {ToastType} from '../../../../../../shared/model/toastNotification/ToastType';
+import {ConfirmDialogComponent} from "../../../../../../shared/components/confirm-dialog/confirm-dialog.component";
 
 /**
  * The configuration list component
@@ -81,10 +80,12 @@ export class WidgetConfigurationListComponent implements OnInit {
    *
    * @param {WidgetConfigurationService} configurationsService The configuration service
    * @param {ChangeDetectorRef} changeDetectorRef The change detector service
+   * @param {TranslateService} translateService The translateService
    * @param {MatDialog} matDialog The mat dialog service
    * @param {ToastService} toastService The toast service
    */
   constructor(private configurationsService: WidgetConfigurationService,
+              private translateService: TranslateService,
               private changeDetectorRef: ChangeDetectorRef,
               private matDialog: MatDialog,
               private toastService: ToastService) {
@@ -146,8 +147,15 @@ export class WidgetConfigurationListComponent implements OnInit {
    * @param {Configuration} configuration The configuration to delete
    */
   openDialogDeleteConfiguration(configuration: Configuration) {
-    const deleteConfigurationDialog = this.matDialog.open(DeleteWidgetConfigurationDialogComponent, {
-      data: {configuration: configuration}
+    let deleteConfigurationDialog = null;
+
+    this.translateService.get(["configuration.delete", "delete.confirm"]).subscribe(translations => {
+      deleteConfigurationDialog = this.matDialog.open(ConfirmDialogComponent, {
+        data: {
+          title: translations["configuration.delete"],
+          message: `${translations["delete.confirm"]} ${configuration.key}`
+        }
+      });
     });
 
     deleteConfigurationDialog.afterClosed().subscribe(shouldDeleteConfiguration => {

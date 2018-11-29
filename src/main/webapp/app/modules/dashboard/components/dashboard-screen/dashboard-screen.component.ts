@@ -34,19 +34,21 @@ import {StompState} from '@stomp/ng2-stompjs';
 import {NgGridItemEvent} from 'angular2-grid';
 import {fromEvent, Subscription} from 'rxjs';
 import {auditTime, map, takeWhile} from 'rxjs/operators';
+import {TranslateService} from "@ngx-translate/core";
 
 import {Project} from '../../../../shared/model/dto/Project';
 import {ProjectWidget} from '../../../../shared/model/dto/ProjectWidget';
 import {DashboardService} from '../../dashboard.service';
 import {WebsocketService} from '../../../../shared/services/websocket.service';
 import {ProjectWidgetPosition} from '../../../../shared/model/dto/ProjectWidgetPosition';
-import {DeleteProjectWidgetDialogComponent} from '../delete-project-widget-dialog/delete-project-widget-dialog.component';
 import {EditProjectWidgetDialogComponent} from '../edit-project-widget-dialog/edit-project-widget-dialog.component';
 import {WSUpdateEvent} from '../../../../shared/model/websocket/WSUpdateEvent';
 import {WSUpdateType} from '../../../../shared/model/websocket/enums/WSUpdateType';
 import {WidgetStateEnum} from '../../../../shared/model/dto/enums/WidgetSateEnum';
+import {ConfirmDialogComponent} from "../../../../shared/components/confirm-dialog/confirm-dialog.component";
 
 import * as Stomp from '@stomp/stompjs';
+import {TitleCasePipe} from "@angular/common";
 
 /**
  * Display the grid stack widgets
@@ -142,13 +144,15 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
    * constructor
    *
    * @param {DashboardService} dashboardService The dashboard service
-   * @param {MatDialog} matDialog The material dialog service
    * @param {WebsocketService} websocketService The websocket service
+   * @param {TranslateService} translateService The translation service to inject
+   * @param {MatDialog} matDialog The material dialog service
    * @param {Router} router The router service
    * @param {ChangeDetectorRef} changeDetectorRef The change detector ref service
    */
   constructor(private dashboardService: DashboardService,
               private websocketService: WebsocketService,
+              private translateService: TranslateService,
               private matDialog: MatDialog,
               private router: Router,
               private changeDetectorRef: ChangeDetectorRef) {
@@ -710,16 +714,25 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
    */
   deleteProjectWidgetFromDashboard(projectWidgetId: number) {
     const projectWidget: ProjectWidget = this.dashboardService.currentDisplayedDashboardValue.projectWidgets
-        .find((currentProjectWidget: ProjectWidget) => {
-          return currentProjectWidget.id === projectWidgetId;
-        });
-
-    if (projectWidget) {
-      const deleteProjectWidgetDialogRef = this.matDialog.open(DeleteProjectWidgetDialogComponent, {
-        data: {projectWidget: projectWidget}
+      .find((currentProjectWidget: ProjectWidget) => {
+        return currentProjectWidget.id === projectWidgetId;
       });
 
-      deleteProjectWidgetDialogRef.afterClosed().subscribe(shouldDeleteProjectWidget => {
+    if (projectWidget) {
+      let deleteProjectWidgetDialog = null;
+
+      this.translateService.get(["widget.delete", "delete.confirm"]).subscribe(translations => {
+        const titlecasePipe = new TitleCasePipe();
+
+        deleteProjectWidgetDialog = this.matDialog.open(ConfirmDialogComponent, {
+          data: {
+            title: translations["widget.delete"],
+            message: `${translations["delete.confirm"]} ${titlecasePipe.transform(projectWidget.widget.name)}`
+          }
+        });
+      });
+
+      deleteProjectWidgetDialog.afterClosed().subscribe(shouldDeleteProjectWidget => {
         if (shouldDeleteProjectWidget) {
           this.dashboardService
               .deleteProjectWidgetFromProject(projectWidget.project.id, projectWidget.id)

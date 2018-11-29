@@ -24,9 +24,6 @@ import {SharedModule} from '../../../../../shared/shared.module';
 import {WidgetConfigurationListComponent} from './configuration-list/widget-configuration-list.component';
 import {WidgetConfigurationService} from './widget-configuration.service';
 import {WidgetConfigurationEditComponent} from './configuration-edit/widget-configuration-edit.component';
-import {
-  DeleteWidgetConfigurationDialogComponent
-} from '../../../components/delete-configuration-dialog/delete-widget-configuration-dialog.component';
 import {LayoutModule} from '../../../../../layout/layout.module';
 import {widgetConfigurationRoute} from './widget-configuration.route';
 
@@ -39,14 +36,10 @@ import {widgetConfigurationRoute} from './widget-configuration.route';
   ],
   declarations: [
     WidgetConfigurationListComponent,
-    WidgetConfigurationEditComponent,
-    DeleteWidgetConfigurationDialogComponent
+    WidgetConfigurationEditComponent
   ],
   providers: [
     WidgetConfigurationService
-  ],
-  entryComponents: [
-    DeleteWidgetConfigurationDialogComponent
   ]
 })
 export class WidgetConfigurationModule {
