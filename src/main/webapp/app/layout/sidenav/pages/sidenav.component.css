@@ -23,6 +23,10 @@ mat-sidenav .sidenav-section {
     margin: 0 auto;
 }
 
+mat-sidenav .sidenav-section-container .sidenav-section {
+    width: 85%;
+}
+
 /** User Section **/
 mat-sidenav #user-section {
     padding: 15px 0 10px 0;
