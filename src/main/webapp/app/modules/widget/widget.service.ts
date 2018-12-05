@@ -21,9 +21,8 @@ import {HttpClient} from '@angular/common/http';
 import {Observable, Subject} from 'rxjs';
 import {tap} from 'rxjs/operators';
 
-import {Category} from '../../shared/model/dto/Category';
 import {Widget} from '../../shared/model/dto/Widget';
-import {widgetsApiEndpoint} from '../../app.constant';
+import {categoriesApiEndpoint, widgetsApiEndpoint} from '../../app.constant';
 import {ApiActionEnum} from '../../shared/model/dto/enums/ApiActionEnum';
 
 /**
@@ -88,11 +87,11 @@ export class WidgetService {
     }
 
     return this.httpClient.get<Widget[]>(url).pipe(
-        tap(widgets => {
-          if (action && action === ApiActionEnum.REFRESH) {
-            this.widgets = widgets;
-          }
-        })
+      tap(widgets => {
+        if (action && action === ApiActionEnum.REFRESH) {
+          this.widgets = widgets;
+        }
+      })
     );
   }
 
@@ -109,24 +108,13 @@ export class WidgetService {
   }
 
   /**
-   * Retrieve every categories
-   *
-   * @returns {Observable<Category[]>} The categories as observable
-   */
-  getCategories(): Observable<Category[]> {
-    const url = `${widgetsApiEndpoint}/categories`;
-
-    return this.httpClient.get<Category[]>(url);
-  }
-
-  /**
    * Get every widget for a category
    *
    * @param {number} categoryId The category id
    * @returns {Observable<Widget[]>} The widgets as observable
    */
   getWidgetsByCategoryId(categoryId: number): Observable<Widget[]> {
-    const url = `${widgetsApiEndpoint}/category/${categoryId}`;
+    const url = `${categoriesApiEndpoint}/${categoryId}/widgets`;
 
     return this.httpClient.get<Widget[]>(url);
   }

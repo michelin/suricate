@@ -27,6 +27,7 @@ import {WidgetVariableType} from '../../../../shared/model/dto/enums/WidgetVaria
 import {DashboardService} from '../../../../modules/dashboard/dashboard.service';
 import {ProjectWidget} from '../../../../shared/model/dto/ProjectWidget';
 import {WidgetAvailabilityEnum} from '../../../../shared/model/dto/enums/WidgetAvailabilityEnum';
+import {HttpCategoryService} from '../../../../shared/services/http/http-category.service';
 
 /**
  * Dialog used to add a widget
@@ -80,6 +81,7 @@ export class AddWidgetDialogComponent implements OnInit {
    *
    * @param data The data send to the dialog
    * @param {WidgetService} widgetService The widget service
+   * @param {HttpCategoryService} httpCategoryService The http category service
    * @param {DashboardService} dashboardService The dashboard service
    * @param {DomSanitizer} domSanitizer The domSanitizer
    * @param {MatDialogRef<AddWidgetDialogComponent>} addWidgetDialogRef The add widget dialog ref
@@ -87,6 +89,7 @@ export class AddWidgetDialogComponent implements OnInit {
    */
   constructor(@Inject(MAT_DIALOG_DATA) private data: any,
               private widgetService: WidgetService,
+              private httpCategoryService: HttpCategoryService,
               private dashboardService: DashboardService,
               private domSanitizer: DomSanitizer,
               private addWidgetDialogRef: MatDialogRef<AddWidgetDialogComponent>,
@@ -94,22 +97,20 @@ export class AddWidgetDialogComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.widgetService
-        .getCategories()
-        .subscribe(categories => {
-          this.categories = categories;
-        });
+    this.httpCategoryService.getAll().subscribe(categories => {
+      this.categories = categories;
+    });
   }
 
   getWidgets(categoryId: number) {
     this.widgetService
-        .getWidgetsByCategoryId(categoryId)
-        .subscribe(widgets => {
-          this.widgets = widgets.filter((widget: Widget) => widget.widgetAvailability === WidgetAvailabilityEnum.ACTIVATED);
-          this.step1Completed = true;
-          this.changeDetectorRef.detectChanges();
-          this.widgetStepper.next();
-        });
+      .getWidgetsByCategoryId(categoryId)
+      .subscribe(widgets => {
+        this.widgets = widgets.filter((widget: Widget) => widget.widgetAvailability === WidgetAvailabilityEnum.ACTIVATED);
+        this.step1Completed = true;
+        this.changeDetectorRef.detectChanges();
+        this.widgetStepper.next();
+      });
 
   }
 
@@ -135,10 +136,10 @@ export class AddWidgetDialogComponent implements OnInit {
       projectWidget.widget = this.selectedWidget;
 
       this.dashboardService
-          .addWidgetToProject(projectWidget)
-          .subscribe(data => {
-            this.addWidgetDialogRef.close();
-          });
+        .addWidgetToProject(projectWidget)
+        .subscribe(data => {
+          this.addWidgetDialogRef.close();
+        });
     }
   }
 

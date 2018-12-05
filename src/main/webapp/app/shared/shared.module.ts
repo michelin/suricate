@@ -42,8 +42,9 @@ import {TranslationComponent} from './components/translations/translation.compon
 import {MaterialCDKModule} from './modules/metarialCDK.module';
 import {SettingsService} from './services/settings.service';
 import {ErrorInterceptor} from './interceptors/error.interceptor';
-import {PasswordPipe} from "./pipes/password-pipe";
-import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
+import {PasswordPipe} from './pipes/password-pipe';
+import {ConfirmDialogComponent} from './components/confirm-dialog/confirm-dialog.component';
+import {HttpCategoryService} from './services/http/http-category.service';
 
 @NgModule({
   imports: [
@@ -103,7 +104,8 @@ import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dial
     ToastService,
     StompRService,
     TokenService,
-    SettingsService
+    SettingsService,
+    HttpCategoryService
   ]
 })
 export class SharedModule {

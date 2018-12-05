@@ -79,6 +79,11 @@ export const screensApiEndpoint = `${baseApiEndpoint}/screens`;
  */
 export const widgetsApiEndpoint = `${baseApiEndpoint}/widgets`;
 /**
+ * Global endpoint for Widgets
+ * @type {string}
+ */
+export const categoriesApiEndpoint = `${baseApiEndpoint}/categories`;
+/**
  * Global configurations enpoint
  * @type {string}
  */

@@ -17,14 +17,12 @@
 package io.suricate.monitoring.controllers.api;
 
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
-import io.suricate.monitoring.model.dto.api.widget.CategoryDto;
 import io.suricate.monitoring.model.dto.api.widget.WidgetDto;
 import io.suricate.monitoring.model.entity.widget.Category;
 import io.suricate.monitoring.model.entity.widget.Widget;
 import io.suricate.monitoring.model.entity.widget.WidgetParam;
 import io.suricate.monitoring.model.enums.ApiActionEnum;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
-import io.suricate.monitoring.model.mapper.widget.CategoryMapper;
 import io.suricate.monitoring.model.mapper.widget.WidgetMapper;
 import io.suricate.monitoring.service.GitService;
 import io.suricate.monitoring.service.api.CategoryService;
@@ -34,8 +32,6 @@ import io.suricate.monitoring.utils.exception.ApiException;
 import io.suricate.monitoring.utils.exception.NoContentException;
 import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
 import io.swagger.annotations.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
@@ -43,7 +39,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -54,14 +49,9 @@ import java.util.stream.Collectors;
  * The widget controller
  */
 @RestController
-@RequestMapping("/api/widgets")
+@RequestMapping("/api")
 @Api(value = "Widget Controller", tags = {"Widget"})
 public class WidgetController {
-
-    /**
-     * Class logger
-     */
-    private final static Logger LOGGER = LoggerFactory.getLogger(WidgetController.class);
 
     /**
      * Widget service
@@ -84,11 +74,6 @@ public class WidgetController {
     private final GitService gitService;
 
     /**
-     * Mapper domain/DTO for categories
-     */
-    private final CategoryMapper categoryMapper;
-
-    /**
      * The widget mapper
      */
     private final WidgetMapper widgetMapper;
@@ -99,20 +84,17 @@ public class WidgetController {
      * @param widgetService   Widget service to inject
      * @param categoryService The category service
      * @param gitService      The git service
-     * @param categoryMapper  The category mapper
      * @param widgetMapper    The widget mapper
      */
     @Autowired
     public WidgetController(final WidgetService widgetService,
                             final CategoryService categoryService,
                             final GitService gitService,
-                            final CategoryMapper categoryMapper,
                             final WidgetMapper widgetMapper,
                             final ConfigurationService configurationService) {
         this.widgetService = widgetService;
         this.categoryService = categoryService;
         this.gitService = gitService;
-        this.categoryMapper = categoryMapper;
         this.widgetMapper = widgetMapper;
         this.configurationService = configurationService;
     }
@@ -129,7 +111,7 @@ public class WidgetController {
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "/widgets", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<List<WidgetDto>> getWidgets(@ApiParam(name = "action", value = "REFRESH if we have to refresh widgets from GIT Repository", allowableValues = "refresh")
                                                       @RequestParam(value = "action", required = false) String action) {
@@ -173,7 +155,7 @@ public class WidgetController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Widget not found", response = ApiErrorDto.class)
     })
-    @RequestMapping(value = "/{widgetId}", method = RequestMethod.POST)
+    @RequestMapping(value = "/widgets/{widgetId}", method = RequestMethod.POST)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<WidgetDto> updateWidget(@ApiParam(name = "widgetId", value = "The widget id", required = true)
                                                   @PathVariable("widgetId") Long widgetId,
@@ -193,36 +175,6 @@ public class WidgetController {
     }
 
     /**
-     * Get the list of widget categories
-     *
-     * @return A list of category
-     */
-    @ApiOperation(value = "Get the full list of widget categories", response = CategoryDto.class)
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = CategoryDto.class, responseContainer = "List"),
-        @ApiResponse(code = 204, message = "No Content"),
-        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
-    })
-    @RequestMapping(value = "/categories", method = RequestMethod.GET)
-    @PreAuthorize("hasRole('ROLE_USER')")
-    @Transactional
-    public ResponseEntity<List<CategoryDto>> getCategories() {
-        List<Category> categories = categoryService.getCategoriesOrderByName();
-
-        if (categories == null || categories.isEmpty()) {
-            throw new NoContentException(Category.class);
-        }
-
-        return ResponseEntity
-            .ok()
-            .contentType(MediaType.APPLICATION_JSON)
-            .cacheControl(CacheControl.noCache())
-            .body(categoryMapper.toCategoryDtosDefault(categories));
-
-    }
-
-    /**
      * Get every widget for a category
      *
      * @param categoryId The category id
@@ -236,7 +188,7 @@ public class WidgetController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Category not found", response = ApiErrorDto.class)
     })
-    @RequestMapping(value = "/category/{categoryId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/categories/{categoryId}/widgets", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<List<WidgetDto>> getWidgetByCategory(@ApiParam(name = "categoryId", value = "The category id", required = true)
                                                                @PathVariable("categoryId") Long categoryId) {
@@ -250,8 +202,8 @@ public class WidgetController {
         }
 
         // Also add global configuration for each widget
-        List<WidgetParam> confs = configurationService.getConfigurationForWidgets().stream().filter(c -> c.getCategory().getId() == categoryId).map(ConfigurationService::initParamFromConfiguration).collect(Collectors.toList());
-        widgets.get().stream().forEach(w -> w.getWidgetParams().addAll(confs));
+        List<WidgetParam> confs = configurationService.getConfigurationForWidgets().stream().filter(c -> c.getCategory().getId().equals(categoryId)).map(ConfigurationService::initParamFromConfiguration).collect(Collectors.toList());
+        widgets.get().forEach(w -> w.getWidgetParams().addAll(confs));
 
         return ResponseEntity
             .ok()
