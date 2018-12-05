@@ -16,43 +16,18 @@
 
 package io.suricate.monitoring.model.dto.api;
 
-import com.fasterxml.jackson.annotation.JsonAnyGetter;
-import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public abstract class AbstractDto implements Serializable {
 
-    private Map<String, String> other = new HashMap<String, String>();
-
     @Override
     public String toString() {
         return ReflectionToStringBuilder.toString(this);
-    }
-
-    /**
-     * Get any not defined bean properties
-     * @return properties map
-     */
-    @JsonAnyGetter
-    public Map<String, String> any() {
-        return other;
-    }
-
-    /**
-     * Set any not defined bean properties
-     * @param name the key to add
-     * @param value the value to add
-     */
-    @JsonAnySetter
-    public void set(String name, String value) {
-        other.put(name, value);
     }
 }
