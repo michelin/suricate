@@ -17,8 +17,8 @@
 package io.suricate.monitoring.controllers.api;
 
 import io.suricate.monitoring.model.dto.api.ApplicationPropertiesDto;
-import io.suricate.monitoring.model.dto.api.widget.ConfigurationDto;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
+import io.suricate.monitoring.model.dto.api.widget.ConfigurationResponseDto;
 import io.suricate.monitoring.model.entity.Configuration;
 import io.suricate.monitoring.model.mapper.ConfigurationMapper;
 import io.suricate.monitoring.service.CacheService;
@@ -83,16 +83,16 @@ public class ConfigurationController {
      *
      * @return The list of configurations
      */
-    @ApiOperation(value = "Get the full list of configurations", response = ConfigurationDto.class, nickname = "getAllConfigs")
+    @ApiOperation(value = "Get the full list of configurations", response = ConfigurationResponseDto.class, nickname = "getAllConfigs")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = ConfigurationDto.class, responseContainer = "List"),
+        @ApiResponse(code = 200, message = "Ok", response = ConfigurationResponseDto.class, responseContainer = "List"),
         @ApiResponse(code = 204, message = "No Content"),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
     @RequestMapping(method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<List<ConfigurationDto>> getAll() {
+    public ResponseEntity<List<ConfigurationResponseDto>> getAll() {
         Optional<List<Configuration>> configurations = configurationService.getAll();
 
         if (!configurations.isPresent()) {
@@ -112,17 +112,17 @@ public class ConfigurationController {
      * @param key The key to find
      * @return The related configuration
      */
-    @ApiOperation(value = "Get a configuration by the key", response = ConfigurationDto.class)
+    @ApiOperation(value = "Get a configuration by the key", response = ConfigurationResponseDto.class)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = ConfigurationDto.class),
+        @ApiResponse(code = 200, message = "Ok", response = ConfigurationResponseDto.class),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Configuration not found", response = ApiErrorDto.class)
     })
     @RequestMapping(value = "/{key}", method = RequestMethod.GET)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<ConfigurationDto> getOneByKey(@ApiParam(name = "key", value = "The configuration key", required = true)
-                                                        @PathVariable("key") final String key) {
+    public ResponseEntity<ConfigurationResponseDto> getOneByKey(@ApiParam(name = "key", value = "The configuration key", required = true)
+                                                                @PathVariable("key") final String key) {
         Optional<Configuration> configurationOptional = configurationService.getOneByKey(key);
 
         if (!configurationOptional.isPresent()) {
@@ -139,23 +139,23 @@ public class ConfigurationController {
     /**
      * Update the configuration by the key
      *
-     * @param key              The key of the config
-     * @param configurationDto The new configuration values
+     * @param key                      The key of the config
+     * @param configurationResponseDto The new configuration values
      * @return The config updated
      */
-    @ApiOperation(value = "Update a configuration by the key", response = ConfigurationDto.class)
+    @ApiOperation(value = "Update a configuration by the key", response = ConfigurationResponseDto.class)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = ConfigurationDto.class),
+        @ApiResponse(code = 200, message = "Ok", response = ConfigurationResponseDto.class),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Configuration not found", response = ApiErrorDto.class)
     })
     @RequestMapping(value = "/{key}", method = RequestMethod.PUT)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<ConfigurationDto> updateOneByKey(@ApiParam(name = "key", value = "The configuration key", required = true)
-                                                           @PathVariable("key") final String key,
-                                                           @ApiParam(name = "configurationDto", value = "The configuration upated", required = true)
-                                                           @RequestBody final ConfigurationDto configurationDto) {
+    public ResponseEntity<ConfigurationResponseDto> updateOneByKey(@ApiParam(name = "key", value = "The configuration key", required = true)
+                                                                   @PathVariable("key") final String key,
+                                                                   @ApiParam(name = "configurationResponseDto", value = "The configuration upated", required = true)
+                                                                   @RequestBody final ConfigurationResponseDto configurationResponseDto) {
         Optional<Configuration> configurationOptional = configurationService.getOneByKey(key);
 
         if (!configurationOptional.isPresent()) {
@@ -163,7 +163,7 @@ public class ConfigurationController {
         }
 
         Configuration configuration = configurationOptional.get();
-        configuration = configurationService.updateConfiguration(configuration, configurationDto.getValue());
+        configuration = configurationService.updateConfiguration(configuration, configurationResponseDto.getValue());
 
         cacheService.clearCache("configuration");
 
@@ -180,17 +180,17 @@ public class ConfigurationController {
      * @param key The configuration key
      * @return The config deleted
      */
-    @ApiOperation(value = "Delete a configuration by the key", response = ConfigurationDto.class)
+    @ApiOperation(value = "Delete a configuration by the key", response = ConfigurationResponseDto.class)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = ConfigurationDto.class),
+        @ApiResponse(code = 200, message = "Ok", response = ConfigurationResponseDto.class),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Configuration not found", response = ApiErrorDto.class)
     })
     @RequestMapping(value = "/{key}", method = RequestMethod.DELETE)
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<ConfigurationDto> deleteOneByKey(@ApiParam(name = "key", value = "The configuration key", required = true)
-                                                           @PathVariable("key") final String key) {
+    public ResponseEntity<ConfigurationResponseDto> deleteOneByKey(@ApiParam(name = "key", value = "The configuration key", required = true)
+                                                                   @PathVariable("key") final String key) {
         Optional<Configuration> configurationOptional = configurationService.getOneByKey(key);
 
         if (!configurationOptional.isPresent()) {
@@ -226,14 +226,14 @@ public class ConfigurationController {
      */
     @ApiOperation(value = "Get the server full configuration", response = ApplicationPropertiesDto.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Ok", response = ApplicationPropertiesDto.class, responseContainer = "List")
+        @ApiResponse(code = 200, message = "Ok", response = ApplicationPropertiesDto.class, responseContainer = "List")
     })
     @RequestMapping(value = "/server", method = RequestMethod.GET)
     public ResponseEntity<List<ApplicationPropertiesDto>> getServerConfiguration() {
         return ResponseEntity
-                .ok()
-                .contentType(MediaType.APPLICATION_JSON)
-                .cacheControl(CacheControl.noCache())
-                .body(configurationService.getServerConfiguration());
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .cacheControl(CacheControl.noCache())
+            .body(configurationService.getServerConfiguration());
     }
 }

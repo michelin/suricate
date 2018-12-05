@@ -54,10 +54,4 @@ public class CategoryResponseDto extends AbstractDto {
      */
     @ApiModelProperty(value = "Asset token")
     private String assetToken;
-
-    /**
-     * The associated categories for this configuration
-     */
-    @ApiModelProperty(value = "Related configurations for this category", dataType = "java.util.List")
-    private List<ConfigurationDto> configurations;
 }

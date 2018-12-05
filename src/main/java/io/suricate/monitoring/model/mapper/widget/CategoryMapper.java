@@ -51,7 +51,6 @@ public abstract class CategoryMapper {
      */
     @Named("toCategoryDtoDefault")
     @Mapping(target = "assetToken", expression = "java( category.getImage() != null ? io.suricate.monitoring.utils.IdUtils.encrypt(category.getImage().getId()) : null )")
-    @Mapping(target = "configurations", qualifiedByName = "toConfigurationDtosWithoutCategory")
     public abstract CategoryResponseDto toCategoryDtoDefault(Category category);
 
     /**
