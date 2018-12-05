@@ -17,10 +17,10 @@
  *
  */
 
-package io.suricate.monitoring.model.dto.project;
+package io.suricate.monitoring.model.dto.api.project;
 
-import io.suricate.monitoring.model.dto.AbstractDto;
-import io.suricate.monitoring.model.dto.widget.WidgetDto;
+import io.suricate.monitoring.model.dto.api.AbstractDto;
+import io.suricate.monitoring.model.dto.api.widget.WidgetDto;
 import io.suricate.monitoring.model.enums.WidgetState;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

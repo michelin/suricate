@@ -14,30 +14,44 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.dto.widget;
+package io.suricate.monitoring.model.dto.api;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 /**
- * Widget param value response used for communication with the clients via webservices
+ * Asset class used for communicate through webservices
  */
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 @ToString
-@ApiModel(value = "WidgetParamValue", description = "Describe a possible param value")
-public class WidgetParamValueDto {
+@ApiModel(value = "Asset", description = "Describe an asset (Image, file, ...)")
+public class AssetDto extends AbstractDto {
+
     /**
-     * The key used in the js file
+     * The asset id
      */
-    @ApiModelProperty(value = "The key used in the JS/HTML Template")
-    private String jsKey;
+    @ApiModelProperty(value = "The database id")
+    private Long id;
+
     /**
-     * The value of this param
+     * The blob content
      */
-    @ApiModelProperty(value = "The user displayed value")
-    private String value;
+    @ApiModelProperty(value = "The blob content")
+    private byte[] content;
+
+    /**
+     * The content type
+     */
+    @ApiModelProperty(value = "The content type")
+    private String contentType;
+
+    /**
+     * The size of the asset
+     */
+    @ApiModelProperty(value = "The size of the asset")
+    private long size;
 }

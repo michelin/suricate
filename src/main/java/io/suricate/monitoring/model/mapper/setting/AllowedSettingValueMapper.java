@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.model.mapper.setting;
 
-import io.suricate.monitoring.model.dto.setting.AllowedSettingValueDto;
+import io.suricate.monitoring.model.dto.api.setting.AllowedSettingValueDto;
 import io.suricate.monitoring.model.entity.setting.AllowedSettingValue;
 import org.mapstruct.*;
 import org.springframework.stereotype.Component;

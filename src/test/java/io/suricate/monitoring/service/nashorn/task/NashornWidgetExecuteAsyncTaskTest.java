@@ -1,10 +1,10 @@
 package io.suricate.monitoring.service.nashorn.task;
 
-import io.suricate.monitoring.model.dto.error.FatalError;
-import io.suricate.monitoring.model.dto.error.RemoteError;
 import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
 import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
 import io.suricate.monitoring.model.dto.nashorn.WidgetVariableResponse;
+import io.suricate.monitoring.model.dto.nashorn.error.FatalError;
+import io.suricate.monitoring.model.dto.nashorn.error.RemoteError;
 import io.suricate.monitoring.model.enums.NashornErrorTypeEnum;
 import io.suricate.monitoring.model.enums.WidgetVariableType;
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;

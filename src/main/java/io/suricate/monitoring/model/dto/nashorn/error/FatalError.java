@@ -14,25 +14,27 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.dto.error;
+package io.suricate.monitoring.model.dto.nashorn.error;
 
-public class RequestException extends Exception {
+public class FatalError extends Exception {
 
-    private final String technicalData;
-
-    private final String response;
-
-    public RequestException(String technicalData, String response) {
-        super(technicalData);
-        this.technicalData = technicalData;
-        this.response = response;
+    public FatalError() {
+        super();
     }
 
-    public String getTechnicalData() {
-        return technicalData;
+    public FatalError(String message) {
+        super(message);
     }
 
-    public String getResponse() {
-        return response;
+    public FatalError(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public FatalError(Throwable cause) {
+        super(cause);
+    }
+
+    protected FatalError(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        super(message, cause, enableSuppression, writableStackTrace);
     }
 }

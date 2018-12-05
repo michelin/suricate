@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.model.dto.websocket;
 
-import io.suricate.monitoring.model.dto.AbstractDto;
+import io.suricate.monitoring.model.dto.api.AbstractDto;
 import io.suricate.monitoring.model.enums.UpdateType;
 import lombok.*;
 

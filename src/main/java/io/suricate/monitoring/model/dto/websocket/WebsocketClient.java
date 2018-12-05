@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.model.dto.websocket;
 
-import io.suricate.monitoring.model.dto.AbstractDto;
+import io.suricate.monitoring.model.dto.api.AbstractDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;

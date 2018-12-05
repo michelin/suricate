@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.dto.user;
+package io.suricate.monitoring.model.dto.api.user;
 
-import io.suricate.monitoring.model.dto.AbstractDto;
-import io.suricate.monitoring.model.dto.setting.UserSettingDto;
+import io.suricate.monitoring.model.dto.api.AbstractDto;
+import io.suricate.monitoring.model.dto.api.setting.UserSettingDto;
 import io.suricate.monitoring.model.enums.AuthenticationMethod;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

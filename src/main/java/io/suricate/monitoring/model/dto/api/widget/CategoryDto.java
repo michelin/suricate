@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.dto.widget;
+package io.suricate.monitoring.model.dto.api.widget;
 
-import io.suricate.monitoring.model.dto.ConfigurationDto;
+import io.suricate.monitoring.model.dto.api.ConfigurationDto;
 import io.suricate.monitoring.model.entity.Asset;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

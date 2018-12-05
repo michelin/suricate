@@ -16,10 +16,10 @@
 
 package io.suricate.monitoring.controllers.api;
 
-import io.suricate.monitoring.model.dto.error.ApiErrorDto;
-import io.suricate.monitoring.model.dto.setting.UserSettingDto;
-import io.suricate.monitoring.model.dto.user.RoleDto;
-import io.suricate.monitoring.model.dto.user.UserDto;
+import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
+import io.suricate.monitoring.model.dto.api.setting.UserSettingDto;
+import io.suricate.monitoring.model.dto.api.user.RoleDto;
+import io.suricate.monitoring.model.dto.api.user.UserDto;
 import io.suricate.monitoring.model.entity.user.User;
 import io.suricate.monitoring.model.enums.AuthenticationMethod;
 import io.suricate.monitoring.model.mapper.role.UserMapper;

@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.dto.error;
+package io.suricate.monitoring.model.dto.api.error;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.suricate.monitoring.model.dto.AbstractDto;
+import io.suricate.monitoring.model.dto.api.AbstractDto;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

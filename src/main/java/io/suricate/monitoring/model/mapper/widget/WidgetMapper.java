@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.model.mapper.widget;
 
-import io.suricate.monitoring.model.dto.widget.WidgetDto;
+import io.suricate.monitoring.model.dto.api.widget.WidgetDto;
 import io.suricate.monitoring.model.entity.widget.Widget;
 import io.suricate.monitoring.model.mapper.AssetMapper;
 import io.suricate.monitoring.model.mapper.LibraryMapper;

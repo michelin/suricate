@@ -1,4 +1,4 @@
-package io.suricate.monitoring.model.dto.widget;
+package io.suricate.monitoring.model.dto.api.widget;
 
 import io.suricate.monitoring.model.enums.RepositoryTypeEnum;
 import io.swagger.annotations.ApiModel;

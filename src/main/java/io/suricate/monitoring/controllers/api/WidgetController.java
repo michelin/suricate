@@ -16,16 +16,14 @@
 
 package io.suricate.monitoring.controllers.api;
 
-import io.suricate.monitoring.model.dto.error.ApiErrorDto;
-import io.suricate.monitoring.model.dto.widget.CategoryDto;
-import io.suricate.monitoring.model.dto.widget.WidgetDto;
-import io.suricate.monitoring.model.entity.Configuration;
+import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
+import io.suricate.monitoring.model.dto.api.widget.CategoryDto;
+import io.suricate.monitoring.model.dto.api.widget.WidgetDto;
 import io.suricate.monitoring.model.entity.widget.Category;
 import io.suricate.monitoring.model.entity.widget.Widget;
 import io.suricate.monitoring.model.entity.widget.WidgetParam;
 import io.suricate.monitoring.model.enums.ApiActionEnum;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
-import io.suricate.monitoring.model.enums.WidgetVariableType;
 import io.suricate.monitoring.model.mapper.widget.CategoryMapper;
 import io.suricate.monitoring.model.mapper.widget.WidgetMapper;
 import io.suricate.monitoring.service.GitService;

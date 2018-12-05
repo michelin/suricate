@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.model.mapper.role;
 
-import io.suricate.monitoring.model.dto.user.UserDto;
+import io.suricate.monitoring.model.dto.api.user.UserDto;
 import io.suricate.monitoring.model.entity.user.User;
 import io.suricate.monitoring.model.enums.AuthenticationMethod;
 import io.suricate.monitoring.model.mapper.setting.UserSettingMapper;

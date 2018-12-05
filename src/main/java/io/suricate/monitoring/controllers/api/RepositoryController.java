@@ -16,8 +16,8 @@
 
 package io.suricate.monitoring.controllers.api;
 
-import io.suricate.monitoring.model.dto.error.ApiErrorDto;
-import io.suricate.monitoring.model.dto.widget.RepositoryDto;
+import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
+import io.suricate.monitoring.model.dto.api.widget.RepositoryDto;
 import io.suricate.monitoring.model.entity.widget.Repository;
 import io.suricate.monitoring.model.mapper.widget.RepositoryMapper;
 import io.suricate.monitoring.service.GitService;

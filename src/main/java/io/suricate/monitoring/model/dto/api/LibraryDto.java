@@ -14,46 +14,47 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.dto.user;
+package io.suricate.monitoring.model.dto.api;
 
-import io.suricate.monitoring.model.dto.AbstractDto;
+import io.suricate.monitoring.model.dto.api.widget.WidgetDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represent a role used for communication with the clients via webservices
+ * Library used for communication with the clients via webservices
  */
 @Getter
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @ToString
-@ApiModel(value = "Role", description = "Describe a user role")
-public class RoleDto extends AbstractDto {
+@ApiModel(value = "Library", description = "Describe a JS Library")
+public class LibraryDto extends AbstractDto {
 
     /**
-     * The role id
+     * The library id
      */
-    @ApiModelProperty(value = "The id")
+    @ApiModelProperty(value = "The database id")
     private Long id;
-    /**
-     * The role name
-     */
-    @ApiModelProperty(value = "The Role name")
-    private String name;
-    /**
-     * The role description
-     */
-    @ApiModelProperty(value = "The description of the role")
-    private String description;
 
     /**
-     * The list of user for this role
+     * The library technical name
      */
-    @ApiModelProperty(value = "The list of users with this role", dataType = "java.util.List")
-    private List<UserDto> users = new ArrayList<>();
+    @ApiModelProperty(value = "A unique technical name")
+    private String technicalName;
+
+    /**
+     * The related asset
+     */
+    @ApiModelProperty(value = "The related asset for this library")
+    private AssetDto asset;
+
+    /**
+     * List of widgets related to it
+     */
+    @ApiModelProperty(value = "The list of widgets that use this library", dataType = "java.util.List")
+    private List<WidgetDto> widgets;
 }

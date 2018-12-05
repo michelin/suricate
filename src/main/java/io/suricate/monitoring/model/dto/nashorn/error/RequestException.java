@@ -14,27 +14,25 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.dto.error;
+package io.suricate.monitoring.model.dto.nashorn.error;
 
-public class RemoteError extends Exception {
+public class RequestException extends Exception {
 
-    public RemoteError() {
-        super();
+    private final String technicalData;
+
+    private final String response;
+
+    public RequestException(String technicalData, String response) {
+        super(technicalData);
+        this.technicalData = technicalData;
+        this.response = response;
     }
 
-    public RemoteError(String message) {
-        super(message);
+    public String getTechnicalData() {
+        return technicalData;
     }
 
-    public RemoteError(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public RemoteError(Throwable cause) {
-        super(cause);
-    }
-
-    protected RemoteError(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
+    public String getResponse() {
+        return response;
     }
 }

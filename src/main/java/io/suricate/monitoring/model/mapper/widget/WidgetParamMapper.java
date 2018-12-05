@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.model.mapper.widget;
 
-import io.suricate.monitoring.model.dto.widget.WidgetParamDto;
+import io.suricate.monitoring.model.dto.api.widget.WidgetParamDto;
 import io.suricate.monitoring.model.entity.widget.WidgetParam;
 import org.mapstruct.*;
 import org.springframework.stereotype.Component;

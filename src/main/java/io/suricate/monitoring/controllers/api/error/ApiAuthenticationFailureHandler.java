@@ -3,7 +3,7 @@ package io.suricate.monitoring.controllers.api.error;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
-import io.suricate.monitoring.model.dto.error.ApiErrorDto;
+import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.access.AccessDeniedException;

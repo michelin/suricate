@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.model.mapper.role;
 
-import io.suricate.monitoring.model.dto.user.RoleDto;
+import io.suricate.monitoring.model.dto.api.user.RoleDto;
 import io.suricate.monitoring.model.entity.user.Role;
 import org.mapstruct.*;
 import org.springframework.stereotype.Component;

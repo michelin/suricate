@@ -14,27 +14,27 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.dto.error;
+package io.suricate.monitoring.model.dto.nashorn.error;
 
-public class FatalError extends Exception {
+public class RemoteError extends Exception {
 
-    public FatalError() {
+    public RemoteError() {
         super();
     }
 
-    public FatalError(String message) {
+    public RemoteError(String message) {
         super(message);
     }
 
-    public FatalError(String message, Throwable cause) {
+    public RemoteError(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public FatalError(Throwable cause) {
+    public RemoteError(Throwable cause) {
         super(cause);
     }
 
-    protected FatalError(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+    protected RemoteError(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
     }
 }

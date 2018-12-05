@@ -16,9 +16,9 @@
 
 package io.suricate.monitoring.controllers.api;
 
-import io.suricate.monitoring.model.dto.ApplicationPropertiesDto;
-import io.suricate.monitoring.model.dto.ConfigurationDto;
-import io.suricate.monitoring.model.dto.error.ApiErrorDto;
+import io.suricate.monitoring.model.dto.api.ApplicationPropertiesDto;
+import io.suricate.monitoring.model.dto.api.ConfigurationDto;
+import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.entity.Configuration;
 import io.suricate.monitoring.model.mapper.ConfigurationMapper;
 import io.suricate.monitoring.service.CacheService;

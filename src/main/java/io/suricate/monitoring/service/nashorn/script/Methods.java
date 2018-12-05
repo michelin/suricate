@@ -16,9 +16,9 @@
 
 package io.suricate.monitoring.service.nashorn.script;
 
-import io.suricate.monitoring.model.dto.error.FatalError;
-import io.suricate.monitoring.model.dto.error.RemoteError;
-import io.suricate.monitoring.model.dto.error.RequestException;
+import io.suricate.monitoring.model.dto.nashorn.error.FatalError;
+import io.suricate.monitoring.model.dto.nashorn.error.RemoteError;
+import io.suricate.monitoring.model.dto.nashorn.error.RequestException;
 import io.suricate.monitoring.utils.OkHttpClientUtils;
 import okhttp3.*;
 import org.apache.commons.io.IOUtils;

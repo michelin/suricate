@@ -17,7 +17,7 @@
 package io.suricate.monitoring.service.api;
 
 import io.suricate.monitoring.configuration.ApplicationProperties;
-import io.suricate.monitoring.model.dto.ApplicationPropertiesDto;
+import io.suricate.monitoring.model.dto.api.ApplicationPropertiesDto;
 import io.suricate.monitoring.model.entity.Configuration;
 import io.suricate.monitoring.model.entity.widget.Category;
 import io.suricate.monitoring.model.entity.widget.WidgetParam;

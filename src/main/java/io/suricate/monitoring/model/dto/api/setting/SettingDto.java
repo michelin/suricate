@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.dto.setting;
+package io.suricate.monitoring.model.dto.api.setting;
 
 import io.suricate.monitoring.model.enums.SettingDataType;
 import io.suricate.monitoring.model.enums.SettingType;

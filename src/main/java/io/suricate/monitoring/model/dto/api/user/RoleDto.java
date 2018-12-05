@@ -14,44 +14,46 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.dto;
+package io.suricate.monitoring.model.dto.api.user;
 
+import io.suricate.monitoring.model.dto.api.AbstractDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * Asset class used for communicate through webservices
+ * Represent a role used for communication with the clients via webservices
  */
 @Getter
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @ToString
-@ApiModel(value = "Asset", description = "Describe an asset (Image, file, ...)")
-public class AssetDto extends AbstractDto {
+@ApiModel(value = "Role", description = "Describe a user role")
+public class RoleDto extends AbstractDto {
 
     /**
-     * The asset id
+     * The role id
      */
-    @ApiModelProperty(value = "The database id")
+    @ApiModelProperty(value = "The id")
     private Long id;
+    /**
+     * The role name
+     */
+    @ApiModelProperty(value = "The Role name")
+    private String name;
+    /**
+     * The role description
+     */
+    @ApiModelProperty(value = "The description of the role")
+    private String description;
 
     /**
-     * The blob content
+     * The list of user for this role
      */
-    @ApiModelProperty(value = "The blob content")
-    private byte[] content;
-
-    /**
-     * The content type
-     */
-    @ApiModelProperty(value = "The content type")
-    private String contentType;
-
-    /**
-     * The size of the asset
-     */
-    @ApiModelProperty(value = "The size of the asset")
-    private long size;
+    @ApiModelProperty(value = "The list of users with this role", dataType = "java.util.List")
+    private List<UserDto> users = new ArrayList<>();
 }
