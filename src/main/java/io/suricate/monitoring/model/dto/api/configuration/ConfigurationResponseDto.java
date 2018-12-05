@@ -14,24 +14,25 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.dto.api.widget;
+package io.suricate.monitoring.model.dto.api.configuration;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
+import io.suricate.monitoring.model.dto.api.widget.CategoryResponseDto;
 import io.suricate.monitoring.model.enums.ConfigurationDataType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 /**
  * Configuration used for communication with the clients via webservices
  */
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ToString
-@ApiModel(value = "Configuration", description = "Describe a configuration")
-public class ConfigurationDto extends AbstractDto {
+@ApiModel(value = "ConfigurationResponse", description = "Describe a configuration response")
+public class ConfigurationResponseDto extends AbstractDto {
 
     /**
      * The configuration key
@@ -44,11 +45,6 @@ public class ConfigurationDto extends AbstractDto {
      */
     @ApiModelProperty(value = "The configuration value")
     private String value;
-
-    /**
-     * Export
-     */
-    private boolean export;
 
     /**
      * The data type of the configuration

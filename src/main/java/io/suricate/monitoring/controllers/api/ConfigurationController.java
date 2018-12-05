@@ -17,8 +17,9 @@
 package io.suricate.monitoring.controllers.api;
 
 import io.suricate.monitoring.model.dto.api.ApplicationPropertiesDto;
+import io.suricate.monitoring.model.dto.api.configuration.ConfigurationRequestDto;
+import io.suricate.monitoring.model.dto.api.configuration.ConfigurationResponseDto;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
-import io.suricate.monitoring.model.dto.api.widget.ConfigurationResponseDto;
 import io.suricate.monitoring.model.entity.Configuration;
 import io.suricate.monitoring.model.mapper.ConfigurationMapper;
 import io.suricate.monitoring.service.CacheService;
@@ -139,8 +140,8 @@ public class ConfigurationController {
     /**
      * Update the configuration by the key
      *
-     * @param key                      The key of the config
-     * @param configurationResponseDto The new configuration values
+     * @param key                     The key of the config
+     * @param configurationRequestDto The new configuration values
      * @return The config updated
      */
     @ApiOperation(value = "Update a configuration by the key", response = ConfigurationResponseDto.class)
@@ -154,8 +155,8 @@ public class ConfigurationController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ConfigurationResponseDto> updateOneByKey(@ApiParam(name = "key", value = "The configuration key", required = true)
                                                                    @PathVariable("key") final String key,
-                                                                   @ApiParam(name = "configurationResponseDto", value = "The configuration upated", required = true)
-                                                                   @RequestBody final ConfigurationResponseDto configurationResponseDto) {
+                                                                   @ApiParam(name = "configurationResponseDto", value = "The configuration updated", required = true)
+                                                                   @RequestBody final ConfigurationRequestDto configurationRequestDto) {
         Optional<Configuration> configurationOptional = configurationService.getOneByKey(key);
 
         if (!configurationOptional.isPresent()) {
@@ -163,7 +164,7 @@ public class ConfigurationController {
         }
 
         Configuration configuration = configurationOptional.get();
-        configuration = configurationService.updateConfiguration(configuration, configurationResponseDto.getValue());
+        configuration = configurationService.updateConfiguration(configuration, configurationRequestDto.getValue());
 
         cacheService.clearCache("configuration");
 

@@ -23,8 +23,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 
 /**
  * Represent a category response used for communication with the clients via webservices
