@@ -14,47 +14,45 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.dto.api;
+package io.suricate.monitoring.model.dto.api.asset;
 
-import io.suricate.monitoring.model.dto.api.widget.WidgetDto;
+import io.suricate.monitoring.model.dto.api.AbstractDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
-import java.util.List;
-
 /**
- * Library used for communication with the clients via webservices
+ * Asset class used for communicate through webservices
  */
 @Getter
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @ToString
-@ApiModel(value = "Library", description = "Describe a JS Library")
-public class LibraryDto extends AbstractDto {
+@ApiModel(value = "Asset", description = "Describe an asset (Image, file, ...)")
+public class AssetDto extends AbstractDto {
 
     /**
-     * The library id
+     * The asset id
      */
     @ApiModelProperty(value = "The database id")
     private Long id;
 
     /**
-     * The library technical name
+     * The blob content
      */
-    @ApiModelProperty(value = "A unique technical name")
-    private String technicalName;
+    @ApiModelProperty(value = "The blob content")
+    private byte[] content;
 
     /**
-     * The related asset
+     * The content type
      */
-    @ApiModelProperty(value = "The related asset for this library")
-    private AssetDto asset;
+    @ApiModelProperty(value = "The content type")
+    private String contentType;
 
     /**
-     * List of widgets related to it
+     * The size of the asset
      */
-    @ApiModelProperty(value = "The list of widgets that use this library", dataType = "java.util.List")
-    private List<WidgetDto> widgets;
+    @ApiModelProperty(value = "The size of the asset")
+    private long size;
 }

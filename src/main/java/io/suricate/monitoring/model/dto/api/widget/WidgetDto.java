@@ -1,8 +1,7 @@
 package io.suricate.monitoring.model.dto.api.widget;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
-import io.suricate.monitoring.model.dto.api.AssetDto;
-import io.suricate.monitoring.model.dto.api.LibraryDto;
+import io.suricate.monitoring.model.dto.api.asset.AssetDto;
 import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
