@@ -45,6 +45,7 @@ import {ErrorInterceptor} from './interceptors/error.interceptor';
 import {PasswordPipe} from './pipes/password-pipe';
 import {ConfirmDialogComponent} from './components/confirm-dialog/confirm-dialog.component';
 import {HttpCategoryService} from './services/http/http-category.service';
+import {HttpAssetService} from './services/http/http-asset.service';
 
 @NgModule({
   imports: [
@@ -105,6 +106,7 @@ import {HttpCategoryService} from './services/http/http-category.service';
     StompRService,
     TokenService,
     SettingsService,
+    HttpAssetService,
     HttpCategoryService
   ]
 })

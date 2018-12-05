@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.model.mapper.widget;
 
-import io.suricate.monitoring.model.dto.api.widget.CategoryDto;
+import io.suricate.monitoring.model.dto.api.widget.CategoryResponseDto;
 import io.suricate.monitoring.model.entity.widget.Category;
 import io.suricate.monitoring.model.mapper.AssetMapper;
 import io.suricate.monitoring.model.mapper.ConfigurationMapper;
@@ -44,43 +44,39 @@ public abstract class CategoryMapper {
     /* ******************************************************* */
 
     /**
-     * Tranform a Category into a CategoryDto
+     * Tranform a Category into a CategoryResponseDto
      *
      * @param category The category to transform
      * @return The related category DTO
      */
     @Named("toCategoryDtoDefault")
-    @Mappings({
-        @Mapping(target = "widgets", qualifiedByName = "toWidgetDtosWithoutCategory"),
-        @Mapping(target = "configurations", qualifiedByName = "toConfigurationDtosWithoutCategory")
-    })
-    public abstract CategoryDto toCategoryDtoDefault(Category category);
+    @Mapping(target = "assetToken", expression = "java( category.getImage() != null ? io.suricate.monitoring.utils.IdUtils.encrypt(category.getImage().getId()) : null )")
+    @Mapping(target = "configurations", qualifiedByName = "toConfigurationDtosWithoutCategory")
+    public abstract CategoryResponseDto toCategoryDtoDefault(Category category);
 
     /**
-     * Tranform a Category into a CategoryDto
+     * Tranform a Category into a CategoryResponseDto
      *
      * @param category The category to transform
      * @return The related category DTO
      */
     @Named("toCategoryDtoWithoutWidgets")
     @Mappings({
-        @Mapping(target = "widgets", ignore = true),
         @Mapping(target = "configurations", qualifiedByName = "toConfigurationDtosWithoutCategory")
     })
-    public abstract CategoryDto toCategoryDtoWithoutWidgets(Category category);
+    public abstract CategoryResponseDto toCategoryDtoWithoutWidgets(Category category);
 
     /**
-     * Tranform a Category into a CategoryDto without configurations and without widgets
+     * Tranform a Category into a CategoryResponseDto without configurations and without widgets
      *
      * @param category The category to transform
      * @return The related category DTO
      */
     @Named("toCategoryDtoWithoutConfigurationsAndWithoutWidgets")
     @Mappings({
-        @Mapping(target = "widgets", ignore = true),
         @Mapping(target = "configurations", ignore = true)
     })
-    public abstract CategoryDto toCategoryDtoWithoutConfigurationsAndWithoutWidgets(Category category);
+    public abstract CategoryResponseDto toCategoryDtoWithoutConfigurationsAndWithoutWidgets(Category category);
 
     /* ******************************************************* */
     /*                    List Mapping                         */
@@ -94,5 +90,5 @@ public abstract class CategoryMapper {
      */
     @Named("toCategoryDtosDefault")
     @IterableMapping(qualifiedByName = "toCategoryDtoDefault")
-    public abstract List<CategoryDto> toCategoryDtosDefault(List<Category> categories);
+    public abstract List<CategoryResponseDto> toCategoryDtosDefault(List<Category> categories);
 }

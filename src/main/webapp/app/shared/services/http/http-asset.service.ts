@@ -16,16 +16,31 @@
  *
  */
 
-import {ConfigurationDataType} from './enums/ConfigurationDataType';
-import {Category} from './api/Category';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+
+import {assetsApiEndpoint} from '../../../app.constant';
 
 /**
- * The configuration entity
+ * Manage the asset http calls
  */
-export class Configuration {
-  key: string;
-  value: string;
-  export: boolean;
-  dataType: ConfigurationDataType;
-  category: Category;
+@Injectable()
+export class HttpAssetService {
+
+  /**
+   * Constructor
+   *
+   * @param httpClient the http client to inject
+   */
+  constructor(private httpClient: HttpClient) {
+  }
+
+  /**
+   * Get the content of an asset
+   *
+   * @param assetToken The asset token
+   */
+  getUrlContent(assetToken: string): string {
+    return assetToken ? `${assetsApiEndpoint}/${assetToken}` : ``;
+  }
 }

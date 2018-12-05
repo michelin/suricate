@@ -16,24 +16,21 @@
 
 package io.suricate.monitoring.model.dto.api.widget;
 
-import io.suricate.monitoring.model.entity.Asset;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 
 /**
- * Represent a cateogry used for communication with the clients via webservices
+ * Represent a category response used for communication with the clients via webservices
  */
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
-@EqualsAndHashCode
-@ToString
-@ApiModel(value = "Category", description = "Describe a widget category")
-public class CategoryDto {
+@ApiModel(value = "CategoryResponse", description = "Describe a widget category response")
+public class CategoryResponseDto {
     /**
      * The category id
      */
@@ -52,14 +49,8 @@ public class CategoryDto {
     /**
      * The image related to this category
      */
-    @ApiModelProperty(value = "Related category image")
-    private Asset image;
-
-    /**
-     * The list of widgets related to this category
-     */
-    @ApiModelProperty(value = "List of related widgets", dataType = "java.util.List")
-    private List<WidgetDto> widgets;
+    @ApiModelProperty(value = "Asset token")
+    private String assetToken;
 
     /**
      * The associated categories for this configuration

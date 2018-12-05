@@ -98,12 +98,16 @@ export const rolesApiEndpoint = `${baseApiEndpoint}/roles`;
  * @type {string}
  */
 export const configApiEndpoint = `${baseApiEndpoint}/manage`;
-
 /**
  * Global repositories endpoint
  * @type {string}
  */
 export const repositoriesApiEndpoint = `${baseApiEndpoint}/repositories`;
+/**
+ * Global assets endpoint
+ * @type {string}
+ */
+export const assetsApiEndpoint = `${baseApiEndpoint}/asset`;
 
 /* ************************************************************************ */
 /*                  HTTP ERROR CONSTANTS                                    */

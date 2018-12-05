@@ -20,7 +20,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 
-import {Category} from '../../model/dto/Category';
+import {Category} from '../../model/dto/api/Category';
 import {categoriesApiEndpoint} from '../../../app.constant';
 
 /**

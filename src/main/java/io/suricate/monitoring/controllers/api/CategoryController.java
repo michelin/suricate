@@ -17,7 +17,7 @@
 package io.suricate.monitoring.controllers.api;
 
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
-import io.suricate.monitoring.model.dto.api.widget.CategoryDto;
+import io.suricate.monitoring.model.dto.api.widget.CategoryResponseDto;
 import io.suricate.monitoring.model.entity.widget.Category;
 import io.suricate.monitoring.model.mapper.widget.CategoryMapper;
 import io.suricate.monitoring.service.api.CategoryService;
@@ -74,9 +74,9 @@ public class CategoryController {
      *
      * @return A list of category
      */
-    @ApiOperation(value = "Get the full list of widget categories", response = CategoryDto.class)
+    @ApiOperation(value = "Get the full list of widget categories", response = CategoryResponseDto.class)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = CategoryDto.class, responseContainer = "List"),
+        @ApiResponse(code = 200, message = "Ok", response = CategoryResponseDto.class, responseContainer = "List"),
         @ApiResponse(code = 204, message = "No Content"),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
@@ -84,7 +84,7 @@ public class CategoryController {
     @GetMapping
     @PreAuthorize("hasRole('ROLE_USER')")
     @Transactional
-    public ResponseEntity<List<CategoryDto>> getCategories() {
+    public ResponseEntity<List<CategoryResponseDto>> getCategories() {
         List<Category> categories = categoryService.getCategoriesOrderByName();
 
         if (categories == null || categories.isEmpty()) {

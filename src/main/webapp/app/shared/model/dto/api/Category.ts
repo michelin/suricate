@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-import {Asset} from './Asset';
-import {Configuration} from './Configuration';
+import {Configuration} from '../Configuration';
 
 /**
  * The category representation
@@ -24,6 +23,6 @@ export class Category {
   public id: number;
   public name: string;
   public technicalName: string;
-  public image: Asset;
+  public assetToken: string;
   public configurations: Configuration[];
 }

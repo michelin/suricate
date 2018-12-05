@@ -97,7 +97,7 @@ public class WidgetDto extends AbstractDto {
      * The category of this widget
      */
     @ApiModelProperty(value = "The category of this widget")
-    private CategoryDto category;
+    private CategoryResponseDto category;
 
     /**
      * The widget availability {@link WidgetAvailabilityEnum}

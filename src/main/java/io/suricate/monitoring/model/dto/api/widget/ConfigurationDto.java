@@ -17,7 +17,6 @@
 package io.suricate.monitoring.model.dto.api.widget;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
-import io.suricate.monitoring.model.dto.api.widget.CategoryDto;
 import io.suricate.monitoring.model.enums.ConfigurationDataType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -61,5 +60,5 @@ public class ConfigurationDto extends AbstractDto {
      * Make a link between category and configurations
      */
     @ApiModelProperty(value = "Related category for this config")
-    private CategoryDto category;
+    private CategoryResponseDto category;
 }

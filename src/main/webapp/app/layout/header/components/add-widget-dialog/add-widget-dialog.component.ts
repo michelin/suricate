@@ -17,17 +17,17 @@
 import {ChangeDetectorRef, Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {FormGroup, NgForm} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef, MatHorizontalStepper} from '@angular/material';
-import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
+import {DomSanitizer} from '@angular/platform-browser';
 
-import {Category} from '../../../../shared/model/dto/Category';
+import {Category} from '../../../../shared/model/dto/api/Category';
 import {WidgetService} from '../../../../modules/widget/widget.service';
-import {Asset} from '../../../../shared/model/dto/Asset';
 import {Widget} from '../../../../shared/model/dto/Widget';
 import {WidgetVariableType} from '../../../../shared/model/dto/enums/WidgetVariableType';
 import {DashboardService} from '../../../../modules/dashboard/dashboard.service';
 import {ProjectWidget} from '../../../../shared/model/dto/ProjectWidget';
 import {WidgetAvailabilityEnum} from '../../../../shared/model/dto/enums/WidgetAvailabilityEnum';
 import {HttpCategoryService} from '../../../../shared/services/http/http-category.service';
+import {HttpAssetService} from '../../../../shared/services/http/http-asset.service';
 
 /**
  * Dialog used to add a widget
@@ -80,6 +80,7 @@ export class AddWidgetDialogComponent implements OnInit {
    * The constructor
    *
    * @param data The data send to the dialog
+   * @param {HttpAssetService} httpAssetService The asset service
    * @param {WidgetService} widgetService The widget service
    * @param {HttpCategoryService} httpCategoryService The http category service
    * @param {DashboardService} dashboardService The dashboard service
@@ -89,6 +90,7 @@ export class AddWidgetDialogComponent implements OnInit {
    */
   constructor(@Inject(MAT_DIALOG_DATA) private data: any,
               private widgetService: WidgetService,
+              private httpAssetService: HttpAssetService,
               private httpCategoryService: HttpCategoryService,
               private dashboardService: DashboardService,
               private domSanitizer: DomSanitizer,
@@ -161,12 +163,7 @@ export class AddWidgetDialogComponent implements OnInit {
     }
   }
 
-  getImageSrc(image: Asset): SafeUrl {
-    if (image != null) {
-      return this.domSanitizer.bypassSecurityTrustUrl(`data:${image.contentType};base64,${image.content}`);
-    } else {
-      return this.domSanitizer.bypassSecurityTrustUrl(``);
-    }
-
+  getImageSrc(assetToken: string): string {
+    return this.httpAssetService.getUrlContent(assetToken);
   }
 }
