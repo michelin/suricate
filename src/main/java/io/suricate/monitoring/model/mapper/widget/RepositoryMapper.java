@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.model.mapper.widget;
 
-import io.suricate.monitoring.model.dto.api.widget.RepositoryDto;
+import io.suricate.monitoring.model.dto.api.repository.RepositoryResponseDto;
 import io.suricate.monitoring.model.entity.widget.Repository;
 import org.mapstruct.*;
 import org.springframework.stereotype.Component;
@@ -40,7 +40,7 @@ public abstract class RepositoryMapper {
     /* ******************************************************* */
 
     /**
-     * Tranform a Repository into a RepositoryDto
+     * Tranform a Repository into a RepositoryResponseDto
      *
      * @param repository The repository to transform
      * @return The related repository DTO
@@ -49,38 +49,38 @@ public abstract class RepositoryMapper {
     @Mappings({
         @Mapping(target = "widgets", qualifiedByName = "toWidgetDtosDefault")
     })
-    public abstract RepositoryDto toRepositoryDtoDefault(Repository repository);
+    public abstract RepositoryResponseDto toRepositoryDtoDefault(Repository repository);
 
     @Named("toRepositoryDtoWithoutWidgets")
     @Mappings({
         @Mapping(target = "widgets", ignore = true)
     })
-    public abstract RepositoryDto toRepositoryDtoWithoutWidgets(Repository repository);
+    public abstract RepositoryResponseDto toRepositoryDtoWithoutWidgets(Repository repository);
 
 
     /**
      * Create a repository with a dto without widgets
      *
-     * @param repositoryDto The repository dto to transform
+     * @param repositoryResponseDto The repository dto to transform
      * @return The repository
      */
     @Named("toRepositoryWithoutWidgets")
     @Mappings({
         @Mapping(target = "widgets", ignore = true)
     })
-    public abstract Repository toRepositoryWithoutWidgets(RepositoryDto repositoryDto);
+    public abstract Repository toRepositoryWithoutWidgets(RepositoryResponseDto repositoryResponseDto);
 
     /* ******************************************************* */
     /*                    List Mapping                         */
     /* ******************************************************* */
 
     /**
-     * Tranform a list of repositories into a list of RepositoryDto
+     * Tranform a list of repositories into a list of RepositoryResponseDto
      *
      * @param repositories The list of repositories to transform
      * @return The related DTOs
      */
     @Named("toRepositoryDtosDefault")
     @IterableMapping(qualifiedByName = "toRepositoryDtoDefault")
-    public abstract List<RepositoryDto> toRepositoryDtosDefault(List<Repository> repositories);
+    public abstract List<RepositoryResponseDto> toRepositoryDtosDefault(List<Repository> repositories);
 }

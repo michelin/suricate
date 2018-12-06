@@ -20,8 +20,6 @@
 package io.suricate.monitoring.model.dto.api.projectwidget;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
-import io.suricate.monitoring.model.dto.api.project.ProjectResponseDto;
-import io.suricate.monitoring.model.dto.api.widget.WidgetDto;
 import io.suricate.monitoring.model.enums.WidgetState;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -105,12 +103,12 @@ public class ProjectWidgetResponseDto extends AbstractDto {
     /**
      * The related project
      */
-    @ApiModelProperty(value = "The related project")
-    private ProjectResponseDto project;
+    @ApiModelProperty(value = "The related projectToken")
+    private String projectToken;
 
     /**
      * The related widget
      */
-    @ApiModelProperty(value = "The related widget")
-    private WidgetDto widget;
+    @ApiModelProperty(value = "The related widgetId")
+    private Long widgetId;
 }

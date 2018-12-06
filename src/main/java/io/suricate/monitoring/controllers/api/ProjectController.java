@@ -21,6 +21,7 @@ import io.suricate.monitoring.model.dto.api.project.ProjectRequestDto;
 import io.suricate.monitoring.model.dto.api.project.ProjectResponseDto;
 import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetPositionRequestDto;
 import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetRequestDto;
+import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetResponseDto;
 import io.suricate.monitoring.model.entity.Configuration;
 import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
@@ -417,6 +418,38 @@ public class ProjectController {
             .contentType(MediaType.APPLICATION_JSON)
             .cacheControl(CacheControl.noCache())
             .body(projectMapper.toProjectDtoDefault(project.get()));
+    }
+
+    /**
+     * Get the list of project widgets for a project
+     */
+    @ApiOperation(value = "Get the full list of projectWidgets for a project", response = ProjectResponseDto.class, nickname = "getProjectWidgetsForProject")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Ok", response = ProjectWidgetResponseDto.class, responseContainer = "List"),
+        @ApiResponse(code = 204, message = "No Content"),
+        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
+    })
+    @GetMapping(value = "/v1/projects/{projectToken}/projectWidgets")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @Transactional
+    public ResponseEntity<List<ProjectWidgetResponseDto>> getProjectWidgetsForProject(@ApiParam(name = "projectToken", value = "The project token", required = true)
+                                                                                      @PathVariable("projectToken") String projectToken) {
+        Optional<Project> projectOptional = projectService.getOneByToken(projectToken);
+
+        if (!projectOptional.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Project project = projectOptional.get();
+        if (project.getWidgets().isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        return ResponseEntity
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(projectWidgetMapper.toProjectWidgetDtosDefault(project.getWidgets()));
     }
 
     /**

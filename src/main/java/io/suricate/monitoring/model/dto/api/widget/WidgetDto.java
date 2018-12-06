@@ -2,6 +2,7 @@ package io.suricate.monitoring.model.dto.api.widget;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
 import io.suricate.monitoring.model.dto.api.asset.AssetResponseDto;
+import io.suricate.monitoring.model.dto.api.repository.RepositoryResponseDto;
 import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -109,7 +110,7 @@ public class WidgetDto extends AbstractDto {
      * The repository used for this widget
      */
     @ApiModelProperty(value = "The repository of this widget")
-    private RepositoryDto repository;
+    private RepositoryResponseDto repository;
 
     /**
      * The list of the params for this widget

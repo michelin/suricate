@@ -17,7 +17,7 @@
 package io.suricate.monitoring.controllers.api;
 
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
-import io.suricate.monitoring.model.dto.api.widget.RepositoryDto;
+import io.suricate.monitoring.model.dto.api.repository.RepositoryResponseDto;
 import io.suricate.monitoring.model.entity.widget.Repository;
 import io.suricate.monitoring.model.mapper.widget.RepositoryMapper;
 import io.suricate.monitoring.service.GitService;
@@ -82,9 +82,9 @@ public class RepositoryController {
      *
      * @return The list of repositories
      */
-    @ApiOperation(value = "Get the full list of repositories", response = RepositoryDto.class, nickname = "getAllRepos")
+    @ApiOperation(value = "Get the full list of repositories", response = RepositoryResponseDto.class, nickname = "getAllRepos")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = RepositoryDto.class, responseContainer = "List"),
+        @ApiResponse(code = 200, message = "Ok", response = RepositoryResponseDto.class, responseContainer = "List"),
         @ApiResponse(code = 204, message = "No Content"),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
@@ -92,7 +92,7 @@ public class RepositoryController {
     @GetMapping(value = "/v1/repositories")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Transactional
-    public ResponseEntity<List<RepositoryDto>> getAll() {
+    public ResponseEntity<List<RepositoryResponseDto>> getAll() {
         Optional<List<Repository>> optionalRepositories = repositoryService.getAllOrderByName();
 
         if (!optionalRepositories.isPresent()) {
@@ -109,20 +109,20 @@ public class RepositoryController {
     /**
      * Create a new repository
      *
-     * @param repositoryDto The repository to create
+     * @param repositoryResponseDto The repository to create
      * @return The repository created
      */
-    @ApiOperation(value = "Create a new repository, and load it automatically if enable is selected", response = RepositoryDto.class)
+    @ApiOperation(value = "Create a new repository, and load it automatically if enable is selected", response = RepositoryResponseDto.class)
     @ApiResponses(value = {
-        @ApiResponse(code = 201, message = "Created", response = RepositoryDto.class),
+        @ApiResponse(code = 201, message = "Created", response = RepositoryResponseDto.class),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
     @PostMapping(value = "/v1/repositories")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<RepositoryDto> createOne(@ApiParam(name = "repositoryDto", value = "The repository to create", required = true)
-                                                   @RequestBody RepositoryDto repositoryDto) {
-        Repository repository = repositoryMapper.toRepositoryWithoutWidgets(repositoryDto);
+    public ResponseEntity<RepositoryResponseDto> createOne(@ApiParam(name = "repositoryResponseDto", value = "The repository to create", required = true)
+                                                           @RequestBody RepositoryResponseDto repositoryResponseDto) {
+        Repository repository = repositoryMapper.toRepositoryWithoutWidgets(repositoryResponseDto);
         repositoryService.addOrUpdateRepository(repository);
 
         if (repository.isEnabled()) {
@@ -148,9 +148,9 @@ public class RepositoryController {
      * @param repositoryId The repository Id
      * @return The repository
      */
-    @ApiOperation(value = "Retrieve an existing repository by id", response = RepositoryDto.class, nickname = "getRepoById")
+    @ApiOperation(value = "Retrieve an existing repository by id", response = RepositoryResponseDto.class, nickname = "getRepoById")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = RepositoryDto.class),
+        @ApiResponse(code = 200, message = "Ok", response = RepositoryResponseDto.class),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Repository not found", response = ApiErrorDto.class)
@@ -158,8 +158,8 @@ public class RepositoryController {
     @GetMapping(value = "/v1/repositories/{repositoryId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Transactional
-    public ResponseEntity<RepositoryDto> getOneById(@ApiParam(name = "repositoryId", value = "The repository id", required = true)
-                                                    @PathVariable Long repositoryId) {
+    public ResponseEntity<RepositoryResponseDto> getOneById(@ApiParam(name = "repositoryId", value = "The repository id", required = true)
+                                                            @PathVariable Long repositoryId) {
         Optional<Repository> optionalRepository = repositoryService.getOneById(repositoryId);
 
         if (!optionalRepository.isPresent()) {
@@ -178,24 +178,24 @@ public class RepositoryController {
      *
      * @return The repository updated
      */
-    @ApiOperation(value = "Update an existing repository by id, and load it automatically if enable is selected", response = RepositoryDto.class)
+    @ApiOperation(value = "Update an existing repository by id, and load it automatically if enable is selected", response = RepositoryResponseDto.class)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = RepositoryDto.class),
+        @ApiResponse(code = 200, message = "Ok", response = RepositoryResponseDto.class),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Repository not found", response = ApiErrorDto.class)
     })
     @PutMapping(value = "/v1/repositories/{repositoryId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<RepositoryDto> updateOneById(@ApiParam(name = "repositoryId", value = "The repository id", required = true)
-                                                       @PathVariable Long repositoryId,
-                                                       @ApiParam(name = "repositoryDto", value = "The repository with the new info's to update", required = true)
-                                                       @RequestBody RepositoryDto repositoryDto) {
+    public ResponseEntity<RepositoryResponseDto> updateOneById(@ApiParam(name = "repositoryId", value = "The repository id", required = true)
+                                                               @PathVariable Long repositoryId,
+                                                               @ApiParam(name = "repositoryResponseDto", value = "The repository with the new info's to update", required = true)
+                                                               @RequestBody RepositoryResponseDto repositoryResponseDto) {
         if (!repositoryService.existsById(repositoryId)) {
             throw new ObjectNotFoundException(Repository.class, repositoryId);
         }
 
-        Repository repository = repositoryMapper.toRepositoryWithoutWidgets(repositoryDto);
+        Repository repository = repositoryMapper.toRepositoryWithoutWidgets(repositoryResponseDto);
         repository.setId(repositoryId);
 
         this.repositoryService.addOrUpdateRepository(repository);

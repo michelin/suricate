@@ -23,11 +23,14 @@ import io.suricate.monitoring.model.mapper.widget.WidgetMapper;
 import io.suricate.monitoring.service.api.ProjectService;
 import io.suricate.monitoring.service.api.ProjectWidgetService;
 import io.suricate.monitoring.service.api.WidgetService;
+import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 /**
  * Interface that manage the generation DTO/Model objects for project widget class
@@ -78,11 +81,18 @@ public abstract class ProjectWidgetMapper {
     @Mapping(target = "widgetPosition.height", source = "projectWidget.height")
     @Mapping(target = "widgetPosition.width", source = "projectWidget.width")
     @Mapping(target = "instantiateHtml", expression = "java(projectWidgetService.instantiateProjectWidgetHtml(projectWidget))")
-    @Mapping(target = "project", qualifiedByName = "toProjectDtoDefault")
-    @Mapping(target = "widget", qualifiedByName = "toWidgetDtoDefault")
+    @Mapping(target = "projectToken", source = "projectWidget.project.token")
+    @Mapping(target = "widgetId", source = "projectWidget.widget.id")
     @Mapping(target = "backendConfig", expression = "java(projectWidgetService.decryptSecretParamsIfNeeded(projectWidget.getWidget().getWidgetParams(), projectWidget.getBackendConfig()))")
     public abstract ProjectWidgetResponseDto toProjectWidgetDtoDefault(ProjectWidget projectWidget);
 
+    /* ******************************************************* */
+    /*                  List Mapping                         */
+    /* ******************************************************* */
+
+    @Named("toProjectWidgetDtosDefault")
+    @IterableMapping(qualifiedByName = "toProjectWidgetDtoDefault")
+    public abstract List<ProjectWidgetResponseDto> toProjectWidgetDtosDefault(List<ProjectWidget> projectWidgets);
 
     /* ************************* TO MODEL **************************************** */
 
