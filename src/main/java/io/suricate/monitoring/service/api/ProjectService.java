@@ -25,8 +25,6 @@ import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
 import io.suricate.monitoring.utils.logging.LogExecutionTime;
 import org.apache.commons.lang3.StringUtils;
 import org.jasypt.encryption.StringEncryptor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -41,11 +39,6 @@ import java.util.UUID;
  */
 @Service
 public class ProjectService {
-
-    /**
-     * Class logger
-     */
-    private final static Logger LOGGER = LoggerFactory.getLogger(ProjectService.class);
 
     /**
      * String encryptor (mainly used for SECRET widget params)
@@ -95,13 +88,13 @@ public class ProjectService {
     }
 
     /**
-     * Test if the project exists by id
+     * Test if the project exists by token
      *
-     * @param id The project id
-     * @return True id the project exists false otherwise
+     * @param token The project token
+     * @return True the project exists false otherwise
      */
-    public boolean isProjectExists(final Long id) {
-        return this.projectRepository.existsById(id);
+    public boolean isProjectExists(final String token) {
+        return this.getOneByToken(token).isPresent();
     }
 
     /**

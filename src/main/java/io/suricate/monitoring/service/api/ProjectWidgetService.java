@@ -164,12 +164,12 @@ public class ProjectWidgetService {
     /**
      * Find a project widget by the project id and the project widget id
      *
-     * @param projectId       The project id
+     * @param projectToken    The project projectToken
      * @param projectWidgetId The project widget id
      * @return The project widget as Optional
      */
-    public Optional<ProjectWidget> findByProjectIdAndProjectWidgetId(final Long projectId, final Long projectWidgetId) {
-        return projectWidgetRepository.findByIdAndProject_Id(projectWidgetId, projectId);
+    public Optional<ProjectWidget> findByProjectTokenAndProjectWidgetId(final String projectToken, final Long projectWidgetId) {
+        return projectWidgetRepository.findByIdAndProject_Token(projectWidgetId, projectToken);
     }
 
     /**
