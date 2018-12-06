@@ -78,4 +78,8 @@ public abstract class ConfigurationMapper {
     @Named("toConfigurationDtosDefault")
     @IterableMapping(qualifiedByName = "toConfigurationDtoDefault")
     public abstract List<ConfigurationResponseDto> toConfigurationDtosDefault(List<Configuration> configurations);
+
+    @Named("toConfigurationDtosWithoutCategory")
+    @IterableMapping(qualifiedByName = "toConfigurationDtoWithoutCategory")
+    public abstract List<ConfigurationResponseDto> toConfigurationDtosWithoutCategory(List<Configuration> configurations);
 }
