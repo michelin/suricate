@@ -197,7 +197,7 @@ public class ProjectController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Current user not found", response = ApiErrorDto.class)
     })
-    @PutMapping(value = "/v1/projects")
+    @PostMapping(value = "/v1/projects")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ProjectDto> createProject(@ApiIgnore Principal principal,
                                                     @ApiParam(name = "projectDto", value = "The project information", required = true)
@@ -382,7 +382,7 @@ public class ProjectController {
         @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "User not found", response = ApiErrorDto.class)
     })
-    @PutMapping(value = "/v1/projects/{projectId}/users")
+    @PostMapping(value = "/v1/projects/{projectId}/users")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ProjectDto> addUserToProject(@ApiParam(name = "projectId", value = "The project id", required = true)
                                                        @PathVariable("projectId") Long projectId,

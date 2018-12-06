@@ -118,7 +118,7 @@ public class RepositoryController {
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
-    @PutMapping(value = "/v1/repositories")
+    @PostMapping(value = "/v1/repositories")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<RepositoryDto> createOne(@ApiParam(name = "repositoryDto", value = "The repository to create", required = true)
                                                    @RequestBody RepositoryDto repositoryDto) {

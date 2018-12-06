@@ -155,7 +155,7 @@ public class WidgetController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Widget not found", response = ApiErrorDto.class)
     })
-    @PostMapping(value = "/v1/widgets/{widgetId}")
+    @PutMapping(value = "/v1/widgets/{widgetId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<WidgetDto> updateWidget(@ApiParam(name = "widgetId", value = "The widget id", required = true)
                                                   @PathVariable("widgetId") Long widgetId,
