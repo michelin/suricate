@@ -26,8 +26,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
@@ -44,7 +42,7 @@ import java.util.Optional;
  * Role managing controllers
  */
 @RestController
-@RequestMapping(value = "/api/roles")
+@RequestMapping(value = "/api")
 @Api(value = "Role Controller", tags = {"Role"})
 public class RoleController {
 
@@ -83,7 +81,7 @@ public class RoleController {
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
     })
-    @GetMapping
+    @GetMapping(value = "/v1/roles")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<RoleDto>> getRoles() {
         Optional<List<Role>> rolesOptional = roleService.getRoles();

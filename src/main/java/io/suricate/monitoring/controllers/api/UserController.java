@@ -51,7 +51,7 @@ import java.util.stream.Collectors;
  * User controller
  */
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api")
 @Api(value = "User Controller", tags = {"User"})
 public class UserController {
 
@@ -102,7 +102,7 @@ public class UserController {
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
-    @GetMapping
+    @GetMapping(value = "/v1/users")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<UserDto>> getAll() {
         Optional<List<User>> users = userService.getAllOrderByUsername();
@@ -131,7 +131,7 @@ public class UserController {
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
-    @GetMapping(value = "/search")
+    @GetMapping(value = "/v1/users/search")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<List<UserDto>> search(@ApiParam(name = "username", value = "The username to search", required = true)
                                                 @RequestParam("username") String username) {
@@ -159,7 +159,7 @@ public class UserController {
         @ApiResponse(code = 200, message = "Ok", response = UserDto.class),
         @ApiResponse(code = 400, message = "Bad request", response = ApiErrorDto.class),
     })
-    @PostMapping(value = "/register")
+    @PostMapping(value = "/v1/users/register")
     @PreAuthorize("isAnonymous()")
     public ResponseEntity<UserDto> register(@ApiParam(name = "userDto", value = "The user information to create", required = true)
                                             @RequestBody UserDto userDto) {
@@ -191,7 +191,7 @@ public class UserController {
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
-    @GetMapping(value = "/{userId}")
+    @GetMapping(value = "/v1/users/{userId}")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<UserDto> getOne(@ApiParam(name = "userId", value = "The user id", required = true)
                                           @PathVariable("userId") Long userId) {
@@ -219,7 +219,7 @@ public class UserController {
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
-    @DeleteMapping(value = "/{userId}")
+    @DeleteMapping(value = "/v1/users/{userId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Transactional
     public ResponseEntity<UserDto> deleteOne(@ApiParam(name = "userId", value = "The user id", required = true)
@@ -252,7 +252,7 @@ public class UserController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "User not found", response = ApiErrorDto.class)
     })
-    @PutMapping(value = "/{userId}")
+    @PutMapping(value = "/v1/users/{userId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<UserDto> updateOne(@ApiParam(name = "userId", value = "The user id", required = true)
                                              @PathVariable("userId") Long userId,
@@ -293,7 +293,7 @@ public class UserController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "User not found", response = ApiErrorDto.class)
     })
-    @PutMapping(value = "/{userId}/settings")
+    @PutMapping(value = "/v1/users/{userId}/settings")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<UserDto> updateUserSettings(@ApiIgnore Principal principal,
                                                       @ApiParam(name = "userId", value = "The user id", required = true)
@@ -332,7 +332,7 @@ public class UserController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "User not found", response = ApiErrorDto.class)
     })
-    @GetMapping(value = "/current")
+    @GetMapping(value = "/v1/users/current")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<UserDto> getCurrentUser(@ApiIgnore Principal principal) {
         Optional<User> user = userService.getOneByUsername(principal.getName());

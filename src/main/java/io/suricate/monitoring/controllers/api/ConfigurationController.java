@@ -41,7 +41,7 @@ import java.util.Optional;
  * Configuration controller
  */
 @RestController
-@RequestMapping("/api/configurations")
+@RequestMapping("/api")
 @Api(value = "Configuration Controller", tags = {"Configuration"})
 public class ConfigurationController {
 
@@ -87,7 +87,7 @@ public class ConfigurationController {
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
-    @GetMapping
+    @GetMapping(value = "/v1/configurations")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<ConfigurationResponseDto>> getAll() {
         Optional<List<Configuration>> configurations = configurationService.getAll();
@@ -116,7 +116,7 @@ public class ConfigurationController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Configuration not found", response = ApiErrorDto.class)
     })
-    @GetMapping(value = "/{key}")
+    @GetMapping(value = "/v1/configurations/{key}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ConfigurationResponseDto> getOneByKey(@ApiParam(name = "key", value = "The configuration key", required = true)
                                                                 @PathVariable("key") final String key) {
@@ -147,7 +147,7 @@ public class ConfigurationController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Configuration not found", response = ApiErrorDto.class)
     })
-    @PutMapping(value = "/{key}")
+    @PutMapping(value = "/v1/configurations/{key}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ConfigurationResponseDto> updateOneByKey(@ApiParam(name = "key", value = "The configuration key", required = true)
                                                                    @PathVariable("key") final String key,
@@ -184,7 +184,7 @@ public class ConfigurationController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Configuration not found", response = ApiErrorDto.class)
     })
-    @DeleteMapping(value = "/{key}")
+    @DeleteMapping(value = "/v1/configurations/{key}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ConfigurationResponseDto> deleteOneByKey(@ApiParam(name = "key", value = "The configuration key", required = true)
                                                                    @PathVariable("key") final String key) {
@@ -209,7 +209,7 @@ public class ConfigurationController {
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Ok", response = ApplicationPropertiesDto.class)
     })
-    @GetMapping(value = "/authentication-provider")
+    @GetMapping(value = "/v1/configurations/authentication-provider")
     public ResponseEntity<ApplicationPropertiesDto> getAuthenticationProvider() {
         return ResponseEntity
             .ok()
@@ -225,7 +225,7 @@ public class ConfigurationController {
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Ok", response = ApplicationPropertiesDto.class, responseContainer = "List")
     })
-    @GetMapping(value = "/server")
+    @GetMapping(value = "/v1/configurations/server")
     public ResponseEntity<List<ApplicationPropertiesDto>> getServerConfiguration() {
         return ResponseEntity
             .ok()

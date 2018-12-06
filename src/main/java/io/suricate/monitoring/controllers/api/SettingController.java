@@ -42,7 +42,7 @@ import java.util.Optional;
  * Settings controller
  */
 @RestController
-@RequestMapping("/api/settings")
+@RequestMapping("/api")
 @Api(value = "Setting Controller", tags = {"Setting"})
 public class SettingController {
 
@@ -81,7 +81,7 @@ public class SettingController {
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
-    @GetMapping
+    @GetMapping(value = "/v1/settings")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<List<SettingDto>> getAll() {
         Optional<List<Setting>> settingsOptional = settingService.getAll();

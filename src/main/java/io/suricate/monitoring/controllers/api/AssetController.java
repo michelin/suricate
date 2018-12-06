@@ -38,7 +38,7 @@ import springfox.documentation.annotations.ApiIgnore;
  * Asset controller
  */
 @RestController
-@RequestMapping("/api/asset")
+@RequestMapping("/api")
 @Api(value = "Asset Controller", tags = {"Asset"})
 public class AssetController {
 
@@ -69,7 +69,7 @@ public class AssetController {
         @ApiResponse(code = 400, response = ApiErrorDto.class, message = "Cannot decrypt token"),
         @ApiResponse(code = 401, response = ApiErrorDto.class, message = "Invalid token")
     })
-    @GetMapping(path = "/{token}/content")
+    @GetMapping(path = "/v1/assets/{token}/content")
     public ResponseEntity<byte[]> getAsset(@ApiIgnore WebRequest webRequest,
                                            @ApiParam(name = "token", value = "The asset Token", required = true)
                                            @PathVariable("token") String token) {

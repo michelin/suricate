@@ -42,7 +42,7 @@ import java.util.List;
  * The widget controller
  */
 @RestController
-@RequestMapping("/api/categories")
+@RequestMapping("/api")
 @Api(value = "Category Controller", tags = {"Category"})
 public class CategoryController {
 
@@ -81,7 +81,7 @@ public class CategoryController {
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
-    @GetMapping
+    @GetMapping(value = "/v1/categories")
     @PreAuthorize("hasRole('ROLE_USER')")
     @Transactional
     public ResponseEntity<List<CategoryResponseDto>> getCategories() {
