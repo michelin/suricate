@@ -48,11 +48,6 @@ import java.util.Optional;
 public class ConfigurationController {
 
     /**
-     * Class logger
-     */
-    private final static Logger LOGGER = LoggerFactory.getLogger(ConfigurationController.class);
-
-    /**
      * The configuration Service
      */
     private final ConfigurationService configurationService;
@@ -62,6 +57,9 @@ public class ConfigurationController {
      */
     private final ConfigurationMapper configurationMapper;
 
+    /**
+     * The cache service
+     */
     private final CacheService cacheService;
 
     /**
@@ -91,7 +89,7 @@ public class ConfigurationController {
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<ConfigurationResponseDto>> getAll() {
         Optional<List<Configuration>> configurations = configurationService.getAll();
@@ -120,7 +118,7 @@ public class ConfigurationController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Configuration not found", response = ApiErrorDto.class)
     })
-    @RequestMapping(value = "/{key}", method = RequestMethod.GET)
+    @GetMapping(value = "/{key}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ConfigurationResponseDto> getOneByKey(@ApiParam(name = "key", value = "The configuration key", required = true)
                                                                 @PathVariable("key") final String key) {
@@ -151,7 +149,7 @@ public class ConfigurationController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Configuration not found", response = ApiErrorDto.class)
     })
-    @RequestMapping(value = "/{key}", method = RequestMethod.PUT)
+    @PutMapping(value = "/{key}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ConfigurationResponseDto> updateOneByKey(@ApiParam(name = "key", value = "The configuration key", required = true)
                                                                    @PathVariable("key") final String key,
@@ -188,7 +186,7 @@ public class ConfigurationController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Configuration not found", response = ApiErrorDto.class)
     })
-    @RequestMapping(value = "/{key}", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/{key}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ConfigurationResponseDto> deleteOneByKey(@ApiParam(name = "key", value = "The configuration key", required = true)
                                                                    @PathVariable("key") final String key) {
@@ -213,7 +211,7 @@ public class ConfigurationController {
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Ok", response = ApplicationPropertiesDto.class)
     })
-    @RequestMapping(value = "/authentication-provider", method = RequestMethod.GET)
+    @GetMapping(value = "/authentication-provider")
     public ResponseEntity<ApplicationPropertiesDto> getAuthenticationProvider() {
         return ResponseEntity
             .ok()
@@ -229,7 +227,7 @@ public class ConfigurationController {
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Ok", response = ApplicationPropertiesDto.class, responseContainer = "List")
     })
-    @RequestMapping(value = "/server", method = RequestMethod.GET)
+    @GetMapping(value = "/server")
     public ResponseEntity<List<ApplicationPropertiesDto>> getServerConfiguration() {
         return ResponseEntity
             .ok()

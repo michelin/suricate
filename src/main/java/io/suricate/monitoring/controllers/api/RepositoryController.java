@@ -49,11 +49,6 @@ import java.util.Optional;
 public class RepositoryController {
 
     /**
-     * Class logger
-     */
-    private final static Logger LOGGER = LoggerFactory.getLogger(RepositoryController.class);
-
-    /**
      * The repository service
      */
     private final RepositoryService repositoryService;
@@ -96,7 +91,7 @@ public class RepositoryController {
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Transactional
     public ResponseEntity<List<RepositoryDto>> getAll() {
@@ -125,7 +120,7 @@ public class RepositoryController {
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
-    @RequestMapping(method = RequestMethod.PUT)
+    @PutMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<RepositoryDto> createOne(@ApiParam(name = "repositoryDto", value = "The repository to create", required = true)
                                                    @RequestBody RepositoryDto repositoryDto) {
@@ -162,7 +157,7 @@ public class RepositoryController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Repository not found", response = ApiErrorDto.class)
     })
-    @RequestMapping(value = "/{repositoryId}", method = RequestMethod.GET)
+    @GetMapping(value = "/{repositoryId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Transactional
     public ResponseEntity<RepositoryDto> getOneById(@ApiParam(name = "repositoryId", value = "The repository id", required = true)
@@ -192,7 +187,7 @@ public class RepositoryController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Repository not found", response = ApiErrorDto.class)
     })
-    @RequestMapping(value = "/{repositoryId}", method = RequestMethod.PUT)
+    @PutMapping(value = "/{repositoryId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<RepositoryDto> updateOneById(@ApiParam(name = "repositoryId", value = "The repository id", required = true)
                                                        @PathVariable Long repositoryId,

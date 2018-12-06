@@ -80,7 +80,7 @@ public class ScreenController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class)
     })
-    @RequestMapping(value = "connect/{screenCode}/project/{projectToken}", method = RequestMethod.GET)
+    @GetMapping(value = "connect/{screenCode}/project/{projectToken}")
     @PreAuthorize("hasRole('ROLE_USER')")
     @Transactional
     public void connectProjectToScreen(@ApiParam(name = "projectToken", value = "The project token", required = true)
@@ -107,7 +107,7 @@ public class ScreenController {
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
-    @RequestMapping(value = "disconnect", method = RequestMethod.PUT)
+    @PutMapping(value = "disconnect")
     @PreAuthorize("hasRole('ROLE_USER')")
     @Transactional
     public void disconnectProjectToTv(@ApiParam(name = "websocketClient", value = "websocket client to disconnect", required = true)
@@ -126,7 +126,7 @@ public class ScreenController {
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
-    @RequestMapping(value = "refresh/{projectToken}", method = RequestMethod.GET)
+    @GetMapping(value = "refresh/{projectToken}")
     @PreAuthorize("hasRole('ROLE_USER')")
     public void refreshEveryConnectedScreensForProject(@ApiParam(name = "projectToken", value = "The project token", required = true)
                                                        @PathVariable("projectToken") String projectToken) {
@@ -144,7 +144,7 @@ public class ScreenController {
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
-    @RequestMapping(value = "screencode/{projectToken}", method = RequestMethod.GET)
+    @GetMapping(value = "screencode/{projectToken}")
     @PreAuthorize("hasRole('ROLE_USER')")
     public void displayScreenCodeEveryConnectedScreensForProject(@ApiParam(name = "projectToken", value = "The project token", required = true)
                                                                  @PathVariable("projectToken") String projectToken) {

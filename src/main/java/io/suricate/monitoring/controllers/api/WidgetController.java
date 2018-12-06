@@ -111,7 +111,7 @@ public class WidgetController {
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
-    @RequestMapping(value = "/widgets", method = RequestMethod.GET)
+    @GetMapping(value = "/widgets")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<List<WidgetDto>> getWidgets(@ApiParam(name = "action", value = "REFRESH if we have to refresh widgets from GIT Repository", allowableValues = "refresh")
                                                       @RequestParam(value = "action", required = false) String action) {
@@ -155,7 +155,7 @@ public class WidgetController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Widget not found", response = ApiErrorDto.class)
     })
-    @RequestMapping(value = "/widgets/{widgetId}", method = RequestMethod.POST)
+    @PostMapping(value = "/widgets/{widgetId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<WidgetDto> updateWidget(@ApiParam(name = "widgetId", value = "The widget id", required = true)
                                                   @PathVariable("widgetId") Long widgetId,
@@ -188,7 +188,7 @@ public class WidgetController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Category not found", response = ApiErrorDto.class)
     })
-    @RequestMapping(value = "/categories/{categoryId}/widgets", method = RequestMethod.GET)
+    @GetMapping(value = "/categories/{categoryId}/widgets")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<List<WidgetDto>> getWidgetByCategory(@ApiParam(name = "categoryId", value = "The category id", required = true)
                                                                @PathVariable("categoryId") Long categoryId) {

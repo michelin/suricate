@@ -64,11 +64,6 @@ import java.util.stream.Collectors;
 public class ProjectController {
 
     /**
-     * Class logger
-     */
-    private final static Logger LOGGER = LoggerFactory.getLogger(ProjectController.class);
-
-    /**
      * Configuration service
      */
     private final ConfigurationService configurationService;
@@ -134,7 +129,7 @@ public class ProjectController {
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Transactional
     public ResponseEntity<List<ProjectDto>> getAll() {
@@ -167,7 +162,7 @@ public class ProjectController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Current user not found", response = ApiErrorDto.class)
     })
-    @RequestMapping(value = "/currentUser", method = RequestMethod.GET)
+    @GetMapping(value = "/currentUser")
     @PreAuthorize("hasRole('ROLE_USER')")
     @Transactional
     public ResponseEntity<List<ProjectDto>> getAllForCurrentUser(@ApiIgnore Principal principal) {
@@ -204,7 +199,7 @@ public class ProjectController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Current user not found", response = ApiErrorDto.class)
     })
-    @RequestMapping(method = RequestMethod.PUT)
+    @PutMapping
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ProjectDto> createProject(@ApiIgnore Principal principal,
                                                     @ApiParam(name = "projectDto", value = "The project information", required = true)
@@ -244,7 +239,7 @@ public class ProjectController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class)
     })
-    @RequestMapping(value = "/{projectId}", method = RequestMethod.PUT)
+    @PutMapping(value = "/{projectId}")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ProjectDto> updateProject(@ApiParam(name = "projectId", value = "The project id", required = true)
                                                     @PathVariable("projectId") Long projectId,
@@ -283,7 +278,7 @@ public class ProjectController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class)
     })
-    @RequestMapping(value = "/{projectId}", method = RequestMethod.GET)
+    @GetMapping(value = "/{projectId}")
     @PreAuthorize("hasRole('ROLE_USER')")
     @Transactional
     public ResponseEntity<ProjectDto> getOneById(@ApiParam(name = "projectId", value = "The project id", required = true)
@@ -295,7 +290,7 @@ public class ProjectController {
         }
 
         // Add configuration for widgets
-        project.get().getWidgets().forEach(this::addCOnfiguration);
+        project.get().getWidgets().forEach(this::addConfiguration);
 
         return ResponseEntity
             .ok()
@@ -304,7 +299,7 @@ public class ProjectController {
             .body(projectMapper.toProjectDtoDefault(project.get()));
     }
 
-    private void addCOnfiguration(ProjectWidget widget) {
+    private void addConfiguration(ProjectWidget widget) {
         Category widgetCat = widget.getWidget().getCategory();
         List<Configuration> confs = configurationService.getConfigurationForCategory(widgetCat.getId());
 
@@ -326,7 +321,7 @@ public class ProjectController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class)
     })
-    @RequestMapping(value = "/project/{token}", method = RequestMethod.GET)
+    @GetMapping(value = "/project/{token}")
     public ResponseEntity<ProjectDto> getOneByToken(@ApiParam(name = "token", value = "The project token", required = true)
                                                     @PathVariable("token") String token) {
         Optional<Project> project = projectService.getOneByToken(token);
@@ -355,7 +350,7 @@ public class ProjectController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class)
     })
-    @RequestMapping(value = "/{projectId}", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/{projectId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Transactional
     public ResponseEntity<ProjectDto> deleteOneById(@ApiParam(name = "projectId", value = "The project id", required = true)
@@ -389,7 +384,7 @@ public class ProjectController {
         @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "User not found", response = ApiErrorDto.class)
     })
-    @RequestMapping(value = "/{projectId}/users", method = RequestMethod.PUT)
+    @PutMapping(value = "/{projectId}/users")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ProjectDto> addUserToProject(@ApiParam(name = "projectId", value = "The project id", required = true)
                                                        @PathVariable("projectId") Long projectId,
@@ -428,7 +423,7 @@ public class ProjectController {
         @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "User not found", response = ApiErrorDto.class)
     })
-    @RequestMapping(value = "/{projectId}/users/{userId}", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/{projectId}/users/{userId}")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ProjectDto> deleteUserToProject(@ApiParam(name = "projectId", value = "The project id", required = true)
                                                           @PathVariable("projectId") Long projectId,
@@ -467,7 +462,7 @@ public class ProjectController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class)
     })
-    @RequestMapping(value = "/{projectId}/widgets", method = RequestMethod.PUT)
+    @PutMapping(value = "/{projectId}/widgets")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ProjectDto> addWidgetToProject(@ApiParam(name = "projectId", value = "The project id", required = true)
                                                          @PathVariable("projectId") Long projectId,
@@ -507,7 +502,7 @@ public class ProjectController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class)
     })
-    @RequestMapping(value = "/{projectId}/projectWidgetPositions", method = RequestMethod.PUT)
+    @PutMapping(value = "/{projectId}/projectWidgetPositions")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ProjectDto> updateProjectWidgetsPositionForProject(@ApiParam(name = "projectId", value = "The project id", required = true)
                                                                              @PathVariable("projectId") Long projectId,
@@ -542,7 +537,7 @@ public class ProjectController {
         @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Project widget not found", response = ApiErrorDto.class)
     })
-    @RequestMapping(value = "{projectId}/projectWidgets/{projectWidgetId}", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "{projectId}/projectWidgets/{projectWidgetId}")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ProjectDto> deleteProjectWidgetFromProject(@ApiParam(name = "projectId", value = "The project id", required = true)
                                                                      @PathVariable("projectId") Long projectId,
@@ -582,7 +577,7 @@ public class ProjectController {
         @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Project widget not found", response = ApiErrorDto.class)
     })
-    @RequestMapping(value = "{projectId}/projectWidgets/{projectWidgetId}", method = RequestMethod.PUT)
+    @PutMapping(value = "{projectId}/projectWidgets/{projectWidgetId}")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ProjectDto> editProjectWidgetFromProject(@ApiParam(name = "projectId", value = "The project id", required = true)
                                                                    @PathVariable("projectId") Long projectId,

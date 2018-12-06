@@ -29,10 +29,7 @@ import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.WebRequest;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -43,11 +40,6 @@ import springfox.documentation.annotations.ApiIgnore;
 @RequestMapping("/api/asset")
 @Api(value = "Asset Controller", tags = {"Asset"})
 public class AssetController {
-
-    /**
-     * Class logger
-     */
-    private final static Logger LOGGER = LoggerFactory.getLogger(AssetController.class);
 
     /**
      * Asset Service
@@ -76,7 +68,7 @@ public class AssetController {
         @ApiResponse(code = 400, response = ApiErrorDto.class, message = "Cannot decrypt token"),
         @ApiResponse(code = 401, response = ApiErrorDto.class, message = "Invalid token")
     })
-    @RequestMapping(path = "/{token}", method = RequestMethod.GET)
+    @GetMapping(path = "/{token}/content")
     public ResponseEntity<byte[]> getAsset(@ApiIgnore WebRequest webRequest,
                                            @ApiParam(name = "token", value = "The asset Token", required = true)
                                            @PathVariable("token") String token) {
