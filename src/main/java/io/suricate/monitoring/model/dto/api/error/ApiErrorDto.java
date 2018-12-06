@@ -21,7 +21,9 @@ import io.suricate.monitoring.model.dto.api.AbstractDto;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
@@ -29,11 +31,9 @@ import java.util.Date;
 /**
  * Used for send errors through webservices
  */
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ToString
 @ApiModel(value = "ApiError", description = "Api error response")
 public class ApiErrorDto extends AbstractDto {
     /**

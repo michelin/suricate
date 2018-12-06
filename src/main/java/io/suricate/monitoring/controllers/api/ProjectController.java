@@ -17,6 +17,7 @@
 package io.suricate.monitoring.controllers.api;
 
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
+import io.suricate.monitoring.model.dto.api.project.ProjectRequestDto;
 import io.suricate.monitoring.model.dto.api.project.ProjectResponseDto;
 import io.suricate.monitoring.model.dto.api.project.ProjectWidgetDto;
 import io.suricate.monitoring.model.dto.api.project.ProjectWidgetPositionDto;
@@ -186,8 +187,8 @@ public class ProjectController {
     /**
      * Add a new project/dashboard for a user
      *
-     * @param principal          The connected user
-     * @param projectResponseDto The project to add
+     * @param principal         The connected user
+     * @param projectRequestDto The project to add
      * @return The saved project
      */
     @ApiOperation(value = "Create a new project for the current user", response = ProjectResponseDto.class)
@@ -200,15 +201,15 @@ public class ProjectController {
     @PostMapping(value = "/v1/projects")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ProjectResponseDto> createProject(@ApiIgnore Principal principal,
-                                                            @ApiParam(name = "projectResponseDto", value = "The project information", required = true)
-                                                            @RequestBody ProjectResponseDto projectResponseDto) {
+                                                            @ApiParam(name = "projectRequestDto", value = "The project information", required = true)
+                                                            @RequestBody ProjectRequestDto projectRequestDto) {
         Optional<User> user = userService.getOneByUsername(principal.getName());
 
         if (!user.isPresent()) {
             throw new ObjectNotFoundException(User.class, principal.getName());
         }
 
-        Project project = projectService.createProject(user.get(), projectMapper.toNewProject(projectResponseDto));
+        Project project = projectService.createProject(user.get(), projectMapper.toNewProject(projectRequestDto));
 
         URI resourceLocation = ServletUriComponentsBuilder
             .fromCurrentContextPath()
@@ -242,7 +243,7 @@ public class ProjectController {
     public ResponseEntity<ProjectResponseDto> updateProject(@ApiParam(name = "projectId", value = "The project id", required = true)
                                                             @PathVariable("projectId") Long projectId,
                                                             @ApiParam(name = "projectResponseDto", value = "The project information", required = true)
-                                                            @RequestBody ProjectResponseDto projectResponseDto) {
+                                                            @RequestBody ProjectRequestDto projectRequestDto) {
         Optional<Project> projectOptional = projectService.getOneById(projectId);
 
         if (!projectOptional.isPresent()) {
@@ -251,10 +252,10 @@ public class ProjectController {
 
         projectService.updateProject(
             projectOptional.get(),
-            projectResponseDto.getName(),
-            projectResponseDto.getGridProperties().getWidgetHeight(),
-            projectResponseDto.getGridProperties().getMaxColumn(),
-            projectResponseDto.getGridProperties().getCssStyle()
+            projectRequestDto.getName(),
+            projectRequestDto.getWidgetHeight(),
+            projectRequestDto.getMaxColumn(),
+            projectRequestDto.getCssStyle()
         );
         return ResponseEntity
             .ok()

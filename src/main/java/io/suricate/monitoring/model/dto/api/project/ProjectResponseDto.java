@@ -32,7 +32,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "Project", description = "Describe a project/dashboard")
+@ApiModel(value = "ProjectResponse", description = "Describe a project/dashboard")
 public class ProjectResponseDto extends AbstractDto {
 
     /**
@@ -49,7 +49,7 @@ public class ProjectResponseDto extends AbstractDto {
      * the grid properties for a dashboard
      */
     @ApiModelProperty(value = "the dashboard grid properties")
-    private ProjectGridPropertiesResponseDto gridProperties;
+    private ProjectGridResponseDto gridProperties;
     /**
      * The librairies related
      */

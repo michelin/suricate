@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.dto.api.asset;
+package io.suricate.monitoring.model.dto.api.project;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
 import io.swagger.annotations.ApiModel;
@@ -24,35 +24,32 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
- * Asset class used for communicate through webservices
+ * Project object used to create a new project
  */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "AssetResponse", description = "Describe an asset (Image, file, ...)")
-public class AssetResponseDto extends AbstractDto {
+@ApiModel(value = "ProjectRequest", description = "Used to create or update a project")
+public class ProjectRequestDto extends AbstractDto {
 
     /**
-     * The asset id
+     * The project name
      */
-    @ApiModelProperty(value = "The database id")
-    private Long id;
-
+    @ApiModelProperty(value = "The project name", required = true)
+    private String name;
     /**
-     * The blob content
+     * Number of column in the dashboard
      */
-    @ApiModelProperty(value = "The blob content")
-    private byte[] content;
-
+    @ApiModelProperty(value = "The number of columns in the dashboard")
+    private Integer maxColumn;
     /**
-     * The content type
+     * The height for widgets contained
      */
-    @ApiModelProperty(value = "The content type")
-    private String contentType;
-
+    @ApiModelProperty(value = "The height in pixel of the widget")
+    private Integer widgetHeight;
     /**
-     * The size of the asset
+     * The global css for the dashboard
      */
-    @ApiModelProperty(value = "The size of the asset")
-    private long size;
+    @ApiModelProperty(value = "The css style of the dashboard grid")
+    private String cssStyle;
 }

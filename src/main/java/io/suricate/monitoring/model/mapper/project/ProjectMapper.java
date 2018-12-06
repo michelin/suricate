@@ -16,6 +16,7 @@
 
 package io.suricate.monitoring.model.mapper.project;
 
+import io.suricate.monitoring.model.dto.api.project.ProjectRequestDto;
 import io.suricate.monitoring.model.dto.api.project.ProjectResponseDto;
 import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.mapper.role.UserMapper;
@@ -96,11 +97,11 @@ public abstract class ProjectMapper {
     /* ******************************************************* */
 
     /**
-     * Transform a projectResponseDto into a project when we want to add a new dashboard
+     * Transform a projectRequestDto into a project when we want to add a new dashboard
      *
-     * @param projectResponseDto The project to transform
+     * @param projectRequestDto The project to transform
      * @return The related project domain object
      */
     @Named("toNewProject")
-    public abstract Project toNewProject(ProjectResponseDto projectResponseDto);
+    public abstract Project toNewProject(ProjectRequestDto projectRequestDto);
 }

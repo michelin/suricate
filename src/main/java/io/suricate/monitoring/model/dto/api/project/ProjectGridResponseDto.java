@@ -12,8 +12,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "Project", description = "Describe a project/dashboard")
-public class ProjectGridPropertiesResponseDto {
+@ApiModel(value = "ProjectGridResponse", description = "Describe a project/dashboard")
+public class ProjectGridResponseDto {
 
     /**
      * Number of column in the dashboard
