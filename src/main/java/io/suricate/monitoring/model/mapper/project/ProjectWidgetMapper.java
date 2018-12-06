@@ -78,7 +78,7 @@ public abstract class ProjectWidgetMapper {
         @Mapping(target = "widgetPosition.height", source = "projectWidget.height"),
         @Mapping(target = "widgetPosition.width", source = "projectWidget.width"),
         @Mapping(target = "instantiateHtml", expression = "java(projectWidgetService.instantiateProjectWidgetHtml(projectWidget))"),
-        @Mapping(target = "project", qualifiedByName = "toProjectDtoWithoutProjectWidget"),
+        @Mapping(target = "project", qualifiedByName = "toProjectDtoDefault"),
         @Mapping(target = "widget", qualifiedByName = "toWidgetDtoDefault"),
         @Mapping(target = "backendConfig", expression = "java(projectWidgetService.decryptSecretParamsIfNeeded(projectWidget.getWidget().getWidgetParams(), projectWidget.getBackendConfig()))")
     })

@@ -19,18 +19,18 @@ package io.suricate.monitoring.model.dto.api.asset;
 import io.suricate.monitoring.model.dto.api.AbstractDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 /**
  * Asset class used for communicate through webservices
  */
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ToString
 @ApiModel(value = "Asset", description = "Describe an asset (Image, file, ...)")
-public class AssetDto extends AbstractDto {
+public class AssetResponseDto extends AbstractDto {
 
     /**
      * The asset id

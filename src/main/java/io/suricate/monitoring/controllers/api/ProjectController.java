@@ -17,7 +17,7 @@
 package io.suricate.monitoring.controllers.api;
 
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
-import io.suricate.monitoring.model.dto.api.project.ProjectDto;
+import io.suricate.monitoring.model.dto.api.project.ProjectResponseDto;
 import io.suricate.monitoring.model.dto.api.project.ProjectWidgetDto;
 import io.suricate.monitoring.model.dto.api.project.ProjectWidgetPositionDto;
 import io.suricate.monitoring.model.entity.Configuration;
@@ -120,9 +120,9 @@ public class ProjectController {
      *
      * @return The whole list of projects
      */
-    @ApiOperation(value = "Get the full list of projects", response = ProjectDto.class, nickname = "getAllProjects")
+    @ApiOperation(value = "Get the full list of projects", response = ProjectResponseDto.class, nickname = "getAllProjects")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = ProjectDto.class, responseContainer = "List"),
+        @ApiResponse(code = 200, message = "Ok", response = ProjectResponseDto.class, responseContainer = "List"),
         @ApiResponse(code = 204, message = "No Content"),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
@@ -130,7 +130,7 @@ public class ProjectController {
     @GetMapping("/v1/projects")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Transactional
-    public ResponseEntity<List<ProjectDto>> getAll() {
+    public ResponseEntity<List<ProjectResponseDto>> getAll() {
 
         return Optional
             .ofNullable(projectService.getAll())
@@ -152,9 +152,9 @@ public class ProjectController {
      * @param principal The connected user
      * @return The whole list of projects
      */
-    @ApiOperation(value = "Get the list of projects related to the current user", response = ProjectDto.class)
+    @ApiOperation(value = "Get the list of projects related to the current user", response = ProjectResponseDto.class)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = ProjectDto.class, responseContainer = "List"),
+        @ApiResponse(code = 200, message = "Ok", response = ProjectResponseDto.class, responseContainer = "List"),
         @ApiResponse(code = 204, message = "No Content"),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
@@ -163,7 +163,7 @@ public class ProjectController {
     @GetMapping(value = "/v1/projects/currentUser")
     @PreAuthorize("hasRole('ROLE_USER')")
     @Transactional
-    public ResponseEntity<List<ProjectDto>> getAllForCurrentUser(@ApiIgnore Principal principal) {
+    public ResponseEntity<List<ProjectResponseDto>> getAllForCurrentUser(@ApiIgnore Principal principal) {
         Optional<User> user = userService.getOneByUsername(principal.getName());
 
         if (!user.isPresent()) {
@@ -186,29 +186,29 @@ public class ProjectController {
     /**
      * Add a new project/dashboard for a user
      *
-     * @param principal  The connected user
-     * @param projectDto The project to add
+     * @param principal          The connected user
+     * @param projectResponseDto The project to add
      * @return The saved project
      */
-    @ApiOperation(value = "Create a new project for the current user", response = ProjectDto.class)
+    @ApiOperation(value = "Create a new project for the current user", response = ProjectResponseDto.class)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = ProjectDto.class),
+        @ApiResponse(code = 200, message = "Ok", response = ProjectResponseDto.class),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Current user not found", response = ApiErrorDto.class)
     })
     @PostMapping(value = "/v1/projects")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ProjectDto> createProject(@ApiIgnore Principal principal,
-                                                    @ApiParam(name = "projectDto", value = "The project information", required = true)
-                                                    @RequestBody ProjectDto projectDto) {
+    public ResponseEntity<ProjectResponseDto> createProject(@ApiIgnore Principal principal,
+                                                            @ApiParam(name = "projectResponseDto", value = "The project information", required = true)
+                                                            @RequestBody ProjectResponseDto projectResponseDto) {
         Optional<User> user = userService.getOneByUsername(principal.getName());
 
         if (!user.isPresent()) {
             throw new ObjectNotFoundException(User.class, principal.getName());
         }
 
-        Project project = projectService.createProject(user.get(), projectMapper.toNewProject(projectDto));
+        Project project = projectService.createProject(user.get(), projectMapper.toNewProject(projectResponseDto));
 
         URI resourceLocation = ServletUriComponentsBuilder
             .fromCurrentContextPath()
@@ -226,23 +226,23 @@ public class ProjectController {
     /**
      * Update an existing project
      *
-     * @param projectId  The project id to update
-     * @param projectDto The informations to update
+     * @param projectId          The project id to update
+     * @param projectResponseDto The informations to update
      * @return The project updated
      */
-    @ApiOperation(value = "Update an existing project by the project id", response = ProjectDto.class)
+    @ApiOperation(value = "Update an existing project by the project id", response = ProjectResponseDto.class)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = ProjectDto.class),
+        @ApiResponse(code = 200, message = "Ok", response = ProjectResponseDto.class),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class)
     })
     @PutMapping(value = "/v1/projects/{projectId}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ProjectDto> updateProject(@ApiParam(name = "projectId", value = "The project id", required = true)
-                                                    @PathVariable("projectId") Long projectId,
-                                                    @ApiParam(name = "projectDto", value = "The project information", required = true)
-                                                    @RequestBody ProjectDto projectDto) {
+    public ResponseEntity<ProjectResponseDto> updateProject(@ApiParam(name = "projectId", value = "The project id", required = true)
+                                                            @PathVariable("projectId") Long projectId,
+                                                            @ApiParam(name = "projectResponseDto", value = "The project information", required = true)
+                                                            @RequestBody ProjectResponseDto projectResponseDto) {
         Optional<Project> projectOptional = projectService.getOneById(projectId);
 
         if (!projectOptional.isPresent()) {
@@ -251,10 +251,10 @@ public class ProjectController {
 
         projectService.updateProject(
             projectOptional.get(),
-            projectDto.getName(),
-            projectDto.getWidgetHeight(),
-            projectDto.getMaxColumn(),
-            projectDto.getCssStyle()
+            projectResponseDto.getName(),
+            projectResponseDto.getGridProperties().getWidgetHeight(),
+            projectResponseDto.getGridProperties().getMaxColumn(),
+            projectResponseDto.getGridProperties().getCssStyle()
         );
         return ResponseEntity
             .ok()
@@ -269,9 +269,9 @@ public class ProjectController {
      * @param projectId The id of the project
      * @return The project
      */
-    @ApiOperation(value = "Retrieve the project information by id", response = ProjectDto.class, nickname = "getProjectById")
+    @ApiOperation(value = "Retrieve the project information by id", response = ProjectResponseDto.class, nickname = "getProjectById")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = ProjectDto.class),
+        @ApiResponse(code = 200, message = "Ok", response = ProjectResponseDto.class),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class)
@@ -279,8 +279,8 @@ public class ProjectController {
     @GetMapping(value = "/v1/projects/{projectId}")
     @PreAuthorize("hasRole('ROLE_USER')")
     @Transactional
-    public ResponseEntity<ProjectDto> getOneById(@ApiParam(name = "projectId", value = "The project id", required = true)
-                                                 @PathVariable("projectId") Long projectId) {
+    public ResponseEntity<ProjectResponseDto> getOneById(@ApiParam(name = "projectId", value = "The project id", required = true)
+                                                         @PathVariable("projectId") Long projectId) {
         Optional<Project> project = projectService.getOneById(projectId);
 
         if (!project.isPresent()) {
@@ -312,16 +312,16 @@ public class ProjectController {
      * @param token The token of the project
      * @return The project
      */
-    @ApiOperation(value = "Retrieve the project information by the project token", response = ProjectDto.class)
+    @ApiOperation(value = "Retrieve the project information by the project token", response = ProjectResponseDto.class)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = ProjectDto.class),
+        @ApiResponse(code = 200, message = "Ok", response = ProjectResponseDto.class),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class)
     })
     @GetMapping(value = "/v1/projects/project/{token}")
-    public ResponseEntity<ProjectDto> getOneByToken(@ApiParam(name = "token", value = "The project token", required = true)
-                                                    @PathVariable("token") String token) {
+    public ResponseEntity<ProjectResponseDto> getOneByToken(@ApiParam(name = "token", value = "The project token", required = true)
+                                                            @PathVariable("token") String token) {
         Optional<Project> project = projectService.getOneByToken(token);
 
         if (!project.isPresent()) {
@@ -341,9 +341,9 @@ public class ProjectController {
      * @param projectId The project id to delete
      * @return The project deleted
      */
-    @ApiOperation(value = "Delete a project by the project id", response = ProjectDto.class)
+    @ApiOperation(value = "Delete a project by the project id", response = ProjectResponseDto.class)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = ProjectDto.class),
+        @ApiResponse(code = 200, message = "Ok", response = ProjectResponseDto.class),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class)
@@ -351,8 +351,8 @@ public class ProjectController {
     @DeleteMapping(value = "/v1/projects/{projectId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Transactional
-    public ResponseEntity<ProjectDto> deleteOneById(@ApiParam(name = "projectId", value = "The project id", required = true)
-                                                    @PathVariable("projectId") Long projectId) {
+    public ResponseEntity<ProjectResponseDto> deleteOneById(@ApiParam(name = "projectId", value = "The project id", required = true)
+                                                            @PathVariable("projectId") Long projectId) {
         Optional<Project> projectOptional = projectService.getOneById(projectId);
 
         if (!projectOptional.isPresent()) {
@@ -374,9 +374,9 @@ public class ProjectController {
      * @param usernameMap Username of the user to add
      * @return The project
      */
-    @ApiOperation(value = "Add a user to a project", response = ProjectDto.class)
+    @ApiOperation(value = "Add a user to a project", response = ProjectResponseDto.class)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = ProjectDto.class),
+        @ApiResponse(code = 200, message = "Ok", response = ProjectResponseDto.class),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class),
@@ -384,10 +384,10 @@ public class ProjectController {
     })
     @PostMapping(value = "/v1/projects/{projectId}/users")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ProjectDto> addUserToProject(@ApiParam(name = "projectId", value = "The project id", required = true)
-                                                       @PathVariable("projectId") Long projectId,
-                                                       @ApiParam(name = "usernameMap", value = "A map with the username", required = true)
-                                                       @RequestBody Map<String, String> usernameMap) {
+    public ResponseEntity<ProjectResponseDto> addUserToProject(@ApiParam(name = "projectId", value = "The project id", required = true)
+                                                               @PathVariable("projectId") Long projectId,
+                                                               @ApiParam(name = "usernameMap", value = "A map with the username", required = true)
+                                                               @RequestBody Map<String, String> usernameMap) {
         Optional<User> user = userService.getOneByUsername(usernameMap.get("username"));
         Optional<Project> project = projectService.getOneById(projectId);
 
@@ -413,9 +413,9 @@ public class ProjectController {
      * @param userId    The user id to delete
      * @return The project
      */
-    @ApiOperation(value = "Delete a user for a project", response = ProjectDto.class)
+    @ApiOperation(value = "Delete a user for a project", response = ProjectResponseDto.class)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = ProjectDto.class),
+        @ApiResponse(code = 200, message = "Ok", response = ProjectResponseDto.class),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class),
@@ -423,10 +423,10 @@ public class ProjectController {
     })
     @DeleteMapping(value = "/v1/projects/{projectId}/users/{userId}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ProjectDto> deleteUserToProject(@ApiParam(name = "projectId", value = "The project id", required = true)
-                                                          @PathVariable("projectId") Long projectId,
-                                                          @ApiParam(name = "userId", value = "The user id", required = true)
-                                                          @PathVariable("userId") Long userId) {
+    public ResponseEntity<ProjectResponseDto> deleteUserToProject(@ApiParam(name = "projectId", value = "The project id", required = true)
+                                                                  @PathVariable("projectId") Long projectId,
+                                                                  @ApiParam(name = "userId", value = "The user id", required = true)
+                                                                  @PathVariable("userId") Long userId) {
         Optional<User> user = userService.getOne(userId);
         Optional<Project> project = projectService.getOneById(projectId);
 
@@ -453,19 +453,19 @@ public class ProjectController {
      * @param projectWidgetDto The projectWidget to add
      * @return The project
      */
-    @ApiOperation(value = "Add a new widget to a project", response = ProjectDto.class)
+    @ApiOperation(value = "Add a new widget to a project", response = ProjectResponseDto.class)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = ProjectDto.class),
+        @ApiResponse(code = 200, message = "Ok", response = ProjectResponseDto.class),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class)
     })
     @PutMapping(value = "/v1/projects/{projectId}/widgets")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ProjectDto> addWidgetToProject(@ApiParam(name = "projectId", value = "The project id", required = true)
-                                                         @PathVariable("projectId") Long projectId,
-                                                         @ApiParam(name = "projectWidgetDto", value = "The project widget info's", required = true)
-                                                         @RequestBody ProjectWidgetDto projectWidgetDto) {
+    public ResponseEntity<ProjectResponseDto> addWidgetToProject(@ApiParam(name = "projectId", value = "The project id", required = true)
+                                                                 @PathVariable("projectId") Long projectId,
+                                                                 @ApiParam(name = "projectWidgetDto", value = "The project widget info's", required = true)
+                                                                 @RequestBody ProjectWidgetDto projectWidgetDto) {
         if (!this.projectService.isProjectExists(projectId)) {
             throw new ObjectNotFoundException(Project.class, projectId);
         }
@@ -493,19 +493,19 @@ public class ProjectController {
      * @param projectWidgetPositionDtos The list of project widget positions
      * @return The project updated
      */
-    @ApiOperation(value = "Update the project widget positions for a project", response = ProjectDto.class)
+    @ApiOperation(value = "Update the project widget positions for a project", response = ProjectResponseDto.class)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = ProjectDto.class),
+        @ApiResponse(code = 200, message = "Ok", response = ProjectResponseDto.class),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class)
     })
     @PutMapping(value = "/v1/projects/{projectId}/projectWidgetPositions")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ProjectDto> updateProjectWidgetsPositionForProject(@ApiParam(name = "projectId", value = "The project id", required = true)
-                                                                             @PathVariable("projectId") Long projectId,
-                                                                             @ApiParam(name = "projectWidgetPositionDtos", value = "The list of the new positions", required = true)
-                                                                             @RequestBody List<ProjectWidgetPositionDto> projectWidgetPositionDtos) {
+    public ResponseEntity<ProjectResponseDto> updateProjectWidgetsPositionForProject(@ApiParam(name = "projectId", value = "The project id", required = true)
+                                                                                     @PathVariable("projectId") Long projectId,
+                                                                                     @ApiParam(name = "projectWidgetPositionDtos", value = "The list of the new positions", required = true)
+                                                                                     @RequestBody List<ProjectWidgetPositionDto> projectWidgetPositionDtos) {
         Optional<Project> projectOptional = projectService.getOneById(projectId);
 
         if (!projectOptional.isPresent()) {
@@ -527,9 +527,9 @@ public class ProjectController {
      * @param projectWidgetId The project widget to delete
      * @return The dashboard updated
      */
-    @ApiOperation(value = "Delete a project widget for a project", response = ProjectDto.class)
+    @ApiOperation(value = "Delete a project widget for a project", response = ProjectResponseDto.class)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = ProjectDto.class),
+        @ApiResponse(code = 200, message = "Ok", response = ProjectResponseDto.class),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class),
@@ -537,10 +537,10 @@ public class ProjectController {
     })
     @DeleteMapping(value = "/v1/projects/{projectId}/projectWidgets/{projectWidgetId}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ProjectDto> deleteProjectWidgetFromProject(@ApiParam(name = "projectId", value = "The project id", required = true)
-                                                                     @PathVariable("projectId") Long projectId,
-                                                                     @ApiParam(name = "projectWidgetId", value = "The project widget id", required = true)
-                                                                     @PathVariable("projectWidgetId") Long projectWidgetId) {
+    public ResponseEntity<ProjectResponseDto> deleteProjectWidgetFromProject(@ApiParam(name = "projectId", value = "The project id", required = true)
+                                                                             @PathVariable("projectId") Long projectId,
+                                                                             @ApiParam(name = "projectWidgetId", value = "The project widget id", required = true)
+                                                                             @PathVariable("projectWidgetId") Long projectWidgetId) {
         Optional<Project> projectOptional = projectService.getOneById(projectId);
         if (!projectOptional.isPresent()) {
             throw new ObjectNotFoundException(Project.class, projectId);
@@ -567,9 +567,9 @@ public class ProjectController {
      * @param projectWidgetDto The project widget updated
      * @return The project updated
      */
-    @ApiOperation(value = "Edit a project widget for a project", response = ProjectDto.class)
+    @ApiOperation(value = "Edit a project widget for a project", response = ProjectResponseDto.class)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = ProjectDto.class),
+        @ApiResponse(code = 200, message = "Ok", response = ProjectResponseDto.class),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class),
@@ -577,12 +577,12 @@ public class ProjectController {
     })
     @PutMapping(value = "/v1/projects/{projectId}/projectWidgets/{projectWidgetId}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ProjectDto> editProjectWidgetFromProject(@ApiParam(name = "projectId", value = "The project id", required = true)
-                                                                   @PathVariable("projectId") Long projectId,
-                                                                   @ApiParam(name = "projectWidgetId", value = "The project widget id", required = true)
-                                                                   @PathVariable("projectWidgetId") Long projectWidgetId,
-                                                                   @ApiParam(name = "projectWidgetDto", value = "The project widget informations to update", required = true)
-                                                                   @RequestBody ProjectWidgetDto projectWidgetDto) {
+    public ResponseEntity<ProjectResponseDto> editProjectWidgetFromProject(@ApiParam(name = "projectId", value = "The project id", required = true)
+                                                                           @PathVariable("projectId") Long projectId,
+                                                                           @ApiParam(name = "projectWidgetId", value = "The project widget id", required = true)
+                                                                           @PathVariable("projectWidgetId") Long projectWidgetId,
+                                                                           @ApiParam(name = "projectWidgetDto", value = "The project widget informations to update", required = true)
+                                                                           @RequestBody ProjectWidgetDto projectWidgetDto) {
 
         Optional<ProjectWidget> projectWidgetOptional = projectWidgetService.findByProjectIdAndProjectWidgetId(projectId, projectWidgetId);
         if (!projectWidgetOptional.isPresent()) {

@@ -105,7 +105,7 @@ public class ProjectWidgetDto extends AbstractDto {
      * The related project
      */
     @ApiModelProperty(value = "The related project")
-    private ProjectDto project;
+    private ProjectResponseDto project;
 
     /**
      * The related widget

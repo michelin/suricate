@@ -17,8 +17,7 @@
 package io.suricate.monitoring.model.dto.api.widget;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
-import io.suricate.monitoring.model.dto.api.asset.AssetDto;
-import io.suricate.monitoring.model.dto.api.widget.WidgetDto;
+import io.suricate.monitoring.model.dto.api.asset.AssetResponseDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -52,7 +51,7 @@ public class LibraryDto extends AbstractDto {
      * The related asset
      */
     @ApiModelProperty(value = "The related asset for this library")
-    private AssetDto asset;
+    private AssetResponseDto asset;
 
     /**
      * List of widgets related to it

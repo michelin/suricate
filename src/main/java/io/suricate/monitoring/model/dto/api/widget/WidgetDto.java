@@ -1,7 +1,7 @@
 package io.suricate.monitoring.model.dto.api.widget;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
-import io.suricate.monitoring.model.dto.api.asset.AssetDto;
+import io.suricate.monitoring.model.dto.api.asset.AssetResponseDto;
 import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -85,7 +85,7 @@ public class WidgetDto extends AbstractDto {
      * A representation by an image of the widget
      */
     @ApiModelProperty(value = "A representation by an image of the widget")
-    private AssetDto image;
+    private AssetResponseDto image;
 
     /**
      * The list of related libraries

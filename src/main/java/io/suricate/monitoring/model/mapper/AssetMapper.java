@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.model.mapper;
 
-import io.suricate.monitoring.model.dto.api.asset.AssetDto;
+import io.suricate.monitoring.model.dto.api.asset.AssetResponseDto;
 import io.suricate.monitoring.model.entity.Asset;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
@@ -46,7 +46,7 @@ public abstract class AssetMapper {
      * @return The related asset DTO
      */
     @Named("toAssetDtoDefault")
-    public abstract AssetDto toAssetDtoDefault(Asset asset);
+    public abstract AssetResponseDto toAssetDtoDefault(Asset asset);
 
     /* ******************************************************* */
     /*                    List Mapping                         */
@@ -60,5 +60,5 @@ public abstract class AssetMapper {
      */
     @Named("toAssetDtosDefault")
     @IterableMapping(qualifiedByName = "toAssetDtoDefault")
-    public abstract List<AssetDto> toAssetDtosDefault(List<Asset> assets);
+    public abstract List<AssetResponseDto> toAssetDtosDefault(List<Asset> assets);
 }

@@ -16,12 +16,15 @@
 
 package io.suricate.monitoring.model.mapper.project;
 
-import io.suricate.monitoring.model.dto.api.project.ProjectDto;
+import io.suricate.monitoring.model.dto.api.project.ProjectResponseDto;
 import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.mapper.role.UserMapper;
 import io.suricate.monitoring.service.api.LibraryService;
 import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
-import org.mapstruct.*;
+import org.mapstruct.IterableMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -59,34 +62,17 @@ public abstract class ProjectMapper {
     /* ******************************************************* */
 
     /**
-     * Transform a project into a ProjectDto
+     * Transform a project into a ProjectResponseDto
      *
      * @param project The project to transform
      * @return The related project DTO
      */
     @Named("toProjectDtoDefault")
-    @Mappings({
-        @Mapping(target = "projectWidgets", source = "project.widgets", qualifiedByName = "toProjectWidgetDtosDefault"),
-        @Mapping(target = "librariesToken", expression = "java(libraryService.getLibraries(project.getWidgets()))"),
-        @Mapping(target = "users", qualifiedByName = "toUserDtosDefault"),
-        @Mapping(target = "websocketClients", expression = "java(dashboardWebSocketService.getWebsocketClientByProjectToken(project.getToken()))")
-    })
-    public abstract ProjectDto toProjectDtoDefault(Project project);
-
-    /**
-     * Transform a project into a ProjectDto
-     *
-     * @param project The project to transform
-     * @return The related project DTO
-     */
-    @Named("toProjectDtoWithoutProjectWidget")
-    @Mappings({
-        @Mapping(target = "projectWidgets", source = "project.widgets", ignore = true),
-        @Mapping(target = "librariesToken", expression = "java(libraryService.getLibraries(project.getWidgets()))"),
-        @Mapping(target = "users", qualifiedByName = "toUserDtosDefault"),
-        @Mapping(target = "websocketClients", expression = "java(dashboardWebSocketService.getWebsocketClientByProjectToken(project.getToken()))")
-    })
-    public abstract ProjectDto toProjectDtoWithoutProjectWidget(Project project);
+    @Mapping(target = "gridProperties.maxColumn", source = "project.maxColumn")
+    @Mapping(target = "gridProperties.widgetHeight", source = "project.widgetHeight")
+    @Mapping(target = "gridProperties.cssStyle", source = "project.cssStyle")
+    @Mapping(target = "librariesToken", expression = "java(libraryService.getLibraries(project.getWidgets()))")
+    public abstract ProjectResponseDto toProjectDtoDefault(Project project);
 
     /* ******************************************************* */
     /*                    List Mapping                         */
@@ -100,7 +86,7 @@ public abstract class ProjectMapper {
      */
     @Named("toProjectDtosDefault")
     @IterableMapping(qualifiedByName = "toProjectDtoDefault")
-    public abstract List<ProjectDto> toProjectDtosDefault(List<Project> projects);
+    public abstract List<ProjectResponseDto> toProjectDtosDefault(List<Project> projects);
 
 
     /* ************************* TO MODEL **************************************** */
@@ -110,15 +96,11 @@ public abstract class ProjectMapper {
     /* ******************************************************* */
 
     /**
-     * Transform a projectDto into a project when we want to add a new dashboard
+     * Transform a projectResponseDto into a project when we want to add a new dashboard
      *
-     * @param projectDto The project to transform
+     * @param projectResponseDto The project to transform
      * @return The related project domain object
      */
     @Named("toNewProject")
-    @Mappings({
-        @Mapping(target = "widgets", source = "projectDto.projectWidgets", ignore = true),
-        @Mapping(target = "users", ignore = true)
-    })
-    public abstract Project toNewProject(ProjectDto projectDto);
+    public abstract Project toNewProject(ProjectResponseDto projectResponseDto);
 }
