@@ -386,7 +386,7 @@ public class ProjectController {
      * @param userId       The user id to delete
      * @return The project
      */
-    @ApiOperation(value = "Delete a user for a project", response = ProjectResponseDto.class)
+    @ApiOperation(value = "Delete a user from a project", response = ProjectResponseDto.class)
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Ok", response = ProjectResponseDto.class),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
@@ -433,7 +433,7 @@ public class ProjectController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class)
     })
-    @PutMapping(value = "/v1/projects/{projectToken}/widgets")
+    @PutMapping(value = "/v1/projects/{projectToken}/projectWidgets")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ProjectResponseDto> addWidgetToProject(@ApiParam(name = "projectToken", value = "The project token", required = true)
                                                                  @PathVariable("projectToken") String projectToken,
@@ -466,19 +466,19 @@ public class ProjectController {
      * @param projectWidgetPositionDtos The list of project widget positions
      * @return The project updated
      */
-    @ApiOperation(value = "Update the project widget positions for a project", response = ProjectResponseDto.class)
+    @ApiOperation(value = "Update the project widget positions for a project")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = ProjectResponseDto.class),
+        @ApiResponse(code = 200, message = "Ok"),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class)
     })
     @PutMapping(value = "/v1/projects/{projectToken}/projectWidgetPositions")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ProjectResponseDto> updateProjectWidgetsPositionForProject(@ApiParam(name = "projectToken", value = "The project token", required = true)
-                                                                                     @PathVariable("projectToken") String projectToken,
-                                                                                     @ApiParam(name = "projectWidgetPositionDtos", value = "The list of the new positions", required = true)
-                                                                                     @RequestBody List<ProjectWidgetPositionDto> projectWidgetPositionDtos) {
+    public ResponseEntity<Void> updateProjectWidgetsPositionForProject(@ApiParam(name = "projectToken", value = "The project token", required = true)
+                                                                       @PathVariable("projectToken") String projectToken,
+                                                                       @ApiParam(name = "projectWidgetPositionDtos", value = "The list of the new positions", required = true)
+                                                                       @RequestBody List<ProjectWidgetPositionDto> projectWidgetPositionDtos) {
         Optional<Project> projectOptional = projectService.getOneByToken(projectToken);
 
         if (!projectOptional.isPresent()) {
@@ -486,93 +486,6 @@ public class ProjectController {
         }
 
         projectWidgetService.updateWidgetPositionByProject(projectOptional.get(), projectWidgetPositionDtos);
-        return ResponseEntity
-            .ok()
-            .cacheControl(CacheControl.noCache())
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(projectMapper.toProjectDtoDefault(projectOptional.get()));
-    }
-
-    /**
-     * Delete a project widget from a dashboard
-     *
-     * @param projectToken    The project token
-     * @param projectWidgetId The project widget to delete
-     * @return The dashboard updated
-     */
-    @ApiOperation(value = "Delete a project widget for a project", response = ProjectResponseDto.class)
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = ProjectResponseDto.class),
-        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
-        @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class),
-        @ApiResponse(code = 404, message = "Project widget not found", response = ApiErrorDto.class)
-    })
-    @DeleteMapping(value = "/v1/projects/{projectToken}/projectWidgets/{projectWidgetId}")
-    @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ProjectResponseDto> deleteProjectWidgetFromProject(@ApiParam(name = "projectToken", value = "The project token", required = true)
-                                                                             @PathVariable("projectToken") String projectToken,
-                                                                             @ApiParam(name = "projectWidgetId", value = "The project widget id", required = true)
-                                                                             @PathVariable("projectWidgetId") Long projectWidgetId) {
-        Optional<Project> projectOptional = projectService.getOneByToken(projectToken);
-        if (!projectOptional.isPresent()) {
-            throw new ObjectNotFoundException(Project.class, projectToken);
-        }
-
-        if (!this.projectWidgetService.isProjectWidgetExists(projectWidgetId)) {
-            throw new ObjectNotFoundException(ProjectWidget.class, projectWidgetId);
-        }
-
-        projectWidgetService.removeWidgetFromDashboard(projectOptional.get(), projectWidgetId);
-
-        return ResponseEntity
-            .ok()
-            .contentType(MediaType.APPLICATION_JSON)
-            .cacheControl(CacheControl.noCache())
-            .body(projectMapper.toProjectDtoDefault(projectOptional.get()));
-    }
-
-    /**
-     * Edit a project widget for a project
-     *
-     * @param projectToken     The project token
-     * @param projectWidgetId  The project widget id
-     * @param projectWidgetDto The project widget updated
-     * @return The project updated
-     */
-    @ApiOperation(value = "Edit a project widget for a project", response = ProjectResponseDto.class)
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = ProjectResponseDto.class),
-        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
-        @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class),
-        @ApiResponse(code = 404, message = "Project widget not found", response = ApiErrorDto.class)
-    })
-    @PutMapping(value = "/v1/projects/{projectToken}/projectWidgets/{projectWidgetId}")
-    @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ProjectResponseDto> editProjectWidgetFromProject(@ApiParam(name = "projectToken", value = "The project token", required = true)
-                                                                           @PathVariable("projectToken") String projectToken,
-                                                                           @ApiParam(name = "projectWidgetId", value = "The project widget id", required = true)
-                                                                           @PathVariable("projectWidgetId") Long projectWidgetId,
-                                                                           @ApiParam(name = "projectWidgetDto", value = "The project widget informations to update", required = true)
-                                                                           @RequestBody ProjectWidgetDto projectWidgetDto) {
-
-        Optional<ProjectWidget> projectWidgetOptional = projectWidgetService.findByProjectTokenAndProjectWidgetId(projectToken, projectWidgetId);
-        if (!projectWidgetOptional.isPresent()) {
-            throw new ObjectNotFoundException(ProjectWidget.class, projectWidgetId);
-        }
-
-        Optional<Project> projectOptional = projectService.getOneByToken(projectToken);
-        if (!projectOptional.isPresent()) {
-            throw new ObjectNotFoundException(Project.class, projectToken);
-        }
-        ProjectWidget projectWidget = projectWidgetOptional.get();
-        projectWidgetService.updateProjectWidget(projectWidget, projectWidgetDto.getCustomStyle(), projectWidgetDto.getBackendConfig());
-
-        return ResponseEntity
-            .ok()
-            .cacheControl(CacheControl.noCache())
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(projectMapper.toProjectDtoDefault(projectOptional.get()));
+        return ResponseEntity.noContent().build();
     }
 }

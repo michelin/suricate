@@ -16,13 +16,12 @@
 
 package io.suricate.monitoring.service.scheduler;
 
+import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
+import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
 import io.suricate.monitoring.model.dto.nashorn.WidgetVariableResponse;
-import io.suricate.monitoring.model.entity.Configuration;
 import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.enums.WidgetState;
-import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
-import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
 import io.suricate.monitoring.service.api.ConfigurationService;
 import io.suricate.monitoring.service.api.ProjectWidgetService;
 import io.suricate.monitoring.service.api.WidgetService;
@@ -105,11 +104,11 @@ public class NashornWidgetScheduler implements Schedulable {
     /**
      * Constructor
      *
-     * @param applicationContext The application context to inject
+     * @param applicationContext   The application context to inject
      * @param projectWidgetService The project widget service to inject
-     * @param nashornService The nashorn service to inject
+     * @param nashornService       The nashorn service to inject
      * @param configurationService The configuration service to inject
-     * @param stringEncryptor The string encryptor to inject
+     * @param stringEncryptor      The string encryptor to inject
      */
     @Autowired
     public NashornWidgetScheduler(final ApplicationContext applicationContext,
@@ -158,33 +157,34 @@ public class NashornWidgetScheduler implements Schedulable {
      * Schedule a list of nashorn request
      *
      * @param nashornRequests The list of nashorn requests to schedule
-     * @param startNow If the scheduling should start now
-     * @param init If it's an initialisation of the scheduling
+     * @param startNow        If the scheduling should start now
+     * @param init            If it's an initialisation of the scheduling
      */
     public void scheduleList(final List<NashornRequest> nashornRequests, boolean startNow, boolean init) {
         try {
             nashornRequests.forEach(nashornRequest -> schedule(nashornRequest, startNow, init));
 
-        } catch (Exception e){
+        } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         }
     }
 
     /**
      * Method used to schedule widget update
+     *
      * @param nashornRequest nashorn request
-     * @param startNow force widget update to start now
-     * @param init force widget to update randomly between START_DELAY_INCLUSIVE and END_DELAY_EXCLUSIVE
+     * @param startNow       force widget update to start now
+     * @param init           force widget to update randomly between START_DELAY_INCLUSIVE and END_DELAY_EXCLUSIVE
      */
     public void schedule(final NashornRequest nashornRequest, boolean startNow, boolean init) {
-        if (nashornRequest == null){
+        if (nashornRequest == null) {
             return;
         }
         // Get the beans inside schedule
         ProjectWidgetService projectWidgetService = ctx.getBean(ProjectWidgetService.class);
         WidgetService widgetService = ctx.getBean(WidgetService.class);
 
-        if(!nashornService.isNashornRequestExecutable(nashornRequest)) {
+        if (!nashornService.isNashornRequestExecutable(nashornRequest)) {
             projectWidgetService.updateState(WidgetState.STOPPED, nashornRequest.getProjectWidgetId(), new Date());
             return;
         }
@@ -196,14 +196,14 @@ public class NashornWidgetScheduler implements Schedulable {
         }
 
         Long delay = nashornRequest.getDelay();
-        if (init){
+        if (init) {
             // delay update on restart
             delay = RandomUtils.nextLong(START_DELAY_INCLUSIVE, END_DELAY_EXCLUSIVE);
         } else if (startNow) {
             delay = SMALL_DELAY;
         }
 
-        ProjectWidget projectWidget = projectWidgetService.getOne(nashornRequest.getProjectWidgetId());
+        ProjectWidget projectWidget = projectWidgetService.getOne(nashornRequest.getProjectWidgetId()).get();
         List<WidgetVariableResponse> widgetVariableResponses = widgetService.getWidgetVariables(projectWidget.getWidget());
 
         // Create scheduled future task
@@ -215,18 +215,19 @@ public class NashornWidgetScheduler implements Schedulable {
 
         // Update job
         jobs.put(nashornRequest.getProjectWidgetId(),
-                new ImmutablePair<>(
-                        new WeakReference<ScheduledFuture<NashornResponse>>(future),
-                        new WeakReference<ScheduledFuture<Void>>(futureResult)
-                ));
+            new ImmutablePair<>(
+                new WeakReference<ScheduledFuture<NashornResponse>>(future),
+                new WeakReference<ScheduledFuture<Void>>(futureResult)
+            ));
 
     }
 
     /**
      * Method used to cancelWidgetInstance the existing scheduled widget instance and launch a new instance
+     *
      * @param nashornRequest the nashorn request to execute
      */
-    public void cancelAndSchedule(NashornRequest nashornRequest){
+    public void cancelAndSchedule(NashornRequest nashornRequest) {
         cancelWidgetInstance(nashornRequest.getProjectWidgetId());
         schedule(nashornRequest, true, false);
     }
@@ -244,9 +245,10 @@ public class NashornWidgetScheduler implements Schedulable {
 
     /**
      * Method used to cancelWidgetInstance the existing scheduled widget instance
+     *
      * @param projectWidgetId the widget instance id
      */
-    public void cancelWidgetInstance(Long projectWidgetId){
+    public void cancelWidgetInstance(Long projectWidgetId) {
         Pair<WeakReference<ScheduledFuture<NashornResponse>>, WeakReference<ScheduledFuture<Void>>> pair = jobs.get(projectWidgetId);
         if (pair != null) {
             cancel(projectWidgetId, pair.getLeft());
@@ -258,10 +260,11 @@ public class NashornWidgetScheduler implements Schedulable {
 
     /**
      * Method used to cancel a scheduled future for an widget instance
+     *
      * @param projectWidgetId project widget Id
-     * @param weakReference weakReference containing the ScheduledFuture or null
+     * @param weakReference   weakReference containing the ScheduledFuture or null
      */
-    private static void cancel(Long projectWidgetId, WeakReference< ? extends ScheduledFuture> weakReference) {
+    private static void cancel(Long projectWidgetId, WeakReference<? extends ScheduledFuture> weakReference) {
         if (weakReference != null) {
             ScheduledFuture scheduledFuture = weakReference.get();
             if (scheduledFuture != null && (!scheduledFuture.isDone() || !scheduledFuture.isCancelled())) {

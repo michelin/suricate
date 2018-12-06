@@ -1,9 +1,9 @@
 package io.suricate.monitoring.service.scheduler;
 
 import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
+import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
 import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
-import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
 import io.suricate.monitoring.model.entity.widget.Widget;
 import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.repository.ProjectRepository;
@@ -11,7 +11,6 @@ import io.suricate.monitoring.repository.ProjectWidgetRepository;
 import io.suricate.monitoring.repository.WidgetRepository;
 import io.suricate.monitoring.service.api.ProjectWidgetService;
 import io.suricate.monitoring.service.nashorn.NashornService;
-import io.suricate.monitoring.service.scheduler.NashornWidgetScheduler;
 import io.suricate.monitoring.utils.FilesUtilsTest;
 import io.suricate.monitoring.utils.WidgetUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -20,12 +19,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
@@ -72,9 +69,9 @@ public class NashornWidgetSchedulerTest {
     @Transactional
     public void before() throws IOException {
         nashornWidgetScheduler.initScheduler();
-        scheduledExecutorService = (ScheduledThreadPoolExecutor) ReflectionTestUtils.getField(nashornWidgetScheduler,"scheduledExecutorService");
-        scheduledExecutorServiceFuture = (ScheduledThreadPoolExecutor) ReflectionTestUtils.getField(nashornWidgetScheduler,"scheduledExecutorServiceFuture");
-        jobs = (Map<Long, Pair<WeakReference<ScheduledFuture<NashornResponse>>, WeakReference<ScheduledFuture<Void>>>>) ReflectionTestUtils.getField(nashornWidgetScheduler,"jobs");
+        scheduledExecutorService = (ScheduledThreadPoolExecutor) ReflectionTestUtils.getField(nashornWidgetScheduler, "scheduledExecutorService");
+        scheduledExecutorServiceFuture = (ScheduledThreadPoolExecutor) ReflectionTestUtils.getField(nashornWidgetScheduler, "scheduledExecutorServiceFuture");
+        jobs = (Map<Long, Pair<WeakReference<ScheduledFuture<NashornResponse>>, WeakReference<ScheduledFuture<Void>>>>) ReflectionTestUtils.getField(nashornWidgetScheduler, "jobs");
 
         // init database
         Project project = new Project();
@@ -124,14 +121,15 @@ public class NashornWidgetSchedulerTest {
         assertThat(newFuture).isNotEqualTo(future);
         Thread.sleep(2100);
         // Wait completion
-        while(scheduledExecutorServiceFuture.getActiveCount() != 0){}
+        while (scheduledExecutorServiceFuture.getActiveCount() != 0) {
+        }
         Assert.assertNotNull(newFuture);
         assertThat(newFuture.isDone()).isTrue();
 
         // reinit
         nashornWidgetScheduler.initScheduler();
-        scheduledExecutorService = (ScheduledThreadPoolExecutor) ReflectionTestUtils.getField(nashornWidgetScheduler,"scheduledExecutorService");
-        scheduledExecutorServiceFuture = (ScheduledThreadPoolExecutor) ReflectionTestUtils.getField(nashornWidgetScheduler,"scheduledExecutorServiceFuture");
+        scheduledExecutorService = (ScheduledThreadPoolExecutor) ReflectionTestUtils.getField(nashornWidgetScheduler, "scheduledExecutorService");
+        scheduledExecutorServiceFuture = (ScheduledThreadPoolExecutor) ReflectionTestUtils.getField(nashornWidgetScheduler, "scheduledExecutorServiceFuture");
         // TODO : Check behavior randomly switch from 1 to 2
     }
 
@@ -144,7 +142,7 @@ public class NashornWidgetSchedulerTest {
 
         // Schedule widget
         nashornWidgetScheduler.cancelAndSchedule(nashornRequest);
-        ProjectWidget current = projectWidgetService.getOne(projectWidget.getId());
+        ProjectWidget current = projectWidgetService.getOne(projectWidget.getId()).get();
         assertThat(current.getState()).isEqualTo(WidgetState.STOPPED);
         assertThat(current.getLastExecutionDate()).isNotNull();
         assertThat(current.getLastSuccessDate()).isNull();
@@ -158,7 +156,7 @@ public class NashornWidgetSchedulerTest {
         nashornRequest.setDelay(-1L);
         // Schedule widget
         nashornWidgetScheduler.cancelAndSchedule(nashornRequest);
-        ProjectWidget current = projectWidgetService.getOne(projectWidget.getId());
+        ProjectWidget current = projectWidgetService.getOne(projectWidget.getId()).get();
         assertThat(current.getState()).isEqualTo(WidgetState.STOPPED);
         assertThat(current.getLastExecutionDate()).isNotNull();
         assertThat(current.getLastSuccessDate()).isNull();

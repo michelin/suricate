@@ -18,15 +18,11 @@ package io.suricate.monitoring.controllers.api;
 
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.widget.WidgetDto;
-import io.suricate.monitoring.model.entity.widget.Category;
 import io.suricate.monitoring.model.entity.widget.Widget;
-import io.suricate.monitoring.model.entity.widget.WidgetParam;
 import io.suricate.monitoring.model.enums.ApiActionEnum;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.model.mapper.widget.WidgetMapper;
 import io.suricate.monitoring.service.GitService;
-import io.suricate.monitoring.service.api.CategoryService;
-import io.suricate.monitoring.service.api.ConfigurationService;
 import io.suricate.monitoring.service.api.WidgetService;
 import io.suricate.monitoring.utils.exception.ApiException;
 import io.suricate.monitoring.utils.exception.NoContentException;
@@ -43,7 +39,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import java.util.stream.Collectors;
 
 /**
  * The widget controller
@@ -59,16 +54,6 @@ public class WidgetController {
     private final WidgetService widgetService;
 
     /**
-     * Category service
-     */
-    private final CategoryService categoryService;
-
-    /**
-     * Configuration service
-     */
-    private final ConfigurationService configurationService;
-
-    /**
      * The GIT service
      */
     private final GitService gitService;
@@ -81,22 +66,17 @@ public class WidgetController {
     /**
      * Constructor
      *
-     * @param widgetService   Widget service to inject
-     * @param categoryService The category service
-     * @param gitService      The git service
-     * @param widgetMapper    The widget mapper
+     * @param widgetService Widget service to inject
+     * @param gitService    The git service
+     * @param widgetMapper  The widget mapper
      */
     @Autowired
     public WidgetController(final WidgetService widgetService,
-                            final CategoryService categoryService,
                             final GitService gitService,
-                            final WidgetMapper widgetMapper,
-                            final ConfigurationService configurationService) {
+                            final WidgetMapper widgetMapper) {
         this.widgetService = widgetService;
-        this.categoryService = categoryService;
         this.gitService = gitService;
         this.widgetMapper = widgetMapper;
-        this.configurationService = configurationService;
     }
 
     /**
@@ -172,43 +152,5 @@ public class WidgetController {
             .contentType(MediaType.APPLICATION_JSON)
             .cacheControl(CacheControl.noCache())
             .body(widgetMapper.toWidgetDtoDefault(widgetOpt.get()));
-    }
-
-    /**
-     * Get every widget for a category
-     *
-     * @param categoryId The category id
-     * @return The list of related widgets
-     */
-    @ApiOperation(value = "Get the list of widgets by category id", response = WidgetDto.class)
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = WidgetDto.class, responseContainer = "List"),
-        @ApiResponse(code = 204, message = "No Content"),
-        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
-        @ApiResponse(code = 404, message = "Category not found", response = ApiErrorDto.class)
-    })
-    @GetMapping(value = "/v1/categories/{categoryId}/widgets")
-    @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<List<WidgetDto>> getWidgetByCategory(@ApiParam(name = "categoryId", value = "The category id", required = true)
-                                                               @PathVariable("categoryId") Long categoryId) {
-        if (!this.categoryService.isCategoryExists(categoryId)) {
-            throw new ObjectNotFoundException(Category.class, categoryId);
-        }
-
-        Optional<List<Widget>> widgets = widgetService.getWidgetsByCategory(categoryId);
-        if (!widgets.isPresent()) {
-            throw new NoContentException(Widget.class);
-        }
-
-        // Also add global configuration for each widget
-        List<WidgetParam> confs = configurationService.getConfigurationForWidgets().stream().filter(c -> c.getCategory().getId().equals(categoryId)).map(ConfigurationService::initParamFromConfiguration).collect(Collectors.toList());
-        widgets.get().forEach(w -> w.getWidgetParams().addAll(confs));
-
-        return ResponseEntity
-            .ok()
-            .contentType(MediaType.APPLICATION_JSON)
-            .cacheControl(CacheControl.noCache())
-            .body(widgetMapper.toWidgetDtosDefault(widgets.get()));
     }
 }

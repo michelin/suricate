@@ -157,19 +157,8 @@ public class ProjectWidgetService {
      * @param projectWidgetId The project widget id
      * @return The project widget
      */
-    public ProjectWidget getOne(final Long projectWidgetId) {
-        return projectWidgetRepository.findById(projectWidgetId).get();
-    }
-
-    /**
-     * Find a project widget by the project id and the project widget id
-     *
-     * @param projectToken    The project projectToken
-     * @param projectWidgetId The project widget id
-     * @return The project widget as Optional
-     */
-    public Optional<ProjectWidget> findByProjectTokenAndProjectWidgetId(final String projectToken, final Long projectWidgetId) {
-        return projectWidgetRepository.findByIdAndProject_Token(projectWidgetId, projectToken);
+    public Optional<ProjectWidget> getOne(final Long projectWidgetId) {
+        return projectWidgetRepository.findById(projectWidgetId);
     }
 
     /**
@@ -237,19 +226,23 @@ public class ProjectWidgetService {
     /**
      * Method used to remove widget from the dashboard
      *
-     * @param project         the project
-     * @param projectWidgetId the projectwidget id
+     * @param projectWidgetId the projectWidgetId id
      */
     @Transactional
-    public void removeWidgetFromDashboard(Project project, Long projectWidgetId) {
-        ctx.getBean(NashornWidgetScheduler.class).cancelWidgetInstance(projectWidgetId);
-        projectWidgetRepository.deleteByProjectIdAndId(project.getId(), projectWidgetId);
-        projectWidgetRepository.flush();
+    public void removeWidgetFromDashboard(Long projectWidgetId) {
+        Optional<ProjectWidget> projectWidgetOptional = this.getOne(projectWidgetId);
 
-        // notify client
-        UpdateEvent updateEvent = new UpdateEvent(UpdateType.GRID);
-        updateEvent.setContent(projectMapper.toProjectDtoDefault(project));
-        dashboardWebsocketService.updateGlobalScreensByProjectId(project.getId(), updateEvent);
+        if (projectWidgetOptional.isPresent()) {
+            ctx.getBean(NashornWidgetScheduler.class).cancelWidgetInstance(projectWidgetId);
+
+            projectWidgetRepository.deleteByProjectIdAndId(projectWidgetOptional.get().getProject().getId(), projectWidgetId);
+            projectWidgetRepository.flush();
+
+            // notify client
+            UpdateEvent updateEvent = new UpdateEvent(UpdateType.GRID);
+            updateEvent.setContent(projectMapper.toProjectDtoDefault(projectWidgetOptional.get().getProject()));
+            dashboardWebsocketService.updateGlobalScreensByProjectId(projectWidgetOptional.get().getProject().getId(), updateEvent);
+        }
     }
 
 
@@ -280,14 +273,17 @@ public class ProjectWidgetService {
      */
     @Transactional
     public void updateState(WidgetState widgetState, Long id, Date date) {
-        ProjectWidget projectWidget = getOne(id);
-        projectWidget.setState(widgetState);
+        Optional<ProjectWidget> projectWidgetOptional = this.getOne(id);
 
-        if (date != null) {
-            projectWidget.setLastExecutionDate(date);
+        if (projectWidgetOptional.isPresent()) {
+            projectWidgetOptional.get().setState(widgetState);
+
+            if (date != null) {
+                projectWidgetOptional.get().setLastExecutionDate(date);
+            }
+
+            projectWidgetRepository.saveAndFlush(projectWidgetOptional.get());
         }
-
-        projectWidgetRepository.saveAndFlush(projectWidget);
     }
 
     /**
