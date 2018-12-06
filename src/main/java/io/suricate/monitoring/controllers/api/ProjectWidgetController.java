@@ -2,7 +2,7 @@ package io.suricate.monitoring.controllers.api;
 
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.project.ProjectResponseDto;
-import io.suricate.monitoring.model.dto.api.project.ProjectWidgetDto;
+import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetRequestDto;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.service.api.ProjectWidgetService;
 import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
@@ -38,8 +38,8 @@ public class ProjectWidgetController {
     /**
      * Edit a project widget for a project
      *
-     * @param projectWidgetId  The project widget id
-     * @param projectWidgetDto The project widget updated
+     * @param projectWidgetId         The project widget id
+     * @param projectWidgetRequestDto The project widget updated
      * @return The project updated
      */
     @ApiOperation(value = "Edit a project widget", response = ProjectResponseDto.class)
@@ -52,17 +52,17 @@ public class ProjectWidgetController {
     })
     @PutMapping(value = "/v1/projectWidgets/{projectWidgetId}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ProjectResponseDto> editProjectWidgetFromProject(@ApiParam(name = "projectWidgetId", value = "The project widget id", required = true)
-                                                                           @PathVariable("projectWidgetId") Long projectWidgetId,
-                                                                           @ApiParam(name = "projectWidgetDto", value = "The project widget informations to update", required = true)
-                                                                           @RequestBody ProjectWidgetDto projectWidgetDto) {
+    public ResponseEntity<Void> editProjectWidgetFromProject(@ApiParam(name = "projectWidgetId", value = "The project widget id", required = true)
+                                                             @PathVariable("projectWidgetId") Long projectWidgetId,
+                                                             @ApiParam(name = "projectWidgetResponseDto", value = "The project widget informations to update", required = true)
+                                                             @RequestBody ProjectWidgetRequestDto projectWidgetRequestDto) {
         Optional<ProjectWidget> projectWidgetOptional = projectWidgetService.getOne(projectWidgetId);
         if (!projectWidgetOptional.isPresent()) {
             throw new ObjectNotFoundException(ProjectWidget.class, projectWidgetId);
         }
 
         ProjectWidget projectWidget = projectWidgetOptional.get();
-        projectWidgetService.updateProjectWidget(projectWidget, projectWidgetDto.getCustomStyle(), projectWidgetDto.getBackendConfig());
+        projectWidgetService.updateProjectWidget(projectWidget, projectWidgetRequestDto.getCustomStyle(), projectWidgetRequestDto.getBackendConfig());
 
         return ResponseEntity.noContent().build();
     }

@@ -21,7 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheException;
 import com.github.mustachejava.MustacheFactory;
-import io.suricate.monitoring.model.dto.api.project.ProjectWidgetPositionDto;
+import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetPositionRequestDto;
 import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
 import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
@@ -165,7 +165,7 @@ public class ProjectWidgetService {
      * Add a new project widget
      *
      * @param projectWidget The project widget to add
-     * @return The projectWidget instantiate
+     * @return The projectwidget instantiate
      */
     @Transactional
     public ProjectWidget addProjectWidget(ProjectWidget projectWidget) {
@@ -189,7 +189,7 @@ public class ProjectWidgetService {
     /**
      * Update the position of a widget
      *
-     * @param projectWidgetId The projectWidget id
+     * @param projectWidgetId The projectwidget id
      * @param startCol        The new start col
      * @param startRow        The new start row
      * @param height          The new Height
@@ -206,14 +206,14 @@ public class ProjectWidgetService {
      * @param positions lit of position
      */
     @Transactional
-    public void updateWidgetPositionByProject(Project project, final List<ProjectWidgetPositionDto> positions) {
-        for (ProjectWidgetPositionDto projectWidgetPositionDto : positions) {
+    public void updateWidgetPositionByProject(Project project, final List<ProjectWidgetPositionRequestDto> positions) {
+        for (ProjectWidgetPositionRequestDto projectWidgetPositionRequestDto : positions) {
             updateWidgetPositionByProjectWidgetId(
-                projectWidgetPositionDto.getProjectWidgetId(),
-                projectWidgetPositionDto.getCol(),
-                projectWidgetPositionDto.getRow(),
-                projectWidgetPositionDto.getHeight(),
-                projectWidgetPositionDto.getWidth()
+                projectWidgetPositionRequestDto.getProjectWidgetId(),
+                projectWidgetPositionRequestDto.getCol(),
+                projectWidgetPositionRequestDto.getRow(),
+                projectWidgetPositionRequestDto.getHeight(),
+                projectWidgetPositionRequestDto.getWidth()
             );
         }
         projectWidgetRepository.flush();
@@ -287,7 +287,7 @@ public class ProjectWidgetService {
     }
 
     /**
-     * Method used to get instantiate html for a projectWidget
+     * Method used to get instantiate html for a projectwidget
      * Call inside {@link ProjectWidgetMapper}
      *
      * @param projectWidget the project widget
@@ -339,8 +339,12 @@ public class ProjectWidgetService {
     public void updateProjectWidget(ProjectWidget projectWidget, final String customStyle, final String backendConfig) {
         ctx.getBean(NashornWidgetScheduler.class).cancelWidgetInstance(projectWidget.getId());
 
-        projectWidget.setCustomStyle(customStyle);
-        projectWidget.setBackendConfig(encryptSecretParamsIfNeeded(projectWidget.getWidget().getWidgetParams(), backendConfig));
+        if (customStyle != null) {
+            projectWidget.setCustomStyle(customStyle);
+        }
+        if (backendConfig != null) {
+            projectWidget.setBackendConfig(encryptSecretParamsIfNeeded(projectWidget.getWidget().getWidgetParams(), backendConfig));
+        }
         projectWidgetRepository.save(projectWidget);
 
         dashboardScheduleService.scheduleWidget(projectWidget.getId());
@@ -366,7 +370,7 @@ public class ProjectWidgetService {
     /**
      * Update project widget when nashorn execution is a success
      *
-     * @param projectWidgetId The projectWidget id
+     * @param projectWidgetId The projectwidget id
      * @param executionDate   The execution date
      * @param executionLog    The execution log
      * @param data            The data return by the execution

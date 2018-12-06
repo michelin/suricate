@@ -19,8 +19,8 @@ package io.suricate.monitoring.controllers.api;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.project.ProjectRequestDto;
 import io.suricate.monitoring.model.dto.api.project.ProjectResponseDto;
-import io.suricate.monitoring.model.dto.api.project.ProjectWidgetDto;
-import io.suricate.monitoring.model.dto.api.project.ProjectWidgetPositionDto;
+import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetPositionRequestDto;
+import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetRequestDto;
 import io.suricate.monitoring.model.entity.Configuration;
 import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
@@ -422,8 +422,8 @@ public class ProjectController {
     /**
      * Add widget into the dashboard
      *
-     * @param projectToken     The project token
-     * @param projectWidgetDto The projectWidget to add
+     * @param projectToken            The project token
+     * @param projectWidgetRequestDto The projectWidget to add
      * @return The project
      */
     @ApiOperation(value = "Add a new widget to a project", response = ProjectResponseDto.class)
@@ -433,17 +433,17 @@ public class ProjectController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class)
     })
-    @PutMapping(value = "/v1/projects/{projectToken}/projectWidgets")
+    @PostMapping(value = "/v1/projects/{projectToken}/projectWidgets")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ProjectResponseDto> addWidgetToProject(@ApiParam(name = "projectToken", value = "The project token", required = true)
-                                                                 @PathVariable("projectToken") String projectToken,
-                                                                 @ApiParam(name = "projectWidgetDto", value = "The project widget info's", required = true)
-                                                                 @RequestBody ProjectWidgetDto projectWidgetDto) {
+    public ResponseEntity<ProjectResponseDto> addProjectWidgetToProject(@ApiParam(name = "projectToken", value = "The project token", required = true)
+                                                                        @PathVariable("projectToken") String projectToken,
+                                                                        @ApiParam(name = "projectWidgetDto", value = "The project widget info's", required = true)
+                                                                        @RequestBody ProjectWidgetRequestDto projectWidgetRequestDto) {
         if (!this.projectService.isProjectExists(projectToken)) {
             throw new ObjectNotFoundException(Project.class, projectToken);
         }
 
-        ProjectWidget projectWidget = projectWidgetMapper.toNewProjectWidget(projectWidgetDto, projectToken);
+        ProjectWidget projectWidget = projectWidgetMapper.toNewProjectWidget(projectWidgetRequestDto, projectToken);
         projectWidgetService.addProjectWidget(projectWidget);
 
         URI resourceLocation = ServletUriComponentsBuilder
@@ -462,8 +462,8 @@ public class ProjectController {
     /**
      * Update the list of widget positions for a project
      *
-     * @param projectToken              The project token to update
-     * @param projectWidgetPositionDtos The list of project widget positions
+     * @param projectToken                     The project token to update
+     * @param projectWidgetPositionRequestDtos The list of project widget positions
      * @return The project updated
      */
     @ApiOperation(value = "Update the project widget positions for a project")
@@ -477,15 +477,15 @@ public class ProjectController {
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Void> updateProjectWidgetsPositionForProject(@ApiParam(name = "projectToken", value = "The project token", required = true)
                                                                        @PathVariable("projectToken") String projectToken,
-                                                                       @ApiParam(name = "projectWidgetPositionDtos", value = "The list of the new positions", required = true)
-                                                                       @RequestBody List<ProjectWidgetPositionDto> projectWidgetPositionDtos) {
+                                                                       @ApiParam(name = "projectWidgetPositionRequestDtos", value = "The list of the new positions", required = true)
+                                                                       @RequestBody List<ProjectWidgetPositionRequestDto> projectWidgetPositionRequestDtos) {
         Optional<Project> projectOptional = projectService.getOneByToken(projectToken);
 
         if (!projectOptional.isPresent()) {
             throw new ObjectNotFoundException(Project.class, projectToken);
         }
 
-        projectWidgetService.updateWidgetPositionByProject(projectOptional.get(), projectWidgetPositionDtos);
+        projectWidgetService.updateWidgetPositionByProject(projectOptional.get(), projectWidgetPositionRequestDtos);
         return ResponseEntity.noContent().build();
     }
 }

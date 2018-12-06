@@ -16,17 +16,18 @@
 
 package io.suricate.monitoring.model.mapper.project;
 
-import io.suricate.monitoring.model.dto.api.project.ProjectWidgetDto;
+import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetRequestDto;
+import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetResponseDto;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.mapper.widget.WidgetMapper;
 import io.suricate.monitoring.service.api.ProjectService;
 import io.suricate.monitoring.service.api.ProjectWidgetService;
 import io.suricate.monitoring.service.api.WidgetService;
-import org.mapstruct.*;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 /**
  * Interface that manage the generation DTO/Model objects for project widget class
@@ -66,37 +67,22 @@ public abstract class ProjectWidgetMapper {
     /* ******************************************************* */
 
     /**
-     * Tranform a project widget into a ProjectWidgetDto
+     * Tranform a project widget into a ProjectWidgetResponseDto
      *
      * @param projectWidget The project widget to transform
      * @return The related project widget DTO
      */
     @Named("toProjectWidgetDtoDefault")
-    @Mappings({
-        @Mapping(target = "widgetPosition.col", source = "projectWidget.col"),
-        @Mapping(target = "widgetPosition.row", source = "projectWidget.row"),
-        @Mapping(target = "widgetPosition.height", source = "projectWidget.height"),
-        @Mapping(target = "widgetPosition.width", source = "projectWidget.width"),
-        @Mapping(target = "instantiateHtml", expression = "java(projectWidgetService.instantiateProjectWidgetHtml(projectWidget))"),
-        @Mapping(target = "project", qualifiedByName = "toProjectDtoDefault"),
-        @Mapping(target = "widget", qualifiedByName = "toWidgetDtoDefault"),
-        @Mapping(target = "backendConfig", expression = "java(projectWidgetService.decryptSecretParamsIfNeeded(projectWidget.getWidget().getWidgetParams(), projectWidget.getBackendConfig()))")
-    })
-    public abstract ProjectWidgetDto toProjectWidgetDtoDefault(ProjectWidget projectWidget);
+    @Mapping(target = "widgetPosition.col", source = "projectWidget.col")
+    @Mapping(target = "widgetPosition.row", source = "projectWidget.row")
+    @Mapping(target = "widgetPosition.height", source = "projectWidget.height")
+    @Mapping(target = "widgetPosition.width", source = "projectWidget.width")
+    @Mapping(target = "instantiateHtml", expression = "java(projectWidgetService.instantiateProjectWidgetHtml(projectWidget))")
+    @Mapping(target = "project", qualifiedByName = "toProjectDtoDefault")
+    @Mapping(target = "widget", qualifiedByName = "toWidgetDtoDefault")
+    @Mapping(target = "backendConfig", expression = "java(projectWidgetService.decryptSecretParamsIfNeeded(projectWidget.getWidget().getWidgetParams(), projectWidget.getBackendConfig()))")
+    public abstract ProjectWidgetResponseDto toProjectWidgetDtoDefault(ProjectWidget projectWidget);
 
-    /* ******************************************************* */
-    /*                    List Mapping                         */
-    /* ******************************************************* */
-
-    /**
-     * Tranform a list of project widgets into a list of projectWidgetDtos
-     *
-     * @param projectWidgets The list of project widget to tranform
-     * @return The related list of dto object
-     */
-    @Named("toProjectWidgetDtosDefault")
-    @IterableMapping(qualifiedByName = "toProjectWidgetDtoDefault")
-    public abstract List<ProjectWidgetDto> toProjectWidgetDtosDefault(List<ProjectWidget> projectWidgets);
 
     /* ************************* TO MODEL **************************************** */
 
@@ -105,22 +91,18 @@ public abstract class ProjectWidgetMapper {
     /* ******************************************************* */
 
     /**
-     * Tranform a projectWidgetDto into a new projectWidget when we want to add a new project widget
+     * Tranform a projectWidgetDto into a new projectwidget when we want to add a new project widget
      *
-     * @param projectWidgetDto The project widget to transform
+     * @param projectWidgetRequestDto The project widget to transform
      * @return The domain object
      */
     @Named("toNewProjectWidget")
-    @Mappings({
-        @Mapping(target = "col", expression = "java(0)"),
-        @Mapping(target = "row", expression = "java(0)"),
-        @Mapping(target = "height", expression = "java(1)"),
-        @Mapping(target = "width", expression = "java(1)"),
-        @Mapping(target = "project", expression = "java( projectService.getOneByToken(projectToken).get())"),
-        @Mapping(target = "widget", expression = "java( widgetService.findOne(projectWidgetDto.getWidget().getId()) )"),
-        @Mapping(target = "data", expression = "java( \"{}\" )")
-    })
-    public abstract ProjectWidget toNewProjectWidget(ProjectWidgetDto projectWidgetDto, String projectToken);
-
-
+    @Mapping(target = "col", source = "projectWidgetRequestDto.col")
+    @Mapping(target = "row", source = "projectWidgetRequestDto.row")
+    @Mapping(target = "height", source = "projectWidgetRequestDto.height")
+    @Mapping(target = "width", source = "projectWidgetRequestDto.width")
+    @Mapping(target = "project", expression = "java( projectService.getOneByToken(projectToken).get())")
+    @Mapping(target = "widget", expression = "java( widgetService.findOne(projectWidgetRequestDto.getWidgetId()) )")
+    @Mapping(target = "data", source = "projectWidgetRequestDto.data")
+    public abstract ProjectWidget toNewProjectWidget(ProjectWidgetRequestDto projectWidgetRequestDto, String projectToken);
 }

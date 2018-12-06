@@ -14,24 +14,24 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.dto.api.project;
+package io.suricate.monitoring.model.dto.api.projectwidget;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 /**
  * Widget position used for communication with the clients via webservices
  * (For example when a widget change of position)
  */
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ToString
-@ApiModel(value = "ProjectWidgetPosition", description = "Describe the position of the widget on the grid")
-public class ProjectWidgetPositionDto extends AbstractDto {
+@ApiModel(value = "ProjectWidgetPositionResponse", description = "Describe the position of the widget on the grid")
+public class ProjectWidgetPositionResponseDto extends AbstractDto {
 
     /**
      * The project widget id related to this project widget position

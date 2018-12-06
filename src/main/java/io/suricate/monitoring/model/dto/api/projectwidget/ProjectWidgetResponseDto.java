@@ -17,14 +17,17 @@
  *
  */
 
-package io.suricate.monitoring.model.dto.api.project;
+package io.suricate.monitoring.model.dto.api.projectwidget;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
+import io.suricate.monitoring.model.dto.api.project.ProjectResponseDto;
 import io.suricate.monitoring.model.dto.api.widget.WidgetDto;
 import io.suricate.monitoring.model.enums.WidgetState;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
@@ -33,13 +36,11 @@ import java.util.Date;
  * This is the instantiation of a widget
  * Link a widget with a dashboard/project
  */
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ToString
-@ApiModel(value = "ProjectWidget", description = "Describe an instantiation of a widget")
-public class ProjectWidgetDto extends AbstractDto {
+@ApiModel(value = "projectWidgetResponse", description = "Describe an instantiation of a widget")
+public class ProjectWidgetResponseDto extends AbstractDto {
 
     /**
      * The project widget id
@@ -57,7 +58,7 @@ public class ProjectWidgetDto extends AbstractDto {
      * The position of this instance of widget in the grid
      */
     @ApiModelProperty(value = "The position of the widget on the grid")
-    private ProjectWidgetPositionDto widgetPosition;
+    private ProjectWidgetPositionResponseDto widgetPosition;
 
     /**
      * The css style for this instance
