@@ -74,10 +74,4 @@ public class RepositoryResponseDto extends AbstractDto {
      */
     @ApiModelProperty(value = "True if the repository is enabled for update", required = true)
     private boolean enabled = true;
-
-    /**
-     * The list of related widgets
-     */
-    @ApiModelProperty(value = "The type of the repository")
-    private List<WidgetDto> widgets = new ArrayList<>();
 }

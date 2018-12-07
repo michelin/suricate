@@ -16,6 +16,7 @@
 
 package io.suricate.monitoring.model.mapper.widget;
 
+import io.suricate.monitoring.model.dto.api.repository.RepositoryRequestDto;
 import io.suricate.monitoring.model.dto.api.repository.RepositoryResponseDto;
 import io.suricate.monitoring.model.entity.widget.Repository;
 import org.mapstruct.*;
@@ -46,29 +47,19 @@ public abstract class RepositoryMapper {
      * @return The related repository DTO
      */
     @Named("toRepositoryDtoDefault")
-    @Mappings({
-        @Mapping(target = "widgets", qualifiedByName = "toWidgetDtosDefault")
-    })
     public abstract RepositoryResponseDto toRepositoryDtoDefault(Repository repository);
-
-    @Named("toRepositoryDtoWithoutWidgets")
-    @Mappings({
-        @Mapping(target = "widgets", ignore = true)
-    })
-    public abstract RepositoryResponseDto toRepositoryDtoWithoutWidgets(Repository repository);
-
 
     /**
      * Create a repository with a dto without widgets
      *
-     * @param repositoryResponseDto The repository dto to transform
+     * @param repositoryRequestDto The repository dto to transform
      * @return The repository
      */
     @Named("toRepositoryWithoutWidgets")
     @Mappings({
         @Mapping(target = "widgets", ignore = true)
     })
-    public abstract Repository toRepositoryWithoutWidgets(RepositoryResponseDto repositoryResponseDto);
+    public abstract Repository toRepositoryWithoutWidgets(RepositoryRequestDto repositoryRequestDto);
 
     /* ******************************************************* */
     /*                    List Mapping                         */

@@ -17,9 +17,12 @@
 package io.suricate.monitoring.controllers.api;
 
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
+import io.suricate.monitoring.model.dto.api.repository.RepositoryRequestDto;
 import io.suricate.monitoring.model.dto.api.repository.RepositoryResponseDto;
+import io.suricate.monitoring.model.dto.api.widget.WidgetDto;
 import io.suricate.monitoring.model.entity.widget.Repository;
 import io.suricate.monitoring.model.mapper.widget.RepositoryMapper;
+import io.suricate.monitoring.model.mapper.widget.WidgetMapper;
 import io.suricate.monitoring.service.GitService;
 import io.suricate.monitoring.service.api.RepositoryService;
 import io.suricate.monitoring.utils.exception.NoContentException;
@@ -62,19 +65,27 @@ public class RepositoryController {
     private final RepositoryMapper repositoryMapper;
 
     /**
+     * The widget mapper
+     */
+    private final WidgetMapper widgetMapper;
+
+    /**
      * Constructor
      *
      * @param repositoryService The repository service to inject
      * @param gitService        The git service to inject
      * @param repositoryMapper  The repository mapper to inject
+     * @param widgetMapper      The widget mapper
      */
     @Autowired
     public RepositoryController(final RepositoryService repositoryService,
                                 final GitService gitService,
-                                final RepositoryMapper repositoryMapper) {
+                                final RepositoryMapper repositoryMapper,
+                                final WidgetMapper widgetMapper) {
         this.repositoryService = repositoryService;
         this.gitService = gitService;
         this.repositoryMapper = repositoryMapper;
+        this.widgetMapper = widgetMapper;
     }
 
     /**
@@ -109,7 +120,7 @@ public class RepositoryController {
     /**
      * Create a new repository
      *
-     * @param repositoryResponseDto The repository to create
+     * @param repositoryRequestDto The repository to create
      * @return The repository created
      */
     @ApiOperation(value = "Create a new repository, and load it automatically if enable is selected", response = RepositoryResponseDto.class)
@@ -121,8 +132,8 @@ public class RepositoryController {
     @PostMapping(value = "/v1/repositories")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<RepositoryResponseDto> createOne(@ApiParam(name = "repositoryResponseDto", value = "The repository to create", required = true)
-                                                           @RequestBody RepositoryResponseDto repositoryResponseDto) {
-        Repository repository = repositoryMapper.toRepositoryWithoutWidgets(repositoryResponseDto);
+                                                           @RequestBody RepositoryRequestDto repositoryRequestDto) {
+        Repository repository = repositoryMapper.toRepositoryWithoutWidgets(repositoryRequestDto);
         repositoryService.addOrUpdateRepository(repository);
 
         if (repository.isEnabled()) {
@@ -190,12 +201,12 @@ public class RepositoryController {
     public ResponseEntity<RepositoryResponseDto> updateOneById(@ApiParam(name = "repositoryId", value = "The repository id", required = true)
                                                                @PathVariable Long repositoryId,
                                                                @ApiParam(name = "repositoryResponseDto", value = "The repository with the new info's to update", required = true)
-                                                               @RequestBody RepositoryResponseDto repositoryResponseDto) {
+                                                               @RequestBody RepositoryRequestDto repositoryRequestDto) {
         if (!repositoryService.existsById(repositoryId)) {
             throw new ObjectNotFoundException(Repository.class, repositoryId);
         }
 
-        Repository repository = repositoryMapper.toRepositoryWithoutWidgets(repositoryResponseDto);
+        Repository repository = repositoryMapper.toRepositoryWithoutWidgets(repositoryRequestDto);
         repository.setId(repositoryId);
 
         this.repositoryService.addOrUpdateRepository(repository);
@@ -209,5 +220,36 @@ public class RepositoryController {
             .contentType(MediaType.APPLICATION_JSON)
             .cacheControl(CacheControl.noCache())
             .body(this.repositoryMapper.toRepositoryDtoDefault(repository));
+    }
+
+    /**
+     * Retrieve a list of widget by repository
+     *
+     * @param repositoryId The repository Id
+     * @return The repository
+     */
+    @ApiOperation(value = "Retrieve a list of widget by repository", nickname = "getRepositoryWidget")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Ok"),
+        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
+        @ApiResponse(code = 404, message = "Repository not found", response = ApiErrorDto.class)
+    })
+    @GetMapping(value = "/v1/repositories/{repositoryId}/widgets")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @Transactional
+    public ResponseEntity<List<WidgetDto>> getRepositoryWidget(@ApiParam(name = "repositoryId", value = "The repository id", required = true)
+                                                               @PathVariable Long repositoryId) {
+        Optional<Repository> optionalRepository = repositoryService.getOneById(repositoryId);
+
+        if (!optionalRepository.isPresent()) {
+            throw new ObjectNotFoundException(Repository.class, repositoryId);
+        }
+
+        return ResponseEntity
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .cacheControl(CacheControl.noCache())
+            .body(widgetMapper.toWidgetDtosDefault(optionalRepository.get().getWidgets()));
     }
 }
