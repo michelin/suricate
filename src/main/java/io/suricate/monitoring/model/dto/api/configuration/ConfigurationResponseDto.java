@@ -31,7 +31,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "ConfigurationResponse", description = "Describe a configuration response")
+@ApiModel(value = "ConfigurationResponse", description = "Describe a configuration")
 public class ConfigurationResponseDto extends AbstractDto {
 
     /**

@@ -34,7 +34,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "UserRequest", description = "Describe a user of the app")
+@ApiModel(value = "UserRequest", description = "Create/Update a user")
 public class UserRequestDto extends AbstractDto {
 
     /**

@@ -19,16 +19,16 @@ package io.suricate.monitoring.model.dto.api.setting;
 import io.suricate.monitoring.model.dto.api.AbstractDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 /**
  * The Allowed setting value DTO used for REST communication
  */
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ToString
 @ApiModel(value = "AllowedSettingValue", description = "Describe the possible values for a setting")
 public class AllowedSettingValueDto extends AbstractDto {
 
@@ -55,10 +55,4 @@ public class AllowedSettingValueDto extends AbstractDto {
      */
     @ApiModelProperty(value = "True if this value should be used as default", required = true)
     private boolean isDefault;
-
-    /**
-     * The related setting
-     */
-    @ApiModelProperty(value = "The related setting", required = true)
-    private SettingResponseDto setting;
 }

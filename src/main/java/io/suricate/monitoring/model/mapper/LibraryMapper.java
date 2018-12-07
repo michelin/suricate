@@ -16,10 +16,12 @@
 
 package io.suricate.monitoring.model.mapper;
 
-import io.suricate.monitoring.model.dto.api.widget.LibraryDto;
+import io.suricate.monitoring.model.dto.api.widget.LibraryResponseDto;
 import io.suricate.monitoring.model.entity.Library;
 import io.suricate.monitoring.model.mapper.widget.WidgetMapper;
-import org.mapstruct.*;
+import org.mapstruct.IterableMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.Named;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -48,10 +50,7 @@ public abstract class LibraryMapper {
      * @return The related library DTO
      */
     @Named("toLibraryDtoDefault")
-    @Mappings({
-        @Mapping(target = "widgets", qualifiedByName = "toWidgetDtosWithoutLibraries")
-    })
-    public abstract LibraryDto toLibraryDtoDefault(Library library);
+    public abstract LibraryResponseDto toLibraryDtoDefault(Library library);
 
     /**
      * Tranform a library into a libraryDto
@@ -60,10 +59,7 @@ public abstract class LibraryMapper {
      * @return The related library DTO
      */
     @Named("toLibraryDtoWithoutWidgets")
-    @Mappings({
-        @Mapping(target = "widgets", ignore = true)
-    })
-    public abstract LibraryDto toLibraryDtoWithoutWidgets(Library library);
+    public abstract LibraryResponseDto toLibraryDtoWithoutWidgets(Library library);
 
     /* ******************************************************* */
     /*                    List Mapping                         */
@@ -77,7 +73,7 @@ public abstract class LibraryMapper {
      */
     @Named("toLibraryDtosDefault")
     @IterableMapping(qualifiedByName = "toLibraryDtoDefault")
-    public abstract List<LibraryDto> toLibraryDtosDefault(List<Library> libraries);
+    public abstract List<LibraryResponseDto> toLibraryDtosDefault(List<Library> libraries);
 
     /**
      * Tranform a list of libraries into a list of librarieDto without widgets
@@ -87,5 +83,5 @@ public abstract class LibraryMapper {
      */
     @Named("toLibraryDtosWithoutWidgets")
     @IterableMapping(qualifiedByName = "toLibraryDtoWithoutWidgets")
-    public abstract List<LibraryDto> toLibraryDtosWithoutWidgets(List<Library> libraries);
+    public abstract List<LibraryResponseDto> toLibraryDtosWithoutWidgets(List<Library> libraries);
 }

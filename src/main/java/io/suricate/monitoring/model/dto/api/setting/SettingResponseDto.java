@@ -20,7 +20,9 @@ import io.suricate.monitoring.model.enums.SettingDataType;
 import io.suricate.monitoring.model.enums.SettingType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,11 +30,9 @@ import java.util.List;
 /**
  * Setting DTO used for REST communication
  */
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ToString
 @ApiModel(value = "SettingResponse", description = "Describe a setting")
 public class SettingResponseDto {
     /**

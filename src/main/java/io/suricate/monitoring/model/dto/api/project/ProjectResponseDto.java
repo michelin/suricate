@@ -48,7 +48,7 @@ public class ProjectResponseDto extends AbstractDto {
     /**
      * the grid properties for a dashboard
      */
-    @ApiModelProperty(value = "the dashboard grid properties")
+    @ApiModelProperty(value = "The properties of the dashboard grid")
     private ProjectGridResponseDto gridProperties;
     /**
      * The librairies related

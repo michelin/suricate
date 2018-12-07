@@ -19,16 +19,16 @@ package io.suricate.monitoring.model.dto.api.setting;
 import io.suricate.monitoring.model.dto.api.AbstractDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 /**
  * The user setting DTO for REST communication
  */
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ToString
 @ApiModel(value = "UserSettingResponse", description = "The setting saved for the user")
 public class UserSettingResponseDto extends AbstractDto {
 
@@ -39,15 +39,15 @@ public class UserSettingResponseDto extends AbstractDto {
     private Long id;
 
     /**
-     * The related user
+     * The related user id
      */
-    @ApiModelProperty(value = "The user related to this setting")
+    @ApiModelProperty(value = "The user id related to this setting")
     private Long userId;
 
     /**
-     * The setting reference
+     * The setting id
      */
-    @ApiModelProperty(value = "The related setting")
+    @ApiModelProperty(value = "The related setting id")
     private Long settingId;
 
     /**

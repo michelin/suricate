@@ -29,7 +29,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "ProjectRequest", description = "Used to create or update a project")
+@ApiModel(value = "ProjectRequest", description = "Create or update a project")
 public class ProjectRequestDto extends AbstractDto {
 
     /**

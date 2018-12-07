@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "ConfigurationRequest", description = "Describe a configuration request")
+@ApiModel(value = "ConfigurationRequest", description = "Add or modify a configuration")
 public class ConfigurationRequestDto extends AbstractDto {
 
     /**
@@ -18,5 +18,4 @@ public class ConfigurationRequestDto extends AbstractDto {
      */
     @ApiModelProperty(value = "The configuration value")
     private String value;
-    
 }

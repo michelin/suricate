@@ -19,17 +19,17 @@ package io.suricate.monitoring.model.dto.api.role;
 import io.suricate.monitoring.model.dto.api.AbstractDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 /**
  * Represent a role used for communication with the clients via webservices
  */
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ToString
-@ApiModel(value = "Role", description = "Describe a user role")
+@ApiModel(value = "RoleResponse", description = "Describe a role")
 public class RoleResponseDto extends AbstractDto {
 
     /**

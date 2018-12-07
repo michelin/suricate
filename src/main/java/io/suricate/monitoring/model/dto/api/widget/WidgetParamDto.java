@@ -16,10 +16,13 @@
 
 package io.suricate.monitoring.model.dto.api.widget;
 
+import io.suricate.monitoring.model.dto.api.AbstractDto;
 import io.suricate.monitoring.model.enums.WidgetVariableType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,13 +30,11 @@ import java.util.List;
 /**
  * Represent a widget param response used for communication with the clients via webservices
  */
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
-@EqualsAndHashCode
-@ToString
+@EqualsAndHashCode(callSuper = false)
 @ApiModel(value = "WidgetParam", description = "Describe the params for an instance of widget")
-public class WidgetParamDto {
+public class WidgetParamDto extends AbstractDto {
     /**
      * The param name
      */

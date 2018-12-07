@@ -30,7 +30,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "ProjectWidgetPositionRequest", description = "Describe the position of the widget on the grid")
+@ApiModel(value = "ProjectWidgetPositionRequest", description = "Modify the position of a widget")
 public class ProjectWidgetPositionRequestDto extends AbstractDto {
 
     /**

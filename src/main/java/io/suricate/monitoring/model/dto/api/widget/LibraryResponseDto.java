@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.dto.api.setting;
+package io.suricate.monitoring.model.dto.api.widget;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
-import io.suricate.monitoring.model.dto.api.user.UserResponseDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -25,41 +24,29 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
- * The user setting DTO for REST communication
+ * Library used for communication with the clients via webservices
  */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "UserSettingRequest", description = "The setting saved for the user")
-public class UserSettingRequestDto extends AbstractDto {
+@ApiModel(value = "LibraryResponse", description = "Describe a JS Library")
+public class LibraryResponseDto extends AbstractDto {
 
     /**
-     * The user setting id
+     * The library id
      */
-    @ApiModelProperty(value = "The id line")
+    @ApiModelProperty(value = "The database id")
     private Long id;
 
     /**
-     * The related user
+     * The library technical name
      */
-    @ApiModelProperty(value = "The user related to this setting")
-    private UserResponseDto user;
+    @ApiModelProperty(value = "A unique technical name")
+    private String technicalName;
 
     /**
-     * The setting reference
+     * The related asset
      */
-    @ApiModelProperty(value = "The related setting")
-    private SettingResponseDto setting;
-
-    /**
-     * The allowed setting value
-     */
-    @ApiModelProperty(value = "The selected value if it's a constrained setting")
-    private AllowedSettingValueDto settingValue;
-
-    /**
-     * The unconstrained value
-     */
-    @ApiModelProperty(value = "The value typed by the user it's an unconstrained field")
-    private String unconstrainedValue;
+    @ApiModelProperty(value = "The related asset token for this library")
+    private String assetToken;
 }

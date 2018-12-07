@@ -48,7 +48,7 @@ public class CategoryResponseDto extends AbstractDto {
     @ApiModelProperty(value = "Category technical name, should be unique in table")
     private String technicalName;
     /**
-     * The image related to this category
+     * The image token related to this category
      */
     @ApiModelProperty(value = "Asset token")
     private String assetToken;

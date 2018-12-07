@@ -34,7 +34,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "ProjectWidgetRequest", description = "project widget to create")
+@ApiModel(value = "ProjectWidgetRequest", description = "Create/update project widget")
 public class ProjectWidgetRequestDto extends AbstractDto {
 
     /**

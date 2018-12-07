@@ -30,14 +30,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "ProjectWidgetPositionResponse", description = "Describe the position of the widget on the grid")
+@ApiModel(value = "ProjectWidgetPositionResponse", description = "Position of the widget on the grid")
 public class ProjectWidgetPositionResponseDto extends AbstractDto {
-
-    /**
-     * The project widget id related to this project widget position
-     */
-    @ApiModelProperty(value = "The related project widget id")
-    private Long projectWidgetId;
 
     /**
      * The start column of this widget

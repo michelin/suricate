@@ -24,9 +24,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Represent a user used for communication with the clients via webservices
  */
@@ -34,7 +31,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "User", description = "Describe a user of the app")
+@ApiModel(value = "UserResponse", description = "Describe a user of the app")
 public class UserResponseDto extends AbstractDto {
 
     /**

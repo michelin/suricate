@@ -18,7 +18,9 @@ package io.suricate.monitoring.model.mapper.setting;
 
 import io.suricate.monitoring.model.dto.api.setting.AllowedSettingValueDto;
 import io.suricate.monitoring.model.entity.setting.AllowedSettingValue;
-import org.mapstruct.*;
+import org.mapstruct.IterableMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.Named;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -46,9 +48,6 @@ public abstract class AllowedSettingValueMapper {
      * @return The related dto
      */
     @Named("toAllowedSettingValueDtoDefault")
-    @Mappings({
-        @Mapping(target = "setting", qualifiedByName = "toSettingDtoDefault")
-    })
     public abstract AllowedSettingValueDto toAllowedSettingValueDtoDefault(AllowedSettingValue allowedSettingValue);
 
     /**
@@ -58,9 +57,6 @@ public abstract class AllowedSettingValueMapper {
      * @return The related dto
      */
     @Named("toAllowedSettingValueDtoWithoutSetting")
-    @Mappings({
-        @Mapping(target = "setting", ignore = true)
-    })
     public abstract AllowedSettingValueDto toAllowedSettingValueDtoWithoutSetting(AllowedSettingValue allowedSettingValue);
 
     /* ******************************************************* */

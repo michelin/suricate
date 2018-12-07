@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "ProjectGridResponse", description = "Describe a project/dashboard")
+@ApiModel(value = "ProjectGridResponse", description = "Properties of the dashboard for the related project")
 public class ProjectGridResponseDto {
 
     /**
