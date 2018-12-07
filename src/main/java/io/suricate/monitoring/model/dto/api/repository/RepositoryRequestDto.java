@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "Repository", description = "Describe a widget repository")
+@ApiModel(value = "RepositoryRequest", description = "Describe a widget repository")
 public class RepositoryRequestDto extends AbstractDto {
 
     /**

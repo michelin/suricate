@@ -1,7 +1,6 @@
 package io.suricate.monitoring.model.dto.api.repository;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
-import io.suricate.monitoring.model.dto.api.widget.WidgetDto;
 import io.suricate.monitoring.model.enums.RepositoryTypeEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -9,16 +8,13 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Describe a repository
  */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "Repository", description = "Describe a widget repository")
+@ApiModel(value = "RepositoryResponse", description = "Describe a widget repository")
 public class RepositoryResponseDto extends AbstractDto {
 
     /**

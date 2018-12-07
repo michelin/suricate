@@ -17,21 +17,22 @@
 package io.suricate.monitoring.controllers.api;
 
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
-import io.suricate.monitoring.model.dto.api.user.RoleDto;
+import io.suricate.monitoring.model.dto.api.role.RoleResponseDto;
+import io.suricate.monitoring.model.dto.api.user.UserResponseDto;
 import io.suricate.monitoring.model.entity.user.Role;
 import io.suricate.monitoring.model.mapper.role.RoleMapper;
+import io.suricate.monitoring.model.mapper.role.UserMapper;
 import io.suricate.monitoring.service.api.RoleService;
 import io.suricate.monitoring.utils.exception.NoContentException;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -57,16 +58,24 @@ public class RoleController {
     private final RoleMapper roleMapper;
 
     /**
+     * The user mapper
+     */
+    private final UserMapper userMapper;
+
+    /**
      * Constructor
      *
      * @param roleService The role service
      * @param roleMapper  The role mapper
+     * @param userMapper  The user mapper
      */
     @Autowired
     public RoleController(final RoleService roleService,
-                          final RoleMapper roleMapper) {
+                          final RoleMapper roleMapper,
+                          final UserMapper userMapper) {
         this.roleService = roleService;
         this.roleMapper = roleMapper;
+        this.userMapper = userMapper;
     }
 
     /**
@@ -74,16 +83,16 @@ public class RoleController {
      *
      * @return The list of roles
      */
-    @ApiOperation(value = "Get the full list of roles", response = RoleDto.class)
+    @ApiOperation(value = "Get the full list of roles", response = RoleResponseDto.class)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = RoleDto.class),
+        @ApiResponse(code = 200, message = "Ok", response = RoleResponseDto.class),
         @ApiResponse(code = 204, message = "No Content"),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
     })
     @GetMapping(value = "/v1/roles")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<List<RoleDto>> getRoles() {
+    public ResponseEntity<List<RoleResponseDto>> getRoles() {
         Optional<List<Role>> rolesOptional = roleService.getRoles();
 
         if (!rolesOptional.isPresent()) {
@@ -95,5 +104,62 @@ public class RoleController {
             .cacheControl(CacheControl.noCache())
             .contentType(MediaType.APPLICATION_JSON)
             .body(roleMapper.toRoleDtosDefault(rolesOptional.get()));
+    }
+
+
+    /**
+     * Get a role
+     *
+     * @param roleId The role id to get
+     * @return The role
+     */
+    @ApiOperation(value = "Get a role by id", response = RoleResponseDto.class)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Ok", response = RoleResponseDto.class),
+        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
+    })
+    @GetMapping(value = "/v1/roles/{roleId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<RoleResponseDto> getOne(@ApiParam(name = "roleId", value = "The role id", required = true)
+                                                  @PathVariable("roleId") Long roleId) {
+        Optional<Role> roleOptional = roleService.getOneById(roleId);
+        if (!roleOptional.isPresent()) {
+            throw new ObjectNotFoundException(Role.class, roleId);
+        }
+
+        return ResponseEntity
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .cacheControl(CacheControl.noCache())
+            .body(roleMapper.toRoleDtoDefault(roleOptional.get()));
+    }
+
+    /**
+     * Get the list of users by role
+     *
+     * @param roleId The role id to get
+     * @return The list of related users
+     */
+    @ApiOperation(value = "Get the list of user for a role", response = UserResponseDto.class)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Ok", response = UserResponseDto.class),
+        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
+    })
+    @GetMapping(value = "/v1/roles/{roleId}/users")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<List<UserResponseDto>> getUsersByRole(@ApiParam(name = "roleId", value = "The role id", required = true)
+                                                                @PathVariable("roleId") Long roleId) {
+        Optional<Role> roleOptional = roleService.getOneById(roleId);
+        if (!roleOptional.isPresent()) {
+            throw new ObjectNotFoundException(Role.class, roleId);
+        }
+
+        return ResponseEntity
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .cacheControl(CacheControl.noCache())
+            .body(userMapper.toUserDtosDefault(roleOptional.get().getUsers()));
     }
 }

@@ -17,6 +17,7 @@
 package io.suricate.monitoring.model.dto.api.user;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
+import io.suricate.monitoring.model.dto.api.role.RoleResponseDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -82,5 +83,5 @@ public class UserRequestDto extends AbstractDto {
      * User roles
      */
     @ApiModelProperty(value = "The list of related roles", dataType = "java.util.List")
-    private List<RoleDto> roles = new ArrayList<>();
+    private List<RoleResponseDto> roles = new ArrayList<>();
 }

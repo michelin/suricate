@@ -14,15 +14,12 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.dto.api.user;
+package io.suricate.monitoring.model.dto.api.role;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Represent a role used for communication with the clients via webservices
@@ -33,7 +30,7 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = false)
 @ToString
 @ApiModel(value = "Role", description = "Describe a user role")
-public class RoleDto extends AbstractDto {
+public class RoleResponseDto extends AbstractDto {
 
     /**
      * The role id
@@ -50,10 +47,4 @@ public class RoleDto extends AbstractDto {
      */
     @ApiModelProperty(value = "The description of the role")
     private String description;
-
-    /**
-     * The list of user for this role
-     */
-    @ApiModelProperty(value = "The list of users with this role", dataType = "java.util.List")
-    private List<UserResponseDto> users = new ArrayList<>();
 }

@@ -16,9 +16,11 @@
 
 package io.suricate.monitoring.model.mapper.role;
 
-import io.suricate.monitoring.model.dto.api.user.RoleDto;
+import io.suricate.monitoring.model.dto.api.role.RoleResponseDto;
 import io.suricate.monitoring.model.entity.user.Role;
-import org.mapstruct.*;
+import org.mapstruct.IterableMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.Named;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -40,27 +42,13 @@ public abstract class RoleMapper {
     /* ******************************************************* */
 
     /**
-     * Tranform a Role into a RoleDto
+     * Tranform a Role into a RoleResponseDto
      *
      * @param role The project to transform
      * @return The related role DTO
      */
     @Named("toRoleDtoDefault")
-    @Mappings({
-        @Mapping(target = "users", qualifiedByName = "toUserDtosWithoutRole")
-    })
-    public abstract RoleDto toRoleDtoDefault(Role role);
-
-    /**
-     * Will be used by "toUserDto" prevent cycle references on User -> Roles -> user
-     * @param role The role to tranform
-     * @return The role without users
-     */
-    @Named("toRoleDtoWithoutUsers")
-    @Mappings({
-        @Mapping(target = "users", ignore = true)
-    })
-    public abstract RoleDto toRoleDtoWithoutUsers(Role role);
+    public abstract RoleResponseDto toRoleDtoDefault(Role role);
 
     /* ******************************************************* */
     /*                    List Mapping                         */
@@ -74,15 +62,5 @@ public abstract class RoleMapper {
      */
     @Named("toRoleDtosDefault")
     @IterableMapping(qualifiedByName = "toRoleDtoDefault")
-    public abstract List<RoleDto> toRoleDtosDefault(List<Role> roles);
-
-    /**
-     * Tranform a list of roles into a list of role dto without user
-     *
-     * @param roles The list of roles to transform
-     * @return The related roles DTO
-     */
-    @Named("toRoleDtosWithoutUsers")
-    @IterableMapping(qualifiedByName = "toRoleDtoWithoutUsers")
-    public abstract List<RoleDto> toRoleDtosWithoutUsers(List<Role> roles);
+    public abstract List<RoleResponseDto> toRoleDtosDefault(List<Role> roles);
 }

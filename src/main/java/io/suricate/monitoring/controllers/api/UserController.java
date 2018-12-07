@@ -17,8 +17,8 @@
 package io.suricate.monitoring.controllers.api;
 
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
+import io.suricate.monitoring.model.dto.api.role.RoleResponseDto;
 import io.suricate.monitoring.model.dto.api.setting.UserSettingDto;
-import io.suricate.monitoring.model.dto.api.user.RoleDto;
 import io.suricate.monitoring.model.dto.api.user.UserRequestDto;
 import io.suricate.monitoring.model.dto.api.user.UserResponseDto;
 import io.suricate.monitoring.model.entity.user.User;
@@ -258,7 +258,7 @@ public class UserController {
             userRequestDto.getFirstname(),
             userRequestDto.getLastname(),
             userRequestDto.getEmail(),
-            userRequestDto.getRoles().stream().map(RoleDto::getName).collect(Collectors.toList())
+            userRequestDto.getRoles().stream().map(RoleResponseDto::getName).collect(Collectors.toList())
         );
 
         if (!userOptional.isPresent()) {
