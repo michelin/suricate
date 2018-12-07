@@ -18,12 +18,13 @@ package io.suricate.monitoring.controllers.api;
 
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.role.RoleResponseDto;
-import io.suricate.monitoring.model.dto.api.setting.UserSettingDto;
+import io.suricate.monitoring.model.dto.api.setting.UserSettingResponseDto;
 import io.suricate.monitoring.model.dto.api.user.UserRequestDto;
 import io.suricate.monitoring.model.dto.api.user.UserResponseDto;
 import io.suricate.monitoring.model.entity.user.User;
 import io.suricate.monitoring.model.enums.AuthenticationMethod;
 import io.suricate.monitoring.model.mapper.role.UserMapper;
+import io.suricate.monitoring.model.mapper.setting.UserSettingMapper;
 import io.suricate.monitoring.service.api.UserService;
 import io.suricate.monitoring.service.api.UserSettingService;
 import io.suricate.monitoring.utils.exception.NoContentException;
@@ -70,18 +71,26 @@ public class UserController {
     private final UserMapper userMapper;
 
     /**
+     * The user setting mapper
+     */
+    private final UserSettingMapper userSettingMapper;
+
+    /**
      * Constructor
      *
-     * @param userService The user service to inject
-     * @param userMapper  The user mapper to inject
+     * @param userService       The user service to inject
+     * @param userMapper        The user mapper to inject
+     * @param userSettingMapper The user setting mapper
      */
     @Autowired
     public UserController(final UserService userService,
                           final UserMapper userMapper,
-                          final UserSettingService userSettingService) {
+                          final UserSettingService userSettingService,
+                          final UserSettingMapper userSettingMapper) {
         this.userService = userService;
         this.userMapper = userMapper;
         this.userSettingService = userSettingService;
+        this.userSettingMapper = userSettingMapper;
     }
 
     /**
@@ -216,8 +225,8 @@ public class UserController {
     @DeleteMapping(value = "/v1/users/{userId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Transactional
-    public ResponseEntity<UserResponseDto> deleteOne(@ApiParam(name = "userId", value = "The user id", required = true)
-                                                     @PathVariable("userId") Long userId) {
+    public ResponseEntity<Void> deleteOne(@ApiParam(name = "userId", value = "The user id", required = true)
+                                          @PathVariable("userId") Long userId) {
         Optional<User> userOptional = userService.getOne(userId);
 
         if (!userOptional.isPresent()) {
@@ -225,11 +234,7 @@ public class UserController {
         }
 
         userService.deleteUserByUserId(userOptional.get());
-        return ResponseEntity
-            .ok()
-            .contentType(MediaType.APPLICATION_JSON)
-            .cacheControl(CacheControl.noCache())
-            .body(userMapper.toUserDtoDefault(userOptional.get()));
+        return ResponseEntity.noContent().build();
     }
 
     /**
@@ -273,11 +278,39 @@ public class UserController {
     }
 
     /**
+     * Retrieve the user settings
+     *
+     * @param userId The user id used in the url
+     */
+    @ApiOperation(value = "Retrieve the user settings", response = UserSettingResponseDto.class)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Ok", response = UserSettingResponseDto.class),
+        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
+        @ApiResponse(code = 404, message = "User not found", response = ApiErrorDto.class)
+    })
+    @GetMapping(value = "/v1/users/{userId}/settings")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<List<UserSettingResponseDto>> updateUserSettings(@ApiParam(name = "userId", value = "The user id", required = true)
+                                                                           @PathVariable("userId") Long userId) {
+        Optional<User> userOptional = userService.getOne(userId);
+        if (!userOptional.isPresent()) {
+            throw new ObjectNotFoundException(User.class, userId);
+        }
+
+        return ResponseEntity
+            .ok()
+            .cacheControl(CacheControl.noCache())
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(userSettingMapper.toUserSettingDtosDefault(userOptional.get().getUserSettings()));
+    }
+
+    /**
      * Update the user settings for a user
      *
-     * @param principal       The connected user
-     * @param userId          The user id used in the url
-     * @param userSettingDtos The new settings
+     * @param principal               The connected user
+     * @param userId                  The user id used in the url
+     * @param userSettingResponseDtos The new settings
      * @return The user updated
      */
     @ApiOperation(value = "Update the user settings for a user", response = UserResponseDto.class)
@@ -292,9 +325,8 @@ public class UserController {
     public ResponseEntity<UserResponseDto> updateUserSettings(@ApiIgnore Principal principal,
                                                               @ApiParam(name = "userId", value = "The user id", required = true)
                                                               @PathVariable("userId") Long userId,
-                                                              @ApiParam(name = "userSettingDtos", value = "The list of user settings updated", required = true)
-                                                              @RequestBody List<UserSettingDto> userSettingDtos) {
-
+                                                              @ApiParam(name = "userSettingResponseDtos", value = "The list of user settings updated", required = true)
+                                                              @RequestBody List<UserSettingResponseDto> userSettingResponseDtos) {
         Optional<User> userOptional = this.userService.getOneByUsername(principal.getName());
         if (!userOptional.isPresent()) {
             throw new ObjectNotFoundException(User.class, userId);
@@ -304,7 +336,7 @@ public class UserController {
         }
 
         User user = userOptional.get();
-        userSettingService.updateUserSettingsForUser(user, userSettingDtos);
+        userSettingService.updateUserSettingsForUser(user, userSettingResponseDtos);
 
         return ResponseEntity
             .ok()

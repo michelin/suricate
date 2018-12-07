@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.service.api;
 
-import io.suricate.monitoring.model.dto.api.setting.UserSettingDto;
+import io.suricate.monitoring.model.dto.api.setting.UserSettingResponseDto;
 import io.suricate.monitoring.model.entity.setting.AllowedSettingValue;
 import io.suricate.monitoring.model.entity.setting.UserSetting;
 import io.suricate.monitoring.model.entity.user.User;
@@ -119,22 +119,22 @@ public class UserSettingService {
     /**
      * Update the settings for a user
      *
-     * @param user            The user
-     * @param userSettingDtos The updated settings
+     * @param user                    The user
+     * @param userSettingResponseDtos The updated settings
      * @return The user settings updated
      */
-    public List<UserSetting> updateUserSettingsForUser(User user, final List<UserSettingDto> userSettingDtos) {
-        for (UserSettingDto userSettingDto : userSettingDtos) {
-            UserSetting userSetting = userSettingRepository.findById(userSettingDto.getId()).get();
+    public List<UserSetting> updateUserSettingsForUser(User user, final List<UserSettingResponseDto> userSettingResponseDtos) {
+        for (UserSettingResponseDto userSettingResponseDto : userSettingResponseDtos) {
+            UserSetting userSetting = userSettingRepository.findById(userSettingResponseDto.getId()).get();
 
             if (userSetting.getSetting().isConstrained()) {
                 // Constrained case
                 allowedSettingValueService
-                    .getOneById(userSettingDto.getSettingValue().getId())
+                    .getOneById(userSettingResponseDto.getSettingValue().getId())
                     .ifPresent(userSetting::setSettingValue);
             } else {
                 // Unconstrained case
-                userSetting.setUnconstrainedValue(userSettingDto.getUnconstrainedValue());
+                userSetting.setUnconstrainedValue(userSettingResponseDto.getUnconstrainedValue());
             }
             userSettingRepository.save(userSetting);
         }

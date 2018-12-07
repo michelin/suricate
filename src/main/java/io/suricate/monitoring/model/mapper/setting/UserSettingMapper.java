@@ -16,10 +16,13 @@
 
 package io.suricate.monitoring.model.mapper.setting;
 
-import io.suricate.monitoring.model.dto.api.setting.UserSettingDto;
+import io.suricate.monitoring.model.dto.api.setting.UserSettingResponseDto;
 import io.suricate.monitoring.model.entity.setting.UserSetting;
 import io.suricate.monitoring.model.mapper.role.UserMapper;
-import org.mapstruct.*;
+import org.mapstruct.IterableMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -48,13 +51,11 @@ public abstract class UserSettingMapper {
      * @param userSetting The user setting to transform
      * @return The related DTO
      */
-    @Named("toUserSettingDtoWithoutUser")
-    @Mappings({
-        @Mapping(target = "user", ignore = true),
-        @Mapping(target = "setting", qualifiedByName = "toSettingDtoDefault"),
-        @Mapping(target = "settingValue", qualifiedByName = "toAllowedSettingValueDtoWithoutSetting")
-    })
-    public abstract UserSettingDto toUserSettingDtoWithoutUser(UserSetting userSetting);
+    @Named("toUserSettingDtoDefault")
+    @Mapping(target = "userId", source = "userSetting.user.id")
+    @Mapping(target = "settingId", source = "userSetting.setting.id")
+    @Mapping(target = "settingValue", qualifiedByName = "toAllowedSettingValueDtoWithoutSetting")
+    public abstract UserSettingResponseDto toUserSettingDtoDefault(UserSetting userSetting);
 
 
     /* ******************************************************* */
@@ -67,7 +68,7 @@ public abstract class UserSettingMapper {
      * @param userSettings The user settings to transform
      * @return The related list of dto's
      */
-    @Named("toUserSettingDtosWithoutUser")
-    @IterableMapping(qualifiedByName = "toUserSettingDtoWithoutUser")
-    public abstract List<UserSettingDto> toUserSettingDtosWithoutUser(List<UserSetting> userSettings);
+    @Named("toUserSettingDtosDefault")
+    @IterableMapping(qualifiedByName = "toUserSettingDtoDefault")
+    public abstract List<UserSettingResponseDto> toUserSettingDtosDefault(List<UserSetting> userSettings);
 }
