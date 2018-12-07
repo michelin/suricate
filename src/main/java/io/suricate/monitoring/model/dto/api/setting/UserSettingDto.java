@@ -49,7 +49,7 @@ public class UserSettingDto extends AbstractDto {
      * The setting reference
      */
     @ApiModelProperty(value = "The related setting")
-    private SettingDto setting;
+    private SettingResponseDto setting;
 
     /**
      * The allowed setting value

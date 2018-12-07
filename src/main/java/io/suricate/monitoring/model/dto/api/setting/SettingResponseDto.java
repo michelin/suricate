@@ -33,8 +33,8 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @ToString
-@ApiModel(value = "Setting", description = "Describe a setting")
-public class SettingDto {
+@ApiModel(value = "SettingResponse", description = "Describe a setting")
+public class SettingResponseDto {
     /**
      * The setting id
      */

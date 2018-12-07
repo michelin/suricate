@@ -60,5 +60,5 @@ public class AllowedSettingValueDto extends AbstractDto {
      * The related setting
      */
     @ApiModelProperty(value = "The related setting", required = true)
-    private SettingDto setting;
+    private SettingResponseDto setting;
 }

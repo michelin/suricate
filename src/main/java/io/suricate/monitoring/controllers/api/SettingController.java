@@ -17,7 +17,7 @@
 package io.suricate.monitoring.controllers.api;
 
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
-import io.suricate.monitoring.model.dto.api.setting.SettingDto;
+import io.suricate.monitoring.model.dto.api.setting.SettingResponseDto;
 import io.suricate.monitoring.model.entity.setting.Setting;
 import io.suricate.monitoring.model.mapper.setting.SettingMapper;
 import io.suricate.monitoring.service.api.SettingService;
@@ -74,16 +74,16 @@ public class SettingController {
      *
      * @return The full list of settings
      */
-    @ApiOperation(value = "Get the full list of settings", response = SettingDto.class, nickname = "getAllSettings")
+    @ApiOperation(value = "Get the full list of settings", response = SettingResponseDto.class, nickname = "getAllSettings")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = SettingDto.class, responseContainer = "List"),
+        @ApiResponse(code = 200, message = "Ok", response = SettingResponseDto.class, responseContainer = "List"),
         @ApiResponse(code = 204, message = "No Content"),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
     @GetMapping(value = "/v1/settings")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<List<SettingDto>> getAll() {
+    public ResponseEntity<List<SettingResponseDto>> getAll() {
         Optional<List<Setting>> settingsOptional = settingService.getAll();
 
         if (!settingsOptional.isPresent()) {
