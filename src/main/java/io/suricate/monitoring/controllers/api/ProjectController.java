@@ -22,6 +22,7 @@ import io.suricate.monitoring.model.dto.api.project.ProjectResponseDto;
 import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetPositionRequestDto;
 import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetRequestDto;
 import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetResponseDto;
+import io.suricate.monitoring.model.dto.api.user.UserResponseDto;
 import io.suricate.monitoring.model.entity.Configuration;
 import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
@@ -30,6 +31,7 @@ import io.suricate.monitoring.model.entity.widget.Category;
 import io.suricate.monitoring.model.entity.widget.WidgetParam;
 import io.suricate.monitoring.model.mapper.project.ProjectMapper;
 import io.suricate.monitoring.model.mapper.project.ProjectWidgetMapper;
+import io.suricate.monitoring.model.mapper.role.UserMapper;
 import io.suricate.monitoring.service.api.ConfigurationService;
 import io.suricate.monitoring.service.api.ProjectService;
 import io.suricate.monitoring.service.api.ProjectWidgetService;
@@ -89,6 +91,11 @@ public class ProjectController {
     private final ProjectMapper projectMapper;
 
     /**
+     * The user mapper
+     */
+    private final UserMapper userMapper;
+
+    /**
      * Project widget mapper
      */
     private final ProjectWidgetMapper projectWidgetMapper;
@@ -108,13 +115,15 @@ public class ProjectController {
                              final UserService userService,
                              final ProjectMapper projectMapper,
                              final ProjectWidgetMapper projectWidgetMapper,
-                             final ConfigurationService configurationService) {
+                             final ConfigurationService configurationService,
+                             final UserMapper userMapper) {
         this.projectService = projectService;
         this.projectWidgetService = projectWidgetService;
         this.userService = userService;
         this.projectMapper = projectMapper;
         this.projectWidgetMapper = projectWidgetMapper;
         this.configurationService = configurationService;
+        this.userMapper = userMapper;
     }
 
     /**
@@ -339,6 +348,34 @@ public class ProjectController {
             .contentType(MediaType.APPLICATION_JSON)
             .cacheControl(CacheControl.noCache())
             .body(projectMapper.toProjectDtoDefault(projectOptional.get()));
+    }
+
+    /**
+     * Get the list of users associated to a project
+     *
+     * @param projectToken Token of the project
+     */
+    @ApiOperation(value = "Retrieve project users", response = ProjectResponseDto.class)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Ok", response = ProjectResponseDto.class),
+        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
+    })
+    @GetMapping(value = "/v1/projects/{projectToken}/users")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @Transactional
+    public ResponseEntity<List<UserResponseDto>> getProjectUsers(@ApiParam(name = "projectToken", value = "The project token", required = true)
+                                                                 @PathVariable("projectToken") String projectToken) {
+        Optional<Project> projectOptional = projectService.getOneByToken(projectToken);
+        if (!projectOptional.isPresent()) {
+            throw new ObjectNotFoundException(Project.class, projectToken);
+        }
+
+        return ResponseEntity
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .cacheControl(CacheControl.noCache())
+            .body(userMapper.toUserDtosDefault(projectOptional.get().getUsers()));
     }
 
     /**

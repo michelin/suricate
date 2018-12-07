@@ -16,11 +16,15 @@
 
 package io.suricate.monitoring.model.mapper.role;
 
-import io.suricate.monitoring.model.dto.api.user.UserDto;
+import io.suricate.monitoring.model.dto.api.user.UserRequestDto;
+import io.suricate.monitoring.model.dto.api.user.UserResponseDto;
 import io.suricate.monitoring.model.entity.user.User;
 import io.suricate.monitoring.model.enums.AuthenticationMethod;
 import io.suricate.monitoring.model.mapper.setting.UserSettingMapper;
-import org.mapstruct.*;
+import org.mapstruct.IterableMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -50,60 +54,28 @@ public abstract class UserMapper {
     /* ******************************************************* */
 
     /**
-     * Tranform a User into a UserDto
+     * Tranform a User into a UserResponseDto
      *
      * @param user The user to transform
      * @return The related user DTO
      */
     @Named("toUserDtoDefault")
-    @Mappings({
-        @Mapping(target = "roles", qualifiedByName = "toRoleDtosWithoutUsers"),
-        @Mapping(target = "userSettings", qualifiedByName = "toUserSettingDtoWithoutUser"),
-        @Mapping(target = "fullname", expression = "java(String.format(\"%s %s\", user.getFirstname(), user.getLastname()))"),
-        @Mapping(target = "password", ignore = true)
-    })
-    public abstract UserDto toUserDtoDefault(User user);
-
-    /**
-     * Transform a user into a user dto without roles
-     *
-     * @param user The user to tranform
-     * @return The related dto
-     */
-    @Named("toUserDtoWithoutRole")
-    @Mappings({
-        @Mapping(target = "roles", ignore = true),
-        @Mapping(target = "userSettings", qualifiedByName = "toUserSettingDtoWithoutUser"),
-        @Mapping(target = "fullname", expression = "java(String.format(\"%s %s\", user.getFirstname(), user.getLastname()))"),
-        @Mapping(target = "password", ignore = true)
-    })
-    public abstract UserDto toUserDtoWithoutRole(User user);
-
-
+    @Mapping(target = "fullname", expression = "java(String.format(\"%s %s\", user.getFirstname(), user.getLastname()))")
+    public abstract UserResponseDto toUserDtoDefault(User user);
 
     /* ******************************************************* */
     /*                    List Mapping                         */
     /* ******************************************************* */
 
     /**
-     * Tranform a list of Users into a list of UserDto
+     * Tranform a list of Users into a list of UserResponseDto
      *
      * @param users The list of user to transform
      * @return The related users DTO
      */
     @Named("toUserDtosDefault")
     @IterableMapping(qualifiedByName = "toUserDtoDefault")
-    public abstract List<UserDto> toUserDtosDefault(List<User> users);
-
-    /**
-     * Tranform a list of Users into a list of UserDto without role
-     *
-     * @param users The list of user to transform
-     * @return The related users DTO
-     */
-    @Named("toUserDtosWithoutRole")
-    @IterableMapping(qualifiedByName = "toUserDtoWithoutRole")
-    public abstract List<UserDto> toUserDtosWithoutRole(List<User> users);
+    public abstract List<UserResponseDto> toUserDtosDefault(List<User> users);
 
     /* ************************* TO MODEL **************************************** */
 
@@ -111,19 +83,16 @@ public abstract class UserMapper {
     /*                  Simple Mapping                         */
     /* ******************************************************* */
 
-
     /**
-     * Tranform a UserDto into a User for creation
+     * Tranform a UserRequestDto into a User for creation
      *
-     * @param userDto              The userDto to transform
+     * @param userRequestDto       The userRequestDto to transform
      * @param authenticationMethod The authentication method of the user
      * @return The related user
      */
     @Named("toNewUser")
-    @Mappings({
-        @Mapping(target = "roles", ignore = true),
-        @Mapping(target = "authenticationMethod", source = "authenticationMethod"),
-        @Mapping(target = "password", expression = "java( passwordEncoder.encode(userDto.getPassword()) )")
-    })
-    public abstract User toNewUser(UserDto userDto, AuthenticationMethod authenticationMethod);
+    @Mapping(target = "roles", ignore = true)
+    @Mapping(target = "authenticationMethod", source = "authenticationMethod")
+    @Mapping(target = "password", expression = "java( passwordEncoder.encode(userRequestDto.getPassword()) )")
+    public abstract User toNewUser(UserRequestDto userRequestDto, AuthenticationMethod authenticationMethod);
 }

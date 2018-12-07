@@ -17,7 +17,7 @@
 package io.suricate.monitoring.model.dto.api.setting;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
-import io.suricate.monitoring.model.dto.api.user.UserDto;
+import io.suricate.monitoring.model.dto.api.user.UserResponseDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -43,7 +43,7 @@ public class UserSettingDto extends AbstractDto {
      * The related user
      */
     @ApiModelProperty(value = "The user related to this setting")
-    private UserDto user;
+    private UserResponseDto user;
 
     /**
      * The setting reference

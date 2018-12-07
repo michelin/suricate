@@ -17,11 +17,11 @@
 package io.suricate.monitoring.model.dto.api.user;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
-import io.suricate.monitoring.model.dto.api.setting.UserSettingDto;
-import io.suricate.monitoring.model.enums.AuthenticationMethod;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,19 +29,12 @@ import java.util.List;
 /**
  * Represent a user used for communication with the clients via webservices
  */
-@Getter
-@Setter
+
+@Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ToString
-@ApiModel(value = "User", description = "Describe a user of the app")
-public class UserDto extends AbstractDto {
-
-    /**
-     * Database id
-     */
-    @ApiModelProperty(value = "The id of the user")
-    private Long id;
+@ApiModel(value = "UserRequest", description = "Describe a user of the app")
+public class UserRequestDto extends AbstractDto {
 
     /**
      * User firstname
@@ -68,12 +61,6 @@ public class UserDto extends AbstractDto {
     private String username;
 
     /**
-     * Mail
-     */
-    @ApiModelProperty(value = "The user email")
-    private String email;
-
-    /**
      * Password of the user
      */
     @ApiModelProperty(value = "The user password")
@@ -86,20 +73,14 @@ public class UserDto extends AbstractDto {
     private String confirmPassword;
 
     /**
-     * The authentication method
+     * Mail
      */
-    @ApiModelProperty(value = "The authentication method for this user")
-    private AuthenticationMethod authenticationMethod;
+    @ApiModelProperty(value = "The user email")
+    private String email;
 
     /**
      * User roles
      */
     @ApiModelProperty(value = "The list of related roles", dataType = "java.util.List")
     private List<RoleDto> roles = new ArrayList<>();
-
-    /**
-     * User settings
-     */
-    @ApiModelProperty(value = "The user setting", dataType = "java.util.List")
-    private List<UserSettingDto> userSettings = new ArrayList<>();
 }
