@@ -468,6 +468,7 @@ public class ProjectController {
     })
     @PostMapping(value = "/v1/projects/{projectToken}/projectWidgets")
     @PreAuthorize("hasRole('ROLE_USER')")
+    @Transactional
     public ResponseEntity<ProjectResponseDto> addProjectWidgetToProject(@ApiParam(name = "projectToken", value = "The project token", required = true)
                                                                         @PathVariable("projectToken") String projectToken,
                                                                         @ApiParam(name = "projectWidgetDto", value = "The project widget info's", required = true)
