@@ -16,8 +16,8 @@
 
 package io.suricate.monitoring.service.api;
 
+import io.suricate.monitoring.model.dto.api.widget.WidgetResponseDto;
 import io.suricate.monitoring.model.dto.nashorn.WidgetVariableResponse;
-import io.suricate.monitoring.model.dto.api.widget.WidgetDto;
 import io.suricate.monitoring.model.entity.Library;
 import io.suricate.monitoring.model.entity.widget.*;
 import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
@@ -182,17 +182,17 @@ public class WidgetService {
     /**
      * Update a widget
      *
-     * @param widgetId             The widget id to update
-     * @param widgetDtoWithchanges The object that holds changes
+     * @param widgetId                     The widget id to update
+     * @param widgetResponseDtoWithchanges The object that holds changes
      * @return The widget update
      */
-    public Optional<Widget> updateWidget(final Long widgetId, final WidgetDto widgetDtoWithchanges) {
+    public Optional<Widget> updateWidget(final Long widgetId, final WidgetResponseDto widgetResponseDtoWithchanges) {
         if (!widgetRepository.existsById(widgetId)) {
             return Optional.empty();
         }
 
         Widget widgetToBeModified = findOne(widgetId);
-        widgetToBeModified.setWidgetAvailability(widgetDtoWithchanges.getWidgetAvailability());
+        widgetToBeModified.setWidgetAvailability(widgetResponseDtoWithchanges.getWidgetAvailability());
 
         return Optional.of(widgetRepository.save(widgetToBeModified));
     }

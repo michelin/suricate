@@ -18,7 +18,7 @@ package io.suricate.monitoring.controllers.api;
 
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.widget.CategoryResponseDto;
-import io.suricate.monitoring.model.dto.api.widget.WidgetDto;
+import io.suricate.monitoring.model.dto.api.widget.WidgetResponseDto;
 import io.suricate.monitoring.model.entity.widget.Category;
 import io.suricate.monitoring.model.entity.widget.Widget;
 import io.suricate.monitoring.model.entity.widget.WidgetParam;
@@ -137,9 +137,9 @@ public class CategoryController {
      * @param categoryId The category id
      * @return The list of related widgets
      */
-    @ApiOperation(value = "Get the list of widgets by category id", response = WidgetDto.class)
+    @ApiOperation(value = "Get the list of widgets by category id", response = WidgetResponseDto.class)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = WidgetDto.class, responseContainer = "List"),
+        @ApiResponse(code = 200, message = "Ok", response = WidgetResponseDto.class, responseContainer = "List"),
         @ApiResponse(code = 204, message = "No Content"),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
@@ -147,8 +147,8 @@ public class CategoryController {
     })
     @GetMapping(value = "/v1/categories/{categoryId}/widgets")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<List<WidgetDto>> getWidgetByCategory(@ApiParam(name = "categoryId", value = "The category id", required = true)
-                                                               @PathVariable("categoryId") Long categoryId) {
+    public ResponseEntity<List<WidgetResponseDto>> getWidgetByCategory(@ApiParam(name = "categoryId", value = "The category id", required = true)
+                                                                       @PathVariable("categoryId") Long categoryId) {
         if (!this.categoryService.isCategoryExists(categoryId)) {
             throw new ObjectNotFoundException(Category.class, categoryId);
         }

@@ -1,31 +1,26 @@
 package io.suricate.monitoring.model.dto.api.widget;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
-import io.suricate.monitoring.model.dto.api.asset.AssetResponseDto;
-import io.suricate.monitoring.model.dto.api.repository.RepositoryResponseDto;
 import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.*;
-
-import java.util.ArrayList;
-import java.util.List;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 /**
  * Object representing a widget used for communication with clients of the webservice
  */
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ToString
-@ApiModel(value = "Widget", description = "Describe a widget")
-public class WidgetDto extends AbstractDto {
+@ApiModel(value = "WidgetResponse", description = "Describe a widget")
+public class WidgetResponseDto extends AbstractDto {
 
     /**
      * The widget ID
      */
-    @ApiModelProperty(value = "Table ID")
+    @ApiModelProperty(value = "Id")
     private Long id;
 
     /**
@@ -45,24 +40,6 @@ public class WidgetDto extends AbstractDto {
      */
     @ApiModelProperty(value = "Unique name to identifiy this widget")
     private String technicalName;
-
-    /**
-     * The html content of the widget
-     */
-    @ApiModelProperty(value = "The frontend html template")
-    private String htmlContent;
-
-    /**
-     * The css content of the widget
-     */
-    @ApiModelProperty(value = "Global HTML for this widget")
-    private String cssContent;
-
-    /**
-     * The JS of the widget (executed by nashorn
-     */
-    @ApiModelProperty(value = "JS template executed by the backend with Nashorn")
-    private String backendJs;
 
     /**
      * Information on the usage of this widget
@@ -86,19 +63,13 @@ public class WidgetDto extends AbstractDto {
      * A representation by an image of the widget
      */
     @ApiModelProperty(value = "A representation by an image of the widget")
-    private AssetResponseDto image;
-
-    /**
-     * The list of related libraries
-     */
-    @ApiModelProperty(value = "List of related JS libraries", dataType = "java.util.List")
-    private List<LibraryDto> libraries = new ArrayList<>();
+    private String imageToken;
 
     /**
      * The category of this widget
      */
     @ApiModelProperty(value = "The category of this widget")
-    private CategoryResponseDto category;
+    private Long categoryId;
 
     /**
      * The widget availability {@link WidgetAvailabilityEnum}
@@ -110,11 +81,5 @@ public class WidgetDto extends AbstractDto {
      * The repository used for this widget
      */
     @ApiModelProperty(value = "The repository of this widget")
-    private RepositoryResponseDto repository;
-
-    /**
-     * The list of the params for this widget
-     */
-    @ApiModelProperty(value = "List of params for this widget", dataType = "java.util.List")
-    private List<WidgetParamDto> widgetParams = new ArrayList<>();
+    private Long repositoryId;
 }

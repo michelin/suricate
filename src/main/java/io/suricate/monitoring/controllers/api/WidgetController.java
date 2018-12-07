@@ -17,7 +17,7 @@
 package io.suricate.monitoring.controllers.api;
 
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
-import io.suricate.monitoring.model.dto.api.widget.WidgetDto;
+import io.suricate.monitoring.model.dto.api.widget.WidgetResponseDto;
 import io.suricate.monitoring.model.entity.widget.Widget;
 import io.suricate.monitoring.model.enums.ApiActionEnum;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
@@ -84,17 +84,17 @@ public class WidgetController {
      *
      * @return The list of widgets
      */
-    @ApiOperation(value = "Get the full list of widgets", response = WidgetDto.class)
+    @ApiOperation(value = "Get the full list of widgets", response = WidgetResponseDto.class)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = WidgetDto.class, responseContainer = "List"),
+        @ApiResponse(code = 200, message = "Ok", response = WidgetResponseDto.class, responseContainer = "List"),
         @ApiResponse(code = 204, message = "No Content"),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
     @GetMapping(value = "/v1/widgets")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<List<WidgetDto>> getWidgets(@ApiParam(name = "action", value = "REFRESH if we have to refresh widgets from GIT Repository", allowableValues = "refresh")
-                                                      @RequestParam(value = "action", required = false) String action) {
+    public ResponseEntity<List<WidgetResponseDto>> getWidgets(@ApiParam(name = "action", value = "REFRESH if we have to refresh widgets from GIT Repository", allowableValues = "refresh")
+                                                              @RequestParam(value = "action", required = false) String action) {
         if (ApiActionEnum.REFRESH.name().equalsIgnoreCase(action)) {
             Future<Boolean> isDone = this.gitService.updateWidgetFromEnabledGitRepositories();
 
@@ -122,26 +122,51 @@ public class WidgetController {
     }
 
     /**
+     * Get a widget
+     *
+     * @param widgetId The widget id to update
+     */
+    @ApiOperation(value = "Retrieve a widget by id", response = WidgetResponseDto.class)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Ok", response = WidgetResponseDto.class),
+        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
+        @ApiResponse(code = 404, message = "Widget not found", response = ApiErrorDto.class)
+    })
+    @GetMapping(value = "/v1/widgets/{widgetId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<WidgetResponseDto> getOnById(@ApiParam(name = "widgetId", value = "The widget id", required = true)
+                                                       @PathVariable("widgetId") Long widgetId) {
+        Widget widget = widgetService.findOne(widgetId);
+
+        return ResponseEntity
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .cacheControl(CacheControl.noCache())
+            .body(widgetMapper.toWidgetDtoDefault(widget));
+    }
+
+    /**
      * Update a widget
      *
-     * @param widgetId  The widget id to update
-     * @param widgetDto The object holding changes
+     * @param widgetId          The widget id to update
+     * @param widgetResponseDto The object holding changes
      * @return The widget dto changed
      */
-    @ApiOperation(value = "Update a widget by id", response = WidgetDto.class)
+    @ApiOperation(value = "Update a widget by id", response = WidgetResponseDto.class)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = WidgetDto.class),
+        @ApiResponse(code = 200, message = "Ok", response = WidgetResponseDto.class),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Widget not found", response = ApiErrorDto.class)
     })
     @PutMapping(value = "/v1/widgets/{widgetId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<WidgetDto> updateWidget(@ApiParam(name = "widgetId", value = "The widget id", required = true)
-                                                  @PathVariable("widgetId") Long widgetId,
-                                                  @ApiParam(name = "widgetDto", value = "The widget with modifications", required = true)
-                                                  @RequestBody WidgetDto widgetDto) {
-        Optional<Widget> widgetOpt = widgetService.updateWidget(widgetId, widgetDto);
+    public ResponseEntity<WidgetResponseDto> updateWidget(@ApiParam(name = "widgetId", value = "The widget id", required = true)
+                                                          @PathVariable("widgetId") Long widgetId,
+                                                          @ApiParam(name = "widgetResponseDto", value = "The widget with modifications", required = true)
+                                                          @RequestBody WidgetResponseDto widgetResponseDto) {
+        Optional<Widget> widgetOpt = widgetService.updateWidget(widgetId, widgetResponseDto);
 
         if (!widgetOpt.isPresent()) {
             throw new ObjectNotFoundException(Widget.class, widgetId);

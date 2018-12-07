@@ -19,7 +19,7 @@ package io.suricate.monitoring.controllers.api;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.repository.RepositoryRequestDto;
 import io.suricate.monitoring.model.dto.api.repository.RepositoryResponseDto;
-import io.suricate.monitoring.model.dto.api.widget.WidgetDto;
+import io.suricate.monitoring.model.dto.api.widget.WidgetResponseDto;
 import io.suricate.monitoring.model.entity.widget.Repository;
 import io.suricate.monitoring.model.mapper.widget.RepositoryMapper;
 import io.suricate.monitoring.model.mapper.widget.WidgetMapper;
@@ -238,8 +238,8 @@ public class RepositoryController {
     @GetMapping(value = "/v1/repositories/{repositoryId}/widgets")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Transactional
-    public ResponseEntity<List<WidgetDto>> getRepositoryWidget(@ApiParam(name = "repositoryId", value = "The repository id", required = true)
-                                                               @PathVariable Long repositoryId) {
+    public ResponseEntity<List<WidgetResponseDto>> getRepositoryWidget(@ApiParam(name = "repositoryId", value = "The repository id", required = true)
+                                                                       @PathVariable Long repositoryId) {
         Optional<Repository> optionalRepository = repositoryService.getOneById(repositoryId);
 
         if (!optionalRepository.isPresent()) {

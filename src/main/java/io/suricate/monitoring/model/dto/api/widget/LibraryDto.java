@@ -57,5 +57,5 @@ public class LibraryDto extends AbstractDto {
      * List of widgets related to it
      */
     @ApiModelProperty(value = "The list of widgets that use this library", dataType = "java.util.List")
-    private List<WidgetDto> widgets;
+    private List<WidgetResponseDto> widgets;
 }
