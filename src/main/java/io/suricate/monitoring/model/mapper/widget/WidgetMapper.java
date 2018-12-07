@@ -18,8 +18,6 @@ package io.suricate.monitoring.model.mapper.widget;
 
 import io.suricate.monitoring.model.dto.api.widget.WidgetResponseDto;
 import io.suricate.monitoring.model.entity.widget.Widget;
-import io.suricate.monitoring.model.mapper.AssetMapper;
-import io.suricate.monitoring.model.mapper.LibraryMapper;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -32,16 +30,7 @@ import java.util.List;
  * Interface that manage the generation DTO/Model objects for Widget class
  */
 @Component
-@Mapper(
-    componentModel = "spring",
-    uses = {
-        AssetMapper.class,
-        LibraryMapper.class,
-        CategoryMapper.class,
-        WidgetParamMapper.class,
-        RepositoryMapper.class
-    }
-)
+@Mapper(componentModel = "spring")
 public abstract class WidgetMapper {
 
     /* ******************************************************* */

@@ -18,7 +18,6 @@ package io.suricate.monitoring.model.mapper.setting;
 
 import io.suricate.monitoring.model.dto.api.setting.UserSettingResponseDto;
 import io.suricate.monitoring.model.entity.setting.UserSetting;
-import io.suricate.monitoring.model.mapper.role.UserMapper;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -34,8 +33,6 @@ import java.util.List;
 @Mapper(
     componentModel = "spring",
     uses = {
-        UserMapper.class,
-        SettingMapper.class,
         AllowedSettingValueMapper.class
     }
 )
@@ -54,7 +51,7 @@ public abstract class UserSettingMapper {
     @Named("toUserSettingDtoDefault")
     @Mapping(target = "userId", source = "userSetting.user.id")
     @Mapping(target = "settingId", source = "userSetting.setting.id")
-    @Mapping(target = "settingValue", qualifiedByName = "toAllowedSettingValueDtoWithoutSetting")
+    @Mapping(target = "settingValue", qualifiedByName = "toAllowedSettingValueDtoDefault")
     public abstract UserSettingResponseDto toUserSettingDtoDefault(UserSetting userSetting);
 
 

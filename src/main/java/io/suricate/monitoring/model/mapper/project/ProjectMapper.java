@@ -19,9 +19,7 @@ package io.suricate.monitoring.model.mapper.project;
 import io.suricate.monitoring.model.dto.api.project.ProjectRequestDto;
 import io.suricate.monitoring.model.dto.api.project.ProjectResponseDto;
 import io.suricate.monitoring.model.entity.project.Project;
-import io.suricate.monitoring.model.mapper.role.UserMapper;
 import io.suricate.monitoring.service.api.LibraryService;
-import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -35,13 +33,7 @@ import java.util.List;
  * Interface that manage the generation DTO/Model objects for project class
  */
 @Component
-@Mapper(
-    componentModel = "spring",
-    uses = {
-        ProjectWidgetMapper.class,
-        UserMapper.class
-    }
-)
+@Mapper(componentModel = "spring")
 public abstract class ProjectMapper {
 
     /**
@@ -49,12 +41,6 @@ public abstract class ProjectMapper {
      */
     @Autowired
     protected LibraryService libraryService;
-
-    /**
-     * The dashboard web socket service
-     */
-    @Autowired
-    protected DashboardWebSocketService dashboardWebSocketService;
 
     /* ************************* TO DTO ********************************************** */
 

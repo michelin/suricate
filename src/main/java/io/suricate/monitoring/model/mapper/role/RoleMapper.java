@@ -29,12 +29,7 @@ import java.util.List;
  * Interface that manage the generation DTO/Model objects for Role class
  */
 @Component
-@Mapper(
-    componentModel = "spring",
-    uses = {
-        UserMapper.class
-    }
-)
+@Mapper(componentModel = "spring")
 public abstract class RoleMapper {
 
     /* ******************************************************* */

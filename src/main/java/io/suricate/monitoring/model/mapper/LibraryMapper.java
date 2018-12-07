@@ -18,7 +18,6 @@ package io.suricate.monitoring.model.mapper;
 
 import io.suricate.monitoring.model.dto.api.widget.LibraryResponseDto;
 import io.suricate.monitoring.model.entity.Library;
-import io.suricate.monitoring.model.mapper.widget.WidgetMapper;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
@@ -30,13 +29,7 @@ import java.util.List;
  * Interface that manage the generation DTO/Model objects for library class
  */
 @Component
-@Mapper(
-    componentModel = "spring",
-    uses = {
-        AssetMapper.class,
-        WidgetMapper.class
-    }
-)
+@Mapper(componentModel = "spring")
 public abstract class LibraryMapper {
 
     /* ******************************************************* */
@@ -52,15 +45,6 @@ public abstract class LibraryMapper {
     @Named("toLibraryDtoDefault")
     public abstract LibraryResponseDto toLibraryDtoDefault(Library library);
 
-    /**
-     * Tranform a library into a libraryDto
-     *
-     * @param library The library to transform
-     * @return The related library DTO
-     */
-    @Named("toLibraryDtoWithoutWidgets")
-    public abstract LibraryResponseDto toLibraryDtoWithoutWidgets(Library library);
-
     /* ******************************************************* */
     /*                    List Mapping                         */
     /* ******************************************************* */
@@ -75,13 +59,4 @@ public abstract class LibraryMapper {
     @IterableMapping(qualifiedByName = "toLibraryDtoDefault")
     public abstract List<LibraryResponseDto> toLibraryDtosDefault(List<Library> libraries);
 
-    /**
-     * Tranform a list of libraries into a list of librarieDto without widgets
-     *
-     * @param libraries The libraries to transform
-     * @return The related list of libraries DTO
-     */
-    @Named("toLibraryDtosWithoutWidgets")
-    @IterableMapping(qualifiedByName = "toLibraryDtoWithoutWidgets")
-    public abstract List<LibraryResponseDto> toLibraryDtosWithoutWidgets(List<Library> libraries);
 }

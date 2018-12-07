@@ -20,7 +20,6 @@ import io.suricate.monitoring.model.dto.api.user.UserRequestDto;
 import io.suricate.monitoring.model.dto.api.user.UserResponseDto;
 import io.suricate.monitoring.model.entity.user.User;
 import io.suricate.monitoring.model.enums.AuthenticationMethod;
-import io.suricate.monitoring.model.mapper.setting.UserSettingMapper;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -35,13 +34,7 @@ import java.util.List;
  * Interface that manage the generation DTO/Model objects for User class
  */
 @Component
-@Mapper(
-    componentModel = "spring",
-    uses = {
-        RoleMapper.class,
-        UserSettingMapper.class
-    }
-)
+@Mapper(componentModel = "spring")
 public abstract class UserMapper {
 
     @Autowired

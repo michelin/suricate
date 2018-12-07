@@ -29,9 +29,7 @@ import java.util.List;
  * Interface that manage the generation DTO/Model objects for asset class
  */
 @Component
-@Mapper(
-    componentModel = "spring"
-)
+@Mapper(componentModel = "spring")
 public abstract class AssetMapper {
 
 

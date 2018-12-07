@@ -19,7 +19,10 @@ package io.suricate.monitoring.model.mapper.widget;
 import io.suricate.monitoring.model.dto.api.repository.RepositoryRequestDto;
 import io.suricate.monitoring.model.dto.api.repository.RepositoryResponseDto;
 import io.suricate.monitoring.model.entity.widget.Repository;
-import org.mapstruct.*;
+import org.mapstruct.IterableMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -28,12 +31,7 @@ import java.util.List;
  * Interface that manage the generation DTO/Model objects for Widget class
  */
 @Component
-@Mapper(
-    componentModel = "spring",
-    uses = {
-        WidgetMapper.class
-    }
-)
+@Mapper(componentModel = "spring")
 public abstract class RepositoryMapper {
 
     /* ******************************************************* */
@@ -56,9 +54,7 @@ public abstract class RepositoryMapper {
      * @return The repository
      */
     @Named("toRepositoryWithoutWidgets")
-    @Mappings({
-        @Mapping(target = "widgets", ignore = true)
-    })
+    @Mapping(target = "widgets", ignore = true)
     public abstract Repository toRepositoryWithoutWidgets(RepositoryRequestDto repositoryRequestDto);
 
     /* ******************************************************* */

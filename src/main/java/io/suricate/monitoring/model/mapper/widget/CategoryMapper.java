@@ -18,8 +18,6 @@ package io.suricate.monitoring.model.mapper.widget;
 
 import io.suricate.monitoring.model.dto.api.widget.CategoryResponseDto;
 import io.suricate.monitoring.model.entity.widget.Category;
-import io.suricate.monitoring.model.mapper.AssetMapper;
-import io.suricate.monitoring.model.mapper.ConfigurationMapper;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -32,14 +30,7 @@ import java.util.List;
  * Interface that manage the generation DTO/Model objects for Category class
  */
 @Component
-@Mapper(
-    componentModel = "spring",
-    uses = {
-        AssetMapper.class,
-        WidgetMapper.class,
-        ConfigurationMapper.class
-    }
-)
+@Mapper(componentModel = "spring")
 public abstract class CategoryMapper {
 
     /* ******************************************************* */
@@ -55,15 +46,6 @@ public abstract class CategoryMapper {
     @Named("toCategoryDtoDefault")
     @Mapping(target = "assetToken", expression = "java( category.getImage() != null ? io.suricate.monitoring.utils.IdUtils.encrypt(category.getImage().getId()) : null )")
     public abstract CategoryResponseDto toCategoryDtoDefault(Category category);
-
-    /**
-     * Tranform a Category into a CategoryResponseDto
-     *
-     * @param category The category to transform
-     * @return The related category DTO
-     */
-    @Named("toCategoryDtoWithoutWidgets")
-    public abstract CategoryResponseDto toCategoryDtoWithoutWidgets(Category category);
 
     /* ******************************************************* */
     /*                    List Mapping                         */

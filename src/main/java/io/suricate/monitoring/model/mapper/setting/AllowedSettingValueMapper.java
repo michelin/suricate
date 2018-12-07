@@ -29,12 +29,7 @@ import java.util.List;
  * Interface that manage the generation DTO/Model objects for AllowedSettingValue class
  */
 @Component
-@Mapper(
-    componentModel = "spring",
-    uses = {
-        SettingMapper.class
-    }
-)
+@Mapper(componentModel = "spring")
 public abstract class AllowedSettingValueMapper {
 
     /* ******************************************************* */
@@ -50,15 +45,6 @@ public abstract class AllowedSettingValueMapper {
     @Named("toAllowedSettingValueDtoDefault")
     public abstract AllowedSettingValueDto toAllowedSettingValueDtoDefault(AllowedSettingValue allowedSettingValue);
 
-    /**
-     * Transform an allowedSettingValue into an AllowedSettingValueDto without setting
-     *
-     * @param allowedSettingValue The setting value to transform
-     * @return The related dto
-     */
-    @Named("toAllowedSettingValueDtoWithoutSetting")
-    public abstract AllowedSettingValueDto toAllowedSettingValueDtoWithoutSetting(AllowedSettingValue allowedSettingValue);
-
     /* ******************************************************* */
     /*                    List Mapping                         */
     /* ******************************************************* */
@@ -72,15 +58,5 @@ public abstract class AllowedSettingValueMapper {
     @Named("toAllowedSettingValueDtosDefault")
     @IterableMapping(qualifiedByName = "toAllowedSettingValueDtoDefault")
     public abstract List<AllowedSettingValueDto> toAllowedSettingValueDtosDefault(List<AllowedSettingValue> allowedSettingValues);
-
-    /**
-     * Transform a list of AllowedSettingValue into a list of AllowedSettingValueDto without setting
-     *
-     * @param allowedSettingValues The list to transform
-     * @return The related list of dtos
-     */
-    @Named("toAllowedSettingValueDtosWithoutSetting")
-    @IterableMapping(qualifiedByName = "toAllowedSettingValueDtoWithoutSetting")
-    public abstract List<AllowedSettingValueDto> toAllowedSettingValueDtosWithoutSetting(List<AllowedSettingValue> allowedSettingValues);
 
 }

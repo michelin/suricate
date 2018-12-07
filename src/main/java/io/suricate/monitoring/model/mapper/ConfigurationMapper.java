@@ -52,7 +52,6 @@ public abstract class ConfigurationMapper {
      */
     @Named("toConfigurationDtoDefault")
     @Mapping(target = "category", qualifiedByName = "toCategoryDtoDefault")
-
     public abstract ConfigurationResponseDto toConfigurationDtoDefault(Configuration configuration);
 
     /**

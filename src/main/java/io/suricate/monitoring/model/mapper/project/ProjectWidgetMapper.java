@@ -19,7 +19,6 @@ package io.suricate.monitoring.model.mapper.project;
 import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetRequestDto;
 import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetResponseDto;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
-import io.suricate.monitoring.model.mapper.widget.WidgetMapper;
 import io.suricate.monitoring.service.api.ProjectService;
 import io.suricate.monitoring.service.api.ProjectWidgetService;
 import io.suricate.monitoring.service.api.WidgetService;
@@ -36,13 +35,7 @@ import java.util.List;
  * Interface that manage the generation DTO/Model objects for project widget class
  */
 @Component
-@Mapper(
-    componentModel = "spring",
-    uses = {
-        WidgetMapper.class,
-        ProjectMapper.class
-    }
-)
+@Mapper(componentModel = "spring")
 public abstract class ProjectWidgetMapper {
 
     /**
