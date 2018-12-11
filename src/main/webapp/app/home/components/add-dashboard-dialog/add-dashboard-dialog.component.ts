@@ -27,6 +27,7 @@ import {UserService} from '../../../modules/security/user/user.service';
 import {Project} from '../../../shared/model/api/Project';
 import {User} from '../../../shared/model/api/user/User';
 import {HttpProjectService} from '../../../shared/services/http/http-project.service';
+import {HttpUserService} from '../../../shared/services/http/http-user.service';
 
 @Component({
   selector: 'app-add-dashboard-dialog',
@@ -88,6 +89,7 @@ export class AddDashboardDialogComponent implements OnInit {
    * @param {ChangeDetectorRef} changeDetectorRef The change detector service
    * @param {DashboardService} dashboardService The dashboard service
    * @param {HttpProjectService} httpProjectService The project service
+   * @param {HttpUserService} httpUserService The http user service to inject
    * @param {UserService} userService The user service
    * @param {ColorPickerService} colorPickerService The color picker service for dashboard background color
    */
@@ -96,6 +98,7 @@ export class AddDashboardDialogComponent implements OnInit {
               private changeDetectorRef: ChangeDetectorRef,
               private dashboardService: DashboardService,
               private httpProjectService: HttpProjectService,
+              private httpUserService: HttpUserService,
               private userService: UserService,
               private colorPickerService: ColorPickerService) {
   }
@@ -156,7 +159,7 @@ export class AddDashboardDialogComponent implements OnInit {
     this.userAutoComplete$ = this.addUserForm.get('username').valueChanges.pipe(
       debounceTime(500),
       distinctUntilChanged(),
-      switchMap(username => username ? this.userService.searchUserByUsername(username) : new Observable<User[]>())
+      switchMap(username => username ? this.httpUserService.searchUserByUsername(username) : new Observable<User[]>())
     );
   }
 

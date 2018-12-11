@@ -28,6 +28,7 @@ import {ConfirmDialogComponent} from '../../../../../shared/components/confirm-d
 import {Role} from '../../../../../shared/model/api/user/Role';
 import {User} from '../../../../../shared/model/api/user/User';
 import {ToastType} from '../../../../../shared/components/toast/toast-objects/ToastType';
+import {HttpUserService} from '../../../../../shared/services/http/http-user.service';
 
 
 /**
@@ -80,6 +81,7 @@ export class UserListComponent implements AfterViewInit {
   /**
    * The constructor
    *
+   * @param {HttpUserService} httpUserService The http user service to inject
    * @param {UserService} userService The user service to inject
    * @param {RoleService} roleService The role service to inject
    * @param {ChangeDetectorRef} changeDetectorRef The change detector service to inject
@@ -87,7 +89,8 @@ export class UserListComponent implements AfterViewInit {
    * @param {TranslateService} translateService The translate service to inject
    * @param {ToastService} toastService The toast service to inject
    */
-  constructor(private userService: UserService,
+  constructor(private httpUserService: HttpUserService,
+              private userService: UserService,
               private roleService: RoleService,
               private changeDetectorRef: ChangeDetectorRef,
               private matDialog: MatDialog,
@@ -113,7 +116,7 @@ export class UserListComponent implements AfterViewInit {
         switchMap(() => {
           this.isLoadingResults = true;
           this.changeDetectorRef.detectChanges();
-          return this.userService.getAll();
+          return this.httpUserService.getAll();
         }),
         map(data => {
           this.isLoadingResults = false;
@@ -175,7 +178,7 @@ export class UserListComponent implements AfterViewInit {
 
     deleteUserDialogRef.afterClosed().subscribe(shouldDeleteUser => {
       if (shouldDeleteUser) {
-        this.userService.deleteUser(user).subscribe(() => {
+        this.httpUserService.deleteUser(user).subscribe(() => {
           this.toastService.sendMessage('User deleted successfully', ToastType.SUCCESS);
           this.initUsersTable();
         });

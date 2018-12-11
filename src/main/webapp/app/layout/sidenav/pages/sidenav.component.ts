@@ -26,6 +26,7 @@ import {UserService} from '../../../modules/security/user/user.service';
 import {AuthenticationService} from '../../../modules/authentication/authentication.service';
 import {User} from '../../../shared/model/api/user/User';
 import {HttpProjectService} from '../../../shared/services/http/http-project.service';
+import {HttpUserService} from '../../../shared/services/http/http-user.service';
 
 /**
  * Hold the sidenav behavior
@@ -73,6 +74,7 @@ export class SidenavComponent implements OnInit, AfterViewInit, OnDestroy {
    *
    * @param {Router} router The router service
    * @param {ChangeDetectorRef} changeDetectorRef The change detector service
+   * @param {HttpUserService} httpUserService The http user service
    * @param {DashboardService} dashboardService The dashboard service
    * @param {HttpProjectService} httpProjectService The httpProjectService service
    * @param {UserService} userService The user service
@@ -81,6 +83,7 @@ export class SidenavComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   constructor(private router: Router,
               private changeDetectorRef: ChangeDetectorRef,
+              private httpUserService: HttpUserService,
               private httpProjectService: HttpProjectService,
               private dashboardService: DashboardService,
               private userService: UserService,
@@ -100,7 +103,7 @@ export class SidenavComponent implements OnInit, AfterViewInit, OnDestroy {
       .pipe(takeWhile(() => this.isAlive))
       .subscribe(connectedUser => this.connectedUser = connectedUser);
 
-    this.userService.getConnectedUser().subscribe();
+    this.httpUserService.getConnectedUser().subscribe();
     this.isUserAdmin = this.userService.isAdmin();
     this.httpProjectService.getAllForCurrentUser().subscribe();
   }

@@ -48,6 +48,8 @@ import {HttpCategoryService} from './services/http/http-category.service';
 import {HttpAssetService} from './services/http/http-asset.service';
 import {HttpProjectService} from './services/http/http-project.service';
 import {HttpScreenService} from './services/http/http-screen.service';
+import {HttpRoleService} from './services/http/http-role.service';
+import {HttpUserService} from './services/http/http-user.service';
 
 @NgModule({
   imports: [
@@ -111,7 +113,9 @@ import {HttpScreenService} from './services/http/http-screen.service';
     HttpAssetService,
     HttpCategoryService,
     HttpProjectService,
-    HttpScreenService
+    HttpRoleService,
+    HttpScreenService,
+    HttpUserService
   ]
 })
 export class SharedModule {

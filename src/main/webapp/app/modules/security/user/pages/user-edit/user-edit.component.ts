@@ -27,6 +27,7 @@ import {User} from '../../../../../shared/model/api/user/User';
 import {Role} from '../../../../../shared/model/api/user/Role';
 import {ToastType} from '../../../../../shared/components/toast/toast-objects/ToastType';
 import {HttpRoleService} from '../../../../../shared/services/http/http-role.service';
+import {HttpUserService} from '../../../../../shared/services/http/http-user.service';
 
 /**
  * Component user the edition of a user
@@ -59,6 +60,7 @@ export class UserEditComponent implements OnInit {
   /**
    * Constructor
    *
+   * @param {httpUserService} httpUserService The user service
    * @param {UserService} userService The user service to inject
    * @param {Router} router The router service to inject
    * @param {RoleService} roleService The role service to inject
@@ -67,7 +69,8 @@ export class UserEditComponent implements OnInit {
    * @param {FormBuilder} formBuilder The formBuilder service
    * @param {ToastService} toastService The service used for displayed Toast notification
    */
-  constructor(private userService: UserService,
+  constructor(private httpUserService: HttpUserService,
+              private userService: UserService,
               private router: Router,
               private roleService: RoleService,
               private httpRoleService: HttpRoleService,
@@ -85,7 +88,7 @@ export class UserEditComponent implements OnInit {
     });
 
     this.activatedRoute.params.subscribe(params => {
-      this.userService.getById(params['userId']).subscribe(user => {
+      this.httpUserService.getById(params['userId']).subscribe(user => {
         this.user = user;
         this.initUserEditForm();
       });
@@ -131,7 +134,7 @@ export class UserEditComponent implements OnInit {
       }
     });
 
-    this.userService.updateUser(userUpdated).subscribe(() => {
+    this.httpUserService.updateUser(userUpdated).subscribe(() => {
       this.toastService.sendMessage('User saved successfully', ToastType.SUCCESS);
       this.redirectToUserList();
     });

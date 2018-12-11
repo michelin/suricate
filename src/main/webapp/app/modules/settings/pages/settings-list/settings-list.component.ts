@@ -24,6 +24,7 @@ import {SettingsService} from '../../../../shared/services/settings.service';
 import {SettingDataType} from '../../../../shared/model/api/enums/SettingDataType';
 import {User} from '../../../../shared/model/api/user/User';
 import {ToastType} from '../../../../shared/components/toast/toast-objects/ToastType';
+import {HttpUserService} from '../../../../shared/services/http/http-user.service';
 
 /**
  * Represent the Admin Setting list page
@@ -50,11 +51,13 @@ export class SettingsListComponent implements OnInit {
   /**
    * Constructor
    *
+   * @param {HttpUserService} httpUserService The http user service
    * @param {UserService} userService The user service to inject
    * @param {ToastService} toastService The toast notification service
    * @param {SettingsService} settingsService The settings service to inject
    */
-  constructor(private userService: UserService,
+  constructor(private httpUserService: HttpUserService,
+              private userService: UserService,
               private toastService: ToastService,
               private settingsService: SettingsService) {
   }
@@ -64,7 +67,7 @@ export class SettingsListComponent implements OnInit {
    */
   ngOnInit() {
     this.currentUser$ = this.userService.connectedUser$;
-    this.userService.getConnectedUser().subscribe();
+    this.httpUserService.getConnectedUser().subscribe();
   }
 
   /**
@@ -90,12 +93,10 @@ export class SettingsListComponent implements OnInit {
         }
       });
 
-      this.userService
-        .updateUserSettings(currentUser, userSettings)
-        .subscribe(user => {
-          this.toastService.sendMessage('Settings saved succesfully', ToastType.SUCCESS);
-          this.settingsService.setUserSettings(user);
-        });
+      this.httpUserService.updateUserSettings(currentUser, userSettings).subscribe(user => {
+        this.toastService.sendMessage('Settings saved succesfully', ToastType.SUCCESS);
+        this.settingsService.setUserSettings(user);
+      });
     }
   }
 }
