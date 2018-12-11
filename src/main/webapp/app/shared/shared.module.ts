@@ -47,6 +47,7 @@ import {ConfirmDialogComponent} from './components/confirm-dialog/confirm-dialog
 import {HttpCategoryService} from './services/http/http-category.service';
 import {HttpAssetService} from './services/http/http-asset.service';
 import {HttpProjectService} from './services/http/http-project.service';
+import {HttpScreenService} from './services/http/http-screen.service';
 
 @NgModule({
   imports: [
@@ -109,7 +110,8 @@ import {HttpProjectService} from './services/http/http-project.service';
     SettingsService,
     HttpAssetService,
     HttpCategoryService,
-    HttpProjectService
+    HttpProjectService,
+    HttpScreenService
   ]
 })
 export class SharedModule {

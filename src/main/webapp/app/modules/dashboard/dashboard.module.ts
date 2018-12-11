@@ -26,7 +26,6 @@ import {DashboardEditComponent} from './pages/admin/dashboard-edit/dashboard-edi
 import {EditProjectWidgetDialogComponent} from './components/edit-project-widget-dialog/edit-project-widget-dialog.component';
 import {DashboardScreenComponent} from './components/dashboard-screen/dashboard-screen.component';
 import {DashboardTvComponent} from './pages/dashboard-tv/dashboard-tv.component';
-import {ScreenService} from './screen.service';
 import {LayoutModule} from '../../layout/layout.module';
 import {DashboardRoutes} from './dashboard.route';
 
@@ -49,8 +48,7 @@ import {DashboardRoutes} from './dashboard.route';
     RouterModule
   ],
   providers: [
-    DashboardService,
-    ScreenService
+    DashboardService
   ],
   entryComponents: [
     EditProjectWidgetDialogComponent

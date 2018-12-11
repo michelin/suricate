@@ -21,7 +21,7 @@ import {ActivatedRoute} from '@angular/router';
 import {AddWidgetDialogComponent} from '../add-widget-dialog/add-widget-dialog.component';
 import {AddDashboardDialogComponent} from '../../../../home/components/add-dashboard-dialog/add-dashboard-dialog.component';
 import {TvManagementDialogComponent} from '../tv-management-dialog/tv-management-dialog.component';
-import {ScreenService} from '../../../../modules/dashboard/screen.service';
+import {HttpScreenService} from '../../../../shared/services/http/http-screen.service';
 import {DashboardService} from '../../../../modules/dashboard/dashboard.service';
 import {Project} from '../../../../shared/model/api/Project';
 
@@ -64,12 +64,12 @@ export class DashboardActionsComponent implements OnInit {
    *
    * @param {MatDialog} matDialog The mat dialog to inject
    * @param {ActivatedRoute} activatedRoute The activated route
-   * @param {ScreenService} screenService The screen service
+   * @param {HttpScreenService} screenService The screen service
    * @param {DashboardService} dashboardService The dashboard service
    */
   constructor(private matDialog: MatDialog,
               private activatedRoute: ActivatedRoute,
-              private screenService: ScreenService,
+              private screenService: HttpScreenService,
               private dashboardService: DashboardService) {
   }
 

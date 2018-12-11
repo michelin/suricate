@@ -21,7 +21,7 @@ import {FormBuilder, FormGroup} from '@angular/forms';
 import {DashboardService} from '../../../../modules/dashboard/dashboard.service';
 import {Project} from '../../../../shared/model/api/Project';
 import {WebsocketClient} from '../../../../shared/model/api/WebsocketClient';
-import {ScreenService} from '../../../../modules/dashboard/screen.service';
+import {HttpScreenService} from '../../../../shared/services/http/http-screen.service';
 import {HttpProjectService} from '../../../../shared/services/http/http-project.service';
 
 /**
@@ -53,13 +53,13 @@ export class TvManagementDialogComponent implements OnInit {
    * @param {FormBuilder} formBuilder The formBuilder
    * @param {DashboardService} dashboardService The dashboard service to inject
    * @param {HttpProjectService} httpProjectService The http project service to inject
-   * @param {ScreenService} screenService The screen service
+   * @param {HttpScreenService} screenService The screen service
    */
   constructor(@Inject(MAT_DIALOG_DATA) private data: any,
               private formBuilder: FormBuilder,
               private dashboardService: DashboardService,
               private httpProjectService: HttpProjectService,
-              private screenService: ScreenService) {
+              private screenService: HttpScreenService) {
   }
 
   /**
