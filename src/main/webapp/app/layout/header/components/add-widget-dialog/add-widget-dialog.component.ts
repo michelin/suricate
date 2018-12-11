@@ -29,6 +29,7 @@ import {WidgetAvailabilityEnum} from '../../../../shared/model/api/enums/WidgetA
 import {WidgetVariableType} from '../../../../shared/model/api/enums/WidgetVariableType';
 import {Category} from '../../../../shared/model/api/Category';
 import {HttpProjectService} from '../../../../shared/services/http/http-project.service';
+import {HttpWidgetService} from '../../../../shared/services/http/http-widget.service';
 
 /**
  * Dialog used to add a widget
@@ -85,6 +86,7 @@ export class AddWidgetDialogComponent implements OnInit {
    * @param {WidgetService} widgetService The widget service
    * @param {HttpCategoryService} httpCategoryService The http category service
    * @param {HttpProjectService} httpProjectService The http project service
+   * @param {HttpWidgetService} httpWidgetService The http widget service
    * @param {DashboardService} dashboardService The dashboard service
    * @param {DomSanitizer} domSanitizer The domSanitizer
    * @param {MatDialogRef<AddWidgetDialogComponent>} addWidgetDialogRef The add widget dialog ref
@@ -95,6 +97,7 @@ export class AddWidgetDialogComponent implements OnInit {
               private httpAssetService: HttpAssetService,
               private httpCategoryService: HttpCategoryService,
               private httpProjectService: HttpProjectService,
+              private httpWidgetService: HttpWidgetService,
               private dashboardService: DashboardService,
               private domSanitizer: DomSanitizer,
               private addWidgetDialogRef: MatDialogRef<AddWidgetDialogComponent>,
@@ -108,14 +111,12 @@ export class AddWidgetDialogComponent implements OnInit {
   }
 
   getWidgets(categoryId: number) {
-    this.widgetService
-      .getWidgetsByCategoryId(categoryId)
-      .subscribe(widgets => {
-        this.widgets = widgets.filter((widget: Widget) => widget.widgetAvailability === WidgetAvailabilityEnum.ACTIVATED);
-        this.step1Completed = true;
-        this.changeDetectorRef.detectChanges();
-        this.widgetStepper.next();
-      });
+    this.httpWidgetService.getWidgetsByCategoryId(categoryId).subscribe(widgets => {
+      this.widgets = widgets.filter((widget: Widget) => widget.widgetAvailability === WidgetAvailabilityEnum.ACTIVATED);
+      this.step1Completed = true;
+      this.changeDetectorRef.detectChanges();
+      this.widgetStepper.next();
+    });
 
   }
 

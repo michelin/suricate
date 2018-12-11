@@ -30,6 +30,7 @@ import {ToastService} from '../../../../shared/components/toast/toast.service';
 import {UserService} from '../../../security/user/user.service';
 import {WidgetAvailabilityEnum} from '../../../../shared/model/api/enums/WidgetAvailabilityEnum';
 import {ToastType} from '../../../../shared/components/toast/toast-objects/ToastType';
+import {HttpWidgetService} from '../../../../shared/services/http/http-widget.service';
 
 /**
  * Component that display the list of widgets (admin part)
@@ -114,13 +115,16 @@ export class WidgetListComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Constructor
    *
+   * @param {UserService} userService The user service
    * @param {WidgetService} widgetService The widgetService to inject
+   * @param {HttpWidgetService} httpWidgetService The http widget service
    * @param {ChangeDetectorRef} changeDetectorRef enable the change detection after view init
    * @param {DomSanitizer} domSanitizer The dom sanitizer service
    * @param {ToastService} toastService The toast notificaiton service
    */
   constructor(private userService: UserService,
               private widgetService: WidgetService,
+              private httpWidgetService: HttpWidgetService,
               private changeDetectorRef: ChangeDetectorRef,
               private domSanitizer: DomSanitizer,
               private toastService: ToastService) {
@@ -158,7 +162,7 @@ export class WidgetListComponent implements OnInit, AfterViewInit, OnDestroy {
         switchMap(() => {
           this.isLoadingResults = true;
           this.changeDetectorRef.detectChanges();
-          return this.widgetService.getAll();
+          return this.httpWidgetService.getAll();
         }),
         map(data => {
           this.isLoadingResults = false;
@@ -270,15 +274,13 @@ export class WidgetListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     if (widgetToDisable) {
       widgetToDisable.widgetAvailability = changeEvent.checked ? WidgetAvailabilityEnum.ACTIVATED : WidgetAvailabilityEnum.DISABLED;
-      this
-        .widgetService
-        .updateWidget(widgetToDisable)
-        .subscribe((widgetResponse: Widget) => {
-          this.toastService.sendMessage(
-            `The widget "${widgetResponse.name}" has been ${widgetResponse.widgetAvailability.toString()}`,
-            ToastType.SUCCESS
-          );
-        });
+      
+      this.httpWidgetService.updateWidget(widgetToDisable).subscribe((widgetResponse: Widget) => {
+        this.toastService.sendMessage(
+          `The widget "${widgetResponse.name}" has been ${widgetResponse.widgetAvailability.toString()}`,
+          ToastType.SUCCESS
+        );
+      });
     }
   }
 

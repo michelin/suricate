@@ -15,11 +15,10 @@
  */
 
 import {Component} from '@angular/core';
-
-import {WidgetService} from '../../../../modules/widget/widget.service';
 import {ToastService} from '../../../../shared/components/toast/toast.service';
 import {ToastType} from '../../../../shared/components/toast/toast-objects/ToastType';
 import {ApiActionEnum} from '../../../../shared/model/api/enums/ApiActionEnum';
+import {HttpWidgetService} from '../../../../shared/services/http/http-widget.service';
 
 /**
  * Hold the widget list actions
@@ -34,10 +33,10 @@ export class WidgetListActionsComponent {
   /**
    * Constructor
    *
-   * @param {WidgetService} widgetService The widget service
+   * @param {HttpWidgetService} httpWidgetService The http widget service
    * @param {ToastService} toastService The toast service
    */
-  constructor(private widgetService: WidgetService,
+  constructor(private httpWidgetService: HttpWidgetService,
               private toastService: ToastService) {
   }
 
@@ -45,7 +44,7 @@ export class WidgetListActionsComponent {
    * Method used to reload widgets from repository
    */
   reloadWidgets() {
-    this.widgetService.getAll(ApiActionEnum.REFRESH).subscribe(() => {
+    this.httpWidgetService.getAll(ApiActionEnum.REFRESH).subscribe(() => {
       this.toastService.sendMessage('Widget successfully reloads', ToastType.SUCCESS);
     });
   }
