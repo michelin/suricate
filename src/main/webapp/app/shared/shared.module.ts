@@ -50,6 +50,7 @@ import {HttpProjectService} from './services/http/http-project.service';
 import {HttpScreenService} from './services/http/http-screen.service';
 import {HttpRoleService} from './services/http/http-role.service';
 import {HttpUserService} from './services/http/http-user.service';
+import {HttpRepositoryService} from './services/http/http-repository.service';
 
 @NgModule({
   imports: [
@@ -115,7 +116,8 @@ import {HttpUserService} from './services/http/http-user.service';
     HttpProjectService,
     HttpRoleService,
     HttpScreenService,
-    HttpUserService
+    HttpUserService,
+    HttpRepositoryService
   ]
 })
 export class SharedModule {

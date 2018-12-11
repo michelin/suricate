@@ -23,7 +23,6 @@ import {SharedModule} from '../../../../../shared/shared.module';
 import {LayoutModule} from '../../../../../layout/layout.module';
 
 import {RepositoryListComponent} from './repository-list/repository-list.component';
-import {RepositoryService} from './repository.service';
 import {RouterModule} from '@angular/router';
 import {repositoryRoutes} from './repository.route';
 import {RepositoryAddEditComponent} from './repository-add-edit/repository-add-edit.component';
@@ -38,9 +37,6 @@ import {RepositoryAddEditComponent} from './repository-add-edit/repository-add-e
   declarations: [
     RepositoryListComponent,
     RepositoryAddEditComponent
-  ],
-  providers: [
-    RepositoryService
   ]
 })
 export class RepositoryModule {

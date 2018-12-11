@@ -20,16 +20,14 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs/internal/Observable';
 
-import {Repository} from '../../../../../shared/model/api/Repository';
-import {repositoriesApiEndpoint} from '../../../../../app.constant';
+import {Repository} from '../../model/api/Repository';
+import {repositoriesApiEndpoint} from '../../../app.constant';
 
 /**
  * Service that manage HTTP repository calls
  */
-@Injectable({
-  providedIn: 'root'
-})
-export class RepositoryService {
+@Injectable()
+export class HttpRepositoryService {
 
   /**
    * Constructor

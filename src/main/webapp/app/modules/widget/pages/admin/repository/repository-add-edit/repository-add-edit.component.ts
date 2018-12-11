@@ -21,7 +21,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 import {Repository} from '../../../../../../shared/model/api/Repository';
-import {RepositoryService} from '../repository.service';
+import {HttpRepositoryService} from '../../../../../../shared/services/http/http-repository.service';
 import {FormUtils} from '../../../../../../shared/utils/FormUtils';
 import {ToastService} from '../../../../../../shared/components/toast/toast.service';
 import {RepositoryTypeEnum} from '../../../../../../shared/model/api/enums/RepositoryTypeEnum';
@@ -60,14 +60,14 @@ export class RepositoryAddEditComponent implements OnInit {
    * @param {ActivatedRoute} activatedRoute The activated route service
    * @param {Router} router The router service to inject
    * @param {FormBuilder} formBuilder The form builder service
-   * @param {RepositoryService} repositoryService The repository service to inject
+   * @param {HttpRepositoryService} repositoryService The repository service to inject
    * @param {ToastService} toastService The toast service
    * @param {ChangeDetectorRef} changeDetectorRef The change detector service
    */
   constructor(private activatedRoute: ActivatedRoute,
               private router: Router,
               private formBuilder: FormBuilder,
-              private repositoryService: RepositoryService,
+              private repositoryService: HttpRepositoryService,
               private toastService: ToastService,
               private changeDetectorRef: ChangeDetectorRef) {
   }

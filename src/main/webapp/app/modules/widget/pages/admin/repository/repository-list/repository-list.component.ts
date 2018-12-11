@@ -21,7 +21,7 @@ import {MatDialog, MatPaginator, MatSlideToggleChange, MatSort, MatTableDataSour
 import {merge, of} from 'rxjs/index';
 import {catchError, map, startWith, switchMap} from 'rxjs/operators';
 
-import {RepositoryService} from '../repository.service';
+import {HttpRepositoryService} from '../../../../../../shared/services/http/http-repository.service';
 import {Repository} from '../../../../../../shared/model/api/Repository';
 import {ToastService} from '../../../../../../shared/components/toast/toast.service';
 import {ToastType} from '../../../../../../shared/components/toast/toast-objects/ToastType';
@@ -75,12 +75,12 @@ export class RepositoryListComponent implements OnInit {
    *
    * @param {MatDialog} matDialog The mat dialog service
    * @param {ChangeDetectorRef} changeDetectorRef The change detector ref to inject
-   * @param {RepositoryService} repositoryService The repository service
+   * @param {HttpRepositoryService} repositoryService The repository service
    * @param {ToastService} toastService The toast service
    */
   constructor(private matDialog: MatDialog,
               private changeDetectorRef: ChangeDetectorRef,
-              private repositoryService: RepositoryService,
+              private repositoryService: HttpRepositoryService,
               private toastService: ToastService) {
   }
 
