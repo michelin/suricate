@@ -26,6 +26,7 @@ import {RoleEnum} from '../../../../../shared/model/api/enums/RoleEnum';
 import {User} from '../../../../../shared/model/api/user/User';
 import {Role} from '../../../../../shared/model/api/user/Role';
 import {ToastType} from '../../../../../shared/components/toast/toast-objects/ToastType';
+import {HttpRoleService} from '../../../../../shared/services/http/http-role.service';
 
 /**
  * Component user the edition of a user
@@ -61,6 +62,7 @@ export class UserEditComponent implements OnInit {
    * @param {UserService} userService The user service to inject
    * @param {Router} router The router service to inject
    * @param {RoleService} roleService The role service to inject
+   * @param {HttpRoleService} httpRoleService The http role service to inject
    * @param {ActivatedRoute} activatedRoute The activated route to inject
    * @param {FormBuilder} formBuilder The formBuilder service
    * @param {ToastService} toastService The service used for displayed Toast notification
@@ -68,6 +70,7 @@ export class UserEditComponent implements OnInit {
   constructor(private userService: UserService,
               private router: Router,
               private roleService: RoleService,
+              private httpRoleService: HttpRoleService,
               private activatedRoute: ActivatedRoute,
               private formBuilder: FormBuilder,
               private toastService: ToastService) {
@@ -77,7 +80,7 @@ export class UserEditComponent implements OnInit {
    * Called when the component is displayed
    */
   ngOnInit() {
-    this.roleService.getRoles().subscribe(roles => {
+    this.httpRoleService.getRoles().subscribe(roles => {
       this.roles = roles;
     });
 
