@@ -20,15 +20,15 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 
-import {Configuration} from '../../../../../shared/model/api/Configuration';
-import {configurationsApiEndpoint} from '../../../../../app.constant';
-import {ApplicationProperties} from '../../../../../shared/model/api/ApplicationProperties';
+import {Configuration} from '../../model/api/Configuration';
+import {configurationsApiEndpoint} from '../../../app.constant';
+import {ApplicationProperties} from '../../model/api/ApplicationProperties';
 
 /**
  * Configuration services manage http calls
  */
 @Injectable()
-export class WidgetConfigurationService {
+export class HttpConfigurationService {
 
   /**
    * Constructor

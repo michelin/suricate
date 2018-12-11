@@ -20,7 +20,7 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 
-import {WidgetConfigurationService} from '../widget-configuration.service';
+import {HttpConfigurationService} from '../../../../../../shared/services/http/http-configuration.service';
 import {ToastService} from '../../../../../../shared/components/toast/toast.service';
 import {Configuration} from '../../../../../../shared/model/api/Configuration';
 import {ConfigurationDataType} from '../../../../../../shared/model/api/enums/ConfigurationDataType';
@@ -61,13 +61,13 @@ export class WidgetConfigurationEditComponent implements OnInit {
    * @param {Router} router The router service to inject
    * @param {FormBuilder} formBuilder The form builder
    * @param {ToastService} toastService The toast service
-   * @param {WidgetConfigurationService} configurationService The configuration service
+   * @param {HttpConfigurationService} configurationService The configuration service
    */
   constructor(private activatedRoute: ActivatedRoute,
               private router: Router,
               private formBuilder: FormBuilder,
               private toastService: ToastService,
-              private configurationService: WidgetConfigurationService) {
+              private configurationService: HttpConfigurationService) {
   }
 
   /**

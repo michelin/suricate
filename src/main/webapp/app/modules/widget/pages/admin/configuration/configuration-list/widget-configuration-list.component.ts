@@ -22,7 +22,7 @@ import {merge, of as observableOf} from 'rxjs';
 import {catchError, map, startWith, switchMap} from 'rxjs/operators';
 import {TranslateService} from '@ngx-translate/core';
 
-import {WidgetConfigurationService} from '../widget-configuration.service';
+import {HttpConfigurationService} from '../../../../../../shared/services/http/http-configuration.service';
 import {ToastService} from '../../../../../../shared/components/toast/toast.service';
 import {Configuration} from '../../../../../../shared/model/api/Configuration';
 import {ConfirmDialogComponent} from '../../../../../../shared/components/confirm-dialog/confirm-dialog.component';
@@ -78,13 +78,13 @@ export class WidgetConfigurationListComponent implements OnInit {
   /**
    * The constructor
    *
-   * @param {WidgetConfigurationService} configurationsService The configuration service
+   * @param {HttpConfigurationService} configurationsService The configuration service
    * @param {ChangeDetectorRef} changeDetectorRef The change detector service
    * @param {TranslateService} translateService The translateService
    * @param {MatDialog} matDialog The mat dialog service
    * @param {ToastService} toastService The toast service
    */
-  constructor(private configurationsService: WidgetConfigurationService,
+  constructor(private configurationsService: HttpConfigurationService,
               private translateService: TranslateService,
               private changeDetectorRef: ChangeDetectorRef,
               private matDialog: MatDialog,
