@@ -21,9 +21,9 @@ import {HttpClient} from '@angular/common/http';
 import {Observable, Subject} from 'rxjs';
 import {tap} from 'rxjs/operators';
 
-import {Widget} from '../../shared/model/dto/Widget';
+import {Widget} from '../../shared/model/api/Widget';
 import {categoriesApiEndpoint, widgetsApiEndpoint} from '../../app.constant';
-import {ApiActionEnum} from '../../shared/model/dto/enums/ApiActionEnum';
+import {ApiActionEnum} from '../../shared/model/api/enums/ApiActionEnum';
 
 /**
  * Manage the widget Http calls

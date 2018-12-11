@@ -20,7 +20,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs/internal/Observable';
 
-import {Repository} from '../../../../../shared/model/dto/Repository';
+import {Repository} from '../../../../../shared/model/api/Repository';
 import {repositoriesApiEndpoint} from '../../../../../app.constant';
 
 /**

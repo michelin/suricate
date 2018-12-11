@@ -18,9 +18,9 @@
 
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
+import {ToastMessage} from './toast-objects/ToastMessage';
+import {ToastType} from './toast-objects/ToastType';
 
-import {ToastMessage} from '../../model/toastNotification/ToastMessage';
-import {ToastType} from '../../model/toastNotification/ToastType';
 
 /**
  * The service that manage toast notification message

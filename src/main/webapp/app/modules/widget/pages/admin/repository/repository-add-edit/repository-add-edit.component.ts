@@ -20,12 +20,12 @@ import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
-import {Repository} from '../../../../../../shared/model/dto/Repository';
+import {Repository} from '../../../../../../shared/model/api/Repository';
 import {RepositoryService} from '../repository.service';
-import {RepositoryTypeEnum} from '../../../../../../shared/model/dto/enums/RepositoryTypeEnum';
 import {FormUtils} from '../../../../../../shared/utils/FormUtils';
 import {ToastService} from '../../../../../../shared/components/toast/toast.service';
-import {ToastType} from '../../../../../../shared/model/toastNotification/ToastType';
+import {RepositoryTypeEnum} from '../../../../../../shared/model/api/enums/RepositoryTypeEnum';
+import {ToastType} from '../../../../../../shared/components/toast/toast-objects/ToastType';
 
 /**
  * Edit a repository
@@ -144,19 +144,19 @@ export class RepositoryAddEditComponent implements OnInit {
 
       if (this.repository) {
         this.repositoryService
-            .updateOneById(this.repository.id, repositoryToAddEdit)
-            .subscribe((repositoryAdded: Repository) => {
-              this.toastService.sendMessage(`Repository ${repositoryAdded.name} updated successfully`, ToastType.SUCCESS);
-              this.redirectToRepositoryList();
-            });
+          .updateOneById(this.repository.id, repositoryToAddEdit)
+          .subscribe((repositoryAdded: Repository) => {
+            this.toastService.sendMessage(`Repository ${repositoryAdded.name} updated successfully`, ToastType.SUCCESS);
+            this.redirectToRepositoryList();
+          });
 
       } else {
         this.repositoryService
-            .addOne(repositoryToAddEdit)
-            .subscribe((repositoryAdded: Repository) => {
-              this.toastService.sendMessage(`Repository ${repositoryAdded.name} added successfully`, ToastType.SUCCESS);
-              this.redirectToRepositoryList();
-            });
+          .addOne(repositoryToAddEdit)
+          .subscribe((repositoryAdded: Repository) => {
+            this.toastService.sendMessage(`Repository ${repositoryAdded.name} added successfully`, ToastType.SUCCESS);
+            this.redirectToRepositoryList();
+          });
       }
     }
   }

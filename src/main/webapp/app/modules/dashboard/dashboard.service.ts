@@ -19,13 +19,13 @@ import {HttpClient} from '@angular/common/http';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 
-import {Project} from '../../shared/model/dto/Project';
-import {ProjectWidget} from '../../shared/model/dto/ProjectWidget';
+import {Project} from '../../shared/model/api/Project';
+import {ProjectWidget} from '../../shared/model/api/ProjectWidget';
 import {UserService} from '../security/user/user.service';
-import {User} from '../../shared/model/dto/user/User';
-import {ProjectWidgetPosition} from '../../shared/model/dto/ProjectWidgetPosition';
-import {WidgetStateEnum} from '../../shared/model/dto/enums/WidgetSateEnum';
+import {ProjectWidgetPosition} from '../../shared/model/api/ProjectWidgetPosition';
 import {projectsApiEndpoint} from '../../app.constant';
+import {User} from '../../shared/model/api/user/User';
+import {WidgetStateEnum} from '../../shared/model/api/enums/WidgetSateEnum';
 
 /**
  * The dashboard service, manage http calls
@@ -203,12 +203,12 @@ export class DashboardService {
     const url = `${projectsApiEndpoint}/currentUser`;
 
     return this.httpClient.get<Project[]>(url)
-        .pipe(
-            map(projects => {
-              this.currentDashboardListValues = projects;
-              return projects;
-            })
-        );
+      .pipe(
+        map(projects => {
+          this.currentDashboardListValues = projects;
+          return projects;
+        })
+      );
   }
 
   /**
@@ -245,12 +245,12 @@ export class DashboardService {
     const url = `${projectsApiEndpoint}`;
 
     return this.httpClient.put<Project>(url, project)
-        .pipe(
-            map(projectAdded => {
-              this.updateDashboardListSubject(projectAdded, this.dashboardActionUpdate);
-              return projectAdded;
-            })
-        );
+      .pipe(
+        map(projectAdded => {
+          this.updateDashboardListSubject(projectAdded, this.dashboardActionUpdate);
+          return projectAdded;
+        })
+      );
   }
 
   /**
@@ -263,12 +263,12 @@ export class DashboardService {
     const url = `${projectsApiEndpoint}/${project.id}`;
 
     return this.httpClient.put<Project>(url, project)
-        .pipe(
-            map(projectAdded => {
-              this.updateDashboardListSubject(projectAdded, this.dashboardActionUpdate);
-              return projectAdded;
-            })
-        );
+      .pipe(
+        map(projectAdded => {
+          this.updateDashboardListSubject(projectAdded, this.dashboardActionUpdate);
+          return projectAdded;
+        })
+      );
   }
 
   /**
@@ -281,14 +281,14 @@ export class DashboardService {
     const url = `${projectsApiEndpoint}/${projectWidget.project.id}/widgets`;
 
     return this
-        .httpClient
-        .put<Project>(url, projectWidget)
-        .pipe(
-            map(project => {
-              this.currendDashbordSubject.next(project);
-              return project;
-            })
-        );
+      .httpClient
+      .put<Project>(url, projectWidget)
+      .pipe(
+        map(project => {
+          this.currendDashbordSubject.next(project);
+          return project;
+        })
+      );
   }
 
   /**
@@ -302,12 +302,12 @@ export class DashboardService {
     const url = `${projectsApiEndpoint}/${project.id}/users`;
 
     return this.httpClient.put<Project>(url, username)
-        .pipe(
-            map(projectUpdated => {
-              this.updateDashboardListSubject(project, this.dashboardActionUpdate);
-              return projectUpdated;
-            })
-        );
+      .pipe(
+        map(projectUpdated => {
+          this.updateDashboardListSubject(project, this.dashboardActionUpdate);
+          return projectUpdated;
+        })
+      );
   }
 
   /**
@@ -321,12 +321,12 @@ export class DashboardService {
     const url = `${projectsApiEndpoint}/${project.id}/users/${userId}`;
 
     return this.httpClient.delete<Project>(url)
-        .pipe(
-            map(projectUpdated => {
-              this.updateDashboardListSubject(project, this.dashboardActionUpdate);
-              return projectUpdated;
-            })
-        );
+      .pipe(
+        map(projectUpdated => {
+          this.updateDashboardListSubject(project, this.dashboardActionUpdate);
+          return projectUpdated;
+        })
+      );
   }
 
   /**
@@ -339,12 +339,12 @@ export class DashboardService {
     const url = `${projectsApiEndpoint}/${project.id}`;
 
     return this.httpClient.delete<Project>(url)
-        .pipe(
-            map(projectDelete => {
-              this.updateDashboardListSubject(projectDelete, this.dashboardActionDelete);
-              return projectDelete;
-            })
-        );
+      .pipe(
+        map(projectDelete => {
+          this.updateDashboardListSubject(projectDelete, this.dashboardActionDelete);
+          return projectDelete;
+        })
+      );
   }
 
   /**
@@ -358,12 +358,12 @@ export class DashboardService {
     const url = `${projectsApiEndpoint}/${projectId}/projectWidgetPositions`;
 
     return this.httpClient.put<Project>(url, projectWidgetPositions)
-        .pipe(
-            map(project => {
-              this.updateDashboardListSubject(project, this.dashboardActionUpdate);
-              return project;
-            })
-        );
+      .pipe(
+        map(project => {
+          this.updateDashboardListSubject(project, this.dashboardActionUpdate);
+          return project;
+        })
+      );
   }
 
   /**
@@ -377,14 +377,14 @@ export class DashboardService {
     const url = `${projectsApiEndpoint}/${projectId}/projectWidgets/${projectWidgetId}`;
 
     return this.httpClient.delete<Project>(url)
-        .pipe(
-            map(project => {
-              this.updateDashboardListSubject(project, this.dashboardActionUpdate);
-              this.currentDisplayedDashboardValue = project;
+      .pipe(
+        map(project => {
+          this.updateDashboardListSubject(project, this.dashboardActionUpdate);
+          this.currentDisplayedDashboardValue = project;
 
-              return project;
-            })
-        );
+          return project;
+        })
+      );
   }
 
   /**

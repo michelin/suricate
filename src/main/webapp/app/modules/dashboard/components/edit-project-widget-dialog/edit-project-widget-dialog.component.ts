@@ -18,13 +18,13 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {FormGroup, NgForm} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 
-import {ProjectWidget} from '../../../../shared/model/dto/ProjectWidget';
-import {Asset} from '../../../../shared/model/dto/Asset';
-import {WidgetVariableType} from '../../../../shared/model/dto/enums/WidgetVariableType';
-import {WidgetParam} from '../../../../shared/model/dto/WidgetParam';
+import {ProjectWidget} from '../../../../shared/model/api/ProjectWidget';
+import {Asset} from '../../../../shared/model/api/Asset';
+import {WidgetParam} from '../../../../shared/model/api/WidgetParam';
 import {DashboardService} from '../../dashboard.service';
 import {ToastService} from '../../../../shared/components/toast/toast.service';
-import {ToastType} from '../../../../shared/model/toastNotification/ToastType';
+import {WidgetVariableType} from '../../../../shared/model/api/enums/WidgetVariableType';
+import {ToastType} from '../../../../shared/components/toast/toast-objects/ToastType';
 
 @Component({
   selector: 'app-edit-project-widget-dialog',
@@ -132,8 +132,8 @@ export class EditProjectWidgetDialogComponent implements OnInit {
 
       this.projectWidget.backendConfig = backendConfig;
       this.dashboardService
-          .editProjectWidgetFromProject(this.projectWidget.project.id, this.projectWidget)
-          .subscribe(() => this.toastService.sendMessage('Widget Updated successfully', ToastType.SUCCESS));
+        .editProjectWidgetFromProject(this.projectWidget.project.id, this.projectWidget)
+        .subscribe(() => this.toastService.sendMessage('Widget Updated successfully', ToastType.SUCCESS));
       this.dialogRef.close();
     }
   }

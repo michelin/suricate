@@ -17,7 +17,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 
-import {WebsocketClient} from '../../shared/model/dto/WebsocketClient';
+import {WebsocketClient} from '../../shared/model/api/WebsocketClient';
 import {screensApiEndpoint} from '../../app.constant';
 
 /**

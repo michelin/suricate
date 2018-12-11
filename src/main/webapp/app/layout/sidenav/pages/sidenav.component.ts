@@ -20,11 +20,11 @@ import {MatSidenav} from '@angular/material';
 import {takeWhile} from 'rxjs/operators';
 
 import {SidenavService} from '../sidenav.service';
-import {User} from '../../../shared/model/dto/user/User';
-import {Project} from '../../../shared/model/dto/Project';
+import {Project} from '../../../shared/model/api/Project';
 import {DashboardService} from '../../../modules/dashboard/dashboard.service';
 import {UserService} from '../../../modules/security/user/user.service';
 import {AuthenticationService} from '../../../modules/authentication/authentication.service';
+import {User} from '../../../shared/model/api/user/User';
 
 /**
  * Hold the sidenav behavior
@@ -90,12 +90,12 @@ export class SidenavComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   ngOnInit() {
     this.dashboardService.currentDashboardList$
-        .pipe(takeWhile(() => this.isAlive))
-        .subscribe(projects => this.dashboards = this.dashboardService.sortByProjectName(projects));
+      .pipe(takeWhile(() => this.isAlive))
+      .subscribe(projects => this.dashboards = this.dashboardService.sortByProjectName(projects));
 
     this.userService.connectedUser$
-        .pipe(takeWhile(() => this.isAlive))
-        .subscribe(connectedUser => this.connectedUser = connectedUser);
+      .pipe(takeWhile(() => this.isAlive))
+      .subscribe(connectedUser => this.connectedUser = connectedUser);
 
     this.userService.getConnectedUser().subscribe();
     this.isUserAdmin = this.userService.isAdmin();
@@ -107,15 +107,15 @@ export class SidenavComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   ngAfterViewInit() {
     this.sidenavService
-        .subscribeToSidenavOpenCloseEvent()
-        .pipe(takeWhile(() => this.isAlive))
-        .subscribe((shouldOpen: boolean) => {
-          if (shouldOpen) {
-            this.sidenav.open();
-          } else {
-            this.sidenav.close();
-          }
-        });
+      .subscribeToSidenavOpenCloseEvent()
+      .pipe(takeWhile(() => this.isAlive))
+      .subscribe((shouldOpen: boolean) => {
+        if (shouldOpen) {
+          this.sidenav.open();
+        } else {
+          this.sidenav.close();
+        }
+      });
   }
 
   /**

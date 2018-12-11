@@ -24,12 +24,12 @@ import {catchError, debounceTime, distinctUntilChanged, map, startWith, switchMa
 
 
 import {WidgetService} from '../../widget.service';
-import {Asset} from '../../../../shared/model/dto/Asset';
-import {WidgetAvailabilityEnum} from '../../../../shared/model/dto/enums/WidgetAvailabilityEnum';
-import {Widget} from '../../../../shared/model/dto/Widget';
+import {Asset} from '../../../../shared/model/api/Asset';
+import {Widget} from '../../../../shared/model/api/Widget';
 import {ToastService} from '../../../../shared/components/toast/toast.service';
-import {ToastType} from '../../../../shared/model/toastNotification/ToastType';
 import {UserService} from '../../../security/user/user.service';
+import {WidgetAvailabilityEnum} from '../../../../shared/model/api/enums/WidgetAvailabilityEnum';
+import {ToastType} from '../../../../shared/components/toast/toast-objects/ToastType';
 
 /**
  * Component that display the list of widgets (admin part)
@@ -132,7 +132,7 @@ export class WidgetListComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit() {
     this.isUserAdmin = this.userService.isAdmin();
     this.widgetService.widgets$.pipe(
-        takeWhile(() => this.isAlive)
+      takeWhile(() => this.isAlive)
     ).subscribe(() => {
       this.initTable();
     });
@@ -153,32 +153,32 @@ export class WidgetListComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   initTable() {
     merge(this.matSort.sortChange, this.matPaginator.page)
-        .pipe(
-            startWith(null),
-            switchMap(() => {
-              this.isLoadingResults = true;
-              this.changeDetectorRef.detectChanges();
-              return this.widgetService.getAll();
-            }),
-            map(data => {
-              this.isLoadingResults = false;
-              this.errorCatched = false;
+      .pipe(
+        startWith(null),
+        switchMap(() => {
+          this.isLoadingResults = true;
+          this.changeDetectorRef.detectChanges();
+          return this.widgetService.getAll();
+        }),
+        map(data => {
+          this.isLoadingResults = false;
+          this.errorCatched = false;
 
-              return data;
-            }),
-            catchError(() => {
-              this.isLoadingResults = false;
-              this.errorCatched = true;
+          return data;
+        }),
+        catchError(() => {
+          this.isLoadingResults = false;
+          this.errorCatched = true;
 
-              return observableOf([]);
-            })
-        )
-        .subscribe(data => {
-          this.resultsLength = data.length;
-          this.matTableDataSource.data = data;
-          this.matTableDataSource.sort = this.matSort;
-          this.widgets = data;
-        });
+          return observableOf([]);
+        })
+      )
+      .subscribe(data => {
+        this.resultsLength = data.length;
+        this.matTableDataSource.data = data;
+        this.matTableDataSource.sort = this.matSort;
+        this.widgets = data;
+      });
 
     // Apply custom sort rules
     this.matTableDataSource.sortingDataAccessor = (widget: Widget, property: string) => {
@@ -200,33 +200,33 @@ export class WidgetListComponent implements OnInit, AfterViewInit, OnDestroy {
     // Filter for widget name input
     if (this.nameInputFilter !== undefined) {
       fromEvent(this.nameInputFilter.nativeElement, 'keyup')
-          .pipe(
-              debounceTime(500),
-              distinctUntilChanged(),
-              map((keyboardEvent: any) => keyboardEvent.target.value)
-          )
-          .subscribe((inputValue: string) => {
-            this.matTableDataSource.filterPredicate = (widget: Widget, filter: string) => {
-              return widget.name.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) !== -1;
-            };
-            this.applyFilter(inputValue);
-          });
+        .pipe(
+          debounceTime(500),
+          distinctUntilChanged(),
+          map((keyboardEvent: any) => keyboardEvent.target.value)
+        )
+        .subscribe((inputValue: string) => {
+          this.matTableDataSource.filterPredicate = (widget: Widget, filter: string) => {
+            return widget.name.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) !== -1;
+          };
+          this.applyFilter(inputValue);
+        });
     }
 
     if (this.categoryInputFilter !== undefined) {
       // Filter for widget category
       fromEvent(this.categoryInputFilter.nativeElement, 'keyup')
-          .pipe(
-              debounceTime(500),
-              distinctUntilChanged(),
-              map((keyboardEvent: any) => keyboardEvent.target.value)
-          )
-          .subscribe((inputValue: string) => {
-            this.matTableDataSource.filterPredicate = (widget: Widget, filter: string) => {
-              return widget.category.name.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) !== -1;
-            };
-            this.applyFilter(inputValue);
-          });
+        .pipe(
+          debounceTime(500),
+          distinctUntilChanged(),
+          map((keyboardEvent: any) => keyboardEvent.target.value)
+        )
+        .subscribe((inputValue: string) => {
+          this.matTableDataSource.filterPredicate = (widget: Widget, filter: string) => {
+            return widget.category.name.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) !== -1;
+          };
+          this.applyFilter(inputValue);
+        });
     }
   }
 
@@ -255,8 +255,8 @@ export class WidgetListComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     return this
-        .domSanitizer
-        .bypassSecurityTrustHtml(imgHtml);
+      .domSanitizer
+      .bypassSecurityTrustHtml(imgHtml);
   }
 
   /**
@@ -271,14 +271,14 @@ export class WidgetListComponent implements OnInit, AfterViewInit, OnDestroy {
     if (widgetToDisable) {
       widgetToDisable.widgetAvailability = changeEvent.checked ? WidgetAvailabilityEnum.ACTIVATED : WidgetAvailabilityEnum.DISABLED;
       this
-          .widgetService
-          .updateWidget(widgetToDisable)
-          .subscribe((widgetResponse: Widget) => {
-            this.toastService.sendMessage(
-                `The widget "${widgetResponse.name}" has been ${widgetResponse.widgetAvailability.toString()}`,
-                ToastType.SUCCESS
-            );
-          });
+        .widgetService
+        .updateWidget(widgetToDisable)
+        .subscribe((widgetResponse: Widget) => {
+          this.toastService.sendMessage(
+            `The widget "${widgetResponse.name}" has been ${widgetResponse.widgetAvailability.toString()}`,
+            ToastType.SUCCESS
+          );
+        });
     }
   }
 

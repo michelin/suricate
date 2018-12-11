@@ -19,13 +19,13 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatHorizontalStepper} from '@angular/material';
 import {CustomValidators} from 'ng2-validation';
 import {ColorPickerService} from 'ngx-color-picker';
-import {Observable, EMPTY as empty} from 'rxjs';
+import {Observable} from 'rxjs';
 import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
 
 import {DashboardService} from '../../../modules/dashboard/dashboard.service';
-import {User} from '../../../shared/model/dto/user/User';
 import {UserService} from '../../../modules/security/user/user.service';
-import {Project} from '../../../shared/model/dto/Project';
+import {Project} from '../../../shared/model/api/Project';
+import {User} from '../../../shared/model/api/user/User';
 
 @Component({
   selector: 'app-add-dashboard-dialog',
@@ -104,13 +104,13 @@ export class AddDashboardDialogComponent implements OnInit {
     if (this.data && this.data.projectId) {
       this.isEditMode = true;
       this.dashboardService
-          .getOneById(+this.data.projectId)
-          .subscribe(project => {
-            this.projectAdded = project;
-            this.dashboardBackgroundColor = this.getPropertyFromGridCss('background-color');
-            this.initDashboardForm(true);
-            this.initUserForm();
-          });
+        .getOneById(+this.data.projectId)
+        .subscribe(project => {
+          this.projectAdded = project;
+          this.dashboardBackgroundColor = this.getPropertyFromGridCss('background-color');
+          this.initDashboardForm(true);
+          this.initUserForm();
+        });
 
     } else {
       // init form dashboard
@@ -130,14 +130,14 @@ export class AddDashboardDialogComponent implements OnInit {
     this.dashboardFormCompleted = formCompleted;
     this.dashboardForm = this.formBuilder.group({
       'name':
-          [this.projectAdded ? this.projectAdded.name : '',
-            [Validators.required]],
+        [this.projectAdded ? this.projectAdded.name : '',
+          [Validators.required]],
       'widgetHeight':
-          [this.projectAdded ? this.projectAdded.widgetHeight : '360',
-            [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]],
+        [this.projectAdded ? this.projectAdded.widgetHeight : '360',
+          [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]],
       'maxColumn':
-          [this.projectAdded ? this.projectAdded.maxColumn : '5',
-            [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]]
+        [this.projectAdded ? this.projectAdded.maxColumn : '5',
+          [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]]
     });
   }
 
@@ -151,9 +151,9 @@ export class AddDashboardDialogComponent implements OnInit {
     });
     // Populate user autocomplete
     this.userAutoComplete$ = this.addUserForm.get('username').valueChanges.pipe(
-        debounceTime(500),
-        distinctUntilChanged(),
-        switchMap(username => username ? this.userService.searchUserByUsername(username) : new Observable<User[]>())
+      debounceTime(500),
+      distinctUntilChanged(),
+      switchMap(username => username ? this.userService.searchUserByUsername(username) : new Observable<User[]>())
     );
   }
 
@@ -180,13 +180,13 @@ export class AddDashboardDialogComponent implements OnInit {
 
       if (!this.isEditMode) {
         this.dashboardService
-            .createProject(this.projectAdded)
-            .subscribe(project => this.displayProject(project));
+          .createProject(this.projectAdded)
+          .subscribe(project => this.displayProject(project));
 
       } else {
         this.dashboardService
-            .editProject(this.projectAdded)
-            .subscribe(project => this.displayProject(project));
+          .editProject(this.projectAdded)
+          .subscribe(project => this.displayProject(project));
       }
     }
   }
@@ -217,8 +217,8 @@ export class AddDashboardDialogComponent implements OnInit {
   private getPropertyFromGridCss(property: string): string {
     const propertyArray = this.projectAdded.cssStyle.split(';');
     return propertyArray
-        .filter((currentProperty: string) => currentProperty.split(':')[0] === property)[0]
-        .split(':')[1];
+      .filter((currentProperty: string) => currentProperty.split(':')[0] === property)[0]
+      .split(':')[1];
   }
 
   /**
@@ -227,8 +227,8 @@ export class AddDashboardDialogComponent implements OnInit {
   addUser() {
     if (this.addUserForm.valid) {
       this.dashboardService
-          .addUserToProject(this.projectAdded, this.addUserForm.value)
-          .subscribe(project => this.projectAdded = project);
+        .addUserToProject(this.projectAdded, this.addUserForm.value)
+        .subscribe(project => this.projectAdded = project);
     }
   }
 
@@ -239,7 +239,7 @@ export class AddDashboardDialogComponent implements OnInit {
    */
   deleteUser(userId: number) {
     this.dashboardService
-        .deleteUserFromProject(this.projectAdded, userId)
-        .subscribe(project => this.projectAdded = project);
+      .deleteUserFromProject(this.projectAdded, userId)
+      .subscribe(project => this.projectAdded = project);
   }
 }

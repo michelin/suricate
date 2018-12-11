@@ -16,8 +16,8 @@
 
 import {Asset} from './Asset';
 import {WidgetParam} from './WidgetParam';
-import {Category} from './api/Category';
 import {WidgetAvailabilityEnum} from './enums/WidgetAvailabilityEnum';
+import {Category} from './Category';
 
 /**
  * The widget entity

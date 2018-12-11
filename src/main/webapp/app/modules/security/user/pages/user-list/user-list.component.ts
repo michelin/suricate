@@ -18,16 +18,16 @@ import {AfterViewInit, ChangeDetectorRef, Component, ViewChild} from '@angular/c
 import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import {merge, of as observableOf} from 'rxjs';
 import {catchError, map, startWith, switchMap} from 'rxjs/operators';
-import {TitleCasePipe} from "@angular/common";
-import {TranslateService} from "@ngx-translate/core";
+import {TitleCasePipe} from '@angular/common';
+import {TranslateService} from '@ngx-translate/core';
 
 import {UserService} from '../../user.service';
-import {User} from '../../../../../shared/model/dto/user/User';
 import {ToastService} from '../../../../../shared/components/toast/toast.service';
-import {ToastType} from '../../../../../shared/model/toastNotification/ToastType';
 import {RoleService} from '../../role.service';
-import {Role} from '../../../../../shared/model/dto/user/Role';
-import {ConfirmDialogComponent} from "../../../../../shared/components/confirm-dialog/confirm-dialog.component";
+import {ConfirmDialogComponent} from '../../../../../shared/components/confirm-dialog/confirm-dialog.component';
+import {Role} from '../../../../../shared/model/api/user/Role';
+import {User} from '../../../../../shared/model/api/user/User';
+import {ToastType} from '../../../../../shared/components/toast/toast-objects/ToastType';
 
 
 /**
@@ -108,31 +108,31 @@ export class UserListComponent implements AfterViewInit {
   initUsersTable(): void {
     // If the user changes the sort order, reset back to the first page.
     merge(this.matSort.sortChange, this.matPaginator.page)
-        .pipe(
-            startWith(null),
-            switchMap(() => {
-              this.isLoadingResults = true;
-              this.changeDetectorRef.detectChanges();
-              return this.userService.getAll();
-            }),
-            map(data => {
-              this.isLoadingResults = false;
-              this.errorCatched = false;
+      .pipe(
+        startWith(null),
+        switchMap(() => {
+          this.isLoadingResults = true;
+          this.changeDetectorRef.detectChanges();
+          return this.userService.getAll();
+        }),
+        map(data => {
+          this.isLoadingResults = false;
+          this.errorCatched = false;
 
-              return data;
-            }),
-            catchError(() => {
-              this.isLoadingResults = false;
-              this.errorCatched = true;
+          return data;
+        }),
+        catchError(() => {
+          this.isLoadingResults = false;
+          this.errorCatched = true;
 
-              return observableOf([]);
-            })
-        )
-        .subscribe(data => {
-          this.resultsLength = data.length;
-          this.matTableDataSource.data = data;
-          this.matTableDataSource.sort = this.matSort;
-        });
+          return observableOf([]);
+        })
+      )
+      .subscribe(data => {
+        this.resultsLength = data.length;
+        this.matTableDataSource.data = data;
+        this.matTableDataSource.sort = this.matSort;
+      });
 
     // Apply sort custom rules for user
     this.matTableDataSource.sortingDataAccessor = (user: User, property: string) => {
@@ -162,13 +162,13 @@ export class UserListComponent implements AfterViewInit {
   openDialogDeleteUser(user: User) {
     let deleteUserDialogRef = null;
 
-    this.translateService.get(["user.delete", "delete.confirm"]).subscribe(translations => {
+    this.translateService.get(['user.delete', 'delete.confirm']).subscribe(translations => {
       const titlecasePipe = new TitleCasePipe();
 
       deleteUserDialogRef = this.matDialog.open(ConfirmDialogComponent, {
         data: {
-          title: translations["user.delete"],
-          message: `${translations["delete.confirm"]} ${titlecasePipe.transform(user.username)}`
+          title: translations['user.delete'],
+          message: `${translations['delete.confirm']} ${titlecasePipe.transform(user.username)}`
         }
       });
     });

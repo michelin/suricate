@@ -23,7 +23,7 @@ import {takeWhile} from 'rxjs/operators';
 
 import {SidenavService} from '../../../../layout/sidenav/sidenav.service';
 import {WebsocketService} from '../../../../shared/services/websocket.service';
-import {Project} from '../../../../shared/model/dto/Project';
+import {Project} from '../../../../shared/model/api/Project';
 import {DashboardService} from '../../dashboard.service';
 import {WSUpdateEvent} from '../../../../shared/model/websocket/WSUpdateEvent';
 import {WSUpdateType} from '../../../../shared/model/websocket/enums/WSUpdateType';
@@ -98,8 +98,8 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
     this.screenCode = this.websocketService.getscreenCode();
 
     this.dashboardService.currentDisplayedDashboard$
-        .pipe(takeWhile(() => this.isAlive))
-        .subscribe(project => this.project$ = of(project));
+      .pipe(takeWhile(() => this.isAlive))
+      .subscribe(project => this.project$ = of(project));
 
     this.activatedRoute.queryParams.subscribe(params => {
       if (params['token']) {
@@ -120,12 +120,12 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   listenForConnection() {
     this.websocketService.startConnection();
     this.screenSubscription = this
-        .websocketService
-        .subscribeToDestination(`/user/${this.screenCode}/queue/connect`)
-        .pipe(takeWhile(() => this.isAlive))
-        .subscribe((stompMessage: Stomp.Message) => {
-          this.handleConnectEvent(JSON.parse(stompMessage.body));
-        });
+      .websocketService
+      .subscribeToDestination(`/user/${this.screenCode}/queue/connect`)
+      .pipe(takeWhile(() => this.isAlive))
+      .subscribe((stompMessage: Stomp.Message) => {
+        this.handleConnectEvent(JSON.parse(stompMessage.body));
+      });
   }
 
   /**

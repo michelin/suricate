@@ -20,7 +20,7 @@ import {Router} from '@angular/router';
 
 import {AuthenticationService} from '../../authentication.service';
 import {WidgetConfigurationService} from '../../../widget/pages/admin/configuration/widget-configuration.service';
-import {ApplicationProperties} from '../../../../shared/model/ApplicationProperties';
+import {ApplicationProperties} from '../../../../shared/model/api/ApplicationProperties';
 import {authenticationProviderLDAP} from '../../../../app.constant';
 
 /**
@@ -105,16 +105,16 @@ export class LoginComponent implements OnInit {
 
       // Try to authenticate
       this.authenticationService
-          .authenticate(this.loginForm.value)
-          .subscribe(
-              () => {
-                // Authentication succeed
-                this.router.navigate(['/home']);
-              },
-              error => {
-                // Authentication failed
-                this.formSubmitAttempt = false;
-              });
+        .authenticate(this.loginForm.value)
+        .subscribe(
+          () => {
+            // Authentication succeed
+            this.router.navigate(['/home']);
+          },
+          error => {
+            // Authentication failed
+            this.formSubmitAttempt = false;
+          });
     }
   }
 }

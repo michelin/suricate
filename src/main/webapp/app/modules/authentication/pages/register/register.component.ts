@@ -20,14 +20,14 @@ import {Router} from '@angular/router';
 import {CustomValidators} from 'ng2-validation';
 
 import {AuthenticationService} from '../../authentication.service';
-import {Credentials} from '../../../../shared/model/dto/user/Credentials';
-import {User} from '../../../../shared/model/dto/user/User';
 import {checkPasswordMatch} from '../../../../shared/validators/CustomValidator';
 import {ToastService} from '../../../../shared/components/toast/toast.service';
-import {ToastType} from '../../../../shared/model/toastNotification/ToastType';
 import {authenticationProviderLDAP} from '../../../../app.constant';
-import {ApplicationProperties} from '../../../../shared/model/ApplicationProperties';
+import {ApplicationProperties} from '../../../../shared/model/api/ApplicationProperties';
 import {WidgetConfigurationService} from '../../../widget/pages/admin/configuration/widget-configuration.service';
+import {User} from '../../../../shared/model/api/user/User';
+import {Credentials} from '../../../../shared/model/api/user/Credentials';
+import {ToastType} from '../../../../shared/components/toast/toast-objects/ToastType';
 
 /**
  * Component that register a new user
@@ -97,16 +97,16 @@ export class RegisterComponent implements OnInit {
     this.authenticationService.logout();
 
     this.passwordControl = this.formBuilder
-        .control(
-            '',
-            [Validators.required, Validators.minLength(3)]
-        );
+      .control(
+        '',
+        [Validators.required, Validators.minLength(3)]
+      );
 
     this.confirmPasswordControl = this.formBuilder
-        .control(
-            '',
-            [Validators.required, Validators.minLength(3), checkPasswordMatch(this.passwordControl)]
-        );
+      .control(
+        '',
+        [Validators.required, Validators.minLength(3), checkPasswordMatch(this.passwordControl)]
+      );
 
     this.registerForm = this.formBuilder.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
@@ -136,25 +136,25 @@ export class RegisterComponent implements OnInit {
       this.formSubmitAttempt = true;
       const user: User = this.registerForm.value;
       this
-          .authenticationService
-          .register(user)
-          .subscribe(() => {
-            const credentials: Credentials = {username: user.username, password: user.password};
-            this
-                .authenticationService
-                .authenticate(credentials)
-                .subscribe(
-                    () => {
-                      // Authentication succeed
-                      this.router.navigate(['/home']);
-                    },
-                    error => {
-                      // Authentication failed
-                      this.formSubmitAttempt = false;
-                      console.log(error);
-                    }
-                );
-          });
+        .authenticationService
+        .register(user)
+        .subscribe(() => {
+          const credentials: Credentials = {username: user.username, password: user.password};
+          this
+            .authenticationService
+            .authenticate(credentials)
+            .subscribe(
+              () => {
+                // Authentication succeed
+                this.router.navigate(['/home']);
+              },
+              error => {
+                // Authentication failed
+                this.formSubmitAttempt = false;
+                console.log(error);
+              }
+            );
+        });
     } else {
       this.toastService.sendMessage('Some fields are not properly filled', ToastType.DANGER);
     }

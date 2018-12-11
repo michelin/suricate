@@ -21,7 +21,7 @@ import {Observable, of} from 'rxjs';
 import {takeWhile} from 'rxjs/operators';
 
 import {DashboardService} from '../../dashboard.service';
-import {Project} from '../../../../shared/model/dto/Project';
+import {Project} from '../../../../shared/model/api/Project';
 import {AddWidgetDialogComponent} from '../../../../layout/header/components/add-widget-dialog/add-widget-dialog.component';
 
 /**
@@ -73,15 +73,15 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
     // Global init from project
     this.activatedRoute.params.subscribe(params => {
       this.dashboardService
-          .getOneById(+params['id'])
-          .subscribe(project => {
-            this.dashboardService.currentDisplayedDashboardValue = project;
-          });
+        .getOneById(+params['id'])
+        .subscribe(project => {
+          this.dashboardService.currentDisplayedDashboardValue = project;
+        });
     });
 
     this.dashboardService.currentDisplayedDashboard$
-        .pipe(takeWhile(() => this.isAlive))
-        .subscribe(project => this.project$ = of(project));
+      .pipe(takeWhile(() => this.isAlive))
+      .subscribe(project => this.project$ = of(project));
   }
 
   /**

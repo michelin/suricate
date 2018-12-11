@@ -22,9 +22,9 @@ import {ActivatedRoute, Router} from '@angular/router';
 
 import {WidgetConfigurationService} from '../widget-configuration.service';
 import {ToastService} from '../../../../../../shared/components/toast/toast.service';
-import {Configuration} from '../../../../../../shared/model/dto/Configuration';
-import {ConfigurationDataType} from '../../../../../../shared/model/dto/enums/ConfigurationDataType';
-import {ToastType} from '../../../../../../shared/model/toastNotification/ToastType';
+import {Configuration} from '../../../../../../shared/model/api/Configuration';
+import {ConfigurationDataType} from '../../../../../../shared/model/api/enums/ConfigurationDataType';
+import {ToastType} from '../../../../../../shared/components/toast/toast-objects/ToastType';
 
 /**
  * Manage the edition of a configuration
@@ -102,11 +102,11 @@ export class WidgetConfigurationEditComponent implements OnInit {
       configuration.value = this.configurationForm.get('value').value;
 
       this.configurationService
-          .updateConfigurationByKey(this.configuration)
-          .subscribe(() => {
-            this.toastService.sendMessage('Configuration updated successfully', ToastType.SUCCESS);
-            this.redirectToWidgetConfigurationList();
-          });
+        .updateConfigurationByKey(this.configuration)
+        .subscribe(() => {
+          this.toastService.sendMessage('Configuration updated successfully', ToastType.SUCCESS);
+          this.redirectToWidgetConfigurationList();
+        });
     }
   }
 

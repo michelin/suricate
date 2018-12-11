@@ -19,11 +19,11 @@ import {FormGroup, NgForm} from '@angular/forms';
 import {Observable} from 'rxjs';
 
 import {UserService} from '../../../security/user/user.service';
-import {User} from '../../../../shared/model/dto/user/User';
-import {SettingDataType} from '../../../../shared/model/dto/enums/SettingDataType';
 import {ToastService} from '../../../../shared/components/toast/toast.service';
-import {ToastType} from '../../../../shared/model/toastNotification/ToastType';
 import {SettingsService} from '../../../../shared/services/settings.service';
+import {SettingDataType} from '../../../../shared/model/api/enums/SettingDataType';
+import {User} from '../../../../shared/model/api/user/User';
+import {ToastType} from '../../../../shared/components/toast/toast-objects/ToastType';
 
 /**
  * Represent the Admin Setting list page
@@ -91,11 +91,11 @@ export class SettingsListComponent implements OnInit {
       });
 
       this.userService
-          .updateUserSettings(currentUser, userSettings)
-          .subscribe(user => {
-            this.toastService.sendMessage('Settings saved succesfully', ToastType.SUCCESS);
-            this.settingsService.setUserSettings(user);
-          });
+        .updateUserSettings(currentUser, userSettings)
+        .subscribe(user => {
+          this.toastService.sendMessage('Settings saved succesfully', ToastType.SUCCESS);
+          this.settingsService.setUserSettings(user);
+        });
     }
   }
 }

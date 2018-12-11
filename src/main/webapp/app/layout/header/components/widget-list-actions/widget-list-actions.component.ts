@@ -18,8 +18,8 @@ import {Component} from '@angular/core';
 
 import {WidgetService} from '../../../../modules/widget/widget.service';
 import {ToastService} from '../../../../shared/components/toast/toast.service';
-import {ToastType} from '../../../../shared/model/toastNotification/ToastType';
-import {ApiActionEnum} from '../../../../shared/model/dto/enums/ApiActionEnum';
+import {ToastType} from '../../../../shared/components/toast/toast-objects/ToastType';
+import {ApiActionEnum} from '../../../../shared/model/api/enums/ApiActionEnum';
 
 /**
  * Hold the widget list actions

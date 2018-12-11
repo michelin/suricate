@@ -19,7 +19,7 @@ import {MatDialog, MatDialogRef} from '@angular/material';
 import {Router} from '@angular/router';
 import {takeWhile} from 'rxjs/operators';
 
-import {Project} from '../shared/model/dto/Project';
+import {Project} from '../shared/model/api/Project';
 import {DashboardService} from '../modules/dashboard/dashboard.service';
 import {AddDashboardDialogComponent} from './components/add-dashboard-dialog/add-dashboard-dialog.component';
 
@@ -67,8 +67,8 @@ export class HomeComponent implements OnInit, OnDestroy {
    */
   ngOnInit() {
     this.dashboardService.currentDashboardList$
-        .pipe(takeWhile(() => this.isAlive))
-        .subscribe(dashboards => this.dashboards = dashboards);
+      .pipe(takeWhile(() => this.isAlive))
+      .subscribe(dashboards => this.dashboards = dashboards);
   }
 
   /**

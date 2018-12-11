@@ -19,10 +19,10 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
 import {CustomValidators} from 'ng2-validation';
 
-import {Project} from '../../../../../shared/model/dto/Project';
+import {Project} from '../../../../../shared/model/api/Project';
 import {DashboardService} from '../../../dashboard.service';
 import {ToastService} from '../../../../../shared/components/toast/toast.service';
-import {ToastType} from '../../../../../shared/model/toastNotification/ToastType';
+import {ToastType} from '../../../../../shared/components/toast/toast-objects/ToastType';
 
 /**
  * Component that display the edit page for a dashboard
@@ -65,17 +65,17 @@ export class DashboardEditComponent implements OnInit {
    */
   ngOnInit() {
     this
-        .activatedRoute
-        .params
-        .subscribe(params => {
-          this
-              .dashboardService
-              .getOneById(+params['dashboardId'])
-              .subscribe(dashboard => {
-                this.dashboard = dashboard;
-                this.initDashboardForm();
-              });
-        });
+      .activatedRoute
+      .params
+      .subscribe(params => {
+        this
+          .dashboardService
+          .getOneById(+params['dashboardId'])
+          .subscribe(dashboard => {
+            this.dashboard = dashboard;
+            this.initDashboardForm();
+          });
+      });
   }
 
   /**
@@ -106,8 +106,8 @@ export class DashboardEditComponent implements OnInit {
    */
   saveDashboard() {
     this
-        .dashboardService
-        .editProject({...this.dashboard, ...this.editDashboardForm.value})
-        .subscribe(() => this.toastService.sendMessage('Dashboard saved successfully', ToastType.SUCCESS));
+      .dashboardService
+      .editProject({...this.dashboard, ...this.editDashboardForm.value})
+      .subscribe(() => this.toastService.sendMessage('Dashboard saved successfully', ToastType.SUCCESS));
   }
 }

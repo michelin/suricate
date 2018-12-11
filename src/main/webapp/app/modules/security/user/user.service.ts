@@ -19,12 +19,12 @@ import {HttpClient} from '@angular/common/http';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {map} from 'rxjs/operators';
 
-import {User} from '../../../shared/model/dto/user/User';
 import {TokenService} from '../../../shared/auth/token.service';
-import {RoleEnum} from '../../../shared/model/dto/enums/RoleEnum';
-import {UserSetting} from '../../../shared/model/dto/UserSetting';
+import {UserSetting} from '../../../shared/model/api/UserSetting';
 import {SettingsService} from '../../../shared/services/settings.service';
 import {usersApiEndpoint} from '../../../app.constant';
+import {User} from '../../../shared/model/api/user/User';
+import {RoleEnum} from '../../../shared/model/api/enums/RoleEnum';
 
 /**
  * User service that manage users
@@ -116,12 +116,12 @@ export class UserService {
     const url = `${usersApiEndpoint}/current`;
 
     return this.httpClient.get<User>(url)
-        .pipe(
-            map(user => {
-              this.connectedUser = user;
-              return user;
-            })
-        );
+      .pipe(
+        map(user => {
+          this.connectedUser = user;
+          return user;
+        })
+      );
   }
 
   /**
@@ -144,14 +144,14 @@ export class UserService {
     const url = `${usersApiEndpoint}/${user.id}`;
 
     return this.httpClient.put<User>(url, user)
-        .pipe(
-            map(userUpdated => {
-              if (userUpdated.id === this.connectedUser.id) {
-                this.connectedUser = userUpdated;
-              }
-              return userUpdated;
-            })
-        );
+      .pipe(
+        map(userUpdated => {
+          if (userUpdated.id === this.connectedUser.id) {
+            this.connectedUser = userUpdated;
+          }
+          return userUpdated;
+        })
+      );
   }
 
   /**
@@ -165,16 +165,16 @@ export class UserService {
     const url = `${usersApiEndpoint}/${user.id}/settings`;
 
     return this
-        .httpClient
-        .put<User>(url, userSettings)
-        .pipe(
-            map(userUpdated => {
-              if (userUpdated.id === this.connectedUser.id) {
-                this.connectedUser = userUpdated;
-              }
-              return userUpdated;
-            })
-        );
+      .httpClient
+      .put<User>(url, userSettings)
+      .pipe(
+        map(userUpdated => {
+          if (userUpdated.id === this.connectedUser.id) {
+            this.connectedUser = userUpdated;
+          }
+          return userUpdated;
+        })
+      );
   }
 
   /**

@@ -19,8 +19,8 @@ import {MAT_DIALOG_DATA} from '@angular/material';
 import {FormBuilder, FormGroup} from '@angular/forms';
 
 import {DashboardService} from '../../../../modules/dashboard/dashboard.service';
-import {Project} from '../../../../shared/model/dto/Project';
-import {WebsocketClient} from '../../../../shared/model/dto/WebsocketClient';
+import {Project} from '../../../../shared/model/api/Project';
+import {WebsocketClient} from '../../../../shared/model/api/WebsocketClient';
 import {ScreenService} from '../../../../modules/dashboard/screen.service';
 
 /**
@@ -64,8 +64,8 @@ export class TvManagementDialogComponent implements OnInit {
    */
   ngOnInit() {
     this.dashboardService
-        .getOneById(this.data.projectId)
-        .subscribe(project => this.project = project);
+      .getOneById(this.data.projectId)
+      .subscribe(project => this.project = project);
 
     this.screenRegisterForm = this.formBuilder.group({
       screenCode: ['']

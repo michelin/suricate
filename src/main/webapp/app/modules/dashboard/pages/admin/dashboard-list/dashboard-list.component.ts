@@ -18,15 +18,14 @@ import {AfterViewInit, ChangeDetectorRef, Component, ViewChild} from '@angular/c
 import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import {merge, of as observableOf} from 'rxjs';
 import {catchError, map, startWith, switchMap} from 'rxjs/operators';
-import {TitleCasePipe} from "@angular/common";
-import {TranslateService} from "@ngx-translate/core";
+import {TitleCasePipe} from '@angular/common';
+import {TranslateService} from '@ngx-translate/core';
 
-import {Project} from '../../../../../shared/model/dto/Project';
+import {Project} from '../../../../../shared/model/api/Project';
 import {DashboardService} from '../../../dashboard.service';
-import {ToastType} from '../../../../../shared/model/toastNotification/ToastType';
-import {User} from '../../../../../shared/model/dto/user/User';
 import {ToastService} from '../../../../../shared/components/toast/toast.service';
-import {ConfirmDialogComponent} from "../../../../../shared/components/confirm-dialog/confirm-dialog.component";
+import {ConfirmDialogComponent} from '../../../../../shared/components/confirm-dialog/confirm-dialog.component';
+import {ToastType} from '../../../../../shared/components/toast/toast-objects/ToastType';
 
 /**
  * Component that manage the dashboard list for admin part
@@ -105,31 +104,31 @@ export class DashboardListComponent implements AfterViewInit {
   initProjectsTable(): void {
     // If the user changes the sort order, reset back to the first page.
     merge(this.matSort.sortChange, this.matPaginator.page)
-        .pipe(
-            startWith(null),
-            switchMap(() => {
-              this.isLoadingResults = true;
-              this.changeDetectorRef.detectChanges();
-              return this.dashboardService.getAll();
-            }),
-            map(data => {
-              this.isLoadingResults = false;
-              this.errorCatched = false;
+      .pipe(
+        startWith(null),
+        switchMap(() => {
+          this.isLoadingResults = true;
+          this.changeDetectorRef.detectChanges();
+          return this.dashboardService.getAll();
+        }),
+        map(data => {
+          this.isLoadingResults = false;
+          this.errorCatched = false;
 
-              return data;
-            }),
-            catchError(() => {
-              this.isLoadingResults = false;
-              this.errorCatched = true;
+          return data;
+        }),
+        catchError(() => {
+          this.isLoadingResults = false;
+          this.errorCatched = true;
 
-              return observableOf([]);
-            })
-        )
-        .subscribe(data => {
-          this.resultsLength = data.length;
-          this.matTableDataSource.data = data;
-          this.matTableDataSource.sort = this.matSort;
-        });
+          return observableOf([]);
+        })
+      )
+      .subscribe(data => {
+        this.resultsLength = data.length;
+        this.matTableDataSource.data = data;
+        this.matTableDataSource.sort = this.matSort;
+      });
 
     // Apply sort custom rules for dashboards
     this.matTableDataSource.sortingDataAccessor = (dashboard: Project, property: string) => {
@@ -150,13 +149,13 @@ export class DashboardListComponent implements AfterViewInit {
   openDialogDeleteDashboard(project: Project) {
     let deleteUserDialog = null;
 
-    this.translateService.get(["dashboard.delete", "delete.confirm"]).subscribe(translations => {
+    this.translateService.get(['dashboard.delete', 'delete.confirm']).subscribe(translations => {
       const titleCasePipe = new TitleCasePipe();
 
       deleteUserDialog = this.matDialog.open(ConfirmDialogComponent, {
         data: {
-          title: translations["dashboard.delete"],
-          message: `${translations["delete.confirm"]} ${titleCasePipe.transform(project.name)}`
+          title: translations['dashboard.delete'],
+          message: `${translations['delete.confirm']} ${titleCasePipe.transform(project.name)}`
         }
       });
     });

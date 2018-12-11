@@ -34,21 +34,21 @@ import {StompState} from '@stomp/ng2-stompjs';
 import {NgGridItemEvent} from 'angular2-grid';
 import {fromEvent, Subscription} from 'rxjs';
 import {auditTime, map, takeWhile} from 'rxjs/operators';
-import {TranslateService} from "@ngx-translate/core";
+import {TranslateService} from '@ngx-translate/core';
 
-import {Project} from '../../../../shared/model/dto/Project';
-import {ProjectWidget} from '../../../../shared/model/dto/ProjectWidget';
+import {Project} from '../../../../shared/model/api/Project';
+import {ProjectWidget} from '../../../../shared/model/api/ProjectWidget';
 import {DashboardService} from '../../dashboard.service';
 import {WebsocketService} from '../../../../shared/services/websocket.service';
-import {ProjectWidgetPosition} from '../../../../shared/model/dto/ProjectWidgetPosition';
+import {ProjectWidgetPosition} from '../../../../shared/model/api/ProjectWidgetPosition';
 import {EditProjectWidgetDialogComponent} from '../edit-project-widget-dialog/edit-project-widget-dialog.component';
 import {WSUpdateEvent} from '../../../../shared/model/websocket/WSUpdateEvent';
 import {WSUpdateType} from '../../../../shared/model/websocket/enums/WSUpdateType';
-import {WidgetStateEnum} from '../../../../shared/model/dto/enums/WidgetSateEnum';
-import {ConfirmDialogComponent} from "../../../../shared/components/confirm-dialog/confirm-dialog.component";
+import {ConfirmDialogComponent} from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 
 import * as Stomp from '@stomp/stompjs';
-import {TitleCasePipe} from "@angular/common";
+import {TitleCasePipe} from '@angular/common';
+import {WidgetStateEnum} from '../../../../shared/model/api/enums/WidgetSateEnum';
 
 /**
  * Display the grid stack widgets
@@ -189,14 +189,14 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
       this.subscribeToDestinations();
 
       this.websocketService
-          .stompConnectionState$
-          .pipe(
-              takeWhile(() => this.isAlive),
-              auditTime(10000)
-          )
-          .subscribe((stompState: StompState) => {
-            this.currentStompConnectionState = stompState;
-          });
+        .stompConnectionState$
+        .pipe(
+          takeWhile(() => this.isAlive),
+          auditTime(10000)
+        )
+        .subscribe((stompState: StompState) => {
+          this.currentStompConnectionState = stompState;
+        });
     }
   }
 
@@ -207,12 +207,12 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
     if (!this.readOnly) {
       // Check when the projectWidgets *ngFor is ended
       this.projectWidgetsRendered
-          .changes
-          .subscribe((projectWidgetElements: QueryList<any>) => {
-            this._isGridItemInit = true;
-            this.bindDeleteProjectWidgetEvent(projectWidgetElements);
-            this.bindEditProjectWidgetEvent(projectWidgetElements);
-          });
+        .changes
+        .subscribe((projectWidgetElements: QueryList<any>) => {
+          this._isGridItemInit = true;
+          this.bindDeleteProjectWidgetEvent(projectWidgetElements);
+          this.bindEditProjectWidgetEvent(projectWidgetElements);
+        });
     }
 
     // We have to inject this variable in the window scope (because some Widgets use it for init the js)
@@ -548,15 +548,15 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
       if (deleteButton) {
         const projectWidgetNumber: number = deleteButton.getAttribute('data-project-widget-id');
         this.deleteButtonSubscriptions.push(
-            projectWidgetNumber,
-            fromEvent<MouseEvent>(deleteButton, 'click')
-                .pipe(
-                    takeWhile(() => this.isAlive && this._isGridItemInit),
-                    map((mouseEvent: any) => mouseEvent.target.closest('.widget').querySelector('.btn-widget-delete'))
-                )
-                .subscribe((deleteButtonElement: any) => {
-                  this.deleteProjectWidgetFromDashboard(+deleteButtonElement.getAttribute('data-project-widget-id'));
-                })
+          projectWidgetNumber,
+          fromEvent<MouseEvent>(deleteButton, 'click')
+            .pipe(
+              takeWhile(() => this.isAlive && this._isGridItemInit),
+              map((mouseEvent: any) => mouseEvent.target.closest('.widget').querySelector('.btn-widget-delete'))
+            )
+            .subscribe((deleteButtonElement: any) => {
+              this.deleteProjectWidgetFromDashboard(+deleteButtonElement.getAttribute('data-project-widget-id'));
+            })
         );
       }
     });
@@ -575,15 +575,15 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
         const projectWidgetNumber: number = editButton.getAttribute('data-project-widget-id');
 
         this.editButtonSubscriptions.push(
-            projectWidgetNumber,
-            fromEvent<MouseEvent>(editButton, 'click')
-                .pipe(
-                    takeWhile(() => this.isAlive && this._isGridItemInit),
-                    map((mouseEvent: any) => mouseEvent.target.closest('.widget').querySelector('.btn-widget-edit'))
-                )
-                .subscribe((editButtonElement: any) => {
-                  this.editProjectWidgetFromDashboard(+editButtonElement.getAttribute('data-project-widget-id'));
-                })
+          projectWidgetNumber,
+          fromEvent<MouseEvent>(editButton, 'click')
+            .pipe(
+              takeWhile(() => this.isAlive && this._isGridItemInit),
+              map((mouseEvent: any) => mouseEvent.target.closest('.widget').querySelector('.btn-widget-edit'))
+            )
+            .subscribe((editButtonElement: any) => {
+              this.editProjectWidgetFromDashboard(+editButtonElement.getAttribute('data-project-widget-id'));
+            })
         );
       }
     });
@@ -599,17 +599,17 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
    */
   subscribeToDestinations() {
     this.websocketSubscriptions.push(
-        this.websocketService
-            .subscribeToDestination(`/user/${this.project.token}-${this.screenCode}/queue/unique`)
-            .pipe(takeWhile(() => this.isAlive))
-            .subscribe((stompMessage: Stomp.Message) => this.handleUniqueScreenEvent(JSON.parse(stompMessage.body)))
+      this.websocketService
+        .subscribeToDestination(`/user/${this.project.token}-${this.screenCode}/queue/unique`)
+        .pipe(takeWhile(() => this.isAlive))
+        .subscribe((stompMessage: Stomp.Message) => this.handleUniqueScreenEvent(JSON.parse(stompMessage.body)))
     );
 
     this.websocketSubscriptions.push(
-        this.websocketService
-            .subscribeToDestination(`/user/${this.project.token}/queue/live`)
-            .pipe(takeWhile(() => this.isAlive))
-            .subscribe((stompMessage: Stomp.Message) => this.handleGlobalScreenEvent(JSON.parse(stompMessage.body)))
+      this.websocketService
+        .subscribeToDestination(`/user/${this.project.token}/queue/live`)
+        .pipe(takeWhile(() => this.isAlive))
+        .subscribe((stompMessage: Stomp.Message) => this.handleGlobalScreenEvent(JSON.parse(stompMessage.body)))
     );
   }
 
@@ -637,7 +637,7 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
       const projectWidget: ProjectWidget = updateEvent.content;
       if (projectWidget) {
         this.dashboardService
-            .updateWidgetHtmlFromProjetWidgetId(projectWidget.id, projectWidget.instantiateHtml, projectWidget.state);
+          .updateWidgetHtmlFromProjetWidgetId(projectWidget.id, projectWidget.instantiateHtml, projectWidget.state);
       }
     }
 
@@ -721,13 +721,13 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
     if (projectWidget) {
       let deleteProjectWidgetDialog = null;
 
-      this.translateService.get(["widget.delete", "delete.confirm"]).subscribe(translations => {
+      this.translateService.get(['widget.delete', 'delete.confirm']).subscribe(translations => {
         const titlecasePipe = new TitleCasePipe();
 
         deleteProjectWidgetDialog = this.matDialog.open(ConfirmDialogComponent, {
           data: {
-            title: translations["widget.delete"],
-            message: `${translations["delete.confirm"]} ${titlecasePipe.transform(projectWidget.widget.name)}`
+            title: translations['widget.delete'],
+            message: `${translations['delete.confirm']} ${titlecasePipe.transform(projectWidget.widget.name)}`
           }
         });
       });
@@ -735,8 +735,8 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
       deleteProjectWidgetDialog.afterClosed().subscribe(shouldDeleteProjectWidget => {
         if (shouldDeleteProjectWidget) {
           this.dashboardService
-              .deleteProjectWidgetFromProject(projectWidget.project.id, projectWidget.id)
-              .subscribe();
+            .deleteProjectWidgetFromProject(projectWidget.project.id, projectWidget.id)
+            .subscribe();
         }
       });
     }
@@ -749,9 +749,9 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
    */
   editProjectWidgetFromDashboard(projectWidgetId: number) {
     const projectWidget: ProjectWidget = this.dashboardService.currentDisplayedDashboardValue.projectWidgets
-        .find((currentProjectWidget: ProjectWidget) => {
-          return currentProjectWidget.id === projectWidgetId;
-        });
+      .find((currentProjectWidget: ProjectWidget) => {
+        return currentProjectWidget.id === projectWidgetId;
+      });
 
     if (projectWidget) {
       this.matDialog.open(EditProjectWidgetDialogComponent, {
@@ -786,8 +786,8 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
       });
 
       this.dashboardService
-          .updateWidgetPositionForProject(currentProject.id, projectWidgetPositions)
-          .subscribe();
+        .updateWidgetPositionForProject(currentProject.id, projectWidgetPositions)
+        .subscribe();
     }
 
     // We check if the grid item is init, if it's we change the boolean.

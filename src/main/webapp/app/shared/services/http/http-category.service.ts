@@ -20,8 +20,8 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 
-import {Category} from '../../model/dto/api/Category';
 import {categoriesApiEndpoint} from '../../../app.constant';
+import {Category} from '../../model/api/Category';
 
 /**
  * Manage the widget Http calls

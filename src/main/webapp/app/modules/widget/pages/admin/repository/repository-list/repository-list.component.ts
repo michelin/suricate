@@ -22,9 +22,9 @@ import {merge, of} from 'rxjs/index';
 import {catchError, map, startWith, switchMap} from 'rxjs/operators';
 
 import {RepositoryService} from '../repository.service';
-import {Repository} from '../../../../../../shared/model/dto/Repository';
+import {Repository} from '../../../../../../shared/model/api/Repository';
 import {ToastService} from '../../../../../../shared/components/toast/toast.service';
-import {ToastType} from '../../../../../../shared/model/toastNotification/ToastType';
+import {ToastType} from '../../../../../../shared/components/toast/toast-objects/ToastType';
 
 @Component({
   selector: 'app-repository-list',
@@ -96,31 +96,31 @@ export class RepositoryListComponent implements OnInit {
    */
   initTable() {
     merge(this.matSort.sortChange, this.matPaginator.page)
-        .pipe(
-            startWith(null),
-            switchMap(() => {
-              this.isLoadingResults = true;
-              this.changeDetectorRef.detectChanges();
-              return this.repositoryService.getAll();
-            }),
-            map(data => {
-              this.isLoadingResults = false;
-              this.errorCatched = false;
+      .pipe(
+        startWith(null),
+        switchMap(() => {
+          this.isLoadingResults = true;
+          this.changeDetectorRef.detectChanges();
+          return this.repositoryService.getAll();
+        }),
+        map(data => {
+          this.isLoadingResults = false;
+          this.errorCatched = false;
 
-              return data;
-            }),
-            catchError(() => {
-              this.isLoadingResults = false;
-              this.errorCatched = true;
+          return data;
+        }),
+        catchError(() => {
+          this.isLoadingResults = false;
+          this.errorCatched = true;
 
-              return of([]);
-            })
-        )
-        .subscribe(data => {
-          this.resultsLength = data.length;
-          this.matTableDataSource.data = data;
-          this.matTableDataSource.sort = this.matSort;
-        });
+          return of([]);
+        })
+      )
+      .subscribe(data => {
+        this.resultsLength = data.length;
+        this.matTableDataSource.data = data;
+        this.matTableDataSource.sort = this.matSort;
+      });
   }
 
   /**
@@ -133,11 +133,11 @@ export class RepositoryListComponent implements OnInit {
     repository.enabled = changeEvent.checked;
 
     this.repositoryService
-        .updateOneById(repository.id, repository)
-        .subscribe(repositoryUpdate => {
-          const repoStatusAsString: string = repositoryUpdate.enabled ? 'activated' : 'disabled';
-          this.toastService
-              .sendMessage(`The repository ${repository.name} has been ${repoStatusAsString} successfully`, ToastType.SUCCESS);
-        });
+      .updateOneById(repository.id, repository)
+      .subscribe(repositoryUpdate => {
+        const repoStatusAsString: string = repositoryUpdate.enabled ? 'activated' : 'disabled';
+        this.toastService
+          .sendMessage(`The repository ${repository.name} has been ${repoStatusAsString} successfully`, ToastType.SUCCESS);
+      });
   }
 }

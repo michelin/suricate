@@ -20,12 +20,12 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {CustomValidators} from 'ng2-validation';
 
 import {UserService} from '../../user.service';
-import {User} from '../../../../../shared/model/dto/user/User';
 import {ToastService} from '../../../../../shared/components/toast/toast.service';
-import {ToastType} from '../../../../../shared/model/toastNotification/ToastType';
-import {Role} from '../../../../../shared/model/dto/user/Role';
 import {RoleService} from '../../role.service';
-import {RoleEnum} from '../../../../../shared/model/dto/enums/RoleEnum';
+import {RoleEnum} from '../../../../../shared/model/api/enums/RoleEnum';
+import {User} from '../../../../../shared/model/api/user/User';
+import {Role} from '../../../../../shared/model/api/user/Role';
+import {ToastType} from '../../../../../shared/components/toast/toast-objects/ToastType';
 
 /**
  * Component user the edition of a user

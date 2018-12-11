@@ -20,9 +20,9 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 
-import {Configuration} from '../../../../../shared/model/dto/Configuration';
+import {Configuration} from '../../../../../shared/model/api/Configuration';
 import {configurationsApiEndpoint} from '../../../../../app.constant';
-import {ApplicationProperties} from '../../../../../shared/model/ApplicationProperties';
+import {ApplicationProperties} from '../../../../../shared/model/api/ApplicationProperties';
 
 /**
  * Configuration services manage http calls

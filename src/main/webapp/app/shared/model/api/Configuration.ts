@@ -17,7 +17,7 @@
  */
 
 import {ConfigurationDataType} from './enums/ConfigurationDataType';
-import {Category} from './api/Category';
+import {Category} from './Category';
 
 /**
  * The configuration entity

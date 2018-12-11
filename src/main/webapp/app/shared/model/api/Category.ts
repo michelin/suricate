@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {Configuration} from '../Configuration';
+import {Configuration} from './Configuration';
 
 /**
  * The category representation

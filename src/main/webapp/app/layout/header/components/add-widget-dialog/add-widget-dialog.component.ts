@@ -19,15 +19,15 @@ import {FormGroup, NgForm} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef, MatHorizontalStepper} from '@angular/material';
 import {DomSanitizer} from '@angular/platform-browser';
 
-import {Category} from '../../../../shared/model/dto/api/Category';
 import {WidgetService} from '../../../../modules/widget/widget.service';
-import {Widget} from '../../../../shared/model/dto/Widget';
-import {WidgetVariableType} from '../../../../shared/model/dto/enums/WidgetVariableType';
+import {Widget} from '../../../../shared/model/api/Widget';
 import {DashboardService} from '../../../../modules/dashboard/dashboard.service';
-import {ProjectWidget} from '../../../../shared/model/dto/ProjectWidget';
-import {WidgetAvailabilityEnum} from '../../../../shared/model/dto/enums/WidgetAvailabilityEnum';
+import {ProjectWidget} from '../../../../shared/model/api/ProjectWidget';
 import {HttpCategoryService} from '../../../../shared/services/http/http-category.service';
 import {HttpAssetService} from '../../../../shared/services/http/http-asset.service';
+import {WidgetAvailabilityEnum} from '../../../../shared/model/api/enums/WidgetAvailabilityEnum';
+import {WidgetVariableType} from '../../../../shared/model/api/enums/WidgetVariableType';
+import {Category} from '../../../../shared/model/api/Category';
 
 /**
  * Dialog used to add a widget
