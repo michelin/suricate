@@ -31,6 +31,7 @@ import {SettingsService} from '../../../../shared/services/settings.service';
 import {UserService} from '../../../security/user/user.service';
 
 import * as Stomp from '@stomp/stompjs';
+import {HttpProjectService} from '../../../../shared/services/http/http-project.service';
 
 /**
  * Dashboard TV Management
@@ -72,6 +73,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    *
    * @param {SidenavService} sidenavService The sidenav service to inject
    * @param {DashboardService} dashboardService The dashboard service to inject
+   * @param {HttpProjectService} httpProjectService The http project service to inject
    * @param {WebsocketService} websocketService The websocket service to inject
    * @param {SettingsService} themeService The theme service
    * @param {ActivatedRoute} activatedRoute The activated route service
@@ -81,6 +83,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    */
   constructor(private sidenavService: SidenavService,
               private dashboardService: DashboardService,
+              private httpProjectService: HttpProjectService,
               private websocketService: WebsocketService,
               private themeService: SettingsService,
               private activatedRoute: ActivatedRoute,
@@ -103,7 +106,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
 
     this.activatedRoute.queryParams.subscribe(params => {
       if (params['token']) {
-        this.dashboardService.getOneByToken(params['token']).subscribe(project => {
+        this.httpProjectService.getOneByToken(params['token']).subscribe(project => {
           this.dashboardService.currentDisplayedDashboardValue = project;
         });
 

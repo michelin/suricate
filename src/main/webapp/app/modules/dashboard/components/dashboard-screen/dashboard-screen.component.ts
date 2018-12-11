@@ -49,6 +49,7 @@ import {ConfirmDialogComponent} from '../../../../shared/components/confirm-dial
 import * as Stomp from '@stomp/stompjs';
 import {TitleCasePipe} from '@angular/common';
 import {WidgetStateEnum} from '../../../../shared/model/api/enums/WidgetSateEnum';
+import {HttpProjectService} from '../../../../shared/services/http/http-project.service';
 
 /**
  * Display the grid stack widgets
@@ -144,6 +145,7 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
    * constructor
    *
    * @param {DashboardService} dashboardService The dashboard service
+   * @param {HttpProjectService} httpProjectService The http project service
    * @param {WebsocketService} websocketService The websocket service
    * @param {TranslateService} translateService The translation service to inject
    * @param {MatDialog} matDialog The material dialog service
@@ -151,6 +153,7 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
    * @param {ChangeDetectorRef} changeDetectorRef The change detector ref service
    */
   constructor(private dashboardService: DashboardService,
+              private httpProjectService: HttpProjectService,
               private websocketService: WebsocketService,
               private translateService: TranslateService,
               private matDialog: MatDialog,
@@ -403,7 +406,7 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
     return `
       <style>
         ${projectWidget.widget.cssContent}
-        ${projectWidget.customStyle ? projectWidget.customStyle : '' }
+        ${projectWidget.customStyle ? projectWidget.customStyle : ''}
       </style>
 
       ${this.getWidgetHtml(projectWidget)}
@@ -734,7 +737,7 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
 
       deleteProjectWidgetDialog.afterClosed().subscribe(shouldDeleteProjectWidget => {
         if (shouldDeleteProjectWidget) {
-          this.dashboardService
+          this.httpProjectService
             .deleteProjectWidgetFromProject(projectWidget.project.id, projectWidget.id)
             .subscribe();
         }
@@ -785,7 +788,7 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
         projectWidgetPositions.push(projectWidgetPosition);
       });
 
-      this.dashboardService
+      this.httpProjectService
         .updateWidgetPositionForProject(currentProject.id, projectWidgetPositions)
         .subscribe();
     }

@@ -22,6 +22,7 @@ import {DashboardService} from '../../../../modules/dashboard/dashboard.service'
 import {Project} from '../../../../shared/model/api/Project';
 import {WebsocketClient} from '../../../../shared/model/api/WebsocketClient';
 import {ScreenService} from '../../../../modules/dashboard/screen.service';
+import {HttpProjectService} from '../../../../shared/services/http/http-project.service';
 
 /**
  * Component that manage the popup for Dashboard TV Management
@@ -51,11 +52,13 @@ export class TvManagementDialogComponent implements OnInit {
    * @param data The data give to the modal
    * @param {FormBuilder} formBuilder The formBuilder
    * @param {DashboardService} dashboardService The dashboard service to inject
+   * @param {HttpProjectService} httpProjectService The http project service to inject
    * @param {ScreenService} screenService The screen service
    */
   constructor(@Inject(MAT_DIALOG_DATA) private data: any,
               private formBuilder: FormBuilder,
               private dashboardService: DashboardService,
+              private httpProjectService: HttpProjectService,
               private screenService: ScreenService) {
   }
 
@@ -63,7 +66,7 @@ export class TvManagementDialogComponent implements OnInit {
    * When the component is initialized
    */
   ngOnInit() {
-    this.dashboardService
+    this.httpProjectService
       .getOneById(this.data.projectId)
       .subscribe(project => this.project = project);
 

@@ -23,6 +23,7 @@ import {takeWhile} from 'rxjs/operators';
 import {DashboardService} from '../../dashboard.service';
 import {Project} from '../../../../shared/model/api/Project';
 import {AddWidgetDialogComponent} from '../../../../layout/header/components/add-widget-dialog/add-widget-dialog.component';
+import {HttpProjectService} from '../../../../shared/services/http/http-project.service';
 
 /**
  * Component that display a specific dashboard
@@ -59,10 +60,12 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    *
    * @param {ActivatedRoute} activatedRoute The activated route service
    * @param {DashboardService} dashboardService The dashboard service
+   * @param {HttpProjectService} httpProjectService The http project service
    * @param {MatDialog} matDialog The mat dialog service
    */
   constructor(private activatedRoute: ActivatedRoute,
               private dashboardService: DashboardService,
+              private httpProjectService: HttpProjectService,
               private matDialog: MatDialog) {
   }
 
@@ -72,7 +75,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
   ngOnInit() {
     // Global init from project
     this.activatedRoute.params.subscribe(params => {
-      this.dashboardService
+      this.httpProjectService
         .getOneById(+params['id'])
         .subscribe(project => {
           this.dashboardService.currentDisplayedDashboardValue = project;

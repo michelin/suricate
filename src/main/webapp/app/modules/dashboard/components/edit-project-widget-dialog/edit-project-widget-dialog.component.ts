@@ -25,6 +25,7 @@ import {DashboardService} from '../../dashboard.service';
 import {ToastService} from '../../../../shared/components/toast/toast.service';
 import {WidgetVariableType} from '../../../../shared/model/api/enums/WidgetVariableType';
 import {ToastType} from '../../../../shared/components/toast/toast-objects/ToastType';
+import {HttpProjectService} from '../../../../shared/services/http/http-project.service';
 
 @Component({
   selector: 'app-edit-project-widget-dialog',
@@ -51,11 +52,13 @@ export class EditProjectWidgetDialogComponent implements OnInit {
    * @param data The data give to the dialog
    * @param dialogRef The mat dialog ref
    * @param dashboardService The dashboard service to inject
+   * @param httpProjectService The http Project service to inject
    * @param toastService The notification service
    */
   constructor(@Inject(MAT_DIALOG_DATA) private data: any,
               private dialogRef: MatDialogRef<EditProjectWidgetDialogComponent>,
               private dashboardService: DashboardService,
+              private httpProjectService: HttpProjectService,
               private toastService: ToastService) {
   }
 
@@ -131,7 +134,7 @@ export class EditProjectWidgetDialogComponent implements OnInit {
       });
 
       this.projectWidget.backendConfig = backendConfig;
-      this.dashboardService
+      this.httpProjectService
         .editProjectWidgetFromProject(this.projectWidget.project.id, this.projectWidget)
         .subscribe(() => this.toastService.sendMessage('Widget Updated successfully', ToastType.SUCCESS));
       this.dialogRef.close();

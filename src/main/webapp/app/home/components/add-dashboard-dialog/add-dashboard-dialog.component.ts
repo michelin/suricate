@@ -26,6 +26,7 @@ import {DashboardService} from '../../../modules/dashboard/dashboard.service';
 import {UserService} from '../../../modules/security/user/user.service';
 import {Project} from '../../../shared/model/api/Project';
 import {User} from '../../../shared/model/api/user/User';
+import {HttpProjectService} from '../../../shared/services/http/http-project.service';
 
 @Component({
   selector: 'app-add-dashboard-dialog',
@@ -86,6 +87,7 @@ export class AddDashboardDialogComponent implements OnInit {
    * @param {FormBuilder} formBuilder The formbuilder service
    * @param {ChangeDetectorRef} changeDetectorRef The change detector service
    * @param {DashboardService} dashboardService The dashboard service
+   * @param {HttpProjectService} httpProjectService The project service
    * @param {UserService} userService The user service
    * @param {ColorPickerService} colorPickerService The color picker service for dashboard background color
    */
@@ -93,6 +95,7 @@ export class AddDashboardDialogComponent implements OnInit {
               private formBuilder: FormBuilder,
               private changeDetectorRef: ChangeDetectorRef,
               private dashboardService: DashboardService,
+              private httpProjectService: HttpProjectService,
               private userService: UserService,
               private colorPickerService: ColorPickerService) {
   }
@@ -103,7 +106,7 @@ export class AddDashboardDialogComponent implements OnInit {
   ngOnInit() {
     if (this.data && this.data.projectId) {
       this.isEditMode = true;
-      this.dashboardService
+      this.httpProjectService
         .getOneById(+this.data.projectId)
         .subscribe(project => {
           this.projectAdded = project;
@@ -179,12 +182,12 @@ export class AddDashboardDialogComponent implements OnInit {
       this.projectAdded.cssStyle = this.getGridCss();
 
       if (!this.isEditMode) {
-        this.dashboardService
+        this.httpProjectService
           .createProject(this.projectAdded)
           .subscribe(project => this.displayProject(project));
 
       } else {
-        this.dashboardService
+        this.httpProjectService
           .editProject(this.projectAdded)
           .subscribe(project => this.displayProject(project));
       }
@@ -226,7 +229,7 @@ export class AddDashboardDialogComponent implements OnInit {
    */
   addUser() {
     if (this.addUserForm.valid) {
-      this.dashboardService
+      this.httpProjectService
         .addUserToProject(this.projectAdded, this.addUserForm.value)
         .subscribe(project => this.projectAdded = project);
     }
@@ -238,7 +241,7 @@ export class AddDashboardDialogComponent implements OnInit {
    * @param {number} userId The user id
    */
   deleteUser(userId: number) {
-    this.dashboardService
+    this.httpProjectService
       .deleteUserFromProject(this.projectAdded, userId)
       .subscribe(project => this.projectAdded = project);
   }

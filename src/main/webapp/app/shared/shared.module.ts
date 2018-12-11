@@ -46,6 +46,7 @@ import {PasswordPipe} from './pipes/password-pipe';
 import {ConfirmDialogComponent} from './components/confirm-dialog/confirm-dialog.component';
 import {HttpCategoryService} from './services/http/http-category.service';
 import {HttpAssetService} from './services/http/http-asset.service';
+import {HttpProjectService} from './services/http/http-project.service';
 
 @NgModule({
   imports: [
@@ -107,7 +108,8 @@ import {HttpAssetService} from './services/http/http-asset.service';
     TokenService,
     SettingsService,
     HttpAssetService,
-    HttpCategoryService
+    HttpCategoryService,
+    HttpProjectService
   ]
 })
 export class SharedModule {

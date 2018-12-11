@@ -25,6 +25,7 @@ import {DashboardService} from '../../../modules/dashboard/dashboard.service';
 import {UserService} from '../../../modules/security/user/user.service';
 import {AuthenticationService} from '../../../modules/authentication/authentication.service';
 import {User} from '../../../shared/model/api/user/User';
+import {HttpProjectService} from '../../../shared/services/http/http-project.service';
 
 /**
  * Hold the sidenav behavior
@@ -73,12 +74,14 @@ export class SidenavComponent implements OnInit, AfterViewInit, OnDestroy {
    * @param {Router} router The router service
    * @param {ChangeDetectorRef} changeDetectorRef The change detector service
    * @param {DashboardService} dashboardService The dashboard service
+   * @param {HttpProjectService} httpProjectService The httpProjectService service
    * @param {UserService} userService The user service
    * @param {AuthenticationService} authenticationService The authentication service
    * @param {SidenavService} sidenavService The sidenav service
    */
   constructor(private router: Router,
               private changeDetectorRef: ChangeDetectorRef,
+              private httpProjectService: HttpProjectService,
               private dashboardService: DashboardService,
               private userService: UserService,
               private authenticationService: AuthenticationService,
@@ -99,7 +102,7 @@ export class SidenavComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.userService.getConnectedUser().subscribe();
     this.isUserAdmin = this.userService.isAdmin();
-    this.dashboardService.getAllForCurrentUser().subscribe();
+    this.httpProjectService.getAllForCurrentUser().subscribe();
   }
 
   /**

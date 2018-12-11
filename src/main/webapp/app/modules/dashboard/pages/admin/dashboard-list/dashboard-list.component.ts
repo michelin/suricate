@@ -26,6 +26,7 @@ import {DashboardService} from '../../../dashboard.service';
 import {ToastService} from '../../../../../shared/components/toast/toast.service';
 import {ConfirmDialogComponent} from '../../../../../shared/components/confirm-dialog/confirm-dialog.component';
 import {ToastType} from '../../../../../shared/components/toast/toast-objects/ToastType';
+import {HttpProjectService} from '../../../../../shared/services/http/http-project.service';
 
 /**
  * Component that manage the dashboard list for admin part
@@ -78,13 +79,15 @@ export class DashboardListComponent implements AfterViewInit {
   /**
    * Constructor
    *
+   * @param {HttpProjectService} httpProjectService The http project service to inject
    * @param {DashboardService} dashboardService The dashboardService to inject
    * @param {TranslateService} translateService The translate service to inject
    * @param {ChangeDetectorRef} changeDetectorRef The change detector ref
    * @param {MatDialog} matDialog The matDialog service to inject
    * @param {ToastService} toastService The toast service to inject
    */
-  constructor(private dashboardService: DashboardService,
+  constructor(private httpProjectService: HttpProjectService,
+              private dashboardService: DashboardService,
               private translateService: TranslateService,
               private changeDetectorRef: ChangeDetectorRef,
               private matDialog: MatDialog,
@@ -109,7 +112,7 @@ export class DashboardListComponent implements AfterViewInit {
         switchMap(() => {
           this.isLoadingResults = true;
           this.changeDetectorRef.detectChanges();
-          return this.dashboardService.getAll();
+          return this.httpProjectService.getAll();
         }),
         map(data => {
           this.isLoadingResults = false;
@@ -162,7 +165,7 @@ export class DashboardListComponent implements AfterViewInit {
 
     deleteUserDialog.afterClosed().subscribe(shouldDeleteDashboard => {
       if (shouldDeleteDashboard) {
-        this.dashboardService.deleteProject(project).subscribe(() => {
+        this.httpProjectService.deleteProject(project).subscribe(() => {
           this.toastService.sendMessage('Project deleted successfully', ToastType.SUCCESS);
           this.initProjectsTable();
         });

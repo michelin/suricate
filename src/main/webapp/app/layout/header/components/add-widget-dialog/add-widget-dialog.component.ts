@@ -28,6 +28,7 @@ import {HttpAssetService} from '../../../../shared/services/http/http-asset.serv
 import {WidgetAvailabilityEnum} from '../../../../shared/model/api/enums/WidgetAvailabilityEnum';
 import {WidgetVariableType} from '../../../../shared/model/api/enums/WidgetVariableType';
 import {Category} from '../../../../shared/model/api/Category';
+import {HttpProjectService} from '../../../../shared/services/http/http-project.service';
 
 /**
  * Dialog used to add a widget
@@ -83,6 +84,7 @@ export class AddWidgetDialogComponent implements OnInit {
    * @param {HttpAssetService} httpAssetService The asset service
    * @param {WidgetService} widgetService The widget service
    * @param {HttpCategoryService} httpCategoryService The http category service
+   * @param {HttpProjectService} httpProjectService The http project service
    * @param {DashboardService} dashboardService The dashboard service
    * @param {DomSanitizer} domSanitizer The domSanitizer
    * @param {MatDialogRef<AddWidgetDialogComponent>} addWidgetDialogRef The add widget dialog ref
@@ -92,6 +94,7 @@ export class AddWidgetDialogComponent implements OnInit {
               private widgetService: WidgetService,
               private httpAssetService: HttpAssetService,
               private httpCategoryService: HttpCategoryService,
+              private httpProjectService: HttpProjectService,
               private dashboardService: DashboardService,
               private domSanitizer: DomSanitizer,
               private addWidgetDialogRef: MatDialogRef<AddWidgetDialogComponent>,
@@ -137,7 +140,7 @@ export class AddWidgetDialogComponent implements OnInit {
       projectWidget.project = this.dashboardService.currentDisplayedDashboardValue;
       projectWidget.widget = this.selectedWidget;
 
-      this.dashboardService
+      this.httpProjectService
         .addWidgetToProject(projectWidget)
         .subscribe(data => {
           this.addWidgetDialogRef.close();

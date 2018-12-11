@@ -23,6 +23,7 @@ import {Project} from '../../../../../shared/model/api/Project';
 import {DashboardService} from '../../../dashboard.service';
 import {ToastService} from '../../../../../shared/components/toast/toast.service';
 import {ToastType} from '../../../../../shared/components/toast/toast-objects/ToastType';
+import {HttpProjectService} from '../../../../../shared/services/http/http-project.service';
 
 /**
  * Component that display the edit page for a dashboard
@@ -50,11 +51,13 @@ export class DashboardEditComponent implements OnInit {
    * Constructor
    *
    * @param {DashboardService} dashboardService The dashboard service to inject
+   * @param {HttpProjectService} httpProjectService The http project service to inject
    * @param {ActivatedRoute} activatedRoute The activated route to inject
    * @param {FormBuilder} formBuilder The formBuilder service
    * @param {ToastService} toastService The service used for displayed Toast notification
    */
   constructor(private dashboardService: DashboardService,
+              private httpProjectService: HttpProjectService,
               private activatedRoute: ActivatedRoute,
               private formBuilder: FormBuilder,
               private toastService: ToastService) {
@@ -68,8 +71,7 @@ export class DashboardEditComponent implements OnInit {
       .activatedRoute
       .params
       .subscribe(params => {
-        this
-          .dashboardService
+        this.httpProjectService
           .getOneById(+params['dashboardId'])
           .subscribe(dashboard => {
             this.dashboard = dashboard;
@@ -105,8 +107,7 @@ export class DashboardEditComponent implements OnInit {
    * edit the dashboard
    */
   saveDashboard() {
-    this
-      .dashboardService
+    this.httpProjectService
       .editProject({...this.dashboard, ...this.editDashboardForm.value})
       .subscribe(() => this.toastService.sendMessage('Dashboard saved successfully', ToastType.SUCCESS));
   }
