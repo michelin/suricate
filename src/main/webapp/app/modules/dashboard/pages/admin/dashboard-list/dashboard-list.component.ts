@@ -26,7 +26,7 @@ import {DashboardService} from '../../../dashboard.service';
 import {ToastService} from '../../../../../shared/components/toast/toast.service';
 import {ConfirmDialogComponent} from '../../../../../shared/components/confirm-dialog/confirm-dialog.component';
 import {ToastType} from '../../../../../shared/components/toast/toast-objects/ToastType';
-import {HttpProjectService} from '../../../../../shared/services/http/http-project.service';
+import {HttpProjectService} from '../../../../../shared/services/api/http-project.service';
 
 /**
  * Component that manage the dashboard list for admin part

@@ -23,13 +23,13 @@ import {WidgetService} from '../../../../modules/widget/widget.service';
 import {Widget} from '../../../../shared/model/api/Widget';
 import {DashboardService} from '../../../../modules/dashboard/dashboard.service';
 import {ProjectWidget} from '../../../../shared/model/api/ProjectWidget';
-import {HttpCategoryService} from '../../../../shared/services/http/http-category.service';
-import {HttpAssetService} from '../../../../shared/services/http/http-asset.service';
+import {HttpCategoryService} from '../../../../shared/services/api/http-category.service';
+import {HttpAssetService} from '../../../../shared/services/api/http-asset.service';
 import {WidgetAvailabilityEnum} from '../../../../shared/model/api/enums/WidgetAvailabilityEnum';
 import {WidgetVariableType} from '../../../../shared/model/api/enums/WidgetVariableType';
 import {Category} from '../../../../shared/model/api/Category';
-import {HttpProjectService} from '../../../../shared/services/http/http-project.service';
-import {HttpWidgetService} from '../../../../shared/services/http/http-widget.service';
+import {HttpProjectService} from '../../../../shared/services/api/http-project.service';
+import {HttpWidgetService} from '../../../../shared/services/api/http-widget.service';
 
 /**
  * Dialog used to add a widget

@@ -30,7 +30,7 @@ import {ToastService} from '../../../../shared/components/toast/toast.service';
 import {UserService} from '../../../security/user/user.service';
 import {WidgetAvailabilityEnum} from '../../../../shared/model/api/enums/WidgetAvailabilityEnum';
 import {ToastType} from '../../../../shared/components/toast/toast-objects/ToastType';
-import {HttpWidgetService} from '../../../../shared/services/http/http-widget.service';
+import {HttpWidgetService} from '../../../../shared/services/api/http-widget.service';
 
 /**
  * Component that display the list of widgets (admin part)
@@ -274,7 +274,7 @@ export class WidgetListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     if (widgetToDisable) {
       widgetToDisable.widgetAvailability = changeEvent.checked ? WidgetAvailabilityEnum.ACTIVATED : WidgetAvailabilityEnum.DISABLED;
-      
+
       this.httpWidgetService.updateWidget(widgetToDisable).subscribe((widgetResponse: Widget) => {
         this.toastService.sendMessage(
           `The widget "${widgetResponse.name}" has been ${widgetResponse.widgetAvailability.toString()}`,

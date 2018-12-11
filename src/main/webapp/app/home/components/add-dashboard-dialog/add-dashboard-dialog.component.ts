@@ -26,8 +26,8 @@ import {DashboardService} from '../../../modules/dashboard/dashboard.service';
 import {UserService} from '../../../modules/security/user/user.service';
 import {Project} from '../../../shared/model/api/Project';
 import {User} from '../../../shared/model/api/user/User';
-import {HttpProjectService} from '../../../shared/services/http/http-project.service';
-import {HttpUserService} from '../../../shared/services/http/http-user.service';
+import {HttpProjectService} from '../../../shared/services/api/http-project.service';
+import {HttpUserService} from '../../../shared/services/api/http-user.service';
 
 @Component({
   selector: 'app-add-dashboard-dialog',

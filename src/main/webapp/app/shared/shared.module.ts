@@ -44,15 +44,15 @@ import {SettingsService} from './services/settings.service';
 import {ErrorInterceptor} from './interceptors/error.interceptor';
 import {PasswordPipe} from './pipes/password-pipe';
 import {ConfirmDialogComponent} from './components/confirm-dialog/confirm-dialog.component';
-import {HttpCategoryService} from './services/http/http-category.service';
-import {HttpAssetService} from './services/http/http-asset.service';
-import {HttpProjectService} from './services/http/http-project.service';
-import {HttpScreenService} from './services/http/http-screen.service';
-import {HttpRoleService} from './services/http/http-role.service';
-import {HttpUserService} from './services/http/http-user.service';
-import {HttpRepositoryService} from './services/http/http-repository.service';
-import {HttpConfigurationService} from './services/http/http-configuration.service';
-import {HttpWidgetService} from './services/http/http-widget.service';
+import {HttpCategoryService} from './services/api/http-category.service';
+import {HttpAssetService} from './services/api/http-asset.service';
+import {HttpProjectService} from './services/api/http-project.service';
+import {HttpScreenService} from './services/api/http-screen.service';
+import {HttpRoleService} from './services/api/http-role.service';
+import {HttpUserService} from './services/api/http-user.service';
+import {HttpRepositoryService} from './services/api/http-repository.service';
+import {HttpConfigurationService} from './services/api/http-configuration.service';
+import {HttpWidgetService} from './services/api/http-widget.service';
 
 @NgModule({
   imports: [

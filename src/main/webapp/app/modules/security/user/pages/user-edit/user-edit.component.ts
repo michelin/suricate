@@ -26,8 +26,8 @@ import {RoleEnum} from '../../../../../shared/model/api/enums/RoleEnum';
 import {User} from '../../../../../shared/model/api/user/User';
 import {Role} from '../../../../../shared/model/api/user/Role';
 import {ToastType} from '../../../../../shared/components/toast/toast-objects/ToastType';
-import {HttpRoleService} from '../../../../../shared/services/http/http-role.service';
-import {HttpUserService} from '../../../../../shared/services/http/http-user.service';
+import {HttpRoleService} from '../../../../../shared/services/api/http-role.service';
+import {HttpUserService} from '../../../../../shared/services/api/http-user.service';
 
 /**
  * Component user the edition of a user

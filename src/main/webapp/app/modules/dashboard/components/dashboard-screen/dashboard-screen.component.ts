@@ -49,7 +49,7 @@ import {ConfirmDialogComponent} from '../../../../shared/components/confirm-dial
 import * as Stomp from '@stomp/stompjs';
 import {TitleCasePipe} from '@angular/common';
 import {WidgetStateEnum} from '../../../../shared/model/api/enums/WidgetSateEnum';
-import {HttpProjectService} from '../../../../shared/services/http/http-project.service';
+import {HttpProjectService} from '../../../../shared/services/api/http-project.service';
 
 /**
  * Display the grid stack widgets

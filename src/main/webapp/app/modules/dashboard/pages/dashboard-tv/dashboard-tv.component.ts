@@ -31,7 +31,7 @@ import {SettingsService} from '../../../../shared/services/settings.service';
 import {UserService} from '../../../security/user/user.service';
 
 import * as Stomp from '@stomp/stompjs';
-import {HttpProjectService} from '../../../../shared/services/http/http-project.service';
+import {HttpProjectService} from '../../../../shared/services/api/http-project.service';
 
 /**
  * Dashboard TV Management

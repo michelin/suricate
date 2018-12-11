@@ -19,7 +19,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 
 import {AuthenticationService} from '../../authentication.service';
-import {HttpConfigurationService} from '../../../../shared/services/http/http-configuration.service';
+import {HttpConfigurationService} from '../../../../shared/services/api/http-configuration.service';
 import {ApplicationProperties} from '../../../../shared/model/api/ApplicationProperties';
 import {authenticationProviderLDAP} from '../../../../app.constant';
 

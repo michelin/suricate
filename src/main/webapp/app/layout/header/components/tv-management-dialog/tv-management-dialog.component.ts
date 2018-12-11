@@ -21,8 +21,8 @@ import {FormBuilder, FormGroup} from '@angular/forms';
 import {DashboardService} from '../../../../modules/dashboard/dashboard.service';
 import {Project} from '../../../../shared/model/api/Project';
 import {WebsocketClient} from '../../../../shared/model/api/WebsocketClient';
-import {HttpScreenService} from '../../../../shared/services/http/http-screen.service';
-import {HttpProjectService} from '../../../../shared/services/http/http-project.service';
+import {HttpScreenService} from '../../../../shared/services/api/http-screen.service';
+import {HttpProjectService} from '../../../../shared/services/api/http-project.service';
 
 /**
  * Component that manage the popup for Dashboard TV Management

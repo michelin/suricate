@@ -24,7 +24,7 @@ import {checkPasswordMatch} from '../../../../shared/validators/CustomValidator'
 import {ToastService} from '../../../../shared/components/toast/toast.service';
 import {authenticationProviderLDAP} from '../../../../app.constant';
 import {ApplicationProperties} from '../../../../shared/model/api/ApplicationProperties';
-import {HttpConfigurationService} from '../../../../shared/services/http/http-configuration.service';
+import {HttpConfigurationService} from '../../../../shared/services/api/http-configuration.service';
 import {User} from '../../../../shared/model/api/user/User';
 import {Credentials} from '../../../../shared/model/api/user/Credentials';
 import {ToastType} from '../../../../shared/components/toast/toast-objects/ToastType';

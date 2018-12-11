@@ -21,7 +21,7 @@ import {ActivatedRoute} from '@angular/router';
 import {AddWidgetDialogComponent} from '../add-widget-dialog/add-widget-dialog.component';
 import {AddDashboardDialogComponent} from '../../../../home/components/add-dashboard-dialog/add-dashboard-dialog.component';
 import {TvManagementDialogComponent} from '../tv-management-dialog/tv-management-dialog.component';
-import {HttpScreenService} from '../../../../shared/services/http/http-screen.service';
+import {HttpScreenService} from '../../../../shared/services/api/http-screen.service';
 import {DashboardService} from '../../../../modules/dashboard/dashboard.service';
 import {Project} from '../../../../shared/model/api/Project';
 

@@ -25,7 +25,7 @@ import {DashboardService} from '../../dashboard.service';
 import {ToastService} from '../../../../shared/components/toast/toast.service';
 import {WidgetVariableType} from '../../../../shared/model/api/enums/WidgetVariableType';
 import {ToastType} from '../../../../shared/components/toast/toast-objects/ToastType';
-import {HttpProjectService} from '../../../../shared/services/http/http-project.service';
+import {HttpProjectService} from '../../../../shared/services/api/http-project.service';
 
 @Component({
   selector: 'app-edit-project-widget-dialog',

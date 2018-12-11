@@ -22,7 +22,7 @@ import {merge, of as observableOf} from 'rxjs';
 import {catchError, map, startWith, switchMap} from 'rxjs/operators';
 import {TranslateService} from '@ngx-translate/core';
 
-import {HttpConfigurationService} from '../../../../../../shared/services/http/http-configuration.service';
+import {HttpConfigurationService} from '../../../../../../shared/services/api/http-configuration.service';
 import {ToastService} from '../../../../../../shared/components/toast/toast.service';
 import {Configuration} from '../../../../../../shared/model/api/Configuration';
 import {ConfirmDialogComponent} from '../../../../../../shared/components/confirm-dialog/confirm-dialog.component';

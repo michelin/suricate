@@ -23,7 +23,7 @@ import {Project} from '../../../../../shared/model/api/Project';
 import {DashboardService} from '../../../dashboard.service';
 import {ToastService} from '../../../../../shared/components/toast/toast.service';
 import {ToastType} from '../../../../../shared/components/toast/toast-objects/ToastType';
-import {HttpProjectService} from '../../../../../shared/services/http/http-project.service';
+import {HttpProjectService} from '../../../../../shared/services/api/http-project.service';
 
 /**
  * Component that display the edit page for a dashboard

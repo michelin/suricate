@@ -21,7 +21,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 import {Repository} from '../../../../../../shared/model/api/Repository';
-import {HttpRepositoryService} from '../../../../../../shared/services/http/http-repository.service';
+import {HttpRepositoryService} from '../../../../../../shared/services/api/http-repository.service';
 import {FormUtils} from '../../../../../../shared/utils/FormUtils';
 import {ToastService} from '../../../../../../shared/components/toast/toast.service';
 import {RepositoryTypeEnum} from '../../../../../../shared/model/api/enums/RepositoryTypeEnum';

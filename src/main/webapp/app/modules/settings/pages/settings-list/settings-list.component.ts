@@ -24,7 +24,7 @@ import {SettingsService} from '../../../../shared/services/settings.service';
 import {SettingDataType} from '../../../../shared/model/api/enums/SettingDataType';
 import {User} from '../../../../shared/model/api/user/User';
 import {ToastType} from '../../../../shared/components/toast/toast-objects/ToastType';
-import {HttpUserService} from '../../../../shared/services/http/http-user.service';
+import {HttpUserService} from '../../../../shared/services/api/http-user.service';
 
 /**
  * Represent the Admin Setting list page
