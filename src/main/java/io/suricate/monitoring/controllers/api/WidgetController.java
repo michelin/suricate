@@ -45,7 +45,7 @@ import java.util.concurrent.Future;
  */
 @RestController
 @RequestMapping("/api")
-@Api(value = "Widget Controller", tags = {"Widget"})
+@Api(value = "Widget Controller", tags = {"Widgets"})
 public class WidgetController {
 
     /**

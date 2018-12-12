@@ -43,7 +43,7 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/api")
-@Api(value = "Setting Controller", tags = {"Setting"})
+@Api(value = "Setting Controller", tags = {"Settings"})
 public class SettingController {
 
     /**

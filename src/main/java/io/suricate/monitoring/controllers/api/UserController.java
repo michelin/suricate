@@ -52,7 +52,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("/api")
-@Api(value = "User Controller", tags = {"User"})
+@Api(value = "User Controller", tags = {"Users"})
 public class UserController {
 
     /**

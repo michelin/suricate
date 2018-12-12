@@ -21,7 +21,7 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/api")
-@Api(value = "Project Widget Controller", tags = {"Project Widget"})
+@Api(value = "Project Widget Controller", tags = {"Project Widgets"})
 public class ProjectWidgetController {
 
     /**

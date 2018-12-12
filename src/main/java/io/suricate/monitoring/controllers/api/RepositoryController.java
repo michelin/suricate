@@ -46,7 +46,7 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping(value = "/api")
-@Api(value = "Repository Controller", tags = {"Repository"})
+@Api(value = "Repository Controller", tags = {"Repositories"})
 public class RepositoryController {
 
     /**

@@ -62,7 +62,7 @@ import java.util.stream.Collectors;
  */
 @RestController
 @RequestMapping("/api")
-@Api(value = "Project Controller", tags = {"Project"})
+@Api(value = "Project Controller", tags = {"Projects"})
 public class ProjectController {
 
     /**

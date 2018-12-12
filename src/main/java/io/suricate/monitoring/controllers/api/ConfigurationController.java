@@ -42,7 +42,7 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/api")
-@Api(value = "Configuration Controller", tags = {"Configuration"})
+@Api(value = "Configuration Controller", tags = {"Configurations"})
 public class ConfigurationController {
 
     /**

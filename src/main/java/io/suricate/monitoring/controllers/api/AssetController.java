@@ -39,7 +39,7 @@ import springfox.documentation.annotations.ApiIgnore;
  */
 @RestController
 @RequestMapping("/api")
-@Api(value = "Asset Controller", tags = {"Asset"})
+@Api(value = "Asset Controller", tags = {"Assets"})
 public class AssetController {
 
     /**

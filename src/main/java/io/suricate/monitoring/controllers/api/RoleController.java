@@ -44,7 +44,7 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping(value = "/api")
-@Api(value = "Role Controller", tags = {"Role"})
+@Api(value = "Role Controller", tags = {"Roles"})
 public class RoleController {
 
     /**
