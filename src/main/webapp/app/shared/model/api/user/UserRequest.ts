@@ -14,15 +14,18 @@
  * limitations under the License.
  */
 
+import {Role} from '../role/Role';
+
 /**
  * The user entity
  */
-export class User {
-  id: number;
+export class UserRequest {
   username: string;
   firstname: string;
   lastname: string;
   fullname: string;
+  password: string;
+  confirmPassword: string;
   email: string;
-  authenticationMethod: string;
+  roles: Role[];
 }

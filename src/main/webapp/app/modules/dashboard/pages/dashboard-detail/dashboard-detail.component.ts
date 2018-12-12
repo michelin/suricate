@@ -21,7 +21,7 @@ import {Observable, of} from 'rxjs';
 import {takeWhile} from 'rxjs/operators';
 
 import {DashboardService} from '../../dashboard.service';
-import {Project} from '../../../../shared/model/api/Project';
+import {Project} from '../../../../shared/model/api/project/Project';
 import {AddWidgetDialogComponent} from '../../../../layout/header/components/add-widget-dialog/add-widget-dialog.component';
 import {HttpProjectService} from '../../../../shared/services/api/http-project.service';
 

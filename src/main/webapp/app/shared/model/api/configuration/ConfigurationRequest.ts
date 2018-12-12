@@ -17,12 +17,8 @@
  */
 
 /**
- * The project widget position
+ * The configuration request
  */
-export class ProjectWidgetPosition {
-  projectWidgetId: number;
-  col: number;
-  row: number;
-  width: number;
-  height: number;
+export interface ConfigurationRequest {
+  value: string;
 }

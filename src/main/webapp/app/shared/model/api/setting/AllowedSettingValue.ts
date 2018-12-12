@@ -16,31 +16,12 @@
  *
  */
 
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
-
-import {categoriesApiEndpoint} from '../../../app.constant';
-import {Category} from '../../model/api/widget/Category';
-
 /**
- * Manage the widget Http calls
+ * Represent a possible value for a setting
  */
-
-@Injectable()
-export class HttpCategoryService {
-
-  constructor(private httpClient: HttpClient) {
-  }
-
-  /**
-   * Retrieve the full list of categories
-   *
-   * @returns {Observable<Category[]>} The categories as observable
-   */
-  getAll(): Observable<Category[]> {
-    const url = `${categoriesApiEndpoint}`;
-
-    return this.httpClient.get<Category[]>(url);
-  }
+export class AllowedSettingValue {
+  id: number;
+  title: string;
+  value: string;
+  isDefault: boolean;
 }

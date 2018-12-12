@@ -37,7 +37,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "projectWidgetResponse", description = "Describe an instantiation of a widget")
+@ApiModel(value = "ProjectWidgetResponse", description = "Describe an instantiation of a widget")
 public class ProjectWidgetResponseDto extends AbstractDto {
 
     /**

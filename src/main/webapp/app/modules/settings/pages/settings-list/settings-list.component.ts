@@ -21,10 +21,10 @@ import {Observable} from 'rxjs';
 import {UserService} from '../../../security/user/user.service';
 import {ToastService} from '../../../../shared/components/toast/toast.service';
 import {SettingsService} from '../../../../shared/services/settings.service';
-import {SettingDataType} from '../../../../shared/model/api/enums/SettingDataType';
 import {User} from '../../../../shared/model/api/user/User';
 import {ToastType} from '../../../../shared/components/toast/toast-objects/ToastType';
 import {HttpUserService} from '../../../../shared/services/api/http-user.service';
+import {SettingDataType} from '../../../../shared/model/enums/SettingDataType';
 
 /**
  * Represent the Admin Setting list page

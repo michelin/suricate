@@ -14,27 +14,12 @@
  * limitations under the License.
  */
 
-import {Asset} from './Asset';
-import {WidgetParam} from './WidgetParam';
-import {WidgetAvailabilityEnum} from './enums/WidgetAvailabilityEnum';
-import {Category} from './Category';
-
 /**
- * The widget entity
+ * The project request
  */
-export class Widget {
-  id: number;
+export class ProjectRequest {
   name: string;
-  description: string;
-  technicalName: string;
-  htmlContent: string;
-  cssContent: string;
-  backendJs: string;
-  info: string;
-  delay: number;
-  timeout: string;
-  image: Asset;
-  category: Category;
-  widgetAvailability: WidgetAvailabilityEnum;
-  widgetParams: WidgetParam[];
+  maxColumn: string;
+  widgetHeight: number;
+  cssStyle: string;
 }

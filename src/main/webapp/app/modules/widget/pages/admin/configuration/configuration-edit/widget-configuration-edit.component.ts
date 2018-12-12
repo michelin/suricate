@@ -22,9 +22,9 @@ import {ActivatedRoute, Router} from '@angular/router';
 
 import {HttpConfigurationService} from '../../../../../../shared/services/api/http-configuration.service';
 import {ToastService} from '../../../../../../shared/components/toast/toast.service';
-import {Configuration} from '../../../../../../shared/model/api/Configuration';
-import {ConfigurationDataType} from '../../../../../../shared/model/api/enums/ConfigurationDataType';
+import {Configuration} from '../../../../../../shared/model/api/configuration/Configuration';
 import {ToastType} from '../../../../../../shared/components/toast/toast-objects/ToastType';
+import {ConfigurationDataType} from '../../../../../../shared/model/enums/ConfigurationDataType';
 
 /**
  * Manage the edition of a configuration

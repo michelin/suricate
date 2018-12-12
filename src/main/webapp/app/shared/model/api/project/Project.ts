@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
+import {ProjectGrid} from './ProjectGrid';
+
 /**
- * The user entity
+ * The project entity
  */
-export class User {
-  id: number;
-  username: string;
-  firstname: string;
-  lastname: string;
-  fullname: string;
-  email: string;
-  authenticationMethod: string;
+export class Project {
+  token: string;
+  name: string;
+  gridProperties: ProjectGrid;
+  librariesToken: string[];
 }

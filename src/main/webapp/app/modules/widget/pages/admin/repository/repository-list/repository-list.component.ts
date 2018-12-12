@@ -22,7 +22,7 @@ import {merge, of} from 'rxjs/index';
 import {catchError, map, startWith, switchMap} from 'rxjs/operators';
 
 import {HttpRepositoryService} from '../../../../../../shared/services/api/http-repository.service';
-import {Repository} from '../../../../../../shared/model/api/Repository';
+import {Repository} from '../../../../../../shared/model/api/Repository/Repository';
 import {ToastService} from '../../../../../../shared/components/toast/toast.service';
 import {ToastType} from '../../../../../../shared/components/toast/toast-objects/ToastType';
 

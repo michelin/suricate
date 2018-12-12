@@ -25,7 +25,7 @@ import {UserService} from '../security/user/user.service';
 import {authenticationApiEndpoint, usersApiEndpoint} from '../../app.constant';
 import {TokenService} from '../../shared/auth/token.service';
 import {Credentials} from '../../shared/model/api/user/Credentials';
-import {AuthenticationResponse} from '../../shared/model/api/user/AuthenticationResponse';
+import {AuthenticationResponse} from '../../shared/model/api/authentication/AuthenticationResponse';
 import {User} from '../../shared/model/api/user/User';
 
 

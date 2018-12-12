@@ -34,7 +34,7 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value = "WidgetParam", description = "Describe the params for an instance of widget")
-public class WidgetParamDto extends AbstractDto {
+public class WidgetParamResponseDto extends AbstractDto {
     /**
      * The param name
      */
@@ -81,5 +81,5 @@ public class WidgetParamDto extends AbstractDto {
      * The list of param values if the type is COMBO or a MULTIPLE
      */
     @ApiModelProperty(value = "The list of possible values if the type is COMBO or MULTIPLE", dataType = "java.util.List")
-    private List<WidgetParamValueDto> values = new ArrayList<>();
+    private List<WidgetParamValueResponseDto> values = new ArrayList<>();
 }

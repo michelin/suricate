@@ -25,7 +25,7 @@ import {UserService} from '../../user.service';
 import {ToastService} from '../../../../../shared/components/toast/toast.service';
 import {RoleService} from '../../role.service';
 import {ConfirmDialogComponent} from '../../../../../shared/components/confirm-dialog/confirm-dialog.component';
-import {Role} from '../../../../../shared/model/api/user/Role';
+import {Role} from '../../../../../shared/model/api/role/Role';
 import {User} from '../../../../../shared/model/api/user/User';
 import {ToastType} from '../../../../../shared/components/toast/toast-objects/ToastType';
 import {HttpUserService} from '../../../../../shared/services/api/http-user.service';

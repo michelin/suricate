@@ -18,14 +18,14 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {FormGroup, NgForm} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 
-import {ProjectWidget} from '../../../../shared/model/api/ProjectWidget';
-import {Asset} from '../../../../shared/model/api/Asset';
-import {WidgetParam} from '../../../../shared/model/api/WidgetParam';
+import {ProjectWidget} from '../../../../shared/model/api/ProjectWidget/ProjectWidget';
+import {Asset} from '../../../../shared/model/api/asset/Asset';
+import {WidgetParam} from '../../../../shared/model/api/widget/WidgetParam';
 import {DashboardService} from '../../dashboard.service';
 import {ToastService} from '../../../../shared/components/toast/toast.service';
-import {WidgetVariableType} from '../../../../shared/model/api/enums/WidgetVariableType';
 import {ToastType} from '../../../../shared/components/toast/toast-objects/ToastType';
 import {HttpProjectService} from '../../../../shared/services/api/http-project.service';
+import {WidgetVariableType} from '../../../../shared/model/enums/WidgetVariableType';
 
 @Component({
   selector: 'app-edit-project-widget-dialog',

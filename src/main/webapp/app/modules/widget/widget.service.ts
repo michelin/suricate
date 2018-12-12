@@ -19,7 +19,7 @@
 import {Injectable} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 
-import {Widget} from '../../shared/model/api/Widget';
+import {Widget} from '../../shared/model/api/widget/Widget';
 
 /**
  * Manage the widget Http calls

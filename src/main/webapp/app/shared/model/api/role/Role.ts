@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
+import {RoleEnum} from '../../enums/RoleEnum';
+
 /**
- * The user entity
+ * The Role entity
  */
-export class User {
+export class Role {
   id: number;
-  username: string;
-  firstname: string;
-  lastname: string;
-  fullname: string;
-  email: string;
-  authenticationMethod: string;
+  name: RoleEnum;
+  description: string;
 }

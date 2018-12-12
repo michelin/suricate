@@ -24,7 +24,7 @@ import {TranslateService} from '@ngx-translate/core';
 
 import {HttpConfigurationService} from '../../../../../../shared/services/api/http-configuration.service';
 import {ToastService} from '../../../../../../shared/components/toast/toast.service';
-import {Configuration} from '../../../../../../shared/model/api/Configuration';
+import {Configuration} from '../../../../../../shared/model/api/configuration/Configuration';
 import {ConfirmDialogComponent} from '../../../../../../shared/components/confirm-dialog/confirm-dialog.component';
 import {ToastType} from '../../../../../../shared/components/toast/toast-objects/ToastType';
 

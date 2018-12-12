@@ -24,13 +24,13 @@ import {catchError, debounceTime, distinctUntilChanged, map, startWith, switchMa
 
 
 import {WidgetService} from '../../widget.service';
-import {Asset} from '../../../../shared/model/api/Asset';
-import {Widget} from '../../../../shared/model/api/Widget';
+import {Asset} from '../../../../shared/model/api/asset/Asset';
+import {Widget} from '../../../../shared/model/api/widget/Widget';
 import {ToastService} from '../../../../shared/components/toast/toast.service';
 import {UserService} from '../../../security/user/user.service';
-import {WidgetAvailabilityEnum} from '../../../../shared/model/api/enums/WidgetAvailabilityEnum';
 import {ToastType} from '../../../../shared/components/toast/toast-objects/ToastType';
 import {HttpWidgetService} from '../../../../shared/services/api/http-widget.service';
+import {WidgetAvailabilityEnum} from '../../../../shared/model/enums/WidgetAvailabilityEnum';
 
 /**
  * Component that display the list of widgets (admin part)

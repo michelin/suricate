@@ -17,25 +17,15 @@
  *
  */
 
-import {WidgetStateEnum} from './enums/WidgetSateEnum';
-import {ProjectWidgetPosition} from './ProjectWidgetPosition';
-import {Project} from './Project';
-import {Widget} from './Widget';
-
 /**
  * The project widget entity
  */
-export class ProjectWidget {
-  public id: number;
-  public data: string;
-  public widgetPosition: ProjectWidgetPosition;
-  public customStyle: string;
-  public instantiateHtml: string;
-  public backendConfig: string;
-  public log: string;
-  public lastExecutionDate: Date;
-  public lastSuccessDate: Date;
-  public state: WidgetStateEnum;
-  public project: Project;
-  public widget: Widget;
+export class ProjectWidgetRequest {
+  backendConfig: string;
+  col: number;
+  customStyle: string;
+  data: string;
+  height: number;
+  row: number;
+  width: number;
 }

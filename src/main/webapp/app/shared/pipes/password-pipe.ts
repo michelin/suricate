@@ -18,8 +18,8 @@
 
 import {Pipe, PipeTransform} from '@angular/core';
 import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
-import {Configuration} from '../model/api/Configuration';
-import {WidgetVariableType} from '../model/api/enums/WidgetVariableType';
+import {Configuration} from '../model/api/configuration/Configuration';
+import {WidgetVariableType} from '../model/enums/WidgetVariableType';
 
 /**
  * Transform a string into stars

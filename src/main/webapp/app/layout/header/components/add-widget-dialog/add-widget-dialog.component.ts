@@ -20,16 +20,16 @@ import {MAT_DIALOG_DATA, MatDialogRef, MatHorizontalStepper} from '@angular/mate
 import {DomSanitizer} from '@angular/platform-browser';
 
 import {WidgetService} from '../../../../modules/widget/widget.service';
-import {Widget} from '../../../../shared/model/api/Widget';
+import {Widget} from '../../../../shared/model/api/widget/Widget';
 import {DashboardService} from '../../../../modules/dashboard/dashboard.service';
-import {ProjectWidget} from '../../../../shared/model/api/ProjectWidget';
+import {ProjectWidget} from '../../../../shared/model/api/ProjectWidget/ProjectWidget';
 import {HttpCategoryService} from '../../../../shared/services/api/http-category.service';
 import {HttpAssetService} from '../../../../shared/services/api/http-asset.service';
-import {WidgetAvailabilityEnum} from '../../../../shared/model/api/enums/WidgetAvailabilityEnum';
-import {WidgetVariableType} from '../../../../shared/model/api/enums/WidgetVariableType';
-import {Category} from '../../../../shared/model/api/Category';
+import {Category} from '../../../../shared/model/api/widget/Category';
 import {HttpProjectService} from '../../../../shared/services/api/http-project.service';
 import {HttpWidgetService} from '../../../../shared/services/api/http-widget.service';
+import {WidgetVariableType} from '../../../../shared/model/enums/WidgetVariableType';
+import {WidgetAvailabilityEnum} from '../../../../shared/model/enums/WidgetAvailabilityEnum';
 
 /**
  * Dialog used to add a widget
@@ -168,6 +168,6 @@ export class AddWidgetDialogComponent implements OnInit {
   }
 
   getImageSrc(assetToken: string): string {
-    return this.httpAssetService.getUrlContent(assetToken);
+    return this.httpAssetService.getContentUrl(assetToken);
   }
 }

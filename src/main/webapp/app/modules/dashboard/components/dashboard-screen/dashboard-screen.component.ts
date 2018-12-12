@@ -36,11 +36,11 @@ import {fromEvent, Subscription} from 'rxjs';
 import {auditTime, map, takeWhile} from 'rxjs/operators';
 import {TranslateService} from '@ngx-translate/core';
 
-import {Project} from '../../../../shared/model/api/Project';
-import {ProjectWidget} from '../../../../shared/model/api/ProjectWidget';
+import {Project} from '../../../../shared/model/api/project/Project';
+import {ProjectWidget} from '../../../../shared/model/api/ProjectWidget/ProjectWidget';
 import {DashboardService} from '../../dashboard.service';
 import {WebsocketService} from '../../../../shared/services/websocket.service';
-import {ProjectWidgetPosition} from '../../../../shared/model/api/ProjectWidgetPosition';
+import {ProjectWidgetPosition} from '../../../../shared/model/api/ProjectWidget/ProjectWidgetPosition';
 import {EditProjectWidgetDialogComponent} from '../edit-project-widget-dialog/edit-project-widget-dialog.component';
 import {WSUpdateEvent} from '../../../../shared/model/websocket/WSUpdateEvent';
 import {WSUpdateType} from '../../../../shared/model/websocket/enums/WSUpdateType';
@@ -48,8 +48,8 @@ import {ConfirmDialogComponent} from '../../../../shared/components/confirm-dial
 
 import * as Stomp from '@stomp/stompjs';
 import {TitleCasePipe} from '@angular/common';
-import {WidgetStateEnum} from '../../../../shared/model/api/enums/WidgetSateEnum';
 import {HttpProjectService} from '../../../../shared/services/api/http-project.service';
+import {WidgetStateEnum} from '../../../../shared/model/enums/WidgetSateEnum';
 
 /**
  * Display the grid stack widgets

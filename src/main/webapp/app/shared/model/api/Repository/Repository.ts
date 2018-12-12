@@ -16,8 +16,8 @@
  *
  */
 
-import {RepositoryTypeEnum} from './enums/RepositoryTypeEnum';
-import {Widget} from './Widget';
+
+import {RepositoryTypeEnum} from '../../enums/RepositoryTypeEnum';
 
 /**
  * Hold the repository informations
@@ -68,9 +68,4 @@ export class Repository {
    * If the repository is enable or not
    */
   enabled: boolean;
-
-  /**
-   * The list of related widgets
-   */
-  widgets: Widget[];
 }

@@ -14,13 +14,8 @@
  * limitations under the License.
  */
 
-import {RoleEnum} from '../enums/RoleEnum';
-
-/**
- * The Role entity
- */
-export class Role {
-  id: number;
-  name: RoleEnum;
-  description: string;
+export interface ProjectGrid {
+  maxColumn: number;
+  widgetHeight: number;
+  cssStyle: string;
 }

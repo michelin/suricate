@@ -17,6 +17,7 @@
 package io.suricate.monitoring.model.dto.api.role;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
+import io.suricate.monitoring.model.enums.UserRoleEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -41,7 +42,7 @@ public class RoleResponseDto extends AbstractDto {
      * The role name
      */
     @ApiModelProperty(value = "The Role name")
-    private String name;
+    private UserRoleEnum name;
     /**
      * The role description
      */

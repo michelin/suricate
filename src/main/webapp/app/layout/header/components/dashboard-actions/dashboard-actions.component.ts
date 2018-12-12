@@ -23,7 +23,7 @@ import {AddDashboardDialogComponent} from '../../../../home/components/add-dashb
 import {TvManagementDialogComponent} from '../tv-management-dialog/tv-management-dialog.component';
 import {HttpScreenService} from '../../../../shared/services/api/http-screen.service';
 import {DashboardService} from '../../../../modules/dashboard/dashboard.service';
-import {Project} from '../../../../shared/model/api/Project';
+import {Project} from '../../../../shared/model/api/project/Project';
 
 /**
  * Hold the header dashboard actions

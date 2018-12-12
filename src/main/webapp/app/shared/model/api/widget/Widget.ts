@@ -14,19 +14,21 @@
  * limitations under the License.
  */
 
-import {WidgetVariableType} from './enums/WidgetVariableType';
-import {WidgetParamValue} from './WidgetParamValue';
+import {WidgetAvailabilityEnum} from '../../enums/WidgetAvailabilityEnum';
 
 /**
- * The widget param entity
+ * The widget entity
  */
-export class WidgetParam {
-  public name: string;
-  public description: string;
-  public defaultValue: string;
-  public type: WidgetVariableType;
-  public acceptFileRegex: string;
-  public usageExample: string;
-  public required: boolean;
-  public values: WidgetParamValue[];
+export class Widget {
+  id: number;
+  name: string;
+  description: string;
+  technicalName: string;
+  info: string;
+  delay: number;
+  timeout: string;
+  imageToken: string;
+  widgetAvailability: WidgetAvailabilityEnum;
+  categoryId: number;
+  repositoryId: number;
 }

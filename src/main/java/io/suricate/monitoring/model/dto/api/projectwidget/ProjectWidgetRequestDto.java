@@ -63,11 +63,6 @@ public class ProjectWidgetRequestDto extends AbstractDto {
     @ApiModelProperty(value = "The data of the last execution")
     private String data = "{}";
     /**
-     * The widget id related to this project widget
-     */
-    @ApiModelProperty(value = "The widget id related to this project widget")
-    private Long widgetId;
-    /**
      * The css style for this instance
      */
     @ApiModelProperty(value = "The css for this instance of widget")

@@ -23,7 +23,7 @@ import {takeWhile} from 'rxjs/operators';
 
 import {SidenavService} from '../../../../layout/sidenav/sidenav.service';
 import {WebsocketService} from '../../../../shared/services/websocket.service';
-import {Project} from '../../../../shared/model/api/Project';
+import {Project} from '../../../../shared/model/api/project/Project';
 import {DashboardService} from '../../dashboard.service';
 import {WSUpdateEvent} from '../../../../shared/model/websocket/WSUpdateEvent';
 import {WSUpdateType} from '../../../../shared/model/websocket/enums/WSUpdateType';

@@ -17,11 +17,11 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 
-import {Project} from '../../shared/model/api/Project';
-import {ProjectWidget} from '../../shared/model/api/ProjectWidget';
+import {Project} from '../../shared/model/api/project/Project';
+import {ProjectWidget} from '../../shared/model/api/ProjectWidget/ProjectWidget';
 import {UserService} from '../security/user/user.service';
 import {User} from '../../shared/model/api/user/User';
-import {WidgetStateEnum} from '../../shared/model/api/enums/WidgetSateEnum';
+import {WidgetStateEnum} from '../../shared/model/enums/WidgetSateEnum';
 
 /**
  * The dashboard service, manage http calls

@@ -19,7 +19,7 @@ import {MAT_DIALOG_DATA} from '@angular/material';
 import {FormBuilder, FormGroup} from '@angular/forms';
 
 import {DashboardService} from '../../../../modules/dashboard/dashboard.service';
-import {Project} from '../../../../shared/model/api/Project';
+import {Project} from '../../../../shared/model/api/project/Project';
 import {WebsocketClient} from '../../../../shared/model/api/WebsocketClient';
 import {HttpScreenService} from '../../../../shared/services/api/http-screen.service';
 import {HttpProjectService} from '../../../../shared/services/api/http-project.service';

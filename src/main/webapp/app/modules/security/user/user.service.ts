@@ -20,7 +20,7 @@ import {BehaviorSubject, Observable, Subject} from 'rxjs';
 import {TokenService} from '../../../shared/auth/token.service';
 import {SettingsService} from '../../../shared/services/settings.service';
 import {User} from '../../../shared/model/api/user/User';
-import {RoleEnum} from '../../../shared/model/api/enums/RoleEnum';
+import {RoleEnum} from '../../../shared/model/enums/RoleEnum';
 
 /**
  * User service that manage users

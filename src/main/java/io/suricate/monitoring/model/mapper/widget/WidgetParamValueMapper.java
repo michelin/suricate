@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.model.mapper.widget;
 
-import io.suricate.monitoring.model.dto.api.widget.WidgetParamValueDto;
+import io.suricate.monitoring.model.dto.api.widget.WidgetParamValueResponseDto;
 import io.suricate.monitoring.model.entity.widget.WidgetParamValue;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
@@ -45,7 +45,7 @@ public abstract class WidgetParamValueMapper {
      * @return The related widgetParamValue DTO
      */
     @Named("toWidgetParamValueDtoDefault")
-    public abstract WidgetParamValueDto toWidgetParamValueDtoDefault(WidgetParamValue widgetParamValue);
+    public abstract WidgetParamValueResponseDto toWidgetParamValueDtoDefault(WidgetParamValue widgetParamValue);
 
     /* ******************************************************* */
     /*                    List Mapping                         */
@@ -59,5 +59,5 @@ public abstract class WidgetParamValueMapper {
      */
     @Named("toWidgetParamValueDtosDefault")
     @IterableMapping(qualifiedByName = "toWidgetParamValueDtoDefault")
-    public abstract List<WidgetParamValueDto> toWidgetParamValueDtosDefault(List<WidgetParamValue> widgetParamValues);
+    public abstract List<WidgetParamValueResponseDto> toWidgetParamValueDtosDefault(List<WidgetParamValue> widgetParamValues);
 }

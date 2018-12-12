@@ -14,22 +14,19 @@
  * limitations under the License.
  */
 
-import {User} from './user/User';
-import {ProjectWidget} from './ProjectWidget';
-import {WebsocketClient} from './WebsocketClient';
+import {WidgetParamValue} from './WidgetParamValue';
+import {WidgetVariableType} from '../../enums/WidgetVariableType';
 
 /**
- * The project entity
+ * The widget param entity
  */
-export class Project {
-  id: number;
-  name: string;
-  maxColumn: number;
-  widgetHeight: number;
-  cssStyle: string;
-  token: string;
-  projectWidgets: ProjectWidget[];
-  librariesToken: string[];
-  users: User[];
-  websocketClients: WebsocketClient[];
+export class WidgetParam {
+  public name: string;
+  public description: string;
+  public defaultValue: string;
+  public type: WidgetVariableType;
+  public acceptFileRegex: string;
+  public usageExample: string;
+  public required: boolean;
+  public values: WidgetParamValue[];
 }

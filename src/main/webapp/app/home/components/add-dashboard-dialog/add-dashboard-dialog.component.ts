@@ -24,7 +24,7 @@ import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
 
 import {DashboardService} from '../../../modules/dashboard/dashboard.service';
 import {UserService} from '../../../modules/security/user/user.service';
-import {Project} from '../../../shared/model/api/Project';
+import {Project} from '../../../shared/model/api/project/Project';
 import {User} from '../../../shared/model/api/user/User';
 import {HttpProjectService} from '../../../shared/services/api/http-project.service';
 import {HttpUserService} from '../../../shared/services/api/http-user.service';

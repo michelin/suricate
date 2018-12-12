@@ -15,7 +15,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {Role} from '../../../shared/model/api/user/Role';
+import {Role} from '../../../shared/model/api/role/Role';
 
 /**
  * The role service

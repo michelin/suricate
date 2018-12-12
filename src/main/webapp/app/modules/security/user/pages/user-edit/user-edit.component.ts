@@ -22,12 +22,12 @@ import {CustomValidators} from 'ng2-validation';
 import {UserService} from '../../user.service';
 import {ToastService} from '../../../../../shared/components/toast/toast.service';
 import {RoleService} from '../../role.service';
-import {RoleEnum} from '../../../../../shared/model/api/enums/RoleEnum';
 import {User} from '../../../../../shared/model/api/user/User';
-import {Role} from '../../../../../shared/model/api/user/Role';
+import {Role} from '../../../../../shared/model/api/role/Role';
 import {ToastType} from '../../../../../shared/components/toast/toast-objects/ToastType';
 import {HttpRoleService} from '../../../../../shared/services/api/http-role.service';
 import {HttpUserService} from '../../../../../shared/services/api/http-user.service';
+import {RoleEnum} from '../../../../../shared/model/enums/RoleEnum';
 
 /**
  * Component user the edition of a user

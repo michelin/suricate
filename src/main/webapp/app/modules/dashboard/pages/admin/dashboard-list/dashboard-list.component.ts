@@ -21,7 +21,7 @@ import {catchError, map, startWith, switchMap} from 'rxjs/operators';
 import {TitleCasePipe} from '@angular/common';
 import {TranslateService} from '@ngx-translate/core';
 
-import {Project} from '../../../../../shared/model/api/Project';
+import {Project} from '../../../../../shared/model/api/project/Project';
 import {DashboardService} from '../../../dashboard.service';
 import {ToastService} from '../../../../../shared/components/toast/toast.service';
 import {ConfirmDialogComponent} from '../../../../../shared/components/confirm-dialog/confirm-dialog.component';

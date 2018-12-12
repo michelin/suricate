@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.dto.api.widget;
+package io.suricate.monitoring.model.dto.api.setting;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
 import io.swagger.annotations.ApiModel;
@@ -24,21 +24,35 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 /**
- * Widget param value response used for communication with the clients via webservices
+ * The Allowed setting value DTO used for REST communication
  */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "WidgetParamValue", description = "Describe a possible param value")
-public class WidgetParamValueDto extends AbstractDto {
+@ApiModel(value = "AllowedSettingValue", description = "Describe the possible values for a setting")
+public class AllowedSettingValueResponseDto extends AbstractDto {
+
     /**
-     * The key used in the js file
+     * The setting id
      */
-    @ApiModelProperty(value = "The key used in the JS/HTML Template")
-    private String jsKey;
+    @ApiModelProperty(value = "The setting value id", required = true)
+    private Long id;
+
     /**
-     * The value of this param
+     * The title to display for the user
      */
-    @ApiModelProperty(value = "The user displayed value")
+    @ApiModelProperty(value = "The title displayed to the user", required = true)
+    private String title;
+
+    /**
+     * The value of the entry (used in the code)
+     */
+    @ApiModelProperty(value = "The value that will be used on the code for this setting", required = true)
     private String value;
+
+    /**
+     * True if this setting is the default setting
+     */
+    @ApiModelProperty(value = "True if this value should be used as default", required = true)
+    private boolean isDefault;
 }

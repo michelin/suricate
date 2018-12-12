@@ -19,7 +19,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
 import {CustomValidators} from 'ng2-validation';
 
-import {Project} from '../../../../../shared/model/api/Project';
+import {Project} from '../../../../../shared/model/api/project/Project';
 import {DashboardService} from '../../../dashboard.service';
 import {ToastService} from '../../../../../shared/components/toast/toast.service';
 import {ToastType} from '../../../../../shared/components/toast/toast-objects/ToastType';

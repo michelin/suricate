@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.model.mapper.setting;
 
-import io.suricate.monitoring.model.dto.api.setting.AllowedSettingValueDto;
+import io.suricate.monitoring.model.dto.api.setting.AllowedSettingValueResponseDto;
 import io.suricate.monitoring.model.entity.setting.AllowedSettingValue;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
@@ -37,26 +37,26 @@ public abstract class AllowedSettingValueMapper {
     /* ******************************************************* */
 
     /**
-     * Transform an allowedSettingValue into an AllowedSettingValueDto
+     * Transform an allowedSettingValue into an AllowedSettingValueResponseDto
      *
      * @param allowedSettingValue The setting value to transform
      * @return The related dto
      */
     @Named("toAllowedSettingValueDtoDefault")
-    public abstract AllowedSettingValueDto toAllowedSettingValueDtoDefault(AllowedSettingValue allowedSettingValue);
+    public abstract AllowedSettingValueResponseDto toAllowedSettingValueDtoDefault(AllowedSettingValue allowedSettingValue);
 
     /* ******************************************************* */
     /*                    List Mapping                         */
     /* ******************************************************* */
 
     /**
-     * Transform a list of AllowedSettingValue into a list of AllowedSettingValueDto
+     * Transform a list of AllowedSettingValue into a list of AllowedSettingValueResponseDto
      *
      * @param allowedSettingValues The list to transform
      * @return The related list of dtos
      */
     @Named("toAllowedSettingValueDtosDefault")
     @IterableMapping(qualifiedByName = "toAllowedSettingValueDtoDefault")
-    public abstract List<AllowedSettingValueDto> toAllowedSettingValueDtosDefault(List<AllowedSettingValue> allowedSettingValues);
+    public abstract List<AllowedSettingValueResponseDto> toAllowedSettingValueDtosDefault(List<AllowedSettingValue> allowedSettingValues);
 
 }

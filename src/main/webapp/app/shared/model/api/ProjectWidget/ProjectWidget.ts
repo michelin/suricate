@@ -1,5 +1,5 @@
 /*
- *  /*
+ *
  *  * Copyright 2012-2018 the original author or authors.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,20 +14,26 @@
  *  * See the License for the specific language governing permissions and
  *  * limitations under the License.
  *
+ *
  */
 
-import {SettingDataType} from './enums/SettingDataType';
-import {AllowedSettingValue} from './AllowedSettingValue';
-import {SettingType} from './enums/SettingType';
+import {ProjectWidgetPosition} from './ProjectWidgetPosition';
+import {WidgetStateEnum} from '../../enums/WidgetSateEnum';
 
 /**
- * Represent a setting for the users
+ * The project widget entity
  */
-export class Setting {
+export class ProjectWidget {
   id: number;
-  description: string;
-  constrained: boolean;
-  dataType: SettingDataType;
-  type: SettingType;
-  allowedSettingValues: AllowedSettingValue[];
+  data: string;
+  widgetPosition: ProjectWidgetPosition;
+  customStyle: string;
+  instantiateHtml: string;
+  backendConfig: string;
+  log: string;
+  lastExecutionDate: string;
+  lastSuccessDate: string;
+  state: WidgetStateEnum;
+  projectToken: string;
+  widgetId: number;
 }

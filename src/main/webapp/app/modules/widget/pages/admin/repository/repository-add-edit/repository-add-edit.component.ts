@@ -20,12 +20,12 @@ import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
-import {Repository} from '../../../../../../shared/model/api/Repository';
+import {Repository} from '../../../../../../shared/model/api/Repository/Repository';
 import {HttpRepositoryService} from '../../../../../../shared/services/api/http-repository.service';
 import {FormUtils} from '../../../../../../shared/utils/FormUtils';
 import {ToastService} from '../../../../../../shared/components/toast/toast.service';
-import {RepositoryTypeEnum} from '../../../../../../shared/model/api/enums/RepositoryTypeEnum';
 import {ToastType} from '../../../../../../shared/components/toast/toast-objects/ToastType';
+import {RepositoryTypeEnum} from '../../../../../../shared/model/enums/RepositoryTypeEnum';
 
 /**
  * Edit a repository

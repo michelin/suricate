@@ -16,16 +16,13 @@
  *
  */
 
-import {ConfigurationDataType} from './enums/ConfigurationDataType';
-import {Category} from './Category';
-
 /**
- * The configuration entity
+ * The project widget position
  */
-export class Configuration {
-  key: string;
-  value: string;
-  export: boolean;
-  dataType: ConfigurationDataType;
-  category: Category;
+export class ProjectWidgetPositionRequest {
+  projectWidgetId: number;
+  col: number;
+  row: number;
+  width: number;
+  height: number;
 }

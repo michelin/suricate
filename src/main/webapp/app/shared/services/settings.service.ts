@@ -18,9 +18,9 @@ import {Injectable} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 
-import {UserSetting} from '../model/api/UserSetting';
+import {UserSetting} from '../model/api/setting/UserSetting';
 import {User} from '../model/api/user/User';
-import {SettingType} from '../model/api/enums/SettingType';
+import {SettingType} from '../model/enums/SettingType';
 
 /**
  * Manage the app theme

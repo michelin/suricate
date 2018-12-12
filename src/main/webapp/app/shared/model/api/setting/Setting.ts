@@ -16,17 +16,18 @@
  *
  */
 
-import {User} from './user/User';
-import {Setting} from './Setting';
 import {AllowedSettingValue} from './AllowedSettingValue';
+import {SettingType} from '../../enums/SettingType';
+import {SettingDataType} from '../../enums/SettingDataType';
 
 /**
- * Link between a setting and a user
+ * Represent a setting for the users
  */
-export class UserSetting {
+export class Setting {
   id: number;
-  user: User;
-  setting: Setting;
-  settingValue: AllowedSettingValue;
-  unconstrainedValue: string;
+  description: string;
+  constrained: boolean;
+  dataType: SettingDataType;
+  type: SettingType;
+  allowedSettingValues: AllowedSettingValue[];
 }

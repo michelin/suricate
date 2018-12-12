@@ -20,12 +20,12 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 
-import {Project} from '../../model/api/Project';
+import {Project} from '../../model/api/project/Project';
 import {projectsApiEndpoint} from '../../../app.constant';
 import {DashboardService} from '../../../modules/dashboard/dashboard.service';
 import {map} from 'rxjs/operators';
-import {ProjectWidget} from '../../model/api/ProjectWidget';
-import {ProjectWidgetPosition} from '../../model/api/ProjectWidgetPosition';
+import {ProjectWidget} from '../../model/api/ProjectWidget/ProjectWidget';
+import {ProjectWidgetPosition} from '../../model/api/ProjectWidget/ProjectWidgetPosition';
 
 @Injectable()
 export class HttpProjectService {

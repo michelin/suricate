@@ -69,5 +69,5 @@ public class SettingResponseDto {
      * Hold the possible values (if we have a select setting for example)
      */
     @ApiModelProperty(value = "The possible values for this setting if it's a constrained field", dataType = "java.util.List")
-    private List<AllowedSettingValueDto> allowedSettingValues = new ArrayList<>();
+    private List<AllowedSettingValueResponseDto> allowedSettingValues = new ArrayList<>();
 }

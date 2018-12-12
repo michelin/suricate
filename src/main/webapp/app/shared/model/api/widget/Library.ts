@@ -14,15 +14,11 @@
  * limitations under the License.
  */
 
-import {Configuration} from './Configuration';
-
 /**
- * The category representation
+ * The library representation
  */
-export class Category {
-  public id: number;
-  public name: string;
-  public technicalName: string;
-  public assetToken: string;
-  public configurations: Configuration[];
+export class Library {
+  id: string;
+  technicalName: string;
+  assetToken: string;
 }

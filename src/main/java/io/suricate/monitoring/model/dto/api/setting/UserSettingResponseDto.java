@@ -54,7 +54,7 @@ public class UserSettingResponseDto extends AbstractDto {
      * The allowed setting value
      */
     @ApiModelProperty(value = "The selected value if it's a constrained setting")
-    private AllowedSettingValueDto settingValue;
+    private AllowedSettingValueResponseDto settingValue;
 
     /**
      * The unconstrained value

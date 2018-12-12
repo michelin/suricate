@@ -16,15 +16,15 @@
  *
  */
 
-import {Setting} from './Setting';
+import {AllowedSettingValue} from './AllowedSettingValue';
 
 /**
- * Represente a possible value for a setting
+ * Link between a setting and a user
  */
-export class AllowedSettingValue {
+export class UserSetting {
   id: number;
-  title: string;
-  value: string;
-  isDefault: boolean;
-  setting: Setting;
+  userId: number;
+  settingId: number;
+  settingValue: AllowedSettingValue;
+  unconstrainedValue: string;
 }

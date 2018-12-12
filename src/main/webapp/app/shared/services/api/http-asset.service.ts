@@ -36,11 +36,11 @@ export class HttpAssetService {
   }
 
   /**
-   * Get the content of an asset
+   * Get the asset content url
    *
    * @param assetToken The asset token
    */
-  getUrlContent(assetToken: string): string {
-    return assetToken ? `${assetsApiEndpoint}/${assetToken}` : ``;
+  getContentUrl(assetToken: string): string {
+    return assetToken ? `${assetsApiEndpoint}/${assetToken}/content` : ``;
   }
 }

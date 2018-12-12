@@ -20,7 +20,7 @@ import {MatSidenav} from '@angular/material';
 import {takeWhile} from 'rxjs/operators';
 
 import {SidenavService} from '../sidenav.service';
-import {Project} from '../../../shared/model/api/Project';
+import {Project} from '../../../shared/model/api/project/Project';
 import {DashboardService} from '../../../modules/dashboard/dashboard.service';
 import {UserService} from '../../../modules/security/user/user.service';
 import {AuthenticationService} from '../../../modules/authentication/authentication.service';

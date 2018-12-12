@@ -15,14 +15,11 @@
  */
 
 /**
- * The user entity
+ * The category representation
  */
-export class User {
-  id: number;
-  username: string;
-  firstname: string;
-  lastname: string;
-  fullname: string;
-  email: string;
-  authenticationMethod: string;
+export class Category {
+  public id: number;
+  public name: string;
+  public technicalName: string;
+  public assetToken: string;
 }
