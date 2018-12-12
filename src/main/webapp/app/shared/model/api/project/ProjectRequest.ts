@@ -17,7 +17,7 @@
 /**
  * The project request
  */
-export class ProjectRequest {
+export interface ProjectRequest {
   name: string;
   maxColumn: string;
   widgetHeight: number;

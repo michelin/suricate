@@ -17,9 +17,9 @@
 /**
  * The category representation
  */
-export class Category {
-  public id: number;
-  public name: string;
-  public technicalName: string;
-  public assetToken: string;
+export interface Category {
+  id: number;
+  name: string;
+  technicalName: string;
+  assetToken: string;
 }

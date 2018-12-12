@@ -19,7 +19,7 @@ import {ProjectGrid} from './ProjectGrid';
 /**
  * The project entity
  */
-export class Project {
+export interface Project {
   token: string;
   name: string;
   gridProperties: ProjectGrid;

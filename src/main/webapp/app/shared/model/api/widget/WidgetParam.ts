@@ -20,13 +20,13 @@ import {WidgetVariableType} from '../../enums/WidgetVariableType';
 /**
  * The widget param entity
  */
-export class WidgetParam {
-  public name: string;
-  public description: string;
-  public defaultValue: string;
-  public type: WidgetVariableType;
-  public acceptFileRegex: string;
-  public usageExample: string;
-  public required: boolean;
-  public values: WidgetParamValue[];
+export interface WidgetParam {
+  name: string;
+  description: string;
+  defaultValue: string;
+  type: WidgetVariableType;
+  acceptFileRegex: string;
+  usageExample: string;
+  required: boolean;
+  values: WidgetParamValue[];
 }

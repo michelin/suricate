@@ -19,7 +19,7 @@
 /**
  * The project widget position
  */
-export class ProjectWidgetPositionRequest {
+export interface ProjectWidgetPositionRequest {
   projectWidgetId: number;
   col: number;
   row: number;

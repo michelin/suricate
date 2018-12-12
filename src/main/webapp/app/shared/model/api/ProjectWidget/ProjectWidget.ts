@@ -23,7 +23,7 @@ import {WidgetStateEnum} from '../../enums/WidgetSateEnum';
 /**
  * The project widget entity
  */
-export class ProjectWidget {
+export interface ProjectWidget {
   id: number;
   data: string;
   widgetPosition: ProjectWidgetPosition;

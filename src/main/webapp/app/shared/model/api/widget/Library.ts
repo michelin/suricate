@@ -17,7 +17,7 @@
 /**
  * The library representation
  */
-export class Library {
+export interface Library {
   id: string;
   technicalName: string;
   assetToken: string;

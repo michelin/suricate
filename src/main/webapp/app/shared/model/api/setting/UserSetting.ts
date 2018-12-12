@@ -21,7 +21,7 @@ import {AllowedSettingValue} from './AllowedSettingValue';
 /**
  * Link between a setting and a user
  */
-export class UserSetting {
+export interface UserSetting {
   id: number;
   userId: number;
   settingId: number;

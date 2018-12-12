@@ -19,7 +19,7 @@
 /**
  * Class that represent the websocket client
  */
-export class WebsocketClient {
+export interface WebsocketClient {
   projectToken: string;
   sessionId: string;
   screencode: string;

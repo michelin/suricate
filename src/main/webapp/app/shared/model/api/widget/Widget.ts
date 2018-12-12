@@ -19,7 +19,7 @@ import {WidgetAvailabilityEnum} from '../../enums/WidgetAvailabilityEnum';
 /**
  * The widget entity
  */
-export class Widget {
+export interface Widget {
   id: number;
   name: string;
   description: string;

@@ -28,4 +28,5 @@ export class ProjectWidgetRequest {
   height: number;
   row: number;
   width: number;
+  widgetId: number;
 }

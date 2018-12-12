@@ -19,7 +19,7 @@
 /**
  * Hold the server application properties
  */
-export class ApplicationProperties {
+export interface ApplicationProperties {
   /**
    * The key
    */

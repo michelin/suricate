@@ -22,7 +22,7 @@ import {RepositoryTypeEnum} from '../../enums/RepositoryTypeEnum';
 /**
  * Hold the repository informations
  */
-export class Repository {
+export interface Repository {
 
   /**
    * The repository id

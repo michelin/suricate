@@ -19,7 +19,7 @@ import {RoleEnum} from '../../enums/RoleEnum';
 /**
  * The Role entity
  */
-export class Role {
+export interface Role {
   id: number;
   name: RoleEnum;
   description: string;

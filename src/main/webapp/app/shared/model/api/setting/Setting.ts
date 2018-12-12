@@ -23,7 +23,7 @@ import {SettingDataType} from '../../enums/SettingDataType';
 /**
  * Represent a setting for the users
  */
-export class Setting {
+export interface Setting {
   id: number;
   description: string;
   constrained: boolean;

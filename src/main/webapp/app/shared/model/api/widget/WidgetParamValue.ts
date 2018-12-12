@@ -17,7 +17,7 @@
 /**
  * The widget param values
  */
-export class WidgetParamValue {
-  public jsKey: string;
-  public value: string;
+export interface WidgetParamValue {
+  jsKey: string;
+  value: string;
 }

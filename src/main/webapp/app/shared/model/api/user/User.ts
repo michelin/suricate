@@ -17,7 +17,7 @@
 /**
  * The user entity
  */
-export class User {
+export interface User {
   id: number;
   username: string;
   firstname: string;

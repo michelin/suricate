@@ -19,7 +19,7 @@
 /**
  * Represent a possible value for a setting
  */
-export class AllowedSettingValue {
+export interface AllowedSettingValue {
   id: number;
   title: string;
   value: string;

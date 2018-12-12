@@ -19,7 +19,7 @@
 /**
  * Represent the authentication response
  */
-export class AuthenticationResponse {
+export interface AuthenticationResponse {
   access_token: string;
   token_type: string;
   refresh_token: string;

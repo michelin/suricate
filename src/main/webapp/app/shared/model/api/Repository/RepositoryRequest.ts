@@ -21,7 +21,7 @@ import {RepositoryTypeEnum} from '../../enums/RepositoryTypeEnum';
 /**
  * Hold the repository informations
  */
-export class RepositoryRequest {
+export interface RepositoryRequest {
   /**
    * The repository name
    */

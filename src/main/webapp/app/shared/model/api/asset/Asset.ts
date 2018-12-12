@@ -17,7 +17,7 @@
 /**
  * The asset representation
  */
-export class Asset {
+export interface Asset {
   id: string;
   content: string;
   contentType: string;
