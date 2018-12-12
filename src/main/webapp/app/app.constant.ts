@@ -59,55 +59,65 @@ export const baseWsEndpoint = `${baseEndpoint}/ws`;
 export const authenticationApiEndpoint = `${baseApiEndpoint}/oauth/token`;
 
 /**
- * Global endpoint for Users
+ * Global assets endpoint
  * @type {string}
  */
-export const usersApiEndpoint = `${baseApiEndpoint}/users`;
-/**
- * Global endpoint for projects
- * @type {string}
- */
-export const projectsApiEndpoint = `${baseApiEndpoint}/projects`;
-/**
- * Global endpoint for screens
- * @type {string}
- */
-export const screensApiEndpoint = `${baseApiEndpoint}/screens`;
+export const assetsApiEndpoint = `${baseApiEndpoint}/v1/assets`;
 /**
  * Global endpoint for Widgets
  * @type {string}
  */
-export const widgetsApiEndpoint = `${baseApiEndpoint}/widgets`;
-/**
- * Global endpoint for Widgets
- * @type {string}
- */
-export const categoriesApiEndpoint = `${baseApiEndpoint}/categories`;
+export const categoriesApiEndpoint = `${baseApiEndpoint}/v1/categories`;
 /**
  * Global configurations enpoint
  * @type {string}
  */
-export const configurationsApiEndpoint = `${baseApiEndpoint}/configurations`;
+export const configurationsApiEndpoint = `${baseApiEndpoint}/v1/configurations`;
 /**
- * Global roles endpoint
+ * Global endpoint for projects
  * @type {string}
  */
-export const rolesApiEndpoint = `${baseApiEndpoint}/roles`;
+export const projectsApiEndpoint = `${baseApiEndpoint}/v1/projects`;
 /**
- * Global config endpoint
+ * Global endpoint for project widgets
  * @type {string}
  */
-export const configApiEndpoint = `${baseApiEndpoint}/manage`;
+export const projectWidgetsApiEndpoint = `${baseApiEndpoint}/v1/projectWidgets`;
 /**
  * Global repositories endpoint
  * @type {string}
  */
-export const repositoriesApiEndpoint = `${baseApiEndpoint}/repositories`;
+export const repositoriesApiEndpoint = `${baseApiEndpoint}/v1/repositories`;
 /**
- * Global assets endpoint
+ * Global roles endpoint
  * @type {string}
  */
-export const assetsApiEndpoint = `${baseApiEndpoint}/asset`;
+export const rolesApiEndpoint = `${baseApiEndpoint}/v1/roles`;
+/**
+ * Global endpoint for screens
+ * @type {string}
+ */
+export const screensApiEndpoint = `${baseApiEndpoint}/v1/screens`;
+/**
+ * Global endpoint for settings
+ * @type {string}
+ */
+export const settingsApiEndpoint = `${baseApiEndpoint}/v1/settings`;
+/**
+ * Global endpoint for Users
+ * @type {string}
+ */
+export const usersApiEndpoint = `${baseApiEndpoint}/v1/users`;
+/**
+ * Global endpoint for Widgets
+ * @type {string}
+ */
+export const widgetsApiEndpoint = `${baseApiEndpoint}/v1/widgets`;
+/**
+ * Global config endpoint
+ * @type {string}
+ */
+export const configApiEndpoint = `${baseApiEndpoint}/v1/manage`;
 
 /* ************************************************************************ */
 /*                  HTTP ERROR CONSTANTS                                    */
