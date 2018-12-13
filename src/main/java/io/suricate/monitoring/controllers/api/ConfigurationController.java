@@ -21,14 +21,13 @@ import io.suricate.monitoring.model.dto.api.configuration.ConfigurationRequestDt
 import io.suricate.monitoring.model.dto.api.configuration.ConfigurationResponseDto;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.entity.Configuration;
-import io.suricate.monitoring.model.mapper.ConfigurationMapper;
 import io.suricate.monitoring.service.CacheService;
 import io.suricate.monitoring.service.api.ConfigurationService;
+import io.suricate.monitoring.service.mapper.ConfigurationMapper;
 import io.suricate.monitoring.utils.exception.NoContentException;
 import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -90,17 +89,16 @@ public class ConfigurationController {
     @GetMapping(value = "/v1/configurations")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<ConfigurationResponseDto>> getAll() {
-        Optional<List<Configuration>> configurations = configurationService.getAll();
+        Optional<List<Configuration>> configurationsOptional = configurationService.getAll();
 
-        if (!configurations.isPresent()) {
+        if (!configurationsOptional.isPresent()) {
             throw new NoContentException(Configuration.class);
         }
 
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .cacheControl(CacheControl.noCache())
-            .body(configurationMapper.toConfigurationDtosDefault(configurations.get()));
+            .body(configurationMapper.toConfigurationDtosDefault(configurationsOptional.get()));
     }
 
     /**
@@ -129,7 +127,6 @@ public class ConfigurationController {
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .cacheControl(CacheControl.noCache())
             .body(configurationMapper.toConfigurationDtoDefault(configurationOptional.get()));
     }
 
@@ -140,28 +137,25 @@ public class ConfigurationController {
      * @param configurationRequestDto The new configuration values
      * @return The config updated
      */
-    @ApiOperation(value = "Update a configuration by the key", response = ConfigurationResponseDto.class)
+    @ApiOperation(value = "Update a configuration by the key")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = ConfigurationResponseDto.class),
+        @ApiResponse(code = 200, message = "Ok"),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Configuration not found", response = ApiErrorDto.class)
     })
     @PutMapping(value = "/v1/configurations/{key}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<ConfigurationResponseDto> updateOneByKey(@ApiParam(name = "key", value = "The configuration key", required = true)
-                                                                   @PathVariable("key") final String key,
-                                                                   @ApiParam(name = "configurationResponseDto", value = "The configuration updated", required = true)
-                                                                   @RequestBody final ConfigurationRequestDto configurationRequestDto) {
+    public ResponseEntity<Void> updateOneByKey(@ApiParam(name = "key", value = "The configuration key", required = true)
+                                               @PathVariable("key") final String key,
+                                               @ApiParam(name = "configurationResponseDto", value = "The configuration updated", required = true)
+                                               @RequestBody final ConfigurationRequestDto configurationRequestDto) {
         Optional<Configuration> configurationOptional = configurationService.getOneByKey(key);
-
         if (!configurationOptional.isPresent()) {
             throw new ObjectNotFoundException(Configuration.class, key);
         }
 
-        Configuration configuration = configurationOptional.get();
-        configuration = configurationService.updateConfiguration(configuration, configurationRequestDto.getValue());
-
+        configurationService.updateConfiguration(configurationOptional.get(), configurationRequestDto.getValue());
         cacheService.clearCache("configuration");
 
         return ResponseEntity.noContent().build();
@@ -173,29 +167,25 @@ public class ConfigurationController {
      * @param key The configuration key
      * @return The config deleted
      */
-    @ApiOperation(value = "Delete a configuration by the key", response = ConfigurationResponseDto.class)
+    @ApiOperation(value = "Delete a configuration by the key")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = ConfigurationResponseDto.class),
+        @ApiResponse(code = 200, message = "Ok"),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Configuration not found", response = ApiErrorDto.class)
     })
     @DeleteMapping(value = "/v1/configurations/{key}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<ConfigurationResponseDto> deleteOneByKey(@ApiParam(name = "key", value = "The configuration key", required = true)
-                                                                   @PathVariable("key") final String key) {
+    public ResponseEntity<Void> deleteOneByKey(@ApiParam(name = "key", value = "The configuration key", required = true)
+                                               @PathVariable("key") final String key) {
         Optional<Configuration> configurationOptional = configurationService.getOneByKey(key);
-
         if (!configurationOptional.isPresent()) {
             throw new ObjectNotFoundException(Configuration.class, key);
         }
 
         configurationService.deleteOneByKey(key);
-        return ResponseEntity
-            .ok()
-            .contentType(MediaType.APPLICATION_JSON)
-            .cacheControl(CacheControl.noCache())
-            .body(configurationMapper.toConfigurationDtoDefault(configurationOptional.get()));
+
+        return ResponseEntity.noContent().build();
     }
 
     /**
@@ -210,7 +200,6 @@ public class ConfigurationController {
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .cacheControl(CacheControl.noCache())
             .body(configurationService.getAuthenticationProvider());
     }
 
@@ -226,7 +215,6 @@ public class ConfigurationController {
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .cacheControl(CacheControl.noCache())
             .body(configurationService.getServerConfiguration());
     }
 }

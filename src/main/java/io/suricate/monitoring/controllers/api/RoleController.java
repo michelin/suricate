@@ -20,14 +20,13 @@ import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.role.RoleResponseDto;
 import io.suricate.monitoring.model.dto.api.user.UserResponseDto;
 import io.suricate.monitoring.model.entity.user.Role;
+import io.suricate.monitoring.service.api.RoleService;
 import io.suricate.monitoring.service.mapper.RoleMapper;
 import io.suricate.monitoring.service.mapper.UserMapper;
-import io.suricate.monitoring.service.api.RoleService;
 import io.suricate.monitoring.utils.exception.NoContentException;
 import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -85,7 +84,7 @@ public class RoleController {
      */
     @ApiOperation(value = "Get the full list of roles", response = RoleResponseDto.class)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = RoleResponseDto.class),
+        @ApiResponse(code = 200, message = "Ok", response = RoleResponseDto.class, responseContainer = "List"),
         @ApiResponse(code = 204, message = "No Content"),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
@@ -94,18 +93,15 @@ public class RoleController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<RoleResponseDto>> getRoles() {
         Optional<List<Role>> rolesOptional = roleService.getRoles();
-
         if (!rolesOptional.isPresent()) {
             throw new NoContentException(Role.class);
         }
 
         return ResponseEntity
             .ok()
-            .cacheControl(CacheControl.noCache())
             .contentType(MediaType.APPLICATION_JSON)
             .body(roleMapper.toRoleDtosDefault(rolesOptional.get()));
     }
-
 
     /**
      * Get a role
@@ -131,7 +127,6 @@ public class RoleController {
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .cacheControl(CacheControl.noCache())
             .body(roleMapper.toRoleDtoDefault(roleOptional.get()));
     }
 
@@ -143,7 +138,7 @@ public class RoleController {
      */
     @ApiOperation(value = "Get the list of user for a role", response = UserResponseDto.class)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = UserResponseDto.class),
+        @ApiResponse(code = 200, message = "Ok", response = UserResponseDto.class, responseContainer = "List"),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
@@ -159,7 +154,6 @@ public class RoleController {
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .cacheControl(CacheControl.noCache())
             .body(userMapper.toUserDtosDefault(roleOptional.get().getUsers()));
     }
 }

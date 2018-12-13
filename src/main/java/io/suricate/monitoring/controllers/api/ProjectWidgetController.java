@@ -1,7 +1,6 @@
 package io.suricate.monitoring.controllers.api;
 
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
-import io.suricate.monitoring.model.dto.api.project.ProjectResponseDto;
 import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetRequestDto;
 import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetResponseDto;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
@@ -51,9 +50,9 @@ public class ProjectWidgetController {
      * @param projectWidgetId The project widget id
      * @return The project updated
      */
-    @ApiOperation(value = "Retrieve a project widget", response = ProjectResponseDto.class)
+    @ApiOperation(value = "Retrieve a project widget", response = ProjectWidgetResponseDto.class)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = ProjectResponseDto.class),
+        @ApiResponse(code = 200, message = "Ok", response = ProjectWidgetResponseDto.class),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Project widget not found", response = ApiErrorDto.class)
@@ -80,9 +79,9 @@ public class ProjectWidgetController {
      * @param projectWidgetRequestDto The project widget updated
      * @return The project updated
      */
-    @ApiOperation(value = "Edit a project widget", response = ProjectResponseDto.class)
+    @ApiOperation(value = "Edit a project widget")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = ProjectResponseDto.class),
+        @ApiResponse(code = 200, message = "Ok"),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Project widget not found", response = ApiErrorDto.class)
@@ -98,8 +97,7 @@ public class ProjectWidgetController {
             throw new ObjectNotFoundException(ProjectWidget.class, projectWidgetId);
         }
 
-        ProjectWidget projectWidget = projectWidgetOptional.get();
-        projectWidgetService.updateProjectWidget(projectWidget, projectWidgetRequestDto.getCustomStyle(), projectWidgetRequestDto.getBackendConfig());
+        projectWidgetService.updateProjectWidget(projectWidgetOptional.get(), projectWidgetRequestDto.getCustomStyle(), projectWidgetRequestDto.getBackendConfig());
 
         return ResponseEntity.noContent().build();
     }
@@ -110,17 +108,17 @@ public class ProjectWidgetController {
      * @param projectWidgetId The project widget to delete
      * @return The dashboard updated
      */
-    @ApiOperation(value = "Delete a project widget", response = ProjectResponseDto.class)
+    @ApiOperation(value = "Delete a project widget")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = ProjectResponseDto.class),
+        @ApiResponse(code = 200, message = "Ok"),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Project widget not found", response = ApiErrorDto.class)
     })
     @DeleteMapping(value = "/v1/projectWidgets/{projectWidgetId}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ProjectResponseDto> deleteProjectWidget(@ApiParam(name = "projectWidgetId", value = "The project widget id", required = true)
-                                                                  @PathVariable("projectWidgetId") Long projectWidgetId) {
+    public ResponseEntity<Void> deleteProjectWidget(@ApiParam(name = "projectWidgetId", value = "The project widget id", required = true)
+                                                    @PathVariable("projectWidgetId") Long projectWidgetId) {
         if (!this.projectWidgetService.isProjectWidgetExists(projectWidgetId)) {
             throw new ObjectNotFoundException(ProjectWidget.class, projectWidgetId);
         }

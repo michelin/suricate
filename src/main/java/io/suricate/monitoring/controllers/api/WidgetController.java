@@ -21,15 +21,14 @@ import io.suricate.monitoring.model.dto.api.widget.WidgetResponseDto;
 import io.suricate.monitoring.model.entity.widget.Widget;
 import io.suricate.monitoring.model.enums.ApiActionEnum;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
-import io.suricate.monitoring.service.mapper.WidgetMapper;
 import io.suricate.monitoring.service.GitService;
 import io.suricate.monitoring.service.api.WidgetService;
+import io.suricate.monitoring.service.mapper.WidgetMapper;
 import io.suricate.monitoring.utils.exception.ApiException;
 import io.suricate.monitoring.utils.exception.NoContentException;
 import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -97,7 +96,6 @@ public class WidgetController {
                                                               @RequestParam(value = "action", required = false) String action) {
         if (ApiActionEnum.REFRESH.name().equalsIgnoreCase(action)) {
             Future<Boolean> isDone = this.gitService.updateWidgetFromEnabledGitRepositories();
-
             try {
                 if (!isDone.get()) {
                     throw new ApiException("Error while retrieving widgets from repository", ApiErrorEnum.INTERNAL_SERVER_ERROR);
@@ -109,16 +107,15 @@ public class WidgetController {
             }
         }
 
-        Optional<List<Widget>> widgets = widgetService.getAll();
-        if (!widgets.isPresent()) {
+        Optional<List<Widget>> widgetsOptional = widgetService.getAll();
+        if (!widgetsOptional.isPresent()) {
             throw new NoContentException(Widget.class);
         }
 
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .cacheControl(CacheControl.noCache())
-            .body(widgetMapper.toWidgetDtosDefault(widgets.get()));
+            .body(widgetMapper.toWidgetDtosDefault(widgetsOptional.get()));
     }
 
     /**
@@ -138,11 +135,13 @@ public class WidgetController {
     public ResponseEntity<WidgetResponseDto> getOnById(@ApiParam(name = "widgetId", value = "The widget id", required = true)
                                                        @PathVariable("widgetId") Long widgetId) {
         Widget widget = widgetService.findOne(widgetId);
+        if (widget == null) {
+            throw new ObjectNotFoundException(Widget.class, widgetId);
+        }
 
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .cacheControl(CacheControl.noCache())
             .body(widgetMapper.toWidgetDtoDefault(widget));
     }
 
@@ -153,29 +152,24 @@ public class WidgetController {
      * @param widgetResponseDto The object holding changes
      * @return The widget dto changed
      */
-    @ApiOperation(value = "Update a widget by id", response = WidgetResponseDto.class)
+    @ApiOperation(value = "Update a widget by id")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = WidgetResponseDto.class),
+        @ApiResponse(code = 200, message = "Ok"),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Widget not found", response = ApiErrorDto.class)
     })
     @PutMapping(value = "/v1/widgets/{widgetId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<WidgetResponseDto> updateWidget(@ApiParam(name = "widgetId", value = "The widget id", required = true)
-                                                          @PathVariable("widgetId") Long widgetId,
-                                                          @ApiParam(name = "widgetResponseDto", value = "The widget with modifications", required = true)
-                                                          @RequestBody WidgetResponseDto widgetResponseDto) {
-        Optional<Widget> widgetOpt = widgetService.updateWidget(widgetId, widgetResponseDto);
-
-        if (!widgetOpt.isPresent()) {
+    public ResponseEntity<Void> updateWidget(@ApiParam(name = "widgetId", value = "The widget id", required = true)
+                                             @PathVariable("widgetId") Long widgetId,
+                                             @ApiParam(name = "widgetResponseDto", value = "The widget with modifications", required = true)
+                                             @RequestBody WidgetResponseDto widgetResponseDto) {
+        Optional<Widget> widgetOptional = widgetService.updateWidget(widgetId, widgetResponseDto);
+        if (!widgetOptional.isPresent()) {
             throw new ObjectNotFoundException(Widget.class, widgetId);
         }
 
-        return ResponseEntity
-            .ok()
-            .contentType(MediaType.APPLICATION_JSON)
-            .cacheControl(CacheControl.noCache())
-            .body(widgetMapper.toWidgetDtoDefault(widgetOpt.get()));
+        return ResponseEntity.noContent().build();
     }
 }

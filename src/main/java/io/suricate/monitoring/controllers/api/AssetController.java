@@ -74,7 +74,6 @@ public class AssetController {
                                            @ApiParam(name = "token", value = "The asset Token", required = true)
                                            @PathVariable("token") String token) {
         Asset asset = assetService.findOne(IdUtils.decrypt(token));
-
         if (asset == null) {
             throw new ObjectNotFoundException(Asset.class, token);
 

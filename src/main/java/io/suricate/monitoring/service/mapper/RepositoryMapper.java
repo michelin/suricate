@@ -72,10 +72,12 @@ public abstract class RepositoryMapper {
     /**
      * Create a repository with a dto without widgets
      *
+     * @param repositoryId         The repository id
      * @param repositoryRequestDto The repository dto to transform
      * @return The repository
      */
     @Named("toRepositoryDefaultModel")
+    @Mapping(target = "id", source = "repositoryId")
     @Mapping(target = "widgets", ignore = true)
-    public abstract Repository toRepositoryDefaultModel(RepositoryRequestDto repositoryRequestDto);
+    public abstract Repository toRepositoryDefaultModel(Long repositoryId, RepositoryRequestDto repositoryRequestDto);
 }

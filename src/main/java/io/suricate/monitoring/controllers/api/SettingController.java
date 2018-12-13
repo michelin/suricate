@@ -19,15 +19,14 @@ package io.suricate.monitoring.controllers.api;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.setting.SettingResponseDto;
 import io.suricate.monitoring.model.entity.setting.Setting;
-import io.suricate.monitoring.service.mapper.SettingMapper;
 import io.suricate.monitoring.service.api.SettingService;
+import io.suricate.monitoring.service.mapper.SettingMapper;
 import io.suricate.monitoring.utils.exception.NoContentException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -92,7 +91,6 @@ public class SettingController {
 
         return ResponseEntity
             .ok()
-            .cacheControl(CacheControl.noCache())
             .contentType(MediaType.APPLICATION_JSON)
             .body(settingMapper.toSettingDtosDefault(settingsOptional.get()));
     }

@@ -21,15 +21,14 @@ import io.suricate.monitoring.model.dto.api.repository.RepositoryRequestDto;
 import io.suricate.monitoring.model.dto.api.repository.RepositoryResponseDto;
 import io.suricate.monitoring.model.dto.api.widget.WidgetResponseDto;
 import io.suricate.monitoring.model.entity.widget.Repository;
-import io.suricate.monitoring.service.mapper.RepositoryMapper;
-import io.suricate.monitoring.service.mapper.WidgetMapper;
 import io.suricate.monitoring.service.GitService;
 import io.suricate.monitoring.service.api.RepositoryService;
+import io.suricate.monitoring.service.mapper.RepositoryMapper;
+import io.suricate.monitoring.service.mapper.WidgetMapper;
 import io.suricate.monitoring.utils.exception.NoContentException;
 import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -105,7 +104,6 @@ public class RepositoryController {
     @Transactional
     public ResponseEntity<List<RepositoryResponseDto>> getAll() {
         Optional<List<Repository>> optionalRepositories = repositoryService.getAllOrderByName();
-
         if (!optionalRepositories.isPresent()) {
             throw new NoContentException(Repository.class);
         }
@@ -113,7 +111,6 @@ public class RepositoryController {
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .cacheControl(CacheControl.noCache())
             .body(repositoryMapper.toRepositoryDtosDefault(optionalRepositories.get()));
     }
 
@@ -133,7 +130,7 @@ public class RepositoryController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<RepositoryResponseDto> createOne(@ApiParam(name = "repositoryResponseDto", value = "The repository to create", required = true)
                                                            @RequestBody RepositoryRequestDto repositoryRequestDto) {
-        Repository repository = repositoryMapper.toRepositoryWithoutWidgets(repositoryRequestDto);
+        Repository repository = repositoryMapper.toRepositoryDefaultModel(null, repositoryRequestDto);
         repositoryService.addOrUpdateRepository(repository);
 
         if (repository.isEnabled()) {
@@ -149,7 +146,6 @@ public class RepositoryController {
         return ResponseEntity
             .created(resourceLocation)
             .contentType(MediaType.APPLICATION_JSON)
-            .cacheControl(CacheControl.noCache())
             .body(repositoryMapper.toRepositoryDtoDefault(repository));
     }
 
@@ -172,7 +168,6 @@ public class RepositoryController {
     public ResponseEntity<RepositoryResponseDto> getOneById(@ApiParam(name = "repositoryId", value = "The repository id", required = true)
                                                             @PathVariable Long repositoryId) {
         Optional<Repository> optionalRepository = repositoryService.getOneById(repositoryId);
-
         if (!optionalRepository.isPresent()) {
             throw new ObjectNotFoundException(Repository.class, repositoryId);
         }
@@ -180,7 +175,6 @@ public class RepositoryController {
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .cacheControl(CacheControl.noCache())
             .body(repositoryMapper.toRepositoryDtoDefault(optionalRepository.get()));
     }
 
@@ -189,37 +183,31 @@ public class RepositoryController {
      *
      * @return The repository updated
      */
-    @ApiOperation(value = "Update an existing repository by id, and load it automatically if enable is selected", response = RepositoryResponseDto.class)
+    @ApiOperation(value = "Update an existing repository by id, and load it automatically if enable is selected")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = RepositoryResponseDto.class),
+        @ApiResponse(code = 200, message = "Ok"),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Repository not found", response = ApiErrorDto.class)
     })
     @PutMapping(value = "/v1/repositories/{repositoryId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<RepositoryResponseDto> updateOneById(@ApiParam(name = "repositoryId", value = "The repository id", required = true)
-                                                               @PathVariable Long repositoryId,
-                                                               @ApiParam(name = "repositoryResponseDto", value = "The repository with the new info's to update", required = true)
-                                                               @RequestBody RepositoryRequestDto repositoryRequestDto) {
+    public ResponseEntity<Void> updateOneById(@ApiParam(name = "repositoryId", value = "The repository id", required = true)
+                                              @PathVariable Long repositoryId,
+                                              @ApiParam(name = "repositoryResponseDto", value = "The repository with the new info's to update", required = true)
+                                              @RequestBody RepositoryRequestDto repositoryRequestDto) {
         if (!repositoryService.existsById(repositoryId)) {
             throw new ObjectNotFoundException(Repository.class, repositoryId);
         }
 
-        Repository repository = repositoryMapper.toRepositoryWithoutWidgets(repositoryRequestDto);
-        repository.setId(repositoryId);
-
+        Repository repository = repositoryMapper.toRepositoryDefaultModel(repositoryId, repositoryRequestDto);
         this.repositoryService.addOrUpdateRepository(repository);
 
         if (repository.isEnabled()) {
             this.gitService.updateWidgetFromGitRepository(repository);
         }
 
-        return ResponseEntity
-            .ok()
-            .contentType(MediaType.APPLICATION_JSON)
-            .cacheControl(CacheControl.noCache())
-            .body(this.repositoryMapper.toRepositoryDtoDefault(repository));
+        return ResponseEntity.noContent().build();
     }
 
     /**
@@ -228,9 +216,9 @@ public class RepositoryController {
      * @param repositoryId The repository Id
      * @return The repository
      */
-    @ApiOperation(value = "Retrieve a list of widget by repository", nickname = "getRepositoryWidget")
+    @ApiOperation(value = "Retrieve a list of widget by repository", response = WidgetResponseDto.class, nickname = "getRepositoryWidget")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok"),
+        @ApiResponse(code = 200, message = "Ok", response = WidgetResponseDto.class, responseContainer = "List"),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Repository not found", response = ApiErrorDto.class)
@@ -241,7 +229,6 @@ public class RepositoryController {
     public ResponseEntity<List<WidgetResponseDto>> getRepositoryWidget(@ApiParam(name = "repositoryId", value = "The repository id", required = true)
                                                                        @PathVariable Long repositoryId) {
         Optional<Repository> optionalRepository = repositoryService.getOneById(repositoryId);
-
         if (!optionalRepository.isPresent()) {
             throw new ObjectNotFoundException(Repository.class, repositoryId);
         }
@@ -249,7 +236,6 @@ public class RepositoryController {
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .cacheControl(CacheControl.noCache())
             .body(widgetMapper.toWidgetDtosDefault(optionalRepository.get().getWidgets()));
     }
 }

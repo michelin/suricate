@@ -18,20 +18,19 @@ package io.suricate.monitoring.controllers.api;
 
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.role.RoleResponseDto;
-import io.suricate.monitoring.model.dto.api.setting.UserSettingResponseDto;
 import io.suricate.monitoring.model.dto.api.user.UserRequestDto;
 import io.suricate.monitoring.model.dto.api.user.UserResponseDto;
+import io.suricate.monitoring.model.dto.api.user.UserSettingResponseDto;
 import io.suricate.monitoring.model.entity.user.User;
 import io.suricate.monitoring.model.enums.AuthenticationMethod;
-import io.suricate.monitoring.service.mapper.UserMapper;
-import io.suricate.monitoring.service.mapper.UserSettingMapper;
 import io.suricate.monitoring.service.api.UserService;
 import io.suricate.monitoring.service.api.UserSettingService;
+import io.suricate.monitoring.service.mapper.UserMapper;
+import io.suricate.monitoring.service.mapper.UserSettingMapper;
 import io.suricate.monitoring.utils.exception.NoContentException;
 import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -107,79 +106,16 @@ public class UserController {
     })
     @GetMapping(value = "/v1/users")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<List<UserResponseDto>> getAll() {
-        Optional<List<User>> users = userService.getAllOrderByUsername();
-
-        if (!users.isPresent()) {
+    public ResponseEntity<List<UserResponseDto>> getAll(@RequestParam(value = "filter", required = false, defaultValue = "") String filter) {
+        Optional<List<User>> usersOptional = userService.getAllByUsernameStartWith(filter);
+        if (!usersOptional.isPresent()) {
             throw new NoContentException(User.class);
         }
 
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .cacheControl(CacheControl.noCache())
-            .body(userMapper.toUserDtosDefault(users.get()));
-    }
-
-    /**
-     * Search users by username
-     *
-     * @param username The username query
-     * @return The user that match with the query
-     */
-    @ApiOperation(value = "Search a user by username", response = UserResponseDto.class)
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = UserResponseDto.class, responseContainer = "List"),
-        @ApiResponse(code = 204, message = "No Content"),
-        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
-    })
-    @GetMapping(value = "/v1/users/search")
-    @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<List<UserResponseDto>> search(@ApiParam(name = "username", value = "The username to search", required = true)
-                                                        @RequestParam("username") String username) {
-        Optional<List<User>> users = userService.getAllByUsernameStartWith(username);
-
-        if (!users.isPresent()) {
-            throw new NoContentException(User.class);
-        }
-
-        return ResponseEntity
-            .ok()
-            .contentType(MediaType.APPLICATION_JSON)
-            .cacheControl(CacheControl.noCache())
-            .body(userMapper.toUserDtosDefault(users.get()));
-    }
-
-    /**
-     * Register a new user in the database
-     *
-     * @param userRequestDto The user to register
-     * @return The user registered
-     */
-    @ApiOperation(value = "Register a new user", response = UserResponseDto.class)
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = UserResponseDto.class),
-        @ApiResponse(code = 400, message = "Bad request", response = ApiErrorDto.class),
-    })
-    @PostMapping(value = "/v1/users/register")
-    @PreAuthorize("isAnonymous()")
-    public ResponseEntity<UserResponseDto> register(@ApiParam(name = "userResponseDto", value = "The user information to create", required = true)
-                                                    @RequestBody UserRequestDto userRequestDto) {
-        User user = userMapper.toNewUser(userRequestDto, AuthenticationMethod.DATABASE);
-        Optional<User> userSaved = userService.registerNewUserAccount(user);
-
-        URI resourceLocation = ServletUriComponentsBuilder
-            .fromCurrentContextPath()
-            .path("/api/users/" + user.getId())
-            .build()
-            .toUri();
-
-        return ResponseEntity
-            .created(resourceLocation)
-            .contentType(MediaType.APPLICATION_JSON)
-            .cacheControl(CacheControl.noCache())
-            .body(userMapper.toUserDtoDefault(userSaved.get()));
+            .body(userMapper.toUserDtosDefault(usersOptional.get()));
     }
 
     /**
@@ -198,65 +134,37 @@ public class UserController {
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<UserResponseDto> getOne(@ApiParam(name = "userId", value = "The user id", required = true)
                                                   @PathVariable("userId") Long userId) {
-        Optional<User> user = userService.getOne(userId);
-        if (!user.isPresent()) {
+        Optional<User> userOptional = userService.getOne(userId);
+        if (!userOptional.isPresent()) {
             throw new ObjectNotFoundException(User.class, userId);
         }
 
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .cacheControl(CacheControl.noCache())
-            .body(userMapper.toUserDtoDefault(user.get()));
-    }
-
-    /**
-     * Delete a user
-     *
-     * @param userId The user id to delete
-     * @return The user deleted
-     */
-    @ApiOperation(value = "Delete a user by id", response = UserResponseDto.class)
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = UserResponseDto.class),
-        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
-    })
-    @DeleteMapping(value = "/v1/users/{userId}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @Transactional
-    public ResponseEntity<Void> deleteOne(@ApiParam(name = "userId", value = "The user id", required = true)
-                                          @PathVariable("userId") Long userId) {
-        Optional<User> userOptional = userService.getOne(userId);
-
-        if (!userOptional.isPresent()) {
-            throw new ObjectNotFoundException(User.class, userId);
-        }
-
-        userService.deleteUserByUserId(userOptional.get());
-        return ResponseEntity.noContent().build();
+            .body(userMapper.toUserDtoDefault(userOptional.get()));
     }
 
     /**
      * Update a user
      *
      * @param userId         The user id
-     * @param userRequestDto The informations to update
+     * @param userRequestDto The information to update
      * @return The user updated
      */
-    @ApiOperation(value = "Update a user by id", response = UserResponseDto.class)
+    @ApiOperation(value = "Update a user by id")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = UserResponseDto.class),
+        @ApiResponse(code = 200, message = "Ok"),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "User not found", response = ApiErrorDto.class)
     })
     @PutMapping(value = "/v1/users/{userId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<UserResponseDto> updateOne(@ApiParam(name = "userId", value = "The user id", required = true)
-                                                     @PathVariable("userId") Long userId,
-                                                     @ApiParam(name = "userResponseDto", value = "The user info to update", required = true)
-                                                     @RequestBody UserRequestDto userRequestDto) {
+    public ResponseEntity<Void> updateOne(@ApiParam(name = "userId", value = "The user id", required = true)
+                                          @PathVariable("userId") Long userId,
+                                          @ApiParam(name = "userResponseDto", value = "The user info to update", required = true)
+                                          @RequestBody UserRequestDto userRequestDto) {
         Optional<User> userOptional = userService.updateUser(
             userId,
             userRequestDto.getUsername(),
@@ -270,11 +178,33 @@ public class UserController {
             throw new ObjectNotFoundException(User.class, userId);
         }
 
-        return ResponseEntity
-            .ok()
-            .contentType(MediaType.APPLICATION_JSON)
-            .cacheControl(CacheControl.noCache())
-            .body(userMapper.toUserDtoDefault(userOptional.get()));
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * Delete a user
+     *
+     * @param userId The user id to delete
+     * @return The user deleted
+     */
+    @ApiOperation(value = "Delete a user by id")
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Ok"),
+        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
+    })
+    @DeleteMapping(value = "/v1/users/{userId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @Transactional
+    public ResponseEntity<Void> deleteOne(@ApiParam(name = "userId", value = "The user id", required = true)
+                                          @PathVariable("userId") Long userId) {
+        Optional<User> userOptional = userService.getOne(userId);
+        if (!userOptional.isPresent()) {
+            throw new ObjectNotFoundException(User.class, userId);
+        }
+
+        userService.deleteUserByUserId(userOptional.get());
+        return ResponseEntity.noContent().build();
     }
 
     /**
@@ -284,15 +214,15 @@ public class UserController {
      */
     @ApiOperation(value = "Retrieve the user settings", response = UserSettingResponseDto.class)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = UserSettingResponseDto.class),
+        @ApiResponse(code = 200, message = "Ok", response = UserSettingResponseDto.class, responseContainer = "List"),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "User not found", response = ApiErrorDto.class)
     })
     @GetMapping(value = "/v1/users/{userId}/settings")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<List<UserSettingResponseDto>> updateUserSettings(@ApiParam(name = "userId", value = "The user id", required = true)
-                                                                           @PathVariable("userId") Long userId) {
+    public ResponseEntity<List<UserSettingResponseDto>> getUserSettings(@ApiParam(name = "userId", value = "The user id", required = true)
+                                                                        @PathVariable("userId") Long userId) {
         Optional<User> userOptional = userService.getOne(userId);
         if (!userOptional.isPresent()) {
             throw new ObjectNotFoundException(User.class, userId);
@@ -300,7 +230,6 @@ public class UserController {
 
         return ResponseEntity
             .ok()
-            .cacheControl(CacheControl.noCache())
             .contentType(MediaType.APPLICATION_JSON)
             .body(userSettingMapper.toUserSettingDtosDefault(userOptional.get().getUserSettings()));
     }
@@ -313,9 +242,9 @@ public class UserController {
      * @param userSettingResponseDtos The new settings
      * @return The user updated
      */
-    @ApiOperation(value = "Update the user settings for a user", response = UserResponseDto.class)
+    @ApiOperation(value = "Update the user settings for a user")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = UserResponseDto.class),
+        @ApiResponse(code = 200, message = "Ok"),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "User not found", response = ApiErrorDto.class)
@@ -335,14 +264,9 @@ public class UserController {
             throw new AccessDeniedException(String.format("User %s is not allowed to modify this resource", principal.getName()));
         }
 
-        User user = userOptional.get();
-        userSettingService.updateUserSettingsForUser(user, userSettingResponseDtos);
+        userSettingService.updateUserSettingsForUser(userOptional.get(), userSettingResponseDtos);
 
-        return ResponseEntity
-            .ok()
-            .cacheControl(CacheControl.noCache())
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(userMapper.toUserDtoDefault(user));
+        return ResponseEntity.noContent().build();
     }
 
     /**
@@ -361,16 +285,44 @@ public class UserController {
     @GetMapping(value = "/v1/users/current")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<UserResponseDto> getCurrentUser(@ApiIgnore Principal principal) {
-        Optional<User> user = userService.getOneByUsername(principal.getName());
-
-        if (!user.isPresent()) {
+        Optional<User> userOptional = userService.getOneByUsername(principal.getName());
+        if (!userOptional.isPresent()) {
             throw new ObjectNotFoundException(User.class, principal.getName());
         }
 
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .cacheControl(CacheControl.noCache())
-            .body(userMapper.toUserDtoDefault(user.get()));
+            .body(userMapper.toUserDtoDefault(userOptional.get()));
+    }
+
+    /**
+     * Register a new user in the database
+     *
+     * @param userRequestDto The user to register
+     * @return The user registered
+     */
+    @ApiOperation(value = "Register a new user", response = UserResponseDto.class)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Ok", response = UserResponseDto.class),
+        @ApiResponse(code = 400, message = "Bad request", response = ApiErrorDto.class),
+    })
+    @PostMapping(value = "/v1/users/register")
+    @PreAuthorize("isAnonymous()")
+    public ResponseEntity<UserResponseDto> register(@ApiParam(name = "userResponseDto", value = "The user information to create", required = true)
+                                                    @RequestBody UserRequestDto userRequestDto) {
+        User user = userMapper.toNewUser(userRequestDto, AuthenticationMethod.DATABASE);
+        Optional<User> userSavedOptional = userService.registerNewUserAccount(user);
+
+        URI resourceLocation = ServletUriComponentsBuilder
+            .fromCurrentContextPath()
+            .path("/api/users/" + userSavedOptional.get().getId())
+            .build()
+            .toUri();
+
+        return ResponseEntity
+            .created(resourceLocation)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(userMapper.toUserDtoDefault(userSavedOptional.get()));
     }
 }
