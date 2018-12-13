@@ -139,7 +139,7 @@ public class ConfigurationController {
      */
     @ApiOperation(value = "Update a configuration by the key")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok"),
+        @ApiResponse(code = 204, message = "Configuration updated"),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Configuration not found", response = ApiErrorDto.class)
@@ -169,7 +169,7 @@ public class ConfigurationController {
      */
     @ApiOperation(value = "Delete a configuration by the key")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok"),
+        @ApiResponse(code = 204, message = "Configuration deleted"),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Configuration not found", response = ApiErrorDto.class)

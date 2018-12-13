@@ -154,7 +154,7 @@ public class UserController {
      */
     @ApiOperation(value = "Update a user by id")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok"),
+        @ApiResponse(code = 204, message = "User updated"),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "User not found", response = ApiErrorDto.class)
@@ -189,7 +189,7 @@ public class UserController {
      */
     @ApiOperation(value = "Delete a user by id")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok"),
+        @ApiResponse(code = 204, message = "User deleted"),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
@@ -244,7 +244,7 @@ public class UserController {
      */
     @ApiOperation(value = "Update the user settings for a user")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok"),
+        @ApiResponse(code = 204, message = "Settings updated"),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "User not found", response = ApiErrorDto.class)

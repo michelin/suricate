@@ -243,7 +243,7 @@ public class ProjectController {
      */
     @ApiOperation(value = "Update an existing project by the project token")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok"),
+        @ApiResponse(code = 204, message = "Project updated"),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class)
@@ -278,7 +278,7 @@ public class ProjectController {
      */
     @ApiOperation(value = "Delete a project by the project token")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok"),
+        @ApiResponse(code = 204, message = "Project deleted"),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class)
@@ -306,7 +306,7 @@ public class ProjectController {
      */
     @ApiOperation(value = "Update the project widget positions for a project")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok"),
+        @ApiResponse(code = 204, message = "Widget position updated"),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class)
@@ -469,7 +469,7 @@ public class ProjectController {
      */
     @ApiOperation(value = "Delete a user from a project")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok"),
+        @ApiResponse(code = 204, message = "User removed from project"),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class),

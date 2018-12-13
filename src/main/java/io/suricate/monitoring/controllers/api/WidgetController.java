@@ -154,7 +154,7 @@ public class WidgetController {
      */
     @ApiOperation(value = "Update a widget by id")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok"),
+        @ApiResponse(code = 204, message = "Widget updated"),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Widget not found", response = ApiErrorDto.class)

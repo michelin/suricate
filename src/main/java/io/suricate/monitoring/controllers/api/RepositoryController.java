@@ -185,7 +185,7 @@ public class RepositoryController {
      */
     @ApiOperation(value = "Update an existing repository by id, and load it automatically if enable is selected")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok"),
+        @ApiResponse(code = 204, message = "Repository updated"),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Repository not found", response = ApiErrorDto.class)
