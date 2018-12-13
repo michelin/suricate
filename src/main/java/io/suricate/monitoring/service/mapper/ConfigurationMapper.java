@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.mapper;
+package io.suricate.monitoring.service.mapper;
 
 
 import io.suricate.monitoring.model.dto.api.configuration.ConfigurationResponseDto;
 import io.suricate.monitoring.model.entity.Configuration;
-import io.suricate.monitoring.service.mapper.CategoryMapper;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -40,6 +39,8 @@ import java.util.List;
 )
 public abstract class ConfigurationMapper {
 
+    /* ************************* TO DTO ********************************************** */
+
     /* ******************************************************* */
     /*                  Simple Mapping                         */
     /* ******************************************************* */
@@ -54,16 +55,6 @@ public abstract class ConfigurationMapper {
     @Mapping(target = "category", qualifiedByName = "toCategoryDtoDefault")
     public abstract ConfigurationResponseDto toConfigurationDtoDefault(Configuration configuration);
 
-    /**
-     * Get the configuration without category
-     *
-     * @param configuration The configuration
-     * @return The related DTO
-     */
-    @Named("toConfigurationDtoWithoutCategory")
-    @Mapping(target = "category", ignore = true)
-    public abstract ConfigurationResponseDto toConfigurationDtoWithoutCategory(Configuration configuration);
-
     /* ******************************************************* */
     /*                    List Mapping                         */
     /* ******************************************************* */
@@ -77,8 +68,4 @@ public abstract class ConfigurationMapper {
     @Named("toConfigurationDtosDefault")
     @IterableMapping(qualifiedByName = "toConfigurationDtoDefault")
     public abstract List<ConfigurationResponseDto> toConfigurationDtosDefault(List<Configuration> configurations);
-
-    @Named("toConfigurationDtosWithoutCategory")
-    @IterableMapping(qualifiedByName = "toConfigurationDtoWithoutCategory")
-    public abstract List<ConfigurationResponseDto> toConfigurationDtosWithoutCategory(List<Configuration> configurations);
 }

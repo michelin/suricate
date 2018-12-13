@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.dto.api.setting;
+package io.suricate.monitoring.model.dto.api.user;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
+import io.suricate.monitoring.model.dto.api.setting.AllowedSettingValueResponseDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

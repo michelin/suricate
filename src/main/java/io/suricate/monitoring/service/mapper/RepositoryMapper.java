@@ -34,6 +34,8 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public abstract class RepositoryMapper {
 
+    /* ************************* TO DTO ********************************************** */
+
     /* ******************************************************* */
     /*                  Simple Mapping                         */
     /* ******************************************************* */
@@ -46,16 +48,6 @@ public abstract class RepositoryMapper {
      */
     @Named("toRepositoryDtoDefault")
     public abstract RepositoryResponseDto toRepositoryDtoDefault(Repository repository);
-
-    /**
-     * Create a repository with a dto without widgets
-     *
-     * @param repositoryRequestDto The repository dto to transform
-     * @return The repository
-     */
-    @Named("toRepositoryWithoutWidgets")
-    @Mapping(target = "widgets", ignore = true)
-    public abstract Repository toRepositoryWithoutWidgets(RepositoryRequestDto repositoryRequestDto);
 
     /* ******************************************************* */
     /*                    List Mapping                         */
@@ -70,4 +62,20 @@ public abstract class RepositoryMapper {
     @Named("toRepositoryDtosDefault")
     @IterableMapping(qualifiedByName = "toRepositoryDtoDefault")
     public abstract List<RepositoryResponseDto> toRepositoryDtosDefault(List<Repository> repositories);
+
+    /* ************************* TO MODEL **************************************** */
+
+    /* ******************************************************* */
+    /*                  Simple Mapping                         */
+    /* ******************************************************* */
+
+    /**
+     * Create a repository with a dto without widgets
+     *
+     * @param repositoryRequestDto The repository dto to transform
+     * @return The repository
+     */
+    @Named("toRepositoryDefaultModel")
+    @Mapping(target = "widgets", ignore = true)
+    public abstract Repository toRepositoryDefaultModel(RepositoryRequestDto repositoryRequestDto);
 }

@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.mapper;
+package io.suricate.monitoring.service.mapper;
 
 import io.suricate.monitoring.model.dto.api.widget.LibraryResponseDto;
 import io.suricate.monitoring.model.entity.Library;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.springframework.stereotype.Component;
 
@@ -32,6 +33,8 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public abstract class LibraryMapper {
 
+    /* ************************* TO DTO ********************************************** */
+
     /* ******************************************************* */
     /*                  Simple Mapping                         */
     /* ******************************************************* */
@@ -43,6 +46,7 @@ public abstract class LibraryMapper {
      * @return The related library DTO
      */
     @Named("toLibraryDtoDefault")
+    @Mapping(target = "assetToken", expression = "java( library.getAsset() != null ? io.suricate.monitoring.utils.IdUtils.encrypt(library.getAsset().getId()) : null )")
     public abstract LibraryResponseDto toLibraryDtoDefault(Library library);
 
     /* ******************************************************* */

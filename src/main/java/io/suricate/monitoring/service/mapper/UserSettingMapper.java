@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.service.mapper;
 
-import io.suricate.monitoring.model.dto.api.setting.UserSettingResponseDto;
+import io.suricate.monitoring.model.dto.api.user.UserSettingResponseDto;
 import io.suricate.monitoring.model.entity.setting.UserSetting;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
@@ -37,6 +37,8 @@ import java.util.List;
     }
 )
 public abstract class UserSettingMapper {
+
+    /* ************************* TO DTO ********************************************** */
 
     /* ******************************************************* */
     /*                  Simple Mapping                         */

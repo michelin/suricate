@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.service.api;
 
-import io.suricate.monitoring.model.dto.api.setting.UserSettingResponseDto;
+import io.suricate.monitoring.model.dto.api.user.UserSettingResponseDto;
 import io.suricate.monitoring.model.entity.setting.AllowedSettingValue;
 import io.suricate.monitoring.model.entity.setting.UserSetting;
 import io.suricate.monitoring.model.entity.user.User;

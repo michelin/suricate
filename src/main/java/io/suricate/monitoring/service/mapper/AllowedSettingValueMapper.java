@@ -32,6 +32,8 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public abstract class AllowedSettingValueMapper {
 
+    /* ************************* TO DTO ********************************************** */
+
     /* ******************************************************* */
     /*                  Simple Mapping                         */
     /* ******************************************************* */
