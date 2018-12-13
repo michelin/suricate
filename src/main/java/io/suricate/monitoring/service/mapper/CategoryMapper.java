@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.mapper.widget;
+package io.suricate.monitoring.service.mapper;
 
-import io.suricate.monitoring.model.dto.api.widget.WidgetParamResponseDto;
-import io.suricate.monitoring.model.entity.widget.WidgetParam;
+import io.suricate.monitoring.model.dto.api.widget.CategoryResponseDto;
+import io.suricate.monitoring.model.entity.widget.Category;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -27,42 +27,37 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * Interface that manage the generation DTO/Model objects for Widget params class
+ * Interface that manage the generation DTO/Model objects for Category class
  */
 @Component
-@Mapper(
-    componentModel = "spring",
-    uses = {
-        WidgetParamValueMapper.class
-    }
-)
-public abstract class WidgetParamMapper {
+@Mapper(componentModel = "spring")
+public abstract class CategoryMapper {
 
     /* ******************************************************* */
     /*                  Simple Mapping                         */
     /* ******************************************************* */
 
     /**
-     * Tranform a widgetParam into a widgetParamDto
+     * Tranform a Category into a CategoryResponseDto
      *
-     * @param widgetParam The widgetParam to transform
-     * @return The related widgetParam DTO
+     * @param category The category to transform
+     * @return The related category DTO
      */
-    @Named("toWidgetParamDtoDefault")
-    @Mapping(target = "values", source = "widgetParam.possibleValuesMap", qualifiedByName = "toWidgetParamValueDtosDefault")
-    public abstract WidgetParamResponseDto toWidgetParamDtoDefault(WidgetParam widgetParam);
+    @Named("toCategoryDtoDefault")
+    @Mapping(target = "assetToken", expression = "java( category.getImage() != null ? io.suricate.monitoring.utils.IdUtils.encrypt(category.getImage().getId()) : null )")
+    public abstract CategoryResponseDto toCategoryDtoDefault(Category category);
 
     /* ******************************************************* */
     /*                    List Mapping                         */
     /* ******************************************************* */
 
     /**
-     * Tranform a list of widgetParams into a list of widgetParamDto
+     * Tranform a list of categories into a list of categoryDto
      *
-     * @param widgetParams The list of widgetParams to transform
-     * @return The related DTOs
+     * @param categories The list of category to transform
+     * @return The related DTO
      */
-    @Named("toWidgetParamDtosDefault")
-    @IterableMapping(qualifiedByName = "toWidgetParamDtoDefault")
-    public abstract List<WidgetParamResponseDto> toWidgetParamDtosDefault(List<WidgetParam> widgetParams);
+    @Named("toCategoryDtosDefault")
+    @IterableMapping(qualifiedByName = "toCategoryDtoDefault")
+    public abstract List<CategoryResponseDto> toCategoryDtosDefault(List<Category> categories);
 }

@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.mapper.setting;
+package io.suricate.monitoring.service.mapper;
 
-import io.suricate.monitoring.model.dto.api.setting.SettingResponseDto;
-import io.suricate.monitoring.model.entity.setting.Setting;
+import io.suricate.monitoring.model.dto.api.setting.UserSettingResponseDto;
+import io.suricate.monitoring.model.entity.setting.UserSetting;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -27,7 +27,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * Interface that manage the generation DTO/Model objects for Setting class
+ * Interface that manage the generation DTO/Model objects for UserSetting class
  */
 @Component
 @Mapper(
@@ -36,33 +36,36 @@ import java.util.List;
         AllowedSettingValueMapper.class
     }
 )
-public abstract class SettingMapper {
+public abstract class UserSettingMapper {
 
     /* ******************************************************* */
     /*                  Simple Mapping                         */
     /* ******************************************************* */
 
     /**
-     * Transform a setting into a SettingResponseDto
+     * Transform a user setting into a user setting dto without user
      *
-     * @param setting The setting to tranform
+     * @param userSetting The user setting to transform
      * @return The related DTO
      */
-    @Named("toSettingDtoDefault")
-    @Mapping(target = "allowedSettingValues", qualifiedByName = "toAllowedSettingValueDtosDefault")
-    public abstract SettingResponseDto toSettingDtoDefault(Setting setting);
+    @Named("toUserSettingDtoDefault")
+    @Mapping(target = "userId", source = "userSetting.user.id")
+    @Mapping(target = "settingId", source = "userSetting.setting.id")
+    @Mapping(target = "settingValue", qualifiedByName = "toAllowedSettingValueDtoDefault")
+    public abstract UserSettingResponseDto toUserSettingDtoDefault(UserSetting userSetting);
+
 
     /* ******************************************************* */
     /*                    List Mapping                         */
     /* ******************************************************* */
 
     /**
-     * Transform a list of settings into a list of settings dto
+     * Transform a list of userSetting into a list of userSettingsDto
      *
-     * @param settings The list of settings to transform
+     * @param userSettings The user settings to transform
      * @return The related list of dto's
      */
-    @Named("toSettingDtosDefault")
-    @IterableMapping(qualifiedByName = "toSettingDtoDefault")
-    public abstract List<SettingResponseDto> toSettingDtosDefault(List<Setting> settings);
+    @Named("toUserSettingDtosDefault")
+    @IterableMapping(qualifiedByName = "toUserSettingDtoDefault")
+    public abstract List<UserSettingResponseDto> toUserSettingDtosDefault(List<UserSetting> userSettings);
 }

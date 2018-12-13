@@ -164,11 +164,7 @@ public class ConfigurationController {
 
         cacheService.clearCache("configuration");
 
-        return ResponseEntity
-            .ok()
-            .cacheControl(CacheControl.noCache())
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(configurationMapper.toConfigurationDtoDefault(configuration));
+        return ResponseEntity.noContent().build();
     }
 
     /**
@@ -232,32 +228,5 @@ public class ConfigurationController {
             .contentType(MediaType.APPLICATION_JSON)
             .cacheControl(CacheControl.noCache())
             .body(configurationService.getServerConfiguration());
-    }
-
-    /**
-     * Return the list of configurations associated to the category
-     */
-    @ApiOperation(value = "Get the list of configurations for a category", response = ConfigurationResponseDto.class)
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = ConfigurationResponseDto.class, responseContainer = "List"),
-        @ApiResponse(code = 204, message = "No Content"),
-        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
-    })
-    @GetMapping(value = "/v1/categories/{categoryId}/configurations")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<List<ConfigurationResponseDto>> getConfigurationsByCategory(@ApiParam(name = "categoryId", value = "The category id", required = true)
-                                                                                      @PathVariable("categoryId") final Long categoryId) {
-        List<Configuration> configurations = configurationService.getConfigurationForCategory(categoryId);
-
-        if (configurations.isEmpty()) {
-            throw new NoContentException(Configuration.class);
-        }
-
-        return ResponseEntity
-            .ok()
-            .contentType(MediaType.APPLICATION_JSON)
-            .cacheControl(CacheControl.noCache())
-            .body(configurationMapper.toConfigurationDtosWithoutCategory(configurations));
     }
 }

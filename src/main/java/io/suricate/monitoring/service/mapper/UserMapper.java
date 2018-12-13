@@ -14,33 +14,31 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.mapper.project;
+package io.suricate.monitoring.service.mapper;
 
-import io.suricate.monitoring.model.dto.api.project.ProjectRequestDto;
-import io.suricate.monitoring.model.dto.api.project.ProjectResponseDto;
-import io.suricate.monitoring.model.entity.project.Project;
-import io.suricate.monitoring.service.api.LibraryService;
+import io.suricate.monitoring.model.dto.api.user.UserRequestDto;
+import io.suricate.monitoring.model.dto.api.user.UserResponseDto;
+import io.suricate.monitoring.model.entity.user.User;
+import io.suricate.monitoring.model.enums.AuthenticationMethod;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 /**
- * Interface that manage the generation DTO/Model objects for project class
+ * Interface that manage the generation DTO/Model objects for User class
  */
 @Component
 @Mapper(componentModel = "spring")
-public abstract class ProjectMapper {
+public abstract class UserMapper {
 
-    /**
-     * The library service
-     */
     @Autowired
-    protected LibraryService libraryService;
+    protected PasswordEncoder passwordEncoder;
 
     /* ************************* TO DTO ********************************************** */
 
@@ -49,32 +47,28 @@ public abstract class ProjectMapper {
     /* ******************************************************* */
 
     /**
-     * Transform a project into a ProjectResponseDto
+     * Tranform a User into a UserResponseDto
      *
-     * @param project The project to transform
-     * @return The related project DTO
+     * @param user The user to transform
+     * @return The related user DTO
      */
-    @Named("toProjectDtoDefault")
-    @Mapping(target = "gridProperties.maxColumn", source = "project.maxColumn")
-    @Mapping(target = "gridProperties.widgetHeight", source = "project.widgetHeight")
-    @Mapping(target = "gridProperties.cssStyle", source = "project.cssStyle")
-    @Mapping(target = "librariesToken", expression = "java(libraryService.getLibraries(project.getWidgets()))")
-    public abstract ProjectResponseDto toProjectDtoDefault(Project project);
+    @Named("toUserDtoDefault")
+    @Mapping(target = "fullname", expression = "java(String.format(\"%s %s\", user.getFirstname(), user.getLastname()))")
+    public abstract UserResponseDto toUserDtoDefault(User user);
 
     /* ******************************************************* */
     /*                    List Mapping                         */
     /* ******************************************************* */
 
     /**
-     * Tranform a list of projects into a list of projectDtos
+     * Tranform a list of Users into a list of UserResponseDto
      *
-     * @param projects The list of project to tranform
-     * @return The related list of dto object
+     * @param users The list of user to transform
+     * @return The related users DTO
      */
-    @Named("toProjectDtosDefault")
-    @IterableMapping(qualifiedByName = "toProjectDtoDefault")
-    public abstract List<ProjectResponseDto> toProjectDtosDefault(List<Project> projects);
-
+    @Named("toUserDtosDefault")
+    @IterableMapping(qualifiedByName = "toUserDtoDefault")
+    public abstract List<UserResponseDto> toUserDtosDefault(List<User> users);
 
     /* ************************* TO MODEL **************************************** */
 
@@ -83,11 +77,15 @@ public abstract class ProjectMapper {
     /* ******************************************************* */
 
     /**
-     * Transform a projectRequestDto into a project when we want to add a new dashboard
+     * Tranform a UserRequestDto into a User for creation
      *
-     * @param projectRequestDto The project to transform
-     * @return The related project domain object
+     * @param userRequestDto       The userRequestDto to transform
+     * @param authenticationMethod The authentication method of the user
+     * @return The related user
      */
-    @Named("toNewProject")
-    public abstract Project toNewProject(ProjectRequestDto projectRequestDto);
+    @Named("toNewUser")
+    @Mapping(target = "roles", ignore = true)
+    @Mapping(target = "authenticationMethod", source = "authenticationMethod")
+    @Mapping(target = "password", expression = "java( passwordEncoder.encode(userRequestDto.getPassword()) )")
+    public abstract User toNewUser(UserRequestDto userRequestDto, AuthenticationMethod authenticationMethod);
 }

@@ -232,7 +232,7 @@ public class UserService {
                                      final String firstname,
                                      final String lastname,
                                      final String email,
-                                     final List<String> roleNames) {
+                                     final List<UserRoleEnum> roleNames) {
         Optional<User> userOpt = getOne(userId);
 
         if (!userOpt.isPresent()) {
@@ -272,9 +272,9 @@ public class UserService {
      * @param user      The user
      * @param roleNames The roles to set
      */
-    private void updateUserRoles(User user, List<String> roleNames) {
+    private void updateUserRoles(User user, List<UserRoleEnum> roleNames) {
         List<Role> rolesToSet = roleNames.stream()
-            .map(roleName -> roleService.getRoleByName(roleName).orElse(null))
+            .map(roleName -> roleService.getRoleByName(roleName.name()).orElse(null))
             .collect(Collectors.toList());
 
         if (rolesToSet != null && !rolesToSet.isEmpty()) {

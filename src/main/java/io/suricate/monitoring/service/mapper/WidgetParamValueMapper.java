@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.mapper.role;
+package io.suricate.monitoring.service.mapper;
 
-import io.suricate.monitoring.model.dto.api.role.RoleResponseDto;
-import io.suricate.monitoring.model.entity.user.Role;
+import io.suricate.monitoring.model.dto.api.widget.WidgetParamValueResponseDto;
+import io.suricate.monitoring.model.entity.widget.WidgetParamValue;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
@@ -26,36 +26,38 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * Interface that manage the generation DTO/Model objects for Role class
+ * Interface that manage the generation DTO/Model objects for widgetParamValue class
  */
 @Component
-@Mapper(componentModel = "spring")
-public abstract class RoleMapper {
+@Mapper(
+    componentModel = "spring"
+)
+public abstract class WidgetParamValueMapper {
 
     /* ******************************************************* */
     /*                  Simple Mapping                         */
     /* ******************************************************* */
 
     /**
-     * Tranform a Role into a RoleResponseDto
+     * Tranform a widgetParamValue into a widgetParamValueDto
      *
-     * @param role The project to transform
-     * @return The related role DTO
+     * @param widgetParamValue The widgetParamValue to transform
+     * @return The related widgetParamValue DTO
      */
-    @Named("toRoleDtoDefault")
-    public abstract RoleResponseDto toRoleDtoDefault(Role role);
+    @Named("toWidgetParamValueDtoDefault")
+    public abstract WidgetParamValueResponseDto toWidgetParamValueDtoDefault(WidgetParamValue widgetParamValue);
 
     /* ******************************************************* */
     /*                    List Mapping                         */
     /* ******************************************************* */
 
     /**
-     * Tranform a list of roles into a list of role dto
+     * Tranform a list of widgetParamValues into a list of widgetParamValueDto
      *
-     * @param roles The list of roles to transform
-     * @return The related roles DTO
+     * @param widgetParamValues The list of widgetParamValues to transform
+     * @return The related DTOs
      */
-    @Named("toRoleDtosDefault")
-    @IterableMapping(qualifiedByName = "toRoleDtoDefault")
-    public abstract List<RoleResponseDto> toRoleDtosDefault(List<Role> roles);
+    @Named("toWidgetParamValueDtosDefault")
+    @IterableMapping(qualifiedByName = "toWidgetParamValueDtoDefault")
+    public abstract List<WidgetParamValueResponseDto> toWidgetParamValueDtosDefault(List<WidgetParamValue> widgetParamValues);
 }

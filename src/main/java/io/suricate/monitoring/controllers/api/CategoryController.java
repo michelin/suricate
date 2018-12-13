@@ -16,14 +16,17 @@
 
 package io.suricate.monitoring.controllers.api;
 
+import io.suricate.monitoring.model.dto.api.configuration.ConfigurationResponseDto;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.widget.CategoryResponseDto;
 import io.suricate.monitoring.model.dto.api.widget.WidgetResponseDto;
+import io.suricate.monitoring.model.entity.Configuration;
 import io.suricate.monitoring.model.entity.widget.Category;
 import io.suricate.monitoring.model.entity.widget.Widget;
 import io.suricate.monitoring.model.entity.widget.WidgetParam;
-import io.suricate.monitoring.model.mapper.widget.CategoryMapper;
-import io.suricate.monitoring.model.mapper.widget.WidgetMapper;
+import io.suricate.monitoring.model.mapper.ConfigurationMapper;
+import io.suricate.monitoring.service.mapper.CategoryMapper;
+import io.suricate.monitoring.service.mapper.WidgetMapper;
 import io.suricate.monitoring.service.api.CategoryService;
 import io.suricate.monitoring.service.api.ConfigurationService;
 import io.suricate.monitoring.service.api.WidgetService;
@@ -59,14 +62,19 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     /**
+     * The category dto/object mapper
+     */
+    private final CategoryMapper categoryMapper;
+
+    /**
      * The configuration service
      */
     private final ConfigurationService configurationService;
 
     /**
-     * The category dto/object mapper
+     * The configuration mapper
      */
-    private final CategoryMapper categoryMapper;
+    private final ConfigurationMapper configurationMapper;
 
     /**
      * The widget service to inject
@@ -79,23 +87,26 @@ public class CategoryController {
     private final WidgetMapper widgetMapper;
 
     /**
-     * Contructor
+     * Constructor
      *
      * @param categoryService      The category service to inject
-     * @param configurationService The configuration service to inject
      * @param categoryMapper       The category mapper to inject
+     * @param configurationService The configuration service to inject
+     * @param configurationMapper  The configuration mapper
      * @param widgetService        The widget service to inject
      * @param widgetMapper         The widget mapper to inject
      */
     @Autowired
     public CategoryController(final CategoryService categoryService,
-                              final ConfigurationService configurationService,
                               final CategoryMapper categoryMapper,
+                              final ConfigurationService configurationService,
+                              final ConfigurationMapper configurationMapper,
                               final WidgetService widgetService,
                               final WidgetMapper widgetMapper) {
         this.categoryService = categoryService;
-        this.configurationService = configurationService;
         this.categoryMapper = categoryMapper;
+        this.configurationService = configurationService;
+        this.configurationMapper = configurationMapper;
         this.widgetService = widgetService;
         this.widgetMapper = widgetMapper;
     }
@@ -167,5 +178,32 @@ public class CategoryController {
             .contentType(MediaType.APPLICATION_JSON)
             .cacheControl(CacheControl.noCache())
             .body(widgetMapper.toWidgetDtosDefault(widgets.get()));
+    }
+
+    /**
+     * Return the list of configurations associated to the category
+     */
+    @ApiOperation(value = "Get the list of configurations for a category", response = ConfigurationResponseDto.class)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Ok", response = ConfigurationResponseDto.class, responseContainer = "List"),
+        @ApiResponse(code = 204, message = "No Content"),
+        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
+    })
+    @GetMapping(value = "/v1/categories/{categoryId}/configurations")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<List<ConfigurationResponseDto>> getConfigurationsByCategory(@ApiParam(name = "categoryId", value = "The category id", required = true)
+                                                                                      @PathVariable("categoryId") final Long categoryId) {
+        List<Configuration> configurations = configurationService.getConfigurationForCategory(categoryId);
+
+        if (configurations.isEmpty()) {
+            throw new NoContentException(Configuration.class);
+        }
+
+        return ResponseEntity
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .cacheControl(CacheControl.noCache())
+            .body(configurationMapper.toConfigurationDtosWithoutCategory(configurations));
     }
 }

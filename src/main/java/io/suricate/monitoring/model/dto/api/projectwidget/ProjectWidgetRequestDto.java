@@ -72,4 +72,9 @@ public class ProjectWidgetRequestDto extends AbstractDto {
      */
     @ApiModelProperty(value = "The configuration of this widget")
     private String backendConfig;
+    /**
+     * The widgetId related to this project widget
+     */
+    @ApiModelProperty(value = "The widgetId related to this project widget")
+    private Long widgetId;
 }

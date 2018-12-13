@@ -19,7 +19,7 @@ package io.suricate.monitoring.controllers.api;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.setting.SettingResponseDto;
 import io.suricate.monitoring.model.entity.setting.Setting;
-import io.suricate.monitoring.model.mapper.setting.SettingMapper;
+import io.suricate.monitoring.service.mapper.SettingMapper;
 import io.suricate.monitoring.service.api.SettingService;
 import io.suricate.monitoring.utils.exception.NoContentException;
 import io.swagger.annotations.Api;

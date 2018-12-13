@@ -21,7 +21,7 @@ import io.suricate.monitoring.model.dto.api.widget.WidgetResponseDto;
 import io.suricate.monitoring.model.entity.widget.Widget;
 import io.suricate.monitoring.model.enums.ApiActionEnum;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
-import io.suricate.monitoring.model.mapper.widget.WidgetMapper;
+import io.suricate.monitoring.service.mapper.WidgetMapper;
 import io.suricate.monitoring.service.GitService;
 import io.suricate.monitoring.service.api.WidgetService;
 import io.suricate.monitoring.utils.exception.ApiException;

@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.mapper.widget;
+package io.suricate.monitoring.service.mapper;
 
-import io.suricate.monitoring.model.dto.api.widget.CategoryResponseDto;
-import io.suricate.monitoring.model.entity.widget.Category;
+import io.suricate.monitoring.model.dto.api.widget.WidgetResponseDto;
+import io.suricate.monitoring.model.entity.widget.Widget;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -27,37 +27,39 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * Interface that manage the generation DTO/Model objects for Category class
+ * Interface that manage the generation DTO/Model objects for Widget class
  */
 @Component
 @Mapper(componentModel = "spring")
-public abstract class CategoryMapper {
+public abstract class WidgetMapper {
 
     /* ******************************************************* */
     /*                  Simple Mapping                         */
     /* ******************************************************* */
 
     /**
-     * Tranform a Category into a CategoryResponseDto
+     * Tranform a Widget into a WidgetResponseDto
      *
-     * @param category The category to transform
-     * @return The related category DTO
+     * @param widget The widget to transform
+     * @return The related widget DTO
      */
-    @Named("toCategoryDtoDefault")
-    @Mapping(target = "assetToken", expression = "java( category.getImage() != null ? io.suricate.monitoring.utils.IdUtils.encrypt(category.getImage().getId()) : null )")
-    public abstract CategoryResponseDto toCategoryDtoDefault(Category category);
+    @Named("toWidgetDtoDefault")
+    @Mapping(target = "imageToken", expression = "java( widget.getImage() != null ? io.suricate.monitoring.utils.IdUtils.encrypt(widget.getImage().getId()) : null )")
+    @Mapping(target = "categoryId", source = "widget.category.id")
+    @Mapping(target = "repositoryId", source = "widget.repository.id")
+    public abstract WidgetResponseDto toWidgetDtoDefault(Widget widget);
 
     /* ******************************************************* */
     /*                    List Mapping                         */
     /* ******************************************************* */
 
     /**
-     * Tranform a list of categories into a list of categoryDto
+     * Tranform a list of widgets into a list of widgetDto
      *
-     * @param categories The list of category to transform
-     * @return The related DTO
+     * @param widgets The list of widget to transform
+     * @return The related DTOs
      */
-    @Named("toCategoryDtosDefault")
-    @IterableMapping(qualifiedByName = "toCategoryDtoDefault")
-    public abstract List<CategoryResponseDto> toCategoryDtosDefault(List<Category> categories);
+    @Named("toWidgetDtosDefault")
+    @IterableMapping(qualifiedByName = "toWidgetDtoDefault")
+    public abstract List<WidgetResponseDto> toWidgetDtosDefault(List<Widget> widgets);
 }

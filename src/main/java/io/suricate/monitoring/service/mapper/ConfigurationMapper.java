@@ -19,7 +19,7 @@ package io.suricate.monitoring.model.mapper;
 
 import io.suricate.monitoring.model.dto.api.configuration.ConfigurationResponseDto;
 import io.suricate.monitoring.model.entity.Configuration;
-import io.suricate.monitoring.model.mapper.widget.CategoryMapper;
+import io.suricate.monitoring.service.mapper.CategoryMapper;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

@@ -20,12 +20,12 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
-import io.suricate.monitoring.model.dto.websocket.WebsocketClient;
 import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
+import io.suricate.monitoring.model.dto.websocket.WebsocketClient;
 import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.enums.UpdateType;
-import io.suricate.monitoring.model.mapper.project.ProjectMapper;
 import io.suricate.monitoring.service.api.ProjectService;
+import io.suricate.monitoring.service.mapper.ProjectMapper;
 import io.suricate.monitoring.service.nashorn.NashornService;
 import io.suricate.monitoring.service.scheduler.NashornWidgetScheduler;
 import org.slf4j.Logger;
@@ -89,10 +89,10 @@ public class DashboardWebSocketService {
     /**
      * Constructor
      *
-     * @param simpMessagingTemplate message template used for send messages through stomp websockets
-     * @param projectService The project service
-     * @param projectMapper The project mapper
-     * @param nashornService The nashorn service
+     * @param simpMessagingTemplate  message template used for send messages through stomp websockets
+     * @param projectService         The project service
+     * @param projectMapper          The project mapper
+     * @param nashornService         The nashorn service
      * @param nashornWidgetScheduler The nashorn scheduler
      */
     @Autowired
@@ -112,18 +112,18 @@ public class DashboardWebSocketService {
      * Add a new link between the projectToken and a WebsocketClient
      * Used when a new Websocket connection is done
      *
-     * @param projectToken The connected projectToken
+     * @param projectToken    The connected projectToken
      * @param websocketClient The related websocket client
      */
     @Transactional
-    public void addProjectClient (final String projectToken, final WebsocketClient websocketClient) {
+    public void addProjectClient(final String projectToken, final WebsocketClient websocketClient) {
         boolean shouldInstantiateProject = !projectClients.containsKey(projectToken);
         projectClients.put(projectToken, websocketClient);
 
-        if(shouldInstantiateProject) {
+        if (shouldInstantiateProject) {
             Optional<Project> projectOpt = projectService.getOneByToken(projectToken);
 
-            if(projectOpt.isPresent()) {
+            if (projectOpt.isPresent()) {
                 List<NashornRequest> nashornRequest = nashornService.getNashornRequestsByProject(projectOpt.get());
                 nashornWidgetScheduler.scheduleList(nashornRequest, true, true);
             }
@@ -144,14 +144,14 @@ public class DashboardWebSocketService {
     /**
      * Remove a link between a projectToken and WebsocketClient
      *
-     * @param projectToken The projectToken
+     * @param projectToken    The projectToken
      * @param websocketClient The websocket client
      */
     @Transactional
-    public void removeProjectClient (final String projectToken, final WebsocketClient websocketClient) {
+    public void removeProjectClient(final String projectToken, final WebsocketClient websocketClient) {
         projectClients.remove(projectToken, websocketClient);
 
-        if(projectClients == null || !projectClients.containsKey(projectToken)) {
+        if (projectClients == null || !projectClients.containsKey(projectToken)) {
             projectService
                 .getOneByToken(projectToken)
                 .ifPresent(nashornWidgetScheduler::cancelProjectScheduling);
@@ -162,9 +162,9 @@ public class DashboardWebSocketService {
      * Add new link between the websocket session ID and a WebsocketClient
      *
      * @param websocketSessionId The websocket session id
-     * @param websocketClient The related websocket client
+     * @param websocketClient    The related websocket client
      */
-    public void addSessionClient (final String websocketSessionId, final WebsocketClient websocketClient) {
+    public void addSessionClient(final String websocketSessionId, final WebsocketClient websocketClient) {
         sessionClient.put(websocketSessionId, websocketClient);
     }
 
@@ -174,7 +174,7 @@ public class DashboardWebSocketService {
      * @param websocketSessionId The websocket session to remove
      * @return The websocket session removed
      */
-    public WebsocketClient removeSessionClient (final String websocketSessionId) {
+    public WebsocketClient removeSessionClient(final String websocketSessionId) {
         return sessionClient.remove(websocketSessionId);
     }
 
@@ -182,7 +182,7 @@ public class DashboardWebSocketService {
      * Method used for updates by project id every screens connected to this project
      *
      * @param projectId the project id
-     * @param payload the payload content
+     * @param payload   the payload content
      */
     public void updateGlobalScreensByProjectId(Long projectId, Object payload) {
         updateGlobalScreensByProjectToken(projectService.getTokenByProjectId(projectId), payload);
@@ -192,22 +192,22 @@ public class DashboardWebSocketService {
      * Method used for updates by project token every screens connected to this project
      *
      * @param projectToken the project token
-     * @param payload the payload content
+     * @param payload      the payload content
      */
     @Async
     public void updateGlobalScreensByProjectToken(String projectToken, Object payload) {
         LOGGER.debug("Update project's screen {}", projectToken);
         LOGGER.trace("Update project's screen {}, data: {}", projectToken, payload);
 
-        if (projectToken == null){
+        if (projectToken == null) {
             LOGGER.error("Project token not found for payload: {}", payload);
             return;
         }
 
         simpMessagingTemplate.convertAndSendToUser(
-                projectToken.trim(),
-                "/queue/live",
-                payload
+            projectToken.trim(),
+            "/queue/live",
+            payload
         );
     }
 
@@ -215,8 +215,8 @@ public class DashboardWebSocketService {
      * Method used to update unique screen by project token and screen code
      *
      * @param projectToken project token
-     * @param screenCode The screen code
-     * @param payload data to send
+     * @param screenCode   The screen code
+     * @param payload      data to send
      */
     @Async
     public void updateUniqueScreen(String projectToken, String screenCode, Object payload) {
@@ -224,9 +224,9 @@ public class DashboardWebSocketService {
         LOGGER.debug("Update project's screen {} for user {}, data: {}", projectToken, screenCode, payload);
 
         simpMessagingTemplate.convertAndSendToUser(
-                projectToken.trim()+"-"+screenCode,
-                "/queue/unique",
-                payload
+            projectToken.trim() + "-" + screenCode,
+            "/queue/unique",
+            payload
         );
     }
 
@@ -268,7 +268,7 @@ public class DashboardWebSocketService {
     /**
      * Method used to force reload all connected client
      */
-    public void reloadAllConnectedDashboard(){
+    public void reloadAllConnectedDashboard() {
         Iterator<String> it = projectClients.keySet().iterator();
 
         while (it.hasNext()) {

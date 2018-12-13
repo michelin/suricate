@@ -14,49 +14,55 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.mapper.setting;
+package io.suricate.monitoring.service.mapper;
 
-import io.suricate.monitoring.model.dto.api.setting.AllowedSettingValueResponseDto;
-import io.suricate.monitoring.model.entity.setting.AllowedSettingValue;
+import io.suricate.monitoring.model.dto.api.widget.WidgetParamResponseDto;
+import io.suricate.monitoring.model.entity.widget.WidgetParam;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 /**
- * Interface that manage the generation DTO/Model objects for AllowedSettingValue class
+ * Interface that manage the generation DTO/Model objects for Widget params class
  */
 @Component
-@Mapper(componentModel = "spring")
-public abstract class AllowedSettingValueMapper {
+@Mapper(
+    componentModel = "spring",
+    uses = {
+        WidgetParamValueMapper.class
+    }
+)
+public abstract class WidgetParamMapper {
 
     /* ******************************************************* */
     /*                  Simple Mapping                         */
     /* ******************************************************* */
 
     /**
-     * Transform an allowedSettingValue into an AllowedSettingValueResponseDto
+     * Tranform a widgetParam into a widgetParamDto
      *
-     * @param allowedSettingValue The setting value to transform
-     * @return The related dto
+     * @param widgetParam The widgetParam to transform
+     * @return The related widgetParam DTO
      */
-    @Named("toAllowedSettingValueDtoDefault")
-    public abstract AllowedSettingValueResponseDto toAllowedSettingValueDtoDefault(AllowedSettingValue allowedSettingValue);
+    @Named("toWidgetParamDtoDefault")
+    @Mapping(target = "values", source = "widgetParam.possibleValuesMap", qualifiedByName = "toWidgetParamValueDtosDefault")
+    public abstract WidgetParamResponseDto toWidgetParamDtoDefault(WidgetParam widgetParam);
 
     /* ******************************************************* */
     /*                    List Mapping                         */
     /* ******************************************************* */
 
     /**
-     * Transform a list of AllowedSettingValue into a list of AllowedSettingValueResponseDto
+     * Tranform a list of widgetParams into a list of widgetParamDto
      *
-     * @param allowedSettingValues The list to transform
-     * @return The related list of dtos
+     * @param widgetParams The list of widgetParams to transform
+     * @return The related DTOs
      */
-    @Named("toAllowedSettingValueDtosDefault")
-    @IterableMapping(qualifiedByName = "toAllowedSettingValueDtoDefault")
-    public abstract List<AllowedSettingValueResponseDto> toAllowedSettingValueDtosDefault(List<AllowedSettingValue> allowedSettingValues);
-
+    @Named("toWidgetParamDtosDefault")
+    @IterableMapping(qualifiedByName = "toWidgetParamDtoDefault")
+    public abstract List<WidgetParamResponseDto> toWidgetParamDtosDefault(List<WidgetParam> widgetParams);
 }
