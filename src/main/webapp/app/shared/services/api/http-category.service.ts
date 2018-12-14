@@ -22,6 +22,8 @@ import {Observable} from 'rxjs';
 
 import {categoriesApiEndpoint} from '../../../app.constant';
 import {Category} from '../../model/api/widget/Category';
+import {Widget} from '../../model/api/widget/Widget';
+import {Configuration} from '../../model/api/configuration/Configuration';
 
 /**
  * Manage the widget Http calls
@@ -30,6 +32,11 @@ import {Category} from '../../model/api/widget/Category';
 @Injectable()
 export class HttpCategoryService {
 
+  /**
+   * Constructor
+   *
+   * @param httpClient the http client to inject
+   */
   constructor(private httpClient: HttpClient) {
   }
 
@@ -42,5 +49,25 @@ export class HttpCategoryService {
     const url = `${categoriesApiEndpoint}`;
 
     return this.httpClient.get<Category[]>(url);
+  }
+
+  /**
+   * Get the list of configurations for a category
+   * @param categoryId The category id
+   */
+  getCategoryConfigurations(categoryId: number): Observable<Configuration[]> {
+    const url = `${categoriesApiEndpoint}/${categoryId}/configurations`;
+    return this.httpClient.get<Configuration[]>(url);
+  }
+
+  /**
+   * Get the full list of widgets for a category
+   *
+   * @param categoryId The category id
+   */
+  getCategoryWidgets(categoryId: number): Observable<Widget[]> {
+    const url = `${categoriesApiEndpoint}/${categoryId}/widgets`;
+
+    return this.httpClient.get<Widget[]>(url);
   }
 }

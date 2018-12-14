@@ -60,4 +60,14 @@ public class SettingService {
     public Optional<List<Setting>> getAll() {
         return this.settingRepository.findAllByOrderByDescription();
     }
+
+    /**
+     * Get a setting by id
+     *
+     * @param settingId The setting id
+     * @return The setting as optional
+     */
+    public Optional<Setting> getOneById(final Long settingId) {
+        return this.settingRepository.findById(settingId);
+    }
 }

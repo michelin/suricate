@@ -14,24 +14,8 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.repository;
+import {WidgetAvailabilityEnum} from '../../enums/WidgetAvailabilityEnum';
 
-import io.suricate.monitoring.model.entity.setting.UserSetting;
-import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.Optional;
-
-/**
- * Repository used for request UserSettings in database
- */
-public interface UserSettingRepository extends JpaRepository<UserSetting, Long> {
-
-    /**
-     * Get a setting by userId and setting Id
-     *
-     * @param userId    The userId
-     * @param settingId The setting Id
-     * @return The user setting associated
-     */
-    Optional<UserSetting> findByUser_IdAndSetting_Id(Long userId, Long settingId);
+export interface WidgetRequest {
+  widgetAvailability: WidgetAvailabilityEnum;
 }

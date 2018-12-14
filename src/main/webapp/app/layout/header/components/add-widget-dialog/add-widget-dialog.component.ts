@@ -117,7 +117,6 @@ export class AddWidgetDialogComponent implements OnInit {
       this.changeDetectorRef.detectChanges();
       this.widgetStepper.next();
     });
-
   }
 
   setSelectedWidget(selectedWidget: Widget) {
@@ -142,7 +141,7 @@ export class AddWidgetDialogComponent implements OnInit {
       projectWidget.widget = this.selectedWidget;
 
       this.httpProjectService
-        .addWidgetToProject(projectWidget)
+        .addProjectWidgetToProject(projectWidget)
         .subscribe(data => {
           this.addWidgetDialogRef.close();
         });

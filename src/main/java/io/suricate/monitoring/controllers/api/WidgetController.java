@@ -17,6 +17,7 @@
 package io.suricate.monitoring.controllers.api;
 
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
+import io.suricate.monitoring.model.dto.api.widget.WidgetRequestDto;
 import io.suricate.monitoring.model.dto.api.widget.WidgetResponseDto;
 import io.suricate.monitoring.model.entity.widget.Widget;
 import io.suricate.monitoring.model.enums.ApiActionEnum;
@@ -132,8 +133,8 @@ public class WidgetController {
     })
     @GetMapping(value = "/v1/widgets/{widgetId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<WidgetResponseDto> getOnById(@ApiParam(name = "widgetId", value = "The widget id", required = true)
-                                                       @PathVariable("widgetId") Long widgetId) {
+    public ResponseEntity<WidgetResponseDto> getOneById(@ApiParam(name = "widgetId", value = "The widget id", required = true)
+                                                        @PathVariable("widgetId") Long widgetId) {
         Widget widget = widgetService.findOne(widgetId);
         if (widget == null) {
             throw new ObjectNotFoundException(Widget.class, widgetId);
@@ -148,8 +149,8 @@ public class WidgetController {
     /**
      * Update a widget
      *
-     * @param widgetId          The widget id to update
-     * @param widgetResponseDto The object holding changes
+     * @param widgetId         The widget id to update
+     * @param widgetRequestDto The object holding changes
      * @return The widget dto changed
      */
     @ApiOperation(value = "Update a widget by id")
@@ -163,9 +164,9 @@ public class WidgetController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Void> updateWidget(@ApiParam(name = "widgetId", value = "The widget id", required = true)
                                              @PathVariable("widgetId") Long widgetId,
-                                             @ApiParam(name = "widgetResponseDto", value = "The widget with modifications", required = true)
-                                             @RequestBody WidgetResponseDto widgetResponseDto) {
-        Optional<Widget> widgetOptional = widgetService.updateWidget(widgetId, widgetResponseDto);
+                                             @ApiParam(name = "widgetRequestDto", value = "The widget with modifications", required = true)
+                                             @RequestBody WidgetRequestDto widgetRequestDto) {
+        Optional<Widget> widgetOptional = widgetService.updateWidget(widgetId, widgetRequestDto);
         if (!widgetOptional.isPresent()) {
             throw new ObjectNotFoundException(Widget.class, widgetId);
         }

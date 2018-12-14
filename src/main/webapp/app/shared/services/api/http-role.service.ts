@@ -19,6 +19,7 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Role} from '../../model/api/role/Role';
 import {rolesApiEndpoint} from '../../../app.constant';
+import {User} from '../../model/api/user/User';
 
 @Injectable()
 export class HttpRoleService {
@@ -42,5 +43,25 @@ export class HttpRoleService {
     return this.httpClient.get<Role[]>(url);
   }
 
+  /**
+   * Get a role by id
+   *
+   * @param roleId The role id
+   */
+  getOneById(roleId: number): Observable<Role> {
+    const url = `${rolesApiEndpoint}/${roleId}`;
 
+    return this.httpClient.get<Role>(url);
+  }
+
+  /**
+   * Get a list of users for a role
+   *
+   * @param roleId The role id
+   */
+  getUsersByRole(roleId: number): Observable<User[]> {
+    const url = `${rolesApiEndpoint}/${roleId}/users`;
+
+    return this.httpClient.get<User[]>(url);
+  }
 }

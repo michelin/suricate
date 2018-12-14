@@ -50,6 +50,7 @@ import * as Stomp from '@stomp/stompjs';
 import {TitleCasePipe} from '@angular/common';
 import {HttpProjectService} from '../../../../shared/services/api/http-project.service';
 import {WidgetStateEnum} from '../../../../shared/model/enums/WidgetSateEnum';
+import {HttpProjectWidgetService} from '../../../../shared/services/api/http-project-widget.service';
 
 /**
  * Display the grid stack widgets
@@ -146,6 +147,7 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
    *
    * @param {DashboardService} dashboardService The dashboard service
    * @param {HttpProjectService} httpProjectService The http project service
+   * @param {HttpProjectWidgetService} httpProjectWidgetService The http projerct widget service
    * @param {WebsocketService} websocketService The websocket service
    * @param {TranslateService} translateService The translation service to inject
    * @param {MatDialog} matDialog The material dialog service
@@ -154,6 +156,7 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
    */
   constructor(private dashboardService: DashboardService,
               private httpProjectService: HttpProjectService,
+              private httpProjectWidgetService: HttpProjectWidgetService,
               private websocketService: WebsocketService,
               private translateService: TranslateService,
               private matDialog: MatDialog,
@@ -737,9 +740,7 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
 
       deleteProjectWidgetDialog.afterClosed().subscribe(shouldDeleteProjectWidget => {
         if (shouldDeleteProjectWidget) {
-          this.httpProjectService
-            .deleteProjectWidgetFromProject(projectWidget.project.id, projectWidget.id)
-            .subscribe();
+          this.httpProjectWidgetService.deleteOneById(projectWidget.id).subscribe();
         }
       });
     }
@@ -789,7 +790,7 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
       });
 
       this.httpProjectService
-        .updateWidgetPositionForProject(currentProject.id, projectWidgetPositions)
+        .updateProjectWidgetPositions(currentProject.id, projectWidgetPositions)
         .subscribe();
     }
 

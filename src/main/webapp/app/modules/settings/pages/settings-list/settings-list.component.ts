@@ -93,7 +93,7 @@ export class SettingsListComponent implements OnInit {
         }
       });
 
-      this.httpUserService.updateUserSettings(currentUser, userSettings).subscribe(user => {
+      this.httpUserService.updateUserSetting(currentUser, userSettings).subscribe(user => {
         this.toastService.sendMessage('Settings saved succesfully', ToastType.SUCCESS);
         this.settingsService.setUserSettings(user);
       });

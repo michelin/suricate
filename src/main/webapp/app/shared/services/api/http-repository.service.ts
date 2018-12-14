@@ -22,6 +22,8 @@ import {Observable} from 'rxjs/internal/Observable';
 
 import {Repository} from '../../model/api/Repository/Repository';
 import {repositoriesApiEndpoint} from '../../../app.constant';
+import {RepositoryRequest} from '../../model/api/Repository/RepositoryRequest';
+import {Widget} from '../../model/api/widget/Widget';
 
 /**
  * Service that manage HTTP repository calls
@@ -47,6 +49,17 @@ export class HttpRepositoryService {
   }
 
   /**
+   * Add a repository
+   *
+   * @param repositoryRequest The repository to add
+   */
+  addRepository(repositoryRequest: RepositoryRequest): Observable<Repository> {
+    const url = `${repositoriesApiEndpoint}`;
+
+    return this.httpClient.post<Repository>(url, repositoryRequest);
+  }
+
+  /**
    * Get the repository id
    *
    * @param repositoryId The repository id
@@ -58,26 +71,25 @@ export class HttpRepositoryService {
   }
 
   /**
-   * Add a repo
-   *
-   * @param repository The repository to add
-   */
-  addOne(repository: Repository): Observable<Repository> {
-    const url = `${repositoriesApiEndpoint}`;
-
-    return this.httpClient.put<Repository>(url, repository);
-  }
-
-  /**
    * Update a repository
    *
    * @param repositoryId The repository id
-   * @param repository The repository with informations updated
-   * @returns The repository as observable
+   * @param repositoryRequest The repository with informations updated
    */
-  updateOneById(repositoryId: number, repository: Repository): Observable<Repository> {
+  updateOneById(repositoryId: number, repositoryRequest: RepositoryRequest): Observable<void> {
     const url = `${repositoriesApiEndpoint}/${repositoryId}`;
 
-    return this.httpClient.put<Repository>(url, repository);
+    return this.httpClient.put<void>(url, repositoryRequest);
+  }
+
+  /**
+   * Get the list of widgets for a repository
+   *
+   * @param repositoryId The repository ID
+   */
+  getRepositoryWidgets(repositoryId: number): Observable<Widget[]> {
+    const url = `${repositoriesApiEndpoint}/${repositoryId}/widgets`;
+
+    return this.httpClient.get<Widget[]>(url);
   }
 }

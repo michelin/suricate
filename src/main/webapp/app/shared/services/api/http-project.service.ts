@@ -23,13 +23,21 @@ import {Observable} from 'rxjs';
 import {Project} from '../../model/api/project/Project';
 import {projectsApiEndpoint} from '../../../app.constant';
 import {DashboardService} from '../../../modules/dashboard/dashboard.service';
-import {map} from 'rxjs/operators';
 import {ProjectWidget} from '../../model/api/ProjectWidget/ProjectWidget';
-import {ProjectWidgetPosition} from '../../model/api/ProjectWidget/ProjectWidgetPosition';
+import {ProjectRequest} from '../../model/api/project/ProjectRequest';
+import {ProjectWidgetPositionRequest} from '../../model/api/ProjectWidget/ProjectWidgetPositionRequest';
+import {ProjectWidgetRequest} from '../../model/api/ProjectWidget/ProjectWidgetRequest';
+import {User} from '../../model/api/user/User';
 
 @Injectable()
 export class HttpProjectService {
 
+  /**
+   * Constructor
+   *
+   * @param httpClient the http client to inject
+   * @param dashboardService The dashboard service
+   */
   constructor(private httpClient: HttpClient,
               private dashboardService: DashboardService) {
   }
@@ -46,6 +54,123 @@ export class HttpProjectService {
   }
 
   /**
+   * Add/Update a dashboard and update the subject list
+   *
+   * @param {ProjectRequest} projectRequest The project request
+   */
+  createProject(projectRequest: ProjectRequest): Observable<Project> {
+    const url = `${projectsApiEndpoint}`;
+
+    return this.httpClient.post<Project>(url, projectRequest);
+  }
+
+  /**
+   * Get a dashboard by id
+   *
+   * @param {string} projectToken The dashboard token
+   * @returns {Observable<Project>} The dashboard as observable
+   */
+  getOneByToken(projectToken: string): Observable<Project> {
+    const url = `${projectsApiEndpoint}/${projectToken}`;
+
+    return this.httpClient.get<Project>(url);
+  }
+
+  /**
+   * Update project
+   *
+   * @param projectToken The project token
+   * @param projectRequest The project request
+   */
+  editProject(projectToken: string, projectRequest: ProjectRequest): Observable<void> {
+    const url = `${projectsApiEndpoint}/${projectToken}`;
+
+    return this.httpClient.put<void>(url, projectRequest);
+  }
+
+  /**
+   * Delete a project
+   *
+   * @param {string} projectToken
+   */
+  deleteProject(projectToken: string,): Observable<void> {
+    const url = `${projectsApiEndpoint}/${projectToken}`;
+
+    return this.httpClient.delete<void>(url);
+  }
+
+  /**
+   * Update the list of project widgets position for a project
+   *
+   * @param projectToken The project token
+   * @param projectWidgetPositionRequests The list of positions to update
+   */
+  updateProjectWidgetPositions(projectToken: string, projectWidgetPositionRequests: ProjectWidgetPositionRequest[]): Observable<void> {
+    const url = `${projectsApiEndpoint}/${projectToken}/projectWidgetPositions`;
+
+    return this.httpClient.put<void>(url, projectWidgetPositionRequests);
+  }
+
+  /**
+   * Get the list of project widgets for a project
+   *
+   * @param projectToken The project token
+   */
+  getProjectProjectWidgets(projectToken: string): Observable<ProjectWidget[]> {
+    const url = `${projectsApiEndpoint} /${projectToken}/projectWidgets`;
+
+    return this.httpClient.get<ProjectWidget[]>(url);
+  }
+
+  /**
+   * Add a new widget to the project
+   *
+   * @param projectToken The project token
+   * @param projectWidgetRequest The project widget to add
+   */
+  addProjectWidgetToProject(projectToken: string, projectWidgetRequest: ProjectWidgetRequest): Observable<ProjectWidget> {
+    const url = `${projectsApiEndpoint}/${projectToken}/projectWidgets`;
+
+    return this.httpClient.post<ProjectWidget>(url, projectWidgetRequest);
+  }
+
+  /**
+   * Get the list of users for a project
+   *
+   * @param projectToken The project token
+   */
+  getProjectUsers(projectToken: string): Observable<User[]> {
+    const url = `${projectsApiEndpoint}/${projectToken}/users`;
+
+    return this.httpClient.get<User[]>(url);
+  }
+
+  /**
+   * Add a user to a project
+   *
+   * @param {string} projectToken The projectToken
+   * @param {string} username The username to add
+   * @returns {Observable<Project>} The project as observable
+   */
+  addUserToProject(projectToken: string, username: string): Observable<void> {
+    const url = `${projectsApiEndpoint}/${projectToken}/users`;
+
+    return this.httpClient.post<void>(url, username);
+  }
+
+  /**
+   * Delete a user from a project
+   *
+   * @param {string} projectToken The project token
+   * @param {number} userId The userId
+   */
+  deleteUserFromProject(projectToken: string, userId: number): Observable<void> {
+    const url = `${projectsApiEndpoint}/${projectToken}/users/${userId}`;
+
+    return this.httpClient.delete<void>(url);
+  }
+
+  /**
    * Get every dashboards for the current user
    *
    * @returns {Observable<Project[]>} The list as observable
@@ -53,202 +178,6 @@ export class HttpProjectService {
   getAllForCurrentUser(): Observable<Project[]> {
     const url = `${projectsApiEndpoint}/currentUser`;
 
-    return this.httpClient.get<Project[]>(url)
-      .pipe(
-        map(projects => {
-          this.dashboardService.currentDashboardListValues = projects;
-          return projects;
-        })
-      );
-  }
-
-  /**
-   * Get a dashboard by id
-   *
-   * @param {number} id The dashboard id
-   * @returns {Observable<Project>} The dashboard as observable
-   */
-  getOneById(id: number): Observable<Project> {
-    const url = `${projectsApiEndpoint}/${id}`;
-
-    return this.httpClient.get<Project>(url);
-  }
-
-  /**
-   * Get a dashboard by token
-   *
-   * @param {string} token The dashboard token
-   * @returns {Observable<Project>} The dashboard as observable
-   */
-  getOneByToken(token: string): Observable<Project> {
-    const url = `${projectsApiEndpoint}/project/${token}`;
-
-    return this.httpClient.get<Project>(url);
-  }
-
-
-  /**
-   * Add/Update a dashboard and update the subject list
-   *
-   * @param {Project} project The project
-   * @returns {Observable<Project>} The project as observable
-   */
-  createProject(project: Project): Observable<Project> {
-    const url = `${projectsApiEndpoint}`;
-
-    return this.httpClient.put<Project>(url, project)
-      .pipe(
-        map(projectAdded => {
-          this.dashboardService.updateDashboardListSubject(projectAdded, this.dashboardService.dashboardActionUpdate);
-          return projectAdded;
-        })
-      );
-  }
-
-  /**
-   * Add/Update a dashboard and update the subject list
-   *
-   * @param {Project} project The project
-   * @returns {Observable<Project>} The project as observable
-   */
-  editProject(project: Project): Observable<Project> {
-    const url = `${projectsApiEndpoint}/${project.id}`;
-
-    return this.httpClient.put<Project>(url, project)
-      .pipe(
-        map(projectAdded => {
-          this.dashboardService.updateDashboardListSubject(projectAdded, this.dashboardService.dashboardActionUpdate);
-          return projectAdded;
-        })
-      );
-  }
-
-  /**
-   * Add a new widget to the project
-   *
-   * @param {ProjectWidget} projectWidget The project widget to modify
-   * @returns {Observable<Project>} The project as observable
-   */
-  addWidgetToProject(projectWidget: ProjectWidget): Observable<Project> {
-    const url = `${projectsApiEndpoint}/${projectWidget.project.id}/widgets`;
-
-    return this
-      .httpClient
-      .put<Project>(url, projectWidget)
-      .pipe(
-        map(project => {
-          this.dashboardService.currentDisplayedDashboardValue = project;
-          return project;
-        })
-      );
-  }
-
-  /**
-   * Add a user to a project
-   *
-   * @param {Project} project The project
-   * @param {string} username The username to add
-   * @returns {Observable<Project>} The project as observable
-   */
-  addUserToProject(project: Project, username: string): Observable<Project> {
-    const url = `${projectsApiEndpoint}/${project.id}/users`;
-
-    return this.httpClient.put<Project>(url, username)
-      .pipe(
-        map(projectUpdated => {
-          this.dashboardService.updateDashboardListSubject(project, this.dashboardService.dashboardActionUpdate);
-          return projectUpdated;
-        })
-      );
-  }
-
-  /**
-   * Delete a user from a project
-   *
-   * @param {Project} project The project
-   * @param {number} userId The userId
-   * @returns {Observable<Project>} The project as observable
-   */
-  deleteUserFromProject(project: Project, userId: number): Observable<Project> {
-    const url = `${projectsApiEndpoint}/${project.id}/users/${userId}`;
-
-    return this.httpClient.delete<Project>(url)
-      .pipe(
-        map(projectUpdated => {
-          this.dashboardService.updateDashboardListSubject(project, this.dashboardService.dashboardActionUpdate);
-          return projectUpdated;
-        })
-      );
-  }
-
-  /**
-   * Delete a project
-   *
-   * @param {Project} project
-   * @returns {Observable<Project>}
-   */
-  deleteProject(project: Project): Observable<Project> {
-    const url = `${projectsApiEndpoint}/${project.id}`;
-
-    return this.httpClient.delete<Project>(url)
-      .pipe(
-        map(projectDelete => {
-          this.dashboardService.updateDashboardListSubject(projectDelete, this.dashboardService.dashboardActionDelete);
-          return projectDelete;
-        })
-      );
-  }
-
-  /**
-   * Update the list of project widgets position for a project
-   *
-   * @param {number} projectId The project id to update
-   * @param {ProjectWidgetPosition[]} projectWidgetPositions The list of project widget position
-   * @returns {Observable<Project>} The project updated
-   */
-  updateWidgetPositionForProject(projectId: number, projectWidgetPositions: ProjectWidgetPosition[]): Observable<Project> {
-    const url = `${projectsApiEndpoint}/${projectId}/projectWidgetPositions`;
-
-    return this.httpClient.put<Project>(url, projectWidgetPositions)
-      .pipe(
-        map(project => {
-          this.dashboardService.updateDashboardListSubject(project, this.dashboardService.dashboardActionUpdate);
-          return project;
-        })
-      );
-  }
-
-  /**
-   * Delete a project widget from a dashboard
-   *
-   * @param {number} projectId The project id
-   * @param {number} projectWidgetId The project widget id to delete
-   * @returns {Observable<Project>} The project updated
-   */
-  deleteProjectWidgetFromProject(projectId: number, projectWidgetId: number): Observable<Project> {
-    const url = `${projectsApiEndpoint}/${projectId}/projectWidgets/${projectWidgetId}`;
-
-    return this.httpClient.delete<Project>(url)
-      .pipe(
-        map(project => {
-          this.dashboardService.updateDashboardListSubject(project, this.dashboardService.dashboardActionUpdate);
-          this.dashboardService.currentDisplayedDashboardValue = project;
-
-          return project;
-        })
-      );
-  }
-
-  /**
-   * Edit a project widget from a project
-   *
-   * @param {number} projectId The project id
-   * @param {ProjectWidget} projectWidget The project widget to edit
-   * @returns {Observable<Project>} The project updated
-   */
-  editProjectWidgetFromProject(projectId: number, projectWidget: ProjectWidget): Observable<Project> {
-    const url = `${projectsApiEndpoint}/${projectId}/projectWidgets/${projectWidget.id}`;
-
-    return this.httpClient.put<Project>(url, projectWidget);
+    return this.httpClient.get<Project[]>(url);
   }
 }

@@ -27,6 +27,7 @@ import {TokenService} from '../../shared/auth/token.service';
 import {Credentials} from '../../shared/model/api/user/Credentials';
 import {AuthenticationResponse} from '../../shared/model/api/authentication/AuthenticationResponse';
 import {User} from '../../shared/model/api/user/User';
+import {UserRequest} from '../../shared/model/api/user/UserRequest';
 
 
 /**
@@ -115,13 +116,13 @@ export class AuthenticationService {
   /**
    * Register a new user
    *
-   * @param {User} user The user to register
+   * @param userRequest The user Request
    * @returns {Observable<User>} The user registered
    */
-  register(user: User): Observable<User> {
+  register(userRequest: UserRequest): Observable<User> {
     const url = `${usersApiEndpoint}/register`;
 
-    return this.httpClient.post<User>(url, user);
+    return this.httpClient.post<User>(url, userRequest);
   }
 
   /**

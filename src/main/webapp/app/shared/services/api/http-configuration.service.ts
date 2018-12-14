@@ -23,6 +23,7 @@ import {Observable} from 'rxjs';
 import {Configuration} from '../../model/api/configuration/Configuration';
 import {configurationsApiEndpoint} from '../../../app.constant';
 import {ApplicationProperties} from '../../model/api/ApplicationProperties';
+import {ConfigurationRequest} from '../../model/api/configuration/ConfigurationRequest';
 
 /**
  * Configuration services manage http calls
@@ -52,11 +53,11 @@ export class HttpConfigurationService {
   /**
    * Get a single configuration by key
    *
-   * @param {string} key The key to find
+   * @param {string} configurationKey The key to find
    * @returns {Observable<Configuration>} The configuration as observable
    */
-  getOneByKey(key: string): Observable<Configuration> {
-    const url = `${configurationsApiEndpoint}/${key}`;
+  getOneByKey(configurationKey: string): Observable<Configuration> {
+    const url = `${configurationsApiEndpoint}/${configurationKey}`;
 
     return this.httpClient.get<Configuration>(url);
   }
@@ -64,25 +65,26 @@ export class HttpConfigurationService {
   /**
    * Update a configuration
    *
-   * @param {Configuration} configuration The ocnfiguration to update
+   * @param {string} configurationKey The configuration key to update
+   * @param {ConfigurationRequest} configurationRequest The value updated
    * @returns {Observable<Configuration>} The config updated
    */
-  updateConfigurationByKey(configuration: Configuration): Observable<Configuration> {
-    const url = `${configurationsApiEndpoint}/${configuration.key}`;
+  updateConfigurationByKey(configurationKey: string, configurationRequest: ConfigurationRequest): Observable<void> {
+    const url = `${configurationsApiEndpoint}/${configurationKey}`;
 
-    return this.httpClient.put<Configuration>(url, configuration);
+    return this.httpClient.put<void>(url, configurationRequest);
   }
 
   /**
    * Delete the configuration
    *
-   * @param {Configuration} configuration The configuration to delete
+   * @param {string} configurationKey The configuration to delete
    * @returns {Observable<Configuration>} The configuration delete as observable
    */
-  deleteConfiguration(configuration: Configuration): Observable<Configuration> {
-    const url = `${configurationsApiEndpoint}/${configuration.key}`;
+  deleteConfiguration(configurationKey: string): Observable<void> {
+    const url = `${configurationsApiEndpoint}/${configurationKey}`;
 
-    return this.httpClient.delete<Configuration>(url);
+    return this.httpClient.delete<void>(url);
   }
 
   /**

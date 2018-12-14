@@ -16,19 +16,19 @@
 
 package io.suricate.monitoring.service.api;
 
-import io.suricate.monitoring.model.dto.api.user.UserSettingResponseDto;
+import io.suricate.monitoring.model.dto.api.user.UserSettingRequestDto;
 import io.suricate.monitoring.model.entity.setting.AllowedSettingValue;
 import io.suricate.monitoring.model.entity.setting.UserSetting;
 import io.suricate.monitoring.model.entity.user.User;
 import io.suricate.monitoring.repository.UserSettingRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -36,11 +36,6 @@ import java.util.stream.Collectors;
  */
 @Service
 public class UserSettingService {
-
-    /**
-     * Class logger
-     */
-    private final static Logger LOGGER = LoggerFactory.getLogger(UserSettingService.class);
 
     /**
      * The user setting repository
@@ -119,26 +114,27 @@ public class UserSettingService {
     /**
      * Update the settings for a user
      *
-     * @param user                    The user
-     * @param userSettingResponseDtos The updated settings
+     * @param userId                The user id
+     * @param settingId             The setting id
+     * @param userSettingRequestDto The new user setting value
      * @return The user settings updated
      */
-    public List<UserSetting> updateUserSettingsForUser(User user, final List<UserSettingResponseDto> userSettingResponseDtos) {
-        for (UserSettingResponseDto userSettingResponseDto : userSettingResponseDtos) {
-            UserSetting userSetting = userSettingRepository.findById(userSettingResponseDto.getId()).get();
-
-            if (userSetting.getSetting().isConstrained()) {
-                // Constrained case
-                allowedSettingValueService
-                    .getOneById(userSettingResponseDto.getSettingValue().getId())
-                    .ifPresent(userSetting::setSettingValue);
-            } else {
-                // Unconstrained case
-                userSetting.setUnconstrainedValue(userSettingResponseDto.getUnconstrainedValue());
-            }
-            userSettingRepository.save(userSetting);
+    public UserSetting updateUserSetting(final Long userId, final Long settingId, final UserSettingRequestDto userSettingRequestDto) {
+        Optional<UserSetting> userSettingOptional = userSettingRepository.findByUser_IdAndSetting_Id(userId, settingId);
+        if (!userSettingOptional.isPresent()) {
+            throw new ObjectNotFoundException(UserSetting.class, "userId: " + userId + ", settingId: " + settingId);
         }
 
-        return user.getUserSettings();
+        UserSetting userSetting = userSettingOptional.get();
+        if (userSetting.getSetting().isConstrained()) {
+            allowedSettingValueService
+                .getOneById(userSettingRequestDto.getAllowedSettingValueId())
+                .ifPresent(userSetting::setSettingValue);
+        } else {
+            userSetting.setUnconstrainedValue(userSettingRequestDto.getUnconstrainedValue());
+        }
+        userSettingRepository.save(userSetting);
+
+        return userSetting;
     }
 }

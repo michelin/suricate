@@ -19,6 +19,7 @@ import {HttpClient} from '@angular/common/http';
 
 import {WebsocketClient} from '../../model/api/WebsocketClient';
 import {screensApiEndpoint} from '../../../app.constant';
+import {Observable} from 'rxjs';
 
 /**
  * Screen that manage the Http calls for screens
@@ -40,10 +41,10 @@ export class HttpScreenService {
    * @param {string} projectToken The project token to connect
    * @param {number} screenCode The tv screen code
    */
-  connectProjectToScreen(projectToken: string, screenCode: number): void {
+  connectProjectToScreen(projectToken: string, screenCode: number): Observable<void> {
     const url = `${screensApiEndpoint}/connect/${screenCode}/project/${projectToken}`;
 
-    this.httpClient.get<void>(url).subscribe();
+    return this.httpClient.put<void>(url, null);
   }
 
   /**
@@ -51,10 +52,10 @@ export class HttpScreenService {
    *
    * @param {WebsocketClient} websocketClient The client to disconnect
    */
-  disconnectScreen(websocketClient: WebsocketClient): void {
+  disconnectScreen(websocketClient: WebsocketClient): Observable<void> {
     const url = `${screensApiEndpoint}/disconnect/`;
 
-    this.httpClient.put<void>(url, websocketClient).subscribe();
+    return this.httpClient.put<void>(url, websocketClient);
   }
 
   /**
@@ -62,19 +63,19 @@ export class HttpScreenService {
    *
    * @param {string} projectToken The project token to refresh
    */
-  refreshEveryConnectedScreensForProject(projectToken: string): void {
+  refreshEveryConnectedScreensForProject(projectToken: string): Observable<void> {
     const url = `${screensApiEndpoint}/refresh/${projectToken}`;
 
-    this.httpClient.get<void>(url).subscribe();
+    return this.httpClient.put<void>(url, null);
   }
 
   /**
    * Display the screen code on every connected screens
    * @param {string} projectToken The project token
    */
-  displayScreenCodeEveryConnectedScreensForProject(projectToken: string): void {
+  displayScreenCodeEveryConnectedScreensForProject(projectToken: string): Observable<void> {
     const url = `${screensApiEndpoint}/screencode/${projectToken}`;
 
-    this.httpClient.get<void>(url).subscribe();
+    return this.httpClient.put<void>(url, null);
   }
 }

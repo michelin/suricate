@@ -69,12 +69,12 @@ public class ScreenController {
      */
     @ApiOperation(value = "Send the notification to connected a new screen")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok"),
+        @ApiResponse(code = 204, message = "Screen connected"),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class)
     })
-    @GetMapping(value = "/v1/screens/connect/{screenCode}/project/{projectToken}")
+    @PutMapping(value = "/v1/screens/connect/{screenCode}/project/{projectToken}")
     @PreAuthorize("hasRole('ROLE_USER')")
     @Transactional
     public ResponseEntity<Void> connectProjectToScreen(@ApiParam(name = "projectToken", value = "The project token", required = true)
@@ -117,11 +117,11 @@ public class ScreenController {
      */
     @ApiOperation(value = "Refresh every connected client for this project")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok"),
+        @ApiResponse(code = 204, message = "Screens refresh"),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
-    @GetMapping(value = "/v1/screens/refresh/{projectToken}")
+    @PutMapping(value = "/v1/screens/refresh/{projectToken}")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Void> refreshEveryConnectedScreensForProject(@ApiParam(name = "projectToken", value = "The project token", required = true)
                                                                        @PathVariable("projectToken") String projectToken) {
@@ -136,11 +136,11 @@ public class ScreenController {
      */
     @ApiOperation(value = "Send the notification to for the project screens to display their screen code")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok"),
+        @ApiResponse(code = 204, message = "Screen code displayed"),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
-    @GetMapping(value = "/v1/screens/screencode/{projectToken}")
+    @PutMapping(value = "/v1/screens/screencode/{projectToken}")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Void> displayScreenCodeEveryConnectedScreensForProject(@ApiParam(name = "projectToken", value = "The project token", required = true)
                                                                                  @PathVariable("projectToken") String projectToken) {

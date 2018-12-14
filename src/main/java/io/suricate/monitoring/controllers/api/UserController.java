@@ -20,13 +20,18 @@ import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.role.RoleResponseDto;
 import io.suricate.monitoring.model.dto.api.user.UserRequestDto;
 import io.suricate.monitoring.model.dto.api.user.UserResponseDto;
+import io.suricate.monitoring.model.dto.api.user.UserSettingRequestDto;
 import io.suricate.monitoring.model.dto.api.user.UserSettingResponseDto;
+import io.suricate.monitoring.model.entity.setting.Setting;
 import io.suricate.monitoring.model.entity.user.User;
+import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.model.enums.AuthenticationMethod;
+import io.suricate.monitoring.service.api.SettingService;
 import io.suricate.monitoring.service.api.UserService;
 import io.suricate.monitoring.service.api.UserSettingService;
 import io.suricate.monitoring.service.mapper.UserMapper;
 import io.suricate.monitoring.service.mapper.UserSettingMapper;
+import io.suricate.monitoring.utils.exception.ApiException;
 import io.suricate.monitoring.utils.exception.NoContentException;
 import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
 import io.swagger.annotations.*;
@@ -65,6 +70,11 @@ public class UserController {
     private final UserSettingService userSettingService;
 
     /**
+     * The setting service
+     */
+    private final SettingService settingService;
+
+    /**
      * The user mapper
      */
     private final UserMapper userMapper;
@@ -84,10 +94,12 @@ public class UserController {
     @Autowired
     public UserController(final UserService userService,
                           final UserMapper userMapper,
+                          final SettingService settingService,
                           final UserSettingService userSettingService,
                           final UserSettingMapper userSettingMapper) {
         this.userService = userService;
         this.userMapper = userMapper;
+        this.settingService = settingService;
         this.userSettingService = userSettingService;
         this.userSettingMapper = userSettingMapper;
     }
@@ -237,9 +249,9 @@ public class UserController {
     /**
      * Update the user settings for a user
      *
-     * @param principal               The connected user
-     * @param userId                  The user id used in the url
-     * @param userSettingResponseDtos The new settings
+     * @param principal             The connected user
+     * @param userId                The user id used in the url
+     * @param userSettingRequestDto The new setting value
      * @return The user updated
      */
     @ApiOperation(value = "Update the user settings for a user")
@@ -249,13 +261,15 @@ public class UserController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "User not found", response = ApiErrorDto.class)
     })
-    @PutMapping(value = "/v1/users/{userId}/settings")
+    @PutMapping(value = "/v1/users/{userId}/settings/{settingId}")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<UserResponseDto> updateUserSettings(@ApiIgnore Principal principal,
                                                               @ApiParam(name = "userId", value = "The user id", required = true)
                                                               @PathVariable("userId") Long userId,
-                                                              @ApiParam(name = "userSettingResponseDtos", value = "The list of user settings updated", required = true)
-                                                              @RequestBody List<UserSettingResponseDto> userSettingResponseDtos) {
+                                                              @ApiParam(name = "settingId", value = "The setting id", required = true)
+                                                              @PathVariable("settingId") Long settingId,
+                                                              @ApiParam(name = "userSettingRequestDto", value = "The new value of the setting", required = true)
+                                                              @RequestBody UserSettingRequestDto userSettingRequestDto) {
         Optional<User> userOptional = this.userService.getOneByUsername(principal.getName());
         if (!userOptional.isPresent()) {
             throw new ObjectNotFoundException(User.class, userId);
@@ -264,7 +278,12 @@ public class UserController {
             throw new AccessDeniedException(String.format("User %s is not allowed to modify this resource", principal.getName()));
         }
 
-        userSettingService.updateUserSettingsForUser(userOptional.get(), userSettingResponseDtos);
+        Optional<Setting> settingOptional = this.settingService.getOneById(settingId);
+        if (!settingOptional.isPresent()) {
+            throw new ObjectNotFoundException(Setting.class, settingId);
+        }
+
+        userSettingService.updateUserSetting(userId, settingId, userSettingRequestDto);
 
         return ResponseEntity.noContent().build();
     }
@@ -313,6 +332,10 @@ public class UserController {
                                                     @RequestBody UserRequestDto userRequestDto) {
         User user = userMapper.toNewUser(userRequestDto, AuthenticationMethod.DATABASE);
         Optional<User> userSavedOptional = userService.registerNewUserAccount(user);
+
+        if (!userSavedOptional.isPresent()) {
+            throw new ApiException(ApiErrorEnum.INTERNAL_SERVER_ERROR);
+        }
 
         URI resourceLocation = ServletUriComponentsBuilder
             .fromCurrentContextPath()

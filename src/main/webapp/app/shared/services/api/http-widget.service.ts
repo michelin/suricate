@@ -18,10 +18,11 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {Widget} from '../../model/api/widget/Widget';
-import {categoriesApiEndpoint, widgetsApiEndpoint} from '../../../app.constant';
+import {widgetsApiEndpoint} from '../../../app.constant';
 import {tap} from 'rxjs/operators';
 import {WidgetService} from '../../../modules/widget/widget.service';
 import {ApiActionEnum} from '../../model/enums/ApiActionEnum';
+import {WidgetRequest} from '../../model/api/widget/WidgetRequest';
 
 @Injectable()
 export class HttpWidgetService {
@@ -58,26 +59,25 @@ export class HttpWidgetService {
   }
 
   /**
-   * Update a widget
+   * Get a widget by the id
    *
-   * @param {Widget} widget The widget to update
-   * @returns {Observable<Widget>} The widget updated
+   * @param widgetId
    */
-  updateWidget(widget: Widget): Observable<Widget> {
-    const url = `${widgetsApiEndpoint}/${widget.id}`;
+  getOneById(widgetId: number): Observable<Widget> {
+    const url = `${widgetsApiEndpoint}/`;
 
-    return this.httpClient.post<Widget>(url, widget);
+    return this.httpClient.get<Widget>(url);
   }
 
   /**
-   * Get every widget for a category
+   * Update the widget id
    *
-   * @param {number} categoryId The category id
-   * @returns {Observable<Widget[]>} The widgets as observable
+   * @param widgetId The widget id
+   * @param widgetRequest The widget request
    */
-  getWidgetsByCategoryId(categoryId: number): Observable<Widget[]> {
-    const url = `${categoriesApiEndpoint}/${categoryId}/widgets`;
+  updateOneById(widgetId: number, widgetRequest: WidgetRequest): Observable<void> {
+    const url = `${widgetsApiEndpoint}/${widgetId}`;
 
-    return this.httpClient.get<Widget[]>(url);
+    return this.httpClient.put<void>(url, widgetRequest);
   }
 }

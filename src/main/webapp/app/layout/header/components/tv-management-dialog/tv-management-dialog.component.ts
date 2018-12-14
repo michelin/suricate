@@ -67,7 +67,7 @@ export class TvManagementDialogComponent implements OnInit {
    */
   ngOnInit() {
     this.httpProjectService
-      .getOneById(this.data.projectId)
+      .getOneByToken(this.data.projectId)
       .subscribe(project => this.project = project);
 
     this.screenRegisterForm = this.formBuilder.group({

@@ -152,7 +152,7 @@ export class RepositoryAddEditComponent implements OnInit {
 
       } else {
         this.repositoryService
-          .addOne(repositoryToAddEdit)
+          .addRepository(repositoryToAddEdit)
           .subscribe((repositoryAdded: Repository) => {
             this.toastService.sendMessage(`Repository ${repositoryAdded.name} added successfully`, ToastType.SUCCESS);
             this.redirectToRepositoryList();

@@ -19,9 +19,10 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {User} from '../../model/api/user/User';
 import {usersApiEndpoint} from '../../../app.constant';
-import {map} from 'rxjs/operators';
 import {UserService} from '../../../modules/security/user/user.service';
-import {UserSetting} from '../../model/api/setting/UserSetting';
+import {UserRequest} from '../../model/api/user/UserRequest';
+import {Setting} from '../../model/api/setting/Setting';
+import {UserSettingRequest} from '../../model/api/setting/UserSettingRequest';
 
 @Injectable()
 export class HttpUserService {
@@ -30,6 +31,7 @@ export class HttpUserService {
    * Constructor
    *
    * @param httpClient The http client
+   * @param userService The user service to inject
    */
   constructor(private httpClient: HttpClient,
               private userService: UserService) {
@@ -40,8 +42,8 @@ export class HttpUserService {
    *
    * @returns {Observable<User[]>} The list of users
    */
-  getAll(): Observable<User[]> {
-    const url = `${usersApiEndpoint}`;
+  getAll(filter: string = ''): Observable<User[]> {
+    const url = `${usersApiEndpoint}?filter=${filter}`;
 
     return this.httpClient.get<User[]>(url);
   }
@@ -49,13 +51,60 @@ export class HttpUserService {
   /**
    * Get a user by id
    *
-   * @param {string} userId The user id to find
+   * @param {number} userId The user id to find
    * @returns {Observable<User>} The user found
    */
-  getById(userId: string): Observable<User> {
+  getById(userId: number): Observable<User> {
     const url = `${usersApiEndpoint}/${userId}`;
 
     return this.httpClient.get<User>(url);
+  }
+
+  /**
+   * Update a user
+   *
+   * @param {number} userId The userId to update
+   * @param userRequest The user request
+   */
+  updateUser(userId: number, userRequest: UserRequest): Observable<void> {
+    const url = `${usersApiEndpoint}/${userId}`;
+
+    return this.httpClient.put<void>(url, userRequest);
+  }
+
+  /**
+   * Delete a user
+   *
+   * @param userId The user id to delete
+   */
+  deleteUser(userId: number): Observable<void> {
+    const url = `${usersApiEndpoint}/${userId}`;
+
+    return this.httpClient.delete<void>(url);
+  }
+
+  /**
+   * Get the user settings
+   *
+   * @param userId The user id
+   */
+  getUserSettings(userId: number): Observable<Setting[]> {
+    const url = `${usersApiEndpoint}/${userId}`;
+
+    return this.httpClient.get<Setting[]>(url);
+  }
+
+  /**
+   * Update user settings
+   *
+   * @param {number} userId The user id to update
+   * @param {number} settingId The setting id
+   * @param {UserSettingRequest} userSettingRequest The user setting request
+   */
+  updateUserSetting(userId: number, settingId: number, userSettingRequest: UserSettingRequest): Observable<void> {
+    const url = `${usersApiEndpoint}/${userId}/settings/${settingId}`;
+
+    return this.httpClient.put<void>(url, userSettingRequest);
   }
 
   /**
@@ -66,77 +115,6 @@ export class HttpUserService {
   getConnectedUser(): Observable<User> {
     const url = `${usersApiEndpoint}/current`;
 
-    return this.httpClient.get<User>(url)
-      .pipe(
-        map(user => {
-          this.userService.connectedUser = user;
-          return user;
-        })
-      );
-  }
-
-  /**
-   * Delete a user
-   * @param {User} user The user to delete
-   */
-  deleteUser(user: User): Observable<User> {
-    const url = `${usersApiEndpoint}/${user.id}`;
-
-    return this.httpClient.delete<User>(url);
-  }
-
-  /**
-   * Update a user
-   *
-   * @param {User} user The user to update
-   * @returns {Observable<User>} The user updated
-   */
-  updateUser(user: User): Observable<User> {
-    const url = `${usersApiEndpoint}/${user.id}`;
-
-    return this.httpClient.put<User>(url, user)
-      .pipe(
-        map(userUpdated => {
-          if (userUpdated.id === this.userService.connectedUser.id) {
-            this.userService.connectedUser = userUpdated;
-          }
-          return userUpdated;
-        })
-      );
-  }
-
-  /**
-   * Update user settings
-   *
-   * @param {User} user The user to update
-   * @param {UserSetting[]} userSettings The new settings
-   * @returns {Observable<User>} The user updated
-   */
-  updateUserSettings(user: User, userSettings: UserSetting[]): Observable<User> {
-    const url = `${usersApiEndpoint}/${user.id}/settings`;
-
-    return this
-      .httpClient
-      .put<User>(url, userSettings)
-      .pipe(
-        map(userUpdated => {
-          if (userUpdated.id === this.userService.connectedUser.id) {
-            this.userService.connectedUser = userUpdated;
-          }
-          return userUpdated;
-        })
-      );
-  }
-
-  /**
-   * Search a list of users by username
-   *
-   * @param {string} username The username to find
-   * @returns {Observable<User[]>} The list of users that match the string
-   */
-  searchUserByUsername(username: string): Observable<User[]> {
-    const url = `${usersApiEndpoint}/search?username=${username}`;
-
-    return this.httpClient.get<User[]>(url);
+    return this.httpClient.get<User>(url);
   }
 }
