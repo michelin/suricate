@@ -22,7 +22,6 @@ import {DomSanitizer} from '@angular/platform-browser';
 import {WidgetService} from '../../../../modules/widget/widget.service';
 import {Widget} from '../../../../shared/model/api/widget/Widget';
 import {DashboardService} from '../../../../modules/dashboard/dashboard.service';
-import {ProjectWidget} from '../../../../shared/model/api/ProjectWidget/ProjectWidget';
 import {HttpCategoryService} from '../../../../shared/services/api/http-category.service';
 import {HttpAssetService} from '../../../../shared/services/api/http-asset.service';
 import {Category} from '../../../../shared/model/api/widget/Category';
@@ -30,6 +29,7 @@ import {HttpProjectService} from '../../../../shared/services/api/http-project.s
 import {HttpWidgetService} from '../../../../shared/services/api/http-widget.service';
 import {WidgetVariableType} from '../../../../shared/model/enums/WidgetVariableType';
 import {WidgetAvailabilityEnum} from '../../../../shared/model/enums/WidgetAvailabilityEnum';
+import {ProjectWidgetRequest} from '../../../../shared/model/api/ProjectWidget/ProjectWidgetRequest';
 
 /**
  * Dialog used to add a widget
@@ -56,6 +56,11 @@ export class AddWidgetDialogComponent implements OnInit {
    * @type {boolean}
    */
   step2Completed = false;
+
+  /**
+   * The current project token
+   */
+  projectToken: string;
 
   /**
    * The widget param enum
@@ -108,10 +113,12 @@ export class AddWidgetDialogComponent implements OnInit {
     this.httpCategoryService.getAll().subscribe(categories => {
       this.categories = categories;
     });
+
+    this.projectToken = this.data.projectToken;
   }
 
   getWidgets(categoryId: number) {
-    this.httpWidgetService.getWidgetsByCategoryId(categoryId).subscribe(widgets => {
+    this.httpCategoryService.getCategoryWidgets(categoryId).subscribe(widgets => {
       this.widgets = widgets.filter((widget: Widget) => widget.widgetAvailability === WidgetAvailabilityEnum.ACTIVATED);
       this.step1Completed = true;
       this.changeDetectorRef.detectChanges();
@@ -131,20 +138,18 @@ export class AddWidgetDialogComponent implements OnInit {
       const form: FormGroup = formSettings.form;
       let backendConfig = '';
 
-      for (const param of this.selectedWidget.widgetParams) {
+      for (const param of this.selectedWidget.params) {
         backendConfig = `${backendConfig}${param.name}=${form.get(param.name).value}\n`;
       }
 
-      const projectWidget: ProjectWidget = new ProjectWidget();
-      projectWidget.backendConfig = backendConfig;
-      projectWidget.project = this.dashboardService.currentDisplayedDashboardValue;
-      projectWidget.widget = this.selectedWidget;
+      const projectWidget: ProjectWidgetRequest = {
+        backendConfig: backendConfig,
+        widgetId: this.selectedWidget.id
+      };
 
-      this.httpProjectService
-        .addProjectWidgetToProject(projectWidget)
-        .subscribe(data => {
-          this.addWidgetDialogRef.close();
-        });
+      this.httpProjectService.addProjectWidgetToProject(this.projectToken, projectWidget).subscribe(() => {
+        this.addWidgetDialogRef.close();
+      });
     }
   }
 

@@ -19,7 +19,7 @@
  */
 export interface ProjectRequest {
   name: string;
-  maxColumn: string;
+  maxColumn: number;
   widgetHeight: number;
   cssStyle: string;
 }

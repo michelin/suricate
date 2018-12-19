@@ -63,7 +63,7 @@
         <h1> {{selectedWidget.name}} </h1>
         <div class="container">
           <div class="image-container">
-            <img [src]="getImageSrc(selectedWidget.image)">
+            <img [src]="getImageSrc(selectedWidget.imageToken)">
           </div>
           <div class="description-container">
             {{selectedWidget.description}}
@@ -75,7 +75,7 @@
 
         <div class="settings-container">
           <form id="formSettings" #formSettings="ngForm" (ngSubmit)="addWidget(formSettings)" novalidate>
-            <div *ngFor="let param of selectedWidget.widgetParams">
+            <div *ngFor="let param of selectedWidget.params">
               <!-- Boolean Type -->
               <mat-checkbox *ngIf="param.type == widgetParamEnum.BOOLEAN"
                             color="accent"

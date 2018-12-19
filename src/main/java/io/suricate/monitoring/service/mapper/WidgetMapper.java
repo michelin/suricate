@@ -30,7 +30,12 @@ import java.util.List;
  * Interface that manage the generation DTO/Model objects for Widget class
  */
 @Component
-@Mapper(componentModel = "spring")
+@Mapper(
+    componentModel = "spring",
+    uses = {
+        WidgetParamMapper.class
+    }
+)
 public abstract class WidgetMapper {
 
     /* ************************* TO DTO ********************************************** */
@@ -49,6 +54,7 @@ public abstract class WidgetMapper {
     @Mapping(target = "imageToken", expression = "java( widget.getImage() != null ? io.suricate.monitoring.utils.IdUtils.encrypt(widget.getImage().getId()) : null )")
     @Mapping(target = "categoryId", source = "widget.category.id")
     @Mapping(target = "repositoryId", source = "widget.repository.id")
+    @Mapping(target = "params", source = "widget.widgetParams", qualifiedByName = "toWidgetParamDtoDefault")
     public abstract WidgetResponseDto toWidgetDtoDefault(Widget widget);
 
     /* ******************************************************* */

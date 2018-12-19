@@ -15,6 +15,7 @@
  */
 
 import {WidgetAvailabilityEnum} from '../../enums/WidgetAvailabilityEnum';
+import {WidgetParam} from './WidgetParam';
 
 /**
  * The widget entity
@@ -24,6 +25,7 @@ export interface Widget {
   name: string;
   description: string;
   technicalName: string;
+  cssContent: string;
   info: string;
   delay: number;
   timeout: string;
@@ -31,4 +33,5 @@ export interface Widget {
   widgetAvailability: WidgetAvailabilityEnum;
   categoryId: number;
   repositoryId: number;
+  params: WidgetParam[];
 }

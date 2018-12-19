@@ -112,16 +112,15 @@ export class SidenavComponent implements OnInit, AfterViewInit, OnDestroy {
    * Called when the view has been init
    */
   ngAfterViewInit() {
-    this.sidenavService
-      .subscribeToSidenavOpenCloseEvent()
-      .pipe(takeWhile(() => this.isAlive))
-      .subscribe((shouldOpen: boolean) => {
-        if (shouldOpen) {
-          this.sidenav.open();
-        } else {
-          this.sidenav.close();
-        }
-      });
+    this.sidenavService.subscribeToSidenavOpenCloseEvent().pipe(
+      takeWhile(() => this.isAlive)
+    ).subscribe((shouldOpen: boolean) => {
+      if (shouldOpen) {
+        this.sidenav.open();
+      } else {
+        this.sidenav.close();
+      }
+    });
   }
 
   /**

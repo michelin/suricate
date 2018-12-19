@@ -86,7 +86,7 @@ export class DashboardActionsComponent implements OnInit {
   openAddWidgetDialog() {
     this.addWidgetDialogRef = this.matDialog.open(AddWidgetDialogComponent, {
       minWidth: 900,
-      data: {projectId: this.project.id}
+      data: {projectId: this.project.token}
     });
   }
 
@@ -96,7 +96,7 @@ export class DashboardActionsComponent implements OnInit {
   openEditDashboardDialog() {
     this.editDashboardDialogRef = this.matDialog.open(AddDashboardDialogComponent, {
       minWidth: 900,
-      data: {projectId: this.project.id}
+      data: {projectId: this.project.token}
     });
   }
 
@@ -106,7 +106,7 @@ export class DashboardActionsComponent implements OnInit {
   openTvManagementDialog() {
     this.tvManagementDialogRef = this.matDialog.open(TvManagementDialogComponent, {
       minWidth: 900,
-      data: {projectId: this.project.id}
+      data: {projectId: this.project.token}
     });
   }
 

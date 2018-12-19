@@ -19,7 +19,6 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
-  ElementRef,
   Input,
   OnChanges,
   OnDestroy,
@@ -31,25 +30,19 @@ import {
 import {Router} from '@angular/router';
 import {MatDialog} from '@angular/material';
 import {StompState} from '@stomp/ng2-stompjs';
-import {NgGridItemEvent} from 'angular2-grid';
-import {fromEvent, Subscription} from 'rxjs';
-import {auditTime, map, takeWhile} from 'rxjs/operators';
+import {Subscription} from 'rxjs';
+import {auditTime, takeWhile} from 'rxjs/operators';
 import {TranslateService} from '@ngx-translate/core';
 
 import {Project} from '../../../../shared/model/api/project/Project';
 import {ProjectWidget} from '../../../../shared/model/api/ProjectWidget/ProjectWidget';
 import {DashboardService} from '../../dashboard.service';
 import {WebsocketService} from '../../../../shared/services/websocket.service';
-import {ProjectWidgetPosition} from '../../../../shared/model/api/ProjectWidget/ProjectWidgetPosition';
-import {EditProjectWidgetDialogComponent} from '../edit-project-widget-dialog/edit-project-widget-dialog.component';
 import {WSUpdateEvent} from '../../../../shared/model/websocket/WSUpdateEvent';
 import {WSUpdateType} from '../../../../shared/model/websocket/enums/WSUpdateType';
-import {ConfirmDialogComponent} from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 
 import * as Stomp from '@stomp/stompjs';
-import {TitleCasePipe} from '@angular/common';
 import {HttpProjectService} from '../../../../shared/services/api/http-project.service';
-import {WidgetStateEnum} from '../../../../shared/model/enums/WidgetSateEnum';
 import {HttpProjectWidgetService} from '../../../../shared/services/api/http-project-widget.service';
 
 /**
@@ -82,6 +75,11 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
    * @type {QueryList<any>}
    */
   @ViewChildren('projectWidgetsRendered') projectWidgetsRendered: QueryList<any>;
+
+  /**
+   * The list of project widgets for this project
+   */
+  projectWidgets: ProjectWidget[];
 
   /**
    * Used for keep the subscription of subjects/Obsevables open
@@ -172,12 +170,16 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
     if (changes.project) {
       this.project = changes.project.currentValue;
 
-      if (changes.project.previousValue && changes.project.previousValue.id !== changes.project.currentValue.id) {
-        this.unsubscribeToDestinations();
-        this.disconnect();
-        this.websocketService.startConnection();
-        this.subscribeToDestinations();
-      }
+      this.httpProjectService.getProjectProjectWidgets(this.project.token).subscribe((projectWidgets: ProjectWidget[]) => {
+        this.projectWidgets = projectWidgets;
+
+        if (changes.project.previousValue && changes.project.previousValue.id !== changes.project.currentValue.id) {
+          this.unsubscribeToDestinations();
+          this.disconnect();
+          this.websocketService.startConnection();
+          this.subscribeToDestinations();
+        }
+      });
     }
   }
 
@@ -212,13 +214,9 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
   ngAfterViewInit() {
     if (!this.readOnly) {
       // Check when the projectWidgets *ngFor is ended
-      this.projectWidgetsRendered
-        .changes
-        .subscribe((projectWidgetElements: QueryList<any>) => {
-          this._isGridItemInit = true;
-          this.bindDeleteProjectWidgetEvent(projectWidgetElements);
-          this.bindEditProjectWidgetEvent(projectWidgetElements);
-        });
+      this.projectWidgetsRendered.changes.subscribe((projectWidgetElements: QueryList<any>) => {
+        this._isGridItemInit = true;
+      });
     }
 
     // We have to inject this variable in the window scope (because some Widgets use it for init the js)
@@ -246,9 +244,9 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
    */
   initGridStackOptions(project: Project) {
     this.gridOptions = {
-      'max_cols': project.maxColumn,
+      'max_cols': project.gridProperties.maxColumn,
       'min_cols': 1,
-      'row_height': project.widgetHeight,
+      'row_height': project.gridProperties.widgetHeight,
       'margins': [4],
       'auto_resize': true
     };
@@ -397,90 +395,6 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
     this.isSrcScriptsRendered = isScriptRendered;
   }
 
-  /* ************ Unique Widget HTML and CSS Management ************* */
-
-  /**
-   * Get the html/CSS code for the widget
-   *
-   * @param {ProjectWidget} projectWidget The widget
-   * @returns {SafeHtml} The html as SafeHtml
-   */
-  getHtmlAndCss(projectWidget: ProjectWidget): string {
-    return `
-      <style>
-        ${projectWidget.widget.cssContent}
-        ${projectWidget.customStyle ? projectWidget.customStyle : ''}
-      </style>
-
-      ${this.getWidgetHtml(projectWidget)}
-    `;
-  }
-
-  /**
-   * Get The html for a widget
-   *
-   * @param {ProjectWidget} projectWidget The project widget
-   * @returns {string} The related html
-   */
-  getWidgetHtml(projectWidget: ProjectWidget): string {
-    let widgetHtml = '';
-
-    if (projectWidget.widget.delay > 0 && projectWidget.log) {
-      if (projectWidget.state === WidgetStateEnum.STOPPED) {
-        widgetHtml = widgetHtml.concat(`
-        <div style="position: relative;
-                    background-color: #b41e1ee0;
-                    width: 100%;
-                    z-index: 15;
-                    top: 0;
-                    text-align: center;
-                    font-size: 0.5em;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center">
-          <span>
-            <mat-icon class="material-icons" style="color: #cfd2da !important;">warning</mat-icon>
-          </span>
-          <span style="display: inline-block; color: #cfd2da !important">
-            Widget execution error
-          </span>
-        </div>
-      `);
-      }
-
-      if (projectWidget.state === WidgetStateEnum.WARNING) {
-        widgetHtml = widgetHtml.concat(`
-        <div style="position: relative;
-                    background-color: #e8af00db;
-                    width: 100%;
-                    z-index: 15;
-                    top: 0;
-                    text-align: center;
-                    font-size: 0.5em;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center">
-          <span>
-            <mat-icon class="material-icons" style="color: #cfd2da !important;">warning</mat-icon>
-          </span>
-          <span style="display: inline-block; color: #cfd2da !important">
-            Issue with remote server. Retrying ...
-          </span>
-        </div>
-      `);
-      }
-    }
-
-    widgetHtml = widgetHtml.concat(`
-      ${this.getActionButtonsHtml(projectWidget)}
-      <div class="grid-stack-item-content">
-        ${projectWidget.instantiateHtml}
-      </div>
-    `);
-
-    return widgetHtml;
-  }
-
   /* *************** Widget Action buttons (CSS, HTML, Bindings) ************** */
   /**
    * Get the css for widget action buttons
@@ -508,91 +422,6 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
         right: 34px;
       }
     `;
-  }
-
-  /**
-   * Get the html for the action buttons
-   *
-   * @param {ProjectWidget} projectWidget The project widget
-   * @returns {string} The html string
-   */
-  getActionButtonsHtml(projectWidget: ProjectWidget): string {
-    if (this.readOnly) {
-      return '';
-    }
-
-    return `
-      <button id="delete-${projectWidget.id}"
-              name="delete-${projectWidget.id}"
-              class="btn-widget btn-widget-delete"
-              role="button"
-              data-project-widget-id="${projectWidget.id}"
-              aria-disabled="false">
-        <mat-icon class="material-icons">delete_forever</mat-icon>
-      </button>
-
-      <button id="edit-${projectWidget.id}"
-              name="edit-${projectWidget.id}"
-              class="btn-widget btn-widget-edit"
-              role="button"
-              data-project-widget-id="${projectWidget.id}"
-              aria-disabled="false">
-        <mat-icon class="material-icons">edit</mat-icon>
-      </button>
-    `;
-  }
-
-  /**
-   * Bind delete events for each delete button element
-   *
-   * @param {QueryList<any>} projectWidgetElements The project widget elements
-   */
-  bindDeleteProjectWidgetEvent(projectWidgetElements: QueryList<any>) {
-    projectWidgetElements.forEach((projectWidgetElement: ElementRef) => {
-      const deleteButton: any = projectWidgetElement.nativeElement.querySelector('.btn-widget-delete');
-
-      if (deleteButton) {
-        const projectWidgetNumber: number = deleteButton.getAttribute('data-project-widget-id');
-        this.deleteButtonSubscriptions.push(
-          projectWidgetNumber,
-          fromEvent<MouseEvent>(deleteButton, 'click')
-            .pipe(
-              takeWhile(() => this.isAlive && this._isGridItemInit),
-              map((mouseEvent: any) => mouseEvent.target.closest('.widget').querySelector('.btn-widget-delete'))
-            )
-            .subscribe((deleteButtonElement: any) => {
-              this.deleteProjectWidgetFromDashboard(+deleteButtonElement.getAttribute('data-project-widget-id'));
-            })
-        );
-      }
-    });
-  }
-
-  /**
-   * Bind edit events for each edit button elements
-   *
-   * @param {QueryList<any>} projectWidgetElements The list of elements
-   */
-  bindEditProjectWidgetEvent(projectWidgetElements: QueryList<any>) {
-    projectWidgetElements.forEach((projectWidgetElement: ElementRef) => {
-      const editButton: any = projectWidgetElement.nativeElement.querySelector('.btn-widget-edit');
-
-      if (editButton) {
-        const projectWidgetNumber: number = editButton.getAttribute('data-project-widget-id');
-
-        this.editButtonSubscriptions.push(
-          projectWidgetNumber,
-          fromEvent<MouseEvent>(editButton, 'click')
-            .pipe(
-              takeWhile(() => this.isAlive && this._isGridItemInit),
-              map((mouseEvent: any) => mouseEvent.target.closest('.widget').querySelector('.btn-widget-edit'))
-            )
-            .subscribe((editButtonElement: any) => {
-              this.editProjectWidgetFromDashboard(+editButtonElement.getAttribute('data-project-widget-id'));
-            })
-        );
-      }
-    });
   }
 
   /* ******************************************************* */
@@ -707,99 +536,4 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
 
     return projectWidgets;
   }
-
-  /* ******************************************************* */
-  /*                  REST Management                        */
-
-  /* ******************************************************* */
-
-  /**
-   * Delete a project widget from a dashboard
-   *
-   * @param {number} projectWidgetId The project widget id to delete
-   */
-  deleteProjectWidgetFromDashboard(projectWidgetId: number) {
-    const projectWidget: ProjectWidget = this.dashboardService.currentDisplayedDashboardValue.projectWidgets
-      .find((currentProjectWidget: ProjectWidget) => {
-        return currentProjectWidget.id === projectWidgetId;
-      });
-
-    if (projectWidget) {
-      let deleteProjectWidgetDialog = null;
-
-      this.translateService.get(['widget.delete', 'delete.confirm']).subscribe(translations => {
-        const titlecasePipe = new TitleCasePipe();
-
-        deleteProjectWidgetDialog = this.matDialog.open(ConfirmDialogComponent, {
-          data: {
-            title: translations['widget.delete'],
-            message: `${translations['delete.confirm']} ${titlecasePipe.transform(projectWidget.widget.name)}`
-          }
-        });
-      });
-
-      deleteProjectWidgetDialog.afterClosed().subscribe(shouldDeleteProjectWidget => {
-        if (shouldDeleteProjectWidget) {
-          this.httpProjectWidgetService.deleteOneById(projectWidget.id).subscribe();
-        }
-      });
-    }
-  }
-
-  /**
-   * Edit a project widget from the dashboard
-   *
-   * @param {number} projectWidgetId The project widget id to edit
-   */
-  editProjectWidgetFromDashboard(projectWidgetId: number) {
-    const projectWidget: ProjectWidget = this.dashboardService.currentDisplayedDashboardValue.projectWidgets
-      .find((currentProjectWidget: ProjectWidget) => {
-        return currentProjectWidget.id === projectWidgetId;
-      });
-
-    if (projectWidget) {
-      this.matDialog.open(EditProjectWidgetDialogComponent, {
-        minWidth: 700,
-        data: {projectWidget: projectWidget}
-      });
-    }
-  }
-
-  /**
-   * Update the project widget position for every widgets
-   *
-   * @param {NgGridItemEvent[]} gridItemEvents The list of grid item events
-   */
-  updateProjectWidgetsPosition(gridItemEvents: NgGridItemEvent[]) {
-    const currentProject: Project = this.dashboardService.currentDisplayedDashboardValue;
-
-    // update the position only if the grid item has been init
-    if (this._isGridItemInit) {
-      const projectWidgetPositions: ProjectWidgetPosition[] = [];
-
-      gridItemEvents.forEach(gridItemEvent => {
-        const projectWidgetPosition: ProjectWidgetPosition = {
-          projectWidgetId: gridItemEvent.payload,
-          col: gridItemEvent.col,
-          row: gridItemEvent.row,
-          width: gridItemEvent.sizex,
-          height: gridItemEvent.sizey
-        };
-
-        projectWidgetPositions.push(projectWidgetPosition);
-      });
-
-      this.httpProjectService
-        .updateProjectWidgetPositions(currentProject.id, projectWidgetPositions)
-        .subscribe();
-    }
-
-    // We check if the grid item is init, if it's we change the boolean.
-    // Without this the grid item plugin will send request to the server at the initialisation of the component
-    // (probably a bug of the "OnItemChange" event)
-    if (!this._isGridItemInit && gridItemEvents.length === currentProject.projectWidgets.length) {
-      this._isGridItemInit = true;
-    }
-  }
-
 }

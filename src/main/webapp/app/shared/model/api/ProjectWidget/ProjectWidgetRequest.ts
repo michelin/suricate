@@ -20,13 +20,13 @@
 /**
  * The project widget entity
  */
-export class ProjectWidgetRequest {
-  backendConfig: string;
-  col: number;
-  customStyle: string;
-  data: string;
-  height: number;
-  row: number;
-  width: number;
+export interface ProjectWidgetRequest {
+  backendConfig?: string;
+  col?: number;
+  customStyle?: string;
+  data?: string;
+  height?: number;
+  row?: number;
+  width?: number;
   widgetId: number;
 }

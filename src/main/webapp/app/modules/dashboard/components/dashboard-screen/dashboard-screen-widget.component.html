@@ -1,0 +1,11 @@
+<div #projectWidgetElement
+     [ngClass]="'widget ' + widget.technicalName + ' widget-' + projectWidget.id"
+     [ngGridItem]="{ 'col': projectWidget.widgetPosition.col,
+                     'row': projectWidget.widgetPosition.row,
+                     'sizey': projectWidget.widgetPosition.height,
+                     'sizex': projectWidget.widgetPosition.width,
+                     'payload': projectWidget.id
+                   }"
+     [innerHTML]="getHtmlAndCss() | safeHtml" appRunScripts>
+
+</div>

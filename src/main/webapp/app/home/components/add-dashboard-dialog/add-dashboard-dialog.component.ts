@@ -28,6 +28,7 @@ import {Project} from '../../../shared/model/api/project/Project';
 import {User} from '../../../shared/model/api/user/User';
 import {HttpProjectService} from '../../../shared/services/api/http-project.service';
 import {HttpUserService} from '../../../shared/services/api/http-user.service';
+import {ProjectRequest} from '../../../shared/model/api/project/ProjectRequest';
 
 @Component({
   selector: 'app-add-dashboard-dialog',
@@ -109,14 +110,13 @@ export class AddDashboardDialogComponent implements OnInit {
   ngOnInit() {
     if (this.data && this.data.projectId) {
       this.isEditMode = true;
-      this.httpProjectService
-        .getOneByToken(+this.data.projectId)
-        .subscribe(project => {
-          this.projectAdded = project;
-          this.dashboardBackgroundColor = this.getPropertyFromGridCss('background-color');
-          this.initDashboardForm(true);
-          this.initUserForm();
-        });
+
+      this.httpProjectService.getOneByToken(this.data.projectId).subscribe(project => {
+        this.projectAdded = project;
+        this.dashboardBackgroundColor = this.getPropertyFromGridCss('background-color');
+        this.initDashboardForm(true);
+        this.initUserForm();
+      });
 
     } else {
       // init form dashboard
@@ -135,15 +135,9 @@ export class AddDashboardDialogComponent implements OnInit {
   private initDashboardForm(formCompleted: boolean) {
     this.dashboardFormCompleted = formCompleted;
     this.dashboardForm = this.formBuilder.group({
-      'name':
-        [this.projectAdded ? this.projectAdded.name : '',
-          [Validators.required]],
-      'widgetHeight':
-        [this.projectAdded ? this.projectAdded.widgetHeight : '360',
-          [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]],
-      'maxColumn':
-        [this.projectAdded ? this.projectAdded.maxColumn : '5',
-          [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]]
+      'name': [this.projectAdded ? this.projectAdded.name : '', [Validators.required]],
+      'widgetHeight': [this.projectAdded ? this.projectAdded.gridProperties.widgetHeight : '360', [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]],
+      'maxColumn': [this.projectAdded ? this.projectAdded.gridProperties.maxColumn : '5', [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]]
     });
   }
 
@@ -159,7 +153,7 @@ export class AddDashboardDialogComponent implements OnInit {
     this.userAutoComplete$ = this.addUserForm.get('username').valueChanges.pipe(
       debounceTime(500),
       distinctUntilChanged(),
-      switchMap(username => username ? this.httpUserService.searchUserByUsername(username) : new Observable<User[]>())
+      switchMap(username => username ? this.httpUserService.getAll(username) : new Observable<User[]>())
     );
   }
 
@@ -182,27 +176,29 @@ export class AddDashboardDialogComponent implements OnInit {
         ...this.projectAdded,
         ...this.dashboardForm.value
       };
-      this.projectAdded.cssStyle = this.getGridCss();
+      this.projectAdded.gridProperties.cssStyle = this.getGridCss();
 
       if (!this.isEditMode) {
-        this.httpProjectService
-          .createProject(this.projectAdded)
-          .subscribe(project => this.displayProject(project));
+        this.httpProjectService.createProject(this.getProjectRequestFromProject(this.projectAdded)).subscribe((project: Project) => {
+          this.displayProject(project.token);
+        });
 
       } else {
-        this.httpProjectService
-          .editProject(this.projectAdded)
-          .subscribe(project => this.displayProject(project));
+        this.httpProjectService.editProject(this.projectAdded.token, this.getProjectRequestFromProject(this.projectAdded)).subscribe(() => {
+          this.displayProject(this.projectAdded.token);
+        });
       }
     }
   }
 
-  displayProject(project: Project) {
-    this.projectAdded = project;
-    this.dashboardFormCompleted = true;
-    this.changeDetectorRef.detectChanges();
-    this.dashboardService.currentDisplayedDashboardValue = project;
-    this.addDashboardStepper.next();
+  displayProject(projectToken: string) {
+    this.httpProjectService.getOneByToken(projectToken).subscribe((project: Project) => {
+      this.projectAdded = project;
+      this.dashboardFormCompleted = true;
+      this.changeDetectorRef.detectChanges();
+      this.dashboardService.currentDisplayedDashboardValue = project;
+      this.addDashboardStepper.next();
+    });
   }
 
   /**
@@ -221,7 +217,7 @@ export class AddDashboardDialogComponent implements OnInit {
    * @returns {string} The related value
    */
   private getPropertyFromGridCss(property: string): string {
-    const propertyArray = this.projectAdded.cssStyle.split(';');
+    const propertyArray = this.projectAdded.gridProperties.cssStyle.split(';');
     return propertyArray
       .filter((currentProperty: string) => currentProperty.split(':')[0] === property)[0]
       .split(':')[1];
@@ -232,9 +228,7 @@ export class AddDashboardDialogComponent implements OnInit {
    */
   addUser() {
     if (this.addUserForm.valid) {
-      this.httpProjectService
-        .addUserToProject(this.projectAdded, this.addUserForm.value)
-        .subscribe(project => this.projectAdded = project);
+      this.httpProjectService.addUserToProject(this.projectAdded.token, this.addUserForm.value).subscribe();
     }
   }
 
@@ -244,8 +238,15 @@ export class AddDashboardDialogComponent implements OnInit {
    * @param {number} userId The user id
    */
   deleteUser(userId: number) {
-    this.httpProjectService
-      .deleteUserFromProject(this.projectAdded, userId)
-      .subscribe(project => this.projectAdded = project);
+    this.httpProjectService.deleteUserFromProject(this.projectAdded.token, userId).subscribe();
+  }
+
+  getProjectRequestFromProject(project: Project): ProjectRequest {
+    return {
+      name: project.name,
+      maxColumn: project.gridProperties.maxColumn,
+      widgetHeight: project.gridProperties.widgetHeight,
+      cssStyle: project.gridProperties.cssStyle
+    };
   }
 }

@@ -184,11 +184,7 @@ public class CategoryController {
         if (!widgetsOptional.isPresent()) {
             throw new NoContentException(Widget.class);
         }
-
-        // Also add global configuration for each widget
-        // List<WidgetParam> confs = configurationService.getConfigurationForWidgets().stream().filter(c -> c.getCategory().getId().equals(categoryId)).map(ConfigurationService::initParamFromConfiguration).collect(Collectors.toList());
-        // widgets.get().forEach(w -> w.getWidgetParams().addAll(confs));
-
+        
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)

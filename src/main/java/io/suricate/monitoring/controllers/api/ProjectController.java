@@ -23,12 +23,9 @@ import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetPositionR
 import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetRequestDto;
 import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetResponseDto;
 import io.suricate.monitoring.model.dto.api.user.UserResponseDto;
-import io.suricate.monitoring.model.entity.Configuration;
 import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.entity.user.User;
-import io.suricate.monitoring.model.entity.widget.Category;
-import io.suricate.monitoring.model.entity.widget.WidgetParam;
 import io.suricate.monitoring.service.api.ConfigurationService;
 import io.suricate.monitoring.service.api.ProjectService;
 import io.suricate.monitoring.service.api.ProjectWidgetService;
@@ -54,7 +51,6 @@ import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Project controller
@@ -216,22 +212,10 @@ public class ProjectController {
             throw new ObjectNotFoundException(Project.class, projectToken);
         }
 
-//        // Add configuration for widgets
-//        projectOptional.get().getWidgets().forEach(this::addConfiguration);
-
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
             .body(projectMapper.toProjectDtoDefault(projectOptional.get()));
-    }
-
-    private void addConfiguration(ProjectWidget widget) {
-        Category widgetCat = widget.getWidget().getCategory();
-        List<Configuration> confs = configurationService.getConfigurationForCategory(widgetCat.getId());
-
-        List<WidgetParam> params = confs.stream().map(ConfigurationService::initParamFromConfiguration).collect(Collectors.toList());
-
-        widget.getWidget().getWidgetParams().addAll(params);
     }
 
     /**

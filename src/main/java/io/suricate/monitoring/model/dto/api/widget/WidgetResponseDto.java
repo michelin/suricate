@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 /**
  * Object representing a widget used for communication with clients of the webservice
  */
@@ -54,6 +56,12 @@ public class WidgetResponseDto extends AbstractDto {
     private Long delay;
 
     /**
+     * The css of this widget
+     */
+    @ApiModelProperty(value = "The css of this widget")
+    private String cssContent;
+
+    /**
      * The timeout of the nashorn execution
      */
     @ApiModelProperty(value = "Timeout for nashorn execution (prevent infinity loop)")
@@ -82,4 +90,10 @@ public class WidgetResponseDto extends AbstractDto {
      */
     @ApiModelProperty(value = "The repository of this widget")
     private Long repositoryId;
+
+    /**
+     * The list of the params for this widget
+     */
+    @ApiModelProperty(value = "The list of the params for this widget")
+    private List<WidgetParamResponseDto> params;
 }

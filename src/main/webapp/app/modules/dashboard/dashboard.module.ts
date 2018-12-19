@@ -28,6 +28,7 @@ import {DashboardScreenComponent} from './components/dashboard-screen/dashboard-
 import {DashboardTvComponent} from './pages/dashboard-tv/dashboard-tv.component';
 import {LayoutModule} from '../../layout/layout.module';
 import {DashboardRoutes} from './dashboard.route';
+import {DashboardScreenWidgetComponent} from './components/dashboard-screen/dashboard-screen-widget.component';
 
 @NgModule({
   imports: [
@@ -42,6 +43,7 @@ import {DashboardRoutes} from './dashboard.route';
     DashboardEditComponent,
     EditProjectWidgetDialogComponent,
     DashboardScreenComponent,
+    DashboardScreenWidgetComponent,
     DashboardTvComponent
   ],
   exports: [
