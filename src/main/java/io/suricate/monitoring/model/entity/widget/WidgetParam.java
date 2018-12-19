@@ -32,14 +32,18 @@ import java.util.List;
  * Entity representing a param for a widget in database
  */
 @Entity
-@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
+@Getter
+@Setter
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+@ToString
 public class WidgetParam extends AbstractAuditingEntity<Long> {
 
     /**
      * The widget param id
      */
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
@@ -114,7 +118,7 @@ public class WidgetParam extends AbstractAuditingEntity<Long> {
      * @param possibleValuesMap The list values to add
      */
     public void addPossibleValuesMap(List<WidgetParamValue> possibleValuesMap) {
-        possibleValuesMap.forEach( possibleValueMap -> this.addPossibleValueMap(possibleValueMap));
+        possibleValuesMap.forEach(possibleValueMap -> this.addPossibleValueMap(possibleValueMap));
     }
 
     /**

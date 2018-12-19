@@ -27,14 +27,18 @@ import java.util.List;
  * Library entity
  */
 @Entity
-@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
-public class Library extends AbstractAuditingEntity<Long>{
+@Getter
+@Setter
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+@ToString
+public class Library extends AbstractAuditingEntity<Long> {
 
     /**
      * The id
      */
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**

@@ -28,14 +28,18 @@ import java.util.Date;
  * Project_widget entity
  */
 @Entity(name = "ProjectWidget")
-@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
+@Getter
+@Setter
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+@ToString
 public class ProjectWidget extends AbstractAuditingEntity<Long> {
 
     /**
      * The project widget id
      */
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
@@ -110,13 +114,13 @@ public class ProjectWidget extends AbstractAuditingEntity<Long> {
      * The related project
      */
     @ManyToOne
-    @PrimaryKeyJoinColumn(name="projectId",referencedColumnName = "ID")
+    @PrimaryKeyJoinColumn(name = "projectId", referencedColumnName = "ID")
     private Project project;
 
     /**
      * The related widget
      */
     @ManyToOne
-    @PrimaryKeyJoinColumn(name = "widgetId" ,referencedColumnName = "ID")
+    @PrimaryKeyJoinColumn(name = "widgetId", referencedColumnName = "ID")
     private Widget widget;
 }

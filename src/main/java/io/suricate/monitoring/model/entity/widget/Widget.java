@@ -45,7 +45,7 @@ public class Widget extends AbstractAuditingEntity<Long> {
      * The widget id
      */
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**

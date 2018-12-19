@@ -42,7 +42,7 @@ public class User extends AbstractEntity<Long> {
      * The user id
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**

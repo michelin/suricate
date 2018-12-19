@@ -1,5 +1,3 @@
-CREATE SEQUENCE hibernate_sequence;
-
 CREATE TABLE asset (
   id                bigserial     NOT NULL,
   content           bytea,
