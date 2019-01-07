@@ -259,9 +259,7 @@ export class WidgetListComponent implements OnInit, AfterViewInit, OnDestroy {
       imgHtml = `<img src="data:${imageAsset.contentType};base64,${imageAsset.content}" style="max-width: 100%; height: 105px" />`;
     }
 
-    return this
-      .domSanitizer
-      .bypassSecurityTrustHtml(imgHtml);
+    return this.domSanitizer.bypassSecurityTrustHtml(imgHtml);
   }
 
   /**

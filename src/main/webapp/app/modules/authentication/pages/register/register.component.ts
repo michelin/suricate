@@ -18,6 +18,8 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {CustomValidators} from 'ng2-validation';
+import {catchError, flatMap} from 'rxjs/operators';
+import {throwError} from 'rxjs';
 
 import {AuthenticationService} from '../../authentication.service';
 import {checkPasswordMatch} from '../../../../shared/validators/CustomValidator';
@@ -28,6 +30,7 @@ import {HttpConfigurationService} from '../../../../shared/services/api/http-con
 import {Credentials} from '../../../../shared/model/api/user/Credentials';
 import {ToastType} from '../../../../shared/components/toast/toast-objects/ToastType';
 import {UserRequest} from '../../../../shared/model/api/user/UserRequest';
+
 
 /**
  * Component that register a new user
@@ -95,18 +98,15 @@ export class RegisterComponent implements OnInit {
     });
 
     this.authenticationService.logout();
+    this.initRegisterForm();
+  }
 
-    this.passwordControl = this.formBuilder
-      .control(
-        '',
-        [Validators.required, Validators.minLength(3)]
-      );
-
-    this.confirmPasswordControl = this.formBuilder
-      .control(
-        '',
-        [Validators.required, Validators.minLength(3), checkPasswordMatch(this.passwordControl)]
-      );
+  /**
+   * Init the register form
+   */
+  initRegisterForm() {
+    this.passwordControl = this.formBuilder.control('', [Validators.required, Validators.minLength(3)]);
+    this.confirmPasswordControl = this.formBuilder.control('', [Validators.required, Validators.minLength(3), checkPasswordMatch(this.passwordControl)]);
 
     this.registerForm = this.formBuilder.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
@@ -134,22 +134,28 @@ export class RegisterComponent implements OnInit {
   signUp() {
     if (this.registerForm.valid) {
       this.formSubmitAttempt = true;
-      const user: UserRequest = this.registerForm.value;
+      const userRequest: UserRequest = this.registerForm.value;
 
-      this.authenticationService.register(user).subscribe(() => {
-        const credentials: Credentials = {username: user.username, password: user.password};
-        this.authenticationService.authenticate(credentials).subscribe(
-          () => {
-            // Authentication succeed
-            this.router.navigate(['/home']);
-          },
-          error => {
-            // Authentication failed
-            this.formSubmitAttempt = false;
-            console.log(error);
-          }
-        );
-      });
+      this.authenticationService.register(userRequest).pipe(
+        flatMap(() => {
+          const credentials: Credentials = {username: userRequest.username, password: userRequest.password};
+          return this.authenticationService.authenticate(credentials);
+        }),
+        catchError(error => {
+          console.log(error);
+          return throwError(error);
+        })
+      ).subscribe(
+        () => {
+          // Authentication succeed
+          this.router.navigate(['/home']);
+        },
+        error => {
+          console.log(error);
+          this.formSubmitAttempt = false;
+        }
+      );
+
     } else {
       this.toastService.sendMessage('Some fields are not properly filled', ToastType.DANGER);
     }
