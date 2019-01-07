@@ -165,7 +165,7 @@ export class DashboardListComponent implements AfterViewInit {
 
     deleteUserDialog.afterClosed().subscribe(shouldDeleteDashboard => {
       if (shouldDeleteDashboard) {
-        this.httpProjectService.deleteProject(project).subscribe(() => {
+        this.httpProjectService.deleteProject(project.token).subscribe(() => {
           this.toastService.sendMessage('Project deleted successfully', ToastType.SUCCESS);
           this.initProjectsTable();
         });

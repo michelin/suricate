@@ -143,12 +143,10 @@ export class RepositoryAddEditComponent implements OnInit {
       const repositoryToAddEdit: Repository = this.repositoryForm.value;
 
       if (this.repository) {
-        this.repositoryService
-          .updateOneById(this.repository.id, repositoryToAddEdit)
-          .subscribe((repositoryAdded: Repository) => {
-            this.toastService.sendMessage(`Repository ${repositoryAdded.name} updated successfully`, ToastType.SUCCESS);
-            this.redirectToRepositoryList();
-          });
+        this.repositoryService.updateOneById(this.repository.id, repositoryToAddEdit).subscribe(() => {
+          this.toastService.sendMessage(`Repository ${repositoryToAddEdit.name} updated successfully`, ToastType.SUCCESS);
+          this.redirectToRepositoryList();
+        });
 
       } else {
         this.repositoryService

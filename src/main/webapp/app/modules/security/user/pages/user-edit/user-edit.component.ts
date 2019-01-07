@@ -28,6 +28,7 @@ import {ToastType} from '../../../../../shared/components/toast/toast-objects/To
 import {HttpRoleService} from '../../../../../shared/services/api/http-role.service';
 import {HttpUserService} from '../../../../../shared/services/api/http-user.service';
 import {RoleEnum} from '../../../../../shared/model/enums/RoleEnum';
+import {UserRequest} from '../../../../../shared/model/api/user/UserRequest';
 
 /**
  * Component user the edition of a user
@@ -122,8 +123,7 @@ export class UserEditComponent implements OnInit {
    * Save a user
    */
   saveUser() {
-    const userUpdated: User = this.editUserForm.value;
-    userUpdated.id = this.user.id;
+    const userUpdated: UserRequest = this.editUserForm.value;
     userUpdated.roles = [];
 
     const rolesSelected: RoleEnum[] = this.editUserForm.get('roles').value;
@@ -134,7 +134,7 @@ export class UserEditComponent implements OnInit {
       }
     });
 
-    this.httpUserService.updateUser(userUpdated).subscribe(() => {
+    this.httpUserService.updateUser(this.user.id, userUpdated).subscribe(() => {
       this.toastService.sendMessage('User saved successfully', ToastType.SUCCESS);
       this.redirectToUserList();
     });

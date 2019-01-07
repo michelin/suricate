@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import {Role} from '../role/Role';
+
 /**
  * The user entity
  */
@@ -25,4 +27,5 @@ export interface User {
   fullname: string;
   email: string;
   authenticationMethod: string;
+  roles: Role[];
 }

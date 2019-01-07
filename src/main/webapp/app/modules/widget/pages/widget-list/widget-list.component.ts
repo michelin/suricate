@@ -188,7 +188,7 @@ export class WidgetListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.matTableDataSource.sortingDataAccessor = (widget: Widget, property: string) => {
       switch (property) {
         case 'category':
-          return widget.category.name;
+          return '';
         case 'status':
           return widget.widgetAvailability;
         default:
@@ -227,7 +227,8 @@ export class WidgetListComponent implements OnInit, AfterViewInit, OnDestroy {
         )
         .subscribe((inputValue: string) => {
           this.matTableDataSource.filterPredicate = (widget: Widget, filter: string) => {
-            return widget.category.name.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) !== -1;
+            // return widget.category.name.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) !== -1;
+            return true;
           };
           this.applyFilter(inputValue);
         });
@@ -275,10 +276,9 @@ export class WidgetListComponent implements OnInit, AfterViewInit, OnDestroy {
     if (widgetToDisable) {
       widgetToDisable.widgetAvailability = changeEvent.checked ? WidgetAvailabilityEnum.ACTIVATED : WidgetAvailabilityEnum.DISABLED;
 
-      this.httpWidgetService.updateWidget(widgetToDisable).subscribe((widgetResponse: Widget) => {
+      this.httpWidgetService.updateOneById(widgetToDisable.id, {widgetAvailability: widgetToDisable.widgetAvailability}).subscribe(() => {
         this.toastService.sendMessage(
-          `The widget "${widgetResponse.name}" has been ${widgetResponse.widgetAvailability.toString()}`,
-          ToastType.SUCCESS
+          `The widget "${widgetToDisable.name}" has been ${widgetToDisable.widgetAvailability.toString()}`, ToastType.SUCCESS
         );
       });
     }

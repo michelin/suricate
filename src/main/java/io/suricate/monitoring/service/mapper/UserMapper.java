@@ -34,7 +34,12 @@ import java.util.List;
  * Interface that manage the generation DTO/Model objects for User class
  */
 @Component
-@Mapper(componentModel = "spring")
+@Mapper(
+    componentModel = "spring",
+    uses = {
+        RoleMapper.class
+    }
+)
 public abstract class UserMapper {
 
     @Autowired
@@ -54,6 +59,7 @@ public abstract class UserMapper {
      */
     @Named("toUserDtoDefault")
     @Mapping(target = "fullname", expression = "java(String.format(\"%s %s\", user.getFirstname(), user.getLastname()))")
+    @Mapping(target = "roles", qualifiedByName = "toRoleDtoDefault")
     public abstract UserResponseDto toUserDtoDefault(User user);
 
     /* ******************************************************* */

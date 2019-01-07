@@ -20,6 +20,6 @@
  * Link between a setting and a user
  */
 export interface UserSettingRequest {
-  settingValueId: number;
-  unconstrainedValue: string;
+  settingValueId?: number;
+  unconstrainedValue?: string;
 }

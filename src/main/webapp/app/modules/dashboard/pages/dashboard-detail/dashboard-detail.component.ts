@@ -75,11 +75,9 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
   ngOnInit() {
     // Global init from project
     this.activatedRoute.params.subscribe(params => {
-      this.httpProjectService
-        .getOneByToken(+params['id'])
-        .subscribe(project => {
-          this.dashboardService.currentDisplayedDashboardValue = project;
-        });
+      this.httpProjectService.getOneByToken(params['dashboardToken']).subscribe(project => {
+        this.dashboardService.currentDisplayedDashboardValue = project;
+      });
     });
 
     this.dashboardService.currentDisplayedDashboard$

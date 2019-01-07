@@ -101,12 +101,10 @@ export class WidgetConfigurationEditComponent implements OnInit {
       const configuration = this.configuration;
       configuration.value = this.configurationForm.get('value').value;
 
-      this.configurationService
-        .updateConfigurationByKey(this.configuration)
-        .subscribe(() => {
-          this.toastService.sendMessage('Configuration updated successfully', ToastType.SUCCESS);
-          this.redirectToWidgetConfigurationList();
-        });
+      this.configurationService.updateConfigurationByKey(configuration.key, this.configuration).subscribe(() => {
+        this.toastService.sendMessage('Configuration updated successfully', ToastType.SUCCESS);
+        this.redirectToWidgetConfigurationList();
+      });
     }
   }
 

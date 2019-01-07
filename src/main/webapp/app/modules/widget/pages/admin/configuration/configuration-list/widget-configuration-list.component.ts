@@ -160,13 +160,10 @@ export class WidgetConfigurationListComponent implements OnInit {
 
     deleteConfigurationDialog.afterClosed().subscribe(shouldDeleteConfiguration => {
       if (shouldDeleteConfiguration) {
-        this
-          .configurationsService
-          .deleteConfiguration(configuration)
-          .subscribe(() => {
-            this.toastService.sendMessage('Configuration deleted successfully', ToastType.SUCCESS);
-            this.initTable();
-          });
+        this.configurationsService.deleteConfiguration(configuration.key).subscribe(() => {
+          this.toastService.sendMessage('Configuration deleted successfully', ToastType.SUCCESS);
+          this.initTable();
+        });
       }
     });
   }

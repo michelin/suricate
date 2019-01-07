@@ -470,10 +470,6 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
     // WIDGET
     if (updateEvent.type === WSUpdateType.WIDGET) {
       const projectWidget: ProjectWidget = updateEvent.content;
-      if (projectWidget) {
-        this.dashboardService
-          .updateWidgetHtmlFromProjetWidgetId(projectWidget.id, projectWidget.instantiateHtml, projectWidget.state);
-      }
     }
 
     // POSITION & GRID

@@ -44,4 +44,15 @@ export class HttpSettingService {
 
     return this.httpClient.get<Setting[]>(url);
   }
+
+  /**
+   * Get a setting by id
+   *
+   * @param settingId The setting id to get
+   */
+  getOneById(settingId: number): Observable<Setting> {
+    const url = `${settingsApiEndpoint}/${settingId}`;
+
+    return this.httpClient.get<Setting>(url);
+  }
 }

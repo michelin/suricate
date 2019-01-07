@@ -25,6 +25,9 @@ import {User} from '../../../../shared/model/api/user/User';
 import {ToastType} from '../../../../shared/components/toast/toast-objects/ToastType';
 import {HttpUserService} from '../../../../shared/services/api/http-user.service';
 import {SettingDataType} from '../../../../shared/model/enums/SettingDataType';
+import {UserSetting} from '../../../../shared/model/api/setting/UserSetting';
+import {HttpSettingService} from '../../../../shared/services/api/http-setting.service';
+import {UserSettingRequest} from '../../../../shared/model/api/setting/UserSettingRequest';
 
 /**
  * Represent the Admin Setting list page
@@ -57,6 +60,7 @@ export class SettingsListComponent implements OnInit {
    * @param {SettingsService} settingsService The settings service to inject
    */
   constructor(private httpUserService: HttpUserService,
+              private httpSettingService: HttpSettingService,
               private userService: UserService,
               private toastService: ToastService,
               private settingsService: SettingsService) {
@@ -78,24 +82,26 @@ export class SettingsListComponent implements OnInit {
   saveUserSettings(formSettings: NgForm) {
     if (formSettings.valid) {
       const userSettingForm: FormGroup = formSettings.form;
-      const currentUser = this.userService.connectedUser;
 
-      const userSettings = currentUser.userSettings;
-      userSettings.forEach(userSetting => {
-        const userValue = userSettingForm.get(userSetting.setting.type).value;
+      this.httpUserService.getUserSettings(this.userService.connectedUser.id).subscribe((userSettings: UserSetting[]) => {
+        userSettings.forEach(userSetting => {
+          this.httpSettingService.getOneById(userSetting.settingId).subscribe(setting => {
+            const userValue = userSettingForm.get(setting.type).value;
+            let userSettingRequest: UserSettingRequest;
 
-        if (userSetting.setting.constrained) {
-          userSetting.settingValue = userSetting.setting.allowedSettingValues.find(allowedSettingValue => {
-            return allowedSettingValue.value === userValue;
+            if (setting.constrained) {
+              userSetting.settingValue = setting.allowedSettingValues.find(allowedSettingValue => {
+                return allowedSettingValue.value === userValue;
+              });
+            } else {
+              userSetting.unconstrainedValue = userValue;
+            }
+
+            this.httpUserService.updateUserSetting(userSetting.userId, userSetting.settingId, {}).subscribe(user => {
+              this.toastService.sendMessage('Settings saved succesfully', ToastType.SUCCESS);
+            });
           });
-        } else {
-          userSetting.unconstrainedValue = userValue;
-        }
-      });
-
-      this.httpUserService.updateUserSetting(currentUser, userSettings).subscribe(user => {
-        this.toastService.sendMessage('Settings saved succesfully', ToastType.SUCCESS);
-        this.settingsService.setUserSettings(user);
+        });
       });
     }
   }

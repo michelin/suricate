@@ -25,10 +25,10 @@ export const DashboardRoutes: Routes = [
   {path: 'tv', component: DashboardTvComponent},
   {path: 'dashboards/all', component: DashboardListComponent, canActivate: [AuthGuard, AdminGuard]},
   {
-    path: 'dashboards/all/:dashboardId/edit',
+    path: 'dashboards/all/:dashboardToken/edit',
     component: DashboardEditComponent,
     data: {breadcrumb: 'Edit Dashboard'},
     canActivate: [AuthGuard, AdminGuard]
   },
-  {path: 'dashboards/:id', component: DashboardDetailComponent, canActivate: [AuthGuard]},
+  {path: 'dashboards/:dashboardToken', component: DashboardDetailComponent, canActivate: [AuthGuard]},
 ];

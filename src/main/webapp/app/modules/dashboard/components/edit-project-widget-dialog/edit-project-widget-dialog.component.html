@@ -101,8 +101,9 @@
             <!-- Used for display file selection window -->
             <button mat-raised-button class="file_upload_button mat-elevation-z8" type="button" (click)="file.click()">
               <mat-icon>attach_file</mat-icon>
-              <span [class]="'file-selection-sentence-' + param.name"><app-translate
-                  [key]="'uploadyarn star'"></app-translate></span>
+              <span [class]="'file-selection-sentence-' + param.name">
+                <app-translate [key]="'star'"></app-translate>
+              </span>
             </button>
             <!-- Used for retrieve the file -->
             <input #file

@@ -24,6 +24,7 @@ import {DashboardService} from '../../../dashboard.service';
 import {ToastService} from '../../../../../shared/components/toast/toast.service';
 import {ToastType} from '../../../../../shared/components/toast/toast-objects/ToastType';
 import {HttpProjectService} from '../../../../../shared/services/api/http-project.service';
+import {ProjectRequest} from '../../../../../shared/model/api/project/ProjectRequest';
 
 /**
  * Component that display the edit page for a dashboard
@@ -71,12 +72,10 @@ export class DashboardEditComponent implements OnInit {
       .activatedRoute
       .params
       .subscribe(params => {
-        this.httpProjectService
-          .getOneByToken(+params['dashboardId'])
-          .subscribe(dashboard => {
-            this.dashboard = dashboard;
-            this.initDashboardForm();
-          });
+        this.httpProjectService.getOneByToken(this.dashboard.token).subscribe(dashboard => {
+          this.dashboard = dashboard;
+          this.initDashboardForm();
+        });
       });
   }
 
@@ -87,8 +86,8 @@ export class DashboardEditComponent implements OnInit {
     this.editDashboardForm = this.formBuilder.group({
       name: [this.dashboard.name, [Validators.required, Validators.minLength(3)]],
       token: [this.dashboard.token, [Validators.required]],
-      widgetHeight: [this.dashboard.widgetHeight, [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]],
-      maxColumn: [this.dashboard.maxColumn, [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]]
+      widgetHeight: [this.dashboard.gridProperties.widgetHeight, [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]],
+      maxColumn: [this.dashboard.gridProperties.maxColumn, [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]]
     });
   }
 
@@ -107,8 +106,10 @@ export class DashboardEditComponent implements OnInit {
    * edit the dashboard
    */
   saveDashboard() {
-    this.httpProjectService
-      .editProject({...this.dashboard, ...this.editDashboardForm.value})
-      .subscribe(() => this.toastService.sendMessage('Dashboard saved successfully', ToastType.SUCCESS));
+    const projectRequest: ProjectRequest = {...this.dashboard, ...this.editDashboardForm.value};
+
+    this.httpProjectService.editProject(this.dashboard.token, projectRequest).subscribe(() => {
+      this.toastService.sendMessage('Dashboard saved successfully', ToastType.SUCCESS)
+    });
   }
 }

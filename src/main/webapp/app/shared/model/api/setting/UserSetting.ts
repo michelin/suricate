@@ -25,6 +25,6 @@ export interface UserSetting {
   id: number;
   userId: number;
   settingId: number;
-  settingValue: AllowedSettingValue;
-  unconstrainedValue: string;
+  settingValue?: AllowedSettingValue;
+  unconstrainedValue?: string;
 }

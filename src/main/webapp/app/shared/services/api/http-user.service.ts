@@ -21,8 +21,8 @@ import {User} from '../../model/api/user/User';
 import {usersApiEndpoint} from '../../../app.constant';
 import {UserService} from '../../../modules/security/user/user.service';
 import {UserRequest} from '../../model/api/user/UserRequest';
-import {Setting} from '../../model/api/setting/Setting';
 import {UserSettingRequest} from '../../model/api/setting/UserSettingRequest';
+import {UserSetting} from '../../model/api/setting/UserSetting';
 
 @Injectable()
 export class HttpUserService {
@@ -88,10 +88,10 @@ export class HttpUserService {
    *
    * @param userId The user id
    */
-  getUserSettings(userId: number): Observable<Setting[]> {
+  getUserSettings(userId: number): Observable<UserSetting[]> {
     const url = `${usersApiEndpoint}/${userId}`;
 
-    return this.httpClient.get<Setting[]>(url);
+    return this.httpClient.get<UserSetting[]>(url);
   }
 
   /**

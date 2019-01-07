@@ -18,10 +18,7 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 
 import {Project} from '../../shared/model/api/project/Project';
-import {ProjectWidget} from '../../shared/model/api/ProjectWidget/ProjectWidget';
 import {UserService} from '../security/user/user.service';
-import {User} from '../../shared/model/api/user/User';
-import {WidgetStateEnum} from '../../shared/model/enums/WidgetSateEnum';
 
 /**
  * The dashboard service, manage http calls
@@ -118,58 +115,6 @@ export class DashboardService {
    */
   set currentDisplayedDashboardValue(project: Project) {
     this.currentDashboardSubject.next(project);
-  }
-
-  /**
-   * Update the list hold by the subject
-   *
-   * @param {Project} project The project
-   * @param {string} action The action performed
-   */
-  updateDashboardListSubject(project: Project, action: string): void {
-    // Initialize search index
-    let indexOfCurrentProject = -1;
-
-    if (this.currentDashboardListValues != null) {
-      indexOfCurrentProject = this.currentDashboardListValues.findIndex(currentProject => currentProject.id === project.id);
-    }
-
-    if (indexOfCurrentProject >= 0) {
-      this.currentDashboardListValues.splice(indexOfCurrentProject, 1);
-    }
-
-    const currentUser: User = this.userService.connectedUser;
-    if (project.users.findIndex(userLoop => userLoop.id === currentUser.id) >= 0) {
-      if (this.currentDashboardListValues == undefined) {
-        this.currentDashboardListValues = [project];
-      } else if (action === this.dashboardActionUpdate) {
-        this.currentDashboardListValues = [...this.currentDashboardListValues, project];
-      } else {
-        this.currentDashboardListValues = [...this.currentDashboardListValues];
-      }
-    }
-  }
-
-  /**
-   * Use to update the html of a websocket
-   *
-   * @param {number} projectWidgetId The project widget ID to update
-   * @param {string} newHtmlContent The HTML to replace
-   * @param {WidgetStateEnum} widgetStatus The widget status
-   */
-  public updateWidgetHtmlFromProjetWidgetId(projectWidgetId: number, newHtmlContent: string, widgetStatus: WidgetStateEnum): void {
-    let projectWidgetToUpdate: ProjectWidget = null;
-
-    this.currentDisplayedDashboardValue.projectWidgets.filter(currentProjectWidget => {
-      if (currentProjectWidget.id === projectWidgetId) {
-        projectWidgetToUpdate = currentProjectWidget;
-      }
-    });
-
-    if (projectWidgetToUpdate) {
-      projectWidgetToUpdate.instantiateHtml = newHtmlContent;
-      projectWidgetToUpdate.state = widgetStatus;
-    }
   }
 
   /* ******************************************************************* */

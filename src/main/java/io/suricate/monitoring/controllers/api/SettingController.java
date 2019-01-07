@@ -22,15 +22,14 @@ import io.suricate.monitoring.model.entity.setting.Setting;
 import io.suricate.monitoring.service.api.SettingService;
 import io.suricate.monitoring.service.mapper.SettingMapper;
 import io.suricate.monitoring.utils.exception.NoContentException;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -93,5 +92,32 @@ public class SettingController {
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
             .body(settingMapper.toSettingDtosDefault(settingsOptional.get()));
+    }
+
+    /**
+     * Get a setting
+     *
+     * @param settingId The setting id to get
+     * @return The setting
+     */
+    @ApiOperation(value = "Get a setting by id", response = SettingResponseDto.class)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Ok", response = SettingResponseDto.class),
+        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
+    })
+    @GetMapping(value = "/v1/settings/{settingId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<SettingResponseDto> getOne(@ApiParam(name = "settingId", value = "The setting id", required = true)
+                                                     @PathVariable("settingId") Long settingId) {
+        Optional<Setting> settingOptional = settingService.getOneById(settingId);
+        if (!settingOptional.isPresent()) {
+            throw new ObjectNotFoundException(Setting.class, settingId);
+        }
+
+        return ResponseEntity
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(settingMapper.toSettingDtoDefault(settingOptional.get()));
     }
 }

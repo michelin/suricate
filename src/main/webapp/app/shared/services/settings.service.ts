@@ -20,7 +20,6 @@ import {BehaviorSubject, Observable} from 'rxjs';
 
 import {UserSetting} from '../model/api/setting/UserSetting';
 import {User} from '../model/api/user/User';
-import {SettingType} from '../model/enums/SettingType';
 
 /**
  * Manage the app theme
@@ -118,7 +117,8 @@ export class SettingsService {
    * @returns {UserSetting} The user setting
    */
   getThemeUserSetting(user: User): UserSetting {
-    return user.userSettings.find(userSetting => userSetting.setting.type === SettingType.TEMPLATE);
+    // return user.userSettings.find(userSetting => userSetting.setting.type === SettingType.TEMPLATE);
+    return {id: 1, settingId: 1, userId: 1};
   }
 
   /**

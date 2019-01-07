@@ -132,12 +132,9 @@ export class RepositoryListComponent implements OnInit {
   toggleWidgetActivation(repository: Repository, changeEvent: MatSlideToggleChange) {
     repository.enabled = changeEvent.checked;
 
-    this.repositoryService
-      .updateOneById(repository.id, repository)
-      .subscribe(repositoryUpdate => {
-        const repoStatusAsString: string = repositoryUpdate.enabled ? 'activated' : 'disabled';
-        this.toastService
-          .sendMessage(`The repository ${repository.name} has been ${repoStatusAsString} successfully`, ToastType.SUCCESS);
-      });
+    this.repositoryService.updateOneById(repository.id, repository).subscribe(() => {
+      const repoStatusAsString: string = repository.enabled ? 'activated' : 'disabled';
+      this.toastService.sendMessage(`The repository ${repository.name} has been ${repoStatusAsString} successfully`, ToastType.SUCCESS);
+    });
   }
 }
