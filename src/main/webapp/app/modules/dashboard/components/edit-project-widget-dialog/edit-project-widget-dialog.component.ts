@@ -19,7 +19,6 @@ import {FormGroup, NgForm} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 
 import {ProjectWidget} from '../../../../shared/model/api/ProjectWidget/ProjectWidget';
-import {Asset} from '../../../../shared/model/api/asset/Asset';
 import {WidgetParam} from '../../../../shared/model/api/widget/WidgetParam';
 import {DashboardService} from '../../dashboard.service';
 import {ToastService} from '../../../../shared/components/toast/toast.service';
@@ -27,6 +26,9 @@ import {ToastType} from '../../../../shared/components/toast/toast-objects/Toast
 import {HttpProjectService} from '../../../../shared/services/api/http-project.service';
 import {WidgetVariableType} from '../../../../shared/model/enums/WidgetVariableType';
 import {HttpProjectWidgetService} from '../../../../shared/services/api/http-project-widget.service';
+import {HttpWidgetService} from '../../../../shared/services/api/http-widget.service';
+import {Widget} from '../../../../shared/model/api/widget/Widget';
+import {HttpAssetService} from '../../../../shared/services/api/http-asset.service';
 
 @Component({
   selector: 'app-edit-project-widget-dialog',
@@ -40,6 +42,8 @@ export class EditProjectWidgetDialogComponent implements OnInit {
    * @type {ProjectWidget}
    */
   projectWidget: ProjectWidget;
+
+  widget: Widget;
 
   /**
    * The widget variable type
@@ -62,6 +66,8 @@ export class EditProjectWidgetDialogComponent implements OnInit {
               private dashboardService: DashboardService,
               private httpProjectService: HttpProjectService,
               private httpProjectWidgetService: HttpProjectWidgetService,
+              private httpWidgetService: HttpWidgetService,
+              private httpAssetService: HttpAssetService,
               private toastService: ToastService) {
   }
 
@@ -69,17 +75,23 @@ export class EditProjectWidgetDialogComponent implements OnInit {
    * Init of the ocmponent
    */
   ngOnInit() {
-    this.projectWidget = this.data.projectWidget;
+    this.httpProjectWidgetService.getOneById(this.data.projectWidgetId).subscribe(projectWidget => {
+      this.projectWidget = projectWidget;
+
+      this.httpWidgetService.getOneById(projectWidget.widgetId).subscribe(widget => {
+        this.widget = widget;
+      });
+    });
   }
 
   /**
    * The get the string image
    *
-   * @param {Asset} image The image
+   * @param {string} assetToken The image
    * @returns {string} The base64 url
    */
-  getImageSrc(image: Asset): string {
-    return image != null ? `data:${image.contentType};base64,${image.content}` : ``;
+  getImageSrc(assetToken: string): string {
+    return this.httpAssetService.getContentUrl(assetToken);
   }
 
   /**
@@ -132,7 +144,7 @@ export class EditProjectWidgetDialogComponent implements OnInit {
       const form: FormGroup = formSettings.form;
       let backendConfig = '';
 
-      this.projectWidget.widget.widgetParams.forEach(param => {
+      this.widget.params.forEach(param => {
         backendConfig = `${backendConfig}${param.name}=${form.get(param.name).value}\n`;
       });
 
