@@ -24,6 +24,7 @@ import {TvManagementDialogComponent} from '../tv-management-dialog/tv-management
 import {HttpScreenService} from '../../../../shared/services/api/http-screen.service';
 import {DashboardService} from '../../../../modules/dashboard/dashboard.service';
 import {Project} from '../../../../shared/model/api/project/Project';
+import {HttpProjectService} from '../../../../shared/services/api/http-project.service';
 
 /**
  * Hold the header dashboard actions
@@ -70,6 +71,7 @@ export class DashboardActionsComponent implements OnInit {
   constructor(private matDialog: MatDialog,
               private activatedRoute: ActivatedRoute,
               private screenService: HttpScreenService,
+              private httpProjectService: HttpProjectService,
               private dashboardService: DashboardService) {
   }
 
@@ -77,7 +79,11 @@ export class DashboardActionsComponent implements OnInit {
    * When the component is init
    */
   ngOnInit() {
-    this.dashboardService.currentDisplayedDashboard$.subscribe(project => this.project = project);
+    this.activatedRoute.params.subscribe(params => {
+      this.httpProjectService.getOneByToken(params['dashboardToken']).subscribe(dashboard => {
+        this.project = dashboard;
+      });
+    });
   }
 
   /**

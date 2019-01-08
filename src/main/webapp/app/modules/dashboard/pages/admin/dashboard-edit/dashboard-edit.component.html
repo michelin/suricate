@@ -72,8 +72,8 @@
 
       <h4 class="title" fxFlexAlign="start"> {{ 'Users' | uppercase }} </h4>
 
-      <mat-list role="list" *ngIf="dashboard?.users">
-        <mat-list-item *ngFor="let user of dashboard?.users">
+      <mat-list role="list" *ngIf="dashboardUsers">
+        <mat-list-item *ngFor="let user of dashboardUsers">
           <mat-icon class="prefix">account_box</mat-icon>
           <div class="user"> {{user.firstname}} {{user.lastname}} ({{user.username | uppercase}})</div>
         </mat-list-item>

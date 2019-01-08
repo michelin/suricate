@@ -33,7 +33,7 @@
         <app-translate [key]="'edit'"></app-translate>
       </mat-header-cell>
       <mat-cell fxFlex="8" *matCellDef="let row">
-        <a [routerLink]="[row.id, 'edit']">
+        <a [routerLink]="[row.token, 'edit']">
           <button mat-icon-button color="accent">
             <mat-icon>edit</mat-icon>
           </button>

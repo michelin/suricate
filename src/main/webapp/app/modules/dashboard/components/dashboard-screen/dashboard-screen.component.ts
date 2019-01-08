@@ -61,6 +61,11 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
    */
   @Input() project: Project;
   /**
+   * The project widget list
+   * @type {ProjectWidget[]}
+   */
+  @Input() projectWidgets: ProjectWidget[];
+  /**
    * Tell if the dashboard should be on readOnly or not
    * @type {boolean}
    */
@@ -75,11 +80,6 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
    * @type {QueryList<any>}
    */
   @ViewChildren('projectWidgetsRendered') projectWidgetsRendered: QueryList<any>;
-
-  /**
-   * The list of project widgets for this project
-   */
-  projectWidgets: ProjectWidget[];
 
   /**
    * Used for keep the subscription of subjects/Obsevables open
@@ -477,7 +477,6 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
       const projectUpdated: Project = updateEvent.content;
       if (projectUpdated) {
         this._isGridItemInit = false;
-        this.dashboardService.currentDisplayedDashboardValue = projectUpdated;
       }
     }
 
@@ -519,7 +518,7 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
       if (left.widgetPosition.row > right.widgetPosition.row) {
         return 1;
       }
-      if (left.widgetPosition.row = right.widgetPosition.row) {
+      if (left.widgetPosition.row == right.widgetPosition.row) {
         if (left.widgetPosition.col < right.widgetPosition.col) {
           return -1;
         }

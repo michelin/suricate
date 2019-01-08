@@ -17,13 +17,12 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {MatDialog, MatDialogRef} from '@angular/material';
 import {ActivatedRoute} from '@angular/router';
-import {Observable, of} from 'rxjs';
-import {takeWhile} from 'rxjs/operators';
 
 import {DashboardService} from '../../dashboard.service';
 import {Project} from '../../../../shared/model/api/project/Project';
 import {AddWidgetDialogComponent} from '../../../../layout/header/components/add-widget-dialog/add-widget-dialog.component';
 import {HttpProjectService} from '../../../../shared/services/api/http-project.service';
+import {ProjectWidget} from '../../../../shared/model/api/ProjectWidget/ProjectWidget';
 
 /**
  * Component that display a specific dashboard
@@ -50,10 +49,15 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
   private isAlive = true;
 
   /**
-   * The project as observable
-   * @type {Observable<Project>}
+   * The project
+   * @type {Project}
    */
-  project$: Observable<Project>;
+  project: Project;
+
+  /**
+   * The list of projectWidgets
+   */
+  projectWidgets: ProjectWidget[];
 
   /**
    * constructor
@@ -76,13 +80,13 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
     // Global init from project
     this.activatedRoute.params.subscribe(params => {
       this.httpProjectService.getOneByToken(params['dashboardToken']).subscribe(project => {
-        this.dashboardService.currentDisplayedDashboardValue = project;
+        this.project = project;
+
+        this.httpProjectService.getProjectProjectWidgets(params['dashboardToken']).subscribe(projectWidgets => {
+          this.projectWidgets = projectWidgets;
+        });
       });
     });
-
-    this.dashboardService.currentDisplayedDashboard$
-      .pipe(takeWhile(() => this.isAlive))
-      .subscribe(project => this.project$ = of(project));
   }
 
   /**

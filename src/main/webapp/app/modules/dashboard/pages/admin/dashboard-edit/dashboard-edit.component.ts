@@ -25,6 +25,7 @@ import {ToastService} from '../../../../../shared/components/toast/toast.service
 import {ToastType} from '../../../../../shared/components/toast/toast-objects/ToastType';
 import {HttpProjectService} from '../../../../../shared/services/api/http-project.service';
 import {ProjectRequest} from '../../../../../shared/model/api/project/ProjectRequest';
+import {User} from '../../../../../shared/model/api/user/User';
 
 /**
  * Component that display the edit page for a dashboard
@@ -49,6 +50,11 @@ export class DashboardEditComponent implements OnInit {
   dashboard: Project;
 
   /**
+   * The list of project users
+   */
+  dashboardUsers: User[];
+
+  /**
    * Constructor
    *
    * @param {DashboardService} dashboardService The dashboard service to inject
@@ -68,15 +74,16 @@ export class DashboardEditComponent implements OnInit {
    * Called when the component is displayed
    */
   ngOnInit() {
-    this
-      .activatedRoute
-      .params
-      .subscribe(params => {
-        this.httpProjectService.getOneByToken(this.dashboard.token).subscribe(dashboard => {
-          this.dashboard = dashboard;
-          this.initDashboardForm();
+    this.activatedRoute.params.subscribe(params => {
+      this.httpProjectService.getOneByToken(params['dashboardToken']).subscribe(dashboard => {
+        this.dashboard = dashboard;
+        this.initDashboardForm();
+
+        this.httpProjectService.getProjectUsers(params['dashboardToken']).subscribe(users => {
+          this.dashboardUsers = users;
         });
       });
+    });
   }
 
   /**
@@ -109,7 +116,7 @@ export class DashboardEditComponent implements OnInit {
     const projectRequest: ProjectRequest = {...this.dashboard, ...this.editDashboardForm.value};
 
     this.httpProjectService.editProject(this.dashboard.token, projectRequest).subscribe(() => {
-      this.toastService.sendMessage('Dashboard saved successfully', ToastType.SUCCESS)
+      this.toastService.sendMessage('Dashboard saved successfully', ToastType.SUCCESS);
     });
   }
 }
