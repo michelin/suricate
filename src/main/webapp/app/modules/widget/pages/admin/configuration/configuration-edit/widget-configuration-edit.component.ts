@@ -124,5 +124,4 @@ export class WidgetConfigurationEditComponent implements OnInit {
   redirectToWidgetConfigurationList() {
     this.router.navigate(['/widgets/configurations']);
   }
-
 }
