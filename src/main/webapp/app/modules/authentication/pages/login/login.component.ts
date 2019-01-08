@@ -78,7 +78,10 @@ export class LoginComponent implements OnInit {
     });
 
     this.authenticationService.logout();
+    this.initLoginForm();
+  }
 
+  initLoginForm() {
     this.loginForm = this.formBuilder.group({
       'username': ['', [Validators.required]],
       'password': ['', [Validators.required]]
@@ -104,17 +107,15 @@ export class LoginComponent implements OnInit {
       this.formSubmitAttempt = true;
 
       // Try to authenticate
-      this.authenticationService
-        .authenticate(this.loginForm.value)
-        .subscribe(
-          () => {
-            // Authentication succeed
-            this.router.navigate(['/home']);
-          },
-          error => {
-            // Authentication failed
-            this.formSubmitAttempt = false;
-          });
+      this.authenticationService.authenticate(this.loginForm.value).subscribe(
+        () => {
+          // Authentication succeed
+          this.router.navigate(['/home']);
+        },
+        () => {
+          // Authentication failed
+          this.formSubmitAttempt = false;
+        });
     }
   }
 }
