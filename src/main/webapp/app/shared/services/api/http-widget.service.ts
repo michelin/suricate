@@ -17,10 +17,9 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
+
 import {Widget} from '../../model/api/widget/Widget';
 import {widgetsApiEndpoint} from '../../../app.constant';
-import {tap} from 'rxjs/operators';
-import {WidgetService} from '../../../modules/widget/widget.service';
 import {ApiActionEnum} from '../../model/enums/ApiActionEnum';
 import {WidgetRequest} from '../../model/api/widget/WidgetRequest';
 
@@ -31,10 +30,8 @@ export class HttpWidgetService {
    * Constructor
    *
    * @param {HttpClient} httpClient The http client service
-   * @param {WidgetService} widgetService The widget service to inject
    */
-  constructor(private httpClient: HttpClient,
-              private widgetService: WidgetService) {
+  constructor(private httpClient: HttpClient) {
   }
 
   /**
@@ -49,13 +46,7 @@ export class HttpWidgetService {
       url = url.concat(`?action=${action}`);
     }
 
-    return this.httpClient.get<Widget[]>(url).pipe(
-      tap(widgets => {
-        if (action && action === ApiActionEnum.REFRESH) {
-          this.widgetService.widgets = widgets;
-        }
-      })
-    );
+    return this.httpClient.get<Widget[]>(url);
   }
 
   /**

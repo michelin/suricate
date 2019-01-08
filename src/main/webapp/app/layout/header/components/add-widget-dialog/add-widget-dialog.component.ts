@@ -19,7 +19,6 @@ import {FormGroup, NgForm} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef, MatHorizontalStepper} from '@angular/material';
 import {DomSanitizer} from '@angular/platform-browser';
 
-import {WidgetService} from '../../../../modules/widget/widget.service';
 import {Widget} from '../../../../shared/model/api/widget/Widget';
 import {DashboardService} from '../../../../modules/dashboard/dashboard.service';
 import {HttpCategoryService} from '../../../../shared/services/api/http-category.service';
@@ -98,7 +97,6 @@ export class AddWidgetDialogComponent implements OnInit {
    * @param {ChangeDetectorRef} changeDetectorRef The change detector service
    */
   constructor(@Inject(MAT_DIALOG_DATA) private data: any,
-              private widgetService: WidgetService,
               private httpAssetService: HttpAssetService,
               private httpCategoryService: HttpCategoryService,
               private httpProjectService: HttpProjectService,
