@@ -174,15 +174,15 @@ export class UserListComponent implements AfterViewInit {
           message: `${translations['delete.confirm']} ${titlecasePipe.transform(user.username)}`
         }
       });
-    });
 
-    deleteUserDialogRef.afterClosed().subscribe(shouldDeleteUser => {
-      if (shouldDeleteUser) {
-        this.httpUserService.deleteUser(user.id).subscribe(() => {
-          this.toastService.sendMessage('User deleted successfully', ToastType.SUCCESS);
-          this.initUsersTable();
-        });
-      }
+      deleteUserDialogRef.afterClosed().subscribe(shouldDeleteUser => {
+        if (shouldDeleteUser) {
+          this.httpUserService.deleteUser(user.id).subscribe(() => {
+            this.toastService.sendMessage('User deleted successfully', ToastType.SUCCESS);
+            this.initUsersTable();
+          });
+        }
+      });
     });
   }
 

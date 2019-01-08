@@ -123,18 +123,18 @@ export class UserEditComponent implements OnInit {
    * Save a user
    */
   saveUser() {
-    const userUpdated: UserRequest = this.editUserForm.value;
-    userUpdated.roles = [];
+    const userUpdateRequest: UserRequest = this.editUserForm.value;
+    userUpdateRequest.roles = [];
 
     const rolesSelected: RoleEnum[] = this.editUserForm.get('roles').value;
     rolesSelected.forEach((roleName: RoleEnum) => {
       const roleSelected = this.roles.find((role: Role) => role.name === roleName);
       if (roleSelected) {
-        userUpdated.roles.push(roleSelected);
+        userUpdateRequest.roles.push(roleSelected);
       }
     });
 
-    this.httpUserService.updateUser(this.user.id, userUpdated).subscribe(() => {
+    this.httpUserService.updateUser(this.user.id, userUpdateRequest).subscribe(() => {
       this.toastService.sendMessage('User saved successfully', ToastType.SUCCESS);
       this.redirectToUserList();
     });

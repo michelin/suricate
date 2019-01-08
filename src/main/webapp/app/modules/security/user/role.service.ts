@@ -44,6 +44,6 @@ export class RoleService {
    * @returns {string} The list of roles has string
    */
   getRolesNameAsString(roles: Role[]): string {
-    return roles.map(role => role.name).toString();
+    return roles.map(role => role.name).join(', ');
   }
 }
