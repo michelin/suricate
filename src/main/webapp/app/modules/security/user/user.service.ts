@@ -15,7 +15,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable, Subject} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 
 import {TokenService} from '../../../shared/auth/token.service';
 import {SettingsService} from '../../../shared/services/settings.service';

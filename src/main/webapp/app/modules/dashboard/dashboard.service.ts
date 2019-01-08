@@ -116,29 +116,4 @@ export class DashboardService {
   set currentDisplayedDashboardValue(project: Project) {
     this.currentDashboardSubject.next(project);
   }
-
-  /* ******************************************************************* */
-  /*                      Dashboard Other Management                     */
-
-  /* ******************************************************************* */
-
-  /**
-   * Sort list of project by name
-   *
-   * @param {Project[]} projects The list of projects to sort
-   */
-  sortByProjectName(projects: Project[]): Project[] {
-    if (projects === null) {
-      return projects;
-    }
-    return projects.sort((left, right): number => {
-      if (left.name < right.name) {
-        return -1;
-      }
-      if (left.name > right.name) {
-        return 1;
-      }
-      return 0;
-    });
-  }
 }

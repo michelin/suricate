@@ -95,17 +95,40 @@ export class SidenavComponent implements OnInit, AfterViewInit, OnDestroy {
    * Init objects
    */
   ngOnInit() {
-    this.dashboardService.currentDashboardList$
-      .pipe(takeWhile(() => this.isAlive))
-      .subscribe(projects => this.dashboards = this.dashboardService.sortByProjectName(projects));
+    this.initUserInformations();
+    this.initDashboardsInformations();
+  }
 
-    this.userService.connectedUser$
-      .pipe(takeWhile(() => this.isAlive))
-      .subscribe(connectedUser => this.connectedUser = connectedUser);
+  /**
+   * Init the informations related to the user
+   */
+  initUserInformations() {
+    this.userService.connectedUser$.pipe(
+      takeWhile(() => this.isAlive)
+    ).subscribe(connectedUser => {
+      this.connectedUser = connectedUser;
+    });
 
-    this.httpUserService.getConnectedUser().subscribe();
+    this.httpUserService.getConnectedUser().subscribe(connectedUser => {
+      this.userService.connectedUser = connectedUser;
+    });
+
     this.isUserAdmin = this.userService.isAdmin();
-    this.httpProjectService.getAllForCurrentUser().subscribe();
+  }
+
+  /**
+   * Init the dashboards information for the user
+   */
+  initDashboardsInformations() {
+    this.dashboardService.currentDashboardList$.pipe(
+      takeWhile(() => this.isAlive)
+    ).subscribe(projects => {
+      this.dashboards = projects;
+    });
+
+    this.httpProjectService.getAllForCurrentUser().subscribe((projects: Project[]) => {
+      this.dashboardService.currentDashboardListValues = projects;
+    });
   }
 
   /**
