@@ -140,12 +140,12 @@ export class AddWidgetDialogComponent implements OnInit {
         backendConfig = `${backendConfig}${param.name}=${form.get(param.name).value}\n`;
       }
 
-      const projectWidget: ProjectWidgetRequest = {
+      const projectWidgetRequest: ProjectWidgetRequest = {
         backendConfig: backendConfig,
         widgetId: this.selectedWidget.id
       };
 
-      this.httpProjectService.addProjectWidgetToProject(this.projectToken, projectWidget).subscribe(() => {
+      this.httpProjectService.addProjectWidgetToProject(this.projectToken, projectWidgetRequest).subscribe(() => {
         this.addWidgetDialogRef.close();
       });
     }

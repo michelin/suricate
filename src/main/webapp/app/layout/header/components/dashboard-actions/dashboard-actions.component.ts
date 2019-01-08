@@ -92,7 +92,7 @@ export class DashboardActionsComponent implements OnInit {
   openAddWidgetDialog() {
     this.addWidgetDialogRef = this.matDialog.open(AddWidgetDialogComponent, {
       minWidth: 900,
-      data: {projectId: this.project.token}
+      data: {projectToken: this.project.token}
     });
   }
 
