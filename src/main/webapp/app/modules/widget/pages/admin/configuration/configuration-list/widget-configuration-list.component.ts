@@ -156,15 +156,15 @@ export class WidgetConfigurationListComponent implements OnInit {
           message: `${translations['delete.confirm']} ${configuration.key}`
         }
       });
-    });
 
-    deleteConfigurationDialog.afterClosed().subscribe(shouldDeleteConfiguration => {
-      if (shouldDeleteConfiguration) {
-        this.configurationsService.deleteConfiguration(configuration.key).subscribe(() => {
-          this.toastService.sendMessage('Configuration deleted successfully', ToastType.SUCCESS);
-          this.initTable();
-        });
-      }
+      deleteConfigurationDialog.afterClosed().subscribe(shouldDeleteConfiguration => {
+        if (shouldDeleteConfiguration) {
+          this.configurationsService.deleteConfiguration(configuration.key).subscribe(() => {
+            this.toastService.sendMessage('Configuration deleted successfully', ToastType.SUCCESS);
+            this.initTable();
+          });
+        }
+      });
     });
   }
 
