@@ -53,6 +53,7 @@ import {HttpUserService} from './services/api/http-user.service';
 import {HttpRepositoryService} from './services/api/http-repository.service';
 import {HttpConfigurationService} from './services/api/http-configuration.service';
 import {HttpWidgetService} from './services/api/http-widget.service';
+import {HttpProjectWidgetService} from './services/api/http-project-widget.service';
 
 @NgModule({
   imports: [
@@ -116,6 +117,7 @@ import {HttpWidgetService} from './services/api/http-widget.service';
     HttpAssetService,
     HttpCategoryService,
     HttpProjectService,
+    HttpProjectWidgetService,
     HttpRoleService,
     HttpScreenService,
     HttpUserService,
