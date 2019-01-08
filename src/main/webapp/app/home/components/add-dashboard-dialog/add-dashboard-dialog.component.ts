@@ -71,6 +71,11 @@ export class AddDashboardDialogComponent implements OnInit {
   projectAdded: Project;
 
   /**
+   * The users of the project
+   */
+  projectUsers: User[];
+
+  /**
    * Tel if we open the dialog in edit mode or not
    * @type {boolean}
    */
@@ -172,19 +177,20 @@ export class AddDashboardDialogComponent implements OnInit {
    */
   saveDashboard() {
     if (this.dashboardForm.valid) {
-      this.projectAdded = {
-        ...this.projectAdded,
-        ...this.dashboardForm.value
+      const projectRequest: ProjectRequest = {
+        name: this.dashboardForm.get('name').value,
+        maxColumn: this.dashboardForm.get('maxColumn').value,
+        widgetHeight: this.dashboardForm.get('widgetHeight').value,
+        cssStyle: this.getGridCss()
       };
-      this.projectAdded.gridProperties.cssStyle = this.getGridCss();
 
       if (!this.isEditMode) {
-        this.httpProjectService.createProject(this.getProjectRequestFromProject(this.projectAdded)).subscribe((project: Project) => {
+        this.httpProjectService.createProject(projectRequest).subscribe((project: Project) => {
           this.displayProject(project.token);
         });
 
       } else {
-        this.httpProjectService.editProject(this.projectAdded.token, this.getProjectRequestFromProject(this.projectAdded)).subscribe(() => {
+        this.httpProjectService.editProject(this.projectAdded.token, projectRequest).subscribe(() => {
           this.displayProject(this.projectAdded.token);
         });
       }
@@ -194,10 +200,14 @@ export class AddDashboardDialogComponent implements OnInit {
   displayProject(projectToken: string) {
     this.httpProjectService.getOneByToken(projectToken).subscribe((project: Project) => {
       this.projectAdded = project;
+      this.dashboardService.currentDashboardListValues = [...this.dashboardService.currentDashboardListValues, project];
       this.dashboardFormCompleted = true;
       this.changeDetectorRef.detectChanges();
-      this.dashboardService.currentDisplayedDashboardValue = project;
       this.addDashboardStepper.next();
+
+      this.httpProjectService.getProjectUsers(projectToken).subscribe((users: User[]) => {
+        this.projectUsers = users;
+      });
     });
   }
 
@@ -239,14 +249,5 @@ export class AddDashboardDialogComponent implements OnInit {
    */
   deleteUser(userId: number) {
     this.httpProjectService.deleteUserFromProject(this.projectAdded.token, userId).subscribe();
-  }
-
-  getProjectRequestFromProject(project: Project): ProjectRequest {
-    return {
-      name: project.name,
-      maxColumn: project.gridProperties.maxColumn,
-      widgetHeight: project.gridProperties.widgetHeight,
-      cssStyle: project.gridProperties.cssStyle
-    };
   }
 }

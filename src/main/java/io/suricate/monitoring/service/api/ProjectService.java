@@ -115,6 +115,7 @@ public class ProjectService {
      * @param token The token to find
      * @return The project
      */
+    @Transactional
     public Optional<Project> getOneByToken(final String token) {
         return projectRepository.findProjectByToken(token);
     }

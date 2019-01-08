@@ -6,7 +6,7 @@
   <mat-horizontal-stepper #addDashboardStepper [linear]="true">
     <!-- Step 1 : Dashboard settings -->
     <mat-step [completed]="dashboardFormCompleted">
-      <form [formGroup]="dashboardForm" (submit)="saveDashboard()" novalidate>
+      <form [formGroup]="dashboardForm" novalidate>
         <ng-template matStepLabel>
           <app-translate [key]="'dashboard.settings'"></app-translate>
         </ng-template>
@@ -70,12 +70,6 @@
                    [cpPresetColors]="[dashboardBackgroundColor]"
                    [readonly]="true">
           </mat-form-field>
-
-
-          <button fxFlexAlign="end" mat-raised-button color="accent">
-            <app-translate [key]="'save.and.assign'"></app-translate>
-            <mat-icon matSuffix>keyboard_arrow_right</mat-icon>
-          </button>
         </div>
 
       </form>
@@ -87,9 +81,18 @@
         <app-translate [key]="'users.add'"></app-translate>
       </ng-template>
 
-      <div fxLayout="column wrap" fxFlexAlign="start center" fxLayoutGap="50px">
-        <form id="user-form" fxFlexFill [formGroup]="addUserForm" fxLayout="row wrap"
-              fxLayoutAlign="space-between start" fxLayoutGap="10px" (submit)="addUser()">
+      <div fxLayout="column wrap"
+           fxFlexAlign="start center"
+           fxLayoutGap="50px">
+
+        <form id="user-form"
+              fxFlexFill
+              [formGroup]="addUserForm"
+              fxLayout="row wrap"
+              fxLayoutAlign="space-between start"
+              fxLayoutGap="10px"
+              (submit)="addUser()">
+
           <mat-form-field fxFlex="80">
             <mat-icon matPrefix style="margin-right: 10px">person_pin</mat-icon>
             <input matInput
@@ -112,12 +115,13 @@
             <app-translate [key]="'user.add'"></app-translate>
           </button>
         </form>
+
         <div class="user-list">
           <h1 class="little">
             <app-translate [key]="'users.dashboard'"></app-translate>
           </h1>
-          <mat-list role="list" *ngIf="projectAdded">
-            <mat-list-item *ngFor="let user of projectAdded.users">
+          <mat-list role="list" *ngIf="projectUsers">
+            <mat-list-item *ngFor="let user of projectUsers">
               <mat-icon style="display: block">account_box</mat-icon>
               <div> {{user.firstname}} {{user.lastname}} ({{user.username | uppercase}})</div>
               <button
@@ -130,6 +134,7 @@
             </mat-list-item>
           </mat-list>
         </div>
+
       </div>
     </mat-step>
 
@@ -137,7 +142,11 @@
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button mat-button mat-dialog-close>
+  <button mat-button mat-dialog-close color="warn">
     <app-translate [key]="'close'"></app-translate>
+  </button>
+  <span class="spacer"></span>
+  <button mat-button color="primary" *ngIf="addDashboardStepper?.selectedIndex == 0" (click)="saveDashboard()">
+    <app-translate [key]="'save.and.assign'"></app-translate>
   </button>
 </mat-dialog-actions>

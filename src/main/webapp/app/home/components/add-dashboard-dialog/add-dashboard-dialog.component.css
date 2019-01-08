@@ -1,6 +1,15 @@
 .mat-list-item .mat-icon {
     margin-right: 20px;
 }
+
 .mat-list-item button {
     margin-left: 20px;
+}
+
+.spacer {
+    flex: 1 1 auto;
+}
+
+.mat-button.mat-primary {
+    color: #1997c6;
 }

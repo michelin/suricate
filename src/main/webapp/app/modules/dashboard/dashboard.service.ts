@@ -48,13 +48,6 @@ export class DashboardService {
   private userDashboardsSubject = new BehaviorSubject<Project[]>([]);
 
   /**
-   * Hold the dashboard currently displayed to the user
-   * @type {BehaviorSubject<Project>}
-   * @private
-   */
-  private currentDashboardSubject = new BehaviorSubject<Project>(null);
-
-  /**
    * The constructor
    *
    * @param {UserService} userService The user service to inject
@@ -64,7 +57,6 @@ export class DashboardService {
 
   /* ******************************************************************* */
   /*                      Subject Management Part                        */
-
   /* ******************************************************************* */
 
   /* ******* User Dashboards List Management **************** */
@@ -90,30 +82,5 @@ export class DashboardService {
    */
   set currentDashboardListValues(newProjectsList: Project[]) {
     this.userDashboardsSubject.next(newProjectsList);
-  }
-
-  /* ******* Current displayed Dashboard Management **************** */
-  /**
-   * Get the current displayed dashboard
-   * @returns {Observable<Project>}
-   */
-  get currentDisplayedDashboard$(): Observable<Project> {
-    return this.currentDashboardSubject.asObservable();
-  }
-
-  /**
-   * Get the current displayed dashboard value
-   * @returns {Project}
-   */
-  get currentDisplayedDashboardValue(): Project {
-    return this.currentDashboardSubject.getValue();
-  }
-
-  /**
-   * Set and send the new informations on the current displayed dashboard
-   * @param {Project} project
-   */
-  set currentDisplayedDashboardValue(project: Project) {
-    this.currentDashboardSubject.next(project);
   }
 }
