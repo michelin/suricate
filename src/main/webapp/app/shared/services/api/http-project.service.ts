@@ -117,7 +117,7 @@ export class HttpProjectService {
    * @param projectToken The project token
    */
   getProjectProjectWidgets(projectToken: string): Observable<ProjectWidget[]> {
-    const url = `${projectsApiEndpoint} /${projectToken}/projectWidgets`;
+    const url = `${projectsApiEndpoint}/${projectToken}/projectWidgets`;
 
     return this.httpClient.get<ProjectWidget[]>(url);
   }
