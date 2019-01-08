@@ -2,6 +2,7 @@
   translate) }}</h1>
 
 <mat-dialog-content *ngIf="!isEditMode || (isEditMode && projectAdded)">
+
   <mat-horizontal-stepper #addDashboardStepper [linear]="true">
     <!-- Step 1 : Dashboard settings -->
     <mat-step [completed]="dashboardFormCompleted">
