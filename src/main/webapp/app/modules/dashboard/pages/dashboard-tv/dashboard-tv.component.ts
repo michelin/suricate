@@ -18,7 +18,7 @@
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Observable, of, Subscription} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {takeWhile} from 'rxjs/operators';
 
 import {SidenavService} from '../../../../layout/sidenav/sidenav.service';
@@ -100,18 +100,13 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
     this.sidenavService.closeSidenav();
     this.screenCode = this.websocketService.getscreenCode();
 
-    this.dashboardService.currentDisplayedDashboard$
-      .pipe(takeWhile(() => this.isAlive))
-      .subscribe(project => this.project$ = of(project));
 
     this.activatedRoute.queryParams.subscribe(params => {
       if (params['token']) {
         this.httpProjectService.getOneByToken(params['token']).subscribe(project => {
-          this.dashboardService.currentDisplayedDashboardValue = project;
         });
 
       } else {
-        this.dashboardService.currentDisplayedDashboardValue = null;
         this.listenForConnection();
       }
     });
