@@ -86,10 +86,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   /**
    * Navigate to a dashboard
    *
-   * @param {number} dashboardId The dashboard id
+   * @param {string} projectToken The project token
    */
-  navigateToDashboard(dashboardId: number) {
-    this.router.navigate(['/dashboards', dashboardId]);
+  navigateToDashboard(projectToken: string) {
+    this.router.navigate(['/dashboards', projectToken]);
   }
 
   /**

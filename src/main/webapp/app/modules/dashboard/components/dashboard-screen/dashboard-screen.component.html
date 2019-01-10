@@ -7,10 +7,7 @@
 
 <!-- Grid project -->
 <div *ngIf="gridOptions" [ngGrid]="gridOptions" class="grid-stack">
-  <div class="commonCssAndJs">
-    <div [innerHTML]="getGridCSS(project.gridProperties.cssStyle) | safeHtml"></div>
-    <div [innerHTML]="getWidgetCommonCSS() | safeHtml"></div>
-  </div>
+  <div [innerHTML]="('<style>' + project.gridProperties.cssStyle + '</style>') | safeHtml"></div>
 
   <app-dashboard-screen-widget *ngFor="let projectWidget of projectWidgets"
                                [projectWidget]="projectWidget"

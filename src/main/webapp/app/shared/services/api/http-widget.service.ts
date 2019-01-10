@@ -55,7 +55,7 @@ export class HttpWidgetService {
    * @param widgetId
    */
   getOneById(widgetId: number): Observable<Widget> {
-    const url = `${widgetsApiEndpoint}/`;
+    const url = `${widgetsApiEndpoint}/${widgetId}`;
 
     return this.httpClient.get<Widget>(url);
   }

@@ -63,9 +63,17 @@ export class DashboardScreenComponent implements OnInit {
    */
   gridOptions: {};
 
+  /**
+   * The constructor
+   *
+   * @param websocketService The websocket service
+   */
   constructor(private websocketService: WebsocketService) {
   }
 
+  /**
+   * Called when the component is init
+   */
   ngOnInit(): void {
     if (!this.screenCode) {
       this.screenCode = this.websocketService.getscreenCode();
@@ -106,92 +114,4 @@ export class DashboardScreenComponent implements OnInit {
       </style>
     `;
   }
-
-  /**
-   * Get the oommon css for each widget
-   *
-   * @returns {SafeHtml} AS safe HTML
-   */
-  getWidgetCommonCSS(): string {
-    return `
-      <style>
-        .grid-stack .icon-background {
-          pointer-events: none;
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          width: 100% !important;
-          height: auto;
-          font-size: 11rem;
-          transform: translate(-50%, -50%);
-          opacity: 0.05;
-        }
-        .grid-stack .widget {
-          text-align: center;
-        }
-        .grid-stack .widget .fullwidget {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-        }
-        .grid-stack .grid-stack-item-content {
-          height: 100%;
-          width: 100%;
-          position: absolute;
-          top: 0;
-          overflow: hidden;
-        }
-        .grid-stack .grid-stack-item-content * {
-          color: #fff;
-        }
-        .grid-stack .grid-stack-item-content .link {
-          display: block;
-          width: 90%;
-          margin: auto;
-          position: relative;
-          top: 5px;
-          height: 91%;
-        }
-        .grid-stack .grid-stack-item-content-inner {
-          max-height: 100%;
-          position: relative;
-          top: 50%;
-          transform: translateY(-50%);
-        }
-        .grid-stack h1,.grid-stack h2,.grid-stack h3,.grid-stack h4,.grid-stack h5,.grid-stack p {
-          padding: 0;
-          margin: 0;
-        }
-        .grid-stack h1 {
-          font-size: 1.4rem;
-          text-transform: uppercase;
-          margin-top: 6px;
-          margin-bottom: 6%;
-        }
-        .grid-stack h2 {
-          font-size: 3.7rem;
-        }
-        .grid-stack p {
-          font-size: 0.8em;
-        }
-        .grid-stack .widget .more-info {
-          color: rgba(255, 255, 255, 0.5);
-          font-size: 0.9rem;
-          position: absolute;
-          bottom: 17px;
-          left: 0;
-          right: 0;
-        }
-        .grid-stack .widget .updated-at {
-          color: rgba(0, 0, 0, 0.3);
-          font-size: 0.9rem;
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          right: 0;
-        }
-      </style>
-    `;
-  }
-
 }

@@ -47,6 +47,16 @@ export class DashboardScreenWidgetComponent implements OnInit {
    */
   widget: Widget;
 
+  /**
+   * The enumeration that hold the state of a widget (used in HTML)
+   */
+  WidgetStateEnum = WidgetStateEnum;
+
+  /**
+   * Constructor
+   *
+   * @param httpWidgetService The Http widget service
+   */
   constructor(private httpWidgetService: HttpWidgetService) {
   }
 
@@ -55,85 +65,4 @@ export class DashboardScreenWidgetComponent implements OnInit {
       this.widget = widget;
     });
   }
-
-  /**
-   * Get the html/CSS code for the widget
-   *
-   * @param {ProjectWidget} projectWidget The widget
-   * @returns {SafeHtml} The html as SafeHtml
-   */
-  getHtmlAndCss(): string {
-    return `
-      <style>
-        ${this.widget.cssContent}
-        ${this.projectWidget.customStyle ? this.projectWidget.customStyle : ''}
-      </style>
-
-      ${this.getWidgetHtml()}
-    `;
-  }
-
-  /**
-   * Get The html for a widget
-   *t
-   * @returns {string} The related html
-   */
-  getWidgetHtml(): string {
-    let widgetHtml = '';
-
-    if (this.widget.delay > 0 && this.projectWidget.log) {
-      if (this.projectWidget.state === WidgetStateEnum.STOPPED) {
-        widgetHtml = widgetHtml.concat(`
-        <div style="position: relative;
-                    background-color: #b41e1ee0;
-                    width: 100%;
-                    z-index: 15;
-                    top: 0;
-                    text-align: center;
-                    font-size: 0.5em;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center">
-          <span>
-            <mat-icon class="material-icons" style="color: #cfd2da !important;">warning</mat-icon>
-          </span>
-          <span style="display: inline-block; color: #cfd2da !important">
-            Widget execution error
-          </span>
-        </div>
-      `);
-      }
-
-      if (this.projectWidget.state === WidgetStateEnum.WARNING) {
-        widgetHtml = widgetHtml.concat(`
-        <div style="position: relative;
-                    background-color: #e8af00db;
-                    width: 100%;
-                    z-index: 15;
-                    top: 0;
-                    text-align: center;
-                    font-size: 0.5em;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center">
-          <span>
-            <mat-icon class="material-icons" style="color: #cfd2da !important;">warning</mat-icon>
-          </span>
-          <span style="display: inline-block; color: #cfd2da !important">
-            Issue with remote server. Retrying ...
-          </span>
-        </div>
-      `);
-      }
-    }
-
-    widgetHtml = widgetHtml.concat(`
-      <div class="grid-stack-item-content">
-        ${this.projectWidget.instantiateHtml}
-      </div>
-    `);
-
-    return widgetHtml;
-  }
-
 }

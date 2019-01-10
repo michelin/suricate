@@ -10,19 +10,21 @@
       </mat-card-content>
     </a>
     <mat-card-actions align="start">
-      <button #addDashboardButton mat-button (click)="openAddDashboardDialog()"><app-translate [key]="'dashboard.add'"></app-translate></button>
+      <button #addDashboardButton mat-button (click)="openAddDashboardDialog()">
+        <app-translate [key]="'dashboard.add'"></app-translate>
+      </button>
     </mat-card-actions>
   </mat-card>
 
   <!-- Other dashboards -->
   <mat-card *ngFor="let dashboard of dashboards" fxFlex="30%">
-    <a (click)="navigateToDashboard(dashboard.id)">
+    <a (click)="navigateToDashboard(dashboard.token)">
       <mat-card-content fxLayout="row wrap" fxLayoutAlign="center center">
         <mat-icon>dashboard</mat-icon>
       </mat-card-content>
     </a>
     <mat-card-actions align="start">
-      <button mat-button (click)="navigateToDashboard(dashboard.id)">
+      <button mat-button (click)="navigateToDashboard(dashboard.token)">
         {{ dashboard.name }}
       </button>
     </mat-card-actions>
