@@ -1,13 +1,3 @@
-<!-- Display Synchronisation server Errors -->
-<div id="server-error"
-     *ngIf="currentStompConnectionState === stompStateEnum.CLOSED || currentStompConnectionState === stompStateEnum.TRYING"
-     fxLayout="row wrap"
-     fxLayoutAlign="center center"
-     fxLayoutGap="30px">
-  <span> <mat-icon>warning</mat-icon> </span>
-  <span> <app-translate [key]="'connection.lost'"></app-translate> </span>
-</div>
-
 <!-- Display Screen code -->
 <div *ngIf="displayScreenCode" id="screen-code-div" fxLayout="col wrap" fxLayoutAlign="center center"
      fxLayoutGap="50px">
@@ -16,24 +6,14 @@
 </div>
 
 <!-- Grid project -->
-<div *ngIf="gridOptions" [ngGrid]="gridOptions" (onItemChange)="updateProjectWidgetsPosition($event)"
-     class="grid-stack">
+<div *ngIf="gridOptions" [ngGrid]="gridOptions" class="grid-stack">
   <div class="commonCssAndJs">
-    <div [innerHTML]="getGridCSS(project.cssStyle) | safeHtml"></div>
+    <div [innerHTML]="getGridCSS(project.gridProperties.cssStyle) | safeHtml"></div>
     <div [innerHTML]="getWidgetCommonCSS() | safeHtml"></div>
-    <div *ngIf="project.librariesToken"
-         [innerHTML]="getJSLibraries(project.librariesToken) | safeHtml"
-         (scriptRenderingFinished)="setSrcScriptRendered($event)"
-         appRunScripts></div>
   </div>
 
-  <span *ngIf="isSrcScriptsRendered">
-      <app-dashboard-screen-widget
-        #projectWidgetsRendered
-        *ngFor="let projectWidget of this.sortProjectWidgets(projectWidgets); let projectWidgetsLoaded = last"
-        [projectWidget]="projectWidget"
-        [readOnly]="readOnly">
-
-      </app-dashboard-screen-widget>
-  </span>
+  <app-dashboard-screen-widget *ngFor="let projectWidget of projectWidgets"
+                               [projectWidget]="projectWidget"
+                               [readOnly]="readOnly">
+  </app-dashboard-screen-widget>
 </div>

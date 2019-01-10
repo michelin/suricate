@@ -15,7 +15,7 @@
  */
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {MatDialog, MatDialogRef} from '@angular/material';
+import {MatDialog} from '@angular/material';
 import {ActivatedRoute} from '@angular/router';
 
 import {DashboardService} from '../../dashboard.service';
@@ -33,13 +33,6 @@ import {ProjectWidget} from '../../../../shared/model/api/ProjectWidget/ProjectW
   styleUrls: ['./dashboard-detail.component.css']
 })
 export class DashboardDetailComponent implements OnInit, OnDestroy {
-
-  /**
-   * The widget dialog ref
-   * @type {MatDialogRef<AddWidgetDialogComponent>}
-   * @private
-   */
-  private addWidgetDialogRef: MatDialogRef<AddWidgetDialogComponent>;
 
   /**
    * Tell if the component is displayed
@@ -77,15 +70,27 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    * Init objects
    */
   ngOnInit() {
+    this.dashboardService.refreshProjectWidgetListEvent().subscribe(shouldRefresh => {
+      if (shouldRefresh) {
+        this.refreshProjectWidgetList();
+      }
+    });
+
     // Global init from project
     this.activatedRoute.params.subscribe(params => {
       this.httpProjectService.getOneByToken(params['dashboardToken']).subscribe(project => {
         this.project = project;
-
-        this.httpProjectService.getProjectProjectWidgets(params['dashboardToken']).subscribe(projectWidgets => {
-          this.projectWidgets = projectWidgets;
-        });
+        this.refreshProjectWidgetList();
       });
+    });
+  }
+
+  /**
+   * Refresh the project widget list
+   */
+  refreshProjectWidgetList(): void {
+    this.httpProjectService.getProjectProjectWidgets(this.project.token).subscribe(projectWidgets => {
+      this.projectWidgets = projectWidgets;
     });
   }
 
@@ -93,9 +98,10 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    * The add widget dialog ref
    */
   openAddWidgetDialog() {
-    this.addWidgetDialogRef = this.matDialog.open(AddWidgetDialogComponent, {
+    this.matDialog.open(AddWidgetDialogComponent, {
       minWidth: 900,
       minHeight: 500,
+      data: {projectToken: this.project.token}
     });
   }
 

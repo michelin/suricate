@@ -15,7 +15,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject, Observable, Subject} from 'rxjs';
 
 import {Project} from '../../shared/model/api/project/Project';
 import {UserService} from '../security/user/user.service';
@@ -46,6 +46,11 @@ export class DashboardService {
    * @private
    */
   private userDashboardsSubject = new BehaviorSubject<Project[]>([]);
+
+  /**
+   * Tell if the dashboard screen should refresh
+   */
+  private shouldRefreshProjectWidgetList = new Subject<boolean>();
 
   /**
    * The constructor
@@ -82,5 +87,21 @@ export class DashboardService {
    */
   set currentDashboardListValues(newProjectsList: Project[]) {
     this.userDashboardsSubject.next(newProjectsList);
+  }
+
+  /* ******* Event refresh dashboard screen list **************** */
+
+  /**
+   * Event we should subscribe to receive event of refresh
+   */
+  refreshProjectWidgetListEvent(): Observable<boolean> {
+    return this.shouldRefreshProjectWidgetList.asObservable();
+  }
+
+  /**
+   * Send an event for the refresh
+   */
+  refreshProjectWidgetList(): void {
+    this.shouldRefreshProjectWidgetList.next(true);
   }
 }

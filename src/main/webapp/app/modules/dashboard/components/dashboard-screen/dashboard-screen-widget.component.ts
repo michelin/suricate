@@ -15,10 +15,10 @@
  */
 
 
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {ProjectWidget} from '../../../../shared/model/api/ProjectWidget/ProjectWidget';
-import {HttpWidgetService} from '../../../../shared/services/api/http-widget.service';
 import {Widget} from '../../../../shared/model/api/widget/Widget';
+import {HttpWidgetService} from '../../../../shared/services/api/http-widget.service';
 import {WidgetStateEnum} from '../../../../shared/model/enums/WidgetSateEnum';
 
 /**
@@ -31,17 +31,27 @@ import {WidgetStateEnum} from '../../../../shared/model/enums/WidgetSateEnum';
 })
 export class DashboardScreenWidgetComponent implements OnInit {
 
+  /**
+   * The projectWidget to display
+   * @type {ProjectWidget}
+   */
   @Input() projectWidget: ProjectWidget;
-  @Input() readOnly: boolean;
-  @ViewChild('projectWidgetElement') projectWidgetElement;
 
+  /**
+   * Tell if we are on
+   */
+  @Input() readOnly: boolean;
+
+  /**
+   * The widget related to this project widget
+   */
   widget: Widget;
 
   constructor(private httpWidgetService: HttpWidgetService) {
   }
 
   ngOnInit(): void {
-    this.httpWidgetService.getOneById(this.projectWidget.widgetId).subscribe((widget: Widget) => {
+    this.httpWidgetService.getOneById(this.projectWidget.widgetId).subscribe(widget => {
       this.widget = widget;
     });
   }
@@ -49,6 +59,7 @@ export class DashboardScreenWidgetComponent implements OnInit {
   /**
    * Get the html/CSS code for the widget
    *
+   * @param {ProjectWidget} projectWidget The widget
    * @returns {SafeHtml} The html as SafeHtml
    */
   getHtmlAndCss(): string {
@@ -59,12 +70,12 @@ export class DashboardScreenWidgetComponent implements OnInit {
       </style>
 
       ${this.getWidgetHtml()}
-     `;
+    `;
   }
 
   /**
    * Get The html for a widget
-   *
+   *t
    * @returns {string} The related html
    */
   getWidgetHtml(): string {
@@ -117,44 +128,12 @@ export class DashboardScreenWidgetComponent implements OnInit {
     }
 
     widgetHtml = widgetHtml.concat(`
-      ${this.getActionButtonsHtml()}
       <div class="grid-stack-item-content">
         ${this.projectWidget.instantiateHtml}
       </div>
     `);
 
     return widgetHtml;
-  }
-
-  /**
-   * Get the html for the action buttons
-   *
-   * @returns {string} The html string
-   */
-  getActionButtonsHtml(): string {
-    if (this.readOnly) {
-      return '';
-    }
-
-    return `
-      <button id="delete-${this.projectWidget.id}"
-              name="delete-${this.projectWidget.id}"
-              class="btn-widget btn-widget-delete"
-              role="button"
-              data-project-widget-id="${this.projectWidget.id}"
-              aria-disabled="false">
-        <mat-icon class="material-icons">delete_forever</mat-icon>
-      </button>
-
-      <button id="edit-${this.projectWidget.id}"
-              name="edit-${this.projectWidget.id}"
-              class="btn-widget btn-widget-edit"
-              role="button"
-              data-project-widget-id="${this.projectWidget.id}"
-              aria-disabled="false">
-        <mat-icon class="material-icons">edit</mat-icon>
-      </button>
-    `;
   }
 
 }
