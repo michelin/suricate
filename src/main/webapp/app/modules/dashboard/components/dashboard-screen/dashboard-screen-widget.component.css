@@ -21,15 +21,6 @@
     height: 100%;
 }
 
-.widget .more-info {
-    color: rgba(255, 255, 255, 0.5);
-    font-size: 0.9rem;
-    position: absolute;
-    bottom: 17px;
-    left: 0;
-    right: 0;
-}
-
 .widget .updated-at {
     color: rgba(0, 0, 0, 0.3);
     font-size: 0.9rem;
@@ -99,7 +90,7 @@
     overflow: hidden;
 }
 
-.grid-stack .grid-stack-item-content * {
+.grid-stack-item-content * {
     color: #fff;
 }
 

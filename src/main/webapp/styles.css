@@ -31,6 +31,16 @@ mat-sidenav > #user-section .mat-expansion-panel-body {
     padding: 0;
 }
 
+
+.widget .more-info {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.9rem;
+    position: absolute;
+    bottom: 17px;
+    left: 0;
+    right: 0;
+}
+
 .widget-dialog-card .mat-card-header-text {
     margin: auto !important;
 }
