@@ -20,6 +20,7 @@ import {Component, Input, OnInit,} from '@angular/core';
 import {Project} from '../../../../shared/model/api/project/Project';
 import {ProjectWidget} from '../../../../shared/model/api/ProjectWidget/ProjectWidget';
 import {WebsocketService} from '../../../../shared/services/websocket.service';
+import {HttpAssetService} from '../../../../shared/services/api/http-asset.service';
 
 /**
  * Display the grid stack widgets
@@ -63,12 +64,15 @@ export class DashboardScreenComponent implements OnInit {
    */
   gridOptions: {};
 
+  isSrcScriptsRendered = false;
+
   /**
    * The constructor
    *
    * @param websocketService The websocket service
    */
-  constructor(private websocketService: WebsocketService) {
+  constructor(private websocketService: WebsocketService,
+              private httpAssetService: HttpAssetService) {
   }
 
   /**
@@ -108,18 +112,22 @@ export class DashboardScreenComponent implements OnInit {
   }
 
   /**
-   * Get the CSS for the grid
+   * Get the JS libraries from project
    *
-   * @param {string} css The css
-   * @returns {string} The css as html
+   * @returns {string} The src script
    */
-  getGridCSS(css: string): string {
-    return `
-      <style>
-        .grid {
-          ${css}
-        }
-      </style>
-    `;
+  getJSLibraries(): string {
+    let scriptUrls = '';
+
+    this.project.librariesToken.forEach(libraryToken => {
+      scriptUrls = scriptUrls.concat(`<script src="${this.httpAssetService.getContentUrl(libraryToken)}"></script>`);
+    });
+
+    return scriptUrls;
   }
+
+  setSrcScriptRendered(isScriptRendered: boolean) {
+    this.isSrcScriptsRendered = isScriptRendered;
+  }
+
 }

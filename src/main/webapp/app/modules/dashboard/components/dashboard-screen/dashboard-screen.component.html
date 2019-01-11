@@ -8,9 +8,15 @@
 <!-- Grid project -->
 <div *ngIf="gridOptions" [ngGrid]="gridOptions" class="grid-stack">
   <div [innerHTML]="('<style>' + project.gridProperties.cssStyle + '</style>') | safeHtml"></div>
+  <div [innerHTML]="getJSLibraries() | safeHtml"
+       (scriptRenderingFinished)="setSrcScriptRendered($event)"
+       appRunScripts>
+  </div>
 
-  <app-dashboard-screen-widget *ngFor="let projectWidget of projectWidgets"
-                               [projectWidget]="projectWidget"
-                               [readOnly]="readOnly">
-  </app-dashboard-screen-widget>
+  <div *ngIf="isSrcScriptsRendered">
+    <app-dashboard-screen-widget *ngFor="let projectWidget of projectWidgets"
+                                 [projectWidget]="projectWidget"
+                                 [readOnly]="readOnly">
+    </app-dashboard-screen-widget>
+  </div>
 </div>
