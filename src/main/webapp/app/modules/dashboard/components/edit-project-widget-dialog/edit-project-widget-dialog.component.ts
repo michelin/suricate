@@ -43,6 +43,10 @@ export class EditProjectWidgetDialogComponent implements OnInit {
    */
   projectWidget: ProjectWidget;
 
+  /**
+   * The related widget
+   * @type {Widget}
+   */
   widget: Widget;
 
   /**
@@ -149,8 +153,9 @@ export class EditProjectWidgetDialogComponent implements OnInit {
       });
 
       this.projectWidget.backendConfig = backendConfig;
-      this.httpProjectWidgetService.updateOneById(this.projectWidget.id, this.projectWidget)
-        .subscribe(() => this.toastService.sendMessage('Widget Updated successfully', ToastType.SUCCESS));
+      this.httpProjectWidgetService.updateOneById(this.projectWidget.id, this.projectWidget).subscribe(() => {
+        this.toastService.sendMessage('Widget Updated successfully', ToastType.SUCCESS);
+      });
       this.dialogRef.close();
     }
   }

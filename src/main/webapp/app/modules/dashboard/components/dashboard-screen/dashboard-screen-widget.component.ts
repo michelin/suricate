@@ -20,6 +20,12 @@ import {ProjectWidget} from '../../../../shared/model/api/ProjectWidget/ProjectW
 import {Widget} from '../../../../shared/model/api/widget/Widget';
 import {HttpWidgetService} from '../../../../shared/services/api/http-widget.service';
 import {WidgetStateEnum} from '../../../../shared/model/enums/WidgetSateEnum';
+import {TranslateService} from '@ngx-translate/core';
+import {TitleCasePipe} from '@angular/common';
+import {ConfirmDialogComponent} from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
+import {MatDialog} from '@angular/material';
+import {HttpProjectWidgetService} from '../../../../shared/services/api/http-project-widget.service';
+import {EditProjectWidgetDialogComponent} from '../edit-project-widget-dialog/edit-project-widget-dialog.component';
 
 /**
  * Display the grid stack widgets
@@ -55,14 +61,48 @@ export class DashboardScreenWidgetComponent implements OnInit {
   /**
    * Constructor
    *
+   * @param matDialog The material dialog
    * @param httpWidgetService The Http widget service
+   * @param httpProjectWidgetService The http project widget service
+   * @param translateService The translation service
    */
-  constructor(private httpWidgetService: HttpWidgetService) {
+  constructor(private matDialog: MatDialog,
+              private httpWidgetService: HttpWidgetService,
+              private httpProjectWidgetService: HttpProjectWidgetService,
+              private translateService: TranslateService) {
   }
 
   ngOnInit(): void {
     this.httpWidgetService.getOneById(this.projectWidget.widgetId).subscribe(widget => {
       this.widget = widget;
+    });
+  }
+
+  /**
+   * Delete The project widget
+   */
+  displayDeleteProjectWidgetDialog(): void {
+    this.translateService.get(['widget.delete', 'delete.confirm']).subscribe(translations => {
+      const titlecasePipe = new TitleCasePipe();
+
+      this.matDialog.open(ConfirmDialogComponent, {
+        data: {
+          title: translations['widget.delete'],
+          message: `${translations['delete.confirm']} ${titlecasePipe.transform(this.widget.name)}`
+        }
+      }).afterClosed().subscribe(shouldDeleteProjectWidget => {
+        if (shouldDeleteProjectWidget) {
+          this.httpProjectWidgetService.deleteOneById(this.projectWidget.id).subscribe();
+        }
+      });
+
+    });
+  }
+
+  displayEditProjectWidgetDialog(): void {
+    this.matDialog.open(EditProjectWidgetDialogComponent, {
+      minWidth: 700,
+      data: {projectWidgetId: this.projectWidget.id}
     });
   }
 }

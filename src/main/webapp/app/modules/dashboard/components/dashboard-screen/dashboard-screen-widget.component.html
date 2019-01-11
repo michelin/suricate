@@ -53,7 +53,8 @@
              class="btn-widget btn-widget-delete"
              role="button"
              data-project-widget-id="${projectWidget.id}"
-             aria-disabled="false">
+             aria-disabled="false"
+             (click)="displayDeleteProjectWidgetDialog()">
         <mat-icon class="material-icons">delete_forever</mat-icon>
       </button>
 
@@ -62,7 +63,8 @@
               class="btn-widget btn-widget-edit"
               role="button"
               data-project-widget-id="${projectWidget.id}"
-              aria-disabled="false">
+              aria-disabled="false"
+              (click)="displayEditProjectWidgetDialog()">
         <mat-icon class="material-icons">edit</mat-icon>
       </button>
   </span>
