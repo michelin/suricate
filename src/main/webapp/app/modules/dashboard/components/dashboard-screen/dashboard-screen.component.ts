@@ -97,6 +97,14 @@ export class DashboardScreenComponent implements OnInit {
       'margins': [4],
       'auto_resize': true
     };
+
+    if (this.readOnly) {
+      this.gridOptions = {
+        ...this.gridOptions,
+        'draggable': false,
+        'resizable': false,
+      };
+    }
   }
 
   /**

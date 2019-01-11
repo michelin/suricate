@@ -4,27 +4,30 @@
                      'sizey': projectWidget.widgetPosition.height, 'sizex': projectWidget.widgetPosition.width,
                      'payload': projectWidget.id}">
 
-  <!-- Widget css -->
+  <!--------------------------------------------------->
+  <!--                 WIDGET CSS                    -->
+  <!--------------------------------------------------->
   <div [innerHTML]="('<style>' + widget.cssContent + '</style>') | safeHtml"></div>
   <div *ngIf="projectWidget.customStyle"
        [innerHTML]="('<style>' + projectWidget.customStyle + '</style>') | safeHtml">
   </div>
 
-  <!-- Widget html -->
+  <!--------------------------------------------------->
+  <!--                 WIDGET HTML                   -->
+  <!--------------------------------------------------->
   <div class="grid-stack-item-content">
     <div [innerHTML]="projectWidget.instantiateHtml | safeHtml"></div>
   </div>
 
-  <!-- Widget issue info -->
+  <!--------------------------------------------------->
+  <!--             WIDGET ISSUE INFO                 -->
+  <!--------------------------------------------------->
   <div *ngIf="widget.delay > 0 && projectWidget.log">
-
     <!-- Stopped -->
     <div *ngIf="projectWidget.state === WidgetStateEnum.STOPPED"
          class="issue execution-error">
-      <span>
-        <mat-icon class="material-icons" style="color: #cfd2da !important;">warning</mat-icon>
-      </span>
-      <span style="display: inline-block; color: #cfd2da !important">
+      <mat-icon class="material-icons" style="color: #cfd2da !important;">warning</mat-icon>
+      <span class="text">
         Widget execution error
       </span>
     </div>
@@ -35,9 +38,32 @@
       <span>
         <mat-icon class="material-icons" style="color: #cfd2da !important;">warning</mat-icon>
       </span>
-      <span style="display: inline-block; color: #cfd2da !important">
+      <span class="text">
         Issue with remote server. Retrying ...
       </span>
     </div>
   </div>
+
+  <!--------------------------------------------------->
+  <!--           WIDGET ACTION BUTTON                -->
+  <!--------------------------------------------------->
+  <span *ngIf="!readOnly">
+     <button id="delete-${projectWidget.id}"
+             name="delete-${projectWidget.id}"
+             class="btn-widget btn-widget-delete"
+             role="button"
+             data-project-widget-id="${projectWidget.id}"
+             aria-disabled="false">
+        <mat-icon class="material-icons">delete_forever</mat-icon>
+      </button>
+
+      <button id="edit-${projectWidget.id}"
+              name="edit-${projectWidget.id}"
+              class="btn-widget btn-widget-edit"
+              role="button"
+              data-project-widget-id="${projectWidget.id}"
+              aria-disabled="false">
+        <mat-icon class="material-icons">edit</mat-icon>
+      </button>
+  </span>
 </div>

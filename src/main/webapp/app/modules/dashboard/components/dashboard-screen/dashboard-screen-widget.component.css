@@ -7,6 +7,10 @@
     z-index: 1015;
 }
 
+.widget.moving .btn-widget {
+    z-index: 1020;
+}
+
 .widget {
     text-align: center;
 }
@@ -35,16 +39,48 @@
     right: 0;
 }
 
+.widget .btn-widget {
+    position: absolute;
+    background-color: rgba(66, 66, 66, 0.6);
+    color: #cfd2da !important;
+    border: none;
+    cursor: pointer;
+    z-index: 20;
+}
+
+.widget .btn-widget .material-icons {
+    font-size: 21px;
+    color: #cfd2da !important;
+}
+
+.widget .btn-widget.btn-widget-delete {
+    right: 0;
+}
+
+.widget .btn-widget.btn-widget-edit {
+    right: 41px;
+}
+
+
 .widget .issue {
     position: relative;
     width: 100%;
     z-index: 15;
     top: 0;
-    text-align: center;
-    font-size: 0.5em;
+    font-size: 0.9em;
     display: flex;
     align-items: center;
-    justify-content: center
+    height: 28px;
+}
+
+.widget .material-icons {
+    margin-left: 5px;
+}
+
+.widget .text {
+    display: inline-block;
+    color: #cfd2da !important;
+    margin-left: 10px;
 }
 
 .widget .issue.execution-error {
