@@ -157,12 +157,12 @@ public class NashornWidgetScheduler implements Schedulable {
      * Schedule a list of nashorn request
      *
      * @param nashornRequests The list of nashorn requests to schedule
-     * @param startNow        If the scheduling should start now
+     * @param start           If the scheduling should start now
      * @param init            If it's an initialisation of the scheduling
      */
-    public void scheduleList(final List<NashornRequest> nashornRequests, boolean startNow, boolean init) {
+    public void scheduleList(final List<NashornRequest> nashornRequests, boolean start, boolean init) {
         try {
-            nashornRequests.forEach(nashornRequest -> schedule(nashornRequest, startNow, init));
+            nashornRequests.forEach(nashornRequest -> schedule(nashornRequest, start, init));
 
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
@@ -173,10 +173,10 @@ public class NashornWidgetScheduler implements Schedulable {
      * Method used to schedule widget update
      *
      * @param nashornRequest nashorn request
-     * @param startNow       force widget update to start now
+     * @param start          force widget update to start now
      * @param init           force widget to update randomly between START_DELAY_INCLUSIVE and END_DELAY_EXCLUSIVE
      */
-    public void schedule(final NashornRequest nashornRequest, boolean startNow, boolean init) {
+    public void schedule(final NashornRequest nashornRequest, boolean start, boolean init) {
         if (nashornRequest == null) {
             return;
         }
@@ -196,10 +196,9 @@ public class NashornWidgetScheduler implements Schedulable {
         }
 
         Long delay = nashornRequest.getDelay();
-        if (init) {
-            // delay update on restart
+        if (start) {
             delay = RandomUtils.nextLong(START_DELAY_INCLUSIVE, END_DELAY_EXCLUSIVE);
-        } else if (startNow) {
+        } else if (init) {
             delay = SMALL_DELAY;
         }
 
@@ -229,7 +228,7 @@ public class NashornWidgetScheduler implements Schedulable {
      */
     public void cancelAndSchedule(NashornRequest nashornRequest) {
         cancelWidgetInstance(nashornRequest.getProjectWidgetId());
-        schedule(nashornRequest, true, false);
+        schedule(nashornRequest, false, true);
     }
 
     /**
