@@ -120,6 +120,6 @@ export class DashboardActionsComponent implements OnInit {
    * Refresh every screens for the current dashboard
    */
   refreshConnectedScreens() {
-    this.screenService.refreshEveryConnectedScreensForProject(this.project.token);
+    this.screenService.refreshEveryConnectedScreensForProject(this.project.token).subscribe();
   }
 }

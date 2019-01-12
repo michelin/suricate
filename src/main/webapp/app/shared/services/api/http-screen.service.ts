@@ -64,7 +64,7 @@ export class HttpScreenService {
    * @param {string} projectToken The project token to refresh
    */
   refreshEveryConnectedScreensForProject(projectToken: string): Observable<void> {
-    const url = `${screensApiEndpoint}/refresh/${projectToken}`;
+    const url = `${screensApiEndpoint}/${projectToken}/refresh`;
 
     return this.httpClient.put<void>(url, null);
   }
