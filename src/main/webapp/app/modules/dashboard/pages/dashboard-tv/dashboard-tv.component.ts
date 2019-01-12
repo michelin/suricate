@@ -172,6 +172,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * When on code view screen we wait for new connection
    */
   listenForConnection() {
+    this.isAlive = true;
     this.websocketService.startConnection();
 
     const waitingConnectionUrl = `/user/${this.screenCode}/queue/connect`;
@@ -189,13 +190,20 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
     });
   }
 
+  unsubscribeToConnectionEvent() {
+    if (this.connectionEventSubscription) {
+      this.connectionEventSubscription.unsubscribe();
+      this.connectionEventSubscription = null;
+    }
+
+    this.isAlive = false;
+  }
+
   /**
    * Disconnect TV from stompJS
    */
   disconnectTV() {
-    this.connectionEventSubscription.unsubscribe();
-    this.connectionEventSubscription = null;
-    this.isAlive = false;
+    this.unsubscribeToConnectionEvent();
     this.websocketService.disconnect();
   }
 
@@ -203,8 +211,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * Handle the disconnection of a dashboard
    */
   handlingDashboardDisconnect() {
-    this.disconnectTV();
     this.router.navigate(['/tv']);
-    this.listenForConnection();
+    setTimeout(() => this.listenForConnection(), 500);
   }
 }

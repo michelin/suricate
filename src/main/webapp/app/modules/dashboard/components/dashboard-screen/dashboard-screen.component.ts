@@ -161,7 +161,7 @@ export class DashboardScreenComponent implements OnInit, OnChanges, OnDestroy {
     if (changes.project) {
       if (!changes.project.previousValue) {
         this.subscribeToRenderedScriptEvent();
-      } else {
+      } else if (changes.project.previousValue.token !== changes.project.currentValue.token) {
         this.runScriptsService.emitScriptRendered(false);
       }
 
@@ -233,15 +233,18 @@ export class DashboardScreenComponent implements OnInit, OnChanges, OnDestroy {
    */
   initGridStackItems(): void {
     this.gridStackItems = [];
-    this.projectWidgets.forEach((projectWidget: ProjectWidget) => {
-      this.gridStackItems.push({
-        col: projectWidget.widgetPosition.col,
-        row: projectWidget.widgetPosition.row,
-        sizey: projectWidget.widgetPosition.height,
-        sizex: projectWidget.widgetPosition.width,
-        payload: projectWidget
+
+    if (this.projectWidgets) {
+      this.projectWidgets.forEach((projectWidget: ProjectWidget) => {
+        this.gridStackItems.push({
+          col: projectWidget.widgetPosition.col,
+          row: projectWidget.widgetPosition.row,
+          sizey: projectWidget.widgetPosition.height,
+          sizex: projectWidget.widgetPosition.width,
+          payload: projectWidget
+        });
       });
-    });
+    }
   }
 
   /**********************************************************************************************************/

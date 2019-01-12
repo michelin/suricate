@@ -70,6 +70,6 @@ export class RunScriptsDirective implements OnInit {
     });
 
     // Wait for DOM rendering
-    setTimeout(() => this.runScriptsService.emitScriptRendered(true), 500);
+    setTimeout(() => this.runScriptsService.emitScriptRendered(true), 0);
   }
 }
