@@ -23,6 +23,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
+import org.springframework.web.socket.messaging.AbstractSubProtocolEvent;
+import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 import org.springframework.web.socket.messaging.SessionUnsubscribeEvent;
 
@@ -95,6 +97,20 @@ public class WebSocketEventEndpointsConfiguration {
      */
     @EventListener
     public void onSessionUnsubscribe(SessionUnsubscribeEvent event) {
+        this.removeSubscriptions(event);
+    }
+
+    /**
+     * Entry point when a client disconnect to the web sockets
+     *
+     * @param event The disconnect event
+     */
+    @EventListener
+    public void onSessionDisconnect(SessionDisconnectEvent event) {
+        this.removeSubscriptions(event);
+    }
+
+    private void removeSubscriptions(AbstractSubProtocolEvent event) {
         StompHeaderAccessor stompHeaderAccessor = StompHeaderAccessor.wrap(event.getMessage());
         WebsocketClient websocketClient = dashboardWebSocketService.removeSessionClient(stompHeaderAccessor.getSessionId());
 

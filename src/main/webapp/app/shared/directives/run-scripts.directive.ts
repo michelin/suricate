@@ -37,7 +37,7 @@ export class RunScriptsDirective implements OnInit {
   }
 
   ngOnInit(): void {
-    this.reinsertScripts();
+    setTimeout(() => this.reinsertScripts(), 0);
   }
 
   /**
