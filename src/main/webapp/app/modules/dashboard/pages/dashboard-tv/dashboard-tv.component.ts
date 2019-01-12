@@ -128,7 +128,6 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
       if (updateEvent.type === WSUpdateType.CONNECT) {
         const project: Project = updateEvent.content;
         if (project) {
-          this.websocketService.disconnect();
           this.router.navigate(['/tv'], {queryParams: {token: project.token}});
         }
       }
@@ -163,6 +162,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    */
   handlingDashboardDisconnect() {
     this.router.navigate(['/tv']);
+    location.reload();
   }
 
   /**

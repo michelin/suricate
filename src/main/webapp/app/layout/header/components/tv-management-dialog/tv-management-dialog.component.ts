@@ -74,14 +74,17 @@ export class TvManagementDialogComponent implements OnInit {
   ngOnInit() {
     this.httpProjectService.getOneByToken(this.data.projectToken).subscribe(project => {
       this.project = project;
-
-      this.httpProjectService.getProjectWebsocketClients(project.token).subscribe(websocketClients => {
-        this.websocketClients = websocketClients;
-      });
+      this.refreshWebsocketClients();
     });
 
     this.screenRegisterForm = this.formBuilder.group({
       screenCode: ['']
+    });
+  }
+
+  refreshWebsocketClients() {
+    this.httpProjectService.getProjectWebsocketClients(this.project.token).subscribe(websocketClients => {
+      this.websocketClients = websocketClients;
     });
   }
 
@@ -91,7 +94,11 @@ export class TvManagementDialogComponent implements OnInit {
   registerScreen(): void {
     if (this.screenRegisterForm.valid) {
       const screenCode: string = this.screenRegisterForm.get('screenCode').value;
-      this.screenService.connectProjectToScreen(this.project.token, +screenCode);
+
+      this.screenService.connectProjectToScreen(this.project.token, +screenCode).subscribe(() => {
+        this.screenRegisterForm.reset();
+        setTimeout(() => this.refreshWebsocketClients(), 2000);
+      });
     }
   }
 
@@ -101,7 +108,9 @@ export class TvManagementDialogComponent implements OnInit {
    * @param {WebsocketClient} websocketClient The websocket to disconnect
    */
   disconnectScreen(websocketClient: WebsocketClient): void {
-    this.screenService.disconnectScreen(websocketClient);
+    this.screenService.disconnectScreen(websocketClient.projectToken, +websocketClient.screenCode).subscribe(() => {
+      setTimeout(() => this.refreshWebsocketClients(), 2000);
+    });
   }
 
   /**
@@ -110,7 +119,7 @@ export class TvManagementDialogComponent implements OnInit {
    */
   displayScreenCode(projectToken: string): void {
     if (projectToken) {
-      this.screenService.displayScreenCodeEveryConnectedScreensForProject(projectToken);
+      this.screenService.displayScreenCodeEveryConnectedScreensForProject(projectToken).subscribe();
     }
   }
 }

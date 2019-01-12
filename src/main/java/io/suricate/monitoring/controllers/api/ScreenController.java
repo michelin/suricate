@@ -17,7 +17,6 @@
 package io.suricate.monitoring.controllers.api;
 
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
-import io.suricate.monitoring.model.dto.websocket.WebsocketClient;
 import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.service.api.ProjectService;
 import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
@@ -74,13 +73,13 @@ public class ScreenController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class)
     })
-    @PutMapping(value = "/v1/screens/connect/{screenCode}/project/{projectToken}")
+    @GetMapping(value = "/v1/screens/{projectToken}/connect")
     @PreAuthorize("hasRole('ROLE_USER')")
     @Transactional
     public ResponseEntity<Void> connectProjectToScreen(@ApiParam(name = "projectToken", value = "The project token", required = true)
                                                        @PathVariable("projectToken") String projectToken,
                                                        @ApiParam(name = "screenCode", value = "The screen code", required = true)
-                                                       @PathVariable("screenCode") String screenCode) {
+                                                       @RequestParam("screenCode") String screenCode) {
         Optional<Project> projectOptional = projectService.getOneByToken(projectToken);
         if (!projectOptional.isPresent()) {
             throw new ObjectNotFoundException(Project.class, projectOptional);
@@ -92,8 +91,6 @@ public class ScreenController {
 
     /**
      * Disconnect a client
-     *
-     * @param websocketClient The web socket client to disconnect
      */
     @ApiOperation(value = "Send the notification to disconnect a new screen")
     @ApiResponses(value = {
@@ -101,12 +98,14 @@ public class ScreenController {
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
-    @PutMapping(value = "/v1/screens/disconnect")
+    @GetMapping(value = "/v1/screens/{projectToken}/disconnect")
     @PreAuthorize("hasRole('ROLE_USER')")
     @Transactional
-    public ResponseEntity<Void> disconnectProjectToTv(@ApiParam(name = "websocketClient", value = "websocket client to disconnect", required = true)
-                                                      @RequestBody WebsocketClient websocketClient) {
-        this.dashboardWebSocketService.disconnectClient(websocketClient);
+    public ResponseEntity<Void> disconnectProjectToTv(@ApiParam(name = "projectToken", value = "The project token", required = true)
+                                                      @PathVariable("projectToken") String projectToken,
+                                                      @ApiParam(name = "screenCode", value = "The screen code", required = true)
+                                                      @RequestParam("screenCode") String screenCode) {
+        this.dashboardWebSocketService.disconnectClient(projectToken, Integer.parseInt(screenCode));
         return ResponseEntity.noContent().build();
     }
 
@@ -121,7 +120,7 @@ public class ScreenController {
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
-    @PutMapping(value = "/v1/screens/{projectToken}/refresh")
+    @GetMapping(value = "/v1/screens/{projectToken}/refresh")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Void> refreshEveryConnectedScreensForProject(@ApiParam(name = "projectToken", value = "The project token", required = true)
                                                                        @PathVariable("projectToken") String projectToken) {
@@ -140,7 +139,7 @@ public class ScreenController {
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
-    @PutMapping(value = "/v1/screens/screencode/{projectToken}")
+    @PutMapping(value = "/v1/screens/{projectToken}/showscreencode")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Void> displayScreenCodeEveryConnectedScreensForProject(@ApiParam(name = "projectToken", value = "The project token", required = true)
                                                                                  @PathVariable("projectToken") String projectToken) {

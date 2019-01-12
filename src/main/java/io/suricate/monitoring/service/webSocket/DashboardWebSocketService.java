@@ -151,7 +151,7 @@ public class DashboardWebSocketService {
     public void removeProjectClient(final String projectToken, final WebsocketClient websocketClient) {
         projectClients.remove(projectToken, websocketClient);
 
-        if (projectClients == null || !projectClients.containsKey(projectToken)) {
+        if (!projectClients.containsKey(projectToken)) {
             projectService.getOneByToken(projectToken).ifPresent(nashornWidgetScheduler::cancelProjectScheduling);
         }
     }
@@ -163,7 +163,11 @@ public class DashboardWebSocketService {
      * @param websocketClient    The related websocket client
      */
     public void addSessionClient(final String websocketSessionId, final WebsocketClient websocketClient) {
-        sessionClient.put(websocketSessionId, websocketClient);
+        if (sessionClient.containsKey(websocketSessionId)) {
+            sessionClient.replace(websocketSessionId, websocketClient);
+        } else {
+            sessionClient.put(websocketSessionId, websocketClient);
+        }
     }
 
     /**
@@ -217,7 +221,7 @@ public class DashboardWebSocketService {
      * @param payload      data to send
      */
     @Async
-    public void updateUniqueScreen(String projectToken, String screenCode, Object payload) {
+    public void updateUniqueScreen(String projectToken, int screenCode, Object payload) {
         LOGGER.debug("screen unique");
         LOGGER.debug("Update project's screen {} for user {}, data: {}", projectToken, screenCode, payload);
 
@@ -257,10 +261,11 @@ public class DashboardWebSocketService {
     /**
      * Disconnect screen from project
      *
-     * @param websocketClient the websocketClient to disconnect
+     * @param projectToken The project token
+     * @param screenCode   The screen code
      */
-    public void disconnectClient(WebsocketClient websocketClient) {
-        updateUniqueScreen(websocketClient.getProjectToken(), websocketClient.getScreenCode(), new UpdateEvent(UpdateType.DISCONNECT));
+    public void disconnectClient(final String projectToken, final int screenCode) {
+        updateUniqueScreen(projectToken, screenCode, new UpdateEvent(UpdateType.DISCONNECT));
     }
 
     /**

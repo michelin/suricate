@@ -120,6 +120,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    */
   handlingDashboardDisconnect() {
     this.router.navigate(['/home']);
+    location.reload();
   }
 
   /**
