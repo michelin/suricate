@@ -3,7 +3,8 @@
                         [project]="project"
                         [projectWidgets]="projectWidgets"
                         [screenCode]="screenCode"
-                        [readOnly]="true">
+                        [readOnly]="true"
+                        (disconnectEvent)="handlingDashboardDisconnect()">
   </app-dashboard-screen>
 
   <ng-template #displayScreenCode>

@@ -31,6 +31,7 @@ import {WebsocketService} from '../../../../shared/services/websocket.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {UserService} from '../../../security/user/user.service';
 import {ProjectWidget} from '../../../../shared/model/api/ProjectWidget/ProjectWidget';
+import {DashboardService} from '../../dashboard.service';
 
 /**
  * Dashboard TV Management
@@ -84,7 +85,8 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
               private router: Router,
               private httpProjectService: HttpProjectService,
               private websocketService: WebsocketService,
-              private userService: UserService) {
+              private userService: UserService,
+              private dashboardService: DashboardService) {
   }
 
   /**
@@ -95,6 +97,12 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
     this.screenCode = this.websocketService.getscreenCode();
     this.listenForConnection();
     this.retrieveProjectTokenFromURL();
+
+    this.dashboardService.refreshProjectWidgetListEvent().subscribe(shouldRefresh => {
+      if (shouldRefresh) {
+        this.refreshProjectWidgetList();
+      }
+    });
   }
 
   /**
@@ -135,13 +143,26 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
       if (params['token']) {
         this.httpProjectService.getOneByToken(params['token']).subscribe(project => {
           this.project = project;
-
-          this.httpProjectService.getProjectProjectWidgets(project.token).subscribe(projectWidgets => {
-            this.projectWidgets = projectWidgets;
-          });
+          this.refreshProjectWidgetList();
         });
       }
     });
+  }
+
+  /**
+   * Refresh the project widget list
+   */
+  refreshProjectWidgetList(): void {
+    this.httpProjectService.getProjectProjectWidgets(this.project.token).subscribe(projectWidgets => {
+      this.projectWidgets = projectWidgets;
+    });
+  }
+
+  /**
+   * Handle the disconnection of a dashboard
+   */
+  handlingDashboardDisconnect() {
+    this.router.navigate(['/tv']);
   }
 
   /**

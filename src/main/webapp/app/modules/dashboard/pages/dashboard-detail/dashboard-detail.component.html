@@ -5,7 +5,8 @@
                       [project]="project"
                       [projectWidgets]="projectWidgets"
                       [screenCode]="screenCode"
-                      [readOnly]="false">
+                      [readOnly]="false"
+                      (disconnectEvent)="handlingDashboardDisconnect()">
 </app-dashboard-screen>
 
 <!-- Display the add card, if no widget inside the project -->

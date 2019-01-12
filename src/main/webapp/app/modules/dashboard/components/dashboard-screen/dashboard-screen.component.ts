@@ -15,7 +15,7 @@
  */
 
 
-import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges,} from '@angular/core';
+import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges,} from '@angular/core';
 import {takeWhile} from 'rxjs/operators';
 import * as Stomp from '@stomp/stompjs';
 
@@ -25,7 +25,6 @@ import {WebsocketService} from '../../../../shared/services/websocket.service';
 import {HttpAssetService} from '../../../../shared/services/api/http-asset.service';
 import {WSUpdateEvent} from '../../../../shared/model/websocket/WSUpdateEvent';
 import {WSUpdateType} from '../../../../shared/model/websocket/enums/WSUpdateType';
-import {Router} from '@angular/router';
 import {DashboardService} from '../../dashboard.service';
 
 
@@ -67,6 +66,12 @@ export class DashboardScreenComponent implements OnInit, OnChanges, OnDestroy {
   @Input() screenCode: number;
 
   /**
+   * Event for handling the disconnection
+   * @type {EventEmitter<any>}
+   */
+  @Output() disconnectEvent = new EventEmitter<any>();
+
+  /**
    * Tell if we should display the screen code
    * @type {boolean}
    */
@@ -83,18 +88,15 @@ export class DashboardScreenComponent implements OnInit, OnChanges, OnDestroy {
    */
   isSrcScriptsRendered = false;
 
-
   /**
    * The constructor
    *
    * @param websocketService The websocket service
    * @param httpAssetService The http asset service
-   * @param router The angular router service
    */
   constructor(private websocketService: WebsocketService,
               private httpAssetService: HttpAssetService,
-              private dashboardService: DashboardService,
-              private router: Router) {
+              private dashboardService: DashboardService) {
   }
 
   /**********************************************************************************************************/
@@ -246,9 +248,12 @@ export class DashboardScreenComponent implements OnInit, OnChanges, OnDestroy {
     ).subscribe((stompMessage: Stomp.Message) => {
       const updateEvent: WSUpdateEvent = JSON.parse(stompMessage.body);
 
-      if (updateEvent.type === WSUpdateType.DISCONNECT) {
-        this.disconnectFromWebsocket();
-        this.router.navigate(['/tv']);
+      if (updateEvent.type === WSUpdateType.RELOAD) {
+        location.reload();
+      } else if (updateEvent.type === WSUpdateType.DISPLAY_NUMBER) {
+        this.displayScreenCode();
+      } else {
+        this.dashboardService.refreshProjectWidgetList();
       }
     });
   }
@@ -264,12 +269,9 @@ export class DashboardScreenComponent implements OnInit, OnChanges, OnDestroy {
     ).subscribe((stompMessage: Stomp.Message) => {
       const updateEvent: WSUpdateEvent = JSON.parse(stompMessage.body);
 
-      if (updateEvent.type === WSUpdateType.RELOAD) {
-        location.reload();
-      } else if (updateEvent.type === WSUpdateType.DISPLAY_NUMBER) {
-        this.displayScreenCode();
-      } else {
-        this.dashboardService.refreshProjectWidgetList();
+      if (updateEvent.type === WSUpdateType.DISCONNECT) {
+        this.disconnectFromWebsocket();
+        this.disconnectEvent.emit();
       }
     });
   }

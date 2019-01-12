@@ -16,7 +16,7 @@
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {MatDialog} from '@angular/material';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 
 import {DashboardService} from '../../dashboard.service';
 import {Project} from '../../../../shared/model/api/project/Project';
@@ -70,7 +70,8 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
               private dashboardService: DashboardService,
               private websocketService: WebsocketService,
               private httpProjectService: HttpProjectService,
-              private matDialog: MatDialog) {
+              private matDialog: MatDialog,
+              private router: Router) {
   }
 
   /**
@@ -112,6 +113,13 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
       minHeight: 500,
       data: {projectToken: this.project.token}
     });
+  }
+
+  /**
+   * Handle the disconnection of a dashboard
+   */
+  handlingDashboardDisconnect() {
+    this.router.navigate(['/home']);
   }
 
   /**
