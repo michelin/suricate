@@ -6,16 +6,18 @@
 </div>
 
 <!-- Grid project -->
-<div *ngIf="gridOptions" [ngGrid]="gridOptions" class="grid-stack">
+<div *ngIf="gridOptions" class="grid-stack" [ngGrid]="gridOptions"
+     (onResizeStop)="updateProjectWidgetsPosition()" (onDragStop)="updateProjectWidgetsPosition()">
+
   <div [innerHTML]="('<style>' + project.gridProperties.cssStyle + '</style>') | safeHtml"></div>
-  <div [innerHTML]="getJSLibraries() | safeHtml"
-       (scriptRenderingFinished)="isSrcScriptsRendered = $event"
+  <div [innerHTML]="getJSLibraries() | safeHtml" (scriptRenderingFinished)="isSrcScriptsRendered = $event"
        appRunScripts>
   </div>
 
   <div *ngIf="isSrcScriptsRendered">
-    <app-dashboard-screen-widget *ngFor="let projectWidget of projectWidgets"
-                                 [projectWidget]="projectWidget"
+    <app-dashboard-screen-widget *ngFor="let gridStackItem of gridStackItems"
+                                 [projectWidget]="gridStackItem.payload"
+                                 [gridStackItem]="gridStackItem"
                                  [readOnly]="readOnly">
     </app-dashboard-screen-widget>
   </div>

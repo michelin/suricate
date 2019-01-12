@@ -26,6 +26,7 @@ import {ConfirmDialogComponent} from '../../../../shared/components/confirm-dial
 import {MatDialog} from '@angular/material';
 import {HttpProjectWidgetService} from '../../../../shared/services/api/http-project-widget.service';
 import {EditProjectWidgetDialogComponent} from '../edit-project-widget-dialog/edit-project-widget-dialog.component';
+import {NgGridItemConfig} from 'angular2-grid';
 
 /**
  * Display the grid stack widgets
@@ -43,6 +44,11 @@ export class DashboardScreenWidgetComponent implements OnInit {
    */
   @Input() projectWidget: ProjectWidget;
 
+  /**
+   * The grid item config
+   * @type {NgGridItemConfig}
+   */
+  @Input() gridStackItem: NgGridItemConfig;
   /**
    * Tell if we are on
    */

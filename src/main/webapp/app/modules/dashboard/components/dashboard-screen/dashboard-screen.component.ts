@@ -26,6 +26,9 @@ import {HttpAssetService} from '../../../../shared/services/api/http-asset.servi
 import {WSUpdateEvent} from '../../../../shared/model/websocket/WSUpdateEvent';
 import {WSUpdateType} from '../../../../shared/model/websocket/enums/WSUpdateType';
 import {DashboardService} from '../../dashboard.service';
+import {NgGridConfig, NgGridItemConfig} from 'angular2-grid';
+import {ProjectWidgetPositionRequest} from '../../../../shared/model/api/ProjectWidget/ProjectWidgetPositionRequest';
+import {HttpProjectService} from '../../../../shared/services/api/http-project.service';
 
 
 /**
@@ -79,8 +82,15 @@ export class DashboardScreenComponent implements OnInit, OnChanges, OnDestroy {
 
   /**
    * The options for the plugin angular2-grid
+   * @type {NgGridConfig}
    */
-  gridOptions: {};
+  gridOptions: NgGridConfig = {};
+
+  /**
+   * The grid items description
+   * @type {NgGridItemConfig[]}
+   */
+  gridStackItems: NgGridItemConfig[] = [];
 
   /**
    * Tell if the global JS scripts has been rendered
@@ -96,6 +106,7 @@ export class DashboardScreenComponent implements OnInit, OnChanges, OnDestroy {
    */
   constructor(private websocketService: WebsocketService,
               private httpAssetService: HttpAssetService,
+              private httpProjectService: HttpProjectService,
               private dashboardService: DashboardService) {
   }
 
@@ -128,6 +139,11 @@ export class DashboardScreenComponent implements OnInit, OnChanges, OnDestroy {
         this.initWebsocketSubscriptions();
       }
     }
+
+    if (changes.projectWidgets) {
+      this.projectWidgets = changes.projectWidgets.currentValue;
+      this.initGridStackItems();
+    }
   }
 
   /**
@@ -135,6 +151,14 @@ export class DashboardScreenComponent implements OnInit, OnChanges, OnDestroy {
    */
   ngOnDestroy(): void {
     this.disconnectFromWebsocket();
+  }
+
+  /**
+   * Display the screen code
+   */
+  displayScreenCode() {
+    this.shouldDisplayScreenCode = true;
+    setTimeout(() => this.shouldDisplayScreenCode = false, 10000);
   }
 
   /**********************************************************************************************************/
@@ -165,6 +189,22 @@ export class DashboardScreenComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
+  /**
+   * Create the list of gridStackItems used to display widgets on the grid
+   */
+  initGridStackItems(): void {
+    this.gridStackItems = [];
+    this.projectWidgets.forEach((projectWidget: ProjectWidget) => {
+      this.gridStackItems.push({
+        col: projectWidget.widgetPosition.col,
+        row: projectWidget.widgetPosition.row,
+        sizey: projectWidget.widgetPosition.height,
+        sizex: projectWidget.widgetPosition.width,
+        payload: projectWidget
+      });
+    });
+  }
+
   /**********************************************************************************************************/
   /*                      JS MANAGEMENT                                                                     */
 
@@ -178,19 +218,13 @@ export class DashboardScreenComponent implements OnInit, OnChanges, OnDestroy {
   getJSLibraries(): string {
     let scriptUrls = '';
 
-    this.project.librariesToken.forEach(libraryToken => {
-      scriptUrls = scriptUrls.concat(`<script src="${this.httpAssetService.getContentUrl(libraryToken)}"></script>`);
-    });
+    if (this.project.librariesToken) {
+      this.project.librariesToken.forEach(libraryToken => {
+        scriptUrls = scriptUrls.concat(`<script src="${this.httpAssetService.getContentUrl(libraryToken)}"></script>`);
+      });
+    }
 
     return scriptUrls;
-  }
-
-  /**
-   * Display the screen code
-   */
-  displayScreenCode() {
-    this.shouldDisplayScreenCode = true;
-    setTimeout(() => this.shouldDisplayScreenCode = false, 10000);
   }
 
   /**********************************************************************************************************/
@@ -274,5 +308,26 @@ export class DashboardScreenComponent implements OnInit, OnChanges, OnDestroy {
         this.disconnectEvent.emit();
       }
     });
+  }
+
+  /**
+   * Update the project widget position
+   */
+  updateProjectWidgetsPosition() {
+    console.log(`update positions: ${this.gridStackItems}`);
+
+    const projectWidgetPositionRequests: ProjectWidgetPositionRequest[] = [];
+
+    this.gridStackItems.forEach(gridStackItem => {
+      projectWidgetPositionRequests.push({
+        projectWidgetId: (gridStackItem.payload as ProjectWidget).id,
+        col: gridStackItem.col,
+        row: gridStackItem.row,
+        height: gridStackItem.sizey,
+        width: gridStackItem.sizex,
+      });
+    });
+
+    this.httpProjectService.updateProjectWidgetPositions(this.project.token, projectWidgetPositionRequests).subscribe();
   }
 }
