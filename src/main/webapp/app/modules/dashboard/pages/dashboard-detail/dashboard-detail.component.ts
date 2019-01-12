@@ -80,27 +80,28 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.screenCode = this.websocketService.getscreenCode();
 
-    this.dashboardService.refreshProjectWidgetListEvent().subscribe(shouldRefresh => {
+    this.dashboardService.refreshProjectEvent().subscribe(shouldRefresh => {
       if (shouldRefresh) {
-        this.refreshProjectWidgetList();
+        this.refreshProject(this.project.token);
       }
     });
 
     // Global init from project
     this.activatedRoute.params.subscribe(params => {
-      this.httpProjectService.getOneByToken(params['dashboardToken']).subscribe(project => {
-        this.project = project;
-        this.refreshProjectWidgetList();
-      });
+      this.refreshProject(params['dashboardToken']);
     });
   }
 
   /**
-   * Refresh the project widget list
+   * Refresh the project
    */
-  refreshProjectWidgetList(): void {
-    this.httpProjectService.getProjectProjectWidgets(this.project.token).subscribe(projectWidgets => {
-      this.projectWidgets = projectWidgets;
+  refreshProject(dashboardToken: string): void {
+    this.httpProjectService.getOneByToken(dashboardToken).subscribe(project => {
+      this.project = project;
+
+      this.httpProjectService.getProjectProjectWidgets(this.project.token).subscribe(projectWidgets => {
+        this.projectWidgets = projectWidgets;
+      });
     });
   }
 
@@ -120,7 +121,6 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    */
   handlingDashboardDisconnect() {
     this.router.navigate(['/home']);
-    location.reload();
   }
 
   /**

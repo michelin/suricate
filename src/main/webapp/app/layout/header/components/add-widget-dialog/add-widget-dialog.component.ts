@@ -146,7 +146,7 @@ export class AddWidgetDialogComponent implements OnInit {
       };
 
       this.httpProjectService.addProjectWidgetToProject(this.projectToken, projectWidgetRequest).subscribe(() => {
-        this.dashboardService.refreshProjectWidgetList();
+        this.dashboardService.refreshProject();
         this.addWidgetDialogRef.close();
       });
     }

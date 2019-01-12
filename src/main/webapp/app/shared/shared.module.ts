@@ -54,6 +54,7 @@ import {HttpRepositoryService} from './services/api/http-repository.service';
 import {HttpConfigurationService} from './services/api/http-configuration.service';
 import {HttpWidgetService} from './services/api/http-widget.service';
 import {HttpProjectWidgetService} from './services/api/http-project-widget.service';
+import {RunScriptsService} from './directives/run-scripts.service';
 
 @NgModule({
   imports: [
@@ -110,6 +111,7 @@ import {HttpProjectWidgetService} from './services/api/http-project-widget.servi
     AuthGuard,
     AdminGuard,
     WebsocketService,
+    RunScriptsService,
     ToastService,
     StompRService,
     TokenService,

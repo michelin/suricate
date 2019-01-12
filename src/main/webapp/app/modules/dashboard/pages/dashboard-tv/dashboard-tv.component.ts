@@ -32,6 +32,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {UserService} from '../../../security/user/user.service';
 import {ProjectWidget} from '../../../../shared/model/api/ProjectWidget/ProjectWidget';
 import {DashboardService} from '../../dashboard.service';
+import {Subscription} from 'rxjs';
 
 /**
  * Dashboard TV Management
@@ -69,6 +70,12 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   screenCode: number;
 
   /**
+   * The stompJS connection event subscription
+   * @type {Subscription}
+   */
+  connectionEventSubscription: Subscription;
+
+  /**
    * The constructor
    *
    * @param settingsService The setting service
@@ -78,6 +85,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * @param httpProjectService The http service for project management
    * @param websocketService The websocket management
    * @param userService The user service
+   * @param dashboardService The dashboard service
    */
   constructor(private settingsService: SettingsService,
               private sidenavService: SidenavService,
@@ -89,6 +97,11 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
               private dashboardService: DashboardService) {
   }
 
+  /**********************************************************************************************************/
+  /*                      COMPONENT LIFE CYCLE                                                              */
+
+  /**********************************************************************************************************/
+
   /**
    * Init of the component
    */
@@ -98,11 +111,21 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
     this.listenForConnection();
     this.retrieveProjectTokenFromURL();
 
-    this.dashboardService.refreshProjectWidgetListEvent().subscribe(shouldRefresh => {
+    this.dashboardService.refreshProjectEvent().subscribe(shouldRefresh => {
       if (shouldRefresh) {
-        this.refreshProjectWidgetList();
+        this.refreshProject(this.project.token);
       }
     });
+  }
+
+  /**
+   * When the component is destroyed
+   */
+  ngOnDestroy() {
+    this.settingsService.initUserThemeSetting(this.userService.connectedUser);
+    this.sidenavService.openSidenav();
+    this.isAlive = false;
+    this.disconnectTV();
   }
 
   /**
@@ -114,13 +137,45 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Get the project informations from the url query params
+   */
+  retrieveProjectTokenFromURL() {
+    this.activatedRoute.queryParams.subscribe(params => {
+      if (params['token']) {
+        this.refreshProject(params['token']);
+
+      } else {
+        this.project = null;
+      }
+    });
+  }
+
+  /**
+   * Refresh the project widget list
+   */
+  refreshProject(projectToken: string): void {
+    this.httpProjectService.getOneByToken(projectToken).subscribe(project => {
+      this.project = project;
+
+      this.httpProjectService.getProjectProjectWidgets(projectToken).subscribe(projectWidgets => {
+        this.projectWidgets = projectWidgets;
+      });
+    });
+  }
+
+  /**********************************************************************************************************/
+  /*                      WEBSOCKET MANAGEMENT                                                              */
+
+  /**********************************************************************************************************/
+
+  /**
    * When on code view screen we wait for new connection
    */
   listenForConnection() {
     this.websocketService.startConnection();
 
     const waitingConnectionUrl = `/user/${this.screenCode}/queue/connect`;
-    this.websocketService.subscribeToDestination(waitingConnectionUrl).pipe(
+    this.connectionEventSubscription = this.websocketService.subscribeToDestination(waitingConnectionUrl).pipe(
       takeWhile(() => this.isAlive)
     ).subscribe((stompMessage: Stomp.Message) => {
       const updateEvent: WSUpdateEvent = JSON.parse(stompMessage.body);
@@ -135,43 +190,21 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Get the project informations from the url query params
+   * Disconnect TV from stompJS
    */
-  retrieveProjectTokenFromURL() {
-    this.activatedRoute.queryParams.subscribe(params => {
-      if (params['token']) {
-        this.httpProjectService.getOneByToken(params['token']).subscribe(project => {
-          this.project = project;
-          this.refreshProjectWidgetList();
-        });
-      }
-    });
-  }
-
-  /**
-   * Refresh the project widget list
-   */
-  refreshProjectWidgetList(): void {
-    this.httpProjectService.getProjectProjectWidgets(this.project.token).subscribe(projectWidgets => {
-      this.projectWidgets = projectWidgets;
-    });
+  disconnectTV() {
+    this.connectionEventSubscription.unsubscribe();
+    this.connectionEventSubscription = null;
+    this.isAlive = false;
+    this.websocketService.disconnect();
   }
 
   /**
    * Handle the disconnection of a dashboard
    */
   handlingDashboardDisconnect() {
+    this.disconnectTV();
     this.router.navigate(['/tv']);
-    location.reload();
-  }
-
-  /**
-   * When the component is destroyed
-   */
-  ngOnDestroy() {
-    this.settingsService.initUserThemeSetting(this.userService.connectedUser);
-    this.isAlive = false;
-    this.sidenavService.openSidenav();
-    this.websocketService.disconnect();
+    this.listenForConnection();
   }
 }

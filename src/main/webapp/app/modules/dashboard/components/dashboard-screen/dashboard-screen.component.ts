@@ -15,7 +15,7 @@
  */
 
 
-import {Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges,} from '@angular/core';
+import {Component, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges,} from '@angular/core';
 import {takeWhile} from 'rxjs/operators';
 import * as Stomp from '@stomp/stompjs';
 
@@ -29,6 +29,9 @@ import {DashboardService} from '../../dashboard.service';
 import {NgGridConfig, NgGridItemConfig} from 'angular2-grid';
 import {ProjectWidgetPositionRequest} from '../../../../shared/model/api/ProjectWidget/ProjectWidgetPositionRequest';
 import {HttpProjectService} from '../../../../shared/services/api/http-project.service';
+import {Subscription} from 'rxjs';
+import {RunScriptsDirective} from '../../../../shared/directives/run-scripts.directive';
+import {RunScriptsService} from '../../../../shared/directives/run-scripts.service';
 
 
 /**
@@ -75,6 +78,21 @@ export class DashboardScreenComponent implements OnInit, OnChanges, OnDestroy {
   @Output() disconnectEvent = new EventEmitter<any>();
 
   /**
+   * Add runScriptsDirective, so we can recall it
+   */
+  @HostBinding('attr.appRunScripts') appRunScriptDirective = new RunScriptsDirective(this.elementRef, this.runScriptsService);
+
+  /**
+   * The stompJS Subscription for project event
+   */
+  projectEventSubscription: Subscription;
+
+  /**
+   * The stompJS Subscription for screen event
+   */
+  screenEventSubscription: Subscription;
+
+  /**
    * Tell if we should display the screen code
    * @type {boolean}
    */
@@ -103,11 +121,17 @@ export class DashboardScreenComponent implements OnInit, OnChanges, OnDestroy {
    *
    * @param websocketService The websocket service
    * @param httpAssetService The http asset service
+   * @param httpProjectService The http project service
+   * @param dashboardService The dashboard service
+   * @param elementRef The element Ref service
+   * @param runScriptsService The service associated to the runScript directive
    */
   constructor(private websocketService: WebsocketService,
               private httpAssetService: HttpAssetService,
               private httpProjectService: HttpProjectService,
-              private dashboardService: DashboardService) {
+              private dashboardService: DashboardService,
+              private elementRef: ElementRef,
+              private runScriptsService: RunScriptsService) {
   }
 
   /**********************************************************************************************************/
@@ -118,6 +142,10 @@ export class DashboardScreenComponent implements OnInit, OnChanges, OnDestroy {
    * Called when the component is init
    */
   ngOnInit(): void {
+    this.runScriptsService.scriptRenderedEvent().subscribe(isRendered => {
+      this.isSrcScriptsRendered = isRendered;
+    });
+
     // We have to inject this variable in the window scope (because some Widgets use it for init the js)
     window['page_loaded'] = true;
   }
@@ -127,8 +155,10 @@ export class DashboardScreenComponent implements OnInit, OnChanges, OnDestroy {
    */
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.project) {
+      this.runScriptsService.emitScriptRendered(false);
       this.project = changes.project.currentValue;
       this.initGridStackOptions(this.project);
+      this.appRunScriptDirective.ngOnInit();
 
       if (changes.project.previousValue) {
         if (changes.project.previousValue.token !== changes.project.currentValue.token) {
@@ -260,6 +290,10 @@ export class DashboardScreenComponent implements OnInit, OnChanges, OnDestroy {
    * Unsubscribe to every current websocket connections
    */
   unsubscribeToWebsocket() {
+    this.projectEventSubscription.unsubscribe();
+    this.projectEventSubscription = null;
+    this.screenEventSubscription.unsubscribe();
+    this.screenEventSubscription = null;
     this.isAlive = false;
   }
 
@@ -277,7 +311,7 @@ export class DashboardScreenComponent implements OnInit, OnChanges, OnDestroy {
   websocketProjectEventSubscription() {
     const projectSubscriptionUrl = `/user/${this.project.token}/queue/live`;
 
-    this.websocketService.subscribeToDestination(projectSubscriptionUrl).pipe(
+    this.projectEventSubscription = this.websocketService.subscribeToDestination(projectSubscriptionUrl).pipe(
       takeWhile(() => this.isAlive)
     ).subscribe((stompMessage: Stomp.Message) => {
       const updateEvent: WSUpdateEvent = JSON.parse(stompMessage.body);
@@ -287,7 +321,7 @@ export class DashboardScreenComponent implements OnInit, OnChanges, OnDestroy {
       } else if (updateEvent.type === WSUpdateType.DISPLAY_NUMBER) {
         this.displayScreenCode();
       } else {
-        this.dashboardService.refreshProjectWidgetList();
+        this.dashboardService.refreshProject();
       }
     });
   }
@@ -298,7 +332,7 @@ export class DashboardScreenComponent implements OnInit, OnChanges, OnDestroy {
   websocketScreenEventSubscription() {
     const screenSubscriptionUrl = `/user/${this.project.token}-${this.screenCode}/queue/unique`;
 
-    this.websocketService.subscribeToDestination(screenSubscriptionUrl).pipe(
+    this.screenEventSubscription = this.websocketService.subscribeToDestination(screenSubscriptionUrl).pipe(
       takeWhile(() => this.isAlive)
     ).subscribe((stompMessage: Stomp.Message) => {
       const updateEvent: WSUpdateEvent = JSON.parse(stompMessage.body);

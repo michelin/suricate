@@ -50,7 +50,7 @@ export class DashboardService {
   /**
    * Tell if the dashboard screen should refresh
    */
-  private shouldRefreshProjectWidgetList = new Subject<boolean>();
+  private shouldRefreshProject = new Subject<boolean>();
 
   /**
    * The constructor
@@ -94,14 +94,14 @@ export class DashboardService {
   /**
    * Event we should subscribe to receive event of refresh
    */
-  refreshProjectWidgetListEvent(): Observable<boolean> {
-    return this.shouldRefreshProjectWidgetList.asObservable();
+  refreshProjectEvent(): Observable<boolean> {
+    return this.shouldRefreshProject.asObservable();
   }
 
   /**
    * Send an event for the refresh
    */
-  refreshProjectWidgetList(): void {
-    this.shouldRefreshProjectWidgetList.next(true);
+  refreshProject(): void {
+    this.shouldRefreshProject.next(true);
   }
 }
