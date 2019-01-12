@@ -6,7 +6,7 @@
 </div>
 
 <!-- Grid project -->
-<div *ngIf="gridOptions && project" class="grid-stack" [ngGrid]="gridOptions"
+<div *ngIf="gridOptions" class="grid-stack" [ngGrid]="gridOptions"
      (onResizeStop)="updateProjectWidgetsPosition()" (onDragStop)="updateProjectWidgetsPosition()"
      appRunScripts>
 

@@ -142,12 +142,16 @@ export class DashboardScreenComponent implements OnInit, OnChanges, OnDestroy {
    * Called when the component is init
    */
   ngOnInit(): void {
-    this.runScriptsService.scriptRenderedEvent().subscribe(isRendered => {
-      this.isSrcScriptsRendered = isRendered;
-    });
-
     // We have to inject this variable in the window scope (because some Widgets use it for init the js)
     window['page_loaded'] = true;
+  }
+
+  subscribeToRenderedScriptEvent() {
+    this.runScriptsService.scriptRenderedEvent().pipe(
+      takeWhile(() => this.isAlive)
+    ).subscribe(isRendered => {
+      this.isSrcScriptsRendered = isRendered;
+    });
   }
 
   /**
@@ -155,7 +159,12 @@ export class DashboardScreenComponent implements OnInit, OnChanges, OnDestroy {
    */
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.project) {
-      this.runScriptsService.emitScriptRendered(false);
+      if (!changes.project.previousValue) {
+        this.subscribeToRenderedScriptEvent();
+      } else {
+        this.runScriptsService.emitScriptRendered(false);
+      }
+
       this.project = changes.project.currentValue;
       this.initGridStackOptions(this.project);
       this.appRunScriptDirective.ngOnInit();
@@ -290,10 +299,16 @@ export class DashboardScreenComponent implements OnInit, OnChanges, OnDestroy {
    * Unsubscribe to every current websocket connections
    */
   unsubscribeToWebsocket() {
-    this.projectEventSubscription.unsubscribe();
-    this.projectEventSubscription = null;
-    this.screenEventSubscription.unsubscribe();
-    this.screenEventSubscription = null;
+    if (this.projectEventSubscription) {
+      this.projectEventSubscription.unsubscribe();
+      this.projectEventSubscription = null;
+    }
+
+    if (this.screenEventSubscription) {
+      this.screenEventSubscription.unsubscribe();
+      this.screenEventSubscription = null;
+    }
+
     this.isAlive = false;
   }
 
