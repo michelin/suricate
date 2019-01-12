@@ -1,8 +1,9 @@
 <div id="tv-view">
-  <app-dashboard-screen *ngIf="(project$ | async); else displayScreenCode"
-                        [project]="(project$ | async)"
-                        [readOnly]="true"
-                        [screenCode]="screenCode">
+  <app-dashboard-screen *ngIf="project; else displayScreenCode"
+                        [project]="project"
+                        [projectWidgets]="projectWidgets"
+                        [screenCode]="screenCode"
+                        [readOnly]="true">
   </app-dashboard-screen>
 
   <ng-template #displayScreenCode>

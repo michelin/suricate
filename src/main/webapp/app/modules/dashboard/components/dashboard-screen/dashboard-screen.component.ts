@@ -16,7 +16,6 @@
 
 
 import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges,} from '@angular/core';
-import {Subscription} from 'rxjs';
 import {takeWhile} from 'rxjs/operators';
 import * as Stomp from '@stomp/stompjs';
 
@@ -39,13 +38,6 @@ import {DashboardService} from '../../dashboard.service';
   styleUrls: ['./dashboard-screen.component.css']
 })
 export class DashboardScreenComponent implements OnInit, OnChanges, OnDestroy {
-
-  /**
-   * Save every web socket subscriptions event
-   * @type {Subscription[]}
-   * @private
-   */
-  private websocketSubscriptions: Subscription[] = [];
 
   /**
    * Tell to subscriptions if the component is alive
@@ -124,7 +116,6 @@ export class DashboardScreenComponent implements OnInit, OnChanges, OnDestroy {
     if (changes.project) {
       this.project = changes.project.currentValue;
       this.initGridStackOptions(this.project);
-      this.screenCode = this.websocketService.getscreenCode();
 
       if (changes.project.previousValue) {
         if (changes.project.previousValue.token !== changes.project.currentValue.token) {

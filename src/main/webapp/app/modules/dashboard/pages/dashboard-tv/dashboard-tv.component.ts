@@ -17,21 +17,20 @@
  */
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Observable, Subscription} from 'rxjs';
 import {takeWhile} from 'rxjs/operators';
 
-import {SidenavService} from '../../../../layout/sidenav/sidenav.service';
-import {WebsocketService} from '../../../../shared/services/websocket.service';
 import {Project} from '../../../../shared/model/api/project/Project';
-import {DashboardService} from '../../dashboard.service';
 import {WSUpdateEvent} from '../../../../shared/model/websocket/WSUpdateEvent';
 import {WSUpdateType} from '../../../../shared/model/websocket/enums/WSUpdateType';
-import {SettingsService} from '../../../../shared/services/settings.service';
-import {UserService} from '../../../security/user/user.service';
 
 import * as Stomp from '@stomp/stompjs';
+import {SettingsService} from '../../../../shared/services/settings.service';
+import {SidenavService} from '../../../../layout/sidenav/sidenav.service';
 import {HttpProjectService} from '../../../../shared/services/api/http-project.service';
+import {WebsocketService} from '../../../../shared/services/websocket.service';
+import {ActivatedRoute, Router} from '@angular/router';
+import {UserService} from '../../../security/user/user.service';
+import {ProjectWidget} from '../../../../shared/model/api/ProjectWidget/ProjectWidget';
 
 /**
  * Dashboard TV Management
@@ -49,18 +48,18 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * @private
    */
   private isAlive = true;
-  /**
-   * The screen subscription (Code View)
-   * @type {Subscription}
-   * @private
-   */
-  private screenSubscription: Subscription;
 
   /**
-   * The project as observable
-   * @type {Observable<Project>}
+   * The project
+   * @type {Project}
    */
-  project$: Observable<Project>;
+  project: Project;
+
+  /**
+   * The list of project widgets related to the project
+   * @type {ProjectWidget[]}
+   */
+  projectWidgets: ProjectWidget[];
 
   /**
    * The screen code to display
@@ -71,24 +70,20 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   /**
    * The constructor
    *
-   * @param {SidenavService} sidenavService The sidenav service to inject
-   * @param {DashboardService} dashboardService The dashboard service to inject
-   * @param {HttpProjectService} httpProjectService The http project service to inject
-   * @param {WebsocketService} websocketService The websocket service to inject
-   * @param {SettingsService} themeService The theme service
-   * @param {ActivatedRoute} activatedRoute The activated route service
-   * @param {Router} router The router service
-   * @param {SettingsService} settingsService The settings service
-   * @param {UserService} userService The user service
+   * @param settingsService The setting service
+   * @param sidenavService The sidenav service
+   * @param activatedRoute The activated route
+   * @param router The router service
+   * @param httpProjectService The http service for project management
+   * @param websocketService The websocket management
+   * @param userService The user service
    */
-  constructor(private sidenavService: SidenavService,
-              private dashboardService: DashboardService,
-              private httpProjectService: HttpProjectService,
-              private websocketService: WebsocketService,
-              private themeService: SettingsService,
+  constructor(private settingsService: SettingsService,
+              private sidenavService: SidenavService,
               private activatedRoute: ActivatedRoute,
               private router: Router,
-              private settingsService: SettingsService,
+              private httpProjectService: HttpProjectService,
+              private websocketService: WebsocketService,
               private userService: UserService) {
   }
 
@@ -96,20 +91,18 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * Init of the component
    */
   ngOnInit() {
-    setTimeout(() => this.themeService.currentTheme = 'dark-theme', 0);
-    this.sidenavService.closeSidenav();
+    this.initDefaultScreenSettings();
     this.screenCode = this.websocketService.getscreenCode();
+    this.listenForConnection();
+    this.retrieveProjectTokenFromURL();
+  }
 
-
-    this.activatedRoute.queryParams.subscribe(params => {
-      if (params['token']) {
-        this.httpProjectService.getOneByToken(params['token']).subscribe(project => {
-        });
-
-      } else {
-        this.listenForConnection();
-      }
-    });
+  /**
+   * Init the settings to be in TV Mode
+   */
+  initDefaultScreenSettings() {
+    setTimeout(() => this.settingsService.currentTheme = 'dark-theme', 0);
+    this.sidenavService.closeSidenav();
   }
 
   /**
@@ -117,39 +110,38 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    */
   listenForConnection() {
     this.websocketService.startConnection();
-    this.screenSubscription = this
-      .websocketService
-      .subscribeToDestination(`/user/${this.screenCode}/queue/connect`)
-      .pipe(takeWhile(() => this.isAlive))
-      .subscribe((stompMessage: Stomp.Message) => {
-        this.handleConnectEvent(JSON.parse(stompMessage.body));
-      });
-  }
 
-  /**
-   * Handle the connection event
-   *
-   * @param {WSUpdateEvent} updateEvent Update event
-   */
-  handleConnectEvent(updateEvent: WSUpdateEvent) {
-    if (updateEvent.type === WSUpdateType.CONNECT) {
-      const project: Project = updateEvent.content;
+    const waitingConnectionUrl = `/user/${this.screenCode}/queue/connect`;
+    this.websocketService.subscribeToDestination(waitingConnectionUrl).pipe(
+      takeWhile(() => this.isAlive)
+    ).subscribe((stompMessage: Stomp.Message) => {
+      const updateEvent: WSUpdateEvent = JSON.parse(stompMessage.body);
 
-      if (project) {
-        this.unsubscribeListening();
-        this.websocketService.disconnect();
-        this.router.navigate(['/tv'], {queryParams: {token: project.token}});
+      if (updateEvent.type === WSUpdateType.CONNECT) {
+        const project: Project = updateEvent.content;
+        if (project) {
+          this.websocketService.disconnect();
+          this.router.navigate(['/tv'], {queryParams: {token: project.token}});
+        }
       }
-    }
+    });
   }
 
   /**
-   * Unsubscribe to the listening event
+   * Get the project informations from the url query params
    */
-  unsubscribeListening() {
-    if (this.screenSubscription) {
-      this.screenSubscription.unsubscribe();
-    }
+  retrieveProjectTokenFromURL() {
+    this.activatedRoute.queryParams.subscribe(params => {
+      if (params['token']) {
+        this.httpProjectService.getOneByToken(params['token']).subscribe(project => {
+          this.project = project;
+
+          this.httpProjectService.getProjectProjectWidgets(project.token).subscribe(projectWidgets => {
+            this.projectWidgets = projectWidgets;
+          });
+        });
+      }
+    });
   }
 
   /**
@@ -159,8 +151,6 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
     this.settingsService.initUserThemeSetting(this.userService.connectedUser);
     this.isAlive = false;
     this.sidenavService.openSidenav();
-
-    this.unsubscribeListening();
     this.websocketService.disconnect();
   }
 }

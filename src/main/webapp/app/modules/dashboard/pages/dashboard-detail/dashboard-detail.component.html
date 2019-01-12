@@ -2,8 +2,9 @@
 
 <!-- Dashboard screen -->
 <app-dashboard-screen *ngIf="projectWidgets?.length > 0; else dashboardNoWidget"
-                      [projectWidgets]="projectWidgets"
                       [project]="project"
+                      [projectWidgets]="projectWidgets"
+                      [screenCode]="screenCode"
                       [readOnly]="false">
 </app-dashboard-screen>
 

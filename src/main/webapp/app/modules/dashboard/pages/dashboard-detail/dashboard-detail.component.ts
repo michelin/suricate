@@ -23,6 +23,7 @@ import {Project} from '../../../../shared/model/api/project/Project';
 import {AddWidgetDialogComponent} from '../../../../layout/header/components/add-widget-dialog/add-widget-dialog.component';
 import {HttpProjectService} from '../../../../shared/services/api/http-project.service';
 import {ProjectWidget} from '../../../../shared/model/api/ProjectWidget/ProjectWidget';
+import {WebsocketService} from '../../../../shared/services/websocket.service';
 
 /**
  * Component that display a specific dashboard
@@ -53,6 +54,11 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
   projectWidgets: ProjectWidget[];
 
   /**
+   * The screen code of the client;
+   */
+  screenCode: number;
+
+  /**
    * constructor
    *
    * @param {ActivatedRoute} activatedRoute The activated route service
@@ -62,6 +68,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    */
   constructor(private activatedRoute: ActivatedRoute,
               private dashboardService: DashboardService,
+              private websocketService: WebsocketService,
               private httpProjectService: HttpProjectService,
               private matDialog: MatDialog) {
   }
@@ -70,6 +77,8 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    * Init objects
    */
   ngOnInit() {
+    this.screenCode = this.websocketService.getscreenCode();
+
     this.dashboardService.refreshProjectWidgetListEvent().subscribe(shouldRefresh => {
       if (shouldRefresh) {
         this.refreshProjectWidgetList();
