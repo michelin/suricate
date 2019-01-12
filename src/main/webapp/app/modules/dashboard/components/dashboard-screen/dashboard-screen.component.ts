@@ -15,12 +15,20 @@
  */
 
 
-import {Component, Input, OnInit,} from '@angular/core';
+import {Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges,} from '@angular/core';
+import {Subscription} from 'rxjs';
+import {takeWhile} from 'rxjs/operators';
+import * as Stomp from '@stomp/stompjs';
 
 import {Project} from '../../../../shared/model/api/project/Project';
 import {ProjectWidget} from '../../../../shared/model/api/ProjectWidget/ProjectWidget';
 import {WebsocketService} from '../../../../shared/services/websocket.service';
 import {HttpAssetService} from '../../../../shared/services/api/http-asset.service';
+import {WSUpdateEvent} from '../../../../shared/model/websocket/WSUpdateEvent';
+import {WSUpdateType} from '../../../../shared/model/websocket/enums/WSUpdateType';
+import {Router} from '@angular/router';
+import {DashboardService} from '../../dashboard.service';
+
 
 /**
  * Display the grid stack widgets
@@ -30,7 +38,20 @@ import {HttpAssetService} from '../../../../shared/services/api/http-asset.servi
   templateUrl: './dashboard-screen.component.html',
   styleUrls: ['./dashboard-screen.component.css']
 })
-export class DashboardScreenComponent implements OnInit {
+export class DashboardScreenComponent implements OnInit, OnChanges, OnDestroy {
+
+  /**
+   * Save every web socket subscriptions event
+   * @type {Subscription[]}
+   * @private
+   */
+  private websocketSubscriptions: Subscription[] = [];
+
+  /**
+   * Tell to subscriptions if the component is alive
+   * When the component is destroyed, the associated subscriptions will be deleted
+   */
+  private isAlive = true;
 
   /**
    * The project to display
@@ -57,36 +78,76 @@ export class DashboardScreenComponent implements OnInit {
    * Tell if we should display the screen code
    * @type {boolean}
    */
-  displayScreenCode = false;
+  shouldDisplayScreenCode = false;
 
   /**
    * The options for the plugin angular2-grid
    */
   gridOptions: {};
 
+  /**
+   * Tell if the global JS scripts has been rendered
+   * (Online JS scripts contained inside the widgets are executed when this value is set to true)
+   */
   isSrcScriptsRendered = false;
+
 
   /**
    * The constructor
    *
    * @param websocketService The websocket service
+   * @param httpAssetService The http asset service
+   * @param router The angular router service
    */
   constructor(private websocketService: WebsocketService,
-              private httpAssetService: HttpAssetService) {
+              private httpAssetService: HttpAssetService,
+              private dashboardService: DashboardService,
+              private router: Router) {
   }
 
+  /**********************************************************************************************************/
+  /*                      COMPONENT LIFE CYCLE                                                              */
+
+  /**********************************************************************************************************/
   /**
    * Called when the component is init
    */
   ngOnInit(): void {
-    if (!this.screenCode) {
-      this.screenCode = this.websocketService.getscreenCode();
-    }
+    // We have to inject this variable in the window scope (because some Widgets use it for init the js)
+    window['page_loaded'] = true;
+  }
 
-    if (this.project) {
+  /**
+   * Each time a value change, this function will be called
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.project) {
+      this.project = changes.project.currentValue;
       this.initGridStackOptions(this.project);
+      this.screenCode = this.websocketService.getscreenCode();
+
+      if (changes.project.previousValue) {
+        if (changes.project.previousValue.token !== changes.project.currentValue.token) {
+          this.resetWebsocketSubscriptions();
+        }
+      } else {
+        this.startWebsocketConnection();
+        this.initWebsocketSubscriptions();
+      }
     }
   }
+
+  /**
+   * When the component is destroyed (new page)
+   */
+  ngOnDestroy(): void {
+    this.disconnectFromWebsocket();
+  }
+
+  /**********************************************************************************************************/
+  /*                      GRID STACK MANAGEMENT                                                             */
+
+  /**********************************************************************************************************/
 
   /**
    * Init the options for Grid Stack plugin
@@ -111,6 +172,11 @@ export class DashboardScreenComponent implements OnInit {
     }
   }
 
+  /**********************************************************************************************************/
+  /*                      JS MANAGEMENT                                                                     */
+
+  /**********************************************************************************************************/
+
   /**
    * Get the JS libraries from project
    *
@@ -126,8 +192,94 @@ export class DashboardScreenComponent implements OnInit {
     return scriptUrls;
   }
 
-  setSrcScriptRendered(isScriptRendered: boolean) {
-    this.isSrcScriptsRendered = isScriptRendered;
+  /**
+   * Display the screen code
+   */
+  displayScreenCode() {
+    this.shouldDisplayScreenCode = true;
+    setTimeout(() => this.shouldDisplayScreenCode = false, 10000);
   }
 
+  /**********************************************************************************************************/
+  /*                      WEBSOCKET MANAGEMENT                                                              */
+
+  /**********************************************************************************************************/
+
+  /**
+   * Start the websocket connection using sockJS
+   */
+  startWebsocketConnection() {
+    this.websocketService.startConnection();
+  }
+
+  /**
+   * Disconnect from websockets
+   */
+  disconnectFromWebsocket() {
+    this.unsubscribeToWebsocket();
+    this.websocketService.disconnect();
+  }
+
+  /**
+   * Init the websocket subscriptions
+   */
+  initWebsocketSubscriptions() {
+    this.isAlive = true;
+    this.websocketProjectEventSubscription();
+    this.websocketScreenEventSubscription();
+  }
+
+  /**
+   * Unsubscribe to every current websocket connections
+   */
+  unsubscribeToWebsocket() {
+    this.isAlive = false;
+  }
+
+  /**
+   * Reset the websocket subscription
+   */
+  resetWebsocketSubscriptions() {
+    this.unsubscribeToWebsocket();
+    this.initWebsocketSubscriptions();
+  }
+
+  /**
+   * Create a websocket subscription for the current project
+   */
+  websocketProjectEventSubscription() {
+    const projectSubscriptionUrl = `/user/${this.project.token}/queue/live`;
+
+    this.websocketService.subscribeToDestination(projectSubscriptionUrl).pipe(
+      takeWhile(() => this.isAlive)
+    ).subscribe((stompMessage: Stomp.Message) => {
+      const updateEvent: WSUpdateEvent = JSON.parse(stompMessage.body);
+
+      if (updateEvent.type === WSUpdateType.DISCONNECT) {
+        this.disconnectFromWebsocket();
+        this.router.navigate(['/tv']);
+      }
+    });
+  }
+
+  /**
+   * Create a websocket subscription for the current screen
+   */
+  websocketScreenEventSubscription() {
+    const screenSubscriptionUrl = `/user/${this.project.token}-${this.screenCode}/queue/unique`;
+
+    this.websocketService.subscribeToDestination(screenSubscriptionUrl).pipe(
+      takeWhile(() => this.isAlive)
+    ).subscribe((stompMessage: Stomp.Message) => {
+      const updateEvent: WSUpdateEvent = JSON.parse(stompMessage.body);
+
+      if (updateEvent.type === WSUpdateType.RELOAD) {
+        location.reload();
+      } else if (updateEvent.type === WSUpdateType.DISPLAY_NUMBER) {
+        this.displayScreenCode();
+      } else {
+        this.dashboardService.refreshProjectWidgetList();
+      }
+    });
+  }
 }

@@ -1,5 +1,5 @@
 <!-- Display Screen code -->
-<div *ngIf="displayScreenCode" id="screen-code-div" fxLayout="col wrap" fxLayoutAlign="center center"
+<div *ngIf="shouldDisplayScreenCode" id="screen-code-div" fxLayout="col wrap" fxLayoutAlign="center center"
      fxLayoutGap="50px">
   <mat-icon>tv</mat-icon>
   <span> {{ screenCode }}</span>
@@ -9,7 +9,7 @@
 <div *ngIf="gridOptions" [ngGrid]="gridOptions" class="grid-stack">
   <div [innerHTML]="('<style>' + project.gridProperties.cssStyle + '</style>') | safeHtml"></div>
   <div [innerHTML]="getJSLibraries() | safeHtml"
-       (scriptRenderingFinished)="setSrcScriptRendered($event)"
+       (scriptRenderingFinished)="isSrcScriptsRendered = $event"
        appRunScripts>
   </div>
 

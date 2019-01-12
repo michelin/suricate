@@ -152,9 +152,7 @@ public class DashboardWebSocketService {
         projectClients.remove(projectToken, websocketClient);
 
         if (projectClients == null || !projectClients.containsKey(projectToken)) {
-            projectService
-                .getOneByToken(projectToken)
-                .ifPresent(nashornWidgetScheduler::cancelProjectScheduling);
+            projectService.getOneByToken(projectToken).ifPresent(nashornWidgetScheduler::cancelProjectScheduling);
         }
     }
 
