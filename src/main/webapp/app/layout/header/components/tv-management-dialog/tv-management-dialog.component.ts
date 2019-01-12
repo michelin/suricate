@@ -47,6 +47,12 @@ export class TvManagementDialogComponent implements OnInit {
   project: Project;
 
   /**
+   * The list of clients connected by websocket
+   * @type {WebsocketClient[]}
+   */
+  websocketClients: WebsocketClient[];
+
+  /**
    * Constructor
    *
    * @param data The data give to the modal
@@ -66,9 +72,13 @@ export class TvManagementDialogComponent implements OnInit {
    * When the component is initialized
    */
   ngOnInit() {
-    this.httpProjectService
-      .getOneByToken(this.data.projectId)
-      .subscribe(project => this.project = project);
+    this.httpProjectService.getOneByToken(this.data.projectToken).subscribe(project => {
+      this.project = project;
+
+      this.httpProjectService.getProjectWebsocketClients(project.token).subscribe(websocketClients => {
+        this.websocketClients = websocketClients;
+      });
+    });
 
     this.screenRegisterForm = this.formBuilder.group({
       screenCode: ['']

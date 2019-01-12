@@ -112,7 +112,7 @@ export class DashboardActionsComponent implements OnInit {
   openTvManagementDialog() {
     this.tvManagementDialogRef = this.matDialog.open(TvManagementDialogComponent, {
       minWidth: 900,
-      data: {projectId: this.project.token}
+      data: {projectToken: this.project.token}
     });
   }
 

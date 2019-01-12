@@ -23,6 +23,7 @@ import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetPositionR
 import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetRequestDto;
 import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetResponseDto;
 import io.suricate.monitoring.model.dto.api.user.UserResponseDto;
+import io.suricate.monitoring.model.dto.websocket.WebsocketClient;
 import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.entity.user.User;
@@ -33,6 +34,7 @@ import io.suricate.monitoring.service.api.UserService;
 import io.suricate.monitoring.service.mapper.ProjectMapper;
 import io.suricate.monitoring.service.mapper.ProjectWidgetMapper;
 import io.suricate.monitoring.service.mapper.UserMapper;
+import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
 import io.suricate.monitoring.utils.exception.NoContentException;
 import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
 import io.swagger.annotations.*;
@@ -96,13 +98,19 @@ public class ProjectController {
     private final ProjectWidgetMapper projectWidgetMapper;
 
     /**
+     * The dashboard websocket service
+     */
+    private final DashboardWebSocketService dashboardWebSocketService;
+
+    /**
      * Constructor for dependency injection
      *
-     * @param projectService       The project service to inject
-     * @param projectWidgetService The project widget service
-     * @param userService          The user service to inject
-     * @param projectMapper        The project mapper
-     * @param projectWidgetMapper  The project widget mapper
+     * @param projectService            The project service to inject
+     * @param projectWidgetService      The project widget service
+     * @param userService               The user service to inject
+     * @param projectMapper             The project mapper
+     * @param projectWidgetMapper       The project widget mapper
+     * @param dashboardWebSocketService The dashboard websocket service
      */
     @Autowired
     public ProjectController(final ProjectService projectService,
@@ -111,7 +119,8 @@ public class ProjectController {
                              final ProjectMapper projectMapper,
                              final ProjectWidgetMapper projectWidgetMapper,
                              final ConfigurationService configurationService,
-                             final UserMapper userMapper) {
+                             final UserMapper userMapper,
+                             final DashboardWebSocketService dashboardWebSocketService) {
         this.projectService = projectService;
         this.projectWidgetService = projectWidgetService;
         this.userService = userService;
@@ -119,6 +128,7 @@ public class ProjectController {
         this.projectWidgetMapper = projectWidgetMapper;
         this.configurationService = configurationService;
         this.userMapper = userMapper;
+        this.dashboardWebSocketService = dashboardWebSocketService;
     }
 
     /**
@@ -477,6 +487,33 @@ public class ProjectController {
 
         projectService.deleteUserFromProject(userOptional.get(), projectOptional.get());
         return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * Get the list of websocket clients connected to the project
+     *
+     * @param projectToken Token of the project
+     */
+    @ApiOperation(value = "Retrieve connected websocket clients for a project", response = WebsocketClient.class)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Ok", response = WebsocketClient.class, responseContainer = "List"),
+        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
+    })
+    @GetMapping(value = "/v1/projects/{projectToken}/websocket/clients")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @Transactional
+    public ResponseEntity<List<WebsocketClient>> getProjectWebsocketClients(@ApiParam(name = "projectToken", value = "The project token", required = true)
+                                                                            @PathVariable("projectToken") String projectToken) {
+        Optional<Project> projectOptional = projectService.getOneByToken(projectToken);
+        if (!projectOptional.isPresent()) {
+            throw new ObjectNotFoundException(Project.class, projectToken);
+        }
+
+        return ResponseEntity
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(dashboardWebSocketService.getWebsocketClientByProjectToken(projectToken));
     }
 
     /**

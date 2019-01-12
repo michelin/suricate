@@ -28,6 +28,7 @@ import {ProjectRequest} from '../../model/api/project/ProjectRequest';
 import {ProjectWidgetPositionRequest} from '../../model/api/ProjectWidget/ProjectWidgetPositionRequest';
 import {ProjectWidgetRequest} from '../../model/api/ProjectWidget/ProjectWidgetRequest';
 import {User} from '../../model/api/user/User';
+import {WebsocketClient} from '../../model/api/WebsocketClient';
 
 @Injectable()
 export class HttpProjectService {
@@ -168,6 +169,16 @@ export class HttpProjectService {
     const url = `${projectsApiEndpoint}/${projectToken}/users/${userId}`;
 
     return this.httpClient.delete<void>(url);
+  }
+
+  /**
+   * Get the list of clients connected by websocket to a project
+   *
+   * @param projectToken The project token
+   */
+  getProjectWebsocketClients(projectToken: string): Observable<WebsocketClient[]> {
+    const url = `${projectsApiEndpoint}/${projectToken}/websocket/clients`;
+    return this.httpClient.get<WebsocketClient[]>(url);
   }
 
   /**

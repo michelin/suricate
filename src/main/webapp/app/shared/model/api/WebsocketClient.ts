@@ -22,5 +22,5 @@
 export interface WebsocketClient {
   projectToken: string;
   sessionId: string;
-  screencode: string;
+  screenCode: string;
 }
