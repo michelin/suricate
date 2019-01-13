@@ -4,22 +4,22 @@
 
 <mat-dialog-content>
   <div class="widget-dialog">
-    <h1> {{widget.name}} </h1>
+    <h1> {{widget?.name}} </h1>
     <div class="container">
       <div class="image-container">
         <img [src]="getImageSrc(widget?.imageToken) | safeUrl">
       </div>
       <div class="description-container">
-        {{widget.description}}
+        {{widget?.description}}
       </div>
     </div>
 
-    <div *ngIf="widget.info" id="widget-info" [innerHtml]="widget.info | safeHtml ">
+    <div *ngIf="widget?.info" id="widget-info" [innerHTML]="widget.info | safeHtml ">
     </div>
 
     <div class="settings-container">
       <form id="formSettings" #formSettings="ngForm" (ngSubmit)="editWidget(formSettings)" novalidate>
-        <div *ngFor="let param of widget.params">
+        <div *ngFor="let param of widget?.params">
 
           <!-- Boolean Type -->
           <mat-checkbox *ngIf="param.type == widgetVariableType.BOOLEAN"

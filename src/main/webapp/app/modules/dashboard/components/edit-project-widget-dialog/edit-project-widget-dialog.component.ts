@@ -149,7 +149,8 @@ export class EditProjectWidgetDialogComponent implements OnInit {
       let backendConfig = '';
 
       this.widget.params.forEach(param => {
-        backendConfig = `${backendConfig}${param.name}=${form.get(param.name).value}\n`;
+        const value = form.get(param.name).value;
+        backendConfig = value ? `${backendConfig}${param.name}=${value}\n` : '';
       });
 
       this.projectWidget.backendConfig = backendConfig;

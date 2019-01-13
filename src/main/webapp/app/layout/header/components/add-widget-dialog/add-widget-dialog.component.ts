@@ -136,9 +136,10 @@ export class AddWidgetDialogComponent implements OnInit {
       const form: FormGroup = formSettings.form;
       let backendConfig = '';
 
-      for (const param of this.selectedWidget.params) {
-        backendConfig = `${backendConfig}${param.name}=${form.get(param.name).value}\n`;
-      }
+      this.selectedWidget.params.forEach(param => {
+        const value = form.get(param.name).value;
+        backendConfig = value ? `${backendConfig}${param.name}=${value}\n` : `${backendConfig}`;
+      });
 
       const projectWidgetRequest: ProjectWidgetRequest = {
         backendConfig: backendConfig,

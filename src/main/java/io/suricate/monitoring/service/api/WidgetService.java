@@ -18,6 +18,7 @@ package io.suricate.monitoring.service.api;
 
 import io.suricate.monitoring.model.dto.api.widget.WidgetRequestDto;
 import io.suricate.monitoring.model.dto.nashorn.WidgetVariableResponse;
+import io.suricate.monitoring.model.entity.Configuration;
 import io.suricate.monitoring.model.entity.Library;
 import io.suricate.monitoring.model.entity.widget.*;
 import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
@@ -58,6 +59,11 @@ public class WidgetService {
     private final CategoryService categoryService;
 
     /**
+     * Configuration Service
+     */
+    private final ConfigurationService configurationService;
+
+    /**
      * Cache service
      */
     private final CacheService cacheService;
@@ -70,19 +76,22 @@ public class WidgetService {
     /**
      * Constructor
      *
-     * @param widgetRepository The widget repository
-     * @param categoryService  The category service
-     * @param cacheService     The cache service
-     * @param assetService     The asset service
+     * @param widgetRepository     The widget repository
+     * @param categoryService      The category service
+     * @param configurationService The configuration service
+     * @param cacheService         The cache service
+     * @param assetService         The asset service
      */
     @Autowired
     public WidgetService(final WidgetRepository widgetRepository,
                          final CategoryService categoryService,
+                         final ConfigurationService configurationService,
                          final CacheService cacheService,
                          final AssetService assetService) {
 
         this.widgetRepository = widgetRepository;
         this.categoryService = categoryService;
+        this.configurationService = configurationService;
         this.cacheService = cacheService;
         this.assetService = assetService;
     }
@@ -100,6 +109,7 @@ public class WidgetService {
             return Optional.empty();
         }
 
+        widgets.forEach(widget -> widget.getWidgetParams().addAll(getGlobalWidgetParamsFromConfiguration(widget)));
         return Optional.of(widgets);
     }
 
@@ -110,7 +120,14 @@ public class WidgetService {
      * @return The related widget
      */
     public Widget findOne(final Long id) {
-        return widgetRepository.findById(id).get();
+        Optional<Widget> widgetOptional = widgetRepository.findById(id);
+
+        if (!widgetOptional.isPresent()) {
+            return null;
+        }
+
+        widgetOptional.get().getWidgetParams().addAll(getGlobalWidgetParamsFromConfiguration(widgetOptional.get()));
+        return widgetOptional.get();
     }
 
     /**
@@ -126,8 +143,20 @@ public class WidgetService {
         if (widgets == null || widgets.isEmpty()) {
             return Optional.empty();
         }
-
+        
+        widgets.forEach(widget -> widget.getWidgetParams().addAll(getGlobalWidgetParamsFromConfiguration(widget)));
         return Optional.of(widgets);
+    }
+
+    /**
+     * Get the global widget params for a widget
+     *
+     * @param widget The widget
+     * @return The related global configuration
+     */
+    public List<WidgetParam> getGlobalWidgetParamsFromConfiguration(final Widget widget) {
+        List<Configuration> configurations = configurationService.getConfigurationForCategory(widget.getCategory().getId());
+        return configurations.stream().map(ConfigurationService::initParamFromConfiguration).collect(Collectors.toList());
     }
 
     /**
@@ -139,7 +168,11 @@ public class WidgetService {
     public List<WidgetVariableResponse> getWidgetVariables(final Widget widget) {
         List<WidgetVariableResponse> widgetVariableResponses = new ArrayList<>();
 
-        for (WidgetParam widgetParam : widget.getWidgetParams()) {
+        List<WidgetParam> widgetParams = new ArrayList<>();
+        widgetParams.addAll(widget.getWidgetParams());
+        widgetParams.addAll(getGlobalWidgetParamsFromConfiguration(widget));
+
+        for (WidgetParam widgetParam : widgetParams) {
             WidgetVariableResponse widgetVariableResponse = new WidgetVariableResponse();
             widgetVariableResponse.setName(widgetParam.getName());
             widgetVariableResponse.setDescription(widgetParam.getDescription());
