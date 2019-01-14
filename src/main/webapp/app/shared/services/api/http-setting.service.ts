@@ -18,8 +18,9 @@
 
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Setting} from '../../model/api/setting/Setting';
 import {Observable} from 'rxjs';
+
+import {Setting} from '../../model/api/setting/Setting';
 import {settingsApiEndpoint} from '../../../app.constant';
 import {SettingType} from '../../model/enums/SettingType';
 

@@ -17,13 +17,14 @@
 import {Injectable} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
+import {flatMap} from 'rxjs/operators';
 
 import {UserSetting} from '../../shared/model/api/setting/UserSetting';
 import {User} from '../../shared/model/api/user/User';
 import {HttpUserService} from '../../shared/services/api/http-user.service';
 import {SettingType} from '../../shared/model/enums/SettingType';
 import {HttpSettingService} from '../../shared/services/api/http-setting.service';
-import {flatMap} from 'rxjs/operators';
+
 
 /**
  * Manage the app theme

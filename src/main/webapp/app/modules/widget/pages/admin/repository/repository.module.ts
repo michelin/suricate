@@ -21,7 +21,6 @@ import {CommonModule} from '@angular/common';
 
 import {SharedModule} from '../../../../../shared/shared.module';
 import {LayoutModule} from '../../../../../layout/layout.module';
-
 import {RepositoryListComponent} from './repository-list/repository-list.component';
 import {RouterModule} from '@angular/router';
 import {repositoryRoutes} from './repository.route';

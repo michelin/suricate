@@ -22,7 +22,6 @@ import {AddWidgetDialogComponent} from '../add-widget-dialog/add-widget-dialog.c
 import {AddDashboardDialogComponent} from '../../../../home/components/add-dashboard-dialog/add-dashboard-dialog.component';
 import {TvManagementDialogComponent} from '../tv-management-dialog/tv-management-dialog.component';
 import {HttpScreenService} from '../../../../shared/services/api/http-screen.service';
-import {DashboardService} from '../../../../modules/dashboard/dashboard.service';
 import {Project} from '../../../../shared/model/api/project/Project';
 import {HttpProjectService} from '../../../../shared/services/api/http-project.service';
 
@@ -65,14 +64,13 @@ export class DashboardActionsComponent implements OnInit {
    *
    * @param {MatDialog} matDialog The mat dialog to inject
    * @param {ActivatedRoute} activatedRoute The activated route
-   * @param {HttpScreenService} screenService The screen service
-   * @param {DashboardService} dashboardService The dashboard service
+   * @param {HttpScreenService} httpScreenService The screen service
+   * @param {HttpProjectService} httpProjectService The project service
    */
   constructor(private matDialog: MatDialog,
               private activatedRoute: ActivatedRoute,
-              private screenService: HttpScreenService,
-              private httpProjectService: HttpProjectService,
-              private dashboardService: DashboardService) {
+              private httpScreenService: HttpScreenService,
+              private httpProjectService: HttpProjectService) {
   }
 
   /**
@@ -120,6 +118,6 @@ export class DashboardActionsComponent implements OnInit {
    * Refresh every screens for the current dashboard
    */
   refreshConnectedScreens() {
-    this.screenService.refreshEveryConnectedScreensForProject(this.project.token).subscribe();
+    this.httpScreenService.refreshEveryConnectedScreensForProject(this.project.token).subscribe();
   }
 }

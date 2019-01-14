@@ -22,7 +22,6 @@ import {Observable} from 'rxjs';
 
 import {Project} from '../../model/api/project/Project';
 import {projectsApiEndpoint} from '../../../app.constant';
-import {DashboardService} from '../../../modules/dashboard/dashboard.service';
 import {ProjectWidget} from '../../model/api/ProjectWidget/ProjectWidget';
 import {ProjectRequest} from '../../model/api/project/ProjectRequest';
 import {ProjectWidgetPositionRequest} from '../../model/api/ProjectWidget/ProjectWidgetPositionRequest';
@@ -37,10 +36,8 @@ export class HttpProjectService {
    * Constructor
    *
    * @param httpClient the http client to inject
-   * @param dashboardService The dashboard service
    */
-  constructor(private httpClient: HttpClient,
-              private dashboardService: DashboardService) {
+  constructor(private httpClient: HttpClient) {
   }
 
   /**

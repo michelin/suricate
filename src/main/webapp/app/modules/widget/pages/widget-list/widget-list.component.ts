@@ -18,7 +18,6 @@
 
 import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator, MatSlideToggleChange, MatSort, MatTableDataSource} from '@angular/material';
-import {DomSanitizer} from '@angular/platform-browser';
 import {fromEvent, merge, of as observableOf} from 'rxjs';
 import {catchError, debounceTime, distinctUntilChanged, map, startWith, switchMap} from 'rxjs/operators';
 
@@ -115,15 +114,14 @@ export class WidgetListComponent implements OnInit, AfterViewInit, OnDestroy {
    *
    * @param {UserService} userService The user service
    * @param {HttpWidgetService} httpWidgetService The http widget service
+   * @param {HttpAssetService} httpAssetService The http asset service
    * @param {ChangeDetectorRef} changeDetectorRef enable the change detection after view init
-   * @param {DomSanitizer} domSanitizer The dom sanitizer service
    * @param {ToastService} toastService The toast notification service
    */
   constructor(private userService: UserService,
               private httpWidgetService: HttpWidgetService,
               private httpAssetService: HttpAssetService,
               private changeDetectorRef: ChangeDetectorRef,
-              private domSanitizer: DomSanitizer,
               private toastService: ToastService) {
   }
 

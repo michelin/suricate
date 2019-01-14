@@ -20,10 +20,8 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 
 import {ProjectWidget} from '../../../../shared/model/api/ProjectWidget/ProjectWidget';
 import {WidgetParam} from '../../../../shared/model/api/widget/WidgetParam';
-import {DashboardService} from '../../dashboard.service';
 import {ToastService} from '../../../../shared/components/toast/toast.service';
 import {ToastType} from '../../../../shared/components/toast/toast-objects/ToastType';
-import {HttpProjectService} from '../../../../shared/services/api/http-project.service';
 import {WidgetVariableType} from '../../../../shared/model/enums/WidgetVariableType';
 import {HttpProjectWidgetService} from '../../../../shared/services/api/http-project-widget.service';
 import {HttpWidgetService} from '../../../../shared/services/api/http-widget.service';
@@ -60,15 +58,13 @@ export class EditProjectWidgetDialogComponent implements OnInit {
    *
    * @param data The data give to the dialog
    * @param dialogRef The mat dialog ref
-   * @param dashboardService The dashboard service to inject
-   * @param httpProjectService The http Project service to inject
    * @param httpProjectWidgetService The project widget service to inject
+   * @param httpWidgetService The http widget service to inject
+   * @param httpAssetService The http asset service to inject
    * @param toastService The notification service
    */
   constructor(@Inject(MAT_DIALOG_DATA) private data: any,
               private dialogRef: MatDialogRef<EditProjectWidgetDialogComponent>,
-              private dashboardService: DashboardService,
-              private httpProjectService: HttpProjectService,
               private httpProjectWidgetService: HttpProjectWidgetService,
               private httpWidgetService: HttpWidgetService,
               private httpAssetService: HttpAssetService,

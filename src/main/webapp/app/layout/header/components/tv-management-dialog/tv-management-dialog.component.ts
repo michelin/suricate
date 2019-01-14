@@ -18,7 +18,6 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA} from '@angular/material';
 import {FormBuilder, FormGroup} from '@angular/forms';
 
-import {DashboardService} from '../../../../modules/dashboard/dashboard.service';
 import {Project} from '../../../../shared/model/api/project/Project';
 import {WebsocketClient} from '../../../../shared/model/api/WebsocketClient';
 import {HttpScreenService} from '../../../../shared/services/api/http-screen.service';
@@ -57,15 +56,13 @@ export class TvManagementDialogComponent implements OnInit {
    *
    * @param data The data give to the modal
    * @param {FormBuilder} formBuilder The formBuilder
-   * @param {DashboardService} dashboardService The dashboard service to inject
    * @param {HttpProjectService} httpProjectService The http project service to inject
-   * @param {HttpScreenService} screenService The screen service
+   * @param {HttpScreenService} httpScreenService The screen service
    */
   constructor(@Inject(MAT_DIALOG_DATA) private data: any,
               private formBuilder: FormBuilder,
-              private dashboardService: DashboardService,
               private httpProjectService: HttpProjectService,
-              private screenService: HttpScreenService) {
+              private httpScreenService: HttpScreenService) {
   }
 
   /**
@@ -95,7 +92,7 @@ export class TvManagementDialogComponent implements OnInit {
     if (this.screenRegisterForm.valid) {
       const screenCode: string = this.screenRegisterForm.get('screenCode').value;
 
-      this.screenService.connectProjectToScreen(this.project.token, +screenCode).subscribe(() => {
+      this.httpScreenService.connectProjectToScreen(this.project.token, +screenCode).subscribe(() => {
         this.screenRegisterForm.reset();
         setTimeout(() => this.refreshWebsocketClients(), 2000);
       });
@@ -108,7 +105,7 @@ export class TvManagementDialogComponent implements OnInit {
    * @param {WebsocketClient} websocketClient The websocket to disconnect
    */
   disconnectScreen(websocketClient: WebsocketClient): void {
-    this.screenService.disconnectScreen(websocketClient.projectToken, +websocketClient.screenCode).subscribe(() => {
+    this.httpScreenService.disconnectScreen(websocketClient.projectToken, +websocketClient.screenCode).subscribe(() => {
       setTimeout(() => this.refreshWebsocketClients(), 2000);
     });
   }
@@ -119,7 +116,7 @@ export class TvManagementDialogComponent implements OnInit {
    */
   displayScreenCode(projectToken: string): void {
     if (projectToken) {
-      this.screenService.displayScreenCodeEveryConnectedScreensForProject(projectToken).subscribe();
+      this.httpScreenService.displayScreenCodeEveryConnectedScreensForProject(projectToken).subscribe();
     }
   }
 }

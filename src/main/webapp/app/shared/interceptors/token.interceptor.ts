@@ -18,7 +18,6 @@ import {Injectable} from '@angular/core';
 import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {Observable} from 'rxjs';
 
-import {AuthenticationService} from '../../modules/authentication/authentication.service';
 import {TokenService} from '../auth/token.service';
 import {baseApiEndpoint} from '../../app.constant';
 
@@ -31,11 +30,9 @@ export class TokenInterceptor implements HttpInterceptor {
   /**
    * Constructor
    *
-   * @param {AuthenticationService} authenticationService The authentication service to inject
    * @param {TokenService} tokenService The token service to inject
    */
-  constructor(private authenticationService: AuthenticationService,
-              private tokenService: TokenService) {
+  constructor(private tokenService: TokenService) {
   }
 
   /**
@@ -47,7 +44,7 @@ export class TokenInterceptor implements HttpInterceptor {
    */
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (!request || !request.url ||
-        (/^http/.test(request.url) && !(baseApiEndpoint && request.url.startsWith(baseApiEndpoint)))) {
+      (/^http/.test(request.url) && !(baseApiEndpoint && request.url.startsWith(baseApiEndpoint)))) {
       return next.handle(request);
     }
 

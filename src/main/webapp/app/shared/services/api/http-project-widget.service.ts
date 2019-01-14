@@ -19,10 +19,14 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
+
 import {ProjectWidget} from '../../model/api/ProjectWidget/ProjectWidget';
 import {projectWidgetsApiEndpoint} from '../../../app.constant';
 import {ProjectWidgetRequest} from '../../model/api/ProjectWidget/ProjectWidgetRequest';
 
+/**
+ * Manage the http project widget calls
+ */
 @Injectable()
 export class HttpProjectWidgetService {
 

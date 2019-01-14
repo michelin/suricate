@@ -17,12 +17,16 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
+
 import {User} from '../../model/api/user/User';
 import {usersApiEndpoint} from '../../../app.constant';
 import {UserRequest} from '../../model/api/user/UserRequest';
 import {UserSettingRequest} from '../../model/api/setting/UserSettingRequest';
 import {UserSetting} from '../../model/api/setting/UserSetting';
 
+/**
+ * Manage the http user calls
+ */
 @Injectable()
 export class HttpUserService {
 

@@ -17,7 +17,6 @@
 import {ChangeDetectorRef, Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {FormGroup, NgForm} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef, MatHorizontalStepper} from '@angular/material';
-import {DomSanitizer} from '@angular/platform-browser';
 
 import {Widget} from '../../../../shared/model/api/widget/Widget';
 import {DashboardService} from '../../../../modules/dashboard/dashboard.service';
@@ -25,7 +24,6 @@ import {HttpCategoryService} from '../../../../shared/services/api/http-category
 import {HttpAssetService} from '../../../../shared/services/api/http-asset.service';
 import {Category} from '../../../../shared/model/api/widget/Category';
 import {HttpProjectService} from '../../../../shared/services/api/http-project.service';
-import {HttpWidgetService} from '../../../../shared/services/api/http-widget.service';
 import {WidgetVariableType} from '../../../../shared/model/enums/WidgetVariableType';
 import {WidgetAvailabilityEnum} from '../../../../shared/model/enums/WidgetAvailabilityEnum';
 import {ProjectWidgetRequest} from '../../../../shared/model/api/ProjectWidget/ProjectWidgetRequest';
@@ -87,12 +85,9 @@ export class AddWidgetDialogComponent implements OnInit {
    *
    * @param data The data send to the dialog
    * @param {HttpAssetService} httpAssetService The asset service
-   * @param {WidgetService} widgetService The widget service
    * @param {HttpCategoryService} httpCategoryService The http category service
    * @param {HttpProjectService} httpProjectService The http project service
-   * @param {HttpWidgetService} httpWidgetService The http widget service
    * @param {DashboardService} dashboardService The dashboard service
-   * @param {DomSanitizer} domSanitizer The domSanitizer
    * @param {MatDialogRef<AddWidgetDialogComponent>} addWidgetDialogRef The add widget dialog ref
    * @param {ChangeDetectorRef} changeDetectorRef The change detector service
    */
@@ -100,9 +95,7 @@ export class AddWidgetDialogComponent implements OnInit {
               private httpAssetService: HttpAssetService,
               private httpCategoryService: HttpCategoryService,
               private httpProjectService: HttpProjectService,
-              private httpWidgetService: HttpWidgetService,
               private dashboardService: DashboardService,
-              private domSanitizer: DomSanitizer,
               private addWidgetDialogRef: MatDialogRef<AddWidgetDialogComponent>,
               private changeDetectorRef: ChangeDetectorRef) {
   }

@@ -17,7 +17,6 @@
  */
 
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
 
 import {assetsApiEndpoint} from '../../../app.constant';
 
@@ -29,10 +28,8 @@ export class HttpAssetService {
 
   /**
    * Constructor
-   *
-   * @param httpClient the http client to inject
    */
-  constructor(private httpClient: HttpClient) {
+  constructor() {
   }
 
   /**

@@ -17,7 +17,7 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
+
 import {Configuration} from '../model/api/configuration/Configuration';
 import {WidgetVariableType} from '../model/enums/WidgetVariableType';
 
@@ -31,7 +31,6 @@ export class PasswordPipe implements PipeTransform {
 
   /**
    * The constructor
-   * @param {DomSanitizer} domSanitizer The dom sanitizer service
    */
   constructor() {
   }
@@ -39,10 +38,10 @@ export class PasswordPipe implements PipeTransform {
   /**
    * The transform function
    *
-   * @param {string} valueToSanitize The string value to sanitize
-   * @returns {SafeHtml}
+   * @param {Configuration} config The string value to sanitize
+   * @returns {String} The password hidden
    */
-  transform(config: Configuration): SafeHtml {
+  transform(config: Configuration): String {
     return (config.dataType.toString() == WidgetVariableType.PASSWORD || config.dataType.toString() == WidgetVariableType.SECRET) ? '*****' : config.value;
   }
 

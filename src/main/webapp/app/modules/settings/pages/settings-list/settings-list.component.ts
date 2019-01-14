@@ -16,9 +16,9 @@
 
 import {Component, OnInit} from '@angular/core';
 import {FormGroup, NgForm} from '@angular/forms';
+import {from} from 'rxjs';
+import {flatMap} from 'rxjs/operators';
 
-import {UserService} from '../../../security/user/user.service';
-import {ToastService} from '../../../../shared/components/toast/toast.service';
 import {SettingsService} from '../../settings.service';
 import {User} from '../../../../shared/model/api/user/User';
 import {HttpUserService} from '../../../../shared/services/api/http-user.service';
@@ -28,8 +28,6 @@ import {HttpSettingService} from '../../../../shared/services/api/http-setting.s
 import {Setting} from '../../../../shared/model/api/setting/Setting';
 import {SettingType} from '../../../../shared/model/enums/SettingType';
 import {AllowedSettingValue} from '../../../../shared/model/api/setting/AllowedSettingValue';
-import {from} from 'rxjs';
-import {flatMap} from 'rxjs/operators';
 
 /**
  * Represent the Admin Setting list page
@@ -69,14 +67,10 @@ export class SettingsListComponent implements OnInit {
    *
    * @param {HttpUserService} httpUserService The http user service
    * @param {HttpSettingService} httpSettingService The http setting service
-   * @param {UserService} userService The user service to inject
-   * @param {ToastService} toastService The toast notification service
    * @param {SettingsService} settingsService The settings service to inject
    */
   constructor(private httpUserService: HttpUserService,
               private httpSettingService: HttpSettingService,
-              private userService: UserService,
-              private toastService: ToastService,
               private settingsService: SettingsService) {
   }
 

@@ -17,8 +17,8 @@
  */
 
 import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
-import {MatDialog, MatPaginator, MatSlideToggleChange, MatSort, MatTableDataSource} from '@angular/material';
-import {merge, of} from 'rxjs/index';
+import {MatPaginator, MatSlideToggleChange, MatSort, MatTableDataSource} from '@angular/material';
+import {merge, of} from 'rxjs';
 import {catchError, map, startWith, switchMap} from 'rxjs/operators';
 
 import {HttpRepositoryService} from '../../../../../../shared/services/api/http-repository.service';
@@ -73,13 +73,11 @@ export class RepositoryListComponent implements OnInit {
   /**
    * Constructor
    *
-   * @param {MatDialog} matDialog The mat dialog service
    * @param {ChangeDetectorRef} changeDetectorRef The change detector ref to inject
    * @param {HttpRepositoryService} repositoryService The repository service
    * @param {ToastService} toastService The toast service
    */
-  constructor(private matDialog: MatDialog,
-              private changeDetectorRef: ChangeDetectorRef,
+  constructor(private changeDetectorRef: ChangeDetectorRef,
               private repositoryService: HttpRepositoryService,
               private toastService: ToastService) {
   }

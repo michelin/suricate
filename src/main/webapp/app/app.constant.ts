@@ -128,19 +128,3 @@ export const configApiEndpoint = `${baseApiEndpoint}/v1/manage`;
  * @type {string}
  */
 export const badCredentialError = 'invalid_grant';
-
-/* ************************************************************************ */
-/*                Server Configuration CONSTANTS                            */
-/* ************************************************************************ */
-
-/**
- * LDAP authentication provider
- * @type {string}
- */
-export const authenticationProviderLDAP = 'ldap';
-
-/**
- * Database authentication provider
- * @type {string}
- */
-export const authenticationProviderDatabase = 'database';

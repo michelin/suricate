@@ -20,7 +20,6 @@ import {RouterModule} from '@angular/router';
 
 
 import {SharedModule} from '../../shared/shared.module';
-
 import {AuthenticationService} from './authentication.service';
 import {LoginComponent} from './pages/login/login.component';
 import {RegisterComponent} from './pages/register/register.component';

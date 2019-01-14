@@ -20,7 +20,6 @@ import {Routes} from '@angular/router';
 
 import {AuthGuard} from '../../../../../shared/auth/guards/auth.guard';
 import {AdminGuard} from '../../../../../shared/auth/guards/admin.guard';
-
 import {RepositoryListComponent} from './repository-list/repository-list.component';
 import {RepositoryAddEditComponent} from './repository-add-edit/repository-add-edit.component';
 

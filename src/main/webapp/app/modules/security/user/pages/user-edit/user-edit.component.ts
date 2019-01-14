@@ -19,7 +19,6 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CustomValidators} from 'ng2-validation';
 
-import {UserService} from '../../user.service';
 import {ToastService} from '../../../../../shared/components/toast/toast.service';
 import {RoleService} from '../../role.service';
 import {User} from '../../../../../shared/model/api/user/User';
@@ -62,7 +61,6 @@ export class UserEditComponent implements OnInit {
    * Constructor
    *
    * @param {httpUserService} httpUserService The user service
-   * @param {UserService} userService The user service to inject
    * @param {Router} router The router service to inject
    * @param {RoleService} roleService The role service to inject
    * @param {HttpRoleService} httpRoleService The http role service to inject
@@ -71,7 +69,6 @@ export class UserEditComponent implements OnInit {
    * @param {ToastService} toastService The service used for displayed Toast notification
    */
   constructor(private httpUserService: HttpUserService,
-              private userService: UserService,
               private router: Router,
               private roleService: RoleService,
               private httpRoleService: HttpRoleService,

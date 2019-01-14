@@ -17,10 +17,14 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
+
 import {Role} from '../../model/api/role/Role';
 import {rolesApiEndpoint} from '../../../app.constant';
 import {User} from '../../model/api/user/User';
 
+/**
+ * Manage the http role calls
+ */
 @Injectable()
 export class HttpRoleService {
 

@@ -24,12 +24,12 @@ import {throwError} from 'rxjs';
 import {AuthenticationService} from '../../authentication.service';
 import {checkPasswordMatch} from '../../../../shared/validators/CustomValidator';
 import {ToastService} from '../../../../shared/components/toast/toast.service';
-import {authenticationProviderLDAP} from '../../../../app.constant';
 import {ApplicationProperties} from '../../../../shared/model/api/ApplicationProperties';
 import {HttpConfigurationService} from '../../../../shared/services/api/http-configuration.service';
 import {Credentials} from '../../../../shared/model/api/user/Credentials';
 import {ToastType} from '../../../../shared/components/toast/toast-objects/ToastType';
 import {UserRequest} from '../../../../shared/model/api/user/UserRequest';
+import {AuthenticationProviderEnum} from '../../../../shared/model/enums/AuthenticationProviderEnum';
 
 
 /**
@@ -92,7 +92,7 @@ export class RegisterComponent implements OnInit {
    */
   ngOnInit() {
     this.httpConfigurationService.getAuthenticationProvider().subscribe((applicationProperties: ApplicationProperties) => {
-      if (applicationProperties.value.toLowerCase() === authenticationProviderLDAP) {
+      if (applicationProperties.value === AuthenticationProviderEnum.LDAP) {
         this.router.navigate(['/login']);
       }
     });

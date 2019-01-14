@@ -13,12 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Routes} from '@angular/router';
 
-import {RegisterComponent} from './pages/register/register.component';
-import {LoginComponent} from './pages/login/login.component';
-
-export const authRoutes: Routes = [
-  {path: 'login', component: LoginComponent},
-  {path: 'register', component: RegisterComponent}
-];
+export enum AuthenticationProviderEnum {
+  LDAP = 'LDAP',
+  DATABASE = 'DATABASE'
+}

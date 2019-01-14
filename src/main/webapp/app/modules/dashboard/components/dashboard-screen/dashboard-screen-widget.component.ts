@@ -16,17 +16,19 @@
 
 
 import {Component, Input, OnInit} from '@angular/core';
+import {TranslateService} from '@ngx-translate/core';
+import {TitleCasePipe} from '@angular/common';
+import {MatDialog} from '@angular/material';
+import {NgGridItemConfig} from 'angular2-grid';
+
 import {ProjectWidget} from '../../../../shared/model/api/ProjectWidget/ProjectWidget';
 import {Widget} from '../../../../shared/model/api/widget/Widget';
 import {HttpWidgetService} from '../../../../shared/services/api/http-widget.service';
 import {WidgetStateEnum} from '../../../../shared/model/enums/WidgetSateEnum';
-import {TranslateService} from '@ngx-translate/core';
-import {TitleCasePipe} from '@angular/common';
 import {ConfirmDialogComponent} from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
-import {MatDialog} from '@angular/material';
 import {HttpProjectWidgetService} from '../../../../shared/services/api/http-project-widget.service';
 import {EditProjectWidgetDialogComponent} from '../edit-project-widget-dialog/edit-project-widget-dialog.component';
-import {NgGridItemConfig} from 'angular2-grid';
+
 
 /**
  * Display the grid stack widgets

@@ -15,6 +15,7 @@
  */
 
 import {Component} from '@angular/core';
+
 import {ToastService} from '../../../../shared/components/toast/toast.service';
 import {ToastType} from '../../../../shared/components/toast/toast-objects/ToastType';
 import {HttpWidgetService} from '../../../../shared/services/api/http-widget.service';

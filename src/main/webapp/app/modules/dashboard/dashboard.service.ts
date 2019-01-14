@@ -18,27 +18,12 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 
 import {Project} from '../../shared/model/api/project/Project';
-import {UserService} from '../security/user/user.service';
 
 /**
  * The dashboard service, manage http calls
  */
 @Injectable()
 export class DashboardService {
-
-  /**
-   * The action type DELETE
-   * @type {string}
-   * @private
-   */
-  readonly dashboardActionDelete = 'DELETE';
-
-  /**
-   * The action type update
-   * @type {string}
-   * @private
-   */
-  readonly dashboardActionUpdate = 'UPDATE';
 
   /**
    * Hold the list of the user dashboards
@@ -54,10 +39,8 @@ export class DashboardService {
 
   /**
    * The constructor
-   *
-   * @param {UserService} userService The user service to inject
    */
-  constructor(private userService: UserService) {
+  constructor() {
   }
 
   /* ******************************************************************* */

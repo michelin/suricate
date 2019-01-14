@@ -21,7 +21,7 @@ import {Router} from '@angular/router';
 import {AuthenticationService} from '../../authentication.service';
 import {HttpConfigurationService} from '../../../../shared/services/api/http-configuration.service';
 import {ApplicationProperties} from '../../../../shared/model/api/ApplicationProperties';
-import {authenticationProviderLDAP} from '../../../../app.constant';
+import {AuthenticationProviderEnum} from '../../../../shared/model/enums/AuthenticationProviderEnum';
 
 /**
  * Manage the login page
@@ -61,20 +61,20 @@ export class LoginComponent implements OnInit {
    * @param {Router} router The router service
    * @param {AuthenticationService} authenticationService The authentication service
    * @param {FormBuilder} formBuilder The form builder service
-   * @param {ConfigurationService} configurationService The configuration service to inject
+   * @param {HttpConfigurationService} HttpConfigurationService The configuration service to inject
    */
   constructor(private router: Router,
               private authenticationService: AuthenticationService,
               private formBuilder: FormBuilder,
-              private configurationService: HttpConfigurationService) {
+              private HttpConfigurationService: HttpConfigurationService) {
   }
 
   /**
    * Init objects
    */
   ngOnInit() {
-    this.configurationService.getAuthenticationProvider().subscribe((applicationProperties: ApplicationProperties) => {
-      this.isLdapServerUserProvider = applicationProperties.value.toLowerCase() === authenticationProviderLDAP;
+    this.HttpConfigurationService.getAuthenticationProvider().subscribe((applicationProperties: ApplicationProperties) => {
+      this.isLdapServerUserProvider = applicationProperties.value === AuthenticationProviderEnum.LDAP;
     });
 
     this.authenticationService.logout();

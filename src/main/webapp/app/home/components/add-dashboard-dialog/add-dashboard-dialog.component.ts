@@ -18,12 +18,10 @@ import {ChangeDetectorRef, Component, Inject, OnInit, ViewChild} from '@angular/
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatHorizontalStepper} from '@angular/material';
 import {CustomValidators} from 'ng2-validation';
-import {ColorPickerService} from 'ngx-color-picker';
 import {Observable} from 'rxjs';
 import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
 
 import {DashboardService} from '../../../modules/dashboard/dashboard.service';
-import {UserService} from '../../../modules/security/user/user.service';
 import {Project} from '../../../shared/model/api/project/Project';
 import {User} from '../../../shared/model/api/user/User';
 import {HttpProjectService} from '../../../shared/services/api/http-project.service';
@@ -96,17 +94,13 @@ export class AddDashboardDialogComponent implements OnInit {
    * @param {DashboardService} dashboardService The dashboard service
    * @param {HttpProjectService} httpProjectService The project service
    * @param {HttpUserService} httpUserService The http user service to inject
-   * @param {UserService} userService The user service
-   * @param {ColorPickerService} colorPickerService The color picker service for dashboard background color
    */
   constructor(@Inject(MAT_DIALOG_DATA) private data: any,
               private formBuilder: FormBuilder,
               private changeDetectorRef: ChangeDetectorRef,
               private dashboardService: DashboardService,
               private httpProjectService: HttpProjectService,
-              private httpUserService: HttpUserService,
-              private userService: UserService,
-              private colorPickerService: ColorPickerService) {
+              private httpUserService: HttpUserService) {
   }
 
   /**

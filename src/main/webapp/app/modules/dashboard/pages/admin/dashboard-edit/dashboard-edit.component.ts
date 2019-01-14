@@ -20,7 +20,6 @@ import {ActivatedRoute} from '@angular/router';
 import {CustomValidators} from 'ng2-validation';
 
 import {Project} from '../../../../../shared/model/api/project/Project';
-import {DashboardService} from '../../../dashboard.service';
 import {ToastService} from '../../../../../shared/components/toast/toast.service';
 import {ToastType} from '../../../../../shared/components/toast/toast-objects/ToastType';
 import {HttpProjectService} from '../../../../../shared/services/api/http-project.service';
@@ -57,14 +56,12 @@ export class DashboardEditComponent implements OnInit {
   /**
    * Constructor
    *
-   * @param {DashboardService} dashboardService The dashboard service to inject
    * @param {HttpProjectService} httpProjectService The http project service to inject
    * @param {ActivatedRoute} activatedRoute The activated route to inject
    * @param {FormBuilder} formBuilder The formBuilder service
    * @param {ToastService} toastService The service used for displayed Toast notification
    */
-  constructor(private dashboardService: DashboardService,
-              private httpProjectService: HttpProjectService,
+  constructor(private httpProjectService: HttpProjectService,
               private activatedRoute: ActivatedRoute,
               private formBuilder: FormBuilder,
               private toastService: ToastService) {

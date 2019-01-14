@@ -18,8 +18,9 @@
  */
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
+import {Observable} from 'rxjs';
+
 import {configApiEndpoint} from '../../../app.constant';
-import {Observable} from 'rxjs/index';
 
 @Injectable()
 export class ConfigService {

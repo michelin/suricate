@@ -20,8 +20,6 @@ import {merge, of as observableOf} from 'rxjs';
 import {catchError, map, startWith, switchMap} from 'rxjs/operators';
 import {TitleCasePipe} from '@angular/common';
 import {TranslateService} from '@ngx-translate/core';
-
-import {UserService} from '../../user.service';
 import {ToastService} from '../../../../../shared/components/toast/toast.service';
 import {RoleService} from '../../role.service';
 import {ConfirmDialogComponent} from '../../../../../shared/components/confirm-dialog/confirm-dialog.component';
@@ -82,7 +80,6 @@ export class UserListComponent implements AfterViewInit {
    * The constructor
    *
    * @param {HttpUserService} httpUserService The http user service to inject
-   * @param {UserService} userService The user service to inject
    * @param {RoleService} roleService The role service to inject
    * @param {ChangeDetectorRef} changeDetectorRef The change detector service to inject
    * @param {MatDialog} matDialog The mat dialog service to inject
@@ -90,7 +87,6 @@ export class UserListComponent implements AfterViewInit {
    * @param {ToastService} toastService The toast service to inject
    */
   constructor(private httpUserService: HttpUserService,
-              private userService: UserService,
               private roleService: RoleService,
               private changeDetectorRef: ChangeDetectorRef,
               private matDialog: MatDialog,

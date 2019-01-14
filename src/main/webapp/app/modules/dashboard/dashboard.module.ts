@@ -17,8 +17,8 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
-import {SharedModule} from '../../shared/shared.module';
 
+import {SharedModule} from '../../shared/shared.module';
 import {DashboardService} from './dashboard.service';
 import {DashboardDetailComponent} from './pages/dashboard-detail/dashboard-detail.component';
 import {DashboardListComponent} from './pages/admin/dashboard-list/dashboard-list.component';

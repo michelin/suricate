@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import {Routes} from '@angular/router';
+
 import {DashboardTvComponent} from './pages/dashboard-tv/dashboard-tv.component';
 import {AuthGuard} from '../../shared/auth/guards/auth.guard';
 import {DashboardListComponent} from './pages/admin/dashboard-list/dashboard-list.component';

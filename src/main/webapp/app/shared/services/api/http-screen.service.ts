@@ -16,8 +16,9 @@
 
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {screensApiEndpoint} from '../../../app.constant';
 import {Observable} from 'rxjs';
+
+import {screensApiEndpoint} from '../../../app.constant';
 
 /**
  * Screen that manage the Http calls for screens

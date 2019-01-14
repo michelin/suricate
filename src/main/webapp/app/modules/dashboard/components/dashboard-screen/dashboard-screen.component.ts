@@ -17,6 +17,8 @@
 
 import {Component, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, Output, SimpleChanges,} from '@angular/core';
 import {takeWhile} from 'rxjs/operators';
+import {Subscription} from 'rxjs';
+import {NgGridConfig, NgGridItemConfig} from 'angular2-grid';
 import * as Stomp from '@stomp/stompjs';
 
 import {Project} from '../../../../shared/model/api/project/Project';
@@ -26,10 +28,8 @@ import {HttpAssetService} from '../../../../shared/services/api/http-asset.servi
 import {WSUpdateEvent} from '../../../../shared/model/websocket/WSUpdateEvent';
 import {WSUpdateType} from '../../../../shared/model/websocket/enums/WSUpdateType';
 import {DashboardService} from '../../dashboard.service';
-import {NgGridConfig, NgGridItemConfig} from 'angular2-grid';
 import {ProjectWidgetPositionRequest} from '../../../../shared/model/api/ProjectWidget/ProjectWidgetPositionRequest';
 import {HttpProjectService} from '../../../../shared/services/api/http-project.service';
-import {Subscription} from 'rxjs';
 import {RunScriptsDirective} from '../../../../shared/directives/run-scripts.directive';
 import {RunScriptsService} from '../../../../shared/directives/run-scripts.service';
 

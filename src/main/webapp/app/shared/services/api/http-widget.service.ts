@@ -23,6 +23,9 @@ import {widgetsApiEndpoint} from '../../../app.constant';
 import {ApiActionEnum} from '../../model/enums/ApiActionEnum';
 import {WidgetRequest} from '../../model/api/widget/WidgetRequest';
 
+/**
+ * Manage the Http widget calls
+ */
 @Injectable()
 export class HttpWidgetService {
 
