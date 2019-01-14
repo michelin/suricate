@@ -31,6 +31,9 @@ mat-sidenav > #user-section .mat-expansion-panel-body {
     padding: 0;
 }
 
+.mat-expansion-panel-body {
+    padding: 0 24px 0 16px !important;
+}
 
 .widget .more-info {
     color: rgba(255, 255, 255, 0.5);

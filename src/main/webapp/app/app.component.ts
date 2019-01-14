@@ -79,7 +79,11 @@ export class AppComponent implements OnInit, OnDestroy {
    */
   ngOnInit() {
     this.isLoggedIn$ = this.authenticationService.isLoggedIn$.pipe(takeWhile(() => this.isAlive));
-    this.settingsService.currentTheme$.subscribe(themeValue => this.switchTheme(themeValue));
+    this.settingsService.currentTheme$.pipe(
+      takeWhile(() => this.isAlive)
+    ).subscribe(themeValue => {
+      this.switchTheme(themeValue);
+    });
 
     this.settingsService.initDefaultSettings();
     this.userService.connectedUser$.subscribe(user => {
@@ -98,7 +102,6 @@ export class AppComponent implements OnInit, OnDestroy {
   switchTheme(themeValue: string) {
     this.overlayContainer.getContainerElement().classList.add(themeValue);
     this.appHtmlClass = themeValue;
-    this.changeDetectorRef.detectChanges();
   }
 
   /**

@@ -132,7 +132,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * Init the settings to be in TV Mode
    */
   initDefaultScreenSettings() {
-    setTimeout(() => this.settingsService.currentTheme = 'dark-theme', 0);
+    setTimeout(() => this.settingsService.currentTheme = 'dark-theme', 500);
     this.sidenavService.closeSidenav();
   }
 
