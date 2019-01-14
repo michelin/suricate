@@ -74,12 +74,9 @@ public class SettingController {
     @ApiOperation(value = "Get the full list of settings", response = SettingResponseDto.class, nickname = "getAllSettings")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Ok", response = SettingResponseDto.class, responseContainer = "List"),
-        @ApiResponse(code = 204, message = "No Content"),
-        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
+        @ApiResponse(code = 204, message = "No Content")
     })
     @GetMapping(value = "/v1/settings")
-    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<List<SettingResponseDto>> getAll(@ApiParam(name = "type", value = "The setting type to get", allowableValues = "template, language")
                                                            @RequestParam(value = "type", required = false) String type) {
         Optional<List<Setting>> settingsOptional = Optional.empty();
