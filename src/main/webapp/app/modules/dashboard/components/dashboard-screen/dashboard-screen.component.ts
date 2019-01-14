@@ -15,7 +15,7 @@
  */
 
 
-import {Component, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges,} from '@angular/core';
+import {Component, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, Output, SimpleChanges,} from '@angular/core';
 import {takeWhile} from 'rxjs/operators';
 import * as Stomp from '@stomp/stompjs';
 
@@ -42,7 +42,7 @@ import {RunScriptsService} from '../../../../shared/directives/run-scripts.servi
   templateUrl: './dashboard-screen.component.html',
   styleUrls: ['./dashboard-screen.component.css']
 })
-export class DashboardScreenComponent implements OnInit, OnChanges, OnDestroy {
+export class DashboardScreenComponent implements OnChanges, OnDestroy {
 
   /**
    * Tell to subscriptions if the component is alive
@@ -138,13 +138,6 @@ export class DashboardScreenComponent implements OnInit, OnChanges, OnDestroy {
   /*                      COMPONENT LIFE CYCLE                                                              */
 
   /**********************************************************************************************************/
-  /**
-   * Called when the component is init
-   */
-  ngOnInit(): void {
-    // We have to inject this variable in the window scope (because some Widgets use it for init the js)
-    window['page_loaded'] = true;
-  }
 
   subscribeToRenderedScriptEvent() {
     this.runScriptsService.scriptRenderedEvent().pipe(
@@ -161,6 +154,9 @@ export class DashboardScreenComponent implements OnInit, OnChanges, OnDestroy {
     if (changes.project) {
       if (!changes.project.previousValue) {
         this.subscribeToRenderedScriptEvent();
+        // We have to inject this variable in the window scope (because some Widgets use it for init the js)
+        window['page_loaded'] = true;
+
       } else if (changes.project.previousValue.token !== changes.project.currentValue.token) {
         this.runScriptsService.emitScriptRendered(false);
       }

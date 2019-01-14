@@ -63,8 +63,10 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    *
    * @param {ActivatedRoute} activatedRoute The activated route service
    * @param {DashboardService} dashboardService The dashboard service
+   * @param {WebsocketService} websocketService The websocket service
    * @param {HttpProjectService} httpProjectService The http project service
    * @param {MatDialog} matDialog The mat dialog service
+   * @param {Router} router The router service on Angular
    */
   constructor(private activatedRoute: ActivatedRoute,
               private dashboardService: DashboardService,

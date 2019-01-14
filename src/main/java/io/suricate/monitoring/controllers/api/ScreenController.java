@@ -139,7 +139,7 @@ public class ScreenController {
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
-    @PutMapping(value = "/v1/screens/{projectToken}/showscreencode")
+    @GetMapping(value = "/v1/screens/{projectToken}/showscreencode")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Void> displayScreenCodeEveryConnectedScreensForProject(@ApiParam(name = "projectToken", value = "The project token", required = true)
                                                                                  @PathVariable("projectToken") String projectToken) {
