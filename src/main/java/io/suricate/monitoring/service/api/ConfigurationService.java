@@ -132,6 +132,7 @@ public class ConfigurationService {
 
     /**
      * FIXME : MVT
+     *
      * @return
      */
     public List<ApplicationPropertiesDto> getServerConfiguration() {
@@ -139,8 +140,14 @@ public class ConfigurationService {
         return null;
     }
 
+    /**
+     * Get the list of configurations for a category
+     *
+     * @param categoryId The category
+     * @return The list of configurations
+     */
     @Transactional
-    public List<Configuration> getConfigurationForCategory(Long categoryId) {
+    public Optional<List<Configuration>> getConfigurationForCategory(Long categoryId) {
         return configurationRepository.findConfigurationByCategoryId(categoryId);
     }
 
@@ -181,6 +188,7 @@ public class ConfigurationService {
 
     /**
      * Convert configuration to widget param
+     *
      * @param configuration Configuration to convert
      * @return widget param newly created
      */

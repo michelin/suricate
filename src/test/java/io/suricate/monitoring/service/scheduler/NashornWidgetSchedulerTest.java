@@ -4,8 +4,10 @@ import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
 import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
 import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
+import io.suricate.monitoring.model.entity.widget.Category;
 import io.suricate.monitoring.model.entity.widget.Widget;
 import io.suricate.monitoring.model.enums.WidgetState;
+import io.suricate.monitoring.repository.CategoryRepository;
 import io.suricate.monitoring.repository.ProjectRepository;
 import io.suricate.monitoring.repository.ProjectWidgetRepository;
 import io.suricate.monitoring.repository.WidgetRepository;
@@ -54,6 +56,9 @@ public class NashornWidgetSchedulerTest {
     ProjectRepository projectRepository;
 
     @Autowired
+    CategoryRepository categoryRepository;
+
+    @Autowired
     ProjectWidgetRepository projectWidgetRepository;
 
     @Autowired
@@ -79,8 +84,15 @@ public class NashornWidgetSchedulerTest {
         project.setToken("999999");
         projectRepository.save(project);
 
+        // Add Category
+        Category category = new Category();
+        category.setName("Test");
+        category.setTechnicalName("Test");
+        categoryRepository.save(category);
+
         // Add widget
         Widget widget = WidgetUtils.getWidget(new File(FilesUtilsTest.class.getResource("/widgets/test/widgets/alwaysRun").getFile()));
+        widget.setCategory(category);
         widgetRepository.save(widget);
 
         // Add widget Instance

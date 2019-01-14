@@ -143,7 +143,7 @@ public class WidgetService {
         if (widgets == null || widgets.isEmpty()) {
             return Optional.empty();
         }
-        
+
         widgets.forEach(widget -> widget.getWidgetParams().addAll(getGlobalWidgetParamsFromConfiguration(widget)));
         return Optional.of(widgets);
     }
@@ -155,8 +155,12 @@ public class WidgetService {
      * @return The related global configuration
      */
     public List<WidgetParam> getGlobalWidgetParamsFromConfiguration(final Widget widget) {
-        List<Configuration> configurations = configurationService.getConfigurationForCategory(widget.getCategory().getId());
-        return configurations.stream().map(ConfigurationService::initParamFromConfiguration).collect(Collectors.toList());
+        Optional<List<Configuration>> configurationsOptional = configurationService.getConfigurationForCategory(widget.getCategory().getId());
+
+        return configurationsOptional
+            .map(configurations -> configurations.stream().map(ConfigurationService::initParamFromConfiguration).collect(Collectors.toList()))
+            .orElseGet(ArrayList::new);
+
     }
 
     /**

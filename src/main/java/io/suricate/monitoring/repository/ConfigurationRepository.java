@@ -22,6 +22,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Repository used for request Configurations in database
@@ -37,6 +38,12 @@ public interface ConfigurationRepository extends JpaRepository<Configuration, St
     @Query("SELECT c FROM Configuration c WHERE c.key LIKE 'WIDGET_CONFIG_%'")
     List<Configuration> findConfigurationForWidgets();
 
-    List<Configuration> findConfigurationByCategoryId(Long categoryId);
+    /**
+     * Get the list of configurations for a category
+     *
+     * @param categoryId The category to find
+     * @return The list of related configurations
+     */
+    Optional<List<Configuration>> findConfigurationByCategoryId(Long categoryId);
 
 }

@@ -150,16 +150,16 @@ public class CategoryController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<List<ConfigurationResponseDto>> getConfigurationsByCategory(@ApiParam(name = "categoryId", value = "The category id", required = true)
                                                                                       @PathVariable("categoryId") final Long categoryId) {
-        List<Configuration> configurations = configurationService.getConfigurationForCategory(categoryId);
+        Optional<List<Configuration>> configurationsOptional = configurationService.getConfigurationForCategory(categoryId);
 
-        if (configurations.isEmpty()) {
+        if (!configurationsOptional.isPresent()) {
             throw new NoContentException(Configuration.class);
         }
 
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(configurationMapper.toConfigurationDtosDefault(configurations));
+            .body(configurationMapper.toConfigurationDtosDefault(configurationsOptional.get()));
     }
 
     /**
@@ -184,7 +184,7 @@ public class CategoryController {
         if (!widgetsOptional.isPresent()) {
             throw new NoContentException(Widget.class);
         }
-        
+
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
