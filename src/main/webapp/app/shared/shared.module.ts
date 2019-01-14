@@ -40,7 +40,6 @@ import {TokenService} from './auth/token.service';
 import {TranslateModule} from '@ngx-translate/core';
 import {TranslationComponent} from './components/translations/translation.component';
 import {MaterialCDKModule} from './modules/metarialCDK.module';
-import {SettingsService} from './services/settings.service';
 import {ErrorInterceptor} from './interceptors/error.interceptor';
 import {PasswordPipe} from './pipes/password-pipe';
 import {ConfirmDialogComponent} from './components/confirm-dialog/confirm-dialog.component';
@@ -55,6 +54,7 @@ import {HttpConfigurationService} from './services/api/http-configuration.servic
 import {HttpWidgetService} from './services/api/http-widget.service';
 import {HttpProjectWidgetService} from './services/api/http-project-widget.service';
 import {RunScriptsService} from './directives/run-scripts.service';
+import {HttpSettingService} from './services/api/http-setting.service';
 
 @NgModule({
   imports: [
@@ -115,13 +115,13 @@ import {RunScriptsService} from './directives/run-scripts.service';
     ToastService,
     StompRService,
     TokenService,
-    SettingsService,
     HttpAssetService,
     HttpCategoryService,
     HttpProjectService,
     HttpProjectWidgetService,
     HttpRoleService,
     HttpScreenService,
+    HttpSettingService,
     HttpUserService,
     HttpRepositoryService,
     HttpConfigurationService,

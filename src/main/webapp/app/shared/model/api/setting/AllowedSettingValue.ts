@@ -23,5 +23,5 @@ export interface AllowedSettingValue {
   id: number;
   title: string;
   value: string;
-  isDefault: boolean;
+  default: boolean;
 }

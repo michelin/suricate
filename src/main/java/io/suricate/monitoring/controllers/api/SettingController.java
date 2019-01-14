@@ -19,6 +19,7 @@ package io.suricate.monitoring.controllers.api;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.setting.SettingResponseDto;
 import io.suricate.monitoring.model.entity.setting.Setting;
+import io.suricate.monitoring.model.enums.SettingType;
 import io.suricate.monitoring.service.api.SettingService;
 import io.suricate.monitoring.service.mapper.SettingMapper;
 import io.suricate.monitoring.utils.exception.NoContentException;
@@ -28,11 +29,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -81,8 +80,18 @@ public class SettingController {
     })
     @GetMapping(value = "/v1/settings")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<List<SettingResponseDto>> getAll() {
-        Optional<List<Setting>> settingsOptional = settingService.getAll();
+    public ResponseEntity<List<SettingResponseDto>> getAll(@ApiParam(name = "type", value = "The setting type to get", allowableValues = "template, language")
+                                                           @RequestParam(value = "type", required = false) String type) {
+        Optional<List<Setting>> settingsOptional = Optional.empty();
+
+        if (type != null) {
+            Optional<Setting> settingByType = settingService.getOneByType(SettingType.getSettingTypeByString(type));
+            if (settingByType.isPresent()) {
+                settingsOptional = Optional.of(Collections.singletonList(settingByType.get()));
+            }
+        } else {
+            settingsOptional = settingService.getAll();
+        }
 
         if (!settingsOptional.isPresent()) {
             throw new NoContentException(Setting.class);

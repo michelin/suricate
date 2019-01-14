@@ -17,9 +17,8 @@
 package io.suricate.monitoring.service.api;
 
 import io.suricate.monitoring.model.entity.setting.Setting;
+import io.suricate.monitoring.model.enums.SettingType;
 import io.suricate.monitoring.repository.SettingRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,11 +30,6 @@ import java.util.Optional;
  */
 @Service
 public class SettingService {
-
-    /**
-     * Class logger
-     */
-    private final static Logger LOGGER = LoggerFactory.getLogger(SettingService.class);
 
     /**
      * The setting repository
@@ -69,5 +63,15 @@ public class SettingService {
      */
     public Optional<Setting> getOneById(final Long settingId) {
         return this.settingRepository.findById(settingId);
+    }
+
+    /**
+     * Get a setting by the type
+     *
+     * @param settingType The setting type
+     * @return The setting as optional
+     */
+    public Optional<Setting> getOneByType(final SettingType settingType) {
+        return this.settingRepository.findByType(settingType);
     }
 }

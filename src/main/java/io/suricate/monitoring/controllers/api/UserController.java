@@ -23,6 +23,7 @@ import io.suricate.monitoring.model.dto.api.user.UserResponseDto;
 import io.suricate.monitoring.model.dto.api.user.UserSettingRequestDto;
 import io.suricate.monitoring.model.dto.api.user.UserSettingResponseDto;
 import io.suricate.monitoring.model.entity.setting.Setting;
+import io.suricate.monitoring.model.entity.setting.UserSetting;
 import io.suricate.monitoring.model.entity.user.User;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.model.enums.AuthenticationMethod;
@@ -35,6 +36,7 @@ import io.suricate.monitoring.utils.exception.ApiException;
 import io.suricate.monitoring.utils.exception.NoContentException;
 import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
 import io.swagger.annotations.*;
+import org.apache.directory.shared.ldap.aci.UserClass;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -244,6 +246,36 @@ public class UserController {
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
             .body(userSettingMapper.toUserSettingDtosDefault(userOptional.get().getUserSettings()));
+    }
+
+    /**
+     * Get a user setting
+     *
+     * @param userId    The user id to get
+     * @param settingId The setting id to get
+     * @return The userSetting
+     */
+    @ApiOperation(value = "Get a user setting by user id et setting id", response = UserSettingResponseDto.class)
+    @ApiResponses(value = {
+        @ApiResponse(code = 200, message = "Ok", response = UserSettingResponseDto.class),
+        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
+    })
+    @GetMapping(value = "/v1/users/{userId}/settings/{settingId}")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<UserSettingResponseDto> getOne(@ApiParam(name = "userId", value = "The user id", required = true)
+                                                         @PathVariable("userId") Long userId,
+                                                         @ApiParam(name = "settingId", value = "The setting id", required = true)
+                                                         @PathVariable("settingId") Long settingId) {
+        Optional<UserSetting> userSettingOptional = userSettingService.getUserSetting(userId, settingId);
+        if (!userSettingOptional.isPresent()) {
+            throw new ObjectNotFoundException(UserClass.class, "User: " + userId + "; setting: " + settingId);
+        }
+
+        return ResponseEntity
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(userSettingMapper.toUserSettingDtoDefault(userSettingOptional.get()));
     }
 
     /**

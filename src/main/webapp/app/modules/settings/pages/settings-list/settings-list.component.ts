@@ -16,18 +16,20 @@
 
 import {Component, OnInit} from '@angular/core';
 import {FormGroup, NgForm} from '@angular/forms';
-import {Observable} from 'rxjs';
 
 import {UserService} from '../../../security/user/user.service';
 import {ToastService} from '../../../../shared/components/toast/toast.service';
-import {SettingsService} from '../../../../shared/services/settings.service';
+import {SettingsService} from '../../settings.service';
 import {User} from '../../../../shared/model/api/user/User';
-import {ToastType} from '../../../../shared/components/toast/toast-objects/ToastType';
 import {HttpUserService} from '../../../../shared/services/api/http-user.service';
 import {SettingDataType} from '../../../../shared/model/enums/SettingDataType';
 import {UserSetting} from '../../../../shared/model/api/setting/UserSetting';
 import {HttpSettingService} from '../../../../shared/services/api/http-setting.service';
-import {UserSettingRequest} from '../../../../shared/model/api/setting/UserSettingRequest';
+import {Setting} from '../../../../shared/model/api/setting/Setting';
+import {SettingType} from '../../../../shared/model/enums/SettingType';
+import {AllowedSettingValue} from '../../../../shared/model/api/setting/AllowedSettingValue';
+import {from} from 'rxjs';
+import {flatMap} from 'rxjs/operators';
 
 /**
  * Represent the Admin Setting list page
@@ -40,10 +42,21 @@ import {UserSettingRequest} from '../../../../shared/model/api/setting/UserSetti
 export class SettingsListComponent implements OnInit {
 
   /**
-   * The current user
-   * @type {Observable<User>}
+   * The connected user
+   * @type {User}
    */
-  currentUser$: Observable<User>;
+  connectedUser: User;
+
+  /**
+   * The list of user settings
+   * @type {UserSetting[]}
+   */
+  userSettings: UserSetting[];
+
+  /**
+   * The list of settings
+   */
+  settings: Setting[];
 
   /**
    * The setting data types
@@ -55,6 +68,7 @@ export class SettingsListComponent implements OnInit {
    * Constructor
    *
    * @param {HttpUserService} httpUserService The http user service
+   * @param {HttpSettingService} httpSettingService The http setting service
    * @param {UserService} userService The user service to inject
    * @param {ToastService} toastService The toast notification service
    * @param {SettingsService} settingsService The settings service to inject
@@ -69,9 +83,44 @@ export class SettingsListComponent implements OnInit {
   /**
    * When the component is init
    */
-  ngOnInit() {
-    this.currentUser$ = this.userService.connectedUser$;
-    this.httpUserService.getConnectedUser().subscribe();
+  ngOnInit(): void {
+    this.httpUserService.getConnectedUser().subscribe(connectedUser => {
+      this.connectedUser = connectedUser;
+      this.refreshUserSettings();
+    });
+
+    this.httpSettingService.getAll().subscribe(settings => {
+      this.settings = settings;
+    });
+  }
+
+  /**
+   * Get a user setting from a setting
+   *
+   * @param settingId The setting id to find
+   */
+  getUserSettingFromSetting(settingId: number): UserSetting {
+    return this.userSettings.find(userSetting => userSetting.settingId === settingId);
+  }
+
+  /**
+   * Method used to refresh the user settings
+   */
+  refreshUserSettings(): void {
+    this.httpUserService.getUserSettings(this.connectedUser.id).subscribe(userSettings => {
+      this.userSettings = userSettings;
+    });
+  }
+
+  /**
+   * Get an allowed setting value by settingType and a allowed value as string
+   *
+   * @param settingType The setting type
+   * @param allowedSettingValue The allowed setting value as String
+   */
+  getAllowedSettingValueFromSettingTypeAndAllowedSettingValue(settingType: SettingType, allowedSettingValue: string): AllowedSettingValue {
+    return this.settings.find(setting => setting.type === settingType)
+      .allowedSettingValues.find(allowedSetting => allowedSetting.value === allowedSettingValue);
   }
 
   /**
@@ -83,26 +132,20 @@ export class SettingsListComponent implements OnInit {
     if (formSettings.valid) {
       const userSettingForm: FormGroup = formSettings.form;
 
-      this.httpUserService.getUserSettings(this.userService.connectedUser.id).subscribe((userSettings: UserSetting[]) => {
-        userSettings.forEach(userSetting => {
-          this.httpSettingService.getOneById(userSetting.settingId).subscribe(setting => {
-            const userValue = userSettingForm.get(setting.type).value;
-            let userSettingRequest: UserSettingRequest;
+      console.log(userSettingForm.value);
+      from(this.settings).pipe(
+        flatMap(setting => {
+          if (setting.constrained) {
+            const selectedFormValue = userSettingForm.get(setting.type);
+            const allowedSettingValue = this.getAllowedSettingValueFromSettingTypeAndAllowedSettingValue(setting.type, selectedFormValue.value);
 
-            if (setting.constrained) {
-              userSetting.settingValue = setting.allowedSettingValues.find(allowedSettingValue => {
-                return allowedSettingValue.value === userValue;
-              });
-            } else {
-              userSetting.unconstrainedValue = userValue;
-            }
-
-            this.httpUserService.updateUserSetting(userSetting.userId, userSetting.settingId, {}).subscribe(user => {
-              this.toastService.sendMessage('Settings saved succesfully', ToastType.SUCCESS);
-            });
-          });
-        });
+            return this.httpUserService.updateUserSetting(this.connectedUser.id, setting.id, {allowedSettingValueId: allowedSettingValue.id});
+          }
+        })
+      ).subscribe(() => {
+        this.settingsService.initUserSettings(this.connectedUser);
       });
+
     }
   }
 }

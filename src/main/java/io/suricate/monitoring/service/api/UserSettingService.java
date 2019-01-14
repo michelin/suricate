@@ -77,16 +77,14 @@ public class UserSettingService {
     public List<UserSetting> createDefaultSettingsForUser(final User user) {
         List<UserSetting> userSettings = new ArrayList<>();
 
-        settingService
-            .getAll()
-            .ifPresent(settings -> userSettings.addAll(
-                settings
-                    .stream()
-                    .flatMap(setting -> setting.getAllowedSettingValues().stream())
-                    .filter(AllowedSettingValue::isDefault)
-                    .map(allowedSettingValue -> this.createUserSettingFromAllowedSettingValue(allowedSettingValue, user))
-                    .collect(Collectors.toList())
-            ));
+        settingService.getAll().ifPresent(settings -> userSettings.addAll(
+            settings
+                .stream()
+                .flatMap(setting -> setting.getAllowedSettingValues().stream())
+                .filter(AllowedSettingValue::isDefault)
+                .map(allowedSettingValue -> this.createUserSettingFromAllowedSettingValue(allowedSettingValue, user))
+                .collect(Collectors.toList())
+        ));
 
         this.userSettingRepository.saveAll(userSettings);
         this.userSettingRepository.flush();
@@ -110,6 +108,16 @@ public class UserSettingService {
         return userSetting;
     }
 
+    /**
+     * Get a user setting
+     *
+     * @param userId    The user Id
+     * @param settingId The setting id
+     * @return The user setting as optional
+     */
+    public Optional<UserSetting> getUserSetting(final Long userId, final Long settingId) {
+        return userSettingRepository.findByUser_IdAndSetting_Id(userId, settingId);
+    }
 
     /**
      * Update the settings for a user
@@ -120,7 +128,8 @@ public class UserSettingService {
      * @return The user settings updated
      */
     public UserSetting updateUserSetting(final Long userId, final Long settingId, final UserSettingRequestDto userSettingRequestDto) {
-        Optional<UserSetting> userSettingOptional = userSettingRepository.findByUser_IdAndSetting_Id(userId, settingId);
+        Optional<UserSetting> userSettingOptional = getUserSetting(userId, settingId);
+
         if (!userSettingOptional.isPresent()) {
             throw new ObjectNotFoundException(UserSetting.class, "userId: " + userId + ", settingId: " + settingId);
         }

@@ -21,6 +21,7 @@ import {HttpClient} from '@angular/common/http';
 import {Setting} from '../../model/api/setting/Setting';
 import {Observable} from 'rxjs';
 import {settingsApiEndpoint} from '../../../app.constant';
+import {SettingType} from '../../model/enums/SettingType';
 
 /**
  * Manage the setting http calls
@@ -38,9 +39,14 @@ export class HttpSettingService {
 
   /**
    * Get the list of settings
+   *
+   * @param type Filter the result by type
    */
-  getAll(): Observable<Setting[]> {
-    const url = `${settingsApiEndpoint}`;
+  getAll(type?: SettingType): Observable<Setting[]> {
+    let url = `${settingsApiEndpoint}`;
+    if (type) {
+      url = url.concat(`?type=${type.toLowerCase()}`);
+    }
 
     return this.httpClient.get<Setting[]>(url);
   }

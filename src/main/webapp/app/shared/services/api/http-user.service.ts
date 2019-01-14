@@ -19,7 +19,6 @@ import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
 import {User} from '../../model/api/user/User';
 import {usersApiEndpoint} from '../../../app.constant';
-import {UserService} from '../../../modules/security/user/user.service';
 import {UserRequest} from '../../model/api/user/UserRequest';
 import {UserSettingRequest} from '../../model/api/setting/UserSettingRequest';
 import {UserSetting} from '../../model/api/setting/UserSetting';
@@ -31,10 +30,8 @@ export class HttpUserService {
    * Constructor
    *
    * @param httpClient The http client
-   * @param userService The user service to inject
    */
-  constructor(private httpClient: HttpClient,
-              private userService: UserService) {
+  constructor(private httpClient: HttpClient) {
   }
 
   /**
@@ -89,9 +86,21 @@ export class HttpUserService {
    * @param userId The user id
    */
   getUserSettings(userId: number): Observable<UserSetting[]> {
-    const url = `${usersApiEndpoint}/${userId}`;
+    const url = `${usersApiEndpoint}/${userId}/settings`;
 
     return this.httpClient.get<UserSetting[]>(url);
+  }
+
+  /**
+   * Get a user setting by user id and setting id
+   *
+   * @param userId The user id
+   * @param settingId The setting id
+   */
+  getUserSetting(userId: number, settingId: number): Observable<UserSetting> {
+    const url = `${usersApiEndpoint}/${userId}/settings/${settingId}`;
+
+    return this.httpClient.get<UserSetting>(url);
   }
 
   /**

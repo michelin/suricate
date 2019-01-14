@@ -16,6 +16,7 @@
 
 package io.suricate.monitoring.model.dto.api.setting;
 
+import io.suricate.monitoring.model.dto.api.AbstractDto;
 import io.suricate.monitoring.model.enums.SettingDataType;
 import io.suricate.monitoring.model.enums.SettingType;
 import io.swagger.annotations.ApiModel;
@@ -34,7 +35,7 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value = "SettingResponse", description = "Describe a setting")
-public class SettingResponseDto {
+public class SettingResponseDto extends AbstractDto {
     /**
      * The setting id
      */

@@ -20,5 +20,6 @@
  * The list of settings type
  */
 export enum SettingType {
-  TEMPLATE = 'TEMPLATE'
+  TEMPLATE = 'TEMPLATE',
+  LANGUAGE = 'LANGUAGE'
 }

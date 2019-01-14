@@ -22,6 +22,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.springframework.lang.Nullable;
 
 /**
  * The user setting DTO for REST communication
@@ -36,11 +37,13 @@ public class UserSettingRequestDto extends AbstractDto {
      * The allowed setting value
      */
     @ApiModelProperty(value = "The selected value Id if it's a constrained setting")
+    @Nullable
     private Long allowedSettingValueId;
 
     /**
      * The unconstrained value
      */
     @ApiModelProperty(value = "The value typed by the user it's an unconstrained field")
+    @Nullable
     private String unconstrainedValue;
 }

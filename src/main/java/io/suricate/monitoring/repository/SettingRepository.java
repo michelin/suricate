@@ -17,6 +17,7 @@
 package io.suricate.monitoring.repository;
 
 import io.suricate.monitoring.model.entity.setting.Setting;
+import io.suricate.monitoring.model.enums.SettingType;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
@@ -34,4 +35,11 @@ public interface SettingRepository extends JpaRepository<Setting, Long> {
      */
     Optional<List<Setting>> findAllByOrderByDescription();
 
+    /**
+     * Find by setting type
+     *
+     * @param settingType The setting type to find
+     * @return The related setting
+     */
+    Optional<Setting> findByType(final SettingType settingType);
 }

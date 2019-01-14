@@ -24,7 +24,7 @@ import {WSUpdateEvent} from '../../../../shared/model/websocket/WSUpdateEvent';
 import {WSUpdateType} from '../../../../shared/model/websocket/enums/WSUpdateType';
 
 import * as Stomp from '@stomp/stompjs';
-import {SettingsService} from '../../../../shared/services/settings.service';
+import {SettingsService} from '../../../settings/settings.service';
 import {SidenavService} from '../../../../layout/sidenav/sidenav.service';
 import {HttpProjectService} from '../../../../shared/services/api/http-project.service';
 import {WebsocketService} from '../../../../shared/services/websocket.service';

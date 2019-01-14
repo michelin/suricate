@@ -20,7 +20,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {Observable} from 'rxjs';
 
 import {AuthenticationService} from './modules/authentication/authentication.service';
-import {SettingsService} from './shared/services/settings.service';
+import {SettingsService} from './modules/settings/settings.service';
 import {UserService} from './modules/security/user/user.service';
 import {takeWhile} from 'rxjs/operators';
 

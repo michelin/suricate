@@ -29,5 +29,5 @@ export interface Setting {
   constrained: boolean;
   dataType: SettingDataType;
   type: SettingType;
-  allowedSettingValues: AllowedSettingValue[];
+  allowedSettingValues?: AllowedSettingValue[];
 }

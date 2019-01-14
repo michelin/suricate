@@ -18,7 +18,7 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 
 import {TokenService} from '../../../shared/auth/token.service';
-import {SettingsService} from '../../../shared/services/settings.service';
+import {SettingsService} from '../../settings/settings.service';
 import {User} from '../../../shared/model/api/user/User';
 import {RoleEnum} from '../../../shared/model/enums/RoleEnum';
 
