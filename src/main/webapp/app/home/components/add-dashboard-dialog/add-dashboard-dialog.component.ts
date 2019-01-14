@@ -200,7 +200,11 @@ export class AddDashboardDialogComponent implements OnInit {
   displayProject(projectToken: string) {
     this.httpProjectService.getOneByToken(projectToken).subscribe((project: Project) => {
       this.projectAdded = project;
-      this.dashboardService.currentDashboardListValues = this.dashboardService.currentDashboardListValues ? [...this.dashboardService.currentDashboardListValues, project] : [project];
+
+      this.httpProjectService.getAllForCurrentUser().subscribe((projects: Project[]) => {
+        this.dashboardService.currentDashboardListValues = projects;
+      });
+
       this.dashboardFormCompleted = true;
       this.changeDetectorRef.detectChanges();
       this.addDashboardStepper.next();

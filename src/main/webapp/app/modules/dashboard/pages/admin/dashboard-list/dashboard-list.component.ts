@@ -150,26 +150,26 @@ export class DashboardListComponent implements AfterViewInit {
    * @param {Project} project The dashboard to delete
    */
   openDialogDeleteDashboard(project: Project) {
-    let deleteUserDialog = null;
-
     this.translateService.get(['dashboard.delete', 'delete.confirm']).subscribe(translations => {
       const titleCasePipe = new TitleCasePipe();
 
-      deleteUserDialog = this.matDialog.open(ConfirmDialogComponent, {
+      this.matDialog.open(ConfirmDialogComponent, {
         data: {
           title: translations['dashboard.delete'],
           message: `${translations['delete.confirm']} ${titleCasePipe.transform(project.name)}`
         }
-      });
-    });
+      }).afterClosed().subscribe(shouldDeleteDashboard => {
+        if (shouldDeleteDashboard) {
+          this.httpProjectService.deleteProject(project.token).subscribe(() => {
+            this.toastService.sendMessage('Project deleted successfully', ToastType.SUCCESS);
+            this.initProjectsTable();
 
-    deleteUserDialog.afterClosed().subscribe(shouldDeleteDashboard => {
-      if (shouldDeleteDashboard) {
-        this.httpProjectService.deleteProject(project.token).subscribe(() => {
-          this.toastService.sendMessage('Project deleted successfully', ToastType.SUCCESS);
-          this.initProjectsTable();
-        });
-      }
+            this.httpProjectService.getAllForCurrentUser().subscribe((projects: Project[]) => {
+              this.dashboardService.currentDashboardListValues = projects;
+            });
+          });
+        }
+      });
     });
   }
 
