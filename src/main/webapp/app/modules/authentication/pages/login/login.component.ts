@@ -61,19 +61,19 @@ export class LoginComponent implements OnInit {
    * @param {Router} router The router service
    * @param {AuthenticationService} authenticationService The authentication service
    * @param {FormBuilder} formBuilder The form builder service
-   * @param {HttpConfigurationService} HttpConfigurationService The configuration service to inject
+   * @param {HttpConfigurationService} httpConfigurationService The configuration service to inject
    */
   constructor(private router: Router,
               private authenticationService: AuthenticationService,
               private formBuilder: FormBuilder,
-              private HttpConfigurationService: HttpConfigurationService) {
+              private httpConfigurationService: HttpConfigurationService) {
   }
 
   /**
    * Init objects
    */
   ngOnInit() {
-    this.HttpConfigurationService.getAuthenticationProvider().subscribe((applicationProperties: ApplicationProperties) => {
+    this.httpConfigurationService.getAuthenticationProvider().subscribe((applicationProperties: ApplicationProperties) => {
       this.isLdapServerUserProvider = applicationProperties.value === AuthenticationProviderEnum.LDAP;
     });
 

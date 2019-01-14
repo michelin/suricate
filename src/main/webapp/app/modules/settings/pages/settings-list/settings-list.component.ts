@@ -131,9 +131,16 @@ export class SettingsListComponent implements OnInit {
         flatMap(setting => {
           if (setting.constrained) {
             const selectedFormValue = userSettingForm.get(setting.type);
-            const allowedSettingValue = this.getAllowedSettingValueFromSettingTypeAndAllowedSettingValue(setting.type, selectedFormValue.value);
+            const allowedSettingValue = this.getAllowedSettingValueFromSettingTypeAndAllowedSettingValue(
+              setting.type,
+              selectedFormValue.value
+            );
 
-            return this.httpUserService.updateUserSetting(this.connectedUser.id, setting.id, {allowedSettingValueId: allowedSettingValue.id});
+            return this.httpUserService.updateUserSetting(
+              this.connectedUser.id,
+              setting.id,
+              {allowedSettingValueId: allowedSettingValue.id}
+            );
           }
         })
       ).subscribe(() => {

@@ -15,7 +15,7 @@
  */
 
 
-import {Component, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, Output, SimpleChanges,} from '@angular/core';
+import {Component, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, Output, SimpleChanges} from '@angular/core';
 import {takeWhile} from 'rxjs/operators';
 import {Subscription} from 'rxjs';
 import {NgGridConfig, NgGridItemConfig} from 'angular2-grid';

@@ -43,9 +43,7 @@ export class ConfigListComponent {
     database.dataChange.subscribe(data => this.configDataSource.data = data);
   }
 
-  transformer = (node: FileNode, level: number) => {
-    return new FileFlatNode(!!node.children, node.filename, level, node.type);
-  };
+  transformer = (node: FileNode, level: number) => new FileFlatNode(!!node.children, node.filename, level, node.type);
 
   private _getLevel = (node: FileFlatNode) => node.level;
 

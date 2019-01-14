@@ -106,7 +106,10 @@ export class RegisterComponent implements OnInit {
    */
   initRegisterForm() {
     this.passwordControl = this.formBuilder.control('', [Validators.required, Validators.minLength(3)]);
-    this.confirmPasswordControl = this.formBuilder.control('', [Validators.required, Validators.minLength(3), checkPasswordMatch(this.passwordControl)]);
+    this.confirmPasswordControl = this.formBuilder.control(
+      '',
+      [Validators.required, Validators.minLength(3), checkPasswordMatch(this.passwordControl)]
+    );
 
     this.registerForm = this.formBuilder.group({
       username: ['', [Validators.required, Validators.minLength(3)]],

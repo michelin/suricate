@@ -135,8 +135,14 @@ export class AddDashboardDialogComponent implements OnInit {
     this.dashboardFormCompleted = formCompleted;
     this.dashboardForm = this.formBuilder.group({
       'name': [this.projectAdded ? this.projectAdded.name : '', [Validators.required]],
-      'widgetHeight': [this.projectAdded ? this.projectAdded.gridProperties.widgetHeight : '360', [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]],
-      'maxColumn': [this.projectAdded ? this.projectAdded.gridProperties.maxColumn : '5', [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]]
+      'widgetHeight': [
+        this.projectAdded ? this.projectAdded.gridProperties.widgetHeight : '360',
+        [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]
+      ],
+      'maxColumn': [
+        this.projectAdded ? this.projectAdded.gridProperties.maxColumn : '5',
+        [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]
+      ]
     });
   }
 

@@ -91,7 +91,7 @@ export class HttpProjectService {
    *
    * @param {string} projectToken
    */
-  deleteProject(projectToken: string,): Observable<void> {
+  deleteProject(projectToken: string): Observable<void> {
     const url = `${projectsApiEndpoint}/${projectToken}`;
 
     return this.httpClient.delete<void>(url);
