@@ -21,19 +21,16 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
-
-import java.io.IOException;
-import java.net.*;
-import java.util.Arrays;
-import java.util.List;
+import org.springframework.stereotype.Component;
 
 /**
  * Bean used to manage proxy configuration
  */
-@Configuration
+@Component
 @ConfigurationProperties(prefix = "proxy")
-@Getter @Setter @NoArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
 public class ProxyConfiguration {
 
     /**
@@ -56,20 +53,12 @@ public class ProxyConfiguration {
      */
     public void setProxy() {
         if (!StringUtils.isAllEmpty(host, port) && StringUtils.isNumeric(port)) {
-            ProxySelector.setDefault(new ProxySelector() {
+            System.setProperty("http.proxyHost", host);
+            System.setProperty("http.proxyPort", port);
 
-                @Override
-                public List<Proxy> select(URI uri) {
-                    return Arrays.asList(new Proxy(Proxy.Type.HTTP, InetSocketAddress.createUnresolved(host, Integer.valueOf(port))));
-                }
-
-                @Override
-                public void connectFailed(URI uri, SocketAddress sa, IOException ioe) {
-                    if (uri == null || sa == null || ioe == null) {
-                        throw new IllegalArgumentException("Arguments can't be null.");
-                    }
-                }
-            });
+            if (!StringUtils.isAllEmpty(noProxyDomains)) {
+                System.setProperty("http.nonProxyHosts", noProxyDomains);
+            }
         }
     }
 }
