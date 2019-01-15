@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.configuration;
+package io.suricate.monitoring.configuration.web;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

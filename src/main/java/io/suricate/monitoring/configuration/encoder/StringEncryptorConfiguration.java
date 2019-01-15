@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.configuration;
+package io.suricate.monitoring.configuration.encoder;
 
 import com.ulisesbocchio.jasyptspringboot.annotation.EnableEncryptableProperties;
 import org.jasypt.encryption.StringEncryptor;
@@ -39,6 +39,7 @@ public class StringEncryptorConfiguration {
 
     /**
      * Method used to configure the default string encryptor without salt
+     *
      * @return the default encryptor
      */
     @Bean(name = "noSaltEncrypter")
@@ -48,6 +49,7 @@ public class StringEncryptorConfiguration {
 
     /**
      * Default string encryptor
+     *
      * @return the string encryptor
      */
     @Bean("jasyptStringEncryptor")
@@ -57,7 +59,8 @@ public class StringEncryptorConfiguration {
 
     /**
      * Method used to create a String encryptor
-     * @param encryptorPassword encryptor password
+     *
+     * @param encryptorPassword      encryptor password
      * @param saltGeneratorClassName salt class name
      * @return the encryptor
      */

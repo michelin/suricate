@@ -14,24 +14,24 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.configuration;
+package io.suricate.monitoring.configuration.mustache;
 
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.MustacheFactory;
 import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 
 /**
- * Database password encoder service
+ * Configuration for mustache template (Used in widget's HTML files)
  */
-@Component
-public class DatabasePasswordEncoder {
+@Configuration
+public class TemplateConfiguration {
 
     /**
-     * Configure the password encoder
+     * Default mustache factory
      */
     @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(11);
+    protected MustacheFactory mustacheFactory() {
+        return new DefaultMustacheFactory();
     }
 }
