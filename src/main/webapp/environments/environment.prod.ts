@@ -16,7 +16,7 @@
 
 export const environment = {
   production: true,
-    VERSION: require('../../../../package.json').version,
-    ENVIRONMENT: require('../../../../package.json').environment,
-    BASE_URL: ''
+  VERSION: require('../../../../package.json').version,
+  ENVIRONMENT: require('../../../../package.json').environment,
+  BASE_URL: ''
 };
