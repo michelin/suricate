@@ -25,9 +25,17 @@ import org.springframework.web.servlet.resource.PathResourceResolver;
 
 import java.io.IOException;
 
+/**
+ * Class used to configure the path for the different resource of the app (index.html of angular, Swagger page, ...)
+ */
 @Configuration
 public class SuricateWebMvcConfigurer implements WebMvcConfigurer {
 
+    /**
+     * The view resolver
+     *
+     * @param registry Store the configurations
+     */
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("swagger-ui.html")
