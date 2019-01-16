@@ -19,7 +19,7 @@ import {MatDialog, MatDialogRef} from '@angular/material';
 import {Router} from '@angular/router';
 import {takeWhile} from 'rxjs/operators';
 
-import {Project} from '../shared/model/dto/Project';
+import {Project} from '../shared/model/api/project/Project';
 import {DashboardService} from '../modules/dashboard/dashboard.service';
 import {AddDashboardDialogComponent} from './components/add-dashboard-dialog/add-dashboard-dialog.component';
 
@@ -66,9 +66,11 @@ export class HomeComponent implements OnInit, OnDestroy {
    * Init objects
    */
   ngOnInit() {
-    this.dashboardService.currentDashboardList$
-        .pipe(takeWhile(() => this.isAlive))
-        .subscribe(dashboards => this.dashboards = dashboards);
+    this.dashboardService.currentDashboardList$.pipe(
+      takeWhile(() => this.isAlive)
+    ).subscribe(dashboards => {
+      this.dashboards = dashboards;
+    });
   }
 
   /**
@@ -84,10 +86,10 @@ export class HomeComponent implements OnInit, OnDestroy {
   /**
    * Navigate to a dashboard
    *
-   * @param {number} dashboardId The dashboard id
+   * @param {string} projectToken The project token
    */
-  navigateToDashboard(dashboardId: number) {
-    this.router.navigate(['/dashboards', dashboardId]);
+  navigateToDashboard(projectToken: string) {
+    this.router.navigate(['/dashboards', projectToken]);
   }
 
   /**

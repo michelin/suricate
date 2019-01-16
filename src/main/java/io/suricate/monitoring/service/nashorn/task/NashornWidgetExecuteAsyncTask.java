@@ -16,11 +16,11 @@
 
 package io.suricate.monitoring.service.nashorn.task;
 
-import io.suricate.monitoring.model.dto.error.RemoteError;
-import io.suricate.monitoring.model.dto.error.RequestException;
 import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
 import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
 import io.suricate.monitoring.model.dto.nashorn.WidgetVariableResponse;
+import io.suricate.monitoring.model.dto.nashorn.error.RemoteError;
+import io.suricate.monitoring.model.dto.nashorn.error.RequestException;
 import io.suricate.monitoring.model.enums.NashornErrorTypeEnum;
 import io.suricate.monitoring.model.enums.WidgetVariableType;
 import io.suricate.monitoring.service.nashorn.JavaClassFilter;

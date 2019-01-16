@@ -18,13 +18,15 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {FormGroup, NgForm} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 
-import {ProjectWidget} from '../../../../shared/model/dto/ProjectWidget';
-import {Asset} from '../../../../shared/model/dto/Asset';
-import {WidgetVariableType} from '../../../../shared/model/dto/enums/WidgetVariableType';
-import {WidgetParam} from '../../../../shared/model/dto/WidgetParam';
-import {DashboardService} from '../../dashboard.service';
+import {ProjectWidget} from '../../../../shared/model/api/ProjectWidget/ProjectWidget';
+import {WidgetParam} from '../../../../shared/model/api/widget/WidgetParam';
 import {ToastService} from '../../../../shared/components/toast/toast.service';
-import {ToastType} from '../../../../shared/model/toastNotification/ToastType';
+import {ToastType} from '../../../../shared/components/toast/toast-objects/ToastType';
+import {WidgetVariableType} from '../../../../shared/model/enums/WidgetVariableType';
+import {HttpProjectWidgetService} from '../../../../shared/services/api/http-project-widget.service';
+import {HttpWidgetService} from '../../../../shared/services/api/http-widget.service';
+import {Widget} from '../../../../shared/model/api/widget/Widget';
+import {HttpAssetService} from '../../../../shared/services/api/http-asset.service';
 
 @Component({
   selector: 'app-edit-project-widget-dialog',
@@ -40,6 +42,12 @@ export class EditProjectWidgetDialogComponent implements OnInit {
   projectWidget: ProjectWidget;
 
   /**
+   * The related widget
+   * @type {Widget}
+   */
+  widget: Widget;
+
+  /**
    * The widget variable type
    * @type {WidgetVariableType}
    */
@@ -50,12 +58,16 @@ export class EditProjectWidgetDialogComponent implements OnInit {
    *
    * @param data The data give to the dialog
    * @param dialogRef The mat dialog ref
-   * @param dashboardService The dashboard service to inject
+   * @param httpProjectWidgetService The project widget service to inject
+   * @param httpWidgetService The http widget service to inject
+   * @param httpAssetService The http asset service to inject
    * @param toastService The notification service
    */
   constructor(@Inject(MAT_DIALOG_DATA) private data: any,
               private dialogRef: MatDialogRef<EditProjectWidgetDialogComponent>,
-              private dashboardService: DashboardService,
+              private httpProjectWidgetService: HttpProjectWidgetService,
+              private httpWidgetService: HttpWidgetService,
+              private httpAssetService: HttpAssetService,
               private toastService: ToastService) {
   }
 
@@ -63,17 +75,23 @@ export class EditProjectWidgetDialogComponent implements OnInit {
    * Init of the ocmponent
    */
   ngOnInit() {
-    this.projectWidget = this.data.projectWidget;
+    this.httpProjectWidgetService.getOneById(this.data.projectWidgetId).subscribe(projectWidget => {
+      this.projectWidget = projectWidget;
+
+      this.httpWidgetService.getOneById(projectWidget.widgetId).subscribe(widget => {
+        this.widget = widget;
+      });
+    });
   }
 
   /**
    * The get the string image
    *
-   * @param {Asset} image The image
+   * @param {string} assetToken The image
    * @returns {string} The base64 url
    */
-  getImageSrc(image: Asset): string {
-    return image != null ? `data:${image.contentType};base64,${image.content}` : ``;
+  getImageSrc(assetToken: string): string {
+    return this.httpAssetService.getContentUrl(assetToken);
   }
 
   /**
@@ -126,14 +144,15 @@ export class EditProjectWidgetDialogComponent implements OnInit {
       const form: FormGroup = formSettings.form;
       let backendConfig = '';
 
-      this.projectWidget.widget.widgetParams.forEach(param => {
-        backendConfig = `${backendConfig}${param.name}=${form.get(param.name).value}\n`;
+      this.widget.params.forEach(param => {
+        const value = form.get(param.name).value;
+        backendConfig = value ? `${backendConfig}${param.name}=${value}\n` : '';
       });
 
       this.projectWidget.backendConfig = backendConfig;
-      this.dashboardService
-          .editProjectWidgetFromProject(this.projectWidget.project.id, this.projectWidget)
-          .subscribe(() => this.toastService.sendMessage('Widget Updated successfully', ToastType.SUCCESS));
+      this.httpProjectWidgetService.updateOneById(this.projectWidget.id, this.projectWidget).subscribe(() => {
+        this.toastService.sendMessage('Widget Updated successfully', ToastType.SUCCESS);
+      });
       this.dialogRef.close();
     }
   }

@@ -15,14 +15,14 @@
  */
 
 import {OverlayContainer} from '@angular/cdk/overlay';
-import {ChangeDetectorRef, Component, HostBinding, OnDestroy, OnInit} from '@angular/core';
-import {TranslateService} from '@ngx-translate/core';
+import {Component, HostBinding, OnDestroy, OnInit} from '@angular/core';
 import {Observable} from 'rxjs';
+import {takeWhile} from 'rxjs/operators';
 
 import {AuthenticationService} from './modules/authentication/authentication.service';
-import {SettingsService} from './shared/services/settings.service';
+import {SettingsService} from './modules/settings/settings.service';
 import {UserService} from './modules/security/user/user.service';
-import {takeWhile} from 'rxjs/operators';
+
 
 @Component({
   selector: 'app-root',
@@ -62,16 +62,12 @@ export class AppComponent implements OnInit, OnDestroy {
    * @param {AuthenticationService} authenticationService Authentication service to inject
    * @param {OverlayContainer} overlayContainer The overlay container service
    * @param {UserService} userService The user service
-   * @param {TranslateService} translateService The translation service
    * @param {SettingsService} settingsService The settings service to inject
-   * @param {ChangeDetectorRef} changeDetectorRef The change detector ref service
    */
   constructor(private authenticationService: AuthenticationService,
               private overlayContainer: OverlayContainer,
               private userService: UserService,
-              private translateService: TranslateService,
-              private settingsService: SettingsService,
-              private changeDetectorRef: ChangeDetectorRef) {
+              private settingsService: SettingsService) {
   }
 
   /**
@@ -79,7 +75,11 @@ export class AppComponent implements OnInit, OnDestroy {
    */
   ngOnInit() {
     this.isLoggedIn$ = this.authenticationService.isLoggedIn$.pipe(takeWhile(() => this.isAlive));
-    this.settingsService.currentTheme$.subscribe(themeValue => this.switchTheme(themeValue));
+    this.settingsService.currentTheme$.pipe(
+      takeWhile(() => this.isAlive)
+    ).subscribe(themeValue => {
+      this.switchTheme(themeValue);
+    });
 
     this.settingsService.initDefaultSettings();
     this.userService.connectedUser$.subscribe(user => {
@@ -98,7 +98,6 @@ export class AppComponent implements OnInit, OnDestroy {
   switchTheme(themeValue: string) {
     this.overlayContainer.getContainerElement().classList.add(themeValue);
     this.appHtmlClass = themeValue;
-    this.changeDetectorRef.detectChanges();
   }
 
   /**

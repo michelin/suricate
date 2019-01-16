@@ -24,9 +24,10 @@ import {map} from 'rxjs/operators';
 import {UserService} from '../security/user/user.service';
 import {authenticationApiEndpoint, usersApiEndpoint} from '../../app.constant';
 import {TokenService} from '../../shared/auth/token.service';
-import {AuthenticationResponse} from '../../shared/model/dto/user/AuthenticationResponse';
-import {Credentials} from '../../shared/model/dto/user/Credentials';
-import {User} from '../../shared/model/dto/user/User';
+import {Credentials} from '../../shared/model/api/user/Credentials';
+import {AuthenticationResponse} from '../../shared/model/api/authentication/AuthenticationResponse';
+import {User} from '../../shared/model/api/user/User';
+import {UserRequest} from '../../shared/model/api/user/UserRequest';
 
 
 /**
@@ -99,29 +100,29 @@ export class AuthenticationService {
     const url = `${authenticationApiEndpoint}`;
 
     return this.httpClient
-        .post<AuthenticationResponse>(url, params.toString(), {headers: headers})
-        .pipe(
-            map(authenticationResponse => {
-              if (authenticationResponse && authenticationResponse.access_token) {
-                this.tokenService.token = authenticationResponse.access_token;
-                this.isLoggedIn = this.tokenService.hasToken();
+      .post<AuthenticationResponse>(url, params.toString(), {headers: headers})
+      .pipe(
+        map(authenticationResponse => {
+          if (authenticationResponse && authenticationResponse.access_token) {
+            this.tokenService.token = authenticationResponse.access_token;
+            this.isLoggedIn = this.tokenService.hasToken();
 
-                return authenticationResponse;
-              }
-            })
-        );
+            return authenticationResponse;
+          }
+        })
+      );
   }
 
   /**
    * Register a new user
    *
-   * @param {User} user The user to register
+   * @param userRequest The user Request
    * @returns {Observable<User>} The user registered
    */
-  register(user: User): Observable<User> {
+  register(userRequest: UserRequest): Observable<User> {
     const url = `${usersApiEndpoint}/register`;
 
-    return this.httpClient.post<User>(url, user);
+    return this.httpClient.post<User>(url, userRequest);
   }
 
   /**

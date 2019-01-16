@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.model.dto.nashorn;
 
-import io.suricate.monitoring.model.dto.AbstractDto;
+import io.suricate.monitoring.model.dto.api.AbstractDto;
 import io.suricate.monitoring.model.enums.NashornErrorTypeEnum;
 import io.suricate.monitoring.utils.JsonUtils;
 import lombok.*;

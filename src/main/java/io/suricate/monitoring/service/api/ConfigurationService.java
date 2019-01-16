@@ -17,7 +17,7 @@
 package io.suricate.monitoring.service.api;
 
 import io.suricate.monitoring.configuration.ApplicationProperties;
-import io.suricate.monitoring.model.dto.ApplicationPropertiesDto;
+import io.suricate.monitoring.model.dto.api.ApplicationPropertiesDto;
 import io.suricate.monitoring.model.entity.Configuration;
 import io.suricate.monitoring.model.entity.widget.Category;
 import io.suricate.monitoring.model.entity.widget.WidgetParam;
@@ -132,6 +132,7 @@ public class ConfigurationService {
 
     /**
      * FIXME : MVT
+     *
      * @return
      */
     public List<ApplicationPropertiesDto> getServerConfiguration() {
@@ -139,8 +140,14 @@ public class ConfigurationService {
         return null;
     }
 
+    /**
+     * Get the list of configurations for a category
+     *
+     * @param categoryId The category
+     * @return The list of configurations
+     */
     @Transactional
-    public List<Configuration> getConfigurationForCategory(Long categoryId) {
+    public Optional<List<Configuration>> getConfigurationForCategory(Long categoryId) {
         return configurationRepository.findConfigurationByCategoryId(categoryId);
     }
 
@@ -181,6 +188,7 @@ public class ConfigurationService {
 
     /**
      * Convert configuration to widget param
+     *
      * @param configuration Configuration to convert
      * @return widget param newly created
      */

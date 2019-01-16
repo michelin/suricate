@@ -24,13 +24,13 @@
     <!-- Registered screen part -->
     <div id="registered-div" fxFlex="100" fxLayout="row wrap" fxLayoutGap="20px">
       <h2 class="little title" fxFlex="100">
-        Currently linked screen - {{ project?.websocketClients?.length }} client(s)
+        Currently linked screen - {{ websocketClients?.length }} client(s)
       </h2>
       <mat-divider fxFlex="100"></mat-divider>
 
       <!-- screen codes -->
       <div id="screen-container" fxFlex="100" fxLayout="col wrap" fxLayoutAlign="start center" fxLayoutGap="30px">
-        <div *ngFor="let websocketClient of project?.websocketClients"
+        <div *ngFor="let websocketClient of websocketClients"
              fxFlex="29"
              fxLayout="row wrap"
              fxLayoutAlign="center center">

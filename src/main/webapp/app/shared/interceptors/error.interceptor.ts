@@ -23,7 +23,7 @@ import {Injectable} from '@angular/core';
 
 import {ToastService} from '../components/toast/toast.service';
 import {badCredentialError} from '../../app.constant';
-import {ToastType} from '../model/toastNotification/ToastType';
+import {ToastType} from '../components/toast/toast-objects/ToastType';
 
 /**
  * Intercptor that manage http errors
@@ -48,26 +48,26 @@ export class ErrorInterceptor implements HttpInterceptor {
    */
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(request)
-        .pipe(
-            tap(
-                (event: HttpEvent<any>) => {
-                },
-                (httpError: any) => {
-                  if (httpError instanceof HttpErrorResponse) {
-                    switch (httpError.status) {
-                      case 400:
-                        if (httpError.error.error === badCredentialError) {
-                          this.toastService.sendMessage('Bad credentials', ToastType.DANGER, 'Wrong login or password');
-                        }
-                        break;
-
-                      case 0:
-                        this.displayUnknowErrorMessage();
-                        break;
-                    }
+      .pipe(
+        tap(
+          (event: HttpEvent<any>) => {
+          },
+          (httpError: any) => {
+            if (httpError instanceof HttpErrorResponse) {
+              switch (httpError.status) {
+                case 400:
+                  if (httpError.error.error === badCredentialError) {
+                    this.toastService.sendMessage('Bad credentials', ToastType.DANGER, 'Wrong login or password');
                   }
-                })
-        );
+                  break;
+
+                case 0:
+                  this.displayUnknowErrorMessage();
+                  break;
+              }
+            }
+          })
+      );
   }
 
   /**

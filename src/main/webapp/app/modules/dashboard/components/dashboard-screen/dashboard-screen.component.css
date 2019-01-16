@@ -1,31 +1,7 @@
-.grid {
-    font-size: 20px;
-    color: #fff;
-    font-family: 'Open Sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
-    min-height: 100% !important;
-}
-
-.grid-item.moving {
-    z-index: 10;
-}
-
-#server-error {
-    background-color: #b58900;
-    position: relative;
-    z-index: 20;
-    height: 85px;
-    font-size: 1.5rem;
-}
-
-#server-error .mat-icon {
-    font-size: 3rem;
-    width: 48px;
-    height: 48px;
-}
-
 #screen-code-div {
     height: 220px;
     background-color: #424242;
+    color: #fff;
     margin-bottom: 20px;
     font-size: 8em;
 }
@@ -34,4 +10,12 @@
     height: auto;
     width: auto;
     font-size: 1em;
+    color: inherit;
+}
+
+.grid {
+    font-size: 20px;
+    color: #fff;
+    font-family: 'Open Sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
+    min-height: 100% !important;
 }

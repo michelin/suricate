@@ -17,14 +17,14 @@
 package io.suricate.monitoring.service.scheduler;
 
 import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
+import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
+import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.enums.NashornErrorTypeEnum;
-import io.suricate.monitoring.model.enums.WidgetState;
-import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
-import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
 import io.suricate.monitoring.model.enums.UpdateType;
-import io.suricate.monitoring.model.mapper.project.ProjectWidgetMapper;
+import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.service.api.ProjectWidgetService;
+import io.suricate.monitoring.service.mapper.ProjectWidgetMapper;
 import io.suricate.monitoring.service.nashorn.NashornService;
 import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -74,10 +74,10 @@ public class DashboardScheduleService {
      * Constructor
      *
      * @param dashboardWebSocketService The dashboard websocket service
-     * @param projectWidgetService The project widget service
-     * @param projectWidgetMapper The project widget mapper
-     * @param nashornService The nashorn service to inject
-     * @param applicationContext The application context to inject
+     * @param projectWidgetService      The project widget service
+     * @param projectWidgetMapper       The project widget mapper
+     * @param nashornService            The nashorn service to inject
+     * @param applicationContext        The application context to inject
      */
     @Autowired
     public DashboardScheduleService(final DashboardWebSocketService dashboardWebSocketService,
@@ -94,14 +94,15 @@ public class DashboardScheduleService {
 
     /**
      * Method used to handle nashorn process response
+     *
      * @param nashornResponse nashorn response
-     * @param callBack the callback used schedule an other project
+     * @param callBack        the callback used schedule an other project
      */
     @Transactional
-    public void handleResponse(NashornResponse nashornResponse, Schedulable callBack){
+    public void handleResponse(NashornResponse nashornResponse, Schedulable callBack) {
         updateData(nashornResponse);
         // check if the request is isValid
-        if (!nashornResponse.isValid()){
+        if (!nashornResponse.isValid()) {
             LOGGER.error("Error for widget instance: {}, log: {}, data: {}", nashornResponse.getProjectWidgetId(), nashornResponse.getLog(), nashornResponse);
         }
         // Stop execution if a fatal error is detected
@@ -116,13 +117,14 @@ public class DashboardScheduleService {
 
     /**
      * Method used to notify and update the widget on dashboard
+     *
      * @param projectWidgetId project widget Id
-     * @param projectId project Id
+     * @param projectId       project Id
      */
     private void notifyWidgetUpdate(Long projectWidgetId, Long projectId) {
         // Notify the dashboard
         UpdateEvent event = new UpdateEvent(UpdateType.WIDGET);
-        ProjectWidget projectWidget = projectWidgetService.getOne(projectWidgetId);
+        ProjectWidget projectWidget = projectWidgetService.getOne(projectWidgetId).get();
         event.setContent(projectWidgetMapper.toProjectWidgetDtoDefault(projectWidget));
 
         dashboardWebSocketService.updateGlobalScreensByProjectId(projectId, event);
@@ -130,10 +132,11 @@ public class DashboardScheduleService {
 
     /**
      * Method used to schedule a widget
+     *
      * @param projectWidgetId The project widget id
      */
     @Transactional
-    public void scheduleWidget(final Long projectWidgetId){
+    public void scheduleWidget(final Long projectWidgetId) {
         NashornRequest nashornRequest = nashornService.getNashornRequestByProjectWidgetId(projectWidgetId);
         applicationContext.getBean(NashornWidgetScheduler.class).cancelAndSchedule(nashornRequest);
     }
@@ -141,22 +144,23 @@ public class DashboardScheduleService {
     /**
      * Method used to update logs
      *
-     * @param exception exception throw
+     * @param exception       exception throw
      * @param projectWidgetId the widget instance id
-     * @param projectId the project id
+     * @param projectId       the project id
      */
     @Transactional
-    public void updateLogException(Exception exception, Long projectWidgetId, Long projectId){
-        projectWidgetService.updateLogExecution(new Date(), ExceptionUtils.getMessage(exception), projectWidgetId,  WidgetState.STOPPED);
+    public void updateLogException(Exception exception, Long projectWidgetId, Long projectId) {
+        projectWidgetService.updateLogExecution(new Date(), ExceptionUtils.getMessage(exception), projectWidgetId, WidgetState.STOPPED);
         notifyWidgetUpdate(projectWidgetId, projectId);
     }
 
 
     /**
      * Method used to update data after processing
+     *
      * @param nashornResponse the update data returned by the nashorn script
      */
-    private void updateData(NashornResponse nashornResponse){
+    private void updateData(NashornResponse nashornResponse) {
         if (nashornResponse.isValid()) {
             projectWidgetService.updateSuccessExecution(nashornResponse.getProjectWidgetId(), nashornResponse.getLaunchDate(), nashornResponse.getLog(), nashornResponse.getData(), WidgetState.RUNNING);
         } else {

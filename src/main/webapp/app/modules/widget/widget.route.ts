@@ -16,6 +16,7 @@
  *
  */
 import {Routes} from '@angular/router';
+
 import {AuthGuard} from '../../shared/auth/guards/auth.guard';
 import {AdminGuard} from '../../shared/auth/guards/admin.guard';
 import {WidgetListComponent} from './pages/widget-list/widget-list.component';

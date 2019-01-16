@@ -20,13 +20,13 @@ import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
 import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import {merge, of as observableOf} from 'rxjs';
 import {catchError, map, startWith, switchMap} from 'rxjs/operators';
-import {TranslateService} from "@ngx-translate/core";
+import {TranslateService} from '@ngx-translate/core';
 
-import {WidgetConfigurationService} from '../widget-configuration.service';
+import {HttpConfigurationService} from '../../../../../../shared/services/api/http-configuration.service';
 import {ToastService} from '../../../../../../shared/components/toast/toast.service';
-import {Configuration} from '../../../../../../shared/model/dto/Configuration';
-import {ToastType} from '../../../../../../shared/model/toastNotification/ToastType';
-import {ConfirmDialogComponent} from "../../../../../../shared/components/confirm-dialog/confirm-dialog.component";
+import {Configuration} from '../../../../../../shared/model/api/configuration/Configuration';
+import {ConfirmDialogComponent} from '../../../../../../shared/components/confirm-dialog/confirm-dialog.component';
+import {ToastType} from '../../../../../../shared/components/toast/toast-objects/ToastType';
 
 /**
  * The configuration list component
@@ -78,13 +78,13 @@ export class WidgetConfigurationListComponent implements OnInit {
   /**
    * The constructor
    *
-   * @param {WidgetConfigurationService} configurationsService The configuration service
+   * @param {HttpConfigurationService} configurationsService The configuration service
    * @param {ChangeDetectorRef} changeDetectorRef The change detector service
    * @param {TranslateService} translateService The translateService
    * @param {MatDialog} matDialog The mat dialog service
    * @param {ToastService} toastService The toast service
    */
-  constructor(private configurationsService: WidgetConfigurationService,
+  constructor(private configurationsService: HttpConfigurationService,
               private translateService: TranslateService,
               private changeDetectorRef: ChangeDetectorRef,
               private matDialog: MatDialog,
@@ -103,31 +103,31 @@ export class WidgetConfigurationListComponent implements OnInit {
    */
   initTable() {
     merge(this.matSort.sortChange, this.matPaginator.page)
-        .pipe(
-            startWith(null),
-            switchMap(() => {
-              this.isLoadingResults = true;
-              this.changeDetectorRef.detectChanges();
-              return this.configurationsService.getAll();
-            }),
-            map(data => {
-              this.isLoadingResults = false;
-              this.errorCatched = false;
+      .pipe(
+        startWith(null),
+        switchMap(() => {
+          this.isLoadingResults = true;
+          this.changeDetectorRef.detectChanges();
+          return this.configurationsService.getAll();
+        }),
+        map(data => {
+          this.isLoadingResults = false;
+          this.errorCatched = false;
 
-              return data;
-            }),
-            catchError(() => {
-              this.isLoadingResults = false;
-              this.errorCatched = true;
+          return data;
+        }),
+        catchError(() => {
+          this.isLoadingResults = false;
+          this.errorCatched = true;
 
-              return observableOf([]);
-            })
-        )
-        .subscribe(data => {
-          this.resultsLength = data.length;
-          this.matTableDataSource.data = data;
-          this.matTableDataSource.sort = this.matSort;
-        });
+          return observableOf([]);
+        })
+      )
+      .subscribe(data => {
+        this.resultsLength = data.length;
+        this.matTableDataSource.data = data;
+        this.matTableDataSource.sort = this.matSort;
+      });
 
     // Apply sort custom rules for configuration
     this.matTableDataSource.sortingDataAccessor = (item: Configuration, property: string) => {
@@ -149,25 +149,22 @@ export class WidgetConfigurationListComponent implements OnInit {
   openDialogDeleteConfiguration(configuration: Configuration) {
     let deleteConfigurationDialog = null;
 
-    this.translateService.get(["configuration.delete", "delete.confirm"]).subscribe(translations => {
+    this.translateService.get(['configuration.delete', 'delete.confirm']).subscribe(translations => {
       deleteConfigurationDialog = this.matDialog.open(ConfirmDialogComponent, {
         data: {
-          title: translations["configuration.delete"],
-          message: `${translations["delete.confirm"]} ${configuration.key}`
+          title: translations['configuration.delete'],
+          message: `${translations['delete.confirm']} ${configuration.key}`
         }
       });
-    });
 
-    deleteConfigurationDialog.afterClosed().subscribe(shouldDeleteConfiguration => {
-      if (shouldDeleteConfiguration) {
-        this
-            .configurationsService
-            .deleteConfiguration(configuration)
-            .subscribe(() => {
-              this.toastService.sendMessage('Configuration deleted successfully', ToastType.SUCCESS);
-              this.initTable();
-            });
-      }
+      deleteConfigurationDialog.afterClosed().subscribe(shouldDeleteConfiguration => {
+        if (shouldDeleteConfiguration) {
+          this.configurationsService.deleteConfiguration(configuration.key).subscribe(() => {
+            this.toastService.sendMessage('Configuration deleted successfully', ToastType.SUCCESS);
+            this.initTable();
+          });
+        }
+      });
     });
   }
 

@@ -31,6 +31,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -81,9 +82,8 @@ public class NashornService {
      * @return The related nashorn request
      */
     public NashornRequest getNashornRequestByProjectWidgetId(final Long projectWidgetId) {
-        ProjectWidget projectWidget = projectWidgetService.getOne(projectWidgetId);
-
-        return createNashornRequestByProjectWidget(projectWidget);
+        Optional<ProjectWidget> projectWidgetOptional = projectWidgetService.getOne(projectWidgetId);
+        return createNashornRequestByProjectWidget(projectWidgetOptional.get());
     }
 
     /**
@@ -113,7 +113,7 @@ public class NashornService {
      * @return True is it's ok, false otherwise
      */
     public boolean isNashornRequestExecutable(final NashornRequest nashornRequest) {
-        if(!nashornRequest.isValid()) {
+        if (!nashornRequest.isValid()) {
             LOGGER.debug("Widget content not isValid for widget instance :{}", nashornRequest.getProjectWidgetId());
             return false;
         }

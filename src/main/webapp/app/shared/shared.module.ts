@@ -40,10 +40,21 @@ import {TokenService} from './auth/token.service';
 import {TranslateModule} from '@ngx-translate/core';
 import {TranslationComponent} from './components/translations/translation.component';
 import {MaterialCDKModule} from './modules/metarialCDK.module';
-import {SettingsService} from './services/settings.service';
 import {ErrorInterceptor} from './interceptors/error.interceptor';
-import {PasswordPipe} from "./pipes/password-pipe";
-import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
+import {PasswordPipe} from './pipes/password-pipe';
+import {ConfirmDialogComponent} from './components/confirm-dialog/confirm-dialog.component';
+import {HttpCategoryService} from './services/api/http-category.service';
+import {HttpAssetService} from './services/api/http-asset.service';
+import {HttpProjectService} from './services/api/http-project.service';
+import {HttpScreenService} from './services/api/http-screen.service';
+import {HttpRoleService} from './services/api/http-role.service';
+import {HttpUserService} from './services/api/http-user.service';
+import {HttpRepositoryService} from './services/api/http-repository.service';
+import {HttpConfigurationService} from './services/api/http-configuration.service';
+import {HttpWidgetService} from './services/api/http-widget.service';
+import {HttpProjectWidgetService} from './services/api/http-project-widget.service';
+import {RunScriptsService} from './directives/run-scripts.service';
+import {HttpSettingService} from './services/api/http-setting.service';
 
 @NgModule({
   imports: [
@@ -100,10 +111,21 @@ import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dial
     AuthGuard,
     AdminGuard,
     WebsocketService,
+    RunScriptsService,
     ToastService,
     StompRService,
     TokenService,
-    SettingsService
+    HttpAssetService,
+    HttpCategoryService,
+    HttpProjectService,
+    HttpProjectWidgetService,
+    HttpRoleService,
+    HttpScreenService,
+    HttpSettingService,
+    HttpUserService,
+    HttpRepositoryService,
+    HttpConfigurationService,
+    HttpWidgetService
   ]
 })
 export class SharedModule {

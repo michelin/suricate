@@ -16,20 +16,18 @@
 
 package io.suricate.monitoring.controllers.api;
 
-import io.suricate.monitoring.model.dto.ApplicationPropertiesDto;
-import io.suricate.monitoring.model.dto.ConfigurationDto;
-import io.suricate.monitoring.model.dto.error.ApiErrorDto;
+import io.suricate.monitoring.model.dto.api.ApplicationPropertiesDto;
+import io.suricate.monitoring.model.dto.api.configuration.ConfigurationRequestDto;
+import io.suricate.monitoring.model.dto.api.configuration.ConfigurationResponseDto;
+import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.entity.Configuration;
-import io.suricate.monitoring.model.mapper.ConfigurationMapper;
 import io.suricate.monitoring.service.CacheService;
 import io.suricate.monitoring.service.api.ConfigurationService;
+import io.suricate.monitoring.service.mapper.ConfigurationMapper;
 import io.suricate.monitoring.utils.exception.NoContentException;
 import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
 import io.swagger.annotations.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -42,14 +40,9 @@ import java.util.Optional;
  * Configuration controller
  */
 @RestController
-@RequestMapping("/api/configurations")
-@Api(value = "Configuration Controller", tags = {"Configuration"})
+@RequestMapping("/api")
+@Api(value = "Configuration Controller", tags = {"Configurations"})
 public class ConfigurationController {
-
-    /**
-     * Class logger
-     */
-    private final static Logger LOGGER = LoggerFactory.getLogger(ConfigurationController.class);
 
     /**
      * The configuration Service
@@ -61,6 +54,9 @@ public class ConfigurationController {
      */
     private final ConfigurationMapper configurationMapper;
 
+    /**
+     * The cache service
+     */
     private final CacheService cacheService;
 
     /**
@@ -83,27 +79,26 @@ public class ConfigurationController {
      *
      * @return The list of configurations
      */
-    @ApiOperation(value = "Get the full list of configurations", response = ConfigurationDto.class, nickname = "getAllConfigs")
+    @ApiOperation(value = "Get the full list of configurations", response = ConfigurationResponseDto.class, nickname = "getAllConfigs")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = ConfigurationDto.class, responseContainer = "List"),
+        @ApiResponse(code = 200, message = "Ok", response = ConfigurationResponseDto.class, responseContainer = "List"),
         @ApiResponse(code = 204, message = "No Content"),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
-    @RequestMapping(method = RequestMethod.GET)
+    @GetMapping(value = "/v1/configurations")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<List<ConfigurationDto>> getAll() {
-        Optional<List<Configuration>> configurations = configurationService.getAll();
+    public ResponseEntity<List<ConfigurationResponseDto>> getAll() {
+        Optional<List<Configuration>> configurationsOptional = configurationService.getAll();
 
-        if (!configurations.isPresent()) {
+        if (!configurationsOptional.isPresent()) {
             throw new NoContentException(Configuration.class);
         }
 
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .cacheControl(CacheControl.noCache())
-            .body(configurationMapper.toConfigurationDtosDefault(configurations.get()));
+            .body(configurationMapper.toConfigurationDtosDefault(configurationsOptional.get()));
     }
 
     /**
@@ -112,17 +107,17 @@ public class ConfigurationController {
      * @param key The key to find
      * @return The related configuration
      */
-    @ApiOperation(value = "Get a configuration by the key", response = ConfigurationDto.class)
+    @ApiOperation(value = "Get a configuration by the key", response = ConfigurationResponseDto.class)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = ConfigurationDto.class),
+        @ApiResponse(code = 200, message = "Ok", response = ConfigurationResponseDto.class),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Configuration not found", response = ApiErrorDto.class)
     })
-    @RequestMapping(value = "/{key}", method = RequestMethod.GET)
+    @GetMapping(value = "/v1/configurations/{key}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<ConfigurationDto> getOneByKey(@ApiParam(name = "key", value = "The configuration key", required = true)
-                                                        @PathVariable("key") final String key) {
+    public ResponseEntity<ConfigurationResponseDto> getOneByKey(@ApiParam(name = "key", value = "The configuration key", required = true)
+                                                                @PathVariable("key") final String key) {
         Optional<Configuration> configurationOptional = configurationService.getOneByKey(key);
 
         if (!configurationOptional.isPresent()) {
@@ -132,46 +127,38 @@ public class ConfigurationController {
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .cacheControl(CacheControl.noCache())
             .body(configurationMapper.toConfigurationDtoDefault(configurationOptional.get()));
     }
 
     /**
      * Update the configuration by the key
      *
-     * @param key              The key of the config
-     * @param configurationDto The new configuration values
+     * @param key                     The key of the config
+     * @param configurationRequestDto The new configuration values
      * @return The config updated
      */
-    @ApiOperation(value = "Update a configuration by the key", response = ConfigurationDto.class)
+    @ApiOperation(value = "Update a configuration by the key")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = ConfigurationDto.class),
+        @ApiResponse(code = 204, message = "Configuration updated"),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Configuration not found", response = ApiErrorDto.class)
     })
-    @RequestMapping(value = "/{key}", method = RequestMethod.PUT)
+    @PutMapping(value = "/v1/configurations/{key}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<ConfigurationDto> updateOneByKey(@ApiParam(name = "key", value = "The configuration key", required = true)
-                                                           @PathVariable("key") final String key,
-                                                           @ApiParam(name = "configurationDto", value = "The configuration upated", required = true)
-                                                           @RequestBody final ConfigurationDto configurationDto) {
+    public ResponseEntity<Void> updateOneByKey(@ApiParam(name = "key", value = "The configuration key", required = true)
+                                               @PathVariable("key") final String key,
+                                               @ApiParam(name = "configurationResponseDto", value = "The configuration updated", required = true)
+                                               @RequestBody final ConfigurationRequestDto configurationRequestDto) {
         Optional<Configuration> configurationOptional = configurationService.getOneByKey(key);
-
         if (!configurationOptional.isPresent()) {
             throw new ObjectNotFoundException(Configuration.class, key);
         }
 
-        Configuration configuration = configurationOptional.get();
-        configuration = configurationService.updateConfiguration(configuration, configurationDto.getValue());
-
+        configurationService.updateConfiguration(configurationOptional.get(), configurationRequestDto.getValue());
         cacheService.clearCache("configuration");
 
-        return ResponseEntity
-            .ok()
-            .cacheControl(CacheControl.noCache())
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(configurationMapper.toConfigurationDtoDefault(configuration));
+        return ResponseEntity.noContent().build();
     }
 
     /**
@@ -180,29 +167,25 @@ public class ConfigurationController {
      * @param key The configuration key
      * @return The config deleted
      */
-    @ApiOperation(value = "Delete a configuration by the key", response = ConfigurationDto.class)
+    @ApiOperation(value = "Delete a configuration by the key")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = ConfigurationDto.class),
+        @ApiResponse(code = 204, message = "Configuration deleted"),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Configuration not found", response = ApiErrorDto.class)
     })
-    @RequestMapping(value = "/{key}", method = RequestMethod.DELETE)
+    @DeleteMapping(value = "/v1/configurations/{key}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<ConfigurationDto> deleteOneByKey(@ApiParam(name = "key", value = "The configuration key", required = true)
-                                                           @PathVariable("key") final String key) {
+    public ResponseEntity<Void> deleteOneByKey(@ApiParam(name = "key", value = "The configuration key", required = true)
+                                               @PathVariable("key") final String key) {
         Optional<Configuration> configurationOptional = configurationService.getOneByKey(key);
-
         if (!configurationOptional.isPresent()) {
             throw new ObjectNotFoundException(Configuration.class, key);
         }
 
         configurationService.deleteOneByKey(key);
-        return ResponseEntity
-            .ok()
-            .contentType(MediaType.APPLICATION_JSON)
-            .cacheControl(CacheControl.noCache())
-            .body(configurationMapper.toConfigurationDtoDefault(configurationOptional.get()));
+
+        return ResponseEntity.noContent().build();
     }
 
     /**
@@ -212,12 +195,11 @@ public class ConfigurationController {
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Ok", response = ApplicationPropertiesDto.class)
     })
-    @RequestMapping(value = "/authentication-provider", method = RequestMethod.GET)
+    @GetMapping(value = "/v1/configurations/authentication-provider")
     public ResponseEntity<ApplicationPropertiesDto> getAuthenticationProvider() {
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .cacheControl(CacheControl.noCache())
             .body(configurationService.getAuthenticationProvider());
     }
 
@@ -226,14 +208,13 @@ public class ConfigurationController {
      */
     @ApiOperation(value = "Get the server full configuration", response = ApplicationPropertiesDto.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Ok", response = ApplicationPropertiesDto.class, responseContainer = "List")
+        @ApiResponse(code = 200, message = "Ok", response = ApplicationPropertiesDto.class, responseContainer = "List")
     })
-    @RequestMapping(value = "/server", method = RequestMethod.GET)
+    @GetMapping(value = "/v1/configurations/server")
     public ResponseEntity<List<ApplicationPropertiesDto>> getServerConfiguration() {
         return ResponseEntity
-                .ok()
-                .contentType(MediaType.APPLICATION_JSON)
-                .cacheControl(CacheControl.noCache())
-                .body(configurationService.getServerConfiguration());
+            .ok()
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(configurationService.getServerConfiguration());
     }
 }

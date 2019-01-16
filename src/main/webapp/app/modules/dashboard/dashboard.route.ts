@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import {Routes} from '@angular/router';
+
 import {DashboardTvComponent} from './pages/dashboard-tv/dashboard-tv.component';
 import {AuthGuard} from '../../shared/auth/guards/auth.guard';
 import {DashboardListComponent} from './pages/admin/dashboard-list/dashboard-list.component';
@@ -25,10 +26,10 @@ export const DashboardRoutes: Routes = [
   {path: 'tv', component: DashboardTvComponent},
   {path: 'dashboards/all', component: DashboardListComponent, canActivate: [AuthGuard, AdminGuard]},
   {
-    path: 'dashboards/all/:dashboardId/edit',
+    path: 'dashboards/all/:dashboardToken/edit',
     component: DashboardEditComponent,
     data: {breadcrumb: 'Edit Dashboard'},
     canActivate: [AuthGuard, AdminGuard]
   },
-  {path: 'dashboards/:id', component: DashboardDetailComponent, canActivate: [AuthGuard]},
+  {path: 'dashboards/:dashboardToken', component: DashboardDetailComponent, canActivate: [AuthGuard]},
 ];

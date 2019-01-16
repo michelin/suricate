@@ -17,34 +17,34 @@
  */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
-import {Configuration} from "../model/dto/Configuration";
-import {WidgetParamValue} from "../model/dto/WidgetParamValue";
-import {WidgetVariableType} from "../model/dto/enums/WidgetVariableType";
+
+import {Configuration} from '../model/api/configuration/Configuration';
+import {WidgetVariableType} from '../model/enums/WidgetVariableType';
 
 /**
  * Transform a string into stars
  */
 @Pipe({
-    name: 'password'
+  name: 'password'
 })
 export class PasswordPipe implements PipeTransform {
 
-    /**
-     * The constructor
-     * @param {DomSanitizer} domSanitizer The dom sanitizer service
-     */
-    constructor() {
-    }
+  /**
+   * The constructor
+   */
+  constructor() {
+  }
 
-    /**
-     * The transform function
-     *
-     * @param {string} valueToSanitize The string value to sanitize
-     * @returns {SafeHtml}
-     */
-    transform(config: Configuration): SafeHtml {
-        return (config.dataType.toString() == WidgetVariableType.PASSWORD || config.dataType.toString() == WidgetVariableType.SECRET) ? "*****" : config.value;
-    }
+  /**
+   * The transform function
+   *
+   * @param {Configuration} config The string value to sanitize
+   * @returns {String} The password hidden
+   */
+  transform(config: Configuration): String {
+    return (config.dataType.toString() === WidgetVariableType.PASSWORD || config.dataType.toString() === WidgetVariableType.SECRET) ?
+      '*****'
+      : config.value;
+  }
 
 }

@@ -17,7 +17,7 @@
 package io.suricate.monitoring;
 
 import io.suricate.monitoring.configuration.ApplicationProperties;
-import io.suricate.monitoring.configuration.ProxyConfiguration;
+import io.suricate.monitoring.configuration.web.ProxyConfiguration;
 import io.suricate.monitoring.service.GitService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;

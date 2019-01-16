@@ -17,16 +17,16 @@
 import {ChangeDetectorRef, Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {FormGroup, NgForm} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef, MatHorizontalStepper} from '@angular/material';
-import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
 
-import {Category} from '../../../../shared/model/dto/Category';
-import {WidgetService} from '../../../../modules/widget/widget.service';
-import {Asset} from '../../../../shared/model/dto/Asset';
-import {Widget} from '../../../../shared/model/dto/Widget';
-import {WidgetVariableType} from '../../../../shared/model/dto/enums/WidgetVariableType';
+import {Widget} from '../../../../shared/model/api/widget/Widget';
 import {DashboardService} from '../../../../modules/dashboard/dashboard.service';
-import {ProjectWidget} from '../../../../shared/model/dto/ProjectWidget';
-import {WidgetAvailabilityEnum} from '../../../../shared/model/dto/enums/WidgetAvailabilityEnum';
+import {HttpCategoryService} from '../../../../shared/services/api/http-category.service';
+import {HttpAssetService} from '../../../../shared/services/api/http-asset.service';
+import {Category} from '../../../../shared/model/api/widget/Category';
+import {HttpProjectService} from '../../../../shared/services/api/http-project.service';
+import {WidgetVariableType} from '../../../../shared/model/enums/WidgetVariableType';
+import {WidgetAvailabilityEnum} from '../../../../shared/model/enums/WidgetAvailabilityEnum';
+import {ProjectWidgetRequest} from '../../../../shared/model/api/ProjectWidget/ProjectWidgetRequest';
 
 /**
  * Dialog used to add a widget
@@ -55,6 +55,11 @@ export class AddWidgetDialogComponent implements OnInit {
   step2Completed = false;
 
   /**
+   * The current project token
+   */
+  projectToken: string;
+
+  /**
    * The widget param enum
    * @type {WidgetVariableType}
    */
@@ -79,38 +84,37 @@ export class AddWidgetDialogComponent implements OnInit {
    * The constructor
    *
    * @param data The data send to the dialog
-   * @param {WidgetService} widgetService The widget service
+   * @param {HttpAssetService} httpAssetService The asset service
+   * @param {HttpCategoryService} httpCategoryService The http category service
+   * @param {HttpProjectService} httpProjectService The http project service
    * @param {DashboardService} dashboardService The dashboard service
-   * @param {DomSanitizer} domSanitizer The domSanitizer
    * @param {MatDialogRef<AddWidgetDialogComponent>} addWidgetDialogRef The add widget dialog ref
    * @param {ChangeDetectorRef} changeDetectorRef The change detector service
    */
   constructor(@Inject(MAT_DIALOG_DATA) private data: any,
-              private widgetService: WidgetService,
+              private httpAssetService: HttpAssetService,
+              private httpCategoryService: HttpCategoryService,
+              private httpProjectService: HttpProjectService,
               private dashboardService: DashboardService,
-              private domSanitizer: DomSanitizer,
               private addWidgetDialogRef: MatDialogRef<AddWidgetDialogComponent>,
               private changeDetectorRef: ChangeDetectorRef) {
   }
 
   ngOnInit() {
-    this.widgetService
-        .getCategories()
-        .subscribe(categories => {
-          this.categories = categories;
-        });
+    this.httpCategoryService.getAll().subscribe(categories => {
+      this.categories = categories;
+    });
+
+    this.projectToken = this.data.projectToken;
   }
 
   getWidgets(categoryId: number) {
-    this.widgetService
-        .getWidgetsByCategoryId(categoryId)
-        .subscribe(widgets => {
-          this.widgets = widgets.filter((widget: Widget) => widget.widgetAvailability === WidgetAvailabilityEnum.ACTIVATED);
-          this.step1Completed = true;
-          this.changeDetectorRef.detectChanges();
-          this.widgetStepper.next();
-        });
-
+    this.httpCategoryService.getCategoryWidgets(categoryId).subscribe(widgets => {
+      this.widgets = widgets.filter((widget: Widget) => widget.widgetAvailability === WidgetAvailabilityEnum.ACTIVATED);
+      this.step1Completed = true;
+      this.changeDetectorRef.detectChanges();
+      this.widgetStepper.next();
+    });
   }
 
   setSelectedWidget(selectedWidget: Widget) {
@@ -125,20 +129,20 @@ export class AddWidgetDialogComponent implements OnInit {
       const form: FormGroup = formSettings.form;
       let backendConfig = '';
 
-      for (const param of this.selectedWidget.widgetParams) {
-        backendConfig = `${backendConfig}${param.name}=${form.get(param.name).value}\n`;
-      }
+      this.selectedWidget.params.forEach(param => {
+        const value = form.get(param.name).value;
+        backendConfig = value ? `${backendConfig}${param.name}=${value}\n` : `${backendConfig}`;
+      });
 
-      const projectWidget: ProjectWidget = new ProjectWidget();
-      projectWidget.backendConfig = backendConfig;
-      projectWidget.project = this.dashboardService.currentDisplayedDashboardValue;
-      projectWidget.widget = this.selectedWidget;
+      const projectWidgetRequest: ProjectWidgetRequest = {
+        backendConfig: backendConfig,
+        widgetId: this.selectedWidget.id
+      };
 
-      this.dashboardService
-          .addWidgetToProject(projectWidget)
-          .subscribe(data => {
-            this.addWidgetDialogRef.close();
-          });
+      this.httpProjectService.addProjectWidgetToProject(this.projectToken, projectWidgetRequest).subscribe(() => {
+        this.dashboardService.refreshProject();
+        this.addWidgetDialogRef.close();
+      });
     }
   }
 
@@ -160,12 +164,7 @@ export class AddWidgetDialogComponent implements OnInit {
     }
   }
 
-  getImageSrc(image: Asset): SafeUrl {
-    if (image != null) {
-      return this.domSanitizer.bypassSecurityTrustUrl(`data:${image.contentType};base64,${image.content}`);
-    } else {
-      return this.domSanitizer.bypassSecurityTrustUrl(``);
-    }
-
+  getImageSrc(assetToken: string): string {
+    return this.httpAssetService.getContentUrl(assetToken);
   }
 }

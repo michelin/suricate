@@ -19,9 +19,9 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 
 import {AuthenticationService} from '../../authentication.service';
-import {WidgetConfigurationService} from '../../../widget/pages/admin/configuration/widget-configuration.service';
-import {ApplicationProperties} from '../../../../shared/model/ApplicationProperties';
-import {authenticationProviderLDAP} from '../../../../app.constant';
+import {HttpConfigurationService} from '../../../../shared/services/api/http-configuration.service';
+import {ApplicationProperties} from '../../../../shared/model/api/ApplicationProperties';
+import {AuthenticationProviderEnum} from '../../../../shared/model/enums/AuthenticationProviderEnum';
 
 /**
  * Manage the login page
@@ -61,24 +61,27 @@ export class LoginComponent implements OnInit {
    * @param {Router} router The router service
    * @param {AuthenticationService} authenticationService The authentication service
    * @param {FormBuilder} formBuilder The form builder service
-   * @param {ConfigurationService} configurationService The configuration service to inject
+   * @param {HttpConfigurationService} httpConfigurationService The configuration service to inject
    */
   constructor(private router: Router,
               private authenticationService: AuthenticationService,
               private formBuilder: FormBuilder,
-              private configurationService: WidgetConfigurationService) {
+              private httpConfigurationService: HttpConfigurationService) {
   }
 
   /**
    * Init objects
    */
   ngOnInit() {
-    this.configurationService.getAuthenticationProvider().subscribe((applicationProperties: ApplicationProperties) => {
-      this.isLdapServerUserProvider = applicationProperties.value.toLowerCase() === authenticationProviderLDAP;
+    this.httpConfigurationService.getAuthenticationProvider().subscribe((applicationProperties: ApplicationProperties) => {
+      this.isLdapServerUserProvider = applicationProperties.value === AuthenticationProviderEnum.LDAP;
     });
 
     this.authenticationService.logout();
+    this.initLoginForm();
+  }
 
+  initLoginForm() {
     this.loginForm = this.formBuilder.group({
       'username': ['', [Validators.required]],
       'password': ['', [Validators.required]]
@@ -104,17 +107,15 @@ export class LoginComponent implements OnInit {
       this.formSubmitAttempt = true;
 
       // Try to authenticate
-      this.authenticationService
-          .authenticate(this.loginForm.value)
-          .subscribe(
-              () => {
-                // Authentication succeed
-                this.router.navigate(['/home']);
-              },
-              error => {
-                // Authentication failed
-                this.formSubmitAttempt = false;
-              });
+      this.authenticationService.authenticate(this.loginForm.value).subscribe(
+        () => {
+          // Authentication succeed
+          this.router.navigate(['/home']);
+        },
+        () => {
+          // Authentication failed
+          this.formSubmitAttempt = false;
+        });
     }
   }
 }

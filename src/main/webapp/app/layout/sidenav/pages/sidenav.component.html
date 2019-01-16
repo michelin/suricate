@@ -113,7 +113,7 @@
             <app-translate [key]="'dashboards.list'"></app-translate>
           </a>
           <a mat-list-item routerLinkActive="active" *ngFor="let dashboard of dashboards"
-             [routerLink]="['/dashboards', dashboard.id]">{{dashboard.name}}</a>
+             [routerLink]="['/dashboards', dashboard.token]">{{dashboard.name}}</a>
         </mat-nav-list>
       </div>
     </div>

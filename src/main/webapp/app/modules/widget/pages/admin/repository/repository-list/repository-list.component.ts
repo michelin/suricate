@@ -17,14 +17,14 @@
  */
 
 import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
-import {MatDialog, MatPaginator, MatSlideToggleChange, MatSort, MatTableDataSource} from '@angular/material';
-import {merge, of} from 'rxjs/index';
+import {MatPaginator, MatSlideToggleChange, MatSort, MatTableDataSource} from '@angular/material';
+import {merge, of} from 'rxjs';
 import {catchError, map, startWith, switchMap} from 'rxjs/operators';
 
-import {RepositoryService} from '../repository.service';
-import {Repository} from '../../../../../../shared/model/dto/Repository';
+import {HttpRepositoryService} from '../../../../../../shared/services/api/http-repository.service';
+import {Repository} from '../../../../../../shared/model/api/Repository/Repository';
 import {ToastService} from '../../../../../../shared/components/toast/toast.service';
-import {ToastType} from '../../../../../../shared/model/toastNotification/ToastType';
+import {ToastType} from '../../../../../../shared/components/toast/toast-objects/ToastType';
 
 @Component({
   selector: 'app-repository-list',
@@ -73,14 +73,12 @@ export class RepositoryListComponent implements OnInit {
   /**
    * Constructor
    *
-   * @param {MatDialog} matDialog The mat dialog service
    * @param {ChangeDetectorRef} changeDetectorRef The change detector ref to inject
-   * @param {RepositoryService} repositoryService The repository service
+   * @param {HttpRepositoryService} repositoryService The repository service
    * @param {ToastService} toastService The toast service
    */
-  constructor(private matDialog: MatDialog,
-              private changeDetectorRef: ChangeDetectorRef,
-              private repositoryService: RepositoryService,
+  constructor(private changeDetectorRef: ChangeDetectorRef,
+              private repositoryService: HttpRepositoryService,
               private toastService: ToastService) {
   }
 
@@ -96,31 +94,31 @@ export class RepositoryListComponent implements OnInit {
    */
   initTable() {
     merge(this.matSort.sortChange, this.matPaginator.page)
-        .pipe(
-            startWith(null),
-            switchMap(() => {
-              this.isLoadingResults = true;
-              this.changeDetectorRef.detectChanges();
-              return this.repositoryService.getAll();
-            }),
-            map(data => {
-              this.isLoadingResults = false;
-              this.errorCatched = false;
+      .pipe(
+        startWith(null),
+        switchMap(() => {
+          this.isLoadingResults = true;
+          this.changeDetectorRef.detectChanges();
+          return this.repositoryService.getAll();
+        }),
+        map(data => {
+          this.isLoadingResults = false;
+          this.errorCatched = false;
 
-              return data;
-            }),
-            catchError(() => {
-              this.isLoadingResults = false;
-              this.errorCatched = true;
+          return data;
+        }),
+        catchError(() => {
+          this.isLoadingResults = false;
+          this.errorCatched = true;
 
-              return of([]);
-            })
-        )
-        .subscribe(data => {
-          this.resultsLength = data.length;
-          this.matTableDataSource.data = data;
-          this.matTableDataSource.sort = this.matSort;
-        });
+          return of([]);
+        })
+      )
+      .subscribe(data => {
+        this.resultsLength = data.length;
+        this.matTableDataSource.data = data;
+        this.matTableDataSource.sort = this.matSort;
+      });
   }
 
   /**
@@ -132,12 +130,9 @@ export class RepositoryListComponent implements OnInit {
   toggleWidgetActivation(repository: Repository, changeEvent: MatSlideToggleChange) {
     repository.enabled = changeEvent.checked;
 
-    this.repositoryService
-        .updateOneById(repository.id, repository)
-        .subscribe(repositoryUpdate => {
-          const repoStatusAsString: string = repositoryUpdate.enabled ? 'activated' : 'disabled';
-          this.toastService
-              .sendMessage(`The repository ${repository.name} has been ${repoStatusAsString} successfully`, ToastType.SUCCESS);
-        });
+    this.repositoryService.updateOneById(repository.id, repository).subscribe(() => {
+      const repoStatusAsString: string = repository.enabled ? 'activated' : 'disabled';
+      this.toastService.sendMessage(`The repository ${repository.name} has been ${repoStatusAsString} successfully`, ToastType.SUCCESS);
+    });
   }
 }

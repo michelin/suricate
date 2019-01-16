@@ -20,6 +20,7 @@ package io.suricate.monitoring.model.entity.project;
 import io.suricate.monitoring.model.entity.AbstractAuditingEntity;
 import io.suricate.monitoring.model.entity.user.User;
 import lombok.*;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -71,6 +72,7 @@ public class Project extends AbstractAuditingEntity<Long> {
      * The css style of the grid
      */
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     private String cssStyle;
 
     /**

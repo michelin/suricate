@@ -18,10 +18,10 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA} from '@angular/material';
 import {FormBuilder, FormGroup} from '@angular/forms';
 
-import {DashboardService} from '../../../../modules/dashboard/dashboard.service';
-import {Project} from '../../../../shared/model/dto/Project';
-import {WebsocketClient} from '../../../../shared/model/dto/WebsocketClient';
-import {ScreenService} from '../../../../modules/dashboard/screen.service';
+import {Project} from '../../../../shared/model/api/project/Project';
+import {WebsocketClient} from '../../../../shared/model/api/WebsocketClient';
+import {HttpScreenService} from '../../../../shared/services/api/http-screen.service';
+import {HttpProjectService} from '../../../../shared/services/api/http-project.service';
 
 /**
  * Component that manage the popup for Dashboard TV Management
@@ -46,29 +46,42 @@ export class TvManagementDialogComponent implements OnInit {
   project: Project;
 
   /**
+   * The list of clients connected by websocket
+   * @type {WebsocketClient[]}
+   */
+  websocketClients: WebsocketClient[];
+
+  /**
    * Constructor
    *
    * @param data The data give to the modal
    * @param {FormBuilder} formBuilder The formBuilder
-   * @param {DashboardService} dashboardService The dashboard service to inject
-   * @param {ScreenService} screenService The screen service
+   * @param {HttpProjectService} httpProjectService The http project service to inject
+   * @param {HttpScreenService} httpScreenService The screen service
    */
   constructor(@Inject(MAT_DIALOG_DATA) private data: any,
               private formBuilder: FormBuilder,
-              private dashboardService: DashboardService,
-              private screenService: ScreenService) {
+              private httpProjectService: HttpProjectService,
+              private httpScreenService: HttpScreenService) {
   }
 
   /**
    * When the component is initialized
    */
   ngOnInit() {
-    this.dashboardService
-        .getOneById(this.data.projectId)
-        .subscribe(project => this.project = project);
+    this.httpProjectService.getOneByToken(this.data.projectToken).subscribe(project => {
+      this.project = project;
+      this.refreshWebsocketClients();
+    });
 
     this.screenRegisterForm = this.formBuilder.group({
       screenCode: ['']
+    });
+  }
+
+  refreshWebsocketClients() {
+    this.httpProjectService.getProjectWebsocketClients(this.project.token).subscribe(websocketClients => {
+      this.websocketClients = websocketClients;
     });
   }
 
@@ -78,7 +91,11 @@ export class TvManagementDialogComponent implements OnInit {
   registerScreen(): void {
     if (this.screenRegisterForm.valid) {
       const screenCode: string = this.screenRegisterForm.get('screenCode').value;
-      this.screenService.connectProjectToScreen(this.project.token, +screenCode);
+
+      this.httpScreenService.connectProjectToScreen(this.project.token, +screenCode).subscribe(() => {
+        this.screenRegisterForm.reset();
+        setTimeout(() => this.refreshWebsocketClients(), 2000);
+      });
     }
   }
 
@@ -88,7 +105,9 @@ export class TvManagementDialogComponent implements OnInit {
    * @param {WebsocketClient} websocketClient The websocket to disconnect
    */
   disconnectScreen(websocketClient: WebsocketClient): void {
-    this.screenService.disconnectScreen(websocketClient);
+    this.httpScreenService.disconnectScreen(websocketClient.projectToken, +websocketClient.screenCode).subscribe(() => {
+      setTimeout(() => this.refreshWebsocketClients(), 2000);
+    });
   }
 
   /**
@@ -97,7 +116,7 @@ export class TvManagementDialogComponent implements OnInit {
    */
   displayScreenCode(projectToken: string): void {
     if (projectToken) {
-      this.screenService.displayScreenCodeEveryConnectedScreensForProject(projectToken);
+      this.httpScreenService.displayScreenCodeEveryConnectedScreensForProject(projectToken).subscribe();
     }
   }
 }

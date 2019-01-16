@@ -17,7 +17,7 @@
 package io.suricate.monitoring.model.enums;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.suricate.monitoring.model.dto.error.ApiErrorDto;
+import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 

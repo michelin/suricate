@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.controllers.api.error;
 
-import io.suricate.monitoring.model.dto.error.ApiErrorDto;
+import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.utils.exception.ApiException;
 import org.slf4j.Logger;

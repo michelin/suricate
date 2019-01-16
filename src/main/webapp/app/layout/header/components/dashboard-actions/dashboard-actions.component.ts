@@ -21,9 +21,9 @@ import {ActivatedRoute} from '@angular/router';
 import {AddWidgetDialogComponent} from '../add-widget-dialog/add-widget-dialog.component';
 import {AddDashboardDialogComponent} from '../../../../home/components/add-dashboard-dialog/add-dashboard-dialog.component';
 import {TvManagementDialogComponent} from '../tv-management-dialog/tv-management-dialog.component';
-import {ScreenService} from '../../../../modules/dashboard/screen.service';
-import {DashboardService} from '../../../../modules/dashboard/dashboard.service';
-import {Project} from '../../../../shared/model/dto/Project';
+import {HttpScreenService} from '../../../../shared/services/api/http-screen.service';
+import {Project} from '../../../../shared/model/api/project/Project';
+import {HttpProjectService} from '../../../../shared/services/api/http-project.service';
 
 /**
  * Hold the header dashboard actions
@@ -64,20 +64,24 @@ export class DashboardActionsComponent implements OnInit {
    *
    * @param {MatDialog} matDialog The mat dialog to inject
    * @param {ActivatedRoute} activatedRoute The activated route
-   * @param {ScreenService} screenService The screen service
-   * @param {DashboardService} dashboardService The dashboard service
+   * @param {HttpScreenService} httpScreenService The screen service
+   * @param {HttpProjectService} httpProjectService The project service
    */
   constructor(private matDialog: MatDialog,
               private activatedRoute: ActivatedRoute,
-              private screenService: ScreenService,
-              private dashboardService: DashboardService) {
+              private httpScreenService: HttpScreenService,
+              private httpProjectService: HttpProjectService) {
   }
 
   /**
    * When the component is init
    */
   ngOnInit() {
-    this.dashboardService.currentDisplayedDashboard$.subscribe(project => this.project = project);
+    this.activatedRoute.params.subscribe(params => {
+      this.httpProjectService.getOneByToken(params['dashboardToken']).subscribe(dashboard => {
+        this.project = dashboard;
+      });
+    });
   }
 
   /**
@@ -86,7 +90,7 @@ export class DashboardActionsComponent implements OnInit {
   openAddWidgetDialog() {
     this.addWidgetDialogRef = this.matDialog.open(AddWidgetDialogComponent, {
       minWidth: 900,
-      data: {projectId: this.project.id}
+      data: {projectToken: this.project.token}
     });
   }
 
@@ -96,7 +100,7 @@ export class DashboardActionsComponent implements OnInit {
   openEditDashboardDialog() {
     this.editDashboardDialogRef = this.matDialog.open(AddDashboardDialogComponent, {
       minWidth: 900,
-      data: {projectId: this.project.id}
+      data: {projectId: this.project.token}
     });
   }
 
@@ -106,7 +110,7 @@ export class DashboardActionsComponent implements OnInit {
   openTvManagementDialog() {
     this.tvManagementDialogRef = this.matDialog.open(TvManagementDialogComponent, {
       minWidth: 900,
-      data: {projectId: this.project.id}
+      data: {projectToken: this.project.token}
     });
   }
 
@@ -114,6 +118,6 @@ export class DashboardActionsComponent implements OnInit {
    * Refresh every screens for the current dashboard
    */
   refreshConnectedScreens() {
-    this.screenService.refreshEveryConnectedScreensForProject(this.project.token);
+    this.httpScreenService.refreshEveryConnectedScreensForProject(this.project.token).subscribe();
   }
 }

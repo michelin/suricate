@@ -17,7 +17,7 @@
 package io.suricate.monitoring.utils.exception;
 
 
-import io.suricate.monitoring.model.dto.error.ApiErrorDto;
+import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import org.apache.commons.lang3.StringUtils;
 

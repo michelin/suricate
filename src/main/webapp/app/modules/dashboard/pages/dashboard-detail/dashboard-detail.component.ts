@@ -15,14 +15,15 @@
  */
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {MatDialog, MatDialogRef} from '@angular/material';
-import {ActivatedRoute} from '@angular/router';
-import {Observable, of} from 'rxjs';
-import {takeWhile} from 'rxjs/operators';
+import {MatDialog} from '@angular/material';
+import {ActivatedRoute, Router} from '@angular/router';
 
 import {DashboardService} from '../../dashboard.service';
-import {Project} from '../../../../shared/model/dto/Project';
+import {Project} from '../../../../shared/model/api/project/Project';
 import {AddWidgetDialogComponent} from '../../../../layout/header/components/add-widget-dialog/add-widget-dialog.component';
+import {HttpProjectService} from '../../../../shared/services/api/http-project.service';
+import {ProjectWidget} from '../../../../shared/model/api/ProjectWidget/ProjectWidget';
+import {WebsocketService} from '../../../../shared/services/websocket.service';
 
 /**
  * Component that display a specific dashboard
@@ -35,13 +36,6 @@ import {AddWidgetDialogComponent} from '../../../../layout/header/components/add
 export class DashboardDetailComponent implements OnInit, OnDestroy {
 
   /**
-   * The widget dialog ref
-   * @type {MatDialogRef<AddWidgetDialogComponent>}
-   * @private
-   */
-  private addWidgetDialogRef: MatDialogRef<AddWidgetDialogComponent>;
-
-  /**
    * Tell if the component is displayed
    * @type {boolean}
    * @private
@@ -49,49 +43,86 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
   private isAlive = true;
 
   /**
-   * The project as observable
-   * @type {Observable<Project>}
+   * The project
+   * @type {Project}
    */
-  project$: Observable<Project>;
+  project: Project;
+
+  /**
+   * The list of projectWidgets
+   */
+  projectWidgets: ProjectWidget[];
+
+  /**
+   * The screen code of the client;
+   */
+  screenCode: number;
 
   /**
    * constructor
    *
    * @param {ActivatedRoute} activatedRoute The activated route service
    * @param {DashboardService} dashboardService The dashboard service
+   * @param {WebsocketService} websocketService The websocket service
+   * @param {HttpProjectService} httpProjectService The http project service
    * @param {MatDialog} matDialog The mat dialog service
+   * @param {Router} router The router service on Angular
    */
   constructor(private activatedRoute: ActivatedRoute,
               private dashboardService: DashboardService,
-              private matDialog: MatDialog) {
+              private websocketService: WebsocketService,
+              private httpProjectService: HttpProjectService,
+              private matDialog: MatDialog,
+              private router: Router) {
   }
 
   /**
    * Init objects
    */
   ngOnInit() {
-    // Global init from project
-    this.activatedRoute.params.subscribe(params => {
-      this.dashboardService
-          .getOneById(+params['id'])
-          .subscribe(project => {
-            this.dashboardService.currentDisplayedDashboardValue = project;
-          });
+    this.screenCode = this.websocketService.getscreenCode();
+
+    this.dashboardService.refreshProjectEvent().subscribe(shouldRefresh => {
+      if (shouldRefresh) {
+        this.refreshProject(this.project.token);
+      }
     });
 
-    this.dashboardService.currentDisplayedDashboard$
-        .pipe(takeWhile(() => this.isAlive))
-        .subscribe(project => this.project$ = of(project));
+    // Global init from project
+    this.activatedRoute.params.subscribe(params => {
+      this.refreshProject(params['dashboardToken']);
+    });
+  }
+
+  /**
+   * Refresh the project
+   */
+  refreshProject(dashboardToken: string): void {
+    this.httpProjectService.getOneByToken(dashboardToken).subscribe(project => {
+      this.project = project;
+
+      this.httpProjectService.getProjectProjectWidgets(this.project.token).subscribe(projectWidgets => {
+        this.projectWidgets = projectWidgets;
+      });
+    });
   }
 
   /**
    * The add widget dialog ref
    */
   openAddWidgetDialog() {
-    this.addWidgetDialogRef = this.matDialog.open(AddWidgetDialogComponent, {
+    this.matDialog.open(AddWidgetDialogComponent, {
       minWidth: 900,
       minHeight: 500,
+      data: {projectToken: this.project.token}
     });
+  }
+
+  /**
+   * Handle the disconnection of a dashboard
+   */
+  handlingDashboardDisconnect() {
+    this.router.navigate(['/home']);
   }
 
   /**

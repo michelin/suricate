@@ -21,10 +21,10 @@ import {CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
 
 import {SharedModule} from '../../shared/shared.module';
-
 import {SettingsListComponent} from './pages/settings-list/settings-list.component';
 import {LayoutModule} from '../../layout/layout.module';
 import {settingsRoutes} from './settings.route';
+import {SettingsService} from './settings.service';
 
 @NgModule({
   imports: [
@@ -35,6 +35,9 @@ import {settingsRoutes} from './settings.route';
   ],
   declarations: [
     SettingsListComponent
+  ],
+  providers: [
+    SettingsService
   ]
 })
 export class SettingsModule {

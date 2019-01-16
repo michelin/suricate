@@ -19,7 +19,7 @@
     <ng-container matColumnDef="image">
       <mat-header-cell fxFlex="17%" *matHeaderCellDef></mat-header-cell>
       <mat-cell fxFlex="17%" *matCellDef="let row">
-        <div class="list-image" [innerHtml]="getHtmlImage(row.image)"></div>
+        <img fxFlex="60%" class="list-image" [src]="getImageSrc(row.imageToken)"/>
       </mat-cell>
     </ng-container>
 

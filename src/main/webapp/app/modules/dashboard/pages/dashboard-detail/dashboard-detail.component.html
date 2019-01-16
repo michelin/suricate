@@ -1,9 +1,12 @@
-<app-pages-header [secondTitle]="(project$ | async)?.name"></app-pages-header>
+<app-pages-header [secondTitle]="project?.name"></app-pages-header>
 
 <!-- Dashboard screen -->
-<app-dashboard-screen *ngIf="(project$ | async)?.projectWidgets?.length > 0; else dashboardNoWidget"
-                      [project]="(project$ | async)"
-                      [readOnly]="false">
+<app-dashboard-screen *ngIf="projectWidgets?.length > 0; else dashboardNoWidget"
+                      [project]="project"
+                      [projectWidgets]="projectWidgets"
+                      [screenCode]="screenCode"
+                      [readOnly]="false"
+                      (disconnectEvent)="handlingDashboardDisconnect()">
 </app-dashboard-screen>
 
 <!-- Display the add card, if no widget inside the project -->
@@ -17,7 +20,9 @@
         </mat-card-content>
       </a>
       <mat-card-actions align="start">
-        <button #addDashboardButton mat-button (click)="openAddWidgetDialog()"><app-translate [key]="'widget.add'"></app-translate></button>
+        <button #addDashboardButton mat-button (click)="openAddWidgetDialog()">
+          <app-translate [key]="'widget.add'"></app-translate>
+        </button>
       </mat-card-actions>
     </mat-card>
   </div>

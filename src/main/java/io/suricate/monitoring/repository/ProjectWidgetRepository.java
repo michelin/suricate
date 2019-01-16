@@ -17,16 +17,13 @@
 package io.suricate.monitoring.repository;
 
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
-import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
 import io.suricate.monitoring.model.enums.WidgetState;
-import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -39,87 +36,81 @@ public interface ProjectWidgetRepository extends JpaRepository<ProjectWidget, Lo
      */
     @Modifying
     @Query("UPDATE ProjectWidget " +
-                "SET    lastSuccessDate = null, " +
-                        "log = null," +
-                        "state = 'STOPPED'")
+        "SET    lastSuccessDate = null, " +
+        "log = null," +
+        "state = 'STOPPED'")
     void resetProjectWidgetsState();
 
     /**
      * Update the position in the grid of a widget
      *
-     * @param row The new start row number
-     * @param col The new Start col number
-     * @param width The new number of columns taken by the widget
+     * @param row    The new start row number
+     * @param col    The new Start col number
+     * @param width  The new number of columns taken by the widget
      * @param height The new number of rows taken by the widget
-     * @param id The project widget id
+     * @param id     The project widget id
      * @return State of the update
      */
     @Modifying
     @Query("UPDATE ProjectWidget SET row = :row, " +
-            "col = :col, " +
-            "width = :width, " +
-            "height = :height " +
-            "WHERE id = :id")
-    int updateRowAndColAndWidthAndHeightById(@Param("row") int row,@Param("col") int col,@Param("width") int width,@Param("height") int height,@Param("id") Long id );
+        "col = :col, " +
+        "width = :width, " +
+        "height = :height " +
+        "WHERE id = :id")
+    int updateRowAndColAndWidthAndHeightById(@Param("row") int row, @Param("col") int col, @Param("width") int width, @Param("height") int height, @Param("id") Long id);
 
     /**
      * Update the state of a project widget when nashorn execution end by a success
      *
-     * @param date The last execution date
-     * @param log The log of nashorn execution
-     * @param data The data returned by nashorn
-     * @param id The id of the project widget
+     * @param date        The last execution date
+     * @param log         The log of nashorn execution
+     * @param data        The data returned by nashorn
+     * @param id          The id of the project widget
      * @param widgetState The widget state
      * @return State of the query
      */
     @Modifying
     @Query("UPDATE ProjectWidget " +
-            "SET lastExecutionDate = :lastExecutionDate, " +
-            "lastSuccessDate = :lastExecutionDate," +
-            "state = :state, " +
-            "log = :log, " +
-            "data = :data " +
-            "WHERE id = :id")
-    int updateSuccessExecution(@Param("lastExecutionDate")Date date, @Param("log") String log, @Param("data") String data, @Param("id") Long id, @Param("state") WidgetState widgetState);
+        "SET lastExecutionDate = :lastExecutionDate, " +
+        "lastSuccessDate = :lastExecutionDate," +
+        "state = :state, " +
+        "log = :log, " +
+        "data = :data " +
+        "WHERE id = :id")
+    int updateSuccessExecution(@Param("lastExecutionDate") Date date, @Param("log") String log, @Param("data") String data, @Param("id") Long id, @Param("state") WidgetState widgetState);
 
     /**
      * Update the state of a project widget when nashorn execution end with errors
      *
-     * @param date The last execution date
-     * @param log The logs of the execution
-     * @param id The project widget id
+     * @param date        The last execution date
+     * @param log         The logs of the execution
+     * @param id          The project widget id
      * @param widgetState The widget state
      * @return State of the query
      */
     @Modifying
     @Query("UPDATE ProjectWidget " +
-            "SET lastExecutionDate = :lastExecutionDate, " +
-            "state = :state, " +
-            "log = :log " +
-            "WHERE id = :id")
-    int updateExecutionLog(@Param("lastExecutionDate")Date date, @Param("log") String log, @Param("id") Long id, @Param("state") WidgetState widgetState);
-
-    /**
-     * Method used to find all project and widget for a project
-     * @param projectId project id to find
-     * @param widgetAvailability widget availability
-     * @return the list of widget instance
-     */
-    List<ProjectWidget> findByProjectIdAndWidget_WidgetAvailabilityOrderById(Long projectId, WidgetAvailabilityEnum widgetAvailability);
+        "SET lastExecutionDate = :lastExecutionDate, " +
+        "state = :state, " +
+        "log = :log " +
+        "WHERE id = :id")
+    int updateExecutionLog(@Param("lastExecutionDate") Date date, @Param("log") String log, @Param("id") Long id, @Param("state") WidgetState widgetState);
 
     /**
      * Method used to delete a widget instance by it's id and the project id
+     *
      * @param projectId the project is
-     * @param id the widget instance id
+     * @param id        the widget instance id
      * @return the number of deleted rows
      */
     Long deleteByProjectIdAndId(Long projectId, Long id);
 
     /**
      * Get project Widget Id from id and projectId
+     *
      * @param projectWidgetId project widget Id
-     * @param projectId project id
+     * @param projectToken    project token
      * @return project widget id
      */
-    Optional<ProjectWidget> findByIdAndProject_Id(Long projectWidgetId, Long projectId);
+    Optional<ProjectWidget> findByIdAndProject_Token(Long projectWidgetId, String projectToken);
 }

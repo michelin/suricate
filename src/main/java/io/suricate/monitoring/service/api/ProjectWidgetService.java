@@ -21,7 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.mustachejava.Mustache;
 import com.github.mustachejava.MustacheException;
 import com.github.mustachejava.MustacheFactory;
-import io.suricate.monitoring.model.dto.project.ProjectWidgetPositionDto;
+import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetPositionRequestDto;
 import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
 import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
@@ -30,9 +30,9 @@ import io.suricate.monitoring.model.entity.widget.WidgetParam;
 import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.model.enums.WidgetVariableType;
-import io.suricate.monitoring.model.mapper.project.ProjectMapper;
-import io.suricate.monitoring.model.mapper.project.ProjectWidgetMapper;
 import io.suricate.monitoring.repository.ProjectWidgetRepository;
+import io.suricate.monitoring.service.mapper.ProjectMapper;
+import io.suricate.monitoring.service.mapper.ProjectWidgetMapper;
 import io.suricate.monitoring.service.scheduler.DashboardScheduleService;
 import io.suricate.monitoring.service.scheduler.NashornWidgetScheduler;
 import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
@@ -157,26 +157,15 @@ public class ProjectWidgetService {
      * @param projectWidgetId The project widget id
      * @return The project widget
      */
-    public ProjectWidget getOne(final Long projectWidgetId) {
-        return projectWidgetRepository.findById(projectWidgetId).get();
-    }
-
-    /**
-     * Find a project widget by the project id and the project widget id
-     *
-     * @param projectId       The project id
-     * @param projectWidgetId The project widget id
-     * @return The project widget as Optional
-     */
-    public Optional<ProjectWidget> findByProjectIdAndProjectWidgetId(final Long projectId, final Long projectWidgetId) {
-        return projectWidgetRepository.findByIdAndProject_Id(projectWidgetId, projectId);
+    public Optional<ProjectWidget> getOne(final Long projectWidgetId) {
+        return projectWidgetRepository.findById(projectWidgetId);
     }
 
     /**
      * Add a new project widget
      *
      * @param projectWidget The project widget to add
-     * @return The projectWidget instantiate
+     * @return The projectwidget instantiate
      */
     @Transactional
     public ProjectWidget addProjectWidget(ProjectWidget projectWidget) {
@@ -200,7 +189,7 @@ public class ProjectWidgetService {
     /**
      * Update the position of a widget
      *
-     * @param projectWidgetId The projectWidget id
+     * @param projectWidgetId The projectwidget id
      * @param startCol        The new start col
      * @param startRow        The new start row
      * @param height          The new Height
@@ -217,14 +206,14 @@ public class ProjectWidgetService {
      * @param positions lit of position
      */
     @Transactional
-    public void updateWidgetPositionByProject(Project project, final List<ProjectWidgetPositionDto> positions) {
-        for (ProjectWidgetPositionDto projectWidgetPositionDto : positions) {
+    public void updateWidgetPositionByProject(Project project, final List<ProjectWidgetPositionRequestDto> positions) {
+        for (ProjectWidgetPositionRequestDto projectWidgetPositionRequestDto : positions) {
             updateWidgetPositionByProjectWidgetId(
-                projectWidgetPositionDto.getProjectWidgetId(),
-                projectWidgetPositionDto.getCol(),
-                projectWidgetPositionDto.getRow(),
-                projectWidgetPositionDto.getHeight(),
-                projectWidgetPositionDto.getWidth()
+                projectWidgetPositionRequestDto.getProjectWidgetId(),
+                projectWidgetPositionRequestDto.getCol(),
+                projectWidgetPositionRequestDto.getRow(),
+                projectWidgetPositionRequestDto.getHeight(),
+                projectWidgetPositionRequestDto.getWidth()
             );
         }
         projectWidgetRepository.flush();
@@ -237,19 +226,23 @@ public class ProjectWidgetService {
     /**
      * Method used to remove widget from the dashboard
      *
-     * @param project         the project
-     * @param projectWidgetId the projectwidget id
+     * @param projectWidgetId the projectWidgetId id
      */
     @Transactional
-    public void removeWidgetFromDashboard(Project project, Long projectWidgetId) {
-        ctx.getBean(NashornWidgetScheduler.class).cancelWidgetInstance(projectWidgetId);
-        projectWidgetRepository.deleteByProjectIdAndId(project.getId(), projectWidgetId);
-        projectWidgetRepository.flush();
+    public void removeWidgetFromDashboard(Long projectWidgetId) {
+        Optional<ProjectWidget> projectWidgetOptional = this.getOne(projectWidgetId);
 
-        // notify client
-        UpdateEvent updateEvent = new UpdateEvent(UpdateType.GRID);
-        updateEvent.setContent(projectMapper.toProjectDtoDefault(project));
-        dashboardWebsocketService.updateGlobalScreensByProjectId(project.getId(), updateEvent);
+        if (projectWidgetOptional.isPresent()) {
+            ctx.getBean(NashornWidgetScheduler.class).cancelWidgetInstance(projectWidgetId);
+
+            projectWidgetRepository.deleteByProjectIdAndId(projectWidgetOptional.get().getProject().getId(), projectWidgetId);
+            projectWidgetRepository.flush();
+
+            // notify client
+            UpdateEvent updateEvent = new UpdateEvent(UpdateType.GRID);
+            updateEvent.setContent(projectMapper.toProjectDtoDefault(projectWidgetOptional.get().getProject()));
+            dashboardWebsocketService.updateGlobalScreensByProjectId(projectWidgetOptional.get().getProject().getId(), updateEvent);
+        }
     }
 
 
@@ -280,18 +273,21 @@ public class ProjectWidgetService {
      */
     @Transactional
     public void updateState(WidgetState widgetState, Long id, Date date) {
-        ProjectWidget projectWidget = getOne(id);
-        projectWidget.setState(widgetState);
+        Optional<ProjectWidget> projectWidgetOptional = this.getOne(id);
 
-        if (date != null) {
-            projectWidget.setLastExecutionDate(date);
+        if (projectWidgetOptional.isPresent()) {
+            projectWidgetOptional.get().setState(widgetState);
+
+            if (date != null) {
+                projectWidgetOptional.get().setLastExecutionDate(date);
+            }
+
+            projectWidgetRepository.saveAndFlush(projectWidgetOptional.get());
         }
-
-        projectWidgetRepository.saveAndFlush(projectWidget);
     }
 
     /**
-     * Method used to get instantiate html for a projectWidget
+     * Method used to get instantiate html for a projectwidget
      * Call inside {@link ProjectWidgetMapper}
      *
      * @param projectWidget the project widget
@@ -343,8 +339,12 @@ public class ProjectWidgetService {
     public void updateProjectWidget(ProjectWidget projectWidget, final String customStyle, final String backendConfig) {
         ctx.getBean(NashornWidgetScheduler.class).cancelWidgetInstance(projectWidget.getId());
 
-        projectWidget.setCustomStyle(customStyle);
-        projectWidget.setBackendConfig(encryptSecretParamsIfNeeded(projectWidget.getWidget().getWidgetParams(), backendConfig));
+        if (customStyle != null) {
+            projectWidget.setCustomStyle(customStyle);
+        }
+        if (backendConfig != null) {
+            projectWidget.setBackendConfig(encryptSecretParamsIfNeeded(projectWidget.getWidget().getWidgetParams(), backendConfig));
+        }
         projectWidgetRepository.save(projectWidget);
 
         dashboardScheduleService.scheduleWidget(projectWidget.getId());
@@ -370,7 +370,7 @@ public class ProjectWidgetService {
     /**
      * Update project widget when nashorn execution is a success
      *
-     * @param projectWidgetId The projectWidget id
+     * @param projectWidgetId The projectwidget id
      * @param executionDate   The execution date
      * @param executionLog    The execution log
      * @param data            The data return by the execution
