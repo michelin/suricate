@@ -109,7 +109,6 @@ public class WidgetService {
             return Optional.empty();
         }
 
-        widgets.forEach(widget -> widget.getWidgetParams().addAll(getGlobalWidgetParamsFromConfiguration(widget)));
         return Optional.of(widgets);
     }
 
@@ -126,7 +125,6 @@ public class WidgetService {
             return null;
         }
 
-        widgetOptional.get().getWidgetParams().addAll(getGlobalWidgetParamsFromConfiguration(widgetOptional.get()));
         return widgetOptional.get();
     }
 
@@ -144,7 +142,6 @@ public class WidgetService {
             return Optional.empty();
         }
 
-        widgets.forEach(widget -> widget.getWidgetParams().addAll(getGlobalWidgetParamsFromConfiguration(widget)));
         return Optional.of(widgets);
     }
 
@@ -172,8 +169,7 @@ public class WidgetService {
     public List<WidgetVariableResponse> getWidgetVariables(final Widget widget) {
         List<WidgetVariableResponse> widgetVariableResponses = new ArrayList<>();
 
-        List<WidgetParam> widgetParams = new ArrayList<>();
-        widgetParams.addAll(widget.getWidgetParams());
+        List<WidgetParam> widgetParams = new ArrayList<>(widget.getWidgetParams());
         widgetParams.addAll(getGlobalWidgetParamsFromConfiguration(widget));
 
         for (WidgetParam widgetParam : widgetParams) {
@@ -266,6 +262,7 @@ public class WidgetService {
         if (category == null || widgets == null) {
             return;
         }
+
         for (Widget widget : widgets) {
             if (widget.getLibraries() != null && mapLibrary != null) {
                 widget.getLibraries().replaceAll(x -> mapLibrary.get(x.getTechnicalName()));
@@ -277,7 +274,7 @@ public class WidgetService {
                 LOGGER.info(
                     "The widget {} has been found on another repository ''{}'' and will be replace by {}",
                     currentWidget.getTechnicalName(),
-                    currentWidget.getRepository() != null ? currentWidget.getRepository().getName() : StringUtils.EMPTY,
+                    (currentWidget.getRepository() != null) ? currentWidget.getRepository().getName() : StringUtils.EMPTY,
                     repository.getName()
                 );
 

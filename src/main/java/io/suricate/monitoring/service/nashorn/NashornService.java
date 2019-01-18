@@ -133,7 +133,7 @@ public class NashornService {
      * @param configurations The global configurations
      * @return The nashorn request updated
      */
-    public NashornRequest injectWidgetsConfigurations(NashornRequest nashornRequest, List<Configuration> configurations) {
+    public NashornRequest injectCategoryConfigurations(NashornRequest nashornRequest, List<Configuration> configurations) {
 
         if (configurations != null && !configurations.isEmpty()) {
             StringBuilder builder = new StringBuilder(nashornRequest.getProperties()).append('\n');
