@@ -139,13 +139,16 @@ public class NashornService {
         if (configurations != null && !configurations.isEmpty()) {
             builder.append('\n');
             for (Configuration configuration : configurations) {
-                builder
-                    .append(configuration.getKey())
-                    .append('=')
-                    .append(configuration.getValue())
-                    .append('\n');
+                if (!projectWidget.getBackendConfig().contains(configuration.getKey())) {
+                    builder
+                        .append(configuration.getKey())
+                        .append('=')
+                        .append(configuration.getValue())
+                        .append('\n');
+                }
             }
         }
+
 
         return builder.toString();
     }

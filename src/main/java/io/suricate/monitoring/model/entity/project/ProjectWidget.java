@@ -107,14 +107,7 @@ public class ProjectWidget extends AbstractAuditingEntity<Long> {
      */
     @Column
     private Date lastSuccessDate;
-
-    /**
-     * Boolean that tell if the global configuration has been override or not
-     */
-    @Type(type = "yes_no")
-    @Column(nullable = false, name = "is_global_config_overridden")
-    private boolean isGlobalConfigOverridden = false;
-
+    
     /**
      * The widget state {@link WidgetState}
      */

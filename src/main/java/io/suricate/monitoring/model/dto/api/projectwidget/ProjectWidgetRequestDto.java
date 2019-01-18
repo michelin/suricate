@@ -73,11 +73,6 @@ public class ProjectWidgetRequestDto extends AbstractDto {
     @ApiModelProperty(value = "The configuration of this widget")
     private String backendConfig;
     /**
-     * Boolean that tell if the global configuration has been override or not
-     */
-    @ApiModelProperty(value = "True if the global configuration has been override for this project widget")
-    private boolean globalConfigOverridden;
-    /**
      * The widgetId related to this project widget
      */
     @ApiModelProperty(value = "The widgetId related to this project widget")

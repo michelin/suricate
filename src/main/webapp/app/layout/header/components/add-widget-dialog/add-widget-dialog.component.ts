@@ -27,6 +27,8 @@ import {HttpProjectService} from '../../../../shared/services/api/http-project.s
 import {WidgetVariableType} from '../../../../shared/model/enums/WidgetVariableType';
 import {WidgetAvailabilityEnum} from '../../../../shared/model/enums/WidgetAvailabilityEnum';
 import {ProjectWidgetRequest} from '../../../../shared/model/api/ProjectWidget/ProjectWidgetRequest';
+import {WidgetParam} from '../../../../shared/model/api/widget/WidgetParam';
+import {Configuration} from '../../../../shared/model/api/configuration/Configuration';
 
 /**
  * Dialog used to add a widget
@@ -79,6 +81,14 @@ export class AddWidgetDialogComponent implements OnInit {
    * @type {Widget}
    */
   selectedWidget: Widget;
+  /**
+   * The widget params
+   */
+  widgetParams: WidgetParam[];
+  /**
+   * The category configuration
+   */
+  configurations: Configuration[];
 
   /**
    * The constructor
@@ -119,9 +129,32 @@ export class AddWidgetDialogComponent implements OnInit {
 
   setSelectedWidget(selectedWidget: Widget) {
     this.selectedWidget = selectedWidget;
+    this.httpCategoryService.getCategoryConfigurations(selectedWidget.category.id).subscribe(configurations => {
+      this.configurations = configurations;
+      this.createParamsToDisplay();
+    });
     this.step2Completed = true;
     this.changeDetectorRef.detectChanges();
     this.widgetStepper.next();
+  }
+
+  /**
+   * Create the list of params to display
+   */
+  createParamsToDisplay() {
+    this.widgetParams = this.selectedWidget.params;
+
+    if (this.configurations) {
+      this.configurations.forEach(configuration => {
+        this.widgetParams.push({
+          name: configuration.key,
+          description: configuration.key,
+          defaultValue: configuration.value,
+          type: WidgetVariableType[configuration.dataType.toString()],
+          required: true
+        });
+      });
+    }
   }
 
   addWidget(formSettings: NgForm) {
