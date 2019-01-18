@@ -78,10 +78,13 @@ public class UserDetailsServiceLdapAuthoritiesPopulator implements LdapAuthoriti
         LOGGER.debug("Authenticating {}", username);
         String lowercaseLogin = username.toLowerCase(Locale.ENGLISH);
         Optional<User> currentUser =  userService.getOneByUsername(lowercaseLogin);
+        ConnectedUser connectedUser = new ConnectedUser(lowercaseLogin, userData, applicationProperties.authentication.ldap);
 
         if (!currentUser.isPresent()) {
             // Call service to add user
-            currentUser = userService.initUser(new ConnectedUser(lowercaseLogin, userData, applicationProperties.authentication.ldap));
+            currentUser = userService.initUser(connectedUser);
+        } else {
+            currentUser = userService.updateUserLdapInformations(currentUser.get(), connectedUser);
         }
 
         return currentUser.map(user -> user.getRoles().stream()
