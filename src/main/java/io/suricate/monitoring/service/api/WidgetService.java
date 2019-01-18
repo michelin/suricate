@@ -157,7 +157,6 @@ public class WidgetService {
         return configurationsOptional
             .map(configurations -> configurations.stream().map(ConfigurationService::initParamFromConfiguration).collect(Collectors.toList()))
             .orElseGet(ArrayList::new);
-
     }
 
     /**
