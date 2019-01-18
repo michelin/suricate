@@ -55,7 +55,7 @@ security.oauth2:
   client:
     client-id: suricateAngular
     client-secret: suricateAngularSecret
-  resource.filter-order :  3
+  resource.filter-order:  3
 
 ### Actuator ###
 management:
@@ -81,7 +81,7 @@ logging:
   file: /tmp/suricate-io/suricate/log
   level:
     io.suricate.monitoring: DEBUG
-    net.sf.jmimemagic.MagicParser :  off
+    net.sf.jmimemagic.MagicParser:  off
     org.springframework.boot.actuate: INFO
     org.springframework.security.web.csrf.CsrfFilter: DEBUG
 
@@ -107,7 +107,6 @@ application:
       username:
       password:
       userSearchBase:
-      referral:
     ### JWT Configuration ###
     jwt:
       secret:  ${random.value}

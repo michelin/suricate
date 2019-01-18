@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-
 package io.suricate.monitoring.configuration.security.ldap;
 
 import io.suricate.monitoring.configuration.ApplicationProperties;
@@ -23,10 +22,8 @@ import io.suricate.monitoring.service.api.UserService;
 import io.suricate.monitoring.utils.exception.ConfigurationException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Profile;
 import org.springframework.ldap.core.AuthenticationSource;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -49,16 +46,14 @@ public class LdapAuthentication {
      * The user service
      */
     private final UserService userService;
-    private final ApplicationProperties applicationProperties;
     private final UserDetailsServiceLdapAuthoritiesPopulator userDetailsServiceLdapAuthoritiesPopulator;
-    private final ApplicationProperties.Ldap ldap;
+    private final ApplicationProperties.Ldap ldapProperties;
 
     @Autowired
-    public LdapAuthentication(UserService userService, ApplicationProperties applicationProperties, UserDetailsServiceLdapAuthoritiesPopulator userDetailsServiceLdapAuthoritiesPopulator, @Qualifier("applicationProperties") ApplicationProperties props) {
+    public LdapAuthentication(UserService userService, ApplicationProperties applicationProperties, UserDetailsServiceLdapAuthoritiesPopulator userDetailsServiceLdapAuthoritiesPopulator) {
         this.userService = userService;
-        this.applicationProperties = applicationProperties;
         this.userDetailsServiceLdapAuthoritiesPopulator = userDetailsServiceLdapAuthoritiesPopulator;
-        this.ldap = props.getAuthentication().ldap;
+        this.ldapProperties = applicationProperties.authentication.ldap;
     }
 
     /**
@@ -66,7 +61,7 @@ public class LdapAuthentication {
      */
     @PostConstruct
     private void checkLdapConfiguration() {
-        if (StringUtils.isBlank(applicationProperties.authentication.ldap.url)) {
+        if (StringUtils.isBlank(ldapProperties.url)) {
             throw new ConfigurationException("The Ldap url is mandatory when the provider is ldap", "application.authentication.ldap.url");
         }
     }
@@ -82,8 +77,12 @@ public class LdapAuthentication {
         auth.ldapAuthentication()
             .userDetailsContextMapper(userDetailsContextMapper())
             .ldapAuthoritiesPopulator(userDetailsServiceLdapAuthoritiesPopulator)
-            .userSearchFilter(applicationProperties.authentication.ldap.userSearchFilter)
-            .userSearchBase(ldap.userSearchBase)
+            .userSearchFilter(ldapProperties.userSearchFilter)
+            .groupRoleAttribute(ldapProperties.groupRoleAttribute)
+            .groupSearchBase(ldapProperties.groupSearchBase)
+            .groupSearchFilter(ldapProperties.groupSearchFilter)
+            .rolePrefix(ldapProperties.rolePrefix)
+            .userSearchBase(ldapProperties.userSearchBase)
             .contextSource(contextSource());
     }
 
@@ -97,35 +96,38 @@ public class LdapAuthentication {
             @Override
             public UserDetails mapUserFromContext(DirContextOperations ctx, String username, java.util.Collection<? extends GrantedAuthority> authorities) {
                 Long userId = userService.getIdByUsername(username);
-                return new ConnectedUser(username, ctx, authorities, userId, applicationProperties.authentication.ldap);
+                return new ConnectedUser(username, ctx, authorities, userId, ldapProperties);
             }
         };
     }
 
     /**
      * Initialize LDAP context
-     * @return
+     * @return The default context source configured
      */
     private DefaultSpringSecurityContextSource contextSource() {
-        DefaultSpringSecurityContextSource contextSource = new DefaultSpringSecurityContextSource(ldap.url);
+        DefaultSpringSecurityContextSource contextSource = new DefaultSpringSecurityContextSource(ldapProperties.url);
 
-        if (!StringUtils.isEmpty(ldap.referral)) { contextSource.setReferral(ldap.referral); }
+        if (!StringUtils.isEmpty(ldapProperties.referral)) {
+            contextSource.setReferral(ldapProperties.referral);
+        }
 
-        if (!StringUtils.isEmpty(ldap.username) && !StringUtils.isEmpty(ldap.password) ) {
+        if (!StringUtils.isEmpty(ldapProperties.username) && !StringUtils.isEmpty(ldapProperties.password) ) {
             contextSource.setAuthenticationSource(new AuthenticationSource() {
                 @Override
                 public String getPrincipal() {
-                    return ldap.username;
+                    return ldapProperties.username;
                 }
 
                 @Override
                 public String getCredentials() {
-                    return ldap.password;
+                    return ldapProperties.password;
                 }
             });
         }
 
         contextSource.setCacheEnvironmentProperties(false);
+        contextSource.afterPropertiesSet();
         return contextSource;
     }
 
