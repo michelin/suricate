@@ -16,6 +16,7 @@
 
 package io.suricate.monitoring.service.mapper;
 
+import io.suricate.monitoring.configuration.security.ConnectedUser;
 import io.suricate.monitoring.model.dto.api.user.UserRequestDto;
 import io.suricate.monitoring.model.dto.api.user.UserResponseDto;
 import io.suricate.monitoring.model.entity.user.User;
@@ -42,6 +43,9 @@ import java.util.List;
 )
 public abstract class UserMapper {
 
+    /**
+     * The password encoder
+     */
     @Autowired
     protected PasswordEncoder passwordEncoder;
 
@@ -81,6 +85,17 @@ public abstract class UserMapper {
     /* ******************************************************* */
     /*                  Simple Mapping                         */
     /* ******************************************************* */
+
+    /**
+     * Function used to map a LDAP user to a user in Database
+     *
+     * @param connectedUser The LDAP user
+     * @return The User in database
+     */
+    @Named("fromLdapUserToUser")
+    @Mapping(target = "authenticationMethod", expression = "java(AuthenticationMethod.LDAP)")
+    @Mapping(target = "email", source = "connectedUser.mail")
+    public abstract User fromLdapUserToUser(final ConnectedUser connectedUser);
 
     /**
      * Tranform a UserRequestDto into a User for creation

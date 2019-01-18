@@ -19,9 +19,9 @@ package io.suricate.monitoring.service.api;
 import io.suricate.monitoring.configuration.security.ConnectedUser;
 import io.suricate.monitoring.model.entity.user.Role;
 import io.suricate.monitoring.model.entity.user.User;
-import io.suricate.monitoring.model.enums.AuthenticationMethod;
 import io.suricate.monitoring.model.enums.UserRoleEnum;
 import io.suricate.monitoring.repository.UserRepository;
+import io.suricate.monitoring.service.mapper.UserMapper;
 import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -50,6 +50,12 @@ public class UserService {
      * The user repository
      */
     private final UserRepository userRepository;
+
+    /**
+     * The user mapper
+     */
+    private final UserMapper userMapper;
+
     /**
      * The role service
      */
@@ -69,16 +75,19 @@ public class UserService {
      * Constructor
      *
      * @param userRepository     The user repository
+     * @param userMapper         The user mapper
      * @param roleService        The role service
      * @param projectService     The projectService to inject
      * @param userSettingService The user setting service
      */
     @Autowired
     public UserService(final UserRepository userRepository,
+                       final UserMapper userMapper,
                        final RoleService roleService,
                        final ProjectService projectService,
                        final UserSettingService userSettingService) {
         this.userRepository = userRepository;
+        this.userMapper = userMapper;
         this.roleService = roleService;
         this.projectService = projectService;
         this.userSettingService = userSettingService;
@@ -127,12 +136,7 @@ public class UserService {
         }
 
         // Create user
-        User user = new User();
-        user.setFirstname(connectedUser.getFirstname());
-        user.setLastname(connectedUser.getLastname());
-        user.setUsername(connectedUser.getUsername());
-        user.setEmail(connectedUser.getMail());
-        user.setAuthenticationMethod(AuthenticationMethod.LDAP);
+        User user = userMapper.fromLdapUserToUser(connectedUser);
 
         UserRoleEnum roleEnumToFind;
         if (userRepository.count() > 0) {
@@ -154,6 +158,24 @@ public class UserService {
         user.getUserSettings().addAll(userSettingService.createDefaultSettingsForUser(user));
 
         return Optional.of(user);
+    }
+
+    /**
+     * Update the user informations when ldap connection is set
+     *
+     * @param user          The user to update
+     * @param connectedUser The LDAP informations
+     * @return The user updated
+     */
+    public Optional<User> updateUserLdapInformations(final User user, final ConnectedUser connectedUser) {
+        User userUpdated = userMapper.fromLdapUserToUser(connectedUser);
+        userUpdated.setRoles(user.getRoles());
+        userUpdated.setProjects(user.getProjects());
+        userUpdated.setUserSettings(user.getUserSettings());
+        userUpdated.setId(user.getId());
+
+        userRepository.save(userUpdated);
+        return Optional.of(userUpdated);
     }
 
     /**
