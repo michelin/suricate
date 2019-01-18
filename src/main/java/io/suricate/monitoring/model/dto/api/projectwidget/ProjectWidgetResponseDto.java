@@ -95,6 +95,12 @@ public class ProjectWidgetResponseDto extends AbstractDto {
     private Date lastSuccessDate;
 
     /**
+     * Boolean that tell if the global configuration has been override or not
+     */
+    @ApiModelProperty(value = "True if the global configuration has been override for this project widget")
+    private boolean isGlobalConfigOverridden;
+
+    /**
      * The widget state {@link WidgetState}
      */
     @ApiModelProperty(value = "The current widget state")

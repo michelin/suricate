@@ -28,5 +28,6 @@ export interface ProjectWidgetRequest {
   height?: number;
   row?: number;
   width?: number;
+  globalConfigOverridden: boolean;
   widgetId: number;
 }

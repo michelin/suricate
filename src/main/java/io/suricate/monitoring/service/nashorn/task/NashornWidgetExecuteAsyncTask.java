@@ -46,7 +46,7 @@ import java.util.concurrent.Callable;
 /**
  * Class used for execute a widget project passed via nashorn request
  */
-public class NashornWidgetExecuteAsyncTask implements Callable<NashornResponse>{
+public class NashornWidgetExecuteAsyncTask implements Callable<NashornResponse> {
 
     /**
      * Class logger
@@ -71,8 +71,8 @@ public class NashornWidgetExecuteAsyncTask implements Callable<NashornResponse>{
     /**
      * Constructor
      *
-     * @param nashornRequest The nashorn request
-     * @param stringEncryptor The string encryptor bean
+     * @param nashornRequest          The nashorn request
+     * @param stringEncryptor         The string encryptor bean
      * @param widgetVariableResponses The widget variables
      */
     public NashornWidgetExecuteAsyncTask(NashornRequest nashornRequest,
@@ -99,14 +99,14 @@ public class NashornWidgetExecuteAsyncTask implements Callable<NashornResponse>{
             ScriptEngine engine = factory.getScriptEngine(new JavaClassFilter());
 
             // Get properties from widget project backend_config
-            Map<String,String> mapProperties = PropertiesUtils.getMap(nashornRequest.getProperties());
+            Map<String, String> mapProperties = PropertiesUtils.getMap(nashornRequest.getProperties());
             // Decrypt SECRET properties
             decryptProperties(mapProperties, widgetVariableResponses);
             // Put unset not required properties
             insertUnsetOptionalProperties(mapProperties, widgetVariableResponses);
 
             // Populate properties in the engine
-            for (Map.Entry<String,String> entry : mapProperties.entrySet()) {
+            for (Map.Entry<String, String> entry : mapProperties.entrySet()) {
                 engine.getBindings(ScriptContext.ENGINE_SCOPE).put(entry.getKey().toUpperCase(), entry.getValue());
             }
             // add the data of the previous execution
@@ -147,7 +147,7 @@ public class NashornWidgetExecuteAsyncTask implements Callable<NashornResponse>{
                 ret.setError(NashornErrorTypeEnum.ERROR);
             }
             if (rootCause instanceof RequestException) {
-                ret.setLog("Service Response:\n\n"+((RequestException) rootCause).getResponse()+"\n\nTechnical Data:\n\n"+((RequestException) rootCause).getTechnicalData());
+                ret.setLog("Service Response:\n\n" + ((RequestException) rootCause).getResponse() + "\n\nTechnical Data:\n\n" + ((RequestException) rootCause).getTechnicalData());
             } else {
                 ret.setLog(prettify(ExceptionUtils.getRootCauseMessage(e)));
             }
@@ -162,63 +162,64 @@ public class NashornWidgetExecuteAsyncTask implements Callable<NashornResponse>{
     /**
      * Method used to decypt properties
      *
-     * @param mapProperties the properties map
+     * @param mapProperties           the properties map
      * @param widgetVariableResponses The list of variables for a widget
      */
     private void decryptProperties(Map<String, String> mapProperties, List<WidgetVariableResponse> widgetVariableResponses) {
         if (widgetVariableResponses != null) {
-            for (WidgetVariableResponse widgetVariableResponse : widgetVariableResponses){
+            for (WidgetVariableResponse widgetVariableResponse : widgetVariableResponses) {
                 // decrypt encrypted property
-                if (WidgetVariableType.SECRET == widgetVariableResponse.getType() || widgetVariableResponse.getType() == WidgetVariableType.PASSWORD){
+                if (WidgetVariableType.SECRET == widgetVariableResponse.getType() || widgetVariableResponse.getType() == WidgetVariableType.PASSWORD) {
                     mapProperties.put(widgetVariableResponse.getName(), stringEncryptor.decrypt(mapProperties.get(widgetVariableResponse.getName())));
                 }
             }
         }
-
     }
 
     /**
      * Set the unset variables in the map properties
-     * 
-     * @param mapProperties The map properties to fill
+     *
+     * @param mapProperties           The map properties to fill
      * @param widgetVariableResponses The list of widget responses
      */
     private void insertUnsetOptionalProperties(Map<String, String> mapProperties, List<WidgetVariableResponse> widgetVariableResponses) {
         if (widgetVariableResponses != null) {
             for (WidgetVariableResponse widgetVariableResponse : widgetVariableResponses) {
                 // Set unset optional properties as null
-                if (!mapProperties.containsKey(widgetVariableResponse.getName()) && !widgetVariableResponse.isRequired()){
+                if (!mapProperties.containsKey(widgetVariableResponse.getName()) && !widgetVariableResponse.isRequired()) {
                     mapProperties.put(widgetVariableResponse.getName(), null);
                 }
             }
         }
-        
+
     }
 
 
     /**
      * Method used to prettify an error message
+     *
      * @param message the message to prettify
      * @return the message without the Exception name
      */
-    protected String prettify(String message){
-        if (message == null){
+    protected String prettify(String message) {
+        if (message == null) {
             return null;
         }
-        return StringUtils.replacePattern(message,"ExecutionException: java.lang.FatalError:|FatalError:","").trim();
+        return StringUtils.replacePattern(message, "ExecutionException: java.lang.FatalError:|FatalError:", "").trim();
     }
 
     /**
      * Method used to check is the return error is fatal
-     * @param e Exception throw
+     *
+     * @param e         Exception throw
      * @param rootCause the root cause exception
      * @return true is the error is fatal false otherwise
      */
     protected boolean isFatalError(Exception e, Throwable rootCause) {
         return !(rootCause instanceof RemoteError
-                || StringUtils.containsIgnoreCase(ExceptionUtils.getMessage(e),"timeout")
-                || rootCause instanceof UnknownHostException
-                || nashornRequest.isAlreadySuccess()
+            || StringUtils.containsIgnoreCase(ExceptionUtils.getMessage(e), "timeout")
+            || rootCause instanceof UnknownHostException
+            || nashornRequest.isAlreadySuccess()
         );
     }
 }

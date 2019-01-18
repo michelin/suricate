@@ -1,0 +1,1 @@
+ALTER TABLE project_widget ADD COLUMN is_global_config_overridden char(1) NOT NULL DEFAULT 'N';
