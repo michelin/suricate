@@ -7,10 +7,7 @@ import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.entity.widget.Category;
 import io.suricate.monitoring.model.entity.widget.Widget;
 import io.suricate.monitoring.model.enums.WidgetState;
-import io.suricate.monitoring.repository.CategoryRepository;
-import io.suricate.monitoring.repository.ProjectRepository;
-import io.suricate.monitoring.repository.ProjectWidgetRepository;
-import io.suricate.monitoring.repository.WidgetRepository;
+import io.suricate.monitoring.repository.*;
 import io.suricate.monitoring.service.api.ProjectWidgetService;
 import io.suricate.monitoring.service.nashorn.NashornService;
 import io.suricate.monitoring.utils.FilesUtilsTest;
@@ -57,6 +54,9 @@ public class NashornWidgetSchedulerTest {
 
     @Autowired
     CategoryRepository categoryRepository;
+
+    @Autowired
+    ConfigurationRepository configurationRepository;
 
     @Autowired
     ProjectWidgetRepository projectWidgetRepository;

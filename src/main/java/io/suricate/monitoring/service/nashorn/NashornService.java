@@ -22,6 +22,7 @@ import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.service.api.ProjectWidgetService;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -134,7 +136,7 @@ public class NashornService {
      * @return Get the full configuration for project widget
      */
     private String getProjectWidgetConfigurationsWithGlobalOne(final ProjectWidget projectWidget, final List<Configuration> configurations) {
-        StringBuilder builder = new StringBuilder(projectWidget.getBackendConfig());
+        StringBuilder builder = new StringBuilder(Objects.toString(projectWidget.getBackendConfig(), StringUtils.EMPTY));
 
         if (configurations != null && !configurations.isEmpty()) {
             builder.append('\n');
