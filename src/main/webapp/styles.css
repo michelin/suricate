@@ -44,6 +44,17 @@ mat-sidenav > #user-section .mat-expansion-panel-body {
     right: 0;
 }
 
+.widget .fullwidget {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.grid-stack a {
+    text-decoration: none;
+    color: inherit;
+}
+
 .widget-dialog-card .mat-card-header-text {
     margin: auto !important;
 }

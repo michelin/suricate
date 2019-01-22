@@ -31,8 +31,6 @@ import {DashboardService} from '../../dashboard.service';
 import {ProjectWidgetPositionRequest} from '../../../../shared/model/api/ProjectWidget/ProjectWidgetPositionRequest';
 import {HttpProjectService} from '../../../../shared/services/api/http-project.service';
 import {RunScriptsDirective} from '../../../../shared/directives/run-scripts.directive';
-import {RunScriptsService} from '../../../../shared/directives/run-scripts.service';
-
 
 /**
  * Display the grid stack widgets
@@ -80,7 +78,7 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
   /**
    * Add runScriptsDirective, so we can recall it
    */
-  @HostBinding('attr.appRunScripts') appRunScriptDirective = new RunScriptsDirective(this.elementRef, this.runScriptsService);
+  @HostBinding('attr.appRunScripts') appRunScriptDirective = new RunScriptsDirective(this.elementRef);
 
   /**
    * The stompJS Subscription for project event
@@ -111,12 +109,6 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
   gridStackItems: NgGridItemConfig[] = [];
 
   /**
-   * Tell if the global JS scripts has been rendered
-   * (Online JS scripts contained inside the widgets are executed when this value is set to true)
-   */
-  isSrcScriptsRendered = false;
-
-  /**
    * The constructor
    *
    * @param websocketService The websocket service
@@ -124,14 +116,12 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
    * @param httpProjectService The http project service
    * @param dashboardService The dashboard service
    * @param elementRef The element Ref service
-   * @param runScriptsService The service associated to the runScript directive
    */
   constructor(private websocketService: WebsocketService,
               private httpAssetService: HttpAssetService,
               private httpProjectService: HttpProjectService,
               private dashboardService: DashboardService,
-              private elementRef: ElementRef,
-              private runScriptsService: RunScriptsService) {
+              private elementRef: ElementRef) {
   }
 
   /**********************************************************************************************************/
@@ -139,31 +129,19 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
 
   /**********************************************************************************************************/
 
-  subscribeToRenderedScriptEvent() {
-    this.runScriptsService.scriptRenderedEvent().pipe(
-      takeWhile(() => this.isAlive)
-    ).subscribe(isRendered => {
-      this.isSrcScriptsRendered = isRendered;
-    });
-  }
-
   /**
    * Each time a value change, this function will be called
    */
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.project) {
       if (!changes.project.previousValue) {
-        this.subscribeToRenderedScriptEvent();
         // We have to inject this variable in the window scope (because some Widgets use it for init the js)
         window['page_loaded'] = true;
-
-      } else if (changes.project.previousValue.token !== changes.project.currentValue.token) {
-        this.runScriptsService.emitScriptRendered(false);
       }
 
       this.project = changes.project.currentValue;
-      this.initGridStackOptions(this.project);
       this.appRunScriptDirective.ngOnInit();
+      this.initGridStackOptions(this.project);
 
       if (changes.project.previousValue) {
         if (changes.project.previousValue.token !== changes.project.currentValue.token) {
@@ -334,6 +312,8 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
         location.reload();
       } else if (updateEvent.type === WSUpdateType.DISPLAY_NUMBER) {
         this.displayScreenCode();
+      } else if (updateEvent.type === WSUpdateType.POSITION) {
+        this.dashboardService.refreshProjectWidgets();
       } else {
         this.dashboardService.refreshProject();
       }

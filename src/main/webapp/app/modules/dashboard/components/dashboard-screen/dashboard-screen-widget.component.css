@@ -15,12 +15,6 @@
     text-align: center;
 }
 
-.widget .fullwidget {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-}
-
 .widget .updated-at {
     color: rgba(0, 0, 0, 0.3);
     font-size: 0.9rem;

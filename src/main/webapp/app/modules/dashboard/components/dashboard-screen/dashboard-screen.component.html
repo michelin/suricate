@@ -15,11 +15,10 @@
   <div [innerHTML]="getJSLibraries() | safeHtml">
   </div>
 
-  <div *ngIf="isSrcScriptsRendered">
-    <app-dashboard-screen-widget *ngFor="let gridStackItem of gridStackItems"
-                                 [projectWidget]="gridStackItem.payload"
-                                 [gridStackItem]="gridStackItem"
-                                 [readOnly]="readOnly">
-    </app-dashboard-screen-widget>
-  </div>
+  <app-dashboard-screen-widget *ngFor="let gridStackItem of gridStackItems"
+                               [projectWidget]="gridStackItem.payload"
+                               [gridStackItem]="gridStackItem"
+                               [projectToken]="project.token"
+                               [readOnly]="readOnly">
+  </app-dashboard-screen-widget>
 </div>

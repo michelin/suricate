@@ -115,6 +115,12 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
         this.refreshProject(this.project.token);
       }
     });
+
+    this.dashboardService.refreshProjectWidgetsEvent().subscribe(shouldRefresh => {
+      if (shouldRefresh) {
+        this.refreshProjectWidgets(this.project.token);
+      }
+    });
   }
 
   /**
@@ -152,13 +158,19 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   /**
    * Refresh the project widget list
    */
+  refreshProjectWidgets(dashboardToken: string): void {
+    this.httpProjectService.getProjectProjectWidgets(dashboardToken).subscribe(projectWidgets => {
+      this.projectWidgets = projectWidgets;
+    });
+  }
+
+  /**
+   * Refresh the project widget list
+   */
   refreshProject(projectToken: string): void {
     this.httpProjectService.getOneByToken(projectToken).subscribe(project => {
       this.project = project;
-
-      this.httpProjectService.getProjectProjectWidgets(projectToken).subscribe(projectWidgets => {
-        this.projectWidgets = projectWidgets;
-      });
+      this.refreshProjectWidgets(projectToken);
     });
   }
 
