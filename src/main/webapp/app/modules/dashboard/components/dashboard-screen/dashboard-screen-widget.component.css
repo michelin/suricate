@@ -55,7 +55,7 @@
     font-size: 0.9em;
     display: flex;
     align-items: center;
-    height: 28px;
+    height: auto;
 }
 
 .widget .material-icons {
