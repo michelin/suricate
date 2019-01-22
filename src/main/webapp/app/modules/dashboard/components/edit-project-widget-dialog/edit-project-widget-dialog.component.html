@@ -19,14 +19,14 @@
 
     <div class="settings-container">
       <form id="formSettings" #formSettings="ngForm" (ngSubmit)="editWidget(formSettings)" novalidate>
-        <div *ngFor="let param of widget?.params">
+        <div *ngFor="let param of widgetParams">
 
           <!-- Boolean Type -->
           <mat-checkbox *ngIf="param.type == widgetVariableType.BOOLEAN"
                         color="accent"
                         [name]="param.name"
                         [required]="param.required"
-                        [ngModel]="getParamValueByParamName(projectWidget.backendConfig, param) ? getParamValueByParamName(projectWidget.backendConfig, param)
+                        [ngModel]="getParamValueByParamName(projectWidget.backendConfig, param.name) ? getParamValueByParamName(projectWidget.backendConfig, param.name)
                                     : param.defaultValue ? param.defaultValue
                                     : param.usageExample">
             {{param.description}}
@@ -39,7 +39,7 @@
                    [name]="param.name"
                    [required]="param.required"
                    [placeholder]="param.description"
-                   [ngModel]="getParamValueByParamName(projectWidget.backendConfig, param) ? getParamValueByParamName(projectWidget.backendConfig, param)
+                   [ngModel]="getParamValueByParamName(projectWidget.backendConfig, param.name) ? getParamValueByParamName(projectWidget.backendConfig, param.name)
                                 : param.defaultValue ? param.defaultValue
                                 : param.usageExample">
           </mat-form-field>
@@ -51,7 +51,7 @@
                    [name]="param.name"
                    [required]="param.required"
                    [placeholder]="param.description"
-                   [ngModel]="getParamValueByParamName(projectWidget.backendConfig, param) ? getParamValueByParamName(projectWidget.backendConfig, param)
+                   [ngModel]="getParamValueByParamName(projectWidget.backendConfig, param.name) ? getParamValueByParamName(projectWidget.backendConfig, param.name)
                                 : param.defaultValue ? param.defaultValue
                                 : param.usageExample">
           </mat-form-field>
@@ -63,7 +63,7 @@
                    [name]="param.name"
                    [required]="param.required"
                    [placeholder]="param.description"
-                   [ngModel]="getParamValueByParamName(projectWidget.backendConfig, param) ? getParamValueByParamName(projectWidget.backendConfig, param)
+                   [ngModel]="getParamValueByParamName(projectWidget.backendConfig, param.name) ? getParamValueByParamName(projectWidget.backendConfig, param.name)
                                 : param.defaultValue ? param.defaultValue
                                 : param.usageExample">
           </mat-form-field>
@@ -73,7 +73,7 @@
             <mat-select [required]="param.required"
                         [placeholder]="param.description"
                         [name]="param.name"
-                        [ngModel]="getParamValueByParamName(projectWidget.backendConfig, param) ? getParamValueByParamName(projectWidget.backendConfig, param)
+                        [ngModel]="getParamValueByParamName(projectWidget.backendConfig, param.name) ? getParamValueByParamName(projectWidget.backendConfig, param.name)
                                     : param.defaultValue ? param.defaultValue
                                     : param.usageExample">
               <mat-option *ngFor="let paramValue of param.values" [value]="paramValue.jsKey">

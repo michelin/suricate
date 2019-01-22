@@ -19,7 +19,6 @@ import {FormGroup, NgForm} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 
 import {ProjectWidget} from '../../../../shared/model/api/ProjectWidget/ProjectWidget';
-import {WidgetParam} from '../../../../shared/model/api/widget/WidgetParam';
 import {ToastService} from '../../../../shared/components/toast/toast.service';
 import {ToastType} from '../../../../shared/components/toast/toast-objects/ToastType';
 import {WidgetVariableType} from '../../../../shared/model/enums/WidgetVariableType';
@@ -27,6 +26,9 @@ import {HttpProjectWidgetService} from '../../../../shared/services/api/http-pro
 import {HttpWidgetService} from '../../../../shared/services/api/http-widget.service';
 import {Widget} from '../../../../shared/model/api/widget/Widget';
 import {HttpAssetService} from '../../../../shared/services/api/http-asset.service';
+import {Configuration} from '../../../../shared/model/api/configuration/Configuration';
+import {HttpCategoryService} from '../../../../shared/services/api/http-category.service';
+import {WidgetParam} from '../../../../shared/model/api/widget/WidgetParam';
 
 @Component({
   selector: 'app-edit-project-widget-dialog',
@@ -48,10 +50,21 @@ export class EditProjectWidgetDialogComponent implements OnInit {
   widget: Widget;
 
   /**
+   * The category configuration of the widget
+   */
+  configurations: Configuration[];
+
+  /**
+   * The widget params
+   */
+  widgetParams: WidgetParam[];
+
+  /**
    * The widget variable type
    * @type {WidgetVariableType}
    */
   widgetVariableType = WidgetVariableType;
+
 
   /**
    * Constructor
@@ -61,6 +74,7 @@ export class EditProjectWidgetDialogComponent implements OnInit {
    * @param httpProjectWidgetService The project widget service to inject
    * @param httpWidgetService The http widget service to inject
    * @param httpAssetService The http asset service to inject
+   * @param httpCategoryService Manage HTTP calls for the category
    * @param toastService The notification service
    */
   constructor(@Inject(MAT_DIALOG_DATA) private data: any,
@@ -68,6 +82,7 @@ export class EditProjectWidgetDialogComponent implements OnInit {
               private httpProjectWidgetService: HttpProjectWidgetService,
               private httpWidgetService: HttpWidgetService,
               private httpAssetService: HttpAssetService,
+              private httpCategoryService: HttpCategoryService,
               private toastService: ToastService) {
   }
 
@@ -80,8 +95,33 @@ export class EditProjectWidgetDialogComponent implements OnInit {
 
       this.httpWidgetService.getOneById(projectWidget.widgetId).subscribe(widget => {
         this.widget = widget;
+
+        this.httpCategoryService.getCategoryConfigurations(widget.category.id).subscribe(configurations => {
+          this.configurations = configurations;
+
+          this.createParamsToDisplay();
+        });
       });
     });
+  }
+
+  /**
+   * Create the list of params to display
+   */
+  createParamsToDisplay() {
+    this.widgetParams = this.widget.params;
+
+    if (this.configurations) {
+      this.configurations.forEach(configuration => {
+        this.widgetParams.push({
+          name: configuration.key,
+          description: configuration.key,
+          defaultValue: configuration.value,
+          type: WidgetVariableType[configuration.dataType.toString()],
+          required: true
+        });
+      });
+    }
   }
 
   /**
@@ -124,13 +164,13 @@ export class EditProjectWidgetDialogComponent implements OnInit {
   /**
    * Get the param value inside the backend config for a param
    *
-   * @param {string} backendConfig The backend config
-   * @param {WidgetParam} param The param to find
+   * @param {string} config The backend config
+   * @param {string} paramName The param name to find
    * @returns {string} The corresponding value
    */
-  getParamValueByParamName(backendConfig: string, param: WidgetParam): string {
-    const paramLines: string[] = backendConfig.split('\n');
-    const paramLine = paramLines.find((currentParam: string) => currentParam.startsWith(param.name));
+  getParamValueByParamName(config: string, paramName: string): string {
+    const paramLines: string[] = config.split('\n');
+    const paramLine = paramLines.find((currentParam: string) => currentParam.startsWith(paramName));
     return paramLine ? paramLine.split(/=(.+)?/)[1] : '';
   }
 

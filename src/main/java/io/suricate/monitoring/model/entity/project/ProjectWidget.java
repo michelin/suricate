@@ -107,7 +107,7 @@ public class ProjectWidget extends AbstractAuditingEntity<Long> {
      */
     @Column
     private Date lastSuccessDate;
-
+    
     /**
      * The widget state {@link WidgetState}
      */

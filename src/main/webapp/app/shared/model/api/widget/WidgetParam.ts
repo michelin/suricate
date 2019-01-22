@@ -25,8 +25,8 @@ export interface WidgetParam {
   description: string;
   defaultValue: string;
   type: WidgetVariableType;
-  acceptFileRegex: string;
-  usageExample: string;
+  acceptFileRegex?: string;
+  usageExample?: string;
   required: boolean;
-  values: WidgetParamValue[];
+  values?: WidgetParamValue[];
 }

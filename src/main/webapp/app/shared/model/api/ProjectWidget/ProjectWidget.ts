@@ -33,6 +33,7 @@ export interface ProjectWidget {
   log: string;
   lastExecutionDate: string;
   lastSuccessDate: string;
+  globalConfigOverridden: boolean;
   state: WidgetStateEnum;
   projectToken: string;
   widgetId: number;
