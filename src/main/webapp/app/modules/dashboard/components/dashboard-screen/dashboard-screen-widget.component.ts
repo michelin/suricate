@@ -119,6 +119,14 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Disable click event
+   * @param event The click event
+   */
+  preventDefault(event: MouseEvent) {
+    event.preventDefault();
+  }
+
+  /**
    * Refresh this project widget
    */
   refreshProjectWidget() {
