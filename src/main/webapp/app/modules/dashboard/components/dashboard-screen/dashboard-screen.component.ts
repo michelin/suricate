@@ -31,6 +31,7 @@ import {DashboardService} from '../../dashboard.service';
 import {ProjectWidgetPositionRequest} from '../../../../shared/model/api/ProjectWidget/ProjectWidgetPositionRequest';
 import {HttpProjectService} from '../../../../shared/services/api/http-project.service';
 import {RunScriptsDirective} from '../../../../shared/directives/run-scripts.directive';
+import {GridItemUtils} from '../../../../shared/utils/GridItemUtils';
 
 /**
  * Display the grid stack widgets
@@ -96,6 +97,11 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
    * @type {NgGridConfig}
    */
   gridOptions: NgGridConfig = {};
+
+  /**
+   * Grid state when widgets were first loaded
+   */
+  startGridStackItems: NgGridItemConfig[] = [];
 
   /**
    * The grid items description
@@ -204,16 +210,30 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
     this.gridStackItems = [];
 
     if (this.projectWidgets) {
-      this.projectWidgets.forEach((projectWidget: ProjectWidget) => {
-        this.gridStackItems.push({
-          col: projectWidget.widgetPosition.col,
-          row: projectWidget.widgetPosition.row,
-          sizey: projectWidget.widgetPosition.height,
-          sizex: projectWidget.widgetPosition.width,
-          payload: projectWidget
-        });
-      });
+      this.startGridStackItems = this.getGridStackItemsFromProjectWidgets(this.projectWidgets);
+      this.gridStackItems = JSON.parse(JSON.stringify(this.startGridStackItems));
     }
+  }
+
+  /**
+   * Get the list of GridItemConfigs from project widget
+   *
+   * @param projectWidgets The project widgets
+   */
+  private getGridStackItemsFromProjectWidgets(projectWidgets: ProjectWidget[]) {
+    const gridStackItemsConfig: NgGridItemConfig[] = [];
+
+    this.projectWidgets.forEach((projectWidget: ProjectWidget) => {
+      gridStackItemsConfig.push({
+        col: projectWidget.widgetPosition.col,
+        row: projectWidget.widgetPosition.row,
+        sizey: projectWidget.widgetPosition.height,
+        sizex: projectWidget.widgetPosition.width,
+        payload: projectWidget
+      });
+    });
+
+    return gridStackItemsConfig;
   }
 
   /**********************************************************************************************************/
@@ -332,20 +352,40 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
    * Update the project widget position
    */
   updateProjectWidgetsPosition() {
-    console.log(`update positions: ${this.gridStackItems}`);
+    if (this.isGridItemsHasMoved()) {
+      console.log(`update positions: ${this.gridStackItems}`);
 
-    const projectWidgetPositionRequests: ProjectWidgetPositionRequest[] = [];
-
-    this.gridStackItems.forEach(gridStackItem => {
-      projectWidgetPositionRequests.push({
-        projectWidgetId: (gridStackItem.payload as ProjectWidget).id,
-        col: gridStackItem.col,
-        row: gridStackItem.row,
-        height: gridStackItem.sizey,
-        width: gridStackItem.sizex,
+      const projectWidgetPositionRequests: ProjectWidgetPositionRequest[] = [];
+      this.gridStackItems.forEach(gridStackItem => {
+        projectWidgetPositionRequests.push({
+          projectWidgetId: (gridStackItem.payload as ProjectWidget).id,
+          col: gridStackItem.col,
+          row: gridStackItem.row,
+          height: gridStackItem.sizey,
+          width: gridStackItem.sizex,
+        });
       });
+
+      this.httpProjectService.updateProjectWidgetPositions(this.project.token, projectWidgetPositionRequests).subscribe();
+    }
+  }
+
+  /**
+   * Checks if the grid elements have been moved
+   */
+  private isGridItemsHasMoved(): boolean {
+    let itemHaveBeenMoved: boolean = false;
+
+    this.startGridStackItems.forEach(startGridItem => {
+      const gridItemFound = this.gridStackItems.find(currentGridItem => {
+        return (currentGridItem.payload as ProjectWidget).id === (startGridItem.payload as ProjectWidget).id;
+      });
+
+      if (gridItemFound && GridItemUtils.isItemHaveBeenMoved(startGridItem, gridItemFound)) {
+        itemHaveBeenMoved = true;
+      }
     });
 
-    this.httpProjectService.updateProjectWidgetPositions(this.project.token, projectWidgetPositionRequests).subscribe();
+    return itemHaveBeenMoved;
   }
 }

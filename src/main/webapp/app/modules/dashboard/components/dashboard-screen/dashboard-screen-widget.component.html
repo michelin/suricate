@@ -45,21 +45,15 @@
   <!--           WIDGET ACTION BUTTON                -->
   <!--------------------------------------------------->
   <span *ngIf="!readOnly">
-     <button id="delete-${projectWidget.id}"
-             name="delete-${projectWidget.id}"
-             class="btn-widget btn-widget-delete"
+     <button class="btn-widget btn-widget-delete"
              role="button"
-             data-project-widget-id="${projectWidget.id}"
              aria-disabled="false"
              (click)="displayDeleteProjectWidgetDialog()">
         <mat-icon class="material-icons">delete_forever</mat-icon>
       </button>
 
-      <button id="edit-${projectWidget.id}"
-              name="edit-${projectWidget.id}"
-              class="btn-widget btn-widget-edit"
+      <button class="btn-widget btn-widget-edit"
               role="button"
-              data-project-widget-id="${projectWidget.id}"
               aria-disabled="false"
               (click)="displayEditProjectWidgetDialog()">
         <mat-icon class="material-icons">edit</mat-icon>
