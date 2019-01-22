@@ -110,6 +110,11 @@ public class WebSocketEventEndpointsConfiguration {
         this.removeSubscriptions(event);
     }
 
+    /**
+     * Remove the client's subscription for a project
+     *
+     * @param event The WS event
+     */
     private void removeSubscriptions(AbstractSubProtocolEvent event) {
         StompHeaderAccessor stompHeaderAccessor = StompHeaderAccessor.wrap(event.getMessage());
         WebsocketClient websocketClient = dashboardWebSocketService.removeSessionClient(stompHeaderAccessor.getSessionId());

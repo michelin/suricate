@@ -20,7 +20,6 @@ import {TranslateService} from '@ngx-translate/core';
 import {TitleCasePipe} from '@angular/common';
 import {MatDialog} from '@angular/material';
 import {NgGridItemConfig} from 'angular2-grid';
-import {Subscription} from 'rxjs';
 import {takeWhile} from 'rxjs/operators';
 
 import {ProjectWidget} from '../../../../shared/model/api/ProjectWidget/ProjectWidget';
@@ -78,10 +77,6 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    * The enumeration that hold the state of a widget (used in HTML)
    */
   WidgetStateEnum = WidgetStateEnum;
-  /**
-   * The project widget subscription
-   */
-  projectWidgetEventSubscription: Subscription;
 
   /**
    * True when the component is alive
@@ -139,7 +134,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   initWebsocketConnectionForProjectWidget() {
     const projectWidgetSubscriptionUrl = `/user/${this.projectToken}-projectWidget-${this.projectWidget.id}/queue/live`;
 
-    this.projectWidgetEventSubscription = this.websocketService.subscribeToDestination(projectWidgetSubscriptionUrl).pipe(
+    this.websocketService.subscribeToDestination(projectWidgetSubscriptionUrl).pipe(
       takeWhile(() => this.isAlive)
     ).subscribe((stompMessage: Stomp.Message) => {
       const updateEvent: WSUpdateEvent = JSON.parse(stompMessage.body);
@@ -185,7 +180,6 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    * Called when the component is destroyed
    */
   ngOnDestroy(): void {
-    this.projectWidgetEventSubscription.unsubscribe();
     this.isAlive = false;
   }
 }

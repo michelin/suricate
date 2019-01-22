@@ -81,11 +81,6 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
   @HostBinding('attr.appRunScripts') appRunScriptDirective = new RunScriptsDirective(this.elementRef);
 
   /**
-   * The stompJS Subscription for project event
-   */
-  projectEventSubscription: Subscription;
-
-  /**
    * The stompJS Subscription for screen event
    */
   screenEventSubscription: Subscription;
@@ -276,11 +271,6 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
    * Unsubscribe to every current websocket connections
    */
   unsubscribeToWebsocket() {
-    if (this.projectEventSubscription) {
-      this.projectEventSubscription.unsubscribe();
-      this.projectEventSubscription = null;
-    }
-
     if (this.screenEventSubscription) {
       this.screenEventSubscription.unsubscribe();
       this.screenEventSubscription = null;
@@ -303,7 +293,7 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
   websocketProjectEventSubscription() {
     const projectSubscriptionUrl = `/user/${this.project.token}/queue/live`;
 
-    this.projectEventSubscription = this.websocketService.subscribeToDestination(projectSubscriptionUrl).pipe(
+    this.websocketService.subscribeToDestination(projectSubscriptionUrl).pipe(
       takeWhile(() => this.isAlive)
     ).subscribe((stompMessage: Stomp.Message) => {
       const updateEvent: WSUpdateEvent = JSON.parse(stompMessage.body);
