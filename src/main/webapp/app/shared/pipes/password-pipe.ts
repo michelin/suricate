@@ -42,7 +42,7 @@ export class PasswordPipe implements PipeTransform {
    * @returns {String} The password hidden
    */
   transform(config: Configuration): String {
-    return (config.dataType.toString() === WidgetVariableType.PASSWORD || config.dataType.toString() === WidgetVariableType.SECRET) ?
+    return (config.dataType && (config.dataType.toString() === WidgetVariableType.PASSWORD || config.dataType.toString() === WidgetVariableType.SECRET)) ?
       '*****'
       : config.value;
   }
