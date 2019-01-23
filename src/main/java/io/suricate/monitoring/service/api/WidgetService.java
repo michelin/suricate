@@ -176,6 +176,7 @@ public class WidgetService {
             widgetVariableResponse.setName(widgetParam.getName());
             widgetVariableResponse.setDescription(widgetParam.getDescription());
             widgetVariableResponse.setType(widgetParam.getType());
+            widgetVariableResponse.setDefaultValue(widgetParam.getDefaultValue());
 
             if (widgetVariableResponse.getType() != null) {
                 switch (widgetVariableResponse.getType()) {

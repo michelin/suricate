@@ -103,7 +103,7 @@ public class NashornWidgetExecuteAsyncTask implements Callable<NashornResponse> 
             // Decrypt SECRET properties
             decryptProperties(mapProperties, widgetVariableResponses);
             // Put unset not required properties
-            insertUnsetOptionalProperties(mapProperties, widgetVariableResponses);
+            insertUnsetProperties(mapProperties, widgetVariableResponses);
 
             // Populate properties in the engine
             for (Map.Entry<String, String> entry : mapProperties.entrySet()) {
@@ -182,16 +182,19 @@ public class NashornWidgetExecuteAsyncTask implements Callable<NashornResponse> 
      * @param mapProperties           The map properties to fill
      * @param widgetVariableResponses The list of widget responses
      */
-    private void insertUnsetOptionalProperties(Map<String, String> mapProperties, List<WidgetVariableResponse> widgetVariableResponses) {
+    private void insertUnsetProperties(Map<String, String> mapProperties, List<WidgetVariableResponse> widgetVariableResponses) {
         if (widgetVariableResponses != null) {
             for (WidgetVariableResponse widgetVariableResponse : widgetVariableResponses) {
                 // Set unset optional properties as null
-                if (!mapProperties.containsKey(widgetVariableResponse.getName()) && !widgetVariableResponse.isRequired()) {
-                    mapProperties.put(widgetVariableResponse.getName(), null);
+                if (!mapProperties.containsKey(widgetVariableResponse.getName())) {
+                    if (!widgetVariableResponse.isRequired()) {
+                        mapProperties.put(widgetVariableResponse.getName(), null);
+                    } else {
+                        mapProperties.put(widgetVariableResponse.getName(), widgetVariableResponse.getDefaultValue());
+                    }
                 }
             }
         }
-
     }
 
 
