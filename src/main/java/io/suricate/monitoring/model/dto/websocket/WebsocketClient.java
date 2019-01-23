@@ -45,6 +45,12 @@ public class WebsocketClient extends AbstractDto {
     private String sessionId;
 
     /**
+     * The websoscket subscription ID related to the session ID
+     */
+    @ApiModelProperty(value = "The subscription id related to unique screen WS subscription")
+    private String subscriptionId;
+
+    /**
      * The client screen code
      */
     @ApiModelProperty(value = "Screen reference")
@@ -53,13 +59,15 @@ public class WebsocketClient extends AbstractDto {
     /**
      * Default constructor using fields
      *
-     * @param projectToken the project token
-     * @param sessionId    the session id
-     * @param screenCode   The screenCode
+     * @param projectToken   the project token
+     * @param sessionId      the session id
+     * @param subscriptionId The subscription Id
+     * @param screenCode     The screenCode
      */
-    public WebsocketClient(String projectToken, String sessionId, String screenCode) {
+    public WebsocketClient(String projectToken, String sessionId, String subscriptionId, String screenCode) {
         this.projectToken = projectToken;
         this.sessionId = sessionId;
+        this.subscriptionId = subscriptionId;
         this.screenCode = screenCode;
     }
 }

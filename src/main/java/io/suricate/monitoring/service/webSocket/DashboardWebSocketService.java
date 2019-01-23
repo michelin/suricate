@@ -137,7 +137,7 @@ public class DashboardWebSocketService {
      * @return The list of related websocket clients
      */
     @Transactional
-    public List<WebsocketClient> getWebsocketClientByProjectToken(final String projectToken) {
+    public List<WebsocketClient> getWebsocketClientsByProjectToken(final String projectToken) {
         return new ArrayList<>(projectClients.get(projectToken));
     }
 
@@ -166,8 +166,31 @@ public class DashboardWebSocketService {
         if (sessionClient.containsKey(websocketSessionId)) {
             sessionClient.replace(websocketSessionId, websocketClient);
         } else {
+            sessionClient.values().stream()
+                .filter(wsClient -> wsClient.getScreenCode().equals(websocketClient.getScreenCode()))
+                .findAny()
+                .ifPresent(sessionClientWithSameScreenCode -> sessionClient.remove(sessionClientWithSameScreenCode.getScreenCode()));
+
             sessionClient.put(websocketSessionId, websocketClient);
         }
+    }
+
+    /**
+     * Remove a websocket session from the map
+     *
+     * @param websocketSessionId      The websocket session to remove
+     * @param websocketSubscriptionId The subscription ID related to the unique screen destination
+     * @return The websocket session removed
+     */
+    public WebsocketClient removeSessionClientByWebsocketSessionIdAndSubscriptionId(final String websocketSessionId, final String websocketSubscriptionId) {
+        WebsocketClient websocketClient = null;
+
+        if (sessionClient.containsKey(websocketSessionId) &&
+            sessionClient.get(websocketSessionId).getSubscriptionId().equals(websocketSubscriptionId)) {
+            websocketClient = sessionClient.remove(websocketSessionId);
+        }
+
+        return websocketClient;
     }
 
     /**
@@ -176,8 +199,14 @@ public class DashboardWebSocketService {
      * @param websocketSessionId The websocket session to remove
      * @return The websocket session removed
      */
-    public WebsocketClient removeSessionClient(final String websocketSessionId) {
-        return sessionClient.remove(websocketSessionId);
+    public WebsocketClient removeSessionClientByWebsocketSessionId(final String websocketSessionId) {
+        WebsocketClient websocketClient = null;
+
+        if (sessionClient.containsKey(websocketSessionId)) {
+            websocketClient = sessionClient.remove(websocketSessionId);
+        }
+
+        return websocketClient;
     }
 
     /**

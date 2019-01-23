@@ -513,7 +513,7 @@ public class ProjectController {
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(dashboardWebSocketService.getWebsocketClientByProjectToken(projectToken));
+            .body(dashboardWebSocketService.getWebsocketClientsByProjectToken(projectToken));
     }
 
     /**
