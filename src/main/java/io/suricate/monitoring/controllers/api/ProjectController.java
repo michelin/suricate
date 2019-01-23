@@ -48,6 +48,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.annotation.security.PermitAll;
 import java.net.URI;
 import java.security.Principal;
 import java.util.List;
@@ -213,7 +214,7 @@ public class ProjectController {
         @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class)
     })
     @GetMapping(value = "/v1/projects/{projectToken}")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PermitAll
     @Transactional
     public ResponseEntity<ProjectResponseDto> getOneByToken(@ApiParam(name = "projectToken", value = "The project token", required = true)
                                                             @PathVariable("projectToken") String projectToken) {
@@ -332,7 +333,7 @@ public class ProjectController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
     @GetMapping(value = "/v1/projects/{projectToken}/projectWidgets")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PermitAll
     @Transactional
     public ResponseEntity<List<ProjectWidgetResponseDto>> getProjectWidgetsForProject(@ApiParam(name = "projectToken", value = "The project token", required = true)
                                                                                       @PathVariable("projectToken") String projectToken) {
