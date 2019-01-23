@@ -19,7 +19,7 @@ import {Component, ElementRef, HostBinding, Input, OnDestroy, OnInit} from '@ang
 import {TranslateService} from '@ngx-translate/core';
 import {TitleCasePipe} from '@angular/common';
 import {MatDialog} from '@angular/material';
-import {NgGridItemConfig} from 'angular2-grid';
+import {NgGridItemConfig, NgGridItemEvent} from 'angular2-grid';
 import {takeWhile} from 'rxjs/operators';
 
 import {ProjectWidget} from '../../../../shared/model/api/ProjectWidget/ProjectWidget';
@@ -33,6 +33,7 @@ import {RunScriptsDirective} from '../../../../shared/directives/run-scripts.dir
 import {WebsocketService} from '../../../../shared/services/websocket.service';
 import {WSUpdateEvent} from '../../../../shared/model/websocket/WSUpdateEvent';
 import {WSUpdateType} from '../../../../shared/model/websocket/enums/WSUpdateType';
+import {GridItemUtils} from '../../../../shared/utils/GridItemUtils';
 
 import * as Stomp from '@stomp/stompjs';
 
@@ -51,7 +52,6 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    * @type {ProjectWidget}
    */
   @Input() projectWidget: ProjectWidget;
-
   /**
    * The grid item config
    * @type {NgGridItemConfig}
@@ -69,6 +69,11 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   @Input() projectToken: string;
 
   /**
+   * Add runScriptsDirective, so we can recall it
+   */
+  @HostBinding('attr.appRunScripts') appRunScriptDirective = new RunScriptsDirective(this.elementRef);
+
+  /**
    * The widget related to this project widget
    */
   widget: Widget;
@@ -82,11 +87,10 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    * True when the component is alive
    */
   isAlive = true;
-
   /**
-   * Add runScriptsDirective, so we can recall it
+   * Init element info
    */
-  @HostBinding('attr.appRunScripts') appRunScriptDirective = new RunScriptsDirective(this.elementRef);
+  startGridStackItem: NgGridItemConfig;
 
   /**
    * Constructor
@@ -112,6 +116,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initWebsocketConnectionForProjectWidget();
     setTimeout(() => this.appRunScriptDirective.ngOnInit(), 1000);
+    this.startGridStackItem = {...this.gridStackItem};
 
     this.httpWidgetService.getOneById(this.projectWidget.widgetId).subscribe(widget => {
       this.widget = widget;
@@ -119,11 +124,25 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Disable click event
+   * Register the new posisition of the element
+   *
+   * @param gridItemEvent The grid item event
+   */
+  registerNewPosition(gridItemEvent: NgGridItemEvent) {
+    this.gridStackItem.col = gridItemEvent.col;
+    this.gridStackItem.row = gridItemEvent.row;
+    this.gridStackItem.sizey = gridItemEvent.sizey;
+    this.gridStackItem.sizex = gridItemEvent.sizex;
+  }
+
+  /**
+   * Disable click event if the item have been moved
    * @param event The click event
    */
   preventDefault(event: MouseEvent) {
-    event.preventDefault();
+    if (GridItemUtils.isItemHaveBeenMoved(this.startGridStackItem, this.gridStackItem)) {
+      event.preventDefault();
+    }
   }
 
   /**

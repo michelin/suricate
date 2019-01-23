@@ -211,6 +211,7 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
 
     if (this.projectWidgets) {
       this.startGridStackItems = this.getGridStackItemsFromProjectWidgets(this.projectWidgets);
+      // Make a copy with a new reference
       this.gridStackItems = JSON.parse(JSON.stringify(this.startGridStackItems));
     }
   }
