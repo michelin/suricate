@@ -19,10 +19,13 @@ package io.suricate.monitoring.service.mapper;
 
 import io.suricate.monitoring.model.dto.api.configuration.ConfigurationResponseDto;
 import io.suricate.monitoring.model.entity.Configuration;
+import org.jasypt.encryption.StringEncryptor;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -39,6 +42,10 @@ import java.util.List;
 )
 public abstract class ConfigurationMapper {
 
+    @Autowired
+    @Qualifier("jasyptStringEncryptor")
+    StringEncryptor stringEncryptor;
+
     /* ************************* TO DTO ********************************************** */
 
     /* ******************************************************* */
@@ -53,6 +60,9 @@ public abstract class ConfigurationMapper {
      */
     @Named("toConfigurationDtoDefault")
     @Mapping(target = "category", qualifiedByName = "toCategoryDtoDefault")
+    @Mapping(target = "value", expression = "java(" +
+        "configuration.getDataType() == io.suricate.monitoring.model.enums.ConfigurationDataType.PASSWORD ? stringEncryptor.decrypt(configuration.getValue()) : configuration.getValue())" +
+        "")
     public abstract ConfigurationResponseDto toConfigurationDtoDefault(Configuration configuration);
 
     /* ******************************************************* */
