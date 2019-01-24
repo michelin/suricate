@@ -17,29 +17,27 @@
  */
 @import '~@angular/material/theming';
 // Plus imports for other components in your app.
-@import "dashboard-dark-palette";
-@import "../shared/custom-theming-functions";
+@import '~sass/themes/light-theme/dashboard-light-palette';
+@import '~sass/themes/shared/custom-theming-functions';
 
 /* ************************************************************ */
 /*                   Angular Material Variables                 */
 /* ************************************************************ */
 
-// Define the palettes for your theme using the Material Design palettes available in palette.scss
-// (imported above). For each palette, you can optionally specify a default, lighter, and darker
-// hue.
-$dark-primary: mat-palette($dashboard-dark, 500, 300, 800);
-$dark-accent: mat-palette($dashboard-dark, A200, A400, A100);
-// The warn palette is optional (defaults to red).
-$dark-warn: mat-palette($mat-red, 300);
-// Create the theme object (a Sass map containing all of the palettes).
-$dark-theme: mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
+// Select colors
+$light-primary: mat-palette($dashboard-light, 500, 300, 800);
+$light-accent: mat-palette($dashboard-light, A200, A400, A100);
+$light-warn: mat-palette($mat-red, 600);
+
+// Theme creation
+$light-theme: mat-light-theme($light-primary, $light-accent, $light-warn);
 
 /* ************************************************************ */
 /*                       Custom Variables                       */
 /* ************************************************************ */
-$background-color-content: #303030;
-$text-color: rgba(255, 255, 255, 0.70);
-$text-color-title: #b0b2b8;
-$table-hover-color: #666;
+$background-color-content: #edf0f5;
+$text-color: black;
+$text-color-title: #7e8188;
+$table-hover-color: #dfdfdf;
 
-$dark-custom-theme: custom-color-theme($background-color-content, $text-color, $text-color-title, $table-hover-color);
+$light-custom-theme: custom-color-theme($background-color-content, $text-color, $text-color-title, $table-hover-color);

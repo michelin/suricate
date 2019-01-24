@@ -17,9 +17,9 @@
  */
 @import '~@angular/material/theming';
 // Plus imports for other components in your app.
-@import "dark-theme/dashboard-dark-theme";
-@import "light-theme/dashboard-light-theme";
-@import "shared/custom-theming-rules";
+@import '~sass/themes/dark-theme/dashboard-dark-theme';
+@import '~sass/themes/light-theme/dashboard-light-theme';
+@import '~sass/themes/shared/custom-theming-rules';
 
 // Include the common styles for Angular Material. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
