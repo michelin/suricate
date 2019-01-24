@@ -34,7 +34,7 @@ import {ToastType} from '../../../../../../shared/components/toast/toast-objects
 @Component({
   selector: 'app-widget-configuration-list',
   templateUrl: './widget-configuration-list.component.html',
-  styleUrls: ['./widget-configuration-list.component.css']
+  styleUrls: ['./widget-configuration-list.component.scss']
 })
 export class WidgetConfigurationListComponent implements OnInit {
 

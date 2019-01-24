@@ -29,7 +29,7 @@ import {HttpProjectService} from '../../../../shared/services/api/http-project.s
 @Component({
   selector: 'app-tv-management-dialog',
   templateUrl: './tv-management-dialog.component.html',
-  styleUrls: ['./tv-management-dialog.component.css']
+  styleUrls: ['./tv-management-dialog.component.scss']
 })
 export class TvManagementDialogComponent implements OnInit {
 

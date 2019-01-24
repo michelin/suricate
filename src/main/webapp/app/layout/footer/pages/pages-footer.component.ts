@@ -24,7 +24,7 @@ import {appEnv, appVersion} from '../../../app.constant';
 @Component({
   selector: 'app-pages-footer',
   templateUrl: './pages-footer.component.html',
-  styleUrls: ['./pages-footer.component.css']
+  styleUrls: ['./pages-footer.component.scss']
 })
 export class PagesFooterComponent implements OnInit {
 

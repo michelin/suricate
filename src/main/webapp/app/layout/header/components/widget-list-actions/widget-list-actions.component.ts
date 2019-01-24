@@ -27,7 +27,7 @@ import {ApiActionEnum} from '../../../../shared/model/enums/ApiActionEnum';
 @Component({
   selector: 'app-widget-list-actions',
   templateUrl: './widget-list-actions.component.html',
-  styleUrls: ['./widget-list-actions.component.css']
+  styleUrls: ['./widget-list-actions.component.scss']
 })
 export class WidgetListActionsComponent {
 

@@ -33,7 +33,7 @@ import {RepositoryTypeEnum} from '../../../../../../shared/model/enums/Repositor
 @Component({
   selector: 'app-repository-add-edit',
   templateUrl: './repository-add-edit.component.html',
-  styleUrls: ['./repository-add-edit.component.css']
+  styleUrls: ['./repository-add-edit.component.scss']
 })
 export class RepositoryAddEditComponent implements OnInit {
 

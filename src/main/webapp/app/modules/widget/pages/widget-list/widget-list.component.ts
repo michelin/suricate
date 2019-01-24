@@ -35,7 +35,7 @@ import {HttpAssetService} from '../../../../shared/services/api/http-asset.servi
 @Component({
   selector: 'app-widget-list',
   templateUrl: './widget-list.component.html',
-  styleUrls: ['./widget-list.component.css']
+  styleUrls: ['./widget-list.component.scss']
 })
 export class WidgetListComponent implements OnInit, AfterViewInit, OnDestroy {
 

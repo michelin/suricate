@@ -1,0 +1,21 @@
+.mat-card {
+  & {
+    margin-bottom: 20px;
+  }
+
+  a {
+    display: block;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  .mat-card-content .mat-icon {
+    font-size: 5rem;
+    width: auto;
+    height: auto;
+  }
+}
+
+#add-dashboard-card .mat-icon {
+  color: #1997c6;
+}

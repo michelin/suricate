@@ -23,7 +23,7 @@ import {Router} from '@angular/router';
 @Component({
   selector: 'app-repository-actions',
   templateUrl: './repository-actions.component.html',
-  styleUrls: ['./repository-actions.component.css']
+  styleUrls: ['./repository-actions.component.scss']
 })
 export class RepositoryActionsComponent {
 

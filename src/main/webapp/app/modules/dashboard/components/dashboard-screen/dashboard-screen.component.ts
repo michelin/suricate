@@ -39,7 +39,7 @@ import {GridItemUtils} from '../../../../shared/utils/GridItemUtils';
 @Component({
   selector: 'app-dashboard-screen',
   templateUrl: './dashboard-screen.component.html',
-  styleUrls: ['./dashboard-screen.component.css']
+  styleUrls: ['./dashboard-screen.component.scss']
 })
 export class DashboardScreenComponent implements OnChanges, OnDestroy {
 

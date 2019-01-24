@@ -39,7 +39,7 @@ import {DashboardService} from '../../dashboard.service';
 @Component({
   selector: 'app-code-view',
   templateUrl: './dashboard-tv.component.html',
-  styleUrls: ['./dashboard-tv.component.css']
+  styleUrls: ['./dashboard-tv.component.scss']
 })
 export class DashboardTvComponent implements OnInit, OnDestroy {
 

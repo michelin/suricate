@@ -23,7 +23,7 @@ import {Router} from '@angular/router';
 @Component({
   selector: 'app-pages-header',
   templateUrl: './pages-header.component.html',
-  styleUrls: ['./pages-header.component.css']
+  styleUrls: ['./pages-header.component.scss']
 })
 export class PagesHeaderComponent implements OnInit {
 

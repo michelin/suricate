@@ -26,7 +26,7 @@ import {ConfigDb, FileFlatNode, FileNode} from '../../config.db';
 @Component({
   selector: 'app-config-list',
   templateUrl: 'config-list.component.html',
-  styleUrls: ['config-list.component.css'],
+  styleUrls: ['config-list.component.scss'],
   providers: [ConfigDb]
 })
 export class ConfigListComponent {

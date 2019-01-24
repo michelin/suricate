@@ -33,7 +33,7 @@ import {WidgetParam} from '../../../../shared/model/api/widget/WidgetParam';
 @Component({
   selector: 'app-edit-project-widget-dialog',
   templateUrl: './edit-project-widget-dialog.component.html',
-  styleUrls: ['./edit-project-widget-dialog.component.css']
+  styleUrls: ['./edit-project-widget-dialog.component.scss']
 })
 export class EditProjectWidgetDialogComponent implements OnInit {
 

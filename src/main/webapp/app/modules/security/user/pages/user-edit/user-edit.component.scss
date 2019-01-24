@@ -1,28 +1,32 @@
 #card-edit-user {
+  & {
     width: 100%;
-}
+  }
 
-#card-edit-user .title {
+  & > * {
+    width: 70%;
+    margin: 5px 0;
+  }
+
+  .title {
     margin-left: -80px;
     font-weight: 300;
     line-height: 1.4rem;
-}
+  }
 
-#card-edit-user > * {
-    width: 70%;
-    margin: 5px 0;
-}
-
-#card-edit-user button {
+  button {
     display: block;
     width: 100%;
+  }
 }
 
-.mat-icon.prefix {
+.mat-icon {
+  &.prefix {
     margin-right: 10px;
+  }
 }
 
 .mat-form-field {
-    width: 100%;
-    margin: 10px 0;
+  width: 100%;
+  margin: 10px 0;
 }

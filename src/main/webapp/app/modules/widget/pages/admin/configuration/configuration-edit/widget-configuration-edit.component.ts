@@ -32,7 +32,7 @@ import {ConfigurationDataType} from '../../../../../../shared/model/enums/Config
 @Component({
   selector: 'app-widget-configuration-edit',
   templateUrl: './widget-configuration-edit.component.html',
-  styleUrls: ['./widget-configuration-edit.component.css']
+  styleUrls: ['./widget-configuration-edit.component.scss']
 })
 export class WidgetConfigurationEditComponent implements OnInit {
 

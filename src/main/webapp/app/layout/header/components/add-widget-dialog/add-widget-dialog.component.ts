@@ -36,7 +36,7 @@ import {Configuration} from '../../../../shared/model/api/configuration/Configur
 @Component({
   selector: 'app-add-widget-dialog',
   templateUrl: './add-widget-dialog.component.html',
-  styleUrls: ['./add-widget-dialog.component.css']
+  styleUrls: ['./add-widget-dialog.component.scss']
 })
 export class AddWidgetDialogComponent implements OnInit {
 
