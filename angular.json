@@ -21,11 +21,11 @@
               "src/main/webapp/favicon.ico"
             ],
             "styles": [
-              "src/main/webapp/assets/styles/normalize.css",
-              "node_modules/material-design-icons-iconfont/dist/material-design-icons.css",
-              "node_modules/font-awesome/css/font-awesome.css",
+              "node_modules/normalize-scss/sass/_normalize.scss",
+              "node_modules/material-design-icons-iconfont/dist/material-design-icons.scss",
+              "node_modules/font-awesome/scss/font-awesome.scss",
               "src/main/webapp/assets/styles/themes/dashboard-themes.scss",
-              "src/main/webapp/styles.css"
+              "src/main/webapp/styles.scss"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",

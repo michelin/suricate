@@ -1,0 +1,131 @@
+/* You can add global styles to this file, and also import other style files */
+body {
+  & {
+    padding: 0;
+    margin: 0;
+    min-height: 100vh;
+    font: 15px Roboto, sans-serif;
+  }
+
+  h1.little {
+    font-size: 1em;
+    margin: 0;
+    font-variant: all-small-caps;
+  }
+
+  h2.little {
+    font-size: 1.3em;
+    margin: 0;
+    font-variant: all-small-caps;
+  }
+
+
+  a {
+    &, &:visited {
+      text-decoration: none;
+      text-decoration: -moz-none;
+      color: #0d6f93;
+    }
+
+    &:hover {
+      color: #1997c6;
+    }
+  }
+
+  mat-divider {
+    border-top-color: #7e818880;
+  }
+
+  mat-sidenav {
+    .mat-expansion-panel-body {
+      padding: 0 24px 0 16px !important;
+    }
+
+    & > #user-section {
+      .mat-expansion-panel-body {
+        width: 100%;
+        padding: 0;
+      }
+    }
+  }
+
+  .mat-raised-button.mat-accent .mat-button-wrapper {
+    color: white !important;
+  }
+
+  .mat-table .mat-row .mat-cell {
+    font-size: 11px;
+  }
+
+  .mat-form-field-suffix .show-pwd-icon {
+    cursor: pointer;
+  }
+
+  mat-step-header {
+    .mat-step-icon {
+      & > span {
+        color: #f5f4f4;
+      }
+
+      & > mat-icon {
+        color: #dcdcdc;
+      }
+    }
+  }
+
+  .grid-stack {
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .widget {
+      .more-info {
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.9rem;
+        position: absolute;
+        bottom: 17px;
+        left: 0;
+        right: 0;
+      }
+
+      .fullwidget {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+      }
+
+      .icon-background {
+        pointer-events: none;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 100% !important;
+        height: auto;
+        font-size: 11rem;
+        transform: translate(-50%, -50%);
+        opacity: 0.05;
+      }
+    }
+  }
+
+  .widget-dialog-card {
+    &.step2 {
+      min-height: 275px;
+    }
+
+    .mat-card-header-text {
+      margin: auto !important;
+    }
+  }
+
+  .widget-param-multiple {
+    .mat-option.mat-selected:not(.mat-option-disabled) {
+      color: #1997c6;
+    }
+
+    .mat-pseudo-checkbox-checked {
+      background-color: #1997c6;
+    }
+  }
+}

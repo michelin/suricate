@@ -43,6 +43,7 @@
     "ng2-stomp-service": "^1.2.2",
     "ng2-validation": "^4.2.0",
     "ngx-color-picker": "^6.5.0",
+    "normalize-scss": "^7.0.1",
     "rxjs": "6.3.3",
     "sockjs-client": "^1.1.4",
     "tslib": "^1.9.0",
