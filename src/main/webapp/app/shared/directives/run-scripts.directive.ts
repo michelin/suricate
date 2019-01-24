@@ -17,8 +17,6 @@
 
 import {Directive, ElementRef, OnInit} from '@angular/core';
 
-import {RunScriptsService} from './run-scripts.service';
-
 /**
  * Directive used for running script under HTML Views
  */
@@ -31,10 +29,8 @@ export class RunScriptsDirective implements OnInit {
    * The constructor
    *
    * @param {ElementRef} elementRef Represent a reference for an HTML Element
-   * @param runScriptsService The service for this directive
    */
-  constructor(private elementRef: ElementRef,
-              private runScriptsService: RunScriptsService) {
+  constructor(private elementRef: ElementRef) {
   }
 
   ngOnInit(): void {
@@ -69,8 +65,5 @@ export class RunScriptsDirective implements OnInit {
       copyScript.async = false;
       script.parentNode.replaceChild(copyScript, script);
     });
-
-    // Wait for DOM rendering
-    setTimeout(() => this.runScriptsService.emitScriptRendered(true), 0);
   }
 }

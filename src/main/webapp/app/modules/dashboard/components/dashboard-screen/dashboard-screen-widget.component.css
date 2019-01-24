@@ -15,12 +15,6 @@
     text-align: center;
 }
 
-.widget .fullwidget {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-}
-
 .widget .updated-at {
     color: rgba(0, 0, 0, 0.3);
     font-size: 0.9rem;
@@ -61,7 +55,7 @@
     font-size: 0.9em;
     display: flex;
     align-items: center;
-    height: 28px;
+    height: auto;
 }
 
 .widget .material-icons {
@@ -128,16 +122,4 @@ h2 {
 
 p {
     font-size: 0.8em;
-}
-
-.icon-background {
-    pointer-events: none;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 100% !important;
-    height: auto;
-    font-size: 11rem;
-    transform: translate(-50%, -50%);
-    opacity: 0.05;
 }

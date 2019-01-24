@@ -88,9 +88,24 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
       }
     });
 
+    this.dashboardService.refreshProjectWidgetsEvent().subscribe(shouldRefresh => {
+      if (shouldRefresh) {
+        this.refreshProjectWidgets(this.project.token);
+      }
+    });
+
     // Global init from project
     this.activatedRoute.params.subscribe(params => {
       this.refreshProject(params['dashboardToken']);
+    });
+  }
+
+  /**
+   * Refresh the project widget list
+   */
+  refreshProjectWidgets(dashboardToken: string): void {
+    this.httpProjectService.getProjectProjectWidgets(dashboardToken).subscribe(projectWidgets => {
+      this.projectWidgets = projectWidgets;
     });
   }
 
@@ -100,10 +115,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
   refreshProject(dashboardToken: string): void {
     this.httpProjectService.getOneByToken(dashboardToken).subscribe(project => {
       this.project = project;
-
-      this.httpProjectService.getProjectProjectWidgets(this.project.token).subscribe(projectWidgets => {
-        this.projectWidgets = projectWidgets;
-      });
+      this.refreshProjectWidgets(dashboardToken);
     });
   }
 

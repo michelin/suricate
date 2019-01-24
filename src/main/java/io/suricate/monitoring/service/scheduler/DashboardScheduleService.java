@@ -127,7 +127,7 @@ public class DashboardScheduleService {
         ProjectWidget projectWidget = projectWidgetService.getOne(projectWidgetId).get();
         event.setContent(projectWidgetMapper.toProjectWidgetDtoDefault(projectWidget));
 
-        dashboardWebSocketService.updateGlobalScreensByProjectId(projectId, event);
+        dashboardWebSocketService.updateGlobalScreensByIdAndProjectWidgetId(projectId, projectWidgetId, event);
     }
 
     /**

@@ -350,9 +350,9 @@ public class ProjectWidgetService {
         dashboardScheduleService.scheduleWidget(projectWidget.getId());
 
         // notify client
-        UpdateEvent updateEvent = new UpdateEvent(UpdateType.GRID);
+        UpdateEvent updateEvent = new UpdateEvent(UpdateType.WIDGET);
         updateEvent.setContent(projectMapper.toProjectDtoDefault(projectWidget.getProject()));
-        dashboardWebsocketService.updateGlobalScreensByProjectId(projectWidget.getProject().getId(), updateEvent);
+        dashboardWebsocketService.updateGlobalScreensByProjectTokenAndProjectWidgetId(projectWidget.getProject().getToken(), projectWidget.getId(), updateEvent);
     }
 
     /**

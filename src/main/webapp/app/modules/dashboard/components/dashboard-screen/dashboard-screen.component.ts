@@ -31,8 +31,7 @@ import {DashboardService} from '../../dashboard.service';
 import {ProjectWidgetPositionRequest} from '../../../../shared/model/api/ProjectWidget/ProjectWidgetPositionRequest';
 import {HttpProjectService} from '../../../../shared/services/api/http-project.service';
 import {RunScriptsDirective} from '../../../../shared/directives/run-scripts.directive';
-import {RunScriptsService} from '../../../../shared/directives/run-scripts.service';
-
+import {GridItemUtils} from '../../../../shared/utils/GridItemUtils';
 
 /**
  * Display the grid stack widgets
@@ -80,12 +79,7 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
   /**
    * Add runScriptsDirective, so we can recall it
    */
-  @HostBinding('attr.appRunScripts') appRunScriptDirective = new RunScriptsDirective(this.elementRef, this.runScriptsService);
-
-  /**
-   * The stompJS Subscription for project event
-   */
-  projectEventSubscription: Subscription;
+  @HostBinding('attr.appRunScripts') appRunScriptDirective = new RunScriptsDirective(this.elementRef);
 
   /**
    * The stompJS Subscription for screen event
@@ -105,16 +99,15 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
   gridOptions: NgGridConfig = {};
 
   /**
+   * Grid state when widgets were first loaded
+   */
+  startGridStackItems: NgGridItemConfig[] = [];
+
+  /**
    * The grid items description
    * @type {NgGridItemConfig[]}
    */
   gridStackItems: NgGridItemConfig[] = [];
-
-  /**
-   * Tell if the global JS scripts has been rendered
-   * (Online JS scripts contained inside the widgets are executed when this value is set to true)
-   */
-  isSrcScriptsRendered = false;
 
   /**
    * The constructor
@@ -124,14 +117,12 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
    * @param httpProjectService The http project service
    * @param dashboardService The dashboard service
    * @param elementRef The element Ref service
-   * @param runScriptsService The service associated to the runScript directive
    */
   constructor(private websocketService: WebsocketService,
               private httpAssetService: HttpAssetService,
               private httpProjectService: HttpProjectService,
               private dashboardService: DashboardService,
-              private elementRef: ElementRef,
-              private runScriptsService: RunScriptsService) {
+              private elementRef: ElementRef) {
   }
 
   /**********************************************************************************************************/
@@ -139,31 +130,19 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
 
   /**********************************************************************************************************/
 
-  subscribeToRenderedScriptEvent() {
-    this.runScriptsService.scriptRenderedEvent().pipe(
-      takeWhile(() => this.isAlive)
-    ).subscribe(isRendered => {
-      this.isSrcScriptsRendered = isRendered;
-    });
-  }
-
   /**
    * Each time a value change, this function will be called
    */
   ngOnChanges(changes: SimpleChanges): void {
     if (changes.project) {
       if (!changes.project.previousValue) {
-        this.subscribeToRenderedScriptEvent();
         // We have to inject this variable in the window scope (because some Widgets use it for init the js)
         window['page_loaded'] = true;
-
-      } else if (changes.project.previousValue.token !== changes.project.currentValue.token) {
-        this.runScriptsService.emitScriptRendered(false);
       }
 
       this.project = changes.project.currentValue;
-      this.initGridStackOptions(this.project);
       this.appRunScriptDirective.ngOnInit();
+      this.initGridStackOptions(this.project);
 
       if (changes.project.previousValue) {
         if (changes.project.previousValue.token !== changes.project.currentValue.token) {
@@ -231,16 +210,31 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
     this.gridStackItems = [];
 
     if (this.projectWidgets) {
-      this.projectWidgets.forEach((projectWidget: ProjectWidget) => {
-        this.gridStackItems.push({
-          col: projectWidget.widgetPosition.col,
-          row: projectWidget.widgetPosition.row,
-          sizey: projectWidget.widgetPosition.height,
-          sizex: projectWidget.widgetPosition.width,
-          payload: projectWidget
-        });
-      });
+      this.startGridStackItems = this.getGridStackItemsFromProjectWidgets(this.projectWidgets);
+      // Make a copy with a new reference
+      this.gridStackItems = JSON.parse(JSON.stringify(this.startGridStackItems));
     }
+  }
+
+  /**
+   * Get the list of GridItemConfigs from project widget
+   *
+   * @param projectWidgets The project widgets
+   */
+  private getGridStackItemsFromProjectWidgets(projectWidgets: ProjectWidget[]) {
+    const gridStackItemsConfig: NgGridItemConfig[] = [];
+
+    this.projectWidgets.forEach((projectWidget: ProjectWidget) => {
+      gridStackItemsConfig.push({
+        col: projectWidget.widgetPosition.col,
+        row: projectWidget.widgetPosition.row,
+        sizey: projectWidget.widgetPosition.height,
+        sizex: projectWidget.widgetPosition.width,
+        payload: projectWidget
+      });
+    });
+
+    return gridStackItemsConfig;
   }
 
   /**********************************************************************************************************/
@@ -298,11 +292,6 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
    * Unsubscribe to every current websocket connections
    */
   unsubscribeToWebsocket() {
-    if (this.projectEventSubscription) {
-      this.projectEventSubscription.unsubscribe();
-      this.projectEventSubscription = null;
-    }
-
     if (this.screenEventSubscription) {
       this.screenEventSubscription.unsubscribe();
       this.screenEventSubscription = null;
@@ -325,7 +314,7 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
   websocketProjectEventSubscription() {
     const projectSubscriptionUrl = `/user/${this.project.token}/queue/live`;
 
-    this.projectEventSubscription = this.websocketService.subscribeToDestination(projectSubscriptionUrl).pipe(
+    this.websocketService.subscribeToDestination(projectSubscriptionUrl).pipe(
       takeWhile(() => this.isAlive)
     ).subscribe((stompMessage: Stomp.Message) => {
       const updateEvent: WSUpdateEvent = JSON.parse(stompMessage.body);
@@ -334,6 +323,8 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
         location.reload();
       } else if (updateEvent.type === WSUpdateType.DISPLAY_NUMBER) {
         this.displayScreenCode();
+      } else if (updateEvent.type === WSUpdateType.POSITION) {
+        this.dashboardService.refreshProjectWidgets();
       } else {
         this.dashboardService.refreshProject();
       }
@@ -362,20 +353,40 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
    * Update the project widget position
    */
   updateProjectWidgetsPosition() {
-    console.log(`update positions: ${this.gridStackItems}`);
+    if (this.isGridItemsHasMoved()) {
+      console.log(`update positions: ${this.gridStackItems}`);
 
-    const projectWidgetPositionRequests: ProjectWidgetPositionRequest[] = [];
-
-    this.gridStackItems.forEach(gridStackItem => {
-      projectWidgetPositionRequests.push({
-        projectWidgetId: (gridStackItem.payload as ProjectWidget).id,
-        col: gridStackItem.col,
-        row: gridStackItem.row,
-        height: gridStackItem.sizey,
-        width: gridStackItem.sizex,
+      const projectWidgetPositionRequests: ProjectWidgetPositionRequest[] = [];
+      this.gridStackItems.forEach(gridStackItem => {
+        projectWidgetPositionRequests.push({
+          projectWidgetId: (gridStackItem.payload as ProjectWidget).id,
+          col: gridStackItem.col,
+          row: gridStackItem.row,
+          height: gridStackItem.sizey,
+          width: gridStackItem.sizex,
+        });
       });
+
+      this.httpProjectService.updateProjectWidgetPositions(this.project.token, projectWidgetPositionRequests).subscribe();
+    }
+  }
+
+  /**
+   * Checks if the grid elements have been moved
+   */
+  private isGridItemsHasMoved(): boolean {
+    let itemHaveBeenMoved: boolean = false;
+
+    this.startGridStackItems.forEach(startGridItem => {
+      const gridItemFound = this.gridStackItems.find(currentGridItem => {
+        return (currentGridItem.payload as ProjectWidget).id === (startGridItem.payload as ProjectWidget).id;
+      });
+
+      if (gridItemFound && GridItemUtils.isItemHaveBeenMoved(startGridItem, gridItemFound)) {
+        itemHaveBeenMoved = true;
+      }
     });
 
-    this.httpProjectService.updateProjectWidgetPositions(this.project.token, projectWidgetPositionRequests).subscribe();
+    return itemHaveBeenMoved;
   }
 }

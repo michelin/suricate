@@ -35,6 +35,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.PermitAll;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
@@ -132,7 +133,7 @@ public class WidgetController {
         @ApiResponse(code = 404, message = "Widget not found", response = ApiErrorDto.class)
     })
     @GetMapping(value = "/v1/widgets/{widgetId}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PermitAll
     public ResponseEntity<WidgetResponseDto> getOneById(@ApiParam(name = "widgetId", value = "The widget id", required = true)
                                                         @PathVariable("widgetId") Long widgetId) {
         Widget widget = widgetService.findOne(widgetId);

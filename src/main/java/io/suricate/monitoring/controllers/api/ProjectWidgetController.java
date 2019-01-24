@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.security.PermitAll;
 import java.util.Optional;
 
 /**
@@ -58,7 +59,7 @@ public class ProjectWidgetController {
         @ApiResponse(code = 404, message = "Project widget not found", response = ApiErrorDto.class)
     })
     @GetMapping(value = "/v1/projectWidgets/{projectWidgetId}")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PermitAll
     public ResponseEntity<ProjectWidgetResponseDto> getProjectWidgetFromProject(@ApiParam(name = "projectWidgetId", value = "The project widget id", required = true)
                                                                                 @PathVariable("projectWidgetId") Long projectWidgetId) {
         Optional<ProjectWidget> projectWidgetOptional = projectWidgetService.getOne(projectWidgetId);

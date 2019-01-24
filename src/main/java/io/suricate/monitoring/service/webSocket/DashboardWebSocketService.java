@@ -137,7 +137,7 @@ public class DashboardWebSocketService {
      * @return The list of related websocket clients
      */
     @Transactional
-    public List<WebsocketClient> getWebsocketClientByProjectToken(final String projectToken) {
+    public List<WebsocketClient> getWebsocketClientsByProjectToken(final String projectToken) {
         return new ArrayList<>(projectClients.get(projectToken));
     }
 
@@ -166,8 +166,31 @@ public class DashboardWebSocketService {
         if (sessionClient.containsKey(websocketSessionId)) {
             sessionClient.replace(websocketSessionId, websocketClient);
         } else {
+            sessionClient.values().stream()
+                .filter(wsClient -> wsClient.getScreenCode().equals(websocketClient.getScreenCode()))
+                .findAny()
+                .ifPresent(sessionClientWithSameScreenCode -> sessionClient.remove(sessionClientWithSameScreenCode.getScreenCode()));
+
             sessionClient.put(websocketSessionId, websocketClient);
         }
+    }
+
+    /**
+     * Remove a websocket session from the map
+     *
+     * @param websocketSessionId      The websocket session to remove
+     * @param websocketSubscriptionId The subscription ID related to the unique screen destination
+     * @return The websocket session removed
+     */
+    public WebsocketClient removeSessionClientByWebsocketSessionIdAndSubscriptionId(final String websocketSessionId, final String websocketSubscriptionId) {
+        WebsocketClient websocketClient = null;
+
+        if (sessionClient.containsKey(websocketSessionId) &&
+            sessionClient.get(websocketSessionId).getSubscriptionId().equals(websocketSubscriptionId)) {
+            websocketClient = sessionClient.remove(websocketSessionId);
+        }
+
+        return websocketClient;
     }
 
     /**
@@ -176,8 +199,14 @@ public class DashboardWebSocketService {
      * @param websocketSessionId The websocket session to remove
      * @return The websocket session removed
      */
-    public WebsocketClient removeSessionClient(final String websocketSessionId) {
-        return sessionClient.remove(websocketSessionId);
+    public WebsocketClient removeSessionClientByWebsocketSessionId(final String websocketSessionId) {
+        WebsocketClient websocketClient = null;
+
+        if (sessionClient.containsKey(websocketSessionId)) {
+            websocketClient = sessionClient.remove(websocketSessionId);
+        }
+
+        return websocketClient;
     }
 
     /**
@@ -208,6 +237,45 @@ public class DashboardWebSocketService {
 
         simpMessagingTemplate.convertAndSendToUser(
             projectToken.trim(),
+            "/queue/live",
+            payload
+        );
+    }
+
+    /**
+     * Method used to update widget by project id, projectWidgetId for every screens connected to this widget
+     *
+     * @param projectId       the project id
+     * @param projectWidgetId The project widget id
+     * @param payload         the payload content
+     */
+    public void updateGlobalScreensByIdAndProjectWidgetId(final Long projectId, final Long projectWidgetId, final Object payload) {
+        updateGlobalScreensByProjectTokenAndProjectWidgetId(projectService.getTokenByProjectId(projectId), projectWidgetId, payload);
+    }
+
+    /**
+     * Method used to update widget by project token, projectWidgetId for every screens connected to this widget
+     *
+     * @param projectToken    the project token
+     * @param projectWidgetId The project widget id
+     * @param payload         the payload content
+     */
+    @Async
+    public void updateGlobalScreensByProjectTokenAndProjectWidgetId(final String projectToken, final Long projectWidgetId, final Object payload) {
+        LOGGER.debug("Update project's screen {}, project widget {}", projectToken, projectWidgetId);
+        LOGGER.trace("Update project's screen {}, , project widget {}, data: {}", projectToken, projectWidgetId, payload);
+
+        if (projectToken == null) {
+            LOGGER.error("Project token not found for payload: {}", payload);
+            return;
+        }
+        if (projectWidgetId == null) {
+            LOGGER.error("Project widget id not found for payload: {}", payload);
+            return;
+        }
+
+        simpMessagingTemplate.convertAndSendToUser(
+            projectToken.trim() + "-projectWidget-" + projectWidgetId,
             "/queue/live",
             payload
         );
