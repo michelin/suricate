@@ -18,7 +18,6 @@
 @import '~@angular/material/theming';
 // Plus imports for other components in your app.
 @import '~sass/themes/dark-theme/dashboard-dark-palette';
-@import '~sass/themes/shared/custom-theming-functions';
 
 /* ************************************************************ */
 /*                   Angular Material Variables                 */
@@ -31,15 +30,6 @@ $dark-primary: mat-palette($dashboard-dark, 500, 300, 800);
 $dark-accent: mat-palette($dashboard-dark, A200, A400, A100);
 // The warn palette is optional (defaults to red).
 $dark-warn: mat-palette($mat-red, 300);
+
 // Create the theme object (a Sass map containing all of the palettes).
 $dark-theme: mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
-
-/* ************************************************************ */
-/*                       Custom Variables                       */
-/* ************************************************************ */
-$background-color-content: #303030;
-$text-color: rgba(255, 255, 255, 0.70);
-$text-color-title: #b0b2b8;
-$table-hover-color: #666;
-
-$dark-custom-theme: custom-color-theme($background-color-content, $text-color, $text-color-title, $table-hover-color);

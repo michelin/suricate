@@ -18,26 +18,15 @@
 @import '~@angular/material/theming';
 // Plus imports for other components in your app.
 @import '~sass/themes/light-theme/dashboard-light-palette';
-@import '~sass/themes/shared/custom-theming-functions';
 
 /* ************************************************************ */
 /*                   Angular Material Variables                 */
 /* ************************************************************ */
 
 // Select colors
-$light-primary: mat-palette($dashboard-light, 500, 300, 800);
-$light-accent: mat-palette($dashboard-light, A200, A400, A100);
-$light-warn: mat-palette($mat-red, 600);
+$light-primary: mat-palette($suricate-palette-light-primary);
+$light-accent: mat-palette($suricate-palette-light-accent);
+$light-warn: mat-palette($mat-red);
 
 // Theme creation
 $light-theme: mat-light-theme($light-primary, $light-accent, $light-warn);
-
-/* ************************************************************ */
-/*                       Custom Variables                       */
-/* ************************************************************ */
-$background-color-content: #edf0f5;
-$text-color: black;
-$text-color-title: #7e8188;
-$table-hover-color: #dfdfdf;
-
-$light-custom-theme: custom-color-theme($background-color-content, $text-color, $text-color-title, $table-hover-color);

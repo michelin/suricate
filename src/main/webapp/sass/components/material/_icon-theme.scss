@@ -1,0 +1,27 @@
+@import '~@angular/material/theming';
+
+/**
+ * Component for that modify the theme of Angular Material mat-icon
+ */
+@mixin suricate-icon-theme($theme) {
+  // Angular Material colors
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $is-dark: map-get($theme, is-dark);
+  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
+
+  // Custom colors
+  $sidenav-text: #cfd2da;
+
+  .mat-icon {
+    & {
+      font-variant: none;
+    }
+
+    &.mat-default {
+      color: $sidenav-text;
+    }
+  }
+}

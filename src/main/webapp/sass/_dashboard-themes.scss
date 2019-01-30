@@ -19,7 +19,7 @@
 // Plus imports for other components in your app.
 @import '~sass/themes/dark-theme/dashboard-dark-theme';
 @import '~sass/themes/light-theme/dashboard-light-theme';
-@import '~sass/themes/shared/custom-theming-rules';
+@import '~sass/themes/suricate-theme';
 
 // Include the common styles for Angular Material. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
@@ -28,12 +28,12 @@
 
 // DEFAULT THEME
 @include angular-material-theme($light-theme);
-@include main-custom-theming($light-theme, $light-custom-theme)
+@include suricate-theme($light-theme);
 
 // DARK THEME
 .dark-theme {
   @include angular-material-theme($dark-theme);
-  @include main-custom-theming($dark-theme, $dark-custom-theme)
+  @include suricate-theme($dark-theme);
 }
 
 

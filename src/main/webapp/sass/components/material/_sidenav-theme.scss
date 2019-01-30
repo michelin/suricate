@@ -1,0 +1,160 @@
+@import '~@angular/material/theming';
+
+/**
+ * Component for that modify the theme of Angular Material sidenav
+ */
+@mixin suricate-sidenav-theme($theme) {
+  // Angular Material colors
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $is-dark: map-get($theme, is-dark);
+  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
+
+  // Custom colors
+  $sidenav-background-primary: #424242;
+  $sidenav-background-secondary: #5a5a5a;
+  $sidenav-text: #cfd2da;
+
+  .mat-sidenav {
+    & {
+      background-color: $sidenav-background-primary;
+      color: $sidenav-text;
+      font-variant: all-small-caps;
+      font-size: 0.8em;
+    }
+
+    .mat-divider {
+      width: 90%;
+      color: #303030;
+    }
+
+
+    .sidenav-section {
+      & {
+        width: 85%;
+        margin: 0 auto;
+      }
+
+      &#user-section {
+        & {
+          padding: 15px 0 10px 0;
+          margin: 0;
+          width: 100%;
+        }
+
+        & > .avatar-container {
+          & {
+            margin: 0 auto;
+            width: 60px;
+            height: 60px;
+            overflow: hidden;
+            border-radius: 50%;
+            border: 1px solid #303030;
+          }
+
+          & > .avatar {
+            height: 100%;
+            font-size: 25px;
+            line-height: 54px;
+            text-align: center;
+            background: #303030;
+          }
+        }
+      }
+
+      &#button-section {
+        & {
+          margin-bottom: 7px !important;
+          margin-top: 0;
+          width: 90%;
+        }
+
+        & > a {
+          display: block;
+          width: 40%;
+        }
+      }
+
+      .common-icon-button {
+        & {
+          height: 33px;
+          width: 40%;
+        }
+
+        &:hover {
+          background-color: mat-color($primary, 400);
+        }
+
+        mat-icon {
+          font-size: 24px;
+        }
+      }
+    }
+
+
+    .mat-list-item {
+      & {
+        color: $sidenav-text;
+        font-size: 1em;
+        height: 25px !important;
+      }
+
+      &:hover {
+        background-color: mat-color($primary, 400);
+      }
+
+      &.active {
+        background-color: mat-color($primary, 300);
+      }
+    }
+
+    .mat-expansion-panel {
+      & {
+        background-color: $sidenav-background-primary;
+        color: $sidenav-text;
+      }
+
+      .mat-expansion-panel-header-title {
+        color: $sidenav-text;
+        font-size: 0.8em;
+      }
+
+      .mat-expansion-panel-content {
+        & {
+          background-color: $sidenav-background-secondary;
+          font-variant: all-small-caps;
+          font-size: 1em;
+        }
+
+        .mat-expansion-panel-body {
+          padding: 0;
+        }
+
+        .mat-icon {
+          margin-right: 10px;
+          padding-top: 2px;
+          height: 20px;
+          width: 19px;
+          font-size: 19px;
+        }
+
+        .mat-list-base {
+          padding-bottom: 8px;
+        }
+
+        .mat-list-item {
+          height: 28px !important;
+          width: 90%;
+          margin: auto;
+        }
+      }
+    }
+  }
+
+  .mat-sidenav-content {
+    padding: 10px 10px 0 10px;
+    min-height: 100vh;
+  }
+}

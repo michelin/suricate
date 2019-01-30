@@ -23,7 +23,7 @@
 
           <!-- Boolean Type -->
           <mat-checkbox *ngIf="param.type == widgetVariableType.BOOLEAN"
-                        color="accent"
+                        color="primary"
                         [name]="param.name"
                         [required]="param.required"
                         [ngModel]="getParamValueByParamName(projectWidget.backendConfig, param.name) ? getParamValueByParamName(projectWidget.backendConfig, param.name)
@@ -115,7 +115,7 @@
             <input type="text" style="display:none;" [name]="param.name" [required]="param.required" ngModel>
           </div>
         </div>
-        <button mat-raised-button class="mat-elevation-z4" color="accent" type="submit">
+        <button mat-raised-button class="mat-elevation-z4" color="primary" type="submit">
           <app-translate [key]="'save'"></app-translate>
         </button>
       </form>

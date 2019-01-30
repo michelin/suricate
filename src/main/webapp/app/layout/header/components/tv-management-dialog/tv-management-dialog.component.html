@@ -16,7 +16,7 @@
                    placeholder="Enter the code displayed on the screen"
                    formControlName="screenCode">
           </mat-form-field>
-          <button mat-raised-button color="accent"> Register</button>
+          <button mat-raised-button color="primary"> Register</button>
         </div>
       </div>
     </form>
@@ -38,7 +38,7 @@
             <mat-icon class="screen-icon">tv</mat-icon>
             <span class="screen-code">code: {{ websocketClient.screenCode }}</span>
           </span>
-          <button fxFlex="75" mat-raised-button color="accent" (click)="disconnectScreen(websocketClient)">DISCONNECT
+          <button fxFlex="75" mat-raised-button color="primary" (click)="disconnectScreen(websocketClient)">DISCONNECT
           </button>
         </div>
       </div>

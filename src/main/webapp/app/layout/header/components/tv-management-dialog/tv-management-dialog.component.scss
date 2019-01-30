@@ -29,13 +29,8 @@ mat-divider {
 }
 
 #display-code-link {
-  & {
-    color: rgb(151, 153, 162);
-  }
-
   a {
     text-decoration: none;
-    color: inherit;
     cursor: pointer;
   }
 }

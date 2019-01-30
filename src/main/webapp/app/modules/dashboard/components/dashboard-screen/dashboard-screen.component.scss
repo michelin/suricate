@@ -1,8 +1,6 @@
 #screen-code-div {
   & {
     height: 220px;
-    background-color: #424242;
-    color: #fff;
     margin-bottom: 20px;
     font-size: 8em;
   }
@@ -11,13 +9,11 @@
     height: auto;
     width: auto;
     font-size: 1em;
-    color: inherit;
   }
 }
 
 .grid {
   font-size: 20px;
-  color: #fff;
   font-family: 'Open Sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
   min-height: 100% !important;
 }
