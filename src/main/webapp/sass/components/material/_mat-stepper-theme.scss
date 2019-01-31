@@ -1,0 +1,26 @@
+@import '~@angular/material/theming';
+
+/**
+ * Component for that modify the theme of Angular Material mat-stepper
+ */
+@mixin custom-mat-stepper-theme($theme) {
+  // Angular Material colors
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $is-dark: map-get($theme, is-dark);
+  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
+
+  .mat-stepper-horizontal {
+    &.mat-primary {
+      .mat-step-header {
+        .mat-step-icon-selected,
+        .mat-step-icon-state-edit {
+          background-color: mat-color($primary, A700);
+        }
+      }
+    }
+  }
+
+}

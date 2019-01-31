@@ -3,7 +3,7 @@
 </h1>
 
 <mat-dialog-content>
-  <mat-horizontal-stepper #widgetStepper [linear]="true">
+  <mat-horizontal-stepper #widgetStepper class="mat-primary" [linear]="true">
 
     <!-- Step 1 : Select category -->
     <mat-step [completed]="step1Completed">
@@ -19,7 +19,7 @@
             </mat-card-header>
             <img mat-card-image [src]="getImageSrc(category.assetToken)">
             <mat-card-actions>
-              <button mat-button (click)="getWidgets(category.id)">
+              <button mat-button color="primary" (click)="getWidgets(category.id)">
                 <app-translate [key]="'select'"></app-translate>
               </button>
             </mat-card-actions>
@@ -45,7 +45,7 @@
               {{widget.description}}
             </mat-card-content>
             <mat-card-actions>
-              <button mat-button (click)="setSelectedWidget(widget)">
+              <button mat-button color="primary" (click)="setSelectedWidget(widget)">
                 <app-translate [key]="'select'"></app-translate>
               </button>
             </mat-card-actions>
