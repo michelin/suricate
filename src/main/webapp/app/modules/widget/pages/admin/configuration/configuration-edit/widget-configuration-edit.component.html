@@ -10,7 +10,7 @@
     <mat-card-content fxLayout="row wrap"
                       fxLayoutAlign="center center">
       <mat-form-field>
-        <mat-icon class="prefix" matPrefix>vpn_key</mat-icon>
+        <mat-icon class="prefix" color="primary" matPrefix>vpn_key</mat-icon>
         <input matInput
                type="text"
                id="key"
@@ -27,7 +27,7 @@
       </mat-form-field>
 
       <mat-form-field>
-        <mat-icon class="prefix" matPrefix>widgets</mat-icon>
+        <mat-icon class="prefix" color="primary" matPrefix>widgets</mat-icon>
         <input matInput
                type="text"
                id="category"
@@ -44,7 +44,7 @@
       </mat-form-field>
 
       <mat-form-field *ngIf="configuration.dataType === configurationDataType.INTEGER; else defaultValueInput">
-        <mat-icon class="prefix" matPrefix>input</mat-icon>
+        <mat-icon class="prefix" color="primary" matPrefix>input</mat-icon>
         <input matInput
                type="number"
                id="value"
@@ -58,7 +58,7 @@
 
       <ng-template #defaultValueInput>
         <mat-form-field>
-          <mat-icon class="prefix" matPrefix>input</mat-icon>
+          <mat-icon class="prefix" color="primary" matPrefix>input</mat-icon>
           <input matInput
                  type="text"
                  id="value"
