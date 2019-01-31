@@ -15,8 +15,11 @@
  *  * limitations under the License.
  *
  */
+// Custom variables
+@import '~sass/variables';
 //Normalize SCSS
 @import '~normalize-scss/sass/normalize';
+@import '~material-design-icons-iconfont/src/material-design-icons';
 //Suricate Specifics
 @import '~sass/dashboard-themes';
 @import '~sass/global-styles';
