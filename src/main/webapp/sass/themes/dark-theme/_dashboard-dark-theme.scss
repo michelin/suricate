@@ -26,10 +26,9 @@
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue.
-$dark-primary: mat-palette($dashboard-dark, 500, 300, 800);
-$dark-accent: mat-palette($dashboard-dark, A200, A400, A100);
-// The warn palette is optional (defaults to red).
-$dark-warn: mat-palette($mat-red, 300);
+$dark-primary: mat-palette($suricate-palette-dark-primary);
+$dark-accent: mat-palette($suricate-palette-dark-accent);
+$dark-warn: mat-palette($suricate-palette-dark-warn);
 
 // Create the theme object (a Sass map containing all of the palettes).
 $dark-theme: mat-dark-theme($dark-primary, $dark-accent, $dark-warn);
