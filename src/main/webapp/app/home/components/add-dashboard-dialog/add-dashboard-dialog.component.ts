@@ -107,12 +107,13 @@ export class AddDashboardDialogComponent implements OnInit {
    * Initialisation of the component
    */
   ngOnInit() {
-    if (this.data && this.data.projectId) {
+    if (this.data && this.data.projectToken) {
       this.isEditMode = true;
 
-      this.httpProjectService.getOneByToken(this.data.projectId).subscribe(project => {
+      this.httpProjectService.getOneByToken(this.data.projectToken).subscribe(project => {
         this.projectAdded = project;
-        this.dashboardBackgroundColor = this.getPropertyFromGridCss('background-color');
+        const backgroundColor = this.getPropertyFromGridCss('background-color');
+        this.dashboardBackgroundColor = backgroundColor ? backgroundColor : this.dashboardBackgroundColor;
         this.initDashboardForm(true);
         this.initUserForm();
       });
@@ -231,10 +232,13 @@ export class AddDashboardDialogComponent implements OnInit {
    * @returns {string} The related value
    */
   private getPropertyFromGridCss(property: string): string {
-    const propertyArray = this.projectAdded.gridProperties.cssStyle.split(';');
-    return propertyArray
-      .filter((currentProperty: string) => currentProperty.split(':')[0] === property)[0]
-      .split(':')[1];
+    const propertyArray = [...this.projectAdded.gridProperties.cssStyle.split(/[{}]/)];
+
+    const propertyFound = propertyArray.find((currentProperty: string) => {
+      return currentProperty.includes(':') && currentProperty.trim().split(':')[0] === property;
+    });
+
+    return propertyFound ? propertyFound.split(':')[1].slice(0, -1) : propertyFound;
   }
 
   /**
