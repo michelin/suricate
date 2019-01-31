@@ -17,4 +17,10 @@
       background-color: mat-color($primary, A700);
     }
   }
+
+  .mat-icon-button {
+    &.mat-primary {
+      color: mat-color($primary, A700);
+    }
+  }
 }
