@@ -222,7 +222,9 @@ export class AddDashboardDialogComponent implements OnInit {
    * @returns {string} The CSS as string
    */
   private getGridCss(): string {
-    return `background-color:${this.dashboardBackgroundColor};`;
+    return `body.grid{
+      background-color:${this.dashboardBackgroundColor};
+    }`;
   }
 
   /**
