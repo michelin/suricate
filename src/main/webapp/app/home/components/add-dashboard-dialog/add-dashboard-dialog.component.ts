@@ -222,7 +222,7 @@ export class AddDashboardDialogComponent implements OnInit {
    * @returns {string} The CSS as string
    */
   private getGridCss(): string {
-    return `body.grid{
+    return `.grid{
       background-color:${this.dashboardBackgroundColor};
     }`;
   }
@@ -234,10 +234,10 @@ export class AddDashboardDialogComponent implements OnInit {
    * @returns {string} The related value
    */
   private getPropertyFromGridCss(property: string): string {
-    const propertyArray = [...this.projectAdded.gridProperties.cssStyle.split(/[{}]/)];
+    const propertyArray = [...this.projectAdded.gridProperties.cssStyle.split(/[{}]/)].map(value => value.trim());
 
     const propertyFound = propertyArray.find((currentProperty: string) => {
-      return currentProperty.includes(':') && currentProperty.trim().split(':')[0] === property;
+      return currentProperty.includes(':') && currentProperty.split(':')[0] === property;
     });
 
     return propertyFound ? propertyFound.split(':')[1].slice(0, -1) : propertyFound;
