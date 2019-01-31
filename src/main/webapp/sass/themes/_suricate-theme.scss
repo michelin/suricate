@@ -1,6 +1,8 @@
 @import "~sass/components/material/mat-sidenav-theme";
 @import "~sass/components/material/mat-icon-theme";
 @import "~sass/components/material/mat-button-theme";
+@import "~sass/components/material/mat-slide-toggle-theme";
+@import "~sass/components/material/mat-checkbox-theme";
 
 /**
  * Mixin that inject every custom components (used in theme definitions)
@@ -9,4 +11,6 @@
   @include custom-mat-sidenav-theme($theme);
   @include custom-mat-icon-theme($theme);
   @include custom-mat-button-theme($theme);
+  @include custom-mat-slide-toggle-theme($theme);
+  @include custom-mat-checkbox-theme($theme);
 }

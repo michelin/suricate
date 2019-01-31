@@ -12,7 +12,8 @@
   $foreground: map-get($theme, foreground);
   $background: map-get($theme, background);
 
-  .mat-raised-button {
+  .mat-raised-button,
+  .mat-mini-fab {
     &.mat-primary {
       background-color: mat-color($primary, A700);
     }

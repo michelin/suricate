@@ -1,0 +1,29 @@
+@import '~@angular/material/theming';
+
+/**
+ * Component for that modify the theme of Angular Material mat-slide-toggle
+ */
+@mixin custom-mat-slide-toggle-theme($theme) {
+  // Angular Material colors
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $is-dark: map-get($theme, is-dark);
+  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
+
+  .mat-slide-toggle {
+    &.mat-primary {
+      &.mat-checked {
+        .mat-slide-toggle-thumb {
+          background-color: mat-color($primary, A700);
+        }
+
+        .mat-slide-toggle-bar {
+          background-color: mat-color($primary, A700, 0.55);
+        }
+      }
+    }
+  }
+
+}
