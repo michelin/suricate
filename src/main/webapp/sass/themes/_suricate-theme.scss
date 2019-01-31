@@ -1,10 +1,12 @@
-@import "~sass/components/material/sidenav-theme";
-@import "~sass/components/material/icon-theme";
+@import "~sass/components/material/mat-sidenav-theme";
+@import "~sass/components/material/mat-icon-theme";
+@import "~sass/components/material/mat-button-theme";
 
 /**
  * Mixin that inject every custom components (used in theme definitions)
  */
 @mixin suricate-theme($theme) {
-  @include suricate-sidenav-theme($theme);
-  @include suricate-icon-theme($theme);
+  @include custom-mat-sidenav-theme($theme);
+  @include custom-mat-icon-theme($theme);
+  @include custom-mat-button-theme($theme);
 }

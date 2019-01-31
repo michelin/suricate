@@ -3,7 +3,7 @@
 /**
  * Component for that modify the theme of Angular Material sidenav
  */
-@mixin suricate-sidenav-theme($theme) {
+@mixin custom-mat-sidenav-theme($theme) {
   // Angular Material colors
   $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);

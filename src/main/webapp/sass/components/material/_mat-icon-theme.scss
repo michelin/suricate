@@ -3,7 +3,7 @@
 /**
  * Component for that modify the theme of Angular Material mat-icon
  */
-@mixin suricate-icon-theme($theme) {
+@mixin custom-mat-icon-theme($theme) {
   // Angular Material colors
   $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);
@@ -18,6 +18,10 @@
   .mat-icon {
     & {
       font-variant: none;
+    }
+
+    &.mat-primary {
+      color: mat-color($primary, A700);
     }
 
     &.mat-default {

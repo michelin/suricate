@@ -1,6 +1,12 @@
+@import '~@angular/material/theming';
+
 .mat-card {
   & {
     margin-bottom: 20px;
+  }
+
+  &:hover {
+    @include mat-elevation(8);
   }
 
   a {

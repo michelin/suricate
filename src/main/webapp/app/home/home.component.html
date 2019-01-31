@@ -3,10 +3,10 @@
 <div fxLayout="col wrap" fxLayoutAlign="start start" fxLayoutGap="15px">
 
   <!-- Add Dashboard Card -->
-  <mat-card id="add-dashboard-card" fxFlex="30%">
+  <mat-card id="add-dashboard-card" fxFlex="30%" class="mat-elevation-z4">
     <a (click)="openAddDashboardDialog()">
       <mat-card-content fxLayout="row wrap" fxLayoutAlign="center center">
-        <mat-icon>add_box</mat-icon>
+        <mat-icon color="primary">add_box</mat-icon>
       </mat-card-content>
     </a>
     <mat-card-actions align="start">
@@ -17,7 +17,7 @@
   </mat-card>
 
   <!-- Other dashboards -->
-  <mat-card *ngFor="let dashboard of dashboards" fxFlex="30%">
+  <mat-card *ngFor="let dashboard of dashboards" fxFlex="30%" class="mat-elevation-z4">
     <a (click)="navigateToDashboard(dashboard.token)">
       <mat-card-content fxLayout="row wrap" fxLayoutAlign="center center">
         <mat-icon>dashboard</mat-icon>
