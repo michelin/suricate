@@ -22,7 +22,6 @@ import {MatDialog} from '@angular/material';
 import {NgGridItemConfig, NgGridItemEvent} from 'angular2-grid';
 import {takeWhile} from 'rxjs/operators';
 
-
 import {ProjectWidget} from '../../../../shared/model/api/ProjectWidget/ProjectWidget';
 import {Widget} from '../../../../shared/model/api/widget/Widget';
 import {HttpWidgetService} from '../../../../shared/services/api/http-widget.service';
@@ -36,7 +35,6 @@ import {WSUpdateEvent} from '../../../../shared/model/websocket/WSUpdateEvent';
 import {WSUpdateType} from '../../../../shared/model/websocket/enums/WSUpdateType';
 import {GridItemUtils} from '../../../../shared/utils/GridItemUtils';
 import {CommunicationDialogComponent} from '../../../../shared/components/communication-dialog/communication-dialog.component';
-
 
 import * as Stomp from '@stomp/stompjs';
 
