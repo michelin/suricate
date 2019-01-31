@@ -26,7 +26,7 @@
 // Select colors
 $light-primary: mat-palette($suricate-palette-light-primary);
 $light-accent: mat-palette($suricate-palette-light-accent);
-$light-warn: mat-palette($mat-red);
+$light-warn: mat-palette($suricate-palette-light-warn);
 
 // Theme creation
 $light-theme: mat-light-theme($light-primary, $light-accent, $light-warn);
