@@ -54,6 +54,7 @@ import {HttpConfigurationService} from './services/api/http-configuration.servic
 import {HttpWidgetService} from './services/api/http-widget.service';
 import {HttpProjectWidgetService} from './services/api/http-project-widget.service';
 import {HttpSettingService} from './services/api/http-setting.service';
+import {CommunicationDialogComponent} from './components/communication-dialog/communication-dialog.component';
 
 @NgModule({
   imports: [
@@ -78,7 +79,8 @@ import {HttpSettingService} from './services/api/http-setting.service';
     RunScriptsDirective,
     TranslationComponent,
     PasswordPipe,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    CommunicationDialogComponent
   ],
   exports: [
     FormsModule,
@@ -99,10 +101,12 @@ import {HttpSettingService} from './services/api/http-setting.service';
     RunScriptsDirective,
     TranslationComponent,
     PasswordPipe,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    CommunicationDialogComponent
   ],
   entryComponents: [
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    CommunicationDialogComponent
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true},
