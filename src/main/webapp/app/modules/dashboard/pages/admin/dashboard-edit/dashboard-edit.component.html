@@ -14,7 +14,7 @@
 
       <!-- Name Input -->
       <mat-form-field>
-        <mat-icon class="prefix" matPrefix>loyalty</mat-icon>
+        <mat-icon class="prefix" color="primary" matPrefix>loyalty</mat-icon>
         <input matInput
                type="text"
                id="name"
@@ -28,7 +28,7 @@
 
       <!-- Token Input -->
       <mat-form-field>
-        <mat-icon class="prefix" matPrefix>vpn_key</mat-icon>
+        <mat-icon class="prefix" color="primary" matPrefix>vpn_key</mat-icon>
         <input matInput
                type="text"
                id="token"
@@ -43,7 +43,7 @@
 
       <!-- widgetHeight Input -->
       <mat-form-field>
-        <mat-icon class="prefix" matPrefix>equalizer</mat-icon>
+        <mat-icon class="prefix" color="primary" matPrefix>equalizer</mat-icon>
         <input matInput
                type="text"
                id="widgetHeight"
@@ -58,7 +58,7 @@
 
       <!-- widgetHeight Input -->
       <mat-form-field>
-        <mat-icon class="prefix" matPrefix>view_week</mat-icon>
+        <mat-icon class="prefix" color="primary" matPrefix>view_week</mat-icon>
         <input matInput
                type="text"
                id="maxColumn"
@@ -74,7 +74,7 @@
 
       <mat-list role="list" *ngIf="dashboardUsers">
         <mat-list-item *ngFor="let user of dashboardUsers">
-          <mat-icon class="prefix">account_box</mat-icon>
+          <mat-icon class="prefix" color="primary">account_box</mat-icon>
           <div class="user"> {{user.firstname}} {{user.lastname}} ({{user.username | uppercase}})</div>
         </mat-list-item>
       </mat-list>
@@ -82,7 +82,7 @@
     </mat-card-content>
 
     <mat-card-actions>
-      <button mat-raised-button class="mat-elevation-z2" color="accent" type="submit">{{ 'Save' | uppercase}}</button>
+      <button mat-raised-button class="mat-elevation-z2" color="primary" type="submit">{{ 'Save' | uppercase}}</button>
     </mat-card-actions>
 
   </mat-card>

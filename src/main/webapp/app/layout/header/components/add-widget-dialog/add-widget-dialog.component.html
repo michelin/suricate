@@ -3,7 +3,7 @@
 </h1>
 
 <mat-dialog-content>
-  <mat-horizontal-stepper #widgetStepper [linear]="true">
+  <mat-horizontal-stepper #widgetStepper class="mat-primary" [linear]="true">
 
     <!-- Step 1 : Select category -->
     <mat-step [completed]="step1Completed">
@@ -19,7 +19,7 @@
             </mat-card-header>
             <img mat-card-image [src]="getImageSrc(category.assetToken)">
             <mat-card-actions>
-              <button mat-button (click)="getWidgets(category.id)">
+              <button mat-button color="primary" (click)="getWidgets(category.id)">
                 <app-translate [key]="'select'"></app-translate>
               </button>
             </mat-card-actions>
@@ -45,7 +45,7 @@
               {{widget.description}}
             </mat-card-content>
             <mat-card-actions>
-              <button mat-button (click)="setSelectedWidget(widget)">
+              <button mat-button color="primary" (click)="setSelectedWidget(widget)">
                 <app-translate [key]="'select'"></app-translate>
               </button>
             </mat-card-actions>
@@ -78,7 +78,7 @@
             <div *ngFor="let param of widgetParams">
               <!-- Boolean Type -->
               <mat-checkbox *ngIf="param.type == widgetParamEnum.BOOLEAN"
-                            color="accent"
+                            color="primary"
                             [name]="param.name"
                             [required]="param.required"
                             [ngModel]="param.defaultValue ? param.defaultValue : param.usageExample">
@@ -162,7 +162,7 @@
               </div>
             </div>
 
-            <button mat-raised-button class="mat-elevation-z4" color="accent" type="submit">
+            <button mat-raised-button class="mat-elevation-z4" color="primary" type="submit">
               <app-translate [key]="'widget.add'"></app-translate>
             </button>
           </form>

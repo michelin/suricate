@@ -110,7 +110,7 @@
             </mat-autocomplete>
           </mat-form-field>
 
-          <button fxFlex="15" fxFlexAlign="center" mat-raised-button id="add-user-button" color="accent" type="submit"
+          <button fxFlex="15" fxFlexAlign="center" mat-raised-button id="add-user-button" color="primary" type="submit"
                   name="add-user">
             <app-translate [key]="'user.add'"></app-translate>
           </button>
@@ -127,7 +127,7 @@
               <button
                   mat-icon-button
                   matTooltip="Delete user"
-                  color="warn"
+                  color="primary"
                   (click)="deleteUser(user.id)">
                 <mat-icon>delete_forever</mat-icon>
               </button>
@@ -142,7 +142,7 @@
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button mat-button mat-dialog-close color="warn">
+  <button mat-button mat-dialog-close color="primary">
     <app-translate [key]="'close'"></app-translate>
   </button>
   <span class="spacer"></span>

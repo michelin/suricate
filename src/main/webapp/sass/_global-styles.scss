@@ -1,0 +1,100 @@
+/*!
+ *  /*
+ *  * Copyright 2012-2018 the original author or authors.
+ *  *
+ *  * Licensed under the Apache License, Version 2.0 (the "License");
+ *  * you may not use this file except in compliance with the License.
+ *  * You may obtain a copy of the License at
+ *  *
+ *  *      http://www.apache.org/licenses/LICENSE-2.0
+ *  *
+ *  * Unless required by applicable law or agreed to in writing, software
+ *  * distributed under the License is distributed on an "AS IS" BASIS,
+ *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  * See the License for the specific language governing permissions and
+ *  * limitations under the License.
+ *
+ */
+
+/* You can add global styles to this file, and also import other style files */
+body {
+  & {
+    padding: 0;
+    margin: 0;
+    min-height: 100vh;
+    font: 15px Roboto, sans-serif;
+  }
+
+  h1.little {
+    font-size: 1em;
+    margin: 0;
+    font-variant: all-small-caps;
+  }
+
+  h2.little {
+    font-size: 1.3em;
+    margin: 0;
+    font-variant: all-small-caps;
+  }
+
+
+  a {
+    &, &:visited {
+      text-decoration: none;
+      text-decoration: -moz-none;
+    }
+  }
+
+  .mat-table .mat-row .mat-cell {
+    font-size: 11px;
+  }
+
+  .mat-form-field-suffix .show-pwd-icon {
+    cursor: pointer;
+  }
+
+  .grid-stack {
+    a {
+      text-decoration: none;
+    }
+
+    .widget {
+      .more-info {
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.9rem;
+        position: absolute;
+        bottom: 17px;
+        left: 0;
+        right: 0;
+      }
+
+      .fullwidget {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+      }
+
+      .icon-background {
+        pointer-events: none;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 100% !important;
+        height: auto;
+        font-size: 11rem;
+        transform: translate(-50%, -50%);
+        opacity: 0.05;
+      }
+    }
+  }
+
+  .widget-dialog-card {
+    &.step2 {
+      min-height: 275px;
+    }
+
+    .mat-card-header-text {
+      margin: auto !important;
+    }
+  }
+}

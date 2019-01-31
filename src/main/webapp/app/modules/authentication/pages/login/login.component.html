@@ -39,7 +39,7 @@
 
             <!-- Username Input -->
             <mat-form-field>
-              <mat-icon class="prefix" matPrefix>person</mat-icon>
+              <mat-icon class="prefix" matPrefix color="primary">person</mat-icon>
               <input matInput
                      type="text"
                      id="username"
@@ -53,7 +53,7 @@
 
             <!-- Password Input -->
             <mat-form-field>
-              <mat-icon class="prefix" matPrefix>lock</mat-icon>
+              <mat-icon class="prefix" matPrefix color="primary">lock</mat-icon>
               <input matInput
                      [type]="hidePassword ? 'password' : 'text'"
                      id="password"
@@ -63,6 +63,7 @@
 
               <mat-icon class="show-pwd-icon"
                         matSuffix
+                        color="primary"
                         (click)="hidePassword = !hidePassword">
                 {{hidePassword ? 'visibility' : 'visibility_off'}}
               </mat-icon>
@@ -78,7 +79,7 @@
                           fxLayoutAlign="center"
                           fxLayoutGap="15px"
                           *ngIf="!formSubmitAttempt">
-          <button fxFlex="85" mat-raised-button class="mat-elevation-z2" color="accent" type="submit">
+          <button fxFlex="85" mat-raised-button class="mat-elevation-z2" color="primary" type="submit">
             {{ 'sign.in' | translate | uppercase}}
           </button>
         </mat-card-actions>

@@ -35,7 +35,7 @@ import {HttpUserService} from '../../../../../shared/services/api/http-user.serv
 @Component({
   selector: 'app-user',
   templateUrl: './user-list.component.html',
-  styleUrls: ['./user-list.component.css']
+  styleUrls: ['./user-list.component.scss']
 })
 export class UserListComponent implements AfterViewInit {
   /**

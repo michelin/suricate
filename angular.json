@@ -20,12 +20,15 @@
               "src/main/webapp/assets",
               "src/main/webapp/favicon.ico"
             ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "node_modules/normalize-scss/sass"
+              ]
+            },
             "styles": [
-              "src/main/webapp/assets/styles/normalize.css",
-              "node_modules/material-design-icons-iconfont/dist/material-design-icons.css",
-              "node_modules/font-awesome/css/font-awesome.css",
-              "src/main/webapp/assets/styles/themes/dashboard-themes.scss",
-              "src/main/webapp/styles.css"
+              "node_modules/material-design-icons-iconfont/dist/material-design-icons.scss",
+              "node_modules/font-awesome/scss/font-awesome.scss",
+              "src/main/webapp/sass/styles.scss"
             ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
@@ -77,21 +80,24 @@
             "karmaConfig": "./karma.conf.js",
             "polyfills": "src/main/webapp/polyfills.ts",
             "tsConfig": "src/main/webapp/tsconfig.spec.json",
+            "assets": [
+              "src/main/webapp/assets",
+              "src/main/webapp/favicon.ico"
+            ],
+            "stylePreprocessorOptions": {
+              "includePaths": [
+                "node_modules/normalize-scss/sass"
+              ]
+            },
+            "styles": [
+              "node_modules/material-design-icons-iconfont/dist/material-design-icons.scss",
+              "node_modules/font-awesome/scss/font-awesome.scss",
+              "src/main/webapp/sass/styles.scss"
+            ],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
               "node_modules/lodash/lodash.min.js",
               "node_modules/moment/min/moment-with-locales.min.js"
-            ],
-            "styles": [
-              "src/main/webapp/assets/styles/normalize.css",
-              "node_modules/material-design-icons-iconfont/dist/material-design-icons.css",
-              "node_modules/font-awesome/css/font-awesome.css",
-              "src/main/webapp/assets/styles/themes/dashboard-themes.scss",
-              "src/main/webapp/styles.css"
-            ],
-            "assets": [
-              "src/main/webapp/assets",
-              "src/main/webapp/favicon.ico"
             ]
           }
         },
@@ -114,7 +120,7 @@
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "app",
-      "styleext": "css"
+      "styleext": "scss"
     },
     "@schematics/angular:directive": {
       "prefix": "app"

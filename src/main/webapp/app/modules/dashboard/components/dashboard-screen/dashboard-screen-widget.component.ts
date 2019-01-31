@@ -43,7 +43,7 @@ import * as Stomp from '@stomp/stompjs';
 @Component({
   selector: 'app-dashboard-screen-widget',
   templateUrl: './dashboard-screen-widget.component.html',
-  styleUrls: ['./dashboard-screen-widget.component.css']
+  styleUrls: ['./dashboard-screen-widget.component.scss']
 })
 export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
 

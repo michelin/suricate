@@ -31,7 +31,7 @@ import {ToastType} from './toast-objects/ToastType';
 @Component({
   selector: 'app-toast-messages',
   templateUrl: './toast.component.html',
-  styleUrls: ['./toast.component.css'],
+  styleUrls: ['./toast.component.scss'],
   animations: [
     trigger('slideInOut', [
       state('in', style({

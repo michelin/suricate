@@ -34,7 +34,7 @@ import {HttpProjectService} from '../../../../../shared/services/api/http-projec
 @Component({
   selector: 'app-dashboard-list',
   templateUrl: './dashboard-list.component.html',
-  styleUrls: ['./dashboard-list.component.css']
+  styleUrls: ['./dashboard-list.component.scss']
 })
 export class DashboardListComponent implements AfterViewInit {
 

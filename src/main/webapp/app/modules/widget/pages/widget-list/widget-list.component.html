@@ -49,7 +49,7 @@
         <app-translate [key]="'activation.status'"></app-translate>
       </mat-header-cell>
       <mat-cell fxFlex="13%" *matCellDef="let row">
-        <mat-slide-toggle color="accent"
+        <mat-slide-toggle color="primary"
                           [disabled]="!isUserAdmin"
                           [checked]="row.widgetAvailability == widgetAvailability.ACTIVATED"
                           (change)="toggleWidgetActivation(row, $event)"></mat-slide-toggle>

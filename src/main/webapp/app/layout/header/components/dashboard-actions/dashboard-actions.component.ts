@@ -31,7 +31,7 @@ import {HttpProjectService} from '../../../../shared/services/api/http-project.s
 @Component({
   selector: 'app-dashboard-actions',
   templateUrl: './dashboard-actions.component.html',
-  styleUrls: ['./dashboard-actions.component.css']
+  styleUrls: ['./dashboard-actions.component.scss']
 })
 export class DashboardActionsComponent implements OnInit {
 

@@ -27,7 +27,7 @@ import {UserService} from './modules/security/user/user.service';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css']
+  styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit, OnDestroy {
 
@@ -96,6 +96,7 @@ export class AppComponent implements OnInit, OnDestroy {
    * @param {string} themeValue The new theme value
    */
   switchTheme(themeValue: string) {
+    this.overlayContainer.getContainerElement().classList.remove(this.appHtmlClass);
     this.overlayContainer.getContainerElement().classList.add(themeValue);
     this.appHtmlClass = themeValue;
   }

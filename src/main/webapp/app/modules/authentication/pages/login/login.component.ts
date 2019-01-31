@@ -29,7 +29,7 @@ import {AuthenticationProviderEnum} from '../../../../shared/model/enums/Authent
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
+  styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
   /**
