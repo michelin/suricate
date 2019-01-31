@@ -19,9 +19,14 @@
     }
   }
 
+  .mat-button,
   .mat-icon-button {
     &.mat-primary {
       color: mat-color($primary, A700);
+
+      .mat-button-focus-overlay {
+        background-color: mat-color($primary, A700);
+      }
     }
   }
 }
