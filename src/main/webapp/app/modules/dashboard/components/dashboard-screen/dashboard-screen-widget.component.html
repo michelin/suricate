@@ -47,18 +47,29 @@
   <!--           WIDGET ACTION BUTTON                -->
   <!--------------------------------------------------->
   <span *ngIf="!readOnly">
-     <button class="btn-widget btn-widget-delete"
-             role="button"
-             aria-disabled="false"
-             (click)="displayDeleteProjectWidgetDialog()">
-        <mat-icon class="material-icons">delete_forever</mat-icon>
-      </button>
+    <button class="btn-widget btn-widget-delete"
+            role="button"
+            aria-disabled="false"
+            matTooltip="{{ 'widget.delete' | translate }}"
+            (click)="displayDeleteProjectWidgetDialog()">
+      <mat-icon class="material-icons">delete_forever</mat-icon>
+    </button>
 
-      <button class="btn-widget btn-widget-edit"
-              role="button"
-              aria-disabled="false"
-              (click)="displayEditProjectWidgetDialog()">
-        <mat-icon class="material-icons">edit</mat-icon>
-      </button>
+    <button class="btn-widget btn-widget-edit"
+            role="button"
+            aria-disabled="false"
+            matTooltip="{{ 'widget.edit' | translate }}"
+            (click)="displayEditProjectWidgetDialog()">
+      <mat-icon class="material-icons">edit</mat-icon>
+    </button>
+
+    <button class="btn-widget btn-widget-log"
+            role="button"
+            aria-disabled="false"
+            matTooltip="{{ 'widget.display.log' | translate }}"
+            (click)="displayLogProjectWidgetDialog()">
+      <mat-icon class="material-icons">notes</mat-icon>
+    </button>
   </span>
+
 </div>

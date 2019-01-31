@@ -204,6 +204,13 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * call the popup that display the execution log
+   */
+  displayLogProjectWidgetDialog(): void {
+
+  }
+
+  /**
    * Called when the component is destroyed
    */
   ngOnDestroy(): void {
