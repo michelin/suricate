@@ -30,6 +30,11 @@
 @include angular-material-theme($light-theme);
 @include suricate-theme($light-theme);
 
+.default-theme {
+  @include angular-material-theme($light-theme);
+  @include suricate-theme($light-theme);
+}
+
 // DARK THEME
 .dark-theme {
   @include angular-material-theme($dark-theme);

@@ -96,6 +96,7 @@ export class AppComponent implements OnInit, OnDestroy {
    * @param {string} themeValue The new theme value
    */
   switchTheme(themeValue: string) {
+    this.overlayContainer.getContainerElement().classList.remove(this.appHtmlClass);
     this.overlayContainer.getContainerElement().classList.add(themeValue);
     this.appHtmlClass = themeValue;
   }
