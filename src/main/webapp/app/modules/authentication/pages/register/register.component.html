@@ -37,7 +37,7 @@
 
             <!-- Username Input -->
             <mat-form-field>
-              <mat-icon class="prefix" matPrefix>android</mat-icon>
+              <mat-icon class="prefix" color="primary" matPrefix>android</mat-icon>
               <input matInput
                      type="text"
                      id="username"
@@ -51,7 +51,7 @@
 
             <!-- Firstname Input -->
             <mat-form-field>
-              <mat-icon class="prefix" matPrefix>person</mat-icon>
+              <mat-icon class="prefix" color="primary" matPrefix>person</mat-icon>
               <input matInput
                      type="text"
                      id="firstname"
@@ -65,7 +65,7 @@
 
             <!-- Lastname Input -->
             <mat-form-field>
-              <mat-icon class="prefix" matPrefix>person</mat-icon>
+              <mat-icon class="prefix" color="primary" matPrefix>person</mat-icon>
               <input matInput
                      type="text"
                      id="lastname"
@@ -79,7 +79,7 @@
 
             <!-- Email Input -->
             <mat-form-field>
-              <mat-icon class="prefix" matPrefix>email</mat-icon>
+              <mat-icon class="prefix" color="primary" matPrefix>email</mat-icon>
               <input matInput
                      type="text"
                      id="email"
@@ -96,7 +96,7 @@
 
             <!-- Password Input -->
             <mat-form-field>
-              <mat-icon class="prefix" matPrefix>lock</mat-icon>
+              <mat-icon class="prefix" color="primary" matPrefix>lock</mat-icon>
               <input matInput
                      [type]="hidePassword ? 'password' : 'text'"
                      id="password"
@@ -105,6 +105,7 @@
                      [required]="registerForm.get('password').errors && registerForm.get('password').errors.required"/>
               <mat-icon class="show-pwd-icon"
                         matSuffix
+                        color="primary"
                         (click)="hidePassword = !hidePassword">
                 {{hidePassword ? 'visibility' : 'visibility_off'}}
               </mat-icon>
@@ -115,14 +116,15 @@
 
             <!-- Confirm Password Input -->
             <mat-form-field>
-              <mat-icon class="prefix" matPrefix>lock</mat-icon>
+              <mat-icon class="prefix" color="primary" matPrefix>lock</mat-icon>
               <input matInput
                      [type]="hidePassword ? 'password' : 'text'"
                      id="confirm_password"
                      placeholder="{{ 'password.confirm' | translate }}"
                      formControlName="confirmPassword"
                      [required]="registerForm.get('confirmPassword').errors && registerForm.get('confirmPassword').errors.required"/>
-              <mat-icon matSuffix (click)="hidePassword = !hidePassword"> {{hidePassword ? 'visibility' :
+              <mat-icon matSuffix color="primary"
+                        (click)="hidePassword = !hidePassword"> {{hidePassword ? 'visibility' :
                 'visibility_off'}}
               </mat-icon>
               <mat-error
