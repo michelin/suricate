@@ -45,6 +45,11 @@ body {
     }
   }
 
+  .text-justify {
+    text-align: justify;
+    text-justify: inter-word;
+  }
+
   .mat-table .mat-row .mat-cell {
     font-size: 11px;
   }
