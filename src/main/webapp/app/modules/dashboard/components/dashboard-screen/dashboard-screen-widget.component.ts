@@ -34,6 +34,7 @@ import {WebsocketService} from '../../../../shared/services/websocket.service';
 import {WSUpdateEvent} from '../../../../shared/model/websocket/WSUpdateEvent';
 import {WSUpdateType} from '../../../../shared/model/websocket/enums/WSUpdateType';
 import {GridItemUtils} from '../../../../shared/utils/GridItemUtils';
+import {CommunicationDialogComponent} from '../../../../shared/components/communication-dialog/communication-dialog.component';
 
 import * as Stomp from '@stomp/stompjs';
 
@@ -201,6 +202,27 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
       minWidth: 700,
       data: {projectWidgetId: this.projectWidget.id}
     });
+  }
+
+  /**
+   * call the popup that display the execution log
+   */
+  displayLogProjectWidgetDialog(): void {
+    this.translateService.get(['widget.display.log']).subscribe(translations => {
+      const titlecasePipe = new TitleCasePipe();
+
+      this.matDialog.open(CommunicationDialogComponent, {
+        minWidth: 700,
+        height: '80%',
+        data: {
+          title: titlecasePipe.transform(translations['widget.display.log']),
+          message: this.projectWidget.log ? this.projectWidget.log : '',
+          isErrorMessage: !!this.projectWidget.log
+        }
+      });
+
+    });
+
   }
 
   /**

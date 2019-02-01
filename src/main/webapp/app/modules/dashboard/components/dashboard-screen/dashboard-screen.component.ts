@@ -375,7 +375,7 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
    * Checks if the grid elements have been moved
    */
   private isGridItemsHasMoved(): boolean {
-    let itemHaveBeenMoved: boolean = false;
+    let itemHaveBeenMoved = false;
 
     this.startGridStackItems.forEach(startGridItem => {
       const gridItemFound = this.gridStackItems.find(currentGridItem => {
