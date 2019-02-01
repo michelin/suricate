@@ -15,11 +15,27 @@
  *  * limitations under the License.
  *
  */
-// Custom variables
-@import '~sass/variables';
-//Normalize SCSS
-@import '~normalize-scss/sass/normalize';
-@import '~material-design-icons-iconfont/src/material-design-icons';
-//Suricate Specifics
 @import '~sass/dashboard-themes';
-@import '~sass/global-styles';
+
+.fixActionRow {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.spacer {
+  flex-grow: 1;
+}
+
+.mat-dialog-content {
+  & {
+    width: 94%;
+    background-color: #cfd2da42;
+    margin: auto;
+    padding: 19px 20px;
+  }
+
+  &.error {
+    color: mat-color(map-get($theme, warn));
+  }
+}

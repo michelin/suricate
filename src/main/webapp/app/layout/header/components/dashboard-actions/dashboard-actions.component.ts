@@ -100,7 +100,7 @@ export class DashboardActionsComponent implements OnInit {
   openEditDashboardDialog() {
     this.editDashboardDialogRef = this.matDialog.open(AddDashboardDialogComponent, {
       minWidth: 900,
-      data: {projectId: this.project.token}
+      data: {projectToken: this.project.token}
     });
   }
 
