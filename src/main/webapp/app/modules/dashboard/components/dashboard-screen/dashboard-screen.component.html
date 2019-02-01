@@ -11,7 +11,7 @@
      (onResizeStop)="updateProjectWidgetsPosition()" (onDragStop)="updateProjectWidgetsPosition()"
      appRunScripts>
 
-  <div [innerHTML]="('<style>.grid {' + project.gridProperties.cssStyle + '}</style>') | safeHtml"></div>
+  <div [innerHTML]="('<style>' + project.gridProperties.cssStyle + '</style>') | safeHtml"></div>
   <div [innerHTML]="getJSLibraries() | safeHtml">
   </div>
 

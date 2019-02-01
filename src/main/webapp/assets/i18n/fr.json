@@ -83,6 +83,7 @@
   "widget.delete": "Supprimer la tuile",
   "widget.select": "Sélectionner une tuile",
   "widget.settings": "Configuration de la tuile",
+  "widget.display.log": "Rapports d'exécution",
   "category.select": "Sélectionner la catégorie",
   "screen.refresh": "Rafraichir Ecrans",
   "screen.management": "Gestion des écrans",
