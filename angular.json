@@ -22,11 +22,11 @@
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
-                "node_modules/normalize-scss/sass"
+                "node_modules/normalize-scss/sass",
+                "node_modules/material-design-icons-iconfont/src"
               ]
             },
             "styles": [
-              "node_modules/material-design-icons-iconfont/dist/material-design-icons.scss",
               "node_modules/font-awesome/scss/font-awesome.scss",
               "src/main/webapp/sass/styles.scss"
             ],
@@ -86,11 +86,11 @@
             ],
             "stylePreprocessorOptions": {
               "includePaths": [
-                "node_modules/normalize-scss/sass"
+                "node_modules/normalize-scss/sass",
+                "node_modules/material-design-icons-iconfont/src"
               ]
             },
             "styles": [
-              "node_modules/material-design-icons-iconfont/dist/material-design-icons.scss",
               "node_modules/font-awesome/scss/font-awesome.scss",
               "src/main/webapp/sass/styles.scss"
             ],

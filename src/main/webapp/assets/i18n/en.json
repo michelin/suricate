@@ -83,6 +83,7 @@
   "widget.delete": "Delete widget",
   "widget.select": "Select Widget",
   "widget.settings": "Widget Settings",
+  "widget.display.log": "Execution logs",
   "category.select": "Select category",
   "screen.refresh": "Refresh Screens",
   "screen.management": "Screen Management",
