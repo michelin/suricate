@@ -85,6 +85,11 @@ public class ProjectWidgetService {
     private final DashboardScheduleService dashboardScheduleService;
 
     /**
+     * The widget service
+     */
+    private final WidgetService widgetService;
+
+    /**
      * The mustacheFactory
      */
     private final MustacheFactory mustacheFactory;
@@ -110,6 +115,7 @@ public class ProjectWidgetService {
      * @param projectWidgetRepository   The project widget repository
      * @param dashboardWebSocketService The dashboard websocket service
      * @param dashboardScheduleService  The dashboard scheduler
+     * @param widgetService             The widget service
      * @param mustacheFactory           The mustache factory (HTML template)
      * @param projectMapper             The project mapper
      * @param ctx                       The application context
@@ -120,12 +126,14 @@ public class ProjectWidgetService {
                                 final MustacheFactory mustacheFactory,
                                 final DashboardWebSocketService dashboardWebSocketService,
                                 @Lazy final DashboardScheduleService dashboardScheduleService,
+                                final WidgetService widgetService,
                                 final ProjectMapper projectMapper,
                                 final ApplicationContext ctx,
                                 @Qualifier("jasyptStringEncryptor") final StringEncryptor stringEncryptor) {
         this.projectWidgetRepository = projectWidgetRepository;
         this.dashboardWebsocketService = dashboardWebSocketService;
         this.dashboardScheduleService = dashboardScheduleService;
+        this.widgetService = widgetService;
         this.mustacheFactory = mustacheFactory;
         this.projectMapper = projectMapper;
         this.ctx = ctx;
@@ -171,7 +179,7 @@ public class ProjectWidgetService {
     public ProjectWidget addProjectWidget(ProjectWidget projectWidget) {
         //Encrypt Secret params
         projectWidget.setBackendConfig(
-            encryptSecretParamsIfNeeded(projectWidget.getWidget().getWidgetParams(), projectWidget.getBackendConfig())
+            encryptSecretParamsIfNeeded(projectWidget.getWidget(), projectWidget.getBackendConfig())
         );
 
         // Add project widget
@@ -343,7 +351,7 @@ public class ProjectWidgetService {
             projectWidget.setCustomStyle(customStyle);
         }
         if (backendConfig != null) {
-            projectWidget.setBackendConfig(encryptSecretParamsIfNeeded(projectWidget.getWidget().getWidgetParams(), backendConfig));
+            projectWidget.setBackendConfig(encryptSecretParamsIfNeeded(projectWidget.getWidget(), backendConfig));
         }
         projectWidgetRepository.save(projectWidget);
 
@@ -410,13 +418,14 @@ public class ProjectWidgetService {
     /**
      * Method that encrypt secret params if need
      *
-     * @param widgetParams  The list of widget params of the related project widget
+     * @param widget        The widget related to project widget
      * @param backendConfig The backend config of project widget
      * @return The backend config with the secret params encrypted
      */
-    private String encryptSecretParamsIfNeeded(final List<WidgetParam> widgetParams, String backendConfig) {
+    private String encryptSecretParamsIfNeeded(final Widget widget, String backendConfig) {
         Map<String, String> backendConfigAsMap = PropertiesUtils.getMap(backendConfig);
 
+        List<WidgetParam> widgetParams = widgetService.getFullListOfParams(widget);
         for (WidgetParam widgetParam : widgetParams) {
             if (widgetParam.getType() == WidgetVariableType.SECRET || widgetParam.getType() == WidgetVariableType.PASSWORD) {
                 String valueToEncrypt = StringUtils.trimToNull(backendConfigAsMap.get(widgetParam.getName()));
