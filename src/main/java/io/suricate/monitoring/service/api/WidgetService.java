@@ -160,6 +160,21 @@ public class WidgetService {
     }
 
     /**
+     * Return the full list of params for a widget including
+     * - Params directly directed to the widget
+     * - Global configurations related to the category of this widget
+     *
+     * @param widget The widget
+     * @return The full list of params
+     */
+    public List<WidgetParam> getFullListOfParams(final Widget widget) {
+        List<WidgetParam> widgetParams = new ArrayList<>(widget.getWidgetParams());
+        widgetParams.addAll(getGlobalWidgetParamsFromConfiguration(widget));
+
+        return widgetParams;
+    }
+
+    /**
      * Get the list of the variables for a widget
      *
      * @param widget The widget
@@ -168,8 +183,7 @@ public class WidgetService {
     public List<WidgetVariableResponse> getWidgetVariables(final Widget widget) {
         List<WidgetVariableResponse> widgetVariableResponses = new ArrayList<>();
 
-        List<WidgetParam> widgetParams = new ArrayList<>(widget.getWidgetParams());
-        widgetParams.addAll(getGlobalWidgetParamsFromConfiguration(widget));
+        List<WidgetParam> widgetParams = getFullListOfParams(widget);
 
         for (WidgetParam widgetParam : widgetParams) {
             WidgetVariableResponse widgetVariableResponse = new WidgetVariableResponse();
