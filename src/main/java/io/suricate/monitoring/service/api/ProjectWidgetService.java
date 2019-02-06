@@ -351,7 +351,9 @@ public class ProjectWidgetService {
             projectWidget.setCustomStyle(customStyle);
         }
         if (backendConfig != null) {
-            projectWidget.setBackendConfig(encryptSecretParamsIfNeeded(projectWidget.getWidget(), backendConfig));
+            projectWidget.setBackendConfig(
+                encryptSecretParamsIfNeeded(projectWidget.getWidget(), backendConfig)
+            );
         }
         projectWidgetRepository.save(projectWidget);
 
