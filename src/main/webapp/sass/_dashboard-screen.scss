@@ -24,15 +24,14 @@
 }
 
 // Dashboard css
-html.grid {
+html .grid {
   font-size: 100%;
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
 }
 
-body.grid {
+body .grid {
   margin: 0;
-  background-color: #222;
   font-size: 20px;
   color: #fff;
   font-family: 'Open Sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
