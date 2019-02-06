@@ -391,13 +391,14 @@ public class ProjectWidgetService {
     /**
      * decrypt the secret params if exists
      *
-     * @param widgetParams  list of params for this widget
+     * @param widget        The widget related to project widget
      * @param backendConfig The related backend config
      * @return The list of param decrypted
      */
-    public String decryptSecretParamsIfNeeded(final List<WidgetParam> widgetParams, String backendConfig) {
+    public String decryptSecretParamsIfNeeded(final Widget widget, String backendConfig) {
         Map<String, String> backendConfigAsMap = PropertiesUtils.getMap(backendConfig);
 
+        List<WidgetParam> widgetParams = widgetService.getFullListOfParams(widget);
         for (WidgetParam widgetParam : widgetParams) {
             if (widgetParam.getType() == WidgetVariableType.SECRET || widgetParam.getType() == WidgetVariableType.PASSWORD) {
                 String valueToEncrypt = StringUtils.trimToNull(backendConfigAsMap.get(widgetParam.getName()));
