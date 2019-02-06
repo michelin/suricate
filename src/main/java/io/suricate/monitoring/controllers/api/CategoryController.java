@@ -147,7 +147,7 @@ public class CategoryController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
     @GetMapping(value = "/v1/categories/{categoryId}/configurations")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<List<ConfigurationResponseDto>> getConfigurationsByCategory(@ApiParam(name = "categoryId", value = "The category id", required = true)
                                                                                       @PathVariable("categoryId") final Long categoryId) {
         Optional<List<Configuration>> configurationsOptional = configurationService.getConfigurationForCategory(categoryId);
