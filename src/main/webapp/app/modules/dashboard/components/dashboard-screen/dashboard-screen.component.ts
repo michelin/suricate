@@ -190,6 +190,7 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
       'max_cols': project.gridProperties.maxColumn,
       'min_cols': 1,
       'row_height': project.gridProperties.widgetHeight,
+      'min_rows': 1,
       'margins': [4],
       'auto_resize': true
     };
