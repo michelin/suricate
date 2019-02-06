@@ -58,41 +58,6 @@ body {
     cursor: pointer;
   }
 
-  .grid-stack {
-    a {
-      text-decoration: none;
-    }
-
-    .widget {
-      .more-info {
-        color: rgba(255, 255, 255, 0.5);
-        font-size: 0.9rem;
-        position: absolute;
-        bottom: 17px;
-        left: 0;
-        right: 0;
-      }
-
-      .fullwidget {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-      }
-
-      .icon-background {
-        pointer-events: none;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        width: 100% !important;
-        height: auto;
-        font-size: 11rem;
-        transform: translate(-50%, -50%);
-        opacity: 0.05;
-      }
-    }
-  }
-
   .widget-dialog-card {
     &.step2 {
       min-height: 275px;

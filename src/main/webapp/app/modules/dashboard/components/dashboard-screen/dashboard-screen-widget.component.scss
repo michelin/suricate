@@ -16,36 +16,11 @@
  *
  */
 
-
-h1, h2, h3, h4, h5, p {
-  padding: 0;
-  margin: 0;
-}
-
-h1 {
-  font-size: 1.4rem;
-  text-transform: uppercase;
-  margin-top: 6px;
-  margin-bottom: 6%;
-}
-
-h2 {
-  font-size: 3.7rem;
-}
-
-p {
-  font-size: 0.8em;
-}
-
 .widget {
-  & {
-    text-align: center;
-  }
-
   &.moving {
     & {
       z-index: 1000;
-      box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);
+      box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
     }
 
     .issue {
@@ -55,14 +30,6 @@ p {
     .btn-widget {
       z-index: 1020;
     }
-  }
-
-  .updated-at {
-    font-size: 0.9rem;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
   }
 
   .btn-widget {
@@ -96,13 +63,15 @@ p {
   .issue {
     & {
       position: relative;
-      width: 100%;
+      width: -webkit-fill-available;
+      width: -moz-available;
       z-index: 15;
       top: 0;
       font-size: 0.9em;
       display: flex;
       align-items: center;
       height: auto;
+      padding: 5px;
     }
 
     &.execution-error {
@@ -112,45 +81,14 @@ p {
     &.execution-warning {
       background-color: #e8af00db;
     }
+
+    .text {
+      color: #cfd2da;
+      margin-left: 10px;
+    }
   }
 
   .material-icons {
     margin-left: 5px;
   }
-
-  .text {
-    display: inline-block;
-    color: #cfd2da !important;
-    margin-left: 10px;
-  }
-}
-
-.grid-stack-item-content {
-  & {
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    top: 0;
-    overflow: hidden;
-  }
-
-  * {
-    color: #fff;
-  }
-
-  .link {
-    display: block;
-    width: 90%;
-    margin: auto;
-    position: relative;
-    top: 5px;
-    height: 91%;
-  }
-}
-
-.grid-stack-item-content-inner {
-  max-height: 100%;
-  position: relative;
-  top: 50%;
-  transform: translateY(-50%);
 }
