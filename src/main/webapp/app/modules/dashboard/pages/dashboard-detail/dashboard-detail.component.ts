@@ -54,6 +54,11 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
   projectWidgets: ProjectWidget[];
 
   /**
+   * True if the dashboard should be displayed readonly, false otherwise
+   */
+  isReadOnly: boolean = true;
+
+  /**
    * The screen code of the client;
    */
   screenCode: number;
@@ -115,7 +120,19 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
   refreshProject(dashboardToken: string): void {
     this.httpProjectService.getOneByToken(dashboardToken).subscribe(project => {
       this.project = project;
+      this.refreshReadOnlyDashboard(dashboardToken);
       this.refreshProjectWidgets(dashboardToken);
+    });
+  }
+
+  /**
+   * Check if the dashboard should be displayed as readonly
+   *
+   * @param dashboardToken
+   */
+  refreshReadOnlyDashboard(dashboardToken: string): void {
+    this.dashboardService.shouldDisplayedReadOnly(dashboardToken).subscribe(shouldDisplayReadOnly => {
+      this.isReadOnly = shouldDisplayReadOnly;
     });
   }
 

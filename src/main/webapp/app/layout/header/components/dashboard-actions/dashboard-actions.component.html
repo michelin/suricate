@@ -1,8 +1,9 @@
-<button mat-mini-fab color="primary" matTooltip="{{ 'widget.add' | translate }}" (click)="openAddWidgetDialog()">
+<button *ngIf="!isReadOnly" mat-mini-fab color="primary" matTooltip="{{ 'widget.add' | translate }}"
+        (click)="openAddWidgetDialog()">
   <mat-icon>add</mat-icon>
 </button>
 
-<button mat-mini-fab color="primary" matTooltip="{{ 'dashboard.settings' | translate }}"
+<button *ngIf="!isReadOnly" mat-mini-fab color="primary" matTooltip="{{ 'dashboard.settings' | translate }}"
         (click)="openEditDashboardDialog()">
   <mat-icon>settings_applications</mat-icon>
 </button>
@@ -18,7 +19,7 @@
   </button>
 </a>
 
-<button mat-mini-fab color="primary" matTooltip="{{ 'screen.management' | translate }}"
+<button *ngIf="!isReadOnly" mat-mini-fab color="primary" matTooltip="{{ 'screen.management' | translate }}"
         (click)="openTvManagementDialog()">
   <mat-icon>live_tv</mat-icon>
 </button>

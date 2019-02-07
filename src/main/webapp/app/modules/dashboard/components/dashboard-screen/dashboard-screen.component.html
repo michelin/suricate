@@ -8,8 +8,7 @@
 
 <!-- Grid project -->
 <div *ngIf="gridOptions" class="grid-stack" [ngGrid]="gridOptions"
-     (onResizeStop)="updateProjectWidgetsPosition()" (onDragStop)="updateProjectWidgetsPosition()"
-     appRunScripts>
+     (onResizeStop)="updateProjectWidgetsPosition()" (onDragStop)="updateProjectWidgetsPosition()">
 
   <div [innerHTML]="('<style>' + project.gridProperties.cssStyle + '</style>') | safeHtml"></div>
   <div [innerHTML]="getJSLibraries() | safeHtml">

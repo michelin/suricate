@@ -18,6 +18,9 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable, Subject} from 'rxjs';
 
 import {Project} from '../../shared/model/api/project/Project';
+import {UserService} from '../security/user/user.service';
+import {HttpProjectService} from '../../shared/services/api/http-project.service';
+import {map} from 'rxjs/operators';
 
 /**
  * The dashboard service, manage http calls
@@ -44,8 +47,11 @@ export class DashboardService {
 
   /**
    * The constructor
+   *
+   * @param userService The user service to inject
    */
-  constructor() {
+  constructor(private userService: UserService,
+              private httpProjectService: HttpProjectService) {
   }
 
   /* ******************************************************************* */
@@ -107,5 +113,24 @@ export class DashboardService {
    */
   refreshProjectWidgets(): void {
     this.shouldRefreshProjectWidgets.next(true);
+  }
+
+  /* ******************************************************************* */
+  /*                      Other Management                               */
+
+  /* ******************************************************************* */
+
+  /**
+   * Check if the dashboard should be displayed without rights
+   *
+   * @param dashboardToken The dashboard token
+   */
+  shouldDisplayedReadOnly(dashboardToken: string): Observable<boolean> {
+    return this.httpProjectService.getProjectUsers(dashboardToken).pipe(
+      map(dashboardUsers => {
+        return !this.userService.isAdmin()
+          && !dashboardUsers.some(user => user.username === this.userService.connectedUser.username);
+      })
+    );
   }
 }
