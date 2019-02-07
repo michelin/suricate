@@ -47,7 +47,7 @@
             <input matInput
                    type="number"
                    id="nb_column"
-                   placeholder=""
+                   placeholder="{{ 'grid.nb.columns' | translate}}"
                    formControlName="maxColumn"
                    [required]="this.dashboardForm.get('maxColumn').errors && this.dashboardForm.get('maxColumn').errors.required">
 
