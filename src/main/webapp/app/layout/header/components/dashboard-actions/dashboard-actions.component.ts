@@ -24,6 +24,7 @@ import {TvManagementDialogComponent} from '../tv-management-dialog/tv-management
 import {HttpScreenService} from '../../../../shared/services/api/http-screen.service';
 import {Project} from '../../../../shared/model/api/project/Project';
 import {HttpProjectService} from '../../../../shared/services/api/http-project.service';
+import {DashboardService} from '../../../../modules/dashboard/dashboard.service';
 
 /**
  * Hold the header dashboard actions
@@ -60,15 +61,22 @@ export class DashboardActionsComponent implements OnInit {
   project: Project;
 
   /**
+   * True if the dashboard should be displayed readonly, false otherwise
+   */
+  isReadOnly: boolean = true;
+
+  /**
    * The constructor
    *
    * @param {MatDialog} matDialog The mat dialog to inject
    * @param {ActivatedRoute} activatedRoute The activated route
+   * @param {DashboardService} dashboardService The dashboard service to inject
    * @param {HttpScreenService} httpScreenService The screen service
    * @param {HttpProjectService} httpProjectService The project service
    */
   constructor(private matDialog: MatDialog,
               private activatedRoute: ActivatedRoute,
+              private dashboardService: DashboardService,
               private httpScreenService: HttpScreenService,
               private httpProjectService: HttpProjectService) {
   }
@@ -77,10 +85,14 @@ export class DashboardActionsComponent implements OnInit {
    * When the component is init
    */
   ngOnInit() {
+    this.dashboardService.refreshProjectEvent().subscribe(shouldRefresh => {
+      if (shouldRefresh) {
+        this.refreshProject(this.project.token);
+      }
+    });
+
     this.activatedRoute.params.subscribe(params => {
-      this.httpProjectService.getOneByToken(params['dashboardToken']).subscribe(dashboard => {
-        this.project = dashboard;
-      });
+      this.refreshProject(params['dashboardToken']);
     });
   }
 
@@ -119,5 +131,26 @@ export class DashboardActionsComponent implements OnInit {
    */
   refreshConnectedScreens() {
     this.httpScreenService.refreshEveryConnectedScreensForProject(this.project.token).subscribe();
+  }
+
+  /**
+   * Refresh the project
+   */
+  refreshProject(dashboardToken: string): void {
+    this.httpProjectService.getOneByToken(dashboardToken).subscribe(project => {
+      this.project = project;
+      this.refreshReadOnlyDashboard(dashboardToken);
+    });
+  }
+
+  /**
+   * Check if the dashboard should be displayed as readonly
+   *
+   * @param dashboardToken
+   */
+  refreshReadOnlyDashboard(dashboardToken: string): void {
+    this.dashboardService.shouldDisplayedReadOnly(dashboardToken).subscribe(shouldDisplayReadOnly => {
+      this.isReadOnly = shouldDisplayReadOnly;
+    });
   }
 }

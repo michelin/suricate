@@ -142,7 +142,7 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
 
       this.project = changes.project.currentValue;
       this.appRunScriptDirective.ngOnInit();
-      this.initGridStackOptions(this.project);
+      this.initGridStackOptions();
 
       if (changes.project.previousValue) {
         if (changes.project.previousValue.token !== changes.project.currentValue.token) {
@@ -152,6 +152,11 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
         this.startWebsocketConnection();
         this.initWebsocketSubscriptions();
       }
+    }
+
+    if (changes.readOnly) {
+      this.readOnly = changes.readOnly.currentValue;
+      this.initGridStackOptions();
     }
 
     if (changes.projectWidgets) {
@@ -182,24 +187,24 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
 
   /**
    * Init the options for Grid Stack plugin
-   *
-   * @param {Project} project The project used for the initialization
    */
-  initGridStackOptions(project: Project): void {
+  initGridStackOptions(): void {
     this.gridOptions = {
-      'max_cols': project.gridProperties.maxColumn,
+      'max_cols': this.project.gridProperties.maxColumn,
       'min_cols': 1,
-      'row_height': project.gridProperties.widgetHeight,
+      'row_height': this.project.gridProperties.widgetHeight,
       'min_rows': 1,
       'margins': [4],
-      'auto_resize': true
+      'auto_resize': true,
+      'draggable': false,
+      'resizable': false
     };
 
-    if (this.readOnly) {
+    if (!this.readOnly) {
       this.gridOptions = {
         ...this.gridOptions,
-        'draggable': false,
-        'resizable': false,
+        'draggable': true,
+        'resizable': true
       };
     }
   }

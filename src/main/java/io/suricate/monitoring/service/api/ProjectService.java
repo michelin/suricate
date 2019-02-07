@@ -22,11 +22,13 @@ import io.suricate.monitoring.model.entity.user.User;
 import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.repository.ProjectRepository;
 import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
+import io.suricate.monitoring.utils.SecurityUtils;
 import io.suricate.monitoring.utils.logging.LogExecutionTime;
 import org.apache.commons.lang3.StringUtils;
 import org.jasypt.encryption.StringEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -204,6 +206,18 @@ public class ProjectService {
      */
     public String getTokenByProjectId(final Long projectId) {
         return projectRepository.getToken(projectId);
+    }
+
+    /**
+     * Check if the connected user can access to this project
+     *
+     * @param project        The project
+     * @param authentication The connected user
+     * @return True if he can, false otherwise
+     */
+    public boolean isConnectedUserCanAccessToProject(final Project project, final Authentication authentication) {
+        return SecurityUtils.isAdmin(authentication)
+            || project.getUsers().stream().anyMatch(currentUser -> currentUser.getUsername().equalsIgnoreCase(authentication.getName()));
     }
 
     /**

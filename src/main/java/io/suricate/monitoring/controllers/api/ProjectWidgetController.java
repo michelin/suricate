@@ -4,14 +4,19 @@ import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetRequestDto;
 import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetResponseDto;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
+import io.suricate.monitoring.model.enums.ApiErrorEnum;
+import io.suricate.monitoring.service.api.ProjectService;
 import io.suricate.monitoring.service.api.ProjectWidgetService;
 import io.suricate.monitoring.service.mapper.ProjectWidgetMapper;
+import io.suricate.monitoring.utils.exception.ApiException;
 import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
 import io.swagger.annotations.*;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.security.PermitAll;
 import java.util.Optional;
@@ -32,17 +37,24 @@ public class ProjectWidgetController {
      * The model/DTO for project widget
      */
     private final ProjectWidgetMapper projectWidgetMapper;
+    /**
+     * The project service
+     */
+    private final ProjectService projectService;
 
     /**
      * Constructor
      *
      * @param projectWidgetService The project widget service
      * @param projectWidgetMapper  The mapper to inject
+     * @param projectService       The project service to inject
      */
     public ProjectWidgetController(final ProjectWidgetService projectWidgetService,
-                                   final ProjectWidgetMapper projectWidgetMapper) {
+                                   final ProjectWidgetMapper projectWidgetMapper,
+                                   final ProjectService projectService) {
         this.projectWidgetService = projectWidgetService;
         this.projectWidgetMapper = projectWidgetMapper;
+        this.projectService = projectService;
     }
 
     /**
@@ -76,6 +88,7 @@ public class ProjectWidgetController {
     /**
      * Edit a project widget for a project
      *
+     * @param authentication          The connected user
      * @param projectWidgetId         The project widget id
      * @param projectWidgetRequestDto The project widget updated
      * @return The project updated
@@ -89,13 +102,18 @@ public class ProjectWidgetController {
     })
     @PutMapping(value = "/v1/projectWidgets/{projectWidgetId}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Void> editProjectWidgetFromProject(@ApiParam(name = "projectWidgetId", value = "The project widget id", required = true)
+    public ResponseEntity<Void> editProjectWidgetFromProject(@ApiIgnore OAuth2Authentication authentication,
+                                                             @ApiParam(name = "projectWidgetId", value = "The project widget id", required = true)
                                                              @PathVariable("projectWidgetId") Long projectWidgetId,
                                                              @ApiParam(name = "projectWidgetResponseDto", value = "The project widget informations to update", required = true)
                                                              @RequestBody ProjectWidgetRequestDto projectWidgetRequestDto) {
         Optional<ProjectWidget> projectWidgetOptional = projectWidgetService.getOne(projectWidgetId);
         if (!projectWidgetOptional.isPresent()) {
             throw new ObjectNotFoundException(ProjectWidget.class, projectWidgetId);
+        }
+
+        if (!projectService.isConnectedUserCanAccessToProject(projectWidgetOptional.get().getProject(), authentication.getUserAuthentication())) {
+            throw new ApiException("The user is not allowed to modify this resource", ApiErrorEnum.NOT_AUTHORIZED);
         }
 
         projectWidgetService.updateProjectWidget(projectWidgetOptional.get(), projectWidgetRequestDto.getCustomStyle(), projectWidgetRequestDto.getBackendConfig());
@@ -118,10 +136,16 @@ public class ProjectWidgetController {
     })
     @DeleteMapping(value = "/v1/projectWidgets/{projectWidgetId}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Void> deleteProjectWidget(@ApiParam(name = "projectWidgetId", value = "The project widget id", required = true)
+    public ResponseEntity<Void> deleteProjectWidget(@ApiIgnore OAuth2Authentication authentication,
+                                                    @ApiParam(name = "projectWidgetId", value = "The project widget id", required = true)
                                                     @PathVariable("projectWidgetId") Long projectWidgetId) {
-        if (!this.projectWidgetService.isProjectWidgetExists(projectWidgetId)) {
+        Optional<ProjectWidget> projectWidgetOptional = projectWidgetService.getOne(projectWidgetId);
+        if (!projectWidgetOptional.isPresent()) {
             throw new ObjectNotFoundException(ProjectWidget.class, projectWidgetId);
+        }
+
+        if (!projectService.isConnectedUserCanAccessToProject(projectWidgetOptional.get().getProject(), authentication.getUserAuthentication())) {
+            throw new ApiException("The user is not allowed to modify this resource", ApiErrorEnum.NOT_AUTHORIZED);
         }
 
         projectWidgetService.removeWidgetFromDashboard(projectWidgetId);
