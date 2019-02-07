@@ -27,6 +27,7 @@ import {User} from '../../../shared/model/api/user/User';
 import {HttpProjectService} from '../../../shared/services/api/http-project.service';
 import {HttpUserService} from '../../../shared/services/api/http-user.service';
 import {ProjectRequest} from '../../../shared/model/api/project/ProjectRequest';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-add-dashboard-dialog',
@@ -91,6 +92,7 @@ export class AddDashboardDialogComponent implements OnInit {
    * @param data The data passed to the dialog
    * @param {FormBuilder} formBuilder The formbuilder service
    * @param {ChangeDetectorRef} changeDetectorRef The change detector service
+   * @param {Router} router The router service
    * @param {DashboardService} dashboardService The dashboard service
    * @param {HttpProjectService} httpProjectService The project service
    * @param {HttpUserService} httpUserService The http user service to inject
@@ -98,6 +100,7 @@ export class AddDashboardDialogComponent implements OnInit {
   constructor(@Inject(MAT_DIALOG_DATA) private data: any,
               private formBuilder: FormBuilder,
               private changeDetectorRef: ChangeDetectorRef,
+              private router: Router,
               private dashboardService: DashboardService,
               private httpProjectService: HttpProjectService,
               private httpUserService: HttpUserService) {
@@ -213,6 +216,10 @@ export class AddDashboardDialogComponent implements OnInit {
       this.httpProjectService.getProjectUsers(projectToken).subscribe((users: User[]) => {
         this.projectUsers = users;
       });
+
+      if (!this.isEditMode) {
+        this.router.navigate(['/dashboards', projectToken]);
+      }
     });
   }
 

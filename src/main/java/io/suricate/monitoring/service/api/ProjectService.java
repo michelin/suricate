@@ -228,7 +228,7 @@ public class ProjectService {
     @Transactional
     public void deleteProject(Project project) {
         // notify clients
-        dashboardWebsocketService.updateGlobalScreensByProjectId(project.getId(), new UpdateEvent(UpdateType.DISCONNECT));
+        dashboardWebsocketService.updateGlobalScreensByProjectToken(project.getToken(), new UpdateEvent(UpdateType.DISCONNECT));
         // delete project
         projectRepository.delete(project);
     }

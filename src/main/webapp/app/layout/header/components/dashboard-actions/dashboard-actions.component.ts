@@ -17,6 +17,8 @@
 import {Component, OnInit} from '@angular/core';
 import {MatDialog, MatDialogRef} from '@angular/material';
 import {ActivatedRoute} from '@angular/router';
+import {TitleCasePipe} from '@angular/common';
+import {TranslateService} from '@ngx-translate/core';
 
 import {AddWidgetDialogComponent} from '../add-widget-dialog/add-widget-dialog.component';
 import {AddDashboardDialogComponent} from '../../../../home/components/add-dashboard-dialog/add-dashboard-dialog.component';
@@ -25,6 +27,7 @@ import {HttpScreenService} from '../../../../shared/services/api/http-screen.ser
 import {Project} from '../../../../shared/model/api/project/Project';
 import {HttpProjectService} from '../../../../shared/services/api/http-project.service';
 import {DashboardService} from '../../../../modules/dashboard/dashboard.service';
+import {ConfirmDialogComponent} from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 
 /**
  * Hold the header dashboard actions
@@ -71,12 +74,14 @@ export class DashboardActionsComponent implements OnInit {
    * @param {MatDialog} matDialog The mat dialog to inject
    * @param {ActivatedRoute} activatedRoute The activated route
    * @param {DashboardService} dashboardService The dashboard service to inject
+   * @param {TranslateService} translateService The translate service to inject
    * @param {HttpScreenService} httpScreenService The screen service
    * @param {HttpProjectService} httpProjectService The project service
    */
   constructor(private matDialog: MatDialog,
               private activatedRoute: ActivatedRoute,
               private dashboardService: DashboardService,
+              private translateService: TranslateService,
               private httpScreenService: HttpScreenService,
               private httpProjectService: HttpProjectService) {
   }
@@ -123,6 +128,27 @@ export class DashboardActionsComponent implements OnInit {
     this.tvManagementDialogRef = this.matDialog.open(TvManagementDialogComponent, {
       minWidth: 900,
       data: {projectToken: this.project.token}
+    });
+  }
+
+  /**
+   * Delete a dashboard
+   */
+  deleteDashboardDialog() {
+    this.translateService.get(['dashboard.delete', 'delete.confirm']).subscribe(translations => {
+      const titlecasePipe = new TitleCasePipe();
+
+      this.matDialog.open(ConfirmDialogComponent, {
+        data: {
+          title: translations['dashboard.delete'],
+          message: `${translations['delete.confirm']} ${titlecasePipe.transform(this.project.name)}`
+        }
+      }).afterClosed().subscribe(shouldDeleteDashboard => {
+        if (shouldDeleteDashboard) {
+          this.httpProjectService.deleteProject(this.project.token).subscribe();
+        }
+      });
+
     });
   }
 

@@ -151,6 +151,9 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    * Handle the disconnection of a dashboard
    */
   handlingDashboardDisconnect() {
+    this.httpProjectService.getAllForCurrentUser().subscribe((projects: Project[]) => {
+      this.dashboardService.currentDashboardListValues = projects;
+    });
     this.router.navigate(['/home']);
   }
 
