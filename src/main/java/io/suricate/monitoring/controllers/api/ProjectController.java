@@ -290,7 +290,7 @@ public class ProjectController {
         @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class)
     })
     @DeleteMapping(value = "/v1/projects/{projectToken}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_USER')")
     @Transactional
     public ResponseEntity<Void> deleteOneById(@ApiIgnore OAuth2Authentication authentication,
                                               @ApiParam(name = "projectToken", value = "The project token", required = true)

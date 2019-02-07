@@ -23,3 +23,8 @@
         (click)="openTvManagementDialog()">
   <mat-icon>live_tv</mat-icon>
 </button>
+
+<button *ngIf="!isReadOnly" mat-mini-fab color="warn" matTooltip="{{ 'dashboard.delete' | translate }}"
+        (click)="deleteDashboardDialog()">
+  <mat-icon>delete_forever</mat-icon>
+</button>

@@ -331,6 +331,9 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
         this.displayScreenCode();
       } else if (updateEvent.type === WSUpdateType.POSITION) {
         this.dashboardService.refreshProjectWidgets();
+      } else if (updateEvent.type === WSUpdateType.DISCONNECT) {
+        this.disconnectFromWebsocket();
+        this.disconnectEvent.emit();
       } else {
         this.dashboardService.refreshProject();
       }
