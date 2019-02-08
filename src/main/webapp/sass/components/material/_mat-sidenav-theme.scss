@@ -133,9 +133,17 @@
         color: $sidenav-text;
       }
 
-      .mat-expansion-panel-header-title {
-        color: $sidenav-text;
-        font-size: 0.8em;
+      .mat-expansion-panel-header {
+        .mat-expansion-panel-header-title {
+          color: inherit;
+          font-size: 0.8em;
+        }
+
+        .mat-expansion-indicator {
+          &:after {
+            color: inherit;
+          }
+        }
       }
 
       .mat-expansion-panel-content {
