@@ -318,6 +318,14 @@ public class ProjectWidgetService {
                 // Add backend config
                 map.putAll(PropertiesUtils.getMap(projectWidget.getBackendConfig()));
                 map.put(JavascriptUtils.INSTANCE_ID_VARIABLE, projectWidget.getId());
+
+                // Add global variables if needed
+                for (WidgetParam widgetParam : widgetService.getFullListOfParams(projectWidget.getWidget())) {
+                    if (!map.containsKey(widgetParam.getName()) && widgetParam.isRequired()) {
+                        map.put(widgetParam.getName(), widgetParam.getDefaultValue());
+                    }
+                }
+
             } catch (IOException e) {
                 LOGGER.error(e.getMessage(), e);
             }

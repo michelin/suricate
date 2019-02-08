@@ -209,6 +209,7 @@ public class ConfigurationService {
         param.setDefaultValue(configuration.getValue());
         param.setType(WidgetVariableType.valueOf(configuration.getDataType().toString()));
         param.setDescription(configuration.getKey());
+        param.setRequired(true);
         return param;
     }
 }
