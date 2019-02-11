@@ -79,7 +79,8 @@ public class Project extends AbstractAuditingEntity<Long> {
     /**
      * The screenshot of the dashboard
      */
-    @OneToOne(mappedBy = "screenshot_id", cascade = CascadeType.REMOVE)
+    @OneToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "screenshot_id")
     private Asset screenshot;
 
     /**
