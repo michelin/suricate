@@ -15,13 +15,30 @@
  *  * limitations under the License.
  *
  */
+@import '~@angular/material/theming';
 
-.mat-list-item {
-  .mat-icon {
-    margin-right: 20px;
-  }
+/**
+ * Component for that modify the theme of Angular Material mat-card
+ */
+@mixin custom-mat-card-theme($theme) {
+  // Angular Material colors
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $is-dark: map-get($theme, is-dark);
+  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
 
-  button {
-    margin-left: 20px;
+  .mat-card {
+    & {
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
+
+    .mat-card-link, .mat-card-content, .mat-card-image {
+      display: flex;
+      flex: 1;
+    }
   }
 }

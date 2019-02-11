@@ -21,6 +21,7 @@
 @import "~sass/components/material/mat-slide-toggle-theme";
 @import "~sass/components/material/mat-checkbox-theme";
 @import "~sass/components/material/mat-stepper-theme";
+@import "~sass/components/material/mat-card-theme";
 
 /**
  * Mixin that inject every custom components (used in theme definitions)
@@ -32,4 +33,5 @@
   @include custom-mat-slide-toggle-theme($theme);
   @include custom-mat-checkbox-theme($theme);
   @include custom-mat-stepper-theme($theme);
+  @include custom-mat-card-theme($theme);
 }

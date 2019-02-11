@@ -20,6 +20,7 @@
 .mat-card {
   & {
     margin-bottom: 20px;
+    height: 350px;
   }
 
   &:hover {
@@ -27,8 +28,12 @@
   }
 
   a {
-    display: block;
     cursor: pointer;
+  }
+
+  .mat-card-image {
+    width: 100%;
+    margin: auto;
   }
 
   .mat-card-content .mat-icon {
