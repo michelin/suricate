@@ -23,5 +23,6 @@ export interface Project {
   token: string;
   name: string;
   gridProperties: ProjectGrid;
+  screenshotToken: string;
   librariesToken: string[];
 }

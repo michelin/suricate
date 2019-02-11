@@ -51,6 +51,11 @@ public class ProjectResponseDto extends AbstractDto {
     @ApiModelProperty(value = "The properties of the dashboard grid")
     private ProjectGridResponseDto gridProperties;
     /**
+     * A representation by an image of the dashboard
+     */
+    @ApiModelProperty(value = "A representation by an image of the dashboard")
+    private String screenshotToken;
+    /**
      * The librairies related
      */
     @ApiModelProperty(value = "The list of the related JS libraries used for the execution of the widgets", dataType = "java.util.List")

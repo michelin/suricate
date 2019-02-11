@@ -58,6 +58,7 @@ public abstract class ProjectMapper {
     @Mapping(target = "gridProperties.maxColumn", source = "project.maxColumn")
     @Mapping(target = "gridProperties.widgetHeight", source = "project.widgetHeight")
     @Mapping(target = "gridProperties.cssStyle", source = "project.cssStyle")
+    @Mapping(target = "screenshotToken", expression = "java( widget.getImage() != null ? io.suricate.monitoring.utils.IdUtils.encrypt(widget.getImage().getId()) : null )")
     @Mapping(target = "librariesToken", expression = "java(libraryService.getLibrariesToken(project.getWidgets()))")
     public abstract ProjectResponseDto toProjectDtoDefault(Project project);
 
