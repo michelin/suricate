@@ -1,4 +1,4 @@
-/*!
+/*
  *  /*
  *  * Copyright 2012-2018 the original author or authors.
  *  *
@@ -16,12 +16,21 @@
  *
  */
 
-.mat-list-item {
-  .mat-icon {
-    margin-right: 20px;
+/**
+ * Utils class for images
+ */
+export class ImageUtils {
+
+  /**
+   * Get base64 URL
+   *
+   * @param base64URL The base 64 URL
+   */
+  static getContentTypeFromBase64URL(base64URL: string): string {
+    return base64URL ? base64URL.split(';base64,')[0].split(':')[1] : null;
   }
 
-  button {
-    margin-left: 20px;
+  static getDataFromBase64URL(base64URL: string): string {
+    return base64URL ? base64URL.split(';base64,')[1] : null;
   }
 }

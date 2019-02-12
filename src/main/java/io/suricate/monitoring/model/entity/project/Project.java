@@ -18,6 +18,7 @@ package io.suricate.monitoring.model.entity.project;
 
 
 import io.suricate.monitoring.model.entity.AbstractAuditingEntity;
+import io.suricate.monitoring.model.entity.Asset;
 import io.suricate.monitoring.model.entity.user.User;
 import lombok.*;
 import org.hibernate.annotations.Type;
@@ -74,6 +75,13 @@ public class Project extends AbstractAuditingEntity<Long> {
     @Lob
     @Type(type = "org.hibernate.type.TextType")
     private String cssStyle;
+
+    /**
+     * The screenshot of the dashboard
+     */
+    @OneToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "screenshot_id")
+    private Asset screenshot;
 
     /**
      * The list of widgets related to it

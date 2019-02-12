@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatDialog} from '@angular/material';
 import {ActivatedRoute, Router} from '@angular/router';
+import * as html2canvas from 'html2canvas';
 
 import {DashboardService} from '../../dashboard.service';
 import {Project} from '../../../../shared/model/api/project/Project';
@@ -24,6 +25,8 @@ import {AddWidgetDialogComponent} from '../../../../layout/header/components/add
 import {HttpProjectService} from '../../../../shared/services/api/http-project.service';
 import {ProjectWidget} from '../../../../shared/model/api/ProjectWidget/ProjectWidget';
 import {WebsocketService} from '../../../../shared/services/websocket.service';
+import {ImageUtils} from '../../../../shared/utils/ImageUtils';
+import {FileUtils} from '../../../../shared/utils/FileUtils';
 
 /**
  * Component that display a specific dashboard
@@ -41,6 +44,16 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    * @private
    */
   private isAlive = true;
+
+  /**
+   * The dashboard html (as HTML Element)
+   */
+  @ViewChild('dashboardScreen') dashboardScreen: ElementRef;
+
+  /**
+   * The timer used to take the screenshot
+   */
+  screenshotTimer: NodeJS.Timer;
 
   /**
    * The project
@@ -103,6 +116,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
     this.activatedRoute.params.subscribe(params => {
       this.refreshProject(params['dashboardToken']);
     });
+
   }
 
   /**
@@ -111,6 +125,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
   refreshProjectWidgets(dashboardToken: string): void {
     this.httpProjectService.getProjectProjectWidgets(dashboardToken).subscribe(projectWidgets => {
       this.projectWidgets = projectWidgets;
+      this.takeDashboardScreenshot();
     });
   }
 
@@ -145,6 +160,35 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
       minHeight: 500,
       data: {projectToken: this.project.token}
     });
+  }
+
+  /**
+   * Take screenshot of dashboard
+   */
+  takeDashboardScreenshot() {
+    if (!this.isReadOnly) {
+      // We clear the timer so if the user is doing modification, on the dashboard it will not disturbed
+      clearTimeout(this.screenshotTimer);
+
+      // We are waiting 10sec before taking the screenshot
+      this.screenshotTimer = setTimeout(() => {
+        this.isReadOnly = true;
+
+        // Waiting for behing readonly and take the screenshot
+        setTimeout(() => {
+          html2canvas(this.dashboardScreen.nativeElement).then(canvas => {
+            this.isReadOnly = false;
+            const imgUrl = canvas.toDataURL('image/png');
+
+            const blob: Blob = FileUtils.base64ToBlob(ImageUtils.getDataFromBase64URL(imgUrl), ImageUtils.getContentTypeFromBase64URL(imgUrl));
+            const imageFile: File = FileUtils.convertBlobToFile(blob, `${this.project.token}.png`, new Date());
+
+            this.httpProjectService.addOrUpdateProjectScreenshot(this.project.token, imageFile).subscribe();
+          });
+        }, 0);
+      }, 10000);
+    }
+
   }
 
   /**

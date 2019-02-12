@@ -17,28 +17,35 @@
  */
 @import '~@angular/material/theming';
 
-.mat-card {
-  & {
-    margin-bottom: 20px;
-    height: 350px;
-  }
+/**
+ * Component for that modify the theme of Angular Material mat-card
+ */
+@mixin custom-mat-card-theme($theme) {
+  // Angular Material colors
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  $is-dark: map-get($theme, is-dark);
+  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
 
-  &:hover {
-    @include mat-elevation(8);
-  }
+  .mat-card {
+    & {
+      display: flex;
+      flex-direction: column;
+      flex-shrink: 0;
+    }
 
-  a {
-    cursor: pointer;
-  }
+    .mat-card-link, .mat-card-content, .mat-card-image {
+      display: flex;
+      flex: 1;
+    }
 
-  .mat-card-image {
-    width: 100%;
-    margin: auto;
-  }
-
-  .mat-card-content .mat-icon {
-    font-size: 5rem;
-    width: auto;
-    height: auto;
+    .mat-card-image {
+      height: auto;
+      max-height: 100%;
+      width: auto !important;
+      max-width: 100%;
+    }
   }
 }

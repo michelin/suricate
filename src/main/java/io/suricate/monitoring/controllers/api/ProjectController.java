@@ -28,7 +28,6 @@ import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.entity.user.User;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
-import io.suricate.monitoring.service.api.ConfigurationService;
 import io.suricate.monitoring.service.api.ProjectService;
 import io.suricate.monitoring.service.api.ProjectWidgetService;
 import io.suricate.monitoring.service.api.UserService;
@@ -37,6 +36,7 @@ import io.suricate.monitoring.service.mapper.ProjectWidgetMapper;
 import io.suricate.monitoring.service.mapper.UserMapper;
 import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
 import io.suricate.monitoring.utils.exception.ApiException;
+import io.suricate.monitoring.utils.exception.InvalidFileException;
 import io.suricate.monitoring.utils.exception.NoContentException;
 import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
 import io.swagger.annotations.*;
@@ -48,10 +48,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.security.PermitAll;
+import java.io.IOException;
 import java.net.URI;
 import java.security.Principal;
 import java.util.List;
@@ -65,11 +67,6 @@ import java.util.Optional;
 @RequestMapping("/api")
 @Api(value = "Project Controller", tags = {"Projects"})
 public class ProjectController {
-
-    /**
-     * Configuration service
-     */
-    private final ConfigurationService configurationService;
 
     /**
      * Project service
@@ -122,7 +119,6 @@ public class ProjectController {
                              final UserService userService,
                              final ProjectMapper projectMapper,
                              final ProjectWidgetMapper projectWidgetMapper,
-                             final ConfigurationService configurationService,
                              final UserMapper userMapper,
                              final DashboardWebSocketService dashboardWebSocketService) {
         this.projectService = projectService;
@@ -130,7 +126,6 @@ public class ProjectController {
         this.userService = userService;
         this.projectMapper = projectMapper;
         this.projectWidgetMapper = projectWidgetMapper;
-        this.configurationService = configurationService;
         this.userMapper = userMapper;
         this.dashboardWebSocketService = dashboardWebSocketService;
     }
@@ -271,6 +266,44 @@ public class ProjectController {
             projectRequestDto.getMaxColumn(),
             projectRequestDto.getCssStyle()
         );
+
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * Add/Update a project screenshot
+     *
+     * @param projectToken The project token to update
+     */
+    @ApiOperation(value = "Add/Update a project screenshot")
+    @ApiResponses(value = {
+        @ApiResponse(code = 204, message = "Screenshot updated"),
+        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
+        @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class)
+    })
+    @PutMapping(value = "/v1/projects/{projectToken}/screenshot")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<Void> updateProjectScreenshot(@ApiIgnore OAuth2Authentication authentication,
+                                                        @ApiParam(name = "projectToken", value = "The project token", required = true)
+                                                        @PathVariable("projectToken") String projectToken,
+                                                        @ApiParam(name = "screenshot", value = "The screenshot to insert", required = true)
+                                                        @RequestParam MultipartFile screenshot) throws IOException {
+        Optional<Project> projectOptional = projectService.getOneByToken(projectToken);
+        if (!projectOptional.isPresent()) {
+            throw new ObjectNotFoundException(Project.class, projectToken);
+        }
+
+        Project project = projectOptional.get();
+        if (!projectService.isConnectedUserCanAccessToProject(project, authentication.getUserAuthentication())) {
+            throw new ApiException("The user is not allowed to modify this resource", ApiErrorEnum.NOT_AUTHORIZED);
+        }
+
+        try {
+            projectService.addOrUpdateScreenshot(project, screenshot);
+        } catch (IOException e) {
+            throw new InvalidFileException(screenshot.getOriginalFilename(), Project.class, project.getId());
+        }
 
         return ResponseEntity.noContent().build();
     }

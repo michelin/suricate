@@ -17,6 +17,7 @@
 package io.suricate.monitoring.service.api;
 
 import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
+import io.suricate.monitoring.model.entity.Asset;
 import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.entity.user.User;
 import io.suricate.monitoring.model.enums.UpdateType;
@@ -30,8 +31,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -58,20 +61,28 @@ public class ProjectService {
     private final DashboardWebSocketService dashboardWebsocketService;
 
     /**
+     * The asset service to inject
+     */
+    private final AssetService assetService;
+
+    /**
      * Constructor
      *
      * @param stringEncryptor           The string encryptor to inject
      * @param projectRepository         The project repository to inject
      * @param dashboardWebSocketService The dashboard web socket service to inject
+     * @param assetService              The asset service
      */
     @Autowired
     public ProjectService(@Qualifier("jasyptStringEncryptor") final StringEncryptor stringEncryptor,
                           final ProjectRepository projectRepository,
-                          final DashboardWebSocketService dashboardWebSocketService) {
+                          final DashboardWebSocketService dashboardWebSocketService,
+                          final AssetService assetService) {
 
         this.stringEncryptor = stringEncryptor;
         this.projectRepository = projectRepository;
         this.dashboardWebsocketService = dashboardWebSocketService;
+        this.assetService = assetService;
     }
 
     public List<Project> getAll() {
@@ -231,5 +242,27 @@ public class ProjectService {
         dashboardWebsocketService.updateGlobalScreensByProjectToken(project.getToken(), new UpdateEvent(UpdateType.DISCONNECT));
         // delete project
         projectRepository.delete(project);
+    }
+
+    /**
+     * Add or update a screenshot for a project
+     *
+     * @param project    The project
+     * @param screenshot The screenshot to add
+     */
+    public void addOrUpdateScreenshot(Project project, MultipartFile screenshot) throws IOException {
+        Asset screenshotAsset = new Asset();
+        screenshotAsset.setContent(screenshot.getBytes());
+        screenshotAsset.setContentType(screenshot.getContentType());
+        screenshotAsset.setSize(screenshot.getSize());
+
+        if (project.getScreenshot() != null) {
+            screenshotAsset.setId(project.getScreenshot().getId());
+            assetService.save(screenshotAsset);
+        } else {
+            assetService.save(screenshotAsset);
+            project.setScreenshot(screenshotAsset);
+            projectRepository.save(project);
+        }
     }
 }

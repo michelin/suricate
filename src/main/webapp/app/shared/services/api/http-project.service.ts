@@ -17,7 +17,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from 'rxjs';
 
 import {Project} from '../../model/api/project/Project';
@@ -95,6 +95,25 @@ export class HttpProjectService {
     const url = `${projectsApiEndpoint}/${projectToken}`;
 
     return this.httpClient.delete<void>(url);
+  }
+
+  /**
+   * Add or update a screenshot for a project
+   *
+   * @param projectToken The project token
+   * @param screenshotFile The screenshot file
+   */
+  addOrUpdateProjectScreenshot(projectToken: string, screenshotFile: File): Observable<void> {
+    const url = `${projectsApiEndpoint}/${projectToken}/screenshot`;
+
+    let formData: FormData = new FormData();
+    formData.append('screenshot', screenshotFile, screenshotFile.name);
+
+    let httpHeaders: HttpHeaders = new HttpHeaders();
+    httpHeaders.append('Content-Type', 'multipart/form-data');
+    httpHeaders.append('Accept', 'application/json');
+
+    return this.httpClient.put<void>(url, formData, {headers: httpHeaders});
   }
 
   /**

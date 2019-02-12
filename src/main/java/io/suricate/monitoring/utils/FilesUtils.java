@@ -16,6 +16,12 @@
 
 package io.suricate.monitoring.utils;
 
+import io.suricate.monitoring.model.entity.Asset;
+import net.sf.jmimemagic.*;
+import org.apache.commons.io.FileUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -26,9 +32,14 @@ import java.util.stream.Stream;
 
 public final class FilesUtils {
 
+    /**
+     * Class logger
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(FilesUtils.class);
 
     /**
      * Method used to list all folder inside a root folder
+     *
      * @param rootFolder the root folder used to find folder
      * @return the list of folder
      * @throws IOException exeception with file
@@ -37,9 +48,9 @@ public final class FilesUtils {
         if (rootFolder != null) {
             try (Stream<Path> list = Files.list(rootFolder.toPath())) {
                 return list.filter(Files::isDirectory)
-                        .map(Path::toFile)
-                        .sorted()
-                        .collect(Collectors.toList());
+                    .map(Path::toFile)
+                    .sorted()
+                    .collect(Collectors.toList());
 
             }
         }
@@ -48,6 +59,7 @@ public final class FilesUtils {
 
     /**
      * Method used to list all files inside a root folder
+     *
      * @param rootFolder the root folder used to find files
      * @return the list of folder
      * @throws IOException exception with file
@@ -56,12 +68,38 @@ public final class FilesUtils {
         if (rootFolder != null) {
             try (Stream<Path> list = Files.list(rootFolder.toPath())) {
                 return list.filter(Files::isRegularFile)
-                        .map(Path::toFile)
-                        .sorted()
-                        .collect(Collectors.toList());
+                    .map(Path::toFile)
+                    .sorted()
+                    .collect(Collectors.toList());
             }
         }
         return null;
+    }
+
+    /**
+     * Method used to read File asset
+     *
+     * @param file the file asset to read
+     * @return the asset corresponding to the file content
+     * @throws IOException file read exception
+     */
+    public static Asset readAsset(File file) throws IOException {
+        Asset asset = new Asset();
+        asset.setContent(FileUtils.readFileToByteArray(file));
+        try {
+            MagicMatch match = Magic.getMagicMatch(asset.getContent());
+            asset.setContentType(match.getMimeType());
+        } catch (MagicParseException | MagicMatchNotFoundException | MagicException e) {
+            LOGGER.trace(e.getMessage(), e);
+            asset.setContentType("text/plain");
+        }
+
+        // Override mime type for javascript
+        if (file.getName().endsWith(".js")) {
+            asset.setContentType("application/javascript");
+        }
+
+        return asset;
     }
 
     private FilesUtils() {
