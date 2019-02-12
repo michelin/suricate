@@ -51,6 +51,11 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
   @ViewChild('dashboardScreen') dashboardScreen: ElementRef;
 
   /**
+   * The timer used to take the screenshot
+   */
+  screenshotTimer: NodeJS.Timer;
+
+  /**
    * The project
    * @type {Project}
    */
@@ -70,8 +75,6 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    * The screen code of the client;
    */
   screenCode: number;
-
-  imgtest: any;
 
   /**
    * constructor
@@ -114,7 +117,6 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
       this.refreshProject(params['dashboardToken']);
     });
 
-    setTimeout(() => this.takeDashboardScreenshot(), 20000);
   }
 
   /**
@@ -123,6 +125,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
   refreshProjectWidgets(dashboardToken: string): void {
     this.httpProjectService.getProjectProjectWidgets(dashboardToken).subscribe(projectWidgets => {
       this.projectWidgets = projectWidgets;
+      this.takeDashboardScreenshot();
     });
   }
 
@@ -163,14 +166,29 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    * Take screenshot of dashboard
    */
   takeDashboardScreenshot() {
-    html2canvas(document.getElementById('dashboardScreen')).then(canvas => {
-      const imgUrl = canvas.toDataURL('image/png');
+    if (!this.isReadOnly) {
+      // We clear the timer so if the user is doing modification, on the dashboard it will not disturbed
+      clearTimeout(this.screenshotTimer);
 
-      const blob: Blob = FileUtils.base64ToBlob(ImageUtils.getDataFromBase64URL(imgUrl), ImageUtils.getContentTypeFromBase64URL(imgUrl));
-      const imageFile: File = FileUtils.convertBlobToFile(blob, `${this.project.token}.png`, new Date());
+      // We are waiting 10sec before taking the screenshot
+      this.screenshotTimer = setTimeout(() => {
+        this.isReadOnly = true;
 
-      this.httpProjectService.addOrUpdateProjectScreenshot(this.project.token, imageFile).subscribe();
-    });
+        // Waiting for behing readonly and take the screenshot
+        setTimeout(() => {
+          html2canvas(this.dashboardScreen.nativeElement).then(canvas => {
+            this.isReadOnly = false;
+            const imgUrl = canvas.toDataURL('image/png');
+
+            const blob: Blob = FileUtils.base64ToBlob(ImageUtils.getDataFromBase64URL(imgUrl), ImageUtils.getContentTypeFromBase64URL(imgUrl));
+            const imageFile: File = FileUtils.convertBlobToFile(blob, `${this.project.token}.png`, new Date());
+
+            this.httpProjectService.addOrUpdateProjectScreenshot(this.project.token, imageFile).subscribe();
+          });
+        }, 0);
+      }, 10000);
+    }
+
   }
 
   /**
