@@ -40,8 +40,21 @@ import {TokenService} from './auth/token.service';
 import {TranslateModule} from '@ngx-translate/core';
 import {TranslationComponent} from './components/translations/translation.component';
 import {MaterialCDKModule} from './modules/metarialCDK.module';
-import {SettingsService} from './services/settings.service';
 import {ErrorInterceptor} from './interceptors/error.interceptor';
+import {PasswordPipe} from './pipes/password-pipe';
+import {ConfirmDialogComponent} from './components/confirm-dialog/confirm-dialog.component';
+import {HttpCategoryService} from './services/api/http-category.service';
+import {HttpAssetService} from './services/api/http-asset.service';
+import {HttpProjectService} from './services/api/http-project.service';
+import {HttpScreenService} from './services/api/http-screen.service';
+import {HttpRoleService} from './services/api/http-role.service';
+import {HttpUserService} from './services/api/http-user.service';
+import {HttpRepositoryService} from './services/api/http-repository.service';
+import {HttpConfigurationService} from './services/api/http-configuration.service';
+import {HttpWidgetService} from './services/api/http-widget.service';
+import {HttpProjectWidgetService} from './services/api/http-project-widget.service';
+import {HttpSettingService} from './services/api/http-setting.service';
+import {CommunicationDialogComponent} from './components/communication-dialog/communication-dialog.component';
 
 @NgModule({
   imports: [
@@ -64,7 +77,10 @@ import {ErrorInterceptor} from './interceptors/error.interceptor';
     SafeUrlPipe,
     EnumKeysPipe,
     RunScriptsDirective,
-    TranslationComponent
+    TranslationComponent,
+    PasswordPipe,
+    ConfirmDialogComponent,
+    CommunicationDialogComponent
   ],
   exports: [
     FormsModule,
@@ -83,7 +99,14 @@ import {ErrorInterceptor} from './interceptors/error.interceptor';
     SafeUrlPipe,
     EnumKeysPipe,
     RunScriptsDirective,
-    TranslationComponent
+    TranslationComponent,
+    PasswordPipe,
+    ConfirmDialogComponent,
+    CommunicationDialogComponent
+  ],
+  entryComponents: [
+    ConfirmDialogComponent,
+    CommunicationDialogComponent
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true},
@@ -94,7 +117,17 @@ import {ErrorInterceptor} from './interceptors/error.interceptor';
     ToastService,
     StompRService,
     TokenService,
-    SettingsService
+    HttpAssetService,
+    HttpCategoryService,
+    HttpProjectService,
+    HttpProjectWidgetService,
+    HttpRoleService,
+    HttpScreenService,
+    HttpSettingService,
+    HttpUserService,
+    HttpRepositoryService,
+    HttpConfigurationService,
+    HttpWidgetService
   ]
 })
 export class SharedModule {

@@ -44,7 +44,7 @@ public class Category extends AbstractAuditingEntity<Long> {
      * The category id
      */
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**

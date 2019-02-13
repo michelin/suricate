@@ -16,7 +16,7 @@
 
 export const environment = {
   production: true,
-    VERSION: require('../../../../package.json').version,
-    ENVIRONMENT: require('../../../../package.json').environment,
-    BASE_URL: 'http://localhost:8080'
+  VERSION: require('../../../../package.json').version,
+  ENVIRONMENT: require('../../../../package.json').environment,
+  BASE_URL: ''
 };

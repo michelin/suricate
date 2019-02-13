@@ -21,7 +21,6 @@ import {RouterModule} from '@angular/router';
 import {RoleService} from './user/role.service';
 import {UserService} from './user/user.service';
 import {UserListComponent} from './user/pages/user-list/user-list.component';
-import {DeleteUserDialogComponent} from './user/components/delete-user-dialog/delete-user-dialog.component';
 import {UserEditComponent} from './user/pages/user-edit/user-edit.component';
 import {LayoutModule} from '../../layout/layout.module';
 import {SharedModule} from '../../shared/shared.module';
@@ -38,12 +37,8 @@ import {ConfigListComponent} from './config/pages/config-list/config-list.compon
   ],
   declarations: [
     UserListComponent,
-    DeleteUserDialogComponent,
     UserEditComponent,
     ConfigListComponent
-  ],
-  entryComponents: [
-    DeleteUserDialogComponent
   ],
   exports: [
     RouterModule

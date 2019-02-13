@@ -18,6 +18,7 @@ package io.suricate.monitoring.model.entity;
 
 
 import lombok.*;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 
@@ -25,22 +26,26 @@ import javax.persistence.*;
  * Library entity
  */
 @Entity
-@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
+@Getter
+@Setter
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+@ToString
 public class Asset extends AbstractAuditingEntity<Long> {
 
     /**
      * The id
      */
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
      * The content of this asset
      */
-    @Lob
+    @Type(type = "org.hibernate.type.BinaryType")
     @Basic(fetch = FetchType.LAZY)
-    @Column(columnDefinition = "LONGBLOB")
+    @Column(name = "content", nullable = false)
     private byte[] content;
 
     /**

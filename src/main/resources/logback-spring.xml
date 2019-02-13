@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <springProfile name="dev,default,test,docker">
+    <springProfile name="dev,default,test,generic,mysql,postgresql,h2">
         <include resource="org/springframework/boot/logging/logback/defaults.xml"/>
         <include resource="org/springframework/boot/logging/logback/console-appender.xml"/>
         <root level="INFO">
             <appender-ref ref="CONSOLE"/>
         </root>
     </springProfile>
-    <springProfile name="prod">
+    <springProfile name="prod,generic">
         <property name="LOG_FILE" value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}/}spring.log}"/>
         <appender name="ROLLIN" class="ch.qos.logback.core.rolling.RollingFileAppender">
             <file>${LOG_FILE}</file>

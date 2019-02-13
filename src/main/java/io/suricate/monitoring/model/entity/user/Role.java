@@ -29,14 +29,18 @@ import java.util.List;
  * The role entity in database
  */
 @Entity(name = "Role")
-@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
+@Getter
+@Setter
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+@ToString
 public class Role extends AbstractEntity<Long> {
 
     /**
      * The id
      */
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**

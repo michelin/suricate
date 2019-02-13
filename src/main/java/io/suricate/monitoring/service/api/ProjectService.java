@@ -17,21 +17,24 @@
 package io.suricate.monitoring.service.api;
 
 import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
+import io.suricate.monitoring.model.entity.Asset;
 import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.entity.user.User;
 import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.repository.ProjectRepository;
 import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
+import io.suricate.monitoring.utils.SecurityUtils;
 import io.suricate.monitoring.utils.logging.LogExecutionTime;
 import org.apache.commons.lang3.StringUtils;
 import org.jasypt.encryption.StringEncryptor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -41,11 +44,6 @@ import java.util.UUID;
  */
 @Service
 public class ProjectService {
-
-    /**
-     * Class logger
-     */
-    private final static Logger LOGGER = LoggerFactory.getLogger(ProjectService.class);
 
     /**
      * String encryptor (mainly used for SECRET widget params)
@@ -63,20 +61,28 @@ public class ProjectService {
     private final DashboardWebSocketService dashboardWebsocketService;
 
     /**
+     * The asset service to inject
+     */
+    private final AssetService assetService;
+
+    /**
      * Constructor
      *
      * @param stringEncryptor           The string encryptor to inject
      * @param projectRepository         The project repository to inject
      * @param dashboardWebSocketService The dashboard web socket service to inject
+     * @param assetService              The asset service
      */
     @Autowired
     public ProjectService(@Qualifier("jasyptStringEncryptor") final StringEncryptor stringEncryptor,
                           final ProjectRepository projectRepository,
-                          final DashboardWebSocketService dashboardWebSocketService) {
+                          final DashboardWebSocketService dashboardWebSocketService,
+                          final AssetService assetService) {
 
         this.stringEncryptor = stringEncryptor;
         this.projectRepository = projectRepository;
         this.dashboardWebsocketService = dashboardWebSocketService;
+        this.assetService = assetService;
     }
 
     public List<Project> getAll() {
@@ -89,18 +95,19 @@ public class ProjectService {
      * @param user The user
      * @return The project list associated to the user
      */
+    @Transactional
     public List<Project> getAllByUser(User user) {
         return projectRepository.findByUsers_IdOrderByName(user.getId());
     }
 
     /**
-     * Test if the project exists by id
+     * Test if the project exists by token
      *
-     * @param id The project id
-     * @return True id the project exists false otherwise
+     * @param token The project token
+     * @return True the project exists false otherwise
      */
-    public boolean isProjectExists(final Long id) {
-        return this.projectRepository.existsById(id);
+    public boolean isProjectExists(final String token) {
+        return this.getOneByToken(token).isPresent();
     }
 
     /**
@@ -121,6 +128,7 @@ public class ProjectService {
      * @param token The token to find
      * @return The project
      */
+    @Transactional
     public Optional<Project> getOneByToken(final String token) {
         return projectRepository.findProjectByToken(token);
     }
@@ -212,6 +220,18 @@ public class ProjectService {
     }
 
     /**
+     * Check if the connected user can access to this project
+     *
+     * @param project        The project
+     * @param authentication The connected user
+     * @return True if he can, false otherwise
+     */
+    public boolean isConnectedUserCanAccessToProject(final Project project, final Authentication authentication) {
+        return SecurityUtils.isAdmin(authentication)
+            || project.getUsers().stream().anyMatch(currentUser -> currentUser.getUsername().equalsIgnoreCase(authentication.getName()));
+    }
+
+    /**
      * Method used to delete a project with his ID
      *
      * @param project the project to delete
@@ -219,8 +239,30 @@ public class ProjectService {
     @Transactional
     public void deleteProject(Project project) {
         // notify clients
-        dashboardWebsocketService.updateGlobalScreensByProjectId(project.getId(), new UpdateEvent(UpdateType.DISCONNECT));
+        dashboardWebsocketService.updateGlobalScreensByProjectToken(project.getToken(), new UpdateEvent(UpdateType.DISCONNECT));
         // delete project
         projectRepository.delete(project);
+    }
+
+    /**
+     * Add or update a screenshot for a project
+     *
+     * @param project    The project
+     * @param screenshot The screenshot to add
+     */
+    public void addOrUpdateScreenshot(Project project, MultipartFile screenshot) throws IOException {
+        Asset screenshotAsset = new Asset();
+        screenshotAsset.setContent(screenshot.getBytes());
+        screenshotAsset.setContentType(screenshot.getContentType());
+        screenshotAsset.setSize(screenshot.getSize());
+
+        if (project.getScreenshot() != null) {
+            screenshotAsset.setId(project.getScreenshot().getId());
+            assetService.save(screenshotAsset);
+        } else {
+            assetService.save(screenshotAsset);
+            project.setScreenshot(screenshotAsset);
+            projectRepository.save(project);
+        }
     }
 }

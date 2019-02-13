@@ -73,4 +73,14 @@ public class RoleService {
 
         return Optional.of(roles);
     }
+
+    /**
+     * Get a role by id
+     *
+     * @param id The id of the role
+     * @return The related role
+     */
+    public Optional<Role> getOneById(final Long id) {
+        return roleRepository.findById(id);
+    }
 }

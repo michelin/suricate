@@ -18,8 +18,10 @@ package io.suricate.monitoring.model.entity.project;
 
 
 import io.suricate.monitoring.model.entity.AbstractAuditingEntity;
+import io.suricate.monitoring.model.entity.Asset;
 import io.suricate.monitoring.model.entity.user.User;
 import lombok.*;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -29,14 +31,18 @@ import java.util.List;
  * Project/dashboard entity
  */
 @Entity
-@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
+@Getter
+@Setter
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+@ToString
 public class Project extends AbstractAuditingEntity<Long> {
 
     /**
      * The project id
      */
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
@@ -67,18 +73,27 @@ public class Project extends AbstractAuditingEntity<Long> {
      * The css style of the grid
      */
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     private String cssStyle;
+
+    /**
+     * The screenshot of the dashboard
+     */
+    @OneToOne(cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "screenshot_id")
+    private Asset screenshot;
 
     /**
      * The list of widgets related to it
      */
-    @OneToMany(mappedBy = "project",cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE)
+    @OrderBy("row ASC, col ASC")
     private List<ProjectWidget> widgets = new ArrayList<>();
 
     /**
      * The list of users of the project
      */
     @ManyToMany
-    @JoinTable(name="user_project", joinColumns={@JoinColumn(name="project_id")}, inverseJoinColumns={@JoinColumn(name="user_id")})
+    @JoinTable(name = "user_project", joinColumns = {@JoinColumn(name = "project_id")}, inverseJoinColumns = {@JoinColumn(name = "user_id")})
     private List<User> users = new ArrayList<>();
 }

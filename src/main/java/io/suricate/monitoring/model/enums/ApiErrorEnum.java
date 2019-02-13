@@ -17,7 +17,7 @@
 package io.suricate.monitoring.model.enums;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.suricate.monitoring.model.dto.error.ApiErrorDto;
+import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
@@ -38,6 +38,7 @@ public enum ApiErrorEnum {
     NOT_AUTHORIZED("User not authorized", "not.authorized", HttpStatus.UNAUTHORIZED),
     BAD_CREDENTIALS_ERROR("Bad credentials", "authentication.bad.credentials", HttpStatus.UNAUTHORIZED),
     FORBIDDEN("You don't have permission to access to this resource", "user.forbidden", HttpStatus.FORBIDDEN),
+    FILE_ERROR("File cannot be read", "file.cannot.read", HttpStatus.INTERNAL_SERVER_ERROR),
     OBJECT_NOT_FOUND("Object not found", "object.not.found", HttpStatus.NOT_FOUND),
     OBJECT_ALREADY_EXIST("Object already exist", "object.already.exist", HttpStatus.CONFLICT),
     PRECONDITION_FAILED("Precondition failed for this request", "precondition.failed", HttpStatus.PRECONDITION_FAILED),

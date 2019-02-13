@@ -17,20 +17,18 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
-import {SharedModule} from '../../shared/shared.module';
 
+import {SharedModule} from '../../shared/shared.module';
 import {DashboardService} from './dashboard.service';
 import {DashboardDetailComponent} from './pages/dashboard-detail/dashboard-detail.component';
 import {DashboardListComponent} from './pages/admin/dashboard-list/dashboard-list.component';
 import {DashboardEditComponent} from './pages/admin/dashboard-edit/dashboard-edit.component';
-import {DeleteDashboardDialogComponent} from './components/delete-dashboard-dialog/delete-dashboard-dialog.component';
-import {DeleteProjectWidgetDialogComponent} from './components/delete-project-widget-dialog/delete-project-widget-dialog.component';
 import {EditProjectWidgetDialogComponent} from './components/edit-project-widget-dialog/edit-project-widget-dialog.component';
 import {DashboardScreenComponent} from './components/dashboard-screen/dashboard-screen.component';
 import {DashboardTvComponent} from './pages/dashboard-tv/dashboard-tv.component';
-import {ScreenService} from './screen.service';
 import {LayoutModule} from '../../layout/layout.module';
 import {DashboardRoutes} from './dashboard.route';
+import {DashboardScreenWidgetComponent} from './components/dashboard-screen/dashboard-screen-widget.component';
 
 @NgModule({
   imports: [
@@ -43,22 +41,18 @@ import {DashboardRoutes} from './dashboard.route';
     DashboardDetailComponent,
     DashboardListComponent,
     DashboardEditComponent,
-    DeleteDashboardDialogComponent,
-    DeleteProjectWidgetDialogComponent,
     EditProjectWidgetDialogComponent,
     DashboardScreenComponent,
+    DashboardScreenWidgetComponent,
     DashboardTvComponent
   ],
   exports: [
     RouterModule
   ],
   providers: [
-    DashboardService,
-    ScreenService
+    DashboardService
   ],
   entryComponents: [
-    DeleteDashboardDialogComponent,
-    DeleteProjectWidgetDialogComponent,
     EditProjectWidgetDialogComponent
   ]
 })

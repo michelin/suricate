@@ -16,6 +16,7 @@
  *
  */
 import {Routes} from '@angular/router';
+
 import {AuthGuard} from '../../shared/auth/guards/auth.guard';
 import {SettingsListComponent} from './pages/settings-list/settings-list.component';
 

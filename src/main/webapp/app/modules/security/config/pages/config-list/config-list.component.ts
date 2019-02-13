@@ -15,9 +15,10 @@
  */
 import {FlatTreeControl} from '@angular/cdk/tree';
 import {Component} from '@angular/core';
-import {ConfigDb, FileFlatNode, FileNode} from '../../config.db';
 import {MatTreeFlatDataSource, MatTreeFlattener} from '@angular/material';
 import {Observable, of as observableOf} from 'rxjs/index';
+
+import {ConfigDb, FileFlatNode, FileNode} from '../../config.db';
 
 /**
  * @title Tree with nested nodes
@@ -25,7 +26,7 @@ import {Observable, of as observableOf} from 'rxjs/index';
 @Component({
   selector: 'app-config-list',
   templateUrl: 'config-list.component.html',
-  styleUrls: ['config-list.component.css'],
+  styleUrls: ['config-list.component.scss'],
   providers: [ConfigDb]
 })
 export class ConfigListComponent {
@@ -35,17 +36,14 @@ export class ConfigListComponent {
   configDataSource: MatTreeFlatDataSource<FileNode, FileFlatNode>;
 
   constructor(database: ConfigDb) {
-    this.treeFlattener = new MatTreeFlattener(this.transformer, this._getLevel,
-        this._isExpandable, this._getChildren);
+    this.treeFlattener = new MatTreeFlattener(this.transformer, this._getLevel, this._isExpandable, this._getChildren);
     this.configTreeControl = new FlatTreeControl<FileFlatNode>(this._getLevel, this._isExpandable);
     this.configDataSource = new MatTreeFlatDataSource(this.configTreeControl, this.treeFlattener);
 
     database.dataChange.subscribe(data => this.configDataSource.data = data);
   }
 
-  transformer = (node: FileNode, level: number) => {
-    return new FileFlatNode(!!node.children, node.filename, level, node.type);
-  }
+  transformer = (node: FileNode, level: number) => new FileFlatNode(!!node.children, node.filename, level, node.type);
 
   private _getLevel = (node: FileFlatNode) => node.level;
 

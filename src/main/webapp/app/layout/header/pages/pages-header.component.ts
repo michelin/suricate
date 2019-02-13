@@ -23,15 +23,16 @@ import {Router} from '@angular/router';
 @Component({
   selector: 'app-pages-header',
   templateUrl: './pages-header.component.html',
-  styleUrls: ['./pages-header.component.css']
+  styleUrls: ['./pages-header.component.scss']
 })
 export class PagesHeaderComponent implements OnInit {
+
   /**
    * The second title
    * @type {string}
    */
   @Input() secondTitle: string;
-  
+
   /**
    * True if the menu should be display on the page
    */

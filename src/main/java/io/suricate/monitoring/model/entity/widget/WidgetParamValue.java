@@ -28,14 +28,18 @@ import javax.persistence.*;
  * The widget param value entity in database
  */
 @Entity
-@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
+@Getter
+@Setter
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+@ToString
 public class WidgetParamValue extends AbstractAuditingEntity<Long> {
 
     /**
      * The id
      */
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**

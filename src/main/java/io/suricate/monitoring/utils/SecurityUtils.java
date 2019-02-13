@@ -31,13 +31,14 @@ public final class SecurityUtils {
 
     /**
      * Method used to get the connected User
+     *
      * @return all data about the connected user
      */
     public static ConnectedUser getConnectedUser() {
         SecurityContext context = SecurityContextHolder.getContext();
-        if (context != null){
+        if (context != null) {
             Authentication authentication = context.getAuthentication();
-            if (authentication != null && authentication.getPrincipal() instanceof ConnectedUser){
+            if (authentication != null && authentication.getPrincipal() instanceof ConnectedUser) {
                 return (ConnectedUser) authentication.getPrincipal();
             }
         }
@@ -46,28 +47,29 @@ public final class SecurityUtils {
 
     /**
      * Method used to isValid if the connected user is admin
+     *
      * @return true if the connected user is admin, false otherwise
      */
-    public static boolean isAdmin() {
-        return hasRole(UserRoleEnum.ROLE_ADMIN.name());
+    public static boolean isAdmin(final Authentication authentication) {
+        return hasRole(authentication, UserRoleEnum.ROLE_ADMIN.name());
     }
 
 
     /**
      * Method used to isValid if the connected user as all role in list
+     *
      * @param roles list of roles
      * @return true if the connected user have all roles, false otherwise
      */
-    public static boolean hasRole(String ...roles){
+    public static boolean hasRole(Authentication authentication, String... roles) {
         boolean ret = false;
 
-        ConnectedUser connectedUser = getConnectedUser();
-        if (connectedUser != null){
+        if (authentication != null) {
             List<GrantedAuthority> list = new ArrayList<>();
-            for (String role: roles){
+            for (String role : roles) {
                 list.add(new SimpleGrantedAuthority(role));
             }
-            ret = connectedUser.getAuthorities().containsAll(list);
+            ret = authentication.getAuthorities().containsAll(list);
         }
 
         return ret;

@@ -18,16 +18,19 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {CustomValidators} from 'ng2-validation';
+import {catchError, flatMap} from 'rxjs/operators';
+import {throwError} from 'rxjs';
 
 import {AuthenticationService} from '../../authentication.service';
-import {Credentials} from '../../../../shared/model/dto/user/Credentials';
-import {User} from '../../../../shared/model/dto/user/User';
 import {checkPasswordMatch} from '../../../../shared/validators/CustomValidator';
 import {ToastService} from '../../../../shared/components/toast/toast.service';
-import {ToastType} from '../../../../shared/model/toastNotification/ToastType';
-import {authenticationProviderLDAP} from '../../../../app.constant';
-import {ApplicationProperties} from '../../../../shared/model/ApplicationProperties';
-import {WidgetConfigurationService} from '../../../widget/pages/admin/configuration/widget-configuration.service';
+import {ApplicationProperties} from '../../../../shared/model/api/ApplicationProperties';
+import {HttpConfigurationService} from '../../../../shared/services/api/http-configuration.service';
+import {Credentials} from '../../../../shared/model/api/user/Credentials';
+import {ToastType} from '../../../../shared/components/toast/toast-objects/ToastType';
+import {UserRequest} from '../../../../shared/model/api/user/UserRequest';
+import {AuthenticationProviderEnum} from '../../../../shared/model/enums/AuthenticationProviderEnum';
+
 
 /**
  * Component that register a new user
@@ -35,7 +38,7 @@ import {WidgetConfigurationService} from '../../../widget/pages/admin/configurat
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
-  styleUrls: ['./register.component.css']
+  styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent implements OnInit {
 
@@ -75,38 +78,38 @@ export class RegisterComponent implements OnInit {
    * @param {AuthenticationService} authenticationService The authentication service to inject
    * @param {Router} router The router service to inject
    * @param {ToastService} toastService The toast service to inject
-   * @param {ConfigurationService} configurationService The configuration service to inject
+   * @param {HttpConfigurationService} httpConfigurationService The configuration service to inject
    */
   constructor(private formBuilder: FormBuilder,
               private authenticationService: AuthenticationService,
               private router: Router,
               private toastService: ToastService,
-              private configurationService: WidgetConfigurationService) {
+              private httpConfigurationService: HttpConfigurationService) {
   }
 
   /**
    * Called when the component is init
    */
   ngOnInit() {
-    this.configurationService.getAuthenticationProvider().subscribe((applicationProperties: ApplicationProperties) => {
-      if (applicationProperties.value.toLowerCase() === authenticationProviderLDAP) {
+    this.httpConfigurationService.getAuthenticationProvider().subscribe((applicationProperties: ApplicationProperties) => {
+      if (applicationProperties.value === AuthenticationProviderEnum.LDAP) {
         this.router.navigate(['/login']);
       }
     });
 
     this.authenticationService.logout();
+    this.initRegisterForm();
+  }
 
-    this.passwordControl = this.formBuilder
-        .control(
-            '',
-            [Validators.required, Validators.minLength(3)]
-        );
-
-    this.confirmPasswordControl = this.formBuilder
-        .control(
-            '',
-            [Validators.required, Validators.minLength(3), checkPasswordMatch(this.passwordControl)]
-        );
+  /**
+   * Init the register form
+   */
+  initRegisterForm() {
+    this.passwordControl = this.formBuilder.control('', [Validators.required, Validators.minLength(3)]);
+    this.confirmPasswordControl = this.formBuilder.control(
+      '',
+      [Validators.required, Validators.minLength(3), checkPasswordMatch(this.passwordControl)]
+    );
 
     this.registerForm = this.formBuilder.group({
       username: ['', [Validators.required, Validators.minLength(3)]],
@@ -134,27 +137,28 @@ export class RegisterComponent implements OnInit {
   signUp() {
     if (this.registerForm.valid) {
       this.formSubmitAttempt = true;
-      const user: User = this.registerForm.value;
-      this
-          .authenticationService
-          .register(user)
-          .subscribe(() => {
-            const credentials: Credentials = {username: user.username, password: user.password};
-            this
-                .authenticationService
-                .authenticate(credentials)
-                .subscribe(
-                    () => {
-                      // Authentication succeed
-                      this.router.navigate(['/home']);
-                    },
-                    error => {
-                      // Authentication failed
-                      this.formSubmitAttempt = false;
-                      console.log(error);
-                    }
-                );
-          });
+      const userRequest: UserRequest = this.registerForm.value;
+
+      this.authenticationService.register(userRequest).pipe(
+        flatMap(() => {
+          const credentials: Credentials = {username: userRequest.username, password: userRequest.password};
+          return this.authenticationService.authenticate(credentials);
+        }),
+        catchError(error => {
+          console.log(error);
+          return throwError(error);
+        })
+      ).subscribe(
+        () => {
+          // Authentication succeed
+          this.router.navigate(['/home']);
+        },
+        error => {
+          console.log(error);
+          this.formSubmitAttempt = false;
+        }
+      );
+
     } else {
       this.toastService.sendMessage('Some fields are not properly filled', ToastType.DANGER);
     }

@@ -19,13 +19,15 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CustomValidators} from 'ng2-validation';
 
-import {UserService} from '../../user.service';
-import {User} from '../../../../../shared/model/dto/user/User';
 import {ToastService} from '../../../../../shared/components/toast/toast.service';
-import {ToastType} from '../../../../../shared/model/toastNotification/ToastType';
-import {Role} from '../../../../../shared/model/dto/user/Role';
 import {RoleService} from '../../role.service';
-import {RoleEnum} from '../../../../../shared/model/dto/enums/RoleEnum';
+import {User} from '../../../../../shared/model/api/user/User';
+import {Role} from '../../../../../shared/model/api/role/Role';
+import {ToastType} from '../../../../../shared/components/toast/toast-objects/ToastType';
+import {HttpRoleService} from '../../../../../shared/services/api/http-role.service';
+import {HttpUserService} from '../../../../../shared/services/api/http-user.service';
+import {RoleEnum} from '../../../../../shared/model/enums/RoleEnum';
+import {UserRequest} from '../../../../../shared/model/api/user/UserRequest';
 
 /**
  * Component user the edition of a user
@@ -33,7 +35,7 @@ import {RoleEnum} from '../../../../../shared/model/dto/enums/RoleEnum';
 @Component({
   selector: 'app-user-edit',
   templateUrl: './user-edit.component.html',
-  styleUrls: ['./user-edit.component.css']
+  styleUrls: ['./user-edit.component.scss']
 })
 export class UserEditComponent implements OnInit {
 
@@ -58,16 +60,18 @@ export class UserEditComponent implements OnInit {
   /**
    * Constructor
    *
-   * @param {UserService} userService The user service to inject
+   * @param {httpUserService} httpUserService The user service
    * @param {Router} router The router service to inject
    * @param {RoleService} roleService The role service to inject
+   * @param {HttpRoleService} httpRoleService The http role service to inject
    * @param {ActivatedRoute} activatedRoute The activated route to inject
    * @param {FormBuilder} formBuilder The formBuilder service
    * @param {ToastService} toastService The service used for displayed Toast notification
    */
-  constructor(private userService: UserService,
+  constructor(private httpUserService: HttpUserService,
               private router: Router,
               private roleService: RoleService,
+              private httpRoleService: HttpRoleService,
               private activatedRoute: ActivatedRoute,
               private formBuilder: FormBuilder,
               private toastService: ToastService) {
@@ -77,12 +81,12 @@ export class UserEditComponent implements OnInit {
    * Called when the component is displayed
    */
   ngOnInit() {
-    this.roleService.getRoles().subscribe(roles => {
+    this.httpRoleService.getRoles().subscribe(roles => {
       this.roles = roles;
     });
 
     this.activatedRoute.params.subscribe(params => {
-      this.userService.getById(params['userId']).subscribe(user => {
+      this.httpUserService.getById(params['userId']).subscribe(user => {
         this.user = user;
         this.initUserEditForm();
       });
@@ -116,19 +120,18 @@ export class UserEditComponent implements OnInit {
    * Save a user
    */
   saveUser() {
-    const userUpdated: User = this.editUserForm.value;
-    userUpdated.id = this.user.id;
-    userUpdated.roles = [];
+    const userUpdateRequest: UserRequest = this.editUserForm.value;
+    userUpdateRequest.roles = [];
 
     const rolesSelected: RoleEnum[] = this.editUserForm.get('roles').value;
     rolesSelected.forEach((roleName: RoleEnum) => {
       const roleSelected = this.roles.find((role: Role) => role.name === roleName);
       if (roleSelected) {
-        userUpdated.roles.push(roleSelected);
+        userUpdateRequest.roles.push(roleSelected);
       }
     });
 
-    this.userService.updateUser(userUpdated).subscribe(() => {
+    this.httpUserService.updateUser(this.user.id, userUpdateRequest).subscribe(() => {
       this.toastService.sendMessage('User saved successfully', ToastType.SUCCESS);
       this.redirectToUserList();
     });

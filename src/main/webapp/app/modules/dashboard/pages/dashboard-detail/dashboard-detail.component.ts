@@ -14,15 +14,19 @@
  * limitations under the License.
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {MatDialog, MatDialogRef} from '@angular/material';
-import {ActivatedRoute} from '@angular/router';
-import {Observable, of} from 'rxjs';
-import {takeWhile} from 'rxjs/operators';
+import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {MatDialog} from '@angular/material';
+import {ActivatedRoute, Router} from '@angular/router';
+import * as html2canvas from 'html2canvas';
 
 import {DashboardService} from '../../dashboard.service';
-import {Project} from '../../../../shared/model/dto/Project';
+import {Project} from '../../../../shared/model/api/project/Project';
 import {AddWidgetDialogComponent} from '../../../../layout/header/components/add-widget-dialog/add-widget-dialog.component';
+import {HttpProjectService} from '../../../../shared/services/api/http-project.service';
+import {ProjectWidget} from '../../../../shared/model/api/ProjectWidget/ProjectWidget';
+import {WebsocketService} from '../../../../shared/services/websocket.service';
+import {ImageUtils} from '../../../../shared/utils/ImageUtils';
+import {FileUtils} from '../../../../shared/utils/FileUtils';
 
 /**
  * Component that display a specific dashboard
@@ -30,16 +34,9 @@ import {AddWidgetDialogComponent} from '../../../../layout/header/components/add
 @Component({
   selector: 'app-dashboard-detail',
   templateUrl: './dashboard-detail.component.html',
-  styleUrls: ['./dashboard-detail.component.css']
+  styleUrls: ['./dashboard-detail.component.scss']
 })
 export class DashboardDetailComponent implements OnInit, OnDestroy {
-
-  /**
-   * The widget dialog ref
-   * @type {MatDialogRef<AddWidgetDialogComponent>}
-   * @private
-   */
-  private addWidgetDialogRef: MatDialogRef<AddWidgetDialogComponent>;
 
   /**
    * Tell if the component is displayed
@@ -49,49 +46,159 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
   private isAlive = true;
 
   /**
-   * The project as observable
-   * @type {Observable<Project>}
+   * The dashboard html (as HTML Element)
    */
-  project$: Observable<Project>;
+  @ViewChild('dashboardScreen') dashboardScreen: ElementRef;
+
+  /**
+   * The timer used to take the screenshot
+   */
+  screenshotTimer: NodeJS.Timer;
+
+  /**
+   * The project
+   * @type {Project}
+   */
+  project: Project;
+
+  /**
+   * The list of projectWidgets
+   */
+  projectWidgets: ProjectWidget[];
+
+  /**
+   * True if the dashboard should be displayed readonly, false otherwise
+   */
+  isReadOnly: boolean = true;
+
+  /**
+   * The screen code of the client;
+   */
+  screenCode: number;
 
   /**
    * constructor
    *
    * @param {ActivatedRoute} activatedRoute The activated route service
    * @param {DashboardService} dashboardService The dashboard service
+   * @param {WebsocketService} websocketService The websocket service
+   * @param {HttpProjectService} httpProjectService The http project service
    * @param {MatDialog} matDialog The mat dialog service
+   * @param {Router} router The router service on Angular
    */
   constructor(private activatedRoute: ActivatedRoute,
               private dashboardService: DashboardService,
-              private matDialog: MatDialog) {
+              private websocketService: WebsocketService,
+              private httpProjectService: HttpProjectService,
+              private matDialog: MatDialog,
+              private router: Router) {
   }
 
   /**
    * Init objects
    */
   ngOnInit() {
-    // Global init from project
-    this.activatedRoute.params.subscribe(params => {
-      this.dashboardService
-          .getOneById(+params['id'])
-          .subscribe(project => {
-            this.dashboardService.currentDisplayedDashboardValue = project;
-          });
+    this.screenCode = this.websocketService.getscreenCode();
+
+    this.dashboardService.refreshProjectEvent().subscribe(shouldRefresh => {
+      if (shouldRefresh) {
+        this.refreshProject(this.project.token);
+      }
     });
 
-    this.dashboardService.currentDisplayedDashboard$
-        .pipe(takeWhile(() => this.isAlive))
-        .subscribe(project => this.project$ = of(project));
+    this.dashboardService.refreshProjectWidgetsEvent().subscribe(shouldRefresh => {
+      if (shouldRefresh) {
+        this.refreshProjectWidgets(this.project.token);
+      }
+    });
+
+    // Global init from project
+    this.activatedRoute.params.subscribe(params => {
+      this.refreshProject(params['dashboardToken']);
+    });
+
+  }
+
+  /**
+   * Refresh the project widget list
+   */
+  refreshProjectWidgets(dashboardToken: string): void {
+    this.httpProjectService.getProjectProjectWidgets(dashboardToken).subscribe(projectWidgets => {
+      this.projectWidgets = projectWidgets;
+      this.takeDashboardScreenshot();
+    });
+  }
+
+  /**
+   * Refresh the project
+   */
+  refreshProject(dashboardToken: string): void {
+    this.httpProjectService.getOneByToken(dashboardToken).subscribe(project => {
+      this.project = project;
+      this.refreshReadOnlyDashboard(dashboardToken);
+      this.refreshProjectWidgets(dashboardToken);
+    });
+  }
+
+  /**
+   * Check if the dashboard should be displayed as readonly
+   *
+   * @param dashboardToken
+   */
+  refreshReadOnlyDashboard(dashboardToken: string): void {
+    this.dashboardService.shouldDisplayedReadOnly(dashboardToken).subscribe(shouldDisplayReadOnly => {
+      this.isReadOnly = shouldDisplayReadOnly;
+    });
   }
 
   /**
    * The add widget dialog ref
    */
   openAddWidgetDialog() {
-    this.addWidgetDialogRef = this.matDialog.open(AddWidgetDialogComponent, {
+    this.matDialog.open(AddWidgetDialogComponent, {
       minWidth: 900,
       minHeight: 500,
+      data: {projectToken: this.project.token}
     });
+  }
+
+  /**
+   * Take screenshot of dashboard
+   */
+  takeDashboardScreenshot() {
+    if (!this.isReadOnly) {
+      // We clear the timer so if the user is doing modification, on the dashboard it will not disturbed
+      clearTimeout(this.screenshotTimer);
+
+      // We are waiting 10sec before taking the screenshot
+      this.screenshotTimer = setTimeout(() => {
+        this.isReadOnly = true;
+
+        // Waiting for behing readonly and take the screenshot
+        setTimeout(() => {
+          html2canvas(this.dashboardScreen.nativeElement).then(canvas => {
+            this.isReadOnly = false;
+            const imgUrl = canvas.toDataURL('image/png');
+
+            const blob: Blob = FileUtils.base64ToBlob(ImageUtils.getDataFromBase64URL(imgUrl), ImageUtils.getContentTypeFromBase64URL(imgUrl));
+            const imageFile: File = FileUtils.convertBlobToFile(blob, `${this.project.token}.png`, new Date());
+
+            this.httpProjectService.addOrUpdateProjectScreenshot(this.project.token, imageFile).subscribe();
+          });
+        }, 0);
+      }, 10000);
+    }
+
+  }
+
+  /**
+   * Handle the disconnection of a dashboard
+   */
+  handlingDashboardDisconnect() {
+    this.httpProjectService.getAllForCurrentUser().subscribe((projects: Project[]) => {
+      this.dashboardService.currentDashboardListValues = projects;
+    });
+    this.router.navigate(['/home']);
   }
 
   /**

@@ -19,9 +19,10 @@ import {MatDialog, MatDialogRef} from '@angular/material';
 import {Router} from '@angular/router';
 import {takeWhile} from 'rxjs/operators';
 
-import {Project} from '../shared/model/dto/Project';
+import {Project} from '../shared/model/api/project/Project';
 import {DashboardService} from '../modules/dashboard/dashboard.service';
 import {AddDashboardDialogComponent} from './components/add-dashboard-dialog/add-dashboard-dialog.component';
+import {HttpAssetService} from '../shared/services/api/http-asset.service';
 
 /**
  * Manage the home page
@@ -29,7 +30,7 @@ import {AddDashboardDialogComponent} from './components/add-dashboard-dialog/add
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.css']
+  styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit, OnDestroy {
   /**
@@ -54,10 +55,12 @@ export class HomeComponent implements OnInit, OnDestroy {
    * The constructor
    *
    * @param {DashboardService} dashboardService The dashboard service
+   * @param {HttpAssetService} httpAssetService The http asset service to inject
    * @param {MatDialog} matDialog The mat dialog service
    * @param {Router} router The router service
    */
   constructor(private dashboardService: DashboardService,
+              private httpAssetService: HttpAssetService,
               private matDialog: MatDialog,
               private router: Router) {
   }
@@ -66,9 +69,11 @@ export class HomeComponent implements OnInit, OnDestroy {
    * Init objects
    */
   ngOnInit() {
-    this.dashboardService.currentDashboardList$
-        .pipe(takeWhile(() => this.isAlive))
-        .subscribe(dashboards => this.dashboards = dashboards);
+    this.dashboardService.currentDashboardList$.pipe(
+      takeWhile(() => this.isAlive)
+    ).subscribe(dashboards => {
+      this.dashboards = dashboards;
+    });
   }
 
   /**
@@ -84,10 +89,19 @@ export class HomeComponent implements OnInit, OnDestroy {
   /**
    * Navigate to a dashboard
    *
-   * @param {number} dashboardId The dashboard id
+   * @param {string} projectToken The project token
    */
-  navigateToDashboard(dashboardId: number) {
-    this.router.navigate(['/dashboards', dashboardId]);
+  navigateToDashboard(projectToken: string) {
+    this.router.navigate(['/dashboards', projectToken]);
+  }
+
+  /**
+   * Get the asset url
+   *
+   * @param assetToken The asset token
+   */
+  getContentUrl(assetToken: string): string {
+    return this.httpAssetService.getContentUrl(assetToken);
   }
 
   /**

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import {Routes} from '@angular/router';
+
 import {UserListComponent} from './user/pages/user-list/user-list.component';
 import {AuthGuard} from '../../shared/auth/guards/auth.guard';
 import {UserEditComponent} from './user/pages/user-edit/user-edit.component';

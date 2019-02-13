@@ -16,8 +16,8 @@
 
 package io.suricate.monitoring.model.dto.nashorn;
 
+import io.suricate.monitoring.model.dto.api.AbstractDto;
 import io.suricate.monitoring.model.enums.WidgetVariableType;
-import io.suricate.monitoring.model.dto.AbstractDto;
 import lombok.*;
 
 import java.util.Map;
@@ -25,7 +25,11 @@ import java.util.Map;
 /**
  * Widget variable used for communication with the clients via webservices
  */
-@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
+@Getter
+@Setter
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+@ToString
 public class WidgetVariableResponse extends AbstractDto {
 
     /**
@@ -52,6 +56,11 @@ public class WidgetVariableResponse extends AbstractDto {
      * If the variable is required
      */
     private boolean required;
+
+    /**
+     * The default value
+     */
+    private String defaultValue;
 
     /**
      * Map of values

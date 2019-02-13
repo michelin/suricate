@@ -1,0 +1,75 @@
+<div *ngIf="widget"
+     class="widget mat-elevation-z4" [ngClass]="widget.technicalName + ' widget-' + projectWidget.id"
+     [ngGridItem]="gridStackItem"
+     (onDragStop)="registerNewPosition($event)"
+     (click)="preventDefault($event)">
+
+  <!--------------------------------------------------->
+  <!--                 WIDGET CSS                    -->
+  <!--------------------------------------------------->
+  <div [innerHTML]="('<style>' + widget.cssContent + '</style>') | safeHtml"></div>
+  <div *ngIf="projectWidget.customStyle" [innerHTML]="('<style>' + projectWidget.customStyle + '</style>') | safeHtml">
+  </div>
+
+  <!--------------------------------------------------->
+  <!--                 WIDGET HTML                   -->
+  <!--------------------------------------------------->
+  <div class="grid-stack-item-content">
+    <div [innerHTML]="projectWidget.instantiateHtml | safeHtml"></div>
+  </div>
+
+  <!--------------------------------------------------->
+  <!--             WIDGET ISSUE INFO                 -->
+  <!--------------------------------------------------->
+  <div *ngIf="widget.delay > 0 && projectWidget.log">
+    <!-- Stopped -->
+    <div *ngIf="projectWidget.state === WidgetStateEnum.STOPPED"
+         class="issue execution-error">
+      <mat-icon class="material-icons" style="color: #cfd2da !important;">warning</mat-icon>
+      <span class="text">
+        Widget execution error
+      </span>
+    </div>
+
+    <!-- warning -->
+    <div *ngIf="projectWidget.state === WidgetStateEnum.WARNING"
+         class="issue execution-warning">
+      <span>
+        <mat-icon class="material-icons" style="color: #cfd2da !important;">warning</mat-icon>
+      </span>
+      <span class="text">
+        Issue with remote server. Retrying ...
+      </span>
+    </div>
+  </div>
+
+  <!--------------------------------------------------->
+  <!--           WIDGET ACTION BUTTON                -->
+  <!--------------------------------------------------->
+  <span *ngIf="!readOnly">
+    <button class="btn-widget btn-widget-delete"
+            role="button"
+            aria-disabled="false"
+            matTooltip="{{ 'widget.delete' | translate }}"
+            (click)="displayDeleteProjectWidgetDialog()">
+      <mat-icon class="material-icons">delete_forever</mat-icon>
+    </button>
+
+    <button class="btn-widget btn-widget-edit"
+            role="button"
+            aria-disabled="false"
+            matTooltip="{{ 'widget.edit' | translate }}"
+            (click)="displayEditProjectWidgetDialog()">
+      <mat-icon class="material-icons">edit</mat-icon>
+    </button>
+
+    <button class="btn-widget btn-widget-log"
+            role="button"
+            aria-disabled="false"
+            matTooltip="{{ 'widget.display.log' | translate }}"
+            (click)="displayLogProjectWidgetDialog()">
+      <mat-icon class="material-icons">notes</mat-icon>
+    </button>
+  </span>
+
+</div>

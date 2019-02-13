@@ -20,6 +20,7 @@ import io.suricate.monitoring.model.entity.AbstractAuditingEntity;
 import io.suricate.monitoring.model.entity.widget.Widget;
 import io.suricate.monitoring.model.enums.WidgetState;
 import lombok.*;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -28,14 +29,18 @@ import java.util.Date;
  * Project_widget entity
  */
 @Entity(name = "ProjectWidget")
-@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
+@Getter
+@Setter
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+@ToString
 public class ProjectWidget extends AbstractAuditingEntity<Long> {
 
     /**
      * The project widget id
      */
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**
@@ -43,6 +48,7 @@ public class ProjectWidget extends AbstractAuditingEntity<Long> {
      */
     @Column
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     private String data;
 
     /**
@@ -73,18 +79,21 @@ public class ProjectWidget extends AbstractAuditingEntity<Long> {
      * The css style added by the user
      */
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     private String customStyle;
 
     /**
      * The configuration of the widget (Result of the widget params)
      */
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     private String backendConfig;
 
     /**
      * The nashorn execution log
      */
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     private String log;
 
     /**
@@ -98,7 +107,7 @@ public class ProjectWidget extends AbstractAuditingEntity<Long> {
      */
     @Column
     private Date lastSuccessDate;
-
+    
     /**
      * The widget state {@link WidgetState}
      */
@@ -110,13 +119,13 @@ public class ProjectWidget extends AbstractAuditingEntity<Long> {
      * The related project
      */
     @ManyToOne
-    @PrimaryKeyJoinColumn(name="projectId",referencedColumnName = "ID")
+    @PrimaryKeyJoinColumn(name = "projectId", referencedColumnName = "ID")
     private Project project;
 
     /**
      * The related widget
      */
     @ManyToOne
-    @PrimaryKeyJoinColumn(name = "widgetId" ,referencedColumnName = "ID")
+    @PrimaryKeyJoinColumn(name = "widgetId", referencedColumnName = "ID")
     private Widget widget;
 }

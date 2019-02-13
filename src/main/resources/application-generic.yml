@@ -1,0 +1,33 @@
+###     Properties for generic env based on system vars      ###
+################################################################
+
+###   DATASOURCES   ###
+## You can override datasource by uncommented and fill these lines
+spring:
+  profiles:
+    active: generic
+  datasource:
+    url: ${SURICATE_DB_URL}
+    driverClassName: com.mysql.jdbc.Driver
+    username: ${SURICATE_DB_USER}
+    password: ${SURICATE_DB_PASSWORD}
+  flyway:
+    locations: ["classpath:db/migration/mysql"]
+  ###   DDL   ###
+  jpa.hibernate.ddl-auto: validate
+
+application:
+  ### Security (ldap | database) ###
+  authentication:
+    ###   LDAP Authentication   ###
+    ldap:
+      url: ${SURICATE_LDAP_URL:}
+      userSearchFilter: ${SURICATE_LDAP_FILTER:}
+      firstNameAttributName: ${SURICATE_LDAP_FNAME_ATT:}
+      lastNameAttributName: ${SURICATE_LDAP_SNAME_ATT:}
+      mailAttributName: ${SURICATE_LDAP_MAIL_ATT:}
+      username: ${SURICATE_LDAP_USER:}
+      password: ${SURICATE_LDAP_PASSWORD:}
+      userSearchBase: ${SURICATE_LDAP_SEARCH_BASE:}
+      referral: follow
+    provider: ${SURICATE_AUTH_PROVIDER:database}

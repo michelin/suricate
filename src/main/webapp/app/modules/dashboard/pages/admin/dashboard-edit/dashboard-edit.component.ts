@@ -19,10 +19,12 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute} from '@angular/router';
 import {CustomValidators} from 'ng2-validation';
 
-import {Project} from '../../../../../shared/model/dto/Project';
-import {DashboardService} from '../../../dashboard.service';
+import {Project} from '../../../../../shared/model/api/project/Project';
 import {ToastService} from '../../../../../shared/components/toast/toast.service';
-import {ToastType} from '../../../../../shared/model/toastNotification/ToastType';
+import {ToastType} from '../../../../../shared/components/toast/toast-objects/ToastType';
+import {HttpProjectService} from '../../../../../shared/services/api/http-project.service';
+import {ProjectRequest} from '../../../../../shared/model/api/project/ProjectRequest';
+import {User} from '../../../../../shared/model/api/user/User';
 
 /**
  * Component that display the edit page for a dashboard
@@ -30,7 +32,7 @@ import {ToastType} from '../../../../../shared/model/toastNotification/ToastType
 @Component({
   selector: 'app-dashboard-edit',
   templateUrl: './dashboard-edit.component.html',
-  styleUrls: ['./dashboard-edit.component.css']
+  styleUrls: ['./dashboard-edit.component.scss']
 })
 export class DashboardEditComponent implements OnInit {
 
@@ -47,14 +49,19 @@ export class DashboardEditComponent implements OnInit {
   dashboard: Project;
 
   /**
+   * The list of project users
+   */
+  dashboardUsers: User[];
+
+  /**
    * Constructor
    *
-   * @param {DashboardService} dashboardService The dashboard service to inject
+   * @param {HttpProjectService} httpProjectService The http project service to inject
    * @param {ActivatedRoute} activatedRoute The activated route to inject
    * @param {FormBuilder} formBuilder The formBuilder service
    * @param {ToastService} toastService The service used for displayed Toast notification
    */
-  constructor(private dashboardService: DashboardService,
+  constructor(private httpProjectService: HttpProjectService,
               private activatedRoute: ActivatedRoute,
               private formBuilder: FormBuilder,
               private toastService: ToastService) {
@@ -64,18 +71,16 @@ export class DashboardEditComponent implements OnInit {
    * Called when the component is displayed
    */
   ngOnInit() {
-    this
-        .activatedRoute
-        .params
-        .subscribe(params => {
-          this
-              .dashboardService
-              .getOneById(+params['dashboardId'])
-              .subscribe(dashboard => {
-                this.dashboard = dashboard;
-                this.initDashboardForm();
-              });
+    this.activatedRoute.params.subscribe(params => {
+      this.httpProjectService.getOneByToken(params['dashboardToken']).subscribe(dashboard => {
+        this.dashboard = dashboard;
+        this.initDashboardForm();
+
+        this.httpProjectService.getProjectUsers(params['dashboardToken']).subscribe(users => {
+          this.dashboardUsers = users;
         });
+      });
+    });
   }
 
   /**
@@ -85,8 +90,8 @@ export class DashboardEditComponent implements OnInit {
     this.editDashboardForm = this.formBuilder.group({
       name: [this.dashboard.name, [Validators.required, Validators.minLength(3)]],
       token: [this.dashboard.token, [Validators.required]],
-      widgetHeight: [this.dashboard.widgetHeight, [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]],
-      maxColumn: [this.dashboard.maxColumn, [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]]
+      widgetHeight: [this.dashboard.gridProperties.widgetHeight, [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]],
+      maxColumn: [this.dashboard.gridProperties.maxColumn, [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]]
     });
   }
 
@@ -105,9 +110,10 @@ export class DashboardEditComponent implements OnInit {
    * edit the dashboard
    */
   saveDashboard() {
-    this
-        .dashboardService
-        .editProject({...this.dashboard, ...this.editDashboardForm.value})
-        .subscribe(() => this.toastService.sendMessage('Dashboard saved successfully', ToastType.SUCCESS));
+    const projectRequest: ProjectRequest = {...this.dashboard, ...this.editDashboardForm.value};
+
+    this.httpProjectService.editProject(this.dashboard.token, projectRequest).subscribe(() => {
+      this.toastService.sendMessage('Dashboard saved successfully', ToastType.SUCCESS);
+    });
   }
 }

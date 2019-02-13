@@ -18,13 +18,15 @@ import {AfterViewInit, ChangeDetectorRef, Component, ViewChild} from '@angular/c
 import {MatDialog, MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
 import {merge, of as observableOf} from 'rxjs';
 import {catchError, map, startWith, switchMap} from 'rxjs/operators';
+import {TitleCasePipe} from '@angular/common';
+import {TranslateService} from '@ngx-translate/core';
 
-import {Project} from '../../../../../shared/model/dto/Project';
+import {Project} from '../../../../../shared/model/api/project/Project';
 import {DashboardService} from '../../../dashboard.service';
-import {ToastType} from '../../../../../shared/model/toastNotification/ToastType';
-import {User} from '../../../../../shared/model/dto/user/User';
 import {ToastService} from '../../../../../shared/components/toast/toast.service';
-import {DeleteDashboardDialogComponent} from '../../../components/delete-dashboard-dialog/delete-dashboard-dialog.component';
+import {ConfirmDialogComponent} from '../../../../../shared/components/confirm-dialog/confirm-dialog.component';
+import {ToastType} from '../../../../../shared/components/toast/toast-objects/ToastType';
+import {HttpProjectService} from '../../../../../shared/services/api/http-project.service';
 
 /**
  * Component that manage the dashboard list for admin part
@@ -32,7 +34,7 @@ import {DeleteDashboardDialogComponent} from '../../../components/delete-dashboa
 @Component({
   selector: 'app-dashboard-list',
   templateUrl: './dashboard-list.component.html',
-  styleUrls: ['./dashboard-list.component.css']
+  styleUrls: ['./dashboard-list.component.scss']
 })
 export class DashboardListComponent implements AfterViewInit {
 
@@ -77,12 +79,16 @@ export class DashboardListComponent implements AfterViewInit {
   /**
    * Constructor
    *
+   * @param {HttpProjectService} httpProjectService The http project service to inject
    * @param {DashboardService} dashboardService The dashboardService to inject
+   * @param {TranslateService} translateService The translate service to inject
    * @param {ChangeDetectorRef} changeDetectorRef The change detector ref
    * @param {MatDialog} matDialog The matDialog service to inject
    * @param {ToastService} toastService The toast service to inject
    */
-  constructor(private dashboardService: DashboardService,
+  constructor(private httpProjectService: HttpProjectService,
+              private dashboardService: DashboardService,
+              private translateService: TranslateService,
               private changeDetectorRef: ChangeDetectorRef,
               private matDialog: MatDialog,
               private toastService: ToastService) {
@@ -101,31 +107,31 @@ export class DashboardListComponent implements AfterViewInit {
   initProjectsTable(): void {
     // If the user changes the sort order, reset back to the first page.
     merge(this.matSort.sortChange, this.matPaginator.page)
-        .pipe(
-            startWith(null),
-            switchMap(() => {
-              this.isLoadingResults = true;
-              this.changeDetectorRef.detectChanges();
-              return this.dashboardService.getAll();
-            }),
-            map(data => {
-              this.isLoadingResults = false;
-              this.errorCatched = false;
+      .pipe(
+        startWith(null),
+        switchMap(() => {
+          this.isLoadingResults = true;
+          this.changeDetectorRef.detectChanges();
+          return this.httpProjectService.getAll();
+        }),
+        map(data => {
+          this.isLoadingResults = false;
+          this.errorCatched = false;
 
-              return data;
-            }),
-            catchError(() => {
-              this.isLoadingResults = false;
-              this.errorCatched = true;
+          return data;
+        }),
+        catchError(() => {
+          this.isLoadingResults = false;
+          this.errorCatched = true;
 
-              return observableOf([]);
-            })
-        )
-        .subscribe(data => {
-          this.resultsLength = data.length;
-          this.matTableDataSource.data = data;
-          this.matTableDataSource.sort = this.matSort;
-        });
+          return observableOf([]);
+        })
+      )
+      .subscribe(data => {
+        this.resultsLength = data.length;
+        this.matTableDataSource.data = data;
+        this.matTableDataSource.sort = this.matSort;
+      });
 
     // Apply sort custom rules for dashboards
     this.matTableDataSource.sortingDataAccessor = (dashboard: Project, property: string) => {
@@ -144,20 +150,26 @@ export class DashboardListComponent implements AfterViewInit {
    * @param {Project} project The dashboard to delete
    */
   openDialogDeleteDashboard(project: Project) {
-    const deleteUserDialogRef = this.matDialog.open(DeleteDashboardDialogComponent, {
-      data: {project: project}
-    });
+    this.translateService.get(['dashboard.delete', 'delete.confirm']).subscribe(translations => {
+      const titleCasePipe = new TitleCasePipe();
 
-    deleteUserDialogRef.afterClosed().subscribe(shouldDeleteDashboard => {
-      if (shouldDeleteDashboard) {
-        this
-            .dashboardService
-            .deleteProject(project)
-            .subscribe(() => {
-              this.toastService.sendMessage('Project deleted successfully', ToastType.SUCCESS);
-              this.initProjectsTable();
+      this.matDialog.open(ConfirmDialogComponent, {
+        data: {
+          title: translations['dashboard.delete'],
+          message: `${translations['delete.confirm']} ${titleCasePipe.transform(project.name)}`
+        }
+      }).afterClosed().subscribe(shouldDeleteDashboard => {
+        if (shouldDeleteDashboard) {
+          this.httpProjectService.deleteProject(project.token).subscribe(() => {
+            this.toastService.sendMessage('Project deleted successfully', ToastType.SUCCESS);
+            this.initProjectsTable();
+
+            this.httpProjectService.getAllForCurrentUser().subscribe((projects: Project[]) => {
+              this.dashboardService.currentDashboardListValues = projects;
             });
-      }
+          });
+        }
+      });
     });
   }
 

@@ -4,29 +4,29 @@
 
 <mat-dialog-content>
   <div class="widget-dialog">
-    <h1> {{projectWidget.widget.name}} </h1>
+    <h1> {{widget?.name}} </h1>
     <div class="container">
       <div class="image-container">
-        <img [src]="getImageSrc(projectWidget?.widget?.image) | safeUrl">
+        <img [src]="getImageSrc(widget?.imageToken) | safeUrl">
       </div>
       <div class="description-container">
-        {{projectWidget.widget.description}}
+        {{widget?.description}}
       </div>
     </div>
 
-    <div *ngIf="projectWidget.widget.info" id="widget-info" [innerHtml]="projectWidget.widget.info | safeHtml ">
+    <div *ngIf="widget?.info" id="widget-info" [innerHTML]="widget.info | safeHtml ">
     </div>
 
     <div class="settings-container">
       <form id="formSettings" #formSettings="ngForm" (ngSubmit)="editWidget(formSettings)" novalidate>
-        <div *ngFor="let param of projectWidget.widget.widgetParams">
+        <div *ngFor="let param of widgetParams">
 
           <!-- Boolean Type -->
           <mat-checkbox *ngIf="param.type == widgetVariableType.BOOLEAN"
-                        color="accent"
+                        color="primary"
                         [name]="param.name"
                         [required]="param.required"
-                        [ngModel]="getParamValueByParamName(projectWidget.backendConfig, param) ? getParamValueByParamName(projectWidget.backendConfig, param)
+                        [ngModel]="getParamValueByParamName(projectWidget.backendConfig, param.name) ? getParamValueByParamName(projectWidget.backendConfig, param.name)
                                     : param.defaultValue ? param.defaultValue
                                     : param.usageExample">
             {{param.description}}
@@ -39,19 +39,19 @@
                    [name]="param.name"
                    [required]="param.required"
                    [placeholder]="param.description"
-                   [ngModel]="getParamValueByParamName(projectWidget.backendConfig, param) ? getParamValueByParamName(projectWidget.backendConfig, param)
+                   [ngModel]="getParamValueByParamName(projectWidget.backendConfig, param.name) ? getParamValueByParamName(projectWidget.backendConfig, param.name)
                                 : param.defaultValue ? param.defaultValue
                                 : param.usageExample">
           </mat-form-field>
 
           <!-- SECRET Type -->
-          <mat-form-field *ngIf="param.type == widgetVariableType.SECRET">
+          <mat-form-field *ngIf="param.type == widgetVariableType.SECRET || param.type == widgetVariableType.PASSWORD">
             <input matInput
                    type="password"
                    [name]="param.name"
                    [required]="param.required"
                    [placeholder]="param.description"
-                   [ngModel]="getParamValueByParamName(projectWidget.backendConfig, param) ? getParamValueByParamName(projectWidget.backendConfig, param)
+                   [ngModel]="getParamValueByParamName(projectWidget.backendConfig, param.name) ? getParamValueByParamName(projectWidget.backendConfig, param.name)
                                 : param.defaultValue ? param.defaultValue
                                 : param.usageExample">
           </mat-form-field>
@@ -63,7 +63,7 @@
                    [name]="param.name"
                    [required]="param.required"
                    [placeholder]="param.description"
-                   [ngModel]="getParamValueByParamName(projectWidget.backendConfig, param) ? getParamValueByParamName(projectWidget.backendConfig, param)
+                   [ngModel]="getParamValueByParamName(projectWidget.backendConfig, param.name) ? getParamValueByParamName(projectWidget.backendConfig, param.name)
                                 : param.defaultValue ? param.defaultValue
                                 : param.usageExample">
           </mat-form-field>
@@ -73,7 +73,7 @@
             <mat-select [required]="param.required"
                         [placeholder]="param.description"
                         [name]="param.name"
-                        [ngModel]="getParamValueByParamName(projectWidget.backendConfig, param) ? getParamValueByParamName(projectWidget.backendConfig, param)
+                        [ngModel]="getParamValueByParamName(projectWidget.backendConfig, param.name) ? getParamValueByParamName(projectWidget.backendConfig, param.name)
                                     : param.defaultValue ? param.defaultValue
                                     : param.usageExample">
               <mat-option *ngFor="let paramValue of param.values" [value]="paramValue.jsKey">
@@ -101,8 +101,9 @@
             <!-- Used for display file selection window -->
             <button mat-raised-button class="file_upload_button mat-elevation-z8" type="button" (click)="file.click()">
               <mat-icon>attach_file</mat-icon>
-              <span [class]="'file-selection-sentence-' + param.name"><app-translate
-                  [key]="'uploadyarn star'"></app-translate></span>
+              <span [class]="'file-selection-sentence-' + param.name">
+                <app-translate [key]="'star'"></app-translate>
+              </span>
             </button>
             <!-- Used for retrieve the file -->
             <input #file
@@ -114,7 +115,7 @@
             <input type="text" style="display:none;" [name]="param.name" [required]="param.required" ngModel>
           </div>
         </div>
-        <button mat-raised-button class="mat-elevation-z4" color="accent" type="submit">
+        <button mat-raised-button class="mat-elevation-z4" color="primary" type="submit">
           <app-translate [key]="'save'"></app-translate>
         </button>
       </form>

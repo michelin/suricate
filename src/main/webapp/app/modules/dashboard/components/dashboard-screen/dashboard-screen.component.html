@@ -1,41 +1,23 @@
-<!-- Display Synchronisation server Errors -->
-<div id="server-error"
-     *ngIf="currentStompConnectionState === stompStateEnum.CLOSED || currentStompConnectionState === stompStateEnum.TRYING"
-     fxLayout="row wrap"
-     fxLayoutAlign="center center"
-     fxLayoutGap="30px">
-  <span> <mat-icon>warning</mat-icon> </span>
-  <span> <app-translate [key]="'connection.lost'"></app-translate> </span>
-</div>
-
 <!-- Display Screen code -->
-<div *ngIf="displayScreenCode" id="screen-code-div" fxLayout="col wrap" fxLayoutAlign="center center" fxLayoutGap="50px">
+<div *ngIf="shouldDisplayScreenCode"
+     id="screen-code-div"
+     fxLayout="col wrap" fxLayoutAlign="center center" fxLayoutGap="50px">
   <mat-icon>tv</mat-icon>
   <span> {{ screenCode }}</span>
 </div>
 
 <!-- Grid project -->
-<div *ngIf="gridOptions" [ngGrid]="gridOptions" (onItemChange)="updateProjectWidgetsPosition($event)" class="grid-stack" >
-  <div class="commonCssAndJs">
-    <div [innerHTML]="getGridCSS(project.cssStyle) | safeHtml"></div>
-    <div [innerHTML]="getWidgetCommonCSS() | safeHtml"></div>
-    <div *ngIf="project.librariesToken"
-         [innerHTML]="getJSLibraries(project.librariesToken) | safeHtml"
-         (scriptRenderingFinished)="setSrcScriptRendered($event)"
-         appRunScripts></div>
+<div *ngIf="gridOptions" class="grid-stack" [ngGrid]="gridOptions"
+     (onResizeStop)="updateProjectWidgetsPosition()" (onDragStop)="updateProjectWidgetsPosition()">
+
+  <div [innerHTML]="('<style>' + project.gridProperties.cssStyle + '</style>') | safeHtml"></div>
+  <div [innerHTML]="getJSLibraries() | safeHtml">
   </div>
 
-  <span *ngIf="isSrcScriptsRendered">
-      <div #projectWidgetsRendered
-           *ngFor="let projectWidget of this.sortProjectWidgets(project.projectWidgets); let projectWidgetsLoaded = last"
-           [ngClass]="'widget ' + projectWidget.widget.technicalName + ' widget-' + projectWidget.id"
-           [ngGridItem]="{'col': projectWidget.widgetPosition.col,
-                    'row': projectWidget.widgetPosition.row,
-                    'sizey': projectWidget.widgetPosition.height,
-                    'sizex': projectWidget.widgetPosition.width,
-                    'payload': projectWidget.id}"
-           [innerHTML]="getHtmlAndCss(projectWidget) | safeHtml" appRunScripts>
-
-      </div>
-  </span>
+  <app-dashboard-screen-widget *ngFor="let gridStackItem of gridStackItems"
+                               [projectWidget]="gridStackItem.payload"
+                               [gridStackItem]="gridStackItem"
+                               [projectToken]="project.token"
+                               [readOnly]="readOnly">
+  </app-dashboard-screen-widget>
 </div>

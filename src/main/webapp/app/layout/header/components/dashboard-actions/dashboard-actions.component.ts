@@ -17,13 +17,17 @@
 import {Component, OnInit} from '@angular/core';
 import {MatDialog, MatDialogRef} from '@angular/material';
 import {ActivatedRoute} from '@angular/router';
+import {TitleCasePipe} from '@angular/common';
+import {TranslateService} from '@ngx-translate/core';
 
 import {AddWidgetDialogComponent} from '../add-widget-dialog/add-widget-dialog.component';
 import {AddDashboardDialogComponent} from '../../../../home/components/add-dashboard-dialog/add-dashboard-dialog.component';
 import {TvManagementDialogComponent} from '../tv-management-dialog/tv-management-dialog.component';
-import {ScreenService} from '../../../../modules/dashboard/screen.service';
+import {HttpScreenService} from '../../../../shared/services/api/http-screen.service';
+import {Project} from '../../../../shared/model/api/project/Project';
+import {HttpProjectService} from '../../../../shared/services/api/http-project.service';
 import {DashboardService} from '../../../../modules/dashboard/dashboard.service';
-import {Project} from '../../../../shared/model/dto/Project';
+import {ConfirmDialogComponent} from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 
 /**
  * Hold the header dashboard actions
@@ -31,7 +35,7 @@ import {Project} from '../../../../shared/model/dto/Project';
 @Component({
   selector: 'app-dashboard-actions',
   templateUrl: './dashboard-actions.component.html',
-  styleUrls: ['./dashboard-actions.component.css']
+  styleUrls: ['./dashboard-actions.component.scss']
 })
 export class DashboardActionsComponent implements OnInit {
 
@@ -60,24 +64,41 @@ export class DashboardActionsComponent implements OnInit {
   project: Project;
 
   /**
+   * True if the dashboard should be displayed readonly, false otherwise
+   */
+  isReadOnly: boolean = true;
+
+  /**
    * The constructor
    *
    * @param {MatDialog} matDialog The mat dialog to inject
    * @param {ActivatedRoute} activatedRoute The activated route
-   * @param {ScreenService} screenService The screen service
-   * @param {DashboardService} dashboardService The dashboard service
+   * @param {DashboardService} dashboardService The dashboard service to inject
+   * @param {TranslateService} translateService The translate service to inject
+   * @param {HttpScreenService} httpScreenService The screen service
+   * @param {HttpProjectService} httpProjectService The project service
    */
   constructor(private matDialog: MatDialog,
               private activatedRoute: ActivatedRoute,
-              private screenService: ScreenService,
-              private dashboardService: DashboardService) {
+              private dashboardService: DashboardService,
+              private translateService: TranslateService,
+              private httpScreenService: HttpScreenService,
+              private httpProjectService: HttpProjectService) {
   }
 
   /**
    * When the component is init
    */
   ngOnInit() {
-    this.dashboardService.currentDisplayedDashboard$.subscribe(project => this.project = project);
+    this.dashboardService.refreshProjectEvent().subscribe(shouldRefresh => {
+      if (shouldRefresh) {
+        this.refreshProject(this.project.token);
+      }
+    });
+
+    this.activatedRoute.params.subscribe(params => {
+      this.refreshProject(params['dashboardToken']);
+    });
   }
 
   /**
@@ -86,7 +107,7 @@ export class DashboardActionsComponent implements OnInit {
   openAddWidgetDialog() {
     this.addWidgetDialogRef = this.matDialog.open(AddWidgetDialogComponent, {
       minWidth: 900,
-      data: {projectId: this.project.id}
+      data: {projectToken: this.project.token}
     });
   }
 
@@ -96,7 +117,7 @@ export class DashboardActionsComponent implements OnInit {
   openEditDashboardDialog() {
     this.editDashboardDialogRef = this.matDialog.open(AddDashboardDialogComponent, {
       minWidth: 900,
-      data: {projectId: this.project.id}
+      data: {projectToken: this.project.token}
     });
   }
 
@@ -106,7 +127,28 @@ export class DashboardActionsComponent implements OnInit {
   openTvManagementDialog() {
     this.tvManagementDialogRef = this.matDialog.open(TvManagementDialogComponent, {
       minWidth: 900,
-      data: {projectId: this.project.id}
+      data: {projectToken: this.project.token}
+    });
+  }
+
+  /**
+   * Delete a dashboard
+   */
+  deleteDashboardDialog() {
+    this.translateService.get(['dashboard.delete', 'delete.confirm']).subscribe(translations => {
+      const titlecasePipe = new TitleCasePipe();
+
+      this.matDialog.open(ConfirmDialogComponent, {
+        data: {
+          title: translations['dashboard.delete'],
+          message: `${translations['delete.confirm']} ${titlecasePipe.transform(this.project.name)}`
+        }
+      }).afterClosed().subscribe(shouldDeleteDashboard => {
+        if (shouldDeleteDashboard) {
+          this.httpProjectService.deleteProject(this.project.token).subscribe();
+        }
+      });
+
     });
   }
 
@@ -114,6 +156,27 @@ export class DashboardActionsComponent implements OnInit {
    * Refresh every screens for the current dashboard
    */
   refreshConnectedScreens() {
-    this.screenService.refreshEveryConnectedScreensForProject(this.project.token);
+    this.httpScreenService.refreshEveryConnectedScreensForProject(this.project.token).subscribe();
+  }
+
+  /**
+   * Refresh the project
+   */
+  refreshProject(dashboardToken: string): void {
+    this.httpProjectService.getOneByToken(dashboardToken).subscribe(project => {
+      this.project = project;
+      this.refreshReadOnlyDashboard(dashboardToken);
+    });
+  }
+
+  /**
+   * Check if the dashboard should be displayed as readonly
+   *
+   * @param dashboardToken
+   */
+  refreshReadOnlyDashboard(dashboardToken: string): void {
+    this.dashboardService.shouldDisplayedReadOnly(dashboardToken).subscribe(shouldDisplayReadOnly => {
+      this.isReadOnly = shouldDisplayReadOnly;
+    });
   }
 }

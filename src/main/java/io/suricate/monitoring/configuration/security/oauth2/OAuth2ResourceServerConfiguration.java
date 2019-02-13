@@ -18,7 +18,6 @@ package io.suricate.monitoring.configuration.security.oauth2;
 
 import io.suricate.monitoring.controllers.api.error.ApiAuthenticationFailureHandler;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -89,11 +88,15 @@ public class OAuth2ResourceServerConfiguration extends ResourceServerConfigurerA
             .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
             .antMatchers("/h2-console/**").permitAll()
             .antMatchers("/api/oauth/token").permitAll()
-            .antMatchers("/api/users/register").permitAll()
-            .antMatchers("/api/configurations/authentication-provider").permitAll()
-            .antMatchers("/api/projects/project/{token}").permitAll()
+            .antMatchers("/api/*/users/register").permitAll()
+            .antMatchers("/api/*/configurations/authentication-provider").permitAll()
+            .antMatchers("/api/*/projects/{projectToken}").permitAll()
+            .antMatchers("/api/*/projects/{projectToken}/projectWidgets").permitAll()
+            .antMatchers("/api/*/projectWidgets/{projectWidgetId}").permitAll()
+            .antMatchers("/api/*/widgets/{widgetId}").permitAll()
             .antMatchers("/api/swagger-ui.html").permitAll()
-            .antMatchers("/api/asset/**").permitAll()
+            .antMatchers("/api/*/settings").permitAll()
+            .antMatchers("/api/*/assets/**").permitAll()
             .antMatchers("/ws/**").permitAll()
             .antMatchers("/api/**").authenticated();
     }

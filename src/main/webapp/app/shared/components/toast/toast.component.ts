@@ -22,8 +22,8 @@ import {Observable, of} from 'rxjs';
 import {takeWhile} from 'rxjs/operators';
 
 import {ToastService} from './toast.service';
-import {ToastMessage} from '../../model/toastNotification/ToastMessage';
-import {ToastType} from '../../model/toastNotification/ToastType';
+import {ToastMessage} from './toast-objects/ToastMessage';
+import {ToastType} from './toast-objects/ToastType';
 
 /**
  * Component that display toast notification messages
@@ -31,7 +31,7 @@ import {ToastType} from '../../model/toastNotification/ToastType';
 @Component({
   selector: 'app-toast-messages',
   templateUrl: './toast.component.html',
-  styleUrls: ['./toast.component.css'],
+  styleUrls: ['./toast.component.scss'],
   animations: [
     trigger('slideInOut', [
       state('in', style({
@@ -41,28 +41,28 @@ import {ToastType} from '../../model/toastNotification/ToastType';
         'max-height': '0px', 'opacity': '0', 'visibility': 'hidden'
       })),
       transition('in => out', [group([
-            animate('400ms ease-in-out', style({
-              'opacity': '0'
-            })),
-            animate('600ms ease-in-out', style({
-              'max-height': '0px'
-            })),
-            animate('700ms ease-in-out', style({
-              'visibility': 'hidden'
-            }))
-          ]
+          animate('400ms ease-in-out', style({
+            'opacity': '0'
+          })),
+          animate('600ms ease-in-out', style({
+            'max-height': '0px'
+          })),
+          animate('700ms ease-in-out', style({
+            'visibility': 'hidden'
+          }))
+        ]
       )]),
       transition('out => in', [group([
-            animate('1ms ease-in-out', style({
-              'visibility': 'visible'
-            })),
-            animate('600ms ease-in-out', style({
-              'max-height': '500px'
-            })),
-            animate('800ms ease-in-out', style({
-              'opacity': '1'
-            }))
-          ]
+          animate('1ms ease-in-out', style({
+            'visibility': 'visible'
+          })),
+          animate('600ms ease-in-out', style({
+            'max-height': '500px'
+          })),
+          animate('800ms ease-in-out', style({
+            'opacity': '1'
+          }))
+        ]
       )])
     ])
   ]
@@ -112,13 +112,13 @@ export class ToastComponent implements OnInit, OnDestroy {
    */
   ngOnInit() {
     this.toastService.toastMessage$
-        .pipe(takeWhile(() => this.isAlive))
-        .subscribe((message: ToastMessage) => {
-          this.message$ = of(message);
-          if (message) {
-            this.showToast();
-          }
-        });
+      .pipe(takeWhile(() => this.isAlive))
+      .subscribe((message: ToastMessage) => {
+        this.message$ = of(message);
+        if (message) {
+          this.showToast();
+        }
+      });
   }
 
   /**

@@ -18,18 +18,16 @@
 
 import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator, MatSlideToggleChange, MatSort, MatTableDataSource} from '@angular/material';
-import {DomSanitizer, SafeHtml} from '@angular/platform-browser';
 import {fromEvent, merge, of as observableOf} from 'rxjs';
-import {catchError, debounceTime, distinctUntilChanged, map, startWith, switchMap, takeWhile} from 'rxjs/operators';
+import {catchError, debounceTime, distinctUntilChanged, map, startWith, switchMap} from 'rxjs/operators';
 
-
-import {WidgetService} from '../../widget.service';
-import {Asset} from '../../../../shared/model/dto/Asset';
-import {WidgetAvailabilityEnum} from '../../../../shared/model/dto/enums/WidgetAvailabilityEnum';
-import {Widget} from '../../../../shared/model/dto/Widget';
+import {Widget} from '../../../../shared/model/api/widget/Widget';
 import {ToastService} from '../../../../shared/components/toast/toast.service';
-import {ToastType} from '../../../../shared/model/toastNotification/ToastType';
 import {UserService} from '../../../security/user/user.service';
+import {ToastType} from '../../../../shared/components/toast/toast-objects/ToastType';
+import {HttpWidgetService} from '../../../../shared/services/api/http-widget.service';
+import {WidgetAvailabilityEnum} from '../../../../shared/model/enums/WidgetAvailabilityEnum';
+import {HttpAssetService} from '../../../../shared/services/api/http-asset.service';
 
 /**
  * Component that display the list of widgets (admin part)
@@ -37,7 +35,7 @@ import {UserService} from '../../../security/user/user.service';
 @Component({
   selector: 'app-widget-list',
   templateUrl: './widget-list.component.html',
-  styleUrls: ['./widget-list.component.css']
+  styleUrls: ['./widget-list.component.scss']
 })
 export class WidgetListComponent implements OnInit, AfterViewInit, OnDestroy {
 
@@ -114,15 +112,16 @@ export class WidgetListComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Constructor
    *
-   * @param {WidgetService} widgetService The widgetService to inject
+   * @param {UserService} userService The user service
+   * @param {HttpWidgetService} httpWidgetService The http widget service
+   * @param {HttpAssetService} httpAssetService The http asset service
    * @param {ChangeDetectorRef} changeDetectorRef enable the change detection after view init
-   * @param {DomSanitizer} domSanitizer The dom sanitizer service
-   * @param {ToastService} toastService The toast notificaiton service
+   * @param {ToastService} toastService The toast notification service
    */
   constructor(private userService: UserService,
-              private widgetService: WidgetService,
+              private httpWidgetService: HttpWidgetService,
+              private httpAssetService: HttpAssetService,
               private changeDetectorRef: ChangeDetectorRef,
-              private domSanitizer: DomSanitizer,
               private toastService: ToastService) {
   }
 
@@ -131,14 +130,7 @@ export class WidgetListComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   ngOnInit() {
     this.isUserAdmin = this.userService.isAdmin();
-    this.widgetService.widgets$.pipe(
-        takeWhile(() => this.isAlive)
-    ).subscribe(() => {
-      this.initTable();
-    });
-
     this.initTable();
-
   }
 
   /**
@@ -153,38 +145,38 @@ export class WidgetListComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   initTable() {
     merge(this.matSort.sortChange, this.matPaginator.page)
-        .pipe(
-            startWith(null),
-            switchMap(() => {
-              this.isLoadingResults = true;
-              this.changeDetectorRef.detectChanges();
-              return this.widgetService.getAll();
-            }),
-            map(data => {
-              this.isLoadingResults = false;
-              this.errorCatched = false;
+      .pipe(
+        startWith(null),
+        switchMap(() => {
+          this.isLoadingResults = true;
+          this.changeDetectorRef.detectChanges();
+          return this.httpWidgetService.getAll();
+        }),
+        map(data => {
+          this.isLoadingResults = false;
+          this.errorCatched = false;
 
-              return data;
-            }),
-            catchError(() => {
-              this.isLoadingResults = false;
-              this.errorCatched = true;
+          return data;
+        }),
+        catchError(() => {
+          this.isLoadingResults = false;
+          this.errorCatched = true;
 
-              return observableOf([]);
-            })
-        )
-        .subscribe(data => {
-          this.resultsLength = data.length;
-          this.matTableDataSource.data = data;
-          this.matTableDataSource.sort = this.matSort;
-          this.widgets = data;
-        });
+          return observableOf([]);
+        })
+      )
+      .subscribe(data => {
+        this.resultsLength = data.length;
+        this.matTableDataSource.data = data;
+        this.matTableDataSource.sort = this.matSort;
+        this.widgets = data;
+      });
 
     // Apply custom sort rules
     this.matTableDataSource.sortingDataAccessor = (widget: Widget, property: string) => {
       switch (property) {
         case 'category':
-          return widget.category.name;
+          return '';
         case 'status':
           return widget.widgetAvailability;
         default:
@@ -200,33 +192,34 @@ export class WidgetListComponent implements OnInit, AfterViewInit, OnDestroy {
     // Filter for widget name input
     if (this.nameInputFilter !== undefined) {
       fromEvent(this.nameInputFilter.nativeElement, 'keyup')
-          .pipe(
-              debounceTime(500),
-              distinctUntilChanged(),
-              map((keyboardEvent: any) => keyboardEvent.target.value)
-          )
-          .subscribe((inputValue: string) => {
-            this.matTableDataSource.filterPredicate = (widget: Widget, filter: string) => {
-              return widget.name.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) !== -1;
-            };
-            this.applyFilter(inputValue);
-          });
+        .pipe(
+          debounceTime(500),
+          distinctUntilChanged(),
+          map((keyboardEvent: any) => keyboardEvent.target.value)
+        )
+        .subscribe((inputValue: string) => {
+          this.matTableDataSource.filterPredicate = (widget: Widget, filter: string) => {
+            return widget.name.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) !== -1;
+          };
+          this.applyFilter(inputValue);
+        });
     }
 
     if (this.categoryInputFilter !== undefined) {
       // Filter for widget category
       fromEvent(this.categoryInputFilter.nativeElement, 'keyup')
-          .pipe(
-              debounceTime(500),
-              distinctUntilChanged(),
-              map((keyboardEvent: any) => keyboardEvent.target.value)
-          )
-          .subscribe((inputValue: string) => {
-            this.matTableDataSource.filterPredicate = (widget: Widget, filter: string) => {
-              return widget.category.name.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) !== -1;
-            };
-            this.applyFilter(inputValue);
-          });
+        .pipe(
+          debounceTime(500),
+          distinctUntilChanged(),
+          map((keyboardEvent: any) => keyboardEvent.target.value)
+        )
+        .subscribe((inputValue: string) => {
+          this.matTableDataSource.filterPredicate = (widget: Widget, filter: string) => {
+            // return widget.category.name.toLocaleLowerCase().indexOf(filter.toLocaleLowerCase()) !== -1;
+            return true;
+          };
+          this.applyFilter(inputValue);
+        });
     }
   }
 
@@ -239,24 +232,8 @@ export class WidgetListComponent implements OnInit, AfterViewInit, OnDestroy {
     this.matTableDataSource.filter = filterValue;
   }
 
-  /**
-   * Get the widget image as SafeHtml
-   *
-   * @param {Asset} imageAsset The asset to display
-   * @returns {SafeHtml} The src html image as SafeHtml
-   */
-  getHtmlImage(imageAsset: Asset): SafeHtml {
-    let imgHtml: string;
-
-    if (!imageAsset) {
-      imgHtml = null;
-    } else {
-      imgHtml = `<img src="data:${imageAsset.contentType};base64,${imageAsset.content}" style="max-width: 100%; height: 105px" />`;
-    }
-
-    return this
-        .domSanitizer
-        .bypassSecurityTrustHtml(imgHtml);
+  getImageSrc(assetToken: string): string {
+    return this.httpAssetService.getContentUrl(assetToken);
   }
 
   /**
@@ -270,15 +247,12 @@ export class WidgetListComponent implements OnInit, AfterViewInit, OnDestroy {
 
     if (widgetToDisable) {
       widgetToDisable.widgetAvailability = changeEvent.checked ? WidgetAvailabilityEnum.ACTIVATED : WidgetAvailabilityEnum.DISABLED;
-      this
-          .widgetService
-          .updateWidget(widgetToDisable)
-          .subscribe((widgetResponse: Widget) => {
-            this.toastService.sendMessage(
-                `The widget "${widgetResponse.name}" has been ${widgetResponse.widgetAvailability.toString()}`,
-                ToastType.SUCCESS
-            );
-          });
+
+      this.httpWidgetService.updateOneById(widgetToDisable.id, {widgetAvailability: widgetToDisable.widgetAvailability}).subscribe(() => {
+        this.toastService.sendMessage(
+          `The widget "${widgetToDisable.name}" has been ${widgetToDisable.widgetAvailability.toString()}`, ToastType.SUCCESS
+        );
+      });
     }
   }
 

@@ -15,11 +15,8 @@
  */
 
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
 
-import {Role} from '../../../shared/model/dto/user/Role';
-import {rolesApiEndpoint} from '../../../app.constant';
+import {Role} from '../../../shared/model/api/role/Role';
 
 /**
  * The role service
@@ -27,35 +24,8 @@ import {rolesApiEndpoint} from '../../../app.constant';
 @Injectable()
 export class RoleService {
 
-  /**
-   * Constructor
-   *
-   * @param {HttpClient} httpClient The Http Client used for doing HTTP request
-   */
-  constructor(private httpClient: HttpClient) {
+  constructor() {
   }
-
-  /* *************************************************************************************** */
-  /*                            HTTP Functions                                               */
-
-  /* *************************************************************************************** */
-
-  /**
-   * Get the list of roles
-   *
-   * @returns {Observable<Role[]>}
-   */
-  getRoles(): Observable<Role[]> {
-    const url = `${rolesApiEndpoint}`;
-
-    return this.httpClient.get<Role[]>(url);
-  }
-
-
-  /* *************************************************************************************** */
-  /*                            Other Help Functions                                         */
-
-  /* *************************************************************************************** */
 
   getRolesNameAsTable(roles: Role[]): string[] {
     const roleNames: string[] = [];
@@ -75,6 +45,6 @@ export class RoleService {
    * @returns {string} The list of roles has string
    */
   getRolesNameAsString(roles: Role[]): string {
-    return roles.map(role => role.name).toString();
+    return roles.map(role => role.name).join(', ');
   }
 }

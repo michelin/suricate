@@ -6,12 +6,10 @@ server.port: 8080
 
 ## Spring modules info ##
 spring:
+  profiles:
+    active: h2,generic
   ### Database ###
   datasource:
-    url: "jdbc:h2:file:./h2/suricate;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE"
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
     continueOnError: true
     type: com.zaxxer.hikari.HikariDataSource
     hikari:
@@ -24,6 +22,7 @@ spring:
   ### Flyway ###
   flyway:
     table: schema_version
+
   ### JPA ###
   jpa:
     ###   DDL   ###
@@ -47,8 +46,6 @@ spring:
     multipart:
       max-file-size: 10Mb
       max-request-size: 10Mb
-  profiles:
-    active: dev
 
 ### Default error page ###
 server.error.whitelabel.enabled: false
@@ -58,7 +55,7 @@ security.oauth2:
   client:
     client-id: suricateAngular
     client-secret: suricateAngularSecret
-  resource.filter-order :  3
+  resource.filter-order:  3
 
 ### Actuator ###
 management:
@@ -84,7 +81,7 @@ logging:
   file: /tmp/suricate-io/suricate/log
   level:
     io.suricate.monitoring: DEBUG
-    net.sf.jmimemagic.MagicParser :  off
+    net.sf.jmimemagic.MagicParser:  off
     org.springframework.boot.actuate: INFO
     org.springframework.security.web.csrf.CsrfFilter: DEBUG
 
@@ -110,7 +107,6 @@ application:
       username:
       password:
       userSearchBase:
-      referral:
     ### JWT Configuration ###
     jwt:
       secret:  ${random.value}
@@ -159,8 +155,9 @@ application:
     contactEmail:
 
 ### proxy ###
-#proxy.host:
-#proxy.port:
+proxy:
+  host: ${SURICATE_PROXY_URL:}
+  port: ${SURICATE_PROXY_PORT:}
 #proxy.noProxyDomains:
 
 

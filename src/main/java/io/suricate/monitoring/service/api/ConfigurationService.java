@@ -17,19 +17,21 @@
 package io.suricate.monitoring.service.api;
 
 import io.suricate.monitoring.configuration.ApplicationProperties;
-import io.suricate.monitoring.model.dto.ApplicationPropertiesDto;
+import io.suricate.monitoring.model.dto.api.ApplicationPropertiesDto;
 import io.suricate.monitoring.model.entity.Configuration;
 import io.suricate.monitoring.model.entity.widget.Category;
 import io.suricate.monitoring.model.entity.widget.WidgetParam;
+import io.suricate.monitoring.model.enums.ConfigurationDataType;
 import io.suricate.monitoring.model.enums.WidgetVariableType;
 import io.suricate.monitoring.repository.ConfigurationRepository;
+import org.jasypt.encryption.StringEncryptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,16 +57,24 @@ public class ConfigurationService {
     private final ApplicationProperties applicationProperties;
 
     /**
+     * The string encryptor
+     */
+    private StringEncryptor stringEncryptor;
+
+    /**
      * Constructor
      *
      * @param configurationRepository Inject the configuration repository
      * @param applicationProperties   The application properties to inject
+     * @param stringEncryptor         The string encryptor
      */
     @Autowired
     public ConfigurationService(final ConfigurationRepository configurationRepository,
-                                final ApplicationProperties applicationProperties) {
+                                final ApplicationProperties applicationProperties,
+                                @Qualifier("jasyptStringEncryptor") final StringEncryptor stringEncryptor) {
         this.configurationRepository = configurationRepository;
         this.applicationProperties = applicationProperties;
+        this.stringEncryptor = stringEncryptor;
     }
 
     /**
@@ -100,7 +110,7 @@ public class ConfigurationService {
      * @return The config updated
      */
     public Configuration updateConfiguration(Configuration configuration, final String newValue) {
-        configuration.setValue(newValue);
+        configuration.setValue(configuration.getDataType() == ConfigurationDataType.PASSWORD ? stringEncryptor.encrypt(newValue) : newValue);
         return configurationRepository.save(configuration);
     }
 
@@ -133,6 +143,7 @@ public class ConfigurationService {
 
     /**
      * FIXME : MVT
+     *
      * @return
      */
     public List<ApplicationPropertiesDto> getServerConfiguration() {
@@ -140,8 +151,14 @@ public class ConfigurationService {
         return null;
     }
 
+    /**
+     * Get the list of configurations for a category
+     *
+     * @param categoryId The category
+     * @return The list of configurations
+     */
     @Transactional
-    public List<Configuration> getConfigurationForCategory(Long categoryId) {
+    public Optional<List<Configuration>> getConfigurationForCategory(Long categoryId) {
         return configurationRepository.findConfigurationByCategoryId(categoryId);
     }
 
@@ -182,6 +199,7 @@ public class ConfigurationService {
 
     /**
      * Convert configuration to widget param
+     *
      * @param configuration Configuration to convert
      * @return widget param newly created
      */
@@ -191,6 +209,7 @@ public class ConfigurationService {
         param.setDefaultValue(configuration.getValue());
         param.setType(WidgetVariableType.valueOf(configuration.getDataType().toString()));
         param.setDescription(configuration.getKey());
+        param.setRequired(true);
         return param;
     }
 }

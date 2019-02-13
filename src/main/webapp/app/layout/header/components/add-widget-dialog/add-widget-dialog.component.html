@@ -1,11 +1,15 @@
-<h1 class="little title"> <app-translate [key]="'widget.add'"></app-translate> </h1>
+<h1 class="little title">
+  <app-translate [key]="'widget.add'"></app-translate>
+</h1>
 
 <mat-dialog-content>
-  <mat-horizontal-stepper #widgetStepper [linear]="true">
+  <mat-horizontal-stepper #widgetStepper class="mat-primary" [linear]="true">
 
     <!-- Step 1 : Select category -->
     <mat-step [completed]="step1Completed">
-      <ng-template matStepLabel> <app-translate [key]="'category.select'"></app-translate></ng-template>
+      <ng-template matStepLabel>
+        <app-translate [key]="'category.select'"></app-translate>
+      </ng-template>
 
       <mat-grid-list cols="3" rowHeight="250px">
         <mat-grid-tile *ngFor="let category of categories">
@@ -13,9 +17,11 @@
             <mat-card-header>
               <mat-card-title> {{category.name}}</mat-card-title>
             </mat-card-header>
-            <img mat-card-image [src]="getImageSrc(category.image)">
+            <img mat-card-image [src]="getImageSrc(category.assetToken)">
             <mat-card-actions>
-              <button mat-button (click)="getWidgets(category.id)"><app-translate [key]="'select'"></app-translate></button>
+              <button mat-button color="primary" (click)="getWidgets(category.id)">
+                <app-translate [key]="'select'"></app-translate>
+              </button>
             </mat-card-actions>
           </mat-card>
         </mat-grid-tile>
@@ -24,7 +30,9 @@
 
     <!-- Step 2 : Select Widget -->
     <mat-step [(completed)]="step2Completed">
-      <ng-template matStepLabel> <app-translate [key]="'widget.select'"></app-translate></ng-template>
+      <ng-template matStepLabel>
+        <app-translate [key]="'widget.select'"></app-translate>
+      </ng-template>
 
       <mat-grid-list cols="3" rowHeight="350px" *ngIf="widgets">
         <mat-grid-tile *ngFor="let widget of widgets">
@@ -32,12 +40,14 @@
             <mat-card-header>
               <mat-card-title> {{widget.name}}</mat-card-title>
             </mat-card-header>
-            <img mat-card-image [src]="getImageSrc(widget.image)">
+            <img mat-card-image [src]="getImageSrc(widget.imageToken)">
             <mat-card-content>
               {{widget.description}}
             </mat-card-content>
             <mat-card-actions>
-              <button mat-button (click)="setSelectedWidget(widget)"><app-translate [key]="'select'"></app-translate></button>
+              <button mat-button color="primary" (click)="setSelectedWidget(widget)">
+                <app-translate [key]="'select'"></app-translate>
+              </button>
             </mat-card-actions>
           </mat-card>
         </mat-grid-tile>
@@ -46,88 +56,90 @@
 
     <!-- Step 3 : Widget Settings -->
     <mat-step>
-      <ng-template matStepLabel> <app-translate [key]="'widget.settings'"></app-translate></ng-template>
+      <ng-template matStepLabel>
+        <app-translate [key]="'widget.settings'"></app-translate>
+      </ng-template>
       <div *ngIf="selectedWidget" class="selected-widget-dialog-card">
         <h1> {{selectedWidget.name}} </h1>
         <div class="container">
           <div class="image-container">
-            <img [src]="getImageSrc(selectedWidget.image)">
+            <img [src]="getImageSrc(selectedWidget.imageToken)">
           </div>
           <div class="description-container">
             {{selectedWidget.description}}
           </div>
         </div>
 
-        <div *ngIf="selectedWidget.info" id="widget-info" [innerHtml]="selectedWidget.info | safeHtml ">
+        <div *ngIf="selectedWidget.info" id="widget-info" [innerHTML]="selectedWidget.info | safeHtml ">
         </div>
 
         <div class="settings-container">
           <form id="formSettings" #formSettings="ngForm" (ngSubmit)="addWidget(formSettings)" novalidate>
-            <div *ngFor="let param of selectedWidget.widgetParams">
-                <!-- Boolean Type -->
-                <mat-checkbox *ngIf="param.type == widgetParamEnum.BOOLEAN"
-                              color="accent"
-                              [name]="param.name"
-                              [required]="param.required"
-                              [ngModel]="param.defaultValue ? param.defaultValue : param.usageExample">
-                  {{param.description}}
-                </mat-checkbox>
+            <div *ngFor="let param of widgetParams">
+              <!-- Boolean Type -->
+              <mat-checkbox *ngIf="param.type == widgetParamEnum.BOOLEAN"
+                            color="primary"
+                            [name]="param.name"
+                            [required]="param.required"
+                            [ngModel]="param.defaultValue ? param.defaultValue : param.usageExample">
+                {{param.description}}
+              </mat-checkbox>
 
-                <!-- INTEGER Type -->
-                <mat-form-field *ngIf="param.type == widgetParamEnum.INTEGER">
-                  <input matInput
-                         type="number"
-                         [name]="param.name"
-                         [required]="param.required"
-                         [placeholder]="param.description"
-                         [ngModel]="param.defaultValue ? param.defaultValue : param.usageExample">
-                </mat-form-field>
+              <!-- INTEGER Type -->
+              <mat-form-field *ngIf="param.type == widgetParamEnum.INTEGER">
+                <input matInput
+                       type="number"
+                       [name]="param.name"
+                       [required]="param.required"
+                       [placeholder]="param.description"
+                       [ngModel]="param.defaultValue ? param.defaultValue : param.usageExample">
+              </mat-form-field>
 
-                <!-- SECRET Type -->
-                <mat-form-field *ngIf="param.type == widgetParamEnum.SECRET">
-                  <input matInput
-                         type="password"
-                         [name]="param.name"
-                         [required]="param.required"
-                         [placeholder]="param.description"
-                         [ngModel]="param.defaultValue ? param.defaultValue : param.usageExample">
-                </mat-form-field>
+              <!-- SECRET Type -->
+              <mat-form-field *ngIf="param.type == widgetParamEnum.SECRET || param.type == widgetParamEnum.PASSWORD">
+                <input matInput
+                       type="password"
+                       [name]="param.name"
+                       [required]="param.required"
+                       [placeholder]="param.description"
+                       [ngModel]="param.defaultValue ? param.defaultValue : param.usageExample">
+              </mat-form-field>
 
-                <!-- STRING Type -->
-                <mat-form-field *ngIf="param.type == widgetParamEnum.STRING">
-                  <input matInput
-                         type="text"
-                         [name]="param.name"
-                         [required]="param.required"
-                         [placeholder]="param.description"
-                         [ngModel]="param.defaultValue ? param.defaultValue : param.usageExample">
-                </mat-form-field>
+              <!-- STRING Type -->
+              <mat-form-field *ngIf="param.type == widgetParamEnum.STRING">
+                <input matInput
+                       type="text"
+                       [name]="param.name"
+                       [required]="param.required"
+                       [placeholder]="param.description"
+                       [ngModel]="param.defaultValue ? param.defaultValue : param.usageExample">
+              </mat-form-field>
 
-                <!-- COMBO Type -->
-                <mat-form-field *ngIf="param.type == widgetParamEnum.COMBO">
-                  <mat-select [required]="param.required"
-                              [placeholder]="param.description"
-                              [name]="param.name"
-                              [ngModel]="param.defaultValue ? param.defaultValue : param.usageExample">
-                    <mat-option *ngFor="let paramValue of param.values" [value]="paramValue.jsKey">
-                      {{ paramValue.value }}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
+              <!-- COMBO Type -->
+              <mat-form-field *ngIf="param.type == widgetParamEnum.COMBO">
+                <mat-select [required]="param.required"
+                            [placeholder]="param.description"
+                            [name]="param.name"
+                            [ngModel]="param.defaultValue ? param.defaultValue : param.usageExample">
+                  <mat-option *ngFor="let paramValue of param.values" [value]="paramValue.jsKey">
+                    {{ paramValue.value }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
 
-                <!-- MULTIPLE Type -->
-                <mat-form-field *ngIf="param.type == widgetParamEnum.MULTIPLE">
-                  <mat-select [required]="param.required"
-                              [placeholder]="param.description"
-                              [name]="param.name"
-                              [ngModel]="param.defaultValue ? param.defaultValue : param.usageExample"
-                              panelClass="widget-param-multiple"
-                              multiple>
-                    <mat-option *ngFor="let paramValue of param.values" [value]="paramValue.jsKey">
-                      {{ paramValue.value }}
-                    </mat-option>
-                  </mat-select>
-                </mat-form-field>
+              <!-- MULTIPLE Type -->
+              <mat-form-field *ngIf="param.type == widgetParamEnum.MULTIPLE">
+                <mat-select [required]="param.required"
+                            [placeholder]="param.description"
+                            [name]="param.name"
+                            [ngModel]="param.defaultValue ? param.defaultValue : param.usageExample"
+                            panelClass="widget-param-multiple"
+                            multiple>
+                  <mat-option *ngFor="let paramValue of param.values" [value]="paramValue.jsKey">
+                    {{ paramValue.value }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
               <!-- FILE Type -->
               <div class="button-wrapper" *ngIf="param.type == widgetParamEnum.FILE">
                 <!-- Used for display file selection window -->
@@ -136,7 +148,8 @@
                         type="button"
                         (click)="file.click()">
                   <mat-icon>attach_file</mat-icon>
-                  <span [class]="'file-selection-sentence-' + param.name"><app-translate [key]="'upload'"></app-translate></span>
+                  <span [class]="'file-selection-sentence-' + param.name"><app-translate
+                      [key]="'upload'"></app-translate></span>
                 </button>
                 <!-- Used for retrieve the file -->
                 <input #file
@@ -149,7 +162,9 @@
               </div>
             </div>
 
-            <button mat-raised-button class="mat-elevation-z4" color="accent" type="submit"><app-translate [key]="'widget.add'"></app-translate></button>
+            <button mat-raised-button class="mat-elevation-z4" color="primary" type="submit">
+              <app-translate [key]="'widget.add'"></app-translate>
+            </button>
           </form>
         </div>
       </div>
@@ -159,5 +174,7 @@
 
 
 <mat-dialog-actions>
-  <button mat-button mat-dialog-close><app-translate [key]="'close'"></app-translate></button>
+  <button mat-button mat-dialog-close>
+    <app-translate [key]="'close'"></app-translate>
+  </button>
 </mat-dialog-actions>

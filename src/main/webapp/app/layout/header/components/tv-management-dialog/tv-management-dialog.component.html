@@ -16,7 +16,7 @@
                    placeholder="Enter the code displayed on the screen"
                    formControlName="screenCode">
           </mat-form-field>
-          <button mat-raised-button color="accent"> Register</button>
+          <button mat-raised-button color="primary"> Register</button>
         </div>
       </div>
     </form>
@@ -24,13 +24,13 @@
     <!-- Registered screen part -->
     <div id="registered-div" fxFlex="100" fxLayout="row wrap" fxLayoutGap="20px">
       <h2 class="little title" fxFlex="100">
-        Currently linked screen - {{ project?.websocketClients?.length }} client(s)
+        Currently linked screen - {{ websocketClients?.length }} client(s)
       </h2>
       <mat-divider fxFlex="100"></mat-divider>
 
       <!-- screen codes -->
       <div id="screen-container" fxFlex="100" fxLayout="col wrap" fxLayoutAlign="start center" fxLayoutGap="30px">
-        <div *ngFor="let websocketClient of project?.websocketClients"
+        <div *ngFor="let websocketClient of websocketClients"
              fxFlex="29"
              fxLayout="row wrap"
              fxLayoutAlign="center center">
@@ -38,7 +38,7 @@
             <mat-icon class="screen-icon">tv</mat-icon>
             <span class="screen-code">code: {{ websocketClient.screenCode }}</span>
           </span>
-          <button fxFlex="75" mat-raised-button color="accent" (click)="disconnectScreen(websocketClient)">DISCONNECT
+          <button fxFlex="75" mat-raised-button color="primary" (click)="disconnectScreen(websocketClient)">DISCONNECT
           </button>
         </div>
       </div>

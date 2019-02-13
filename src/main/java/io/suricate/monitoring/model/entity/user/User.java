@@ -30,6 +30,7 @@ import java.util.List;
  * The user entity in database
  */
 @Entity
+@Table(name = "users")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -41,7 +42,7 @@ public class User extends AbstractEntity<Long> {
      * The user id
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     /**

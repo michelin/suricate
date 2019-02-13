@@ -20,11 +20,13 @@ import {MatSidenav} from '@angular/material';
 import {takeWhile} from 'rxjs/operators';
 
 import {SidenavService} from '../sidenav.service';
-import {User} from '../../../shared/model/dto/user/User';
-import {Project} from '../../../shared/model/dto/Project';
+import {Project} from '../../../shared/model/api/project/Project';
 import {DashboardService} from '../../../modules/dashboard/dashboard.service';
 import {UserService} from '../../../modules/security/user/user.service';
 import {AuthenticationService} from '../../../modules/authentication/authentication.service';
+import {User} from '../../../shared/model/api/user/User';
+import {HttpProjectService} from '../../../shared/services/api/http-project.service';
+import {HttpUserService} from '../../../shared/services/api/http-user.service';
 
 /**
  * Hold the sidenav behavior
@@ -32,7 +34,7 @@ import {AuthenticationService} from '../../../modules/authentication/authenticat
 @Component({
   selector: 'app-sidenav',
   templateUrl: './sidenav.component.html',
-  styleUrls: ['./sidenav.component.css']
+  styleUrls: ['./sidenav.component.scss']
 })
 export class SidenavComponent implements OnInit, AfterViewInit, OnDestroy {
 
@@ -72,13 +74,17 @@ export class SidenavComponent implements OnInit, AfterViewInit, OnDestroy {
    *
    * @param {Router} router The router service
    * @param {ChangeDetectorRef} changeDetectorRef The change detector service
+   * @param {HttpUserService} httpUserService The http user service
    * @param {DashboardService} dashboardService The dashboard service
+   * @param {HttpProjectService} httpProjectService The httpProjectService service
    * @param {UserService} userService The user service
    * @param {AuthenticationService} authenticationService The authentication service
    * @param {SidenavService} sidenavService The sidenav service
    */
   constructor(private router: Router,
               private changeDetectorRef: ChangeDetectorRef,
+              private httpUserService: HttpUserService,
+              private httpProjectService: HttpProjectService,
               private dashboardService: DashboardService,
               private userService: UserService,
               private authenticationService: AuthenticationService,
@@ -89,33 +95,55 @@ export class SidenavComponent implements OnInit, AfterViewInit, OnDestroy {
    * Init objects
    */
   ngOnInit() {
-    this.dashboardService.currentDashboardList$
-        .pipe(takeWhile(() => this.isAlive))
-        .subscribe(projects => this.dashboards = this.dashboardService.sortByProjectName(projects));
+    this.initUserInformations();
+    this.initDashboardsInformations();
+  }
 
-    this.userService.connectedUser$
-        .pipe(takeWhile(() => this.isAlive))
-        .subscribe(connectedUser => this.connectedUser = connectedUser);
+  /**
+   * Init the informations related to the user
+   */
+  initUserInformations() {
+    this.userService.connectedUser$.pipe(
+      takeWhile(() => this.isAlive)
+    ).subscribe(connectedUser => {
+      this.connectedUser = connectedUser;
+    });
 
-    this.userService.getConnectedUser().subscribe();
+    this.httpUserService.getConnectedUser().subscribe(connectedUser => {
+      this.userService.connectedUser = connectedUser;
+    });
+
     this.isUserAdmin = this.userService.isAdmin();
-    this.dashboardService.getAllForCurrentUser().subscribe();
+  }
+
+  /**
+   * Init the dashboards information for the user
+   */
+  initDashboardsInformations() {
+    this.dashboardService.currentDashboardList$.pipe(
+      takeWhile(() => this.isAlive)
+    ).subscribe(projects => {
+      this.dashboards = projects;
+    });
+
+    this.httpProjectService.getAllForCurrentUser().subscribe((projects: Project[]) => {
+      this.dashboardService.currentDashboardListValues = projects;
+    });
   }
 
   /**
    * Called when the view has been init
    */
   ngAfterViewInit() {
-    this.sidenavService
-        .subscribeToSidenavOpenCloseEvent()
-        .pipe(takeWhile(() => this.isAlive))
-        .subscribe((shouldOpen: boolean) => {
-          if (shouldOpen) {
-            this.sidenav.open();
-          } else {
-            this.sidenav.close();
-          }
-        });
+    this.sidenavService.subscribeToSidenavOpenCloseEvent().pipe(
+      takeWhile(() => this.isAlive)
+    ).subscribe((shouldOpen: boolean) => {
+      if (shouldOpen) {
+        this.sidenav.open();
+      } else {
+        this.sidenav.close();
+      }
+    });
   }
 
   /**

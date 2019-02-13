@@ -21,6 +21,8 @@ package io.suricate.monitoring.configuration;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.directory.server.core.ReferralHandlingMode;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -100,49 +102,61 @@ public class ApplicationProperties {
     @Setter
     public static class Ldap {
         /**
-         * LDAP Url
+         * The LDAP URL
          */
         public String url;
-
         /**
-         * User search filter
+         * The filter to search user
          */
         public String userSearchFilter;
-
         /**
-         * LDAP FirstName attribut
+         * Attribute for user group role
+         */
+        public String groupRoleAttribute;
+        /**
+         * The group search base
+         */
+        public String groupSearchBase = StringUtils.EMPTY;
+        /**
+         * Filter to search group
+         */
+        public String groupSearchFilter;
+        /**
+         * Role prefix
+         */
+        public String rolePrefix = "ROLE_";
+        /**
+         * The user search base
+         */
+        public String userSearchBase = StringUtils.EMPTY;
+        /**
+         * The user  Distinguished Name patterns
+         */
+        public String userDnPatterns;
+        /**
+         * The username used to start the connection with the LDAP
+         */
+        public String username = StringUtils.EMPTY;
+        /**
+         * The password used to start the connection with the LDAP
+         */
+        public String password = StringUtils.EMPTY;
+        /**
+         * The LDAP attribute to retrieve the user firstname
          */
         public String firstNameAttributName;
-
         /**
-         * LDAP LastName attribut
+         * The LDAP attribute to retrieve the user lastname
          */
         public String lastNameAttributName;
-
         /**
-         * LDAP mail attribut
+         * The LDAP attribute to retrieve the user mail
          */
         public String mailAttributName;
-
         /**
-         * LDAP user for authentication
+         * The Ldap referral (behavior when the LDAP search executor find a reference to another LDAP server)
          */
-        public String username;
-
-        /**
-         * LDAP password for authentication
-         */
-        public String password;
-
-        /**
-         * LDAP search base
-         */
-        public String userSearchBase;
-
-        /**
-         * LDAP referral mode
-         */
-        public String referral;
+        public String referral = ReferralHandlingMode.IGNORE.getJndiValue();
     }
 
     /**

@@ -20,11 +20,11 @@ import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 
-import {WidgetConfigurationService} from '../widget-configuration.service';
+import {HttpConfigurationService} from '../../../../../../shared/services/api/http-configuration.service';
 import {ToastService} from '../../../../../../shared/components/toast/toast.service';
-import {Configuration} from '../../../../../../shared/model/dto/Configuration';
-import {ConfigurationDataType} from '../../../../../../shared/model/dto/enums/ConfigurationDataType';
-import {ToastType} from '../../../../../../shared/model/toastNotification/ToastType';
+import {Configuration} from '../../../../../../shared/model/api/configuration/Configuration';
+import {ToastType} from '../../../../../../shared/components/toast/toast-objects/ToastType';
+import {ConfigurationDataType} from '../../../../../../shared/model/enums/ConfigurationDataType';
 
 /**
  * Manage the edition of a configuration
@@ -32,7 +32,7 @@ import {ToastType} from '../../../../../../shared/model/toastNotification/ToastT
 @Component({
   selector: 'app-widget-configuration-edit',
   templateUrl: './widget-configuration-edit.component.html',
-  styleUrls: ['./widget-configuration-edit.component.css']
+  styleUrls: ['./widget-configuration-edit.component.scss']
 })
 export class WidgetConfigurationEditComponent implements OnInit {
 
@@ -61,13 +61,13 @@ export class WidgetConfigurationEditComponent implements OnInit {
    * @param {Router} router The router service to inject
    * @param {FormBuilder} formBuilder The form builder
    * @param {ToastService} toastService The toast service
-   * @param {WidgetConfigurationService} configurationService The configuration service
+   * @param {HttpConfigurationService} configurationService The configuration service
    */
   constructor(private activatedRoute: ActivatedRoute,
               private router: Router,
               private formBuilder: FormBuilder,
               private toastService: ToastService,
-              private configurationService: WidgetConfigurationService) {
+              private configurationService: HttpConfigurationService) {
   }
 
   /**
@@ -101,12 +101,10 @@ export class WidgetConfigurationEditComponent implements OnInit {
       const configuration = this.configuration;
       configuration.value = this.configurationForm.get('value').value;
 
-      this.configurationService
-          .updateConfigurationByKey(this.configuration)
-          .subscribe(() => {
-            this.toastService.sendMessage('Configuration updated successfully', ToastType.SUCCESS);
-            this.redirectToWidgetConfigurationList();
-          });
+      this.configurationService.updateConfigurationByKey(configuration.key, this.configuration).subscribe(() => {
+        this.toastService.sendMessage('Configuration updated successfully', ToastType.SUCCESS);
+        this.redirectToWidgetConfigurationList();
+      });
     }
   }
 
@@ -126,5 +124,4 @@ export class WidgetConfigurationEditComponent implements OnInit {
   redirectToWidgetConfigurationList() {
     this.router.navigate(['/widgets/configurations']);
   }
-
 }

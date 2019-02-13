@@ -3,26 +3,30 @@
 <div fxLayout="col wrap" fxLayoutAlign="start start" fxLayoutGap="15px">
 
   <!-- Add Dashboard Card -->
-  <mat-card id="add-dashboard-card" fxFlex="30%">
-    <a (click)="openAddDashboardDialog()">
+  <mat-card id="add-dashboard-card" fxFlex="30%" class="mat-elevation-z4">
+    <a class="mat-card-link" (click)="openAddDashboardDialog()">
       <mat-card-content fxLayout="row wrap" fxLayoutAlign="center center">
-        <mat-icon>add_box</mat-icon>
+        <mat-icon color="primary">add_box</mat-icon>
       </mat-card-content>
     </a>
     <mat-card-actions align="start">
-      <button #addDashboardButton mat-button (click)="openAddDashboardDialog()"><app-translate [key]="'dashboard.add'"></app-translate></button>
+      <button #addDashboardButton mat-button (click)="openAddDashboardDialog()">
+        <app-translate [key]="'dashboard.add'"></app-translate>
+      </button>
     </mat-card-actions>
   </mat-card>
 
   <!-- Other dashboards -->
-  <mat-card *ngFor="let dashboard of dashboards" fxFlex="30%">
-    <a (click)="navigateToDashboard(dashboard.id)">
-      <mat-card-content fxLayout="row wrap" fxLayoutAlign="center center">
+  <mat-card *ngFor="let dashboard of dashboards" fxFlex="30%" class="mat-elevation-z4">
+    <a class="mat-card-link" (click)="navigateToDashboard(dashboard.token)">
+      <img mat-card-image *ngIf="dashboard.screenshotToken" [src]="getContentUrl(dashboard.screenshotToken)"/>
+
+      <mat-card-content *ngIf="!dashboard.screenshotToken" fxLayout="row wrap" fxLayoutAlign="center center">
         <mat-icon>dashboard</mat-icon>
       </mat-card-content>
     </a>
     <mat-card-actions align="start">
-      <button mat-button (click)="navigateToDashboard(dashboard.id)">
+      <button mat-button (click)="navigateToDashboard(dashboard.token)">
         {{ dashboard.name }}
       </button>
     </mat-card-actions>

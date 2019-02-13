@@ -22,6 +22,7 @@ import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.service.api.ProjectWidgetService;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,8 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -81,9 +84,8 @@ public class NashornService {
      * @return The related nashorn request
      */
     public NashornRequest getNashornRequestByProjectWidgetId(final Long projectWidgetId) {
-        ProjectWidget projectWidget = projectWidgetService.getOne(projectWidgetId);
-
-        return createNashornRequestByProjectWidget(projectWidget);
+        Optional<ProjectWidget> projectWidgetOptional = projectWidgetService.getOne(projectWidgetId);
+        return createNashornRequestByProjectWidget(projectWidgetOptional.get());
     }
 
     /**
@@ -93,7 +95,7 @@ public class NashornService {
      * @return The related nashorn request
      */
     private NashornRequest createNashornRequestByProjectWidget(final ProjectWidget projectWidget) {
-        String properties = projectWidget.getBackendConfig();
+        String properties = getProjectWidgetConfigurationsWithGlobalOne(projectWidget, projectWidget.getWidget().getCategory().getConfigurations());
         String script = projectWidget.getWidget().getBackendJs();
         String previousData = projectWidget.getData();
         Long projectId = projectWidget.getProject().getId();
@@ -113,7 +115,7 @@ public class NashornService {
      * @return True is it's ok, false otherwise
      */
     public boolean isNashornRequestExecutable(final NashornRequest nashornRequest) {
-        if(!nashornRequest.isValid()) {
+        if (!nashornRequest.isValid()) {
             LOGGER.debug("Widget content not isValid for widget instance :{}", nashornRequest.getProjectWidgetId());
             return false;
         }
@@ -127,27 +129,29 @@ public class NashornService {
     }
 
     /**
-     * Inject the global configurations into the nashorn request
+     * Get the project widget configurations with the global ones
      *
-     * @param nashornRequest The nashorn request
+     * @param projectWidget  The project widget
      * @param configurations The global configurations
-     * @return The nashorn request updated
+     * @return Get the full configuration for project widget
      */
-    public NashornRequest injectWidgetsConfigurations(NashornRequest nashornRequest, List<Configuration> configurations) {
+    private String getProjectWidgetConfigurationsWithGlobalOne(final ProjectWidget projectWidget, final List<Configuration> configurations) {
+        StringBuilder builder = new StringBuilder(Objects.toString(projectWidget.getBackendConfig(), StringUtils.EMPTY));
 
         if (configurations != null && !configurations.isEmpty()) {
-            StringBuilder builder = new StringBuilder(nashornRequest.getProperties()).append('\n');
-
+            builder.append('\n');
             for (Configuration configuration : configurations) {
-                builder
-                    .append(configuration.getKey())
-                    .append('=')
-                    .append(configuration.getValue())
-                    .append('\n');
+                if (!projectWidget.getBackendConfig().contains(configuration.getKey())) {
+                    builder
+                        .append(configuration.getKey())
+                        .append('=')
+                        .append(configuration.getValue())
+                        .append('\n');
+                }
             }
-            nashornRequest.setProperties(builder.toString());
         }
 
-        return nashornRequest;
+
+        return builder.toString();
     }
 }

@@ -15,38 +15,23 @@
  */
 
 
-import {
-  AfterViewInit,
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  Input,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  QueryList,
-  SimpleChanges,
-  ViewChildren
-} from '@angular/core';
-import {Router} from '@angular/router';
-import {MatDialog} from '@angular/material';
-import {StompState} from '@stomp/ng2-stompjs';
-import {NgGridItemEvent} from 'angular2-grid';
-import {fromEvent, Subscription} from 'rxjs';
-import {auditTime, map, takeWhile} from 'rxjs/operators';
+import {Component, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, Output, SimpleChanges} from '@angular/core';
+import {takeWhile} from 'rxjs/operators';
+import {Subscription} from 'rxjs';
+import {NgGridConfig, NgGridItemConfig} from 'angular2-grid';
+import * as Stomp from '@stomp/stompjs';
 
-import {Project} from '../../../../shared/model/dto/Project';
-import {ProjectWidget} from '../../../../shared/model/dto/ProjectWidget';
-import {DashboardService} from '../../dashboard.service';
+import {Project} from '../../../../shared/model/api/project/Project';
+import {ProjectWidget} from '../../../../shared/model/api/ProjectWidget/ProjectWidget';
 import {WebsocketService} from '../../../../shared/services/websocket.service';
-import {ProjectWidgetPosition} from '../../../../shared/model/dto/ProjectWidgetPosition';
-import {DeleteProjectWidgetDialogComponent} from '../delete-project-widget-dialog/delete-project-widget-dialog.component';
-import {EditProjectWidgetDialogComponent} from '../edit-project-widget-dialog/edit-project-widget-dialog.component';
+import {HttpAssetService} from '../../../../shared/services/api/http-asset.service';
 import {WSUpdateEvent} from '../../../../shared/model/websocket/WSUpdateEvent';
 import {WSUpdateType} from '../../../../shared/model/websocket/enums/WSUpdateType';
-import {WidgetStateEnum} from '../../../../shared/model/dto/enums/WidgetSateEnum';
-
-import * as Stomp from '@stomp/stompjs';
+import {DashboardService} from '../../dashboard.service';
+import {ProjectWidgetPositionRequest} from '../../../../shared/model/api/ProjectWidget/ProjectWidgetPositionRequest';
+import {HttpProjectService} from '../../../../shared/services/api/http-project.service';
+import {RunScriptsDirective} from '../../../../shared/directives/run-scripts.directive';
+import {GridItemUtils} from '../../../../shared/utils/GridItemUtils';
 
 /**
  * Display the grid stack widgets
@@ -54,15 +39,26 @@ import * as Stomp from '@stomp/stompjs';
 @Component({
   selector: 'app-dashboard-screen',
   templateUrl: './dashboard-screen.component.html',
-  styleUrls: ['./dashboard-screen.component.css']
+  styleUrls: ['./dashboard-screen.component.scss']
 })
-export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewInit, OnDestroy {
+export class DashboardScreenComponent implements OnChanges, OnDestroy {
+
+  /**
+   * Tell to subscriptions if the component is alive
+   * When the component is destroyed, the associated subscriptions will be deleted
+   */
+  private isAlive = true;
 
   /**
    * The project to display
    * @type {Project}
    */
   @Input() project: Project;
+  /**
+   * The project widget list
+   * @type {ProjectWidget[]}
+   */
+  @Input() projectWidgets: ProjectWidget[];
   /**
    * Tell if the dashboard should be on readOnly or not
    * @type {boolean}
@@ -73,716 +69,333 @@ export class DashboardScreenComponent implements OnChanges, OnInit, AfterViewIni
    * @type {number}
    */
   @Input() screenCode: number;
-  /**
-   * The list of projectWidgets rendered by the ngFor
-   * @type {QueryList<any>}
-   */
-  @ViewChildren('projectWidgetsRendered') projectWidgetsRendered: QueryList<any>;
 
   /**
-   * Used for keep the subscription of subjects/Obsevables open
-   * @type {boolean} True if we keep the connection, False if we have to unsubscribe
-   * @private
+   * Event for handling the disconnection
+   * @type {EventEmitter<any>}
    */
-  private isAlive = true;
+  @Output() disconnectEvent = new EventEmitter<any>();
 
   /**
-   * Save every web socket subscriptions event
-   * @type {Subscription[]}
-   * @private
+   * Add runScriptsDirective, so we can recall it
    */
-  private websocketSubscriptions: Subscription[] = [];
+  @HostBinding('attr.appRunScripts') appRunScriptDirective = new RunScriptsDirective(this.elementRef);
 
   /**
-   * Hold the delete button subscriptions
+   * The stompJS Subscription for screen event
    */
-  private deleteButtonSubscriptions: any[] = [];
-
-  /**
-   * Hold the edit button subscriptions
-   */
-  private editButtonSubscriptions: any[] = [];
-
-  /**
-   * True if the grid items has been initialized false otherwise
-   * @type {boolean}
-   */
-  _isGridItemInit = false;
-
-  /**
-   * The options for the plugin angular2-grid
-   */
-  gridOptions: {};
-
-  /**
-   * True if the "src" scripts Are Rendered
-   * @type {boolean}
-   */
-  isSrcScriptsRendered = false;
-
-  /**
-   * The current stomp connection state
-   * @type {StompState}
-   */
-  currentStompConnectionState: StompState;
-
-  /**
-   * The stomp state enum
-   * @type {StompState}
-   */
-  stompStateEnum = StompState;
+  screenEventSubscription: Subscription;
 
   /**
    * Tell if we should display the screen code
    * @type {boolean}
    */
-  displayScreenCode = false;
+  shouldDisplayScreenCode = false;
 
   /**
-   * constructor
-   *
-   * @param {DashboardService} dashboardService The dashboard service
-   * @param {MatDialog} matDialog The material dialog service
-   * @param {WebsocketService} websocketService The websocket service
-   * @param {Router} router The router service
-   * @param {ChangeDetectorRef} changeDetectorRef The change detector ref service
+   * The options for the plugin angular2-grid
+   * @type {NgGridConfig}
    */
-  constructor(private dashboardService: DashboardService,
-              private websocketService: WebsocketService,
-              private matDialog: MatDialog,
-              private router: Router,
-              private changeDetectorRef: ChangeDetectorRef) {
+  gridOptions: NgGridConfig = {};
+
+  /**
+   * Grid state when widgets were first loaded
+   */
+  startGridStackItems: NgGridItemConfig[] = [];
+
+  /**
+   * The grid items description
+   * @type {NgGridItemConfig[]}
+   */
+  gridStackItems: NgGridItemConfig[] = [];
+
+  /**
+   * The constructor
+   *
+   * @param websocketService The websocket service
+   * @param httpAssetService The http asset service
+   * @param httpProjectService The http project service
+   * @param dashboardService The dashboard service
+   * @param elementRef The element Ref service
+   */
+  constructor(private websocketService: WebsocketService,
+              private httpAssetService: HttpAssetService,
+              private httpProjectService: HttpProjectService,
+              private dashboardService: DashboardService,
+              private elementRef: ElementRef) {
   }
 
-  /**
-   * Call before ngOnInit and at every changes
-   * @param {SimpleChanges} changes
-   */
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes.project) {
-      this.project = changes.project.currentValue;
+  /**********************************************************************************************************/
+  /*                      COMPONENT LIFE CYCLE                                                              */
 
-      if (changes.project.previousValue && changes.project.previousValue.id !== changes.project.currentValue.id) {
-        this.unsubscribeToDestinations();
-        this.disconnect();
-        this.websocketService.startConnection();
-        this.subscribeToDestinations();
+  /**********************************************************************************************************/
+
+  /**
+   * Each time a value change, this function will be called
+   */
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.project) {
+      if (!changes.project.previousValue) {
+        // We have to inject this variable in the window scope (because some Widgets use it for init the js)
+        window['page_loaded'] = true;
+      }
+
+      this.project = changes.project.currentValue;
+      this.appRunScriptDirective.ngOnInit();
+      this.initGridStackOptions();
+
+      if (changes.project.previousValue) {
+        if (changes.project.previousValue.token !== changes.project.currentValue.token) {
+          this.resetWebsocketSubscriptions();
+        }
+      } else {
+        this.startWebsocketConnection();
+        this.initWebsocketSubscriptions();
       }
     }
-  }
 
-  /**
-   * Init of the component
-   */
-  ngOnInit() {
-    if (!this.screenCode) {
-      this.screenCode = this.websocketService.getscreenCode();
+    if (changes.readOnly) {
+      this.readOnly = changes.readOnly.currentValue;
+      this.initGridStackOptions();
     }
 
-    if (this.project) {
-      this.initGridStackOptions(this.project);
-      this.websocketService.startConnection();
-      this.subscribeToDestinations();
-
-      this.websocketService
-          .stompConnectionState$
-          .pipe(
-              takeWhile(() => this.isAlive),
-              auditTime(10000)
-          )
-          .subscribe((stompState: StompState) => {
-            this.currentStompConnectionState = stompState;
-          });
+    if (changes.projectWidgets) {
+      this.projectWidgets = changes.projectWidgets.currentValue;
+      this.initGridStackItems();
     }
   }
 
   /**
-   * Called when the view has been init
+   * When the component is destroyed (new page)
    */
-  ngAfterViewInit() {
-    if (!this.readOnly) {
-      // Check when the projectWidgets *ngFor is ended
-      this.projectWidgetsRendered
-          .changes
-          .subscribe((projectWidgetElements: QueryList<any>) => {
-            this._isGridItemInit = true;
-            this.bindDeleteProjectWidgetEvent(projectWidgetElements);
-            this.bindEditProjectWidgetEvent(projectWidgetElements);
-          });
-    }
-
-    // We have to inject this variable in the window scope (because some Widgets use it for init the js)
-    window['page_loaded'] = true;
+  ngOnDestroy(): void {
+    this.disconnectFromWebsocket();
   }
 
   /**
-   * Called when the component is getting destroy
+   * Display the screen code
    */
-  ngOnDestroy() {
-    this.unsubscribeToDestinations();
-    this.disconnect();
-    this.isAlive = false;
+  displayScreenCode() {
+    this.shouldDisplayScreenCode = true;
+    setTimeout(() => this.shouldDisplayScreenCode = false, 10000);
   }
 
-  /* ******************************************************* */
-  /*                  Grid Stack Management                  */
+  /**********************************************************************************************************/
+  /*                      GRID STACK MANAGEMENT                                                             */
 
-  /* ******************************************************* */
+  /**********************************************************************************************************/
 
   /**
    * Init the options for Grid Stack plugin
-   *
-   * @param {Project} project The project used for the initialization
    */
-  initGridStackOptions(project: Project) {
+  initGridStackOptions(): void {
     this.gridOptions = {
-      'max_cols': project.maxColumn,
+      'max_cols': this.project.gridProperties.maxColumn,
       'min_cols': 1,
-      'row_height': project.widgetHeight,
+      'row_height': this.project.gridProperties.widgetHeight,
+      'min_rows': 1,
       'margins': [4],
-      'auto_resize': true
+      'auto_resize': true,
+      'draggable': false,
+      'resizable': false
     };
 
-    if (this.readOnly) {
+    if (!this.readOnly) {
       this.gridOptions = {
         ...this.gridOptions,
-        'draggable': false,
-        'resizable': false,
+        'draggable': true,
+        'resizable': true
       };
     }
   }
 
-
-  /* *********  Common (Grid + Widget) CSS Management ******* */
-
   /**
-   * Get the CSS for the grid
-   *
-   * @param {string} css The css
-   * @returns {string} The css as html
+   * Create the list of gridStackItems used to display widgets on the grid
    */
-  getGridCSS(css: string): string {
-    return `
-      <style>
-        .grid {
-          ${css}
-        }
-      </style>
-    `;
+  initGridStackItems(): void {
+    this.gridStackItems = [];
+
+    if (this.projectWidgets) {
+      this.startGridStackItems = this.getGridStackItemsFromProjectWidgets(this.projectWidgets);
+      // Make a copy with a new reference
+      this.gridStackItems = JSON.parse(JSON.stringify(this.startGridStackItems));
+    }
   }
 
   /**
-   * Get the oommon css for each widget
+   * Get the list of GridItemConfigs from project widget
    *
-   * @returns {SafeHtml} AS safe HTML
+   * @param projectWidgets The project widgets
    */
-  getWidgetCommonCSS(): string {
-    return `
-      <style>
-        .grid-stack .icon-background {
-          pointer-events: none;
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          width: 100% !important;
-          height: auto;
-          font-size: 11rem;
-          transform: translate(-50%, -50%);
-          opacity: 0.05;
-        }
-        .grid-stack .widget {
-          text-align: center;
-        }
-        .grid-stack .widget .fullwidget {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-        }
-        .grid-stack .grid-stack-item-content {
-          height: 100%;
-          width: 100%;
-          position: absolute;
-          top: 0;
-          overflow: hidden;
-        }
-        .grid-stack .grid-stack-item-content * {
-          color: #fff;
-        }
-        .grid-stack .grid-stack-item-content .link {
-          display: block;
-          width: 90%;
-          margin: auto;
-          position: relative;
-          top: 5px;
-          height: 91%;
-        }
-        .grid-stack .grid-stack-item-content-inner {
-          max-height: 100%;
-          position: relative;
-          top: 50%;
-          transform: translateY(-50%);
-        }
-        .grid-stack h1,.grid-stack h2,.grid-stack h3,.grid-stack h4,.grid-stack h5,.grid-stack p {
-          padding: 0;
-          margin: 0;
-        }
-        .grid-stack h1 {
-          font-size: 1.4rem;
-          text-transform: uppercase;
-          margin-top: 6px;
-          margin-bottom: 6%;
-        }
-        .grid-stack h2 {
-          font-size: 3.7rem;
-        }
-        .grid-stack p {
-          font-size: 0.8em;
-        }
-        .grid-stack .widget .more-info {
-          color: rgba(255, 255, 255, 0.5);
-          font-size: 0.9rem;
-          position: absolute;
-          bottom: 17px;
-          left: 0;
-          right: 0;
-        }
-        .grid-stack .widget .updated-at {
-          color: rgba(0, 0, 0, 0.3);
-          font-size: 0.9rem;
-          position: absolute;
-          bottom: 0;
-          left: 0;
-          right: 0;
-        }
+  private getGridStackItemsFromProjectWidgets(projectWidgets: ProjectWidget[]) {
+    const gridStackItemsConfig: NgGridItemConfig[] = [];
 
-        ${this.getActionButtonsCss()}
-      </style>
-    `;
+    this.projectWidgets.forEach((projectWidget: ProjectWidget) => {
+      gridStackItemsConfig.push({
+        col: projectWidget.widgetPosition.col,
+        row: projectWidget.widgetPosition.row,
+        sizey: projectWidget.widgetPosition.height,
+        sizex: projectWidget.widgetPosition.width,
+        payload: projectWidget
+      });
+    });
+
+    return gridStackItemsConfig;
   }
 
-  /* ************ JS Management *********************** */
+  /**********************************************************************************************************/
+  /*                      JS MANAGEMENT                                                                     */
+
+  /**********************************************************************************************************/
 
   /**
    * Get the JS libraries from project
    *
-   * @param {string[]} librariesToken The libraries token
    * @returns {string} The src script
    */
-  getJSLibraries(librariesToken: string[]): string {
+  getJSLibraries(): string {
     let scriptUrls = '';
 
-    librariesToken.forEach(token => {
-      scriptUrls = scriptUrls.concat(`<script src="http://localhost:8080/api/asset/${token}"></script>`);
-    });
+    if (this.project.librariesToken) {
+      this.project.librariesToken.forEach(libraryToken => {
+        scriptUrls = scriptUrls.concat(`<script src="${this.httpAssetService.getContentUrl(libraryToken)}"></script>`);
+      });
+    }
 
     return scriptUrls;
   }
 
+  /**********************************************************************************************************/
+  /*                      WEBSOCKET MANAGEMENT                                                              */
+
+  /**********************************************************************************************************/
 
   /**
-   * Set if src scripts are rendered
-   * @param {boolean} isScriptRendered
+   * Start the websocket connection using sockJS
    */
-  setSrcScriptRendered(isScriptRendered: boolean) {
-    this.isSrcScriptsRendered = isScriptRendered;
-  }
-
-  /* ************ Unique Widget HTML and CSS Management ************* */
-
-  /**
-   * Get the html/CSS code for the widget
-   *
-   * @param {ProjectWidget} projectWidget The widget
-   * @returns {SafeHtml} The html as SafeHtml
-   */
-  getHtmlAndCss(projectWidget: ProjectWidget): string {
-    return `
-      <style>
-        ${projectWidget.widget.cssContent}
-        ${projectWidget.customStyle ? projectWidget.customStyle : '' }
-      </style>
-
-      ${this.getWidgetHtml(projectWidget)}
-    `;
+  startWebsocketConnection() {
+    this.websocketService.startConnection();
   }
 
   /**
-   * Get The html for a widget
-   *
-   * @param {ProjectWidget} projectWidget The project widget
-   * @returns {string} The related html
+   * Disconnect from websockets
    */
-  getWidgetHtml(projectWidget: ProjectWidget): string {
-    let widgetHtml = '';
-
-    if (projectWidget.widget.delay > 0 && projectWidget.log) {
-      if (projectWidget.state === WidgetStateEnum.STOPPED) {
-        widgetHtml = widgetHtml.concat(`
-        <div style="position: relative;
-                    background-color: #b41e1ee0;
-                    width: 100%;
-                    z-index: 15;
-                    top: 0;
-                    text-align: center;
-                    font-size: 0.5em;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center">
-          <span>
-            <mat-icon class="material-icons" style="color: #cfd2da !important;">warning</mat-icon>
-          </span>
-          <span style="display: inline-block; color: #cfd2da !important">
-            Widget execution error
-          </span>
-        </div>
-      `);
-      }
-
-      if (projectWidget.state === WidgetStateEnum.WARNING) {
-        widgetHtml = widgetHtml.concat(`
-        <div style="position: relative;
-                    background-color: #e8af00db;
-                    width: 100%;
-                    z-index: 15;
-                    top: 0;
-                    text-align: center;
-                    font-size: 0.5em;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center">
-          <span>
-            <mat-icon class="material-icons" style="color: #cfd2da !important;">warning</mat-icon>
-          </span>
-          <span style="display: inline-block; color: #cfd2da !important">
-            Issue with remote server. Retrying ...
-          </span>
-        </div>
-      `);
-      }
-    }
-
-    widgetHtml = widgetHtml.concat(`
-      ${this.getActionButtonsHtml(projectWidget)}
-      <div class="grid-stack-item-content">
-        ${projectWidget.instantiateHtml}
-      </div>
-    `);
-
-    return widgetHtml;
-  }
-
-  /* *************** Widget Action buttons (CSS, HTML, Bindings) ************** */
-  /**
-   * Get the css for widget action buttons
-   *
-   * @returns {string}
-   */
-  getActionButtonsCss(): string {
-    return `
-      .widget .btn-widget {
-        position: absolute;
-        background-color: rgba(66,66,66,0.6);
-        color: #cfd2da !important;
-        border: none;
-        cursor: pointer;
-        z-index: 20;
-      }
-      .widget .btn-widget .material-icons {
-        font-size: 16px;
-        color: #cfd2da !important;
-      }
-      .widget .btn-widget.btn-widget-delete {
-        right: 0;
-      }
-      .widget .btn-widget.btn-widget-edit {
-        right: 34px;
-      }
-    `;
-  }
-
-  /**
-   * Get the html for the action buttons
-   *
-   * @param {ProjectWidget} projectWidget The project widget
-   * @returns {string} The html string
-   */
-  getActionButtonsHtml(projectWidget: ProjectWidget): string {
-    if (this.readOnly) {
-      return '';
-    }
-
-    return `
-      <button id="delete-${projectWidget.id}"
-              name="delete-${projectWidget.id}"
-              class="btn-widget btn-widget-delete"
-              role="button"
-              data-project-widget-id="${projectWidget.id}"
-              aria-disabled="false">
-        <mat-icon class="material-icons">delete_forever</mat-icon>
-      </button>
-
-      <button id="edit-${projectWidget.id}"
-              name="edit-${projectWidget.id}"
-              class="btn-widget btn-widget-edit"
-              role="button"
-              data-project-widget-id="${projectWidget.id}"
-              aria-disabled="false">
-        <mat-icon class="material-icons">edit</mat-icon>
-      </button>
-    `;
-  }
-
-  /**
-   * Bind delete events for each delete button element
-   *
-   * @param {QueryList<any>} projectWidgetElements The project widget elements
-   */
-  bindDeleteProjectWidgetEvent(projectWidgetElements: QueryList<any>) {
-    projectWidgetElements.forEach((projectWidgetElement: ElementRef) => {
-      const deleteButton: any = projectWidgetElement.nativeElement.querySelector('.btn-widget-delete');
-
-      if (deleteButton) {
-        const projectWidgetNumber: number = deleteButton.getAttribute('data-project-widget-id');
-        this.deleteButtonSubscriptions.push(
-            projectWidgetNumber,
-            fromEvent<MouseEvent>(deleteButton, 'click')
-                .pipe(
-                    takeWhile(() => this.isAlive && this._isGridItemInit),
-                    map((mouseEvent: any) => mouseEvent.target.closest('.widget').querySelector('.btn-widget-delete'))
-                )
-                .subscribe((deleteButtonElement: any) => {
-                  this.deleteProjectWidgetFromDashboard(+deleteButtonElement.getAttribute('data-project-widget-id'));
-                })
-        );
-      }
-    });
-  }
-
-  /**
-   * Bind edit events for each edit button elements
-   *
-   * @param {QueryList<any>} projectWidgetElements The list of elements
-   */
-  bindEditProjectWidgetEvent(projectWidgetElements: QueryList<any>) {
-    projectWidgetElements.forEach((projectWidgetElement: ElementRef) => {
-      const editButton: any = projectWidgetElement.nativeElement.querySelector('.btn-widget-edit');
-
-      if (editButton) {
-        const projectWidgetNumber: number = editButton.getAttribute('data-project-widget-id');
-
-        this.editButtonSubscriptions.push(
-            projectWidgetNumber,
-            fromEvent<MouseEvent>(editButton, 'click')
-                .pipe(
-                    takeWhile(() => this.isAlive && this._isGridItemInit),
-                    map((mouseEvent: any) => mouseEvent.target.closest('.widget').querySelector('.btn-widget-edit'))
-                )
-                .subscribe((editButtonElement: any) => {
-                  this.editProjectWidgetFromDashboard(+editButtonElement.getAttribute('data-project-widget-id'));
-                })
-        );
-      }
-    });
-  }
-
-  /* ******************************************************* */
-  /*                  Websocket Management                   */
-
-  /* ******************************************************* */
-
-  /**
-   * Subscribe to destinations
-   */
-  subscribeToDestinations() {
-    this.websocketSubscriptions.push(
-        this.websocketService
-            .subscribeToDestination(`/user/${this.project.token}-${this.screenCode}/queue/unique`)
-            .pipe(takeWhile(() => this.isAlive))
-            .subscribe((stompMessage: Stomp.Message) => this.handleUniqueScreenEvent(JSON.parse(stompMessage.body)))
-    );
-
-    this.websocketSubscriptions.push(
-        this.websocketService
-            .subscribeToDestination(`/user/${this.project.token}/queue/live`)
-            .pipe(takeWhile(() => this.isAlive))
-            .subscribe((stompMessage: Stomp.Message) => this.handleGlobalScreenEvent(JSON.parse(stompMessage.body)))
-    );
-  }
-
-  /**
-   * Manage the event sent by the server (destination : A specified screen)
-   *
-   * @param {WSUpdateEvent} updateEvent The message received
-   */
-  handleUniqueScreenEvent(updateEvent: WSUpdateEvent) {
-    if (updateEvent.type === WSUpdateType.DISCONNECT) {
-      this.unsubscribeToDestinations();
-      this.websocketService.disconnect();
-      this.router.navigate(['/tv']);
-    }
-  }
-
-  /**
-   * Manage the event sent by the server (destination : Every screen connected to this project)
-   *
-   * @param {WSUpdateEvent} updateEvent The message received
-   */
-  handleGlobalScreenEvent(updateEvent: WSUpdateEvent) {
-    // WIDGET
-    if (updateEvent.type === WSUpdateType.WIDGET) {
-      const projectWidget: ProjectWidget = updateEvent.content;
-      if (projectWidget) {
-        this.dashboardService
-            .updateWidgetHtmlFromProjetWidgetId(projectWidget.id, projectWidget.instantiateHtml, projectWidget.state);
-      }
-    }
-
-    // POSITION & GRID
-    if (updateEvent.type === WSUpdateType.POSITION || updateEvent.type === WSUpdateType.GRID) {
-      const projectUpdated: Project = updateEvent.content;
-      if (projectUpdated) {
-        this._isGridItemInit = false;
-        this.dashboardService.currentDisplayedDashboardValue = projectUpdated;
-      }
-    }
-
-    // RELOAD
-    if (updateEvent.type === WSUpdateType.RELOAD) {
-      location.reload();
-    }
-
-    // DISPLAY SCREEN CODE
-    if (updateEvent.type === WSUpdateType.DISPLAY_NUMBER) {
-      this.displayScreenCode = true;
-      setTimeout(() => this.displayScreenCode = false, 10000);
-    }
-
-    this.changeDetectorRef.detectChanges();
-  }
-
-  unsubscribeToDestinations() {
-    this.websocketSubscriptions.forEach((subscription: Subscription) => {
-      subscription.unsubscribe();
-    });
-  }
-
-  disconnect() {
+  disconnectFromWebsocket() {
+    this.unsubscribeToWebsocket();
     this.websocketService.disconnect();
   }
 
   /**
-   * Sort project widgets should avoid some troubles
-   *
-   * @param {ProjectWidget[]} projectWidgets The list to sort
-   * @returns {ProjectWidget[]} TThe list sorted by row and col
+   * Init the websocket subscriptions
    */
-  sortProjectWidgets(projectWidgets: ProjectWidget[]) {
-    projectWidgets.sort((left, right): number => {
-      if (left.widgetPosition.row < right.widgetPosition.row) {
-        return -1;
+  initWebsocketSubscriptions() {
+    this.isAlive = true;
+    this.websocketProjectEventSubscription();
+    this.websocketScreenEventSubscription();
+  }
+
+  /**
+   * Unsubscribe to every current websocket connections
+   */
+  unsubscribeToWebsocket() {
+    if (this.screenEventSubscription) {
+      this.screenEventSubscription.unsubscribe();
+      this.screenEventSubscription = null;
+    }
+
+    this.isAlive = false;
+  }
+
+  /**
+   * Reset the websocket subscription
+   */
+  resetWebsocketSubscriptions() {
+    this.unsubscribeToWebsocket();
+    this.initWebsocketSubscriptions();
+  }
+
+  /**
+   * Create a websocket subscription for the current project
+   */
+  websocketProjectEventSubscription() {
+    const projectSubscriptionUrl = `/user/${this.project.token}/queue/live`;
+
+    this.websocketService.subscribeToDestination(projectSubscriptionUrl).pipe(
+      takeWhile(() => this.isAlive)
+    ).subscribe((stompMessage: Stomp.Message) => {
+      const updateEvent: WSUpdateEvent = JSON.parse(stompMessage.body);
+
+      if (updateEvent.type === WSUpdateType.RELOAD) {
+        location.reload();
+      } else if (updateEvent.type === WSUpdateType.DISPLAY_NUMBER) {
+        this.displayScreenCode();
+      } else if (updateEvent.type === WSUpdateType.POSITION) {
+        this.dashboardService.refreshProjectWidgets();
+      } else if (updateEvent.type === WSUpdateType.DISCONNECT) {
+        this.disconnectFromWebsocket();
+        this.disconnectEvent.emit();
+      } else {
+        this.dashboardService.refreshProject();
       }
-      if (left.widgetPosition.row > right.widgetPosition.row) {
-        return 1;
+    });
+  }
+
+  /**
+   * Create a websocket subscription for the current screen
+   */
+  websocketScreenEventSubscription() {
+    const screenSubscriptionUrl = `/user/${this.project.token}-${this.screenCode}/queue/unique`;
+
+    this.screenEventSubscription = this.websocketService.subscribeToDestination(screenSubscriptionUrl).pipe(
+      takeWhile(() => this.isAlive)
+    ).subscribe((stompMessage: Stomp.Message) => {
+      const updateEvent: WSUpdateEvent = JSON.parse(stompMessage.body);
+
+      if (updateEvent.type === WSUpdateType.DISCONNECT) {
+        this.disconnectFromWebsocket();
+        this.disconnectEvent.emit();
       }
-      if (left.widgetPosition.row = right.widgetPosition.row) {
-        if (left.widgetPosition.col < right.widgetPosition.col) {
-          return -1;
-        }
-        if (left.widgetPosition.col > right.widgetPosition.col) {
-          return 1;
-        }
-        return 0;
+    });
+  }
+
+  /**
+   * Update the project widget position
+   */
+  updateProjectWidgetsPosition() {
+    if (this.isGridItemsHasMoved()) {
+      console.log(`update positions: ${this.gridStackItems}`);
+
+      const projectWidgetPositionRequests: ProjectWidgetPositionRequest[] = [];
+      this.gridStackItems.forEach(gridStackItem => {
+        projectWidgetPositionRequests.push({
+          projectWidgetId: (gridStackItem.payload as ProjectWidget).id,
+          col: gridStackItem.col,
+          row: gridStackItem.row,
+          height: gridStackItem.sizey,
+          width: gridStackItem.sizex,
+        });
+      });
+
+      this.httpProjectService.updateProjectWidgetPositions(this.project.token, projectWidgetPositionRequests).subscribe();
+    }
+  }
+
+  /**
+   * Checks if the grid elements have been moved
+   */
+  private isGridItemsHasMoved(): boolean {
+    let itemHaveBeenMoved = false;
+
+    this.startGridStackItems.forEach(startGridItem => {
+      const gridItemFound = this.gridStackItems.find(currentGridItem => {
+        return (currentGridItem.payload as ProjectWidget).id === (startGridItem.payload as ProjectWidget).id;
+      });
+
+      if (gridItemFound && GridItemUtils.isItemHaveBeenMoved(startGridItem, gridItemFound)) {
+        itemHaveBeenMoved = true;
       }
     });
 
-    return projectWidgets;
+    return itemHaveBeenMoved;
   }
-
-  /* ******************************************************* */
-  /*                  REST Management                        */
-
-  /* ******************************************************* */
-
-  /**
-   * Delete a project widget from a dashboard
-   *
-   * @param {number} projectWidgetId The project widget id to delete
-   */
-  deleteProjectWidgetFromDashboard(projectWidgetId: number) {
-    const projectWidget: ProjectWidget = this.dashboardService.currentDisplayedDashboardValue.projectWidgets
-        .find((currentProjectWidget: ProjectWidget) => {
-          return currentProjectWidget.id === projectWidgetId;
-        });
-
-    if (projectWidget) {
-      const deleteProjectWidgetDialogRef = this.matDialog.open(DeleteProjectWidgetDialogComponent, {
-        data: {projectWidget: projectWidget}
-      });
-
-      deleteProjectWidgetDialogRef.afterClosed().subscribe(shouldDeleteProjectWidget => {
-        if (shouldDeleteProjectWidget) {
-          this.dashboardService
-              .deleteProjectWidgetFromProject(projectWidget.project.id, projectWidget.id)
-              .subscribe();
-        }
-      });
-    }
-  }
-
-  /**
-   * Edit a project widget from the dashboard
-   *
-   * @param {number} projectWidgetId The project widget id to edit
-   */
-  editProjectWidgetFromDashboard(projectWidgetId: number) {
-    const projectWidget: ProjectWidget = this.dashboardService.currentDisplayedDashboardValue.projectWidgets
-        .find((currentProjectWidget: ProjectWidget) => {
-          return currentProjectWidget.id === projectWidgetId;
-        });
-
-    if (projectWidget) {
-      this.matDialog.open(EditProjectWidgetDialogComponent, {
-        minWidth: 700,
-        data: {projectWidget: projectWidget}
-      });
-    }
-  }
-
-  /**
-   * Update the project widget position for every widgets
-   *
-   * @param {NgGridItemEvent[]} gridItemEvents The list of grid item events
-   */
-  updateProjectWidgetsPosition(gridItemEvents: NgGridItemEvent[]) {
-    const currentProject: Project = this.dashboardService.currentDisplayedDashboardValue;
-
-    // update the position only if the grid item has been init
-    if (this._isGridItemInit) {
-      const projectWidgetPositions: ProjectWidgetPosition[] = [];
-
-      gridItemEvents.forEach(gridItemEvent => {
-        const projectWidgetPosition: ProjectWidgetPosition = {
-          projectWidgetId: gridItemEvent.payload,
-          col: gridItemEvent.col,
-          row: gridItemEvent.row,
-          width: gridItemEvent.sizex,
-          height: gridItemEvent.sizey
-        };
-
-        projectWidgetPositions.push(projectWidgetPosition);
-      });
-
-      this.dashboardService
-          .updateWidgetPositionForProject(currentProject.id, projectWidgetPositions)
-          .subscribe();
-    }
-
-    // We check if the grid item is init, if it's we change the boolean.
-    // Without this the grid item plugin will send request to the server at the initialisation of the component
-    // (probably a bug of the "OnItemChange" event)
-    if (!this._isGridItemInit && gridItemEvents.length === currentProject.projectWidgets.length) {
-      this._isGridItemInit = true;
-    }
-  }
-
 }

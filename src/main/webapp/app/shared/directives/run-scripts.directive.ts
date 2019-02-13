@@ -15,7 +15,7 @@
  */
 
 
-import {Directive, ElementRef, EventEmitter, OnInit, Output} from '@angular/core';
+import {Directive, ElementRef, OnInit} from '@angular/core';
 
 /**
  * Directive used for running script under HTML Views
@@ -26,12 +26,6 @@ import {Directive, ElementRef, EventEmitter, OnInit, Output} from '@angular/core
 export class RunScriptsDirective implements OnInit {
 
   /**
-   * Emit an event when the script rendering for childs are ended
-   * @type {EventEmitter<any>}
-   */
-  @Output() scriptRenderingFinished = new EventEmitter();
-
-  /**
    * The constructor
    *
    * @param {ElementRef} elementRef Represent a reference for an HTML Element
@@ -39,14 +33,8 @@ export class RunScriptsDirective implements OnInit {
   constructor(private elementRef: ElementRef) {
   }
 
-  /**
-   * Execute when the directive is init
-   */
   ngOnInit(): void {
-    setTimeout(() => {
-      // Wait for DOM rendering
-      this.reinsertScripts();
-    }, 0);
+    setTimeout(() => this.reinsertScripts(), 0);
   }
 
   /**
@@ -77,10 +65,5 @@ export class RunScriptsDirective implements OnInit {
       copyScript.async = false;
       script.parentNode.replaceChild(copyScript, script);
     });
-
-    // Wait for DOM rendering
-    setTimeout(() => {
-      this.scriptRenderingFinished.emit(true);
-    }, 500);
   }
 }

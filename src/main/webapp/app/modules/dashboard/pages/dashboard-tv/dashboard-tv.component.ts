@@ -17,20 +17,21 @@
  */
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Observable, of, Subscription} from 'rxjs';
 import {takeWhile} from 'rxjs/operators';
+import {Subscription} from 'rxjs';
+import {ActivatedRoute, Router} from '@angular/router';
+import * as Stomp from '@stomp/stompjs';
 
-import {SidenavService} from '../../../../layout/sidenav/sidenav.service';
-import {WebsocketService} from '../../../../shared/services/websocket.service';
-import {Project} from '../../../../shared/model/dto/Project';
-import {DashboardService} from '../../dashboard.service';
+import {Project} from '../../../../shared/model/api/project/Project';
 import {WSUpdateEvent} from '../../../../shared/model/websocket/WSUpdateEvent';
 import {WSUpdateType} from '../../../../shared/model/websocket/enums/WSUpdateType';
-import {SettingsService} from '../../../../shared/services/settings.service';
+import {SettingsService} from '../../../settings/settings.service';
+import {SidenavService} from '../../../../layout/sidenav/sidenav.service';
+import {HttpProjectService} from '../../../../shared/services/api/http-project.service';
+import {WebsocketService} from '../../../../shared/services/websocket.service';
 import {UserService} from '../../../security/user/user.service';
-
-import * as Stomp from '@stomp/stompjs';
+import {ProjectWidget} from '../../../../shared/model/api/ProjectWidget/ProjectWidget';
+import {DashboardService} from '../../dashboard.service';
 
 /**
  * Dashboard TV Management
@@ -38,7 +39,7 @@ import * as Stomp from '@stomp/stompjs';
 @Component({
   selector: 'app-code-view',
   templateUrl: './dashboard-tv.component.html',
-  styleUrls: ['./dashboard-tv.component.css']
+  styleUrls: ['./dashboard-tv.component.scss']
 })
 export class DashboardTvComponent implements OnInit, OnDestroy {
 
@@ -48,18 +49,18 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * @private
    */
   private isAlive = true;
-  /**
-   * The screen subscription (Code View)
-   * @type {Subscription}
-   * @private
-   */
-  private screenSubscription: Subscription;
 
   /**
-   * The project as observable
-   * @type {Observable<Project>}
+   * The project
+   * @type {Project}
    */
-  project$: Observable<Project>;
+  project: Project;
+
+  /**
+   * The list of project widgets related to the project
+   * @type {ProjectWidget[]}
+   */
+  projectWidgets: ProjectWidget[];
 
   /**
    * The screen code to display
@@ -68,90 +69,58 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   screenCode: number;
 
   /**
+   * The stompJS connection event subscription
+   * @type {Subscription}
+   */
+  connectionEventSubscription: Subscription;
+
+  /**
    * The constructor
    *
-   * @param {SidenavService} sidenavService The sidenav service to inject
-   * @param {DashboardService} dashboardService The dashboard service to inject
-   * @param {WebsocketService} websocketService The websocket service to inject
-   * @param {SettingsService} themeService The theme service
-   * @param {ActivatedRoute} activatedRoute The activated route service
-   * @param {Router} router The router service
-   * @param {SettingsService} settingsService The settings service
-   * @param {UserService} userService The user service
+   * @param settingsService The setting service
+   * @param sidenavService The sidenav service
+   * @param activatedRoute The activated route
+   * @param router The router service
+   * @param httpProjectService The http service for project management
+   * @param websocketService The websocket management
+   * @param userService The user service
+   * @param dashboardService The dashboard service
    */
-  constructor(private sidenavService: SidenavService,
-              private dashboardService: DashboardService,
-              private websocketService: WebsocketService,
-              private themeService: SettingsService,
+  constructor(private settingsService: SettingsService,
+              private sidenavService: SidenavService,
               private activatedRoute: ActivatedRoute,
               private router: Router,
-              private settingsService: SettingsService,
-              private userService: UserService) {
+              private httpProjectService: HttpProjectService,
+              private websocketService: WebsocketService,
+              private userService: UserService,
+              private dashboardService: DashboardService) {
   }
+
+  /**********************************************************************************************************/
+  /*                      COMPONENT LIFE CYCLE                                                              */
+
+  /**********************************************************************************************************/
 
   /**
    * Init of the component
    */
   ngOnInit() {
-    setTimeout(() => this.themeService.currentTheme = 'dark-theme', 0);
-    this.sidenavService.closeSidenav();
+    this.initDefaultScreenSettings();
     this.screenCode = this.websocketService.getscreenCode();
+    this.listenForConnection();
+    this.retrieveProjectTokenFromURL();
 
-    this.dashboardService.currentDisplayedDashboard$
-        .pipe(takeWhile(() => this.isAlive))
-        .subscribe(project => this.project$ = of(project));
-
-    this.activatedRoute.queryParams.subscribe(params => {
-      if (params['token']) {
-        this.dashboardService.getOneByToken(params['token']).subscribe(project => {
-          this.dashboardService.currentDisplayedDashboardValue = project;
-        });
-
-      } else {
-        this.dashboardService.currentDisplayedDashboardValue = null;
-        this.listenForConnection();
+    this.dashboardService.refreshProjectEvent().subscribe(shouldRefresh => {
+      if (shouldRefresh) {
+        this.refreshProject(this.project.token);
       }
     });
-  }
 
-  /**
-   * When on code view screen we wait for new connection
-   */
-  listenForConnection() {
-    this.websocketService.startConnection();
-    this.screenSubscription = this
-        .websocketService
-        .subscribeToDestination(`/user/${this.screenCode}/queue/connect`)
-        .pipe(takeWhile(() => this.isAlive))
-        .subscribe((stompMessage: Stomp.Message) => {
-          this.handleConnectEvent(JSON.parse(stompMessage.body));
-        });
-  }
-
-  /**
-   * Handle the connection event
-   *
-   * @param {WSUpdateEvent} updateEvent Update event
-   */
-  handleConnectEvent(updateEvent: WSUpdateEvent) {
-    if (updateEvent.type === WSUpdateType.CONNECT) {
-      const project: Project = updateEvent.content;
-
-      if (project) {
-        this.unsubscribeListening();
-        this.websocketService.disconnect();
-        this.router.navigate(['/tv'], {queryParams: {token: project.token}});
+    this.dashboardService.refreshProjectWidgetsEvent().subscribe(shouldRefresh => {
+      if (shouldRefresh) {
+        this.refreshProjectWidgets(this.project.token);
       }
-    }
-  }
-
-  /**
-   * Unsubscribe to the listening event
-   */
-  unsubscribeListening() {
-    if (this.screenSubscription) {
-      this.screenSubscription.unsubscribe();
-    }
+    });
   }
 
   /**
@@ -159,10 +128,101 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    */
   ngOnDestroy() {
     this.settingsService.initUserThemeSetting(this.userService.connectedUser);
-    this.isAlive = false;
     this.sidenavService.openSidenav();
+    this.isAlive = false;
+    this.disconnectTV();
+  }
 
-    this.unsubscribeListening();
+  /**
+   * Init the settings to be in TV Mode
+   */
+  initDefaultScreenSettings() {
+    setTimeout(() => this.settingsService.currentTheme = 'dark-theme', 500);
+    this.sidenavService.closeSidenav();
+  }
+
+  /**
+   * Get the project informations from the url query params
+   */
+  retrieveProjectTokenFromURL() {
+    this.activatedRoute.queryParams.subscribe(params => {
+      if (params['token']) {
+        this.refreshProject(params['token']);
+
+      } else {
+        this.project = null;
+      }
+    });
+  }
+
+  /**
+   * Refresh the project widget list
+   */
+  refreshProjectWidgets(dashboardToken: string): void {
+    this.httpProjectService.getProjectProjectWidgets(dashboardToken).subscribe(projectWidgets => {
+      this.projectWidgets = projectWidgets;
+    });
+  }
+
+  /**
+   * Refresh the project widget list
+   */
+  refreshProject(projectToken: string): void {
+    this.httpProjectService.getOneByToken(projectToken).subscribe(project => {
+      this.project = project;
+      this.refreshProjectWidgets(projectToken);
+    });
+  }
+
+  /**********************************************************************************************************/
+  /*                      WEBSOCKET MANAGEMENT                                                              */
+
+  /**********************************************************************************************************/
+
+  /**
+   * When on code view screen we wait for new connection
+   */
+  listenForConnection() {
+    this.isAlive = true;
+    this.websocketService.startConnection();
+
+    const waitingConnectionUrl = `/user/${this.screenCode}/queue/connect`;
+    this.connectionEventSubscription = this.websocketService.subscribeToDestination(waitingConnectionUrl).pipe(
+      takeWhile(() => this.isAlive)
+    ).subscribe((stompMessage: Stomp.Message) => {
+      const updateEvent: WSUpdateEvent = JSON.parse(stompMessage.body);
+
+      if (updateEvent.type === WSUpdateType.CONNECT) {
+        const project: Project = updateEvent.content;
+        if (project) {
+          this.router.navigate(['/tv'], {queryParams: {token: project.token}});
+        }
+      }
+    });
+  }
+
+  unsubscribeToConnectionEvent() {
+    if (this.connectionEventSubscription) {
+      this.connectionEventSubscription.unsubscribe();
+      this.connectionEventSubscription = null;
+    }
+
+    this.isAlive = false;
+  }
+
+  /**
+   * Disconnect TV from stompJS
+   */
+  disconnectTV() {
+    this.unsubscribeToConnectionEvent();
     this.websocketService.disconnect();
+  }
+
+  /**
+   * Handle the disconnection of a dashboard
+   */
+  handlingDashboardDisconnect() {
+    this.router.navigate(['/tv']);
+    setTimeout(() => this.listenForConnection(), 500);
   }
 }

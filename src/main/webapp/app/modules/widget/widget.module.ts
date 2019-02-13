@@ -21,8 +21,6 @@ import {CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
 
 import {SharedModule} from '../../shared/shared.module';
-
-import {WidgetService} from './widget.service';
 import {WidgetListComponent} from './pages/widget-list/widget-list.component';
 import {LayoutModule} from '../../layout/layout.module';
 import {widgetRoutes} from './widget.route';
@@ -38,9 +36,6 @@ import {RepositoryModule} from './pages/admin/repository/repository.module';
   ],
   declarations: [
     WidgetListComponent
-  ],
-  providers: [
-    WidgetService
   ]
 })
 export class WidgetModule {

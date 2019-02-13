@@ -25,6 +25,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import org.springframework.web.socket.messaging.SessionSubscribeEvent;
+import org.springframework.web.socket.messaging.SessionUnsubscribeEvent;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -70,7 +71,7 @@ public class WebSocketEventEndpointsConfiguration {
      * @param event The subscription event
      */
     @EventListener
-    protected void onSessionSubscribe(SessionSubscribeEvent event) {
+    public void onSessionSubscribe(SessionSubscribeEvent event) {
         StompHeaderAccessor stompHeaderAccessor = StompHeaderAccessor.wrap(event.getMessage());
         String simpDestination = (String) stompHeaderAccessor.getHeader("simpDestination");
 
@@ -78,8 +79,13 @@ public class WebSocketEventEndpointsConfiguration {
             Pattern pattern = Pattern.compile("/user/([A-Z0-9]+)-([0-9]+)/queue/unique");
             Matcher matcher = pattern.matcher(simpDestination);
 
-            if (matcher.find()){
-                WebsocketClient websocketClient = new WebsocketClient(matcher.group(PROJECT_TOKEN_REGEX_GROUP), stompHeaderAccessor.getSessionId(), matcher.group(SCREEN_CODE_REGEX_GROUP));
+            if (matcher.find()) {
+                WebsocketClient websocketClient = new WebsocketClient(
+                    matcher.group(PROJECT_TOKEN_REGEX_GROUP),
+                    stompHeaderAccessor.getSessionId(),
+                    stompHeaderAccessor.getSubscriptionId(),
+                    matcher.group(SCREEN_CODE_REGEX_GROUP)
+                );
                 LOGGER.debug("New Client {} with id {} for project {}", websocketClient.getSessionId(), websocketClient.getScreenCode(), websocketClient.getProjectToken());
 
                 dashboardWebSocketService.addProjectClient(websocketClient.getProjectToken(), websocketClient);
@@ -89,14 +95,30 @@ public class WebSocketEventEndpointsConfiguration {
     }
 
     /**
-     * Handle the disconnect event of a websocket client
+     * Entry point when a client unsubscribe to the web sockets
+     *
+     * @param event The unsubscribe event
+     */
+    @EventListener
+    public void onSessionUnsubscribe(SessionUnsubscribeEvent event) {
+        StompHeaderAccessor stompHeaderAccessor = StompHeaderAccessor.wrap(event.getMessage());
+        WebsocketClient websocketClient = dashboardWebSocketService.removeSessionClientByWebsocketSessionIdAndSubscriptionId(stompHeaderAccessor.getSessionId(), stompHeaderAccessor.getSubscriptionId());
+
+        if (websocketClient != null) {
+            LOGGER.debug("Disconnected Client {} with id {} for project {}", websocketClient.getSessionId(), websocketClient.getScreenCode(), websocketClient.getProjectToken());
+            dashboardWebSocketService.removeProjectClient(websocketClient.getProjectToken(), websocketClient);
+        }
+    }
+
+    /**
+     * Entry point when a client disconnect to the web sockets
      *
      * @param event The disconnect event
      */
     @EventListener
-    protected void onSessionDisconnectEvent(SessionDisconnectEvent event) {
+    public void onSessionDisconnect(SessionDisconnectEvent event) {
         StompHeaderAccessor stompHeaderAccessor = StompHeaderAccessor.wrap(event.getMessage());
-        WebsocketClient websocketClient = dashboardWebSocketService.removeSessionClient(stompHeaderAccessor.getSessionId());
+        WebsocketClient websocketClient = dashboardWebSocketService.removeSessionClientByWebsocketSessionId(stompHeaderAccessor.getSessionId());
 
         if (websocketClient != null) {
             LOGGER.debug("Disconnected Client {} with id {} for project {}", websocketClient.getSessionId(), websocketClient.getScreenCode(), websocketClient.getProjectToken());

@@ -1,8 +1,7 @@
 package io.suricate.monitoring.utils;
 
-import io.suricate.monitoring.model.entity.Asset;
-import io.suricate.monitoring.model.entity.widget.Category;
 import io.suricate.monitoring.model.entity.Library;
+import io.suricate.monitoring.model.entity.widget.Category;
 import io.suricate.monitoring.model.entity.widget.Widget;
 import org.junit.Test;
 
@@ -118,21 +117,5 @@ public class WidgetUtilsTest {
         assertThat(new String(list.get(0).getAsset().getContent())).isEqualTo("d32");
         assertThat(list.get(1).getTechnicalName()).isEqualTo("test.js");
         assertThat(new String(list.get(1).getAsset().getContent())).isEqualTo("ok");
-    }
-
-    @Test
-    public void testReadAsset() throws Exception {
-        Asset asset = WidgetUtils.readAsset(new File(FilesUtilsTest.class.getResource("/Libraries/d3.min.js").getFile()));
-        assertThat(asset).isNotNull();
-        assertThat(asset.getContentType()).isEqualTo("application/javascript");
-        assertThat(asset.getSize()).isEqualTo(3);
-    }
-
-    @Test
-    public void testReadImageAsset() throws Exception {
-        Asset asset = WidgetUtils.readAsset(new File(FilesUtilsTest.class.getResource("/widgets/jira/icon.jpeg").getFile()));
-        assertThat(asset).isNotNull();
-        assertThat(asset.getContentType()).isEqualTo("image/jpeg");
-        assertThat(asset.getSize()).isEqualTo(39201);
     }
 }

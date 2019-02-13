@@ -55,7 +55,7 @@ public class LibraryService {
      * The constructor
      *
      * @param libraryRepository Inject the library repository
-     * @param assetService Inject the asset service
+     * @param assetService      Inject the asset service
      */
     @Autowired
     public LibraryService(final LibraryRepository libraryRepository, final AssetService assetService) {
@@ -65,13 +65,14 @@ public class LibraryService {
 
     /**
      * Method used to get all library for the displayed widget
+     *
      * @param projectWidgets The list of project widget
      * @return The list of related libraries
      */
     @LogExecutionTime
-    public List<String> getLibraries(List<ProjectWidget> projectWidgets) {
-        List<Long> widgetList = projectWidgets.stream().map( projectWidget -> projectWidget.getWidget().getId()).distinct().collect(Collectors.toList());
-        if (widgetList.isEmpty()){
+    public List<String> getLibrariesToken(List<ProjectWidget> projectWidgets) {
+        List<Long> widgetList = projectWidgets.stream().map(projectWidget -> projectWidget.getWidget().getId()).distinct().collect(Collectors.toList());
+        if (widgetList.isEmpty()) {
             return null;
         }
         List<Long> ids = libraryRepository.getLibs(widgetList);
@@ -81,6 +82,7 @@ public class LibraryService {
 
     /**
      * Method used to update library in database
+     *
      * @param list all library to add
      * @return the list of library available in database
      */
@@ -91,7 +93,7 @@ public class LibraryService {
         }
         for (Library library : list) {
             Library lib = libraryRepository.findByTechnicalName(library.getTechnicalName());
-            if (library.getAsset() != null){
+            if (library.getAsset() != null) {
                 if (lib != null && lib.getAsset() != null) {
                     library.getAsset().setId(lib.getAsset().getId());
                 }

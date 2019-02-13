@@ -19,7 +19,6 @@ import {CommonModule} from '@angular/common';
 import {RouterModule} from '@angular/router';
 
 import {SharedModule} from '../shared/shared.module';
-
 import {HomeComponent} from './home.component';
 import {AddDashboardDialogComponent} from './components/add-dashboard-dialog/add-dashboard-dialog.component';
 import {LayoutModule} from '../layout/layout.module';
