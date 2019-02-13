@@ -1,0 +1,23 @@
+<div [formGroup]="form">
+
+  <!-- The global mat-form-field -->
+  <mat-form-field>
+
+    <!------------------------------------------------------------------------------------------------------->
+    <!---                        FORM FIELDS                                                              --->
+    <!------------------------------------------------------------------------------------------------------->
+    <app-simple-input *ngIf="[dataType.NUMBER, dataType.TEXT, dataType.PASSWORD].includes(field.type)">
+    </app-simple-input>
+
+    <!------------------------------------------------------------------------------------------------------->
+    <!---                        FIELDS ERROR MANAGEMENT                                                  --->
+    <!------------------------------------------------------------------------------------------------------->
+    <span *ngIf="getFormControl().dirty">
+      <!-- Error message : Required -->
+      <mat-error *ngIf="getFormControl()['errors']?.required">
+        <app-translate [key]="'field.required'"></app-translate>
+      </mat-error>
+    </span>
+
+  </mat-form-field>
+</div>

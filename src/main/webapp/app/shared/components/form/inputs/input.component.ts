@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {FormGroup, Validators} from '@angular/forms';
+import {DataType} from '../../../model/enums/DataType';
 
 /**
  * Manage the instantiation of different form inputs
@@ -40,6 +41,11 @@ export class InputComponent {
    */
   @Output()
   valueChangeEvent = new EventEmitter<any>();
+
+  /**
+   * The data type enum
+   */
+  dataType = DataType;
 
   constructor() {
   }

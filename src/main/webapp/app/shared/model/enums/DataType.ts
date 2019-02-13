@@ -20,9 +20,11 @@
  * Hold the data type for a configuration
  */
 export enum DataType {
+  // Simple data types
   NUMBER = 'NUMBER',
   TEXT = 'TEXT',
   PASSWORD = 'PASSWORD',
+  // Complex data types
   BOOLEAN = 'BOOLEAN',
   SELECT = 'SELECT',
   MULTIPLE = 'MULTIPLE',

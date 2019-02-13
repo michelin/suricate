@@ -55,8 +55,8 @@ import {HttpWidgetService} from './services/api/http-widget.service';
 import {HttpProjectWidgetService} from './services/api/http-project-widget.service';
 import {HttpSettingService} from './services/api/http-setting.service';
 import {CommunicationDialogComponent} from './components/communication-dialog/communication-dialog.component';
-import {InputComponent} from './components/form/input/input.component';
-import {InputDefaultComponent} from './components/form/input/input-default/input-default.component';
+import {InputComponent} from './components/form/inputs/input.component';
+import {SimpleInputComponent} from './components/form/inputs/simple-input/simple-input.component';
 
 @NgModule({
   imports: [
@@ -84,7 +84,7 @@ import {InputDefaultComponent} from './components/form/input/input-default/input
     ConfirmDialogComponent,
     CommunicationDialogComponent,
     InputComponent,
-    InputDefaultComponent
+    SimpleInputComponent
   ],
   exports: [
     FormsModule,
@@ -108,7 +108,7 @@ import {InputDefaultComponent} from './components/form/input/input-default/input
     ConfirmDialogComponent,
     CommunicationDialogComponent,
     InputComponent,
-    InputDefaultComponent
+    SimpleInputComponent
   ],
   entryComponents: [
     ConfirmDialogComponent,
