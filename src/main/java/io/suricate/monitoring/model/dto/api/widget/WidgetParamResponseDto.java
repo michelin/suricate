@@ -17,7 +17,7 @@
 package io.suricate.monitoring.model.dto.api.widget;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
-import io.suricate.monitoring.model.enums.WidgetVariableType;
+import io.suricate.monitoring.model.enums.DataType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -54,10 +54,10 @@ public class WidgetParamResponseDto extends AbstractDto {
     private String defaultValue;
 
     /**
-     * The param type {@link WidgetVariableType}
+     * The param type {@link DataType}
      */
     @ApiModelProperty(value = "The type of this param define the HTML element to display", required = true)
-    private WidgetVariableType type;
+    private DataType type;
 
     /**
      * The regex used for accept a file while uploading it if the type is a FILE

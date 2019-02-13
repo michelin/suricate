@@ -3,8 +3,13 @@ package io.suricate.monitoring.model.enums;
 /**
  * Hold the data types for a configuration
  */
-public enum ConfigurationDataType {
+public enum DataType {
     INTEGER,
     STRING,
-    PASSWORD
+    PASSWORD,
+    BOOLEAN,
+    SELECT,
+    MULTIPLE,
+    COMBO,
+    FILE
 }

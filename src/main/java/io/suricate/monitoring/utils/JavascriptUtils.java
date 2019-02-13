@@ -17,7 +17,7 @@
 package io.suricate.monitoring.utils;
 
 import io.suricate.monitoring.model.dto.nashorn.WidgetVariableResponse;
-import io.suricate.monitoring.model.enums.WidgetVariableType;
+import io.suricate.monitoring.model.enums.DataType;
 import io.suricate.monitoring.service.nashorn.script.Methods;
 import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -62,13 +62,13 @@ public final class JavascriptUtils {
     /**
      * String to inject in script
      */
-    private static  final String INJECT_STRING = "Packages."+ Methods.class.getName()+".checkInterupted();";
+    private static final String INJECT_STRING = "Packages." + Methods.class.getName() + ".checkInterupted();";
 
     private static final int VARIABLE_NAME_INDEX = 0;
     private static final int VARIABLE_TITLE_INDEX = VARIABLE_NAME_INDEX + 1;
     private static final int VARIABLE_TYPE_INDEX = VARIABLE_TITLE_INDEX + 1;
     private static final int VARIABLE_DATA_INDEX = VARIABLE_TYPE_INDEX + 1;
-    private static final int VARIABLE_OPTIONAL_INDEX = VARIABLE_DATA_INDEX +1;
+    private static final int VARIABLE_OPTIONAL_INDEX = VARIABLE_DATA_INDEX + 1;
 
     /**
      * The length of the array for a key:value
@@ -77,39 +77,42 @@ public final class JavascriptUtils {
 
     /**
      * Method used to inject interruption in loop for javascript code
+     *
      * @param data javascript code
      * @return the javascript code with interruption on it
      */
-    public static String injectInterrupt(String data){
-        return StringUtils.trimToEmpty(data).replaceAll(REGEX_LOOP,"){"+INJECT_STRING);
+    public static String injectInterrupt(String data) {
+        return StringUtils.trimToEmpty(data).replaceAll(REGEX_LOOP, "){" + INJECT_STRING);
     }
 
     /**
      * Method used to prepare nashorn script and update path
+     *
      * @param data javascript script
      * @return the script with all class path updated
      */
-    public static String prepare(String data){
-        return injectInterrupt(StringUtils.trimToEmpty(data).replace("Packages.","Packages."+Methods.class.getName()+"."));
+    public static String prepare(String data) {
+        return injectInterrupt(StringUtils.trimToEmpty(data).replace("Packages.", "Packages." + Methods.class.getName() + "."));
     }
 
 
     /**
      * Method used to extract variable from javascript. Some documentation can be added to the variable like:
      * # SURI_JENKINS_TOKEN::Jenkins token used to authenticate user::STRING
+     *
      * @param javascript string content representing javascript
      * @return list of object containing (variable name, description and type)
      */
-    public static List<WidgetVariableResponse> extractVariables(String javascript){
+    public static List<WidgetVariableResponse> extractVariables(String javascript) {
         List<WidgetVariableResponse> ret = new ArrayList<>();
 
-        if (StringUtils.isBlank(javascript)){
+        if (StringUtils.isBlank(javascript)) {
             return ret;
         }
 
-        Map<String,WidgetVariableResponse> map = new LinkedHashMap<>();
+        Map<String, WidgetVariableResponse> map = new LinkedHashMap<>();
         Matcher matcher = REGEX_VARIABLE_DOCUMENTED.matcher(javascript);
-        while (matcher.find()){
+        while (matcher.find()) {
             WidgetVariableResponse widgetVariableResponse = new WidgetVariableResponse();
             String data = matcher.group(1);
             if (StringUtils.isNotEmpty(data)) {
@@ -119,8 +122,8 @@ public final class JavascriptUtils {
                 widgetVariableResponse.setRequired(true);
             }
             if (!INTERNAL_PREVIOUS_VARIABLE.equals(widgetVariableResponse.getName())
-                    && !INSTANCE_ID_VARIABLE.equals(widgetVariableResponse.getName())
-                    && (!map.containsKey(widgetVariableResponse.getName()) || StringUtils.isNotBlank(widgetVariableResponse.getDescription()))) {
+                && !INSTANCE_ID_VARIABLE.equals(widgetVariableResponse.getName())
+                && (!map.containsKey(widgetVariableResponse.getName()) || StringUtils.isNotBlank(widgetVariableResponse.getDescription()))) {
                 map.put(widgetVariableResponse.getName(), widgetVariableResponse);
             }
         }
@@ -130,16 +133,17 @@ public final class JavascriptUtils {
 
     /**
      * Method used to extract documented variable from script file
+     *
      * @param widgetVariableResponse variable read
-     * @param data the line read
+     * @param data                   the line read
      */
     private static void extractDocumentedVariable(WidgetVariableResponse widgetVariableResponse, String data) {
         String[] array = data.split("\\:\\:");
         widgetVariableResponse.setName(array[VARIABLE_NAME_INDEX]);
         widgetVariableResponse.setDescription(array[VARIABLE_TITLE_INDEX]);
-        widgetVariableResponse.setType(EnumUtils.getEnum(WidgetVariableType.class, array[VARIABLE_TYPE_INDEX].toUpperCase()));
+        widgetVariableResponse.setType(EnumUtils.getEnum(DataType.class, array[VARIABLE_TYPE_INDEX].toUpperCase()));
         if (array.length > VARIABLE_DATA_INDEX && widgetVariableResponse.getType() != null) {
-            switch (widgetVariableResponse.getType()){
+            switch (widgetVariableResponse.getType()) {
                 case COMBO:
                     widgetVariableResponse.setValues(parseKeyValue(StringUtils.trimToNull(array[VARIABLE_DATA_INDEX])));
                     break;
@@ -165,10 +169,11 @@ public final class JavascriptUtils {
 
     /**
      * Method used to parse key value from string
+     *
      * @param content the key value as string (KEY:VALUE,KEY:VALUE, ....)
      * @return a map with key values
      */
-    public static Map<String,String> parseKeyValue(String content){
+    public static Map<String, String> parseKeyValue(String content) {
         Map<String, String> ret = null;
         if (StringUtils.isNotBlank(content)) {
             ret = new HashMap<>();
@@ -179,16 +184,17 @@ public final class JavascriptUtils {
                 }
             }
         }
-        return  ret;
+        return ret;
     }
 
     /**
      * Method used to extract global variable from String.<br/>
      * Global variable mus follow the REGEX ( WIDGET_CONFIG_[A-Z0-9_]+
+     *
      * @param content the content to parse
      * @return the list of global variables extracted
      */
-    public static List<String> extractGlobalVariable(String content){
+    public static List<String> extractGlobalVariable(String content) {
         List<String> ret = null;
         if (StringUtils.isNotBlank(content)) {
             ret = new ArrayList<>();

@@ -21,8 +21,7 @@ import io.suricate.monitoring.model.dto.api.ApplicationPropertiesDto;
 import io.suricate.monitoring.model.entity.Configuration;
 import io.suricate.monitoring.model.entity.widget.Category;
 import io.suricate.monitoring.model.entity.widget.WidgetParam;
-import io.suricate.monitoring.model.enums.ConfigurationDataType;
-import io.suricate.monitoring.model.enums.WidgetVariableType;
+import io.suricate.monitoring.model.enums.DataType;
 import io.suricate.monitoring.repository.ConfigurationRepository;
 import org.jasypt.encryption.StringEncryptor;
 import org.slf4j.Logger;
@@ -110,7 +109,7 @@ public class ConfigurationService {
      * @return The config updated
      */
     public Configuration updateConfiguration(Configuration configuration, final String newValue) {
-        configuration.setValue(configuration.getDataType() == ConfigurationDataType.PASSWORD ? stringEncryptor.encrypt(newValue) : newValue);
+        configuration.setValue(configuration.getDataType() == DataType.PASSWORD ? stringEncryptor.encrypt(newValue) : newValue);
         return configurationRepository.save(configuration);
     }
 
@@ -207,7 +206,7 @@ public class ConfigurationService {
         WidgetParam param = new WidgetParam();
         param.setName(configuration.getKey());
         param.setDefaultValue(configuration.getValue());
-        param.setType(WidgetVariableType.valueOf(configuration.getDataType().toString()));
+        param.setType(configuration.getDataType());
         param.setDescription(configuration.getKey());
         param.setRequired(true);
         return param;

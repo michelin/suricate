@@ -18,7 +18,7 @@ package io.suricate.monitoring.model.dto.api.configuration;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
 import io.suricate.monitoring.model.dto.api.widget.CategoryResponseDto;
-import io.suricate.monitoring.model.enums.ConfigurationDataType;
+import io.suricate.monitoring.model.enums.DataType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -50,7 +50,7 @@ public class ConfigurationResponseDto extends AbstractDto {
      * The data type of the configuration
      */
     @ApiModelProperty(value = "Configuration data type")
-    private ConfigurationDataType dataType;
+    private DataType dataType;
 
     /**
      * Make a link between category and configurations
