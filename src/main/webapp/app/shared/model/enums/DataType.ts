@@ -26,8 +26,7 @@ export enum DataType {
   PASSWORD = 'PASSWORD',
   // Complex data types
   BOOLEAN = 'BOOLEAN',
-  SELECT = 'SELECT',
-  MULTIPLE = 'MULTIPLE',
   COMBO = 'COMBO',
+  MULTIPLE = 'MULTIPLE',
   FILE = 'FILE'
 }

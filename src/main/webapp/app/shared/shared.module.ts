@@ -58,6 +58,7 @@ import {CommunicationDialogComponent} from './components/communication-dialog/co
 import {InputComponent} from './components/form/inputs/input.component';
 import {SimpleInputComponent} from './components/form/inputs/simple-input/simple-input.component';
 import {CheckboxComponent} from './components/form/inputs/checkbox/checkbox.component';
+import {SelectInputComponent} from './components/form/inputs/select-input/select-input.component';
 
 @NgModule({
   imports: [
@@ -86,7 +87,8 @@ import {CheckboxComponent} from './components/form/inputs/checkbox/checkbox.comp
     CommunicationDialogComponent,
     InputComponent,
     SimpleInputComponent,
-    CheckboxComponent
+    CheckboxComponent,
+    SelectInputComponent
   ],
   exports: [
     FormsModule,
@@ -111,7 +113,8 @@ import {CheckboxComponent} from './components/form/inputs/checkbox/checkbox.comp
     CommunicationDialogComponent,
     InputComponent,
     SimpleInputComponent,
-    CheckboxComponent
+    CheckboxComponent,
+    SelectInputComponent
   ],
   entryComponents: [
     ConfirmDialogComponent,

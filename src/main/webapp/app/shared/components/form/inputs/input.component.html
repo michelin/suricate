@@ -9,7 +9,10 @@
     <app-simple-input *ngIf="[dataType.NUMBER, dataType.TEXT, dataType.PASSWORD].includes(field.type)">
     </app-simple-input>
 
-    <app-checkbox *ngIf="[dataType.BOOLEAN].includes(field.type)">
+    <app-select-input *ngIf="[dataType.COMBO, dataType.MULTIPLE].includes(field.type)">
+    </app-select-input>
+
+    <app-checkbox *ngIf="dataType.BOOLEAN === field.type">
     </app-checkbox>
 
     <!------------------------------------------------------------------------------------------------------->
