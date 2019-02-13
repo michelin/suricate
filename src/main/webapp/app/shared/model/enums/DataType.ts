@@ -21,7 +21,7 @@
  */
 export enum DataType {
   NUMBER = 'NUMBER',
-  STRING = 'STRING',
+  TEXT = 'TEXT',
   PASSWORD = 'PASSWORD',
   BOOLEAN = 'BOOLEAN',
   SELECT = 'SELECT',

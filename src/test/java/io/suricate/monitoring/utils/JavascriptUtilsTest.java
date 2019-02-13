@@ -49,7 +49,7 @@ public class JavascriptUtilsTest {
     @Test
     public void testExtractVariable() {
         List<WidgetVariableResponse> list = JavascriptUtils.extractVariables("// SURI_IMG::Choose your image::FILE::\n" +
-            "// SURI_STRING:text content:STRING\n" +
+            "// SURI_STRING:text content:TEXT\n" +
             "// SURI_BOOLEAN");
 
         Assert.assertEquals(3, list.size());
@@ -136,12 +136,12 @@ public class JavascriptUtilsTest {
 
     @Test
     public void testExtractMultipleVariable() {
-        List<WidgetVariableResponse> list = JavascriptUtils.extractVariables("//SURI_TEST \n// SURI_TEST::Choose your image::STRING::\n SURI_TEST");
+        List<WidgetVariableResponse> list = JavascriptUtils.extractVariables("//SURI_TEST \n// SURI_TEST::Choose your image::TEXT::\n SURI_TEST");
 
         Assert.assertEquals(1, list.size());
         Assert.assertEquals("SURI_TEST", list.get(0).getName());
         Assert.assertEquals("Choose your image", list.get(0).getDescription());
-        Assert.assertEquals(DataType.STRING, list.get(0).getType());
+        Assert.assertEquals(DataType.TEXT, list.get(0).getType());
     }
 
     @Test

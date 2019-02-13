@@ -1,5 +1,5 @@
-// SURI_TITLE::Widget title::STRING::Unassigned issue
-// SURI_JQL::Jira JQL query::STRING::BSMT and assignee is EMPTY and status not in (Closed,Completed,Done, "Done Done") ORDER BY createdDate DESC
+// SURI_TITLE::Widget title::TEXT::Unassigned issue
+// SURI_JQL::Jira JQL query::TEXT::BSMT and assignee is EMPTY and status not in (Closed,Completed,Done, "Done Done") ORDER BY createdDate DESC
 // SURI_DELAI::Span time to compare widget data in hours::NUMBER::24
 //
 function run() {

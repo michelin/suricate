@@ -56,8 +56,8 @@
                                 : param.usageExample">
           </mat-form-field>
 
-          <!-- STRING Type -->
-          <mat-form-field *ngIf="param.type == dataType.STRING">
+          <!-- TEXT Type -->
+          <mat-form-field *ngIf="param.type == dataType.TEXT">
             <input matInput
                    type="text"
                    [name]="param.name"

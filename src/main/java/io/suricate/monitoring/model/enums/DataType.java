@@ -5,7 +5,7 @@ package io.suricate.monitoring.model.enums;
  */
 public enum DataType {
     NUMBER,
-    STRING,
+    TEXT,
     PASSWORD,
     BOOLEAN,
     SELECT,

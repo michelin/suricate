@@ -1,2 +1,2 @@
-// SURI_TITLE::Widget Title::STRING::My new Dashboard
-// SURI_TEXT::Widget text content::STRING::My content
+// SURI_TITLE::Widget Title::TEXT::My new Dashboard
+// SURI_TEXT::Widget text content::TEXT::My content

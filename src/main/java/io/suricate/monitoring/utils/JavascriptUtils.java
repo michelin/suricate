@@ -98,7 +98,7 @@ public final class JavascriptUtils {
 
     /**
      * Method used to extract variable from javascript. Some documentation can be added to the variable like:
-     * # SURI_JENKINS_TOKEN::Jenkins token used to authenticate user::STRING
+     * # SURI_JENKINS_TOKEN::Jenkins token used to authenticate user::TEXT
      *
      * @param javascript string content representing javascript
      * @return list of object containing (variable name, description and type)
