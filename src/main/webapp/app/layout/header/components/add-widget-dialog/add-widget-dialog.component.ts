@@ -24,11 +24,11 @@ import {HttpCategoryService} from '../../../../shared/services/api/http-category
 import {HttpAssetService} from '../../../../shared/services/api/http-asset.service';
 import {Category} from '../../../../shared/model/api/widget/Category';
 import {HttpProjectService} from '../../../../shared/services/api/http-project.service';
-import {WidgetVariableType} from '../../../../shared/model/enums/WidgetVariableType';
 import {WidgetAvailabilityEnum} from '../../../../shared/model/enums/WidgetAvailabilityEnum';
 import {ProjectWidgetRequest} from '../../../../shared/model/api/ProjectWidget/ProjectWidgetRequest';
 import {WidgetParam} from '../../../../shared/model/api/widget/WidgetParam';
 import {Configuration} from '../../../../shared/model/api/configuration/Configuration';
+import {DataType} from '../../../../shared/model/enums/DataType';
 
 /**
  * Dialog used to add a widget
@@ -63,9 +63,9 @@ export class AddWidgetDialogComponent implements OnInit {
 
   /**
    * The widget param enum
-   * @type {WidgetVariableType}
+   * @type {DataType}
    */
-  widgetParamEnum = WidgetVariableType;
+  dataType = DataType;
   /**
    * The list of categories
    * @type {Category[]}
@@ -150,7 +150,7 @@ export class AddWidgetDialogComponent implements OnInit {
           name: configuration.key,
           description: configuration.key,
           defaultValue: configuration.value,
-          type: WidgetVariableType[configuration.dataType.toString()],
+          type: configuration.dataType,
           required: true
         });
       });

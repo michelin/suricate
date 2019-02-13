@@ -21,7 +21,6 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import {ProjectWidget} from '../../../../shared/model/api/ProjectWidget/ProjectWidget';
 import {ToastService} from '../../../../shared/components/toast/toast.service';
 import {ToastType} from '../../../../shared/components/toast/toast-objects/ToastType';
-import {WidgetVariableType} from '../../../../shared/model/enums/WidgetVariableType';
 import {HttpProjectWidgetService} from '../../../../shared/services/api/http-project-widget.service';
 import {HttpWidgetService} from '../../../../shared/services/api/http-widget.service';
 import {Widget} from '../../../../shared/model/api/widget/Widget';
@@ -29,6 +28,7 @@ import {HttpAssetService} from '../../../../shared/services/api/http-asset.servi
 import {Configuration} from '../../../../shared/model/api/configuration/Configuration';
 import {HttpCategoryService} from '../../../../shared/services/api/http-category.service';
 import {WidgetParam} from '../../../../shared/model/api/widget/WidgetParam';
+import {DataType} from '../../../../shared/model/enums/DataType';
 
 @Component({
   selector: 'app-edit-project-widget-dialog',
@@ -61,9 +61,9 @@ export class EditProjectWidgetDialogComponent implements OnInit {
 
   /**
    * The widget variable type
-   * @type {WidgetVariableType}
+   * @type {DataType}
    */
-  widgetVariableType = WidgetVariableType;
+  dataType = DataType;
 
 
   /**
@@ -117,7 +117,7 @@ export class EditProjectWidgetDialogComponent implements OnInit {
           name: configuration.key,
           description: configuration.key,
           defaultValue: configuration.value,
-          type: WidgetVariableType[configuration.dataType.toString()],
+          type: configuration.dataType,
           required: true
         });
       });

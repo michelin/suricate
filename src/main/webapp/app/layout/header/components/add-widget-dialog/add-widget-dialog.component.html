@@ -77,7 +77,7 @@
           <form id="formSettings" #formSettings="ngForm" (ngSubmit)="addWidget(formSettings)" novalidate>
             <div *ngFor="let param of widgetParams">
               <!-- Boolean Type -->
-              <mat-checkbox *ngIf="param.type == widgetParamEnum.BOOLEAN"
+              <mat-checkbox *ngIf="param.type == dataType.BOOLEAN"
                             color="primary"
                             [name]="param.name"
                             [required]="param.required"
@@ -86,7 +86,7 @@
               </mat-checkbox>
 
               <!-- INTEGER Type -->
-              <mat-form-field *ngIf="param.type == widgetParamEnum.INTEGER">
+              <mat-form-field *ngIf="param.type == dataType.INTEGER">
                 <input matInput
                        type="number"
                        [name]="param.name"
@@ -95,8 +95,8 @@
                        [ngModel]="param.defaultValue ? param.defaultValue : param.usageExample">
               </mat-form-field>
 
-              <!-- SECRET Type -->
-              <mat-form-field *ngIf="param.type == widgetParamEnum.SECRET || param.type == widgetParamEnum.PASSWORD">
+              <!-- PASSWORD Type -->
+              <mat-form-field *ngIf="param.type == dataType.PASSWORD">
                 <input matInput
                        type="password"
                        [name]="param.name"
@@ -106,7 +106,7 @@
               </mat-form-field>
 
               <!-- STRING Type -->
-              <mat-form-field *ngIf="param.type == widgetParamEnum.STRING">
+              <mat-form-field *ngIf="param.type == dataType.STRING">
                 <input matInput
                        type="text"
                        [name]="param.name"
@@ -116,7 +116,7 @@
               </mat-form-field>
 
               <!-- COMBO Type -->
-              <mat-form-field *ngIf="param.type == widgetParamEnum.COMBO">
+              <mat-form-field *ngIf="param.type == dataType.COMBO">
                 <mat-select [required]="param.required"
                             [placeholder]="param.description"
                             [name]="param.name"
@@ -128,7 +128,7 @@
               </mat-form-field>
 
               <!-- MULTIPLE Type -->
-              <mat-form-field *ngIf="param.type == widgetParamEnum.MULTIPLE">
+              <mat-form-field *ngIf="param.type == dataType.MULTIPLE">
                 <mat-select [required]="param.required"
                             [placeholder]="param.description"
                             [name]="param.name"
@@ -141,7 +141,7 @@
                 </mat-select>
               </mat-form-field>
               <!-- FILE Type -->
-              <div class="button-wrapper" *ngIf="param.type == widgetParamEnum.FILE">
+              <div class="button-wrapper" *ngIf="param.type == dataType.FILE">
                 <!-- Used for display file selection window -->
                 <button mat-raised-button
                         class="file_upload_button mat-elevation-z8"

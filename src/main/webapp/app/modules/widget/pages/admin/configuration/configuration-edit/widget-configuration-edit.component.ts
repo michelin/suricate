@@ -24,7 +24,7 @@ import {HttpConfigurationService} from '../../../../../../shared/services/api/ht
 import {ToastService} from '../../../../../../shared/components/toast/toast.service';
 import {Configuration} from '../../../../../../shared/model/api/configuration/Configuration';
 import {ToastType} from '../../../../../../shared/components/toast/toast-objects/ToastType';
-import {ConfigurationDataType} from '../../../../../../shared/model/enums/ConfigurationDataType';
+import {DataType} from '../../../../../../shared/model/enums/DataType';
 
 /**
  * Manage the edition of a configuration
@@ -50,9 +50,9 @@ export class WidgetConfigurationEditComponent implements OnInit {
 
   /**
    * The configuration data type
-   * @type {ConfigurationDataType}
+   * @type {DataType}
    */
-  configurationDataType = ConfigurationDataType;
+  configurationDataType = DataType;
 
   /**
    * Constructor

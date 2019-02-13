@@ -22,12 +22,12 @@ import {flatMap} from 'rxjs/operators';
 import {SettingsService} from '../../settings.service';
 import {User} from '../../../../shared/model/api/user/User';
 import {HttpUserService} from '../../../../shared/services/api/http-user.service';
-import {SettingDataType} from '../../../../shared/model/enums/SettingDataType';
 import {UserSetting} from '../../../../shared/model/api/setting/UserSetting';
 import {HttpSettingService} from '../../../../shared/services/api/http-setting.service';
 import {Setting} from '../../../../shared/model/api/setting/Setting';
 import {SettingType} from '../../../../shared/model/enums/SettingType';
 import {AllowedSettingValue} from '../../../../shared/model/api/setting/AllowedSettingValue';
+import {DataType} from '../../../../shared/model/enums/DataType';
 
 /**
  * Represent the Admin Setting list page
@@ -58,9 +58,9 @@ export class SettingsListComponent implements OnInit {
 
   /**
    * The setting data types
-   * @type {SettingDataType}
+   * @type {DataType}
    */
-  settingDataType = SettingDataType;
+  dataType = DataType;
 
   /**
    * Constructor

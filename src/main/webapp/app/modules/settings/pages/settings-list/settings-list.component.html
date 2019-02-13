@@ -9,7 +9,7 @@
            fxLayoutAlign="center center">
 
         <!-- SELECT Type -->
-        <mat-form-field *ngIf="setting.dataType === settingDataType.SELECT" fxFlex="100">
+        <mat-form-field *ngIf="setting.dataType === dataType.SELECT" fxFlex="100">
           <mat-select [required]="true"
                       [placeholder]="setting.description"
                       [name]="setting.type"

@@ -19,8 +19,13 @@
 /**
  * Hold the data type for a configuration
  */
-export enum ConfigurationDataType {
+export enum DataType {
   INTEGER = 'INTEGER',
   STRING = 'STRING',
-  PASSWORD = 'PASSWORD'
+  PASSWORD = 'PASSWORD',
+  BOOLEAN = 'BOOLEAN',
+  SELECT = 'SELECT',
+  MULTIPLE = 'MULTIPLE',
+  COMBO = 'COMBO',
+  FILE = 'FILE'
 }
