@@ -32,8 +32,8 @@
             {{param.description}}
           </mat-checkbox>
 
-          <!-- INTEGER Type -->
-          <mat-form-field *ngIf="param.type == dataType.INTEGER">
+          <!-- NUMBER Type -->
+          <mat-form-field *ngIf="param.type == dataType.NUMBER">
             <input matInput
                    type="number"
                    [name]="param.name"

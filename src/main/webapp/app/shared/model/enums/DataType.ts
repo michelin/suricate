@@ -20,7 +20,7 @@
  * Hold the data type for a configuration
  */
 export enum DataType {
-  INTEGER = 'INTEGER',
+  NUMBER = 'NUMBER',
   STRING = 'STRING',
   PASSWORD = 'PASSWORD',
   BOOLEAN = 'BOOLEAN',

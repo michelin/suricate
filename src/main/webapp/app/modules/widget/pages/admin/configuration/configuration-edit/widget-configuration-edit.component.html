@@ -43,7 +43,7 @@
         </mat-error>
       </mat-form-field>
 
-      <mat-form-field *ngIf="configuration.dataType === configurationDataType.INTEGER; else defaultValueInput">
+      <mat-form-field *ngIf="configuration.dataType === dataType.NUMBER; else defaultValueInput">
         <mat-icon class="prefix" color="primary" matPrefix>input</mat-icon>
         <input matInput
                type="number"

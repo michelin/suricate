@@ -52,7 +52,7 @@ export class WidgetConfigurationEditComponent implements OnInit {
    * The configuration data type
    * @type {DataType}
    */
-  configurationDataType = DataType;
+  dataType = DataType;
 
   /**
    * Constructor
