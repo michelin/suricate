@@ -57,6 +57,7 @@ import {HttpSettingService} from './services/api/http-setting.service';
 import {CommunicationDialogComponent} from './components/communication-dialog/communication-dialog.component';
 import {InputComponent} from './components/form/inputs/input.component';
 import {SimpleInputComponent} from './components/form/inputs/simple-input/simple-input.component';
+import {CheckboxComponent} from './components/form/inputs/checkbox/checkbox.component';
 
 @NgModule({
   imports: [
@@ -84,7 +85,8 @@ import {SimpleInputComponent} from './components/form/inputs/simple-input/simple
     ConfirmDialogComponent,
     CommunicationDialogComponent,
     InputComponent,
-    SimpleInputComponent
+    SimpleInputComponent,
+    CheckboxComponent
   ],
   exports: [
     FormsModule,
@@ -108,7 +110,8 @@ import {SimpleInputComponent} from './components/form/inputs/simple-input/simple
     ConfirmDialogComponent,
     CommunicationDialogComponent,
     InputComponent,
-    SimpleInputComponent
+    SimpleInputComponent,
+    CheckboxComponent
   ],
   entryComponents: [
     ConfirmDialogComponent,

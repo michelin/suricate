@@ -3,4 +3,5 @@
        [type]="field.type.toLowerCase()"
        [placeholder]="field.label | translate"
        [formControl]="getFormControl()"
-       [required]="isRequired()">
+       [required]="isRequired()"
+       [disabled]="isReadOnly">

@@ -1,0 +1,7 @@
+<mat-checkbox color="primary"
+              [id]="field.key"
+              [formControl]="field.key"
+              [disabled]="isReadOnly"
+              [required]="isRequired()">
+  <app-translate [key]="field.label"></app-translate>
+</mat-checkbox>
