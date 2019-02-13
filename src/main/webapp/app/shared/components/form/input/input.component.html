@@ -1,0 +1,20 @@
+<div [formGroup]="form">
+
+  <!-- The global mat-form-field -->
+  <mat-form-field>
+
+    <app-input-default *ngIf="['hidden', 'text', 'number', 'password'].includes(field.type)">
+
+    </app-input-default>
+
+    <!-- Fields error management -->
+    <span *ngIf="getFormControl().dirty">
+      <!-- Error message : Required -->
+      <mat-error *ngIf="getFormControl()['errors']?.required">
+        <app-translate [key]="'field.required'"></app-translate>
+      </mat-error>
+    </span>
+
+  </mat-form-field>
+
+</div>
