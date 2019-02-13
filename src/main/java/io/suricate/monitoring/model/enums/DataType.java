@@ -10,8 +10,7 @@ public enum DataType {
     PASSWORD,
     // Complex data types
     BOOLEAN,
-    SELECT,
-    MULTIPLE,
     COMBO,
+    MULTIPLE,
     FILE
 }
