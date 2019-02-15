@@ -47,9 +47,11 @@ export class FormService {
   generateFormGroupForFields(fields: FormField[]): FormGroup {
     const formGroup = this.formBuilder.group({});
 
-    fields.forEach(field => {
-      formGroup.addControl(field.key, this.generateFormControl(field));
-    });
+    if (fields) {
+      fields.forEach(field => {
+        formGroup.addControl(field.key, this.generateFormControl(field));
+      });
+    }
 
     return formGroup;
   }
@@ -61,6 +63,6 @@ export class FormService {
    * @return The form control that represent the field
    */
   generateFormControl(field: FormField): FormControl {
-    return this.formBuilder.control(field.value, field.validators, field.asyncValidators);
+    return this.formBuilder.control({value: field.value, disabled: field.disabled}, field.validators, field.asyncValidators);
   }
 }

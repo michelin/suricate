@@ -34,6 +34,10 @@ export interface FormField {
    */
   label: string;
   /**
+   * The placeholder to display if needed
+   */
+  placeholder?: string;
+  /**
    * The type of the data to insert
    */
   type: DataType;
@@ -46,9 +50,9 @@ export interface FormField {
    */
   options?: FormOption[];
   /**
-   * True if the field is required
+   * True if the field should be disabled
    */
-  required: boolean;
+  disabled?: boolean;
   /**
    * The list of validators for this field
    */
