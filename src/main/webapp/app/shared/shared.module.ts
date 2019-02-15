@@ -56,9 +56,7 @@ import {HttpProjectWidgetService} from './services/api/http-project-widget.servi
 import {HttpSettingService} from './services/api/http-setting.service';
 import {CommunicationDialogComponent} from './components/communication-dialog/communication-dialog.component';
 import {InputComponent} from './components/form/inputs/input.component';
-import {SimpleInputComponent} from './components/form/inputs/simple-input/simple-input.component';
 import {CheckboxComponent} from './components/form/inputs/checkbox/checkbox.component';
-import {SelectInputComponent} from './components/form/inputs/select-input/select-input.component';
 import {FileInputComponent} from './components/form/inputs/file-input/file-input.component';
 import {FormService} from './services/app/form.service';
 
@@ -88,9 +86,7 @@ import {FormService} from './services/app/form.service';
     ConfirmDialogComponent,
     CommunicationDialogComponent,
     InputComponent,
-    SimpleInputComponent,
     CheckboxComponent,
-    SelectInputComponent,
     FileInputComponent
   ],
   exports: [
@@ -115,9 +111,7 @@ import {FormService} from './services/app/form.service';
     ConfirmDialogComponent,
     CommunicationDialogComponent,
     InputComponent,
-    SimpleInputComponent,
     CheckboxComponent,
-    SelectInputComponent,
     FileInputComponent
   ],
   entryComponents: [
