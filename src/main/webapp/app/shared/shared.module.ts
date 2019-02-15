@@ -60,6 +60,7 @@ import {SimpleInputComponent} from './components/form/inputs/simple-input/simple
 import {CheckboxComponent} from './components/form/inputs/checkbox/checkbox.component';
 import {SelectInputComponent} from './components/form/inputs/select-input/select-input.component';
 import {FileInputComponent} from './components/form/inputs/file-input/file-input.component';
+import {FormService} from './services/app/form.service';
 
 @NgModule({
   imports: [
@@ -132,6 +133,7 @@ import {FileInputComponent} from './components/form/inputs/file-input/file-input
     ToastService,
     StompRService,
     TokenService,
+    FormService,
     HttpAssetService,
     HttpCategoryService,
     HttpProjectService,
