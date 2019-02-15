@@ -18,7 +18,9 @@
 
 import {Injectable} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
-import {FormField} from '../../model/generic-component/FormField';
+
+import {FormField} from '../../model/app/form/FormField';
+
 
 /**
  * Service class that manage the instantiations of forms
