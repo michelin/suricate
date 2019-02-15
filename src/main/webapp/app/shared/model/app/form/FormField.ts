@@ -52,9 +52,9 @@ export interface FormField {
   /**
    * The list of validators for this field
    */
-  validators: ValidatorFn | ValidatorFn[] | null;
+  validators?: ValidatorFn | ValidatorFn[] | null;
   /**
    * Async validators (require an http call)
    */
-  asyncValidators: AsyncValidatorFn | AsyncValidatorFn[] | null
+  asyncValidators?: AsyncValidatorFn | AsyncValidatorFn[] | null
 }
