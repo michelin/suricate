@@ -4,6 +4,12 @@
     <!---                        FORM FIELDS                                                              --->
     <!------------------------------------------------------------------------------------------------------->
 
+    <!-- Mat Icon prefix -->
+    <mat-icon *ngIf="field.matIconPrefix" class="prefix" matPrefix color="primary">
+      {{ field.matIconPrefix }}
+    </mat-icon>
+
+    <!-- Mat label -->
     <mat-label>
       <app-translate [key]="field.label"></app-translate>
     </mat-label>
@@ -23,11 +29,15 @@
                 [formControl]="getFormControl()"
                 [multiple]="field.type === dataType.MULTIPLE"
                 [required]="isRequired()">
-
       <mat-option *ngFor="let option of field.options" [value]="option.key">
         {{ option.label }}
       </mat-option>
     </mat-select>
+
+    <!-- Mat Icon suffix -->
+    <mat-icon *ngIf="field.matIconSuffix" matSuffix color="primary">
+      {{ field.matIconSuffix }}
+    </mat-icon>
 
     <!------------------------------------------------------------------------------------------------------->
     <!---                        FIELDS ERROR MANAGEMENT                                                  --->
