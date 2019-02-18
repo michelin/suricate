@@ -44,7 +44,7 @@ export interface FormField {
   /**
    * The value to display
    */
-  value: string;
+  value: any;
   /**
    * If the type contains a list of values to display insert them in this attribute
    */

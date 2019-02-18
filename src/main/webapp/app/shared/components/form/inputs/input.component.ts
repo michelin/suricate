@@ -37,25 +37,21 @@ export class InputComponent {
    */
   @Input()
   formGroup: FormGroup;
-
   /**
    * Object that hold different information used for the instantiation of the input
    */
   @Input()
   field: FormField;
-
   /**
    * True if the field should be readonly
    */
   @Input()
   isReadOnly: boolean;
-
   /**
    * Event sent when the value of the input has changed
    */
   @Output()
   valueChangeEvent = new EventEmitter<any>();
-
   /**
    * The data type enum
    */
@@ -66,7 +62,7 @@ export class InputComponent {
    */
   constructor() {
   }
-  
+
   /**
    * Retrieve the form control from the form
    */

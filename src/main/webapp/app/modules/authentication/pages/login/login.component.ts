@@ -45,19 +45,11 @@ export class LoginComponent implements OnInit {
    * The description of the form
    */
   formFields: FormField[];
-
-  /**
-   * If the password field is hidden or not
-   * @type {boolean}
-   */
-  hidePassword = true;
-
   /**
    * Used for display spinner when form has been submitted
    * @type {boolean}
    */
   formSubmitAttempt = false;
-
   /**
    * True if the user provider is LDAP
    */

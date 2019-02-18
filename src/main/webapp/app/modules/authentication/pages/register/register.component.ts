@@ -54,17 +54,11 @@ export class RegisterComponent implements OnInit {
    * The description of the form
    */
   formFields: FormField[];
-
   /**
    * Tell if the form has been submit or not
    * @type {boolean} true if the form is submitting, false otherwise
    */
   formSubmitAttempt = false;
-  /**
-   * If the password should be hide or not
-   * @type {boolean}
-   */
-  hidePassword = true;
 
   /**
    * Constructor
