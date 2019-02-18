@@ -5,15 +5,15 @@
           type="button"
           (click)="file.click()">
     <mat-icon>attach_file</mat-icon>
-    <span [class]="'file-selection-sentence-' + param.name"><app-translate
+    <span [class]="'file-selection-sentence-' + field.key"><app-translate
         [key]="'upload'"></app-translate></span>
   </button>
   <!-- Used for retrieve the file -->
   <input #file
          style="display:none;"
          type="file"
-         [pattern]="param.acceptFileRegex"
-         (change)="getUploadedFileBase64($event, formSettings, param.name, param.acceptFileRegex)">
+         (change)="getUploadedFileBase64($event, formSettings, field.key, field.acceptFileRegex)">
+  <!--[pattern]="field.acceptFileRegex"-->
   <!-- Used for send base64 file with the form -->
-  <input type="text" style="display:none;" [name]="param.name" [required]="param.required" ngModel>
+  <input type="text" style="display:none;" [name]="field.key" [required]="field.required" ngModel>
 </div>
