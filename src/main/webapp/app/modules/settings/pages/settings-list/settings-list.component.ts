@@ -15,9 +15,10 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {FormGroup, NgForm} from '@angular/forms';
+import {FormGroup} from '@angular/forms';
 import {from} from 'rxjs';
-import {flatMap} from 'rxjs/operators';
+import {flatMap, map} from 'rxjs/operators';
+import {TranslateService} from '@ngx-translate/core';
 
 import {SettingsService} from '../../settings.service';
 import {User} from '../../../../shared/model/api/user/User';
@@ -28,6 +29,9 @@ import {Setting} from '../../../../shared/model/api/setting/Setting';
 import {SettingType} from '../../../../shared/model/enums/SettingType';
 import {AllowedSettingValue} from '../../../../shared/model/api/setting/AllowedSettingValue';
 import {DataType} from '../../../../shared/model/enums/DataType';
+import {FormField} from '../../../../shared/model/app/form/FormField';
+import {FormService} from '../../../../shared/services/app/form.service';
+import {FormOption} from '../../../../shared/model/app/form/FormOption';
 
 /**
  * Represent the Admin Setting list page
@@ -38,6 +42,16 @@ import {DataType} from '../../../../shared/model/enums/DataType';
   styleUrls: ['./settings-list.component.scss']
 })
 export class SettingsListComponent implements OnInit {
+
+  /**
+   * The user setting form
+   * @type {FormGroup}
+   */
+  userSettingForm: FormGroup;
+  /**
+   * The description of the form
+   */
+  formFields: FormField[];
 
   /**
    * The connected user
@@ -68,23 +82,74 @@ export class SettingsListComponent implements OnInit {
    * @param {HttpUserService} httpUserService The http user service
    * @param {HttpSettingService} httpSettingService The http setting service
    * @param {SettingsService} settingsService The settings service to inject
+   * @param {TranslateService} translateService The service used for translations
+   * @param {FormService} formService The form service used for the form creation
    */
   constructor(private httpUserService: HttpUserService,
               private httpSettingService: HttpSettingService,
-              private settingsService: SettingsService) {
+              private settingsService: SettingsService,
+              private translateService: TranslateService,
+              private formService: FormService) {
   }
 
   /**
    * When the component is init
    */
   ngOnInit(): void {
-    this.httpUserService.getConnectedUser().subscribe(connectedUser => {
-      this.connectedUser = connectedUser;
-      this.refreshUserSettings();
+    // Get the connected user
+    this.httpUserService.getConnectedUser().pipe(
+      // Get the related userSettings
+      flatMap((connectedUser: User) => {
+        this.connectedUser = connectedUser;
+        return this.httpUserService.getUserSettings(connectedUser.id);
+      }),
+      //Get the full list of settings
+      flatMap((userSettings: UserSetting[]) => {
+        this.userSettings = userSettings;
+        return this.httpSettingService.getAll();
+      }),
+      map((settings: Setting[]) => this.settings = settings)
+    ).subscribe(() => {
+      // When we have every objects needed we can create the form
+      this.initUserSettingForm();
     });
+  }
 
-    this.httpSettingService.getAll().subscribe(settings => {
-      this.settings = settings;
+  /**
+   * Init the user setting form
+   */
+  initUserSettingForm() {
+    this.generateFormFields();
+    this.userSettingForm = this.formService.generateFormGroupForFields(this.formFields);
+  }
+
+  /**
+   * Generate the form fields used for the form creation
+   */
+  generateFormFields() {
+    this.formFields = [];
+
+    this.settings.forEach((setting: Setting) => {
+      const formField: FormField = {
+        key: setting.type,
+        label: setting.description,
+        type: setting.dataType,
+        value: this.getUserSettingFromSetting(setting.id).settingValue.value
+      };
+
+      if (setting.allowedSettingValues) {
+        const formOptions: FormOption[] = [];
+        setting.allowedSettingValues.forEach((allowedSettingValue: AllowedSettingValue) => {
+          formOptions.push({
+            key: allowedSettingValue.value,
+            label: allowedSettingValue.title
+          });
+        });
+
+        formField.options = formOptions;
+      }
+
+      this.formFields.push(formField);
     });
   }
 
@@ -98,39 +163,15 @@ export class SettingsListComponent implements OnInit {
   }
 
   /**
-   * Method used to refresh the user settings
-   */
-  refreshUserSettings(): void {
-    this.httpUserService.getUserSettings(this.connectedUser.id).subscribe(userSettings => {
-      this.userSettings = userSettings;
-    });
-  }
-
-  /**
-   * Get an allowed setting value by settingType and a allowed value as string
-   *
-   * @param settingType The setting type
-   * @param allowedSettingValue The allowed setting value as String
-   */
-  getAllowedSettingValueFromSettingTypeAndAllowedSettingValue(settingType: SettingType, allowedSettingValue: string): AllowedSettingValue {
-    return this.settings.find(setting => setting.type === settingType)
-      .allowedSettingValues.find(allowedSetting => allowedSetting.value === allowedSettingValue);
-  }
-
-  /**
    * Save the user settings
-   *
-   * @param {NgForm} formSettings The form filled
    */
-  saveUserSettings(formSettings: NgForm) {
-    if (formSettings.valid) {
-      const userSettingForm: FormGroup = formSettings.form;
-
-      console.log(userSettingForm.value);
+  saveUserSettings() {
+    if (this.userSettingForm.valid) {
+      console.log(this.userSettingForm.value);
       from(this.settings).pipe(
         flatMap(setting => {
           if (setting.constrained) {
-            const selectedFormValue = userSettingForm.get(setting.type);
+            const selectedFormValue = this.userSettingForm.get(setting.type);
             const allowedSettingValue = this.getAllowedSettingValueFromSettingTypeAndAllowedSettingValue(
               setting.type,
               selectedFormValue.value
@@ -146,7 +187,17 @@ export class SettingsListComponent implements OnInit {
       ).subscribe(() => {
         this.settingsService.initUserSettings(this.connectedUser);
       });
-
     }
+  }
+
+  /**
+   * Get an allowed setting value by settingType and a allowed value as string
+   *
+   * @param settingType The setting type
+   * @param allowedSettingValue The allowed setting value as String
+   */
+  getAllowedSettingValueFromSettingTypeAndAllowedSettingValue(settingType: SettingType, allowedSettingValue: string): AllowedSettingValue {
+    return this.settings.find(setting => setting.type === settingType)
+      .allowedSettingValues.find(allowedSetting => allowedSetting.value === allowedSettingValue);
   }
 }

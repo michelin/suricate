@@ -1,27 +1,14 @@
 <app-pages-header [secondTitle]="'user.settings'"></app-pages-header>
 
-<form *ngIf="userSettings" #formSettings="ngForm" (ngSubmit)="saveUserSettings(formSettings)" novalidate>
+<form *ngIf="userSettingForm" (ngSubmit)="saveUserSettings()" novalidate>
+
   <mat-card fxLayout="row wrap" fxLayoutAlign="center center" class="mat-elevation-z8">
-
-    <mat-card-content fxFlex="80">
-      <div *ngFor="let setting of settings"
-           fxLayout="row wrap"
-           fxLayoutAlign="center center">
-
-        <!-- SELECT Type -->
-        <mat-form-field *ngIf="setting.dataType === dataType.SELECT" fxFlex="100">
-          <mat-select [required]="true"
-                      [placeholder]="setting.description"
-                      [name]="setting.type"
-                      [ngModel]="getUserSettingFromSetting(setting.id).settingValue.value">
-            <mat-option *ngFor="let allowedSettingValue of setting.allowedSettingValues"
-                        [value]="allowedSettingValue.value">
-              {{ allowedSettingValue.title }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-
-      </div>
+    <mat-card-content fxFlex="80" fxLayout="column wrap">
+      <app-input *ngFor="let field of formFields"
+                 [formGroup]="userSettingForm"
+                 [field]="field"
+                 [isReadOnly]="false">
+      </app-input>
     </mat-card-content>
 
     <mat-card-actions fxFlex="80">
