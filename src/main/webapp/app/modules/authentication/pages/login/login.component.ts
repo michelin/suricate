@@ -42,6 +42,10 @@ export class LoginComponent implements OnInit {
    * @type {FormGroup}
    */
   loginForm: FormGroup;
+  /**
+   * The description of the form
+   */
+  formFields: FormField[];
 
   /**
    * If the password field is hidden or not
@@ -59,11 +63,6 @@ export class LoginComponent implements OnInit {
    * True if the user provider is LDAP
    */
   isLdapServerUserProvider: boolean;
-
-  /**
-   * The description of the form
-   */
-  formFields: FormField[];
 
   /**
    * Constructor
@@ -115,7 +114,7 @@ export class LoginComponent implements OnInit {
           type: DataType.TEXT,
           value: '',
           validators: [Validators.required],
-          matIconPrefix: 'person'
+          matIconPrefix: 'android'
         },
         {
           key: 'password',
@@ -127,7 +126,6 @@ export class LoginComponent implements OnInit {
         }
       ];
     });
-
   }
 
   /**
