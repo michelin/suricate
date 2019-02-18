@@ -20,7 +20,6 @@ import {Router} from '@angular/router';
 import {CustomValidators} from 'ng2-validation';
 import {catchError, flatMap} from 'rxjs/operators';
 import {throwError} from 'rxjs';
-import {TitleCasePipe} from '@angular/common';
 import {TranslateService} from '@ngx-translate/core';
 
 import {AuthenticationService} from '../../authentication.service';
@@ -114,12 +113,10 @@ export class RegisterComponent implements OnInit {
     this.translateService
       .get(['username', 'firstname', 'lastname', 'email', 'password', 'password.confirm'])
       .subscribe((translations: string) => {
-        const titleCasePipe = new TitleCasePipe();
-
         this.formFields = [
           {
             key: 'username',
-            label: titleCasePipe.transform(translations['username']),
+            label: translations['username'],
             type: DataType.TEXT,
             value: '',
             validators: [Validators.required, Validators.minLength(3)],
@@ -127,7 +124,7 @@ export class RegisterComponent implements OnInit {
           },
           {
             key: 'firstname',
-            label: titleCasePipe.transform(translations['firstname']),
+            label: translations['firstname'],
             type: DataType.TEXT,
             value: '',
             validators: [Validators.required, Validators.minLength(3)],
@@ -135,7 +132,7 @@ export class RegisterComponent implements OnInit {
           },
           {
             key: 'lastname',
-            label: titleCasePipe.transform(translations['lastname']),
+            label: translations['lastname'],
             type: DataType.TEXT,
             value: '',
             validators: [Validators.required, Validators.minLength(3)],
@@ -143,7 +140,7 @@ export class RegisterComponent implements OnInit {
           },
           {
             key: 'email',
-            label: titleCasePipe.transform(translations['email']),
+            label: translations['email'],
             type: DataType.TEXT,
             value: '',
             validators: [Validators.required, CustomValidators.email],
@@ -151,7 +148,7 @@ export class RegisterComponent implements OnInit {
           },
           {
             key: 'password',
-            label: titleCasePipe.transform(translations['password']),
+            label: translations['password'],
             type: DataType.PASSWORD,
             value: '',
             validators: [Validators.required, Validators.minLength(3)],

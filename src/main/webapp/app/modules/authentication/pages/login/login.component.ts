@@ -18,7 +18,6 @@ import {Component, OnInit} from '@angular/core';
 import {FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {TranslateService} from '@ngx-translate/core';
-import {TitleCasePipe} from '@angular/common';
 
 import {AuthenticationService} from '../../authentication.service';
 import {HttpConfigurationService} from '../../../../shared/services/api/http-configuration.service';
@@ -105,12 +104,10 @@ export class LoginComponent implements OnInit {
    */
   generateFormFields() {
     this.translateService.get(['username', 'password']).subscribe((translations: string) => {
-      const titleCasePipe = new TitleCasePipe();
-
       this.formFields = [
         {
           key: 'username',
-          label: titleCasePipe.transform(translations['username']),
+          label: translations['username'],
           type: DataType.TEXT,
           value: '',
           validators: [Validators.required],
@@ -118,7 +115,7 @@ export class LoginComponent implements OnInit {
         },
         {
           key: 'password',
-          label: titleCasePipe.transform(translations['password']),
+          label: translations['password'],
           type: DataType.PASSWORD,
           value: '',
           validators: [Validators.required],
