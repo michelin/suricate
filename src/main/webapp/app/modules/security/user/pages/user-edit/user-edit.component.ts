@@ -15,9 +15,10 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
-import {CustomValidators} from 'ng2-validation';
+import {TranslateService} from '@ngx-translate/core';
+import {flatMap, map} from 'rxjs/operators';
 
 import {ToastService} from '../../../../../shared/components/toast/toast.service';
 import {RoleService} from '../../role.service';
@@ -28,6 +29,13 @@ import {HttpRoleService} from '../../../../../shared/services/api/http-role.serv
 import {HttpUserService} from '../../../../../shared/services/api/http-user.service';
 import {RoleEnum} from '../../../../../shared/model/enums/RoleEnum';
 import {UserRequest} from '../../../../../shared/model/api/user/UserRequest';
+import {DataType} from '../../../../../shared/model/enums/DataType';
+import {FormService} from '../../../../../shared/services/app/form.service';
+import {FormStep} from '../../../../../shared/model/app/form/FormStep';
+import {Observable} from 'rxjs';
+import {FormField} from '../../../../../shared/model/app/form/FormField';
+import {CustomValidators} from 'ng2-validation';
+import {FormOption} from '../../../../../shared/model/app/form/FormOption';
 
 /**
  * Component user the edition of a user
@@ -44,13 +52,15 @@ export class UserEditComponent implements OnInit {
    * @type {FormGroup}
    */
   editUserForm: FormGroup;
-
+  /**
+   * The description of the form
+   */
+  formSteps: FormStep[];
   /**
    * The user to edit
    * @type {User}
    */
   user: User;
-
   /**
    * The list of roles
    * @type {Role[]}
@@ -65,7 +75,8 @@ export class UserEditComponent implements OnInit {
    * @param {RoleService} roleService The role service to inject
    * @param {HttpRoleService} httpRoleService The http role service to inject
    * @param {ActivatedRoute} activatedRoute The activated route to inject
-   * @param {FormBuilder} formBuilder The formBuilder service
+   * @param {FormService} formService The form service used to create the form
+   * @param {TranslateService} translateService The translation service
    * @param {ToastService} toastService The service used for displayed Toast notification
    */
   constructor(private httpUserService: HttpUserService,
@@ -73,7 +84,8 @@ export class UserEditComponent implements OnInit {
               private roleService: RoleService,
               private httpRoleService: HttpRoleService,
               private activatedRoute: ActivatedRoute,
-              private formBuilder: FormBuilder,
+              private formService: FormService,
+              private translateService: TranslateService,
               private toastService: ToastService) {
   }
 
@@ -81,13 +93,16 @@ export class UserEditComponent implements OnInit {
    * Called when the component is displayed
    */
   ngOnInit() {
-    this.httpRoleService.getRoles().subscribe(roles => {
-      this.roles = roles;
-    });
-
     this.activatedRoute.params.subscribe(params => {
-      this.httpUserService.getById(params['userId']).subscribe(user => {
-        this.user = user;
+      // Retrieve the user to edit
+      this.httpUserService.getById(params['userId']).pipe(
+        // Retrieve the list of roles
+        flatMap((user: User) => {
+          this.user = user;
+          return this.httpRoleService.getRoles();
+        }),
+        map((roles: Role[]) => this.roles = roles)
+      ).subscribe(() => {
         this.initUserEditForm();
       });
     });
@@ -97,23 +112,96 @@ export class UserEditComponent implements OnInit {
    * Init the user edit form
    */
   initUserEditForm() {
-    this.editUserForm = this.formBuilder.group({
-      username: [this.user.username, [Validators.required, Validators.minLength(3)]],
-      firstname: [this.user.firstname, [Validators.required, Validators.minLength(2)]],
-      lastname: [this.user.lastname, [Validators.required, Validators.minLength(2)]],
-      email: [this.user.email, [Validators.required, CustomValidators.email]],
-      roles: [this.roleService.getRolesNameAsTable(this.user.roles), [Validators.required]]
+    this.formSteps = [];
+
+    this.generateStepOne().pipe(
+      flatMap((stepOne: FormStep) => {
+        this.formSteps[0] = stepOne;
+        return this.generateStepTwo();
+      }),
+      map((stepTwo: FormStep) => this.formSteps[1] = stepTwo)
+    ).subscribe(() => {
+      this.editUserForm = this.formService.generateFormGroupForSteps(this.formSteps);
     });
   }
 
   /**
-   * Check if the field is invalid
-   *
-   * @param {string} field The field to check
-   * @returns {boolean} False if the field valid, true otherwise
+   * Generate the step one of the form
    */
-  isFieldInvalid(field: string) {
-    return this.editUserForm.invalid && (this.editUserForm.get(field).dirty || this.editUserForm.get(field).touched);
+  generateStepOne(): Observable<FormStep> {
+    return this.translateService.get(['username', 'firstname', 'lastname', 'email']).pipe(
+      map((translations: string) => {
+        const formFields: FormField[] = [
+          {
+            key: 'username',
+            label: translations['username'],
+            type: DataType.TEXT,
+            value: this.user.username,
+            validators: [Validators.required, Validators.minLength(3)],
+            matIconPrefix: 'android'
+          },
+          {
+            key: 'firstname',
+            label: translations['firstname'],
+            type: DataType.TEXT,
+            value: this.user.firstname,
+            validators: [Validators.required, Validators.minLength(3)],
+            matIconPrefix: 'person'
+          },
+          {
+            key: 'lastname',
+            label: translations['lastname'],
+            type: DataType.TEXT,
+            value: this.user.lastname,
+            validators: [Validators.required, Validators.minLength(3)],
+            matIconPrefix: 'person'
+          },
+          {
+            key: 'email',
+            label: translations['email'],
+            type: DataType.TEXT,
+            value: this.user.email,
+            validators: [Validators.required, CustomValidators.email],
+            matIconPrefix: 'email'
+          }
+        ];
+
+        return {fields: formFields};
+      })
+    );
+  }
+
+  /**
+   * Generate the step two of the form
+   */
+  generateStepTwo(): Observable<FormStep> {
+    return this.translateService.get(['roles']).pipe(
+      map((translations: string) => {
+
+        // Role Options generation
+        const roleOptions: FormOption[] = [];
+        this.roles.forEach((role: Role) => {
+          roleOptions.push({
+            key: role.name,
+            label: role.description
+          });
+        });
+
+        // Creation of the formFields
+        const formFields: FormField[] = [
+          {
+            key: 'roles',
+            label: translations['roles'],
+            type: DataType.MULTIPLE,
+            value: this.user.roles.map(role => role.name),
+            options: roleOptions,
+            validators: [Validators.required],
+          }
+        ];
+
+        return {fields: formFields};
+      })
+    );
   }
 
   /**
