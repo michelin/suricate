@@ -114,14 +114,16 @@ export class LoginComponent implements OnInit {
           label: titleCasePipe.transform(translations['username']),
           type: DataType.TEXT,
           value: '',
-          validators: [Validators.required]
+          validators: [Validators.required],
+          matIconPrefix: 'person'
         },
         {
           key: 'password',
           label: titleCasePipe.transform(translations['password']),
           type: DataType.PASSWORD,
           value: '',
-          validators: [Validators.required]
+          validators: [Validators.required],
+          matIconPrefix: 'lock'
         }
       ];
     });

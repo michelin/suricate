@@ -50,6 +50,14 @@ export interface FormField {
    */
   options?: FormOption[];
   /**
+   * The mat-icon name that should be used as prefix
+   */
+  matIconPrefix?: string;
+  /**
+   * The mat-icon nam that should be used as suffix
+   */
+  matIconSuffix?: string;
+  /**
    * True if the field should be disabled
    */
   disabled?: boolean;
