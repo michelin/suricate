@@ -66,11 +66,7 @@ export class InputComponent {
    */
   constructor() {
   }
-
-  test() {
-    console.log('test');
-  }
-
+  
   /**
    * Retrieve the form control from the form
    */

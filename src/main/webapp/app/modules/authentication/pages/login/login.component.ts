@@ -17,6 +17,8 @@
 import {Component, OnInit} from '@angular/core';
 import {FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
+import {TranslateService} from '@ngx-translate/core';
+import {TitleCasePipe} from '@angular/common';
 
 import {AuthenticationService} from '../../authentication.service';
 import {HttpConfigurationService} from '../../../../shared/services/api/http-configuration.service';
@@ -24,8 +26,6 @@ import {ApplicationProperties} from '../../../../shared/model/api/ApplicationPro
 import {AuthenticationProviderEnum} from '../../../../shared/model/enums/AuthenticationProviderEnum';
 import {FormService} from '../../../../shared/services/app/form.service';
 import {FormField} from '../../../../shared/model/app/form/FormField';
-import {TranslateService} from '@ngx-translate/core';
-import {TitleCasePipe} from '@angular/common';
 import {DataType} from '../../../../shared/model/enums/DataType';
 
 /**
