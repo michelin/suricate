@@ -46,6 +46,19 @@
     <mat-error *ngIf="getFormControl()['errors']?.required">
       <app-translate [key]="'field.required'"></app-translate>
     </mat-error>
+    <!-- Error message : Length -->
+    <mat-error *ngIf="getFormControl()['errors']?.minlength">
+      <app-translate [key]="'field.length'"></app-translate>
+    </mat-error>
+    <!-- Error message : Email -->
+    <mat-error *ngIf="getFormControl()['errors']?.email">
+      <app-translate [key]="'field.email.invalid.format'"></app-translate>
+    </mat-error>
+    <!-- Error message : Password confirmation -->
+    <mat-error *ngIf="getFormControl()['errors']?.mismatch">
+      <app-translate [key]="'field.password.mismatch'"></app-translate>
+    </mat-error>
+
   </mat-form-field>
 
 

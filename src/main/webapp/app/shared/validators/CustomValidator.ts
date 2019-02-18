@@ -26,7 +26,7 @@ import {AbstractControl, ValidationErrors, ValidatorFn} from '@angular/forms';
 export function checkPasswordMatch(passwordControl: AbstractControl): ValidatorFn {
   return (confirmPasswordControl: AbstractControl): ValidationErrors => {
     if (passwordControl.dirty && passwordControl.touched && confirmPasswordControl.dirty && confirmPasswordControl.touched) {
-      return passwordControl.value !== confirmPasswordControl.value ? {unmatchedPasswords: true} : null;
+      return passwordControl.value !== confirmPasswordControl.value ? {mismatch: true} : null;
     }
   };
 }
