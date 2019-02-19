@@ -15,9 +15,11 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {ActivatedRoute} from '@angular/router';
+import {FormGroup, Validators} from '@angular/forms';
+import {ActivatedRoute, Router} from '@angular/router';
 import {CustomValidators} from 'ng2-validation';
+import {TranslateService} from '@ngx-translate/core';
+import {flatMap, map} from 'rxjs/operators';
 
 import {Project} from '../../../../../shared/model/api/project/Project';
 import {ToastService} from '../../../../../shared/components/toast/toast.service';
@@ -25,6 +27,10 @@ import {ToastType} from '../../../../../shared/components/toast/toast-objects/To
 import {HttpProjectService} from '../../../../../shared/services/api/http-project.service';
 import {ProjectRequest} from '../../../../../shared/model/api/project/ProjectRequest';
 import {User} from '../../../../../shared/model/api/user/User';
+import {FormStep} from '../../../../../shared/model/app/form/FormStep';
+import {FormService} from '../../../../../shared/services/app/form.service';
+import {FormField} from '../../../../../shared/model/app/form/FormField';
+import {DataType} from '../../../../../shared/model/enums/DataType';
 
 /**
  * Component that display the edit page for a dashboard
@@ -40,7 +46,13 @@ export class DashboardEditComponent implements OnInit {
    * The dashboard form
    * @type {FormGroup}
    */
-  editDashboardForm: FormGroup;
+  dashboardForm: FormGroup;
+
+  /**
+   * The list of step used to create the form
+   * @type {FormStep[]}
+   */
+  formSteps: FormStep[];
 
   /**
    * The dashboard to edit
@@ -58,13 +70,17 @@ export class DashboardEditComponent implements OnInit {
    *
    * @param {HttpProjectService} httpProjectService The http project service to inject
    * @param {ActivatedRoute} activatedRoute The activated route to inject
-   * @param {FormBuilder} formBuilder The formBuilder service
+   * @param {Router} router The router service
    * @param {ToastService} toastService The service used for displayed Toast notification
+   * @param {FormService} formService The form service used to generate form
+   * @param {TranslateService} translateService The service used to translate sentences
    */
   constructor(private httpProjectService: HttpProjectService,
               private activatedRoute: ActivatedRoute,
-              private formBuilder: FormBuilder,
-              private toastService: ToastService) {
+              private router: Router,
+              private toastService: ToastService,
+              private formService: FormService,
+              private translateService: TranslateService) {
   }
 
   /**
@@ -72,13 +88,12 @@ export class DashboardEditComponent implements OnInit {
    */
   ngOnInit() {
     this.activatedRoute.params.subscribe(params => {
-      this.httpProjectService.getOneByToken(params['dashboardToken']).subscribe(dashboard => {
-        this.dashboard = dashboard;
+      this.httpProjectService.getOneByToken(params['dashboardToken']).pipe(
+        map((dashboard: Project) => this.dashboard = dashboard),
+        flatMap(() => this.httpProjectService.getProjectUsers(params['dashboardToken'])),
+        map((users: User[]) => this.dashboardUsers = users)
+      ).subscribe(() => {
         this.initDashboardForm();
-
-        this.httpProjectService.getProjectUsers(params['dashboardToken']).subscribe(users => {
-          this.dashboardUsers = users;
-        });
       });
     });
   }
@@ -87,33 +102,85 @@ export class DashboardEditComponent implements OnInit {
    * Init the dashboard edit form
    */
   initDashboardForm() {
-    this.editDashboardForm = this.formBuilder.group({
-      name: [this.dashboard.name, [Validators.required, Validators.minLength(3)]],
-      token: [this.dashboard.token, [Validators.required]],
-      widgetHeight: [this.dashboard.gridProperties.widgetHeight, [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]],
-      maxColumn: [this.dashboard.gridProperties.maxColumn, [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]]
+    this.formSteps = [];
+    this.generateStepOne().pipe(
+      map((stepOne: FormStep) => this.formSteps[0] = stepOne)
+    ).subscribe(() => {
+      this.dashboardForm = this.formService.generateFormGroupForSteps(this.formSteps);
     });
+
+    // this.dashboardForm = this.formBuilder.group({
+    //   name: [this.dashboard.name, [Validators.required, Validators.minLength(3)]],
+    //   token: [this.dashboard.token, [Validators.required]],
+    //   widgetHeight: [this.dashboard.gridProperties.widgetHeight, [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]],
+    //   maxColumn: [this.dashboard.gridProperties.maxColumn, [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]]
+    // });
   }
 
-
   /**
-   * Check if the field is invalid
-   *
-   * @param {string} field The field to check
-   * @returns {boolean} False if the field valid, true otherwise
+   * Generate the step one of the form
+   * "General information step"
    */
-  isFieldInvalid(field: string) {
-    return this.editDashboardForm.invalid && (this.editDashboardForm.get(field).dirty || this.editDashboardForm.get(field).touched);
+  generateStepOne() {
+    return this.translateService.get(['dashboard.name', 'token', 'widget.heigth.px', 'grid.nb.columns']).pipe(
+      map((translations: string) => {
+        const formFields: FormField[] = [
+          {
+            key: 'name',
+            label: translations['dashboard.name'],
+            type: DataType.TEXT,
+            value: this.dashboard.name,
+            matIconPrefix: 'loyalty',
+            validators: [Validators.required, Validators.minLength(3)]
+          },
+          {
+            key: 'token',
+            label: translations['token'],
+            type: DataType.TEXT,
+            value: this.dashboard.token,
+            matIconPrefix: 'vpn_key',
+            readOnly: true,
+            validators: [Validators.required]
+          },
+          {
+            key: 'widgetHeight',
+            label: translations['widget.heigth.px'],
+            type: DataType.NUMBER,
+            value: this.dashboard.gridProperties.widgetHeight,
+            matIconPrefix: 'equalizer',
+            validators: [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]
+          },
+          {
+            key: 'maxColumn',
+            label: translations['grid.nb.columns'],
+            type: DataType.NUMBER,
+            value: this.dashboard.gridProperties.maxColumn,
+            matIconPrefix: 'view_week',
+            validators: [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]
+          }
+        ];
+
+        return {fields: formFields};
+      })
+    );
   }
 
   /**
    * edit the dashboard
    */
   saveDashboard() {
-    const projectRequest: ProjectRequest = {...this.dashboard, ...this.editDashboardForm.value};
+    const projectRequest: ProjectRequest = {...this.dashboard, ...this.dashboardForm.value};
 
     this.httpProjectService.editProject(this.dashboard.token, projectRequest).subscribe(() => {
       this.toastService.sendMessage('Dashboard saved successfully', ToastType.SUCCESS);
+      this.redirectToDashboardList();
     });
+  }
+
+  /**
+   * Redirect to dashboard list
+   */
+  redirectToDashboardList() {
+    this.router.navigate(['/dashboards', 'all']);
   }
 }
