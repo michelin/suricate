@@ -17,7 +17,7 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 
 import {HttpConfigurationService} from '../../../../../../shared/services/api/http-configuration.service';
@@ -25,6 +25,11 @@ import {ToastService} from '../../../../../../shared/components/toast/toast.serv
 import {Configuration} from '../../../../../../shared/model/api/configuration/Configuration';
 import {ToastType} from '../../../../../../shared/components/toast/toast-objects/ToastType';
 import {DataType} from '../../../../../../shared/model/enums/DataType';
+import {FormField} from '../../../../../../shared/model/app/form/FormField';
+import {map} from 'rxjs/operators';
+import {TranslateService} from '@ngx-translate/core';
+import {FormService} from '../../../../../../shared/services/app/form.service';
+import {Observable} from 'rxjs';
 
 /**
  * Manage the edition of a configuration
@@ -41,6 +46,11 @@ export class WidgetConfigurationEditComponent implements OnInit {
    * @type {FormGroup}
    */
   configurationForm: FormGroup;
+  /**
+   * Object used to describe the form
+   * @type {FormField[]}
+   */
+  formFields: FormField[];
 
   /**
    * The current configuration
@@ -59,15 +69,17 @@ export class WidgetConfigurationEditComponent implements OnInit {
    *
    * @param {ActivatedRoute} activatedRoute The activated route service
    * @param {Router} router The router service to inject
-   * @param {FormBuilder} formBuilder The form builder
    * @param {ToastService} toastService The toast service
    * @param {HttpConfigurationService} configurationService The configuration service
+   * @param {TranslateService} translateService The translation service
+   * @param {FormService} formService The form service to inject
    */
   constructor(private activatedRoute: ActivatedRoute,
               private router: Router,
-              private formBuilder: FormBuilder,
               private toastService: ToastService,
-              private configurationService: HttpConfigurationService) {
+              private configurationService: HttpConfigurationService,
+              private translateService: TranslateService,
+              private formService: FormService) {
   }
 
   /**
@@ -75,8 +87,9 @@ export class WidgetConfigurationEditComponent implements OnInit {
    */
   ngOnInit() {
     this.activatedRoute.params.subscribe(params => {
-      this.configurationService.getOneByKey(params['configurationKey']).subscribe(configuration => {
-        this.configuration = configuration;
+      this.configurationService.getOneByKey(params['configurationKey']).pipe(
+        map((configuration: Configuration) => this.configuration = configuration)
+      ).subscribe(() => {
         this.initConfigForm();
       });
     });
@@ -86,11 +99,46 @@ export class WidgetConfigurationEditComponent implements OnInit {
    * Init the configuration form
    */
   initConfigForm() {
-    this.configurationForm = this.formBuilder.group({
-      key: [this.configuration.key, [Validators.required]],
-      value: [this.configuration.value ? this.configuration.value : '', [Validators.required]],
-      category: [this.configuration.category.name, [Validators.required]]
+    this.generateFormFields().pipe(
+      map((formFields: FormField[]) => this.formFields = formFields)
+    ).subscribe(() => {
+      this.configurationForm = this.formService.generateFormGroupForFields(this.formFields);
     });
+  }
+
+  generateFormFields(): Observable<FormField[]> {
+    return this.translateService.get(['key', 'configuration.category', 'value']).pipe(
+      map((translations: string) => {
+        return [
+          {
+            key: 'key',
+            label: translations['key'],
+            type: DataType.TEXT,
+            value: this.configuration.key,
+            readOnly: true,
+            matIconPrefix: 'vpn_key',
+            validators: [Validators.required]
+          },
+          {
+            key: 'category',
+            label: translations['configuration.category'],
+            type: DataType.TEXT,
+            value: this.configuration.category.name,
+            readOnly: true,
+            matIconPrefix: 'widgets',
+            validators: [Validators.required]
+          },
+          {
+            key: 'value',
+            label: translations['value'],
+            type: this.configuration.dataType,
+            value: this.configuration.value,
+            matIconPrefix: 'input',
+            validators: [Validators.required]
+          }
+        ];
+      })
+    );
   }
 
   /**
