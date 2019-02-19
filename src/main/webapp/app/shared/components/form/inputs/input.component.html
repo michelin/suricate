@@ -30,7 +30,8 @@
                 [id]="field.key"
                 [formControl]="getFormControl()"
                 [multiple]="field.type === dataType.MULTIPLE"
-                [required]="isRequired()">
+                [required]="isRequired()"
+                (selectionChange)="emitValueChange($event.value)">
       <mat-option *ngFor="let option of field.options" [value]="option.key">
         {{ option.label }}
       </mat-option>

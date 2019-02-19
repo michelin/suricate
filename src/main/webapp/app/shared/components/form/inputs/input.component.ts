@@ -21,6 +21,7 @@ import {AbstractControl, FormGroup, ValidatorFn, Validators} from '@angular/form
 
 import {DataType} from '../../../model/enums/DataType';
 import {FormField} from '../../../model/app/form/FormField';
+import {FormChangeEvent} from '../../../model/app/form/FormChangeEvent';
 
 /**
  * Manage the instantiation of different form inputs
@@ -51,7 +52,7 @@ export class InputComponent {
    * Event sent when the value of the input has changed
    */
   @Output()
-  valueChangeEvent = new EventEmitter<any>();
+  valueChangeEvent = new EventEmitter<FormChangeEvent>();
   /**
    * The data type enum
    */
@@ -75,8 +76,11 @@ export class InputComponent {
    *
    * @param value The new value
    */
-  emitValueChange(value): void {
-    this.valueChangeEvent.emit({value: value});
+  emitValueChange(value: any): void {
+    this.valueChangeEvent.emit({
+      inputKey: this.field.key,
+      value: value
+    });
   }
 
   /**
