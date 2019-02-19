@@ -39,6 +39,30 @@ export class FormService {
   constructor(private formBuilder: FormBuilder) {
   }
 
+  /* *********************************************************************************************************************************** */
+  /*                                         General Form Management                                                                     */
+
+  /* *********************************************************************************************************************************** */
+
+  /**
+   * Method used to copy a formGroup into another
+   *
+   * @param formSource The form group we want to copy
+   * @param formTarget The form group targeted
+   */
+  copyFormGroupToAnotherOne(formSource: FormGroup, formTarget: FormGroup): FormGroup {
+    Object.keys(formSource.controls).forEach((formControlKey: string) => {
+      formTarget.addControl(formControlKey, formSource.get(formControlKey));
+    });
+
+    return formTarget;
+  }
+
+  /* *********************************************************************************************************************************** */
+  /*                                         Form Step Management                                                                        */
+
+  /* *********************************************************************************************************************************** */
+
   /**
    * Generate a form group for the steps
    *
@@ -46,20 +70,33 @@ export class FormService {
    * @return The generated form group for the list of steps give in argument
    */
   generateFormGroupForSteps(steps: FormStep[]): FormGroup {
-    const formGroup = this.formBuilder.group({});
+    let formGroup = this.formBuilder.group({});
 
     steps.forEach((step: FormStep) => {
       // Generation of the form control for the step
       const generatedStepForm = this.generateFormGroupForFields(step.fields);
-
-      //We add every control in the main form
-      Object.keys(generatedStepForm.controls).forEach((formControlKey: string) => {
-        formGroup.addControl(formControlKey, generatedStepForm.get(formControlKey));
-      });
+      formGroup = this.copyFormGroupToAnotherOne(generatedStepForm, formGroup);
     });
 
     return formGroup;
   }
+
+  /**
+   * Reset a form step for a form group
+   *
+   * @param formGroup The form group
+   * @param oldStep The step to remove
+   * @param newStep The new step to add to the form group
+   */
+  switchFormGroupStepByAnotherOne(formGroup: FormGroup, oldStep: FormStep, newStep: FormStep): FormGroup {
+    this.deleteFormControlForFields(formGroup, oldStep.fields);
+    return this.copyFormGroupToAnotherOne(formGroup, this.generateFormGroupForFields(newStep.fields));
+  }
+
+  /* *********************************************************************************************************************************** */
+  /*                                         Form fields Management                                                                      */
+
+  /* *********************************************************************************************************************************** */
 
   /**
    * Generate a form group for the fields
@@ -87,5 +124,16 @@ export class FormService {
    */
   generateFormControl(field: FormField): FormControl {
     return this.formBuilder.control({value: field.value, disabled: field.disabled}, field.validators, field.asyncValidators);
+  }
+
+  /**
+   * Delete the form control related to the form fields
+   *
+   * @param formGroup The form group that contains the fields
+   * @param fields The fields to delete
+   */
+  deleteFormControlForFields(formGroup: FormGroup, fields: FormField[]) {
+    fields.forEach((field: FormField) => formGroup.removeControl(field.key));
+    return formGroup;
   }
 }
