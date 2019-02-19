@@ -58,6 +58,10 @@ export interface FormField {
    */
   matIconSuffix?: string;
   /**
+   * Hint to display to the user
+   */
+  hint?: string;
+  /**
    * True if the field should be disabled
    */
   disabled?: boolean;

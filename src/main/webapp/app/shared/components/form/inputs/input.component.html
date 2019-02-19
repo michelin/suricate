@@ -43,6 +43,12 @@
       {{ field.matIconSuffix }}
     </mat-icon>
 
+    <!-- Display an hint the user -->
+    <mat-hint align="start" *ngIf="field.hint || field.readOnly">
+      <app-translate *ngIf="field.readOnly" [key]="'field.readonly'"></app-translate>
+      <span *ngIf="field.hint"> {{ field.hint }}</span>
+    </mat-hint>
+
     <!------------------------------------------------------------------------------------------------------->
     <!---                        FIELDS ERROR MANAGEMENT                                                  --->
     <!------------------------------------------------------------------------------------------------------->
