@@ -1,5 +1,7 @@
 <div [formGroup]="formGroup">
-  <mat-form-field [floatLabel]="field.placeholder ? 'always' : 'auto'" fxFlex="100">
+  <mat-form-field
+      *ngIf="[dataType.NUMBER, dataType.TEXT, dataType.PASSWORD, dataType.COMBO, dataType.MULTIPLE].includes(field.type)"
+      [floatLabel]="field.placeholder ? 'always' : 'auto'" fxFlex="100">
     <!------------------------------------------------------------------------------------------------------->
     <!---                        FORM FIELDS                                                              --->
     <!------------------------------------------------------------------------------------------------------->
@@ -58,11 +60,13 @@
     <mat-error *ngIf="getFormControl()['errors']?.mismatch">
       <app-translate [key]="'field.password.mismatch'"></app-translate>
     </mat-error>
-
   </mat-form-field>
 
 
-  <app-checkbox *ngIf="dataType.BOOLEAN === field.type">
+  <app-checkbox *ngIf="dataType.BOOLEAN === field.type"
+                [field]="field"
+                [formGroup]="formGroup"
+                [isReadOnly]="false">
   </app-checkbox>
 
   <app-file-input *ngIf="dataType.FILE === field.type">

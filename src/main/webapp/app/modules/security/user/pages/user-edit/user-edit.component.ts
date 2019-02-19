@@ -19,6 +19,8 @@ import {FormGroup, Validators} from '@angular/forms';
 import {ActivatedRoute, Router} from '@angular/router';
 import {TranslateService} from '@ngx-translate/core';
 import {flatMap, map} from 'rxjs/operators';
+import {CustomValidators} from 'ng2-validation';
+import {Observable} from 'rxjs';
 
 import {ToastService} from '../../../../../shared/components/toast/toast.service';
 import {RoleService} from '../../role.service';
@@ -32,9 +34,7 @@ import {UserRequest} from '../../../../../shared/model/api/user/UserRequest';
 import {DataType} from '../../../../../shared/model/enums/DataType';
 import {FormService} from '../../../../../shared/services/app/form.service';
 import {FormStep} from '../../../../../shared/model/app/form/FormStep';
-import {Observable} from 'rxjs';
 import {FormField} from '../../../../../shared/model/app/form/FormField';
-import {CustomValidators} from 'ng2-validation';
 import {FormOption} from '../../../../../shared/model/app/form/FormOption';
 
 /**
@@ -115,10 +115,8 @@ export class UserEditComponent implements OnInit {
     this.formSteps = [];
 
     this.generateStepOne().pipe(
-      flatMap((stepOne: FormStep) => {
-        this.formSteps[0] = stepOne;
-        return this.generateStepTwo();
-      }),
+      map((stepOne: FormStep) => this.formSteps[0] = stepOne),
+      flatMap(() => this.generateStepTwo()),
       map((stepTwo: FormStep) => this.formSteps[1] = stepTwo)
     ).subscribe(() => {
       this.editUserForm = this.formService.generateFormGroupForSteps(this.formSteps);

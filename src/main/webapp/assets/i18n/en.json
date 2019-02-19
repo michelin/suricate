@@ -32,6 +32,7 @@
   "repositories.list": "List of repositories",
   "repository.new": "Add a new repository",
   "repository.info": "Repository Informations",
+  "repository.enable": "Enable this repository",
   "widgets": "Widgets",
   "dashboards": "Dashboards",
   "dashboards.list": "All",
