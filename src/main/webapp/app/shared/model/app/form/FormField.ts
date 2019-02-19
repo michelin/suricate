@@ -62,6 +62,10 @@ export interface FormField {
    */
   disabled?: boolean;
   /**
+   * True if the field should be readonly
+   */
+  readOnly?: boolean;
+  /**
    * The list of validators for this field
    */
   validators?: ValidatorFn | ValidatorFn[] | null;

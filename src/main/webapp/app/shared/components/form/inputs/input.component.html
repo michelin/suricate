@@ -23,7 +23,8 @@
            [placeholder]="field.placeholder"
            [type]="field.type.toLowerCase()"
            [formControl]="getFormControl()"
-           [required]="isRequired()">
+           [required]="isRequired()"
+           [readonly]="field.readOnly">
 
     <!-- SELECT INPUT -->
     <mat-select *ngIf="[dataType.COMBO, dataType.MULTIPLE].includes(field.type)"
@@ -66,8 +67,7 @@
 
   <app-checkbox *ngIf="dataType.BOOLEAN === field.type"
                 [field]="field"
-                [formGroup]="formGroup"
-                [isReadOnly]="false">
+                [formGroup]="formGroup">
   </app-checkbox>
 
   <app-file-input *ngIf="dataType.FILE === field.type">

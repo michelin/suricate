@@ -44,11 +44,6 @@ export class InputComponent {
   @Input()
   field: FormField;
   /**
-   * True if the field should be readonly
-   */
-  @Input()
-  isReadOnly: boolean;
-  /**
    * Event sent when the value of the input has changed
    */
   @Output()
@@ -89,7 +84,7 @@ export class InputComponent {
   isRequired(): boolean {
     let isRequired: boolean = false;
 
-    if (!this.isReadOnly && this.field && this.field.validators && this.field.validators) {
+    if (this.field && this.field.validators && this.field.validators && !this.field.readOnly) {
       isRequired = Array.isArray(this.field.validators) ?
         (this.field.validators as ValidatorFn[]).includes(Validators.required)
         : this.field.validators === Validators.required;

@@ -14,7 +14,6 @@
       <app-input *ngFor="let field of formSteps[0].fields"
                  fxFlex="100"
                  [formGroup]="repositoryForm"
-                 [isReadOnly]="false"
                  [field]="field">
       </app-input>
 
@@ -24,7 +23,6 @@
       <app-input *ngFor="let field of formSteps[1].fields"
                  fxFlex="100"
                  [formGroup]="repositoryForm"
-                 [isReadOnly]="false"
                  [field]="field"
                  (valueChangeEvent)="manageInputChangeEvent($event)">
       </app-input>
@@ -32,16 +30,14 @@
       <app-input *ngFor="let field of formSteps[2]?.fields"
                  fxFlex="100"
                  [formGroup]="repositoryForm"
-                 [isReadOnly]="false"
                  [field]="field"
                  (valueChangeEvent)="manageInputChangeEvent($event)">
       </app-input>
     </mat-card-content>
 
-
     <mat-card-actions fxFlex="80">
       <!-- Submit action-->
-      <button mat-raised-button class="mat-elevation-z6" color="primary" type="submit">
+      <button mat-raised-button class="mat-elevation-z2" color="primary" type="submit">
         {{ 'save' | translate | uppercase}}
       </button>
     </mat-card-actions>

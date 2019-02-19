@@ -13,7 +13,6 @@
       <app-input *ngFor="let field of formSteps[0].fields"
                  fxFlex="100"
                  [formGroup]="editUserForm"
-                 [isReadOnly]="false"
                  [field]="field">
       </app-input>
 
@@ -23,7 +22,6 @@
       <app-input *ngFor="let field of formSteps[1].fields"
                  fxFlex="100"
                  [formGroup]="editUserForm"
-                 [isReadOnly]="false"
                  [field]="field">
       </app-input>
     </mat-card-content>
@@ -33,6 +31,5 @@
         {{ 'save' | translate | uppercase}}
       </button>
     </mat-card-actions>
-
   </mat-card>
 </form>

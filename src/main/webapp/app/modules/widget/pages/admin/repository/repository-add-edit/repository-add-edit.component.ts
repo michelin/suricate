@@ -22,6 +22,7 @@ import {FormGroup, Validators} from '@angular/forms';
 import {TranslateService} from '@ngx-translate/core';
 import {Observable} from 'rxjs';
 import {flatMap, map} from 'rxjs/operators';
+import {TitleCasePipe} from '@angular/common';
 
 import {Repository} from '../../../../../../shared/model/api/Repository/Repository';
 import {HttpRepositoryService} from '../../../../../../shared/services/api/http-repository.service';
@@ -32,7 +33,6 @@ import {FormService} from '../../../../../../shared/services/app/form.service';
 import {FormStep} from '../../../../../../shared/model/app/form/FormStep';
 import {FormField} from '../../../../../../shared/model/app/form/FormField';
 import {DataType} from '../../../../../../shared/model/enums/DataType';
-import {TitleCasePipe} from '@angular/common';
 import {FormOption} from '../../../../../../shared/model/app/form/FormOption';
 import {FormChangeEvent} from '../../../../../../shared/model/app/form/FormChangeEvent';
 
@@ -114,17 +114,6 @@ export class RepositoryAddEditComponent implements OnInit {
     ).subscribe(() => {
       this.repositoryForm = this.formService.generateFormGroupForSteps(this.formSteps);
     });
-
-    // this.repositoryForm = this.formBuilder.group({
-    //   name: [this.repository ? this.repository.name : '', [Validators.required]],
-    //   url: [this.repository ? this.repository.url : ''],
-    //   branch: [this.repository ? this.repository.branch : ''],
-    //   login: [this.repository ? this.repository.login : ''],
-    //   password: [this.repository ? this.repository.password : ''],
-    //   localPath: [this.repository ? this.repository.localPath : ''],
-    //   type: [this.repository ? this.repository.type : ''],
-    //   enabled: [this.repository ? this.repository.enabled : false]
-    // });
   }
 
   /**
@@ -146,7 +135,6 @@ export class RepositoryAddEditComponent implements OnInit {
             key: 'enabled',
             label: translations['repository.enable'],
             type: DataType.BOOLEAN,
-
             value: this.repository ? this.repository.enabled : false
           }
         ];

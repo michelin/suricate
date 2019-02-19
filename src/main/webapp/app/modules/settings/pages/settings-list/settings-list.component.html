@@ -6,8 +6,7 @@
     <mat-card-content fxFlex="80" fxLayout="column wrap">
       <app-input *ngFor="let field of formFields"
                  [formGroup]="userSettingForm"
-                 [field]="field"
-                 [isReadOnly]="false">
+                 [field]="field">
       </app-input>
     </mat-card-content>
 
