@@ -118,19 +118,11 @@ export class LoginComponent implements OnInit {
   }
 
   /**
-   * Check if the field is invalid
-   *
-   * @param {string} field The field to check
-   * @returns {boolean} False if the field valid, true otherwise
-   */
-  isFieldInvalid(field: string) {
-    return this.loginForm.invalid && (this.loginForm.get(field).dirty || this.loginForm.get(field).touched);
-  }
-
-  /**
    * Execute login action
    */
   login() {
+    this.formService.validate(this.loginForm);
+
     if (this.loginForm.valid) {
       // Display spinner
       this.formSubmitAttempt = true;

@@ -166,6 +166,8 @@ export class SettingsListComponent implements OnInit {
    * Save the user settings
    */
   saveUserSettings() {
+    this.formService.validate(this.userSettingForm);
+
     if (this.userSettingForm.valid) {
       console.log(this.userSettingForm.value);
       from(this.settings).pipe(

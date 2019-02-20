@@ -261,6 +261,8 @@ export class RepositoryAddEditComponent implements OnInit {
    * action that save the new repository
    */
   saveRepository() {
+    this.formService.validate(this.repositoryForm);
+
     if (this.repositoryForm.valid) {
       const repositoryToAddEdit: Repository = this.repositoryForm.value;
 

@@ -162,19 +162,11 @@ export class RegisterComponent implements OnInit {
   }
 
   /**
-   * Check if the field is invalid
-   *
-   * @param {string} field The field to check
-   * @returns {boolean} False if the field valid, true otherwise
-   */
-  isFieldInvalid(field: string) {
-    return this.registerForm.invalid && (this.registerForm.get(field).dirty || this.registerForm.get(field).touched);
-  }
-
-  /**
    * Send the register form
    */
   signUp() {
+    this.formService.validate(this.registerForm);
+
     if (this.registerForm.valid) {
       this.formSubmitAttempt = true;
       const userRequest: UserRequest = this.registerForm.value;

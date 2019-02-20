@@ -30,9 +30,6 @@
   $background: map-get($theme, background);
 
   .mat-form-field {
-    & {
-      margin-bottom: 15px;
-    }
 
     .mat-icon.prefix {
       margin-right: 10px;

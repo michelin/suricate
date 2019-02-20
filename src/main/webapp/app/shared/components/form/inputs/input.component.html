@@ -1,83 +1,94 @@
-<!------------------------------------------------------------------------------------------------------->
-<!---                        MAT FORM FIELDS/ERROR                                                    --->
-<!------------------------------------------------------------------------------------------------------->
+<div fxFlex="100" fxLayout="row wrap">
 
-<mat-form-field
-    *ngIf="[dataType.NUMBER, dataType.TEXT, dataType.PASSWORD, dataType.COMBO, dataType.MULTIPLE].includes(field.type)"
-    [floatLabel]="field.placeholder ? 'always' : 'auto'" fxFlex="100">
+  <!------------------------------------------------------------------------------------------------------->
+  <!---                        MAT FORM FIELDS/ERROR                                                    --->
+  <!------------------------------------------------------------------------------------------------------->
 
-  <!-- Mat Icon prefix -->
-  <mat-icon *ngIf="field.matIconPrefix" class="prefix" matPrefix color="primary">
-    {{ field.matIconPrefix }}
-  </mat-icon>
+  <mat-form-field
+      *ngIf="[dataType.NUMBER, dataType.TEXT, dataType.PASSWORD, dataType.COMBO, dataType.MULTIPLE].includes(field.type)"
+      fxFlex="100"
+      [floatLabel]="field.placeholder ? 'always' : 'auto'">
 
-  <!-- Mat label -->
-  <mat-label>
-    <app-translate [key]="field.label"></app-translate>
-  </mat-label>
+    <!-- Mat Icon prefix -->
+    <mat-icon *ngIf="field.matIconPrefix" class="prefix" matPrefix color="primary">
+      {{ field.matIconPrefix }}
+    </mat-icon>
 
-  <!-- SIMPLE INPUT -->
-  <input *ngIf="[dataType.NUMBER, dataType.TEXT, dataType.PASSWORD].includes(field.type)"
-         matInput
-         [id]="field.key"
-         [placeholder]="field.placeholder"
-         [type]="field.type.toLowerCase()"
-         [formControl]="getFormControl()"
-         [required]="isRequired()"
-         [readonly]="field.readOnly">
+    <!-- Mat label -->
+    <mat-label>
+      <app-translate [key]="field.label"></app-translate>
+    </mat-label>
 
-  <!-- SELECT INPUT -->
-  <mat-select *ngIf="[dataType.COMBO, dataType.MULTIPLE].includes(field.type)"
-              [id]="field.key"
-              [formControl]="getFormControl()"
-              [multiple]="field.type === dataType.MULTIPLE"
-              [required]="isRequired()"
-              (selectionChange)="emitValueChange($event.value)">
-    <mat-option *ngFor="let option of field.options" [value]="option.key">
-      {{ option.label }}
-    </mat-option>
-  </mat-select>
+    <!-- SIMPLE INPUT -->
+    <input *ngIf="[dataType.NUMBER, dataType.TEXT, dataType.PASSWORD].includes(field.type)"
+           matInput
+           [id]="field.key"
+           [placeholder]="field.placeholder"
+           [type]="field.type.toLowerCase()"
+           [formControl]="getFormControl()"
+           [required]="isRequired()"
+           [readonly]="field.readOnly">
 
-  <!-- Mat Icon suffix -->
-  <mat-icon *ngIf="field.matIconSuffix" matSuffix color="primary">
-    {{ field.matIconSuffix }}
-  </mat-icon>
+    <!-- SELECT INPUT -->
+    <mat-select *ngIf="[dataType.COMBO, dataType.MULTIPLE].includes(field.type)"
+                [id]="field.key"
+                [formControl]="getFormControl()"
+                [multiple]="field.type === dataType.MULTIPLE"
+                [required]="isRequired()"
+                (selectionChange)="emitValueChange($event.value)">
+      <mat-option *ngFor="let option of field.options" [value]="option.key">
+        {{ option.label }}
+      </mat-option>
+    </mat-select>
 
-  <!-- Display an hint the user -->
-  <mat-hint align="start" *ngIf="field.hint || field.readOnly">
-    <app-translate *ngIf="field.readOnly" [key]="'field.readonly'"></app-translate>
-    <span *ngIf="field.hint"> {{ field.hint }}</span>
-  </mat-hint>
+    <!-- Mat Icon suffix -->
+    <mat-icon *ngIf="field.matIconSuffix" matSuffix color="primary">
+      {{ field.matIconSuffix }}
+    </mat-icon>
+
+    <!-- Display an hint the user -->
+    <mat-hint align="start" *ngIf="field.hint || field.readOnly">
+      <app-translate *ngIf="field.readOnly" [key]="'field.readonly'"></app-translate>
+      <span *ngIf="field.hint"> {{ field.hint }}</span>
+    </mat-hint>
+  </mat-form-field>
+
+
+  <!------------------------------------------------------------------------------------------------------->
+  <!---                        OTHER FIELDS                                                             --->
+  <!------------------------------------------------------------------------------------------------------->
+
+  <app-checkbox *ngIf="dataType.BOOLEAN === field.type"
+                [field]="field"
+                [formGroup]="formGroup">
+  </app-checkbox>
+
+  <app-file-input *ngIf="dataType.FILE === field.type"
+                  [field]="field"
+                  [formGroup]="formGroup">
+  </app-file-input>
 
   <!------------------------------------------------------------------------------------------------------->
   <!---                        FIELDS ERROR MANAGEMENT                                                  --->
   <!------------------------------------------------------------------------------------------------------->
-  <!-- Error message : Required -->
-  <mat-error *ngIf="getFormControl()['errors']?.required">
-    <app-translate [key]="'field.required'"></app-translate>
-  </mat-error>
-  <!-- Error message : Length -->
-  <mat-error *ngIf="getFormControl()['errors']?.minlength">
-    <app-translate [key]="'field.length'"></app-translate>
-  </mat-error>
-  <!-- Error message : Email -->
-  <mat-error *ngIf="getFormControl()['errors']?.email">
-    <app-translate [key]="'field.email.invalid.format'"></app-translate>
-  </mat-error>
-  <!-- Error message : Password confirmation -->
-  <mat-error *ngIf="getFormControl()['errors']?.mismatch">
-    <app-translate [key]="'field.password.mismatch'"></app-translate>
-  </mat-error>
-</mat-form-field>
 
-<!------------------------------------------------------------------------------------------------------->
-<!---                        OTHER FIELDS                                                             --->
-<!------------------------------------------------------------------------------------------------------->
+  <div *ngIf="getFormControl().dirty || getFormControl().touched" [@animationError] class="input-error" fxFlex="100">
+    <!-- Error message : Required -->
+    <div *ngIf="getFormControl()['errors']?.required">
+      <app-translate [key]="'field.required'"></app-translate>
+    </div>
+    <!-- Error message : Length -->
+    <div *ngIf="getFormControl()['errors']?.minlength">
+      <app-translate [key]="'field.length'"></app-translate>
+    </div>
+    <!-- Error message : Email -->
+    <div *ngIf="getFormControl()['errors']?.email">
+      <app-translate [key]="'field.email.invalid.format'"></app-translate>
+    </div>
+    <!-- Error message : Password confirmation -->
+    <div *ngIf="getFormControl()['errors']?.mismatch">
+      <app-translate [key]="'field.password.mismatch'"></app-translate>
+    </div>
+  </div>
 
-<app-checkbox *ngIf="dataType.BOOLEAN === field.type"
-              [field]="field"
-              [formGroup]="formGroup">
-</app-checkbox>
-
-<app-file-input *ngIf="dataType.FILE === field.type">
-</app-file-input>
+</div>

@@ -169,12 +169,16 @@ export class DashboardEditComponent implements OnInit {
    * edit the dashboard
    */
   saveDashboard() {
-    const projectRequest: ProjectRequest = {...this.dashboard, ...this.dashboardForm.value};
+    this.formService.validate(this.dashboardForm);
 
-    this.httpProjectService.editProject(this.dashboard.token, projectRequest).subscribe(() => {
-      this.toastService.sendMessage('Dashboard saved successfully', ToastType.SUCCESS);
-      this.redirectToDashboardList();
-    });
+    if (this.dashboardForm.valid) {
+      const projectRequest: ProjectRequest = {...this.dashboard, ...this.dashboardForm.value};
+
+      this.httpProjectService.editProject(this.dashboard.token, projectRequest).subscribe(() => {
+        this.toastService.sendMessage('Dashboard saved successfully', ToastType.SUCCESS);
+        this.redirectToDashboardList();
+      });
+    }
   }
 
   /**

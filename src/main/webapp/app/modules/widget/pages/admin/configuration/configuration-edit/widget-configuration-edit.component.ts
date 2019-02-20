@@ -145,6 +145,8 @@ export class WidgetConfigurationEditComponent implements OnInit {
    * Save the configuration
    */
   saveConfiguration() {
+    this.formService.validate(this.configurationForm);
+
     if (this.configurationForm.valid) {
       const configuration = this.configuration;
       configuration.value = this.configurationForm.get('value').value;
@@ -154,16 +156,6 @@ export class WidgetConfigurationEditComponent implements OnInit {
         this.redirectToWidgetConfigurationList();
       });
     }
-  }
-
-  /**
-   * Check if the field is invalid
-   *
-   * @param {string} field The field to check
-   * @returns {boolean} False if the field valid, true otherwise
-   */
-  isFieldInvalid(field: string) {
-    return this.configurationForm.invalid && (this.configurationForm.get(field).dirty || this.configurationForm.get(field).touched);
   }
 
   /**
