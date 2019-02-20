@@ -15,8 +15,9 @@
  */
 
 import {Component, Inject, OnInit} from '@angular/core';
-import {FormGroup, NgForm} from '@angular/forms';
+import {FormGroup, NgForm, ValidatorFn, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import {flatMap, map} from 'rxjs/operators';
 
 import {ProjectWidget} from '../../../../shared/model/api/ProjectWidget/ProjectWidget';
 import {ToastService} from '../../../../shared/components/toast/toast.service';
@@ -29,6 +30,10 @@ import {Configuration} from '../../../../shared/model/api/configuration/Configur
 import {HttpCategoryService} from '../../../../shared/services/api/http-category.service';
 import {WidgetParam} from '../../../../shared/model/api/widget/WidgetParam';
 import {DataType} from '../../../../shared/model/enums/DataType';
+import {FormField} from '../../../../shared/model/app/form/FormField';
+import {FormService} from '../../../../shared/services/app/form.service';
+import {FormOption} from '../../../../shared/model/app/form/FormOption';
+import {WidgetParamValue} from '../../../../shared/model/api/widget/WidgetParamValue';
 
 @Component({
   selector: 'app-edit-project-widget-dialog',
@@ -37,6 +42,14 @@ import {DataType} from '../../../../shared/model/enums/DataType';
 })
 export class EditProjectWidgetDialogComponent implements OnInit {
 
+  /**
+   * The project widget form
+   */
+  projectWidgetForm: FormGroup;
+  /**
+   * Object that hold the description of the form
+   */
+  formFields: FormField[];
   /**
    * The project widget to delete
    * @type {ProjectWidget}
@@ -76,6 +89,7 @@ export class EditProjectWidgetDialogComponent implements OnInit {
    * @param httpAssetService The http asset service to inject
    * @param httpCategoryService Manage HTTP calls for the category
    * @param toastService The notification service
+   * @param formService The form service
    */
   constructor(@Inject(MAT_DIALOG_DATA) private data: any,
               private dialogRef: MatDialogRef<EditProjectWidgetDialogComponent>,
@@ -83,25 +97,23 @@ export class EditProjectWidgetDialogComponent implements OnInit {
               private httpWidgetService: HttpWidgetService,
               private httpAssetService: HttpAssetService,
               private httpCategoryService: HttpCategoryService,
-              private toastService: ToastService) {
+              private toastService: ToastService,
+              private formService: FormService) {
   }
 
   /**
-   * Init of the ocmponent
+   * Init of the component
    */
   ngOnInit() {
-    this.httpProjectWidgetService.getOneById(this.data.projectWidgetId).subscribe(projectWidget => {
-      this.projectWidget = projectWidget;
-
-      this.httpWidgetService.getOneById(projectWidget.widgetId).subscribe(widget => {
-        this.widget = widget;
-
-        this.httpCategoryService.getCategoryConfigurations(widget.category.id).subscribe(configurations => {
-          this.configurations = configurations;
-
-          this.createParamsToDisplay();
-        });
-      });
+    this.httpProjectWidgetService.getOneById(this.data.projectWidgetId).pipe(
+      map((projectWidget: ProjectWidget) => this.projectWidget = projectWidget),
+      flatMap(() => this.httpWidgetService.getOneById(this.projectWidget.widgetId)),
+      map((widget: Widget) => this.widget = widget),
+      flatMap(() => this.httpCategoryService.getCategoryConfigurations(this.widget.category.id)),
+      map((configurations: Configuration[]) => this.configurations = configurations)
+    ).subscribe(() => {
+      this.createParamsToDisplay();
+      this.generateProjectWidgetForm();
     });
   }
 
@@ -109,7 +121,7 @@ export class EditProjectWidgetDialogComponent implements OnInit {
    * Create the list of params to display
    */
   createParamsToDisplay() {
-    this.widgetParams = this.widget.params;
+    this.widgetParams = [];
 
     if (this.configurations) {
       this.configurations.forEach(configuration => {
@@ -122,6 +134,82 @@ export class EditProjectWidgetDialogComponent implements OnInit {
         });
       });
     }
+
+    this.widgetParams = [...this.widget.params];
+  }
+
+  /**
+   * Create the form to display
+   */
+  generateProjectWidgetForm() {
+    this.generateFormFields();
+    this.projectWidgetForm = this.formService.generateFormGroupForFields(this.formFields);
+  }
+
+  /**
+   * Generate the form descriptors
+   */
+  generateFormFields() {
+    this.formFields = [];
+
+    this.widgetParams.forEach((widgetParam: WidgetParam) => {
+      const projectWidgetValue = this.getParamValueByParamName(this.projectWidget.backendConfig, widgetParam.name);
+      const formField: FormField = {
+        key: widgetParam.name,
+        type: widgetParam.type,
+        label: widgetParam.description,
+        placeholder: widgetParam.usageExample,
+        value: projectWidgetValue ? projectWidgetValue : widgetParam.defaultValue,
+        options: this.getFormOptionsForWidgetParam(widgetParam),
+        validators: this.getValidatorsForWidgetParam(widgetParam)
+      };
+
+      if(widgetParam.type === DataType.BOOLEAN) {
+        formField.value = JSON.parse(formField.value);
+      }
+
+      this.formFields.push(formField);
+    });
+  }
+
+
+  /**
+   * Generation of the form options for widget params
+   *
+   * @param widgetParam The widget param
+   */
+  getFormOptionsForWidgetParam(widgetParam: WidgetParam): FormOption[] {
+    let formOptions: FormOption[] = [];
+
+    if (widgetParam.values) {
+      formOptions = widgetParam.values.map((widgetParamValue: WidgetParamValue) => {
+        return {
+          key: widgetParamValue.jsKey,
+          label: widgetParamValue.value
+        };
+      });
+    }
+
+    return formOptions;
+  }
+
+  /**
+   * Generation of the validators for the widget param
+   *
+   * @param widgetParam The widget param
+   */
+  getValidatorsForWidgetParam(widgetParam: WidgetParam): ValidatorFn[] {
+    const formValidators: ValidatorFn[] = [];
+
+    if (widgetParam.required) {
+      formValidators.push(Validators.required);
+    }
+
+    if (widgetParam.acceptFileRegex) {
+      formValidators.push(Validators.pattern(widgetParam.acceptFileRegex));
+    }
+
+    return formValidators;
   }
 
   /**
@@ -160,7 +248,6 @@ export class EditProjectWidgetDialogComponent implements OnInit {
     }
   }
 
-
   /**
    * Get the param value inside the backend config for a param
    *
@@ -176,17 +263,18 @@ export class EditProjectWidgetDialogComponent implements OnInit {
 
   /**
    * Edit the widget
-   *
-   * @param {NgForm} formSettings The form info
    */
-  editWidget(formSettings: NgForm): void {
-    if (formSettings.valid) {
-      const form: FormGroup = formSettings.form;
+  editWidget(): void {
+    if (this.projectWidgetForm.valid) {
       let backendConfig = '';
 
       this.widget.params.forEach(param => {
-        const value = form.get(param.name).value;
-        backendConfig = value ? `${backendConfig}${param.name}=${value}\n` : backendConfig;
+        const value = this.projectWidgetForm.get(param.name).value;
+        if(param.type === DataType.BOOLEAN) {
+          backendConfig = `${backendConfig}${param.name}=${value}\n`;
+        } else {
+          backendConfig = value ? `${backendConfig}${param.name}=${value}\n` : backendConfig;
+        }
       });
 
       this.projectWidget.backendConfig = backendConfig;
