@@ -1,7 +1,6 @@
 <mat-checkbox color="primary"
               [name]="field.key"
-              [checked]="field.value ? field.value : false"
-              [formControl]="getFormControl()"
-              [required]="isRequired()">
+              [checked]="field.value === undefined ? false : field.value"
+              [formControl]="getFormControl()">
   {{ field.label }}
 </mat-checkbox>
