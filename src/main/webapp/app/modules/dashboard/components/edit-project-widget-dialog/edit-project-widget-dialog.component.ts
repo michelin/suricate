@@ -265,6 +265,8 @@ export class EditProjectWidgetDialogComponent implements OnInit {
    * Edit the widget
    */
   editWidget(): void {
+    this.formService.validate(this.projectWidgetForm);
+
     if (this.projectWidgetForm.valid) {
       let backendConfig = '';
 
