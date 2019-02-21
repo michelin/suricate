@@ -1,0 +1,51 @@
+@import '~sass/dashboard-themes';
+
+.file-upload-wrapper {
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .upload-button-wrapper {
+    &{
+      float: right;
+    }
+
+    .upload-button {
+      & {
+        background-color: #fff;
+        box-shadow: none;
+        border: 1px solid black;
+        border-radius: 0;
+      }
+
+      .mat-icon {
+        margin-right: 20px;
+      }
+
+      .sentence {
+        font-weight: bold;
+      }
+    }
+  }
+
+  input[type="file"] {
+    display: none;
+  }
+}
+
+.button-error {
+  border-color: mat-color(map-get($theme, warn)) !important;
+  color: mat-color(map-get($theme, warn));
+}
+
+.input-error {
+  margin-top: 0.441667em;
+  top: calc(100% - 8.666667em);
+  position: relative;
+  box-sizing: border-box;
+  width: 100%;
+  overflow: hidden;
+  font-size: 75%;
+  color: mat-color(map-get($theme, warn));
+}

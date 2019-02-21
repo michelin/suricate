@@ -16,6 +16,8 @@
  *
  */
 
+import {Observable} from 'rxjs';
+
 /**
  * Utils class for images
  */
@@ -64,6 +66,24 @@ export class FileUtils {
     file.name = filename;
 
     return file as File;
+  }
+
+  /**
+   * Convert a file into into base 64
+   *
+   * @param file The file to convert
+   */
+  static convertFileToBase64(file: File): Observable<string | ArrayBuffer> {
+    return Observable.create( observable => {
+      const fileReader = new FileReader();
+
+      fileReader.onerror = err => observable.error(err);
+      fileReader.onabort = err => observable.error(err);
+      fileReader.onload = () => observable.next(fileReader.result);
+      fileReader.onloadend = () => observable.complete();
+
+      return fileReader.readAsDataURL(file);
+    });
   }
 
 }

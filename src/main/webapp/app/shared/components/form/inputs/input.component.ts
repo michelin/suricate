@@ -101,4 +101,11 @@ export class InputComponent {
 
     return isRequired;
   }
+
+  /**
+   * Test if the field is on error
+   */
+  isInputFieldOnError(): boolean {
+    return (this.getFormControl().dirty || this.getFormControl().touched) && this.getFormControl().invalid;
+  }
 }

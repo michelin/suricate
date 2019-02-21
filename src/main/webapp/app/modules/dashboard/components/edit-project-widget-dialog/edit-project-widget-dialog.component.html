@@ -23,14 +23,16 @@
             id="formSettings"
             [formGroup]="projectWidgetForm"
             (ngSubmit)="editWidget()"
+            fxLayout="row wrap"
             novalidate>
 
         <app-input *ngFor="let field of formFields"
+                   fxFlex="100"
                    [formGroup]="projectWidgetForm"
                    [field]="field">
         </app-input>
 
-        <button mat-raised-button class="mat-elevation-z2" color="primary" type="submit">
+        <button mat-raised-button class="mat-elevation-z2" color="primary" type="submit" fxFlex="100">
           <app-translate [key]="'save'"></app-translate>
         </button>
       </form>

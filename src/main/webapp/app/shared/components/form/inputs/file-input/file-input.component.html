@@ -1,19 +1,35 @@
-<div class="button-wrapper">
-  <!-- Used for display file selection window -->
-  <button mat-raised-button
-          class="file_upload_button mat-elevation-z8"
-          type="button"
-          (click)="file.click()">
-    <mat-icon>attach_file</mat-icon>
-    <span [class]="'file-selection-sentence-' + field.key"><app-translate
-        [key]="'upload'"></app-translate></span>
-  </button>
-  <!-- Used for retrieve the file -->
-  <input #file
-         style="display:none;"
-         type="file"
-         (change)="getUploadedFileBase64($event, formSettings, field.key, field.acceptFileRegex)">
-  <!--[pattern]="field.acceptFileRegex"-->
-  <!-- Used for send base64 file with the form -->
-  <input type="text" style="display:none;" [name]="field.key" [required]="field.required" ngModel>
+<div class="file-upload-wrapper" fxLayout="row wrap" fxLayoutAlign="space-around center" fxFlex="100" cdk-focus-start>
+  <!-- Image uploaded -->
+  <img *ngIf="imgBase64" [src]="imgBase64" alt="file_uploaded" fxFlex="49">
+
+  <!-- Button visible -->
+  <div fxFlex="48" fxLayout="row wrap" class="upload-button-wrapper">
+    <button mat-raised-button
+            type="button"
+            fxFlex="100"
+            class="upload-button"
+            [ngClass]="{'button-error': isInputFieldOnError()}"
+            (click)="file.click()">
+      <mat-icon>cloud_upload</mat-icon>
+      <app-translate class="sentence" [key]="'upload'"></app-translate>
+    </button>
+
+    <!-- Error Message for file input -->
+    <div *ngIf="isInputFieldOnError()" [@animationError] class="input-error" fxFlex="100">
+      <!-- Error message : Required -->
+      <div *ngIf="getFormControl()['errors']?.required">
+        <app-translate [key]="'field.required'"></app-translate>
+      </div>
+      <!-- Error message : Pattern -->
+      <div *ngIf="getFormControl()['errors']?.pattern">
+        <app-translate [key]="'field.pattern'"></app-translate>
+      </div>
+    </div>
+  </div>
+
+  <!-- Used to retrieve the file (hidden) -->
+  <input #file type="file" (change)="convertFileBase64($event)">
 </div>
+
+
+

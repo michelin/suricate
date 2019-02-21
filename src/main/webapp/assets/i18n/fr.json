@@ -48,6 +48,7 @@
   "field.email.invalid.format": "Format d'email invalide",
   "field.password.mismatch": "Les 2 mots de passe saisis sont différents",
   "field.required.int.length": "Nombre supérieur à 0 requis",
+  "field.pattern": "Le champ ne respect pas le format requis",
   "grid.configuration": "Configuration de la grille",
   "grid.style": "Disposition",
   "grid.background.color": "Couleur de fond",

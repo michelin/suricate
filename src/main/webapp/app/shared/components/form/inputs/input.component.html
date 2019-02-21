@@ -59,11 +59,13 @@
   <!------------------------------------------------------------------------------------------------------->
 
   <app-checkbox *ngIf="dataType.BOOLEAN === field.type"
+                fxFlex="100"
                 [field]="field"
                 [formGroup]="formGroup">
   </app-checkbox>
 
   <app-file-input *ngIf="dataType.FILE === field.type"
+                  fxFlex="100"
                   [field]="field"
                   [formGroup]="formGroup">
   </app-file-input>
@@ -72,7 +74,10 @@
   <!---                        FIELDS ERROR MANAGEMENT                                                  --->
   <!------------------------------------------------------------------------------------------------------->
 
-  <div *ngIf="getFormControl().dirty || getFormControl().touched" [@animationError] class="input-error" fxFlex="100">
+  <div *ngIf="dataType.FILE !== field.type && isInputFieldOnError()"
+       [@animationError]
+       class="input-error"
+       fxFlex="100">
     <!-- Error message : Required -->
     <div *ngIf="getFormControl()['errors']?.required">
       <app-translate [key]="'field.required'"></app-translate>
@@ -88,6 +93,10 @@
     <!-- Error message : Password confirmation -->
     <div *ngIf="getFormControl()['errors']?.mismatch">
       <app-translate [key]="'field.password.mismatch'"></app-translate>
+    </div>
+    <!-- Error message : Pattern -->
+    <div *ngIf="getFormControl()['errors']?.pattern">
+      <app-translate [key]="'field.pattern'"></app-translate>
     </div>
   </div>
 
