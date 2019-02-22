@@ -23,6 +23,7 @@ import {Project} from '../shared/model/api/project/Project';
 import {DashboardService} from '../modules/dashboard/dashboard.service';
 import {AddDashboardDialogComponent} from './components/add-dashboard-dialog/add-dashboard-dialog.component';
 import {HttpAssetService} from '../shared/services/api/http-asset.service';
+import {EditProjectWidgetDialogComponent} from '../modules/dashboard/components/edit-project-widget-dialog/edit-project-widget-dialog.component';
 
 /**
  * Manage the home page
@@ -80,9 +81,8 @@ export class HomeComponent implements OnInit, OnDestroy {
    * Open the add dashboard dialog
    */
   openAddDashboardDialog() {
-    this.addDashboardDialogRef = this.matDialog.open(AddDashboardDialogComponent, {
-      minWidth: 900,
-      minHeight: 500,
+    this.matDialog.open(AddDashboardDialogComponent, {
+      minWidth: 700
     });
   }
 

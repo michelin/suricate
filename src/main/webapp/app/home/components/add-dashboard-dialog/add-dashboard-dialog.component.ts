@@ -14,20 +14,28 @@
  * limitations under the License.
  */
 
-import {ChangeDetectorRef, Component, Inject, OnInit, ViewChild} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Component, Inject, OnInit, ViewChild} from '@angular/core';
+import {FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatHorizontalStepper} from '@angular/material';
-import {CustomValidators} from 'ng2-validation';
 import {Observable} from 'rxjs';
-import {debounceTime, distinctUntilChanged, switchMap} from 'rxjs/operators';
+import {flatMap, map} from 'rxjs/operators';
 
 import {DashboardService} from '../../../modules/dashboard/dashboard.service';
 import {Project} from '../../../shared/model/api/project/Project';
 import {User} from '../../../shared/model/api/user/User';
 import {HttpProjectService} from '../../../shared/services/api/http-project.service';
 import {HttpUserService} from '../../../shared/services/api/http-user.service';
-import {ProjectRequest} from '../../../shared/model/api/project/ProjectRequest';
 import {Router} from '@angular/router';
+import {FormService} from '../../../shared/services/app/form.service';
+import {FormStep} from '../../../shared/model/app/form/FormStep';
+import {FormField} from '../../../shared/model/app/form/FormField';
+import {TranslateService} from '@ngx-translate/core';
+import {DataType} from '../../../shared/model/enums/DataType';
+import {CustomValidators} from 'ng2-validation';
+import {FormChangeEvent} from '../../../shared/model/app/form/FormChangeEvent';
+import {FormOption} from '../../../shared/model/app/form/FormOption';
+import {ProjectRequest} from '../../../shared/model/api/project/ProjectRequest';
+import {TitleCasePipe} from '@angular/common';
 
 @Component({
   selector: 'app-add-dashboard-dialog',
@@ -40,46 +48,28 @@ export class AddDashboardDialogComponent implements OnInit {
    * @type {MatHorizontalStepper}
    */
   @ViewChild('addDashboardStepper') addDashboardStepper: MatHorizontalStepper;
-
   /**
-   * Dashboard form group
+   * project form group
    * @type {FormGroup}
    */
-  dashboardForm: FormGroup;
-
+  projectForm: FormGroup;
   /**
-   * Tell if the form has been completed or not
-   * @type {boolean}
+   * Form used to add user
    */
-  dashboardFormCompleted: boolean;
-
+  userForm: FormGroup;
   /**
-   * User form group
-   * @type {FormGroup}
+   * Describe the form
    */
-  addUserForm: FormGroup;
-  /**
-   * Observable of users (Used for auto completion
-   * @type {Observable<User[]>}
-   */
-  userAutoComplete$: Observable<User[]>;
+  formSteps: FormStep[];
   /**
    * The current project
    * @type {Project}
    */
-  projectAdded: Project;
-
+  project: Project;
   /**
    * The users of the project
    */
   projectUsers: User[];
-
-  /**
-   * Tel if we open the dialog in edit mode or not
-   * @type {boolean}
-   */
-  isEditMode = false;
-
   /**
    * The default dashboard background color
    * @type {string}
@@ -90,16 +80,16 @@ export class AddDashboardDialogComponent implements OnInit {
    * Constructor
    *
    * @param data The data passed to the dialog
-   * @param {FormBuilder} formBuilder The formbuilder service
-   * @param {ChangeDetectorRef} changeDetectorRef The change detector service
+   * @param {FormService} formService The form service
+   * @param {TranslateService} translateService The translation service
    * @param {Router} router The router service
    * @param {DashboardService} dashboardService The dashboard service
    * @param {HttpProjectService} httpProjectService The project service
    * @param {HttpUserService} httpUserService The http user service to inject
    */
   constructor(@Inject(MAT_DIALOG_DATA) private data: any,
-              private formBuilder: FormBuilder,
-              private changeDetectorRef: ChangeDetectorRef,
+              private formService: FormService,
+              private translateService: TranslateService,
               private router: Router,
               private dashboardService: DashboardService,
               private httpProjectService: HttpProjectService,
@@ -111,115 +101,182 @@ export class AddDashboardDialogComponent implements OnInit {
    */
   ngOnInit() {
     if (this.data && this.data.projectToken) {
-      this.isEditMode = true;
-
-      this.httpProjectService.getOneByToken(this.data.projectToken).subscribe(project => {
-        this.projectAdded = project;
-        const backgroundColor = this.getPropertyFromGridCss('background-color');
-        this.dashboardBackgroundColor = backgroundColor ? backgroundColor : this.dashboardBackgroundColor;
-        this.initDashboardForm(true);
-        this.initUserForm();
+      this.httpProjectService.getOneByToken(this.data.projectToken).pipe(
+        map((project: Project) => this.project = project),
+        flatMap(() => this.httpProjectService.getProjectUsers(this.project.token)),
+        map((users: User[]) => this.projectUsers = users)
+      ).subscribe(() => {
+        this.initForms();
       });
-
     } else {
-      // init form dashboard
-      this.initDashboardForm(false);
-
-      // Init user form
-      this.initUserForm();
+      this.initForms();
     }
   }
 
   /**
    * Init the dashboard form
-   *
-   * @param {boolean} formCompleted True if the form has been completed, false otherwise
    */
-  private initDashboardForm(formCompleted: boolean) {
-    this.dashboardFormCompleted = formCompleted;
-    this.dashboardForm = this.formBuilder.group({
-      'name': [this.projectAdded ? this.projectAdded.name : '', [Validators.required]],
-      'widgetHeight': [
-        this.projectAdded ? this.projectAdded.gridProperties.widgetHeight : '360',
-        [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]
-      ],
-      'maxColumn': [
-        this.projectAdded ? this.projectAdded.gridProperties.maxColumn : '5',
-        [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]
-      ]
+  private initForms() {
+    this.formSteps = [];
+
+    this.generateDashboardStep().pipe(
+      map((dashboardStep: FormStep) => this.formSteps[0] = dashboardStep),
+      flatMap(() => this.generateUserStep()),
+      map((userStep: FormStep) => this.formSteps[1] = userStep)
+    ).subscribe(() => {
+      this.initBackgroundColor();
+      this.projectForm = this.formService.generateFormGroupForFields(this.formSteps[0].fields);
+      this.userForm = this.formService.generateFormGroupForFields(this.formSteps[1].fields);
     });
   }
 
   /**
-   * Initialisation of the user form
+   * Generate the dashboard form step
    */
-  private initUserForm() {
-    // Init Add user form
-    this.addUserForm = this.formBuilder.group({
-      'username': ['', [Validators.required]]
-    });
-    // Populate user autocomplete
-    this.userAutoComplete$ = this.addUserForm.get('username').valueChanges.pipe(
-      debounceTime(500),
-      distinctUntilChanged(),
-      switchMap(username => username ? this.httpUserService.getAll(username) : new Observable<User[]>())
+  generateDashboardStep(): Observable<FormStep> {
+    return this.translateService.get(['dashboard.name', 'widget.heigth.px', 'grid.nb.columns']).pipe(
+      map((translations: string) => {
+        const formFields: FormField[] = [
+          {
+            key: 'name',
+            label: translations['dashboard.name'],
+            type: DataType.TEXT,
+            value: this.project ? this.project.name : '',
+            validators: [Validators.required]
+          },
+          {
+            key: 'widgetHeight',
+            label: translations['widget.heigth.px'],
+            type: DataType.NUMBER,
+            value: this.project ? this.project.gridProperties.widgetHeight : 360,
+            validators: [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]
+          },
+          {
+            key: 'maxColumn',
+            label: translations['grid.nb.columns'],
+            type: DataType.NUMBER,
+            value: this.project ? this.project.gridProperties.maxColumn : 5,
+            validators: [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]
+          }
+        ];
+
+        return {fields: formFields, stepCompleted: !!this.project};
+      })
     );
   }
 
   /**
-   * Check if the field is valid
-   *
-   * @param {string} field The field to check
-   * @returns {boolean} False if the field is valid, false otherwise
+   * Generate the dashboard form step
    */
-  isFieldInvalid(field: string) {
-    return this.dashboardForm.invalid && (this.dashboardForm.get(field).dirty || this.dashboardForm.get(field).touched);
+  generateUserStep(): Observable<FormStep> {
+    return this.translateService.get(['username.search']).pipe(
+      map((translations: string) => {
+        const formFields: FormField[] = [
+          {
+            key: 'username',
+            label: translations['username.search'],
+            type: DataType.TEXT,
+            value: '',
+            options: [],
+            hint: translations['username.search'],
+            matIconPrefix: 'person_pin',
+            validators: [Validators.required]
+          }
+        ];
+
+        return {fields: formFields};
+      })
+    );
   }
+
+  /**
+   * Init the background color property
+   */
+  initBackgroundColor() {
+    let backgroundColor = this.dashboardBackgroundColor;
+    if (this.project) {
+      backgroundColor = this.getPropertyFromGridCss('background-color');
+    }
+    this.dashboardBackgroundColor = backgroundColor ? backgroundColor : this.dashboardBackgroundColor;
+  }
+
+  /**
+   * Catch The event emit when the value as been changed
+   *
+   * @param event The event of value changed
+   */
+  catchValueChange(event: FormChangeEvent) {
+    if (event.inputKey === 'username') {
+      this.httpUserService.getAll(event.value.currentTarget.value).subscribe((users: User[]) => {
+        const titleCasePipe = new TitleCasePipe();
+        const formField: FormField = this.getFieldByStepNumberAndFieldKey(1, 'username');
+        const options: FormOption[] = [];
+        if (users) {
+          users.forEach((user: User) => {
+            options.push({
+              key: user.username,
+              label: `${titleCasePipe.transform(user.username)} - ${user.firstname} ${user.lastname}`
+            });
+          });
+        }
+
+        formField.options = options;
+      });
+    }
+  }
+
+  /**
+   * Get a specifique field for a step and key
+   *
+   * @param stepNumber The step number
+   * @param fieldKey The field key to find
+   */
+  private getFieldByStepNumberAndFieldKey(stepNumber: number, fieldKey: string) {
+    return this.formSteps[1].fields.find((field: FormField) => field.key === fieldKey);
+  }
+
 
   /**
    * Function used for add/Save a dashboard
    */
   saveDashboard() {
-    if (this.dashboardForm.valid) {
+    if (this.projectForm.valid) {
       const projectRequest: ProjectRequest = {
-        name: this.dashboardForm.get('name').value,
-        maxColumn: this.dashboardForm.get('maxColumn').value,
-        widgetHeight: this.dashboardForm.get('widgetHeight').value,
+        name: this.projectForm.get('name').value,
+        maxColumn: this.projectForm.get('maxColumn').value,
+        widgetHeight: this.projectForm.get('widgetHeight').value,
         cssStyle: this.getGridCss()
       };
 
-      if (!this.isEditMode) {
+      if (!this.project) {
         this.httpProjectService.createProject(projectRequest).subscribe((project: Project) => {
+          this.formSteps[0].stepCompleted = true;
           this.displayProject(project.token);
         });
 
       } else {
-        this.httpProjectService.editProject(this.projectAdded.token, projectRequest).subscribe(() => {
-          this.displayProject(this.projectAdded.token);
+        this.httpProjectService.editProject(this.project.token, projectRequest).subscribe(() => {
+          this.displayProject(this.project.token);
         });
       }
     }
   }
 
+  /**
+   * Used to display the project informations
+   *
+   * @param projectToken The project token
+   */
   displayProject(projectToken: string) {
-    this.httpProjectService.getOneByToken(projectToken).subscribe((project: Project) => {
-      this.projectAdded = project;
-
-      this.httpProjectService.getAllForCurrentUser().subscribe((projects: Project[]) => {
-        this.dashboardService.currentDashboardListValues = projects;
-      });
-
-      this.dashboardFormCompleted = true;
-      this.changeDetectorRef.detectChanges();
+    this.httpProjectService.getOneByToken(projectToken).pipe(
+      map((project: Project) => this.project = project),
+      flatMap(() => this.httpProjectService.getAllForCurrentUser()),
+      map((projects: Project[]) => this.dashboardService.currentDashboardListValues = projects),
+      flatMap(() => this.httpProjectService.getProjectUsers(projectToken)),
+      map((users: User[]) => this.projectUsers = users)
+    ).subscribe(() => {
       this.addDashboardStepper.next();
-
-      this.httpProjectService.getProjectUsers(projectToken).subscribe((users: User[]) => {
-        this.projectUsers = users;
-      });
-
-      if (!this.isEditMode) {
-        this.router.navigate(['/dashboards', projectToken]);
-      }
+      this.router.navigate(['/dashboards', projectToken]);
     });
   }
 
@@ -241,7 +298,7 @@ export class AddDashboardDialogComponent implements OnInit {
    * @returns {string} The related value
    */
   private getPropertyFromGridCss(property: string): string {
-    const propertyArray = [...this.projectAdded.gridProperties.cssStyle.split(/[{}]/)].map(value => value.trim());
+    const propertyArray = [...this.project.gridProperties.cssStyle.split(/[{}]/)].map(value => value.trim());
 
     const propertyFound = propertyArray.find((currentProperty: string) => {
       return currentProperty.includes(':') && currentProperty.split(':')[0] === property;
@@ -254,8 +311,11 @@ export class AddDashboardDialogComponent implements OnInit {
    * Add a user to the current dashboard
    */
   addUser() {
-    if (this.addUserForm.valid) {
-      this.httpProjectService.addUserToProject(this.projectAdded.token, this.addUserForm.value).subscribe();
+    if (this.userForm.valid) {
+      this.httpProjectService.addUserToProject(this.project.token, this.userForm.value).pipe(
+        flatMap(() => this.httpProjectService.getProjectUsers(this.project.token)),
+        map((users: User[]) => this.projectUsers = users)
+      ).subscribe();
     }
   }
 
@@ -265,6 +325,9 @@ export class AddDashboardDialogComponent implements OnInit {
    * @param {number} userId The user id
    */
   deleteUser(userId: number) {
-    this.httpProjectService.deleteUserFromProject(this.projectAdded.token, userId).subscribe();
+    this.httpProjectService.deleteUserFromProject(this.project.token, userId).pipe(
+      flatMap(() => this.httpProjectService.getProjectUsers(this.project.token)),
+      map((users: User[]) => this.projectUsers = users)
+    ).subscribe();
   }
 }
