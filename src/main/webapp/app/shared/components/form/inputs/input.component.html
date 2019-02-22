@@ -1,4 +1,4 @@
-<div fxFlex="100" fxLayout="row wrap">
+<div fxLayout="column wrap" class="input-wrapper">
 
   <!------------------------------------------------------------------------------------------------------->
   <!---                        MAT FORM FIELDS/ERROR                                                    --->
@@ -6,7 +6,6 @@
 
   <mat-form-field
       *ngIf="[dataType.NUMBER, dataType.TEXT, dataType.PASSWORD, dataType.COMBO, dataType.MULTIPLE].includes(field.type)"
-      fxFlex="100"
       [floatLabel]="field.placeholder ? 'always' : 'auto'">
 
     <!-- Mat Icon prefix -->
@@ -27,7 +26,16 @@
            [type]="field.type.toLowerCase()"
            [formControl]="getFormControl()"
            [required]="isRequired()"
-           [readonly]="field.readOnly">
+           [readonly]="field.readOnly"
+           [matAutocomplete]="autocomplete"
+           (keyup)="emitValueChange($event)">
+
+    <!-- Autocomplete -->
+    <mat-autocomplete #autocomplete="matAutocomplete">
+      <mat-option *ngFor="let option of field.options" [value]="option.key">
+        {{ option.label }}
+      </mat-option>
+    </mat-autocomplete>
 
     <!-- SELECT INPUT -->
     <mat-select *ngIf="[dataType.COMBO, dataType.MULTIPLE].includes(field.type)"
@@ -47,7 +55,7 @@
     </mat-icon>
 
     <!-- Display an hint the user -->
-    <mat-hint align="start" *ngIf="field.hint || field.readOnly">
+    <mat-hint align="start" *ngIf="(field.hint || field.readOnly) && !isInputFieldOnError()">
       <app-translate *ngIf="field.readOnly" [key]="'field.readonly'"></app-translate>
       <span *ngIf="field.hint"> {{ field.hint }}</span>
     </mat-hint>
@@ -59,13 +67,11 @@
   <!------------------------------------------------------------------------------------------------------->
 
   <app-checkbox *ngIf="dataType.BOOLEAN === field.type"
-                fxFlex="100"
                 [field]="field"
                 [formGroup]="formGroup">
   </app-checkbox>
 
   <app-file-input *ngIf="dataType.FILE === field.type"
-                  fxFlex="100"
                   [field]="field"
                   [formGroup]="formGroup">
   </app-file-input>
@@ -76,8 +82,7 @@
 
   <div *ngIf="dataType.FILE !== field.type && isInputFieldOnError()"
        [@animationError]
-       class="input-error"
-       fxFlex="100">
+       class="input-error">
     <!-- Error message : Required -->
     <div *ngIf="getFormControl()['errors']?.required">
       <app-translate [key]="'field.required'"></app-translate>

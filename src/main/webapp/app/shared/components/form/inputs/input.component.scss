@@ -1,12 +1,24 @@
 @import '~sass/dashboard-themes';
 
-.input-error {
-  margin-top: 0.441667em;
-  top: calc(100% - 8.666667em);
-  position: relative;
-  box-sizing: border-box;
-  width: 100%;
-  overflow: hidden;
-  font-size: 75%;
-  color: mat-color(map-get($theme, warn));
+.input-wrapper {
+  & {
+    height: max-content;
+    width: 100%;
+  }
+
+  & > * {
+    width: 100%;
+  }
+
+  .input-error {
+    top: -1.2em;
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+    overflow: hidden;
+    font-size: 75%;
+    color: mat-color(map-get($theme, warn));
+  }
 }
+
+

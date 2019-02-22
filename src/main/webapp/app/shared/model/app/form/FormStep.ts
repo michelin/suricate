@@ -25,5 +25,12 @@ import {FormField} from './FormField';
  * It allow to use generate easily our form in different section of our HTML page
  */
 export interface FormStep {
+  /**
+   * The form field for the step
+   */
   fields: FormField[];
+  /**
+   * Is the step has been completed (used with mat-stepper)
+   */
+  stepCompleted?: boolean
 }
