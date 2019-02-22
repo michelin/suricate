@@ -10,8 +10,13 @@
     width: 100%;
   }
 
+  .mat-form-field {
+    min-height: 73px;
+  }
+
   .input-error {
-    top: -1.2em;
+    top: -2.8em;
+    margin-bottom: -10px;
     position: relative;
     box-sizing: border-box;
     width: 100%;
