@@ -7,7 +7,7 @@
   }
 
   .upload-button-wrapper {
-    &{
+    & {
       float: right;
     }
 
@@ -40,7 +40,7 @@
 }
 
 .input-error {
-  top: -1.2em;
+  top: 0.8em;
   position: relative;
   box-sizing: border-box;
   width: 100%;

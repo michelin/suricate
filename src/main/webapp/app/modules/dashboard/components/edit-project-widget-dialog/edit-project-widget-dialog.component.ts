@@ -15,7 +15,7 @@
  */
 
 import {Component, Inject, OnInit} from '@angular/core';
-import {FormGroup, NgForm, ValidatorFn, Validators} from '@angular/forms';
+import {FormGroup, ValidatorFn, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import {flatMap, map} from 'rxjs/operators';
 
@@ -135,7 +135,7 @@ export class EditProjectWidgetDialogComponent implements OnInit {
       });
     }
 
-    this.widgetParams = [...this.widget.params];
+    this.widgetParams = [...this.widget.params, ...this.widgetParams];
   }
 
   /**
@@ -164,7 +164,7 @@ export class EditProjectWidgetDialogComponent implements OnInit {
         validators: this.getValidatorsForWidgetParam(widgetParam)
       };
 
-      if(widgetParam.type === DataType.BOOLEAN) {
+      if (widgetParam.type === DataType.BOOLEAN) {
         formField.value = JSON.parse(formField.value);
       }
 
@@ -246,7 +246,7 @@ export class EditProjectWidgetDialogComponent implements OnInit {
 
       this.widget.params.forEach(param => {
         const value = this.projectWidgetForm.get(param.name).value;
-        if(param.type === DataType.BOOLEAN) {
+        if (param.type === DataType.BOOLEAN) {
           backendConfig = `${backendConfig}${param.name}=${value}\n`;
         } else {
           backendConfig = value ? `${backendConfig}${param.name}=${value}\n` : backendConfig;
