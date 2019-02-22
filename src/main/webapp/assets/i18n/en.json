@@ -90,6 +90,7 @@
   "widget.settings": "Widget Settings",
   "widget.display.log": "Execution logs",
   "category.select": "Select category",
+  "screen.field.code": "Enter the code displayed on the screen",
   "screen.refresh": "Refresh Screens",
   "screen.management": "Screen Management",
   "projects.list": "List of projects",

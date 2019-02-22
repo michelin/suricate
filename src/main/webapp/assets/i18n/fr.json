@@ -90,6 +90,7 @@
   "widget.settings": "Configuration de la tuile",
   "widget.display.log": "Rapports d'exécution",
   "category.select": "Sélectionner la catégorie",
+  "screen.field.code": "Taper le code affiché à l'écran",
   "screen.refresh": "Rafraichir Ecrans",
   "screen.management": "Gestion des écrans",
   "projects.list": "Liste des projets",

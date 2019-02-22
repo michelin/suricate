@@ -108,13 +108,6 @@ export class DashboardEditComponent implements OnInit {
     ).subscribe(() => {
       this.dashboardForm = this.formService.generateFormGroupForSteps(this.formSteps);
     });
-
-    // this.dashboardForm = this.formBuilder.group({
-    //   name: [this.dashboard.name, [Validators.required, Validators.minLength(3)]],
-    //   token: [this.dashboard.token, [Validators.required]],
-    //   widgetHeight: [this.dashboard.gridProperties.widgetHeight, [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]],
-    //   maxColumn: [this.dashboard.gridProperties.maxColumn, [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]]
-    // });
   }
 
   /**
