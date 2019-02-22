@@ -74,7 +74,7 @@ export class FileUtils {
    * @param file The file to convert
    */
   static convertFileToBase64(file: File): Observable<string | ArrayBuffer> {
-    return Observable.create( observable => {
+    return Observable.create(observable => {
       const fileReader = new FileReader();
 
       fileReader.onerror = err => observable.error(err);
@@ -84,6 +84,17 @@ export class FileUtils {
 
       return fileReader.readAsDataURL(file);
     });
+  }
+
+  /**
+   * Test if the base 64 url is an image
+   * @param base64Url
+   */
+  static isBase64UrlIsAnImage(base64Url: string) {
+    const base64ImagePattern = '^data:image\/(gif|jpe?g|png);base64,.+$';
+    const regexp = new RegExp(base64ImagePattern);
+
+    return regexp.test(base64Url);
   }
 
 }

@@ -1,6 +1,11 @@
 @import '~sass/dashboard-themes';
 
 .file-upload-wrapper {
+  & {
+    margin-bottom: 45px;
+    margin-top: 45px;
+  }
+
   img {
     max-width: 100%;
     height: auto;

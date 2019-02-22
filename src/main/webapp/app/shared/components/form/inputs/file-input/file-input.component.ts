@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {NgForm} from '@angular/forms';
 import {InputComponent} from '../input.component';
 import {animate, style, transition, trigger} from '@angular/animations';
 import {FileUtils} from '../../../../utils/FileUtils';
@@ -12,10 +11,10 @@ import {FileUtils} from '../../../../utils/FileUtils';
   templateUrl: './file-input.component.html',
   styleUrls: ['./file-input.component.scss'],
   animations: [
-    trigger('animationError',  [
+    trigger('animationError', [
       transition(':enter', [
-        style({ opacity: 0, transform: 'translateY(-100%)' }),
-        animate('300ms cubic-bezier(0.55, 0, 0.55, 0.2)', style({ opacity: 1, transform: 'translateY(0%)' })),
+        style({opacity: 0, transform: 'translateY(-100%)'}),
+        animate('300ms cubic-bezier(0.55, 0, 0.55, 0.2)', style({opacity: 1, transform: 'translateY(0%)'})),
       ]),
     ])
   ]
@@ -28,6 +27,11 @@ export class FileInputComponent extends InputComponent implements OnInit {
   imgBase64: string | ArrayBuffer;
 
   /**
+   * If it's not an image we set the filename
+   */
+  filename: string;
+
+  /**
    * Constructor
    */
   constructor() {
@@ -38,7 +42,17 @@ export class FileInputComponent extends InputComponent implements OnInit {
    * When the component is init
    */
   ngOnInit(): void {
-    this.imgBase64 = this.field.value;
+    this.setBase64Image(this.field.value);
+  }
+
+  setBase64Image(base64Url?, filename?: string) {
+    if (FileUtils.isBase64UrlIsAnImage(base64Url)) {
+      this.imgBase64 = base64Url;
+      this.filename = null;
+    } else {
+      this.imgBase64 = null;
+      this.filename = filename;
+    }
   }
 
   /**
@@ -51,8 +65,8 @@ export class FileInputComponent extends InputComponent implements OnInit {
       const file: File = event.target.files[0];
 
       FileUtils.convertFileToBase64(file).subscribe(base64Url => {
-        this.imgBase64 = base64Url;
-        super.getFormControl().setValue( this.imgBase64 );
+        this.setBase64Image(base64Url, file.name);
+        super.getFormControl().setValue(base64Url);
         super.getFormControl().markAsDirty();
       });
     }

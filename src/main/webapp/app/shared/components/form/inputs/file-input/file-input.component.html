@@ -2,6 +2,10 @@
   <!-- Image uploaded -->
   <img *ngIf="imgBase64" [src]="imgBase64" alt="file_uploaded" fxFlex="49">
 
+  <div *ngIf="filename" fxFlex="49">
+    {{ filename }}
+  </div>
+
   <!-- Button visible -->
   <div fxFlex="48" fxLayout="row wrap" class="upload-button-wrapper">
     <button mat-raised-button
