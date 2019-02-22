@@ -103,6 +103,14 @@
     <div *ngIf="getFormControl()['errors']?.pattern">
       <app-translate [key]="'field.pattern'"></app-translate>
     </div>
+    <!-- Error message : Digits -->
+    <div *ngIf="getFormControl()['errors']?.digits">
+      <app-translate [key]="'field.digits'"></app-translate>
+    </div>
+    <!-- Error message : Digits -->
+    <div *ngIf="getFormControl()['errors']?.gt">
+      <app-translate [key]="'field.gt'"></app-translate>
+    </div>
   </div>
 
 </div>

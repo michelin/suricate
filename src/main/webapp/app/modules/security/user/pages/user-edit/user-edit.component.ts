@@ -135,6 +135,7 @@ export class UserEditComponent implements OnInit {
             label: translations['username'],
             type: DataType.TEXT,
             value: this.user.username,
+            readOnly: true,
             validators: [Validators.required, Validators.minLength(3)],
             matIconPrefix: 'android'
           },

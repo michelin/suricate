@@ -33,6 +33,7 @@ import {FormField} from '../../../../shared/model/app/form/FormField';
 import {FormOption} from '../../../../shared/model/app/form/FormOption';
 import {WidgetParamValue} from '../../../../shared/model/api/widget/WidgetParamValue';
 import {FormService} from '../../../../shared/services/app/form.service';
+import {CustomValidators} from 'ng2-validation';
 
 /**
  * Dialog used to add a widget
@@ -234,6 +235,10 @@ export class AddWidgetDialogComponent implements OnInit {
 
     if (widgetParam.acceptFileRegex) {
       formValidators.push(Validators.pattern(widgetParam.acceptFileRegex));
+    }
+
+    if (widgetParam.type === DataType.NUMBER) {
+      formValidators.push(CustomValidators.digits);
     }
 
     return formValidators;

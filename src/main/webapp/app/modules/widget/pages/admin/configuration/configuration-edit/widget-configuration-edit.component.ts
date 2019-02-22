@@ -116,17 +116,15 @@ export class WidgetConfigurationEditComponent implements OnInit {
             type: DataType.TEXT,
             value: this.configuration.key,
             readOnly: true,
-            matIconPrefix: 'vpn_key',
-            validators: [Validators.required]
+            matIconPrefix: 'vpn_key'
           },
           {
             key: 'category',
             label: translations['configuration.category'],
             type: DataType.TEXT,
-            value: this.configuration.category.name,
+            value: this.configuration.category ? this.configuration.category.name : '',
             readOnly: true,
-            matIconPrefix: 'widgets',
-            validators: [Validators.required]
+            matIconPrefix: 'widgets'
           },
           {
             key: 'value',

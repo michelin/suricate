@@ -34,6 +34,7 @@ import {FormField} from '../../../../shared/model/app/form/FormField';
 import {FormService} from '../../../../shared/services/app/form.service';
 import {FormOption} from '../../../../shared/model/app/form/FormOption';
 import {WidgetParamValue} from '../../../../shared/model/api/widget/WidgetParamValue';
+import {CustomValidators} from 'ng2-validation';
 
 @Component({
   selector: 'app-edit-project-widget-dialog',
@@ -207,6 +208,10 @@ export class EditProjectWidgetDialogComponent implements OnInit {
 
     if (widgetParam.acceptFileRegex) {
       formValidators.push(Validators.pattern(widgetParam.acceptFileRegex));
+    }
+    
+    if (widgetParam.type === DataType.NUMBER) {
+      formValidators.push(CustomValidators.digits);
     }
 
     return formValidators;

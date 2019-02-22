@@ -240,6 +240,8 @@ export class AddDashboardDialogComponent implements OnInit {
    * Function used for add/Save a dashboard
    */
   saveDashboard() {
+    this.formService.validate(this.projectForm);
+
     if (this.projectForm.valid) {
       const projectRequest: ProjectRequest = {
         name: this.projectForm.get('name').value,
