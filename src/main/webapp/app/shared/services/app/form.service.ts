@@ -17,7 +17,7 @@
  */
 
 import {Injectable} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup} from '@angular/forms';
+import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn} from '@angular/forms';
 
 import {FormField} from '../../model/app/form/FormField';
 import {FormStep} from '../../model/app/form/FormStep';
@@ -68,7 +68,7 @@ export class FormService {
       const control = formGroup.get(field);
 
       if (control instanceof FormControl) {
-        control.markAsTouched({ onlySelf: true });
+        control.markAsTouched({onlySelf: true});
       } else if (control instanceof FormGroup) {
         this.validate(control);
       }
@@ -152,5 +152,20 @@ export class FormService {
   deleteFormControlForFields(formGroup: FormGroup, fields: FormField[]) {
     fields.forEach((field: FormField) => formGroup.removeControl(field.key));
     return formGroup;
+  }
+
+  /* *********************************************************************************************************************************** */
+  /*                                         Form control Management                                                                     */
+
+  /* *********************************************************************************************************************************** */
+
+  /**
+   * Set validators for a form control
+   *
+   * @param formControl The form control
+   * @param validators The validators to set
+   */
+  setValidatorsForControl(formControl: AbstractControl, validators: ValidatorFn | ValidatorFn[] | null) {
+    formControl.setValidators(validators);
   }
 }

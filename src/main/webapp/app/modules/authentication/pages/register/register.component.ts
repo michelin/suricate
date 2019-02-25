@@ -33,6 +33,7 @@ import {AuthenticationProviderEnum} from '../../../../shared/model/enums/Authent
 import {FormField} from '../../../../shared/model/app/form/FormField';
 import {DataType} from '../../../../shared/model/enums/DataType';
 import {FormService} from '../../../../shared/services/app/form.service';
+import {CustomValidator} from '../../../../shared/validators/CustomValidator';
 
 
 /**
@@ -98,6 +99,14 @@ export class RegisterComponent implements OnInit {
   initRegisterForm() {
     this.generateFormFields();
     this.registerForm = this.formService.generateFormGroupForFields(this.formFields);
+    this.formService.setValidatorsForControl(
+      this.registerForm.get('confirmPassword'),
+      [
+        Validators.required,
+        Validators.minLength(3),
+        CustomValidator.checkPasswordMatch(this.registerForm.get('password'))
+      ]
+    );
   }
 
   /**
@@ -153,14 +162,12 @@ export class RegisterComponent implements OnInit {
             label: translations['password.confirm'],
             type: DataType.PASSWORD,
             value: '',
-            validators: [Validators.required, Validators.minLength(3)],
-            // asyncValidators: [checkPasswordMatch(this.passwordControl)],
             matIconPrefix: 'lock'
           }
         ];
       });
   }
-
+  
   /**
    * Send the register form
    */

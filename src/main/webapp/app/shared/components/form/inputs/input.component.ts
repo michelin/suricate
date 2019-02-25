@@ -107,6 +107,6 @@ export class InputComponent {
    * Test if the field is on error
    */
   isInputFieldOnError(): boolean {
-    return (this.getFormControl().dirty || this.getFormControl().touched) && this.getFormControl().invalid;
+    return this.getFormControl().dirty && this.getFormControl().invalid;
   }
 }

@@ -96,7 +96,7 @@
       <app-translate [key]="'field.email.invalid.format'"></app-translate>
     </div>
     <!-- Error message : Password confirmation -->
-    <div *ngIf="getFormControl()['errors']?.mismatch">
+    <div *ngIf="getFormControl()['errors']?.passwordMismatch">
       <app-translate [key]="'field.password.mismatch'"></app-translate>
     </div>
     <!-- Error message : Pattern -->
