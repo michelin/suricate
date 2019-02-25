@@ -15,7 +15,7 @@
  */
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {MatDialog, MatDialogRef} from '@angular/material';
+import {MatDialog} from '@angular/material';
 import {Router} from '@angular/router';
 import {takeWhile} from 'rxjs/operators';
 
@@ -23,7 +23,6 @@ import {Project} from '../shared/model/api/project/Project';
 import {DashboardService} from '../modules/dashboard/dashboard.service';
 import {AddDashboardDialogComponent} from './components/add-dashboard-dialog/add-dashboard-dialog.component';
 import {HttpAssetService} from '../shared/services/api/http-asset.service';
-import {EditProjectWidgetDialogComponent} from '../modules/dashboard/components/edit-project-widget-dialog/edit-project-widget-dialog.component';
 
 /**
  * Manage the home page
@@ -39,12 +38,6 @@ export class HomeComponent implements OnInit, OnDestroy {
    * @type {boolean}
    */
   private isAlive = true;
-
-  /**
-   * The add dashboard dialog
-   * @type {MatDialogRef<AddDashboardDialogComponent>}
-   */
-  addDashboardDialogRef: MatDialogRef<AddDashboardDialogComponent>;
 
   /**
    * The list of dashboards

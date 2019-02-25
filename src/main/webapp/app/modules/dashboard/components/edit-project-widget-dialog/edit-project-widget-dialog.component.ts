@@ -209,7 +209,7 @@ export class EditProjectWidgetDialogComponent implements OnInit {
     if (widgetParam.acceptFileRegex) {
       formValidators.push(Validators.pattern(widgetParam.acceptFileRegex));
     }
-    
+
     if (widgetParam.type === DataType.NUMBER) {
       formValidators.push(CustomValidators.digits);
     }

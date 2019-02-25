@@ -32,5 +32,5 @@ export interface FormStep {
   /**
    * Is the step has been completed (used with mat-stepper)
    */
-  stepCompleted?: boolean
+  stepCompleted?: boolean;
 }

@@ -167,7 +167,7 @@ export class RegisterComponent implements OnInit {
         ];
       });
   }
-  
+
   /**
    * Send the register form
    */

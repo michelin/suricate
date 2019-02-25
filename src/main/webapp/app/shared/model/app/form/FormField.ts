@@ -76,5 +76,5 @@ export interface FormField {
   /**
    * Async validators (require an http call)
    */
-  asyncValidators?: AsyncValidatorFn | AsyncValidatorFn[] | null
+  asyncValidators?: AsyncValidatorFn | AsyncValidatorFn[] | null;
 }

@@ -92,7 +92,7 @@ export class InputComponent {
    * Tell if it's a required field
    */
   isRequired(): boolean {
-    let isRequired: boolean = false;
+    let isRequired = false;
 
     if (this.field && this.field.validators && this.field.validators && !this.field.readOnly) {
       isRequired = Array.isArray(this.field.validators) ?

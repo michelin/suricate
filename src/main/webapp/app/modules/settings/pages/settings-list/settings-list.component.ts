@@ -103,7 +103,7 @@ export class SettingsListComponent implements OnInit {
         this.connectedUser = connectedUser;
         return this.httpUserService.getUserSettings(connectedUser.id);
       }),
-      //Get the full list of settings
+      // Get the full list of settings
       flatMap((userSettings: UserSetting[]) => {
         this.userSettings = userSettings;
         return this.httpSettingService.getAll();

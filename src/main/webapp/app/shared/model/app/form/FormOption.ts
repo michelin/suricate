@@ -27,5 +27,5 @@ export interface FormOption {
   /**
    * The label displayed to the user
    */
-  label: string
+  label: string;
 }

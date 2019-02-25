@@ -51,7 +51,7 @@ export class FileUtils {
     }
 
     return new Blob(byteArrays, {type: contentType});
-  };
+  }
 
   /**
    * Convert a blob to a file
