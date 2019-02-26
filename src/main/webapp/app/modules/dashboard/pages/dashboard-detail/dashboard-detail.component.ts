@@ -27,7 +27,6 @@ import {ProjectWidget} from '../../../../shared/model/api/ProjectWidget/ProjectW
 import {WebsocketService} from '../../../../shared/services/websocket.service';
 import {ImageUtils} from '../../../../shared/utils/ImageUtils';
 import {FileUtils} from '../../../../shared/utils/FileUtils';
-import Global = NodeJS.Global;
 
 /**
  * Component that display a specific dashboard
@@ -172,7 +171,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
       clearTimeout(this.screenshotTimer);
 
       // We are waiting 10sec before taking the screenshot
-      this.screenshotTimer = Global.setTimeout(() => {
+      this.screenshotTimer = global.setTimeout(() => {
         this.isReadOnly = true;
 
         // Waiting for behing readonly and take the screenshot
