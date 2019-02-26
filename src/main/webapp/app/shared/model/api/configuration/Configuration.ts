@@ -17,7 +17,7 @@
  */
 
 import {Category} from '../widget/Category';
-import {ConfigurationDataType} from '../../enums/ConfigurationDataType';
+import {DataType} from '../../enums/DataType';
 
 /**
  * The configuration entity
@@ -25,6 +25,6 @@ import {ConfigurationDataType} from '../../enums/ConfigurationDataType';
 export interface Configuration {
   key: string;
   value: string;
-  dataType: ConfigurationDataType;
+  dataType: DataType;
   category: Category;
 }

@@ -14,22 +14,21 @@
  *  * See the License for the specific language governing permissions and
  *  * limitations under the License.
  *
- *
  */
 
 package io.suricate.monitoring.model.enums;
 
 /**
- * Widget variable types
+ * Hold the data types for a configuration
  */
-public enum WidgetVariableType {
-
-    STRING,
-    SECRET,
+public enum DataType {
+    // Simple data types
+    NUMBER,
+    TEXT,
+    PASSWORD,
+    // Complex data types
     BOOLEAN,
-    INTEGER,
     COMBO,
     MULTIPLE,
-    FILE,
-    PASSWORD
+    FILE
 }

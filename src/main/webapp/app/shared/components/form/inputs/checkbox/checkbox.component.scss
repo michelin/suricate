@@ -16,11 +16,7 @@
  *
  */
 
-/**
- * Hold the data type for a configuration
- */
-export enum ConfigurationDataType {
-  INTEGER = 'INTEGER',
-  STRING = 'STRING',
-  PASSWORD = 'PASSWORD'
+.mat-checkbox {
+  display: block;
+  margin-bottom: 15px;
 }

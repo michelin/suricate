@@ -22,13 +22,17 @@
     width: 100%;
   }
 
-  & > * {
-    width: 70%;
-    margin: 5px 0;
+  .mat-card-content {
+    & {
+      width: 70%;
+    }
+
+    app-input {
+      padding-left: 25px;
+    }
   }
 
   .title {
-    margin-left: -80px;
     font-weight: 300;
     line-height: 1.4rem;
   }
@@ -37,13 +41,4 @@
     display: block;
     width: 100%;
   }
-}
-
-.mat-icon.prefix {
-  margin-right: 10px;
-}
-
-.mat-form-field {
-  width: 100%;
-  margin: 10px 0;
 }

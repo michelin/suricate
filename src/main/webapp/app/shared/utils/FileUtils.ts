@@ -16,6 +16,8 @@
  *
  */
 
+import {Observable} from 'rxjs';
+
 /**
  * Utils class for images
  */
@@ -49,7 +51,7 @@ export class FileUtils {
     }
 
     return new Blob(byteArrays, {type: contentType});
-  };
+  }
 
   /**
    * Convert a blob to a file
@@ -64,6 +66,35 @@ export class FileUtils {
     file.name = filename;
 
     return file as File;
+  }
+
+  /**
+   * Convert a file into into base 64
+   *
+   * @param file The file to convert
+   */
+  static convertFileToBase64(file: File): Observable<string | ArrayBuffer> {
+    return Observable.create(observable => {
+      const fileReader = new FileReader();
+
+      fileReader.onerror = err => observable.error(err);
+      fileReader.onabort = err => observable.error(err);
+      fileReader.onload = () => observable.next(fileReader.result);
+      fileReader.onloadend = () => observable.complete();
+
+      return fileReader.readAsDataURL(file);
+    });
+  }
+
+  /**
+   * Test if the base 64 url is an image
+   * @param base64Url
+   */
+  static isBase64UrlIsAnImage(base64Url: string) {
+    const base64ImagePattern = '^data:image\/(gif|jpe?g|png);base64,.+$';
+    const regexp = new RegExp(base64ImagePattern);
+
+    return regexp.test(base64Url);
   }
 
 }

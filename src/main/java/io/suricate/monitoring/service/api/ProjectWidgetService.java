@@ -27,9 +27,9 @@ import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.entity.widget.Widget;
 import io.suricate.monitoring.model.entity.widget.WidgetParam;
+import io.suricate.monitoring.model.enums.DataType;
 import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.model.enums.WidgetState;
-import io.suricate.monitoring.model.enums.WidgetVariableType;
 import io.suricate.monitoring.repository.ProjectWidgetRepository;
 import io.suricate.monitoring.service.mapper.ProjectMapper;
 import io.suricate.monitoring.service.mapper.ProjectWidgetMapper;
@@ -410,7 +410,7 @@ public class ProjectWidgetService {
 
         List<WidgetParam> widgetParams = widgetService.getFullListOfParams(widget);
         for (WidgetParam widgetParam : widgetParams) {
-            if (widgetParam.getType() == WidgetVariableType.SECRET || widgetParam.getType() == WidgetVariableType.PASSWORD) {
+            if (widgetParam.getType() == DataType.PASSWORD) {
                 String valueToEncrypt = StringUtils.trimToNull(backendConfigAsMap.get(widgetParam.getName()));
 
                 if (valueToEncrypt != null) {
@@ -438,7 +438,7 @@ public class ProjectWidgetService {
 
         List<WidgetParam> widgetParams = widgetService.getFullListOfParams(widget);
         for (WidgetParam widgetParam : widgetParams) {
-            if (widgetParam.getType() == WidgetVariableType.SECRET || widgetParam.getType() == WidgetVariableType.PASSWORD) {
+            if (widgetParam.getType() == DataType.PASSWORD) {
                 String valueToEncrypt = StringUtils.trimToNull(backendConfigAsMap.get(widgetParam.getName()));
 
                 if (valueToEncrypt != null) {

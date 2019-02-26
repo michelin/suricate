@@ -55,6 +55,10 @@ import {HttpWidgetService} from './services/api/http-widget.service';
 import {HttpProjectWidgetService} from './services/api/http-project-widget.service';
 import {HttpSettingService} from './services/api/http-setting.service';
 import {CommunicationDialogComponent} from './components/communication-dialog/communication-dialog.component';
+import {InputComponent} from './components/form/inputs/input.component';
+import {CheckboxComponent} from './components/form/inputs/checkbox/checkbox.component';
+import {FileInputComponent} from './components/form/inputs/file-input/file-input.component';
+import {FormService} from './services/app/form.service';
 
 @NgModule({
   imports: [
@@ -80,7 +84,10 @@ import {CommunicationDialogComponent} from './components/communication-dialog/co
     TranslationComponent,
     PasswordPipe,
     ConfirmDialogComponent,
-    CommunicationDialogComponent
+    CommunicationDialogComponent,
+    InputComponent,
+    CheckboxComponent,
+    FileInputComponent
   ],
   exports: [
     FormsModule,
@@ -102,7 +109,10 @@ import {CommunicationDialogComponent} from './components/communication-dialog/co
     TranslationComponent,
     PasswordPipe,
     ConfirmDialogComponent,
-    CommunicationDialogComponent
+    CommunicationDialogComponent,
+    InputComponent,
+    CheckboxComponent,
+    FileInputComponent
   ],
   entryComponents: [
     ConfirmDialogComponent,
@@ -117,6 +127,7 @@ import {CommunicationDialogComponent} from './components/communication-dialog/co
     ToastService,
     StompRService,
     TokenService,
+    FormService,
     HttpAssetService,
     HttpCategoryService,
     HttpProjectService,

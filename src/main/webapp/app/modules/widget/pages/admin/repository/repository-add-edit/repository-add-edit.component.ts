@@ -16,16 +16,25 @@
  *
  */
 
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormGroup, Validators} from '@angular/forms';
+import {TranslateService} from '@ngx-translate/core';
+import {Observable} from 'rxjs';
+import {flatMap, map} from 'rxjs/operators';
+import {TitleCasePipe} from '@angular/common';
 
 import {Repository} from '../../../../../../shared/model/api/Repository/Repository';
 import {HttpRepositoryService} from '../../../../../../shared/services/api/http-repository.service';
-import {FormUtils} from '../../../../../../shared/utils/FormUtils';
 import {ToastService} from '../../../../../../shared/components/toast/toast.service';
 import {ToastType} from '../../../../../../shared/components/toast/toast-objects/ToastType';
 import {RepositoryTypeEnum} from '../../../../../../shared/model/enums/RepositoryTypeEnum';
+import {FormService} from '../../../../../../shared/services/app/form.service';
+import {FormStep} from '../../../../../../shared/model/app/form/FormStep';
+import {FormField} from '../../../../../../shared/model/app/form/FormField';
+import {DataType} from '../../../../../../shared/model/enums/DataType';
+import {FormOption} from '../../../../../../shared/model/app/form/FormOption';
+import {FormChangeEvent} from '../../../../../../shared/model/app/form/FormChangeEvent';
 
 /**
  * Edit a repository
@@ -42,7 +51,10 @@ export class RepositoryAddEditComponent implements OnInit {
    * @type {FormGroup}
    */
   repositoryForm: FormGroup;
-
+  /**
+   * The description of the form
+   */
+  formSteps: FormStep[];
   /**
    * The repository to edit
    * @type Repository
@@ -50,26 +62,21 @@ export class RepositoryAddEditComponent implements OnInit {
   repository: Repository;
 
   /**
-   * The list of repository types
-   */
-  repositoryTypeEnum = RepositoryTypeEnum;
-
-  /**
    * Constructor
    *
    * @param {ActivatedRoute} activatedRoute The activated route service
    * @param {Router} router The router service to inject
-   * @param {FormBuilder} formBuilder The form builder service
+   * @param {FormService} formService The form service used to generate form
    * @param {HttpRepositoryService} repositoryService The repository service to inject
    * @param {ToastService} toastService The toast service
-   * @param {ChangeDetectorRef} changeDetectorRef The change detector service
+   * @param {TranslateService} translateService The service used to translate sentences
    */
   constructor(private activatedRoute: ActivatedRoute,
               private router: Router,
-              private formBuilder: FormBuilder,
+              private formService: FormService,
               private repositoryService: HttpRepositoryService,
               private toastService: ToastService,
-              private changeDetectorRef: ChangeDetectorRef) {
+              private translateService: TranslateService) {
   }
 
   /**
@@ -86,8 +93,6 @@ export class RepositoryAddEditComponent implements OnInit {
       } else {
         this.initRepoForm();
       }
-
-      this.changeDetectorRef.detectChanges();
     });
   }
 
@@ -95,50 +100,169 @@ export class RepositoryAddEditComponent implements OnInit {
    * Init the edit form
    */
   initRepoForm() {
-    this.repositoryForm = this.formBuilder.group({
-      name: [this.repository ? this.repository.name : '', [Validators.required]],
-      url: [this.repository ? this.repository.url : ''],
-      branch: [this.repository ? this.repository.branch : ''],
-      login: [this.repository ? this.repository.login : ''],
-      password: [this.repository ? this.repository.password : ''],
-      localPath: [this.repository ? this.repository.localPath : ''],
-      type: [this.repository ? this.repository.type : ''],
-      enabled: [this.repository ? this.repository.enabled : false]
+    this.formSteps = [];
+
+    this.generateStepOne().pipe(
+      map((stepOne: FormStep) => this.formSteps[0] = stepOne),
+      flatMap(() => this.generateStepTwo()),
+      map((stepTwo: FormStep) => {
+        this.formSteps[1] = stepTwo;
+        return stepTwo;
+      }),
+      flatMap((stepTwo: FormStep) => this.generateStepRepoInformation(stepTwo.fields[0].value)),
+      map((stepRepoInfo: FormStep) => this.formSteps[2] = stepRepoInfo)
+    ).subscribe(() => {
+      this.repositoryForm = this.formService.generateFormGroupForSteps(this.formSteps);
     });
   }
 
   /**
-   * Check if the field is invalid
-   *
-   * @param {string} field The field to check
-   * @returns {boolean} False if the field valid, true otherwise
+   * Generate the step one of the form
+   * "General information step"
    */
-  isFieldInvalid(field: string): boolean {
-    return FormUtils.isFieldInvalid(this.repositoryForm, field);
+  generateStepOne(): Observable<FormStep> {
+    return this.translateService.get(['name', 'repository.enable']).pipe(
+      map((translations: string) => {
+        const formFields: FormField[] = [
+          {
+            key: 'name',
+            label: translations['name'],
+            type: DataType.TEXT,
+            value: this.repository ? this.repository.name : '',
+            validators: [Validators.required]
+          },
+          {
+            key: 'enabled',
+            label: translations['repository.enable'],
+            type: DataType.BOOLEAN,
+            value: this.repository ? this.repository.enabled : false
+          }
+        ];
+
+        return {fields: formFields};
+      })
+    );
   }
 
   /**
-   * Reset the form when the repository type as changed
+   *  Generate the step one of the form
    */
-  updateFormValidators() {
-    if (this.repositoryForm.get('type').value === RepositoryTypeEnum.REMOTE) {
-      this.repositoryForm.get('url').validator = Validators.required;
-      this.repositoryForm.get('branch').validator = Validators.required;
-      FormUtils.resetValidatorsAndErrorsForField(this.repositoryForm, 'localPath');
+  generateStepTwo(): Observable<FormStep> {
+    return this.translateService.get(['type']).pipe(
+      map((translations: string) => {
+        const formFields: FormField[] = [
+          {
+            key: 'type',
+            label: translations['type'],
+            type: DataType.COMBO,
+            options: this.getRepositoryTypeOptions(),
+            value: this.repository ? this.repository.type : RepositoryTypeEnum.REMOTE,
+            validators: [Validators.required]
+          }
+        ];
 
-    } else {
-      FormUtils.resetValidatorsAndErrorsForField(this.repositoryForm, 'url');
-      FormUtils.resetValidatorsAndErrorsForField(this.repositoryForm, 'branch');
-      this.repositoryForm.get('localPath').validator = Validators.required;
+        return {fields: formFields};
+      })
+    );
+  }
+
+  /**
+   * Get the repository type options for the combobox
+   */
+  getRepositoryTypeOptions(): FormOption[] {
+    const titleCasePipe = new TitleCasePipe();
+    const typeOptions: FormOption[] = [];
+
+    Object.keys(RepositoryTypeEnum).forEach(repositoryType => {
+      typeOptions.push({
+        key: repositoryType,
+        label: titleCasePipe.transform(repositoryType)
+      });
+    });
+
+    return typeOptions;
+  }
+
+  /**
+   * Manage the change event on form
+   *
+   * @param changeEvent The change event
+   */
+  manageInputChangeEvent(changeEvent: FormChangeEvent) {
+    if (changeEvent.inputKey === 'type') {
+      this.generateStepRepoInformation(changeEvent.value).subscribe((newStep: FormStep) => {
+        this.repositoryForm = this.formService.switchFormGroupStepByAnotherOne(this.repositoryForm, this.formSteps[2], newStep);
+        this.formSteps[2] = newStep;
+      });
     }
+  }
 
-    this.changeDetectorRef.detectChanges();
+  /**
+   * Generate the step three
+   *
+   * @param inputValue
+   */
+  generateStepRepoInformation(inputValue: String): Observable<FormStep> {
+    return this.translateService.get(['url', 'branch', 'login', 'password', 'local.path']).pipe(
+      map((translations: string) => {
+        let formFields: FormField[];
+
+        if (inputValue === RepositoryTypeEnum.REMOTE) {
+          formFields = [
+            {
+              key: 'url',
+              label: translations['url'],
+              type: DataType.TEXT,
+              value: this.repository ? this.repository.url : '',
+              validators: [Validators.required]
+            },
+            {
+              key: 'branch',
+              label: translations['branch'],
+              type: DataType.TEXT,
+              value: this.repository ? this.repository.branch : '',
+              validators: [Validators.required]
+            },
+            {
+              key: 'login',
+              label: translations['login'],
+              type: DataType.TEXT,
+              value: this.repository ? this.repository.login : '',
+              validators: [Validators.required]
+            },
+            {
+              key: 'password',
+              label: translations['password'],
+              type: DataType.PASSWORD,
+              value: this.repository ? this.repository.password : '',
+              validators: [Validators.required]
+            }
+          ];
+        }
+
+        if (inputValue === RepositoryTypeEnum.LOCAL) {
+          formFields = [
+            {
+              key: 'localPath',
+              label: translations['local.path'],
+              type: DataType.TEXT,
+              value: this.repository ? this.repository.localPath : '',
+              validators: [Validators.required]
+            }
+          ];
+        }
+
+        return {fields: formFields};
+      })
+    );
   }
 
   /**
    * action that save the new repository
    */
   saveRepository() {
+    this.formService.validate(this.repositoryForm);
+
     if (this.repositoryForm.valid) {
       const repositoryToAddEdit: Repository = this.repositoryForm.value;
 

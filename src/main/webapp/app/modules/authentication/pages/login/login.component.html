@@ -37,40 +37,10 @@
 
             <img src="../../../../../assets/images/logo.png"/>
 
-            <!-- Username Input -->
-            <mat-form-field>
-              <mat-icon class="prefix" matPrefix color="primary">person</mat-icon>
-              <input matInput
-                     type="text"
-                     id="username"
-                     placeholder="{{'username' | translate}}"
-                     formControlName="username"
-                     [required]="loginForm.get('username').errors && loginForm.get('username').errors.required"/>
-              <mat-error *ngIf="isFieldInvalid('username')">
-                <app-translate [key]="'username.required'"></app-translate>
-              </mat-error>
-            </mat-form-field>
-
-            <!-- Password Input -->
-            <mat-form-field>
-              <mat-icon class="prefix" matPrefix color="primary">lock</mat-icon>
-              <input matInput
-                     [type]="hidePassword ? 'password' : 'text'"
-                     id="password"
-                     placeholder="{{'password' | translate}}"
-                     formControlName="password"
-                     [required]="loginForm.get('password').errors && loginForm.get('password').errors.required"/>
-
-              <mat-icon class="show-pwd-icon"
-                        matSuffix
-                        color="primary"
-                        (click)="hidePassword = !hidePassword">
-                {{hidePassword ? 'visibility' : 'visibility_off'}}
-              </mat-icon>
-              <mat-error *ngIf="isFieldInvalid('password')">
-                <app-translate [key]="'password.required'"></app-translate>
-              </mat-error>
-            </mat-form-field>
+            <app-input *ngFor="let field of formFields"
+                       [formGroup]="loginForm"
+                       [field]="field">
+            </app-input>
           </div>
         </mat-card-content>
 

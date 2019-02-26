@@ -24,6 +24,7 @@ import {takeWhile} from 'rxjs/operators';
 import {ToastService} from './toast.service';
 import {ToastMessage} from './toast-objects/ToastMessage';
 import {ToastType} from './toast-objects/ToastType';
+import Global = NodeJS.Global;
 
 /**
  * Component that display toast notification messages
@@ -142,7 +143,7 @@ export class ToastComponent implements OnInit, OnDestroy {
    * Hide the toast notification with timer
    */
   hideWithinTimeout() {
-    this.hideTimer = setTimeout(() => this.hideToast(), 4000);
+    this.hideTimer = Global.setTimeout(() => this.hideToast(), 4000);
   }
 
   /**

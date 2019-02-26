@@ -35,108 +35,10 @@
                *ngIf="!formSubmitAttempt"
                class="form-content">
 
-            <!-- Username Input -->
-            <mat-form-field>
-              <mat-icon class="prefix" color="primary" matPrefix>android</mat-icon>
-              <input matInput
-                     type="text"
-                     id="username"
-                     placeholder="{{'username' | translate}}"
-                     formControlName="username"
-                     [required]="registerForm.get('username').errors && registerForm.get('username').errors.required"/>
-              <mat-error *ngIf="isFieldInvalid('username')">
-                <app-translate [key]="'username.required.with.length'"></app-translate>
-              </mat-error>
-            </mat-form-field>
-
-            <!-- Firstname Input -->
-            <mat-form-field>
-              <mat-icon class="prefix" color="primary" matPrefix>person</mat-icon>
-              <input matInput
-                     type="text"
-                     id="firstname"
-                     placeholder="{{ 'firstname' | translate}}"
-                     formControlName="firstname"
-                     [required]="registerForm.get('firstname').errors && registerForm.get('firstname').errors.required"/>
-              <mat-error *ngIf="isFieldInvalid('firstname')">
-                <app-translate [key]="'firstname.length'"></app-translate>
-              </mat-error>
-            </mat-form-field>
-
-            <!-- Lastname Input -->
-            <mat-form-field>
-              <mat-icon class="prefix" color="primary" matPrefix>person</mat-icon>
-              <input matInput
-                     type="text"
-                     id="lastname"
-                     placeholder="{{ 'lastname' | translate }}"
-                     formControlName="lastname"
-                     [required]="registerForm.get('lastname').errors && registerForm.get('lastname').errors.required"/>
-              <mat-error *ngIf="isFieldInvalid('lastname')">
-                <app-translate [key]="'lastname.length'"></app-translate>
-              </mat-error>
-            </mat-form-field>
-
-            <!-- Email Input -->
-            <mat-form-field>
-              <mat-icon class="prefix" color="primary" matPrefix>email</mat-icon>
-              <input matInput
-                     type="text"
-                     id="email"
-                     placeholder="{{ 'email' | translate }}"
-                     formControlName="email"
-                     [required]="registerForm.get('email').errors && registerForm.get('email').errors.required"/>
-              <mat-error *ngIf="isFieldInvalid('email') && registerForm.get('email').errors?.required">
-                <app-translate [key]="'email.required'"></app-translate>
-              </mat-error>
-              <mat-error *ngIf="isFieldInvalid('email') && registerForm.get('email').errors?.email">
-                <app-translate [key]="'email.invalid.format'"></app-translate>
-              </mat-error>
-            </mat-form-field>
-
-            <!-- Password Input -->
-            <mat-form-field>
-              <mat-icon class="prefix" color="primary" matPrefix>lock</mat-icon>
-              <input matInput
-                     [type]="hidePassword ? 'password' : 'text'"
-                     id="password"
-                     placeholder="{{ 'password' | translate }}"
-                     formControlName="password"
-                     [required]="registerForm.get('password').errors && registerForm.get('password').errors.required"/>
-              <mat-icon class="show-pwd-icon"
-                        matSuffix
-                        color="primary"
-                        (click)="hidePassword = !hidePassword">
-                {{hidePassword ? 'visibility' : 'visibility_off'}}
-              </mat-icon>
-              <mat-error *ngIf="isFieldInvalid('password') && registerForm.get('password').errors?.required">
-                <app-translate [key]="'password.required.with.length'"></app-translate>
-              </mat-error>
-            </mat-form-field>
-
-            <!-- Confirm Password Input -->
-            <mat-form-field>
-              <mat-icon class="prefix" color="primary" matPrefix>lock</mat-icon>
-              <input matInput
-                     [type]="hidePassword ? 'password' : 'text'"
-                     id="confirm_password"
-                     placeholder="{{ 'password.confirm' | translate }}"
-                     formControlName="confirmPassword"
-                     [required]="registerForm.get('confirmPassword').errors && registerForm.get('confirmPassword').errors.required"/>
-              <mat-icon matSuffix color="primary"
-                        (click)="hidePassword = !hidePassword"> {{hidePassword ? 'visibility' :
-                'visibility_off'}}
-              </mat-icon>
-              <mat-error
-                  *ngIf="isFieldInvalid('confirmPassword') && registerForm.get('confirmPassword').errors?.required">
-                <app-translate [key]="'password.required.with.length'"></app-translate>
-              </mat-error>
-              <mat-error
-                  *ngIf="isFieldInvalid('confirmPassword') && registerForm.get('confirmPassword').errors?.unmatchedPasswords">
-                <app-translate [key]="'password.mismatch'"></app-translate>
-              </mat-error>
-            </mat-form-field>
-
+            <app-input *ngFor="let field of formFields"
+                       [formGroup]="registerForm"
+                       [field]="field">
+            </app-input>
           </div>
         </mat-card-content>
 
@@ -145,8 +47,8 @@
                           fxLayoutAlign="center"
                           fxLayoutGap="15px"
                           *ngIf="!formSubmitAttempt">
-          <button fxFlex="85" mat-raised-button class="mat-elevation-z2" color="primary" type="submit">{{ 'sign.up' |
-            translate | uppercase}}
+          <button fxFlex="85" mat-raised-button class="mat-elevation-z2" color="primary" type="submit">
+            {{ 'sign.up' | translate | uppercase}}
           </button>
         </mat-card-actions>
       </mat-card>

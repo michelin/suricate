@@ -18,7 +18,7 @@
 
 import {AllowedSettingValue} from './AllowedSettingValue';
 import {SettingType} from '../../enums/SettingType';
-import {SettingDataType} from '../../enums/SettingDataType';
+import {DataType} from '../../enums/DataType';
 
 /**
  * Represent a setting for the users
@@ -27,7 +27,7 @@ export interface Setting {
   id: number;
   description: string;
   constrained: boolean;
-  dataType: SettingDataType;
+  dataType: DataType;
   type: SettingType;
   allowedSettingValues?: AllowedSettingValue[];
 }

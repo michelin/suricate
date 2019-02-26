@@ -21,43 +21,23 @@
     width: 100%;
   }
 
+  .mat-card-content {
+    & {
+      width: 70%;
+    }
+
+    app-input {
+      padding-left: 25px;
+    }
+  }
+
   .title {
-    margin-left: -80px;
     font-weight: 300;
     line-height: 1.4rem;
   }
 
-  & > * {
-    width: 70%;
-    margin: 5px 0;
+  button {
+    display: block;
+    width: 100%;
   }
-
-  .mat-card-content {
-    .mat-list {
-      & {
-        width: 100%;
-        margin-left: -16px;
-      }
-
-      .user {
-        width: 50%;
-      }
-    }
-  }
-
-  .mat-card-actions {
-    button {
-      display: block;
-      width: 100%;
-    }
-  }
-}
-
-.mat-form-field {
-  width: 100%;
-  margin: 10px 0;
-}
-
-.mat-icon.prefix {
-  margin-right: 10px;
 }

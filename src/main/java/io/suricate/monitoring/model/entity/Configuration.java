@@ -17,7 +17,7 @@
 package io.suricate.monitoring.model.entity;
 
 import io.suricate.monitoring.model.entity.widget.Category;
-import io.suricate.monitoring.model.enums.ConfigurationDataType;
+import io.suricate.monitoring.model.enums.DataType;
 import lombok.*;
 
 import javax.persistence.*;
@@ -57,7 +57,7 @@ public class Configuration extends AbstractAuditingEntity<String> {
      */
     @Column(name = "data_type")
     @Enumerated(value = EnumType.STRING)
-    private ConfigurationDataType dataType;
+    private DataType dataType;
 
     /**
      * Make a link between category and configurations

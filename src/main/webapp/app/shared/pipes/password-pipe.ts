@@ -19,7 +19,7 @@
 import {Pipe, PipeTransform} from '@angular/core';
 
 import {Configuration} from '../model/api/configuration/Configuration';
-import {WidgetVariableType} from '../model/enums/WidgetVariableType';
+import {DataType} from '../model/enums/DataType';
 
 /**
  * Transform a string into stars
@@ -42,10 +42,7 @@ export class PasswordPipe implements PipeTransform {
    * @returns {String} The password hidden
    */
   transform(config: Configuration): String {
-    return (config.dataType
-      && (config.dataType.toString() === WidgetVariableType.PASSWORD || config.dataType.toString() === WidgetVariableType.SECRET)) ?
-      '*****'
-      : config.value;
+    return (config.dataType && config.dataType === DataType.PASSWORD) ? '*****' : config.value;
   }
 
 }
