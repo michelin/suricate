@@ -146,7 +146,7 @@ public class JavascriptUtilsTest {
 
     @Test
     public void testSecretVariable() {
-        List<WidgetVariableResponse> list = JavascriptUtils.extractVariables("// SURI_TEST::Choose your image::SECRET::");
+        List<WidgetVariableResponse> list = JavascriptUtils.extractVariables("// SURI_TEST::Choose your image::PASSWORD::");
 
         Assert.assertEquals(1, list.size());
         Assert.assertEquals("SURI_TEST", list.get(0).getName());

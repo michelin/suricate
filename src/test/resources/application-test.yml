@@ -17,7 +17,7 @@ spring:
         dialect: org.hibernate.dialect.H2Dialect
   ### Flyway ###
   flyway:
-    locations: ["classpath:db/migration/postgresql", "classpath:db/migration/h2"]
+    locations: ["classpath:db/migration/postgresql"]
 
 ### Actuator ###
 management:
