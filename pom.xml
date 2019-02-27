@@ -465,7 +465,6 @@
                             </arguments>
                             <successCodes>
                                 <successCode>0</successCode>
-                                <successCode>1</successCode>
                             </successCodes>
                         </configuration>
                     </plugin>

@@ -7,7 +7,7 @@ server.port: 8080
 ## Spring modules info ##
 spring:
   profiles:
-    active: h2,generic
+    active: h2,dev
   ### Database ###
   datasource:
     continueOnError: true
