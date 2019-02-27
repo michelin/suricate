@@ -1,13 +1,13 @@
 <app-pages-header [secondTitle]="'dashboards.my'"></app-pages-header>
 
-<div fxLayout="col wrap" fxLayoutAlign="start start" fxLayoutGap="15px">
+<div fxLayout="col wrap" fxLayoutAlign="start start">
 
   <!-- Add Dashboard Card -->
-  <mat-card id="add-dashboard-card" fxFlex="30%" class="mat-elevation-z4">
+  <mat-card id="add-dashboard-card" fxFlex="31%" class="mat-elevation-z2">
     <a class="mat-card-link" (click)="openAddDashboardDialog()">
-      <mat-card-content fxLayout="row wrap" fxLayoutAlign="center center">
+      <div class="card-icon-container">
         <mat-icon color="primary">add_box</mat-icon>
-      </mat-card-content>
+      </div>
     </a>
     <mat-card-actions align="start">
       <button #addDashboardButton mat-button (click)="openAddDashboardDialog()">
@@ -17,13 +17,15 @@
   </mat-card>
 
   <!-- Other dashboards -->
-  <mat-card *ngFor="let dashboard of dashboards" fxFlex="30%" class="mat-elevation-z4">
+  <mat-card *ngFor="let dashboard of dashboards" fxFlex="31%">
     <a class="mat-card-link" (click)="navigateToDashboard(dashboard.token)">
-      <img mat-card-image *ngIf="dashboard.screenshotToken" [src]="getContentUrl(dashboard.screenshotToken)"/>
+      <div *ngIf="dashboard.screenshotToken" class="card-image-container">
+        <img mat-card-image [src]="getContentUrl(dashboard.screenshotToken)"/>
+      </div>
 
-      <mat-card-content *ngIf="!dashboard.screenshotToken" fxLayout="row wrap" fxLayoutAlign="center center">
+      <div *ngIf="!dashboard.screenshotToken" class="card-icon-container">
         <mat-icon>dashboard</mat-icon>
-      </mat-card-content>
+      </div>
     </a>
     <mat-card-actions align="start">
       <button mat-button (click)="navigateToDashboard(dashboard.token)">

@@ -16,11 +16,11 @@
 <ng-template #dashboardNoWidget>
   <div fxLayout="col wrap" fxLayoutAlign="start start">
     <!-- Add Dashboard Card -->
-    <mat-card id="add-dashboard-card" fxFlex="30%">
-      <a (click)="openAddWidgetDialog()">
-        <mat-card-content fxLayout="row wrap" fxLayoutAlign="center center">
-          <mat-icon>add_box</mat-icon>
-        </mat-card-content>
+    <mat-card class="mat-card-link" id="add-dashboard-card" fxFlex="31%">
+      <a class="mat-card-link" (click)="openAddWidgetDialog()">
+        <div class="card-icon-container">
+          <mat-icon color="primary">add_box</mat-icon>
+        </div>
       </a>
       <mat-card-actions align="start">
         <button #addDashboardButton mat-button (click)="openAddWidgetDialog()">

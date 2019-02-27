@@ -11,21 +11,25 @@
         <app-translate [key]="'category.select'"></app-translate>
       </ng-template>
 
-      <mat-grid-list cols="3" rowHeight="250px">
-        <mat-grid-tile *ngFor="let category of categories">
-          <mat-card class="widget-dialog-card">
-            <mat-card-header>
-              <mat-card-title> {{category.name}}</mat-card-title>
-            </mat-card-header>
-            <img mat-card-image [src]="getImageSrc(category.assetToken)">
-            <mat-card-actions>
-              <button mat-button color="primary" (click)="getWidgets(category.id)">
-                <app-translate [key]="'select'"></app-translate>
-              </button>
-            </mat-card-actions>
-          </mat-card>
-        </mat-grid-tile>
-      </mat-grid-list>
+      <div fxLayout="col wrap" fxLayoutAlign="start start">
+        <mat-card *ngFor="let category of categories" class="widget-dialog-card" fxFlex="22%">
+          <mat-card-header>
+            <mat-card-title> {{category.name}}</mat-card-title>
+          </mat-card-header>
+
+          <a class="mat-card-link" (click)="getWidgets(category.id)">
+            <div class="card-image-container">
+              <img mat-card-image [src]="getImageSrc(category.assetToken)">
+            </div>
+          </a>
+
+          <mat-card-actions>
+            <button mat-button color="primary" (click)="getWidgets(category.id)">
+              <app-translate [key]="'select'"></app-translate>
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
     </mat-step>
 
     <!-- Step 2 : Select Widget -->
@@ -34,24 +38,29 @@
         <app-translate [key]="'widget.select'"></app-translate>
       </ng-template>
 
-      <mat-grid-list cols="3" rowHeight="350px" *ngIf="widgets">
-        <mat-grid-tile *ngFor="let widget of widgets">
-          <mat-card class="widget-dialog-card step2">
-            <mat-card-header>
-              <mat-card-title> {{widget.name}}</mat-card-title>
-            </mat-card-header>
-            <img mat-card-image [src]="getImageSrc(widget.imageToken)">
+      <div fxLayout="col wrap" fxLayoutAlign="start start">
+        <mat-card *ngFor="let widget of widgets" class="widget-dialog-card step2" fxFlex="30">
+          <mat-card-header>
+            <mat-card-title> {{widget.name}}</mat-card-title>
+          </mat-card-header>
+
+          <a class="mat-card-link" (click)="setSelectedWidget(widget)">
+            <div class="card-image-container">
+              <img mat-card-image [src]="getImageSrc(widget.imageToken)">
+            </div>
+
             <mat-card-content>
               {{widget.description}}
             </mat-card-content>
-            <mat-card-actions>
-              <button mat-button color="primary" (click)="setSelectedWidget(widget)">
-                <app-translate [key]="'select'"></app-translate>
-              </button>
-            </mat-card-actions>
-          </mat-card>
-        </mat-grid-tile>
-      </mat-grid-list>
+          </a>
+
+          <mat-card-actions>
+            <button mat-button color="primary" (click)="setSelectedWidget(widget)">
+              <app-translate [key]="'select'"></app-translate>
+            </button>
+          </mat-card-actions>
+        </mat-card>
+      </div>
     </mat-step>
 
     <!-- Step 3 : Widget Settings -->
@@ -60,7 +69,7 @@
         <app-translate [key]="'widget.settings'"></app-translate>
       </ng-template>
 
-      <div *ngIf="selectedWidget" class="selected-widget-dialog-card">
+      <div *ngIf="selectedWidget" class="widget-setting-step">
         <h1> {{selectedWidget.name}} </h1>
 
         <div class="container">
@@ -72,12 +81,12 @@
           </div>
         </div>
 
-        <div *ngIf="selectedWidget.info" id="widget-info" [innerHTML]="selectedWidget.info | safeHtml ">
+        <div *ngIf="selectedWidget.info" class="widget-info" [innerHTML]="selectedWidget.info | safeHtml ">
         </div>
 
         <div class="settings-container">
           <form *ngIf="projectWidgetForm"
-                id="formSettings"
+                class="form-settings"
                 [formGroup]="projectWidgetForm"
                 (ngSubmit)="addWidget()"
                 fxLayout="row wrap"
