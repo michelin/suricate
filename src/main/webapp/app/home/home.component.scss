@@ -15,30 +15,3 @@
  *  * limitations under the License.
  *
  */
-@import '~@angular/material/theming';
-
-.mat-card {
-  & {
-    margin-bottom: 20px;
-    height: 350px;
-  }
-
-  &:hover {
-    @include mat-elevation(8);
-  }
-
-  a {
-    cursor: pointer;
-  }
-
-  .mat-card-image {
-    width: 100%;
-    margin: auto;
-  }
-
-  .mat-card-content .mat-icon {
-    font-size: 5rem;
-    width: auto;
-    height: auto;
-  }
-}
