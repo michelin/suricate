@@ -18,120 +18,47 @@
 
 h1 {
   font-variant: all-small-caps;
+  font-size: 1.6em;
+  text-align: center;
 }
 
-.mat-stepper-horizontal {
-  margin-top: 30px;
-}
-
-mat-card {
-  & {
-    width: 190px;
-    min-height: 190px;
-  }
-
-  .step2 {
-    min-height: 250px;
-  }
-
-  img {
-    display: flex;
-    margin: 0 auto 10px auto;
-    width: auto;
-    max-width: 130px;
-    height: auto;
-    max-height: 100px;
-    padding: 4px;
-  }
-
-  mat-card-actions {
-    position: absolute;
-    bottom: 22px;
-  }
-}
-
-.selected-widget-dialog-card {
-  & {
-    width: auto !important;
-    margin: 10px auto;
-    padding-left: 30px;
-    min-height: 300px;
-  }
-
-  & > h1 {
-    text-align: center;
-    font-size: 1.6em;
-  }
-
-  & > .container {
-    display: flex;
-  }
-
-  .image-container {
+.widget-setting-step {
+  .container {
     & {
-      margin: 10px 50px 0 0;
-      width: auto;
-      height: auto;
+      display: flex;
+      margin-bottom: 30px;
     }
 
-    & > img {
-      height: 200px;
-      width: auto;
-    }
-  }
-
-  .description-container {
-    margin: auto;
-  }
-
-  .settings-container {
-    & {
-      margin-top: 30px;
-    }
-
-    * {
-      width: 100%;
-    }
-  }
-
-  #formSettings {
-    button {
-      margin-top: 40px;
-    }
-
-    .button-wrapper {
+    .image-container {
       & {
+        margin: 10px 50px 0 0;
+        width: auto;
+        height: auto;
+      }
+
+      img {
         display: flex;
-        justify-content: center;
-        padding-bottom: 1.25em;
+        width: auto;
+        height: auto;
+        max-height: 220px;
+        max-width: 171px;
+        padding: 4px;
       }
+    }
 
-      .file_upload_button {
-        & {
-          height: 45px;
-          width: 100%;
-        }
-
-        mat-icon {
-          float: left;
-          height: auto;
-          width: auto;
-          font-size: 2.2em;
-          margin-top: 4px;
-        }
-
-        span {
-          font-size: 1.3em;
-        }
-      }
+    .description-container {
+      margin: auto;
     }
   }
 
-  #widget-info {
+  .widget-info {
     text-align: center;
-    margin-top: 30px;
-    padding: 30px 0 30px 0;
-    border-radius: 4px;
+    line-height: 6rem;
+    margin-bottom: 30px;
     background-color: #cfd2da;
+  }
+
+  .form-settings {
+
   }
 }

@@ -15,23 +15,3 @@
  *  * limitations under the License.
  *
  */
-
-
-.mat-card {
-  & {
-    margin-bottom: 20px;
-  }
-
-  .mat-card-content {
-    .mat-icon {
-      font-size: 5rem;
-      width: auto;
-      height: auto;
-    }
-  }
-
-  a {
-    display: block;
-    cursor: pointer;
-  }
-}
