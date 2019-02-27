@@ -465,7 +465,6 @@
                             </arguments>
                             <successCodes>
                                 <successCode>0</successCode>
-                                <successCode>1</successCode>
                             </successCodes>
                         </configuration>
                     </plugin>
@@ -473,7 +472,7 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-war-plugin</artifactId>
                         <configuration>
-                            <warSourceDirectory>target/public/</warSourceDirectory>
+                            <warSourceDirectory>target/dist/</warSourceDirectory>
                         </configuration>
                     </plugin>
                 </plugins>
