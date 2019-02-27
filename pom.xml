@@ -473,7 +473,7 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-war-plugin</artifactId>
                         <configuration>
-                            <warSourceDirectory>target/dist/</warSourceDirectory>
+                            <warSourceDirectory>target/public/</warSourceDirectory>
                         </configuration>
                     </plugin>
                 </plugins>

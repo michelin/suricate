@@ -5,7 +5,7 @@ spring:
     path: /h2-console
   ### Database ###
   datasource:
-    url: "jdbc:h2:mem:suricate;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=PostgreSQL"
+    url: "jdbc:h2:mem:suricate;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE"
     driver-class-name: org.h2.Driver
     username: sa
     password:
@@ -15,4 +15,4 @@ spring:
         dialect: org.hibernate.dialect.H2Dialect
   ### Flyway ###
   flyway:
-    locations: ["classpath:db/migration/postgresql", "classpath:db/migration/h2"]
+    locations: ["classpath:db/migration/postgresql"]
