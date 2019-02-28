@@ -12,7 +12,7 @@
       </ng-template>
 
       <div fxLayout="col wrap" fxLayoutAlign="start start">
-        <mat-card *ngFor="let category of categories" class="widget-dialog-card" fxFlex="22%">
+        <mat-card *ngFor="let category of categories" class="card-link" fxFlex="22%">
           <mat-card-header>
             <mat-card-title> {{category.name}}</mat-card-title>
           </mat-card-header>
@@ -39,7 +39,7 @@
       </ng-template>
 
       <div fxLayout="col wrap" fxLayoutAlign="start start">
-        <mat-card *ngFor="let widget of widgets" class="widget-dialog-card step2" fxFlex="30">
+        <mat-card *ngFor="let widget of widgets" class="card-link" fxFlex="30">
           <mat-card-header>
             <mat-card-title> {{widget.name}}</mat-card-title>
           </mat-card-header>

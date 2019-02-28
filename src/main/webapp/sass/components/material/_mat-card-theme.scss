@@ -35,17 +35,18 @@
       flex-direction: column;
       flex-shrink: 1;
       flex-grow: 1;
-      height: 350px;
+      height: auto;
       margin: 15px;
-      @include mat-elevation(1);
+      @include mat-elevation(4);
     }
 
-    &:hover {
+    &.card-link:hover {
       @include mat-elevation(8);
     }
 
     .mat-card-header {
-      min-height: 30px;
+      display: block;
+      text-align: center;
     }
 
     .mat-card-link {
