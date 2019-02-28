@@ -7,7 +7,7 @@ server.port: 8080
 ## Spring modules info ##
 spring:
   profiles:
-    active: h2,dev
+    active: h2
   ### Database ###
   datasource:
     continueOnError: true
@@ -156,8 +156,8 @@ application:
 
 ### proxy ###
 proxy:
-  host: ${SURICATE_PROXY_URL:}
-  port: ${SURICATE_PROXY_PORT:}
-#proxy.noProxyDomains:
+  host:
+  port:
+  noProxyDomains:
 
 
