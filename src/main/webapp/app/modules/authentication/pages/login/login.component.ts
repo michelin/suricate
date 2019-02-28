@@ -15,13 +15,17 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
+import {TranslateService} from '@ngx-translate/core';
 
 import {AuthenticationService} from '../../authentication.service';
 import {HttpConfigurationService} from '../../../../shared/services/api/http-configuration.service';
 import {ApplicationProperties} from '../../../../shared/model/api/ApplicationProperties';
 import {AuthenticationProviderEnum} from '../../../../shared/model/enums/AuthenticationProviderEnum';
+import {FormService} from '../../../../shared/services/app/form.service';
+import {FormField} from '../../../../shared/model/app/form/FormField';
+import {DataType} from '../../../../shared/model/enums/DataType';
 
 /**
  * Manage the login page
@@ -37,19 +41,15 @@ export class LoginComponent implements OnInit {
    * @type {FormGroup}
    */
   loginForm: FormGroup;
-
   /**
-   * If the password field is hidden or not
-   * @type {boolean}
+   * The description of the form
    */
-  hidePassword = true;
-
+  formFields: FormField[];
   /**
    * Used for display spinner when form has been submitted
    * @type {boolean}
    */
   formSubmitAttempt = false;
-
   /**
    * True if the user provider is LDAP
    */
@@ -60,12 +60,14 @@ export class LoginComponent implements OnInit {
    *
    * @param {Router} router The router service
    * @param {AuthenticationService} authenticationService The authentication service
-   * @param {FormBuilder} formBuilder The form builder service
+   * @param {FormService} formService Generic service used to manage the initiations of forms
+   * @param {TranslateService} translateService The translate service
    * @param {HttpConfigurationService} httpConfigurationService The configuration service to inject
    */
   constructor(private router: Router,
               private authenticationService: AuthenticationService,
-              private formBuilder: FormBuilder,
+              private formService: FormService,
+              private translateService: TranslateService,
               private httpConfigurationService: HttpConfigurationService) {
   }
 
@@ -81,27 +83,46 @@ export class LoginComponent implements OnInit {
     this.initLoginForm();
   }
 
+  /**
+   * Init the form
+   */
   initLoginForm() {
-    this.loginForm = this.formBuilder.group({
-      'username': ['', [Validators.required]],
-      'password': ['', [Validators.required]]
-    });
+    this.generateFormFields();
+    this.loginForm = this.formService.generateFormGroupForFields(this.formFields);
   }
 
   /**
-   * Check if the field is invalid
-   *
-   * @param {string} field The field to check
-   * @returns {boolean} False if the field valid, true otherwise
+   * Generate the form fields used for the form creation
    */
-  isFieldInvalid(field: string) {
-    return this.loginForm.invalid && (this.loginForm.get(field).dirty || this.loginForm.get(field).touched);
+  generateFormFields() {
+    this.translateService.get(['username', 'password']).subscribe((translations: string) => {
+      this.formFields = [
+        {
+          key: 'username',
+          label: translations['username'],
+          type: DataType.TEXT,
+          value: '',
+          validators: [Validators.required],
+          matIconPrefix: 'android'
+        },
+        {
+          key: 'password',
+          label: translations['password'],
+          type: DataType.PASSWORD,
+          value: '',
+          validators: [Validators.required],
+          matIconPrefix: 'lock'
+        }
+      ];
+    });
   }
 
   /**
    * Execute login action
    */
   login() {
+    this.formService.validate(this.loginForm);
+
     if (this.loginForm.valid) {
       // Display spinner
       this.formSubmitAttempt = true;

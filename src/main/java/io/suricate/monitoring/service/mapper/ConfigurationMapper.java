@@ -61,7 +61,7 @@ public abstract class ConfigurationMapper {
     @Named("toConfigurationDtoDefault")
     @Mapping(target = "category", qualifiedByName = "toCategoryDtoDefault")
     @Mapping(target = "value", expression = "java(" +
-        "configuration.getDataType() == io.suricate.monitoring.model.enums.ConfigurationDataType.PASSWORD ? stringEncryptor.decrypt(configuration.getValue()) : configuration.getValue())" +
+        "configuration.getDataType() == io.suricate.monitoring.model.enums.DataType.PASSWORD ? stringEncryptor.decrypt(configuration.getValue()) : configuration.getValue())" +
         "")
     public abstract ConfigurationResponseDto toConfigurationDtoDefault(Configuration configuration);
 

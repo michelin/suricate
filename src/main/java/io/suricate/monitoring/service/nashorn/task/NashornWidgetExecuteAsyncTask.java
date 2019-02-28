@@ -21,8 +21,8 @@ import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
 import io.suricate.monitoring.model.dto.nashorn.WidgetVariableResponse;
 import io.suricate.monitoring.model.dto.nashorn.error.RemoteError;
 import io.suricate.monitoring.model.dto.nashorn.error.RequestException;
+import io.suricate.monitoring.model.enums.DataType;
 import io.suricate.monitoring.model.enums.NashornErrorTypeEnum;
-import io.suricate.monitoring.model.enums.WidgetVariableType;
 import io.suricate.monitoring.service.nashorn.JavaClassFilter;
 import io.suricate.monitoring.utils.JavascriptUtils;
 import io.suricate.monitoring.utils.JsonUtils;
@@ -169,7 +169,7 @@ public class NashornWidgetExecuteAsyncTask implements Callable<NashornResponse> 
         if (widgetVariableResponses != null) {
             for (WidgetVariableResponse widgetVariableResponse : widgetVariableResponses) {
                 // decrypt encrypted property
-                if (WidgetVariableType.SECRET == widgetVariableResponse.getType() || widgetVariableResponse.getType() == WidgetVariableType.PASSWORD) {
+                if (widgetVariableResponse.getType() == DataType.PASSWORD) {
                     mapProperties.put(widgetVariableResponse.getName(), stringEncryptor.decrypt(mapProperties.get(widgetVariableResponse.getName())));
                 }
             }

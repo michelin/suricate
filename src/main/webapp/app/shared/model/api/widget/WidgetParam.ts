@@ -15,7 +15,7 @@
  */
 
 import {WidgetParamValue} from './WidgetParamValue';
-import {WidgetVariableType} from '../../enums/WidgetVariableType';
+import {DataType} from '../../enums/DataType';
 
 /**
  * The widget param entity
@@ -24,7 +24,7 @@ export interface WidgetParam {
   name: string;
   description: string;
   defaultValue: string;
-  type: WidgetVariableType;
+  type: DataType;
   acceptFileRegex?: string;
   usageExample?: string;
   required: boolean;

@@ -15,7 +15,7 @@
  */
 
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {MatDialog, MatDialogRef} from '@angular/material';
+import {MatDialog} from '@angular/material';
 import {Router} from '@angular/router';
 import {takeWhile} from 'rxjs/operators';
 
@@ -38,12 +38,6 @@ export class HomeComponent implements OnInit, OnDestroy {
    * @type {boolean}
    */
   private isAlive = true;
-
-  /**
-   * The add dashboard dialog
-   * @type {MatDialogRef<AddDashboardDialogComponent>}
-   */
-  addDashboardDialogRef: MatDialogRef<AddDashboardDialogComponent>;
 
   /**
    * The list of dashboards
@@ -80,9 +74,8 @@ export class HomeComponent implements OnInit, OnDestroy {
    * Open the add dashboard dialog
    */
   openAddDashboardDialog() {
-    this.addDashboardDialogRef = this.matDialog.open(AddDashboardDialogComponent, {
-      minWidth: 900,
-      minHeight: 500,
+    this.matDialog.open(AddDashboardDialogComponent, {
+      minWidth: 700
     });
   }
 

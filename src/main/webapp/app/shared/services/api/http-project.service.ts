@@ -106,10 +106,10 @@ export class HttpProjectService {
   addOrUpdateProjectScreenshot(projectToken: string, screenshotFile: File): Observable<void> {
     const url = `${projectsApiEndpoint}/${projectToken}/screenshot`;
 
-    let formData: FormData = new FormData();
+    const formData: FormData = new FormData();
     formData.append('screenshot', screenshotFile, screenshotFile.name);
 
-    let httpHeaders: HttpHeaders = new HttpHeaders();
+    const httpHeaders: HttpHeaders = new HttpHeaders();
     httpHeaders.append('Content-Type', 'multipart/form-data');
     httpHeaders.append('Accept', 'application/json');
 

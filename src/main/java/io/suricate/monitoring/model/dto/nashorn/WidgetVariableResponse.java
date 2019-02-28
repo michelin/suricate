@@ -17,7 +17,7 @@
 package io.suricate.monitoring.model.dto.nashorn;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
-import io.suricate.monitoring.model.enums.WidgetVariableType;
+import io.suricate.monitoring.model.enums.DataType;
 import lombok.*;
 
 import java.util.Map;
@@ -50,7 +50,7 @@ public class WidgetVariableResponse extends AbstractDto {
     /**
      * The variable type
      */
-    private WidgetVariableType type;
+    private DataType type;
 
     /**
      * If the variable is required

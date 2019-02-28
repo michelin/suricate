@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.model.entity.setting;
 
-import io.suricate.monitoring.model.enums.SettingDataType;
+import io.suricate.monitoring.model.enums.DataType;
 import io.suricate.monitoring.model.enums.SettingType;
 import lombok.*;
 import org.hibernate.annotations.Type;
@@ -60,7 +60,7 @@ public class Setting {
      */
     @Column(nullable = false, name = "data_type")
     @Enumerated(EnumType.STRING)
-    private SettingDataType dataType;
+    private DataType dataType;
 
     /**
      * The setting type

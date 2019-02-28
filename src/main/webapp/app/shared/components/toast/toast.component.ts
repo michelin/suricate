@@ -142,7 +142,7 @@ export class ToastComponent implements OnInit, OnDestroy {
    * Hide the toast notification with timer
    */
   hideWithinTimeout() {
-    this.hideTimer = setTimeout(() => this.hideToast(), 4000);
+    this.hideTimer = global.setTimeout(() => this.hideToast(), 4000);
   }
 
   /**

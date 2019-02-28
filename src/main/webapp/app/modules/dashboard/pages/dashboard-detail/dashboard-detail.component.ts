@@ -69,7 +69,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
   /**
    * True if the dashboard should be displayed readonly, false otherwise
    */
-  isReadOnly: boolean = true;
+  isReadOnly = true;
 
   /**
    * The screen code of the client;
@@ -171,7 +171,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
       clearTimeout(this.screenshotTimer);
 
       // We are waiting 10sec before taking the screenshot
-      this.screenshotTimer = setTimeout(() => {
+      this.screenshotTimer = global.setTimeout(() => {
         this.isReadOnly = true;
 
         // Waiting for behing readonly and take the screenshot
@@ -180,7 +180,10 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
             this.isReadOnly = false;
             const imgUrl = canvas.toDataURL('image/png');
 
-            const blob: Blob = FileUtils.base64ToBlob(ImageUtils.getDataFromBase64URL(imgUrl), ImageUtils.getContentTypeFromBase64URL(imgUrl));
+            const blob: Blob = FileUtils.base64ToBlob(
+              ImageUtils.getDataFromBase64URL(imgUrl),
+              ImageUtils.getContentTypeFromBase64URL(imgUrl)
+            );
             const imageFile: File = FileUtils.convertBlobToFile(blob, `${this.project.token}.png`, new Date());
 
             this.httpProjectService.addOrUpdateProjectScreenshot(this.project.token, imageFile).subscribe();

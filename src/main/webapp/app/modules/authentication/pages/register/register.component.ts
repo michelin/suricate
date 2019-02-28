@@ -15,14 +15,14 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {CustomValidators} from 'ng2-validation';
 import {catchError, flatMap} from 'rxjs/operators';
 import {throwError} from 'rxjs';
+import {TranslateService} from '@ngx-translate/core';
 
 import {AuthenticationService} from '../../authentication.service';
-import {checkPasswordMatch} from '../../../../shared/validators/CustomValidator';
 import {ToastService} from '../../../../shared/components/toast/toast.service';
 import {ApplicationProperties} from '../../../../shared/model/api/ApplicationProperties';
 import {HttpConfigurationService} from '../../../../shared/services/api/http-configuration.service';
@@ -30,6 +30,10 @@ import {Credentials} from '../../../../shared/model/api/user/Credentials';
 import {ToastType} from '../../../../shared/components/toast/toast-objects/ToastType';
 import {UserRequest} from '../../../../shared/model/api/user/UserRequest';
 import {AuthenticationProviderEnum} from '../../../../shared/model/enums/AuthenticationProviderEnum';
+import {FormField} from '../../../../shared/model/app/form/FormField';
+import {DataType} from '../../../../shared/model/enums/DataType';
+import {FormService} from '../../../../shared/services/app/form.service';
+import {CustomValidator} from '../../../../shared/validators/CustomValidator';
 
 
 /**
@@ -43,47 +47,35 @@ import {AuthenticationProviderEnum} from '../../../../shared/model/enums/Authent
 export class RegisterComponent implements OnInit {
 
   /**
-   * The form control for the password confirmation
-   * @type {FormControl}
-   * @private
-   */
-  private confirmPasswordControl: FormControl;
-  /**
-   * The form control for the password
-   * @type {FormControl}
-   * @private
-   */
-  private passwordControl: FormControl;
-
-  /**
    * The register form
    * @type {FormGroup}
    */
   registerForm: FormGroup;
   /**
+   * The description of the form
+   */
+  formFields: FormField[];
+  /**
    * Tell if the form has been submit or not
    * @type {boolean} true if the form is submitting, false otherwise
    */
   formSubmitAttempt = false;
-  /**
-   * If the password should be hide or not
-   * @type {boolean}
-   */
-  hidePassword = true;
 
   /**
    * Constructor
    *
-   * @param {FormBuilder} formBuilder The formBuilder service to inject
    * @param {AuthenticationService} authenticationService The authentication service to inject
    * @param {Router} router The router service to inject
    * @param {ToastService} toastService The toast service to inject
+   * @param {TranslateService} translateService The service used for translations
+   * @param {FormService} formService The form service used for the form creation
    * @param {HttpConfigurationService} httpConfigurationService The configuration service to inject
    */
-  constructor(private formBuilder: FormBuilder,
-              private authenticationService: AuthenticationService,
+  constructor(private authenticationService: AuthenticationService,
               private router: Router,
               private toastService: ToastService,
+              private translateService: TranslateService,
+              private formService: FormService,
               private httpConfigurationService: HttpConfigurationService) {
   }
 
@@ -105,36 +97,83 @@ export class RegisterComponent implements OnInit {
    * Init the register form
    */
   initRegisterForm() {
-    this.passwordControl = this.formBuilder.control('', [Validators.required, Validators.minLength(3)]);
-    this.confirmPasswordControl = this.formBuilder.control(
-      '',
-      [Validators.required, Validators.minLength(3), checkPasswordMatch(this.passwordControl)]
+    this.generateFormFields();
+    this.registerForm = this.formService.generateFormGroupForFields(this.formFields);
+    this.formService.setValidatorsForControl(
+      this.registerForm.get('confirmPassword'),
+      [
+        Validators.required,
+        Validators.minLength(3),
+        CustomValidator.checkPasswordMatch(this.registerForm.get('password'))
+      ]
     );
-
-    this.registerForm = this.formBuilder.group({
-      username: ['', [Validators.required, Validators.minLength(3)]],
-      firstname: ['', [Validators.required, Validators.minLength(2)]],
-      lastname: ['', [Validators.required, Validators.minLength(2)]],
-      email: ['', [Validators.required, CustomValidators.email]],
-      password: this.passwordControl,
-      confirmPassword: this.confirmPasswordControl
-    });
   }
 
   /**
-   * Check if the field is invalid
-   *
-   * @param {string} field The field to check
-   * @returns {boolean} False if the field valid, true otherwise
+   * Generate the form fields used for the form creation
    */
-  isFieldInvalid(field: string) {
-    return this.registerForm.invalid && (this.registerForm.get(field).dirty || this.registerForm.get(field).touched);
+  generateFormFields() {
+    this.translateService
+      .get(['username', 'firstname', 'lastname', 'email', 'password', 'password.confirm'])
+      .subscribe((translations: string) => {
+        this.formFields = [
+          {
+            key: 'username',
+            label: translations['username'],
+            type: DataType.TEXT,
+            value: '',
+            validators: [Validators.required, Validators.minLength(3)],
+            matIconPrefix: 'android'
+          },
+          {
+            key: 'firstname',
+            label: translations['firstname'],
+            type: DataType.TEXT,
+            value: '',
+            validators: [Validators.required, Validators.minLength(3)],
+            matIconPrefix: 'person'
+          },
+          {
+            key: 'lastname',
+            label: translations['lastname'],
+            type: DataType.TEXT,
+            value: '',
+            validators: [Validators.required, Validators.minLength(3)],
+            matIconPrefix: 'person'
+          },
+          {
+            key: 'email',
+            label: translations['email'],
+            type: DataType.TEXT,
+            value: '',
+            validators: [Validators.required, CustomValidators.email],
+            matIconPrefix: 'email'
+          },
+          {
+            key: 'password',
+            label: translations['password'],
+            type: DataType.PASSWORD,
+            value: '',
+            validators: [Validators.required, Validators.minLength(3)],
+            matIconPrefix: 'lock'
+          },
+          {
+            key: 'confirmPassword',
+            label: translations['password.confirm'],
+            type: DataType.PASSWORD,
+            value: '',
+            matIconPrefix: 'lock'
+          }
+        ];
+      });
   }
 
   /**
    * Send the register form
    */
   signUp() {
+    this.formService.validate(this.registerForm);
+
     if (this.registerForm.valid) {
       this.formSubmitAttempt = true;
       const userRequest: UserRequest = this.registerForm.value;

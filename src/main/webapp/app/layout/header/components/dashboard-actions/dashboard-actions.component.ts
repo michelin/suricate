@@ -66,7 +66,7 @@ export class DashboardActionsComponent implements OnInit {
   /**
    * True if the dashboard should be displayed readonly, false otherwise
    */
-  isReadOnly: boolean = true;
+  isReadOnly = true;
 
   /**
    * The constructor

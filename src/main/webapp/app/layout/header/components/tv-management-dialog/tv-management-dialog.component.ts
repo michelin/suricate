@@ -16,12 +16,19 @@
 
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA} from '@angular/material';
-import {FormBuilder, FormGroup} from '@angular/forms';
+import {FormGroup} from '@angular/forms';
 
 import {Project} from '../../../../shared/model/api/project/Project';
 import {WebsocketClient} from '../../../../shared/model/api/WebsocketClient';
 import {HttpScreenService} from '../../../../shared/services/api/http-screen.service';
 import {HttpProjectService} from '../../../../shared/services/api/http-project.service';
+import {FormField} from '../../../../shared/model/app/form/FormField';
+import {FormService} from '../../../../shared/services/app/form.service';
+import {TranslateService} from '@ngx-translate/core';
+import {map} from 'rxjs/operators';
+import {DataType} from '../../../../shared/model/enums/DataType';
+import {CustomValidators} from 'ng2-validation';
+import {Observable} from 'rxjs';
 
 /**
  * Component that manage the popup for Dashboard TV Management
@@ -40,6 +47,11 @@ export class TvManagementDialogComponent implements OnInit {
   screenRegisterForm: FormGroup;
 
   /**
+   * The description of the form
+   */
+  formFields: FormField[];
+
+  /**
    * The current project
    * @type {Project}
    */
@@ -55,14 +67,16 @@ export class TvManagementDialogComponent implements OnInit {
    * Constructor
    *
    * @param data The data give to the modal
-   * @param {FormBuilder} formBuilder The formBuilder
+   * @param {FormService} formService The formService
    * @param {HttpProjectService} httpProjectService The http project service to inject
    * @param {HttpScreenService} httpScreenService The screen service
+   * @param {TranslateService} translateService The translate service
    */
   constructor(@Inject(MAT_DIALOG_DATA) private data: any,
-              private formBuilder: FormBuilder,
+              private formService: FormService,
               private httpProjectService: HttpProjectService,
-              private httpScreenService: HttpScreenService) {
+              private httpScreenService: HttpScreenService,
+              private translateService: TranslateService) {
   }
 
   /**
@@ -74,9 +88,25 @@ export class TvManagementDialogComponent implements OnInit {
       this.refreshWebsocketClients();
     });
 
-    this.screenRegisterForm = this.formBuilder.group({
-      screenCode: ['']
+    this.generateFormFields().subscribe(() => {
+      this.screenRegisterForm = this.formService.generateFormGroupForFields(this.formFields);
     });
+  }
+
+  generateFormFields(): Observable<void> {
+    this.formFields = [];
+    return this.translateService.get(['screen.field.code']).pipe(
+      map((translations: string) => {
+        this.formFields.push({
+          key: 'screenCode',
+          label: translations['screen.field.code'],
+          type: DataType.NUMBER,
+          value: '',
+          validators: [CustomValidators.digits, CustomValidators.gt(0)]
+        });
+      })
+    );
+
   }
 
   refreshWebsocketClients() {
