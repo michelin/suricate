@@ -56,14 +56,4 @@ body {
   .mat-form-field-suffix .show-pwd-icon {
     cursor: pointer;
   }
-
-  .widget-dialog-card {
-    &.step2 {
-      min-height: 275px;
-    }
-
-    .mat-card-header-text {
-      margin: auto !important;
-    }
-  }
 }
