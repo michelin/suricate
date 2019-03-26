@@ -1,9 +1,3 @@
-<div *ngIf="isLoggedIn$ | async; else displayLogin">
-  <app-sidenav></app-sidenav>
-</div>
-
-<ng-template #displayLogin>
-  <router-outlet></router-outlet>
-</ng-template>
+<app-sidenav></app-sidenav>
 
 <app-toast-messages></app-toast-messages>

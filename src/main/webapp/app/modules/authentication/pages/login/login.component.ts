@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {TranslateService} from '@ngx-translate/core';
@@ -26,6 +26,7 @@ import {AuthenticationProviderEnum} from '../../../../shared/model/enums/Authent
 import {FormService} from '../../../../shared/services/app/form.service';
 import {FormField} from '../../../../shared/model/app/form/FormField';
 import {DataType} from '../../../../shared/model/enums/DataType';
+import {SidenavService} from "../../../../layout/sidenav/sidenav.service";
 
 /**
  * Manage the login page
@@ -35,7 +36,7 @@ import {DataType} from '../../../../shared/model/enums/DataType';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
   /**
    * The login form
    * @type {FormGroup}
@@ -62,12 +63,14 @@ export class LoginComponent implements OnInit {
    * @param {AuthenticationService} authenticationService The authentication service
    * @param {FormService} formService Generic service used to manage the initiations of forms
    * @param {TranslateService} translateService The translate service
+   * @param {SidenavService} sidenavService Manage the sidenav
    * @param {HttpConfigurationService} httpConfigurationService The configuration service to inject
    */
   constructor(private router: Router,
               private authenticationService: AuthenticationService,
               private formService: FormService,
               private translateService: TranslateService,
+              private sidenavService: SidenavService,
               private httpConfigurationService: HttpConfigurationService) {
   }
 
@@ -75,6 +78,8 @@ export class LoginComponent implements OnInit {
    * Init objects
    */
   ngOnInit() {
+    this.sidenavService.closeSidenav();
+
     this.httpConfigurationService.getAuthenticationProvider().subscribe((applicationProperties: ApplicationProperties) => {
       this.isLdapServerUserProvider = applicationProperties.value.toUpperCase() === AuthenticationProviderEnum.LDAP;
     });
@@ -138,5 +143,12 @@ export class LoginComponent implements OnInit {
           this.formSubmitAttempt = false;
         });
     }
+  }
+
+    /**
+     * Called when the component is destroyed
+     */
+  ngOnDestroy() {
+    this.sidenavService.openSidenav();
   }
 }

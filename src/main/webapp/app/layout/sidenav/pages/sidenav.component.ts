@@ -27,6 +27,7 @@ import {AuthenticationService} from '../../../modules/authentication/authenticat
 import {User} from '../../../shared/model/api/user/User';
 import {HttpProjectService} from '../../../shared/services/api/http-project.service';
 import {HttpUserService} from '../../../shared/services/api/http-user.service';
+import {TokenService} from "../../../shared/auth/token.service";
 
 /**
  * Hold the sidenav behavior
@@ -80,6 +81,7 @@ export class SidenavComponent implements OnInit, AfterViewInit, OnDestroy {
    * @param {UserService} userService The user service
    * @param {AuthenticationService} authenticationService The authentication service
    * @param {SidenavService} sidenavService The sidenav service
+   * @param {TokenService} tokenService The token service
    */
   constructor(private router: Router,
               private changeDetectorRef: ChangeDetectorRef,
@@ -88,46 +90,37 @@ export class SidenavComponent implements OnInit, AfterViewInit, OnDestroy {
               private dashboardService: DashboardService,
               private userService: UserService,
               private authenticationService: AuthenticationService,
-              private sidenavService: SidenavService) {
+              private sidenavService: SidenavService,
+              private tokenService: TokenService) {
   }
 
   /**
    * Init objects
    */
   ngOnInit() {
-    this.initUserInformations();
-    this.initDashboardsInformations();
+    this.userService.connectedUser$.pipe(takeWhile(() => this.isAlive)).subscribe(connectedUser => {
+        this.connectedUser = connectedUser;
+        this.isUserAdmin = this.userService.isAdmin();
+        this.refreshDashboardList();
+    });
+
+    this.dashboardService.currentDashboardList$.pipe(takeWhile(() => this.isAlive)).subscribe(projects => {
+        this.dashboards = projects;
+    });
+
+    if(this.tokenService.hasToken()) {
+      this.httpUserService.getConnectedUser().subscribe(connectedUser => {
+          this.userService.connectedUser = connectedUser;
+      });
+    }
   }
 
   /**
-   * Init the informations related to the user
+   * Refresh the dashboard list
    */
-  initUserInformations() {
-    this.userService.connectedUser$.pipe(
-      takeWhile(() => this.isAlive)
-    ).subscribe(connectedUser => {
-      this.connectedUser = connectedUser;
-    });
-
-    this.httpUserService.getConnectedUser().subscribe(connectedUser => {
-      this.userService.connectedUser = connectedUser;
-    });
-
-    this.isUserAdmin = this.userService.isAdmin();
-  }
-
-  /**
-   * Init the dashboards information for the user
-   */
-  initDashboardsInformations() {
-    this.dashboardService.currentDashboardList$.pipe(
-      takeWhile(() => this.isAlive)
-    ).subscribe(projects => {
-      this.dashboards = projects;
-    });
-
+  refreshDashboardList() {
     this.httpProjectService.getAllForCurrentUser().subscribe((projects: Project[]) => {
-      this.dashboardService.currentDashboardListValues = projects;
+        this.dashboardService.currentDashboardListValues = projects;
     });
   }
 

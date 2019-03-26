@@ -90,6 +90,6 @@ export class UserService {
    * @returns {boolean} True if the current user admin, false otherwise
    */
   isAdmin(): boolean {
-    return this.tokenService.getUserRoles().includes(RoleEnum.ROLE_ADMIN);
+    return this.tokenService.hasToken() ? this.tokenService.getUserRoles().includes(RoleEnum.ROLE_ADMIN) : false;
   }
 }

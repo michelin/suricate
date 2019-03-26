@@ -28,6 +28,7 @@ import {Credentials} from '../../shared/model/api/user/Credentials';
 import {AuthenticationResponse} from '../../shared/model/api/authentication/AuthenticationResponse';
 import {User} from '../../shared/model/api/user/User';
 import {UserRequest} from '../../shared/model/api/user/UserRequest';
+import {HttpUserService} from "../../shared/services/api/http-user.service";
 
 
 /**
@@ -48,10 +49,12 @@ export class AuthenticationService {
    * @param {HttpClient} httpClient The HttpClient service
    * @param {TokenService} tokenService The token service
    * @param {UserService} userService The user service
+   * @param {HttpUserService} httpUserService The httpUserService
    */
   constructor(private httpClient: HttpClient,
               private tokenService: TokenService,
-              private userService: UserService) {
+              private userService: UserService,
+              private httpUserService: HttpUserService) {
   }
 
   /* ******************************************************************* */
@@ -66,6 +69,13 @@ export class AuthenticationService {
    */
   get isLoggedIn$(): Observable<boolean> {
     return this.loggedInSubject.asObservable();
+  }
+
+  /**
+   * True if a user is connected false otherwise
+   */
+  get isLoggedIn(): boolean {
+    return this.loggedInSubject.getValue();
   }
 
   /**
@@ -105,6 +115,9 @@ export class AuthenticationService {
         map(authenticationResponse => {
           if (authenticationResponse && authenticationResponse.access_token) {
             this.tokenService.token = authenticationResponse.access_token;
+            this.httpUserService.getConnectedUser().subscribe(connectedUser => {
+              this.userService.connectedUser = connectedUser;
+            });
             this.isLoggedIn = this.tokenService.hasToken();
 
             return authenticationResponse;
