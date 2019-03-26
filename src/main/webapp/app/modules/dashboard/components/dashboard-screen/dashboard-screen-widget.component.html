@@ -7,9 +7,9 @@
   <!--------------------------------------------------->
   <!--                 WIDGET CSS                    -->
   <!--------------------------------------------------->
-  <div [innerHTML]="('<style>' + widget.cssContent + '</style>') | safeHtml"></div>
-  <div *ngIf="projectWidget.customStyle" [innerHTML]="('<style>' + projectWidget.customStyle + '</style>') | safeHtml">
-  </div>
+  <span [innerHTML]="('<style>' + widget.cssContent + '</style>') | safeHtml"></span>
+  <span *ngIf="projectWidget.customStyle" [innerHTML]="('<style>' + projectWidget.customStyle + '</style>') | safeHtml">
+  </span>
 
   <!--------------------------------------------------->
   <!--                 WIDGET HTML                   -->

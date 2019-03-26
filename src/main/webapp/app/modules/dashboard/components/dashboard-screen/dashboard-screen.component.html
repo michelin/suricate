@@ -10,9 +10,8 @@
 <div *ngIf="gridOptions" class="grid-stack" [ngGrid]="gridOptions"
      (onResizeStop)="updateProjectWidgetsPosition()" (onDragStop)="updateProjectWidgetsPosition()">
 
-  <div [innerHTML]="('<style>' + project.gridProperties.cssStyle + '</style>') | safeHtml"></div>
-  <div [innerHTML]="getJSLibraries() | safeHtml">
-  </div>
+  <span [innerHTML]="('<style>' + project.gridProperties.cssStyle + '</style>') | safeHtml"></span>
+  <span [innerHTML]="getJSLibraries() | safeHtml"></span>
 
   <app-dashboard-screen-widget *ngFor="let gridStackItem of gridStackItems"
                                [projectWidget]="gridStackItem.payload"

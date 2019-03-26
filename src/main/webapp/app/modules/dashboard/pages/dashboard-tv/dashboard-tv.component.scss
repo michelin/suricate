@@ -45,6 +45,7 @@
 }
 
 #tv-view {
-  margin: -10px -10px 0 -10px;
-  height: 100vh;
+  overflow-x: auto;
+  min-height: 100vh;
+  margin: auto;
 }

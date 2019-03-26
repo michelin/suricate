@@ -142,7 +142,8 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
 
       this.project = changes.project.currentValue;
       this.appRunScriptDirective.ngOnInit();
-      this.initGridStackOptions();
+      setTimeout(() => this.initGridStackOptions());
+
 
       if (changes.project.previousValue) {
         if (changes.project.previousValue.token !== changes.project.currentValue.token) {
