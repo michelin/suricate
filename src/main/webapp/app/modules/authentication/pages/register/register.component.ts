@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {FormGroup, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 import {CustomValidators} from 'ng2-validation';
@@ -34,6 +34,7 @@ import {FormField} from '../../../../shared/model/app/form/FormField';
 import {DataType} from '../../../../shared/model/enums/DataType';
 import {FormService} from '../../../../shared/services/app/form.service';
 import {CustomValidator} from '../../../../shared/validators/CustomValidator';
+import {SidenavService} from "../../../../layout/sidenav/sidenav.service";
 
 
 /**
@@ -44,7 +45,7 @@ import {CustomValidator} from '../../../../shared/validators/CustomValidator';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent implements OnInit, OnDestroy {
 
   /**
    * The register form
@@ -69,6 +70,7 @@ export class RegisterComponent implements OnInit {
    * @param {ToastService} toastService The toast service to inject
    * @param {TranslateService} translateService The service used for translations
    * @param {FormService} formService The form service used for the form creation
+   * @param {SidenavService} sidenavService Manage the sidenav
    * @param {HttpConfigurationService} httpConfigurationService The configuration service to inject
    */
   constructor(private authenticationService: AuthenticationService,
@@ -76,6 +78,7 @@ export class RegisterComponent implements OnInit {
               private toastService: ToastService,
               private translateService: TranslateService,
               private formService: FormService,
+              private sidenavService: SidenavService,
               private httpConfigurationService: HttpConfigurationService) {
   }
 
@@ -83,6 +86,8 @@ export class RegisterComponent implements OnInit {
    * Called when the component is init
    */
   ngOnInit() {
+    this.sidenavService.closeSidenav();
+
     this.httpConfigurationService.getAuthenticationProvider().subscribe((applicationProperties: ApplicationProperties) => {
       if (applicationProperties.value === AuthenticationProviderEnum.LDAP) {
         this.router.navigate(['/login']);
@@ -201,5 +206,12 @@ export class RegisterComponent implements OnInit {
     } else {
       this.toastService.sendMessage('Some fields are not properly filled', ToastType.DANGER);
     }
+  }
+
+  /**
+   * Called when the component is destroyed
+   */
+  ngOnDestroy() {
+    this.sidenavService.openSidenav();
   }
 }
