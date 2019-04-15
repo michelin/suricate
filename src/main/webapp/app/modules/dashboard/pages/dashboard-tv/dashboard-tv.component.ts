@@ -16,7 +16,7 @@
  *
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
 import {takeWhile} from 'rxjs/operators';
 import {Subscription} from 'rxjs';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -39,7 +39,8 @@ import {DashboardService} from '../../dashboard.service';
 @Component({
   selector: 'app-code-view',
   templateUrl: './dashboard-tv.component.html',
-  styleUrls: ['./dashboard-tv.component.scss']
+  styleUrls: ['./dashboard-tv.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class DashboardTvComponent implements OnInit, OnDestroy {
 
