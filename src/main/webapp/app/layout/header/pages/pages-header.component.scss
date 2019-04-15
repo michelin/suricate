@@ -16,25 +16,31 @@
  *
  */
 
-.titles {
-  display: inline-block;
-}
+.header-container {
+  & {
+    padding-top: 10px;
+  }
 
-.actions {
-  padding: 0 25px 0 0;
-  display: inline-block;
-  float: right;
-}
+  .titles {
+    display: inline-block;
+  }
 
-h2.header {
-  font-weight: 300;
-  font-variant: all-small-caps;
-  margin: 0;
-  font-size: 1.2rem;
-  line-height: 1.4rem;
-}
+  .actions {
+    padding: 0 25px 0 0;
+    display: inline-block;
+    float: right;
+  }
 
-mat-divider {
-  margin-top: 10px;
-  margin-bottom: 15px;
+  h2.header {
+    font-weight: 300;
+    font-variant: all-small-caps;
+    margin: 0;
+    font-size: 1.2rem;
+    line-height: 1.4rem;
+  }
+
+  mat-divider {
+    margin-top: 10px;
+    margin-bottom: 15px;
+  }
 }
