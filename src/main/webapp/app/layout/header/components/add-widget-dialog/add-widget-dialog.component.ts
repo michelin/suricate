@@ -14,26 +14,26 @@
  * limitations under the License.
  */
 
-import {ChangeDetectorRef, Component, Inject, OnInit, ViewChild} from '@angular/core';
-import {FormGroup, ValidatorFn, Validators} from '@angular/forms';
-import {MAT_DIALOG_DATA, MatDialogRef, MatHorizontalStepper} from '@angular/material';
+import { ChangeDetectorRef, Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef, MatHorizontalStepper } from '@angular/material';
 
-import {Widget} from '../../../../shared/model/api/widget/Widget';
-import {DashboardService} from '../../../../modules/dashboard/dashboard.service';
-import {HttpCategoryService} from '../../../../shared/services/api/http-category.service';
-import {HttpAssetService} from '../../../../shared/services/api/http-asset.service';
-import {Category} from '../../../../shared/model/api/widget/Category';
-import {HttpProjectService} from '../../../../shared/services/api/http-project.service';
-import {WidgetAvailabilityEnum} from '../../../../shared/model/enums/WidgetAvailabilityEnum';
-import {ProjectWidgetRequest} from '../../../../shared/model/api/ProjectWidget/ProjectWidgetRequest';
-import {WidgetParam} from '../../../../shared/model/api/widget/WidgetParam';
-import {Configuration} from '../../../../shared/model/api/configuration/Configuration';
-import {DataType} from '../../../../shared/model/enums/DataType';
-import {FormField} from '../../../../shared/model/app/form/FormField';
-import {FormOption} from '../../../../shared/model/app/form/FormOption';
-import {WidgetParamValue} from '../../../../shared/model/api/widget/WidgetParamValue';
-import {FormService} from '../../../../shared/services/app/form.service';
-import {CustomValidators} from 'ng2-validation';
+import { Widget } from '../../../../shared/model/api/widget/Widget';
+import { DashboardService } from '../../../../modules/dashboard/dashboard.service';
+import { HttpCategoryService } from '../../../../shared/services/api/http-category.service';
+import { HttpAssetService } from '../../../../shared/services/api/http-asset.service';
+import { Category } from '../../../../shared/model/api/widget/Category';
+import { HttpProjectService } from '../../../../shared/services/api/http-project.service';
+import { WidgetAvailabilityEnum } from '../../../../shared/model/enums/WidgetAvailabilityEnum';
+import { ProjectWidgetRequest } from '../../../../shared/model/api/ProjectWidget/ProjectWidgetRequest';
+import { WidgetParam } from '../../../../shared/model/api/widget/WidgetParam';
+import { Configuration } from '../../../../shared/model/api/configuration/Configuration';
+import { DataType } from '../../../../shared/model/enums/DataType';
+import { FormField } from '../../../../shared/model/app/form/FormField';
+import { FormOption } from '../../../../shared/model/app/form/FormOption';
+import { WidgetParamValue } from '../../../../shared/model/api/widget/WidgetParamValue';
+import { FormService } from '../../../../shared/services/app/form.service';
+import { CustomValidators } from 'ng2-validation';
 
 /**
  * Dialog used to add a widget
@@ -251,7 +251,7 @@ export class AddWidgetDialogComponent implements OnInit {
     if (this.projectWidgetForm.valid) {
       let backendConfig = '';
 
-      this.selectedWidget.params.forEach(param => {
+      this.widgetParams.forEach(param => {
         const value = this.projectWidgetForm.get(param.name).value;
         backendConfig = value ? `${backendConfig}${param.name}=${value}\n` : `${backendConfig}`;
       });
