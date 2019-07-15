@@ -14,27 +14,27 @@
  * limitations under the License.
  */
 
-import {Component, Inject, OnInit} from '@angular/core';
-import {FormGroup, ValidatorFn, Validators} from '@angular/forms';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
-import {flatMap, map} from 'rxjs/operators';
+import { Component, Inject, OnInit } from '@angular/core';
+import { FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { flatMap, map } from 'rxjs/operators';
 
-import {ProjectWidget} from '../../../../shared/model/api/ProjectWidget/ProjectWidget';
-import {ToastService} from '../../../../shared/components/toast/toast.service';
-import {ToastType} from '../../../../shared/components/toast/toast-objects/ToastType';
-import {HttpProjectWidgetService} from '../../../../shared/services/api/http-project-widget.service';
-import {HttpWidgetService} from '../../../../shared/services/api/http-widget.service';
-import {Widget} from '../../../../shared/model/api/widget/Widget';
-import {HttpAssetService} from '../../../../shared/services/api/http-asset.service';
-import {Configuration} from '../../../../shared/model/api/configuration/Configuration';
-import {HttpCategoryService} from '../../../../shared/services/api/http-category.service';
-import {WidgetParam} from '../../../../shared/model/api/widget/WidgetParam';
-import {DataType} from '../../../../shared/model/enums/DataType';
-import {FormField} from '../../../../shared/model/app/form/FormField';
-import {FormService} from '../../../../shared/services/app/form.service';
-import {FormOption} from '../../../../shared/model/app/form/FormOption';
-import {WidgetParamValue} from '../../../../shared/model/api/widget/WidgetParamValue';
-import {CustomValidators} from 'ng2-validation';
+import { ProjectWidget } from '../../../../shared/model/api/ProjectWidget/ProjectWidget';
+import { ToastService } from '../../../../shared/components/toast/toast.service';
+import { ToastType } from '../../../../shared/components/toast/toast-objects/ToastType';
+import { HttpProjectWidgetService } from '../../../../shared/services/api/http-project-widget.service';
+import { HttpWidgetService } from '../../../../shared/services/api/http-widget.service';
+import { Widget } from '../../../../shared/model/api/widget/Widget';
+import { HttpAssetService } from '../../../../shared/services/api/http-asset.service';
+import { Configuration } from '../../../../shared/model/api/configuration/Configuration';
+import { HttpCategoryService } from '../../../../shared/services/api/http-category.service';
+import { WidgetParam } from '../../../../shared/model/api/widget/WidgetParam';
+import { DataType } from '../../../../shared/model/enums/DataType';
+import { FormField } from '../../../../shared/model/app/form/FormField';
+import { FormService } from '../../../../shared/services/app/form.service';
+import { FormOption } from '../../../../shared/model/app/form/FormOption';
+import { WidgetParamValue } from '../../../../shared/model/api/widget/WidgetParamValue';
+import { CustomValidators } from 'ng2-validation';
 
 @Component({
   selector: 'app-edit-project-widget-dialog',
@@ -249,7 +249,7 @@ export class EditProjectWidgetDialogComponent implements OnInit {
     if (this.projectWidgetForm.valid) {
       let backendConfig = '';
 
-      this.widget.params.forEach(param => {
+      this.widgetParams.forEach(param => {
         const value = this.projectWidgetForm.get(param.name).value;
         if (param.type === DataType.BOOLEAN) {
           backendConfig = `${backendConfig}${param.name}=${value}\n`;
