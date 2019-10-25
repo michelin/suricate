@@ -16,20 +16,15 @@
             "main": "src/main/webapp/main.ts",
             "tsConfig": "src/main/webapp/tsconfig.app.json",
             "polyfills": "src/main/webapp/polyfills.ts",
-            "assets": [
-              "src/main/webapp/assets",
-              "src/main/webapp/favicon.ico"
-            ],
+            "assets": ["src/main/webapp/assets", "src/main/webapp/favicon.ico"],
             "stylePreprocessorOptions": {
               "includePaths": [
                 "node_modules/normalize-scss/sass",
-                "node_modules/material-design-icons-iconfont/src"
+                "node_modules/material-design-icons-iconfont/src",
+                "node_modules/@fortawesome/fontawesome-free/scss"
               ]
             },
-            "styles": [
-              "node_modules/font-awesome/scss/font-awesome.scss",
-              "src/main/webapp/sass/styles.scss"
-            ],
+            "styles": ["src/main/webapp/sass/styles.scss"],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
               "node_modules/lodash/lodash.min.js",
@@ -86,20 +81,15 @@
             "karmaConfig": "./karma.conf.js",
             "polyfills": "src/main/webapp/polyfills.ts",
             "tsConfig": "src/main/webapp/tsconfig.spec.json",
-            "assets": [
-              "src/main/webapp/assets",
-              "src/main/webapp/favicon.ico"
-            ],
+            "assets": ["src/main/webapp/assets", "src/main/webapp/favicon.ico"],
             "stylePreprocessorOptions": {
               "includePaths": [
                 "node_modules/normalize-scss/sass",
-                "node_modules/material-design-icons-iconfont/src"
+                "node_modules/material-design-icons-iconfont/src",
+                "node_modules/@fortawesome/fontawesome-free/scss"
               ]
             },
-            "styles": [
-              "node_modules/font-awesome/scss/font-awesome.scss",
-              "src/main/webapp/sass/styles.scss"
-            ],
+            "styles": ["src/main/webapp/sass/styles.scss"],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
               "node_modules/lodash/lodash.min.js",
@@ -110,13 +100,8 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "src/main/webapp/tsconfig.app.json",
-              "src/main/webapp/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "tsConfig": ["src/main/webapp/tsconfig.app.json", "src/main/webapp/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**"]
           }
         }
       }
@@ -136,12 +121,8 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "e2e/tsconfig.e2e.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "tsConfig": ["e2e/tsconfig.e2e.json"],
+            "exclude": ["**/node_modules/**"]
           }
         }
       }
