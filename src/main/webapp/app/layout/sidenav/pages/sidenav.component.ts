@@ -16,7 +16,7 @@
 
 import {AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
-import {MatSidenav} from '@angular/material';
+import { MatSidenav } from '@angular/material/sidenav';
 import {takeWhile} from 'rxjs/operators';
 
 import {SidenavService} from '../sidenav.service';

@@ -15,7 +15,7 @@
  */
 
 import {Component, OnInit} from '@angular/core';
-import {MatDialog, MatDialogRef} from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import {ActivatedRoute} from '@angular/router';
 import {TitleCasePipe} from '@angular/common';
 import {TranslateService} from '@ngx-translate/core';

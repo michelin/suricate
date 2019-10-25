@@ -16,7 +16,7 @@
 
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormGroup, ValidatorFn, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { flatMap, map } from 'rxjs/operators';
 
 import { ProjectWidget } from '../../../../shared/model/api/ProjectWidget/ProjectWidget';

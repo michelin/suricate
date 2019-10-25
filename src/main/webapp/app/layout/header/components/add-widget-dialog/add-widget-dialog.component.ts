@@ -16,7 +16,8 @@
 
 import { ChangeDetectorRef, Component, Inject, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, ValidatorFn, Validators } from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef, MatHorizontalStepper } from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatHorizontalStepper } from '@angular/material/stepper';
 
 import { Widget } from '../../../../shared/model/api/widget/Widget';
 import { DashboardService } from '../../../../modules/dashboard/dashboard.service';

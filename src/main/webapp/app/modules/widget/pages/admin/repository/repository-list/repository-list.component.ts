@@ -17,7 +17,10 @@
  */
 
 import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
-import {MatPaginator, MatSlideToggleChange, MatSort, MatTableDataSource} from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { MatSort } from '@angular/material/sort';
+import { MatTableDataSource } from '@angular/material/table';
 import {merge, of} from 'rxjs';
 import {catchError, map, startWith, switchMap} from 'rxjs/operators';
 

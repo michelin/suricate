@@ -18,7 +18,7 @@
 import {Component, ElementRef, HostBinding, Input, OnDestroy, OnInit} from '@angular/core';
 import {TranslateService} from '@ngx-translate/core';
 import {TitleCasePipe} from '@angular/common';
-import {MatDialog} from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import {NgGridItemConfig, NgGridItemEvent} from 'angular2-grid';
 import {takeWhile} from 'rxjs/operators';
 

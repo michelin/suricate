@@ -16,7 +16,7 @@
 
 
 import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA} from '@angular/material';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 /**
  * This component is used to display information (without actions to do)

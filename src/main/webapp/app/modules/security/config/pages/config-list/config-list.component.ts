@@ -15,7 +15,7 @@
  */
 import {FlatTreeControl} from '@angular/cdk/tree';
 import {Component} from '@angular/core';
-import {MatTreeFlatDataSource, MatTreeFlattener} from '@angular/material';
+import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import {Observable, of as observableOf} from 'rxjs/index';
 
 import {ConfigDb, FileFlatNode, FileNode} from '../../config.db';

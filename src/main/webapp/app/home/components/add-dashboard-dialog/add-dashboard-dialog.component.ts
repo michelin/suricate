@@ -16,7 +16,8 @@
 
 import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {FormGroup, Validators} from '@angular/forms';
-import {MAT_DIALOG_DATA, MatHorizontalStepper} from '@angular/material';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatHorizontalStepper } from '@angular/material/stepper';
 import {Observable} from 'rxjs';
 import {flatMap, map} from 'rxjs/operators';
 
