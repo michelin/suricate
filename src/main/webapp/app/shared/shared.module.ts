@@ -41,9 +41,14 @@ import { CommunicationDialogComponent } from './components/communication-dialog/
 import { InputComponent } from './components/form/inputs/input.component';
 import { CheckboxComponent } from './components/form/inputs/checkbox/checkbox.component';
 import { FileInputComponent } from './components/form/inputs/file-input/file-input.component';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    HttpClientModule,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
@@ -72,6 +77,9 @@ import { FileInputComponent } from './components/form/inputs/file-input/file-inp
     FileInputComponent
   ],
   exports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
