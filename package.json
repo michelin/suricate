@@ -20,7 +20,7 @@
     "@angular/common": "^8.2.12",
     "@angular/compiler": "^8.2.12",
     "@angular/core": "^8.2.12",
-    "@angular/flex-layout": "^7.0.0-beta.19",
+    "@angular/flex-layout": "^8.0.0-beta.27",
     "@angular/forms": "^8.2.12",
     "@angular/material": "^8.2.3",
     "@angular/platform-browser": "^8.2.12",
