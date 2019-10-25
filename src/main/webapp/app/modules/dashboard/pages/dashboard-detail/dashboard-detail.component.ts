@@ -48,7 +48,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
   /**
    * The dashboard html (as HTML Element)
    */
-  @ViewChild('dashboardScreen') dashboardScreen: ElementRef;
+  @ViewChild('dashboardScreen', { static: false }) dashboardScreen: ElementRef;
 
   /**
    * The timer used to take the screenshot

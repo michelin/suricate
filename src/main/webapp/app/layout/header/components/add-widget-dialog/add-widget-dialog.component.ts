@@ -49,7 +49,7 @@ export class AddWidgetDialogComponent implements OnInit {
    * Hold the HTML Stepper
    * @type {MatHorizontalStepper}
    */
-  @ViewChild('widgetStepper') widgetStepper: MatHorizontalStepper;
+  @ViewChild('widgetStepper', { static: true }) widgetStepper: MatHorizontalStepper;
   /**
    * The form used to add a project widget
    */

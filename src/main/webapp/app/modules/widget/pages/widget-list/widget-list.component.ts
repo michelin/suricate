@@ -43,21 +43,21 @@ export class WidgetListComponent implements OnInit, AfterViewInit, OnDestroy {
    * Manage the sort of each column on the table
    * @type {MatSort}
    */
-  @ViewChild(MatSort) matSort: MatSort;
+  @ViewChild(MatSort, { static: true }) matSort: MatSort;
   /**
    * Manage the pagination
    * @type {MatPaginator}
    */
-  @ViewChild(MatPaginator) matPaginator: MatPaginator;
+  @ViewChild(MatPaginator, { static: true }) matPaginator: MatPaginator;
 
   /**
    * The input filter for name
    */
-  @ViewChild('nameInputFilter') nameInputFilter: ElementRef;
+  @ViewChild('nameInputFilter', { static: false }) nameInputFilter: ElementRef;
   /**
    * The input filter for category
    */
-  @ViewChild('categoryInputFilter') categoryInputFilter: ElementRef;
+  @ViewChild('categoryInputFilter', { static: false }) categoryInputFilter: ElementRef;
 
   /**
    * True if the user is admin

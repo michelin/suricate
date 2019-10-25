@@ -43,7 +43,7 @@ export class SidenavComponent implements OnInit, AfterViewInit, OnDestroy {
    * The html sidenav
    * @type {MatSidenav}
    */
-  @ViewChild('sidenav') sidenav: MatSidenav;
+  @ViewChild('sidenav', { static: true }) sidenav: MatSidenav;
 
   /**
    * Used for close the observable subscription

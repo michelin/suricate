@@ -37,12 +37,12 @@ export class RepositoryListComponent implements OnInit {
    * manage sort of the Mat table
    * @type {MatSort}
    */
-  @ViewChild(MatSort) matSort: MatSort;
+  @ViewChild(MatSort, { static: true }) matSort: MatSort;
   /**
    * manage pagination of the Mat table
    * @type {MatPaginator}
    */
-  @ViewChild(MatPaginator) matPaginator: MatPaginator;
+  @ViewChild(MatPaginator, { static: true }) matPaginator: MatPaginator;
 
   /**
    * Hold the data of the mat table

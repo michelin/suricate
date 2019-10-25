@@ -42,12 +42,12 @@ export class UserListComponent implements AfterViewInit {
    * Management of the table sorting
    * @type {MatSort}
    */
-  @ViewChild(MatSort) matSort: MatSort;
+  @ViewChild(MatSort, { static: true }) matSort: MatSort;
   /**
    * Management of the table pagination
    * @type {MatPaginator}
    */
-  @ViewChild(MatPaginator) matPaginator: MatPaginator;
+  @ViewChild(MatPaginator, { static: true }) matPaginator: MatPaginator;
 
   /**
    * The object that hold data management

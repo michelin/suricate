@@ -47,7 +47,7 @@ export class AddDashboardDialogComponent implements OnInit {
    * Mat horizontal stepper
    * @type {MatHorizontalStepper}
    */
-  @ViewChild('addDashboardStepper') addDashboardStepper: MatHorizontalStepper;
+  @ViewChild('addDashboardStepper', { static: false }) addDashboardStepper: MatHorizontalStepper;
   /**
    * project form group
    * @type {FormGroup}
