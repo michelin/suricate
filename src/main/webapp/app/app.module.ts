@@ -21,15 +21,12 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 
 import { AppComponent } from './app.component';
-import { AuthenticationModule } from './modules/authentication/authentication.module';
-import { DashboardModule } from './modules/dashboard/dashboard.module';
-import { HomeModule } from './home/home.module';
+import { CoreModule } from './core/core.module';
+import { DashboardModule } from './dashboard/dashboard.module';
 import { LayoutModule } from './layout/layout.module';
-import { SecurityModule } from './modules/security/security.module';
-import { SettingsModule } from './modules/settings/settings.module';
+import { AdminModule } from './admin/admin.module';
 import { SharedModule } from './shared/shared.module';
-import { WidgetConfigurationModule } from './modules/widget/pages/admin/configuration/widget-configuration.module';
-import { WidgetModule } from './modules/widget/widget.module';
+import { WidgetModule } from './widget/widget.module';
 import { appRoutes } from './app.routes';
 
 export function createTranslateLoader(http: HttpClient) {
@@ -48,15 +45,12 @@ export function createTranslateLoader(http: HttpClient) {
     }),
 
     // Suricate modules
-    AuthenticationModule,
+    CoreModule,
     DashboardModule,
-    HomeModule,
     LayoutModule,
     RouterModule.forRoot(appRoutes),
-    SecurityModule,
-    SettingsModule,
+    AdminModule,
     SharedModule,
-    WidgetConfigurationModule,
     WidgetModule
   ],
   declarations: [AppComponent],

@@ -21,7 +21,7 @@ import { CanActivate, CanActivateChild, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 
 import { TokenService } from '../services/frontend/token.service';
-import { AuthenticationService } from '../../modules/authentication/authentication.service';
+import { AuthenticationService } from '../../core/services/authentication.service';
 
 /**
  * Manage the right of the users

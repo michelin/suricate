@@ -1,0 +1,74 @@
+<app-pages-header [secondTitle]="'users.list'"></app-pages-header>
+
+<div class="table-container mat-elevation-z8">
+  <div class="table-loading-shade" *ngIf="isLoadingResults || errorCatched">
+    <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
+
+    <div class="table-error" *ngIf="errorCatched">
+      <app-translate [key]="'error'"></app-translate>
+    </div>
+  </div>
+
+  <mat-table #table [dataSource]="matTableDataSource" class="table-show" matSort>
+    <!-- Username Column -->
+    <ng-container matColumnDef="username">
+      <mat-header-cell fxFlex="17" *matHeaderCellDef mat-sort-header>
+        <app-translate [key]="'username'"></app-translate>
+      </mat-header-cell>
+      <mat-cell fxFlex="17" *matCellDef="let row">{{ row.username | titlecase }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="fullname">
+      <mat-header-cell fxFlex="20" *matHeaderCellDef mat-sort-header>
+        <app-translate [key]="'fullname'"></app-translate>
+      </mat-header-cell>
+      <mat-cell fxFlex="20" *matCellDef="let row">{{ row.fullname | titlecase }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="mail">
+      <mat-header-cell fxFlex="27" *matHeaderCellDef>
+        <app-translate [key]="'email'"></app-translate>
+      </mat-header-cell>
+      <mat-cell fxFlex="27" *matCellDef="let row">{{ row.email }}</mat-cell>
+    </ng-container>
+
+    <!-- Username Column -->
+    <ng-container matColumnDef="roles">
+      <mat-header-cell fxFlex="20" *matHeaderCellDef mat-sort-header>
+        <app-translate [key]="'roles'"></app-translate>
+      </mat-header-cell>
+      <mat-cell fxFlex="20" *matCellDef="let row"> {{ getRolesName(row.roles) }}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="edit">
+      <mat-header-cell fxFlex="8" *matHeaderCellDef>
+        <app-translate [key]="'edit'"></app-translate>
+      </mat-header-cell>
+      <mat-cell fxFlex="8" *matCellDef="let row">
+        <a [routerLink]="[row.id, 'edit']">
+          <button mat-icon-button color="primary">
+            <mat-icon>edit</mat-icon>
+          </button>
+        </a>
+      </mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="delete">
+      <mat-header-cell fxFlex="8" *matHeaderCellDef>
+        <app-translate [key]="'delete'"></app-translate>
+      </mat-header-cell>
+      <mat-cell fxFlex="8" *matCellDef="let row">
+        <a (click)="openDialogDeleteUser(row)">
+          <button mat-icon-button color="warn">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </a>
+      </mat-cell>
+    </ng-container>
+
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+  </mat-table>
+
+  <mat-paginator [length]="resultsLength" [pageSize]="30"> </mat-paginator>
+</div>

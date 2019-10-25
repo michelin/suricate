@@ -18,7 +18,7 @@ import { Injectable } from '@angular/core';
 import { CanActivate, CanActivateChild, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 
-import { UserService } from '../../modules/security/user/user.service';
+import { UserService } from '../../admin/services/user.service';
 
 /**
  * The admin guard

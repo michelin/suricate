@@ -15,31 +15,30 @@
  */
 
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 
-import { AddWidgetDialogComponent } from './header/components/add-widget-dialog/add-widget-dialog.component';
-import { DashboardActionsComponent } from './header/components/dashboard-actions/dashboard-actions.component';
-import { PagesFooterComponent } from './footer/pages/pages-footer.component';
-import { TvManagementDialogComponent } from './header/components/tv-management-dialog/tv-management-dialog.component';
-import { WidgetListActionsComponent } from './header/components/widget-list-actions/widget-list-actions.component';
+import { AddWidgetDialogComponent } from './components/header/components/add-widget-dialog/add-widget-dialog.component';
+import { DashboardActionsComponent } from './components/header/components/dashboard-actions/dashboard-actions.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { TvManagementDialogComponent } from './components/header/components/tv-management-dialog/tv-management-dialog.component';
+import { WidgetListActionsComponent } from './components/header/components/widget-list-actions/widget-list-actions.component';
 import { SharedModule } from '../shared/shared.module';
-import { PagesHeaderComponent } from './header/pages/pages-header.component';
-import { SidenavComponent } from './sidenav/pages/sidenav.component';
-import { RepositoryActionsComponent } from './header/components/repository-actions/repository-actions.component';
+import { HeaderComponent } from './components/header/header.component';
+import { SidenavComponent } from './components/sidenav/sidenav.component';
+import { RepositoryActionsComponent } from './components/header/components/repository-actions/repository-actions.component';
 
 @NgModule({
-  imports: [CommonModule, SharedModule],
+  imports: [SharedModule],
   declarations: [
     AddWidgetDialogComponent,
     DashboardActionsComponent,
-    PagesFooterComponent,
-    PagesHeaderComponent,
+    FooterComponent,
+    HeaderComponent,
     SidenavComponent,
     TvManagementDialogComponent,
     WidgetListActionsComponent,
     RepositoryActionsComponent
   ],
   entryComponents: [AddWidgetDialogComponent, TvManagementDialogComponent],
-  exports: [AddWidgetDialogComponent, PagesFooterComponent, PagesHeaderComponent, SidenavComponent]
+  exports: [AddWidgetDialogComponent, FooterComponent, HeaderComponent, SidenavComponent]
 })
 export class LayoutModule {}

@@ -19,9 +19,9 @@ import { Observable } from 'rxjs';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { takeWhile } from 'rxjs/operators';
 
-import { AuthenticationService } from './modules/authentication/authentication.service';
-import { SettingsService } from './modules/settings/settings.service';
-import { UserService } from './modules/security/user/user.service';
+import { AuthenticationService } from './core/services/authentication.service';
+import { SettingsService } from './core/services/settings.service';
+import { UserService } from './admin/services/user.service';
 
 @Component({
   selector: 'app-root',

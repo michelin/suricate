@@ -82,6 +82,7 @@ import { StompRService } from '@stomp/ng2-stompjs';
     BrowserModule,
     CheckboxComponent,
     ColorPickerModule,
+    CommonModule,
     CommunicationDialogComponent,
     ConfirmDialogComponent,
     CustomFormsModule,
