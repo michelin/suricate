@@ -16,8 +16,8 @@
  *
  */
 
-import {Category} from '../widget/Category';
-import {DataType} from '../../enums/DataType';
+import { Category } from '../widget/Category';
+import { DataType } from '../../enums/DataType';
 
 /**
  * The configuration entity

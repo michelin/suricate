@@ -14,28 +14,26 @@
  * limitations under the License.
  */
 
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-import {Widget} from '../../model/api/widget/Widget';
-import {widgetsApiEndpoint} from '../../../app.constant';
-import {ApiActionEnum} from '../../model/enums/ApiActionEnum';
-import {WidgetRequest} from '../../model/api/widget/WidgetRequest';
+import { Widget } from '../../model/api/widget/Widget';
+import { widgetsApiEndpoint } from '../../../app.constant';
+import { ApiActionEnum } from '../../model/enums/ApiActionEnum';
+import { WidgetRequest } from '../../model/api/widget/WidgetRequest';
 
 /**
  * Manage the Http widget calls
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class HttpWidgetService {
-
   /**
    * Constructor
    *
    * @param {HttpClient} httpClient The http client service
    */
-  constructor(private httpClient: HttpClient) {
-  }
+  constructor(private httpClient: HttpClient) {}
 
   /**
    * Get the list of widgets

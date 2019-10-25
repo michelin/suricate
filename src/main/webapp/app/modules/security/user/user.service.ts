@@ -14,19 +14,18 @@
  * limitations under the License.
  */
 
-import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 
-import {TokenService} from '../../../shared/auth/token.service';
-import {User} from '../../../shared/model/api/user/User';
-import {RoleEnum} from '../../../shared/model/enums/RoleEnum';
+import { TokenService } from '../../../shared/auth/token.service';
+import { User } from '../../../shared/model/api/user/User';
+import { RoleEnum } from '../../../shared/model/enums/RoleEnum';
 
 /**
  * User service that manage users
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class UserService {
-
   /**
    * The connected user subject
    * @type {Subject<User>}
@@ -38,8 +37,7 @@ export class UserService {
    *
    * @param {TokenService} tokenService The token service
    */
-  constructor(private tokenService: TokenService) {
-  }
+  constructor(private tokenService: TokenService) {}
 
   /* *************************************************************************************** */
   /*                            Subject Management                                           */

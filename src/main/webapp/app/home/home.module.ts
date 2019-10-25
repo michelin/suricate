@@ -14,33 +14,20 @@
  * limitations under the License.
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {RouterModule} from '@angular/router';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
-import {SharedModule} from '../shared/shared.module';
-import {HomeComponent} from './home.component';
-import {AddDashboardDialogComponent} from './components/add-dashboard-dialog/add-dashboard-dialog.component';
-import {LayoutModule} from '../layout/layout.module';
-import {homeRoutes} from './home.route';
+import { SharedModule } from '../shared/shared.module';
+import { HomeComponent } from './home.component';
+import { AddDashboardDialogComponent } from './components/add-dashboard-dialog/add-dashboard-dialog.component';
+import { LayoutModule } from '../layout/layout.module';
+import { homeRoutes } from './home.route';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    LayoutModule,
-    SharedModule,
-    RouterModule.forChild(homeRoutes)
-  ],
-  declarations: [
-    HomeComponent,
-    AddDashboardDialogComponent
-  ],
-  exports: [
-    HomeComponent
-  ],
-  entryComponents: [
-    AddDashboardDialogComponent
-  ]
+  imports: [CommonModule, LayoutModule, SharedModule, RouterModule.forChild(homeRoutes)],
+  declarations: [HomeComponent, AddDashboardDialogComponent],
+  exports: [HomeComponent],
+  entryComponents: [AddDashboardDialogComponent]
 })
-export class HomeModule {
-}
+export class HomeModule {}

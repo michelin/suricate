@@ -16,13 +16,12 @@
  *
  */
 
-import {ToastType} from './ToastType';
+import { ToastType } from './ToastType';
 
 /**
  * Class that represent a toaster notification message
  */
 export class ToastMessage {
-
   /**
    * The title notification
    */

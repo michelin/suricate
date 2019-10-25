@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import {ActivatedRoute, Router} from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import * as html2canvas from 'html2canvas';
 
-import {DashboardService} from '../../dashboard.service';
-import {Project} from '../../../../shared/model/api/project/Project';
-import {AddWidgetDialogComponent} from '../../../../layout/header/components/add-widget-dialog/add-widget-dialog.component';
-import {HttpProjectService} from '../../../../shared/services/api/http-project.service';
-import {ProjectWidget} from '../../../../shared/model/api/ProjectWidget/ProjectWidget';
-import {WebsocketService} from '../../../../shared/services/websocket.service';
-import {ImageUtils} from '../../../../shared/utils/ImageUtils';
-import {FileUtils} from '../../../../shared/utils/FileUtils';
+import { DashboardService } from '../../dashboard.service';
+import { Project } from '../../../../shared/model/api/project/Project';
+import { AddWidgetDialogComponent } from '../../../../layout/header/components/add-widget-dialog/add-widget-dialog.component';
+import { HttpProjectService } from '../../../../shared/services/api/http-project.service';
+import { ProjectWidget } from '../../../../shared/model/api/ProjectWidget/ProjectWidget';
+import { WebsocketService } from '../../../../shared/services/websocket.service';
+import { ImageUtils } from '../../../../shared/utils/ImageUtils';
+import { FileUtils } from '../../../../shared/utils/FileUtils';
 
 /**
  * Component that display a specific dashboard
@@ -37,7 +37,6 @@ import {FileUtils} from '../../../../shared/utils/FileUtils';
   styleUrls: ['./dashboard-detail.component.scss']
 })
 export class DashboardDetailComponent implements OnInit, OnDestroy {
-
   /**
    * Tell if the component is displayed
    * @type {boolean}
@@ -86,13 +85,14 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    * @param {MatDialog} matDialog The mat dialog service
    * @param {Router} router The router service on Angular
    */
-  constructor(private activatedRoute: ActivatedRoute,
-              private dashboardService: DashboardService,
-              private websocketService: WebsocketService,
-              private httpProjectService: HttpProjectService,
-              private matDialog: MatDialog,
-              private router: Router) {
-  }
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private dashboardService: DashboardService,
+    private websocketService: WebsocketService,
+    private httpProjectService: HttpProjectService,
+    private matDialog: MatDialog,
+    private router: Router
+  ) {}
 
   /**
    * Init objects
@@ -116,7 +116,6 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
     this.activatedRoute.params.subscribe(params => {
       this.refreshProject(params['dashboardToken']);
     });
-
   }
 
   /**
@@ -158,7 +157,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
     this.matDialog.open(AddWidgetDialogComponent, {
       minWidth: 900,
       minHeight: 500,
-      data: {projectToken: this.project.token}
+      data: { projectToken: this.project.token }
     });
   }
 
@@ -191,7 +190,6 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
         }, 0);
       }, 10000);
     }
-
   }
 
   /**
@@ -210,5 +208,4 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.isAlive = false;
   }
-
 }

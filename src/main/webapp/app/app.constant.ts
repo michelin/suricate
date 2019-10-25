@@ -16,7 +16,7 @@
  *
  */
 
-import {environment} from '../environments/environment';
+import { environment } from '../environments/environment';
 
 /* ************************************************************************ */
 /*                  Global CONSTANTS                                        */
@@ -37,7 +37,6 @@ export const appEnv = `${environment.ENVIRONMENT}`;
 /* ************************************************************************ */
 /*                  HTTP CONSTANTS                                          */
 /* ************************************************************************ */
-
 
 export const baseEndpoint = `${environment.BASE_URL}`;
 

@@ -5,23 +5,16 @@
         <button class="delete" (click)="hideToast()"></button>
         <div class="notification-body" fxLayout="row" fxLayoutAlign="start center">
           <div fxFlex="30" class="icon-wrapper" fxLayoutAlign="center center">
-            <mat-icon class="material-icons"
-                      *ngIf="(message$ | async)?.style === ToastType.INFO; else displayWarning">
+            <mat-icon class="material-icons" *ngIf="(message$ | async)?.style === ToastType.INFO; else displayWarning">
               format_italic
             </mat-icon>
-            <mat-icon #displayWarning
-                      class="material-icons"
-                      *ngIf="(message$ | async)?.style === ToastType.WARNING; else displayDanger">
+            <mat-icon #displayWarning class="material-icons" *ngIf="(message$ | async)?.style === ToastType.WARNING; else displayDanger">
               warning
             </mat-icon>
-            <mat-icon #displayDanger
-                      class="material-icons"
-                      *ngIf="(message$ | async)?.style === ToastType.DANGER; else displaySuccess">
+            <mat-icon #displayDanger class="material-icons" *ngIf="(message$ | async)?.style === ToastType.DANGER; else displaySuccess">
               error
             </mat-icon>
-            <mat-icon #displaySuccess
-                      class="material-icons"
-                      *ngIf="(message$ | async)?.style === ToastType.SUCCESS">
+            <mat-icon #displaySuccess class="material-icons" *ngIf="(message$ | async)?.style === ToastType.SUCCESS">
               done
             </mat-icon>
           </div>

@@ -14,29 +14,27 @@
  * limitations under the License.
  */
 
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-import {User} from '../../model/api/user/User';
-import {usersApiEndpoint} from '../../../app.constant';
-import {UserRequest} from '../../model/api/user/UserRequest';
-import {UserSettingRequest} from '../../model/api/setting/UserSettingRequest';
-import {UserSetting} from '../../model/api/setting/UserSetting';
+import { User } from '../../model/api/user/User';
+import { usersApiEndpoint } from '../../../app.constant';
+import { UserRequest } from '../../model/api/user/UserRequest';
+import { UserSettingRequest } from '../../model/api/setting/UserSettingRequest';
+import { UserSetting } from '../../model/api/setting/UserSetting';
 
 /**
  * Manage the http user calls
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class HttpUserService {
-
   /**
    * Constructor
    *
    * @param httpClient The http client
    */
-  constructor(private httpClient: HttpClient) {
-  }
+  constructor(private httpClient: HttpClient) {}
 
   /**
    * Get the list of users

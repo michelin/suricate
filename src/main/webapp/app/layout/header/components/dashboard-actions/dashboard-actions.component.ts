@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import {ActivatedRoute} from '@angular/router';
-import {TitleCasePipe} from '@angular/common';
-import {TranslateService} from '@ngx-translate/core';
+import { ActivatedRoute } from '@angular/router';
+import { TitleCasePipe } from '@angular/common';
+import { TranslateService } from '@ngx-translate/core';
 
-import {AddWidgetDialogComponent} from '../add-widget-dialog/add-widget-dialog.component';
-import {AddDashboardDialogComponent} from '../../../../home/components/add-dashboard-dialog/add-dashboard-dialog.component';
-import {TvManagementDialogComponent} from '../tv-management-dialog/tv-management-dialog.component';
-import {HttpScreenService} from '../../../../shared/services/api/http-screen.service';
-import {Project} from '../../../../shared/model/api/project/Project';
-import {HttpProjectService} from '../../../../shared/services/api/http-project.service';
-import {DashboardService} from '../../../../modules/dashboard/dashboard.service';
-import {ConfirmDialogComponent} from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { AddWidgetDialogComponent } from '../add-widget-dialog/add-widget-dialog.component';
+import { AddDashboardDialogComponent } from '../../../../home/components/add-dashboard-dialog/add-dashboard-dialog.component';
+import { TvManagementDialogComponent } from '../tv-management-dialog/tv-management-dialog.component';
+import { HttpScreenService } from '../../../../shared/services/api/http-screen.service';
+import { Project } from '../../../../shared/model/api/project/Project';
+import { HttpProjectService } from '../../../../shared/services/api/http-project.service';
+import { DashboardService } from '../../../../modules/dashboard/dashboard.service';
+import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 
 /**
  * Hold the header dashboard actions
@@ -38,7 +38,6 @@ import {ConfirmDialogComponent} from '../../../../shared/components/confirm-dial
   styleUrls: ['./dashboard-actions.component.scss']
 })
 export class DashboardActionsComponent implements OnInit {
-
   /**
    * Dialog reference used for add a widget
    * @type {MatDialogRef<AddWidgetDialogComponent>}
@@ -78,13 +77,14 @@ export class DashboardActionsComponent implements OnInit {
    * @param {HttpScreenService} httpScreenService The screen service
    * @param {HttpProjectService} httpProjectService The project service
    */
-  constructor(private matDialog: MatDialog,
-              private activatedRoute: ActivatedRoute,
-              private dashboardService: DashboardService,
-              private translateService: TranslateService,
-              private httpScreenService: HttpScreenService,
-              private httpProjectService: HttpProjectService) {
-  }
+  constructor(
+    private matDialog: MatDialog,
+    private activatedRoute: ActivatedRoute,
+    private dashboardService: DashboardService,
+    private translateService: TranslateService,
+    private httpScreenService: HttpScreenService,
+    private httpProjectService: HttpProjectService
+  ) {}
 
   /**
    * When the component is init
@@ -107,7 +107,7 @@ export class DashboardActionsComponent implements OnInit {
   openAddWidgetDialog() {
     this.addWidgetDialogRef = this.matDialog.open(AddWidgetDialogComponent, {
       minWidth: 900,
-      data: {projectToken: this.project.token}
+      data: { projectToken: this.project.token }
     });
   }
 
@@ -117,7 +117,7 @@ export class DashboardActionsComponent implements OnInit {
   openEditDashboardDialog() {
     this.editDashboardDialogRef = this.matDialog.open(AddDashboardDialogComponent, {
       minWidth: 900,
-      data: {projectToken: this.project.token}
+      data: { projectToken: this.project.token }
     });
   }
 
@@ -127,7 +127,7 @@ export class DashboardActionsComponent implements OnInit {
   openTvManagementDialog() {
     this.tvManagementDialogRef = this.matDialog.open(TvManagementDialogComponent, {
       minWidth: 900,
-      data: {projectToken: this.project.token}
+      data: { projectToken: this.project.token }
     });
   }
 
@@ -138,17 +138,19 @@ export class DashboardActionsComponent implements OnInit {
     this.translateService.get(['dashboard.delete', 'delete.confirm']).subscribe(translations => {
       const titlecasePipe = new TitleCasePipe();
 
-      this.matDialog.open(ConfirmDialogComponent, {
-        data: {
-          title: translations['dashboard.delete'],
-          message: `${translations['delete.confirm']} ${titlecasePipe.transform(this.project.name)}`
-        }
-      }).afterClosed().subscribe(shouldDeleteDashboard => {
-        if (shouldDeleteDashboard) {
-          this.httpProjectService.deleteProject(this.project.token).subscribe();
-        }
-      });
-
+      this.matDialog
+        .open(ConfirmDialogComponent, {
+          data: {
+            title: translations['dashboard.delete'],
+            message: `${translations['delete.confirm']} ${titlecasePipe.transform(this.project.name)}`
+          }
+        })
+        .afterClosed()
+        .subscribe(shouldDeleteDashboard => {
+          if (shouldDeleteDashboard) {
+            this.httpProjectService.deleteProject(this.project.token).subscribe();
+          }
+        });
     });
   }
 

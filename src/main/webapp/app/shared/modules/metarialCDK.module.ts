@@ -15,16 +15,11 @@
  *  * limitations under the License.
  *
  */
-import {NgModule} from '@angular/core';
-import {OverlayModule} from '@angular/cdk/overlay';
+import { NgModule } from '@angular/core';
+import { OverlayModule } from '@angular/cdk/overlay';
 
 @NgModule({
-  imports: [
-    OverlayModule
-  ],
-  exports: [
-    OverlayModule
-  ]
+  imports: [OverlayModule],
+  exports: [OverlayModule]
 })
-export class MaterialCDKModule {
-}
+export class MaterialCDKModule {}

@@ -16,29 +16,27 @@
  *
  */
 
-import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-import {Project} from '../../model/api/project/Project';
-import {projectsApiEndpoint} from '../../../app.constant';
-import {ProjectWidget} from '../../model/api/ProjectWidget/ProjectWidget';
-import {ProjectRequest} from '../../model/api/project/ProjectRequest';
-import {ProjectWidgetPositionRequest} from '../../model/api/ProjectWidget/ProjectWidgetPositionRequest';
-import {ProjectWidgetRequest} from '../../model/api/ProjectWidget/ProjectWidgetRequest';
-import {User} from '../../model/api/user/User';
-import {WebsocketClient} from '../../model/api/WebsocketClient';
+import { Project } from '../../model/api/project/Project';
+import { projectsApiEndpoint } from '../../../app.constant';
+import { ProjectWidget } from '../../model/api/ProjectWidget/ProjectWidget';
+import { ProjectRequest } from '../../model/api/project/ProjectRequest';
+import { ProjectWidgetPositionRequest } from '../../model/api/ProjectWidget/ProjectWidgetPositionRequest';
+import { ProjectWidgetRequest } from '../../model/api/ProjectWidget/ProjectWidgetRequest';
+import { User } from '../../model/api/user/User';
+import { WebsocketClient } from '../../model/api/WebsocketClient';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class HttpProjectService {
-
   /**
    * Constructor
    *
    * @param httpClient the http client to inject
    */
-  constructor(private httpClient: HttpClient) {
-  }
+  constructor(private httpClient: HttpClient) {}
 
   /**
    * Get every dashboards and update the list
@@ -113,7 +111,7 @@ export class HttpProjectService {
     httpHeaders.append('Content-Type', 'multipart/form-data');
     httpHeaders.append('Accept', 'application/json');
 
-    return this.httpClient.put<void>(url, formData, {headers: httpHeaders});
+    return this.httpClient.put<void>(url, formData, { headers: httpHeaders });
   }
 
   /**

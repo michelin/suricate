@@ -14,20 +14,19 @@
  * limitations under the License.
  */
 
-import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable, Subject} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
-import {Project} from '../../shared/model/api/project/Project';
-import {UserService} from '../security/user/user.service';
-import {HttpProjectService} from '../../shared/services/api/http-project.service';
-import {map} from 'rxjs/operators';
+import { Project } from '../../shared/model/api/project/Project';
+import { UserService } from '../security/user/user.service';
+import { HttpProjectService } from '../../shared/services/api/http-project.service';
+import { map } from 'rxjs/operators';
 
 /**
  * The dashboard service, manage http calls
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class DashboardService {
-
   /**
    * Hold the list of the user dashboards
    * @type {BehaviorSubject<Project[]>}
@@ -50,9 +49,7 @@ export class DashboardService {
    *
    * @param userService The user service to inject
    */
-  constructor(private userService: UserService,
-              private httpProjectService: HttpProjectService) {
-  }
+  constructor(private userService: UserService, private httpProjectService: HttpProjectService) {}
 
   /* ******************************************************************* */
   /*                      Subject Management Part                        */
@@ -128,8 +125,7 @@ export class DashboardService {
   shouldDisplayedReadOnly(dashboardToken: string): Observable<boolean> {
     return this.httpProjectService.getProjectUsers(dashboardToken).pipe(
       map(dashboardUsers => {
-        return !this.userService.isAdmin()
-          && !dashboardUsers.some(user => user.username === this.userService.connectedUser.username);
+        return !this.userService.isAdmin() && !dashboardUsers.some(user => user.username === this.userService.connectedUser.username);
       })
     );
   }

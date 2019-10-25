@@ -14,40 +14,19 @@
  * limitations under the License.
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {RouterModule} from '@angular/router';
-
-import {RoleService} from './user/role.service';
-import {UserService} from './user/user.service';
-import {UserListComponent} from './user/pages/user-list/user-list.component';
-import {UserEditComponent} from './user/pages/user-edit/user-edit.component';
-import {LayoutModule} from '../../layout/layout.module';
-import {SharedModule} from '../../shared/shared.module';
-import {securityRoutes} from './security.route';
-import {ConfigService} from './config/config.service';
-import {ConfigListComponent} from './config/pages/config-list/config-list.component';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { UserListComponent } from './user/pages/user-list/user-list.component';
+import { UserEditComponent } from './user/pages/user-edit/user-edit.component';
+import { LayoutModule } from '../../layout/layout.module';
+import { SharedModule } from '../../shared/shared.module';
+import { securityRoutes } from './security.route';
+import { ConfigListComponent } from './config/pages/config-list/config-list.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    RouterModule.forChild(securityRoutes),
-    LayoutModule,
-    SharedModule
-  ],
-  declarations: [
-    UserListComponent,
-    UserEditComponent,
-    ConfigListComponent
-  ],
-  exports: [
-    RouterModule
-  ],
-  providers: [
-    UserService,
-    RoleService,
-    ConfigService
-  ]
+  imports: [CommonModule, RouterModule.forChild(securityRoutes), LayoutModule, SharedModule],
+  declarations: [UserListComponent, UserEditComponent, ConfigListComponent],
+  exports: [RouterModule]
 })
-export class SecurityModule {
-}
+export class SecurityModule {}

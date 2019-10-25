@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-import {Component, OnInit} from '@angular/core';
-import {FormGroup, Validators} from '@angular/forms';
-import {ActivatedRoute, Router} from '@angular/router';
-import {CustomValidators} from 'ng2-validation';
-import {TranslateService} from '@ngx-translate/core';
-import {flatMap, map} from 'rxjs/operators';
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { CustomValidators } from 'ng2-validation';
+import { TranslateService } from '@ngx-translate/core';
+import { flatMap, map } from 'rxjs/operators';
 
-import {Project} from '../../../../../shared/model/api/project/Project';
-import {ToastService} from '../../../../../shared/components/toast/toast.service';
-import {ToastType} from '../../../../../shared/components/toast/toast-objects/ToastType';
-import {HttpProjectService} from '../../../../../shared/services/api/http-project.service';
-import {ProjectRequest} from '../../../../../shared/model/api/project/ProjectRequest';
-import {User} from '../../../../../shared/model/api/user/User';
-import {FormStep} from '../../../../../shared/model/app/form/FormStep';
-import {FormService} from '../../../../../shared/services/app/form.service';
-import {FormField} from '../../../../../shared/model/app/form/FormField';
-import {DataType} from '../../../../../shared/model/enums/DataType';
+import { Project } from '../../../../../shared/model/api/project/Project';
+import { ToastService } from '../../../../../shared/components/toast/toast.service';
+import { ToastType } from '../../../../../shared/components/toast/toast-objects/ToastType';
+import { HttpProjectService } from '../../../../../shared/services/api/http-project.service';
+import { ProjectRequest } from '../../../../../shared/model/api/project/ProjectRequest';
+import { User } from '../../../../../shared/model/api/user/User';
+import { FormStep } from '../../../../../shared/model/app/form/FormStep';
+import { FormService } from '../../../../../shared/services/app/form.service';
+import { FormField } from '../../../../../shared/model/app/form/FormField';
+import { DataType } from '../../../../../shared/model/enums/DataType';
 
 /**
  * Component that display the edit page for a dashboard
@@ -41,7 +41,6 @@ import {DataType} from '../../../../../shared/model/enums/DataType';
   styleUrls: ['./dashboard-edit.component.scss']
 })
 export class DashboardEditComponent implements OnInit {
-
   /**
    * The dashboard form
    * @type {FormGroup}
@@ -75,26 +74,30 @@ export class DashboardEditComponent implements OnInit {
    * @param {FormService} formService The form service used to generate form
    * @param {TranslateService} translateService The service used to translate sentences
    */
-  constructor(private httpProjectService: HttpProjectService,
-              private activatedRoute: ActivatedRoute,
-              private router: Router,
-              private toastService: ToastService,
-              private formService: FormService,
-              private translateService: TranslateService) {
-  }
+  constructor(
+    private httpProjectService: HttpProjectService,
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+    private toastService: ToastService,
+    private formService: FormService,
+    private translateService: TranslateService
+  ) {}
 
   /**
    * Called when the component is displayed
    */
   ngOnInit() {
     this.activatedRoute.params.subscribe(params => {
-      this.httpProjectService.getOneByToken(params['dashboardToken']).pipe(
-        map((dashboard: Project) => this.dashboard = dashboard),
-        flatMap(() => this.httpProjectService.getProjectUsers(params['dashboardToken'])),
-        map((users: User[]) => this.dashboardUsers = users)
-      ).subscribe(() => {
-        this.initDashboardForm();
-      });
+      this.httpProjectService
+        .getOneByToken(params['dashboardToken'])
+        .pipe(
+          map((dashboard: Project) => (this.dashboard = dashboard)),
+          flatMap(() => this.httpProjectService.getProjectUsers(params['dashboardToken'])),
+          map((users: User[]) => (this.dashboardUsers = users))
+        )
+        .subscribe(() => {
+          this.initDashboardForm();
+        });
     });
   }
 
@@ -103,11 +106,11 @@ export class DashboardEditComponent implements OnInit {
    */
   initDashboardForm() {
     this.formSteps = [];
-    this.generateStepOne().pipe(
-      map((stepOne: FormStep) => this.formSteps[0] = stepOne)
-    ).subscribe(() => {
-      this.dashboardForm = this.formService.generateFormGroupForSteps(this.formSteps);
-    });
+    this.generateStepOne()
+      .pipe(map((stepOne: FormStep) => (this.formSteps[0] = stepOne)))
+      .subscribe(() => {
+        this.dashboardForm = this.formService.generateFormGroupForSteps(this.formSteps);
+      });
   }
 
   /**
@@ -153,7 +156,7 @@ export class DashboardEditComponent implements OnInit {
           }
         ];
 
-        return {fields: formFields};
+        return { fields: formFields };
       })
     );
   }
@@ -165,7 +168,7 @@ export class DashboardEditComponent implements OnInit {
     this.formService.validate(this.dashboardForm);
 
     if (this.dashboardForm.valid) {
-      const projectRequest: ProjectRequest = {...this.dashboard, ...this.dashboardForm.value};
+      const projectRequest: ProjectRequest = { ...this.dashboard, ...this.dashboardForm.value };
 
       this.httpProjectService.editProject(this.dashboard.token, projectRequest).subscribe(() => {
         this.toastService.sendMessage('Dashboard saved successfully', ToastType.SUCCESS);

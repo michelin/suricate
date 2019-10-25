@@ -16,19 +16,17 @@
  *
  */
 
-import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 
-import {ToastMessage} from './toast-objects/ToastMessage';
-import {ToastType} from './toast-objects/ToastType';
-
+import { ToastMessage } from './toast-objects/ToastMessage';
+import { ToastType } from './toast-objects/ToastType';
 
 /**
  * The service that manage toast notification message
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class ToastService {
-
   /**
    * The toast message subject
    * @type {BehaviorSubject<ToastMessage>}
@@ -39,8 +37,7 @@ export class ToastService {
   /**
    * The constructor
    */
-  constructor() {
-  }
+  constructor() {}
 
   /**
    * get the toast message events
@@ -59,5 +56,4 @@ export class ToastService {
   sendMessage(title: string, style?: ToastType, content?: string): void {
     this.toastMessageSubject.next(new ToastMessage(title, content, style));
   }
-
 }

@@ -14,27 +14,25 @@
  * limitations under the License.
  */
 
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-import {Role} from '../../model/api/role/Role';
-import {rolesApiEndpoint} from '../../../app.constant';
-import {User} from '../../model/api/user/User';
+import { Role } from '../../model/api/role/Role';
+import { rolesApiEndpoint } from '../../../app.constant';
+import { User } from '../../model/api/user/User';
 
 /**
  * Manage the http role calls
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class HttpRoleService {
-
   /**
    * Constructor
    *
    * @param httpClient The http client service to inject
    */
-  constructor(private httpClient: HttpClient) {
-  }
+  constructor(private httpClient: HttpClient) {}
 
   /**
    * Get the list of roles

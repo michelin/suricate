@@ -16,29 +16,17 @@
  *
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {RouterModule} from '@angular/router';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
-import {SharedModule} from '../../shared/shared.module';
-import {SettingsListComponent} from './pages/settings-list/settings-list.component';
-import {LayoutModule} from '../../layout/layout.module';
-import {settingsRoutes} from './settings.route';
-import {SettingsService} from './settings.service';
+import { SharedModule } from '../../shared/shared.module';
+import { SettingsListComponent } from './pages/settings-list/settings-list.component';
+import { LayoutModule } from '../../layout/layout.module';
+import { settingsRoutes } from './settings.route';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    RouterModule.forChild(settingsRoutes),
-    LayoutModule,
-    SharedModule
-  ],
-  declarations: [
-    SettingsListComponent
-  ],
-  providers: [
-    SettingsService
-  ]
+  imports: [CommonModule, RouterModule.forChild(settingsRoutes), LayoutModule, SharedModule],
+  declarations: [SettingsListComponent]
 })
-export class SettingsModule {
-}
+export class SettingsModule {}

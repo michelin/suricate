@@ -16,20 +16,20 @@
  *
  */
 
-import {Component, OnInit} from '@angular/core';
-import {FormGroup, Validators} from '@angular/forms';
-import {ActivatedRoute, Router} from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import {HttpConfigurationService} from '../../../../../../shared/services/api/http-configuration.service';
-import {ToastService} from '../../../../../../shared/components/toast/toast.service';
-import {Configuration} from '../../../../../../shared/model/api/configuration/Configuration';
-import {ToastType} from '../../../../../../shared/components/toast/toast-objects/ToastType';
-import {DataType} from '../../../../../../shared/model/enums/DataType';
-import {FormField} from '../../../../../../shared/model/app/form/FormField';
-import {map} from 'rxjs/operators';
-import {TranslateService} from '@ngx-translate/core';
-import {FormService} from '../../../../../../shared/services/app/form.service';
-import {Observable} from 'rxjs';
+import { HttpConfigurationService } from '../../../../../../shared/services/api/http-configuration.service';
+import { ToastService } from '../../../../../../shared/components/toast/toast.service';
+import { Configuration } from '../../../../../../shared/model/api/configuration/Configuration';
+import { ToastType } from '../../../../../../shared/components/toast/toast-objects/ToastType';
+import { DataType } from '../../../../../../shared/model/enums/DataType';
+import { FormField } from '../../../../../../shared/model/app/form/FormField';
+import { map } from 'rxjs/operators';
+import { TranslateService } from '@ngx-translate/core';
+import { FormService } from '../../../../../../shared/services/app/form.service';
+import { Observable } from 'rxjs';
 
 /**
  * Manage the edition of a configuration
@@ -40,7 +40,6 @@ import {Observable} from 'rxjs';
   styleUrls: ['./widget-configuration-edit.component.scss']
 })
 export class WidgetConfigurationEditComponent implements OnInit {
-
   /**
    * The edit form
    * @type {FormGroup}
@@ -74,24 +73,26 @@ export class WidgetConfigurationEditComponent implements OnInit {
    * @param {TranslateService} translateService The translation service
    * @param {FormService} formService The form service to inject
    */
-  constructor(private activatedRoute: ActivatedRoute,
-              private router: Router,
-              private toastService: ToastService,
-              private configurationService: HttpConfigurationService,
-              private translateService: TranslateService,
-              private formService: FormService) {
-  }
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+    private toastService: ToastService,
+    private configurationService: HttpConfigurationService,
+    private translateService: TranslateService,
+    private formService: FormService
+  ) {}
 
   /**
    * Called when the component is init
    */
   ngOnInit() {
     this.activatedRoute.params.subscribe(params => {
-      this.configurationService.getOneByKey(params['configurationKey']).pipe(
-        map((configuration: Configuration) => this.configuration = configuration)
-      ).subscribe(() => {
-        this.initConfigForm();
-      });
+      this.configurationService
+        .getOneByKey(params['configurationKey'])
+        .pipe(map((configuration: Configuration) => (this.configuration = configuration)))
+        .subscribe(() => {
+          this.initConfigForm();
+        });
     });
   }
 
@@ -99,11 +100,11 @@ export class WidgetConfigurationEditComponent implements OnInit {
    * Init the configuration form
    */
   initConfigForm() {
-    this.generateFormFields().pipe(
-      map((formFields: FormField[]) => this.formFields = formFields)
-    ).subscribe(() => {
-      this.configurationForm = this.formService.generateFormGroupForFields(this.formFields);
-    });
+    this.generateFormFields()
+      .pipe(map((formFields: FormField[]) => (this.formFields = formFields)))
+      .subscribe(() => {
+        this.configurationForm = this.formService.generateFormGroupForFields(this.formFields);
+      });
   }
 
   generateFormFields(): Observable<FormField[]> {

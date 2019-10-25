@@ -16,13 +16,12 @@
  *
  */
 
-import {NgGridItemConfig} from 'angular2-grid';
+import { NgGridItemConfig } from 'angular2-grid';
 
 /**
  * Class that manage the utility function for grid items management
  */
 export class GridItemUtils {
-
   /**
    * Check if item have been moved
    *
@@ -30,7 +29,11 @@ export class GridItemUtils {
    * @param afterEvent Item state after move action
    */
   static isItemHaveBeenMoved(beforeEvent: NgGridItemConfig, afterEvent: NgGridItemConfig) {
-    return beforeEvent.sizex !== afterEvent.sizex || beforeEvent.sizey !== afterEvent.sizey
-      || beforeEvent.col !== afterEvent.col || beforeEvent.row !== afterEvent.row;
+    return (
+      beforeEvent.sizex !== afterEvent.sizex ||
+      beforeEvent.sizey !== afterEvent.sizey ||
+      beforeEvent.col !== afterEvent.col ||
+      beforeEvent.row !== afterEvent.row
+    );
   }
 }

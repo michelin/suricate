@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-import {OverlayContainer} from '@angular/cdk/overlay';
-import {Component, HostBinding, OnDestroy, OnInit} from '@angular/core';
-import {Observable} from 'rxjs';
-import {takeWhile} from 'rxjs/operators';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { Component, HostBinding, OnDestroy, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
+import { takeWhile } from 'rxjs/operators';
 
-import {AuthenticationService} from './modules/authentication/authentication.service';
-import {SettingsService} from './modules/settings/settings.service';
-import {UserService} from './modules/security/user/user.service';
-
+import { AuthenticationService } from './modules/authentication/authentication.service';
+import { SettingsService } from './modules/settings/settings.service';
+import { UserService } from './modules/security/user/user.service';
 
 @Component({
   selector: 'app-root',
@@ -30,7 +29,6 @@ import {UserService} from './modules/security/user/user.service';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit, OnDestroy {
-
   /**
    * The HTML class attribute
    */
@@ -64,20 +62,19 @@ export class AppComponent implements OnInit, OnDestroy {
    * @param {UserService} userService The user service
    * @param {SettingsService} settingsService The settings service to inject
    */
-  constructor(private authenticationService: AuthenticationService,
-              private overlayContainer: OverlayContainer,
-              private userService: UserService,
-              private settingsService: SettingsService) {
-  }
+  constructor(
+    private authenticationService: AuthenticationService,
+    private overlayContainer: OverlayContainer,
+    private userService: UserService,
+    private settingsService: SettingsService
+  ) {}
 
   /**
    * Called at the init of the app
    */
   ngOnInit() {
     this.isLoggedIn$ = this.authenticationService.isLoggedIn$.pipe(takeWhile(() => this.isAlive));
-    this.settingsService.currentTheme$.pipe(
-      takeWhile(() => this.isAlive)
-    ).subscribe(themeValue => {
+    this.settingsService.currentTheme$.pipe(takeWhile(() => this.isAlive)).subscribe(themeValue => {
       this.switchTheme(themeValue);
     });
 

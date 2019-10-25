@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import {DashboardEditComponent} from './dashboard-edit.component';
+import { DashboardEditComponent } from './dashboard-edit.component';
 
 describe('DashboardEditComponent', () => {
   let component: DashboardEditComponent;
@@ -25,8 +25,7 @@ describe('DashboardEditComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [DashboardEditComponent]
-    })
-        .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {

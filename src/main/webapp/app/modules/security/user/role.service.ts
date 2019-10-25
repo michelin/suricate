@@ -14,18 +14,16 @@
  * limitations under the License.
  */
 
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
-import {Role} from '../../../shared/model/api/role/Role';
+import { Role } from '../../../shared/model/api/role/Role';
 
 /**
  * The role service
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class RoleService {
-
-  constructor() {
-  }
+  constructor() {}
 
   getRolesNameAsTable(roles: Role[]): string[] {
     const roleNames: string[] = [];

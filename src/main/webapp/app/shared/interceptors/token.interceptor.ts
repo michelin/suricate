@@ -14,26 +14,24 @@
  * limitations under the License.
  */
 
-import {Injectable} from '@angular/core';
-import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-import {TokenService} from '../auth/token.service';
-import {baseApiEndpoint} from '../../app.constant';
+import { TokenService } from '../auth/token.service';
+import { baseApiEndpoint } from '../../app.constant';
 
 /**
  * The token interceptor
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class TokenInterceptor implements HttpInterceptor {
-
   /**
    * Constructor
    *
    * @param {TokenService} tokenService The token service to inject
    */
-  constructor(private tokenService: TokenService) {
-  }
+  constructor(private tokenService: TokenService) {}
 
   /**
    * Method implemented from HttpInterceptor
@@ -43,8 +41,7 @@ export class TokenInterceptor implements HttpInterceptor {
    * @returns {Observable<HttpEvent<any>>}
    */
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (!request || !request.url ||
-      (/^http/.test(request.url) && !(baseApiEndpoint && request.url.startsWith(baseApiEndpoint)))) {
+    if (!request || !request.url || (/^http/.test(request.url) && !(baseApiEndpoint && request.url.startsWith(baseApiEndpoint)))) {
       return next.handle(request);
     }
 

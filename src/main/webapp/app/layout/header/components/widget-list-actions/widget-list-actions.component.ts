@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import {Component} from '@angular/core';
+import { Component } from '@angular/core';
 
-import {ToastService} from '../../../../shared/components/toast/toast.service';
-import {ToastType} from '../../../../shared/components/toast/toast-objects/ToastType';
-import {HttpWidgetService} from '../../../../shared/services/api/http-widget.service';
-import {ApiActionEnum} from '../../../../shared/model/enums/ApiActionEnum';
+import { ToastService } from '../../../../shared/components/toast/toast.service';
+import { ToastType } from '../../../../shared/components/toast/toast-objects/ToastType';
+import { HttpWidgetService } from '../../../../shared/services/api/http-widget.service';
+import { ApiActionEnum } from '../../../../shared/model/enums/ApiActionEnum';
 
 /**
  * Hold the widget list actions
@@ -30,16 +30,13 @@ import {ApiActionEnum} from '../../../../shared/model/enums/ApiActionEnum';
   styleUrls: ['./widget-list-actions.component.scss']
 })
 export class WidgetListActionsComponent {
-
   /**
    * Constructor
    *
    * @param {HttpWidgetService} httpWidgetService The http widget service
    * @param {ToastService} toastService The toast service
    */
-  constructor(private httpWidgetService: HttpWidgetService,
-              private toastService: ToastService) {
-  }
+  constructor(private httpWidgetService: HttpWidgetService, private toastService: ToastService) {}
 
   /**
    * Method used to reload widgets from repository
@@ -49,5 +46,4 @@ export class WidgetListActionsComponent {
       this.toastService.sendMessage('Widget successfully reloads', ToastType.SUCCESS);
     });
   }
-
 }

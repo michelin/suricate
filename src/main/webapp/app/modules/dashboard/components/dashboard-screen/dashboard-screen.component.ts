@@ -14,24 +14,23 @@
  * limitations under the License.
  */
 
-
-import {Component, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, Output, SimpleChanges} from '@angular/core';
-import {takeWhile} from 'rxjs/operators';
-import {Subscription} from 'rxjs';
-import {NgGridConfig, NgGridItemConfig} from 'angular2-grid';
+import { Component, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
+import { takeWhile } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import { NgGridConfig, NgGridItemConfig } from 'angular2-grid';
 import * as Stomp from '@stomp/stompjs';
 
-import {Project} from '../../../../shared/model/api/project/Project';
-import {ProjectWidget} from '../../../../shared/model/api/ProjectWidget/ProjectWidget';
-import {WebsocketService} from '../../../../shared/services/websocket.service';
-import {HttpAssetService} from '../../../../shared/services/api/http-asset.service';
-import {WSUpdateEvent} from '../../../../shared/model/websocket/WSUpdateEvent';
-import {WSUpdateType} from '../../../../shared/model/websocket/enums/WSUpdateType';
-import {DashboardService} from '../../dashboard.service';
-import {ProjectWidgetPositionRequest} from '../../../../shared/model/api/ProjectWidget/ProjectWidgetPositionRequest';
-import {HttpProjectService} from '../../../../shared/services/api/http-project.service';
-import {RunScriptsDirective} from '../../../../shared/directives/run-scripts.directive';
-import {GridItemUtils} from '../../../../shared/utils/GridItemUtils';
+import { Project } from '../../../../shared/model/api/project/Project';
+import { ProjectWidget } from '../../../../shared/model/api/ProjectWidget/ProjectWidget';
+import { WebsocketService } from '../../../../shared/services/websocket.service';
+import { HttpAssetService } from '../../../../shared/services/api/http-asset.service';
+import { WSUpdateEvent } from '../../../../shared/model/websocket/WSUpdateEvent';
+import { WSUpdateType } from '../../../../shared/model/websocket/enums/WSUpdateType';
+import { DashboardService } from '../../dashboard.service';
+import { ProjectWidgetPositionRequest } from '../../../../shared/model/api/ProjectWidget/ProjectWidgetPositionRequest';
+import { HttpProjectService } from '../../../../shared/services/api/http-project.service';
+import { RunScriptsDirective } from '../../../../shared/directives/run-scripts.directive';
+import { GridItemUtils } from '../../../../shared/utils/GridItemUtils';
 
 /**
  * Display the grid stack widgets
@@ -42,7 +41,6 @@ import {GridItemUtils} from '../../../../shared/utils/GridItemUtils';
   styleUrls: ['./dashboard-screen.component.scss']
 })
 export class DashboardScreenComponent implements OnChanges, OnDestroy {
-
   /**
    * Tell to subscriptions if the component is alive
    * When the component is destroyed, the associated subscriptions will be deleted
@@ -118,12 +116,13 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
    * @param dashboardService The dashboard service
    * @param elementRef The element Ref service
    */
-  constructor(private websocketService: WebsocketService,
-              private httpAssetService: HttpAssetService,
-              private httpProjectService: HttpProjectService,
-              private dashboardService: DashboardService,
-              private elementRef: ElementRef) {
-  }
+  constructor(
+    private websocketService: WebsocketService,
+    private httpAssetService: HttpAssetService,
+    private httpProjectService: HttpProjectService,
+    private dashboardService: DashboardService,
+    private elementRef: ElementRef
+  ) {}
 
   /**********************************************************************************************************/
   /*                      COMPONENT LIFE CYCLE                                                              */
@@ -143,7 +142,6 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
       this.project = changes.project.currentValue;
       this.appRunScriptDirective.ngOnInit();
       setTimeout(() => this.initGridStackOptions());
-
 
       if (changes.project.previousValue) {
         if (changes.project.previousValue.token !== changes.project.currentValue.token) {
@@ -178,7 +176,7 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
    */
   displayScreenCode() {
     this.shouldDisplayScreenCode = true;
-    setTimeout(() => this.shouldDisplayScreenCode = false, 10000);
+    setTimeout(() => (this.shouldDisplayScreenCode = false), 10000);
   }
 
   /**********************************************************************************************************/
@@ -191,21 +189,21 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
    */
   initGridStackOptions(): void {
     this.gridOptions = {
-      'max_cols': this.project.gridProperties.maxColumn,
-      'min_cols': 1,
-      'row_height': this.project.gridProperties.widgetHeight,
-      'min_rows': 1,
-      'margins': [4],
-      'auto_resize': true,
-      'draggable': false,
-      'resizable': false
+      max_cols: this.project.gridProperties.maxColumn,
+      min_cols: 1,
+      row_height: this.project.gridProperties.widgetHeight,
+      min_rows: 1,
+      margins: [4],
+      auto_resize: true,
+      draggable: false,
+      resizable: false
     };
 
     if (!this.readOnly) {
       this.gridOptions = {
         ...this.gridOptions,
-        'draggable': true,
-        'resizable': true
+        draggable: true,
+        resizable: true
       };
     }
   }
@@ -321,24 +319,25 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
   websocketProjectEventSubscription() {
     const projectSubscriptionUrl = `/user/${this.project.token}/queue/live`;
 
-    this.websocketService.subscribeToDestination(projectSubscriptionUrl).pipe(
-      takeWhile(() => this.isAlive)
-    ).subscribe((stompMessage: Stomp.Message) => {
-      const updateEvent: WSUpdateEvent = JSON.parse(stompMessage.body);
+    this.websocketService
+      .subscribeToDestination(projectSubscriptionUrl)
+      .pipe(takeWhile(() => this.isAlive))
+      .subscribe((stompMessage: Stomp.Message) => {
+        const updateEvent: WSUpdateEvent = JSON.parse(stompMessage.body);
 
-      if (updateEvent.type === WSUpdateType.RELOAD) {
-        location.reload();
-      } else if (updateEvent.type === WSUpdateType.DISPLAY_NUMBER) {
-        this.displayScreenCode();
-      } else if (updateEvent.type === WSUpdateType.POSITION) {
-        this.dashboardService.refreshProjectWidgets();
-      } else if (updateEvent.type === WSUpdateType.DISCONNECT) {
-        this.disconnectFromWebsocket();
-        this.disconnectEvent.emit();
-      } else {
-        this.dashboardService.refreshProject();
-      }
-    });
+        if (updateEvent.type === WSUpdateType.RELOAD) {
+          location.reload();
+        } else if (updateEvent.type === WSUpdateType.DISPLAY_NUMBER) {
+          this.displayScreenCode();
+        } else if (updateEvent.type === WSUpdateType.POSITION) {
+          this.dashboardService.refreshProjectWidgets();
+        } else if (updateEvent.type === WSUpdateType.DISCONNECT) {
+          this.disconnectFromWebsocket();
+          this.disconnectEvent.emit();
+        } else {
+          this.dashboardService.refreshProject();
+        }
+      });
   }
 
   /**
@@ -347,16 +346,17 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
   websocketScreenEventSubscription() {
     const screenSubscriptionUrl = `/user/${this.project.token}-${this.screenCode}/queue/unique`;
 
-    this.screenEventSubscription = this.websocketService.subscribeToDestination(screenSubscriptionUrl).pipe(
-      takeWhile(() => this.isAlive)
-    ).subscribe((stompMessage: Stomp.Message) => {
-      const updateEvent: WSUpdateEvent = JSON.parse(stompMessage.body);
+    this.screenEventSubscription = this.websocketService
+      .subscribeToDestination(screenSubscriptionUrl)
+      .pipe(takeWhile(() => this.isAlive))
+      .subscribe((stompMessage: Stomp.Message) => {
+        const updateEvent: WSUpdateEvent = JSON.parse(stompMessage.body);
 
-      if (updateEvent.type === WSUpdateType.DISCONNECT) {
-        this.disconnectFromWebsocket();
-        this.disconnectEvent.emit();
-      }
-    });
+        if (updateEvent.type === WSUpdateType.DISCONNECT) {
+          this.disconnectFromWebsocket();
+          this.disconnectEvent.emit();
+        }
+      });
   }
 
   /**
@@ -373,7 +373,7 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
           col: gridStackItem.col,
           row: gridStackItem.row,
           height: gridStackItem.sizey,
-          width: gridStackItem.sizex,
+          width: gridStackItem.sizex
         });
       });
 

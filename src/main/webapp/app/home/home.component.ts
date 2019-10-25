@@ -14,15 +14,15 @@
  * limitations under the License.
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import {Router} from '@angular/router';
-import {takeWhile} from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { takeWhile } from 'rxjs/operators';
 
-import {Project} from '../shared/model/api/project/Project';
-import {DashboardService} from '../modules/dashboard/dashboard.service';
-import {AddDashboardDialogComponent} from './components/add-dashboard-dialog/add-dashboard-dialog.component';
-import {HttpAssetService} from '../shared/services/api/http-asset.service';
+import { Project } from '../shared/model/api/project/Project';
+import { DashboardService } from '../modules/dashboard/dashboard.service';
+import { AddDashboardDialogComponent } from './components/add-dashboard-dialog/add-dashboard-dialog.component';
+import { HttpAssetService } from '../shared/services/api/http-asset.service';
 
 /**
  * Manage the home page
@@ -53,19 +53,18 @@ export class HomeComponent implements OnInit, OnDestroy {
    * @param {MatDialog} matDialog The mat dialog service
    * @param {Router} router The router service
    */
-  constructor(private dashboardService: DashboardService,
-              private httpAssetService: HttpAssetService,
-              private matDialog: MatDialog,
-              private router: Router) {
-  }
+  constructor(
+    private dashboardService: DashboardService,
+    private httpAssetService: HttpAssetService,
+    private matDialog: MatDialog,
+    private router: Router
+  ) {}
 
   /**
    * Init objects
    */
   ngOnInit() {
-    this.dashboardService.currentDashboardList$.pipe(
-      takeWhile(() => this.isAlive)
-    ).subscribe(dashboards => {
+    this.dashboardService.currentDashboardList$.pipe(takeWhile(() => this.isAlive)).subscribe(dashboards => {
       this.dashboards = dashboards;
     });
   }
@@ -103,5 +102,4 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.isAlive = false;
   }
-
 }

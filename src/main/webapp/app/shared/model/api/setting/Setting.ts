@@ -16,9 +16,9 @@
  *
  */
 
-import {AllowedSettingValue} from './AllowedSettingValue';
-import {SettingType} from '../../enums/SettingType';
-import {DataType} from '../../enums/DataType';
+import { AllowedSettingValue } from './AllowedSettingValue';
+import { SettingType } from '../../enums/SettingType';
+import { DataType } from '../../enums/DataType';
 
 /**
  * Represent a setting for the users

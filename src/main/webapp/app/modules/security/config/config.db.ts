@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-import {Injectable} from '@angular/core';
-import {BehaviorSubject} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
-import {ConfigService} from './config.service';
+import { ConfigService } from './config.service';
 
 /**
  * File node data with nested structure.
@@ -31,9 +31,7 @@ export class FileNode {
 
 /** Flat node with expandable and level information */
 export class FileFlatNode {
-  constructor(
-    public expandable: boolean, public filename: string, public level: number, public type: any) {
-  }
+  constructor(public expandable: boolean, public filename: string, public level: number, public type: any) {}
 }
 
 /**

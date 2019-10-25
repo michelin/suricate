@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-import {Injectable} from '@angular/core';
-import {JwtHelperService} from '@auth0/angular-jwt';
+import { Injectable } from '@angular/core';
+import { JwtHelperService } from '@auth0/angular-jwt';
 
 /**
  * The token service
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class TokenService {
-
   /**
    * Service used for decoding the token
    * @type {JwtHelperService}
@@ -33,8 +32,7 @@ export class TokenService {
   /**
    * Constructor
    */
-  constructor() {
-  }
+  constructor() {}
 
   /* ***************************************************** */
   /*                     Getter / Setter                   */

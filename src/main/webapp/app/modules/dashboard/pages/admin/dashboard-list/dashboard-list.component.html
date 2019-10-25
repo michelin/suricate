@@ -10,7 +10,6 @@
   </div>
 
   <mat-table #table [dataSource]="matTableDataSource" class="table-show" matSort>
-
     <!-- Name Column -->
     <ng-container matColumnDef="name">
       <mat-header-cell fxFlex="20" *matHeaderCellDef mat-sort-header>
@@ -57,9 +56,8 @@
 
     <!-- Table definitions -->
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
   </mat-table>
 
-  <mat-paginator [length]="resultsLength" [pageSize]="30">
-  </mat-paginator>
+  <mat-paginator [length]="resultsLength" [pageSize]="30"> </mat-paginator>
 </div>

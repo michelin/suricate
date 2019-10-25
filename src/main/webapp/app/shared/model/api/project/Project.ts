@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {ProjectGrid} from './ProjectGrid';
+import { ProjectGrid } from './ProjectGrid';
 
 /**
  * The project entity

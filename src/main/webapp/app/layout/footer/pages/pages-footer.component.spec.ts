@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import {PagesFooterComponent} from './pages-footer.component';
+import { PagesFooterComponent } from './pages-footer.component';
 
 describe('PagesFooterComponent', () => {
   let component: PagesFooterComponent;
@@ -25,8 +25,7 @@ describe('PagesFooterComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [PagesFooterComponent]
-    })
-        .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {

@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-
-import {Component, Inject, OnInit} from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 /**
@@ -27,7 +26,6 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
   styleUrls: ['./communication-dialog.component.scss']
 })
 export class CommunicationDialogComponent implements OnInit {
-
   /**
    * The dialog title
    */
@@ -48,8 +46,7 @@ export class CommunicationDialogComponent implements OnInit {
    *
    * @param data The data object that contains every informations to display
    */
-  constructor(@Inject(MAT_DIALOG_DATA) private data: any) {
-  }
+  constructor(@Inject(MAT_DIALOG_DATA) private data: any) {}
 
   /**
    * Called when the dialog is init
@@ -59,5 +56,4 @@ export class CommunicationDialogComponent implements OnInit {
     this.message = this.data.message;
     this.isErrorMessage = this.data.isErrorMessage;
   }
-
 }

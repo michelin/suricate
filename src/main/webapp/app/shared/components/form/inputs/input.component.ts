@@ -16,13 +16,13 @@
  *
  */
 
-import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {AbstractControl, FormGroup, ValidatorFn, Validators} from '@angular/forms';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { AbstractControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 
-import {DataType} from '../../../model/enums/DataType';
-import {FormField} from '../../../model/app/form/FormField';
-import {FormChangeEvent} from '../../../model/app/form/FormChangeEvent';
-import {animate, style, transition, trigger} from '@angular/animations';
+import { DataType } from '../../../model/enums/DataType';
+import { FormField } from '../../../model/app/form/FormField';
+import { FormChangeEvent } from '../../../model/app/form/FormChangeEvent';
+import { animate, style, transition, trigger } from '@angular/animations';
 
 /**
  * Manage the instantiation of different form inputs
@@ -34,14 +34,13 @@ import {animate, style, transition, trigger} from '@angular/animations';
   animations: [
     trigger('animationError', [
       transition(':enter', [
-        style({opacity: 0, transform: 'translateY(-100%)'}),
-        animate('300ms cubic-bezier(0.55, 0, 0.55, 0.2)', style({opacity: 1, transform: 'translateY(0%)'})),
-      ]),
+        style({ opacity: 0, transform: 'translateY(-100%)' }),
+        animate('300ms cubic-bezier(0.55, 0, 0.55, 0.2)', style({ opacity: 1, transform: 'translateY(0%)' }))
+      ])
     ])
   ]
 })
 export class InputComponent {
-
   /**
    * The form created in which we have to create the input
    */
@@ -65,9 +64,7 @@ export class InputComponent {
   /**
    * Constructor
    */
-  constructor() {
-  }
-
+  constructor() {}
 
   /**
    * Retrieve the form control from the form
@@ -95,8 +92,8 @@ export class InputComponent {
     let isRequired = false;
 
     if (this.field && this.field.validators && this.field.validators && !this.field.readOnly) {
-      isRequired = Array.isArray(this.field.validators) ?
-        (this.field.validators as ValidatorFn[]).includes(Validators.required)
+      isRequired = Array.isArray(this.field.validators)
+        ? (this.field.validators as ValidatorFn[]).includes(Validators.required)
         : this.field.validators === Validators.required;
     }
 

@@ -1,54 +1,20 @@
-<div class="container"
-     fxLayout="column wrap"
-     fxLayoutAlign="center center">
-
-  <div class="content"
-       fxFlex="100"
-       fxLayout="column wrap"
-       fxLayoutAlign="center center"
-       fxLayoutGap="7%">
-
-    <form *ngIf="registerForm"
-          id="register-form"
-          [formGroup]="registerForm"
-          (ngSubmit)="signUp()"
-          fxFlex="80"
-          novalidate>
-
-      <mat-card id="card-register"
-                fxFlexFill
-                fxLayout="column wrap"
-                fxLayoutAlign="center"
-                class="mat-elevation-z12">
-
-        <mat-card-content fxFlex="84"
-                          fxLayout="row wrap"
-                          fxLayoutAlign="center center">
+<div class="container" fxLayout="column wrap" fxLayoutAlign="center center">
+  <div class="content" fxFlex="100" fxLayout="column wrap" fxLayoutAlign="center center" fxLayoutGap="7%">
+    <form *ngIf="registerForm" id="register-form" [formGroup]="registerForm" (ngSubmit)="signUp()" fxFlex="80" novalidate>
+      <mat-card id="card-register" fxFlexFill fxLayout="column wrap" fxLayoutAlign="center" class="mat-elevation-z12">
+        <mat-card-content fxFlex="84" fxLayout="row wrap" fxLayoutAlign="center center">
           <!-- When form has been submitted -->
           <mat-spinner *ngIf="formSubmitAttempt"></mat-spinner>
 
           <!-- Before Submit the form -->
-          <div fxFlex="90"
-               fxLayout="column wrap"
-               fxLayoutAlign="center"
-               fxLayoutGap="6px"
-               *ngIf="!formSubmitAttempt"
-               class="form-content">
-
-            <app-input *ngFor="let field of formFields"
-                       [formGroup]="registerForm"
-                       [field]="field">
-            </app-input>
+          <div fxFlex="90" fxLayout="column wrap" fxLayoutAlign="center" fxLayoutGap="6px" *ngIf="!formSubmitAttempt" class="form-content">
+            <app-input *ngFor="let field of formFields" [formGroup]="registerForm" [field]="field"> </app-input>
           </div>
         </mat-card-content>
 
-        <mat-card-actions fxFlex="11"
-                          fxLayout="row wrap"
-                          fxLayoutAlign="center"
-                          fxLayoutGap="15px"
-                          *ngIf="!formSubmitAttempt">
+        <mat-card-actions fxFlex="11" fxLayout="row wrap" fxLayoutAlign="center" fxLayoutGap="15px" *ngIf="!formSubmitAttempt">
           <button fxFlex="85" mat-raised-button class="mat-elevation-z2" color="primary" type="submit">
-            {{ 'sign.up' | translate | uppercase}}
+            {{ 'sign.up' | translate | uppercase }}
           </button>
         </mat-card-actions>
       </mat-card>

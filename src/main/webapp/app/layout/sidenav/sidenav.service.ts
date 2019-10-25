@@ -16,15 +16,14 @@
  *
  */
 
-import {Injectable} from '@angular/core';
-import {Subject, Observable} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
 
 /**
  * Sidenav service
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class SidenavService {
-
   /**
    * The side nav subject
    * @type {Subject<boolean>} True open, false close
@@ -35,8 +34,7 @@ export class SidenavService {
   /**
    * Constructor
    */
-  constructor() {
-  }
+  constructor() {}
 
   /**
    * Observable that hold events close/open events

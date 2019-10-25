@@ -2,7 +2,7 @@
 
 <!-- Temporary filter -->
 <mat-form-field class="general-filter">
-  <input matInput (keyup)="applyFilter($event.target.value)" placeholder="{{ 'filter' | translate }}">
+  <input matInput (keyup)="applyFilter($event.target.value)" placeholder="{{ 'filter' | translate }}" />
 </mat-form-field>
 
 <div class="table-container mat-elevation-z8">
@@ -15,11 +15,10 @@
   </div>
 
   <table mat-table [dataSource]="matTableDataSource" class="table-show" matSort>
-
     <ng-container matColumnDef="image">
       <mat-header-cell fxFlex="17%" *matHeaderCellDef></mat-header-cell>
       <mat-cell fxFlex="17%" *matCellDef="let row">
-        <img fxFlex="60%" class="list-image" [src]="getImageSrc(row.imageToken)"/>
+        <img fxFlex="60%" class="list-image" [src]="getImageSrc(row.imageToken)" />
       </mat-cell>
     </ng-container>
 
@@ -49,10 +48,12 @@
         <app-translate [key]="'activation.status'"></app-translate>
       </mat-header-cell>
       <mat-cell fxFlex="13%" *matCellDef="let row">
-        <mat-slide-toggle color="primary"
-                          [disabled]="!isUserAdmin"
-                          [checked]="row.widgetAvailability == widgetAvailability.ACTIVATED"
-                          (change)="toggleWidgetActivation(row, $event)"></mat-slide-toggle>
+        <mat-slide-toggle
+          color="primary"
+          [disabled]="!isUserAdmin"
+          [checked]="row.widgetAvailability == widgetAvailability.ACTIVATED"
+          (change)="toggleWidgetActivation(row, $event)"
+        ></mat-slide-toggle>
       </mat-cell>
     </ng-container>
 
@@ -82,9 +83,8 @@
 
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
 
-    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
   </table>
 
-  <mat-paginator [length]="resultsLength" [pageSize]="30">
-  </mat-paginator>
+  <mat-paginator [length]="resultsLength" [pageSize]="30"> </mat-paginator>
 </div>

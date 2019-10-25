@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
-import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
+import { Pipe, PipeTransform } from '@angular/core';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 
 /**
  * Transform a string into a safe url
@@ -24,14 +24,12 @@ import {DomSanitizer, SafeUrl} from '@angular/platform-browser';
   name: 'safeUrl'
 })
 export class SafeUrlPipe implements PipeTransform {
-
   /**
    * Constructor
    *
    * @param {DomSanitizer} domSanitizer The dom sanitizer service
    */
-  constructor(private domSanitizer: DomSanitizer) {
-  }
+  constructor(private domSanitizer: DomSanitizer) {}
 
   /**
    * The transformation function
@@ -42,5 +40,4 @@ export class SafeUrlPipe implements PipeTransform {
   transform(valueToSanitize: string): SafeUrl {
     return this.domSanitizer.bypassSecurityTrustUrl(valueToSanitize);
   }
-
 }

@@ -15,11 +15,9 @@
  *  * limitations under the License.
  *
  */
-import {Routes} from '@angular/router';
+import { Routes } from '@angular/router';
 
-import {AuthGuard} from '../../shared/auth/guards/auth.guard';
-import {WidgetListComponent} from './pages/widget-list/widget-list.component';
+import { AuthGuard } from '../../shared/auth/guards/auth.guard';
+import { WidgetListComponent } from './pages/widget-list/widget-list.component';
 
-export const widgetRoutes: Routes = [
-  {path: 'widgets/catalog', component: WidgetListComponent, canActivate: [AuthGuard]}
-];
+export const widgetRoutes: Routes = [{ path: 'widgets/catalog', component: WidgetListComponent, canActivate: [AuthGuard] }];

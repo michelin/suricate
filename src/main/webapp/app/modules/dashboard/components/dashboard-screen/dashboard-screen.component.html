@@ -1,22 +1,26 @@
 <!-- Display Screen code -->
-<div *ngIf="shouldDisplayScreenCode"
-     id="screen-code-div"
-     fxLayout="col wrap" fxLayoutAlign="center center" fxLayoutGap="50px">
+<div *ngIf="shouldDisplayScreenCode" id="screen-code-div" fxLayout="col wrap" fxLayoutAlign="center center" fxLayoutGap="50px">
   <mat-icon>tv</mat-icon>
   <span> {{ screenCode }}</span>
 </div>
 
 <!-- Grid project -->
-<div *ngIf="gridOptions" class="grid-stack" [ngGrid]="gridOptions"
-     (onResizeStop)="updateProjectWidgetsPosition()" (onDragStop)="updateProjectWidgetsPosition()">
-
-  <span [innerHTML]="('<style>' + project.gridProperties.cssStyle + '</style>') | safeHtml"></span>
+<div
+  *ngIf="gridOptions"
+  class="grid-stack"
+  [ngGrid]="gridOptions"
+  (onResizeStop)="updateProjectWidgetsPosition()"
+  (onDragStop)="updateProjectWidgetsPosition()"
+>
+  <span [innerHTML]="'<style>' + project.gridProperties.cssStyle + '</style>' | safeHtml"></span>
   <span [innerHTML]="getJSLibraries() | safeHtml"></span>
 
-  <app-dashboard-screen-widget *ngFor="let gridStackItem of gridStackItems"
-                               [projectWidget]="gridStackItem.payload"
-                               [gridStackItem]="gridStackItem"
-                               [projectToken]="project.token"
-                               [readOnly]="readOnly">
+  <app-dashboard-screen-widget
+    *ngFor="let gridStackItem of gridStackItems"
+    [projectWidget]="gridStackItem.payload"
+    [gridStackItem]="gridStackItem"
+    [projectToken]="project.token"
+    [readOnly]="readOnly"
+  >
   </app-dashboard-screen-widget>
 </div>

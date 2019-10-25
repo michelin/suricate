@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import {WidgetAvailabilityEnum} from '../../enums/WidgetAvailabilityEnum';
-import {WidgetParam} from './WidgetParam';
-import {Category} from './Category';
+import { WidgetAvailabilityEnum } from '../../enums/WidgetAvailabilityEnum';
+import { WidgetParam } from './WidgetParam';
+import { Category } from './Category';
 
 /**
  * The widget entity

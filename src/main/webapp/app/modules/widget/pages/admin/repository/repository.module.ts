@@ -16,27 +16,18 @@
  *
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
-import {SharedModule} from '../../../../../shared/shared.module';
-import {LayoutModule} from '../../../../../layout/layout.module';
-import {RepositoryListComponent} from './repository-list/repository-list.component';
-import {RouterModule} from '@angular/router';
-import {repositoryRoutes} from './repository.route';
-import {RepositoryAddEditComponent} from './repository-add-edit/repository-add-edit.component';
+import { SharedModule } from '../../../../../shared/shared.module';
+import { LayoutModule } from '../../../../../layout/layout.module';
+import { RepositoryListComponent } from './repository-list/repository-list.component';
+import { RouterModule } from '@angular/router';
+import { repositoryRoutes } from './repository.route';
+import { RepositoryAddEditComponent } from './repository-add-edit/repository-add-edit.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    LayoutModule,
-    SharedModule,
-    RouterModule.forChild(repositoryRoutes)
-  ],
-  declarations: [
-    RepositoryListComponent,
-    RepositoryAddEditComponent
-  ]
+  imports: [CommonModule, LayoutModule, SharedModule, RouterModule.forChild(repositoryRoutes)],
+  declarations: [RepositoryListComponent, RepositoryAddEditComponent]
 })
-export class RepositoryModule {
-}
+export class RepositoryModule {}

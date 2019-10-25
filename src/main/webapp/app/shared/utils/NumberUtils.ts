@@ -21,7 +21,6 @@
  *
  */
 export class NumberUtils {
-
   /**
    * Get a random int between min and max
    *
@@ -32,5 +31,4 @@ export class NumberUtils {
   public static getRandomIntBetween(min: number, max: number): number {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
-
 }

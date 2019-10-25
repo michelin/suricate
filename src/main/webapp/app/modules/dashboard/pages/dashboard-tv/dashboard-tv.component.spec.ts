@@ -26,9 +26,8 @@ describe('DashboardTvComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DashboardTvComponent ]
-    })
-    .compileComponents();
+      declarations: [DashboardTvComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

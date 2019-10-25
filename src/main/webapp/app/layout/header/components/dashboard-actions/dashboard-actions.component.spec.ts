@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import {DashboardActionsComponent} from './dashboard-actions.component';
+import { DashboardActionsComponent } from './dashboard-actions.component';
 
 describe('DashboardActionsComponent', () => {
   let component: DashboardActionsComponent;
@@ -25,8 +25,7 @@ describe('DashboardActionsComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [DashboardActionsComponent]
-    })
-        .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {

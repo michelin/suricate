@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import {WidgetParamValue} from './WidgetParamValue';
-import {DataType} from '../../enums/DataType';
+import { WidgetParamValue } from './WidgetParamValue';
+import { DataType } from '../../enums/DataType';
 
 /**
  * The widget param entity

@@ -56,10 +56,7 @@
         <app-translate [key]="'activation.status'"></app-translate>
       </mat-header-cell>
       <mat-cell fxFlex="9%" *matCellDef="let row">
-        <mat-slide-toggle color="primary"
-                          [checked]="row.enabled"
-                          (change)="toggleWidgetActivation(row, $event)">
-        </mat-slide-toggle>
+        <mat-slide-toggle color="primary" [checked]="row.enabled" (change)="toggleWidgetActivation(row, $event)"> </mat-slide-toggle>
       </mat-cell>
     </ng-container>
 
@@ -78,9 +75,8 @@
     </ng-container>
 
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
   </mat-table>
 
-  <mat-paginator [length]="resultsLength" [pageSize]="30">
-  </mat-paginator>
+  <mat-paginator [length]="resultsLength" [pageSize]="30"> </mat-paginator>
 </div>

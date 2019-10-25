@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {Role} from '../role/Role';
+import { Role } from '../role/Role';
 
 /**
  * The user entity

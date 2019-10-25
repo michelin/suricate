@@ -16,25 +16,25 @@
  *
  */
 
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {FormGroup, Validators} from '@angular/forms';
-import {TranslateService} from '@ngx-translate/core';
-import {Observable} from 'rxjs';
-import {flatMap, map} from 'rxjs/operators';
-import {TitleCasePipe} from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FormGroup, Validators } from '@angular/forms';
+import { TranslateService } from '@ngx-translate/core';
+import { Observable } from 'rxjs';
+import { flatMap, map } from 'rxjs/operators';
+import { TitleCasePipe } from '@angular/common';
 
-import {Repository} from '../../../../../../shared/model/api/Repository/Repository';
-import {HttpRepositoryService} from '../../../../../../shared/services/api/http-repository.service';
-import {ToastService} from '../../../../../../shared/components/toast/toast.service';
-import {ToastType} from '../../../../../../shared/components/toast/toast-objects/ToastType';
-import {RepositoryTypeEnum} from '../../../../../../shared/model/enums/RepositoryTypeEnum';
-import {FormService} from '../../../../../../shared/services/app/form.service';
-import {FormStep} from '../../../../../../shared/model/app/form/FormStep';
-import {FormField} from '../../../../../../shared/model/app/form/FormField';
-import {DataType} from '../../../../../../shared/model/enums/DataType';
-import {FormOption} from '../../../../../../shared/model/app/form/FormOption';
-import {FormChangeEvent} from '../../../../../../shared/model/app/form/FormChangeEvent';
+import { Repository } from '../../../../../../shared/model/api/Repository/Repository';
+import { HttpRepositoryService } from '../../../../../../shared/services/api/http-repository.service';
+import { ToastService } from '../../../../../../shared/components/toast/toast.service';
+import { ToastType } from '../../../../../../shared/components/toast/toast-objects/ToastType';
+import { RepositoryTypeEnum } from '../../../../../../shared/model/enums/RepositoryTypeEnum';
+import { FormService } from '../../../../../../shared/services/app/form.service';
+import { FormStep } from '../../../../../../shared/model/app/form/FormStep';
+import { FormField } from '../../../../../../shared/model/app/form/FormField';
+import { DataType } from '../../../../../../shared/model/enums/DataType';
+import { FormOption } from '../../../../../../shared/model/app/form/FormOption';
+import { FormChangeEvent } from '../../../../../../shared/model/app/form/FormChangeEvent';
 
 /**
  * Edit a repository
@@ -45,7 +45,6 @@ import {FormChangeEvent} from '../../../../../../shared/model/app/form/FormChang
   styleUrls: ['./repository-add-edit.component.scss']
 })
 export class RepositoryAddEditComponent implements OnInit {
-
   /**
    * The edit form
    * @type {FormGroup}
@@ -71,13 +70,14 @@ export class RepositoryAddEditComponent implements OnInit {
    * @param {ToastService} toastService The toast service
    * @param {TranslateService} translateService The service used to translate sentences
    */
-  constructor(private activatedRoute: ActivatedRoute,
-              private router: Router,
-              private formService: FormService,
-              private repositoryService: HttpRepositoryService,
-              private toastService: ToastService,
-              private translateService: TranslateService) {
-  }
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private router: Router,
+    private formService: FormService,
+    private repositoryService: HttpRepositoryService,
+    private toastService: ToastService,
+    private translateService: TranslateService
+  ) {}
 
   /**
    * When the component is init
@@ -89,7 +89,6 @@ export class RepositoryAddEditComponent implements OnInit {
           this.repository = repository;
           this.initRepoForm();
         });
-
       } else {
         this.initRepoForm();
       }
@@ -102,18 +101,20 @@ export class RepositoryAddEditComponent implements OnInit {
   initRepoForm() {
     this.formSteps = [];
 
-    this.generateStepOne().pipe(
-      map((stepOne: FormStep) => this.formSteps[0] = stepOne),
-      flatMap(() => this.generateStepTwo()),
-      map((stepTwo: FormStep) => {
-        this.formSteps[1] = stepTwo;
-        return stepTwo;
-      }),
-      flatMap((stepTwo: FormStep) => this.generateStepRepoInformation(stepTwo.fields[0].value)),
-      map((stepRepoInfo: FormStep) => this.formSteps[2] = stepRepoInfo)
-    ).subscribe(() => {
-      this.repositoryForm = this.formService.generateFormGroupForSteps(this.formSteps);
-    });
+    this.generateStepOne()
+      .pipe(
+        map((stepOne: FormStep) => (this.formSteps[0] = stepOne)),
+        flatMap(() => this.generateStepTwo()),
+        map((stepTwo: FormStep) => {
+          this.formSteps[1] = stepTwo;
+          return stepTwo;
+        }),
+        flatMap((stepTwo: FormStep) => this.generateStepRepoInformation(stepTwo.fields[0].value)),
+        map((stepRepoInfo: FormStep) => (this.formSteps[2] = stepRepoInfo))
+      )
+      .subscribe(() => {
+        this.repositoryForm = this.formService.generateFormGroupForSteps(this.formSteps);
+      });
   }
 
   /**
@@ -139,7 +140,7 @@ export class RepositoryAddEditComponent implements OnInit {
           }
         ];
 
-        return {fields: formFields};
+        return { fields: formFields };
       })
     );
   }
@@ -161,7 +162,7 @@ export class RepositoryAddEditComponent implements OnInit {
           }
         ];
 
-        return {fields: formFields};
+        return { fields: formFields };
       })
     );
   }
@@ -252,7 +253,7 @@ export class RepositoryAddEditComponent implements OnInit {
           ];
         }
 
-        return {fields: formFields};
+        return { fields: formFields };
       })
     );
   }
@@ -271,7 +272,6 @@ export class RepositoryAddEditComponent implements OnInit {
           this.toastService.sendMessage(`Repository ${repositoryToAddEdit.name} updated successfully`, ToastType.SUCCESS);
           this.redirectToRepositoryList();
         });
-
       } else {
         this.repositoryService.addRepository(repositoryToAddEdit).subscribe((repositoryAdded: Repository) => {
           this.toastService.sendMessage(`Repository ${repositoryAdded.name} added successfully`, ToastType.SUCCESS);

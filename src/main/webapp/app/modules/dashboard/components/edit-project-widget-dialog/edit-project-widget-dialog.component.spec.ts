@@ -24,9 +24,8 @@ describe('EditProjectWidgetDialogComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ EditProjectWidgetDialogComponent ]
-    })
-    .compileComponents();
+      declarations: [EditProjectWidgetDialogComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

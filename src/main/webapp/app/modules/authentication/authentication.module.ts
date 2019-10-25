@@ -14,32 +14,18 @@
  * limitations under the License.
  */
 
-import {CommonModule} from '@angular/common';
-import {NgModule} from '@angular/core';
-import {RouterModule} from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
 
-
-import {SharedModule} from '../../shared/shared.module';
-import {AuthenticationService} from './authentication.service';
-import {LoginComponent} from './pages/login/login.component';
-import {RegisterComponent} from './pages/register/register.component';
-import {LayoutModule} from '../../layout/layout.module';
-import {authRoutes} from './authentication.route';
+import { SharedModule } from '../../shared/shared.module';
+import { LoginComponent } from './pages/login/login.component';
+import { RegisterComponent } from './pages/register/register.component';
+import { LayoutModule } from '../../layout/layout.module';
+import { authRoutes } from './authentication.route';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    RouterModule.forChild(authRoutes),
-    LayoutModule,
-    SharedModule
-  ],
-  declarations: [
-    LoginComponent,
-    RegisterComponent
-  ],
-  providers: [
-    AuthenticationService
-  ]
+  imports: [CommonModule, RouterModule.forChild(authRoutes), LayoutModule, SharedModule],
+  declarations: [LoginComponent, RegisterComponent]
 })
-export class AuthenticationModule {
-}
+export class AuthenticationModule {}

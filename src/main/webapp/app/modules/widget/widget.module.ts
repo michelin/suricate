@@ -16,27 +16,18 @@
  *
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {RouterModule} from '@angular/router';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
-import {SharedModule} from '../../shared/shared.module';
-import {WidgetListComponent} from './pages/widget-list/widget-list.component';
-import {LayoutModule} from '../../layout/layout.module';
-import {widgetRoutes} from './widget.route';
-import {RepositoryModule} from './pages/admin/repository/repository.module';
+import { SharedModule } from '../../shared/shared.module';
+import { WidgetListComponent } from './pages/widget-list/widget-list.component';
+import { LayoutModule } from '../../layout/layout.module';
+import { widgetRoutes } from './widget.route';
+import { RepositoryModule } from './pages/admin/repository/repository.module';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    LayoutModule,
-    SharedModule,
-    RouterModule.forChild(widgetRoutes),
-    RepositoryModule
-  ],
-  declarations: [
-    WidgetListComponent
-  ]
+  imports: [CommonModule, LayoutModule, SharedModule, RouterModule.forChild(widgetRoutes), RepositoryModule],
+  declarations: [WidgetListComponent]
 })
-export class WidgetModule {
-}
+export class WidgetModule {}

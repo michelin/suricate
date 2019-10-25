@@ -16,27 +16,25 @@
  *
  */
 
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-import {Setting} from '../../model/api/setting/Setting';
-import {settingsApiEndpoint} from '../../../app.constant';
-import {SettingType} from '../../model/enums/SettingType';
+import { Setting } from '../../model/api/setting/Setting';
+import { settingsApiEndpoint } from '../../../app.constant';
+import { SettingType } from '../../model/enums/SettingType';
 
 /**
  * Manage the setting http calls
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class HttpSettingService {
-
   /**
    * Constructor
    *
    * @param httpClient the http client to inject
    */
-  constructor(private httpClient: HttpClient) {
-  }
+  constructor(private httpClient: HttpClient) {}
 
   /**
    * Get the list of settings

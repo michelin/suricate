@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import {SettingsListComponent} from './setting-list.component';
+import { SettingsListComponent } from './settings-list.component';
 
 describe('SettingListComponent', () => {
   let component: SettingsListComponent;
@@ -25,8 +25,7 @@ describe('SettingListComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [SettingsListComponent]
-    })
-        .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {

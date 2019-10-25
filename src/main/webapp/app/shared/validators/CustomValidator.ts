@@ -16,7 +16,7 @@
  *
  */
 
-import {AbstractControl, ValidationErrors, ValidatorFn} from '@angular/forms';
+import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 
 export class CustomValidator {
   /**
@@ -28,7 +28,7 @@ export class CustomValidator {
   static checkPasswordMatch(passwordControl: AbstractControl): ValidatorFn {
     return (confirmPasswordControl: AbstractControl): ValidationErrors => {
       if ((passwordControl.dirty || passwordControl.touched) && (confirmPasswordControl.dirty || confirmPasswordControl.touched)) {
-        return passwordControl.value !== confirmPasswordControl.value ? {passwordMismatch: true} : null;
+        return passwordControl.value !== confirmPasswordControl.value ? { passwordMismatch: true } : null;
       }
     };
   }

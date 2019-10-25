@@ -16,28 +16,26 @@
  *
  */
 
-import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {tap} from 'rxjs/operators';
-import {Injectable} from '@angular/core';
+import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { Injectable } from '@angular/core';
 
-import {ToastService} from '../components/toast/toast.service';
-import {badCredentialError} from '../../app.constant';
-import {ToastType} from '../components/toast/toast-objects/ToastType';
+import { ToastService } from '../components/toast/toast.service';
+import { badCredentialError } from '../../app.constant';
+import { ToastType } from '../components/toast/toast-objects/ToastType';
 
 /**
  * Intercptor that manage http errors
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class ErrorInterceptor implements HttpInterceptor {
-
   /**
    * Constructor
    *
    * @param {ToastService} toastService The toast service
    */
-  constructor(private toastService: ToastService) {
-  }
+  constructor(private toastService: ToastService) {}
 
   /**
    * Method that intercept the request
@@ -47,27 +45,26 @@ export class ErrorInterceptor implements HttpInterceptor {
    * @return {Observable<HttpEvent<any>>} The http request as event
    */
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    return next.handle(request)
-      .pipe(
-        tap(
-          (event: HttpEvent<any>) => {
-          },
-          (httpError: any) => {
-            if (httpError instanceof HttpErrorResponse) {
-              switch (httpError.status) {
-                case 400:
-                  if (httpError.error.error === badCredentialError) {
-                    this.toastService.sendMessage('Bad credentials', ToastType.DANGER, 'Wrong login or password');
-                  }
-                  break;
+    return next.handle(request).pipe(
+      tap(
+        (event: HttpEvent<any>) => {},
+        (httpError: any) => {
+          if (httpError instanceof HttpErrorResponse) {
+            switch (httpError.status) {
+              case 400:
+                if (httpError.error.error === badCredentialError) {
+                  this.toastService.sendMessage('Bad credentials', ToastType.DANGER, 'Wrong login or password');
+                }
+                break;
 
-                case 0:
-                  this.displayUnknowErrorMessage();
-                  break;
-              }
+              case 0:
+                this.displayUnknowErrorMessage();
+                break;
             }
-          })
-      );
+          }
+        }
+      )
+    );
   }
 
   /**

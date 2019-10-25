@@ -24,9 +24,8 @@ describe('DashboardListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DashboardListComponent ]
-    })
-    .compileComponents();
+      declarations: [DashboardListComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

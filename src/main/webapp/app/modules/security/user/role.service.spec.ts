@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import {inject, TestBed} from '@angular/core/testing';
+import { inject, TestBed } from '@angular/core/testing';
 
-import {RoleService} from './role.service';
+import { RoleService } from './role.service';
 
 describe('RoleService', () => {
   beforeEach(() => {

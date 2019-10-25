@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import {Component, Input, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
+import { Component, Input, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 
 /**
  * The page header component
@@ -26,7 +26,6 @@ import {Router} from '@angular/router';
   styleUrls: ['./pages-header.component.scss']
 })
 export class PagesHeaderComponent implements OnInit {
-
   /**
    * The second title
    * @type {string}
@@ -48,8 +47,7 @@ export class PagesHeaderComponent implements OnInit {
    * The constructor
    * @param {Router} route The router service
    */
-  constructor(private route: Router) {
-  }
+  constructor(private route: Router) {}
 
   /**
    * When the component is init

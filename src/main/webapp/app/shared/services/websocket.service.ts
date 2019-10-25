@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import {Injectable} from '@angular/core';
-import {StompConfig, StompRService, StompState} from '@stomp/ng2-stompjs';
-import {Observable} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { StompConfig, StompRService, StompState } from '@stomp/ng2-stompjs';
+import { Observable } from 'rxjs';
 
-import {NumberUtils} from '../utils/NumberUtils';
-import {baseWsEndpoint} from '../../app.constant';
+import { NumberUtils } from '../utils/NumberUtils';
+import { baseWsEndpoint } from '../../app.constant';
 
 import * as Stomp from '@stomp/stompjs';
 import * as SockJS from 'sockjs-client';
@@ -27,9 +27,8 @@ import * as SockJS from 'sockjs-client';
 /**
  * Service that manage the websockets connections
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class WebsocketService {
-
   /**
    * Define the min bound for the screen code random generation
    * @type {number}
@@ -47,8 +46,7 @@ export class WebsocketService {
    *
    * @param {StompRService} stompRService The stomp Service to inject
    */
-  constructor(private stompRService: StompRService) {
-  }
+  constructor(private stompRService: StompRService) {}
 
   /* ****************************************************************** */
   /*                    Screen code management                          */

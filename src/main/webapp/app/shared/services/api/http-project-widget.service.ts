@@ -16,27 +16,25 @@
  *
  */
 
-import {HttpClient} from '@angular/common/http';
-import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 
-import {ProjectWidget} from '../../model/api/ProjectWidget/ProjectWidget';
-import {projectWidgetsApiEndpoint} from '../../../app.constant';
-import {ProjectWidgetRequest} from '../../model/api/ProjectWidget/ProjectWidgetRequest';
+import { ProjectWidget } from '../../model/api/ProjectWidget/ProjectWidget';
+import { projectWidgetsApiEndpoint } from '../../../app.constant';
+import { ProjectWidgetRequest } from '../../model/api/ProjectWidget/ProjectWidgetRequest';
 
 /**
  * Manage the http project widget calls
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class HttpProjectWidgetService {
-
   /**
    * Constructor
    *
    * @param {HttpClient} httpClient The http client service
    */
-  constructor(private httpClient: HttpClient) {
-  }
+  constructor(private httpClient: HttpClient) {}
 
   /**
    * Get a project widget by id

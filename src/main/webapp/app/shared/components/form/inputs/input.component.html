@@ -1,13 +1,12 @@
 <div fxLayout="column wrap" class="input-wrapper">
-
   <!------------------------------------------------------------------------------------------------------->
   <!---                        MAT FORM FIELDS/ERROR                                                    --->
   <!------------------------------------------------------------------------------------------------------->
 
   <mat-form-field
-      *ngIf="[dataType.NUMBER, dataType.TEXT, dataType.PASSWORD, dataType.COMBO, dataType.MULTIPLE].includes(field.type)"
-      [floatLabel]="field.placeholder ? 'always' : 'auto'">
-
+    *ngIf="[dataType.NUMBER, dataType.TEXT, dataType.PASSWORD, dataType.COMBO, dataType.MULTIPLE].includes(field.type)"
+    [floatLabel]="field.placeholder ? 'always' : 'auto'"
+  >
     <!-- Mat Icon prefix -->
     <mat-icon *ngIf="field.matIconPrefix" class="prefix" matPrefix color="primary">
       {{ field.matIconPrefix }}
@@ -19,16 +18,18 @@
     </mat-label>
 
     <!-- SIMPLE INPUT -->
-    <input *ngIf="[dataType.NUMBER, dataType.TEXT, dataType.PASSWORD].includes(field.type)"
-           matInput
-           [id]="field.key"
-           [placeholder]="field.placeholder"
-           [type]="field.type.toLowerCase()"
-           [formControl]="getFormControl()"
-           [required]="isRequired()"
-           [readonly]="field.readOnly"
-           [matAutocomplete]="autocomplete"
-           (keyup)="emitValueChange($event)">
+    <input
+      *ngIf="[dataType.NUMBER, dataType.TEXT, dataType.PASSWORD].includes(field.type)"
+      matInput
+      [id]="field.key"
+      [placeholder]="field.placeholder"
+      [type]="field.type.toLowerCase()"
+      [formControl]="getFormControl()"
+      [required]="isRequired()"
+      [readonly]="field.readOnly"
+      [matAutocomplete]="autocomplete"
+      (keyup)="emitValueChange($event)"
+    />
 
     <!-- Autocomplete -->
     <mat-autocomplete #autocomplete="matAutocomplete">
@@ -38,12 +39,14 @@
     </mat-autocomplete>
 
     <!-- SELECT INPUT -->
-    <mat-select *ngIf="[dataType.COMBO, dataType.MULTIPLE].includes(field.type)"
-                [id]="field.key"
-                [formControl]="getFormControl()"
-                [multiple]="field.type === dataType.MULTIPLE"
-                [required]="isRequired()"
-                (selectionChange)="emitValueChange($event.value)">
+    <mat-select
+      *ngIf="[dataType.COMBO, dataType.MULTIPLE].includes(field.type)"
+      [id]="field.key"
+      [formControl]="getFormControl()"
+      [multiple]="field.type === dataType.MULTIPLE"
+      [required]="isRequired()"
+      (selectionChange)="emitValueChange($event.value)"
+    >
       <mat-option *ngFor="let option of field.options" [value]="option.key">
         {{ option.label }}
       </mat-option>
@@ -61,28 +64,19 @@
     </mat-hint>
   </mat-form-field>
 
-
   <!------------------------------------------------------------------------------------------------------->
   <!---                        OTHER FIELDS                                                             --->
   <!------------------------------------------------------------------------------------------------------->
 
-  <app-checkbox *ngIf="dataType.BOOLEAN === field.type"
-                [field]="field"
-                [formGroup]="formGroup">
-  </app-checkbox>
+  <app-checkbox *ngIf="dataType.BOOLEAN === field.type" [field]="field" [formGroup]="formGroup"> </app-checkbox>
 
-  <app-file-input *ngIf="dataType.FILE === field.type"
-                  [field]="field"
-                  [formGroup]="formGroup">
-  </app-file-input>
+  <app-file-input *ngIf="dataType.FILE === field.type" [field]="field" [formGroup]="formGroup"> </app-file-input>
 
   <!------------------------------------------------------------------------------------------------------->
   <!---                        FIELDS ERROR MANAGEMENT                                                  --->
   <!------------------------------------------------------------------------------------------------------->
 
-  <div *ngIf="dataType.FILE !== field.type && isInputFieldOnError()"
-       [@animationError]
-       class="input-error">
+  <div *ngIf="dataType.FILE !== field.type && isInputFieldOnError()" [@animationError] class="input-error">
     <!-- Error message : Required -->
     <div *ngIf="getFormControl()['errors']?.required">
       <app-translate [key]="'field.required'"></app-translate>
@@ -112,5 +106,4 @@
       <app-translate [key]="'field.gt'"></app-translate>
     </div>
   </div>
-
 </div>

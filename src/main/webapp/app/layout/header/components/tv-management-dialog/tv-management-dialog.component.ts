@@ -14,21 +14,21 @@
  * limitations under the License.
  */
 
-import {Component, Inject, OnInit} from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import {FormGroup} from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 
-import {Project} from '../../../../shared/model/api/project/Project';
-import {WebsocketClient} from '../../../../shared/model/api/WebsocketClient';
-import {HttpScreenService} from '../../../../shared/services/api/http-screen.service';
-import {HttpProjectService} from '../../../../shared/services/api/http-project.service';
-import {FormField} from '../../../../shared/model/app/form/FormField';
-import {FormService} from '../../../../shared/services/app/form.service';
-import {TranslateService} from '@ngx-translate/core';
-import {map} from 'rxjs/operators';
-import {DataType} from '../../../../shared/model/enums/DataType';
-import {CustomValidators} from 'ng2-validation';
-import {Observable} from 'rxjs';
+import { Project } from '../../../../shared/model/api/project/Project';
+import { WebsocketClient } from '../../../../shared/model/api/WebsocketClient';
+import { HttpScreenService } from '../../../../shared/services/api/http-screen.service';
+import { HttpProjectService } from '../../../../shared/services/api/http-project.service';
+import { FormField } from '../../../../shared/model/app/form/FormField';
+import { FormService } from '../../../../shared/services/app/form.service';
+import { TranslateService } from '@ngx-translate/core';
+import { map } from 'rxjs/operators';
+import { DataType } from '../../../../shared/model/enums/DataType';
+import { CustomValidators } from 'ng2-validation';
+import { Observable } from 'rxjs';
 
 /**
  * Component that manage the popup for Dashboard TV Management
@@ -39,7 +39,6 @@ import {Observable} from 'rxjs';
   styleUrls: ['./tv-management-dialog.component.scss']
 })
 export class TvManagementDialogComponent implements OnInit {
-
   /**
    * The register screen form
    * @type {FormGroup}
@@ -72,12 +71,13 @@ export class TvManagementDialogComponent implements OnInit {
    * @param {HttpScreenService} httpScreenService The screen service
    * @param {TranslateService} translateService The translate service
    */
-  constructor(@Inject(MAT_DIALOG_DATA) private data: any,
-              private formService: FormService,
-              private httpProjectService: HttpProjectService,
-              private httpScreenService: HttpScreenService,
-              private translateService: TranslateService) {
-  }
+  constructor(
+    @Inject(MAT_DIALOG_DATA) private data: any,
+    private formService: FormService,
+    private httpProjectService: HttpProjectService,
+    private httpScreenService: HttpScreenService,
+    private translateService: TranslateService
+  ) {}
 
   /**
    * When the component is initialized
@@ -106,7 +106,6 @@ export class TvManagementDialogComponent implements OnInit {
         });
       })
     );
-
   }
 
   refreshWebsocketClients() {

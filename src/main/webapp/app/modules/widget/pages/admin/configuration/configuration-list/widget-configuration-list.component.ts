@@ -16,20 +16,20 @@
  *
  */
 
-import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import {merge, of as observableOf} from 'rxjs';
-import {catchError, map, startWith, switchMap} from 'rxjs/operators';
-import {TranslateService} from '@ngx-translate/core';
+import { merge, of as observableOf } from 'rxjs';
+import { catchError, map, startWith, switchMap } from 'rxjs/operators';
+import { TranslateService } from '@ngx-translate/core';
 
-import {HttpConfigurationService} from '../../../../../../shared/services/api/http-configuration.service';
-import {ToastService} from '../../../../../../shared/components/toast/toast.service';
-import {Configuration} from '../../../../../../shared/model/api/configuration/Configuration';
-import {ConfirmDialogComponent} from '../../../../../../shared/components/confirm-dialog/confirm-dialog.component';
-import {ToastType} from '../../../../../../shared/components/toast/toast-objects/ToastType';
+import { HttpConfigurationService } from '../../../../../../shared/services/api/http-configuration.service';
+import { ToastService } from '../../../../../../shared/components/toast/toast.service';
+import { Configuration } from '../../../../../../shared/model/api/configuration/Configuration';
+import { ConfirmDialogComponent } from '../../../../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { ToastType } from '../../../../../../shared/components/toast/toast-objects/ToastType';
 
 /**
  * The configuration list component
@@ -40,7 +40,6 @@ import {ToastType} from '../../../../../../shared/components/toast/toast-objects
   styleUrls: ['./widget-configuration-list.component.scss']
 })
 export class WidgetConfigurationListComponent implements OnInit {
-
   /**
    * manage sort of the Mat table
    * @type {MatSort}
@@ -87,12 +86,13 @@ export class WidgetConfigurationListComponent implements OnInit {
    * @param {MatDialog} matDialog The mat dialog service
    * @param {ToastService} toastService The toast service
    */
-  constructor(private configurationsService: HttpConfigurationService,
-              private translateService: TranslateService,
-              private changeDetectorRef: ChangeDetectorRef,
-              private matDialog: MatDialog,
-              private toastService: ToastService) {
-  }
+  constructor(
+    private configurationsService: HttpConfigurationService,
+    private translateService: TranslateService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private matDialog: MatDialog,
+    private toastService: ToastService
+  ) {}
 
   /**
    * When the component is created
@@ -170,5 +170,4 @@ export class WidgetConfigurationListComponent implements OnInit {
       });
     });
   }
-
 }

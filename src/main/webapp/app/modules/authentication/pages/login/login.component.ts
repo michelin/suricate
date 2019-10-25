@@ -14,19 +14,19 @@
  * limitations under the License.
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormGroup, Validators} from '@angular/forms';
-import {Router} from '@angular/router';
-import {TranslateService} from '@ngx-translate/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
 
-import {AuthenticationService} from '../../authentication.service';
-import {HttpConfigurationService} from '../../../../shared/services/api/http-configuration.service';
-import {ApplicationProperties} from '../../../../shared/model/api/ApplicationProperties';
-import {AuthenticationProviderEnum} from '../../../../shared/model/enums/AuthenticationProviderEnum';
-import {FormService} from '../../../../shared/services/app/form.service';
-import {FormField} from '../../../../shared/model/app/form/FormField';
-import {DataType} from '../../../../shared/model/enums/DataType';
-import {SidenavService} from "../../../../layout/sidenav/sidenav.service";
+import { AuthenticationService } from '../../authentication.service';
+import { HttpConfigurationService } from '../../../../shared/services/api/http-configuration.service';
+import { ApplicationProperties } from '../../../../shared/model/api/ApplicationProperties';
+import { AuthenticationProviderEnum } from '../../../../shared/model/enums/AuthenticationProviderEnum';
+import { FormService } from '../../../../shared/services/app/form.service';
+import { FormField } from '../../../../shared/model/app/form/FormField';
+import { DataType } from '../../../../shared/model/enums/DataType';
+import { SidenavService } from '../../../../layout/sidenav/sidenav.service';
 
 /**
  * Manage the login page
@@ -66,13 +66,14 @@ export class LoginComponent implements OnInit, OnDestroy {
    * @param {SidenavService} sidenavService Manage the sidenav
    * @param {HttpConfigurationService} httpConfigurationService The configuration service to inject
    */
-  constructor(private router: Router,
-              private authenticationService: AuthenticationService,
-              private formService: FormService,
-              private translateService: TranslateService,
-              private sidenavService: SidenavService,
-              private httpConfigurationService: HttpConfigurationService) {
-  }
+  constructor(
+    private router: Router,
+    private authenticationService: AuthenticationService,
+    private formService: FormService,
+    private translateService: TranslateService,
+    private sidenavService: SidenavService,
+    private httpConfigurationService: HttpConfigurationService
+  ) {}
 
   /**
    * Init objects
@@ -141,13 +142,14 @@ export class LoginComponent implements OnInit, OnDestroy {
         () => {
           // Authentication failed
           this.formSubmitAttempt = false;
-        });
+        }
+      );
     }
   }
 
-    /**
-     * Called when the component is destroyed
-     */
+  /**
+   * Called when the component is destroyed
+   */
   ngOnDestroy() {
     this.sidenavService.openSidenav();
   }

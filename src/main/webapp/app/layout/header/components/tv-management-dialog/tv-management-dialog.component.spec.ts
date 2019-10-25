@@ -24,9 +24,8 @@ describe('TvManagementDialogComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TvManagementDialogComponent ]
-    })
-    .compileComponents();
+      declarations: [TvManagementDialogComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

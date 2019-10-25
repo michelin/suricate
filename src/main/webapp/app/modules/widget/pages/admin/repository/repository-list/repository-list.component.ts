@@ -16,18 +16,18 @@
  *
  */
 
-import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import {merge, of} from 'rxjs';
-import {catchError, map, startWith, switchMap} from 'rxjs/operators';
+import { merge, of } from 'rxjs';
+import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 
-import {HttpRepositoryService} from '../../../../../../shared/services/api/http-repository.service';
-import {Repository} from '../../../../../../shared/model/api/Repository/Repository';
-import {ToastService} from '../../../../../../shared/components/toast/toast.service';
-import {ToastType} from '../../../../../../shared/components/toast/toast-objects/ToastType';
+import { HttpRepositoryService } from '../../../../../../shared/services/api/http-repository.service';
+import { Repository } from '../../../../../../shared/model/api/Repository/Repository';
+import { ToastService } from '../../../../../../shared/components/toast/toast.service';
+import { ToastType } from '../../../../../../shared/components/toast/toast-objects/ToastType';
 
 @Component({
   selector: 'app-repository-list',
@@ -35,7 +35,6 @@ import {ToastType} from '../../../../../../shared/components/toast/toast-objects
   styleUrls: ['./repository-list.component.scss']
 })
 export class RepositoryListComponent implements OnInit {
-
   /**
    * manage sort of the Mat table
    * @type {MatSort}
@@ -80,10 +79,11 @@ export class RepositoryListComponent implements OnInit {
    * @param {HttpRepositoryService} repositoryService The repository service
    * @param {ToastService} toastService The toast service
    */
-  constructor(private changeDetectorRef: ChangeDetectorRef,
-              private repositoryService: HttpRepositoryService,
-              private toastService: ToastService) {
-  }
+  constructor(
+    private changeDetectorRef: ChangeDetectorRef,
+    private repositoryService: HttpRepositoryService,
+    private toastService: ToastService
+  ) {}
 
   /**
    * Called when the component is created

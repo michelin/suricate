@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import {inject, TestBed} from '@angular/core/testing';
+import { inject, TestBed } from '@angular/core/testing';
 
-import {AdminGuard} from './admin.guard';
+import { AdminGuard } from './admin.guard';
 
 describe('AdminGuard', () => {
   beforeEach(() => {

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { TestBed, inject } from '@angular/core/testing';
+import { inject, TestBed } from '@angular/core/testing';
 
 import { UserService } from './user.service';
 

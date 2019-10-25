@@ -16,10 +16,10 @@
  *
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 
-import {Configuration} from '../model/api/configuration/Configuration';
-import {DataType} from '../model/enums/DataType';
+import { Configuration } from '../model/api/configuration/Configuration';
+import { DataType } from '../model/enums/DataType';
 
 /**
  * Transform a string into stars
@@ -28,12 +28,10 @@ import {DataType} from '../model/enums/DataType';
   name: 'password'
 })
 export class PasswordPipe implements PipeTransform {
-
   /**
    * The constructor
    */
-  constructor() {
-  }
+  constructor() {}
 
   /**
    * The transform function
@@ -42,7 +40,6 @@ export class PasswordPipe implements PipeTransform {
    * @returns {String} The password hidden
    */
   transform(config: Configuration): String {
-    return (config.dataType && config.dataType === DataType.PASSWORD) ? '*****' : config.value;
+    return config.dataType && config.dataType === DataType.PASSWORD ? '*****' : config.value;
   }
-
 }

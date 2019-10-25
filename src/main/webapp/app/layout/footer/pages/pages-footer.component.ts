@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import {Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
-import {appEnv, appVersion} from '../../../app.constant';
+import { appEnv, appVersion } from '../../../app.constant';
 
 /**
  * The footer of the application
@@ -27,7 +27,6 @@ import {appEnv, appVersion} from '../../../app.constant';
   styleUrls: ['./pages-footer.component.scss']
 })
 export class PagesFooterComponent implements OnInit {
-
   /**
    * The app version
    * @type {string}
@@ -43,13 +42,10 @@ export class PagesFooterComponent implements OnInit {
   /**
    * The constructor
    */
-  constructor() {
-  }
+  constructor() {}
 
   /**
    * When the component is init
    */
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

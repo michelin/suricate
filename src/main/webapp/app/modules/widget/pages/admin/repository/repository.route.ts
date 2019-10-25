@@ -16,15 +16,15 @@
  *
  */
 
-import {Routes} from '@angular/router';
+import { Routes } from '@angular/router';
 
-import {AuthGuard} from '../../../../../shared/auth/guards/auth.guard';
-import {AdminGuard} from '../../../../../shared/auth/guards/admin.guard';
-import {RepositoryListComponent} from './repository-list/repository-list.component';
-import {RepositoryAddEditComponent} from './repository-add-edit/repository-add-edit.component';
+import { AuthGuard } from '../../../../../shared/auth/guards/auth.guard';
+import { AdminGuard } from '../../../../../shared/auth/guards/admin.guard';
+import { RepositoryListComponent } from './repository-list/repository-list.component';
+import { RepositoryAddEditComponent } from './repository-add-edit/repository-add-edit.component';
 
 export const repositoryRoutes: Routes = [
-  {path: 'repositories', component: RepositoryListComponent, canActivate: [AuthGuard, AdminGuard]},
-  {path: 'repositories/add', component: RepositoryAddEditComponent, canActivate: [AuthGuard, AdminGuard]},
-  {path: 'repositories/:repositoryId/edit', component: RepositoryAddEditComponent, canActivate: [AuthGuard, AdminGuard]}
+  { path: 'repositories', component: RepositoryListComponent, canActivate: [AuthGuard, AdminGuard] },
+  { path: 'repositories/add', component: RepositoryAddEditComponent, canActivate: [AuthGuard, AdminGuard] },
+  { path: 'repositories/:repositoryId/edit', component: RepositoryAddEditComponent, canActivate: [AuthGuard, AdminGuard] }
 ];

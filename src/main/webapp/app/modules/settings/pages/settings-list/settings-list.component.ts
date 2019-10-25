@@ -14,24 +14,24 @@
  * limitations under the License.
  */
 
-import {Component, OnInit} from '@angular/core';
-import {FormGroup} from '@angular/forms';
-import {from} from 'rxjs';
-import {flatMap, map} from 'rxjs/operators';
-import {TranslateService} from '@ngx-translate/core';
+import { Component, OnInit } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { from } from 'rxjs';
+import { flatMap, map } from 'rxjs/operators';
+import { TranslateService } from '@ngx-translate/core';
 
-import {SettingsService} from '../../settings.service';
-import {User} from '../../../../shared/model/api/user/User';
-import {HttpUserService} from '../../../../shared/services/api/http-user.service';
-import {UserSetting} from '../../../../shared/model/api/setting/UserSetting';
-import {HttpSettingService} from '../../../../shared/services/api/http-setting.service';
-import {Setting} from '../../../../shared/model/api/setting/Setting';
-import {SettingType} from '../../../../shared/model/enums/SettingType';
-import {AllowedSettingValue} from '../../../../shared/model/api/setting/AllowedSettingValue';
-import {DataType} from '../../../../shared/model/enums/DataType';
-import {FormField} from '../../../../shared/model/app/form/FormField';
-import {FormService} from '../../../../shared/services/app/form.service';
-import {FormOption} from '../../../../shared/model/app/form/FormOption';
+import { SettingsService } from '../../settings.service';
+import { User } from '../../../../shared/model/api/user/User';
+import { HttpUserService } from '../../../../shared/services/api/http-user.service';
+import { UserSetting } from '../../../../shared/model/api/setting/UserSetting';
+import { HttpSettingService } from '../../../../shared/services/api/http-setting.service';
+import { Setting } from '../../../../shared/model/api/setting/Setting';
+import { SettingType } from '../../../../shared/model/enums/SettingType';
+import { AllowedSettingValue } from '../../../../shared/model/api/setting/AllowedSettingValue';
+import { DataType } from '../../../../shared/model/enums/DataType';
+import { FormField } from '../../../../shared/model/app/form/FormField';
+import { FormService } from '../../../../shared/services/app/form.service';
+import { FormOption } from '../../../../shared/model/app/form/FormOption';
 
 /**
  * Represent the Admin Setting list page
@@ -42,7 +42,6 @@ import {FormOption} from '../../../../shared/model/app/form/FormOption';
   styleUrls: ['./settings-list.component.scss']
 })
 export class SettingsListComponent implements OnInit {
-
   /**
    * The user setting form
    * @type {FormGroup}
@@ -85,34 +84,38 @@ export class SettingsListComponent implements OnInit {
    * @param {TranslateService} translateService The service used for translations
    * @param {FormService} formService The form service used for the form creation
    */
-  constructor(private httpUserService: HttpUserService,
-              private httpSettingService: HttpSettingService,
-              private settingsService: SettingsService,
-              private translateService: TranslateService,
-              private formService: FormService) {
-  }
+  constructor(
+    private httpUserService: HttpUserService,
+    private httpSettingService: HttpSettingService,
+    private settingsService: SettingsService,
+    private translateService: TranslateService,
+    private formService: FormService
+  ) {}
 
   /**
    * When the component is init
    */
   ngOnInit(): void {
     // Get the connected user
-    this.httpUserService.getConnectedUser().pipe(
-      // Get the related userSettings
-      flatMap((connectedUser: User) => {
-        this.connectedUser = connectedUser;
-        return this.httpUserService.getUserSettings(connectedUser.id);
-      }),
-      // Get the full list of settings
-      flatMap((userSettings: UserSetting[]) => {
-        this.userSettings = userSettings;
-        return this.httpSettingService.getAll();
-      }),
-      map((settings: Setting[]) => this.settings = settings)
-    ).subscribe(() => {
-      // When we have every objects needed we can create the form
-      this.initUserSettingForm();
-    });
+    this.httpUserService
+      .getConnectedUser()
+      .pipe(
+        // Get the related userSettings
+        flatMap((connectedUser: User) => {
+          this.connectedUser = connectedUser;
+          return this.httpUserService.getUserSettings(connectedUser.id);
+        }),
+        // Get the full list of settings
+        flatMap((userSettings: UserSetting[]) => {
+          this.userSettings = userSettings;
+          return this.httpSettingService.getAll();
+        }),
+        map((settings: Setting[]) => (this.settings = settings))
+      )
+      .subscribe(() => {
+        // When we have every objects needed we can create the form
+        this.initUserSettingForm();
+      });
   }
 
   /**
@@ -170,25 +173,25 @@ export class SettingsListComponent implements OnInit {
 
     if (this.userSettingForm.valid) {
       console.log(this.userSettingForm.value);
-      from(this.settings).pipe(
-        flatMap(setting => {
-          if (setting.constrained) {
-            const selectedFormValue = this.userSettingForm.get(setting.type);
-            const allowedSettingValue = this.getAllowedSettingValueFromSettingTypeAndAllowedSettingValue(
-              setting.type,
-              selectedFormValue.value
-            );
+      from(this.settings)
+        .pipe(
+          flatMap(setting => {
+            if (setting.constrained) {
+              const selectedFormValue = this.userSettingForm.get(setting.type);
+              const allowedSettingValue = this.getAllowedSettingValueFromSettingTypeAndAllowedSettingValue(
+                setting.type,
+                selectedFormValue.value
+              );
 
-            return this.httpUserService.updateUserSetting(
-              this.connectedUser.id,
-              setting.id,
-              {allowedSettingValueId: allowedSettingValue.id}
-            );
-          }
-        })
-      ).subscribe(() => {
-        this.settingsService.initUserSettings(this.connectedUser);
-      });
+              return this.httpUserService.updateUserSetting(this.connectedUser.id, setting.id, {
+                allowedSettingValueId: allowedSettingValue.id
+              });
+            }
+          })
+        )
+        .subscribe(() => {
+          this.settingsService.initUserSettings(this.connectedUser);
+        });
     }
   }
 
@@ -199,7 +202,8 @@ export class SettingsListComponent implements OnInit {
    * @param allowedSettingValue The allowed setting value as String
    */
   getAllowedSettingValueFromSettingTypeAndAllowedSettingValue(settingType: SettingType, allowedSettingValue: string): AllowedSettingValue {
-    return this.settings.find(setting => setting.type === settingType)
+    return this.settings
+      .find(setting => setting.type === settingType)
       .allowedSettingValues.find(allowedSetting => allowedSetting.value === allowedSettingValue);
   }
 }

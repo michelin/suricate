@@ -16,14 +16,14 @@
  *
  */
 
-import {animate, group, state, style, transition, trigger} from '@angular/animations';
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Observable, of} from 'rxjs';
-import {takeWhile} from 'rxjs/operators';
+import { animate, group, state, style, transition, trigger } from '@angular/animations';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Observable, of } from 'rxjs';
+import { takeWhile } from 'rxjs/operators';
 
-import {ToastService} from './toast.service';
-import {ToastMessage} from './toast-objects/ToastMessage';
-import {ToastType} from './toast-objects/ToastType';
+import { ToastService } from './toast.service';
+import { ToastMessage } from './toast-objects/ToastMessage';
+import { ToastType } from './toast-objects/ToastType';
 
 /**
  * Component that display toast notification messages
@@ -34,41 +34,70 @@ import {ToastType} from './toast-objects/ToastType';
   styleUrls: ['./toast.component.scss'],
   animations: [
     trigger('slideInOut', [
-      state('in', style({
-        'max-height': '500px', 'opacity': '1', 'visibility': 'visible'
-      })),
-      state('out', style({
-        'max-height': '0px', 'opacity': '0', 'visibility': 'hidden'
-      })),
-      transition('in => out', [group([
-          animate('400ms ease-in-out', style({
-            'opacity': '0'
-          })),
-          animate('600ms ease-in-out', style({
-            'max-height': '0px'
-          })),
-          animate('700ms ease-in-out', style({
-            'visibility': 'hidden'
-          }))
-        ]
-      )]),
-      transition('out => in', [group([
-          animate('1ms ease-in-out', style({
-            'visibility': 'visible'
-          })),
-          animate('600ms ease-in-out', style({
-            'max-height': '500px'
-          })),
-          animate('800ms ease-in-out', style({
-            'opacity': '1'
-          }))
-        ]
-      )])
+      state(
+        'in',
+        style({
+          'max-height': '500px',
+          opacity: '1',
+          visibility: 'visible'
+        })
+      ),
+      state(
+        'out',
+        style({
+          'max-height': '0px',
+          opacity: '0',
+          visibility: 'hidden'
+        })
+      ),
+      transition('in => out', [
+        group([
+          animate(
+            '400ms ease-in-out',
+            style({
+              opacity: '0'
+            })
+          ),
+          animate(
+            '600ms ease-in-out',
+            style({
+              'max-height': '0px'
+            })
+          ),
+          animate(
+            '700ms ease-in-out',
+            style({
+              visibility: 'hidden'
+            })
+          )
+        ])
+      ]),
+      transition('out => in', [
+        group([
+          animate(
+            '1ms ease-in-out',
+            style({
+              visibility: 'visible'
+            })
+          ),
+          animate(
+            '600ms ease-in-out',
+            style({
+              'max-height': '500px'
+            })
+          ),
+          animate(
+            '800ms ease-in-out',
+            style({
+              opacity: '1'
+            })
+          )
+        ])
+      ])
     ])
   ]
 })
 export class ToastComponent implements OnInit, OnDestroy {
-
   /**
    * Used for keep the subscription of subjects/Observables open
    * @type {boolean}
@@ -104,21 +133,18 @@ export class ToastComponent implements OnInit, OnDestroy {
    *
    * @param {ToastService} toastService The toast service to inject
    */
-  constructor(private toastService: ToastService) {
-  }
+  constructor(private toastService: ToastService) {}
 
   /**
    * Called when the component is init
    */
   ngOnInit() {
-    this.toastService.toastMessage$
-      .pipe(takeWhile(() => this.isAlive))
-      .subscribe((message: ToastMessage) => {
-        this.message$ = of(message);
-        if (message) {
-          this.showToast();
-        }
-      });
+    this.toastService.toastMessage$.pipe(takeWhile(() => this.isAlive)).subscribe((message: ToastMessage) => {
+      this.message$ = of(message);
+      if (message) {
+        this.showToast();
+      }
+    });
   }
 
   /**
@@ -158,5 +184,4 @@ export class ToastComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.isAlive = false;
   }
-
 }

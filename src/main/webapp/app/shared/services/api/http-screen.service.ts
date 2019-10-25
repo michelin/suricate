@@ -14,25 +14,23 @@
  * limitations under the License.
  */
 
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-import {screensApiEndpoint} from '../../../app.constant';
+import { screensApiEndpoint } from '../../../app.constant';
 
 /**
  * Screen that manage the Http calls for screens
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class HttpScreenService {
-
   /**
    * The constructor
    *
    * @param {HttpClient} httpClient The http client service
    */
-  constructor(private httpClient: HttpClient) {
-  }
+  constructor(private httpClient: HttpClient) {}
 
   /**
    * Send the notification for connect a new tv to this dashboard

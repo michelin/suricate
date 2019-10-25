@@ -16,13 +16,12 @@
  *
  */
 
-import {Observable} from 'rxjs';
+import { Observable } from 'rxjs';
 
 /**
  * Utils class for images
  */
 export class FileUtils {
-
   /**
    * Function that transform base64URL into a Blob
    *
@@ -50,7 +49,7 @@ export class FileUtils {
       byteArrays.push(byteArray);
     }
 
-    return new Blob(byteArrays, {type: contentType});
+    return new Blob(byteArrays, { type: contentType });
   }
 
   /**
@@ -91,10 +90,9 @@ export class FileUtils {
    * @param base64Url
    */
   static isBase64UrlIsAnImage(base64Url: string) {
-    const base64ImagePattern = '^data:image\/(gif|jpe?g|png);base64,.+$';
+    const base64ImagePattern = '^data:image/(gif|jpe?g|png);base64,.+$';
     const regexp = new RegExp(base64ImagePattern);
 
     return regexp.test(base64Url);
   }
-
 }

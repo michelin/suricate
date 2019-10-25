@@ -1,6 +1,6 @@
 <div class="file-upload-wrapper" fxLayout="row wrap" fxLayoutAlign="space-around center" fxFlex="100" cdk-focus-start>
   <!-- Image uploaded -->
-  <img *ngIf="imgBase64" [src]="imgBase64" alt="file_uploaded" fxFlex="49">
+  <img *ngIf="imgBase64" [src]="imgBase64" alt="file_uploaded" fxFlex="49" />
 
   <div *ngIf="filename" fxFlex="49">
     {{ filename }}
@@ -8,12 +8,14 @@
 
   <!-- Button visible -->
   <div fxFlex="48" fxLayout="row wrap" class="upload-button-wrapper">
-    <button mat-raised-button
-            type="button"
-            fxFlex="100"
-            class="upload-button"
-            [ngClass]="{'button-error': isInputFieldOnError()}"
-            (click)="file.click()">
+    <button
+      mat-raised-button
+      type="button"
+      fxFlex="100"
+      class="upload-button"
+      [ngClass]="{ 'button-error': isInputFieldOnError() }"
+      (click)="file.click()"
+    >
       <mat-icon>cloud_upload</mat-icon>
       <app-translate class="sentence" [key]="'upload'"></app-translate>
     </button>
@@ -32,8 +34,5 @@
   </div>
 
   <!-- Used to retrieve the file (hidden) -->
-  <input #file type="file" (change)="convertFileBase64($event)">
+  <input #file type="file" (change)="convertFileBase64($event)" />
 </div>
-
-
-

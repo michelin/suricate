@@ -24,9 +24,8 @@ describe('AddWidgetDialogComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AddWidgetDialogComponent ]
-    })
-    .compileComponents();
+      declarations: [AddWidgetDialogComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {

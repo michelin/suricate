@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import {Component} from '@angular/core';
-import {Router} from '@angular/router';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 
 /**
  * Manage repository actions
@@ -26,14 +26,12 @@ import {Router} from '@angular/router';
   styleUrls: ['./repository-actions.component.scss']
 })
 export class RepositoryActionsComponent {
-
   /**
    * Constructor
    *
    * @param router The router service
    */
-  constructor(private router: Router) {
-  }
+  constructor(private router: Router) {}
 
   /**
    * Navigate to the add repository page
@@ -41,5 +39,4 @@ export class RepositoryActionsComponent {
   addRepository() {
     this.router.navigate(['/repositories', 'add']);
   }
-
 }

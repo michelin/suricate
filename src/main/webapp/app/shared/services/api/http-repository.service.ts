@@ -16,28 +16,26 @@
  *
  */
 
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs/internal/Observable';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs/internal/Observable';
 
-import {Repository} from '../../model/api/Repository/Repository';
-import {repositoriesApiEndpoint} from '../../../app.constant';
-import {RepositoryRequest} from '../../model/api/Repository/RepositoryRequest';
-import {Widget} from '../../model/api/widget/Widget';
+import { Repository } from '../../model/api/Repository/Repository';
+import { repositoriesApiEndpoint } from '../../../app.constant';
+import { RepositoryRequest } from '../../model/api/Repository/RepositoryRequest';
+import { Widget } from '../../model/api/widget/Widget';
 
 /**
  * Service that manage HTTP repository calls
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class HttpRepositoryService {
-
   /**
    * Constructor
    *
    * @param {HttpClient} httpClient The http client to inject
    */
-  constructor(private httpClient: HttpClient) {
-  }
+  constructor(private httpClient: HttpClient) {}
 
   /**
    * Return the list of every repositories

@@ -14,24 +14,22 @@
  * limitations under the License.
  */
 
-import {Injectable} from '@angular/core';
-import {TranslateService} from '@ngx-translate/core';
-import {BehaviorSubject, Observable, Subject} from 'rxjs';
-import {flatMap} from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { flatMap } from 'rxjs/operators';
 
-import {UserSetting} from '../../shared/model/api/setting/UserSetting';
-import {User} from '../../shared/model/api/user/User';
-import {HttpUserService} from '../../shared/services/api/http-user.service';
-import {SettingType} from '../../shared/model/enums/SettingType';
-import {HttpSettingService} from '../../shared/services/api/http-setting.service';
-
+import { UserSetting } from '../../shared/model/api/setting/UserSetting';
+import { User } from '../../shared/model/api/user/User';
+import { HttpUserService } from '../../shared/services/api/http-user.service';
+import { SettingType } from '../../shared/model/enums/SettingType';
+import { HttpSettingService } from '../../shared/services/api/http-setting.service';
 
 /**
  * Manage the app theme
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class SettingsService {
-
   /**
    * Hold the current theme
    *
@@ -47,10 +45,11 @@ export class SettingsService {
    * @param {HttpSettingService} httpSettingService The http setting service
    * @param {HttpUserService} httpUserService The http user service to inject
    */
-  constructor(private translateService: TranslateService,
-              private httpSettingService: HttpSettingService,
-              private httpUserService: HttpUserService) {
-  }
+  constructor(
+    private translateService: TranslateService,
+    private httpSettingService: HttpSettingService,
+    private httpUserService: HttpUserService
+  ) {}
 
   /* ************************************************************************ */
   /*                Global Part                                                */
@@ -103,9 +102,9 @@ export class SettingsService {
    * @returns {Observable<UserSetting>} The user setting as observable
    */
   getThemeUserSetting(user: User): Observable<UserSetting> {
-    return this.httpSettingService.getAll(SettingType.TEMPLATE).pipe(
-      flatMap(settings => this.httpUserService.getUserSetting(user.id, settings[0].id))
-    );
+    return this.httpSettingService
+      .getAll(SettingType.TEMPLATE)
+      .pipe(flatMap(settings => this.httpUserService.getUserSetting(user.id, settings[0].id)));
   }
 
   /**
@@ -168,8 +167,8 @@ export class SettingsService {
    * @returns {Observable<UserSetting>} The user setting as observable
    */
   getLanguageUserSetting(user: User): Observable<UserSetting> {
-    return this.httpSettingService.getAll(SettingType.LANGUAGE).pipe(
-      flatMap(settings => this.httpUserService.getUserSetting(user.id, settings[0].id))
-    );
+    return this.httpSettingService
+      .getAll(SettingType.LANGUAGE)
+      .pipe(flatMap(settings => this.httpUserService.getUserSetting(user.id, settings[0].id)));
   }
 }

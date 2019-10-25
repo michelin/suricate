@@ -16,9 +16,9 @@
  *
  */
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import {RepositoryAddEditComponent} from './repository-add-edit.component';
+import { RepositoryAddEditComponent } from './repository-add-edit.component';
 
 describe('RepositoryAddEditComponent', () => {
   let component: RepositoryAddEditComponent;
@@ -27,8 +27,7 @@ describe('RepositoryAddEditComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [RepositoryAddEditComponent]
-    })
-        .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {

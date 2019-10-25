@@ -16,21 +16,21 @@
  *
  */
 
-import {AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import {fromEvent, merge, of as observableOf} from 'rxjs';
-import {catchError, debounceTime, distinctUntilChanged, map, startWith, switchMap} from 'rxjs/operators';
+import { fromEvent, merge, of as observableOf } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, map, startWith, switchMap } from 'rxjs/operators';
 
-import {Widget} from '../../../../shared/model/api/widget/Widget';
-import {ToastService} from '../../../../shared/components/toast/toast.service';
-import {UserService} from '../../../security/user/user.service';
-import {ToastType} from '../../../../shared/components/toast/toast-objects/ToastType';
-import {HttpWidgetService} from '../../../../shared/services/api/http-widget.service';
-import {WidgetAvailabilityEnum} from '../../../../shared/model/enums/WidgetAvailabilityEnum';
-import {HttpAssetService} from '../../../../shared/services/api/http-asset.service';
+import { Widget } from '../../../../shared/model/api/widget/Widget';
+import { ToastService } from '../../../../shared/components/toast/toast.service';
+import { UserService } from '../../../security/user/user.service';
+import { ToastType } from '../../../../shared/components/toast/toast-objects/ToastType';
+import { HttpWidgetService } from '../../../../shared/services/api/http-widget.service';
+import { WidgetAvailabilityEnum } from '../../../../shared/model/enums/WidgetAvailabilityEnum';
+import { HttpAssetService } from '../../../../shared/services/api/http-asset.service';
 
 /**
  * Component that display the list of widgets (admin part)
@@ -41,7 +41,6 @@ import {HttpAssetService} from '../../../../shared/services/api/http-asset.servi
   styleUrls: ['./widget-list.component.scss']
 })
 export class WidgetListComponent implements OnInit, AfterViewInit, OnDestroy {
-
   /**
    * Manage the sort of each column on the table
    * @type {MatSort}
@@ -121,12 +120,13 @@ export class WidgetListComponent implements OnInit, AfterViewInit, OnDestroy {
    * @param {ChangeDetectorRef} changeDetectorRef enable the change detection after view init
    * @param {ToastService} toastService The toast notification service
    */
-  constructor(private userService: UserService,
-              private httpWidgetService: HttpWidgetService,
-              private httpAssetService: HttpAssetService,
-              private changeDetectorRef: ChangeDetectorRef,
-              private toastService: ToastService) {
-  }
+  constructor(
+    private userService: UserService,
+    private httpWidgetService: HttpWidgetService,
+    private httpAssetService: HttpAssetService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private toastService: ToastService
+  ) {}
 
   /**
    * Steps when the component is init
@@ -251,9 +251,10 @@ export class WidgetListComponent implements OnInit, AfterViewInit, OnDestroy {
     if (widgetToDisable) {
       widgetToDisable.widgetAvailability = changeEvent.checked ? WidgetAvailabilityEnum.ACTIVATED : WidgetAvailabilityEnum.DISABLED;
 
-      this.httpWidgetService.updateOneById(widgetToDisable.id, {widgetAvailability: widgetToDisable.widgetAvailability}).subscribe(() => {
+      this.httpWidgetService.updateOneById(widgetToDisable.id, { widgetAvailability: widgetToDisable.widgetAvailability }).subscribe(() => {
         this.toastService.sendMessage(
-          `The widget "${widgetToDisable.name}" has been ${widgetToDisable.widgetAvailability.toString()}`, ToastType.SUCCESS
+          `The widget "${widgetToDisable.name}" has been ${widgetToDisable.widgetAvailability.toString()}`,
+          ToastType.SUCCESS
         );
       });
     }
@@ -265,5 +266,4 @@ export class WidgetListComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy() {
     this.isAlive = false;
   }
-
 }

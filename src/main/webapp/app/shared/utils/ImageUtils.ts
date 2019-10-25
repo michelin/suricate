@@ -20,7 +20,6 @@
  * Utils class for images
  */
 export class ImageUtils {
-
   /**
    * Get base64 URL
    *

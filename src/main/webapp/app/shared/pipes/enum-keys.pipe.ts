@@ -16,7 +16,7 @@
  *
  */
 
-import {Pipe, PipeTransform} from '@angular/core';
+import { Pipe, PipeTransform } from '@angular/core';
 
 /**
  * Get the keys of a map to iterate over it
@@ -25,7 +25,6 @@ import {Pipe, PipeTransform} from '@angular/core';
   name: 'enumKeys'
 })
 export class EnumKeysPipe implements PipeTransform {
-
   /**
    * Transform an enum to return the list of keys
    *
@@ -34,5 +33,4 @@ export class EnumKeysPipe implements PipeTransform {
   transform(enumObject: any): any {
     return Object.keys(enumObject);
   }
-
 }

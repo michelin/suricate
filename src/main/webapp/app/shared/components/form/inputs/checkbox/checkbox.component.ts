@@ -16,8 +16,8 @@
  *
  */
 
-import {Component} from '@angular/core';
-import {InputComponent} from '../input.component';
+import { Component } from '@angular/core';
+import { InputComponent } from '../input.component';
 
 /**
  * Manage the instantiation of the checkbox
@@ -28,7 +28,6 @@ import {InputComponent} from '../input.component';
   styleUrls: ['./checkbox.component.scss']
 })
 export class CheckboxComponent extends InputComponent {
-
   constructor() {
     super();
   }

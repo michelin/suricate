@@ -14,29 +14,23 @@
  * limitations under the License.
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {RouterModule} from '@angular/router';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 
-import {SharedModule} from '../../shared/shared.module';
-import {DashboardService} from './dashboard.service';
-import {DashboardDetailComponent} from './pages/dashboard-detail/dashboard-detail.component';
-import {DashboardListComponent} from './pages/admin/dashboard-list/dashboard-list.component';
-import {DashboardEditComponent} from './pages/admin/dashboard-edit/dashboard-edit.component';
-import {EditProjectWidgetDialogComponent} from './components/edit-project-widget-dialog/edit-project-widget-dialog.component';
-import {DashboardScreenComponent} from './components/dashboard-screen/dashboard-screen.component';
-import {DashboardTvComponent} from './pages/dashboard-tv/dashboard-tv.component';
-import {LayoutModule} from '../../layout/layout.module';
-import {DashboardRoutes} from './dashboard.route';
-import {DashboardScreenWidgetComponent} from './components/dashboard-screen/dashboard-screen-widget.component';
+import { SharedModule } from '../../shared/shared.module';
+import { DashboardDetailComponent } from './pages/dashboard-detail/dashboard-detail.component';
+import { DashboardListComponent } from './pages/admin/dashboard-list/dashboard-list.component';
+import { DashboardEditComponent } from './pages/admin/dashboard-edit/dashboard-edit.component';
+import { EditProjectWidgetDialogComponent } from './components/edit-project-widget-dialog/edit-project-widget-dialog.component';
+import { DashboardScreenComponent } from './components/dashboard-screen/dashboard-screen.component';
+import { DashboardTvComponent } from './pages/dashboard-tv/dashboard-tv.component';
+import { LayoutModule } from '../../layout/layout.module';
+import { DashboardRoutes } from './dashboard.route';
+import { DashboardScreenWidgetComponent } from './components/dashboard-screen/dashboard-screen-widget.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    RouterModule.forChild(DashboardRoutes),
-    LayoutModule,
-    SharedModule
-  ],
+  imports: [CommonModule, RouterModule.forChild(DashboardRoutes), LayoutModule, SharedModule],
   declarations: [
     DashboardDetailComponent,
     DashboardListComponent,
@@ -46,15 +40,7 @@ import {DashboardScreenWidgetComponent} from './components/dashboard-screen/dash
     DashboardScreenWidgetComponent,
     DashboardTvComponent
   ],
-  exports: [
-    RouterModule
-  ],
-  providers: [
-    DashboardService
-  ],
-  entryComponents: [
-    EditProjectWidgetDialogComponent
-  ]
+  exports: [RouterModule],
+  entryComponents: [EditProjectWidgetDialogComponent]
 })
-export class DashboardModule {
-}
+export class DashboardModule {}

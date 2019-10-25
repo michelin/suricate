@@ -16,19 +16,18 @@
  *
  */
 
-import {Injectable} from '@angular/core';
-import {CanActivate, CanActivateChild, Router} from '@angular/router';
-import {Observable, of} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { CanActivate, CanActivateChild, Router } from '@angular/router';
+import { Observable, of } from 'rxjs';
 
-import {TokenService} from '../token.service';
-import {AuthenticationService} from '../../../modules/authentication/authentication.service';
+import { TokenService } from '../token.service';
+import { AuthenticationService } from '../../../modules/authentication/authentication.service';
 
 /**
  * Manage the right of the users
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class AuthGuard implements CanActivate, CanActivateChild {
-
   /**
    * The constructor
    *
@@ -36,10 +35,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
    * @param {AuthenticationService} authenticationService
    * @param {TokenService} tokenService The token service
    */
-  constructor(private router: Router,
-              private authenticationService: AuthenticationService,
-              private tokenService: TokenService) {
-  }
+  constructor(private router: Router, private authenticationService: AuthenticationService, private tokenService: TokenService) {}
 
   /**
    * Manage user roles

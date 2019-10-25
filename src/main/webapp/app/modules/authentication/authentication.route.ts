@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Routes} from '@angular/router';
 
-import {RegisterComponent} from './pages/register/register.component';
-import {LoginComponent} from './pages/login/login.component';
+import { Routes } from '@angular/router';
 
-export const authRoutes: Routes = [
-  {path: 'login', component: LoginComponent},
-  {path: 'register', component: RegisterComponent}
-];
+import { RegisterComponent } from './pages/register/register.component';
+import { LoginComponent } from './pages/login/login.component';
+
+export const authRoutes: Routes = [{ path: 'login', component: LoginComponent }, { path: 'register', component: RegisterComponent }];

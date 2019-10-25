@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {FlatTreeControl} from '@angular/cdk/tree';
-import {Component} from '@angular/core';
-import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
-import {Observable, of as observableOf} from 'rxjs/index';
 
-import {ConfigDb, FileFlatNode, FileNode} from '../../config.db';
+import { FlatTreeControl } from '@angular/cdk/tree';
+import { Component } from '@angular/core';
+import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
+import { Observable, of as observableOf } from 'rxjs/index';
+
+import { ConfigDb, FileFlatNode, FileNode } from '../../config.db';
 
 /**
  * @title Tree with nested nodes
@@ -30,7 +31,6 @@ import {ConfigDb, FileFlatNode, FileNode} from '../../config.db';
   providers: [ConfigDb]
 })
 export class ConfigListComponent {
-
   configTreeControl: FlatTreeControl<FileFlatNode>;
   treeFlattener: MatTreeFlattener<FileNode, FileFlatNode>;
   configDataSource: MatTreeFlatDataSource<FileNode, FileFlatNode>;
@@ -40,7 +40,7 @@ export class ConfigListComponent {
     this.configTreeControl = new FlatTreeControl<FileFlatNode>(this._getLevel, this._isExpandable);
     this.configDataSource = new MatTreeFlatDataSource(this.configTreeControl, this.treeFlattener);
 
-    database.dataChange.subscribe(data => this.configDataSource.data = data);
+    database.dataChange.subscribe(data => (this.configDataSource.data = data));
   }
 
   transformer = (node: FileNode, level: number) => new FileFlatNode(!!node.children, node.filename, level, node.type);

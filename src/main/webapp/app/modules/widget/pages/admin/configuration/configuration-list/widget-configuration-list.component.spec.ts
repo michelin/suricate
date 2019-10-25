@@ -16,9 +16,9 @@
  *
  */
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import {WidgetConfigurationListComponent} from './configuration-list.component';
+import { WidgetConfigurationListComponent } from './widget-configuration-list.component';
 
 describe('WidgetConfigurationListComponent', () => {
   let component: WidgetConfigurationListComponent;
@@ -27,8 +27,7 @@ describe('WidgetConfigurationListComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [WidgetConfigurationListComponent]
-    })
-        .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {

@@ -14,28 +14,27 @@
  * limitations under the License.
  */
 
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {FormGroup, Validators} from '@angular/forms';
-import {Router} from '@angular/router';
-import {CustomValidators} from 'ng2-validation';
-import {catchError, flatMap} from 'rxjs/operators';
-import {throwError} from 'rxjs';
-import {TranslateService} from '@ngx-translate/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { CustomValidators } from 'ng2-validation';
+import { catchError, flatMap } from 'rxjs/operators';
+import { throwError } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 
-import {AuthenticationService} from '../../authentication.service';
-import {ToastService} from '../../../../shared/components/toast/toast.service';
-import {ApplicationProperties} from '../../../../shared/model/api/ApplicationProperties';
-import {HttpConfigurationService} from '../../../../shared/services/api/http-configuration.service';
-import {Credentials} from '../../../../shared/model/api/user/Credentials';
-import {ToastType} from '../../../../shared/components/toast/toast-objects/ToastType';
-import {UserRequest} from '../../../../shared/model/api/user/UserRequest';
-import {AuthenticationProviderEnum} from '../../../../shared/model/enums/AuthenticationProviderEnum';
-import {FormField} from '../../../../shared/model/app/form/FormField';
-import {DataType} from '../../../../shared/model/enums/DataType';
-import {FormService} from '../../../../shared/services/app/form.service';
-import {CustomValidator} from '../../../../shared/validators/CustomValidator';
-import {SidenavService} from "../../../../layout/sidenav/sidenav.service";
-
+import { AuthenticationService } from '../../authentication.service';
+import { ToastService } from '../../../../shared/components/toast/toast.service';
+import { ApplicationProperties } from '../../../../shared/model/api/ApplicationProperties';
+import { HttpConfigurationService } from '../../../../shared/services/api/http-configuration.service';
+import { Credentials } from '../../../../shared/model/api/user/Credentials';
+import { ToastType } from '../../../../shared/components/toast/toast-objects/ToastType';
+import { UserRequest } from '../../../../shared/model/api/user/UserRequest';
+import { AuthenticationProviderEnum } from '../../../../shared/model/enums/AuthenticationProviderEnum';
+import { FormField } from '../../../../shared/model/app/form/FormField';
+import { DataType } from '../../../../shared/model/enums/DataType';
+import { FormService } from '../../../../shared/services/app/form.service';
+import { CustomValidator } from '../../../../shared/validators/CustomValidator';
+import { SidenavService } from '../../../../layout/sidenav/sidenav.service';
 
 /**
  * Component that register a new user
@@ -46,7 +45,6 @@ import {SidenavService} from "../../../../layout/sidenav/sidenav.service";
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent implements OnInit, OnDestroy {
-
   /**
    * The register form
    * @type {FormGroup}
@@ -73,14 +71,15 @@ export class RegisterComponent implements OnInit, OnDestroy {
    * @param {SidenavService} sidenavService Manage the sidenav
    * @param {HttpConfigurationService} httpConfigurationService The configuration service to inject
    */
-  constructor(private authenticationService: AuthenticationService,
-              private router: Router,
-              private toastService: ToastService,
-              private translateService: TranslateService,
-              private formService: FormService,
-              private sidenavService: SidenavService,
-              private httpConfigurationService: HttpConfigurationService) {
-  }
+  constructor(
+    private authenticationService: AuthenticationService,
+    private router: Router,
+    private toastService: ToastService,
+    private translateService: TranslateService,
+    private formService: FormService,
+    private sidenavService: SidenavService,
+    private httpConfigurationService: HttpConfigurationService
+  ) {}
 
   /**
    * Called when the component is init
@@ -104,14 +103,11 @@ export class RegisterComponent implements OnInit, OnDestroy {
   initRegisterForm() {
     this.generateFormFields();
     this.registerForm = this.formService.generateFormGroupForFields(this.formFields);
-    this.formService.setValidatorsForControl(
-      this.registerForm.get('confirmPassword'),
-      [
-        Validators.required,
-        Validators.minLength(3),
-        CustomValidator.checkPasswordMatch(this.registerForm.get('password'))
-      ]
-    );
+    this.formService.setValidatorsForControl(this.registerForm.get('confirmPassword'), [
+      Validators.required,
+      Validators.minLength(3),
+      CustomValidator.checkPasswordMatch(this.registerForm.get('password'))
+    ]);
   }
 
   /**
@@ -183,26 +179,28 @@ export class RegisterComponent implements OnInit, OnDestroy {
       this.formSubmitAttempt = true;
       const userRequest: UserRequest = this.registerForm.value;
 
-      this.authenticationService.register(userRequest).pipe(
-        flatMap(() => {
-          const credentials: Credentials = {username: userRequest.username, password: userRequest.password};
-          return this.authenticationService.authenticate(credentials);
-        }),
-        catchError(error => {
-          console.log(error);
-          return throwError(error);
-        })
-      ).subscribe(
-        () => {
-          // Authentication succeed
-          this.router.navigate(['/home']);
-        },
-        error => {
-          console.log(error);
-          this.formSubmitAttempt = false;
-        }
-      );
-
+      this.authenticationService
+        .register(userRequest)
+        .pipe(
+          flatMap(() => {
+            const credentials: Credentials = { username: userRequest.username, password: userRequest.password };
+            return this.authenticationService.authenticate(credentials);
+          }),
+          catchError(error => {
+            console.log(error);
+            return throwError(error);
+          })
+        )
+        .subscribe(
+          () => {
+            // Authentication succeed
+            this.router.navigate(['/home']);
+          },
+          error => {
+            console.log(error);
+            this.formSubmitAttempt = false;
+          }
+        );
     } else {
       this.toastService.sendMessage('Some fields are not properly filled', ToastType.DANGER);
     }

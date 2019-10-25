@@ -45,7 +45,6 @@ import { CustomValidators } from 'ng2-validation';
   styleUrls: ['./add-widget-dialog.component.scss']
 })
 export class AddWidgetDialogComponent implements OnInit {
-
   /**
    * Hold the HTML Stepper
    * @type {MatHorizontalStepper}
@@ -116,15 +115,16 @@ export class AddWidgetDialogComponent implements OnInit {
    * @param {MatDialogRef<AddWidgetDialogComponent>} addWidgetDialogRef The add widget dialog ref
    * @param {ChangeDetectorRef} changeDetectorRef The change detector service
    */
-  constructor(@Inject(MAT_DIALOG_DATA) private data: any,
-              private httpAssetService: HttpAssetService,
-              private httpCategoryService: HttpCategoryService,
-              private httpProjectService: HttpProjectService,
-              private dashboardService: DashboardService,
-              private formService: FormService,
-              private addWidgetDialogRef: MatDialogRef<AddWidgetDialogComponent>,
-              private changeDetectorRef: ChangeDetectorRef) {
-  }
+  constructor(
+    @Inject(MAT_DIALOG_DATA) private data: any,
+    private httpAssetService: HttpAssetService,
+    private httpCategoryService: HttpCategoryService,
+    private httpProjectService: HttpProjectService,
+    private dashboardService: DashboardService,
+    private formService: FormService,
+    private addWidgetDialogRef: MatDialogRef<AddWidgetDialogComponent>,
+    private changeDetectorRef: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     this.httpCategoryService.getAll().subscribe(categories => {
@@ -268,7 +268,6 @@ export class AddWidgetDialogComponent implements OnInit {
       });
     }
   }
-
 
   getImageSrc(assetToken: string): string {
     return this.httpAssetService.getContentUrl(assetToken);

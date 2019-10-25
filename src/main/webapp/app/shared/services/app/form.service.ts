@@ -16,28 +16,23 @@
  *
  */
 
-import {Injectable} from '@angular/core';
-import {AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn} from '@angular/forms';
+import { Injectable } from '@angular/core';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn } from '@angular/forms';
 
-import {FormField} from '../../model/app/form/FormField';
-import {FormStep} from '../../model/app/form/FormStep';
-
+import { FormField } from '../../model/app/form/FormField';
+import { FormStep } from '../../model/app/form/FormStep';
 
 /**
  * Service class that manage the instantiations of forms
  */
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class FormService {
-
   /**
    * Constructor
    *
    * @param formBuilder The form builder service
    */
-  constructor(private formBuilder: FormBuilder) {
-  }
+  constructor(private formBuilder: FormBuilder) {}
 
   /* *********************************************************************************************************************************** */
   /*                                         General Form Management                                                                     */
@@ -68,7 +63,7 @@ export class FormService {
       const control = formGroup.get(field);
 
       if (control instanceof FormControl) {
-        control.markAsTouched({onlySelf: true});
+        control.markAsTouched({ onlySelf: true });
       } else if (control instanceof FormGroup) {
         this.validate(control);
       }
@@ -140,7 +135,7 @@ export class FormService {
    * @return The form control that represent the field
    */
   generateFormControl(field: FormField): FormControl {
-    return this.formBuilder.control({value: field.value, disabled: field.disabled}, field.validators, field.asyncValidators);
+    return this.formBuilder.control({ value: field.value, disabled: field.disabled }, field.validators, field.asyncValidators);
   }
 
   /**

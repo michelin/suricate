@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-
-import {CommunicationDialogComponent} from './communication-dialog.component';
+import { CommunicationDialogComponent } from './communication-dialog.component';
 
 describe('CommunicationDialogComponent', () => {
   let component: CommunicationDialogComponent;
@@ -26,8 +25,7 @@ describe('CommunicationDialogComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [CommunicationDialogComponent]
-    })
-      .compileComponents();
+    }).compileComponents();
   }));
 
   beforeEach(() => {

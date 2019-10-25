@@ -42,7 +42,6 @@ import { CustomValidators } from 'ng2-validation';
   styleUrls: ['./edit-project-widget-dialog.component.scss']
 })
 export class EditProjectWidgetDialogComponent implements OnInit {
-
   /**
    * The project widget form
    */
@@ -79,7 +78,6 @@ export class EditProjectWidgetDialogComponent implements OnInit {
    */
   dataType = DataType;
 
-
   /**
    * Constructor
    *
@@ -92,30 +90,34 @@ export class EditProjectWidgetDialogComponent implements OnInit {
    * @param toastService The notification service
    * @param formService The form service
    */
-  constructor(@Inject(MAT_DIALOG_DATA) private data: any,
-              private dialogRef: MatDialogRef<EditProjectWidgetDialogComponent>,
-              private httpProjectWidgetService: HttpProjectWidgetService,
-              private httpWidgetService: HttpWidgetService,
-              private httpAssetService: HttpAssetService,
-              private httpCategoryService: HttpCategoryService,
-              private toastService: ToastService,
-              private formService: FormService) {
-  }
+  constructor(
+    @Inject(MAT_DIALOG_DATA) private data: any,
+    private dialogRef: MatDialogRef<EditProjectWidgetDialogComponent>,
+    private httpProjectWidgetService: HttpProjectWidgetService,
+    private httpWidgetService: HttpWidgetService,
+    private httpAssetService: HttpAssetService,
+    private httpCategoryService: HttpCategoryService,
+    private toastService: ToastService,
+    private formService: FormService
+  ) {}
 
   /**
    * Init of the component
    */
   ngOnInit() {
-    this.httpProjectWidgetService.getOneById(this.data.projectWidgetId).pipe(
-      map((projectWidget: ProjectWidget) => this.projectWidget = projectWidget),
-      flatMap(() => this.httpWidgetService.getOneById(this.projectWidget.widgetId)),
-      map((widget: Widget) => this.widget = widget),
-      flatMap(() => this.httpCategoryService.getCategoryConfigurations(this.widget.category.id)),
-      map((configurations: Configuration[]) => this.configurations = configurations)
-    ).subscribe(() => {
-      this.createParamsToDisplay();
-      this.generateProjectWidgetForm();
-    });
+    this.httpProjectWidgetService
+      .getOneById(this.data.projectWidgetId)
+      .pipe(
+        map((projectWidget: ProjectWidget) => (this.projectWidget = projectWidget)),
+        flatMap(() => this.httpWidgetService.getOneById(this.projectWidget.widgetId)),
+        map((widget: Widget) => (this.widget = widget)),
+        flatMap(() => this.httpCategoryService.getCategoryConfigurations(this.widget.category.id)),
+        map((configurations: Configuration[]) => (this.configurations = configurations))
+      )
+      .subscribe(() => {
+        this.createParamsToDisplay();
+        this.generateProjectWidgetForm();
+      });
   }
 
   /**
@@ -172,7 +174,6 @@ export class EditProjectWidgetDialogComponent implements OnInit {
       this.formFields.push(formField);
     });
   }
-
 
   /**
    * Generation of the form options for widget params
@@ -265,5 +266,4 @@ export class EditProjectWidgetDialogComponent implements OnInit {
       this.dialogRef.close();
     }
   }
-
 }

@@ -1,4 +1,4 @@
-import {EnumKeysPipe} from './enum-keys.pipe';
+import { EnumKeysPipe } from './enum-keys.pipe';
 
 describe('EnumKeysPipe', () => {
   it('create an instance', () => {

@@ -16,21 +16,19 @@
  *
  */
 
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 
-import {assetsApiEndpoint} from '../../../app.constant';
+import { assetsApiEndpoint } from '../../../app.constant';
 
 /**
  * Manage the asset http calls
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class HttpAssetService {
-
   /**
    * Constructor
    */
-  constructor() {
-  }
+  constructor() {}
 
   /**
    * Get the asset content url

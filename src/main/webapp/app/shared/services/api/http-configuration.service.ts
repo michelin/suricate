@@ -16,28 +16,26 @@
  *
  */
 
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-import {Configuration} from '../../model/api/configuration/Configuration';
-import {configurationsApiEndpoint} from '../../../app.constant';
-import {ApplicationProperties} from '../../model/api/ApplicationProperties';
-import {ConfigurationRequest} from '../../model/api/configuration/ConfigurationRequest';
+import { Configuration } from '../../model/api/configuration/Configuration';
+import { configurationsApiEndpoint } from '../../../app.constant';
+import { ApplicationProperties } from '../../model/api/ApplicationProperties';
+import { ConfigurationRequest } from '../../model/api/configuration/ConfigurationRequest';
 
 /**
  * Configuration services manage http calls
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class HttpConfigurationService {
-
   /**
    * Constructor
    *
    * @param {HttpClient} httpClient The http client service
    */
-  constructor(private httpClient: HttpClient) {
-  }
+  constructor(private httpClient: HttpClient) {}
 
   /**
    * Get the full list of configuration

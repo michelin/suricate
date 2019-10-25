@@ -1,6 +1,8 @@
-<mat-checkbox color="primary"
-              [name]="field.key"
-              [checked]="field.value === undefined ? false : field.value"
-              [formControl]="getFormControl()">
+<mat-checkbox
+  color="primary"
+  [name]="field.key"
+  [checked]="field.value === undefined ? false : field.value"
+  [formControl]="getFormControl()"
+>
   {{ field.label }}
 </mat-checkbox>

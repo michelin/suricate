@@ -17,8 +17,8 @@
  *
  */
 
-import {ProjectWidgetPosition} from './ProjectWidgetPosition';
-import {WidgetStateEnum} from '../../enums/WidgetSateEnum';
+import { ProjectWidgetPosition } from './ProjectWidgetPosition';
+import { WidgetStateEnum } from '../../enums/WidgetSateEnum';
 
 /**
  * The project widget entity

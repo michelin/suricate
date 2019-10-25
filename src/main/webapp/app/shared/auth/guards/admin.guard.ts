@@ -14,28 +14,24 @@
  * limitations under the License.
  */
 
-import {Injectable} from '@angular/core';
-import {CanActivate, CanActivateChild, Router} from '@angular/router';
-import {Observable, of} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { CanActivate, CanActivateChild, Router } from '@angular/router';
+import { Observable, of } from 'rxjs';
 
-import {UserService} from '../../../modules/security/user/user.service';
+import { UserService } from '../../../modules/security/user/user.service';
 
 /**
  * The admin guard
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class AdminGuard implements CanActivate, CanActivateChild {
-
   /**
    * The constructor
    *
    * @param {UserService} userService The user service
    * @param {Router} router The router
    */
-  constructor(private userService: UserService,
-              private router: Router) {
-
-  }
+  constructor(private userService: UserService, private router: Router) {}
 
   /**
    * Activate root routes

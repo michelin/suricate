@@ -14,22 +14,22 @@
  * limitations under the License.
  */
 
-import {AfterViewInit, ChangeDetectorRef, Component, ViewChild} from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import {merge, of as observableOf} from 'rxjs';
-import {catchError, map, startWith, switchMap} from 'rxjs/operators';
-import {TitleCasePipe} from '@angular/common';
-import {TranslateService} from '@ngx-translate/core';
+import { merge, of as observableOf } from 'rxjs';
+import { catchError, map, startWith, switchMap } from 'rxjs/operators';
+import { TitleCasePipe } from '@angular/common';
+import { TranslateService } from '@ngx-translate/core';
 
-import {Project} from '../../../../../shared/model/api/project/Project';
-import {DashboardService} from '../../../dashboard.service';
-import {ToastService} from '../../../../../shared/components/toast/toast.service';
-import {ConfirmDialogComponent} from '../../../../../shared/components/confirm-dialog/confirm-dialog.component';
-import {ToastType} from '../../../../../shared/components/toast/toast-objects/ToastType';
-import {HttpProjectService} from '../../../../../shared/services/api/http-project.service';
+import { Project } from '../../../../../shared/model/api/project/Project';
+import { DashboardService } from '../../../dashboard.service';
+import { ToastService } from '../../../../../shared/components/toast/toast.service';
+import { ConfirmDialogComponent } from '../../../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { ToastType } from '../../../../../shared/components/toast/toast-objects/ToastType';
+import { HttpProjectService } from '../../../../../shared/services/api/http-project.service';
 
 /**
  * Component that manage the dashboard list for admin part
@@ -40,7 +40,6 @@ import {HttpProjectService} from '../../../../../shared/services/api/http-projec
   styleUrls: ['./dashboard-list.component.scss']
 })
 export class DashboardListComponent implements AfterViewInit {
-
   /**
    * Management of the table sorting
    * @type {MatSort}
@@ -89,13 +88,14 @@ export class DashboardListComponent implements AfterViewInit {
    * @param {MatDialog} matDialog The matDialog service to inject
    * @param {ToastService} toastService The toast service to inject
    */
-  constructor(private httpProjectService: HttpProjectService,
-              private dashboardService: DashboardService,
-              private translateService: TranslateService,
-              private changeDetectorRef: ChangeDetectorRef,
-              private matDialog: MatDialog,
-              private toastService: ToastService) {
-  }
+  constructor(
+    private httpProjectService: HttpProjectService,
+    private dashboardService: DashboardService,
+    private translateService: TranslateService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private matDialog: MatDialog,
+    private toastService: ToastService
+  ) {}
 
   /**
    * Called when the view has been init
@@ -156,24 +156,26 @@ export class DashboardListComponent implements AfterViewInit {
     this.translateService.get(['dashboard.delete', 'delete.confirm']).subscribe(translations => {
       const titleCasePipe = new TitleCasePipe();
 
-      this.matDialog.open(ConfirmDialogComponent, {
-        data: {
-          title: translations['dashboard.delete'],
-          message: `${translations['delete.confirm']} ${titleCasePipe.transform(project.name)}`
-        }
-      }).afterClosed().subscribe(shouldDeleteDashboard => {
-        if (shouldDeleteDashboard) {
-          this.httpProjectService.deleteProject(project.token).subscribe(() => {
-            this.toastService.sendMessage('Project deleted successfully', ToastType.SUCCESS);
-            this.initProjectsTable();
+      this.matDialog
+        .open(ConfirmDialogComponent, {
+          data: {
+            title: translations['dashboard.delete'],
+            message: `${translations['delete.confirm']} ${titleCasePipe.transform(project.name)}`
+          }
+        })
+        .afterClosed()
+        .subscribe(shouldDeleteDashboard => {
+          if (shouldDeleteDashboard) {
+            this.httpProjectService.deleteProject(project.token).subscribe(() => {
+              this.toastService.sendMessage('Project deleted successfully', ToastType.SUCCESS);
+              this.initProjectsTable();
 
-            this.httpProjectService.getAllForCurrentUser().subscribe((projects: Project[]) => {
-              this.dashboardService.currentDashboardListValues = projects;
+              this.httpProjectService.getAllForCurrentUser().subscribe((projects: Project[]) => {
+                this.dashboardService.currentDashboardListValues = projects;
+              });
             });
-          });
-        }
-      });
+          }
+        });
     });
   }
-
 }

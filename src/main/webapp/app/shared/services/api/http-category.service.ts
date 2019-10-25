@@ -16,29 +16,27 @@
  *
  */
 
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-import {categoriesApiEndpoint} from '../../../app.constant';
-import {Category} from '../../model/api/widget/Category';
-import {Widget} from '../../model/api/widget/Widget';
-import {Configuration} from '../../model/api/configuration/Configuration';
+import { categoriesApiEndpoint } from '../../../app.constant';
+import { Category } from '../../model/api/widget/Category';
+import { Widget } from '../../model/api/widget/Widget';
+import { Configuration } from '../../model/api/configuration/Configuration';
 
 /**
  * Manage the widget Http calls
  */
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class HttpCategoryService {
-
   /**
    * Constructor
    *
    * @param httpClient the http client to inject
    */
-  constructor(private httpClient: HttpClient) {
-  }
+  constructor(private httpClient: HttpClient) {}
 
   /**
    * Retrieve the full list of categories

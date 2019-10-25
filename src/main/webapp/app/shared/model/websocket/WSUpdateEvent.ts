@@ -16,7 +16,7 @@
  *
  */
 
-import {WSUpdateType} from './enums/WSUpdateType';
+import { WSUpdateType } from './enums/WSUpdateType';
 
 /**
  * The object WS Event

@@ -16,7 +16,7 @@
  *
  */
 
-import {RepositoryTypeEnum} from '../../enums/RepositoryTypeEnum';
+import { RepositoryTypeEnum } from '../../enums/RepositoryTypeEnum';
 
 /**
  * Hold the repository informations

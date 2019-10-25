@@ -16,7 +16,7 @@
  *
  */
 
-import {FormField} from './FormField';
+import { FormField } from './FormField';
 
 /**
  * Describe a field used to manage the form

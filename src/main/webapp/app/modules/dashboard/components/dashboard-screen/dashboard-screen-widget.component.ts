@@ -14,27 +14,26 @@
  * limitations under the License.
  */
 
-
-import {Component, ElementRef, HostBinding, Input, OnDestroy, OnInit} from '@angular/core';
-import {TranslateService} from '@ngx-translate/core';
-import {TitleCasePipe} from '@angular/common';
+import { Component, ElementRef, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
+import { TitleCasePipe } from '@angular/common';
 import { MatDialog } from '@angular/material/dialog';
-import {NgGridItemConfig, NgGridItemEvent} from 'angular2-grid';
-import {takeWhile} from 'rxjs/operators';
+import { NgGridItemConfig, NgGridItemEvent } from 'angular2-grid';
+import { takeWhile } from 'rxjs/operators';
 
-import {ProjectWidget} from '../../../../shared/model/api/ProjectWidget/ProjectWidget';
-import {Widget} from '../../../../shared/model/api/widget/Widget';
-import {HttpWidgetService} from '../../../../shared/services/api/http-widget.service';
-import {WidgetStateEnum} from '../../../../shared/model/enums/WidgetSateEnum';
-import {ConfirmDialogComponent} from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
-import {HttpProjectWidgetService} from '../../../../shared/services/api/http-project-widget.service';
-import {EditProjectWidgetDialogComponent} from '../edit-project-widget-dialog/edit-project-widget-dialog.component';
-import {RunScriptsDirective} from '../../../../shared/directives/run-scripts.directive';
-import {WebsocketService} from '../../../../shared/services/websocket.service';
-import {WSUpdateEvent} from '../../../../shared/model/websocket/WSUpdateEvent';
-import {WSUpdateType} from '../../../../shared/model/websocket/enums/WSUpdateType';
-import {GridItemUtils} from '../../../../shared/utils/GridItemUtils';
-import {CommunicationDialogComponent} from '../../../../shared/components/communication-dialog/communication-dialog.component';
+import { ProjectWidget } from '../../../../shared/model/api/ProjectWidget/ProjectWidget';
+import { Widget } from '../../../../shared/model/api/widget/Widget';
+import { HttpWidgetService } from '../../../../shared/services/api/http-widget.service';
+import { WidgetStateEnum } from '../../../../shared/model/enums/WidgetSateEnum';
+import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { HttpProjectWidgetService } from '../../../../shared/services/api/http-project-widget.service';
+import { EditProjectWidgetDialogComponent } from '../edit-project-widget-dialog/edit-project-widget-dialog.component';
+import { RunScriptsDirective } from '../../../../shared/directives/run-scripts.directive';
+import { WebsocketService } from '../../../../shared/services/websocket.service';
+import { WSUpdateEvent } from '../../../../shared/model/websocket/WSUpdateEvent';
+import { WSUpdateType } from '../../../../shared/model/websocket/enums/WSUpdateType';
+import { GridItemUtils } from '../../../../shared/utils/GridItemUtils';
+import { CommunicationDialogComponent } from '../../../../shared/components/communication-dialog/communication-dialog.component';
 
 import * as Stomp from '@stomp/stompjs';
 
@@ -47,7 +46,6 @@ import * as Stomp from '@stomp/stompjs';
   styleUrls: ['./dashboard-screen-widget.component.scss']
 })
 export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
-
   /**
    * The projectWidget to display
    * @type {ProjectWidget}
@@ -103,13 +101,14 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    * @param websocketService The service that manage the websocket
    * @param elementRef Object that get the references of the HTML Elements
    */
-  constructor(private matDialog: MatDialog,
-              private httpWidgetService: HttpWidgetService,
-              private httpProjectWidgetService: HttpProjectWidgetService,
-              private translateService: TranslateService,
-              private websocketService: WebsocketService,
-              private elementRef: ElementRef) {
-  }
+  constructor(
+    private matDialog: MatDialog,
+    private httpWidgetService: HttpWidgetService,
+    private httpProjectWidgetService: HttpProjectWidgetService,
+    private translateService: TranslateService,
+    private websocketService: WebsocketService,
+    private elementRef: ElementRef
+  ) {}
 
   /**
    * Called when the component is init
@@ -117,7 +116,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initWebsocketConnectionForProjectWidget();
     setTimeout(() => this.appRunScriptDirective.ngOnInit(), 1000);
-    this.startGridStackItem = {...this.gridStackItem};
+    this.startGridStackItem = { ...this.gridStackItem };
 
     this.httpWidgetService.getOneById(this.projectWidget.widgetId).subscribe(widget => {
       this.widget = widget;
@@ -162,15 +161,16 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   initWebsocketConnectionForProjectWidget() {
     const projectWidgetSubscriptionUrl = `/user/${this.projectToken}-projectWidget-${this.projectWidget.id}/queue/live`;
 
-    this.websocketService.subscribeToDestination(projectWidgetSubscriptionUrl).pipe(
-      takeWhile(() => this.isAlive)
-    ).subscribe((stompMessage: Stomp.Message) => {
-      const updateEvent: WSUpdateEvent = JSON.parse(stompMessage.body);
+    this.websocketService
+      .subscribeToDestination(projectWidgetSubscriptionUrl)
+      .pipe(takeWhile(() => this.isAlive))
+      .subscribe((stompMessage: Stomp.Message) => {
+        const updateEvent: WSUpdateEvent = JSON.parse(stompMessage.body);
 
-      if (updateEvent.type === WSUpdateType.WIDGET) {
-        this.refreshProjectWidget();
-      }
-    });
+        if (updateEvent.type === WSUpdateType.WIDGET) {
+          this.refreshProjectWidget();
+        }
+      });
   }
 
   /**
@@ -180,17 +180,19 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
     this.translateService.get(['widget.delete', 'delete.confirm']).subscribe(translations => {
       const titlecasePipe = new TitleCasePipe();
 
-      this.matDialog.open(ConfirmDialogComponent, {
-        data: {
-          title: translations['widget.delete'],
-          message: `${translations['delete.confirm']} ${titlecasePipe.transform(this.widget.name)}`
-        }
-      }).afterClosed().subscribe(shouldDeleteProjectWidget => {
-        if (shouldDeleteProjectWidget) {
-          this.httpProjectWidgetService.deleteOneById(this.projectWidget.id).subscribe();
-        }
-      });
-
+      this.matDialog
+        .open(ConfirmDialogComponent, {
+          data: {
+            title: translations['widget.delete'],
+            message: `${translations['delete.confirm']} ${titlecasePipe.transform(this.widget.name)}`
+          }
+        })
+        .afterClosed()
+        .subscribe(shouldDeleteProjectWidget => {
+          if (shouldDeleteProjectWidget) {
+            this.httpProjectWidgetService.deleteOneById(this.projectWidget.id).subscribe();
+          }
+        });
     });
   }
 
@@ -200,7 +202,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   displayEditProjectWidgetDialog(): void {
     this.matDialog.open(EditProjectWidgetDialogComponent, {
       minWidth: 700,
-      data: {projectWidgetId: this.projectWidget.id}
+      data: { projectWidgetId: this.projectWidget.id }
     });
   }
 
@@ -220,9 +222,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
           isErrorMessage: !!this.projectWidget.log
         }
       });
-
     });
-
   }
 
   /**

@@ -16,10 +16,10 @@
  *
  */
 
-import {AsyncValidatorFn, ValidatorFn} from '@angular/forms';
+import { AsyncValidatorFn, ValidatorFn } from '@angular/forms';
 
-import {DataType} from '../../enums/DataType';
-import {FormOption} from './FormOption';
+import { DataType } from '../../enums/DataType';
+import { FormOption } from './FormOption';
 
 /**
  * Describe a field used to manage the form

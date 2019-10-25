@@ -14,10 +14,8 @@
  * limitations under the License.
  */
 
-
 import { RunScriptsDirective } from './run-scripts.directive';
 
 describe('RunScriptsDirective', () => {
-  it('should create an instance', () => {
-  });
+  it('should create an instance', () => {});
 });

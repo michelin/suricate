@@ -24,9 +24,8 @@ describe('PagesHeaderComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PagesHeaderComponent ]
-    })
-    .compileComponents();
+      declarations: [PagesHeaderComponent]
+    }).compileComponents();
   }));
 
   beforeEach(() => {
