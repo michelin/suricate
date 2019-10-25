@@ -19,21 +19,21 @@ import { FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { flatMap, map } from 'rxjs/operators';
 
-import { ProjectWidget } from '../../../../shared/model/api/ProjectWidget/ProjectWidget';
-import { ToastService } from '../../../../shared/components/toast/toast.service';
-import { ToastType } from '../../../../shared/components/toast/toast-objects/ToastType';
-import { HttpProjectWidgetService } from '../../../../shared/services/api/http-project-widget.service';
-import { HttpWidgetService } from '../../../../shared/services/api/http-widget.service';
-import { Widget } from '../../../../shared/model/api/widget/Widget';
-import { HttpAssetService } from '../../../../shared/services/api/http-asset.service';
-import { Configuration } from '../../../../shared/model/api/configuration/Configuration';
-import { HttpCategoryService } from '../../../../shared/services/api/http-category.service';
-import { WidgetParam } from '../../../../shared/model/api/widget/WidgetParam';
-import { DataType } from '../../../../shared/model/enums/DataType';
-import { FormField } from '../../../../shared/model/app/form/FormField';
-import { FormService } from '../../../../shared/services/app/form.service';
-import { FormOption } from '../../../../shared/model/app/form/FormOption';
-import { WidgetParamValue } from '../../../../shared/model/api/widget/WidgetParamValue';
+import { ProjectWidget } from '../../../../shared/models/backend/project-widget/project-widget';
+import { ToastService } from '../../../../shared/services/frontend/toast.service';
+import { ToastTypeEnum } from '../../../../shared/enums/toast-type.enum';
+import { HttpProjectWidgetService } from '../../../../shared/services/backend/http-project-widget.service';
+import { HttpWidgetService } from '../../../../shared/services/backend/http-widget.service';
+import { Widget } from '../../../../shared/models/backend/widget/widget';
+import { HttpAssetService } from '../../../../shared/services/backend/http-asset.service';
+import { Configuration } from '../../../../shared/models/backend/configuration/configuration';
+import { HttpCategoryService } from '../../../../shared/services/backend/http-category.service';
+import { WidgetParam } from '../../../../shared/models/backend/widget/widget-param';
+import { DataTypeEnum } from '../../../../shared/enums/data-type.enum';
+import { FormField } from '../../../../shared/models/frontend/form/form-field';
+import { FormService } from '../../../../shared/services/frontend/form.service';
+import { FormOption } from '../../../../shared/models/frontend/form/form-option';
+import { WidgetParamValue } from '../../../../shared/models/backend/widget/widget-param-value';
 import { CustomValidators } from 'ng2-validation';
 
 @Component({
@@ -74,9 +74,9 @@ export class EditProjectWidgetDialogComponent implements OnInit {
 
   /**
    * The widget variable type
-   * @type {DataType}
+   * @type {DataTypeEnum}
    */
-  dataType = DataType;
+  dataType = DataTypeEnum;
 
   /**
    * Constructor
@@ -167,7 +167,7 @@ export class EditProjectWidgetDialogComponent implements OnInit {
         validators: this.getValidatorsForWidgetParam(widgetParam)
       };
 
-      if (widgetParam.type === DataType.BOOLEAN) {
+      if (widgetParam.type === DataTypeEnum.BOOLEAN) {
         formField.value = JSON.parse(formField.value);
       }
 
@@ -211,7 +211,7 @@ export class EditProjectWidgetDialogComponent implements OnInit {
       formValidators.push(Validators.pattern(widgetParam.acceptFileRegex));
     }
 
-    if (widgetParam.type === DataType.NUMBER) {
+    if (widgetParam.type === DataTypeEnum.NUMBER) {
       formValidators.push(CustomValidators.digits);
     }
 
@@ -252,7 +252,7 @@ export class EditProjectWidgetDialogComponent implements OnInit {
 
       this.widgetParams.forEach(param => {
         const value = this.projectWidgetForm.get(param.name).value;
-        if (param.type === DataType.BOOLEAN) {
+        if (param.type === DataTypeEnum.BOOLEAN) {
           backendConfig = `${backendConfig}${param.name}=${value}\n`;
         } else {
           backendConfig = value ? `${backendConfig}${param.name}=${value}\n` : backendConfig;
@@ -261,7 +261,7 @@ export class EditProjectWidgetDialogComponent implements OnInit {
 
       this.projectWidget.backendConfig = backendConfig;
       this.httpProjectWidgetService.updateOneById(this.projectWidget.id, this.projectWidget).subscribe(() => {
-        this.toastService.sendMessage('Widget Updated successfully', ToastType.SUCCESS);
+        this.toastService.sendMessage('Widget Updated successfully', ToastTypeEnum.SUCCESS);
       });
       this.dialogRef.close();
     }

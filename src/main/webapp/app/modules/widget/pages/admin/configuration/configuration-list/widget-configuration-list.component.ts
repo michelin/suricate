@@ -25,11 +25,11 @@ import { merge, of as observableOf } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 
-import { HttpConfigurationService } from '../../../../../../shared/services/api/http-configuration.service';
-import { ToastService } from '../../../../../../shared/components/toast/toast.service';
-import { Configuration } from '../../../../../../shared/model/api/configuration/Configuration';
+import { HttpConfigurationService } from '../../../../../../shared/services/backend/http-configuration.service';
+import { ToastService } from '../../../../../../shared/services/frontend/toast.service';
+import { Configuration } from '../../../../../../shared/models/backend/configuration/configuration';
 import { ConfirmDialogComponent } from '../../../../../../shared/components/confirm-dialog/confirm-dialog.component';
-import { ToastType } from '../../../../../../shared/components/toast/toast-objects/ToastType';
+import { ToastTypeEnum } from '../../../../../../shared/enums/toast-type.enum';
 
 /**
  * The configuration list component
@@ -163,7 +163,7 @@ export class WidgetConfigurationListComponent implements OnInit {
       deleteConfigurationDialog.afterClosed().subscribe(shouldDeleteConfiguration => {
         if (shouldDeleteConfiguration) {
           this.configurationsService.deleteConfiguration(configuration.key).subscribe(() => {
-            this.toastService.sendMessage('Configuration deleted successfully', ToastType.SUCCESS);
+            this.toastService.sendMessage('Configuration deleted successfully', ToastTypeEnum.SUCCESS);
             this.initTable();
           });
         }

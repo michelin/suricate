@@ -24,17 +24,17 @@ import { Observable } from 'rxjs';
 import { flatMap, map } from 'rxjs/operators';
 import { TitleCasePipe } from '@angular/common';
 
-import { Repository } from '../../../../../../shared/model/api/Repository/Repository';
-import { HttpRepositoryService } from '../../../../../../shared/services/api/http-repository.service';
-import { ToastService } from '../../../../../../shared/components/toast/toast.service';
-import { ToastType } from '../../../../../../shared/components/toast/toast-objects/ToastType';
-import { RepositoryTypeEnum } from '../../../../../../shared/model/enums/RepositoryTypeEnum';
-import { FormService } from '../../../../../../shared/services/app/form.service';
-import { FormStep } from '../../../../../../shared/model/app/form/FormStep';
-import { FormField } from '../../../../../../shared/model/app/form/FormField';
-import { DataType } from '../../../../../../shared/model/enums/DataType';
-import { FormOption } from '../../../../../../shared/model/app/form/FormOption';
-import { FormChangeEvent } from '../../../../../../shared/model/app/form/FormChangeEvent';
+import { Repository } from '../../../../../../shared/models/backend/repository/repository';
+import { HttpRepositoryService } from '../../../../../../shared/services/backend/http-repository.service';
+import { ToastService } from '../../../../../../shared/services/frontend/toast.service';
+import { ToastTypeEnum } from '../../../../../../shared/enums/toast-type.enum';
+import { RepositoryTypeEnum } from '../../../../../../shared/enums/repository-type.enum';
+import { FormService } from '../../../../../../shared/services/frontend/form.service';
+import { FormStep } from '../../../../../../shared/models/frontend/form/form-step';
+import { FormField } from '../../../../../../shared/models/frontend/form/form-field';
+import { DataTypeEnum } from '../../../../../../shared/enums/data-type.enum';
+import { FormOption } from '../../../../../../shared/models/frontend/form/form-option';
+import { FormChangeEvent } from '../../../../../../shared/models/frontend/form/form-change-event';
 
 /**
  * Edit a repository
@@ -128,14 +128,14 @@ export class RepositoryAddEditComponent implements OnInit {
           {
             key: 'name',
             label: translations['name'],
-            type: DataType.TEXT,
+            type: DataTypeEnum.TEXT,
             value: this.repository ? this.repository.name : '',
             validators: [Validators.required]
           },
           {
             key: 'enabled',
             label: translations['repository.enable'],
-            type: DataType.BOOLEAN,
+            type: DataTypeEnum.BOOLEAN,
             value: this.repository ? this.repository.enabled : false
           }
         ];
@@ -155,7 +155,7 @@ export class RepositoryAddEditComponent implements OnInit {
           {
             key: 'type',
             label: translations['type'],
-            type: DataType.COMBO,
+            type: DataTypeEnum.COMBO,
             options: this.getRepositoryTypeOptions(),
             value: this.repository ? this.repository.type : RepositoryTypeEnum.REMOTE,
             validators: [Validators.required]
@@ -213,28 +213,28 @@ export class RepositoryAddEditComponent implements OnInit {
             {
               key: 'url',
               label: translations['url'],
-              type: DataType.TEXT,
+              type: DataTypeEnum.TEXT,
               value: this.repository ? this.repository.url : '',
               validators: [Validators.required]
             },
             {
               key: 'branch',
               label: translations['branch'],
-              type: DataType.TEXT,
+              type: DataTypeEnum.TEXT,
               value: this.repository ? this.repository.branch : '',
               validators: [Validators.required]
             },
             {
               key: 'login',
               label: translations['login'],
-              type: DataType.TEXT,
+              type: DataTypeEnum.TEXT,
               value: this.repository ? this.repository.login : '',
               validators: [Validators.required]
             },
             {
               key: 'password',
               label: translations['password'],
-              type: DataType.PASSWORD,
+              type: DataTypeEnum.PASSWORD,
               value: this.repository ? this.repository.password : '',
               validators: [Validators.required]
             }
@@ -246,7 +246,7 @@ export class RepositoryAddEditComponent implements OnInit {
             {
               key: 'localPath',
               label: translations['local.path'],
-              type: DataType.TEXT,
+              type: DataTypeEnum.TEXT,
               value: this.repository ? this.repository.localPath : '',
               validators: [Validators.required]
             }
@@ -269,12 +269,12 @@ export class RepositoryAddEditComponent implements OnInit {
 
       if (this.repository) {
         this.repositoryService.updateOneById(this.repository.id, repositoryToAddEdit).subscribe(() => {
-          this.toastService.sendMessage(`Repository ${repositoryToAddEdit.name} updated successfully`, ToastType.SUCCESS);
+          this.toastService.sendMessage(`Repository ${repositoryToAddEdit.name} updated successfully`, ToastTypeEnum.SUCCESS);
           this.redirectToRepositoryList();
         });
       } else {
         this.repositoryService.addRepository(repositoryToAddEdit).subscribe((repositoryAdded: Repository) => {
-          this.toastService.sendMessage(`Repository ${repositoryAdded.name} added successfully`, ToastType.SUCCESS);
+          this.toastService.sendMessage(`Repository ${repositoryAdded.name} added successfully`, ToastTypeEnum.SUCCESS);
           this.redirectToRepositoryList();
         });
       }

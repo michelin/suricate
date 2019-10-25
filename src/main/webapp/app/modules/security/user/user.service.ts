@@ -17,9 +17,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-import { TokenService } from '../../../shared/auth/token.service';
-import { User } from '../../../shared/model/api/user/User';
-import { RoleEnum } from '../../../shared/model/enums/RoleEnum';
+import { TokenService } from '../../../shared/services/frontend/token.service';
+import { User } from '../../../shared/models/backend/user/user';
+import { RoleEnum } from '../../../shared/enums/role.enum';
 
 /**
  * User service that manage users

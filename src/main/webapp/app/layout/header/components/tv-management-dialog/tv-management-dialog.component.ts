@@ -18,15 +18,15 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup } from '@angular/forms';
 
-import { Project } from '../../../../shared/model/api/project/Project';
-import { WebsocketClient } from '../../../../shared/model/api/WebsocketClient';
-import { HttpScreenService } from '../../../../shared/services/api/http-screen.service';
-import { HttpProjectService } from '../../../../shared/services/api/http-project.service';
-import { FormField } from '../../../../shared/model/app/form/FormField';
-import { FormService } from '../../../../shared/services/app/form.service';
+import { Project } from '../../../../shared/models/backend/project/project';
+import { WebsocketClient } from '../../../../shared/models/backend/websocket-client';
+import { HttpScreenService } from '../../../../shared/services/backend/http-screen.service';
+import { HttpProjectService } from '../../../../shared/services/backend/http-project.service';
+import { FormField } from '../../../../shared/models/frontend/form/form-field';
+import { FormService } from '../../../../shared/services/frontend/form.service';
 import { TranslateService } from '@ngx-translate/core';
 import { map } from 'rxjs/operators';
-import { DataType } from '../../../../shared/model/enums/DataType';
+import { DataTypeEnum } from '../../../../shared/enums/data-type.enum';
 import { CustomValidators } from 'ng2-validation';
 import { Observable } from 'rxjs';
 
@@ -100,7 +100,7 @@ export class TvManagementDialogComponent implements OnInit {
         this.formFields.push({
           key: 'screenCode',
           label: translations['screen.field.code'],
-          type: DataType.NUMBER,
+          type: DataTypeEnum.NUMBER,
           value: '',
           validators: [CustomValidators.digits, CustomValidators.gt(0)]
         });

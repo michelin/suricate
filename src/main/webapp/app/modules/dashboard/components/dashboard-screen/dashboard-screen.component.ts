@@ -20,17 +20,17 @@ import { Subscription } from 'rxjs';
 import { NgGridConfig, NgGridItemConfig } from 'angular2-grid';
 import * as Stomp from '@stomp/stompjs';
 
-import { Project } from '../../../../shared/model/api/project/Project';
-import { ProjectWidget } from '../../../../shared/model/api/ProjectWidget/ProjectWidget';
-import { WebsocketService } from '../../../../shared/services/websocket.service';
-import { HttpAssetService } from '../../../../shared/services/api/http-asset.service';
-import { WSUpdateEvent } from '../../../../shared/model/websocket/WSUpdateEvent';
-import { WSUpdateType } from '../../../../shared/model/websocket/enums/WSUpdateType';
+import { Project } from '../../../../shared/models/backend/project/project';
+import { ProjectWidget } from '../../../../shared/models/backend/project-widget/project-widget';
+import { WebsocketService } from '../../../../shared/services/frontend/websocket.service';
+import { HttpAssetService } from '../../../../shared/services/backend/http-asset.service';
+import { WebsocketUpdateEvent } from '../../../../shared/models/frontend/websocket/websocket-update-event';
+import { WebsocketUpdateTypeEnum } from '../../../../shared/enums/websocket-update-type.enum';
 import { DashboardService } from '../../dashboard.service';
-import { ProjectWidgetPositionRequest } from '../../../../shared/model/api/ProjectWidget/ProjectWidgetPositionRequest';
-import { HttpProjectService } from '../../../../shared/services/api/http-project.service';
+import { ProjectWidgetPositionRequest } from '../../../../shared/models/backend/project-widget/project-widget-position-request';
+import { HttpProjectService } from '../../../../shared/services/backend/http-project.service';
 import { RunScriptsDirective } from '../../../../shared/directives/run-scripts.directive';
-import { GridItemUtils } from '../../../../shared/utils/GridItemUtils';
+import { GridItemUtils } from '../../../../shared/utils/grid-item.utils';
 
 /**
  * Display the grid stack widgets
@@ -323,15 +323,15 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
       .subscribeToDestination(projectSubscriptionUrl)
       .pipe(takeWhile(() => this.isAlive))
       .subscribe((stompMessage: Stomp.Message) => {
-        const updateEvent: WSUpdateEvent = JSON.parse(stompMessage.body);
+        const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 
-        if (updateEvent.type === WSUpdateType.RELOAD) {
+        if (updateEvent.type === WebsocketUpdateTypeEnum.RELOAD) {
           location.reload();
-        } else if (updateEvent.type === WSUpdateType.DISPLAY_NUMBER) {
+        } else if (updateEvent.type === WebsocketUpdateTypeEnum.DISPLAY_NUMBER) {
           this.displayScreenCode();
-        } else if (updateEvent.type === WSUpdateType.POSITION) {
+        } else if (updateEvent.type === WebsocketUpdateTypeEnum.POSITION) {
           this.dashboardService.refreshProjectWidgets();
-        } else if (updateEvent.type === WSUpdateType.DISCONNECT) {
+        } else if (updateEvent.type === WebsocketUpdateTypeEnum.DISCONNECT) {
           this.disconnectFromWebsocket();
           this.disconnectEvent.emit();
         } else {
@@ -350,9 +350,9 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
       .subscribeToDestination(screenSubscriptionUrl)
       .pipe(takeWhile(() => this.isAlive))
       .subscribe((stompMessage: Stomp.Message) => {
-        const updateEvent: WSUpdateEvent = JSON.parse(stompMessage.body);
+        const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 
-        if (updateEvent.type === WSUpdateType.DISCONNECT) {
+        if (updateEvent.type === WebsocketUpdateTypeEnum.DISCONNECT) {
           this.disconnectFromWebsocket();
           this.disconnectEvent.emit();
         }

@@ -24,12 +24,12 @@ import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 import { TitleCasePipe } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 
-import { Project } from '../../../../../shared/model/api/project/Project';
+import { Project } from '../../../../../shared/models/backend/project/project';
 import { DashboardService } from '../../../dashboard.service';
-import { ToastService } from '../../../../../shared/components/toast/toast.service';
+import { ToastService } from '../../../../../shared/services/frontend/toast.service';
 import { ConfirmDialogComponent } from '../../../../../shared/components/confirm-dialog/confirm-dialog.component';
-import { ToastType } from '../../../../../shared/components/toast/toast-objects/ToastType';
-import { HttpProjectService } from '../../../../../shared/services/api/http-project.service';
+import { ToastTypeEnum } from '../../../../../shared/enums/toast-type.enum';
+import { HttpProjectService } from '../../../../../shared/services/backend/http-project.service';
 
 /**
  * Component that manage the dashboard list for admin part
@@ -167,7 +167,7 @@ export class DashboardListComponent implements AfterViewInit {
         .subscribe(shouldDeleteDashboard => {
           if (shouldDeleteDashboard) {
             this.httpProjectService.deleteProject(project.token).subscribe(() => {
-              this.toastService.sendMessage('Project deleted successfully', ToastType.SUCCESS);
+              this.toastService.sendMessage('Project deleted successfully', ToastTypeEnum.SUCCESS);
               this.initProjectsTable();
 
               this.httpProjectService.getAllForCurrentUser().subscribe((projects: Project[]) => {

@@ -22,7 +22,6 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
-import { MatNativeDateModule, MatRippleModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -31,6 +30,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatNativeDateModule, MatRippleModule } from '@angular/material/core';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -72,15 +72,15 @@ import { MatTreeModule } from '@angular/material/tree';
     MatRippleModule,
     MatSelectModule,
     MatSidenavModule,
-    MatSliderModule,
     MatSlideToggleModule,
+    MatSliderModule,
     MatSnackBarModule,
     MatSortModule,
+    MatStepperModule,
     MatTableModule,
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
-    MatStepperModule,
     MatTreeModule
   ],
   exports: [
@@ -106,15 +106,15 @@ import { MatTreeModule } from '@angular/material/tree';
     MatRippleModule,
     MatSelectModule,
     MatSidenavModule,
-    MatSliderModule,
     MatSlideToggleModule,
+    MatSliderModule,
     MatSnackBarModule,
     MatSortModule,
+    MatStepperModule,
     MatTableModule,
     MatTabsModule,
     MatToolbarModule,
     MatTooltipModule,
-    MatStepperModule,
     MatTreeModule
   ]
 })

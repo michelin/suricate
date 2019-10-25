@@ -23,12 +23,12 @@ import { map } from 'rxjs/operators';
 
 import { UserService } from '../security/user/user.service';
 import { authenticationApiEndpoint, usersApiEndpoint } from '../../app.constant';
-import { TokenService } from '../../shared/auth/token.service';
-import { Credentials } from '../../shared/model/api/user/Credentials';
-import { AuthenticationResponse } from '../../shared/model/api/authentication/AuthenticationResponse';
-import { User } from '../../shared/model/api/user/User';
-import { UserRequest } from '../../shared/model/api/user/UserRequest';
-import { HttpUserService } from '../../shared/services/api/http-user.service';
+import { TokenService } from '../../shared/services/frontend/token.service';
+import { Credentials } from '../../shared/models/backend/user/credentials';
+import { AuthenticationResponse } from '../../shared/models/backend/authentication/authentication-response';
+import { User } from '../../shared/models/backend/user/user';
+import { UserRequest } from '../../shared/models/backend/user/user-request';
+import { HttpUserService } from '../../shared/services/backend/http-user.service';
 
 /**
  * The authentication service

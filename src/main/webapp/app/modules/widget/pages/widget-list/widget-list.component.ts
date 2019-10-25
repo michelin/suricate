@@ -24,13 +24,13 @@ import { MatTableDataSource } from '@angular/material/table';
 import { fromEvent, merge, of as observableOf } from 'rxjs';
 import { catchError, debounceTime, distinctUntilChanged, map, startWith, switchMap } from 'rxjs/operators';
 
-import { Widget } from '../../../../shared/model/api/widget/Widget';
-import { ToastService } from '../../../../shared/components/toast/toast.service';
+import { Widget } from '../../../../shared/models/backend/widget/widget';
+import { ToastService } from '../../../../shared/services/frontend/toast.service';
 import { UserService } from '../../../security/user/user.service';
-import { ToastType } from '../../../../shared/components/toast/toast-objects/ToastType';
-import { HttpWidgetService } from '../../../../shared/services/api/http-widget.service';
-import { WidgetAvailabilityEnum } from '../../../../shared/model/enums/WidgetAvailabilityEnum';
-import { HttpAssetService } from '../../../../shared/services/api/http-asset.service';
+import { ToastTypeEnum } from '../../../../shared/enums/toast-type.enum';
+import { HttpWidgetService } from '../../../../shared/services/backend/http-widget.service';
+import { WidgetAvailabilityEnum } from '../../../../shared/enums/widget-availability.enum';
+import { HttpAssetService } from '../../../../shared/services/backend/http-asset.service';
 
 /**
  * Component that display the list of widgets (admin part)
@@ -254,7 +254,7 @@ export class WidgetListComponent implements OnInit, AfterViewInit, OnDestroy {
       this.httpWidgetService.updateOneById(widgetToDisable.id, { widgetAvailability: widgetToDisable.widgetAvailability }).subscribe(() => {
         this.toastService.sendMessage(
           `The widget "${widgetToDisable.name}" has been ${widgetToDisable.widgetAvailability.toString()}`,
-          ToastType.SUCCESS
+          ToastTypeEnum.SUCCESS
         );
       });
     }

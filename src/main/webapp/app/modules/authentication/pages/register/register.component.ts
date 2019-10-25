@@ -23,17 +23,17 @@ import { throwError } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 
 import { AuthenticationService } from '../../authentication.service';
-import { ToastService } from '../../../../shared/components/toast/toast.service';
-import { ApplicationProperties } from '../../../../shared/model/api/ApplicationProperties';
-import { HttpConfigurationService } from '../../../../shared/services/api/http-configuration.service';
-import { Credentials } from '../../../../shared/model/api/user/Credentials';
-import { ToastType } from '../../../../shared/components/toast/toast-objects/ToastType';
-import { UserRequest } from '../../../../shared/model/api/user/UserRequest';
-import { AuthenticationProviderEnum } from '../../../../shared/model/enums/AuthenticationProviderEnum';
-import { FormField } from '../../../../shared/model/app/form/FormField';
-import { DataType } from '../../../../shared/model/enums/DataType';
-import { FormService } from '../../../../shared/services/app/form.service';
-import { CustomValidator } from '../../../../shared/validators/CustomValidator';
+import { ToastService } from '../../../../shared/services/frontend/toast.service';
+import { ApplicationProperties } from '../../../../shared/models/backend/application-properties';
+import { HttpConfigurationService } from '../../../../shared/services/backend/http-configuration.service';
+import { Credentials } from '../../../../shared/models/backend/user/credentials';
+import { ToastTypeEnum } from '../../../../shared/enums/toast-type.enum';
+import { UserRequest } from '../../../../shared/models/backend/user/user-request';
+import { AuthenticationProviderEnum } from '../../../../shared/enums/authentication-provider.enum';
+import { FormField } from '../../../../shared/models/frontend/form/form-field';
+import { DataTypeEnum } from '../../../../shared/enums/data-type.enum';
+import { FormService } from '../../../../shared/services/frontend/form.service';
+import { CustomValidator } from '../../../../shared/validators/custom-validator';
 import { SidenavService } from '../../../../layout/sidenav/sidenav.service';
 
 /**
@@ -121,7 +121,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
           {
             key: 'username',
             label: translations['username'],
-            type: DataType.TEXT,
+            type: DataTypeEnum.TEXT,
             value: '',
             validators: [Validators.required, Validators.minLength(3)],
             matIconPrefix: 'android'
@@ -129,7 +129,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
           {
             key: 'firstname',
             label: translations['firstname'],
-            type: DataType.TEXT,
+            type: DataTypeEnum.TEXT,
             value: '',
             validators: [Validators.required, Validators.minLength(3)],
             matIconPrefix: 'person'
@@ -137,7 +137,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
           {
             key: 'lastname',
             label: translations['lastname'],
-            type: DataType.TEXT,
+            type: DataTypeEnum.TEXT,
             value: '',
             validators: [Validators.required, Validators.minLength(3)],
             matIconPrefix: 'person'
@@ -145,7 +145,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
           {
             key: 'email',
             label: translations['email'],
-            type: DataType.TEXT,
+            type: DataTypeEnum.TEXT,
             value: '',
             validators: [Validators.required, CustomValidators.email],
             matIconPrefix: 'email'
@@ -153,7 +153,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
           {
             key: 'password',
             label: translations['password'],
-            type: DataType.PASSWORD,
+            type: DataTypeEnum.PASSWORD,
             value: '',
             validators: [Validators.required, Validators.minLength(3)],
             matIconPrefix: 'lock'
@@ -161,7 +161,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
           {
             key: 'confirmPassword',
             label: translations['password.confirm'],
-            type: DataType.PASSWORD,
+            type: DataTypeEnum.PASSWORD,
             value: '',
             matIconPrefix: 'lock'
           }
@@ -202,7 +202,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
           }
         );
     } else {
-      this.toastService.sendMessage('Some fields are not properly filled', ToastType.DANGER);
+      this.toastService.sendMessage('Some fields are not properly filled', ToastTypeEnum.DANGER);
     }
   }
 

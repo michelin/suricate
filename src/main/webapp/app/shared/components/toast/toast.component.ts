@@ -21,9 +21,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 
-import { ToastService } from './toast.service';
-import { ToastMessage } from './toast-objects/ToastMessage';
-import { ToastType } from './toast-objects/ToastType';
+import { ToastService } from '../../services/frontend/toast.service';
+import { ToastMessage } from '../../models/frontend/toast/toast-message';
+import { ToastTypeEnum } from '../../enums/toast-type.enum';
 
 /**
  * Component that display toast notification messages
@@ -114,7 +114,7 @@ export class ToastComponent implements OnInit, OnDestroy {
    * The enums of toast type
    * @type {ToastType}
    */
-  ToastType = ToastType;
+  ToastType = ToastTypeEnum;
 
   /**
    * The message to display

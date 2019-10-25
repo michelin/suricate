@@ -17,9 +17,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
-import { Project } from '../../shared/model/api/project/Project';
+import { Project } from '../../shared/models/backend/project/project';
 import { UserService } from '../security/user/user.service';
-import { HttpProjectService } from '../../shared/services/api/http-project.service';
+import { HttpProjectService } from '../../shared/services/backend/http-project.service';
 import { map } from 'rxjs/operators';
 
 /**

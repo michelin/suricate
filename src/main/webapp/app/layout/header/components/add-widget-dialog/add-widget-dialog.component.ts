@@ -19,21 +19,21 @@ import { FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatHorizontalStepper } from '@angular/material/stepper';
 
-import { Widget } from '../../../../shared/model/api/widget/Widget';
+import { Widget } from '../../../../shared/models/backend/widget/widget';
 import { DashboardService } from '../../../../modules/dashboard/dashboard.service';
-import { HttpCategoryService } from '../../../../shared/services/api/http-category.service';
-import { HttpAssetService } from '../../../../shared/services/api/http-asset.service';
-import { Category } from '../../../../shared/model/api/widget/Category';
-import { HttpProjectService } from '../../../../shared/services/api/http-project.service';
-import { WidgetAvailabilityEnum } from '../../../../shared/model/enums/WidgetAvailabilityEnum';
-import { ProjectWidgetRequest } from '../../../../shared/model/api/ProjectWidget/ProjectWidgetRequest';
-import { WidgetParam } from '../../../../shared/model/api/widget/WidgetParam';
-import { Configuration } from '../../../../shared/model/api/configuration/Configuration';
-import { DataType } from '../../../../shared/model/enums/DataType';
-import { FormField } from '../../../../shared/model/app/form/FormField';
-import { FormOption } from '../../../../shared/model/app/form/FormOption';
-import { WidgetParamValue } from '../../../../shared/model/api/widget/WidgetParamValue';
-import { FormService } from '../../../../shared/services/app/form.service';
+import { HttpCategoryService } from '../../../../shared/services/backend/http-category.service';
+import { HttpAssetService } from '../../../../shared/services/backend/http-asset.service';
+import { Category } from '../../../../shared/models/backend/widget/category';
+import { HttpProjectService } from '../../../../shared/services/backend/http-project.service';
+import { WidgetAvailabilityEnum } from '../../../../shared/enums/widget-availability.enum';
+import { ProjectWidgetRequest } from '../../../../shared/models/backend/project-widget/project-widget-request';
+import { WidgetParam } from '../../../../shared/models/backend/widget/widget-param';
+import { Configuration } from '../../../../shared/models/backend/configuration/configuration';
+import { DataTypeEnum } from '../../../../shared/enums/data-type.enum';
+import { FormField } from '../../../../shared/models/frontend/form/form-field';
+import { FormOption } from '../../../../shared/models/frontend/form/form-option';
+import { WidgetParamValue } from '../../../../shared/models/backend/widget/widget-param-value';
+import { FormService } from '../../../../shared/services/frontend/form.service';
 import { CustomValidators } from 'ng2-validation';
 
 /**
@@ -76,9 +76,9 @@ export class AddWidgetDialogComponent implements OnInit {
 
   /**
    * The widget param enum
-   * @type {DataType}
+   * @type {DataTypeEnum}
    */
-  dataType = DataType;
+  dataType = DataTypeEnum;
   /**
    * The list of categories
    * @type {Category[]}
@@ -194,7 +194,7 @@ export class AddWidgetDialogComponent implements OnInit {
         validators: this.getValidatorsForWidgetParam(widgetParam)
       };
 
-      if (widgetParam.type === DataType.BOOLEAN) {
+      if (widgetParam.type === DataTypeEnum.BOOLEAN) {
         formField.value = JSON.parse(formField.value);
       }
 
@@ -238,7 +238,7 @@ export class AddWidgetDialogComponent implements OnInit {
       formValidators.push(Validators.pattern(widgetParam.acceptFileRegex));
     }
 
-    if (widgetParam.type === DataType.NUMBER) {
+    if (widgetParam.type === DataTypeEnum.NUMBER) {
       formValidators.push(CustomValidators.digits);
     }
 

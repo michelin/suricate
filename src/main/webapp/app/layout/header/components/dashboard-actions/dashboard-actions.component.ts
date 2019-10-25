@@ -23,9 +23,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { AddWidgetDialogComponent } from '../add-widget-dialog/add-widget-dialog.component';
 import { AddDashboardDialogComponent } from '../../../../home/components/add-dashboard-dialog/add-dashboard-dialog.component';
 import { TvManagementDialogComponent } from '../tv-management-dialog/tv-management-dialog.component';
-import { HttpScreenService } from '../../../../shared/services/api/http-screen.service';
-import { Project } from '../../../../shared/model/api/project/Project';
-import { HttpProjectService } from '../../../../shared/services/api/http-project.service';
+import { HttpScreenService } from '../../../../shared/services/backend/http-screen.service';
+import { Project } from '../../../../shared/models/backend/project/project';
+import { HttpProjectService } from '../../../../shared/services/backend/http-project.service';
 import { DashboardService } from '../../../../modules/dashboard/dashboard.service';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
 

@@ -19,11 +19,11 @@ import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
 
-import { UserSetting } from '../../shared/model/api/setting/UserSetting';
-import { User } from '../../shared/model/api/user/User';
-import { HttpUserService } from '../../shared/services/api/http-user.service';
-import { SettingType } from '../../shared/model/enums/SettingType';
-import { HttpSettingService } from '../../shared/services/api/http-setting.service';
+import { UserSetting } from '../../shared/models/backend/setting/user-setting';
+import { User } from '../../shared/models/backend/user/user';
+import { HttpUserService } from '../../shared/services/backend/http-user.service';
+import { SettingsTypeEnum } from '../../shared/enums/settings-type.enum';
+import { HttpSettingService } from '../../shared/services/backend/http-setting.service';
 
 /**
  * Manage the app theme
@@ -103,7 +103,7 @@ export class SettingsService {
    */
   getThemeUserSetting(user: User): Observable<UserSetting> {
     return this.httpSettingService
-      .getAll(SettingType.TEMPLATE)
+      .getAll(SettingsTypeEnum.TEMPLATE)
       .pipe(flatMap(settings => this.httpUserService.getUserSetting(user.id, settings[0].id)));
   }
 
@@ -123,7 +123,7 @@ export class SettingsService {
    * Init the default theme settings
    */
   initDefaultThemeSetting() {
-    this.httpSettingService.getAll(SettingType.TEMPLATE).subscribe(settings => {
+    this.httpSettingService.getAll(SettingsTypeEnum.TEMPLATE).subscribe(settings => {
       this.currentTheme = settings[0].allowedSettingValues.find(allowedSettingValue => allowedSettingValue.default).value;
     });
   }
@@ -137,7 +137,7 @@ export class SettingsService {
    * Init the plugin language settings
    */
   initDefaultLanguageSettings() {
-    this.httpSettingService.getAll(SettingType.LANGUAGE).subscribe(settings => {
+    this.httpSettingService.getAll(SettingsTypeEnum.LANGUAGE).subscribe(settings => {
       const defaultLanguageCode = settings[0].allowedSettingValues.find(allowedSettingValue => allowedSettingValue.default).value;
 
       // this language will be used as a fallback when a translation isn't found in the current language
@@ -168,7 +168,7 @@ export class SettingsService {
    */
   getLanguageUserSetting(user: User): Observable<UserSetting> {
     return this.httpSettingService
-      .getAll(SettingType.LANGUAGE)
+      .getAll(SettingsTypeEnum.LANGUAGE)
       .pipe(flatMap(settings => this.httpUserService.getUserSetting(user.id, settings[0].id)));
   }
 }

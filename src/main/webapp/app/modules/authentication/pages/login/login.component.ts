@@ -20,12 +20,12 @@ import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
 import { AuthenticationService } from '../../authentication.service';
-import { HttpConfigurationService } from '../../../../shared/services/api/http-configuration.service';
-import { ApplicationProperties } from '../../../../shared/model/api/ApplicationProperties';
-import { AuthenticationProviderEnum } from '../../../../shared/model/enums/AuthenticationProviderEnum';
-import { FormService } from '../../../../shared/services/app/form.service';
-import { FormField } from '../../../../shared/model/app/form/FormField';
-import { DataType } from '../../../../shared/model/enums/DataType';
+import { HttpConfigurationService } from '../../../../shared/services/backend/http-configuration.service';
+import { ApplicationProperties } from '../../../../shared/models/backend/application-properties';
+import { AuthenticationProviderEnum } from '../../../../shared/enums/authentication-provider.enum';
+import { FormService } from '../../../../shared/services/frontend/form.service';
+import { FormField } from '../../../../shared/models/frontend/form/form-field';
+import { DataTypeEnum } from '../../../../shared/enums/data-type.enum';
 import { SidenavService } from '../../../../layout/sidenav/sidenav.service';
 
 /**
@@ -106,7 +106,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         {
           key: 'username',
           label: translations['username'],
-          type: DataType.TEXT,
+          type: DataTypeEnum.TEXT,
           value: '',
           validators: [Validators.required],
           matIconPrefix: 'android'
@@ -114,7 +114,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         {
           key: 'password',
           label: translations['password'],
-          type: DataType.PASSWORD,
+          type: DataTypeEnum.PASSWORD,
           value: '',
           validators: [Validators.required],
           matIconPrefix: 'lock'

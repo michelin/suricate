@@ -21,18 +21,18 @@ import { MatDialog } from '@angular/material/dialog';
 import { NgGridItemConfig, NgGridItemEvent } from 'angular2-grid';
 import { takeWhile } from 'rxjs/operators';
 
-import { ProjectWidget } from '../../../../shared/model/api/ProjectWidget/ProjectWidget';
-import { Widget } from '../../../../shared/model/api/widget/Widget';
-import { HttpWidgetService } from '../../../../shared/services/api/http-widget.service';
-import { WidgetStateEnum } from '../../../../shared/model/enums/WidgetSateEnum';
+import { ProjectWidget } from '../../../../shared/models/backend/project-widget/project-widget';
+import { Widget } from '../../../../shared/models/backend/widget/widget';
+import { HttpWidgetService } from '../../../../shared/services/backend/http-widget.service';
+import { WidgetStateEnum } from '../../../../shared/enums/widget-sate.enum';
 import { ConfirmDialogComponent } from '../../../../shared/components/confirm-dialog/confirm-dialog.component';
-import { HttpProjectWidgetService } from '../../../../shared/services/api/http-project-widget.service';
+import { HttpProjectWidgetService } from '../../../../shared/services/backend/http-project-widget.service';
 import { EditProjectWidgetDialogComponent } from '../edit-project-widget-dialog/edit-project-widget-dialog.component';
 import { RunScriptsDirective } from '../../../../shared/directives/run-scripts.directive';
-import { WebsocketService } from '../../../../shared/services/websocket.service';
-import { WSUpdateEvent } from '../../../../shared/model/websocket/WSUpdateEvent';
-import { WSUpdateType } from '../../../../shared/model/websocket/enums/WSUpdateType';
-import { GridItemUtils } from '../../../../shared/utils/GridItemUtils';
+import { WebsocketService } from '../../../../shared/services/frontend/websocket.service';
+import { WebsocketUpdateEvent } from '../../../../shared/models/frontend/websocket/websocket-update-event';
+import { WebsocketUpdateTypeEnum } from '../../../../shared/enums/websocket-update-type.enum';
+import { GridItemUtils } from '../../../../shared/utils/grid-item.utils';
 import { CommunicationDialogComponent } from '../../../../shared/components/communication-dialog/communication-dialog.component';
 
 import * as Stomp from '@stomp/stompjs';
@@ -165,9 +165,9 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
       .subscribeToDestination(projectWidgetSubscriptionUrl)
       .pipe(takeWhile(() => this.isAlive))
       .subscribe((stompMessage: Stomp.Message) => {
-        const updateEvent: WSUpdateEvent = JSON.parse(stompMessage.body);
+        const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 
-        if (updateEvent.type === WSUpdateType.WIDGET) {
+        if (updateEvent.type === WebsocketUpdateTypeEnum.WIDGET) {
           this.refreshProjectWidget();
         }
       });

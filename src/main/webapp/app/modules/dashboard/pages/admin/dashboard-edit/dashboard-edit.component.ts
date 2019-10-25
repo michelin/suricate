@@ -21,16 +21,16 @@ import { CustomValidators } from 'ng2-validation';
 import { TranslateService } from '@ngx-translate/core';
 import { flatMap, map } from 'rxjs/operators';
 
-import { Project } from '../../../../../shared/model/api/project/Project';
-import { ToastService } from '../../../../../shared/components/toast/toast.service';
-import { ToastType } from '../../../../../shared/components/toast/toast-objects/ToastType';
-import { HttpProjectService } from '../../../../../shared/services/api/http-project.service';
-import { ProjectRequest } from '../../../../../shared/model/api/project/ProjectRequest';
-import { User } from '../../../../../shared/model/api/user/User';
-import { FormStep } from '../../../../../shared/model/app/form/FormStep';
-import { FormService } from '../../../../../shared/services/app/form.service';
-import { FormField } from '../../../../../shared/model/app/form/FormField';
-import { DataType } from '../../../../../shared/model/enums/DataType';
+import { Project } from '../../../../../shared/models/backend/project/project';
+import { ToastService } from '../../../../../shared/services/frontend/toast.service';
+import { ToastTypeEnum } from '../../../../../shared/enums/toast-type.enum';
+import { HttpProjectService } from '../../../../../shared/services/backend/http-project.service';
+import { ProjectRequest } from '../../../../../shared/models/backend/project/project-request';
+import { User } from '../../../../../shared/models/backend/user/user';
+import { FormStep } from '../../../../../shared/models/frontend/form/form-step';
+import { FormService } from '../../../../../shared/services/frontend/form.service';
+import { FormField } from '../../../../../shared/models/frontend/form/form-field';
+import { DataTypeEnum } from '../../../../../shared/enums/data-type.enum';
 
 /**
  * Component that display the edit page for a dashboard
@@ -124,7 +124,7 @@ export class DashboardEditComponent implements OnInit {
           {
             key: 'name',
             label: translations['dashboard.name'],
-            type: DataType.TEXT,
+            type: DataTypeEnum.TEXT,
             value: this.dashboard.name,
             matIconPrefix: 'loyalty',
             validators: [Validators.required, Validators.minLength(3)]
@@ -132,7 +132,7 @@ export class DashboardEditComponent implements OnInit {
           {
             key: 'token',
             label: translations['token'],
-            type: DataType.TEXT,
+            type: DataTypeEnum.TEXT,
             value: this.dashboard.token,
             matIconPrefix: 'vpn_key',
             readOnly: true,
@@ -141,7 +141,7 @@ export class DashboardEditComponent implements OnInit {
           {
             key: 'widgetHeight',
             label: translations['widget.heigth.px'],
-            type: DataType.NUMBER,
+            type: DataTypeEnum.NUMBER,
             value: this.dashboard.gridProperties.widgetHeight,
             matIconPrefix: 'equalizer',
             validators: [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]
@@ -149,7 +149,7 @@ export class DashboardEditComponent implements OnInit {
           {
             key: 'maxColumn',
             label: translations['grid.nb.columns'],
-            type: DataType.NUMBER,
+            type: DataTypeEnum.NUMBER,
             value: this.dashboard.gridProperties.maxColumn,
             matIconPrefix: 'view_week',
             validators: [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]
@@ -171,7 +171,7 @@ export class DashboardEditComponent implements OnInit {
       const projectRequest: ProjectRequest = { ...this.dashboard, ...this.dashboardForm.value };
 
       this.httpProjectService.editProject(this.dashboard.token, projectRequest).subscribe(() => {
-        this.toastService.sendMessage('Dashboard saved successfully', ToastType.SUCCESS);
+        this.toastService.sendMessage('Dashboard saved successfully', ToastTypeEnum.SUCCESS);
         this.redirectToDashboardList();
       });
     }

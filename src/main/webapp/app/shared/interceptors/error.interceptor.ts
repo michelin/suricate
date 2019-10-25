@@ -21,12 +21,12 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 
-import { ToastService } from '../components/toast/toast.service';
+import { ToastService } from '../services/frontend/toast.service';
 import { badCredentialError } from '../../app.constant';
-import { ToastType } from '../components/toast/toast-objects/ToastType';
+import { ToastTypeEnum } from '../enums/toast-type.enum';
 
 /**
- * Intercptor that manage http errors
+ * Interceptor that manage http errors
  */
 @Injectable({ providedIn: 'root' })
 export class ErrorInterceptor implements HttpInterceptor {
@@ -53,7 +53,7 @@ export class ErrorInterceptor implements HttpInterceptor {
             switch (httpError.status) {
               case 400:
                 if (httpError.error.error === badCredentialError) {
-                  this.toastService.sendMessage('Bad credentials', ToastType.DANGER, 'Wrong login or password');
+                  this.toastService.sendMessage('Bad credentials', ToastTypeEnum.DANGER, 'Wrong login or password');
                 }
                 break;
 
@@ -71,6 +71,10 @@ export class ErrorInterceptor implements HttpInterceptor {
    * Display the message when an unknown error occured
    */
   displayUnknowErrorMessage() {
-    this.toastService.sendMessage('Server Unavailable', ToastType.DANGER, 'The server is not responsding, please contact an administrator');
+    this.toastService.sendMessage(
+      'Server Unavailable',
+      ToastTypeEnum.DANGER,
+      'The server is not responsding, please contact an administrator'
+    );
   }
 }

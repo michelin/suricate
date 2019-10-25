@@ -22,15 +22,15 @@ import { Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as Stomp from '@stomp/stompjs';
 
-import { Project } from '../../../../shared/model/api/project/Project';
-import { WSUpdateEvent } from '../../../../shared/model/websocket/WSUpdateEvent';
-import { WSUpdateType } from '../../../../shared/model/websocket/enums/WSUpdateType';
+import { Project } from '../../../../shared/models/backend/project/project';
+import { WebsocketUpdateEvent } from '../../../../shared/models/frontend/websocket/websocket-update-event';
+import { WebsocketUpdateTypeEnum } from '../../../../shared/enums/websocket-update-type.enum';
 import { SettingsService } from '../../../settings/settings.service';
 import { SidenavService } from '../../../../layout/sidenav/sidenav.service';
-import { HttpProjectService } from '../../../../shared/services/api/http-project.service';
-import { WebsocketService } from '../../../../shared/services/websocket.service';
+import { HttpProjectService } from '../../../../shared/services/backend/http-project.service';
+import { WebsocketService } from '../../../../shared/services/frontend/websocket.service';
 import { UserService } from '../../../security/user/user.service';
-import { ProjectWidget } from '../../../../shared/model/api/ProjectWidget/ProjectWidget';
+import { ProjectWidget } from '../../../../shared/models/backend/project-widget/project-widget';
 import { DashboardService } from '../../dashboard.service';
 
 /**
@@ -191,9 +191,9 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
       .subscribeToDestination(waitingConnectionUrl)
       .pipe(takeWhile(() => this.isAlive))
       .subscribe((stompMessage: Stomp.Message) => {
-        const updateEvent: WSUpdateEvent = JSON.parse(stompMessage.body);
+        const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 
-        if (updateEvent.type === WSUpdateType.CONNECT) {
+        if (updateEvent.type === WebsocketUpdateTypeEnum.CONNECT) {
           const project: Project = updateEvent.content;
           if (project) {
             this.router.navigate(['/tv'], { queryParams: { token: project.token } });

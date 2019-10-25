@@ -18,8 +18,8 @@
 
 import { Routes } from '@angular/router';
 
-import { AuthGuard } from '../../../../../shared/auth/guards/auth.guard';
-import { AdminGuard } from '../../../../../shared/auth/guards/admin.guard';
+import { AuthGuard } from '../../../../../shared/guards/auth.guard';
+import { AdminGuard } from '../../../../../shared/guards/admin.guard';
 import { WidgetConfigurationEditComponent } from './configuration-edit/widget-configuration-edit.component';
 import { WidgetConfigurationListComponent } from './configuration-list/widget-configuration-list.component';
 

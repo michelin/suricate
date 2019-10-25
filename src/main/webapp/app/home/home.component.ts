@@ -19,10 +19,10 @@ import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { takeWhile } from 'rxjs/operators';
 
-import { Project } from '../shared/model/api/project/Project';
+import { Project } from '../shared/models/backend/project/project';
 import { DashboardService } from '../modules/dashboard/dashboard.service';
 import { AddDashboardDialogComponent } from './components/add-dashboard-dialog/add-dashboard-dialog.component';
-import { HttpAssetService } from '../shared/services/api/http-asset.service';
+import { HttpAssetService } from '../shared/services/backend/http-asset.service';
 
 /**
  * Manage the home page

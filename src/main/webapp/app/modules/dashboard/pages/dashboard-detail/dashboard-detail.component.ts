@@ -20,13 +20,13 @@ import { ActivatedRoute, Router } from '@angular/router';
 import * as html2canvas from 'html2canvas';
 
 import { DashboardService } from '../../dashboard.service';
-import { Project } from '../../../../shared/model/api/project/Project';
+import { Project } from '../../../../shared/models/backend/project/project';
 import { AddWidgetDialogComponent } from '../../../../layout/header/components/add-widget-dialog/add-widget-dialog.component';
-import { HttpProjectService } from '../../../../shared/services/api/http-project.service';
-import { ProjectWidget } from '../../../../shared/model/api/ProjectWidget/ProjectWidget';
-import { WebsocketService } from '../../../../shared/services/websocket.service';
-import { ImageUtils } from '../../../../shared/utils/ImageUtils';
-import { FileUtils } from '../../../../shared/utils/FileUtils';
+import { HttpProjectService } from '../../../../shared/services/backend/http-project.service';
+import { ProjectWidget } from '../../../../shared/models/backend/project-widget/project-widget';
+import { WebsocketService } from '../../../../shared/services/frontend/websocket.service';
+import { ImageUtils } from '../../../../shared/utils/image.utils';
+import { FileUtils } from '../../../../shared/utils/file.utils';
 
 /**
  * Component that display a specific dashboard

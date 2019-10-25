@@ -24,10 +24,10 @@ import { MatTableDataSource } from '@angular/material/table';
 import { merge, of } from 'rxjs';
 import { catchError, map, startWith, switchMap } from 'rxjs/operators';
 
-import { HttpRepositoryService } from '../../../../../../shared/services/api/http-repository.service';
-import { Repository } from '../../../../../../shared/model/api/Repository/Repository';
-import { ToastService } from '../../../../../../shared/components/toast/toast.service';
-import { ToastType } from '../../../../../../shared/components/toast/toast-objects/ToastType';
+import { HttpRepositoryService } from '../../../../../../shared/services/backend/http-repository.service';
+import { Repository } from '../../../../../../shared/models/backend/repository/repository';
+import { ToastService } from '../../../../../../shared/services/frontend/toast.service';
+import { ToastTypeEnum } from '../../../../../../shared/enums/toast-type.enum';
 
 @Component({
   selector: 'app-repository-list',
@@ -135,7 +135,7 @@ export class RepositoryListComponent implements OnInit {
 
     this.repositoryService.updateOneById(repository.id, repository).subscribe(() => {
       const repoStatusAsString: string = repository.enabled ? 'activated' : 'disabled';
-      this.toastService.sendMessage(`The repository ${repository.name} has been ${repoStatusAsString} successfully`, ToastType.SUCCESS);
+      this.toastService.sendMessage(`The repository ${repository.name} has been ${repoStatusAsString} successfully`, ToastTypeEnum.SUCCESS);
     });
   }
 }

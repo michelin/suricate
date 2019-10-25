@@ -24,19 +24,19 @@ import { Observable } from 'rxjs';
 import { flatMap, map } from 'rxjs/operators';
 
 import { DashboardService } from '../../../modules/dashboard/dashboard.service';
-import { Project } from '../../../shared/model/api/project/Project';
-import { User } from '../../../shared/model/api/user/User';
-import { HttpProjectService } from '../../../shared/services/api/http-project.service';
-import { HttpUserService } from '../../../shared/services/api/http-user.service';
-import { FormService } from '../../../shared/services/app/form.service';
-import { FormStep } from '../../../shared/model/app/form/FormStep';
-import { FormField } from '../../../shared/model/app/form/FormField';
+import { Project } from '../../../shared/models/backend/project/project';
+import { User } from '../../../shared/models/backend/user/user';
+import { HttpProjectService } from '../../../shared/services/backend/http-project.service';
+import { HttpUserService } from '../../../shared/services/backend/http-user.service';
+import { FormService } from '../../../shared/services/frontend/form.service';
+import { FormStep } from '../../../shared/models/frontend/form/form-step';
+import { FormField } from '../../../shared/models/frontend/form/form-field';
 import { TranslateService } from '@ngx-translate/core';
-import { DataType } from '../../../shared/model/enums/DataType';
+import { DataTypeEnum } from '../../../shared/enums/data-type.enum';
 import { CustomValidators } from 'ng2-validation';
-import { FormChangeEvent } from '../../../shared/model/app/form/FormChangeEvent';
-import { FormOption } from '../../../shared/model/app/form/FormOption';
-import { ProjectRequest } from '../../../shared/model/api/project/ProjectRequest';
+import { FormChangeEvent } from '../../../shared/models/frontend/form/form-change-event';
+import { FormOption } from '../../../shared/models/frontend/form/form-option';
+import { ProjectRequest } from '../../../shared/models/backend/project/project-request';
 
 @Component({
   selector: 'app-add-dashboard-dialog',
@@ -147,21 +147,21 @@ export class AddDashboardDialogComponent implements OnInit {
           {
             key: 'name',
             label: translations['dashboard.name'],
-            type: DataType.TEXT,
+            type: DataTypeEnum.TEXT,
             value: this.project ? this.project.name : '',
             validators: [Validators.required]
           },
           {
             key: 'widgetHeight',
             label: translations['widget.heigth.px'],
-            type: DataType.NUMBER,
+            type: DataTypeEnum.NUMBER,
             value: this.project ? this.project.gridProperties.widgetHeight : 360,
             validators: [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]
           },
           {
             key: 'maxColumn',
             label: translations['grid.nb.columns'],
-            type: DataType.NUMBER,
+            type: DataTypeEnum.NUMBER,
             value: this.project ? this.project.gridProperties.maxColumn : 5,
             validators: [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]
           }
@@ -182,7 +182,7 @@ export class AddDashboardDialogComponent implements OnInit {
           {
             key: 'username',
             label: translations['username.search'],
-            type: DataType.TEXT,
+            type: DataTypeEnum.TEXT,
             value: '',
             options: [],
             hint: translations['username.search'],

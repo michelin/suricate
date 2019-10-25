@@ -17,9 +17,9 @@
 import { Routes } from '@angular/router';
 
 import { UserListComponent } from './user/pages/user-list/user-list.component';
-import { AuthGuard } from '../../shared/auth/guards/auth.guard';
+import { AuthGuard } from '../../shared/guards/auth.guard';
 import { UserEditComponent } from './user/pages/user-edit/user-edit.component';
-import { AdminGuard } from '../../shared/auth/guards/admin.guard';
+import { AdminGuard } from '../../shared/guards/admin.guard';
 import { ConfigListComponent } from './config/pages/config-list/config-list.component';
 
 export const securityRoutes: Routes = [

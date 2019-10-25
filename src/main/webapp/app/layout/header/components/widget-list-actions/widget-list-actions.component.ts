@@ -16,10 +16,10 @@
 
 import { Component } from '@angular/core';
 
-import { ToastService } from '../../../../shared/components/toast/toast.service';
-import { ToastType } from '../../../../shared/components/toast/toast-objects/ToastType';
-import { HttpWidgetService } from '../../../../shared/services/api/http-widget.service';
-import { ApiActionEnum } from '../../../../shared/model/enums/ApiActionEnum';
+import { ToastService } from '../../../../shared/services/frontend/toast.service';
+import { ToastTypeEnum } from '../../../../shared/enums/toast-type.enum';
+import { HttpWidgetService } from '../../../../shared/services/backend/http-widget.service';
+import { ApiActionEnum } from '../../../../shared/enums/api-action.enum';
 
 /**
  * Hold the widget list actions
@@ -43,7 +43,7 @@ export class WidgetListActionsComponent {
    */
   reloadWidgets() {
     this.httpWidgetService.getAll(ApiActionEnum.REFRESH).subscribe(() => {
-      this.toastService.sendMessage('Widget successfully reloads', ToastType.SUCCESS);
+      this.toastService.sendMessage('Widget successfully reloads', ToastTypeEnum.SUCCESS);
     });
   }
 }

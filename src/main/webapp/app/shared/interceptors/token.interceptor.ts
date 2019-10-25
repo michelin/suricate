@@ -18,7 +18,7 @@ import { Injectable } from '@angular/core';
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { TokenService } from '../auth/token.service';
+import { TokenService } from '../services/frontend/token.service';
 import { baseApiEndpoint } from '../../app.constant';
 
 /**

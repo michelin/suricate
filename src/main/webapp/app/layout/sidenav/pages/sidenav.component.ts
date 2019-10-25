@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-import {AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {Router} from '@angular/router';
+import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { MatSidenav } from '@angular/material/sidenav';
-import {takeWhile} from 'rxjs/operators';
+import { takeWhile } from 'rxjs/operators';
 
-import {SidenavService} from '../sidenav.service';
-import {Project} from '../../../shared/model/api/project/Project';
-import {DashboardService} from '../../../modules/dashboard/dashboard.service';
-import {UserService} from '../../../modules/security/user/user.service';
-import {AuthenticationService} from '../../../modules/authentication/authentication.service';
-import {User} from '../../../shared/model/api/user/User';
-import {HttpProjectService} from '../../../shared/services/api/http-project.service';
-import {HttpUserService} from '../../../shared/services/api/http-user.service';
-import {TokenService} from "../../../shared/auth/token.service";
+import { SidenavService } from '../sidenav.service';
+import { Project } from '../../../shared/models/backend/project/project';
+import { DashboardService } from '../../../modules/dashboard/dashboard.service';
+import { UserService } from '../../../modules/security/user/user.service';
+import { AuthenticationService } from '../../../modules/authentication/authentication.service';
+import { User } from '../../../shared/models/backend/user/user';
+import { HttpProjectService } from '../../../shared/services/backend/http-project.service';
+import { HttpUserService } from '../../../shared/services/backend/http-user.service';
+import { TokenService } from '../../../shared/services/frontend/token.service';
 
 /**
  * Hold the sidenav behavior
@@ -38,7 +38,6 @@ import {TokenService} from "../../../shared/auth/token.service";
   styleUrls: ['./sidenav.component.scss']
 })
 export class SidenavComponent implements OnInit, AfterViewInit, OnDestroy {
-
   /**
    * The html sidenav
    * @type {MatSidenav}
@@ -83,34 +82,35 @@ export class SidenavComponent implements OnInit, AfterViewInit, OnDestroy {
    * @param {SidenavService} sidenavService The sidenav service
    * @param {TokenService} tokenService The token service
    */
-  constructor(private router: Router,
-              private changeDetectorRef: ChangeDetectorRef,
-              private httpUserService: HttpUserService,
-              private httpProjectService: HttpProjectService,
-              private dashboardService: DashboardService,
-              private userService: UserService,
-              private authenticationService: AuthenticationService,
-              private sidenavService: SidenavService,
-              private tokenService: TokenService) {
-  }
+  constructor(
+    private router: Router,
+    private changeDetectorRef: ChangeDetectorRef,
+    private httpUserService: HttpUserService,
+    private httpProjectService: HttpProjectService,
+    private dashboardService: DashboardService,
+    private userService: UserService,
+    private authenticationService: AuthenticationService,
+    private sidenavService: SidenavService,
+    private tokenService: TokenService
+  ) {}
 
   /**
    * Init objects
    */
   ngOnInit() {
     this.userService.connectedUser$.pipe(takeWhile(() => this.isAlive)).subscribe(connectedUser => {
-        this.connectedUser = connectedUser;
-        this.isUserAdmin = this.userService.isAdmin();
-        this.refreshDashboardList();
+      this.connectedUser = connectedUser;
+      this.isUserAdmin = this.userService.isAdmin();
+      this.refreshDashboardList();
     });
 
     this.dashboardService.currentDashboardList$.pipe(takeWhile(() => this.isAlive)).subscribe(projects => {
-        this.dashboards = projects;
+      this.dashboards = projects;
     });
 
-    if(this.tokenService.hasToken()) {
+    if (this.tokenService.hasToken()) {
       this.httpUserService.getConnectedUser().subscribe(connectedUser => {
-          this.userService.connectedUser = connectedUser;
+        this.userService.connectedUser = connectedUser;
       });
     }
   }
@@ -120,7 +120,7 @@ export class SidenavComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   refreshDashboardList() {
     this.httpProjectService.getAllForCurrentUser().subscribe((projects: Project[]) => {
-        this.dashboardService.currentDashboardListValues = projects;
+      this.dashboardService.currentDashboardListValues = projects;
     });
   }
 
@@ -128,15 +128,16 @@ export class SidenavComponent implements OnInit, AfterViewInit, OnDestroy {
    * Called when the view has been init
    */
   ngAfterViewInit() {
-    this.sidenavService.subscribeToSidenavOpenCloseEvent().pipe(
-      takeWhile(() => this.isAlive)
-    ).subscribe((shouldOpen: boolean) => {
-      if (shouldOpen) {
-        this.sidenav.open();
-      } else {
-        this.sidenav.close();
-      }
-    });
+    this.sidenavService
+      .subscribeToSidenavOpenCloseEvent()
+      .pipe(takeWhile(() => this.isAlive))
+      .subscribe((shouldOpen: boolean) => {
+        if (shouldOpen) {
+          this.sidenav.open();
+        } else {
+          this.sidenav.close();
+        }
+      });
   }
 
   /**

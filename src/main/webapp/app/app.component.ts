@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { OverlayContainer } from '@angular/cdk/overlay';
 import { Component, HostBinding, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
+import { OverlayContainer } from '@angular/cdk/overlay';
 import { takeWhile } from 'rxjs/operators';
 
 import { AuthenticationService } from './modules/authentication/authentication.service';

@@ -14,28 +14,28 @@
  * limitations under the License.
  */
 
-import {Component, OnInit} from '@angular/core';
-import {FormGroup, Validators} from '@angular/forms';
-import {ActivatedRoute, Router} from '@angular/router';
-import {TranslateService} from '@ngx-translate/core';
-import {flatMap, map} from 'rxjs/operators';
-import {CustomValidators} from 'ng2-validation';
-import {Observable} from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+import { flatMap, map } from 'rxjs/operators';
+import { CustomValidators } from 'ng2-validation';
+import { Observable } from 'rxjs';
 
-import {ToastService} from '../../../../../shared/components/toast/toast.service';
-import {RoleService} from '../../role.service';
-import {User} from '../../../../../shared/model/api/user/User';
-import {Role} from '../../../../../shared/model/api/role/Role';
-import {ToastType} from '../../../../../shared/components/toast/toast-objects/ToastType';
-import {HttpRoleService} from '../../../../../shared/services/api/http-role.service';
-import {HttpUserService} from '../../../../../shared/services/api/http-user.service';
-import {RoleEnum} from '../../../../../shared/model/enums/RoleEnum';
-import {UserRequest} from '../../../../../shared/model/api/user/UserRequest';
-import {DataType} from '../../../../../shared/model/enums/DataType';
-import {FormService} from '../../../../../shared/services/app/form.service';
-import {FormStep} from '../../../../../shared/model/app/form/FormStep';
-import {FormField} from '../../../../../shared/model/app/form/FormField';
-import {FormOption} from '../../../../../shared/model/app/form/FormOption';
+import { ToastService } from '../../../../../shared/services/frontend/toast.service';
+import { RoleService } from '../../role.service';
+import { User } from '../../../../../shared/models/backend/user/user';
+import { Role } from '../../../../../shared/models/backend/role/role';
+import { ToastTypeEnum } from '../../../../../shared/enums/toast-type.enum';
+import { HttpRoleService } from '../../../../../shared/services/backend/http-role.service';
+import { HttpUserService } from '../../../../../shared/services/backend/http-user.service';
+import { RoleEnum } from '../../../../../shared/enums/role.enum';
+import { UserRequest } from '../../../../../shared/models/backend/user/user-request';
+import { DataTypeEnum } from '../../../../../shared/enums/data-type.enum';
+import { FormService } from '../../../../../shared/services/frontend/form.service';
+import { FormStep } from '../../../../../shared/models/frontend/form/form-step';
+import { FormField } from '../../../../../shared/models/frontend/form/form-field';
+import { FormOption } from '../../../../../shared/models/frontend/form/form-option';
 
 /**
  * Component user the edition of a user
@@ -46,7 +46,6 @@ import {FormOption} from '../../../../../shared/model/app/form/FormOption';
   styleUrls: ['./user-edit.component.scss']
 })
 export class UserEditComponent implements OnInit {
-
   /**
    * The form group
    * @type {FormGroup}
@@ -79,15 +78,16 @@ export class UserEditComponent implements OnInit {
    * @param {TranslateService} translateService The translation service
    * @param {ToastService} toastService The service used for displayed Toast notification
    */
-  constructor(private httpUserService: HttpUserService,
-              private router: Router,
-              private roleService: RoleService,
-              private httpRoleService: HttpRoleService,
-              private activatedRoute: ActivatedRoute,
-              private formService: FormService,
-              private translateService: TranslateService,
-              private toastService: ToastService) {
-  }
+  constructor(
+    private httpUserService: HttpUserService,
+    private router: Router,
+    private roleService: RoleService,
+    private httpRoleService: HttpRoleService,
+    private activatedRoute: ActivatedRoute,
+    private formService: FormService,
+    private translateService: TranslateService,
+    private toastService: ToastService
+  ) {}
 
   /**
    * Called when the component is displayed
@@ -95,16 +95,19 @@ export class UserEditComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.params.subscribe(params => {
       // Retrieve the user to edit
-      this.httpUserService.getById(params['userId']).pipe(
-        // Retrieve the list of roles
-        flatMap((user: User) => {
-          this.user = user;
-          return this.httpRoleService.getRoles();
-        }),
-        map((roles: Role[]) => this.roles = roles)
-      ).subscribe(() => {
-        this.initUserEditForm();
-      });
+      this.httpUserService
+        .getById(params['userId'])
+        .pipe(
+          // Retrieve the list of roles
+          flatMap((user: User) => {
+            this.user = user;
+            return this.httpRoleService.getRoles();
+          }),
+          map((roles: Role[]) => (this.roles = roles))
+        )
+        .subscribe(() => {
+          this.initUserEditForm();
+        });
     });
   }
 
@@ -114,13 +117,15 @@ export class UserEditComponent implements OnInit {
   initUserEditForm() {
     this.formSteps = [];
 
-    this.generateStepOne().pipe(
-      map((stepOne: FormStep) => this.formSteps[0] = stepOne),
-      flatMap(() => this.generateStepTwo()),
-      map((stepTwo: FormStep) => this.formSteps[1] = stepTwo)
-    ).subscribe(() => {
-      this.editUserForm = this.formService.generateFormGroupForSteps(this.formSteps);
-    });
+    this.generateStepOne()
+      .pipe(
+        map((stepOne: FormStep) => (this.formSteps[0] = stepOne)),
+        flatMap(() => this.generateStepTwo()),
+        map((stepTwo: FormStep) => (this.formSteps[1] = stepTwo))
+      )
+      .subscribe(() => {
+        this.editUserForm = this.formService.generateFormGroupForSteps(this.formSteps);
+      });
   }
 
   /**
@@ -133,7 +138,7 @@ export class UserEditComponent implements OnInit {
           {
             key: 'username',
             label: translations['username'],
-            type: DataType.TEXT,
+            type: DataTypeEnum.TEXT,
             value: this.user.username,
             readOnly: true,
             validators: [Validators.required, Validators.minLength(3)],
@@ -142,7 +147,7 @@ export class UserEditComponent implements OnInit {
           {
             key: 'firstname',
             label: translations['firstname'],
-            type: DataType.TEXT,
+            type: DataTypeEnum.TEXT,
             value: this.user.firstname,
             validators: [Validators.required, Validators.minLength(3)],
             matIconPrefix: 'person'
@@ -150,7 +155,7 @@ export class UserEditComponent implements OnInit {
           {
             key: 'lastname',
             label: translations['lastname'],
-            type: DataType.TEXT,
+            type: DataTypeEnum.TEXT,
             value: this.user.lastname,
             validators: [Validators.required, Validators.minLength(3)],
             matIconPrefix: 'person'
@@ -158,14 +163,14 @@ export class UserEditComponent implements OnInit {
           {
             key: 'email',
             label: translations['email'],
-            type: DataType.TEXT,
+            type: DataTypeEnum.TEXT,
             value: this.user.email,
             validators: [Validators.required, CustomValidators.email],
             matIconPrefix: 'email'
           }
         ];
 
-        return {fields: formFields};
+        return { fields: formFields };
       })
     );
   }
@@ -176,7 +181,6 @@ export class UserEditComponent implements OnInit {
   generateStepTwo(): Observable<FormStep> {
     return this.translateService.get(['roles']).pipe(
       map((translations: string) => {
-
         // Role Options generation
         const roleOptions: FormOption[] = [];
         this.roles.forEach((role: Role) => {
@@ -191,14 +195,14 @@ export class UserEditComponent implements OnInit {
           {
             key: 'roles',
             label: translations['roles'],
-            type: DataType.MULTIPLE,
+            type: DataTypeEnum.MULTIPLE,
             value: this.user.roles.map(role => role.name),
             options: roleOptions,
-            validators: [Validators.required],
+            validators: [Validators.required]
           }
         ];
 
-        return {fields: formFields};
+        return { fields: formFields };
       })
     );
   }
@@ -222,7 +226,7 @@ export class UserEditComponent implements OnInit {
       });
 
       this.httpUserService.updateUser(this.user.id, userUpdateRequest).subscribe(() => {
-        this.toastService.sendMessage('User saved successfully', ToastType.SUCCESS);
+        this.toastService.sendMessage('User saved successfully', ToastTypeEnum.SUCCESS);
         this.redirectToUserList();
       });
     }
@@ -234,5 +238,4 @@ export class UserEditComponent implements OnInit {
   redirectToUserList() {
     this.router.navigate(['/security/users']);
   }
-
 }

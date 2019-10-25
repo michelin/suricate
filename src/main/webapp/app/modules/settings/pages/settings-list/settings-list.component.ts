@@ -21,17 +21,17 @@ import { flatMap, map } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 
 import { SettingsService } from '../../settings.service';
-import { User } from '../../../../shared/model/api/user/User';
-import { HttpUserService } from '../../../../shared/services/api/http-user.service';
-import { UserSetting } from '../../../../shared/model/api/setting/UserSetting';
-import { HttpSettingService } from '../../../../shared/services/api/http-setting.service';
-import { Setting } from '../../../../shared/model/api/setting/Setting';
-import { SettingType } from '../../../../shared/model/enums/SettingType';
-import { AllowedSettingValue } from '../../../../shared/model/api/setting/AllowedSettingValue';
-import { DataType } from '../../../../shared/model/enums/DataType';
-import { FormField } from '../../../../shared/model/app/form/FormField';
-import { FormService } from '../../../../shared/services/app/form.service';
-import { FormOption } from '../../../../shared/model/app/form/FormOption';
+import { User } from '../../../../shared/models/backend/user/user';
+import { HttpUserService } from '../../../../shared/services/backend/http-user.service';
+import { UserSetting } from '../../../../shared/models/backend/setting/user-setting';
+import { HttpSettingService } from '../../../../shared/services/backend/http-setting.service';
+import { Setting } from '../../../../shared/models/backend/setting/setting';
+import { SettingsTypeEnum } from '../../../../shared/enums/settings-type.enum';
+import { AllowedSettingValue } from '../../../../shared/models/backend/setting/allowed-setting-value';
+import { DataTypeEnum } from '../../../../shared/enums/data-type.enum';
+import { FormField } from '../../../../shared/models/frontend/form/form-field';
+import { FormService } from '../../../../shared/services/frontend/form.service';
+import { FormOption } from '../../../../shared/models/frontend/form/form-option';
 
 /**
  * Represent the Admin Setting list page
@@ -71,9 +71,9 @@ export class SettingsListComponent implements OnInit {
 
   /**
    * The setting data types
-   * @type {DataType}
+   * @type {DataTypeEnum}
    */
-  dataType = DataType;
+  dataType = DataTypeEnum;
 
   /**
    * Constructor
@@ -201,7 +201,10 @@ export class SettingsListComponent implements OnInit {
    * @param settingType The setting type
    * @param allowedSettingValue The allowed setting value as String
    */
-  getAllowedSettingValueFromSettingTypeAndAllowedSettingValue(settingType: SettingType, allowedSettingValue: string): AllowedSettingValue {
+  getAllowedSettingValueFromSettingTypeAndAllowedSettingValue(
+    settingType: SettingsTypeEnum,
+    allowedSettingValue: string
+  ): AllowedSettingValue {
     return this.settings
       .find(setting => setting.type === settingType)
       .allowedSettingValues.find(allowedSetting => allowedSetting.value === allowedSettingValue);

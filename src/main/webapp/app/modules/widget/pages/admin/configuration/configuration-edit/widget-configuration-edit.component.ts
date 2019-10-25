@@ -20,15 +20,15 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { HttpConfigurationService } from '../../../../../../shared/services/api/http-configuration.service';
-import { ToastService } from '../../../../../../shared/components/toast/toast.service';
-import { Configuration } from '../../../../../../shared/model/api/configuration/Configuration';
-import { ToastType } from '../../../../../../shared/components/toast/toast-objects/ToastType';
-import { DataType } from '../../../../../../shared/model/enums/DataType';
-import { FormField } from '../../../../../../shared/model/app/form/FormField';
+import { HttpConfigurationService } from '../../../../../../shared/services/backend/http-configuration.service';
+import { ToastService } from '../../../../../../shared/services/frontend/toast.service';
+import { Configuration } from '../../../../../../shared/models/backend/configuration/configuration';
+import { ToastTypeEnum } from '../../../../../../shared/enums/toast-type.enum';
+import { DataTypeEnum } from '../../../../../../shared/enums/data-type.enum';
+import { FormField } from '../../../../../../shared/models/frontend/form/form-field';
 import { map } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
-import { FormService } from '../../../../../../shared/services/app/form.service';
+import { FormService } from '../../../../../../shared/services/frontend/form.service';
 import { Observable } from 'rxjs';
 
 /**
@@ -59,9 +59,9 @@ export class WidgetConfigurationEditComponent implements OnInit {
 
   /**
    * The configuration data type
-   * @type {DataType}
+   * @type {DataTypeEnum}
    */
-  dataType = DataType;
+  dataType = DataTypeEnum;
 
   /**
    * Constructor
@@ -114,7 +114,7 @@ export class WidgetConfigurationEditComponent implements OnInit {
           {
             key: 'key',
             label: translations['key'],
-            type: DataType.TEXT,
+            type: DataTypeEnum.TEXT,
             value: this.configuration.key,
             readOnly: true,
             matIconPrefix: 'vpn_key'
@@ -122,7 +122,7 @@ export class WidgetConfigurationEditComponent implements OnInit {
           {
             key: 'category',
             label: translations['configuration.category'],
-            type: DataType.TEXT,
+            type: DataTypeEnum.TEXT,
             value: this.configuration.category ? this.configuration.category.name : '',
             readOnly: true,
             matIconPrefix: 'widgets'
@@ -151,7 +151,7 @@ export class WidgetConfigurationEditComponent implements OnInit {
       configuration.value = this.configurationForm.get('value').value;
 
       this.configurationService.updateConfigurationByKey(configuration.key, this.configuration).subscribe(() => {
-        this.toastService.sendMessage('Configuration updated successfully', ToastType.SUCCESS);
+        this.toastService.sendMessage('Configuration updated successfully', ToastTypeEnum.SUCCESS);
         this.redirectToWidgetConfigurationList();
       });
     }

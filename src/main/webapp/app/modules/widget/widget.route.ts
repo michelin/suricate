@@ -17,7 +17,7 @@
  */
 import { Routes } from '@angular/router';
 
-import { AuthGuard } from '../../shared/auth/guards/auth.guard';
+import { AuthGuard } from '../../shared/guards/auth.guard';
 import { WidgetListComponent } from './pages/widget-list/widget-list.component';
 
 export const widgetRoutes: Routes = [{ path: 'widgets/catalog', component: WidgetListComponent, canActivate: [AuthGuard] }];

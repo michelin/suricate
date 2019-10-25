@@ -14,23 +14,22 @@
  * limitations under the License.
  */
 
-import {AfterViewInit, ChangeDetectorRef, Component, ViewChild} from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import {merge, of as observableOf} from 'rxjs';
-import {catchError, map, startWith, switchMap} from 'rxjs/operators';
-import {TitleCasePipe} from '@angular/common';
-import {TranslateService} from '@ngx-translate/core';
-import {ToastService} from '../../../../../shared/components/toast/toast.service';
-import {RoleService} from '../../role.service';
-import {ConfirmDialogComponent} from '../../../../../shared/components/confirm-dialog/confirm-dialog.component';
-import {Role} from '../../../../../shared/model/api/role/Role';
-import {User} from '../../../../../shared/model/api/user/User';
-import {ToastType} from '../../../../../shared/components/toast/toast-objects/ToastType';
-import {HttpUserService} from '../../../../../shared/services/api/http-user.service';
-
+import { merge, of as observableOf } from 'rxjs';
+import { catchError, map, startWith, switchMap } from 'rxjs/operators';
+import { TitleCasePipe } from '@angular/common';
+import { TranslateService } from '@ngx-translate/core';
+import { ToastService } from '../../../../../shared/services/frontend/toast.service';
+import { RoleService } from '../../role.service';
+import { ConfirmDialogComponent } from '../../../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { Role } from '../../../../../shared/models/backend/role/role';
+import { User } from '../../../../../shared/models/backend/user/user';
+import { ToastTypeEnum } from '../../../../../shared/enums/toast-type.enum';
+import { HttpUserService } from '../../../../../shared/services/backend/http-user.service';
 
 /**
  * This component is used for displaying the list of users
@@ -89,13 +88,14 @@ export class UserListComponent implements AfterViewInit {
    * @param {TranslateService} translateService The translate service to inject
    * @param {ToastService} toastService The toast service to inject
    */
-  constructor(private httpUserService: HttpUserService,
-              private roleService: RoleService,
-              private changeDetectorRef: ChangeDetectorRef,
-              private matDialog: MatDialog,
-              private translateService: TranslateService,
-              private toastService: ToastService) {
-  }
+  constructor(
+    private httpUserService: HttpUserService,
+    private roleService: RoleService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private matDialog: MatDialog,
+    private translateService: TranslateService,
+    private toastService: ToastService
+  ) {}
 
   /**
    * Called when the view has been init
@@ -177,12 +177,11 @@ export class UserListComponent implements AfterViewInit {
       deleteUserDialogRef.afterClosed().subscribe(shouldDeleteUser => {
         if (shouldDeleteUser) {
           this.httpUserService.deleteUser(user.id).subscribe(() => {
-            this.toastService.sendMessage('User deleted successfully', ToastType.SUCCESS);
+            this.toastService.sendMessage('User deleted successfully', ToastTypeEnum.SUCCESS);
             this.initUsersTable();
           });
         }
       });
     });
   }
-
 }
