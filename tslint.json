@@ -6,7 +6,7 @@
     "callable-types": true,
     "class-name": true,
     "forin": true,
-    "import-blacklist": [true, "rxjs/Rx", "primeng/primeng"],
+    "import-blacklist": [true, "rxjs/Rx", "angular/material"],
     "interface-over-type-literal": true,
     "label-position": true,
     "member-access": false,

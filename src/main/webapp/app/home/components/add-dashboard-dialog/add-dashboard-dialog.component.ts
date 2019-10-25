@@ -14,29 +14,29 @@
  * limitations under the License.
  */
 
-import {Component, Inject, OnInit, ViewChild} from '@angular/core';
-import {FormGroup, Validators} from '@angular/forms';
+import { Component, Inject, OnInit, ViewChild } from '@angular/core';
+import { FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { TitleCasePipe } from '@angular/common';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatHorizontalStepper } from '@angular/material/stepper';
-import {Observable} from 'rxjs';
-import {flatMap, map} from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { flatMap, map } from 'rxjs/operators';
 
-import {DashboardService} from '../../../modules/dashboard/dashboard.service';
-import {Project} from '../../../shared/model/api/project/Project';
-import {User} from '../../../shared/model/api/user/User';
-import {HttpProjectService} from '../../../shared/services/api/http-project.service';
-import {HttpUserService} from '../../../shared/services/api/http-user.service';
-import {Router} from '@angular/router';
-import {FormService} from '../../../shared/services/app/form.service';
-import {FormStep} from '../../../shared/model/app/form/FormStep';
-import {FormField} from '../../../shared/model/app/form/FormField';
-import {TranslateService} from '@ngx-translate/core';
-import {DataType} from '../../../shared/model/enums/DataType';
-import {CustomValidators} from 'ng2-validation';
-import {FormChangeEvent} from '../../../shared/model/app/form/FormChangeEvent';
-import {FormOption} from '../../../shared/model/app/form/FormOption';
-import {ProjectRequest} from '../../../shared/model/api/project/ProjectRequest';
-import {TitleCasePipe} from '@angular/common';
+import { DashboardService } from '../../../modules/dashboard/dashboard.service';
+import { Project } from '../../../shared/model/api/project/Project';
+import { User } from '../../../shared/model/api/user/User';
+import { HttpProjectService } from '../../../shared/services/api/http-project.service';
+import { HttpUserService } from '../../../shared/services/api/http-user.service';
+import { FormService } from '../../../shared/services/app/form.service';
+import { FormStep } from '../../../shared/model/app/form/FormStep';
+import { FormField } from '../../../shared/model/app/form/FormField';
+import { TranslateService } from '@ngx-translate/core';
+import { DataType } from '../../../shared/model/enums/DataType';
+import { CustomValidators } from 'ng2-validation';
+import { FormChangeEvent } from '../../../shared/model/app/form/FormChangeEvent';
+import { FormOption } from '../../../shared/model/app/form/FormOption';
+import { ProjectRequest } from '../../../shared/model/api/project/ProjectRequest';
 
 @Component({
   selector: 'app-add-dashboard-dialog',
@@ -88,27 +88,31 @@ export class AddDashboardDialogComponent implements OnInit {
    * @param {HttpProjectService} httpProjectService The project service
    * @param {HttpUserService} httpUserService The http user service to inject
    */
-  constructor(@Inject(MAT_DIALOG_DATA) private data: any,
-              private formService: FormService,
-              private translateService: TranslateService,
-              private router: Router,
-              private dashboardService: DashboardService,
-              private httpProjectService: HttpProjectService,
-              private httpUserService: HttpUserService) {
-  }
+  constructor(
+    @Inject(MAT_DIALOG_DATA) private data: any,
+    private formService: FormService,
+    private translateService: TranslateService,
+    private router: Router,
+    private dashboardService: DashboardService,
+    private httpProjectService: HttpProjectService,
+    private httpUserService: HttpUserService
+  ) {}
 
   /**
    * Initialisation of the component
    */
   ngOnInit() {
     if (this.data && this.data.projectToken) {
-      this.httpProjectService.getOneByToken(this.data.projectToken).pipe(
-        map((project: Project) => this.project = project),
-        flatMap(() => this.httpProjectService.getProjectUsers(this.project.token)),
-        map((users: User[]) => this.projectUsers = users)
-      ).subscribe(() => {
-        this.initForms();
-      });
+      this.httpProjectService
+        .getOneByToken(this.data.projectToken)
+        .pipe(
+          map((project: Project) => (this.project = project)),
+          flatMap(() => this.httpProjectService.getProjectUsers(this.project.token)),
+          map((users: User[]) => (this.projectUsers = users))
+        )
+        .subscribe(() => {
+          this.initForms();
+        });
     } else {
       this.initForms();
     }
@@ -120,15 +124,17 @@ export class AddDashboardDialogComponent implements OnInit {
   private initForms() {
     this.formSteps = [];
 
-    this.generateDashboardStep().pipe(
-      map((dashboardStep: FormStep) => this.formSteps[0] = dashboardStep),
-      flatMap(() => this.generateUserStep()),
-      map((userStep: FormStep) => this.formSteps[1] = userStep)
-    ).subscribe(() => {
-      this.initBackgroundColor();
-      this.projectForm = this.formService.generateFormGroupForFields(this.formSteps[0].fields);
-      this.userForm = this.formService.generateFormGroupForFields(this.formSteps[1].fields);
-    });
+    this.generateDashboardStep()
+      .pipe(
+        map((dashboardStep: FormStep) => (this.formSteps[0] = dashboardStep)),
+        flatMap(() => this.generateUserStep()),
+        map((userStep: FormStep) => (this.formSteps[1] = userStep))
+      )
+      .subscribe(() => {
+        this.initBackgroundColor();
+        this.projectForm = this.formService.generateFormGroupForFields(this.formSteps[0].fields);
+        this.userForm = this.formService.generateFormGroupForFields(this.formSteps[1].fields);
+      });
   }
 
   /**
@@ -161,7 +167,7 @@ export class AddDashboardDialogComponent implements OnInit {
           }
         ];
 
-        return {fields: formFields, stepCompleted: !!this.project};
+        return { fields: formFields, stepCompleted: !!this.project };
       })
     );
   }
@@ -185,7 +191,7 @@ export class AddDashboardDialogComponent implements OnInit {
           }
         ];
 
-        return {fields: formFields};
+        return { fields: formFields };
       })
     );
   }
@@ -236,7 +242,6 @@ export class AddDashboardDialogComponent implements OnInit {
     return this.formSteps[1].fields.find((field: FormField) => field.key === fieldKey);
   }
 
-
   /**
    * Function used for add/Save a dashboard
    */
@@ -256,7 +261,6 @@ export class AddDashboardDialogComponent implements OnInit {
           this.formSteps[0].stepCompleted = true;
           this.displayProject(project.token);
         });
-
       } else {
         this.httpProjectService.editProject(this.project.token, projectRequest).subscribe(() => {
           this.displayProject(this.project.token);
@@ -271,16 +275,19 @@ export class AddDashboardDialogComponent implements OnInit {
    * @param projectToken The project token
    */
   displayProject(projectToken: string) {
-    this.httpProjectService.getOneByToken(projectToken).pipe(
-      map((project: Project) => this.project = project),
-      flatMap(() => this.httpProjectService.getAllForCurrentUser()),
-      map((projects: Project[]) => this.dashboardService.currentDashboardListValues = projects),
-      flatMap(() => this.httpProjectService.getProjectUsers(projectToken)),
-      map((users: User[]) => this.projectUsers = users)
-    ).subscribe(() => {
-      this.addDashboardStepper.next();
-      this.router.navigate(['/dashboards', projectToken]);
-    });
+    this.httpProjectService
+      .getOneByToken(projectToken)
+      .pipe(
+        map((project: Project) => (this.project = project)),
+        flatMap(() => this.httpProjectService.getAllForCurrentUser()),
+        map((projects: Project[]) => (this.dashboardService.currentDashboardListValues = projects)),
+        flatMap(() => this.httpProjectService.getProjectUsers(projectToken)),
+        map((users: User[]) => (this.projectUsers = users))
+      )
+      .subscribe(() => {
+        this.addDashboardStepper.next();
+        this.router.navigate(['/dashboards', projectToken]);
+      });
   }
 
   /**
@@ -315,10 +322,13 @@ export class AddDashboardDialogComponent implements OnInit {
    */
   addUser() {
     if (this.userForm.valid) {
-      this.httpProjectService.addUserToProject(this.project.token, this.userForm.value).pipe(
-        flatMap(() => this.httpProjectService.getProjectUsers(this.project.token)),
-        map((users: User[]) => this.projectUsers = users)
-      ).subscribe();
+      this.httpProjectService
+        .addUserToProject(this.project.token, this.userForm.value)
+        .pipe(
+          flatMap(() => this.httpProjectService.getProjectUsers(this.project.token)),
+          map((users: User[]) => (this.projectUsers = users))
+        )
+        .subscribe();
     }
   }
 
@@ -328,9 +338,12 @@ export class AddDashboardDialogComponent implements OnInit {
    * @param {number} userId The user id
    */
   deleteUser(userId: number) {
-    this.httpProjectService.deleteUserFromProject(this.project.token, userId).pipe(
-      flatMap(() => this.httpProjectService.getProjectUsers(this.project.token)),
-      map((users: User[]) => this.projectUsers = users)
-    ).subscribe();
+    this.httpProjectService
+      .deleteUserFromProject(this.project.token, userId)
+      .pipe(
+        flatMap(() => this.httpProjectService.getProjectUsers(this.project.token)),
+        map((users: User[]) => (this.projectUsers = users))
+      )
+      .subscribe();
   }
 }
