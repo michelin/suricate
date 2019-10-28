@@ -225,7 +225,7 @@ export class UserEditComponent implements OnInit {
         }
       });
 
-      this.httpUserService.updateUser(this.user.id, userUpdateRequest).subscribe(() => {
+      this.httpUserService.update(this.user.id, userUpdateRequest).subscribe(() => {
         this.toastService.sendMessage('User saved successfully', ToastTypeEnum.SUCCESS);
         this.redirectToUserList();
       });

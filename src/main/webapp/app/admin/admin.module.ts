@@ -24,10 +24,18 @@ import { adminRoutes } from './admin.route';
 import { ConfigListComponent } from './components/config-list/config-list.component';
 import { RepositoryAddEditComponent } from './components/repository-add-edit/repository-add-edit.component';
 import { RepositoryListComponent } from './components/repository-list/repository-list.component';
+import { UsersListComponent } from './components-list/users-list.component';
 
 @NgModule({
   imports: [RouterModule.forChild(adminRoutes), LayoutModule, SharedModule],
-  declarations: [RepositoryAddEditComponent, RepositoryListComponent, UserListComponent, UserEditComponent, ConfigListComponent],
+  declarations: [
+    RepositoryAddEditComponent,
+    RepositoryListComponent,
+    UserListComponent,
+    UserEditComponent,
+    ConfigListComponent,
+    UsersListComponent
+  ],
   exports: [RouterModule]
 })
 export class AdminModule {}

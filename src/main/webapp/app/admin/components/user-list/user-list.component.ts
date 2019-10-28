@@ -176,7 +176,7 @@ export class UserListComponent implements AfterViewInit {
 
       deleteUserDialogRef.afterClosed().subscribe(shouldDeleteUser => {
         if (shouldDeleteUser) {
-          this.httpUserService.deleteUser(user.id).subscribe(() => {
+          this.httpUserService.delete(user.id).subscribe(() => {
             this.toastService.sendMessage('User deleted successfully', ToastTypeEnum.SUCCESS);
             this.initUsersTable();
           });

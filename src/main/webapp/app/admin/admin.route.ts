@@ -23,6 +23,7 @@ import { AdminGuard } from '../shared/guards/admin.guard';
 import { ConfigListComponent } from './components/config-list/config-list.component';
 import { RepositoryListComponent } from './components/repository-list/repository-list.component';
 import { RepositoryAddEditComponent } from './components/repository-add-edit/repository-add-edit.component';
+import { UsersListComponent } from './components-list/users-list.component';
 
 export const adminRoutes: Routes = [
   {
@@ -31,6 +32,14 @@ export const adminRoutes: Routes = [
     canActivate: [AuthGuard, AdminGuard],
     data: {
       breadcrumb: 'User List'
+    }
+  },
+  {
+    path: 'admin/users',
+    component: UsersListComponent,
+    canActivate: [AuthGuard, AdminGuard],
+    data: {
+      breadcrumb: 'Users'
     }
   },
   {
