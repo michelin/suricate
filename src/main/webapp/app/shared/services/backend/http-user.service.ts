@@ -16,19 +16,20 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { EMPTY, Observable } from 'rxjs';
 
 import { User } from '../../models/backend/user/user';
 import { usersApiEndpoint } from '../../../app.constant';
 import { UserRequest } from '../../models/backend/user/user-request';
 import { UserSettingRequest } from '../../models/backend/setting/user-setting-request';
 import { UserSetting } from '../../models/backend/setting/user-setting';
+import { AbstractHttpService } from './abstract-http.service';
 
 /**
  * Manage the http user calls
  */
 @Injectable({ providedIn: 'root' })
-export class HttpUserService {
+export class HttpUserService implements AbstractHttpService<User | UserRequest> {
   /**
    * Constructor
    *
@@ -60,15 +61,24 @@ export class HttpUserService {
   }
 
   /**
+   * Function used to create a new user
+   *
+   * @param entity The user to create
+   */
+  create(entity: User | UserRequest): Observable<User> {
+    return EMPTY;
+  }
+
+  /**
    * Update a user
    *
-   * @param {number} userId The userId to update
-   * @param userRequest The user request
+   * @param {number} id The userId to update
+   * @param entity The user request
    */
-  updateUser(userId: number, userRequest: UserRequest): Observable<void> {
-    const url = `${usersApiEndpoint}/${userId}`;
+  update(id: number, entity: User | UserRequest): Observable<void> {
+    const url = `${usersApiEndpoint}/${id}`;
 
-    return this.httpClient.put<void>(url, userRequest);
+    return this.httpClient.put<void>(url, entity);
   }
 
   /**
@@ -76,7 +86,7 @@ export class HttpUserService {
    *
    * @param userId The user id to delete
    */
-  deleteUser(userId: number): Observable<void> {
+  delete(userId: number): Observable<void> {
     const url = `${usersApiEndpoint}/${userId}`;
 
     return this.httpClient.delete<void>(url);
