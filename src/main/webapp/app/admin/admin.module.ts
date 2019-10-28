@@ -16,7 +16,6 @@
 
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { UserListComponent } from './components/user-list/user-list.component';
 import { UserEditComponent } from './components/user-edit/user-edit.component';
 import { LayoutModule } from '../layout/layout.module';
 import { SharedModule } from '../shared/shared.module';
@@ -24,18 +23,11 @@ import { adminRoutes } from './admin.route';
 import { ConfigListComponent } from './components/config-list/config-list.component';
 import { RepositoryAddEditComponent } from './components/repository-add-edit/repository-add-edit.component';
 import { RepositoryListComponent } from './components/repository-list/repository-list.component';
-import { UsersListComponent } from './components-list/users-list.component';
+import { UsersComponent } from './components-list/users.component';
 
 @NgModule({
   imports: [RouterModule.forChild(adminRoutes), LayoutModule, SharedModule],
-  declarations: [
-    RepositoryAddEditComponent,
-    RepositoryListComponent,
-    UserListComponent,
-    UserEditComponent,
-    ConfigListComponent,
-    UsersListComponent
-  ],
+  declarations: [RepositoryAddEditComponent, RepositoryListComponent, UserEditComponent, ConfigListComponent, UsersComponent],
   exports: [RouterModule]
 })
 export class AdminModule {}

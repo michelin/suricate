@@ -14,12 +14,14 @@
  * limitations under the License.
  */
 
-import { Component } from '@angular/core';
+import { Component, Injector } from '@angular/core';
 import { ListComponent } from '../../shared/components/list/list.component';
 import { User } from '../../shared/models/backend/user/user';
 import { HttpUserService } from '../../shared/services/backend/http-user.service';
 import { Role } from '../../shared/models/backend/role/role';
 import { IconEnum } from '../../shared/enums/icon.enum';
+import { TitleCasePipe } from '@angular/common';
+import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
 
 /**
  * Component used to display the list of users
@@ -28,14 +30,15 @@ import { IconEnum } from '../../shared/enums/icon.enum';
   templateUrl: '../../shared/components/list/list.component.html',
   styleUrls: ['../../shared/components/list/list.component.scss']
 })
-export class UsersListComponent extends ListComponent<User> {
+export class UsersComponent extends ListComponent<User> {
   /**
    * Constructor
    *
    * @param httpUserService Suricate service used to manage the http calls for a user
+   * @param injector Angular Service used to manage the injection of services
    */
-  constructor(private httpUserService: HttpUserService) {
-    super(httpUserService);
+  constructor(private httpUserService: HttpUserService, protected injector: Injector) {
+    super(httpUserService, injector);
 
     this.initHeaderConfiguration();
     this.initListConfiguration();
@@ -63,7 +66,8 @@ export class UsersListComponent extends ListComponent<User> {
         },
         {
           iconEnum: IconEnum.DELETE,
-          color: 'warn'
+          color: 'warn',
+          callback: (event: Event, user: User) => this.deleteUser(event, user)
         }
       ]
     };
@@ -90,7 +94,35 @@ export class UsersListComponent extends ListComponent<User> {
     return user.roles.map((role: Role) => role.name).join(', ');
   }
 
-  public editUser(event: Event, user: User): void {
-    console.log(user);
+  /**
+   * Redirect on the edit page
+   *
+   * @param event The click event
+   * @param user The user clicked on the list
+   */
+  private editUser(event: Event, user: User): void {
+    this.router.navigate(['/security', 'users', user.id, 'edit']);
+  }
+
+  /**
+   * Function used to delete a user
+   * @param event The click event
+   * @param user The user to delete
+   */
+  private deleteUser(event: Event, user: User): void {
+    this.translateService.get(['user.delete', 'delete.confirm']).subscribe((translations: string[]) => {
+      const titlecasePipe = new TitleCasePipe();
+
+      this.confirmationService.confirm({
+        title: translations['user.delete'],
+        message: `${translations['delete.confirm']} ${titlecasePipe.transform(user.username)}`,
+        accept: () => {
+          this.httpUserService.delete(user.id).subscribe(() => {
+            this.refreshList();
+            this.toastService.sendMessage('User deleted successfully', ToastTypeEnum.SUCCESS);
+          });
+        }
+      });
+    });
   }
 }

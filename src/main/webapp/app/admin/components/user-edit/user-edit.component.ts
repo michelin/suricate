@@ -236,6 +236,6 @@ export class UserEditComponent implements OnInit {
    * Redirect to the user list after editing succesfully
    */
   redirectToUserList() {
-    this.router.navigate(['/security/users']);
+    this.router.navigate(['/admin', 'users']);
   }
 }

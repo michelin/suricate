@@ -16,27 +16,18 @@
 
 import { Routes } from '@angular/router';
 
-import { UserListComponent } from './components/user-list/user-list.component';
 import { AuthGuard } from '../shared/guards/auth.guard';
 import { UserEditComponent } from './components/user-edit/user-edit.component';
 import { AdminGuard } from '../shared/guards/admin.guard';
 import { ConfigListComponent } from './components/config-list/config-list.component';
 import { RepositoryListComponent } from './components/repository-list/repository-list.component';
 import { RepositoryAddEditComponent } from './components/repository-add-edit/repository-add-edit.component';
-import { UsersListComponent } from './components-list/users-list.component';
+import { UsersComponent } from './components-list/users.component';
 
 export const adminRoutes: Routes = [
   {
-    path: 'security/users',
-    component: UserListComponent,
-    canActivate: [AuthGuard, AdminGuard],
-    data: {
-      breadcrumb: 'User List'
-    }
-  },
-  {
     path: 'admin/users',
-    component: UsersListComponent,
+    component: UsersComponent,
     canActivate: [AuthGuard, AdminGuard],
     data: {
       breadcrumb: 'Users'
