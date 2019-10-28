@@ -16,10 +16,13 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, Injector, OnInit } from '@angular/core';
 import { ListConfiguration } from '../../models/frontend/list/list-configuration';
 import { AbstractHttpService } from '../../services/backend/abstract-http.service';
 import { HeaderConfiguration } from '../../models/frontend/header/header-configuration';
+import { TranslateService } from '@ngx-translate/core';
+import { ToastService } from '../../services/frontend/toast.service';
+import { ConfirmationService } from '../../services/frontend/confirmation.service';
 
 /**
  * Generic component used to display and manage lists
@@ -29,6 +32,19 @@ import { HeaderConfiguration } from '../../models/frontend/header/header-configu
   styleUrls: ['./list.component.scss']
 })
 export class ListComponent<T> implements OnInit {
+  /**
+   * Frontend service used to display dialogs
+   */
+  protected confirmationService: ConfirmationService;
+  /**
+   * ngx-translate service used to manage the translations
+   */
+  protected translateService: TranslateService;
+  /**
+   * Frontend service used to display messages
+   */
+  protected toastService: ToastService;
+
   /**
    * Configuration of the header component
    */
@@ -50,13 +66,26 @@ export class ListComponent<T> implements OnInit {
    * Constructor
    *
    * @param childService The child http service
+   * @param injector Angular Service used to manage the injection of services
    */
-  constructor(private childService: AbstractHttpService<T>) {}
+  constructor(private readonly childService: AbstractHttpService<T>, protected injector: Injector) {
+    this.confirmationService = injector.get(ConfirmationService);
+    this.translateService = injector.get(TranslateService);
+    this.toastService = injector.get(ToastService);
+  }
 
   /**
    * Called when the component is init
    */
   ngOnInit() {
+    this.refreshList();
+  }
+
+  /**
+   * Refresh the list displayed
+   */
+  protected refreshList(): void {
+    this.displayLoader();
     this.childService.getAll().subscribe((objects: T[]) => {
       this.objects = objects;
       this.hideLoader();
@@ -68,6 +97,10 @@ export class ListComponent<T> implements OnInit {
    */
   private hideLoader(): void {
     this.isLoading = false;
+  }
+
+  private displayLoader(): void {
+    this.isLoading = true;
   }
 
   /**
