@@ -44,6 +44,9 @@ import { TokenInterceptor } from './interceptors/token.interceptor';
 import { TranslateModule } from '@ngx-translate/core';
 import { TranslationComponent } from './components/translations/translation.component';
 import { StompRService } from '@stomp/ng2-stompjs';
+import { ListComponent } from './components/list/list.component';
+import { SpinnerComponent } from './components/spinner/spinner.component';
+import { ButtonsComponent } from './components/buttons/buttons.component';
 
 @NgModule({
   imports: [
@@ -75,7 +78,10 @@ import { StompRService } from '@stomp/ng2-stompjs';
     SafeHtmlPipe,
     SafeUrlPipe,
     ToastComponent,
-    TranslationComponent
+    TranslationComponent,
+    ListComponent,
+    SpinnerComponent,
+    ButtonsComponent
   ],
   exports: [
     BrowserAnimationsModule,
@@ -104,7 +110,9 @@ import { StompRService } from '@stomp/ng2-stompjs';
     SafeUrlPipe,
     ToastComponent,
     TranslateModule,
-    TranslationComponent
+    TranslationComponent,
+    SpinnerComponent,
+    ButtonsComponent
   ],
   entryComponents: [CommunicationDialogComponent, ConfirmDialogComponent],
   providers: [

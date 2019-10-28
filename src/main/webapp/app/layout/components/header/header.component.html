@@ -1,8 +1,8 @@
-<div class="header-container">
+<div *ngIf="configuration" class="header-container">
   <div class="titles">
     <h1 class="little title">{{ pageName }}</h1>
     <h2 class="header">
-      <suricate-translate [key]="secondTitle"></suricate-translate>
+      <suricate-translate [key]="configuration.title"></suricate-translate>
     </h2>
   </div>
 

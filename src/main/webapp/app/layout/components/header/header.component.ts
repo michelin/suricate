@@ -16,6 +16,7 @@
 
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { HeaderConfiguration } from '../../../shared/models/frontend/header/header-configuration';
 
 /**
  * The page header component
@@ -27,15 +28,23 @@ import { Router } from '@angular/router';
 })
 export class HeaderComponent implements OnInit {
   /**
+   * The configuration of the header
+   * @type {HeaderConfiguration}
+   */
+  @Input()
+  configuration: HeaderConfiguration;
+  /**
    * The second title
    * @type {string}
    */
-  @Input() secondTitle: string;
+  @Input()
+  secondTitle: string;
 
   /**
    * True if the menu should be display on the page
    */
-  @Input() showMenu = true;
+  @Input()
+  showMenu = true;
 
   /**
    * The page name
