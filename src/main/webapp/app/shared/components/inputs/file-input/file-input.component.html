@@ -17,18 +17,18 @@
       (click)="file.click()"
     >
       <mat-icon>cloud_upload</mat-icon>
-      <app-translate class="sentence" [key]="'upload'"></app-translate>
+      <suricate-translate class="sentence" [key]="'upload'"></suricate-translate>
     </button>
 
     <!-- Error Message for file input -->
     <div *ngIf="isInputFieldOnError()" [@animationError] class="input-error" fxFlex="100">
       <!-- Error message : Required -->
       <div *ngIf="getFormControl()['errors']?.required">
-        <app-translate [key]="'field.required'"></app-translate>
+        <suricate-translate [key]="'field.required'"></suricate-translate>
       </div>
       <!-- Error message : Pattern -->
       <div *ngIf="getFormControl()['errors']?.pattern">
-        <app-translate [key]="'field.pattern'"></app-translate>
+        <suricate-translate [key]="'field.pattern'"></suricate-translate>
       </div>
     </div>
   </div>

@@ -1,5 +1,5 @@
 <div id="tv-view">
-  <app-dashboard-screen
+  <suricate-dashboard-screen
     *ngIf="project; else displayScreenCode"
     [project]="project"
     [projectWidgets]="projectWidgets"
@@ -7,7 +7,7 @@
     [readOnly]="true"
     (disconnectEvent)="handlingDashboardDisconnect()"
   >
-  </app-dashboard-screen>
+  </suricate-dashboard-screen>
 
   <ng-template #displayScreenCode>
     <div class="container" fxLayout="column wrap" fxLayoutAlign="center center">

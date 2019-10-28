@@ -23,7 +23,7 @@ import { InputComponent } from '../input.component';
  * Manage the instantiation of the checkbox
  */
 @Component({
-  selector: 'app-checkbox',
+  selector: 'suricate-checkbox',
   templateUrl: './checkbox.component.html',
   styleUrls: ['./checkbox.component.scss']
 })

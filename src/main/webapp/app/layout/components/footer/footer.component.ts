@@ -22,7 +22,7 @@ import { appEnv, appVersion } from '../../../app.constant';
  * The footer of the application
  */
 @Component({
-  selector: 'app-pages-footer',
+  selector: 'suricate-pages-footer',
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.scss']
 })

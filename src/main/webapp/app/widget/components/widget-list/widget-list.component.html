@@ -1,4 +1,4 @@
-<app-pages-header [secondTitle]="'widgets.list'"></app-pages-header>
+<suricate-pages-header [secondTitle]="'widgets.list'"></suricate-pages-header>
 
 <!-- Temporary filter -->
 <mat-form-field class="general-filter">
@@ -10,7 +10,7 @@
     <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
 
     <div class="table-error" *ngIf="errorCatched">
-      <app-translate [key]="'error'"></app-translate>
+      <suricate-translate [key]="'error'"></suricate-translate>
     </div>
   </div>
 
@@ -24,28 +24,28 @@
 
     <ng-container matColumnDef="name">
       <mat-header-cell fxFlex="15%" *matHeaderCellDef mat-sort-header>
-        <app-translate [key]="'widget.name'"></app-translate>
+        <suricate-translate [key]="'widget.name'"></suricate-translate>
       </mat-header-cell>
       <mat-cell fxFlex="15%" *matCellDef="let row">{{ row.name }}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="description">
       <mat-header-cell fxFlex="40%" *matHeaderCellDef>
-        <app-translate [key]="'widget.description'"></app-translate>
+        <suricate-translate [key]="'widget.description'"></suricate-translate>
       </mat-header-cell>
       <mat-cell fxFlex="40%" *matCellDef="let row">{{ row.description }}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="category">
       <mat-header-cell fxFlex="15%" *matHeaderCellDef mat-sort-header>
-        <app-translate [key]="'widget.category'"></app-translate>
+        <suricate-translate [key]="'widget.category'"></suricate-translate>
       </mat-header-cell>
       <mat-cell fxFlex="15%" *matCellDef="let row">{{ row.category.name }}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="status">
       <mat-header-cell fxFlex="13%" *matHeaderCellDef mat-sort-header>
-        <app-translate [key]="'activation.status'"></app-translate>
+        <suricate-translate [key]="'activation.status'"></suricate-translate>
       </mat-header-cell>
       <mat-cell fxFlex="13%" *matCellDef="let row">
         <mat-slide-toggle
@@ -86,5 +86,5 @@
     <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
   </table>
 
-  <mat-paginator [length]="resultsLength" [pageSize]="30"> </mat-paginator>
+  <mat-paginator [length]="resultsLength" [pageSize]="30"></mat-paginator>
 </div>

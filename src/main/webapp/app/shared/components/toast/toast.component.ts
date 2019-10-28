@@ -29,7 +29,7 @@ import { ToastTypeEnum } from '../../enums/toast-type.enum';
  * Component that display toast notification messages
  */
 @Component({
-  selector: 'app-toast-messages',
+  selector: 'suricate-toast-messages',
   templateUrl: './toast.component.html',
   styleUrls: ['./toast.component.scss'],
   animations: [

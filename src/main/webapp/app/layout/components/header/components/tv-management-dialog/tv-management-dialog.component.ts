@@ -34,7 +34,7 @@ import { Observable } from 'rxjs';
  * Component that manage the popup for Dashboard TV Management
  */
 @Component({
-  selector: 'app-tv-management-dialog',
+  selector: 'suricate-tv-management-dialog',
   templateUrl: './tv-management-dialog.component.html',
   styleUrls: ['./tv-management-dialog.component.scss']
 })

@@ -25,7 +25,7 @@ import { ConfigDbService, FileFlatNode, FileNode } from '../../services/config-d
  * @title Tree with nested nodes
  */
 @Component({
-  selector: 'app-config-list',
+  selector: 'suricate-config-list',
   templateUrl: 'config-list.component.html',
   styleUrls: ['config-list.component.scss'],
   providers: [ConfigDbService]

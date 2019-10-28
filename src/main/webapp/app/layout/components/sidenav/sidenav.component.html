@@ -32,13 +32,13 @@
             <div>
               <a mat-list-item routerLinkActive="active" [routerLink]="['/settings']">
                 <mat-icon>settings</mat-icon>
-                <app-translate [key]="'settings'"></app-translate>
+                <suricate-translate [key]="'settings'"></suricate-translate>
               </a>
             </div>
             <div>
               <a mat-list-item (click)="logout()">
                 <mat-icon>exit_to_app</mat-icon>
-                <app-translate [key]="'logout'"></app-translate>
+                <suricate-translate [key]="'logout'"></suricate-translate>
               </a>
             </div>
           </mat-nav-list>
@@ -65,15 +65,15 @@
       <!-- Admin Section -->
       <div *ngIf="isUserAdmin" class="sidenav-section">
         <h1 class="little title">
-          <app-translate [key]="'security'"></app-translate>
+          <suricate-translate [key]="'security'"></suricate-translate>
         </h1>
 
         <mat-nav-list>
           <a mat-list-item routerLinkActive="active" [routerLink]="['/security/users']">
-            <app-translate [key]="'users'"></app-translate>
+            <suricate-translate [key]="'users'"></suricate-translate>
           </a>
           <a mat-list-item routerLinkActive="active" [routerLink]="['/security/config']">
-            <app-translate [key]="'configurations'"></app-translate>
+            <suricate-translate [key]="'configurations'"></suricate-translate>
           </a>
         </mat-nav-list>
       </div>
@@ -81,17 +81,17 @@
       <!-- Widget section -->
       <div class="sidenav-section">
         <h1 class="little title">
-          <app-translate [key]="'widgets'"></app-translate>
+          <suricate-translate [key]="'widgets'"></suricate-translate>
         </h1>
         <mat-nav-list>
           <a mat-list-item *ngIf="isUserAdmin" routerLinkActive="active" [routerLink]="['/repositories']">
-            <app-translate [key]="'repositories'"></app-translate>
+            <suricate-translate [key]="'repositories'"></suricate-translate>
           </a>
           <a mat-list-item *ngIf="isUserAdmin" routerLinkActive="active" [routerLink]="['/widgets/configurations']">
-            <app-translate [key]="'configurations'"></app-translate>
+            <suricate-translate [key]="'configurations'"></suricate-translate>
           </a>
           <a mat-list-item routerLinkActive="active" [routerLink]="['/widgets/catalog']">
-            <app-translate [key]="'widgets.list'"></app-translate>
+            <suricate-translate [key]="'widgets.list'"></suricate-translate>
           </a>
         </mat-nav-list>
       </div>
@@ -99,11 +99,11 @@
       <!-- Dashboard Section -->
       <div class="sidenav-section">
         <h1 class="little title">
-          <app-translate [key]="'dashboards'"></app-translate>
+          <suricate-translate [key]="'dashboards'"></suricate-translate>
         </h1>
         <mat-nav-list>
           <a mat-list-item *ngIf="isUserAdmin" routerLinkActive="active" [routerLink]="['/dashboards', 'all']">
-            <app-translate [key]="'dashboards.list'"></app-translate>
+            <suricate-translate [key]="'dashboards.list'"></suricate-translate>
           </a>
           <a mat-list-item routerLinkActive="active" *ngFor="let dashboard of dashboards" [routerLink]="['/dashboards', dashboard.token]">{{
             dashboard.name

@@ -32,7 +32,7 @@ import { FileUtils } from '../../../shared/utils/file.utils';
  * Component that display a specific dashboard
  */
 @Component({
-  selector: 'app-dashboard-detail',
+  selector: 'suricate-dashboard-detail',
   templateUrl: './dashboard-detail.component.html',
   styleUrls: ['./dashboard-detail.component.scss']
 })

@@ -15,12 +15,12 @@
   <span [innerHTML]="'<style>' + project.gridProperties.cssStyle + '</style>' | safeHtml"></span>
   <span [innerHTML]="getJSLibraries() | safeHtml"></span>
 
-  <app-dashboard-screen-widget
+  <suricate-dashboard-screen-widget
     *ngFor="let gridStackItem of gridStackItems"
     [projectWidget]="gridStackItem.payload"
     [gridStackItem]="gridStackItem"
     [projectToken]="project.token"
     [readOnly]="readOnly"
   >
-  </app-dashboard-screen-widget>
+  </suricate-dashboard-screen-widget>
 </div>

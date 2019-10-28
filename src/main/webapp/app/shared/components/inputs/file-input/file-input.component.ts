@@ -25,7 +25,7 @@ import { FileUtils } from '../../../utils/file.utils';
  * Component that manage the file input
  */
 @Component({
-  selector: 'app-file-input',
+  selector: 'suricate-file-input',
   templateUrl: './file-input.component.html',
   styleUrls: ['./file-input.component.scss'],
   animations: [

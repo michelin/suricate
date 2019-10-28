@@ -28,7 +28,7 @@ import { FormChangeEvent } from '../../models/frontend/form/form-change-event';
  * Manage the instantiation of different form inputs
  */
 @Component({
-  selector: 'app-input',
+  selector: 'suricate-input',
   templateUrl: './input.component.html',
   styleUrls: ['./input.component.scss'],
   animations: [

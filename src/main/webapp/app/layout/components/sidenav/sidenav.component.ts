@@ -33,7 +33,7 @@ import { TokenService } from '../../../shared/services/frontend/token.service';
  * Hold the sidenav behavior
  */
 @Component({
-  selector: 'app-sidenav',
+  selector: 'suricate-sidenav',
   templateUrl: './sidenav.component.html',
   styleUrls: ['./sidenav.component.scss']
 })

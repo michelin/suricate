@@ -37,7 +37,7 @@ import { DashboardService } from '../../services/dashboard.service';
  * Dashboard TV Management
  */
 @Component({
-  selector: 'app-code-view',
+  selector: 'suricate-code-view',
   templateUrl: './dashboard-tv.component.html',
   styleUrls: ['./dashboard-tv.component.scss'],
   encapsulation: ViewEncapsulation.None

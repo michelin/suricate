@@ -1,4 +1,4 @@
-<app-pages-header [secondTitle]="'dashboards.my'"></app-pages-header>
+<suricate-pages-header [secondTitle]="'dashboards.my'"></suricate-pages-header>
 
 <div fxLayout="col wrap" fxLayoutAlign="start start">
   <!-- Add Dashboard Card -->
@@ -10,7 +10,7 @@
     </a>
     <mat-card-actions align="start">
       <button #addDashboardButton mat-button (click)="openAddDashboardDialog()">
-        <app-translate [key]="'dashboard.add'"></app-translate>
+        <suricate-translate [key]="'dashboard.add'"></suricate-translate>
       </button>
     </mat-card-actions>
   </mat-card>

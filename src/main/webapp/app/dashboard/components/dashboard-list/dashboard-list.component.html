@@ -1,4 +1,4 @@
-<app-pages-header [secondTitle]="'List of projects'" [showMenu]="false"></app-pages-header>
+<suricate-pages-header [secondTitle]="'List of projects'" [showMenu]="false"></suricate-pages-header>
 
 <div class="table-container mat-elevation-z8">
   <div class="table-loading-shade" *ngIf="isLoadingResults || errorCatched">
@@ -13,7 +13,7 @@
     <!-- Name Column -->
     <ng-container matColumnDef="name">
       <mat-header-cell fxFlex="20" *matHeaderCellDef mat-sort-header>
-        <app-translate [key]="'name'"></app-translate>
+        <suricate-translate [key]="'name'"></suricate-translate>
       </mat-header-cell>
       <mat-cell fxFlex="20" *matCellDef="let row">{{ row.name | titlecase }}</mat-cell>
     </ng-container>
@@ -21,7 +21,7 @@
     <!-- Token Column -->
     <ng-container matColumnDef="token">
       <mat-header-cell fxFlex="70" *matHeaderCellDef mat-sort-header>
-        <app-translate [key]="'token'"></app-translate>
+        <suricate-translate [key]="'token'"></suricate-translate>
       </mat-header-cell>
       <mat-cell fxFlex="70" *matCellDef="let row">{{ row.token | titlecase }}</mat-cell>
     </ng-container>
@@ -29,7 +29,7 @@
     <!-- Edit column -->
     <ng-container matColumnDef="edit">
       <mat-header-cell fxFlex="8" *matHeaderCellDef>
-        <app-translate [key]="'edit'"></app-translate>
+        <suricate-translate [key]="'edit'"></suricate-translate>
       </mat-header-cell>
       <mat-cell fxFlex="8" *matCellDef="let row">
         <a [routerLink]="[row.token, 'edit']">
@@ -43,7 +43,7 @@
     <!-- Delete column -->
     <ng-container matColumnDef="delete">
       <mat-header-cell fxFlex="8" *matHeaderCellDef>
-        <app-translate [key]="'delete'"></app-translate>
+        <suricate-translate [key]="'delete'"></suricate-translate>
       </mat-header-cell>
       <mat-cell fxFlex="8" *matCellDef="let row">
         <a (click)="openDialogDeleteDashboard(row)">
@@ -59,5 +59,5 @@
     <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
   </mat-table>
 
-  <mat-paginator [length]="resultsLength" [pageSize]="30"> </mat-paginator>
+  <mat-paginator [length]="resultsLength" [pageSize]="30"></mat-paginator>
 </div>

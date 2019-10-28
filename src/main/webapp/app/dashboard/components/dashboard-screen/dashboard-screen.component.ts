@@ -36,7 +36,7 @@ import { GridItemUtils } from '../../../shared/utils/grid-item.utils';
  * Display the grid stack widgets
  */
 @Component({
-  selector: 'app-dashboard-screen',
+  selector: 'suricate-dashboard-screen',
   templateUrl: './dashboard-screen.component.html',
   styleUrls: ['./dashboard-screen.component.scss']
 })

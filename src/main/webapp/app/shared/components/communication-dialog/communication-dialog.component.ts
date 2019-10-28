@@ -21,7 +21,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
  * This component is used to display information (without actions to do)
  */
 @Component({
-  selector: 'app-communication-dialog',
+  selector: 'suricate-communication-dialog',
   templateUrl: './communication-dialog.component.html',
   styleUrls: ['./communication-dialog.component.scss']
 })

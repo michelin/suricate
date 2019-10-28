@@ -21,7 +21,7 @@ import { Router } from '@angular/router';
  * The page header component
  */
 @Component({
-  selector: 'app-pages-header',
+  selector: 'suricate-pages-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })

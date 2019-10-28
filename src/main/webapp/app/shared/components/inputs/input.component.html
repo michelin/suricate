@@ -14,7 +14,7 @@
 
     <!-- Mat label -->
     <mat-label>
-      <app-translate [key]="field.label"></app-translate>
+      <suricate-translate [key]="field.label"></suricate-translate>
     </mat-label>
 
     <!-- SIMPLE INPUT -->
@@ -59,7 +59,7 @@
 
     <!-- Display an hint the user -->
     <mat-hint align="start" *ngIf="(field.hint || field.readOnly) && !isInputFieldOnError()">
-      <app-translate *ngIf="field.readOnly" [key]="'field.readonly'"></app-translate>
+      <suricate-translate *ngIf="field.readOnly" [key]="'field.readonly'"></suricate-translate>
       <span *ngIf="field.hint"> {{ field.hint }}</span>
     </mat-hint>
   </mat-form-field>
@@ -68,9 +68,9 @@
   <!---                        OTHER FIELDS                                                             --->
   <!------------------------------------------------------------------------------------------------------->
 
-  <app-checkbox *ngIf="dataType.BOOLEAN === field.type" [field]="field" [formGroup]="formGroup"></app-checkbox>
+  <suricate-checkbox *ngIf="dataType.BOOLEAN === field.type" [field]="field" [formGroup]="formGroup"></suricate-checkbox>
 
-  <app-file-input *ngIf="dataType.FILE === field.type" [field]="field" [formGroup]="formGroup"></app-file-input>
+  <suricate-file-input *ngIf="dataType.FILE === field.type" [field]="field" [formGroup]="formGroup"></suricate-file-input>
 
   <!------------------------------------------------------------------------------------------------------->
   <!---                        FIELDS ERROR MANAGEMENT                                                  --->
@@ -79,31 +79,31 @@
   <div *ngIf="dataType.FILE !== field.type && isInputFieldOnError()" [@animationError] class="input-error">
     <!-- Error message : Required -->
     <div *ngIf="getFormControl()['errors']?.required">
-      <app-translate [key]="'field.required'"></app-translate>
+      <suricate-translate [key]="'field.required'"></suricate-translate>
     </div>
     <!-- Error message : Length -->
     <div *ngIf="getFormControl()['errors']?.minlength">
-      <app-translate [key]="'field.length'"></app-translate>
+      <suricate-translate [key]="'field.length'"></suricate-translate>
     </div>
     <!-- Error message : Email -->
     <div *ngIf="getFormControl()['errors']?.email">
-      <app-translate [key]="'field.email.invalid.format'"></app-translate>
+      <suricate-translate [key]="'field.email.invalid.format'"></suricate-translate>
     </div>
     <!-- Error message : Password confirmation -->
     <div *ngIf="getFormControl()['errors']?.passwordMismatch">
-      <app-translate [key]="'field.password.mismatch'"></app-translate>
+      <suricate-translate [key]="'field.password.mismatch'"></suricate-translate>
     </div>
     <!-- Error message : Pattern -->
     <div *ngIf="getFormControl()['errors']?.pattern">
-      <app-translate [key]="'field.pattern'"></app-translate>
+      <suricate-translate [key]="'field.pattern'"></suricate-translate>
     </div>
     <!-- Error message : Digits -->
     <div *ngIf="getFormControl()['errors']?.digits">
-      <app-translate [key]="'field.digits'"></app-translate>
+      <suricate-translate [key]="'field.digits'"></suricate-translate>
     </div>
     <!-- Error message : Digits -->
     <div *ngIf="getFormControl()['errors']?.gt">
-      <app-translate [key]="'field.gt'"></app-translate>
+      <suricate-translate [key]="'field.gt'"></suricate-translate>
     </div>
   </div>
 </div>

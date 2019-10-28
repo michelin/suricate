@@ -1,11 +1,11 @@
-<app-pages-header [secondTitle]="'configurations.list'" [showMenu]="false"></app-pages-header>
+<suricate-pages-header [secondTitle]="'configurations.list'" [showMenu]="false"></suricate-pages-header>
 
 <div class="table-container mat-elevation-z2">
   <div class="table-loading-shade" *ngIf="isLoadingResults || errorCatched">
     <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
 
     <div class="table-error" *ngIf="errorCatched">
-      <app-translate [key]="'error'"></app-translate>
+      <suricate-translate [key]="'error'"></suricate-translate>
     </div>
   </div>
 
@@ -13,35 +13,35 @@
     <!-- Username Column -->
     <ng-container matColumnDef="key">
       <mat-header-cell fxFlex="33%" *matHeaderCellDef mat-sort-header disableClear="true">
-        <app-translate [key]="'key'"></app-translate>
+        <suricate-translate [key]="'key'"></suricate-translate>
       </mat-header-cell>
       <mat-cell fxFlex="33%" *matCellDef="let row">{{ row.key }}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="value">
       <mat-header-cell fxFlex="28%" *matHeaderCellDef mat-sort-header disableClear="true">
-        <app-translate [key]="'value'"></app-translate>
+        <suricate-translate [key]="'value'"></suricate-translate>
       </mat-header-cell>
       <mat-cell fxFlex="28%" *matCellDef="let row">{{ row | password }}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="type">
       <mat-header-cell fxFlex="12%" *matHeaderCellDef mat-sort-header disableClear="true">
-        <app-translate [key]="'type'"></app-translate>
+        <suricate-translate [key]="'type'"></suricate-translate>
       </mat-header-cell>
       <mat-cell fxFlex="12%" *matCellDef="let row">{{ row.dataType }}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="category">
       <mat-header-cell fxFlex="11%" *matHeaderCellDef mat-sort-header disableClear="true">
-        <app-translate [key]="'configuration.category'"></app-translate>
+        <suricate-translate [key]="'configuration.category'"></suricate-translate>
       </mat-header-cell>
       <mat-cell fxFlex="11%" *matCellDef="let row">{{ row.category?.name }}</mat-cell>
     </ng-container>
 
     <ng-container matColumnDef="edit">
       <mat-header-cell fxFlex="8%" *matHeaderCellDef>
-        <app-translate [key]="'edit'"></app-translate>
+        <suricate-translate [key]="'edit'"></suricate-translate>
       </mat-header-cell>
       <mat-cell fxFlex="8%" *matCellDef="let row">
         <a [routerLink]="[row.key, 'edit']">
@@ -54,7 +54,7 @@
 
     <ng-container matColumnDef="delete">
       <mat-header-cell fxFlex="8%" *matHeaderCellDef>
-        <app-translate [key]="'delete'"></app-translate>
+        <suricate-translate [key]="'delete'"></suricate-translate>
       </mat-header-cell>
       <mat-cell fxFlex="8%" *matCellDef="let row">
         <a (click)="openDialogDeleteConfiguration(row)">
@@ -69,5 +69,5 @@
     <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
   </mat-table>
 
-  <mat-paginator [length]="resultsLength" [pageSize]="30"> </mat-paginator>
+  <mat-paginator [length]="resultsLength" [pageSize]="30"></mat-paginator>
 </div>

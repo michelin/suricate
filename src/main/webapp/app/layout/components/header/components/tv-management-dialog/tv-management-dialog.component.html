@@ -9,7 +9,7 @@
         <mat-divider fxFlex="100"></mat-divider>
 
         <div fxFlex="100" fxLayout="col wrap" fxLayoutAlign="start center" fxLayoutGap="25px">
-          <app-input *ngFor="let field of formFields" fxFlex="80" [formGroup]="screenRegisterForm" [field]="field"> </app-input>
+          <suricate-input *ngFor="let field of formFields" fxFlex="80" [formGroup]="screenRegisterForm" [field]="field"></suricate-input>
           <button mat-raised-button color="primary">Register</button>
         </div>
       </div>

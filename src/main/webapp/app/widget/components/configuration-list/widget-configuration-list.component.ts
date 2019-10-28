@@ -35,7 +35,7 @@ import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
  * The configuration list component
  */
 @Component({
-  selector: 'app-widget-configuration-list',
+  selector: 'suricate-widget-configuration-list',
   templateUrl: './widget-configuration-list.component.html',
   styleUrls: ['./widget-configuration-list.component.scss']
 })

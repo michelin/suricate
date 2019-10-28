@@ -1,15 +1,15 @@
-<app-pages-header [secondTitle]="project?.name"></app-pages-header>
+<suricate-pages-header [secondTitle]="project?.name"></suricate-pages-header>
 
 <!-- Dashboard screen -->
 <div #dashboardScreen *ngIf="projectWidgets?.length > 0; else dashboardNoWidget">
-  <app-dashboard-screen
+  <suricate-dashboard-screen
     [project]="project"
     [projectWidgets]="projectWidgets"
     [screenCode]="screenCode"
     [readOnly]="isReadOnly"
     (disconnectEvent)="handlingDashboardDisconnect()"
   >
-  </app-dashboard-screen>
+  </suricate-dashboard-screen>
 </div>
 
 <!-- Display the add card, if no widget inside the project -->
@@ -24,7 +24,7 @@
       </a>
       <mat-card-actions align="start">
         <button #addDashboardButton mat-button (click)="openAddWidgetDialog()">
-          <app-translate [key]="'widget.add'"></app-translate>
+          <suricate-translate [key]="'widget.add'"></suricate-translate>
         </button>
       </mat-card-actions>
     </mat-card>

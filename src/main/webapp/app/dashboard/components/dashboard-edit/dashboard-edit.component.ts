@@ -36,7 +36,7 @@ import { DataTypeEnum } from '../../../shared/enums/data-type.enum';
  * Component that display the edit page for a dashboard
  */
 @Component({
-  selector: 'app-dashboard-edit',
+  selector: 'suricate-dashboard-edit',
   templateUrl: './dashboard-edit.component.html',
   styleUrls: ['./dashboard-edit.component.scss']
 })

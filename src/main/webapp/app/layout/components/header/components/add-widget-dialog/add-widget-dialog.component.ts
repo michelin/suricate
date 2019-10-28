@@ -40,7 +40,7 @@ import { CustomValidators } from 'ng2-validation';
  * Dialog used to add a widget
  */
 @Component({
-  selector: 'app-add-widget-dialog',
+  selector: 'suricate-add-widget-dialog',
   templateUrl: './add-widget-dialog.component.html',
   styleUrls: ['./add-widget-dialog.component.scss']
 })

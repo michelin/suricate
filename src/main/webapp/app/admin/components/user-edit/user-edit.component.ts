@@ -41,7 +41,7 @@ import { FormOption } from '../../../shared/models/frontend/form/form-option';
  * Component user the edition of a user
  */
 @Component({
-  selector: 'app-user-edit',
+  selector: 'suricate-user-edit',
   templateUrl: './user-edit.component.html',
   styleUrls: ['./user-edit.component.scss']
 })

@@ -36,7 +36,7 @@ import { HttpAssetService } from '../../../shared/services/backend/http-asset.se
  * Component that display the list of widgets (admin part)
  */
 @Component({
-  selector: 'app-widget-list',
+  selector: 'suricate-widget-list',
   templateUrl: './widget-list.component.html',
   styleUrls: ['./widget-list.component.scss']
 })

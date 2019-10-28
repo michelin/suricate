@@ -37,7 +37,7 @@ import { FormOption } from '../../../shared/models/frontend/form/form-option';
  * Represent the Admin Setting list page
  */
 @Component({
-  selector: 'app-settings-list',
+  selector: 'suricate-settings-list',
   templateUrl: './settings-list.component.html',
   styleUrls: ['./settings-list.component.scss']
 })

@@ -39,7 +39,7 @@ import { FormOption } from '../../../../../shared/models/frontend/form/form-opti
 import { ProjectRequest } from '../../../../../shared/models/backend/project/project-request';
 
 @Component({
-  selector: 'app-add-dashboard-dialog',
+  selector: 'suricate-add-dashboard-dialog',
   templateUrl: './add-dashboard-dialog.component.html',
   styleUrls: ['./add-dashboard-dialog.component.scss']
 })

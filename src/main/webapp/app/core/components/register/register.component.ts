@@ -40,7 +40,7 @@ import { SidenavService } from '../../../layout/services/sidenav.service';
  * Component that register a new user
  */
 @Component({
-  selector: 'app-register',
+  selector: 'suricate-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
 })

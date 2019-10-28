@@ -35,7 +35,7 @@ import { HttpUserService } from '../../../shared/services/backend/http-user.serv
  * This component is used for displaying the list of users
  */
 @Component({
-  selector: 'app-user',
+  selector: 'suricate-user',
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.scss']
 })

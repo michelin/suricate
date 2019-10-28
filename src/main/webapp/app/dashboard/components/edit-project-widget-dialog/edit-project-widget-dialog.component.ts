@@ -37,7 +37,7 @@ import { WidgetParamValue } from '../../../shared/models/backend/widget/widget-p
 import { CustomValidators } from 'ng2-validation';
 
 @Component({
-  selector: 'app-edit-project-widget-dialog',
+  selector: 'suricate-edit-project-widget-dialog',
   templateUrl: './edit-project-widget-dialog.component.html',
   styleUrls: ['./edit-project-widget-dialog.component.scss']
 })

@@ -8,7 +8,7 @@
 
           <!-- Before Submit the form -->
           <div fxFlex="90" fxLayout="column wrap" fxLayoutAlign="center" fxLayoutGap="6px" *ngIf="!formSubmitAttempt" class="form-content">
-            <app-input *ngFor="let field of formFields" [formGroup]="registerForm" [field]="field"> </app-input>
+            <suricate-input *ngFor="let field of formFields" [formGroup]="registerForm" [field]="field"></suricate-input>
           </div>
         </mat-card-content>
 
@@ -21,9 +21,9 @@
     </form>
 
     <div fxFlex="5" class="registered-sentance" fxFlexAlign="start" fxLayout="col wrap" fxLayoutGap="6px">
-      <app-translate [key]="'already.registered'"></app-translate>
+      <suricate-translate [key]="'already.registered'"></suricate-translate>
       <a [routerLink]="['/login']">
-        <app-translate [key]="'sign.in'"></app-translate>
+        <suricate-translate [key]="'sign.in'"></suricate-translate>
       </a>
     </div>
   </div>

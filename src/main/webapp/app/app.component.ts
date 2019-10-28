@@ -24,7 +24,7 @@ import { SettingsService } from './core/services/settings.service';
 import { UserService } from './admin/services/user.service';
 
 @Component({
-  selector: 'app-root',
+  selector: 'suricate-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })

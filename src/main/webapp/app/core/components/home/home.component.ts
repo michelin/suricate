@@ -28,7 +28,7 @@ import { HttpAssetService } from '../../../shared/services/backend/http-asset.se
  * Manage the home page
  */
 @Component({
-  selector: 'app-home',
+  selector: 'suricate-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })

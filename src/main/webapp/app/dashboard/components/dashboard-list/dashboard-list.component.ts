@@ -35,7 +35,7 @@ import { HttpProjectService } from '../../../shared/services/backend/http-projec
  * Component that manage the dashboard list for admin part
  */
 @Component({
-  selector: 'app-dashboard-list',
+  selector: 'suricate-dashboard-list',
   templateUrl: './dashboard-list.component.html',
   styleUrls: ['./dashboard-list.component.scss']
 })

@@ -21,7 +21,7 @@ import { Router } from '@angular/router';
  * Manage repository actions
  */
 @Component({
-  selector: 'app-repository-actions',
+  selector: 'suricate-repository-actions',
   templateUrl: './repository-actions.component.html',
   styleUrls: ['./repository-actions.component.scss']
 })

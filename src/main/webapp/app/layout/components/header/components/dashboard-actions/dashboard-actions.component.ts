@@ -33,7 +33,7 @@ import { ConfirmDialogComponent } from '../../../../../shared/components/confirm
  * Hold the header dashboard actions
  */
 @Component({
-  selector: 'app-dashboard-actions',
+  selector: 'suricate-dashboard-actions',
   templateUrl: './dashboard-actions.component.html',
   styleUrls: ['./dashboard-actions.component.scss']
 })

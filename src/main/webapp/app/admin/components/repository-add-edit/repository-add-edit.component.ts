@@ -40,7 +40,7 @@ import { FormChangeEvent } from '../../../shared/models/frontend/form/form-chang
  * Edit a repository
  */
 @Component({
-  selector: 'app-repository-add-edit',
+  selector: 'suricate-repository-add-edit',
   templateUrl: './repository-add-edit.component.html',
   styleUrls: ['./repository-add-edit.component.scss']
 })

@@ -1,11 +1,11 @@
-<app-pages-header [secondTitle]="'repositories.list'"></app-pages-header>
+<suricate-pages-header [secondTitle]="'repositories.list'"></suricate-pages-header>
 
 <div class="table-container mat-elevation-z2">
   <div class="table-loading-shade" *ngIf="isLoadingResults || errorCatched">
     <mat-spinner *ngIf="isLoadingResults"></mat-spinner>
 
     <div class="table-error" *ngIf="errorCatched">
-      <app-translate [key]="'error'"></app-translate>
+      <suricate-translate [key]="'error'"></suricate-translate>
     </div>
   </div>
 
@@ -13,7 +13,7 @@
     <!-- Name Column -->
     <ng-container matColumnDef="name">
       <mat-header-cell fxFlex="11%" *matHeaderCellDef mat-sort-header disableClear="true">
-        <app-translate [key]="'name'"></app-translate>
+        <suricate-translate [key]="'name'"></suricate-translate>
       </mat-header-cell>
       <mat-cell fxFlex="11%" *matCellDef="let row">{{ row.name }}</mat-cell>
     </ng-container>
@@ -21,7 +21,7 @@
     <!-- Local path Column -->
     <ng-container matColumnDef="localPath">
       <mat-header-cell fxFlex="30%" *matHeaderCellDef mat-sort-header disableClear="true">
-        <app-translate [key]="'local.path'"></app-translate>
+        <suricate-translate [key]="'local.path'"></suricate-translate>
       </mat-header-cell>
       <mat-cell fxFlex="30%" *matCellDef="let row">{{ row.localPath }}</mat-cell>
     </ng-container>
@@ -29,7 +29,7 @@
     <!-- url Column -->
     <ng-container matColumnDef="url">
       <mat-header-cell fxFlex="30%" *matHeaderCellDef mat-sort-header disableClear="true">
-        <app-translate [key]="'url'"></app-translate>
+        <suricate-translate [key]="'url'"></suricate-translate>
       </mat-header-cell>
       <mat-cell fxFlex="30%" *matCellDef="let row">{{ row.url }}</mat-cell>
     </ng-container>
@@ -37,7 +37,7 @@
     <!-- Branch Column -->
     <ng-container matColumnDef="branch">
       <mat-header-cell fxFlex="10%" *matHeaderCellDef mat-sort-header disableClear="true">
-        <app-translate [key]="'branch'"></app-translate>
+        <suricate-translate [key]="'branch'"></suricate-translate>
       </mat-header-cell>
       <mat-cell fxFlex="10%" *matCellDef="let row">{{ row.branch }}</mat-cell>
     </ng-container>
@@ -45,7 +45,7 @@
     <!-- Type Column -->
     <ng-container matColumnDef="type">
       <mat-header-cell fxFlex="10%" *matHeaderCellDef mat-sort-header disableClear="true">
-        <app-translate [key]="'type'"></app-translate>
+        <suricate-translate [key]="'type'"></suricate-translate>
       </mat-header-cell>
       <mat-cell fxFlex="10%" *matCellDef="let row">{{ row.type }}</mat-cell>
     </ng-container>
@@ -53,17 +53,17 @@
     <!-- Status Column -->
     <ng-container matColumnDef="status">
       <mat-header-cell fxFlex="9%" *matHeaderCellDef mat-sort-header disableClear="true">
-        <app-translate [key]="'activation.status'"></app-translate>
+        <suricate-translate [key]="'activation.status'"></suricate-translate>
       </mat-header-cell>
       <mat-cell fxFlex="9%" *matCellDef="let row">
-        <mat-slide-toggle color="primary" [checked]="row.enabled" (change)="toggleWidgetActivation(row, $event)"> </mat-slide-toggle>
+        <mat-slide-toggle color="primary" [checked]="row.enabled" (change)="toggleWidgetActivation(row, $event)"></mat-slide-toggle>
       </mat-cell>
     </ng-container>
 
     <!-- Edit Column -->
     <ng-container matColumnDef="edit">
       <mat-header-cell fxFlex="8%" *matHeaderCellDef>
-        <app-translate [key]="'edit'"></app-translate>
+        <suricate-translate [key]="'edit'"></suricate-translate>
       </mat-header-cell>
       <mat-cell fxFlex="8%" *matCellDef="let row">
         <a [routerLink]="[row.id, 'edit']">
@@ -78,5 +78,5 @@
     <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
   </mat-table>
 
-  <mat-paginator [length]="resultsLength" [pageSize]="30"> </mat-paginator>
+  <mat-paginator [length]="resultsLength" [pageSize]="30"></mat-paginator>
 </div>

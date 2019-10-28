@@ -25,7 +25,7 @@ import { ApiActionEnum } from '../../../../../shared/enums/api-action.enum';
  * Hold the widget list actions
  */
 @Component({
-  selector: 'app-widget-list-actions',
+  selector: 'suricate-widget-list-actions',
   templateUrl: './widget-list-actions.component.html',
   styleUrls: ['./widget-list-actions.component.scss']
 })

@@ -35,7 +35,7 @@ import { Observable } from 'rxjs';
  * Manage the edition of a configuration
  */
 @Component({
-  selector: 'app-widget-configuration-edit',
+  selector: 'suricate-widget-configuration-edit',
   templateUrl: './widget-configuration-edit.component.html',
   styleUrls: ['./widget-configuration-edit.component.scss']
 })

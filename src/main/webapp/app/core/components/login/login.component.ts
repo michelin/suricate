@@ -32,7 +32,7 @@ import { SidenavService } from '../../../layout/services/sidenav.service';
  * Manage the login page
  */
 @Component({
-  selector: 'app-login',
+  selector: 'suricate-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })

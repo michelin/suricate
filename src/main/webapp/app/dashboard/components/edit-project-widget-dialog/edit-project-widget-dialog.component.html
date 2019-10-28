@@ -1,5 +1,5 @@
 <h2 mat-dialog-title>
-  <app-translate [key]="'widget.edit'"></app-translate>
+  <suricate-translate [key]="'widget.edit'"></suricate-translate>
 </h2>
 
 <mat-dialog-content>
@@ -26,10 +26,10 @@
         fxLayout="row wrap"
         novalidate
       >
-        <app-input *ngFor="let field of formFields" fxFlex="100" [formGroup]="projectWidgetForm" [field]="field"> </app-input>
+        <suricate-input *ngFor="let field of formFields" fxFlex="100" [formGroup]="projectWidgetForm" [field]="field"></suricate-input>
 
         <button mat-raised-button class="mat-elevation-z2" color="primary" type="submit" fxFlex="100">
-          <app-translate [key]="'save'"></app-translate>
+          <suricate-translate [key]="'save'"></suricate-translate>
         </button>
       </form>
     </div>

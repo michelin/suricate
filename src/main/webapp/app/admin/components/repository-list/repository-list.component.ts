@@ -30,7 +30,7 @@ import { ToastService } from '../../../shared/services/frontend/toast.service';
 import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
 
 @Component({
-  selector: 'app-repository-list',
+  selector: 'suricate-repository-list',
   templateUrl: './repository-list.component.html',
   styleUrls: ['./repository-list.component.scss']
 })

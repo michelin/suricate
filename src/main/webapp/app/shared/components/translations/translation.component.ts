@@ -16,18 +16,16 @@
  *
  */
 
-
-import {Component, Input} from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 /**
  * Component that manage translation
  */
 @Component({
-  selector: 'app-translate',
+  selector: 'suricate-translate',
   templateUrl: './translation.component.html'
 })
 export class TranslationComponent {
-
   /**
    * The translation input HTML
    * @type {string}
@@ -37,6 +35,5 @@ export class TranslationComponent {
   /**
    * The constructor
    */
-  constructor() {
-  }
+  constructor() {}
 }

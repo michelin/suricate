@@ -41,7 +41,7 @@ import * as Stomp from '@stomp/stompjs';
  * Display the grid stack widgets
  */
 @Component({
-  selector: 'app-dashboard-screen-widget',
+  selector: 'suricate-dashboard-screen-widget',
   templateUrl: './dashboard-screen-widget.component.html',
   styleUrls: ['./dashboard-screen-widget.component.scss']
 })
