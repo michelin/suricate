@@ -22,6 +22,11 @@ import { takeWhile } from 'rxjs/operators';
 import { AuthenticationService } from './core/services/authentication.service';
 import { SettingsService } from './core/services/settings.service';
 import { UserService } from './admin/services/user.service';
+import { ConfirmationService } from './shared/services/frontend/confirmation.service';
+import { MatDialog } from '@angular/material';
+import { ConfirmationConfiguration } from './shared/models/frontend/confirmation/confirmation-configuration';
+import { ConfirmDialogComponent } from './shared/components/confirm-dialog/confirm-dialog.component';
+import { MatDialogConfig } from '@angular/material/typings/dialog';
 
 @Component({
   selector: 'suricate-root',
@@ -61,12 +66,16 @@ export class AppComponent implements OnInit, OnDestroy {
    * @param {OverlayContainer} overlayContainer The overlay container service
    * @param {UserService} userService The user service
    * @param {SettingsService} settingsService The settings service to inject
+   * @param {ConfirmationService} confirmationService Angular service used to manage confirmation dialog
+   * @param {MatDialog} matDialog Angular material service used to display dialog
    */
   constructor(
     private authenticationService: AuthenticationService,
     private overlayContainer: OverlayContainer,
     private userService: UserService,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
+    private readonly confirmationService: ConfirmationService,
+    private readonly matDialog: MatDialog
   ) {}
 
   /**
@@ -85,6 +94,22 @@ export class AppComponent implements OnInit, OnDestroy {
       } else {
         this.settingsService.initDefaultSettings();
       }
+    });
+
+    this.subscribeToConfirmation();
+  }
+
+  /**
+   * Function that display the dialog when using the confirmation service
+   */
+  private subscribeToConfirmation() {
+    this.confirmationService.getMessages().subscribe((confirmationConfiguration: ConfirmationConfiguration) => {
+      const dialogConfig: MatDialogConfig = {
+        role: 'dialog',
+        data: { configuration: confirmationConfiguration }
+      };
+
+      this.matDialog.open(ConfirmDialogComponent, dialogConfig);
     });
   }
 
