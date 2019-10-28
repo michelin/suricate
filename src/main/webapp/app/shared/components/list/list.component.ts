@@ -23,6 +23,7 @@ import { HeaderConfiguration } from '../../models/frontend/header/header-configu
 import { TranslateService } from '@ngx-translate/core';
 import { ToastService } from '../../services/frontend/toast.service';
 import { ConfirmationService } from '../../services/frontend/confirmation.service';
+import { Router } from '@angular/router';
 
 /**
  * Generic component used to display and manage lists
@@ -44,6 +45,10 @@ export class ListComponent<T> implements OnInit {
    * Frontend service used to display messages
    */
   protected toastService: ToastService;
+  /**
+   * Angular service used to manage routes
+   */
+  protected router: Router;
 
   /**
    * Configuration of the header component
@@ -72,6 +77,7 @@ export class ListComponent<T> implements OnInit {
     this.confirmationService = injector.get(ConfirmationService);
     this.translateService = injector.get(TranslateService);
     this.toastService = injector.get(ToastService);
+    this.router = injector.get(Router);
   }
 
   /**
