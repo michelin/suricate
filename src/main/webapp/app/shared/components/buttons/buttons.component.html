@@ -1,4 +1,10 @@
-<button *ngFor="let configuration of configurations" mat-stroked-button class="button button-single" [color]="configuration.color">
+<button
+  *ngFor="let configuration of configurations"
+  mat-stroked-button
+  class="button button-single"
+  [color]="configuration.color"
+  (click)="configuration.callback($event, object)"
+>
   <mat-icon *ngIf="configuration.iconEnum"> {{ materialIconRecords[configuration.iconEnum] }} </mat-icon>
   <span *ngIf="configuration.label"> {{ configuration.label }} </span>
 </button>

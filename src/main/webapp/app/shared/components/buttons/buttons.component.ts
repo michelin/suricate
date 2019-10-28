@@ -34,6 +34,11 @@ export class ButtonsComponent<T> {
    */
   @Input()
   public configurations: ButtonConfiguration<T>[];
+  /**
+   * Object to raised with the click event
+   */
+  @Input()
+  public object: T;
 
   /**
    * Records that store the icons code for an enum
