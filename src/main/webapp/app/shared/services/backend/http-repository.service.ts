@@ -24,12 +24,14 @@ import { Repository } from '../../models/backend/repository/repository';
 import { repositoriesApiEndpoint } from '../../../app.constant';
 import { RepositoryRequest } from '../../models/backend/repository/repository-request';
 import { Widget } from '../../models/backend/widget/widget';
+import { AbstractHttpService } from './abstract-http.service';
+import { EMPTY } from 'rxjs';
 
 /**
  * Service that manage HTTP repository calls
  */
 @Injectable({ providedIn: 'root' })
-export class HttpRepositoryService {
+export class HttpRepositoryService implements AbstractHttpService<Repository | RepositoryRequest> {
   /**
    * Constructor
    *
@@ -47,25 +49,25 @@ export class HttpRepositoryService {
   }
 
   /**
-   * Add a repository
-   *
-   * @param repositoryRequest The repository to add
-   */
-  addRepository(repositoryRequest: RepositoryRequest): Observable<Repository> {
-    const url = `${repositoriesApiEndpoint}`;
-
-    return this.httpClient.post<Repository>(url, repositoryRequest);
-  }
-
-  /**
    * Get the repository id
    *
    * @param repositoryId The repository id
    */
-  getOneById(repositoryId: number): Observable<Repository> {
+  getById(repositoryId: number): Observable<Repository> {
     const url = `${repositoriesApiEndpoint}/${repositoryId}`;
 
     return this.httpClient.get<Repository>(url);
+  }
+
+  /**
+   * Add a repository
+   *
+   * @param repositoryRequest The repository to add
+   */
+  create(repositoryRequest: RepositoryRequest): Observable<Repository> {
+    const url = `${repositoriesApiEndpoint}`;
+
+    return this.httpClient.post<Repository>(url, repositoryRequest);
   }
 
   /**
@@ -74,10 +76,19 @@ export class HttpRepositoryService {
    * @param repositoryId The repository id
    * @param repositoryRequest The repository with informations updated
    */
-  updateOneById(repositoryId: number, repositoryRequest: RepositoryRequest): Observable<void> {
+  update(repositoryId: number, repositoryRequest: RepositoryRequest): Observable<void> {
     const url = `${repositoriesApiEndpoint}/${repositoryId}`;
 
     return this.httpClient.put<void>(url, repositoryRequest);
+  }
+
+  /**
+   * Delete a repository
+   *
+   * @param id The repository id to delete
+   */
+  delete(id: number): Observable<void> {
+    return EMPTY;
   }
 
   /**

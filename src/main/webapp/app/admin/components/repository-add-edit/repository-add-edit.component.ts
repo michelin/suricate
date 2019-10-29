@@ -85,7 +85,7 @@ export class RepositoryAddEditComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.params.subscribe(params => {
       if (params['repositoryId']) {
-        this.repositoryService.getOneById(params['repositoryId']).subscribe(repository => {
+        this.repositoryService.getById(params['repositoryId']).subscribe(repository => {
           this.repository = repository;
           this.initRepoForm();
         });
@@ -268,12 +268,12 @@ export class RepositoryAddEditComponent implements OnInit {
       const repositoryToAddEdit: Repository = this.repositoryForm.value;
 
       if (this.repository) {
-        this.repositoryService.updateOneById(this.repository.id, repositoryToAddEdit).subscribe(() => {
+        this.repositoryService.update(this.repository.id, repositoryToAddEdit).subscribe(() => {
           this.toastService.sendMessage(`Repository ${repositoryToAddEdit.name} updated successfully`, ToastTypeEnum.SUCCESS);
           this.redirectToRepositoryList();
         });
       } else {
-        this.repositoryService.addRepository(repositoryToAddEdit).subscribe((repositoryAdded: Repository) => {
+        this.repositoryService.create(repositoryToAddEdit).subscribe((repositoryAdded: Repository) => {
           this.toastService.sendMessage(`Repository ${repositoryAdded.name} added successfully`, ToastTypeEnum.SUCCESS);
           this.redirectToRepositoryList();
         });
