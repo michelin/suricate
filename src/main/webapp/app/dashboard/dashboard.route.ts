@@ -18,7 +18,6 @@ import { Routes } from '@angular/router';
 
 import { DashboardTvComponent } from './components/dashboard-tv/dashboard-tv.component';
 import { AuthGuard } from '../shared/guards/auth.guard';
-import { DashboardListComponent } from './components/dashboard-list/dashboard-list.component';
 import { AdminGuard } from '../shared/guards/admin.guard';
 import { DashboardEditComponent } from './components/dashboard-edit/dashboard-edit.component';
 import { DashboardDetailComponent } from './components/dashboard-detail/dashboard-detail.component';
@@ -27,11 +26,6 @@ export const DashboardRoutes: Routes = [
   {
     path: 'tv',
     component: DashboardTvComponent
-  },
-  {
-    path: 'dashboards/all',
-    component: DashboardListComponent,
-    canActivate: [AuthGuard, AdminGuard]
   },
   {
     path: 'dashboards/all/:dashboardToken/edit',

@@ -19,7 +19,6 @@ import { RouterModule } from '@angular/router';
 
 import { SharedModule } from '../shared/shared.module';
 import { DashboardDetailComponent } from './components/dashboard-detail/dashboard-detail.component';
-import { DashboardListComponent } from './components/dashboard-list/dashboard-list.component';
 import { DashboardEditComponent } from './components/dashboard-edit/dashboard-edit.component';
 import { EditProjectWidgetDialogComponent } from './components/edit-project-widget-dialog/edit-project-widget-dialog.component';
 import { DashboardScreenComponent } from './components/dashboard-screen/dashboard-screen.component';
@@ -32,7 +31,6 @@ import { DashboardScreenWidgetComponent } from './components/dashboard-screen/da
   imports: [RouterModule.forChild(DashboardRoutes), LayoutModule, SharedModule],
   declarations: [
     DashboardDetailComponent,
-    DashboardListComponent,
     DashboardEditComponent,
     EditProjectWidgetDialogComponent,
     DashboardScreenComponent,

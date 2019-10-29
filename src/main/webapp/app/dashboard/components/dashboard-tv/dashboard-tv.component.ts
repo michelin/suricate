@@ -168,7 +168,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * Refresh the project widget list
    */
   refreshProject(projectToken: string): void {
-    this.httpProjectService.getOneByToken(projectToken).subscribe(project => {
+    this.httpProjectService.getById(projectToken).subscribe(project => {
       this.project = project;
       this.refreshProjectWidgets(projectToken);
     });

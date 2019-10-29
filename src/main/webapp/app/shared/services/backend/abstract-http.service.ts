@@ -32,7 +32,7 @@ export abstract class AbstractHttpService<T> {
    *
    * @param id The object id to retrieve
    */
-  abstract getById(id: number): Observable<T>;
+  abstract getById(id: number | string): Observable<T>;
 
   /**
    * Function used to create an object of type T
@@ -47,12 +47,12 @@ export abstract class AbstractHttpService<T> {
    * @param id The object id if to update
    * @param entity The new object for this id
    */
-  abstract update(id: number, entity: T): Observable<void>;
+  abstract update(id: number | string, entity: T): Observable<void>;
 
   /**
    * Function used to delete an object
    *
    * @param id The object id to delete
    */
-  abstract delete(id: number): Observable<void>;
+  abstract delete(id: number | string): Observable<void>;
 }

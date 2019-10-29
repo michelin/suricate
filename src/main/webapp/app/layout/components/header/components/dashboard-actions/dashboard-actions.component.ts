@@ -148,7 +148,7 @@ export class DashboardActionsComponent implements OnInit {
         .afterClosed()
         .subscribe(shouldDeleteDashboard => {
           if (shouldDeleteDashboard) {
-            this.httpProjectService.deleteProject(this.project.token).subscribe();
+            this.httpProjectService.delete(this.project.token).subscribe();
           }
         });
     });
@@ -165,7 +165,7 @@ export class DashboardActionsComponent implements OnInit {
    * Refresh the project
    */
   refreshProject(dashboardToken: string): void {
-    this.httpProjectService.getOneByToken(dashboardToken).subscribe(project => {
+    this.httpProjectService.getById(dashboardToken).subscribe(project => {
       this.project = project;
       this.refreshReadOnlyDashboard(dashboardToken);
     });

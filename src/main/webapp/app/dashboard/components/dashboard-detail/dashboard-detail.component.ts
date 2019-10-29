@@ -132,7 +132,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    * Refresh the project
    */
   refreshProject(dashboardToken: string): void {
-    this.httpProjectService.getOneByToken(dashboardToken).subscribe(project => {
+    this.httpProjectService.getById(dashboardToken).subscribe(project => {
       this.project = project;
       this.refreshReadOnlyDashboard(dashboardToken);
       this.refreshProjectWidgets(dashboardToken);

@@ -89,7 +89,7 @@ export class DashboardEditComponent implements OnInit {
   ngOnInit() {
     this.activatedRoute.params.subscribe(params => {
       this.httpProjectService
-        .getOneByToken(params['dashboardToken'])
+        .getById(params['dashboardToken'])
         .pipe(
           map((dashboard: Project) => (this.dashboard = dashboard)),
           flatMap(() => this.httpProjectService.getProjectUsers(params['dashboardToken'])),
@@ -170,7 +170,7 @@ export class DashboardEditComponent implements OnInit {
     if (this.dashboardForm.valid) {
       const projectRequest: ProjectRequest = { ...this.dashboard, ...this.dashboardForm.value };
 
-      this.httpProjectService.editProject(this.dashboard.token, projectRequest).subscribe(() => {
+      this.httpProjectService.update(this.dashboard.token, projectRequest).subscribe(() => {
         this.toastService.sendMessage('Dashboard saved successfully', ToastTypeEnum.SUCCESS);
         this.redirectToDashboardList();
       });
@@ -181,6 +181,6 @@ export class DashboardEditComponent implements OnInit {
    * Redirect to dashboard list
    */
   redirectToDashboardList() {
-    this.router.navigate(['/dashboards', 'all']);
+    this.router.navigate(['/dashboards']);
   }
 }

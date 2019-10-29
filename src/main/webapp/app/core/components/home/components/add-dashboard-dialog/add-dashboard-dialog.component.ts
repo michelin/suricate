@@ -104,7 +104,7 @@ export class AddDashboardDialogComponent implements OnInit {
   ngOnInit() {
     if (this.data && this.data.projectToken) {
       this.httpProjectService
-        .getOneByToken(this.data.projectToken)
+        .getById(this.data.projectToken)
         .pipe(
           map((project: Project) => (this.project = project)),
           flatMap(() => this.httpProjectService.getProjectUsers(this.project.token)),
@@ -257,12 +257,12 @@ export class AddDashboardDialogComponent implements OnInit {
       };
 
       if (!this.project) {
-        this.httpProjectService.createProject(projectRequest).subscribe((project: Project) => {
+        this.httpProjectService.create(projectRequest).subscribe((project: Project) => {
           this.formSteps[0].stepCompleted = true;
           this.displayProject(project.token);
         });
       } else {
-        this.httpProjectService.editProject(this.project.token, projectRequest).subscribe(() => {
+        this.httpProjectService.update(this.project.token, projectRequest).subscribe(() => {
           this.displayProject(this.project.token);
         });
       }
@@ -276,7 +276,7 @@ export class AddDashboardDialogComponent implements OnInit {
    */
   displayProject(projectToken: string) {
     this.httpProjectService
-      .getOneByToken(projectToken)
+      .getById(projectToken)
       .pipe(
         map((project: Project) => (this.project = project)),
         flatMap(() => this.httpProjectService.getAllForCurrentUser()),

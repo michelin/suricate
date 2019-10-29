@@ -83,7 +83,7 @@ export class TvManagementDialogComponent implements OnInit {
    * When the component is initialized
    */
   ngOnInit() {
-    this.httpProjectService.getOneByToken(this.data.projectToken).subscribe(project => {
+    this.httpProjectService.getById(this.data.projectToken).subscribe(project => {
       this.project = project;
       this.refreshWebsocketClients();
     });
