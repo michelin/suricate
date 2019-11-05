@@ -16,7 +16,7 @@
 
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { ConfirmationConfiguration } from '../../models/frontend/confirmation/confirmation-configuration';
+import { ConfirmationDialogConfiguration } from '../../models/frontend/dialog/confirmation-dialog-configuration';
 
 /**
  * Confirmation dialog
@@ -29,19 +29,19 @@ export class ConfirmDialogComponent {
   /**
    * The configuration of the confirmation dialog
    */
-  public configuration: ConfirmationConfiguration;
+  public configuration: ConfirmationDialogConfiguration;
 
   /**
    * Constructor
    *
    * @param confirmationDialogRef Reference on the instance of this dialog
-   * @param data The data gived to the dialog
+   * @param data The data given to the dialog
    */
   constructor(
     private confirmationDialogRef: MatDialogRef<ConfirmDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) private data: { configuration: ConfirmationConfiguration }
+    @Inject(MAT_DIALOG_DATA) private data: ConfirmationDialogConfiguration
   ) {
-    this.configuration = data.configuration;
+    this.configuration = data;
   }
 
   /**

@@ -24,7 +24,7 @@ import { SettingsService } from './core/services/settings.service';
 import { UserService } from './admin/services/user.service';
 import { DialogService } from './shared/services/frontend/dialog.service';
 import { MatDialog } from '@angular/material';
-import { ConfirmationConfiguration } from './shared/models/frontend/confirmation/confirmation-configuration';
+import { ConfirmationDialogConfiguration } from './shared/models/frontend/dialog/confirmation-dialog-configuration';
 import { ConfirmDialogComponent } from './shared/components/confirm-dialog/confirm-dialog.component';
 import { MatDialogConfig } from '@angular/material/typings/dialog';
 
@@ -103,10 +103,10 @@ export class AppComponent implements OnInit, OnDestroy {
    * Function that display the dialog when using the confirmation service
    */
   private subscribeToConfirmation() {
-    this.dialogService.getConfirmationMessages().subscribe((confirmationConfiguration: ConfirmationConfiguration) => {
+    this.dialogService.getConfirmationMessages().subscribe((confirmationConfiguration: ConfirmationDialogConfiguration) => {
       const dialogConfig: MatDialogConfig = {
         role: 'dialog',
-        data: { configuration: confirmationConfiguration }
+        data: confirmationConfiguration
       };
 
       this.matDialog.open(ConfirmDialogComponent, dialogConfig);

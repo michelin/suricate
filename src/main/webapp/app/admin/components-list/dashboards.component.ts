@@ -20,7 +20,6 @@ import { IconEnum } from '../../shared/enums/icon.enum';
 import { Project } from '../../shared/models/backend/project/project';
 import { HttpProjectService } from '../../shared/services/backend/http-project.service';
 import { ProjectRequest } from '../../shared/models/backend/project/project-request';
-import { TitleCasePipe } from '@angular/common';
 import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
 
 /**
@@ -105,11 +104,9 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
    */
   private deleteRepository(event: Event, project: Project): void {
     this.translateService.get(['dashboard.delete', 'delete.confirm']).subscribe((translations: string[]) => {
-      const titleCasePipe = new TitleCasePipe();
-
       this.dialogService.confirm({
         title: translations['dashboard.delete'],
-        message: `${translations['delete.confirm']} ${titleCasePipe.transform(project.name)}`,
+        message: `${translations['delete.confirm']} ${project.name.toUpperCase()}`,
         accept: () => {
           this.httpProjectService.delete(project.token).subscribe(() => {
             this.refreshList();

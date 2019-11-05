@@ -19,17 +19,9 @@
 /**
  * Configuration used by the confirmation dialog
  */
-export interface ConfirmationConfiguration {
+export interface DialogConfiguration {
   /**
    * The title of the confirmation dialog
    */
   title: string;
-  /**
-   * The message to display
-   */
-  message: string;
-  /**
-   * The function to call when the user has confirmed the action
-   */
-  accept: () => void;
 }
