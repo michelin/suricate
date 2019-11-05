@@ -24,7 +24,7 @@ import { ConfirmationConfiguration } from '../../models/frontend/confirmation/co
  * Service used to manage confirmation dialog
  */
 @Injectable({ providedIn: 'root' })
-export class ConfirmationService {
+export class DialogService {
   /**
    * Subject used to manage confirmation messages
    */
@@ -38,7 +38,7 @@ export class ConfirmationService {
   /**
    * Used to retrieve the messages
    */
-  public getMessages(): Observable<ConfirmationConfiguration> {
+  public getConfirmationMessages(): Observable<ConfirmationConfiguration> {
     return this.confirmationSubject.asObservable();
   }
 

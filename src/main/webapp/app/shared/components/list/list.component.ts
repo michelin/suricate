@@ -17,13 +17,14 @@
  */
 
 import { Component, Injector, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { TranslateService } from '@ngx-translate/core';
+
 import { ListConfiguration } from '../../models/frontend/list/list-configuration';
 import { AbstractHttpService } from '../../services/backend/abstract-http.service';
 import { HeaderConfiguration } from '../../models/frontend/header/header-configuration';
-import { TranslateService } from '@ngx-translate/core';
 import { ToastService } from '../../services/frontend/toast.service';
-import { ConfirmationService } from '../../services/frontend/confirmation.service';
-import { Router } from '@angular/router';
+import { DialogService } from '../../services/frontend/dialog.service';
 
 /**
  * Generic component used to display and manage lists
@@ -36,7 +37,7 @@ export class ListComponent<T> implements OnInit {
   /**
    * Frontend service used to display dialogs
    */
-  protected confirmationService: ConfirmationService;
+  protected dialogService: DialogService;
   /**
    * ngx-translate service used to manage the translations
    */
@@ -74,7 +75,7 @@ export class ListComponent<T> implements OnInit {
    * @param injector Angular Service used to manage the injection of services
    */
   constructor(private readonly childService: AbstractHttpService<T>, protected injector: Injector) {
-    this.confirmationService = injector.get(ConfirmationService);
+    this.dialogService = injector.get(DialogService);
     this.translateService = injector.get(TranslateService);
     this.toastService = injector.get(ToastService);
     this.router = injector.get(Router);

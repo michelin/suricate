@@ -107,7 +107,7 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
     this.translateService.get(['dashboard.delete', 'delete.confirm']).subscribe((translations: string[]) => {
       const titleCasePipe = new TitleCasePipe();
 
-      this.confirmationService.confirm({
+      this.dialogService.confirm({
         title: translations['dashboard.delete'],
         message: `${translations['delete.confirm']} ${titleCasePipe.transform(project.name)}`,
         accept: () => {

@@ -113,7 +113,7 @@ export class UsersComponent extends ListComponent<User> {
     this.translateService.get(['user.delete', 'delete.confirm']).subscribe((translations: string[]) => {
       const titlecasePipe = new TitleCasePipe();
 
-      this.confirmationService.confirm({
+      this.dialogService.confirm({
         title: translations['user.delete'],
         message: `${translations['delete.confirm']} ${titlecasePipe.transform(user.username)}`,
         accept: () => {
