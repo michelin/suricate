@@ -19,6 +19,14 @@ import { ListComponent } from '../../shared/components/list/list.component';
 import { IconEnum } from '../../shared/enums/icon.enum';
 import { Repository } from '../../shared/models/backend/repository/repository';
 import { HttpRepositoryService } from '../../shared/services/backend/http-repository.service';
+import { FormField } from '../../shared/models/frontend/form/form-field';
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { DataTypeEnum } from '../../shared/enums/data-type.enum';
+import { Validators } from '@angular/forms';
+import { RepositoryTypeEnum } from '../../shared/enums/repository-type.enum';
+import { FormOption } from '../../shared/models/frontend/form/form-option';
+import { TitleCasePipe } from '@angular/common';
 
 /**
  * Component used to display the list of git repositories
@@ -59,7 +67,7 @@ export class RepositoriesComponent extends ListComponent<Repository> {
         {
           iconEnum: IconEnum.EDIT,
           color: 'primary',
-          callback: (event: Event, repository: Repository) => this.editRepository(event, repository)
+          callback: (event: Event, repository: Repository) => this.openEditSidenav(event, repository)
         }
       ]
     };
@@ -92,7 +100,102 @@ export class RepositoriesComponent extends ListComponent<Repository> {
    * @param event The click event
    * @param repository The repository clicked on the list
    */
-  private editRepository(event: Event, repository: Repository): void {
-    this.router.navigate(['/repositories', repository.id, 'edit']);
+  private openEditSidenav(event: Event, repository: Repository): void {
+    this.translateService.get(['repository.edit']).subscribe((translations: string[]) => {
+      this.getFormFields(repository).subscribe((formFields: FormField[]) => {
+        this.sidenavService.openFormSidenav({
+          title: translations['repository.edit'],
+          formFields: formFields,
+          save: () => this.updateRepository()
+        });
+      });
+    });
   }
+
+  /**
+   * Build the form fields of the repository
+   *
+   * @param repository The bean
+   */
+  private getFormFields(repository?: Repository): Observable<FormField[]> {
+    return this.translateService.get(['name', 'repository.enable', 'type', 'url', 'branch', 'login', 'password', 'local.path']).pipe(
+      map((translations: string) => {
+        const formFields: FormField[] = [
+          {
+            key: 'enabled',
+            label: translations['repository.enable'],
+            type: DataTypeEnum.BOOLEAN,
+            value: repository ? repository.enabled : false
+          },
+          {
+            key: 'name',
+            label: translations['name'],
+            type: DataTypeEnum.TEXT,
+            value: repository ? repository.name : '',
+            validators: [Validators.required]
+          },
+          {
+            key: 'type',
+            label: translations['type'],
+            type: DataTypeEnum.COMBO,
+            options: this.getRepositoryTypeOptions(),
+            value: repository ? repository.type : RepositoryTypeEnum.REMOTE,
+            validators: [Validators.required]
+          },
+          {
+            key: 'url',
+            label: translations['url'],
+            type: DataTypeEnum.TEXT,
+            value: repository ? repository.url : '',
+            validators: [Validators.required]
+          },
+          {
+            key: 'branch',
+            label: translations['branch'],
+            type: DataTypeEnum.TEXT,
+            value: repository ? repository.branch : '',
+            validators: [Validators.required]
+          },
+          {
+            key: 'login',
+            label: translations['login'],
+            type: DataTypeEnum.TEXT,
+            value: repository ? repository.login : '',
+            validators: [Validators.required]
+          },
+          {
+            key: 'password',
+            label: translations['password'],
+            type: DataTypeEnum.PASSWORD,
+            value: repository ? repository.password : '',
+            validators: [Validators.required]
+          }
+        ];
+
+        return formFields;
+      })
+    );
+  }
+
+  /**
+   * Get the repository type options for the combobox
+   */
+  getRepositoryTypeOptions(): FormOption[] {
+    const titleCasePipe = new TitleCasePipe();
+    const typeOptions: FormOption[] = [];
+
+    Object.keys(RepositoryTypeEnum).forEach(repositoryType => {
+      typeOptions.push({
+        key: repositoryType,
+        label: titleCasePipe.transform(repositoryType)
+      });
+    });
+
+    return typeOptions;
+  }
+
+  /**
+   * Function used to update a repository
+   */
+  private updateRepository(): void {}
 }

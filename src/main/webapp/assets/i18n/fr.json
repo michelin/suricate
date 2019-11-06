@@ -96,5 +96,6 @@
   "sign.in": "S'authentifier",
   "sign.up": "Enregistrez vous",
   "login.ldap.auth": "Utilisez votre compte LDAP pour vous authentifier",
-  "configuration.category": "Catégorie"
+  "configuration.category": "Catégorie",
+  "repository.edit": "Modifier repository"
 }
