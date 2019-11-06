@@ -44,7 +44,7 @@ export class CommunicationDialogComponent implements OnInit {
   /**
    * Constructor
    *
-   * @param data The data object that contains every informations to display
+   * @param data The data object that contains every information to display
    */
   constructor(@Inject(MAT_DIALOG_DATA) private data: any) {}
 

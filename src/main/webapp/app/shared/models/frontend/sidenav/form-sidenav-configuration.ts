@@ -1,4 +1,4 @@
-/*!
+/*
  *  /*
  *  * Copyright 2012-2018 the original author or authors.
  *  *
@@ -15,23 +15,30 @@
  *  * limitations under the License.
  *
  */
-@import '~@angular/material/theming';
+
+import { FormField } from '../form/form-field';
+import { ValueChangedEvent } from '../form/value-changed-event';
 
 /**
- * Component for that modify the theme of Angular Material mat-button
+ * Configuration used by the form sidenav
  */
-@mixin custom-mat-form-field-theme($theme) {
-  // Angular Material colors
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
-  $is-dark: map-get($theme, is-dark);
-  $foreground: map-get($theme, foreground);
-  $background: map-get($theme, background);
+export interface FormSidenavConfiguration {
+  /**
+   * The title of the sidenav
+   */
+  title: string;
+  /**
+   * The fields of the form to display
+   */
+  formFields: FormField[];
 
-  .mat-form-field {
-    .mat-icon.prefix {
-      margin-right: 10px;
-    }
-  }
+  /**
+   * The function to call when the form should be sent
+   */
+  save: () => void;
+
+  /**
+   * Function to call when a value of a field has changed
+   */
+  onValueChanged?: (valueChangedEvent: ValueChangedEvent) => void;
 }

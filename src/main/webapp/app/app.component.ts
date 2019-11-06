@@ -96,21 +96,25 @@ export class AppComponent implements OnInit, OnDestroy {
       }
     });
 
-    this.subscribeToConfirmation();
+    this.subscribeToConfirmationDialog();
   }
 
   /**
-   * Function that display the dialog when using the confirmation service
+   * Function that display the confirmation dialog when using the dialog service
    */
-  private subscribeToConfirmation() {
-    this.dialogService.getConfirmationMessages().subscribe((confirmationConfiguration: ConfirmationDialogConfiguration) => {
-      const dialogConfig: MatDialogConfig = {
-        role: 'dialog',
-        data: confirmationConfiguration
-      };
+  private subscribeToConfirmationDialog(): void {
+    this.dialogService
+      .listenConfirmationMessages()
+      .pipe(takeWhile(() => this.isAlive))
+      .subscribe((confirmationConfiguration: ConfirmationDialogConfiguration) => {
+        const dialogConfig: MatDialogConfig = {
+          role: 'dialog',
+          width: '500px',
+          data: confirmationConfiguration
+        };
 
-      this.matDialog.open(ConfirmDialogComponent, dialogConfig);
-    });
+        this.matDialog.open(ConfirmDialogComponent, dialogConfig);
+      });
   }
 
   /**

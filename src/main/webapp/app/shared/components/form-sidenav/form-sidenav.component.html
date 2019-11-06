@@ -1,0 +1,5 @@
+<div *ngIf="formGroup" class="form-sidenav-container" fxLayout="column wrap" fxFlex="100">
+  <h1>{{ configuration.title }}</h1>
+
+  <suricate-input *ngFor="let field of configuration.formFields" fxFlex="100" [formGroup]="formGroup" [field]="field"> </suricate-input>
+</div>

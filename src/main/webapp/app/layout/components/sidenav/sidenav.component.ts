@@ -14,12 +14,12 @@
  * limitations under the License.
  */
 
-import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatSidenav } from '@angular/material/sidenav';
 import { takeWhile } from 'rxjs/operators';
 
-import { SidenavService } from '../../services/sidenav.service';
+import { SidenavService } from '../../../shared/services/frontend/sidenav.service';
 import { Project } from '../../../shared/models/backend/project/project';
 import { DashboardService } from '../../../dashboard/services/dashboard.service';
 import { UserService } from '../../../admin/services/user.service';
@@ -35,9 +35,16 @@ import { TokenService } from '../../../shared/services/frontend/token.service';
 @Component({
   selector: 'suricate-sidenav',
   templateUrl: './sidenav.component.html',
-  styleUrls: ['./sidenav.component.scss']
+  styleUrls: ['./sidenav.component.scss'],
+  encapsulation: ViewEncapsulation.None
 })
 export class SidenavComponent implements OnInit, AfterViewInit, OnDestroy {
+  /**
+   * Reference on the form sidenav
+   */
+  @ViewChild('formSidenav', { static: false })
+  public formSidenav: MatSidenav;
+
   /**
    * The html sidenav
    * @type {MatSidenav}
@@ -113,6 +120,10 @@ export class SidenavComponent implements OnInit, AfterViewInit, OnDestroy {
         this.userService.connectedUser = connectedUser;
       });
     }
+  }
+
+  openFormSidenav() {
+    this.formSidenav.open();
   }
 
   /**

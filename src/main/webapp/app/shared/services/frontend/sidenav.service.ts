@@ -18,6 +18,7 @@
 
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
+import { FormSidenavConfiguration } from '../../models/frontend/sidenav/form-sidenav-configuration';
 
 /**
  * Sidenav service
@@ -30,6 +31,11 @@ export class SidenavService {
    * @private
    */
   private sidenavOpenCloseEventSubject = new Subject<boolean>();
+
+  /**
+   * Subject used to manage form sidenav messages
+   */
+  private formSidenavSubject = new Subject<FormSidenavConfiguration>();
 
   /**
    * Constructor
@@ -57,5 +63,21 @@ export class SidenavService {
    */
   openSidenav(): void {
     this.sidenavOpenCloseEventSubject.next(true);
+  }
+
+  /**
+   * Function used to listen for new form sidenav request
+   */
+  public listenFormSidenavMessages(): Observable<FormSidenavConfiguration> {
+    return this.formSidenavSubject.asObservable();
+  }
+
+  /**
+   * Function used to open the form sidenav
+   *
+   * @param formSidenavConfiguration The form sidenav configuration
+   */
+  public openFormSidenav(formSidenavConfiguration: FormSidenavConfiguration): void {
+    this.formSidenavSubject.next(formSidenavConfiguration);
   }
 }

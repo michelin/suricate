@@ -47,6 +47,7 @@ import { StompRService } from '@stomp/ng2-stompjs';
 import { ListComponent } from './components/list/list.component';
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { ButtonsComponent } from './components/buttons/buttons.component';
+import { FormSidenavComponent } from './components/form-sidenav/form-sidenav.component';
 
 @NgModule({
   imports: [
@@ -81,7 +82,8 @@ import { ButtonsComponent } from './components/buttons/buttons.component';
     TranslationComponent,
     ListComponent,
     SpinnerComponent,
-    ButtonsComponent
+    ButtonsComponent,
+    FormSidenavComponent
   ],
   exports: [
     BrowserAnimationsModule,
@@ -112,7 +114,8 @@ import { ButtonsComponent } from './components/buttons/buttons.component';
     TranslateModule,
     TranslationComponent,
     SpinnerComponent,
-    ButtonsComponent
+    ButtonsComponent,
+    FormSidenavComponent
   ],
   entryComponents: [CommunicationDialogComponent, ConfirmDialogComponent],
   providers: [

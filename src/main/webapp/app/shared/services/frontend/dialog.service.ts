@@ -26,9 +26,9 @@ import { ConfirmationDialogConfiguration } from '../../models/frontend/dialog/co
 @Injectable({ providedIn: 'root' })
 export class DialogService {
   /**
-   * Subject used to manage confirmation messages
+   * Subject used to manage confirmation dialog message
    */
-  private confirmationSubject = new Subject<ConfirmationDialogConfiguration>();
+  private confirmationDialogSubject = new Subject<ConfirmationDialogConfiguration>();
 
   /**
    * Constructor
@@ -38,8 +38,8 @@ export class DialogService {
   /**
    * Used to retrieve the messages
    */
-  public getConfirmationMessages(): Observable<ConfirmationDialogConfiguration> {
-    return this.confirmationSubject.asObservable();
+  public listenConfirmationMessages(): Observable<ConfirmationDialogConfiguration> {
+    return this.confirmationDialogSubject.asObservable();
   }
 
   /**
@@ -48,6 +48,6 @@ export class DialogService {
    * @param confirmationConfiguration
    */
   public confirm(confirmationConfiguration: ConfirmationDialogConfiguration): void {
-    this.confirmationSubject.next(confirmationConfiguration);
+    this.confirmationDialogSubject.next(confirmationConfiguration);
   }
 }

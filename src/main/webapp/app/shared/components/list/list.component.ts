@@ -25,6 +25,7 @@ import { AbstractHttpService } from '../../services/backend/abstract-http.servic
 import { HeaderConfiguration } from '../../models/frontend/header/header-configuration';
 import { ToastService } from '../../services/frontend/toast.service';
 import { DialogService } from '../../services/frontend/dialog.service';
+import { SidenavService } from '../../services/frontend/sidenav.service';
 
 /**
  * Generic component used to display and manage lists
@@ -38,6 +39,10 @@ export class ListComponent<T> implements OnInit {
    * Frontend service used to display dialogs
    */
   protected dialogService: DialogService;
+  /**
+   * The sidenav service used to display the sidenav
+   */
+  protected sidenavService: SidenavService;
   /**
    * ngx-translate service used to manage the translations
    */
@@ -76,6 +81,7 @@ export class ListComponent<T> implements OnInit {
    */
   constructor(private readonly childService: AbstractHttpService<T>, protected injector: Injector) {
     this.dialogService = injector.get(DialogService);
+    this.sidenavService = injector.get(SidenavService);
     this.translateService = injector.get(TranslateService);
     this.toastService = injector.get(ToastService);
     this.router = injector.get(Router);

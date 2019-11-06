@@ -34,7 +34,7 @@ import { FormField } from '../../../shared/models/frontend/form/form-field';
 import { DataTypeEnum } from '../../../shared/enums/data-type.enum';
 import { FormService } from '../../../shared/services/frontend/form.service';
 import { CustomValidator } from '../../../shared/validators/custom-validator';
-import { SidenavService } from '../../../layout/services/sidenav.service';
+import { SidenavService } from '../../../shared/services/frontend/sidenav.service';
 
 /**
  * Component that register a new user

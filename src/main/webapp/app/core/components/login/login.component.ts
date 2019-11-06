@@ -26,7 +26,7 @@ import { AuthenticationProviderEnum } from '../../../shared/enums/authentication
 import { FormService } from '../../../shared/services/frontend/form.service';
 import { FormField } from '../../../shared/models/frontend/form/form-field';
 import { DataTypeEnum } from '../../../shared/enums/data-type.enum';
-import { SidenavService } from '../../../layout/services/sidenav.service';
+import { SidenavService } from '../../../shared/services/frontend/sidenav.service';
 
 /**
  * Manage the login page

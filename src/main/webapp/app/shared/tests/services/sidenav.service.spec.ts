@@ -16,7 +16,7 @@
 
 import { inject, TestBed } from '@angular/core/testing';
 
-import { SidenavService } from '../../services/sidenav.service';
+import { SidenavService } from '../../services/frontend/sidenav.service';
 
 describe('SidenavService', () => {
   beforeEach(() => {

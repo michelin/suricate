@@ -15,23 +15,8 @@
  *  * limitations under the License.
  *
  */
-@import '~@angular/material/theming';
 
-/**
- * Component for that modify the theme of Angular Material mat-button
- */
-@mixin custom-mat-form-field-theme($theme) {
-  // Angular Material colors
-  $primary: map-get($theme, primary);
-  $accent: map-get($theme, accent);
-  $warn: map-get($theme, warn);
-  $is-dark: map-get($theme, is-dark);
-  $foreground: map-get($theme, foreground);
-  $background: map-get($theme, background);
-
-  .mat-form-field {
-    .mat-icon.prefix {
-      margin-right: 10px;
-    }
-  }
+h1 {
+  font-size: 1.6em;
+  margin-block-end: 1.5em;
 }
