@@ -20,6 +20,8 @@ import { SidenavService } from '../../services/frontend/sidenav.service';
 import { FormSidenavConfiguration } from '../../models/frontend/sidenav/form-sidenav-configuration';
 import { FormGroup } from '@angular/forms';
 import { takeWhile } from 'rxjs/operators';
+import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
+import { IconEnum } from '../../enums/icon.enum';
 
 /**
  * Component used to display the form sidenav
@@ -35,6 +37,11 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
    */
   @Output()
   public open = new EventEmitter<void>();
+  /**
+   * Send an event to the parent component used to close the sidebar
+   */
+  @Output()
+  public close = new EventEmitter<void>();
 
   /**
    * The configuration of the sidenav
@@ -52,12 +59,19 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
   private isAlive = true;
 
   /**
+   * The buttons
+   */
+  public buttons: ButtonConfiguration<unknown>[] = [];
+
+  /**
    * Constructor
    *
    * @param formService Frontend service used to manage the forms
    * @param sidenavService Sidenav service used to manage the sidenavs
    */
-  constructor(private readonly formService: FormService, private readonly sidenavService: SidenavService) {}
+  constructor(private readonly formService: FormService, private readonly sidenavService: SidenavService) {
+    this.initButtons();
+  }
 
   /**
    * Called when the component is init
@@ -74,10 +88,37 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Init the buttons
+   */
+  initButtons() {
+    this.buttons.push(
+      {
+        label: 'Close',
+        iconEnum: IconEnum.CLOSE,
+        color: 'warn',
+        callback: (event: Event) => this.closeSidenav()
+      },
+      {
+        label: 'Save',
+        iconEnum: IconEnum.SAVE,
+        color: 'primary',
+        callback: (event: Event) => this.closeSidenav()
+      }
+    );
+  }
+
+  /**
    * Used to open the sidenav
    */
   private openSidenav(): void {
     this.open.emit();
+  }
+
+  /**
+   * Used to close the sidenav
+   */
+  private closeSidenav(): void {
+    this.close.emit();
   }
 
   /**

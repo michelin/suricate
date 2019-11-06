@@ -23,5 +23,7 @@ import { IconEnum } from '../enums/icon.enum';
  */
 export const MaterialIconRecords: Record<IconEnum, string> = {
   [IconEnum.DELETE]: 'delete',
-  [IconEnum.EDIT]: 'edit'
+  [IconEnum.EDIT]: 'edit',
+  [IconEnum.CLOSE]: 'close',
+  [IconEnum.SAVE]: 'done'
 };

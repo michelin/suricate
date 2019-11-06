@@ -1,6 +1,6 @@
 <mat-sidenav-container fxFlex="100%" fxLayout="row wrap" fxLayoutAlign="start">
-  <mat-sidenav #formSidenav class="form-sidenav" mode="over" fxFlex="500px" position="end" opened="false">
-    <suricate-form-sidenav fxLayout="column wrap" (open)="openFormSidenav()"> </suricate-form-sidenav>
+  <mat-sidenav #formSidenav class="form-sidenav" fxLayout="column wrap" mode="over" fxFlex="500px" position="end" opened="false">
+    <suricate-form-sidenav (open)="openFormSidenav()" (close)="closeFormSidenav()"> </suricate-form-sidenav>
   </mat-sidenav>
 
   <mat-sidenav

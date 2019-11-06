@@ -125,6 +125,9 @@ export class SidenavComponent implements OnInit, AfterViewInit, OnDestroy {
   openFormSidenav() {
     this.formSidenav.open();
   }
+  closeFormSidenav() {
+    this.formSidenav.close();
+  }
 
   /**
    * Refresh the dashboard list
