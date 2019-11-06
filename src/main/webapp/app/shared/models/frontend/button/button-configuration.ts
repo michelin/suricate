@@ -23,11 +23,11 @@ import { ThemePalette } from '@angular/material';
  */
 export class ButtonConfiguration<T> {
   label?: string;
-  iconEnum: IconEnum;
-  cssClass?: { [classname: string]: boolean };
+  icon: IconEnum;
   color: ThemePalette;
   callback?: (event: Event, object?: T) => void;
   hidden?: (object?: T) => boolean;
   disabled?: (object?: T) => boolean;
   type?: ButtonTypeEnum;
+  variant?: 'stroked' | 'miniFab';
 }

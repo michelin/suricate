@@ -19,6 +19,7 @@
 import { Component, Input } from '@angular/core';
 import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
 import { MaterialIconRecords } from '../../records/material-icon.record';
+import { ButtonTypeEnum } from '../../enums/button-type.enum';
 
 /**
  * Component used to generate buttons
@@ -39,6 +40,11 @@ export class ButtonsComponent<T> {
    */
   @Input()
   public object: T;
+
+  /**
+   * The different type of buttons
+   */
+  public buttonTypeEnum = ButtonTypeEnum;
 
   /**
    * Records that store the icons code for an enum

@@ -65,7 +65,7 @@ export class RepositoriesComponent extends ListComponent<Repository> {
     this.listConfiguration = {
       buttons: [
         {
-          iconEnum: IconEnum.EDIT,
+          icon: IconEnum.EDIT,
           color: 'primary',
           callback: (event: Event, repository: Repository) => this.openEditSidenav(event, repository)
         }

@@ -60,12 +60,12 @@ export class UsersComponent extends ListComponent<User> {
     this.listConfiguration = {
       buttons: [
         {
-          iconEnum: IconEnum.EDIT,
+          icon: IconEnum.EDIT,
           color: 'primary',
           callback: (event: Event, user: User) => this.editUser(event, user)
         },
         {
-          iconEnum: IconEnum.DELETE,
+          icon: IconEnum.DELETE,
           color: 'warn',
           callback: (event: Event, user: User) => this.deleteUser(event, user)
         }

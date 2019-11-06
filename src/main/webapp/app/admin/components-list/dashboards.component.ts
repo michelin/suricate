@@ -59,12 +59,12 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
     this.listConfiguration = {
       buttons: [
         {
-          iconEnum: IconEnum.EDIT,
+          icon: IconEnum.EDIT,
           color: 'primary',
           callback: (event: Event, project: Project) => this.editRepository(event, project)
         },
         {
-          iconEnum: IconEnum.DELETE,
+          icon: IconEnum.DELETE,
           color: 'warn',
           callback: (event: Event, project: Project) => this.deleteRepository(event, project)
         }

@@ -94,13 +94,13 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
     this.buttons.push(
       {
         label: 'Close',
-        iconEnum: IconEnum.CLOSE,
+        icon: IconEnum.CLOSE,
         color: 'warn',
         callback: (event: Event) => this.closeSidenav()
       },
       {
         label: 'Save',
-        iconEnum: IconEnum.SAVE,
+        icon: IconEnum.SAVE,
         color: 'primary',
         callback: (event: Event) => this.closeSidenav()
       }
