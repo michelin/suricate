@@ -22,7 +22,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
 
 import { DataTypeEnum } from '../../enums/data-type.enum';
 import { FormField } from '../../models/frontend/form/form-field';
-import { FormChangeEvent } from '../../models/frontend/form/form-change-event';
+import { ValueChangedEvent } from '../../models/frontend/form/value-changed-event';
 
 /**
  * Manage the instantiation of different form inputs
@@ -55,7 +55,7 @@ export class InputComponent {
    * Event sent when the value of the input has changed
    */
   @Output()
-  valueChangeEvent = new EventEmitter<FormChangeEvent>();
+  valueChangeEvent = new EventEmitter<ValueChangedEvent>();
   /**
    * The data type enum
    */
@@ -80,7 +80,7 @@ export class InputComponent {
    */
   emitValueChange(value: any): void {
     this.valueChangeEvent.emit({
-      inputKey: this.field.key,
+      fieldKey: this.field.key,
       value: value
     });
   }

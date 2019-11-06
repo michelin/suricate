@@ -34,7 +34,7 @@ import { FormField } from '../../../../../shared/models/frontend/form/form-field
 import { TranslateService } from '@ngx-translate/core';
 import { DataTypeEnum } from '../../../../../shared/enums/data-type.enum';
 import { CustomValidators } from 'ng2-validation';
-import { FormChangeEvent } from '../../../../../shared/models/frontend/form/form-change-event';
+import { ValueChangedEvent } from '../../../../../shared/models/frontend/form/value-changed-event';
 import { FormOption } from '../../../../../shared/models/frontend/form/form-option';
 import { ProjectRequest } from '../../../../../shared/models/backend/project/project-request';
 
@@ -212,8 +212,8 @@ export class AddDashboardDialogComponent implements OnInit {
    *
    * @param event The event of value changed
    */
-  catchValueChange(event: FormChangeEvent) {
-    if (event.inputKey === 'username') {
+  catchValueChange(event: ValueChangedEvent) {
+    if (event.fieldKey === 'username') {
       this.httpUserService.getAll(event.value.currentTarget.value).subscribe((users: User[]) => {
         const titleCasePipe = new TitleCasePipe();
         const formField: FormField = this.getFieldByStepNumberAndFieldKey(1, 'username');

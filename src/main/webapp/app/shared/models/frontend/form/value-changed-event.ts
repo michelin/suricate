@@ -19,7 +19,13 @@
 /**
  * Event that manage change event on form
  */
-export interface FormChangeEvent {
-  inputKey: string;
+export interface ValueChangedEvent {
+  /**
+   * The key of field
+   */
+  fieldKey: string;
+  /**
+   * The new value
+   */
   value: any;
 }

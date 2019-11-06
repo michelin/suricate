@@ -34,7 +34,7 @@ import { FormStep } from '../../../shared/models/frontend/form/form-step';
 import { FormField } from '../../../shared/models/frontend/form/form-field';
 import { DataTypeEnum } from '../../../shared/enums/data-type.enum';
 import { FormOption } from '../../../shared/models/frontend/form/form-option';
-import { FormChangeEvent } from '../../../shared/models/frontend/form/form-change-event';
+import { ValueChangedEvent } from '../../../shared/models/frontend/form/value-changed-event';
 
 /**
  * Edit a repository
@@ -189,8 +189,8 @@ export class RepositoryAddEditComponent implements OnInit {
    *
    * @param changeEvent The change event
    */
-  manageInputChangeEvent(changeEvent: FormChangeEvent) {
-    if (changeEvent.inputKey === 'type') {
+  manageInputChangeEvent(changeEvent: ValueChangedEvent) {
+    if (changeEvent.fieldKey === 'type') {
       this.generateStepRepoInformation(changeEvent.value).subscribe((newStep: FormStep) => {
         this.repositoryForm = this.formService.switchFormGroupStepByAnotherOne(this.repositoryForm, this.formSteps[2], newStep);
         this.formSteps[2] = newStep;
