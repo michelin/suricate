@@ -30,7 +30,8 @@
   "configuration.delete": "Delete a configuration",
   "repositories": "Repositories",
   "repositories.list": "List of repositories",
-  "repository.new": "Add a new repository",
+  "repository.add": "Add repository",
+  "repository.edit": "Edit repository",
   "repository.info": "Repository Informations",
   "repository.enable": "Enable this repository",
   "widgets": "Widgets",
@@ -96,6 +97,5 @@
   "sign.in": "Sign In",
   "sign.up": "Sign up here !",
   "login.ldap.auth": "You can use your LDAP account to Sign in",
-  "configuration.category": "Category",
-  "repository.edit": "Edit repository"
+  "configuration.category": "Category"
 }

@@ -111,10 +111,10 @@ export class RepositoriesComponent extends ListComponent<Repository> {
    * @param saveCallback The function to call when save button is clicked
    */
   private openFormSidenav(event: Event, repository: Repository, saveCallback: () => void): void {
-    this.translateService.get(['repository.edit']).subscribe((translations: string[]) => {
+    this.translateService.get(['repository.edit', 'repository.add']).subscribe((translations: string[]) => {
       this.getFormFields(repository).subscribe((formFields: FormField[]) => {
         this.sidenavService.openFormSidenav({
-          title: translations['repository.edit'],
+          title: repository ? translations['repository.edit'] : translations['repository.add'],
           formFields: formFields,
           save: () => saveCallback()
         });

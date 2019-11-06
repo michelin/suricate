@@ -1,5 +1,5 @@
 <div *ngIf="formGroup" class="form-sidenav-container" fxLayout="column" fxFlex="100%">
-  <h1>{{ configuration.title }}</h1>
+  <h1>{{ configuration.title | uppercase }}</h1>
   <div fxLayout="column" fxLayoutAlign="space-between" fxFlex="100">
     <div fxLayout="column">
       <suricate-input *ngFor="let field of configuration.formFields" [formGroup]="formGroup" [field]="field"> </suricate-input>
