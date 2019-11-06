@@ -14,9 +14,8 @@
     <div *ngIf="pageName === 'widgets'">
       <suricate-widget-list-actions></suricate-widget-list-actions>
     </div>
-    <div *ngIf="pageName === 'repositories'">
-      <suricate-repository-actions></suricate-repository-actions>
-    </div>
+
+    <suricate-buttons *ngIf="configuration.actions" [configurations]="configuration.actions"> </suricate-buttons>
   </div>
 
   <mat-divider></mat-divider>

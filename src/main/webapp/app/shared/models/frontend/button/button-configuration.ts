@@ -17,6 +17,7 @@
 import { ButtonTypeEnum } from '../../../enums/button-type.enum';
 import { IconEnum } from '../../../enums/icon.enum';
 import { ThemePalette } from '@angular/material';
+import { TooltipConfiguration } from '../tooltip/tooltip-configuration';
 
 /**
  * Model of Button
@@ -26,8 +27,8 @@ export class ButtonConfiguration<T> {
   icon: IconEnum;
   color: ThemePalette;
   callback?: (event: Event, object?: T) => void;
-  hidden?: (object?: T) => boolean;
   disabled?: (object?: T) => boolean;
   type?: ButtonTypeEnum;
   variant?: 'stroked' | 'miniFab';
+  tooltip?: TooltipConfiguration;
 }

@@ -22,6 +22,7 @@ import { IconEnum } from '../enums/icon.enum';
  * Records used to store related material icons from https://material.io/resources/icons
  */
 export const MaterialIconRecords: Record<IconEnum, string> = {
+  [IconEnum.ADD]: 'add',
   [IconEnum.DELETE]: 'delete',
   [IconEnum.EDIT]: 'edit',
   [IconEnum.CLOSE]: 'close',

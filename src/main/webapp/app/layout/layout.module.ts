@@ -24,7 +24,6 @@ import { WidgetListActionsComponent } from './components/header/components/widge
 import { SharedModule } from '../shared/shared.module';
 import { HeaderComponent } from './components/header/header.component';
 import { SidenavComponent } from './components/sidenav/sidenav.component';
-import { RepositoryActionsComponent } from './components/header/components/repository-actions/repository-actions.component';
 
 @NgModule({
   imports: [SharedModule],
@@ -35,8 +34,7 @@ import { RepositoryActionsComponent } from './components/header/components/repos
     HeaderComponent,
     SidenavComponent,
     TvManagementDialogComponent,
-    WidgetListActionsComponent,
-    RepositoryActionsComponent
+    WidgetListActionsComponent
   ],
   entryComponents: [AddWidgetDialogComponent, TvManagementDialogComponent],
   exports: [AddWidgetDialogComponent, FooterComponent, HeaderComponent, SidenavComponent]

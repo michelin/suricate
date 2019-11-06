@@ -20,6 +20,7 @@
  * Hold the different icons of the application
  */
 export enum IconEnum {
+  ADD = 'ADD',
   DELETE = 'DELETE',
   EDIT = 'EDIT',
   CLOSE = 'CLOSE',

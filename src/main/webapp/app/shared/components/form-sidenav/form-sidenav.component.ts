@@ -96,13 +96,13 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
         label: 'Close',
         icon: IconEnum.CLOSE,
         color: 'warn',
-        callback: (event: Event) => this.closeSidenav()
+        callback: () => this.closeSidenav()
       },
       {
         label: 'Save',
         icon: IconEnum.SAVE,
         color: 'primary',
-        callback: (event: Event) => this.closeSidenav()
+        callback: () => this.save()
       }
     );
   }
@@ -119,6 +119,14 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
    */
   private closeSidenav(): void {
     this.close.emit();
+  }
+
+  /**
+   * Execute save action on click
+   */
+  private save(): void {
+    this.configuration.save();
+    this.closeSidenav();
   }
 
   /**

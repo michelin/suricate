@@ -14,29 +14,12 @@
  * limitations under the License.
  */
 
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { TooltipPosition } from '@angular/material';
 
 /**
- * Manage repository actions
+ * Model of Tooltip
  */
-@Component({
-  selector: 'suricate-repository-actions',
-  templateUrl: './repository-actions.component.html',
-  styleUrls: ['./repository-actions.component.scss']
-})
-export class RepositoryActionsComponent {
-  /**
-   * Constructor
-   *
-   * @param router The router service
-   */
-  constructor(private router: Router) {}
-
-  /**
-   * Navigate to the add repository page
-   */
-  addRepository() {
-    this.router.navigate(['/repositories', 'add']);
-  }
+export class TooltipConfiguration {
+  message: string;
+  position?: TooltipPosition;
 }

@@ -5,7 +5,7 @@
   </ng-container>
 
   <ng-container *ngSwitchCase="'miniFab'">
-    <ng-container *ngTemplateOutlet="strokedButton; context: { configuration: configuration }"> </ng-container>
+    <ng-container *ngTemplateOutlet="miniFabButton; context: { configuration: configuration }"> </ng-container>
   </ng-container>
 
   <ng-container *ngSwitchDefault>
@@ -21,6 +21,8 @@
   <button
     mat-stroked-button
     class="button button-single"
+    [matTooltip]="configuration.tooltip?.message"
+    [matTooltipPosition]="configuration.tooltip?.position ? $any(configuration.tooltip.position) : 'below'"
     [type]="configuration.type ? configuration.type : buttonTypeEnum.BUTTON"
     [color]="$any(configuration.color)"
     (click)="configuration.callback($event, object)"
@@ -33,6 +35,8 @@
   <button
     mat-mini-fab
     class="button button-single"
+    [matTooltip]="configuration.tooltip?.message"
+    [matTooltipPosition]="configuration.tooltip?.position ? $any(configuration.tooltip?.position) : 'below'"
     [type]="configuration.type ? configuration.type : buttonTypeEnum.BUTTON"
     [color]="$any(configuration.color)"
     (click)="configuration.callback($event, object)"

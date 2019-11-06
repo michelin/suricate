@@ -54,7 +54,16 @@ export class RepositoriesComponent extends ListComponent<Repository> {
    */
   private initHeaderConfiguration(): void {
     this.headerConfiguration = {
-      title: 'repositories.list'
+      title: 'repositories.list',
+      actions: [
+        {
+          icon: IconEnum.ADD,
+          variant: 'miniFab',
+          color: 'primary',
+          callback: (event: Event) => this.openFormSidenav(event, null, this.addRepository),
+          tooltip: { message: 'Add a new repository' }
+        }
+      ]
     };
   }
 
@@ -67,7 +76,7 @@ export class RepositoriesComponent extends ListComponent<Repository> {
         {
           icon: IconEnum.EDIT,
           color: 'primary',
-          callback: (event: Event, repository: Repository) => this.openEditSidenav(event, repository)
+          callback: (event: Event, repository: Repository) => this.openFormSidenav(event, repository, this.updateRepository)
         }
       ]
     };
@@ -95,18 +104,19 @@ export class RepositoriesComponent extends ListComponent<Repository> {
   }
 
   /**
-   * Redirect on the edit page
+   * Open the form sidenav
    *
    * @param event The click event
    * @param repository The repository clicked on the list
+   * @param saveCallback The function to call when save button is clicked
    */
-  private openEditSidenav(event: Event, repository: Repository): void {
+  private openFormSidenav(event: Event, repository: Repository, saveCallback: () => void): void {
     this.translateService.get(['repository.edit']).subscribe((translations: string[]) => {
       this.getFormFields(repository).subscribe((formFields: FormField[]) => {
         this.sidenavService.openFormSidenav({
           title: translations['repository.edit'],
           formFields: formFields,
-          save: () => this.updateRepository()
+          save: () => saveCallback()
         });
       });
     });
@@ -198,4 +208,9 @@ export class RepositoriesComponent extends ListComponent<Repository> {
    * Function used to update a repository
    */
   private updateRepository(): void {}
+
+  /**
+   * Function used to add a repository
+   */
+  private addRepository(): void {}
 }
