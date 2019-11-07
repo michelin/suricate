@@ -17,9 +17,7 @@
 import { Routes } from '@angular/router';
 
 import { AuthGuard } from '../shared/guards/auth.guard';
-import { UserEditComponent } from './components/user-edit/user-edit.component';
 import { AdminGuard } from '../shared/guards/admin.guard';
-import { RepositoryAddEditComponent } from './components/repository-add-edit/repository-add-edit.component';
 import { UsersComponent } from './components-list/users.component';
 import { RepositoriesComponent } from './components-list/repositories.component';
 import { DashboardsComponent } from './components-list/dashboards.component';
@@ -34,14 +32,6 @@ export const adminRoutes: Routes = [
     }
   },
   {
-    path: 'security/users/:userId/edit',
-    component: UserEditComponent,
-    canActivate: [AuthGuard, AdminGuard],
-    data: {
-      breadcrumb: 'Edit User'
-    }
-  },
-  {
     path: 'admin/dashboards',
     component: DashboardsComponent,
     canActivate: [AuthGuard, AdminGuard]
@@ -49,16 +39,6 @@ export const adminRoutes: Routes = [
   {
     path: 'repositories',
     component: RepositoriesComponent,
-    canActivate: [AuthGuard, AdminGuard]
-  },
-  {
-    path: 'repositories/add',
-    component: RepositoryAddEditComponent,
-    canActivate: [AuthGuard, AdminGuard]
-  },
-  {
-    path: 'repositories/:repositoryId/edit',
-    component: RepositoryAddEditComponent,
     canActivate: [AuthGuard, AdminGuard]
   }
 ];

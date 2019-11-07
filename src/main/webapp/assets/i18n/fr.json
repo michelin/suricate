@@ -56,6 +56,8 @@
   "grid.background.color": "Couleur de fond",
   "grid.nb.columns": "Nombre de colonnes",
   "save.and.assign": "Sauvegarder et ajouter aux utilisateurs",
+  "user.add": "Ajouter un utilisateur",
+  "user.edit": "Modifier utilisateur",
   "users.add": "Ajouter des utilisateurs",
   "users.dashboard": "Utilisateurs ajoutés au TdB",
   "users.list": "Liste des utilisateurs",

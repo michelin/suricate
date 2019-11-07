@@ -16,18 +16,16 @@
 
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { UserEditComponent } from './components/user-edit/user-edit.component';
 import { LayoutModule } from '../layout/layout.module';
 import { SharedModule } from '../shared/shared.module';
 import { adminRoutes } from './admin.route';
-import { RepositoryAddEditComponent } from './components/repository-add-edit/repository-add-edit.component';
 import { UsersComponent } from './components-list/users.component';
 import { RepositoriesComponent } from './components-list/repositories.component';
 import { DashboardsComponent } from './components-list/dashboards.component';
 
 @NgModule({
   imports: [RouterModule.forChild(adminRoutes), LayoutModule, SharedModule],
-  declarations: [RepositoryAddEditComponent, UserEditComponent, UsersComponent, RepositoriesComponent, DashboardsComponent],
+  declarations: [UsersComponent, RepositoriesComponent, DashboardsComponent],
   exports: [RouterModule]
 })
 export class AdminModule {}
