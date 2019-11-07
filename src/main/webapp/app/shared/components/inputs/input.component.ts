@@ -81,8 +81,6 @@ export class InputComponent {
       fieldKey: this.field.key,
       value: this.formGroup.value[this.field.key]
     });
-
-    console.log(this.formGroup.value[this.field.key]);
   }
 
   /**

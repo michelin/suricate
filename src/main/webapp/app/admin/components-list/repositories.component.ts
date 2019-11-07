@@ -23,6 +23,7 @@ import { FormField } from '../../shared/models/frontend/form/form-field';
 import { EMPTY, Observable } from 'rxjs';
 import { ValueChangedEvent } from '../../shared/models/frontend/form/value-changed-event';
 import { RepositoryFormFieldsService } from '../../shared/form-fields/repository-form-fields.service';
+import { RepositoryRequest } from '../../shared/models/backend/repository/repository-request';
 
 /**
  * Component used to display the list of git repositories
@@ -66,7 +67,7 @@ export class RepositoriesComponent extends ListComponent<Repository> {
           icon: IconEnum.ADD,
           variant: 'miniFab',
           color: 'primary',
-          callback: (event: Event) => this.openFormSidenav(event, null, this.addRepository),
+          callback: (event: Event) => this.openFormSidenav(event, null, this.addRepository.bind(this)),
           tooltip: { message: 'Add a new repository' }
         }
       ]
@@ -82,7 +83,7 @@ export class RepositoriesComponent extends ListComponent<Repository> {
         {
           icon: IconEnum.EDIT,
           color: 'primary',
-          callback: (event: Event, repository: Repository) => this.openFormSidenav(event, repository, this.updateRepository)
+          callback: (event: Event, repository: Repository) => this.openFormSidenav(event, repository, this.updateRepository.bind(this))
         }
       ]
     };
@@ -116,7 +117,7 @@ export class RepositoriesComponent extends ListComponent<Repository> {
    * @param repository The repository clicked on the list
    * @param saveCallback The function to call when save button is clicked
    */
-  private openFormSidenav(event: Event, repository: Repository, saveCallback: () => void): void {
+  private openFormSidenav(event: Event, repository: Repository, saveCallback: (repositoryRequest: RepositoryRequest) => void): void {
     this.repositoryFormSidenav = repository ? Object.assign(repository) : new Repository();
 
     this.translateService.get(['repository.edit', 'repository.add']).subscribe((translations: string[]) => {
@@ -124,7 +125,7 @@ export class RepositoriesComponent extends ListComponent<Repository> {
         this.sidenavService.openFormSidenav({
           title: repository ? translations['repository.edit'] : translations['repository.add'],
           formFields: formFields,
-          save: () => saveCallback(),
+          save: (repositoryRequest: RepositoryRequest) => saveCallback(repositoryRequest),
           onValueChanged: (valueChangedEvent: ValueChangedEvent) => this.onValueChanged(valueChangedEvent)
         });
       });
@@ -149,10 +150,18 @@ export class RepositoriesComponent extends ListComponent<Repository> {
   /**
    * Function used to update a repository
    */
-  private updateRepository(): void {}
+  private updateRepository(repositoryRequest: RepositoryRequest): void {
+    this.httpRepositoryService.update(this.repositoryFormSidenav.id, repositoryRequest).subscribe(() => {
+      super.refreshList();
+    });
+  }
 
   /**
    * Function used to add a repository
    */
-  private addRepository(): void {}
+  private addRepository(repositoryRequest: RepositoryRequest): void {
+    this.httpRepositoryService.create(repositoryRequest).subscribe(() => {
+      this.refreshList();
+    });
+  }
 }

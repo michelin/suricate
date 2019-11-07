@@ -364,8 +364,6 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
    */
   updateProjectWidgetsPosition() {
     if (this.isGridItemsHasMoved()) {
-      console.log(`update positions: ${this.gridStackItems}`);
-
       const projectWidgetPositionRequests: ProjectWidgetPositionRequest[] = [];
       this.gridStackItems.forEach(gridStackItem => {
         projectWidgetPositionRequests.push({

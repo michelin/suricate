@@ -36,7 +36,7 @@ export interface FormSidenavConfiguration {
   /**
    * The function to call when the form should be sent
    */
-  save: () => void;
+  save: (object: unknown) => void;
 
   /**
    * Function to call when a value of a field has changed

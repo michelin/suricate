@@ -172,7 +172,6 @@ export class SettingsListComponent implements OnInit {
     this.formService.validate(this.userSettingForm);
 
     if (this.userSettingForm.valid) {
-      console.log(this.userSettingForm.value);
       from(this.settings)
         .pipe(
           flatMap(setting => {

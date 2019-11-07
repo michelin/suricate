@@ -69,9 +69,11 @@
   <!---                        OTHER FIELDS                                                             --->
   <!------------------------------------------------------------------------------------------------------->
 
-  <suricate-checkbox *ngIf="dataType.BOOLEAN === field.type" [field]="field" [formGroup]="formGroup"> </suricate-checkbox>
+  <suricate-checkbox *ngIf="dataType.BOOLEAN === field.type" [field]="field" [formGroup]="formGroup" (valueChangeEvent)="emitValueChange()">
+  </suricate-checkbox>
 
-  <suricate-file-input *ngIf="dataType.FILE === field.type" [field]="field" [formGroup]="formGroup"> </suricate-file-input>
+  <suricate-file-input *ngIf="dataType.FILE === field.type" [field]="field" [formGroup]="formGroup" (valueChangeEvent)="emitValueChange()">
+  </suricate-file-input>
 
   <!------------------------------------------------------------------------------------------------------->
   <!---                        FIELDS ERROR MANAGEMENT                                                  --->
