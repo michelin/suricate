@@ -29,11 +29,11 @@
       [required]="isRequired()"
       [readonly]="field.readOnly"
       [matAutocomplete]="autocomplete"
-      (keyup)="emitValueChange()"
+      (input)="emitValueChange()"
     />
 
     <!-- Autocomplete -->
-    <mat-autocomplete #autocomplete="matAutocomplete">
+    <mat-autocomplete #autocomplete="matAutocomplete" (optionSelected)="emitValueChange()">
       <mat-option *ngFor="let option of field.options" [value]="option.key">
         {{ option.label }}
       </mat-option>
@@ -46,7 +46,7 @@
       [formControl]="getFormControl()"
       [multiple]="field.type === dataType.MULTIPLE"
       [required]="isRequired()"
-      (selectionChange)="emitValueChange($event.value)"
+      (selectionChange)="emitValueChange()"
     >
       <mat-option *ngFor="let option of field.options" [value]="option.key">
         {{ option.label }}
@@ -69,9 +69,9 @@
   <!---                        OTHER FIELDS                                                             --->
   <!------------------------------------------------------------------------------------------------------->
 
-  <suricate-checkbox *ngIf="dataType.BOOLEAN === field.type" [field]="field" [formGroup]="formGroup"></suricate-checkbox>
+  <suricate-checkbox *ngIf="dataType.BOOLEAN === field.type" [field]="field" [formGroup]="formGroup"> </suricate-checkbox>
 
-  <suricate-file-input *ngIf="dataType.FILE === field.type" [field]="field" [formGroup]="formGroup"></suricate-file-input>
+  <suricate-file-input *ngIf="dataType.FILE === field.type" [field]="field" [formGroup]="formGroup"> </suricate-file-input>
 
   <!------------------------------------------------------------------------------------------------------->
   <!---                        FIELDS ERROR MANAGEMENT                                                  --->

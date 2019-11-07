@@ -73,6 +73,16 @@ export class FileInputComponent extends InputComponent implements OnInit {
   }
 
   /**
+   * Manage the change event return by the input
+   *
+   * @param event The event
+   */
+  onFileChange(event) {
+    this.convertFileBase64(event);
+    this.emitValueChange();
+  }
+
+  /**
    * Convert a file into base64
    *
    * @param event The change event
@@ -89,6 +99,7 @@ export class FileInputComponent extends InputComponent implements OnInit {
     }
 
     super.getFormControl().markAsTouched();
+    this.emitValueChange();
   }
 
   /**

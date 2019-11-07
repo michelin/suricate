@@ -31,4 +31,8 @@ export class CheckboxComponent extends InputComponent {
   constructor() {
     super();
   }
+
+  checkboxChange() {
+    this.emitValueChange();
+  }
 }

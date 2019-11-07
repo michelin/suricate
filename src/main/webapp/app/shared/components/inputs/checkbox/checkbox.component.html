@@ -3,6 +3,7 @@
   [name]="field.key"
   [checked]="field.value === undefined ? false : field.value"
   [formControl]="getFormControl()"
+  (change)="checkboxChange()"
 >
   {{ field.label }}
 </mat-checkbox>
