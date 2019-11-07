@@ -23,13 +23,9 @@ import { IconEnum } from '../../shared/enums/icon.enum';
 import { TitleCasePipe } from '@angular/common';
 import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
 import { FormField } from '../../shared/models/frontend/form/form-field';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { DataTypeEnum } from '../../shared/enums/data-type.enum';
-import { Validators } from '@angular/forms';
-import { CustomValidators } from 'ng2-validation';
-import { FormOption } from '../../shared/models/frontend/form/form-option';
 import { HttpRoleService } from '../../shared/services/backend/http-role.service';
+import { UserFormFieldsService } from '../../shared/form-fields/user-form-fields.service';
+import { UserRequest } from '../../shared/models/backend/user/user-request';
 
 /**
  * Component used to display the list of users
@@ -40,6 +36,11 @@ import { HttpRoleService } from '../../shared/services/backend/http-role.service
 })
 export class UsersComponent extends ListComponent<User> implements OnInit {
   /**
+   * User selected in the list for modification
+   */
+  private userSelected: User;
+
+  /**
    * The list of roles
    */
   private roles: Role[];
@@ -49,9 +50,15 @@ export class UsersComponent extends ListComponent<User> implements OnInit {
    *
    * @param httpUserService Suricate service used to manage the http calls for users
    * @param httpRoleService Suricate service used to manage the http calls for roles
+   * @param userFormFieldsService Frontend service used to build the form fields for a user
    * @param injector Angular Service used to manage the injection of services
    */
-  constructor(private httpUserService: HttpUserService, private httpRoleService: HttpRoleService, protected injector: Injector) {
+  constructor(
+    private readonly httpUserService: HttpUserService,
+    private readonly httpRoleService: HttpRoleService,
+    private readonly userFormFieldsService: UserFormFieldsService,
+    protected injector: Injector
+  ) {
     super(httpUserService, injector);
 
     this.initHeaderConfiguration();
@@ -84,7 +91,7 @@ export class UsersComponent extends ListComponent<User> implements OnInit {
         {
           icon: IconEnum.EDIT,
           color: 'primary',
-          callback: (event: Event, user: User) => this.openFormSidenav(event, user, this.editUser)
+          callback: (event: Event, user: User) => this.openFormSidenav(event, user, this.editUser.bind(this))
         },
         {
           icon: IconEnum.DELETE,
@@ -117,97 +124,35 @@ export class UsersComponent extends ListComponent<User> implements OnInit {
   }
 
   /**
-   * Edit a user
-   */
-  private editUser(): void {}
-
-  /**
    * Open the form sidenav
    *
    * @param event The click event
    * @param user The user clicked on the list
    * @param saveCallback The function to call when save button is clicked
    */
-  private openFormSidenav(event: Event, user: User, saveCallback: () => void): void {
+  private openFormSidenav(event: Event, user: User, saveCallback: (userRequest: UserRequest) => void): void {
+    this.userSelected = user;
+
     this.translateService.get(['user.edit', 'user.add']).subscribe((translations: string[]) => {
-      this.getFormFields(user).subscribe((formFields: FormField[]) => {
+      this.userFormFieldsService.getFormFields(this.roles, user).subscribe((formFields: FormField[]) => {
         this.sidenavService.openFormSidenav({
           title: user ? translations['user.edit'] : translations['user.add'],
           formFields: formFields,
-          save: () => saveCallback()
+          save: (userRequest: UserRequest) => saveCallback(userRequest)
         });
       });
     });
   }
 
   /**
-   * Build the form fields of the user
+   * Edit a user
    *
-   * @param user The bean
+   * @param userRequest The user request to make
    */
-  private getFormFields(user?: User): Observable<FormField[]> {
-    return this.translateService.get(['username', 'firstname', 'lastname', 'email', 'roles']).pipe(
-      map((translations: string) => {
-        return [
-          {
-            key: 'username',
-            label: translations['username'],
-            type: DataTypeEnum.TEXT,
-            value: user.username ? user.username : null,
-            readOnly: true,
-            validators: [Validators.required, Validators.minLength(3)],
-            matIconPrefix: 'android'
-          },
-          {
-            key: 'firstname',
-            label: translations['firstname'],
-            type: DataTypeEnum.TEXT,
-            value: user.firstname ? user.firstname : null,
-            validators: [Validators.required, Validators.minLength(3)],
-            matIconPrefix: 'person'
-          },
-          {
-            key: 'lastname',
-            label: translations['lastname'],
-            type: DataTypeEnum.TEXT,
-            value: user.lastname ? user.lastname : null,
-            validators: [Validators.required, Validators.minLength(3)],
-            matIconPrefix: 'person'
-          },
-          {
-            key: 'email',
-            label: translations['email'],
-            type: DataTypeEnum.TEXT,
-            value: user.email ? user.email : null,
-            validators: [Validators.required, CustomValidators.email],
-            matIconPrefix: 'email'
-          },
-          {
-            key: 'roles',
-            label: translations['roles'],
-            type: DataTypeEnum.MULTIPLE,
-            value: user.roles && user.roles.length > 0 ? user.roles.map(role => role.name) : null,
-            options: this.getRoleOptions(),
-            validators: [Validators.required]
-          }
-        ];
-      })
-    );
-  }
-
-  /**
-   * Get the role options
-   */
-  getRoleOptions(): FormOption[] {
-    const roleOptions: FormOption[] = [];
-    this.roles.forEach((role: Role) => {
-      roleOptions.push({
-        key: role.name,
-        label: role.description
-      });
+  private editUser(userRequest: UserRequest): void {
+    this.httpUserService.update(this.userSelected.id, userRequest).subscribe(() => {
+      super.refreshList();
     });
-
-    return roleOptions;
   }
 
   /**
