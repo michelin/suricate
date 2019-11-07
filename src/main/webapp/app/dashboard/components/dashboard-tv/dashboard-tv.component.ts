@@ -32,6 +32,7 @@ import { WebsocketService } from '../../../shared/services/frontend/websocket.se
 import { UserService } from '../../../admin/services/user.service';
 import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';
 import { DashboardService } from '../../services/dashboard.service';
+import { AuthenticationService } from '../../../shared/services/frontend/authentication.service';
 
 /**
  * Dashboard TV Management
@@ -128,7 +129,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * When the component is destroyed
    */
   ngOnDestroy() {
-    this.settingsService.initUserThemeSetting(this.userService.connectedUser);
+    this.settingsService.initUserThemeSetting(AuthenticationService.getConnectedUser());
     this.sidenavService.openSidenav();
     this.isAlive = false;
     this.disconnectTV();

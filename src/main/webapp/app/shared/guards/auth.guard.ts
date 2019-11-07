@@ -19,9 +19,7 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, CanActivateChild, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
-
-import { TokenService } from '../services/frontend/token.service';
-import { AuthenticationService } from '../../core/services/authentication.service';
+import { AuthenticationService } from '../services/frontend/authentication.service';
 
 /**
  * Manage the right of the users
@@ -32,10 +30,8 @@ export class AuthGuard implements CanActivate, CanActivateChild {
    * The constructor
    *
    * @param {Router} router The router
-   * @param {AuthenticationService} authenticationService
-   * @param {TokenService} tokenService The token service
    */
-  constructor(private router: Router, private authenticationService: AuthenticationService, private tokenService: TokenService) {}
+  constructor(private router: Router) {}
 
   /**
    * Manage user roles
@@ -43,14 +39,12 @@ export class AuthGuard implements CanActivate, CanActivateChild {
    * @returns {Observable<boolean>}
    */
   canActivate(): Observable<boolean> {
-    if (this.tokenService.token && !this.tokenService.isTokenExpired()) {
+    if (!AuthenticationService.isTokenExpired()) {
       return of(true);
     }
 
     // not logged in so redirect to login page
-    this.authenticationService.logout();
     this.router.navigate(['/login']);
-
     return of(false);
   }
 

@@ -19,7 +19,7 @@ import { Role } from '../role/role';
 /**
  * The user entity
  */
-export interface User {
+export class User {
   id: number;
   username: string;
   firstname: string;

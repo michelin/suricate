@@ -15,18 +15,16 @@
  */
 
 import { Component, HostBinding, OnDestroy, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { takeWhile } from 'rxjs/operators';
 
-import { AuthenticationService } from './core/services/authentication.service';
-import { SettingsService } from './core/services/settings.service';
-import { UserService } from './admin/services/user.service';
 import { DialogService } from './shared/services/frontend/dialog.service';
 import { MatDialog } from '@angular/material';
 import { ConfirmationDialogConfiguration } from './shared/models/frontend/dialog/confirmation-dialog-configuration';
 import { ConfirmDialogComponent } from './shared/components/confirm-dialog/confirm-dialog.component';
 import { MatDialogConfig } from '@angular/material/typings/dialog';
+import { SettingsService } from './core/services/settings.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'suricate-root',
@@ -38,7 +36,6 @@ export class AppComponent implements OnInit, OnDestroy {
    * The HTML class attribute
    */
   @HostBinding('class') appHtmlClass;
-
   /**
    * Tell if the component is instantiate or not
    *
@@ -46,56 +43,39 @@ export class AppComponent implements OnInit, OnDestroy {
    * @private
    */
   private isAlive = true;
-
   /**
-   * Observable that tell to the app if the user is connected
-   * @type {Observable<boolean>}
+   * If we should hide the menu
    */
-  isLoggedIn$: Observable<boolean>;
-
-  /**
-   * The title app
-   * @type {string}
-   */
-  title = 'Dashboard - Monitoring';
+  public shouldHideMenu = true;
 
   /**
    * The constructor
    *
-   * @param {AuthenticationService} authenticationService Authentication service to inject
+   * @param settingsService
    * @param {OverlayContainer} overlayContainer The overlay container service
-   * @param {UserService} userService The user service
-   * @param {SettingsService} settingsService The settings service to inject
    * @param {DialogService} dialogService Angular service used to manage dialogs
    * @param {MatDialog} matDialog Angular material service used to display dialog
+   * @param router Angular service used to manage routes
+   * @param activatedRoute Angular service used to get the activated route by the component
    */
   constructor(
-    private authenticationService: AuthenticationService,
-    private overlayContainer: OverlayContainer,
-    private userService: UserService,
     private settingsService: SettingsService,
+    private overlayContainer: OverlayContainer,
     private readonly dialogService: DialogService,
-    private readonly matDialog: MatDialog
+    private readonly matDialog: MatDialog,
+    private readonly router: Router,
+    private readonly activatedRoute: ActivatedRoute
   ) {}
 
   /**
    * Called at the init of the app
    */
   ngOnInit() {
-    this.isLoggedIn$ = this.authenticationService.isLoggedIn$.pipe(takeWhile(() => this.isAlive));
     this.settingsService.currentTheme$.pipe(takeWhile(() => this.isAlive)).subscribe(themeValue => {
       this.switchTheme(themeValue);
     });
 
     this.settingsService.initDefaultSettings();
-    this.userService.connectedUser$.subscribe(user => {
-      if (user) {
-        this.settingsService.initUserSettings(user);
-      } else {
-        this.settingsService.initDefaultSettings();
-      }
-    });
-
     this.subscribeToConfirmationDialog();
   }
 

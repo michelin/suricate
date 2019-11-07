@@ -16,18 +16,25 @@
  *
  */
 
-import { inject, TestBed } from '@angular/core/testing';
+import { Injectable } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
-import { AuthenticationService } from '../../../shared/services/frontend/authentication.service';
+/**
+ * Service used to manage menu
+ */
+@Injectable({ providedIn: 'root' })
+export class MenuService {
+  /**
+   * Routes where the menu should be hidden
+   */
+  public static readonly routesWithoutMenu = ['login', 'register', 'tv'];
 
-describe('AuthenticationService', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [AuthenticationService]
-    });
-  });
-
-  it('should be created', inject([AuthenticationService], (service: AuthenticationService) => {
-    expect(service).toBeTruthy();
-  }));
-});
+  /**
+   * Used to know if we should hide the menu
+   *
+   * @param activatedRoute The activated route by the displayed component
+   */
+  public static shouldHideMenu(activatedRoute: ActivatedRoute): boolean {
+    return MenuService.routesWithoutMenu.includes(activatedRoute.routeConfig.path);
+  }
+}

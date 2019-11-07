@@ -31,6 +31,7 @@ import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
 import { HttpWidgetService } from '../../../shared/services/backend/http-widget.service';
 import { WidgetAvailabilityEnum } from '../../../shared/enums/widget-availability.enum';
 import { HttpAssetService } from '../../../shared/services/backend/http-asset.service';
+import { AuthenticationService } from '../../../shared/services/frontend/authentication.service';
 
 /**
  * Component that display the list of widgets (admin part)
@@ -132,7 +133,7 @@ export class WidgetListComponent implements OnInit, AfterViewInit, OnDestroy {
    * Steps when the component is init
    */
   ngOnInit() {
-    this.isUserAdmin = this.userService.isAdmin();
+    this.isUserAdmin = AuthenticationService.isAdmin();
     this.initTable();
   }
 

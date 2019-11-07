@@ -22,7 +22,7 @@ import { catchError, flatMap } from 'rxjs/operators';
 import { throwError } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
 
-import { AuthenticationService } from '../../services/authentication.service';
+import { AuthenticationService } from '../../../shared/services/frontend/authentication.service';
 import { ToastService } from '../../../shared/services/frontend/toast.service';
 import { ApplicationProperties } from '../../../shared/models/backend/application-properties';
 import { HttpConfigurationService } from '../../../shared/services/backend/http-configuration.service';
@@ -87,13 +87,17 @@ export class RegisterComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.sidenavService.closeSidenav();
 
+    if (AuthenticationService.isLoggedIn()) {
+      this.navigateToHomePage();
+      return;
+    }
+
     this.httpConfigurationService.getAuthenticationProvider().subscribe((applicationProperties: ApplicationProperties) => {
       if (applicationProperties.value === AuthenticationProviderEnum.LDAP) {
         this.router.navigate(['/login']);
       }
     });
 
-    this.authenticationService.logout();
     this.initRegisterForm();
   }
 
@@ -194,7 +198,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
         .subscribe(
           () => {
             // Authentication succeed
-            this.router.navigate(['/home']);
+            this.navigateToHomePage();
           },
           error => {
             console.log(error);
@@ -204,6 +208,10 @@ export class RegisterComponent implements OnInit, OnDestroy {
     } else {
       this.toastService.sendMessage('Some fields are not properly filled', ToastTypeEnum.DANGER);
     }
+  }
+
+  private navigateToHomePage(): void {
+    this.router.navigate(['/home']);
   }
 
   /**

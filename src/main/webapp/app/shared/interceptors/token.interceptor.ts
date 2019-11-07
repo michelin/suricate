@@ -18,21 +18,14 @@ import { Injectable } from '@angular/core';
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { TokenService } from '../services/frontend/token.service';
 import { baseApiEndpoint } from '../../app.constant';
+import { AuthenticationService } from '../services/frontend/authentication.service';
 
 /**
- * The token interceptor
+ * Used to put the token in the request
  */
 @Injectable({ providedIn: 'root' })
 export class TokenInterceptor implements HttpInterceptor {
-  /**
-   * Constructor
-   *
-   * @param {TokenService} tokenService The token service to inject
-   */
-  constructor(private tokenService: TokenService) {}
-
   /**
    * Method implemented from HttpInterceptor
    *
@@ -45,14 +38,14 @@ export class TokenInterceptor implements HttpInterceptor {
       return next.handle(request);
     }
 
-    const token = this.tokenService.token || sessionStorage.getItem('token');
-    if (!!token) {
+    if (AuthenticationService.isLoggedIn()) {
       request = request.clone({
         setHeaders: {
-          Authorization: 'Bearer ' + token
+          Authorization: AuthenticationService.getFullToken()
         }
       });
     }
+
     return next.handle(request);
   }
 }

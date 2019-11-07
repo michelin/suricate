@@ -21,6 +21,7 @@ import { Project } from '../../shared/models/backend/project/project';
 import { UserService } from '../../admin/services/user.service';
 import { HttpProjectService } from '../../shared/services/backend/http-project.service';
 import { map } from 'rxjs/operators';
+import { AuthenticationService } from '../../shared/services/frontend/authentication.service';
 
 /**
  * The dashboard service, manage http calls
@@ -125,7 +126,10 @@ export class DashboardService {
   shouldDisplayedReadOnly(dashboardToken: string): Observable<boolean> {
     return this.httpProjectService.getProjectUsers(dashboardToken).pipe(
       map(dashboardUsers => {
-        return !this.userService.isAdmin() && !dashboardUsers.some(user => user.username === this.userService.connectedUser.username);
+        return (
+          !AuthenticationService.isAdmin() &&
+          !dashboardUsers.some(user => user.username === AuthenticationService.getConnectedUser().username)
+        );
       })
     );
   }

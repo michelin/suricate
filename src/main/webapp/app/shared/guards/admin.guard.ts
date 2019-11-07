@@ -19,6 +19,7 @@ import { CanActivate, CanActivateChild, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 
 import { UserService } from '../../admin/services/user.service';
+import { AuthenticationService } from '../services/frontend/authentication.service';
 
 /**
  * The admin guard
@@ -38,11 +39,11 @@ export class AdminGuard implements CanActivate, CanActivateChild {
    * @returns {Observable<boolean>}
    */
   canActivate(): Observable<boolean> {
-    if (this.userService.isAdmin()) {
+    if (AuthenticationService.isAdmin()) {
       return of(true);
     }
 
-    this.router.navigate(['home']);
+    this.router.navigate(['/home']);
     return of(false);
   }
 

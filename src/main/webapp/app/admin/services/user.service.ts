@@ -15,11 +15,8 @@
  */
 
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
 
-import { TokenService } from '../../shared/services/frontend/token.service';
 import { User } from '../../shared/models/backend/user/user';
-import { RoleEnum } from '../../shared/enums/role.enum';
 
 /**
  * User service that manage users
@@ -27,46 +24,9 @@ import { RoleEnum } from '../../shared/enums/role.enum';
 @Injectable({ providedIn: 'root' })
 export class UserService {
   /**
-   * The connected user subject
-   * @type {Subject<User>}
-   */
-  private connectedUserSubject: BehaviorSubject<User> = new BehaviorSubject<User>(null);
-
-  /**
    * The constructor
-   *
-   * @param {TokenService} tokenService The token service
    */
-  constructor(private tokenService: TokenService) {}
-
-  /* *************************************************************************************** */
-  /*                            Subject Management                                           */
-
-  /* *************************************************************************************** */
-
-  /**
-   * Get the connected user event
-   * @returns {Observable<User>}
-   */
-  get connectedUser$(): Observable<User> {
-    return this.connectedUserSubject.asObservable();
-  }
-
-  /**
-   * Get the current connected user value
-   * @returns {User}
-   */
-  get connectedUser(): User {
-    return this.connectedUserSubject.getValue();
-  }
-
-  /**
-   * Set and send the new connected user
-   * @param {User} connectedUser
-   */
-  set connectedUser(connectedUser: User) {
-    this.connectedUserSubject.next(connectedUser);
-  }
+  constructor() {}
 
   /* *************************************************************************************** */
   /*                            Other Help Functions                                         */
@@ -80,14 +40,10 @@ export class UserService {
    * @returns {string} The initials
    */
   getUserInitial(user: User): string {
-    return `${user.firstname.substring(0, 1)}${user.lastname.substring(0, 1)}`;
-  }
+    if (user.firstname && user.lastname) {
+      return `${user.firstname.substring(0, 1)}${user.lastname.substring(0, 1)}`;
+    }
 
-  /**
-   * Test if the user is admin
-   * @returns {boolean} True if the current user admin, false otherwise
-   */
-  isAdmin(): boolean {
-    return this.tokenService.hasToken() ? this.tokenService.getUserRoles().includes(RoleEnum.ROLE_ADMIN) : false;
+    return '';
   }
 }

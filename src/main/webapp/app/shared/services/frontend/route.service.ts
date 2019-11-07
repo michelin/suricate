@@ -16,18 +16,24 @@
  *
  */
 
-import { inject, TestBed } from '@angular/core/testing';
+import { Injectable } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
-import { AuthenticationService } from '../../../shared/services/frontend/authentication.service';
+/**
+ * Service used to manage global routes
+ */
+@Injectable({ providedIn: 'root' })
+export class RoutesService {
+  /**
+   * Get the deeper activated route from the current route
+   *
+   * @param activatedRoute The activated route given
+   */
+  public static getDeeperActivatedRoute(activatedRoute: ActivatedRoute): ActivatedRoute {
+    if (activatedRoute.firstChild) {
+      return this.getDeeperActivatedRoute(activatedRoute.firstChild);
+    }
 
-describe('AuthenticationService', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [AuthenticationService]
-    });
-  });
-
-  it('should be created', inject([AuthenticationService], (service: AuthenticationService) => {
-    expect(service).toBeTruthy();
-  }));
-});
+    return activatedRoute;
+  }
+}

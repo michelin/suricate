@@ -19,7 +19,7 @@ import { FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
-import { AuthenticationService } from '../../services/authentication.service';
+import { AuthenticationService } from '../../../shared/services/frontend/authentication.service';
 import { HttpConfigurationService } from '../../../shared/services/backend/http-configuration.service';
 import { ApplicationProperties } from '../../../shared/models/backend/application-properties';
 import { AuthenticationProviderEnum } from '../../../shared/enums/authentication-provider.enum';
@@ -81,11 +81,15 @@ export class LoginComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.sidenavService.closeSidenav();
 
+    if (AuthenticationService.isLoggedIn()) {
+      this.navigateToHomePage();
+      return;
+    }
+
     this.httpConfigurationService.getAuthenticationProvider().subscribe((applicationProperties: ApplicationProperties) => {
       this.isLdapServerUserProvider = applicationProperties.value.toUpperCase() === AuthenticationProviderEnum.LDAP;
     });
 
-    this.authenticationService.logout();
     this.initLoginForm();
   }
 
@@ -136,8 +140,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       // Try to authenticate
       this.authenticationService.authenticate(this.loginForm.value).subscribe(
         () => {
-          // Authentication succeed
-          this.router.navigate(['/home']);
+          this.navigateToHomePage();
         },
         () => {
           // Authentication failed
@@ -145,6 +148,10 @@ export class LoginComponent implements OnInit, OnDestroy {
         }
       );
     }
+  }
+
+  private navigateToHomePage(): void {
+    this.router.navigate(['/home']);
   }
 
   /**

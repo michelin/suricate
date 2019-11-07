@@ -16,18 +16,34 @@
  *
  */
 
-import { inject, TestBed } from '@angular/core/testing';
+import { RoleEnum } from '../../../enums/role.enum';
 
-import { AuthenticationService } from '../../../shared/services/frontend/authentication.service';
-
-describe('AuthenticationService', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [AuthenticationService]
-    });
-  });
-
-  it('should be created', inject([AuthenticationService], (service: AuthenticationService) => {
-    expect(service).toBeTruthy();
-  }));
-});
+/**
+ * Represent the access token decoded
+ */
+export interface AccessTokenDecoded {
+  /**
+   * Unique identifier of the token
+   */
+  jti: string;
+  /**
+   * The OAuth2 client id
+   */
+  client_id: string;
+  /**
+   * The scope the token (read, write)
+   */
+  scope: ['read'] | ['write'] | ['read', 'write'];
+  /**
+   * The expiration date as long
+   */
+  exp: number;
+  /**
+   * The username
+   */
+  user_name: string;
+  /**
+   * The list of roles of the user
+   */
+  authorities: RoleEnum[];
+}
