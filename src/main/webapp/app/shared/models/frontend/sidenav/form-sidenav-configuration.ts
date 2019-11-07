@@ -18,6 +18,7 @@
 
 import { FormField } from '../form/form-field';
 import { ValueChangedEvent } from '../form/value-changed-event';
+import { Observable } from 'rxjs';
 
 /**
  * Configuration used by the form sidenav
@@ -40,5 +41,5 @@ export interface FormSidenavConfiguration {
   /**
    * Function to call when a value of a field has changed
    */
-  onValueChanged?: (valueChangedEvent: ValueChangedEvent) => void;
+  onValueChanged?: (valueChangedEvent: ValueChangedEvent) => Observable<FormField[]>;
 }

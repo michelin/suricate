@@ -75,13 +75,11 @@ export class InputComponent {
 
   /**
    * Function called when a field has been changed in the form, emit and event that will be caught by the parent component
-   *
-   * @param value The new value
    */
-  emitValueChange(value: any): void {
+  emitValueChange(): void {
     this.valueChangeEvent.emit({
       fieldKey: this.field.key,
-      value: value
+      value: this.formGroup.value[this.field.key]
     });
   }
 

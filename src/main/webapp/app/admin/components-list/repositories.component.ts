@@ -20,13 +20,9 @@ import { IconEnum } from '../../shared/enums/icon.enum';
 import { Repository } from '../../shared/models/backend/repository/repository';
 import { HttpRepositoryService } from '../../shared/services/backend/http-repository.service';
 import { FormField } from '../../shared/models/frontend/form/form-field';
-import { map } from 'rxjs/operators';
-import { Observable } from 'rxjs';
-import { DataTypeEnum } from '../../shared/enums/data-type.enum';
-import { Validators } from '@angular/forms';
-import { RepositoryTypeEnum } from '../../shared/enums/repository-type.enum';
-import { FormOption } from '../../shared/models/frontend/form/form-option';
-import { TitleCasePipe } from '@angular/common';
+import { EMPTY, Observable } from 'rxjs';
+import { ValueChangedEvent } from '../../shared/models/frontend/form/value-changed-event';
+import { RepositoryFormFieldsService } from '../../shared/form-fields/repository-form-fields.service';
 
 /**
  * Component used to display the list of git repositories
@@ -37,12 +33,22 @@ import { TitleCasePipe } from '@angular/common';
 })
 export class RepositoriesComponent extends ListComponent<Repository> {
   /**
+   * Reflect the state of the repository in the form sidenav
+   */
+  private repositoryFormSidenav: Repository;
+
+  /**
    * Constructor
    *
    * @param httpRepositoryService Suricate service used to manage the http calls for a repository
+   * @param repositoryFormFieldsService Frontend service used tu get the form fields related to a repository
    * @param injector Angular Service used to manage the injection of services
    */
-  constructor(private httpRepositoryService: HttpRepositoryService, protected injector: Injector) {
+  constructor(
+    private readonly httpRepositoryService: HttpRepositoryService,
+    private readonly repositoryFormFieldsService: RepositoryFormFieldsService,
+    protected injector: Injector
+  ) {
     super(httpRepositoryService, injector);
 
     this.initHeaderConfiguration();
@@ -111,97 +117,33 @@ export class RepositoriesComponent extends ListComponent<Repository> {
    * @param saveCallback The function to call when save button is clicked
    */
   private openFormSidenav(event: Event, repository: Repository, saveCallback: () => void): void {
+    this.repositoryFormSidenav = repository ? Object.assign(repository) : new Repository();
+
     this.translateService.get(['repository.edit', 'repository.add']).subscribe((translations: string[]) => {
-      this.getFormFields(repository).subscribe((formFields: FormField[]) => {
+      this.repositoryFormFieldsService.generateFormFields(repository).subscribe((formFields: FormField[]) => {
         this.sidenavService.openFormSidenav({
           title: repository ? translations['repository.edit'] : translations['repository.add'],
           formFields: formFields,
-          save: () => saveCallback()
+          save: () => saveCallback(),
+          onValueChanged: (valueChangedEvent: ValueChangedEvent) => this.onValueChanged(valueChangedEvent)
         });
       });
     });
   }
 
   /**
-   * Build the form fields of the repository
+   * Manage the value changes
    *
-   * @param repository The bean
+   * @param valueChangedEvent The value changed
    */
-  private getFormFields(repository?: Repository): Observable<FormField[]> {
-    return this.translateService.get(['name', 'repository.enable', 'type', 'url', 'branch', 'login', 'password', 'local.path']).pipe(
-      map((translations: string) => {
-        const formFields: FormField[] = [
-          {
-            key: 'enabled',
-            label: translations['repository.enable'],
-            type: DataTypeEnum.BOOLEAN,
-            value: repository ? repository.enabled : false
-          },
-          {
-            key: 'name',
-            label: translations['name'],
-            type: DataTypeEnum.TEXT,
-            value: repository ? repository.name : '',
-            validators: [Validators.required]
-          },
-          {
-            key: 'type',
-            label: translations['type'],
-            type: DataTypeEnum.COMBO,
-            options: this.getRepositoryTypeOptions(),
-            value: repository ? repository.type : RepositoryTypeEnum.REMOTE,
-            validators: [Validators.required]
-          },
-          {
-            key: 'url',
-            label: translations['url'],
-            type: DataTypeEnum.TEXT,
-            value: repository ? repository.url : '',
-            validators: [Validators.required]
-          },
-          {
-            key: 'branch',
-            label: translations['branch'],
-            type: DataTypeEnum.TEXT,
-            value: repository ? repository.branch : '',
-            validators: [Validators.required]
-          },
-          {
-            key: 'login',
-            label: translations['login'],
-            type: DataTypeEnum.TEXT,
-            value: repository ? repository.login : '',
-            validators: [Validators.required]
-          },
-          {
-            key: 'password',
-            label: translations['password'],
-            type: DataTypeEnum.PASSWORD,
-            value: repository ? repository.password : '',
-            validators: [Validators.required]
-          }
-        ];
+  private onValueChanged(valueChangedEvent: ValueChangedEvent): Observable<FormField[]> {
+    this.repositoryFormSidenav[valueChangedEvent.fieldKey] = valueChangedEvent.value;
 
-        return formFields;
-      })
-    );
-  }
+    if (valueChangedEvent.fieldKey === 'type') {
+      return this.repositoryFormFieldsService.generateFormFields(this.repositoryFormSidenav);
+    }
 
-  /**
-   * Get the repository type options for the combobox
-   */
-  getRepositoryTypeOptions(): FormOption[] {
-    const titleCasePipe = new TitleCasePipe();
-    const typeOptions: FormOption[] = [];
-
-    Object.keys(RepositoryTypeEnum).forEach(repositoryType => {
-      typeOptions.push({
-        key: repositoryType,
-        label: titleCasePipe.transform(repositoryType)
-      });
-    });
-
-    return typeOptions;
+    return EMPTY;
   }
 
   /**

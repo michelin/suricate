@@ -19,9 +19,9 @@
 import { RepositoryTypeEnum } from '../../../enums/repository-type.enum';
 
 /**
- * Hold the repository informations
+ * Hold the repository information
  */
-export interface Repository {
+export class Repository {
   /**
    * The repository id
    */
@@ -66,4 +66,9 @@ export interface Repository {
    * If the repository is enable or not
    */
   enabled: boolean;
+
+  /**
+   * Constructor
+   */
+  constructor() {}
 }

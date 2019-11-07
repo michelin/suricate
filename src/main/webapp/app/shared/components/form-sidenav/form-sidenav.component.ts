@@ -22,6 +22,8 @@ import { FormGroup } from '@angular/forms';
 import { takeWhile } from 'rxjs/operators';
 import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
 import { IconEnum } from '../../enums/icon.enum';
+import { ValueChangedEvent } from '../../models/frontend/form/value-changed-event';
+import { FormField } from '../../models/frontend/form/form-field';
 
 /**
  * Component used to display the form sidenav
@@ -127,6 +129,20 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
   private save(): void {
     this.configuration.save();
     this.closeSidenav();
+  }
+
+  /**
+   * Called when a value has changed
+   *
+   * @param valueChangedEvent The value changed
+   */
+  public valueChanged(valueChangedEvent: ValueChangedEvent): void {
+    if (this.configuration.onValueChanged) {
+      this.configuration.onValueChanged(valueChangedEvent).subscribe((formFields: FormField[]) => {
+        this.formGroup = this.formService.generateFormGroupForFields(formFields);
+        this.configuration.formFields = formFields;
+      });
+    }
   }
 
   /**

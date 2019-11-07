@@ -2,7 +2,13 @@
   <h1>{{ configuration.title | uppercase }}</h1>
   <div fxLayout="column" fxLayoutAlign="space-between" fxFlex="100">
     <div fxLayout="column">
-      <suricate-input *ngFor="let field of configuration.formFields" [formGroup]="formGroup" [field]="field"> </suricate-input>
+      <suricate-input
+        *ngFor="let field of configuration.formFields"
+        [formGroup]="formGroup"
+        [field]="field"
+        (valueChangeEvent)="valueChanged($event)"
+      >
+      </suricate-input>
     </div>
     <div>
       <suricate-buttons [configurations]="buttons"> </suricate-buttons>
