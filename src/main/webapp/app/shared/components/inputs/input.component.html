@@ -34,7 +34,7 @@
 
     <!-- Autocomplete -->
     <mat-autocomplete #autocomplete="matAutocomplete" (optionSelected)="emitValueChange()">
-      <mat-option *ngFor="let option of field.options" [value]="option.key">
+      <mat-option *ngFor="let option of field.options" [value]="option.value">
         {{ option.label }}
       </mat-option>
     </mat-autocomplete>
@@ -48,7 +48,7 @@
       [required]="isRequired()"
       (selectionChange)="emitValueChange()"
     >
-      <mat-option *ngFor="let option of field.options" [value]="option.key">
+      <mat-option *ngFor="let option of field.options" [value]="option.value">
         {{ option.label }}
       </mat-option>
     </mat-select>

@@ -159,8 +159,8 @@ export class RepositoryFormFieldsService {
 
     Object.keys(RepositoryTypeEnum).forEach(repositoryType => {
       typeOptions.push({
-        key: repositoryType,
-        label: titleCasePipe.transform(repositoryType)
+        label: titleCasePipe.transform(repositoryType),
+        value: repositoryType
       });
     });
 

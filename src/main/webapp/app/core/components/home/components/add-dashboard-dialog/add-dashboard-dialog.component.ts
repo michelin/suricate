@@ -221,8 +221,8 @@ export class AddDashboardDialogComponent implements OnInit {
         if (users) {
           users.forEach((user: User) => {
             options.push({
-              key: user.username,
-              label: `${titleCasePipe.transform(user.username)} - ${user.firstname} ${user.lastname}`
+              label: `${titleCasePipe.transform(user.username)} - ${user.firstname} ${user.lastname}`,
+              value: user.username
             });
           });
         }

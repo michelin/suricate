@@ -21,11 +21,11 @@
  */
 export interface FormOption {
   /**
-   * The key of the option
-   */
-  key: string;
-  /**
    * The label displayed to the user
    */
   label: string;
+  /**
+   * The value to persist in the form
+   */
+  value: string;
 }

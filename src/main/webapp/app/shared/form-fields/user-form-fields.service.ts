@@ -103,8 +103,8 @@ export class UserFormFieldsService {
     const roleOptions: FormOption[] = [];
     roles.forEach((role: Role) => {
       roleOptions.push({
-        key: role.name,
-        label: role.description
+        label: role.description,
+        value: role.name
       });
     });
 

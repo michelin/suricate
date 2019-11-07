@@ -144,8 +144,8 @@ export class SettingsListComponent implements OnInit {
         const formOptions: FormOption[] = [];
         setting.allowedSettingValues.forEach((allowedSettingValue: AllowedSettingValue) => {
           formOptions.push({
-            key: allowedSettingValue.value,
-            label: allowedSettingValue.title
+            label: allowedSettingValue.title,
+            value: allowedSettingValue.value
           });
         });
 

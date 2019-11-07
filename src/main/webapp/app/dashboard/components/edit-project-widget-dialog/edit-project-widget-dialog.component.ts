@@ -186,8 +186,8 @@ export class EditProjectWidgetDialogComponent implements OnInit {
     if (widgetParam.values) {
       formOptions = widgetParam.values.map((widgetParamValue: WidgetParamValue) => {
         return {
-          key: widgetParamValue.jsKey,
-          label: widgetParamValue.value
+          label: widgetParamValue.value,
+          value: widgetParamValue.jsKey
         };
       });
     }
