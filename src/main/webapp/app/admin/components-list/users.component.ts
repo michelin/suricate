@@ -106,7 +106,7 @@ export class UsersComponent extends ListComponent<User> implements OnInit {
    * {@inheritDoc}
    */
   protected getFirstLabel(user: User): string {
-    return `${user.fullname} (${user.username})`;
+    return `${user.firstname} ${user.lastname} (${user.username})`;
   }
 
   /**

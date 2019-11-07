@@ -60,16 +60,12 @@ export class SidenavComponent implements OnInit, OnDestroy {
   private isAlive = true;
 
   /**
-   * The connected user
-   * @type {User}
-   */
-  connectedUser: User;
-
-  /**
    * True if the user is admin
    * @type {boolean}
    */
   isUserAdmin: boolean;
+
+  connectedUser: User;
 
   /**
    * The list of dashboards
@@ -108,7 +104,6 @@ export class SidenavComponent implements OnInit, OnDestroy {
    */
   ngOnInit() {
     this.subscribeToRouteEvents();
-    this.connectedUser = AuthenticationService.getConnectedUser();
     this.isUserAdmin = AuthenticationService.isAdmin();
     this.refreshDashboardList();
 
@@ -152,7 +147,7 @@ export class SidenavComponent implements OnInit, OnDestroy {
    * @returns {string} The initials
    */
   getConnectedUserInitial(): string {
-    return this.userService.getUserInitial(this.connectedUser);
+    return this.userService.getUserInitial(this.getConnectedUser());
   }
 
   /**
@@ -164,7 +159,8 @@ export class SidenavComponent implements OnInit, OnDestroy {
   }
 
   getConnectedUser(): User {
-    return AuthenticationService.getConnectedUser();
+    this.connectedUser = AuthenticationService.getConnectedUser();
+    return this.connectedUser;
   }
 
   /**

@@ -43,6 +43,18 @@ export interface AccessTokenDecoded {
    */
   user_name: string;
   /**
+   * User firstname
+   */
+  firstname: string;
+  /**
+   * User mail
+   */
+  lastname: string;
+  /**
+   * User mail
+   */
+  mail: string;
+  /**
    * The list of roles of the user
    */
   authorities: RoleEnum[];

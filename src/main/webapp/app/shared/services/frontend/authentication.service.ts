@@ -155,6 +155,9 @@ export class AuthenticationService {
 
     const user = new User();
     user.username = decodedToken.user_name;
+    user.lastname = decodedToken.lastname;
+    user.firstname = decodedToken.firstname;
+    user.email = decodedToken.mail;
     user.roles = decodedToken.authorities.map((roleEnum: RoleEnum) => {
       const role = new Role();
       role.name = roleEnum;
