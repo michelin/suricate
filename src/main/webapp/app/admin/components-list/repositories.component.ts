@@ -24,6 +24,7 @@ import { EMPTY, Observable } from 'rxjs';
 import { ValueChangedEvent } from '../../shared/models/frontend/form/value-changed-event';
 import { RepositoryFormFieldsService } from '../../shared/form-fields/repository-form-fields.service';
 import { RepositoryRequest } from '../../shared/models/backend/repository/repository-request';
+import { RepositoryTypeEnum } from '../../shared/enums/repository-type.enum';
 
 /**
  * Component used to display the list of git repositories
@@ -100,7 +101,7 @@ export class RepositoriesComponent extends ListComponent<Repository> {
    * {@inheritDoc}
    */
   protected getSecondLabel(repository: Repository): string {
-    return repository.url;
+    return repository.type === RepositoryTypeEnum.REMOTE ? repository.url : repository.localPath;
   }
 
   /**
