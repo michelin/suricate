@@ -27,7 +27,7 @@ import { CustomValidators } from 'ng2-validation';
 import { Role } from '../models/backend/role/role';
 
 /**
- * The role service
+ * Service used to build the form fields related to a user
  */
 @Injectable({ providedIn: 'root' })
 export class UserFormFieldsService {
@@ -44,7 +44,7 @@ export class UserFormFieldsService {
    * @param roles the full list of roles
    * @param user The bean
    */
-  getFormFields(roles: Role[], user?: User): Observable<FormField[]> {
+  generateFormFields(roles: Role[], user?: User): Observable<FormField[]> {
     return this.translateService.get(['username', 'firstname', 'lastname', 'email', 'roles']).pipe(
       map((translations: string) => {
         return [

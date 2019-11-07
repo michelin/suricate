@@ -27,7 +27,7 @@ import { TitleCasePipe } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 
 /**
- * The role service
+ * Service used to build the form fields related to a repository
  */
 @Injectable({ providedIn: 'root' })
 export class RepositoryFormFieldsService {

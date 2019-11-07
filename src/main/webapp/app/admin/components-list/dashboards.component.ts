@@ -21,9 +21,11 @@ import { Project } from '../../shared/models/backend/project/project';
 import { HttpProjectService } from '../../shared/services/backend/http-project.service';
 import { ProjectRequest } from '../../shared/models/backend/project/project-request';
 import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
+import { FormField } from '../../shared/models/frontend/form/form-field';
+import { ProjectFormFieldsService } from '../../shared/form-fields/project-form-fields.service';
 
 /**
- * Component used to display the list of Dhasboards
+ * Component used to display the list of Dashboards
  */
 @Component({
   templateUrl: '../../shared/components/list/list.component.html',
@@ -31,12 +33,22 @@ import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
 })
 export class DashboardsComponent extends ListComponent<Project | ProjectRequest> {
   /**
+   * Project selected in the list for modification
+   */
+  private projectSelected: Project;
+
+  /**
    * Constructor
    *
    * @param httpProjectService Suricate service used to manage the http calls for a project
+   * @param projectFormFieldsService Frontend service used to build form fields for a project
    * @param injector Angular Service used to manage the injection of services
    */
-  constructor(private httpProjectService: HttpProjectService, protected injector: Injector) {
+  constructor(
+    private readonly httpProjectService: HttpProjectService,
+    private readonly projectFormFieldsService: ProjectFormFieldsService,
+    protected injector: Injector
+  ) {
     super(httpProjectService, injector);
 
     this.initHeaderConfiguration();
@@ -61,12 +73,12 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
         {
           icon: IconEnum.EDIT,
           color: 'primary',
-          callback: (event: Event, project: Project) => this.editRepository(event, project)
+          callback: (event: Event, project: Project) => this.openFormSidenav(event, project, this.editProject.bind(this))
         },
         {
           icon: IconEnum.DELETE,
           color: 'warn',
-          callback: (event: Event, project: Project) => this.deleteRepository(event, project)
+          callback: (event: Event, project: Project) => this.deleteProject(event, project)
         }
       ]
     };
@@ -87,13 +99,35 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
   }
 
   /**
-   * Redirect on the edit page
+   * Open the form sidenav
    *
    * @param event The click event
    * @param project The project clicked on the list
+   * @param saveCallback The function to call when save button is clicked
    */
-  private editRepository(event: Event, project: Project): void {
-    this.router.navigate(['/dashboards', 'all', project.token, 'edit']);
+  private openFormSidenav(event: Event, project: Project, saveCallback: (projectRequest: ProjectRequest) => void): void {
+    this.projectSelected = project;
+
+    this.translateService.get(['dashboard.edit', 'dashboard.add']).subscribe((translations: string[]) => {
+      this.projectFormFieldsService.generateFormFields(project).subscribe((formFields: FormField[]) => {
+        this.sidenavService.openFormSidenav({
+          title: project ? translations['dashboard.edit'] : translations['dashboard.add'],
+          formFields: formFields,
+          save: (projectRequest: ProjectRequest) => saveCallback(projectRequest)
+        });
+      });
+    });
+  }
+
+  /**
+   * Redirect on the edit page
+   *
+   * @param projectRequest The project clicked on the list
+   */
+  private editProject(projectRequest: ProjectRequest): void {
+    this.httpProjectService.update(this.projectSelected.token, projectRequest).subscribe(() => {
+      this.refreshList();
+    });
   }
 
   /**
@@ -102,15 +136,15 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
    * @param event The click event
    * @param project The project to delete
    */
-  private deleteRepository(event: Event, project: Project): void {
+  private deleteProject(event: Event, project: Project): void {
     this.translateService.get(['dashboard.delete', 'delete.confirm']).subscribe((translations: string[]) => {
       this.dialogService.confirm({
         title: translations['dashboard.delete'],
         message: `${translations['delete.confirm']} ${project.name.toUpperCase()}`,
         accept: () => {
           this.httpProjectService.delete(project.token).subscribe(() => {
-            this.refreshList();
             this.toastService.sendMessage('Project deleted successfully', ToastTypeEnum.SUCCESS);
+            this.refreshList();
           });
         }
       });

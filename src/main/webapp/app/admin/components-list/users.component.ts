@@ -134,7 +134,7 @@ export class UsersComponent extends ListComponent<User> implements OnInit {
     this.userSelected = user;
 
     this.translateService.get(['user.edit', 'user.add']).subscribe((translations: string[]) => {
-      this.userFormFieldsService.getFormFields(this.roles, user).subscribe((formFields: FormField[]) => {
+      this.userFormFieldsService.generateFormFields(this.roles, user).subscribe((formFields: FormField[]) => {
         this.sidenavService.openFormSidenav({
           title: user ? translations['user.edit'] : translations['user.add'],
           formFields: formFields,
@@ -169,8 +169,8 @@ export class UsersComponent extends ListComponent<User> implements OnInit {
         message: `${translations['delete.confirm']} ${titlecasePipe.transform(user.username)}`,
         accept: () => {
           this.httpUserService.delete(user.id).subscribe(() => {
-            this.refreshList();
             this.toastService.sendMessage('User deleted successfully', ToastTypeEnum.SUCCESS);
+            this.refreshList();
           });
         }
       });
