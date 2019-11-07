@@ -80,9 +80,10 @@ export class SettingsService {
 
   /**
    * The current theme as observable
+   *
    * @returns {Observable<string>}
    */
-  get currentTheme$(): Observable<string> {
+  getThemeChangingMessages(): Observable<string> {
     return this.currentThemeSubject.asObservable();
   }
 

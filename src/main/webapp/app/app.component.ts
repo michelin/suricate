@@ -43,10 +43,6 @@ export class AppComponent implements OnInit, OnDestroy {
    * @private
    */
   private isAlive = true;
-  /**
-   * If we should hide the menu
-   */
-  public shouldHideMenu = true;
 
   /**
    * The constructor
@@ -71,12 +67,24 @@ export class AppComponent implements OnInit, OnDestroy {
    * Called at the init of the app
    */
   ngOnInit() {
-    this.settingsService.currentTheme$.pipe(takeWhile(() => this.isAlive)).subscribe(themeValue => {
-      this.switchTheme(themeValue);
-    });
+    this.subscribeToConfirmationDialog();
+    this.subscribeToThemeChanging();
 
     this.settingsService.initDefaultSettings();
-    this.subscribeToConfirmationDialog();
+  }
+
+  /**
+   * Used to change the current when asked
+   */
+  subscribeToThemeChanging(): void {
+    this.settingsService
+      .getThemeChangingMessages()
+      .pipe(takeWhile(() => this.isAlive))
+      .subscribe(themeValue => {
+        this.overlayContainer.getContainerElement().classList.remove(this.appHtmlClass);
+        this.overlayContainer.getContainerElement().classList.add(themeValue);
+        this.appHtmlClass = themeValue;
+      });
   }
 
   /**
@@ -95,16 +103,6 @@ export class AppComponent implements OnInit, OnDestroy {
 
         this.matDialog.open(ConfirmDialogComponent, dialogConfig);
       });
-  }
-
-  /**
-   * Switch the theme
-   * @param {string} themeValue The new theme value
-   */
-  switchTheme(themeValue: string) {
-    this.overlayContainer.getContainerElement().classList.remove(this.appHtmlClass);
-    this.overlayContainer.getContainerElement().classList.add(themeValue);
-    this.appHtmlClass = themeValue;
   }
 
   /**
