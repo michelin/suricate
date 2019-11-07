@@ -127,8 +127,12 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
    * Execute save action on click
    */
   private save(): void {
-    this.configuration.save(this.formGroup.value);
-    this.closeSidenav();
+    this.formService.validate(this.formGroup);
+
+    if (this.formGroup.valid) {
+      this.configuration.save(this.formGroup.value);
+      this.closeSidenav();
+    }
   }
 
   /**
