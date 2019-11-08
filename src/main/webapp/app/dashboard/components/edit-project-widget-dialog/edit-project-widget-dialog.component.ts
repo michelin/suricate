@@ -109,7 +109,7 @@ export class EditProjectWidgetDialogComponent implements OnInit {
       .getOneById(this.data.projectWidgetId)
       .pipe(
         map((projectWidget: ProjectWidget) => (this.projectWidget = projectWidget)),
-        flatMap(() => this.httpWidgetService.getOneById(this.projectWidget.widgetId)),
+        flatMap(() => this.httpWidgetService.getById(this.projectWidget.widgetId)),
         map((widget: Widget) => (this.widget = widget)),
         flatMap(() => this.httpCategoryService.getCategoryConfigurations(this.widget.category.id)),
         map((configurations: Configuration[]) => (this.configurations = configurations))

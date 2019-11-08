@@ -24,5 +24,6 @@ export enum IconEnum {
   DELETE = 'DELETE',
   EDIT = 'EDIT',
   CLOSE = 'CLOSE',
-  SAVE = 'SAVE'
+  SAVE = 'SAVE',
+  REFRESH = 'REFRESH'
 }

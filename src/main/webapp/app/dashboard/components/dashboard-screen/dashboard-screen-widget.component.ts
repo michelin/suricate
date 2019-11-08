@@ -118,7 +118,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
     setTimeout(() => this.appRunScriptDirective.ngOnInit(), 1000);
     this.startGridStackItem = { ...this.gridStackItem };
 
-    this.httpWidgetService.getOneById(this.projectWidget.widgetId).subscribe(widget => {
+    this.httpWidgetService.getById(this.projectWidget.widgetId).subscribe(widget => {
       this.widget = widget;
     });
   }

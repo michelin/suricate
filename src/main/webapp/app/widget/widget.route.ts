@@ -19,15 +19,15 @@
 import { Routes } from '@angular/router';
 
 import { AuthGuard } from '../shared/guards/auth.guard';
-import { WidgetListComponent } from './components/widget-list/widget-list.component';
 import { WidgetConfigurationListComponent } from './components/configuration-list/widget-configuration-list.component';
 import { AdminGuard } from '../shared/guards/admin.guard';
 import { WidgetConfigurationEditComponent } from './components/configuration-edit/widget-configuration-edit.component';
+import { WidgetsComponent } from './components-list/widgets.component';
 
 export const widgetRoutes: Routes = [
   {
     path: 'widgets/catalog',
-    component: WidgetListComponent,
+    component: WidgetsComponent,
     canActivate: [AuthGuard]
   },
   {

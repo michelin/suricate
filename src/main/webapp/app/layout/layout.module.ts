@@ -20,7 +20,6 @@ import { AddWidgetDialogComponent } from './components/header/components/add-wid
 import { DashboardActionsComponent } from './components/header/components/dashboard-actions/dashboard-actions.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { TvManagementDialogComponent } from './components/header/components/tv-management-dialog/tv-management-dialog.component';
-import { WidgetListActionsComponent } from './components/header/components/widget-list-actions/widget-list-actions.component';
 import { SharedModule } from '../shared/shared.module';
 import { HeaderComponent } from './components/header/header.component';
 import { SidenavComponent } from './components/sidenav/sidenav.component';
@@ -35,7 +34,6 @@ import { MenuComponent } from './components/menu/menu.component';
     HeaderComponent,
     SidenavComponent,
     TvManagementDialogComponent,
-    WidgetListActionsComponent,
     MenuComponent
   ],
   entryComponents: [AddWidgetDialogComponent, TvManagementDialogComponent],

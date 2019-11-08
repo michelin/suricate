@@ -16,32 +16,36 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { EMPTY, Observable } from 'rxjs';
 
 import { Widget } from '../../models/backend/widget/widget';
 import { widgetsApiEndpoint } from '../../../app.constant';
 import { ApiActionEnum } from '../../enums/api-action.enum';
 import { WidgetRequest } from '../../models/backend/widget/widget-request';
+import { AbstractHttpService } from './abstract-http.service';
 
 /**
  * Manage the Http widget calls
  */
 @Injectable({ providedIn: 'root' })
-export class HttpWidgetService {
+export class HttpWidgetService extends AbstractHttpService<Widget> {
   /**
    * Constructor
    *
    * @param {HttpClient} httpClient The http client service
    */
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient) {
+    super();
+  }
 
   /**
    * Get the list of widgets
    *
+   * @param filter
    * @param {ApiActionEnum} action Action to be executed by the backend
    * @returns {Observable<Widget[]>} The list of widgets as observable
    */
-  getAll(action?: ApiActionEnum): Observable<Widget[]> {
+  getAll(filter?: string, action?: ApiActionEnum): Observable<Widget[]> {
     let url = `${widgetsApiEndpoint}`;
     if (action) {
       url = url.concat(`?action=${action}`);
@@ -55,10 +59,19 @@ export class HttpWidgetService {
    *
    * @param widgetId
    */
-  getOneById(widgetId: number): Observable<Widget> {
+  getById(widgetId: number): Observable<Widget> {
     const url = `${widgetsApiEndpoint}/${widgetId}`;
 
     return this.httpClient.get<Widget>(url);
+  }
+
+  /**
+   * Create a widget
+   *
+   * @param widget The object that we want to create
+   */
+  create(widget: Widget): Observable<Widget> {
+    return EMPTY;
   }
 
   /**
@@ -67,9 +80,18 @@ export class HttpWidgetService {
    * @param widgetId The widget id
    * @param widgetRequest The widget request
    */
-  updateOneById(widgetId: number, widgetRequest: WidgetRequest): Observable<void> {
+  update(widgetId: number, widgetRequest: WidgetRequest): Observable<void> {
     const url = `${widgetsApiEndpoint}/${widgetId}`;
 
     return this.httpClient.put<void>(url, widgetRequest);
+  }
+
+  /**
+   * Function used to delete a widget
+   *
+   * @param widgetId The widget id
+   */
+  delete(widgetId: number): Observable<void> {
+    return EMPTY;
   }
 }

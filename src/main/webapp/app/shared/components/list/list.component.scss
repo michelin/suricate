@@ -27,6 +27,16 @@
       border-top: 1px solid rgba(0, 0, 0, 0.12);
     }
 
+    .list-image {
+      height: inherit;
+      padding: 10px;
+
+      img {
+        width: auto;
+        max-height: 100%;
+      }
+    }
+
     .list-detail {
       height: inherit;
       padding-left: 10px;

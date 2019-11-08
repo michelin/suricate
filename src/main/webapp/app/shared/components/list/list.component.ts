@@ -63,7 +63,7 @@ export class ListComponent<T> implements OnInit {
   /**
    * The configuration of the list component
    */
-  public listConfiguration: ListConfiguration<T>;
+  public listConfiguration = new ListConfiguration<T>();
   /**
    * The object list to display
    */
@@ -117,6 +117,22 @@ export class ListComponent<T> implements OnInit {
   }
 
   /**
+   * Get the size of the block
+   */
+  protected getDetailBlockSize(object: T): string {
+    const hasImage = !!this.getObjectImageURL(object);
+    const hasButtons = !!this.listConfiguration.buttons;
+
+    if (hasImage && hasButtons) {
+      return '60%';
+    }
+    if (hasImage || hasButtons) {
+      return '80%';
+    }
+    return '100%';
+  }
+
+  /**
    * Used to get the first label
    * Implemented by child component
    *
@@ -144,5 +160,15 @@ export class ListComponent<T> implements OnInit {
    */
   protected getThirdLabel(object: T): string {
     return '';
+  }
+
+  /**
+   * Used to retrieve the url of the associated object
+   * Implemented in child component
+   *
+   * @param object The object of the list
+   */
+  protected getObjectImageURL(object: T): string {
+    return null;
   }
 }

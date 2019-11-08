@@ -11,9 +11,6 @@
     <div *ngIf="pageName === 'dashboards'">
       <suricate-dashboard-actions></suricate-dashboard-actions>
     </div>
-    <div *ngIf="pageName === 'widgets'">
-      <suricate-widget-list-actions></suricate-widget-list-actions>
-    </div>
 
     <suricate-buttons *ngIf="configuration.actions" [configurations]="configuration.actions"> </suricate-buttons>
   </div>

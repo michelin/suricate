@@ -26,5 +26,6 @@ export const MaterialIconRecords: Record<IconEnum, string> = {
   [IconEnum.DELETE]: 'delete',
   [IconEnum.EDIT]: 'edit',
   [IconEnum.CLOSE]: 'close',
-  [IconEnum.SAVE]: 'done'
+  [IconEnum.SAVE]: 'done',
+  [IconEnum.REFRESH]: 'refresh'
 };

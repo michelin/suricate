@@ -20,14 +20,14 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 import { SharedModule } from '../shared/shared.module';
-import { WidgetListComponent } from './components/widget-list/widget-list.component';
 import { LayoutModule } from '../layout/layout.module';
 import { widgetRoutes } from './widget.route';
 import { WidgetConfigurationEditComponent } from './components/configuration-edit/widget-configuration-edit.component';
 import { WidgetConfigurationListComponent } from './components/configuration-list/widget-configuration-list.component';
+import { WidgetsComponent } from './components-list/widgets.component';
 
 @NgModule({
   imports: [LayoutModule, SharedModule, RouterModule.forChild(widgetRoutes)],
-  declarations: [WidgetConfigurationEditComponent, WidgetConfigurationListComponent, WidgetListComponent]
+  declarations: [WidgetConfigurationEditComponent, WidgetConfigurationListComponent, WidgetsComponent]
 })
 export class WidgetModule {}

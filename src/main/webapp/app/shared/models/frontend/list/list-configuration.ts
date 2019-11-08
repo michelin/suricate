@@ -21,6 +21,6 @@ import { ButtonConfiguration } from '../button/button-configuration';
 /**
  * Interface used to hold the configuration of the generic list component
  */
-export interface ListConfiguration<T> {
+export class ListConfiguration<T> {
   buttons?: ButtonConfiguration<T>[];
 }
