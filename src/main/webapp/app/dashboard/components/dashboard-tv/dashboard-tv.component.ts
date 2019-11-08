@@ -29,7 +29,6 @@ import { SettingsService } from '../../../core/services/settings.service';
 import { SidenavService } from '../../../shared/services/frontend/sidenav.service';
 import { HttpProjectService } from '../../../shared/services/backend/http-project.service';
 import { WebsocketService } from '../../../shared/services/frontend/websocket.service';
-import { UserService } from '../../../admin/services/user.service';
 import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';
 import { DashboardService } from '../../services/dashboard.service';
 import { AuthenticationService } from '../../../shared/services/frontend/authentication.service';
@@ -94,7 +93,6 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
     private router: Router,
     private httpProjectService: HttpProjectService,
     private websocketService: WebsocketService,
-    private userService: UserService,
     private dashboardService: DashboardService
   ) {}
 

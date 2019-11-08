@@ -14,24 +14,15 @@
  * limitations under the License.
  */
 
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Event, NavigationEnd, Router } from '@angular/router';
 import { MatSidenav } from '@angular/material/sidenav';
-import { takeWhile } from 'rxjs/operators';
 
-import { SidenavService } from '../../../shared/services/frontend/sidenav.service';
-import { Project } from '../../../shared/models/backend/project/project';
-import { DashboardService } from '../../../dashboard/services/dashboard.service';
-import { UserService } from '../../../admin/services/user.service';
-import { AuthenticationService } from '../../../shared/services/frontend/authentication.service';
-import { User } from '../../../shared/models/backend/user/user';
-import { HttpProjectService } from '../../../shared/services/backend/http-project.service';
-import { HttpUserService } from '../../../shared/services/backend/http-user.service';
 import { RoutesService } from '../../../shared/services/frontend/route.service';
 import { MenuService } from '../../../shared/services/frontend/menu.service';
 
 /**
- * Hold the sidenav behavior
+ * Hold the sidenav behavior and the main view
  */
 @Component({
   selector: 'suricate-sidenav',
@@ -42,74 +33,39 @@ import { MenuService } from '../../../shared/services/frontend/menu.service';
 export class SidenavComponent implements OnInit, OnDestroy {
   /**
    * Reference on the form sidenav
+   * @type {MatSidenav}
+   * @public
    */
   @ViewChild('formSidenav', { static: false })
   public formSidenav: MatSidenav;
 
   /**
-   * The html sidenav
-   * @type {MatSidenav}
-   */
-  @ViewChild('sidenav', { static: true }) sidenav: MatSidenav;
-
-  /**
-   * Used for close the observable subscription
+   * Used to close observable subscriptions
    * @type {boolean}
    * @private
    */
   private isAlive = true;
 
   /**
-   * True if the user is admin
+   * Used to hide or display the menu using activated routes
    * @type {boolean}
+   * @public
    */
-  isUserAdmin: boolean;
-
-  connectedUser: User;
-
-  /**
-   * The list of dashboards
-   * @type {Project[]}
-   */
-  dashboards: Project[];
-
-  shouldHideMenu = true;
+  public shouldHideMenu = true;
 
   /**
    * Constructor
    *
-   * @param {Router} router The router service
-   * @param {ChangeDetectorRef} changeDetectorRef The change detector service
-   * @param {HttpUserService} httpUserService The http user service
-   * @param {DashboardService} dashboardService The dashboard service
-   * @param {HttpProjectService} httpProjectService The httpProjectService service
-   * @param {UserService} userService The user service
-   * @param {AuthenticationService} authenticationService The authentication service
-   * @param {SidenavService} sidenavService The sidenav service
+   * @param {Router} router Angular service used to manage routing
+   * @param {ActivatedRoute} activatedRoute Angular service used to retrieve the component activated route
    */
-  constructor(
-    private router: Router,
-    private changeDetectorRef: ChangeDetectorRef,
-    private httpUserService: HttpUserService,
-    private httpProjectService: HttpProjectService,
-    private dashboardService: DashboardService,
-    private userService: UserService,
-    private authenticationService: AuthenticationService,
-    private sidenavService: SidenavService,
-    private activatedRoute: ActivatedRoute
-  ) {}
+  constructor(private readonly router: Router, private readonly activatedRoute: ActivatedRoute) {}
 
   /**
    * Init objects
    */
-  ngOnInit() {
+  public ngOnInit(): void {
     this.subscribeToRouteEvents();
-    this.isUserAdmin = AuthenticationService.isAdmin();
-    this.refreshDashboardList();
-
-    this.dashboardService.currentDashboardList$.pipe(takeWhile(() => this.isAlive)).subscribe(projects => {
-      this.dashboards = projects;
-    });
   }
 
   /**
@@ -125,49 +81,25 @@ export class SidenavComponent implements OnInit, OnDestroy {
     });
   }
 
-  openFormSidenav() {
+  /**
+   * Used to open the form sidenav
+   */
+  public openFormSidenav(): void {
     this.formSidenav.open();
   }
-  closeFormSidenav() {
+
+  /**
+   * Used to close the form side nav
+   */
+  public closeFormSidenav(): void {
     this.formSidenav.close();
-  }
-
-  /**
-   * Refresh the dashboard list
-   */
-  refreshDashboardList() {
-    this.httpProjectService.getAllForCurrentUser().subscribe((projects: Project[]) => {
-      this.dashboardService.currentDashboardListValues = projects;
-    });
-  }
-
-  /**
-   * Retrieve the initials of the connected user
-   *
-   * @returns {string} The initials
-   */
-  getConnectedUserInitial(): string {
-    return this.userService.getUserInitial(this.getConnectedUser());
-  }
-
-  /**
-   * Logout the user
-   */
-  logout(): void {
-    AuthenticationService.logout();
-    this.router.navigate(['/login']);
-  }
-
-  getConnectedUser(): User {
-    this.connectedUser = AuthenticationService.getConnectedUser();
-    return this.connectedUser;
   }
 
   /**
    * Called when the component is destoyed
    * All the subscriptions are closed
    */
-  ngOnDestroy() {
+  public ngOnDestroy(): void {
     this.isAlive = false;
   }
 }

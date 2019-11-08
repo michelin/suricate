@@ -18,6 +18,9 @@
 
 import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { MenuConfiguration } from '../../models/frontend/menu/menu-configuration';
+import { AuthenticationService } from './authentication.service';
+import { MenuCategoryConfiguration } from '../../models/frontend/menu/menu-category-configuration';
 
 /**
  * Service used to manage menu
@@ -36,5 +39,62 @@ export class MenuService {
    */
   public static shouldHideMenu(activatedRoute: ActivatedRoute): boolean {
     return MenuService.routesWithoutMenu.includes(activatedRoute.routeConfig.path);
+  }
+
+  /**
+   * Function used to build the menu
+   */
+  public static buildMenu(): MenuConfiguration {
+    const isUserAdmin = AuthenticationService.isAdmin();
+    const menuConfiguration = new MenuConfiguration();
+
+    if (isUserAdmin) {
+      menuConfiguration.categories.push(MenuService.buildAdminMenu());
+    }
+    menuConfiguration.categories.push(MenuService.buildWidgetMenu());
+
+    return menuConfiguration;
+  }
+
+  /**
+   * Build the admin menu
+   */
+  private static buildAdminMenu(): MenuCategoryConfiguration {
+    return {
+      label: 'admin',
+      items: [
+        {
+          label: 'users',
+          linkConfiguration: { link: ['/admin', 'users'] }
+        },
+        {
+          label: 'repositories',
+          linkConfiguration: { link: ['/repositories'] }
+        },
+        {
+          label: 'dashboards',
+          linkConfiguration: { link: ['/admin', 'dashboards'] }
+        },
+        {
+          label: 'configurations',
+          linkConfiguration: { link: ['/widgets', 'configurations'] }
+        }
+      ]
+    };
+  }
+
+  /**
+   * Build the widget menu
+   */
+  private static buildWidgetMenu(): MenuCategoryConfiguration {
+    return {
+      label: 'widgets',
+      items: [
+        {
+          label: 'catalog',
+          linkConfiguration: { link: ['/widgets', 'catalog'] }
+        }
+      ]
+    };
   }
 }

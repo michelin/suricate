@@ -18,7 +18,6 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable, Subject } from 'rxjs';
 
 import { Project } from '../../shared/models/backend/project/project';
-import { UserService } from '../../admin/services/user.service';
 import { HttpProjectService } from '../../shared/services/backend/http-project.service';
 import { map } from 'rxjs/operators';
 import { AuthenticationService } from '../../shared/services/frontend/authentication.service';
@@ -47,10 +46,8 @@ export class DashboardService {
 
   /**
    * The constructor
-   *
-   * @param userService The user service to inject
    */
-  constructor(private userService: UserService, private httpProjectService: HttpProjectService) {}
+  constructor(private httpProjectService: HttpProjectService) {}
 
   /* ******************************************************************* */
   /*                      Subject Management Part                        */

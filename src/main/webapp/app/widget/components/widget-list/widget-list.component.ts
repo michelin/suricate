@@ -26,7 +26,6 @@ import { catchError, debounceTime, distinctUntilChanged, map, startWith, switchM
 
 import { Widget } from '../../../shared/models/backend/widget/widget';
 import { ToastService } from '../../../shared/services/frontend/toast.service';
-import { UserService } from '../../../admin/services/user.service';
 import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
 import { HttpWidgetService } from '../../../shared/services/backend/http-widget.service';
 import { WidgetAvailabilityEnum } from '../../../shared/enums/widget-availability.enum';
@@ -115,14 +114,12 @@ export class WidgetListComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Constructor
    *
-   * @param {UserService} userService The user service
    * @param {HttpWidgetService} httpWidgetService The http widget service
    * @param {HttpAssetService} httpAssetService The http asset service
    * @param {ChangeDetectorRef} changeDetectorRef enable the change detection after view init
    * @param {ToastService} toastService The toast notification service
    */
   constructor(
-    private userService: UserService,
     private httpWidgetService: HttpWidgetService,
     private httpAssetService: HttpAssetService,
     private changeDetectorRef: ChangeDetectorRef,

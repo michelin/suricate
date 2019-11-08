@@ -1,0 +1,66 @@
+<!-- User Section -->
+<div id="user-section" class="sidenav-section">
+  <div class="avatar-container">
+    <div class="avatar">
+      {{ getInitials() }}
+    </div>
+  </div>
+
+  <mat-accordion>
+    <mat-expansion-panel class="mat-elevation-z0">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <div class="nameContainer">
+            <div>{{ connectedUser.firstname }} {{ connectedUser.lastname }}</div>
+            <div>({{ connectedUser.username }})</div>
+          </div>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+
+      <mat-nav-list class="submenu">
+        <div>
+          <a mat-list-item routerLinkActive="active" [routerLink]="['/settings']">
+            <mat-icon>settings</mat-icon>
+            <suricate-translate [key]="'settings'"></suricate-translate>
+          </a>
+        </div>
+        <div>
+          <a mat-list-item (click)="logout()">
+            <mat-icon>exit_to_app</mat-icon>
+            <suricate-translate [key]="'logout'"></suricate-translate>
+          </a>
+        </div>
+      </mat-nav-list>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>
+
+<div class="sidenav-section-container" fxLayout="column wrap" fxLayoutGap="8px">
+  <mat-divider></mat-divider>
+  <div id="button-section" class="sidenav-section" fxLayout="row wrap" fxLayoutAlign="start center">
+    <a fxFlex="40" routerLinkActive="active" [routerLink]="['/home']" [matTooltip]="'home' | translate">
+      <div fxFlex="100" class="common-icon-button" fxLayout="row wrap" fxLayoutAlign="center center">
+        <mat-icon color="default">home</mat-icon>
+      </div>
+    </a>
+    <a fxFlex="40" routerLinkActive="active" [routerLink]="['/tv']" [matTooltip]="'tv.view' | translate" target="_blank">
+      <div fxFlex="100" class="common-icon-button" fxLayout="row wrap" fxLayoutAlign="center center">
+        <mat-icon color="default">tv</mat-icon>
+      </div>
+    </a>
+  </div>
+  <mat-divider></mat-divider>
+
+  <!-- Build the menu -->
+  <div *ngFor="let category of menu.categories" class="sidenav-section">
+    <h1 class="little title">
+      <suricate-translate [key]="category.label"></suricate-translate>
+    </h1>
+
+    <mat-nav-list>
+      <a *ngFor="let item of category.items" mat-list-item routerLinkActive="active" [routerLink]="item.linkConfiguration.link">
+        <suricate-translate [key]="item.label"></suricate-translate>
+      </a>
+    </mat-nav-list>
+  </div>
+</div>

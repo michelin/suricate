@@ -24,8 +24,10 @@ import { ConfirmationDialogConfiguration } from './shared/models/frontend/dialog
 import { ConfirmDialogComponent } from './shared/components/confirm-dialog/confirm-dialog.component';
 import { MatDialogConfig } from '@angular/material/typings/dialog';
 import { SettingsService } from './core/services/settings.service';
-import { ActivatedRoute, Router } from '@angular/router';
 
+/**
+ * Main component init the application
+ */
 @Component({
   selector: 'suricate-root',
   templateUrl: './app.component.html',
@@ -34,11 +36,14 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class AppComponent implements OnInit, OnDestroy {
   /**
    * The HTML class attribute
+   * @type {string}
+   * @private
    */
-  @HostBinding('class') appHtmlClass;
+  @HostBinding('class')
+  private appHtmlClass: string;
+
   /**
    * Tell if the component is instantiate or not
-   *
    * @type {boolean}
    * @private
    */
@@ -47,26 +52,22 @@ export class AppComponent implements OnInit, OnDestroy {
   /**
    * The constructor
    *
-   * @param settingsService
+   * @param {SettingsService} settingsService Suricate service used to manage the settings
    * @param {OverlayContainer} overlayContainer The overlay container service
    * @param {DialogService} dialogService Angular service used to manage dialogs
    * @param {MatDialog} matDialog Angular material service used to display dialog
-   * @param router Angular service used to manage routes
-   * @param activatedRoute Angular service used to get the activated route by the component
    */
   constructor(
-    private settingsService: SettingsService,
-    private overlayContainer: OverlayContainer,
+    private readonly settingsService: SettingsService,
+    private readonly overlayContainer: OverlayContainer,
     private readonly dialogService: DialogService,
-    private readonly matDialog: MatDialog,
-    private readonly router: Router,
-    private readonly activatedRoute: ActivatedRoute
+    private readonly matDialog: MatDialog
   ) {}
 
   /**
    * Called at the init of the app
    */
-  ngOnInit() {
+  public ngOnInit(): void {
     this.subscribeToConfirmationDialog();
     this.subscribeToThemeChanging();
 
@@ -76,7 +77,7 @@ export class AppComponent implements OnInit, OnDestroy {
   /**
    * Used to change the current when asked
    */
-  subscribeToThemeChanging(): void {
+  private subscribeToThemeChanging(): void {
     this.settingsService
       .getThemeChangingMessages()
       .pipe(takeWhile(() => this.isAlive))
@@ -108,7 +109,7 @@ export class AppComponent implements OnInit, OnDestroy {
   /**
    * Called when the component is destroyed
    */
-  ngOnDestroy() {
+  public ngOnDestroy(): void {
     this.isAlive = false;
   }
 }
