@@ -1,0 +1,27 @@
+<suricate-pages-header [configuration]="headerConfiguration"></suricate-pages-header>
+
+<section class="container">
+  <mat-horizontal-stepper #wizardStepper [linear]="true" labelPosition="bottom">
+    <ng-container *ngFor="let step of wizardConfiguration?.steps; let index = index">
+      <ng-template [matStepperIcon]="step.icon">
+        <mat-icon>{{ materialIconRecords[step.icon] }}</mat-icon>
+      </ng-template>
+
+      <mat-step [stepControl]="$any(getFormGroupOfStep(step))" [optional]="step.optional" [state]="step.icon">
+        <ng-template matStepLabel>
+          <div class="step-index">Step {{ index + 1 }}</div>
+          <div>{{ step.title }}</div>
+          <hr />
+        </ng-template>
+
+        <form [formGroup]="getFormGroupOfStep(step)">
+          <suricate-input *ngFor="let field of step.fields" [formGroup]="getFormGroupOfStep(step)" [field]="field"></suricate-input>
+        </form>
+      </mat-step>
+    </ng-container>
+  </mat-horizontal-stepper>
+
+  <div class="stepper-actions-wrapper">
+    <suricate-buttons [configurations]="wizardConfiguration?.buttons"></suricate-buttons>
+  </div>
+</section>

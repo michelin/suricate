@@ -40,20 +40,6 @@ export class FormService {
   /* *********************************************************************************************************************************** */
 
   /**
-   * Method used to copy a formGroup into another
-   *
-   * @param formSource The form group we want to copy
-   * @param formTarget The form group targeted
-   */
-  copyFormGroupToAnotherOne(formSource: FormGroup, formTarget: FormGroup): FormGroup {
-    Object.keys(formSource.controls).forEach((formControlKey: string) => {
-      formTarget.addControl(formControlKey, formSource.get(formControlKey));
-    });
-
-    return formTarget;
-  }
-
-  /**
    * Validate the form
    *
    * @param formGroup The form to validate
@@ -81,28 +67,14 @@ export class FormService {
    * @param steps The form steps to instantiate
    * @return The generated form group for the list of steps give in argument
    */
-  generateFormGroupForSteps(steps: FormStep[]): FormGroup {
+  public generateFormGroupForSteps(steps: FormStep[]): FormGroup {
     let formGroup = this.formBuilder.group({});
 
     steps.forEach((step: FormStep) => {
-      // Generation of the form control for the step
-      const generatedStepForm = this.generateFormGroupForFields(step.fields);
-      formGroup = this.copyFormGroupToAnotherOne(generatedStepForm, formGroup);
+      formGroup.addControl(step.key, this.generateFormGroupForFields(step.fields));
     });
 
     return formGroup;
-  }
-
-  /**
-   * Reset a form step for a form group
-   *
-   * @param formGroup The form group
-   * @param oldStep The step to remove
-   * @param newStep The new step to add to the form group
-   */
-  switchFormGroupStepByAnotherOne(formGroup: FormGroup, oldStep: FormStep, newStep: FormStep): FormGroup {
-    this.deleteFormControlForFields(formGroup, oldStep.fields);
-    return this.copyFormGroupToAnotherOne(formGroup, this.generateFormGroupForFields(newStep.fields));
   }
 
   /* *********************************************************************************************************************************** */

@@ -24,10 +24,11 @@ import { TooltipConfiguration } from '../tooltip/tooltip-configuration';
  */
 export class ButtonConfiguration<T> {
   label?: string;
-  icon: IconEnum;
+  icon?: IconEnum;
   color: ThemePalette;
   callback?: (event: Event, object?: T) => void;
   disabled?: (object?: T) => boolean;
+  hidden?: () => boolean;
   type?: ButtonTypeEnum;
   variant?: 'stroked' | 'miniFab';
   tooltip?: TooltipConfiguration;

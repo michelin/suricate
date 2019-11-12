@@ -19,6 +19,7 @@
 
 <ng-template #strokedButton let-configuration="configuration">
   <button
+    *ngIf="!configuration.hidden || !configuration.hidden()"
     mat-stroked-button
     class="button button-single"
     [matTooltip]="configuration.tooltip?.message"
@@ -33,6 +34,7 @@
 
 <ng-template #miniFabButton let-configuration="configuration">
   <button
+    *ngIf="!configuration.hidden || !configuration.hidden()"
     mat-mini-fab
     class="button button-single"
     [matTooltip]="configuration.tooltip?.message"

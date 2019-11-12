@@ -48,6 +48,7 @@ import { ListComponent } from './components/list/list.component';
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { ButtonsComponent } from './components/buttons/buttons.component';
 import { FormSidenavComponent } from './components/form-sidenav/form-sidenav.component';
+import { WizardComponent } from './components/wizard/wizard.component';
 
 @NgModule({
   imports: [
@@ -83,7 +84,8 @@ import { FormSidenavComponent } from './components/form-sidenav/form-sidenav.com
     ListComponent,
     SpinnerComponent,
     ButtonsComponent,
-    FormSidenavComponent
+    FormSidenavComponent,
+    WizardComponent
   ],
   exports: [
     BrowserAnimationsModule,
@@ -115,7 +117,9 @@ import { FormSidenavComponent } from './components/form-sidenav/form-sidenav.com
     TranslationComponent,
     SpinnerComponent,
     ButtonsComponent,
-    FormSidenavComponent
+    FormSidenavComponent,
+    ListComponent,
+    WizardComponent
   ],
   entryComponents: [CommunicationDialogComponent, ConfirmDialogComponent],
   providers: [

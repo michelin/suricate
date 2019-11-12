@@ -16,31 +16,6 @@
  *
  */
 
-import { FormField } from './form-field';
-import { IconEnum } from '../../../enums/icon.enum';
-
-/**
- * Describe a step of the wizard
- */
-export interface FormStep {
-  /**
-   * The key of the step
-   */
-  key: string;
-  /**
-   * The title of the step
-   */
-  title: string;
-  /**
-   * The icon that should displayed in the step
-   */
-  icon: IconEnum;
-  /**
-   * The form field for the step
-   */
-  fields: FormField[];
-  /**
-   * If the step is optional
-   */
-  optional?: boolean;
+.stepper-actions-wrapper {
+  padding-left: 24px;
 }

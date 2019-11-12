@@ -16,31 +16,19 @@
  *
  */
 
-import { FormField } from './form-field';
-import { IconEnum } from '../../../enums/icon.enum';
+import { FormStep } from '../form/form-step';
+import { ButtonConfiguration } from '../button/button-configuration';
 
 /**
- * Describe a step of the wizard
+ * Class used to configure the wizard component
  */
-export interface FormStep {
+export class WizardConfiguration {
   /**
-   * The key of the step
+   * The steps of the wizard
    */
-  key: string;
+  steps: FormStep[];
   /**
-   * The title of the step
+   * The buttons to display in the wizard
    */
-  title: string;
-  /**
-   * The icon that should displayed in the step
-   */
-  icon: IconEnum;
-  /**
-   * The form field for the step
-   */
-  fields: FormField[];
-  /**
-   * If the step is optional
-   */
-  optional?: boolean;
+  buttons: ButtonConfiguration<unknown>[];
 }
