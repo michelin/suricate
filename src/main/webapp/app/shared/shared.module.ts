@@ -14,7 +14,6 @@
  * limitations under the License.
  */
 
-import { ColorPickerModule } from 'ngx-color-picker';
 import { CommonModule } from '@angular/common';
 import { CustomFormsModule } from 'ng2-validation';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -49,12 +48,13 @@ import { SpinnerComponent } from './components/spinner/spinner.component';
 import { ButtonsComponent } from './components/buttons/buttons.component';
 import { FormSidenavComponent } from './components/form-sidenav/form-sidenav.component';
 import { WizardComponent } from './components/wizard/wizard.component';
+import { ColorPickerModule } from 'ngx-color-picker';
+import { ColorPickerComponent } from './components/inputs/color-picker/color-picker.component';
 
 @NgModule({
   imports: [
     BrowserAnimationsModule,
     BrowserModule,
-    ColorPickerModule,
     CommonModule,
     CustomFormsModule,
     FlexLayoutModule,
@@ -66,7 +66,8 @@ import { WizardComponent } from './components/wizard/wizard.component';
     NgGridModule,
     ReactiveFormsModule,
     RouterModule,
-    TranslateModule
+    TranslateModule,
+    ColorPickerModule
   ],
   declarations: [
     CheckboxComponent,
@@ -85,13 +86,13 @@ import { WizardComponent } from './components/wizard/wizard.component';
     SpinnerComponent,
     ButtonsComponent,
     FormSidenavComponent,
-    WizardComponent
+    WizardComponent,
+    ColorPickerComponent
   ],
   exports: [
     BrowserAnimationsModule,
     BrowserModule,
     CheckboxComponent,
-    ColorPickerModule,
     CommonModule,
     CommunicationDialogComponent,
     ConfirmDialogComponent,
@@ -119,7 +120,8 @@ import { WizardComponent } from './components/wizard/wizard.component';
     ButtonsComponent,
     FormSidenavComponent,
     ListComponent,
-    WizardComponent
+    WizardComponent,
+    ColorPickerComponent
   ],
   entryComponents: [CommunicationDialogComponent, ConfirmDialogComponent],
   providers: [

@@ -16,18 +16,23 @@
  *
  */
 
+import { Component } from '@angular/core';
+import { InputComponent } from '../input.component';
+
 /**
- * Hold the data type for a configuration
+ * Component used to display the color picker
  */
-export enum DataTypeEnum {
-  // Simple data types
-  NUMBER = 'NUMBER',
-  TEXT = 'TEXT',
-  PASSWORD = 'PASSWORD',
-  // Complex data types
-  BOOLEAN = 'BOOLEAN',
-  COMBO = 'COMBO',
-  MULTIPLE = 'MULTIPLE',
-  FILE = 'FILE',
-  COLOR_PICKER = 'COLOR_PICKER'
+@Component({
+  selector: 'suricate-color-picker',
+  templateUrl: './color-picker.component.html',
+  styleUrls: ['./color-picker.component.scss']
+})
+export class ColorPickerComponent extends InputComponent {
+  constructor() {
+    super();
+  }
+
+  private colorChanged(color: string) {
+    this.getFormControl().setValue(color);
+  }
 }

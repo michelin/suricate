@@ -75,6 +75,8 @@
   <suricate-file-input *ngIf="dataType.FILE === field.type" [field]="field" [formGroup]="formGroup" (valueChangeEvent)="emitValueChange()">
   </suricate-file-input>
 
+  <suricate-color-picker *ngIf="dataType.COLOR_PICKER === field.type" [field]="field" [formGroup]="formGroup"> </suricate-color-picker>
+
   <!------------------------------------------------------------------------------------------------------->
   <!---                        FIELDS ERROR MANAGEMENT                                                  --->
   <!------------------------------------------------------------------------------------------------------->

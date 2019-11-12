@@ -1,0 +1,13 @@
+<div class="label">
+  {{ field.label }}
+</div>
+<div
+  class="color-picker-wrapper"
+  [cpToggle]="true"
+  [cpDialogDisplay]="'inline'"
+  [cpOutputFormat]="'hex'"
+  [cpAlphaChannel]="'always'"
+  [cpFallbackColor]="'#87878700'"
+  [colorPicker]="field.value ? field.value : '#87878700'"
+  (colorPickerChange)="colorChanged($event)"
+></div>

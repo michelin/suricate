@@ -16,18 +16,12 @@
  *
  */
 
-/**
- * Hold the data type for a configuration
- */
-export enum DataTypeEnum {
-  // Simple data types
-  NUMBER = 'NUMBER',
-  TEXT = 'TEXT',
-  PASSWORD = 'PASSWORD',
-  // Complex data types
-  BOOLEAN = 'BOOLEAN',
-  COMBO = 'COMBO',
-  MULTIPLE = 'MULTIPLE',
-  FILE = 'FILE',
-  COLOR_PICKER = 'COLOR_PICKER'
+:host {
+  margin-block-end: 20px;
+
+  .label {
+    font-size: 0.8em;
+    color: rgba(0, 0, 0, 0.6);
+    margin-block-end: 5px;
+  }
 }
