@@ -17,7 +17,6 @@
  */
 
 import { FormStep } from '../form/form-step';
-import { ButtonConfiguration } from '../button/button-configuration';
 
 /**
  * Class used to configure the wizard component
@@ -27,8 +26,4 @@ export class WizardConfiguration {
    * The steps of the wizard
    */
   steps: FormStep[];
-  /**
-   * The buttons to display in the wizard
-   */
-  buttons: ButtonConfiguration<unknown>[];
 }

@@ -15,10 +15,14 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { FormField } from '../models/frontend/form/form-field';
 import { TranslateService } from '@ngx-translate/core';
 import { Project } from '../models/backend/project/project';
+import { map } from 'rxjs/operators';
+import { DataTypeEnum } from '../enums/data-type.enum';
+import { Validators } from '@angular/forms';
+import { CustomValidators } from 'ng2-validation';
 
 /**
  * Service used to build the form fields related to a project
@@ -33,11 +37,37 @@ export class ProjectFormFieldsService {
   constructor(private readonly translateService: TranslateService) {}
 
   /**
-   * Build the form fields of the project
+   * Get the list of steps for a dashboard
    *
-   * @param project The project used to build the form fields
+   * @param project The project used for an edition
    */
-  generateFormFields(project: Project): Observable<FormField[]> {
-    return of(null);
+  public generateFormFields(project?: Project): Observable<FormField[]> {
+    return this.translateService.get(['dashboard.name', 'widget.heigth.px', 'grid.nb.columns']).pipe(
+      map((translations: string) => {
+        return [
+          {
+            key: 'name',
+            label: translations['dashboard.name'],
+            type: DataTypeEnum.TEXT,
+            value: project ? project.name : null,
+            validators: [Validators.required]
+          },
+          {
+            key: 'widgetHeight',
+            label: translations['widget.heigth.px'],
+            type: DataTypeEnum.NUMBER,
+            value: project ? project.gridProperties.widgetHeight : 360,
+            validators: [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]
+          },
+          {
+            key: 'maxColumn',
+            label: translations['grid.nb.columns'],
+            type: DataTypeEnum.NUMBER,
+            value: project ? project.gridProperties.maxColumn : 5,
+            validators: [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]
+          }
+        ];
+      })
+    );
   }
 }

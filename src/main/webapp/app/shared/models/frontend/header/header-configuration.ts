@@ -21,7 +21,7 @@ import { ButtonConfiguration } from '../button/button-configuration';
 /**
  * Interface used to hold the configuration of the generic the header component
  */
-export interface HeaderConfiguration {
+export class HeaderConfiguration {
   /**
    * The title of the page
    */

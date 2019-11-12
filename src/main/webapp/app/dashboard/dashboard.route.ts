@@ -25,7 +25,7 @@ import { DashboardsComponent } from './components-list/dashboards.component';
 
 export const DashboardRoutes: Routes = [
   {
-    path: 'admin/dashboards',
+    path: 'dashboards',
     component: DashboardsComponent,
     canActivate: [AuthGuard, AdminGuard]
   },

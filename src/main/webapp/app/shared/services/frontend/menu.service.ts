@@ -73,7 +73,7 @@ export class MenuService {
         },
         {
           label: 'dashboards',
-          linkConfiguration: { link: ['/admin', 'dashboards'] }
+          linkConfiguration: { link: ['dashboards'] }
         },
         {
           label: 'configurations',
