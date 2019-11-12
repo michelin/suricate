@@ -21,11 +21,10 @@ import { SharedModule } from '../shared/shared.module';
 import { adminRoutes } from './admin.route';
 import { UsersComponent } from './components-list/users.component';
 import { RepositoriesComponent } from './components-list/repositories.component';
-import { DashboardsComponent } from './components-list/dashboards.component';
 
 @NgModule({
   imports: [RouterModule.forChild(adminRoutes), LayoutModule, SharedModule],
-  declarations: [UsersComponent, RepositoriesComponent, DashboardsComponent],
+  declarations: [UsersComponent, RepositoriesComponent],
   exports: [RouterModule]
 })
 export class AdminModule {}

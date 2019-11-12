@@ -26,6 +26,7 @@ import { DashboardTvComponent } from './components/dashboard-tv/dashboard-tv.com
 import { LayoutModule } from '../layout/layout.module';
 import { DashboardRoutes } from './dashboard.route';
 import { DashboardScreenWidgetComponent } from './components/dashboard-screen/dashboard-screen-widget.component';
+import { DashboardsComponent } from './components-list/dashboards.component';
 
 @NgModule({
   imports: [RouterModule.forChild(DashboardRoutes), LayoutModule, SharedModule],
@@ -35,7 +36,8 @@ import { DashboardScreenWidgetComponent } from './components/dashboard-screen/da
     EditProjectWidgetDialogComponent,
     DashboardScreenComponent,
     DashboardScreenWidgetComponent,
-    DashboardTvComponent
+    DashboardTvComponent,
+    DashboardsComponent
   ],
   entryComponents: [EditProjectWidgetDialogComponent],
   exports: [RouterModule]

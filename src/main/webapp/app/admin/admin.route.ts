@@ -20,7 +20,6 @@ import { AuthGuard } from '../shared/guards/auth.guard';
 import { AdminGuard } from '../shared/guards/admin.guard';
 import { UsersComponent } from './components-list/users.component';
 import { RepositoriesComponent } from './components-list/repositories.component';
-import { DashboardsComponent } from './components-list/dashboards.component';
 
 export const adminRoutes: Routes = [
   {
@@ -30,11 +29,6 @@ export const adminRoutes: Routes = [
     data: {
       breadcrumb: 'Users'
     }
-  },
-  {
-    path: 'admin/dashboards',
-    component: DashboardsComponent,
-    canActivate: [AuthGuard, AdminGuard]
   },
   {
     path: 'admin/repositories',

@@ -21,8 +21,14 @@ import { AuthGuard } from '../shared/guards/auth.guard';
 import { AdminGuard } from '../shared/guards/admin.guard';
 import { DashboardEditComponent } from './components/dashboard-edit/dashboard-edit.component';
 import { DashboardDetailComponent } from './components/dashboard-detail/dashboard-detail.component';
+import { DashboardsComponent } from './components-list/dashboards.component';
 
 export const DashboardRoutes: Routes = [
+  {
+    path: 'admin/dashboards',
+    component: DashboardsComponent,
+    canActivate: [AuthGuard, AdminGuard]
+  },
   {
     path: 'tv',
     component: DashboardTvComponent
