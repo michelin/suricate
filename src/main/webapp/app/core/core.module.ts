@@ -22,12 +22,11 @@ import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { LayoutModule } from '../layout/layout.module';
 import { coreRoutes } from './core.route';
-import { AddDashboardDialogComponent } from './components/home/components/add-dashboard-dialog/add-dashboard-dialog.component';
 import { HomeComponent } from './components/home/home.component';
 import { SettingsListComponent } from './components/settings-list/settings-list.component';
 
 @NgModule({
   imports: [RouterModule.forChild(coreRoutes), LayoutModule, SharedModule],
-  declarations: [AddDashboardDialogComponent, HomeComponent, LoginComponent, RegisterComponent, SettingsListComponent]
+  declarations: [HomeComponent, LoginComponent, RegisterComponent, SettingsListComponent]
 })
 export class CoreModule {}

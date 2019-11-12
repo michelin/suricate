@@ -21,7 +21,6 @@ import { TitleCasePipe } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 
 import { AddWidgetDialogComponent } from '../add-widget-dialog/add-widget-dialog.component';
-import { AddDashboardDialogComponent } from '../../../../../core/components/home/components/add-dashboard-dialog/add-dashboard-dialog.component';
 import { TvManagementDialogComponent } from '../tv-management-dialog/tv-management-dialog.component';
 import { HttpScreenService } from '../../../../../shared/services/backend/http-screen.service';
 import { Project } from '../../../../../shared/models/backend/project/project';
@@ -43,12 +42,6 @@ export class DashboardActionsComponent implements OnInit {
    * @type {MatDialogRef<AddWidgetDialogComponent>}
    */
   addWidgetDialogRef: MatDialogRef<AddWidgetDialogComponent>;
-
-  /**
-   * Dialog reference used for edit a dashboard
-   * @type {MatDialogRef<AddDashboardDialogComponent>}
-   */
-  editDashboardDialogRef: MatDialogRef<AddDashboardDialogComponent>;
 
   /**
    * Dialog reference used for TV Management
@@ -106,16 +99,6 @@ export class DashboardActionsComponent implements OnInit {
    */
   openAddWidgetDialog() {
     this.addWidgetDialogRef = this.matDialog.open(AddWidgetDialogComponent, {
-      minWidth: 900,
-      data: { projectToken: this.project.token }
-    });
-  }
-
-  /**
-   * Open the edit widget dialog
-   */
-  openEditDashboardDialog() {
-    this.editDashboardDialogRef = this.matDialog.open(AddDashboardDialogComponent, {
       minWidth: 900,
       data: { projectToken: this.project.token }
     });

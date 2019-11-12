@@ -21,7 +21,6 @@ import { takeWhile } from 'rxjs/operators';
 
 import { Project } from '../../../shared/models/backend/project/project';
 import { DashboardService } from '../../../dashboard/services/dashboard.service';
-import { AddDashboardDialogComponent } from './components/add-dashboard-dialog/add-dashboard-dialog.component';
 import { HttpAssetService } from '../../../shared/services/backend/http-asset.service';
 
 /**
@@ -66,15 +65,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.dashboardService.currentDashboardList$.pipe(takeWhile(() => this.isAlive)).subscribe(dashboards => {
       this.dashboards = dashboards;
-    });
-  }
-
-  /**
-   * Open the add dashboard dialog
-   */
-  openAddDashboardDialog() {
-    this.matDialog.open(AddDashboardDialogComponent, {
-      minWidth: 700
     });
   }
 
