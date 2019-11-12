@@ -37,7 +37,7 @@ export const adminRoutes: Routes = [
     canActivate: [AuthGuard, AdminGuard]
   },
   {
-    path: 'repositories',
+    path: 'admin/repositories',
     component: RepositoriesComponent,
     canActivate: [AuthGuard, AdminGuard]
   }

@@ -69,7 +69,7 @@ export class MenuService {
         },
         {
           label: 'repositories',
-          linkConfiguration: { link: ['/repositories'] }
+          linkConfiguration: { link: ['/admin', 'repositories'] }
         },
         {
           label: 'dashboards',
