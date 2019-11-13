@@ -32,7 +32,7 @@ export class ColorPickerComponent extends InputComponent {
     super();
   }
 
-  private colorChanged(color: string) {
+  protected colorChanged(color: string) {
     this.getFormControl().setValue(color);
   }
 }
