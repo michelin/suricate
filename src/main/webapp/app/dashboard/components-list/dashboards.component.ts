@@ -109,7 +109,7 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
     this.projectSelected = project;
 
     this.translateService.get(['dashboard.edit', 'dashboard.add']).subscribe((translations: string[]) => {
-      this.projectFormFieldsService.generateFormFields(project).subscribe((formFields: FormField[]) => {
+      this.projectFormFieldsService.generateProjectFormFields(project).subscribe((formFields: FormField[]) => {
         this.sidenavService.openFormSidenav({
           title: project ? translations['dashboard.edit'] : translations['dashboard.add'],
           formFields: formFields,

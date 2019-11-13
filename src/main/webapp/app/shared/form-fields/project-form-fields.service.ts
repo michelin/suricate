@@ -41,16 +41,10 @@ export class ProjectFormFieldsService {
    *
    * @param project The project used for an edition
    */
-  public generateFormFields(project?: Project): Observable<FormField[]> {
+  public generateProjectFormFields(project?: Project): Observable<FormField[]> {
     return this.translateService.get(['dashboard.name', 'widget.heigth.px', 'grid.nb.columns', 'grid.background.color']).pipe(
       map((translations: string) => {
         return [
-          {
-            key: 'gridBackgroundColor',
-            label: translations['grid.background.color'],
-            type: DataTypeEnum.COLOR_PICKER,
-            value: null
-          },
           {
             key: 'name',
             label: translations['dashboard.name'],
@@ -71,6 +65,12 @@ export class ProjectFormFieldsService {
             type: DataTypeEnum.NUMBER,
             value: project ? project.gridProperties.maxColumn : 5,
             validators: [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]
+          },
+          {
+            key: 'gridBackgroundColor',
+            label: translations['grid.background.color'],
+            type: DataTypeEnum.COLOR_PICKER,
+            value: null
           }
         ];
       })
