@@ -23,6 +23,8 @@ import { ProjectRequest } from '../../shared/models/backend/project/project-requ
 import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
 import { FormField } from '../../shared/models/frontend/form/form-field';
 import { ProjectFormFieldsService } from '../../shared/form-fields/project-form-fields.service';
+import { User } from '../../shared/models/backend/user/user';
+import { ProjectUsersFormFieldsService } from '../../shared/form-fields/project-users-form-fields.service';
 
 /**
  * Component used to display the list of Dashboards
@@ -42,11 +44,13 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
    *
    * @param httpProjectService Suricate service used to manage the http calls for a project
    * @param projectFormFieldsService Frontend service used to build form fields for a project
+   * @param projectUsersFormFieldsService Frontend service used to build form fields for a project users
    * @param injector Angular Service used to manage the injection of services
    */
   constructor(
     private readonly httpProjectService: HttpProjectService,
     private readonly projectFormFieldsService: ProjectFormFieldsService,
+    private readonly projectUsersFormFieldsService: ProjectUsersFormFieldsService,
     protected injector: Injector
   ) {
     super(httpProjectService, injector);
@@ -70,6 +74,11 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
   private initListConfiguration(): void {
     this.listConfiguration = {
       buttons: [
+        {
+          icon: IconEnum.USERS,
+          color: 'primary',
+          callback: (event: Event, project: Project) => this.openUserFormSidenav(event, project, this.saveUsers.bind(this))
+        },
         {
           icon: IconEnum.EDIT,
           color: 'primary',
@@ -150,4 +159,34 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
       });
     });
   }
+
+  /**
+   * Open the form sidenav used to manage users
+   * @param event The click event
+   * @param project The project clicked on the list
+   * @param saveCallback The function to call when save button is clicked
+   */
+  private openUserFormSidenav(event: Event, project: Project, saveCallback: (users: User[]) => void): void {
+    this.projectSelected = project;
+
+    this.httpProjectService.getProjectUsers(project.token).subscribe((users: User[]) => {
+      this.translateService.get(['user.add']).subscribe((translations: string[]) => {
+        this.projectUsersFormFieldsService.generateProjectUsersFormFields(users).subscribe((formFields: FormField[]) => {
+          this.sidenavService.openFormSidenav({
+            title: translations['user.add'],
+            formFields: formFields,
+            save: (users: User[]) => saveCallback(users)
+          });
+        });
+      });
+    });
+  }
+
+  /**
+   * Save the users related to a project
+   *
+   * @param event The click event
+   * @param users The users to add to the project
+   */
+  private saveUsers(event: Event, users: User[]): void {}
 }

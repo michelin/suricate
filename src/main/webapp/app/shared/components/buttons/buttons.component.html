@@ -52,6 +52,9 @@
 <!------------------------------------------------------------------------------------------------------------->
 
 <ng-template #buttonContent let-configuration="configuration">
-  <mat-icon *ngIf="configuration.icon"> {{ materialIconRecords[configuration.icon] }} </mat-icon>
+  <mat-icon *ngIf="configuration.icon" [ngClass]="{ 'icon-with-label': configuration.icon && configuration.label }">
+    {{ materialIconRecords[configuration.icon] }}
+  </mat-icon>
+
   <span *ngIf="configuration.label"> {{ configuration.label }} </span>
 </ng-template>

@@ -50,6 +50,7 @@ import { FormSidenavComponent } from './components/form-sidenav/form-sidenav.com
 import { WizardComponent } from './components/wizard/wizard.component';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { ColorPickerComponent } from './components/inputs/color-picker/color-picker.component';
+import { FieldsComponent } from './components/inputs/fields/fields.component';
 
 @NgModule({
   imports: [
@@ -87,7 +88,8 @@ import { ColorPickerComponent } from './components/inputs/color-picker/color-pic
     ButtonsComponent,
     FormSidenavComponent,
     WizardComponent,
-    ColorPickerComponent
+    ColorPickerComponent,
+    FieldsComponent
   ],
   exports: [
     BrowserAnimationsModule,

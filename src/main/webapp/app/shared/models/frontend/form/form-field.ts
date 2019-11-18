@@ -77,4 +77,12 @@ export interface FormField {
    * Async validators (require an http call)
    */
   asyncValidators?: AsyncValidatorFn | AsyncValidatorFn[] | null;
+  /**
+   * The list of fields in case of a (FIELDS data type)
+   */
+  fields?: FormField[];
+  /**
+   * The list of values to used in the array
+   */
+  values?: unknown[];
 }

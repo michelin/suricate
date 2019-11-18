@@ -1,0 +1,21 @@
+<div fxLayout="col wrap" class="input-wrapper inner-form-group">
+  <h1 fxFlex="100%">{{ field.label }}</h1>
+
+  <ng-container *ngFor="let innerFormGroup of $any(formArray.controls); let index = index">
+    <div fxLayout="row wrap" fxLayoutGap="10px" fxFlex="100%">
+      <suricate-input
+        *ngFor="let innerField of field.fields"
+        [field]="innerField"
+        [formGroup]="innerFormGroup"
+        [fxFlex]="getInnerFormSize()"
+      >
+      </suricate-input>
+
+      <div fxFlex="5" fxLayoutAlign="center center">
+        <mat-icon class="trash-icon" fxFlexAlign="center center" (click)="deleteRow(index)">
+          {{ materialIconRecords[iconEnum.DELETE] }}
+        </mat-icon>
+      </div>
+    </div>
+  </ng-container>
+</div>

@@ -1,4 +1,4 @@
-<div fxLayout="column wrap" class="input-wrapper">
+<div fxLayout="column wrap" class="input-wrapper" *ngIf="field.type !== dataType.FIELDS">
   <!------------------------------------------------------------------------------------------------------->
   <!---                        MAT FORM FIELDS/ERROR                                                    --->
   <!------------------------------------------------------------------------------------------------------->
@@ -59,9 +59,8 @@
     </mat-icon>
 
     <!-- Display an hint the user -->
-    <mat-hint align="start" *ngIf="(field.hint || field.readOnly) && !isInputFieldOnError()">
-      <suricate-translate *ngIf="field.readOnly" [key]="'field.readonly'"></suricate-translate>
-      <span *ngIf="field.hint"> {{ field.hint }}</span>
+    <mat-hint align="start" *ngIf="field.hint && !isInputFieldOnError()">
+      <span> {{ field.hint }}</span>
     </mat-hint>
   </mat-form-field>
 
@@ -112,3 +111,5 @@
     </div>
   </div>
 </div>
+
+<suricate-fields *ngIf="field.type === dataType.FIELDS" [field]="field" [formArray]="$any(getFormControl())"> </suricate-fields>

@@ -29,5 +29,6 @@ export enum DataTypeEnum {
   COMBO = 'COMBO',
   MULTIPLE = 'MULTIPLE',
   FILE = 'FILE',
-  COLOR_PICKER = 'COLOR_PICKER'
+  COLOR_PICKER = 'COLOR_PICKER',
+  FIELDS = 'FIELDS'
 }

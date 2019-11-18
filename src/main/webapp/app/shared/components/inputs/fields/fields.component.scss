@@ -1,4 +1,4 @@
-/*!
+/*
  *  /*
  *  * Copyright 2012-2018 the original author or authors.
  *  *
@@ -16,16 +16,19 @@
  *
  */
 
-.button {
-  &.button-single {
-    margin-right: 10px;
+.inner-form-group {
+  margin-block-start: 20px;
+
+  h1 {
+    font-size: 1.3em;
   }
 
-  .mat-icon {
-    &.icon-with-label {
-      height: 20px;
-      width: 20px;
-      font-size: 20px;
+  .trash-icon {
+    transform: translateY(-50%);
+
+    &:hover {
+      color: #ca2934;
+      cursor: pointer;
     }
   }
 }

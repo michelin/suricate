@@ -63,7 +63,7 @@ export class ListComponent<T> implements OnInit {
   /**
    * The configuration of the list component
    */
-  public listConfiguration = new ListConfiguration<T>();
+  public listConfiguration = new ListConfiguration<unknown>();
   /**
    * The object list to display
    */

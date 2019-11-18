@@ -17,10 +17,11 @@
  */
 
 import { Injectable } from '@angular/core';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, ValidatorFn } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidatorFn } from '@angular/forms';
 
 import { FormField } from '../../models/frontend/form/form-field';
 import { FormStep } from '../../models/frontend/form/form-step';
+import { DataTypeEnum } from '../../enums/data-type.enum';
 
 /**
  * Service class that manage the instantiations of forms
@@ -33,11 +34,6 @@ export class FormService {
    * @param formBuilder The form builder service
    */
   constructor(private formBuilder: FormBuilder) {}
-
-  /* *********************************************************************************************************************************** */
-  /*                                         General Form Management                                                                     */
-
-  /* *********************************************************************************************************************************** */
 
   /**
    * Validate the form
@@ -56,11 +52,6 @@ export class FormService {
     });
   }
 
-  /* *********************************************************************************************************************************** */
-  /*                                         Form Step Management                                                                        */
-
-  /* *********************************************************************************************************************************** */
-
   /**
    * Generate a form group for the steps
    *
@@ -77,11 +68,6 @@ export class FormService {
     return formGroup;
   }
 
-  /* *********************************************************************************************************************************** */
-  /*                                         Form fields Management                                                                      */
-
-  /* *********************************************************************************************************************************** */
-
   /**
    * Generate a form group for the fields
    *
@@ -93,7 +79,11 @@ export class FormService {
 
     if (fields) {
       fields.forEach(field => {
-        formGroup.addControl(field.key, this.generateFormControl(field));
+        if (field.type === DataTypeEnum.FIELDS) {
+          formGroup.addControl(field.key, this.generateFormArrayForField(field));
+        } else {
+          formGroup.addControl(field.key, this.generateFormControl(field));
+        }
       });
     }
 
@@ -101,30 +91,41 @@ export class FormService {
   }
 
   /**
-   * Generate a form control for a specific field
+   * Create a form array used for fields data type
    *
-   * @param field The field used to create the form control
-   * @return The form control that represent the field
+   * @param field The parent field (with type equals to dataType.fields)
    */
-  generateFormControl(field: FormField): FormControl {
-    return this.formBuilder.control({ value: field.value, disabled: field.disabled }, field.validators, field.asyncValidators);
+  private generateFormArrayForField(field: FormField): FormArray {
+    const formArray = this.formBuilder.array([]);
+
+    if (field && field.fields && field.values) {
+      field.values.forEach((value: unknown) => {
+        const formGroup = this.formBuilder.group({});
+        field.fields.forEach(field => {
+          formGroup.addControl(field.key, this.generateFormControl(field, value[field.key] ? value[field.key] : ''));
+        });
+
+        formArray.push(formGroup);
+      });
+    }
+
+    return formArray;
   }
 
   /**
-   * Delete the form control related to the form fields
+   * Generate a form control for a specific field
    *
-   * @param formGroup The form group that contains the fields
-   * @param fields The fields to delete
+   * @param field The field used to create the form control
+   * @param value if we want to force the value
+   * @return The form control that represent the field
    */
-  deleteFormControlForFields(formGroup: FormGroup, fields: FormField[]) {
-    fields.forEach((field: FormField) => formGroup.removeControl(field.key));
-    return formGroup;
+  private generateFormControl(field: FormField, value?: string | number): FormControl {
+    return this.formBuilder.control(
+      { value: value ? value : field.value, disabled: field.disabled },
+      field.validators,
+      field.asyncValidators
+    );
   }
-
-  /* *********************************************************************************************************************************** */
-  /*                                         Form control Management                                                                     */
-
-  /* *********************************************************************************************************************************** */
 
   /**
    * Set validators for a form control
