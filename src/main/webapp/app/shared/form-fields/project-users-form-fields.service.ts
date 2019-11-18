@@ -20,7 +20,6 @@ import { FormField } from '../models/frontend/form/form-field';
 import { TranslateService } from '@ngx-translate/core';
 import { map } from 'rxjs/operators';
 import { DataTypeEnum } from '../enums/data-type.enum';
-import { Validators } from '@angular/forms';
 import { User } from '../models/backend/user/user';
 
 /**
@@ -48,8 +47,7 @@ export class ProjectUsersFormFieldsService {
             key: 'username',
             label: translations['username'],
             type: DataTypeEnum.TEXT,
-            value: null,
-            validators: [Validators.required]
+            value: null
           },
           {
             key: 'users',
