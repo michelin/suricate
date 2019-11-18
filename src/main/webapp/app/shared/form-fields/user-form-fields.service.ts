@@ -25,6 +25,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { User } from '../models/backend/user/user';
 import { CustomValidators } from 'ng2-validation';
 import { Role } from '../models/backend/role/role';
+import { HttpRoleService } from '../services/backend/http-role.service';
 
 /**
  * Service used to build the form fields related to a user
@@ -36,15 +37,14 @@ export class UserFormFieldsService {
    *
    * @param translateService Ngx translate service used to manage the translations
    */
-  constructor(private readonly translateService: TranslateService) {}
+  constructor(private readonly translateService: TranslateService, private readonly httpRoleService: HttpRoleService) {}
 
   /**
    * Build the form fields of the user
    *
-   * @param roles the full list of roles
    * @param user The bean
    */
-  generateFormFields(roles: Role[], user?: User): Observable<FormField[]> {
+  generateFormFields(user?: User): Observable<FormField[]> {
     return this.translateService.get(['username', 'firstname', 'lastname', 'email', 'roles']).pipe(
       map((translations: string) => {
         return [
@@ -86,7 +86,7 @@ export class UserFormFieldsService {
             label: translations['roles'],
             type: DataTypeEnum.MULTIPLE,
             value: user.roles && user.roles.length > 0 ? user.roles.map(role => role.name) : null,
-            options: this.getRoleOptions(roles),
+            options: () => this.getRoleOptions(),
             validators: [Validators.required]
           }
         ];
@@ -96,18 +96,20 @@ export class UserFormFieldsService {
 
   /**
    * Get the role options
-   *
-   * @param roles The full list of roles
    */
-  getRoleOptions(roles: Role[]): FormOption[] {
-    const roleOptions: FormOption[] = [];
-    roles.forEach((role: Role) => {
-      roleOptions.push({
-        label: role.description,
-        value: role.name
-      });
-    });
+  getRoleOptions(): Observable<FormOption[]> {
+    return this.httpRoleService.getRoles().pipe(
+      map((roles: Role[]) => {
+        const roleOptions: FormOption[] = [];
+        roles.forEach((role: Role) => {
+          roleOptions.push({
+            label: role.description,
+            value: role.name
+          });
+        });
 
-    return roleOptions;
+        return roleOptions;
+      })
+    );
   }
 }

@@ -41,11 +41,6 @@ export class UsersComponent extends ListComponent<User> implements OnInit {
   private userSelected: User;
 
   /**
-   * The list of roles
-   */
-  private roles: Role[];
-
-  /**
    * Constructor
    *
    * @param httpUserService Suricate service used to manage the http calls for users
@@ -67,10 +62,6 @@ export class UsersComponent extends ListComponent<User> implements OnInit {
 
   ngOnInit(): void {
     super.ngOnInit();
-
-    this.httpRoleService.getRoles().subscribe((roles: Role[]) => {
-      this.roles = roles;
-    });
   }
 
   /**
@@ -134,7 +125,7 @@ export class UsersComponent extends ListComponent<User> implements OnInit {
     this.userSelected = user;
 
     this.translateService.get(['user.edit', 'user.add']).subscribe((translations: string[]) => {
-      this.userFormFieldsService.generateFormFields(this.roles, user).subscribe((formFields: FormField[]) => {
+      this.userFormFieldsService.generateFormFields(user).subscribe((formFields: FormField[]) => {
         this.sidenavService.openFormSidenav({
           title: user ? translations['user.edit'] : translations['user.add'],
           formFields: formFields,
