@@ -15,9 +15,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-
-import { Project } from '../../shared/models/backend/project/project';
+import { Observable, Subject } from 'rxjs';
 import { HttpProjectService } from '../../shared/services/backend/http-project.service';
 import { map } from 'rxjs/operators';
 import { AuthenticationService } from '../../shared/services/frontend/authentication.service';
@@ -27,13 +25,6 @@ import { AuthenticationService } from '../../shared/services/frontend/authentica
  */
 @Injectable({ providedIn: 'root' })
 export class DashboardService {
-  /**
-   * Hold the list of the user dashboards
-   * @type {BehaviorSubject<Project[]>}
-   * @private
-   */
-  private userDashboardsSubject = new BehaviorSubject<Project[]>([]);
-
   /**
    * Tell if the dashboard screen should refresh
    */
@@ -48,35 +39,6 @@ export class DashboardService {
    * The constructor
    */
   constructor(private httpProjectService: HttpProjectService) {}
-
-  /* ******************************************************************* */
-  /*                      Subject Management Part                        */
-  /* ******************************************************************* */
-
-  /* ******* User Dashboards List Management **************** */
-  /**
-   * Get the list of user dashboards
-   * @returns {Observable<Project>}
-   */
-  get currentDashboardList$(): Observable<Project[]> {
-    return this.userDashboardsSubject.asObservable();
-  }
-
-  /**
-   * Get the list of user dashboards
-   * @returns {Observable<Project>}
-   */
-  get currentDashboardListValues(): Project[] {
-    return this.userDashboardsSubject.getValue();
-  }
-
-  /**
-   * Set and send the new list of current user dashboards
-   * @param {Project[]} newProjectsList
-   */
-  set currentDashboardListValues(newProjectsList: Project[]) {
-    this.userDashboardsSubject.next(newProjectsList);
-  }
 
   /* ******* Event refresh dashboard screen **************** */
 

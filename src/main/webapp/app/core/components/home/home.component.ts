@@ -17,11 +17,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
-import { takeWhile } from 'rxjs/operators';
 
 import { Project } from '../../../shared/models/backend/project/project';
 import { DashboardService } from '../../../dashboard/services/dashboard.service';
 import { HttpAssetService } from '../../../shared/services/backend/http-asset.service';
+import { HttpProjectService } from '../../../shared/services/backend/http-project.service';
 
 /**
  * Manage the home page
@@ -54,6 +54,7 @@ export class HomeComponent implements OnInit, OnDestroy {
    */
   constructor(
     private dashboardService: DashboardService,
+    private readonly httpProjectService: HttpProjectService,
     private httpAssetService: HttpAssetService,
     private matDialog: MatDialog,
     private router: Router
@@ -63,7 +64,7 @@ export class HomeComponent implements OnInit, OnDestroy {
    * Init objects
    */
   ngOnInit() {
-    this.dashboardService.currentDashboardList$.pipe(takeWhile(() => this.isAlive)).subscribe(dashboards => {
+    this.httpProjectService.getAllForCurrentUser().subscribe(dashboards => {
       this.dashboards = dashboards;
     });
   }
