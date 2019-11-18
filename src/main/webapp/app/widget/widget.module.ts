@@ -22,12 +22,11 @@ import { RouterModule } from '@angular/router';
 import { SharedModule } from '../shared/shared.module';
 import { LayoutModule } from '../layout/layout.module';
 import { widgetRoutes } from './widget.route';
-import { WidgetConfigurationEditComponent } from './components/configuration-edit/widget-configuration-edit.component';
-import { WidgetConfigurationListComponent } from './components/configuration-list/widget-configuration-list.component';
 import { WidgetsComponent } from './components-list/widgets.component';
+import { WidgetConfigurationsComponent } from './components-list/widget-configurations.component';
 
 @NgModule({
   imports: [LayoutModule, SharedModule, RouterModule.forChild(widgetRoutes)],
-  declarations: [WidgetConfigurationEditComponent, WidgetConfigurationListComponent, WidgetsComponent]
+  declarations: [WidgetsComponent, WidgetConfigurationsComponent]
 })
 export class WidgetModule {}

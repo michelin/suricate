@@ -18,24 +18,27 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { EMPTY, Observable } from 'rxjs';
 
 import { Configuration } from '../../models/backend/configuration/configuration';
 import { configurationsApiEndpoint } from '../../../app.constant';
 import { ApplicationProperties } from '../../models/backend/application-properties';
 import { ConfigurationRequest } from '../../models/backend/configuration/configuration-request';
+import { AbstractHttpService } from './abstract-http.service';
 
 /**
  * Configuration services manage http calls
  */
 @Injectable({ providedIn: 'root' })
-export class HttpConfigurationService {
+export class HttpConfigurationService extends AbstractHttpService<Configuration> {
   /**
    * Constructor
    *
    * @param {HttpClient} httpClient The http client service
    */
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient) {
+    super();
+  }
 
   /**
    * Get the full list of configuration
@@ -54,10 +57,19 @@ export class HttpConfigurationService {
    * @param {string} configurationKey The key to find
    * @returns {Observable<Configuration>} The configuration as observable
    */
-  getOneByKey(configurationKey: string): Observable<Configuration> {
+  getById(configurationKey: string): Observable<Configuration> {
     const url = `${configurationsApiEndpoint}/${configurationKey}`;
 
     return this.httpClient.get<Configuration>(url);
+  }
+
+  /**
+   * Function used to create a configuration
+   *
+   * @param configuration The configuration that we want to create
+   */
+  create(configuration: Configuration): Observable<Configuration> {
+    return EMPTY;
   }
 
   /**
@@ -67,7 +79,7 @@ export class HttpConfigurationService {
    * @param {ConfigurationRequest} configurationRequest The value updated
    * @returns {Observable<Configuration>} The config updated
    */
-  updateConfigurationByKey(configurationKey: string, configurationRequest: ConfigurationRequest): Observable<void> {
+  update(configurationKey: string, configurationRequest: ConfigurationRequest): Observable<void> {
     const url = `${configurationsApiEndpoint}/${configurationKey}`;
 
     return this.httpClient.put<void>(url, configurationRequest);
@@ -79,7 +91,7 @@ export class HttpConfigurationService {
    * @param {string} configurationKey The configuration to delete
    * @returns {Observable<Configuration>} The configuration delete as observable
    */
-  deleteConfiguration(configurationKey: string): Observable<void> {
+  delete(configurationKey: string): Observable<void> {
     const url = `${configurationsApiEndpoint}/${configurationKey}`;
 
     return this.httpClient.delete<void>(url);

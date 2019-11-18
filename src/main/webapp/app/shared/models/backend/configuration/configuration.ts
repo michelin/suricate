@@ -22,7 +22,7 @@ import { DataTypeEnum } from '../../../enums/data-type.enum';
 /**
  * The configuration entity
  */
-export interface Configuration {
+export class Configuration {
   key: string;
   value: string;
   dataType: DataTypeEnum;

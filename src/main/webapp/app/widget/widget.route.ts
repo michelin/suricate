@@ -19,10 +19,9 @@
 import { Routes } from '@angular/router';
 
 import { AuthGuard } from '../shared/guards/auth.guard';
-import { WidgetConfigurationListComponent } from './components/configuration-list/widget-configuration-list.component';
 import { AdminGuard } from '../shared/guards/admin.guard';
-import { WidgetConfigurationEditComponent } from './components/configuration-edit/widget-configuration-edit.component';
 import { WidgetsComponent } from './components-list/widgets.component';
+import { WidgetConfigurationsComponent } from './components-list/widget-configurations.component';
 
 export const widgetRoutes: Routes = [
   {
@@ -32,12 +31,7 @@ export const widgetRoutes: Routes = [
   },
   {
     path: 'widgets/configurations',
-    component: WidgetConfigurationListComponent,
-    canActivate: [AuthGuard, AdminGuard]
-  },
-  {
-    path: 'widgets/configurations/:configurationKey/edit',
-    component: WidgetConfigurationEditComponent,
+    component: WidgetConfigurationsComponent,
     canActivate: [AuthGuard, AdminGuard]
   }
 ];

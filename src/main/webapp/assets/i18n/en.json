@@ -26,6 +26,7 @@
   "url": "URL",
   "branch": "Branch",
   "configurations": "Configurations",
+  "configurations.edit": "Edit configuration",
   "configurations.list": "List of configurations",
   "configuration.delete": "Delete a configuration",
   "repositories": "Repositories",

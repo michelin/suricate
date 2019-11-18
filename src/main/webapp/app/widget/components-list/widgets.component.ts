@@ -19,7 +19,6 @@ import { ListComponent } from '../../shared/components/list/list.component';
 import { IconEnum } from '../../shared/enums/icon.enum';
 import { Widget } from '../../shared/models/backend/widget/widget';
 import { WidgetRequest } from '../../shared/models/backend/widget/widget-request';
-import { AuthenticationService } from '../../shared/services/frontend/authentication.service';
 import { HttpWidgetService } from '../../shared/services/backend/http-widget.service';
 import { HttpAssetService } from '../../shared/services/backend/http-asset.service';
 import { ApiActionEnum } from '../../shared/enums/api-action.enum';
@@ -33,15 +32,6 @@ import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
   styleUrls: ['../../shared/components/list/list.component.scss']
 })
 export class WidgetsComponent extends ListComponent<Widget | WidgetRequest> {
-  /**
-   * Project selected in the list for modification
-   */
-  private widgetSelected: Widget;
-  /**
-   * Used to know if the current user is admin
-   */
-  public isAdmin = AuthenticationService.isAdmin();
-
   /**
    * Constructor
    *
