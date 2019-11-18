@@ -23,8 +23,10 @@ import { ProjectRequest } from '../../shared/models/backend/project/project-requ
 import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
 import { FormField } from '../../shared/models/frontend/form/form-field';
 import { ProjectFormFieldsService } from '../../shared/form-fields/project-form-fields.service';
-import { User } from '../../shared/models/backend/user/user';
 import { ProjectUsersFormFieldsService } from '../../shared/form-fields/project-users-form-fields.service';
+import { ValueChangedEvent } from '../../shared/models/frontend/form/value-changed-event';
+import { EMPTY, Observable } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 /**
  * Component used to display the list of Dashboards
@@ -38,8 +40,6 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
    * Project selected in the list for modification
    */
   private projectSelected: Project;
-
-  private filter: string;
 
   /**
    * Constructor
@@ -79,7 +79,7 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
         {
           icon: IconEnum.USERS,
           color: 'primary',
-          callback: (event: Event, project: Project) => this.openUserFormSidenav(event, project, this.saveUsers.bind(this))
+          callback: (event: Event, project: Project) => this.openUserFormSidenav(event, project)
         },
         {
           icon: IconEnum.EDIT,
@@ -168,7 +168,7 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
    * @param project The project clicked on the list
    * @param saveCallback The function to call when save button is clicked
    */
-  private openUserFormSidenav(event: Event, project: Project, saveCallback: (users: User[]) => void): void {
+  private openUserFormSidenav(event: Event, project: Project): void {
     this.projectSelected = project;
 
     this.translateService.get(['user.add']).subscribe((translations: string[]) => {
@@ -176,17 +176,19 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
         this.sidenavService.openFormSidenav({
           title: translations['user.add'],
           formFields: formFields,
-          save: (users: User[]) => saveCallback(users)
+          onValueChanged: (valueChangedEvent: ValueChangedEvent) => this.onValueChanged(valueChangedEvent)
         });
       });
     });
   }
 
-  /**
-   * Save the users related to a project
-   *
-   * @param event The click event
-   * @param users The users to add to the project
-   */
-  private saveUsers(event: Event, users: User[]): void {}
+  onValueChanged(valueChangedEvent: ValueChangedEvent): Observable<FormField[]> {
+    if (valueChangedEvent.type === 'optionSelected' && valueChangedEvent.fieldKey === 'usernameAutocomplete') {
+      return this.httpProjectService
+        .addUserToProject(this.projectSelected.token, valueChangedEvent.value)
+        .pipe(switchMap(() => this.projectUsersFormFieldsService.generateProjectUsersFormFields(this.projectSelected.token)));
+    }
+
+    return EMPTY;
+  }
 }

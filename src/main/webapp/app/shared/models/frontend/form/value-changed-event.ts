@@ -16,6 +16,8 @@
  *
  */
 
+export type ValueChangedType = 'inputChange' | 'optionSelected' | 'fileChanged' | 'checkbox';
+
 /**
  * Event that manage change event on form
  */
@@ -28,4 +30,8 @@ export interface ValueChangedEvent {
    * The new value
    */
   value: any;
+  /**
+   * The type of the event, if the user is typing or if an option as bean selected
+   */
+  type: ValueChangedType;
 }

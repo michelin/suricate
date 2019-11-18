@@ -29,11 +29,11 @@
         [required]="isRequired()"
         [readonly]="field.readOnly"
         [matAutocomplete]="autocomplete"
-        (input)="emitValueChange()"
+        (input)="emitValueChange('inputChange')"
       />
 
       <!-- Autocomplete -->
-      <mat-autocomplete #autocomplete="matAutocomplete" (optionSelected)="emitValueChange()">
+      <mat-autocomplete #autocomplete="matAutocomplete" (optionSelected)="emitValueChange('optionSelected')">
         <mat-option *ngFor="let option of options" [value]="option.value">
           {{ option.label }}
         </mat-option>
@@ -47,7 +47,7 @@
       [formControl]="$any(getFormControl())"
       [multiple]="field.type === dataType.MULTIPLE"
       [required]="isRequired()"
-      (selectionChange)="emitValueChange()"
+      (selectionChange)="emitValueChange('optionSelected')"
     >
       <mat-option *ngFor="let option of options" [value]="option.value">
         {{ option.label }}
@@ -69,10 +69,20 @@
   <!---                        OTHER FIELDS                                                             --->
   <!------------------------------------------------------------------------------------------------------->
 
-  <suricate-checkbox *ngIf="dataType.BOOLEAN === field.type" [field]="field" [formGroup]="formGroup" (valueChangeEvent)="emitValueChange()">
+  <suricate-checkbox
+    *ngIf="dataType.BOOLEAN === field.type"
+    [field]="field"
+    [formGroup]="formGroup"
+    (valueChangeEvent)="emitValueChange('checkbox')"
+  >
   </suricate-checkbox>
 
-  <suricate-file-input *ngIf="dataType.FILE === field.type" [field]="field" [formGroup]="formGroup" (valueChangeEvent)="emitValueChange()">
+  <suricate-file-input
+    *ngIf="dataType.FILE === field.type"
+    [field]="field"
+    [formGroup]="formGroup"
+    (valueChangeEvent)="emitValueChange('fileChanged')"
+  >
   </suricate-file-input>
 
   <suricate-color-picker *ngIf="dataType.COLOR_PICKER === field.type" [field]="field" [formGroup]="formGroup"> </suricate-color-picker>

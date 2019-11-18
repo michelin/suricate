@@ -171,7 +171,7 @@ export class HttpProjectService implements AbstractHttpService<Project | Project
   addUserToProject(projectToken: string, username: string): Observable<void> {
     const url = `${projectsApiEndpoint}/${projectToken}/users`;
 
-    return this.httpClient.post<void>(url, username);
+    return this.httpClient.post<void>(url, { username: username });
   }
 
   /**

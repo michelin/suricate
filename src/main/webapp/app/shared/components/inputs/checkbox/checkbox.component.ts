@@ -33,6 +33,6 @@ export class CheckboxComponent extends InputComponent {
   }
 
   checkboxChange() {
-    this.emitValueChange();
+    this.emitValueChange('checkbox');
   }
 }

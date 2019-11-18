@@ -21,7 +21,7 @@ import { AbstractControl, FormGroup, ValidatorFn, Validators } from '@angular/fo
 import { animate, style, transition, trigger } from '@angular/animations';
 
 import { DataTypeEnum } from '../../enums/data-type.enum';
-import { ValueChangedEvent } from '../../models/frontend/form/value-changed-event';
+import { ValueChangedEvent, ValueChangedType } from '../../models/frontend/form/value-changed-event';
 import { SimpleFormField } from '../../models/frontend/form/simple-form-field';
 import { FormOption } from '../../models/frontend/form/form-option';
 
@@ -73,6 +73,13 @@ export class InputComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
+    this.initOptionsField();
+  }
+
+  /**
+   * Init the field options
+   */
+  initOptionsField(): void {
     if (this.field.options) {
       this.field.options().subscribe((options: FormOption[]) => {
         this.options = options;
@@ -90,12 +97,13 @@ export class InputComponent implements OnInit {
   /**
    * Function called when a field has been changed in the form, emit and event that will be caught by the parent component
    */
-  emitValueChange(): void {
+  emitValueChange(type: ValueChangedType): void {
     this.manageAutoCompleteChanges();
 
     this.valueChangeEvent.emit({
       fieldKey: this.field.key,
-      value: this.formGroup.value[this.field.key]
+      value: this.formGroup.value[this.field.key],
+      type: type
     });
   }
 
