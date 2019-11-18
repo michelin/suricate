@@ -20,6 +20,9 @@ import { FormField } from '../models/frontend/form/form-field';
 import { TranslateService } from '@ngx-translate/core';
 import { map } from 'rxjs/operators';
 import { DataTypeEnum } from '../enums/data-type.enum';
+import { HttpProjectService } from '../services/backend/http-project.service';
+import { FormOption } from '../models/frontend/form/form-option';
+import { HttpUserService } from '../services/backend/http-user.service';
 import { User } from '../models/backend/user/user';
 
 /**
@@ -31,30 +34,34 @@ export class ProjectUsersFormFieldsService {
    * Constructor
    *
    * @param translateService Ngx translate service used to manage the translations
+   * @param httpProjectService Suricate service used to manage project
    */
-  constructor(private readonly translateService: TranslateService) {}
+  constructor(
+    private readonly translateService: TranslateService,
+    private readonly httpProjectService: HttpProjectService,
+    private readonly httpUserService: HttpUserService
+  ) {}
 
   /**
    * Get the list of steps for a dashboard
    *
-   * @param users The list of users already added to the project
+   * @param projectToken The project token used to retrieve the users
    */
-  public generateProjectUsersFormFields(users?: User[]): Observable<FormField[]> {
+  public generateProjectUsersFormFields(projectToken: string): Observable<FormField[]> {
     return this.translateService.get(['username']).pipe(
       map((translations: string) => {
         return [
           {
-            key: 'username',
+            key: 'usernameAutocomplete',
             label: translations['username'],
             type: DataTypeEnum.TEXT,
-            value: null
+            options: filter => this.getUsersAutocomplete(filter)
           },
           {
             key: 'users',
             label: 'Users',
             type: DataTypeEnum.FIELDS,
-            value: null,
-            values: users,
+            values: this.httpProjectService.getProjectUsers(projectToken),
             fields: [
               {
                 key: 'username',
@@ -80,6 +87,25 @@ export class ProjectUsersFormFieldsService {
             ]
           }
         ];
+      })
+    );
+  }
+
+  private getUsersAutocomplete(filter: string): Observable<FormOption[]> {
+    return this.httpUserService.getAll(filter).pipe(
+      map((users: User[]) => {
+        const formOptions: FormOption[] = [];
+
+        if (filter) {
+          users.forEach((user: User) => {
+            formOptions.push({
+              label: `${user.firstname} ${user.lastname} (${user.username})`,
+              value: user.username
+            });
+          });
+        }
+
+        return formOptions;
       })
     );
   }

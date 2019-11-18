@@ -18,6 +18,7 @@
 
 import { FormField } from './form-field';
 import { SimpleFormField } from './simple-form-field';
+import { Observable } from 'rxjs';
 
 /**
  * Used for inner form fields (in Form Array)
@@ -30,5 +31,5 @@ export class ComplexFormField extends FormField {
   /**
    * The list of values to used in the array
    */
-  values?: unknown[];
+  values?: Observable<unknown[]>;
 }

@@ -39,6 +39,8 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
    */
   private projectSelected: Project;
 
+  private filter: string;
+
   /**
    * Constructor
    *
@@ -169,14 +171,12 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
   private openUserFormSidenav(event: Event, project: Project, saveCallback: (users: User[]) => void): void {
     this.projectSelected = project;
 
-    this.httpProjectService.getProjectUsers(project.token).subscribe((users: User[]) => {
-      this.translateService.get(['user.add']).subscribe((translations: string[]) => {
-        this.projectUsersFormFieldsService.generateProjectUsersFormFields(users).subscribe((formFields: FormField[]) => {
-          this.sidenavService.openFormSidenav({
-            title: translations['user.add'],
-            formFields: formFields,
-            save: (users: User[]) => saveCallback(users)
-          });
+    this.translateService.get(['user.add']).subscribe((translations: string[]) => {
+      this.projectUsersFormFieldsService.generateProjectUsersFormFields(project.token).subscribe((formFields: FormField[]) => {
+        this.sidenavService.openFormSidenav({
+          title: translations['user.add'],
+          formFields: formFields,
+          save: (users: User[]) => saveCallback(users)
         });
       });
     });

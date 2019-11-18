@@ -16,13 +16,14 @@
  *
  */
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { animate, style, transition, trigger } from '@angular/animations';
 
 import { DataTypeEnum } from '../../enums/data-type.enum';
 import { ValueChangedEvent } from '../../models/frontend/form/value-changed-event';
 import { SimpleFormField } from '../../models/frontend/form/simple-form-field';
+import { FormOption } from '../../models/frontend/form/form-option';
 
 /**
  * Manage the instantiation of different form inputs
@@ -40,7 +41,7 @@ import { SimpleFormField } from '../../models/frontend/form/simple-form-field';
     ])
   ]
 })
-export class InputComponent {
+export class InputComponent implements OnInit {
   /**
    * The form created in which we have to create the input
    */
@@ -62,9 +63,22 @@ export class InputComponent {
   dataType = DataTypeEnum;
 
   /**
+   * The list of options to display
+   */
+  options: FormOption[];
+
+  /**
    * Constructor
    */
   constructor() {}
+
+  ngOnInit(): void {
+    if (this.field.options) {
+      this.field.options().subscribe((options: FormOption[]) => {
+        this.options = options;
+      });
+    }
+  }
 
   /**
    * Retrieve the form control from the form
@@ -77,10 +91,25 @@ export class InputComponent {
    * Function called when a field has been changed in the form, emit and event that will be caught by the parent component
    */
   emitValueChange(): void {
+    this.manageAutoCompleteChanges();
+
     this.valueChangeEvent.emit({
       fieldKey: this.field.key,
       value: this.formGroup.value[this.field.key]
     });
+  }
+
+  /**
+   * Refresh the list to display in auto complete
+   */
+  manageAutoCompleteChanges(): void {
+    if (this.field.options && this.field.type === DataTypeEnum.TEXT) {
+      const inputValue = this.formGroup.value[this.field.key];
+
+      this.field.options(inputValue).subscribe(options => {
+        this.options = options;
+      });
+    }
   }
 
   /**

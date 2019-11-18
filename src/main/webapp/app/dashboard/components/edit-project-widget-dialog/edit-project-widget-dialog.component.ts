@@ -36,6 +36,7 @@ import { FormOption } from '../../../shared/models/frontend/form/form-option';
 import { WidgetParamValue } from '../../../shared/models/backend/widget/widget-param-value';
 import { CustomValidators } from 'ng2-validation';
 import { SimpleFormField } from '../../../shared/models/frontend/form/simple-form-field';
+import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'suricate-edit-project-widget-dialog',
@@ -164,7 +165,7 @@ export class EditProjectWidgetDialogComponent implements OnInit {
         label: widgetParam.description,
         placeholder: widgetParam.usageExample,
         value: projectWidgetValue ? projectWidgetValue : widgetParam.defaultValue,
-        options: this.getFormOptionsForWidgetParam(widgetParam),
+        options: () => this.getFormOptionsForWidgetParam(widgetParam),
         validators: this.getValidatorsForWidgetParam(widgetParam)
       };
 
@@ -181,7 +182,7 @@ export class EditProjectWidgetDialogComponent implements OnInit {
    *
    * @param widgetParam The widget param
    */
-  getFormOptionsForWidgetParam(widgetParam: WidgetParam): FormOption[] {
+  getFormOptionsForWidgetParam(widgetParam: WidgetParam): Observable<FormOption[]> {
     let formOptions: FormOption[] = [];
 
     if (widgetParam.values) {
@@ -193,7 +194,7 @@ export class EditProjectWidgetDialogComponent implements OnInit {
       });
     }
 
-    return formOptions;
+    return of(formOptions);
   }
 
   /**

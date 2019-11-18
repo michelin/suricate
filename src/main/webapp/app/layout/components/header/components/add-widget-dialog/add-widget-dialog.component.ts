@@ -36,6 +36,7 @@ import { WidgetParamValue } from '../../../../../shared/models/backend/widget/wi
 import { FormService } from '../../../../../shared/services/frontend/form.service';
 import { CustomValidators } from 'ng2-validation';
 import { SimpleFormField } from '../../../../../shared/models/frontend/form/simple-form-field';
+import { Observable, of } from 'rxjs';
 
 /**
  * Dialog used to add a widget
@@ -191,7 +192,7 @@ export class AddWidgetDialogComponent implements OnInit {
         label: widgetParam.description,
         placeholder: widgetParam.usageExample,
         value: widgetParam.defaultValue,
-        options: this.getFormOptionsForWidgetParam(widgetParam),
+        options: () => this.getFormOptionsForWidgetParam(widgetParam),
         validators: this.getValidatorsForWidgetParam(widgetParam)
       };
 
@@ -208,7 +209,7 @@ export class AddWidgetDialogComponent implements OnInit {
    *
    * @param widgetParam The widget param
    */
-  getFormOptionsForWidgetParam(widgetParam: WidgetParam): FormOption[] {
+  getFormOptionsForWidgetParam(widgetParam: WidgetParam): Observable<FormOption[]> {
     let formOptions: FormOption[] = [];
 
     if (widgetParam.values) {
@@ -220,7 +221,7 @@ export class AddWidgetDialogComponent implements OnInit {
       });
     }
 
-    return formOptions;
+    return of(formOptions);
   }
 
   /**

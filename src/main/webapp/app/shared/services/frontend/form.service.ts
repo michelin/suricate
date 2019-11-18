@@ -101,13 +101,15 @@ export class FormService {
     const formArray = this.formBuilder.array([]);
 
     if (field && field.fields && field.values) {
-      field.values.forEach((value: unknown) => {
-        const formGroup = this.formBuilder.group({});
-        field.fields.forEach(field => {
-          formGroup.addControl(field.key, this.generateFormControl(field, value[field.key] ? value[field.key] : ''));
-        });
+      field.values.subscribe((values: unknown[]) => {
+        values.forEach((value: unknown) => {
+          const formGroup = this.formBuilder.group({});
+          field.fields.forEach(field => {
+            formGroup.addControl(field.key, this.generateFormControl(field, value[field.key] ? value[field.key] : ''));
+          });
 
-        formArray.push(formGroup);
+          formArray.push(formGroup);
+        });
       });
     }
 

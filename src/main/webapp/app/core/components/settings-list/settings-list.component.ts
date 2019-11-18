@@ -16,7 +16,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { from } from 'rxjs';
+import { from, of } from 'rxjs';
 import { flatMap, map } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -149,7 +149,7 @@ export class SettingsListComponent implements OnInit {
           });
         });
 
-        formField.options = formOptions;
+        formField.options = () => of(formOptions);
       }
 
       this.formFields.push(formField);

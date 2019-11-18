@@ -15,7 +15,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { FormField } from '../models/frontend/form/form-field';
 import { RepositoryTypeEnum } from '../enums/repository-type.enum';
 import { map } from 'rxjs/operators';
@@ -87,7 +87,7 @@ export class RepositoryFormFieldsService {
         key: 'type',
         label: translations['type'],
         type: DataTypeEnum.COMBO,
-        options: this.getRepositoryTypeOptions(),
+        options: () => this.getRepositoryTypeOptions(),
         value: repository ? repository.type : null,
         validators: [Validators.required]
       }
@@ -154,7 +154,7 @@ export class RepositoryFormFieldsService {
   /**
    * Get the repository type options for the combobox
    */
-  private getRepositoryTypeOptions(): FormOption[] {
+  private getRepositoryTypeOptions(): Observable<FormOption[]> {
     const titleCasePipe = new TitleCasePipe();
     const typeOptions: FormOption[] = [];
 
@@ -165,6 +165,6 @@ export class RepositoryFormFieldsService {
       });
     });
 
-    return typeOptions;
+    return of(typeOptions);
   }
 }

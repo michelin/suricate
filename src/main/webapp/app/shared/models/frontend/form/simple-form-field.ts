@@ -19,6 +19,7 @@
 import { FormField } from './form-field';
 import { FormOption } from './form-option';
 import { AsyncValidatorFn, ValidatorFn } from '@angular/forms';
+import { Observable } from 'rxjs';
 
 /**
  * Basic form fields
@@ -35,7 +36,7 @@ export class SimpleFormField extends FormField {
   /**
    * If the type contains a list of values to display insert them in this attribute
    */
-  options?: FormOption[];
+  options?: (filter?: string) => Observable<FormOption[]>;
   /**
    * The mat-icon name that should be used as prefix
    */

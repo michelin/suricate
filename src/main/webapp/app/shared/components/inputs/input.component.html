@@ -19,36 +19,37 @@
     </mat-label>
 
     <!-- SIMPLE INPUT -->
-    <input
-      *ngIf="[dataType.NUMBER, dataType.TEXT, dataType.PASSWORD].includes(field.type)"
-      matInput
-      [id]="field.key"
-      [placeholder]="field.placeholder"
-      [type]="field.type.toString().toLowerCase()"
-      [formControl]="getFormControl()"
-      [required]="isRequired()"
-      [readonly]="field.readOnly"
-      [matAutocomplete]="autocomplete"
-      (input)="emitValueChange()"
-    />
+    <ng-container *ngIf="[dataType.NUMBER, dataType.TEXT, dataType.PASSWORD].includes(field.type)">
+      <input
+        matInput
+        [id]="field.key"
+        [placeholder]="field.placeholder"
+        [type]="field.type.toString().toLowerCase()"
+        [formControl]="$any(getFormControl())"
+        [required]="isRequired()"
+        [readonly]="field.readOnly"
+        [matAutocomplete]="autocomplete"
+        (input)="emitValueChange()"
+      />
 
-    <!-- Autocomplete -->
-    <mat-autocomplete #autocomplete="matAutocomplete" (optionSelected)="emitValueChange()">
-      <mat-option *ngFor="let option of field.options" [value]="option.value">
-        {{ option.label }}
-      </mat-option>
-    </mat-autocomplete>
+      <!-- Autocomplete -->
+      <mat-autocomplete #autocomplete="matAutocomplete" (optionSelected)="emitValueChange()">
+        <mat-option *ngFor="let option of options" [value]="option.value">
+          {{ option.label }}
+        </mat-option>
+      </mat-autocomplete>
+    </ng-container>
 
     <!-- SELECT INPUT -->
     <mat-select
       *ngIf="[dataType.COMBO, dataType.MULTIPLE].includes(field.type)"
       [id]="field.key"
-      [formControl]="getFormControl()"
+      [formControl]="$any(getFormControl())"
       [multiple]="field.type === dataType.MULTIPLE"
       [required]="isRequired()"
       (selectionChange)="emitValueChange()"
     >
-      <mat-option *ngFor="let option of field.options" [value]="option.value">
+      <mat-option *ngFor="let option of options" [value]="option.value">
         {{ option.label }}
       </mat-option>
     </mat-select>
@@ -112,4 +113,4 @@
   </div>
 </div>
 
-<suricate-fields *ngIf="field.type === dataType.FIELDS" [field]="field" [formArray]="$any(getFormControl())"> </suricate-fields>
+<suricate-fields *ngIf="field.type === dataType.FIELDS" [field]="$any(field)" [formArray]="$any(getFormControl())"> </suricate-fields>
