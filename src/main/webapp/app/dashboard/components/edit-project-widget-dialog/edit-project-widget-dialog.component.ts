@@ -35,6 +35,7 @@ import { FormService } from '../../../shared/services/frontend/form.service';
 import { FormOption } from '../../../shared/models/frontend/form/form-option';
 import { WidgetParamValue } from '../../../shared/models/backend/widget/widget-param-value';
 import { CustomValidators } from 'ng2-validation';
+import { SimpleFormField } from '../../../shared/models/frontend/form/simple-form-field';
 
 @Component({
   selector: 'suricate-edit-project-widget-dialog',
@@ -157,7 +158,7 @@ export class EditProjectWidgetDialogComponent implements OnInit {
 
     this.widgetParams.forEach((widgetParam: WidgetParam) => {
       const projectWidgetValue = this.getParamValueByParamName(this.projectWidget.backendConfig, widgetParam.name);
-      const formField: FormField = {
+      const formField: SimpleFormField = {
         key: widgetParam.name,
         type: widgetParam.type,
         label: widgetParam.description,

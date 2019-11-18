@@ -35,6 +35,7 @@ import { FormOption } from '../../../../../shared/models/frontend/form/form-opti
 import { WidgetParamValue } from '../../../../../shared/models/backend/widget/widget-param-value';
 import { FormService } from '../../../../../shared/services/frontend/form.service';
 import { CustomValidators } from 'ng2-validation';
+import { SimpleFormField } from '../../../../../shared/models/frontend/form/simple-form-field';
 
 /**
  * Dialog used to add a widget
@@ -184,7 +185,7 @@ export class AddWidgetDialogComponent implements OnInit {
     this.projectWidgetFormFields = [];
 
     this.widgetParams.forEach((widgetParam: WidgetParam) => {
-      const formField: FormField = {
+      const formField: SimpleFormField = {
         key: widgetParam.name,
         type: widgetParam.type,
         label: widgetParam.description,

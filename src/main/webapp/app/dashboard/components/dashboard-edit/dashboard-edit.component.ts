@@ -29,8 +29,8 @@ import { ProjectRequest } from '../../../shared/models/backend/project/project-r
 import { User } from '../../../shared/models/backend/user/user';
 import { FormStep } from '../../../shared/models/frontend/form/form-step';
 import { FormService } from '../../../shared/services/frontend/form.service';
-import { FormField } from '../../../shared/models/frontend/form/form-field';
 import { DataTypeEnum } from '../../../shared/enums/data-type.enum';
+import { SimpleFormField } from '../../../shared/models/frontend/form/simple-form-field';
 
 /**
  * Component that display the edit page for a dashboard
@@ -120,7 +120,7 @@ export class DashboardEditComponent implements OnInit {
   generateStepOne() {
     return this.translateService.get(['dashboard.name', 'token', 'widget.heigth.px', 'grid.nb.columns']).pipe(
       map((translations: string) => {
-        const formFields: FormField[] = [
+        const formFields: SimpleFormField[] = [
           {
             key: 'name',
             label: translations['dashboard.name'],

@@ -22,6 +22,8 @@ import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Valida
 import { FormField } from '../../models/frontend/form/form-field';
 import { FormStep } from '../../models/frontend/form/form-step';
 import { DataTypeEnum } from '../../enums/data-type.enum';
+import { ComplexFormField } from '../../models/frontend/form/complex-form-field';
+import { SimpleFormField } from '../../models/frontend/form/simple-form-field';
 
 /**
  * Service class that manage the instantiations of forms
@@ -80,7 +82,7 @@ export class FormService {
     if (fields) {
       fields.forEach(field => {
         if (field.type === DataTypeEnum.FIELDS) {
-          formGroup.addControl(field.key, this.generateFormArrayForField(field));
+          formGroup.addControl(field.key, this.generateFormArrayForField(field as ComplexFormField));
         } else {
           formGroup.addControl(field.key, this.generateFormControl(field));
         }
@@ -95,7 +97,7 @@ export class FormService {
    *
    * @param field The parent field (with type equals to dataType.fields)
    */
-  private generateFormArrayForField(field: FormField): FormArray {
+  private generateFormArrayForField(field: ComplexFormField): FormArray {
     const formArray = this.formBuilder.array([]);
 
     if (field && field.fields && field.values) {
@@ -119,7 +121,7 @@ export class FormService {
    * @param value if we want to force the value
    * @return The form control that represent the field
    */
-  private generateFormControl(field: FormField, value?: string | number): FormControl {
+  private generateFormControl(field: SimpleFormField, value?: string | number): FormControl {
     return this.formBuilder.control(
       { value: value ? value : field.value, disabled: field.disabled },
       field.validators,

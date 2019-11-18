@@ -25,6 +25,7 @@ import { Repository } from '../models/backend/repository/repository';
 import { FormOption } from '../models/frontend/form/form-option';
 import { TitleCasePipe } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
+import { SimpleFormField } from '../models/frontend/form/simple-form-field';
 
 /**
  * Service used to build the form fields related to a repository
@@ -67,7 +68,7 @@ export class RepositoryFormFieldsService {
    * @param translations The translations
    * @param repository The repository
    */
-  private getGeneralFormFields(translations: string[], repository: Repository): FormField[] {
+  private getGeneralFormFields(translations: string[], repository: Repository): SimpleFormField[] {
     return [
       {
         key: 'enabled',

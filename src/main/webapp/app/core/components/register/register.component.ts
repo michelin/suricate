@@ -30,11 +30,11 @@ import { Credentials } from '../../../shared/models/backend/user/credentials';
 import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
 import { UserRequest } from '../../../shared/models/backend/user/user-request';
 import { AuthenticationProviderEnum } from '../../../shared/enums/authentication-provider.enum';
-import { FormField } from '../../../shared/models/frontend/form/form-field';
 import { DataTypeEnum } from '../../../shared/enums/data-type.enum';
 import { FormService } from '../../../shared/services/frontend/form.service';
 import { CustomValidator } from '../../../shared/validators/custom-validator';
 import { SidenavService } from '../../../shared/services/frontend/sidenav.service';
+import { SimpleFormField } from '../../../shared/models/frontend/form/simple-form-field';
 
 /**
  * Component that register a new user
@@ -53,7 +53,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   /**
    * The description of the form
    */
-  formFields: FormField[];
+  formFields: SimpleFormField[];
   /**
    * Tell if the form has been submit or not
    * @type {boolean} true if the form is submitting, false otherwise
@@ -126,7 +126,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
             key: 'username',
             label: translations['username'],
             type: DataTypeEnum.TEXT,
-            value: '',
             validators: [Validators.required, Validators.minLength(3)],
             matIconPrefix: 'android'
           },
@@ -134,7 +133,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
             key: 'firstname',
             label: translations['firstname'],
             type: DataTypeEnum.TEXT,
-            value: '',
             validators: [Validators.required, Validators.minLength(3)],
             matIconPrefix: 'person'
           },
@@ -142,7 +140,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
             key: 'lastname',
             label: translations['lastname'],
             type: DataTypeEnum.TEXT,
-            value: '',
             validators: [Validators.required, Validators.minLength(3)],
             matIconPrefix: 'person'
           },
@@ -150,7 +147,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
             key: 'email',
             label: translations['email'],
             type: DataTypeEnum.TEXT,
-            value: '',
             validators: [Validators.required, CustomValidators.email],
             matIconPrefix: 'email'
           },
@@ -158,7 +154,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
             key: 'password',
             label: translations['password'],
             type: DataTypeEnum.PASSWORD,
-            value: '',
             validators: [Validators.required, Validators.minLength(3)],
             matIconPrefix: 'lock'
           },
@@ -166,7 +161,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
             key: 'confirmPassword',
             label: translations['password.confirm'],
             type: DataTypeEnum.PASSWORD,
-            value: '',
             matIconPrefix: 'lock'
           }
         ];

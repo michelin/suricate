@@ -24,9 +24,9 @@ import { HttpConfigurationService } from '../../../shared/services/backend/http-
 import { ApplicationProperties } from '../../../shared/models/backend/application-properties';
 import { AuthenticationProviderEnum } from '../../../shared/enums/authentication-provider.enum';
 import { FormService } from '../../../shared/services/frontend/form.service';
-import { FormField } from '../../../shared/models/frontend/form/form-field';
 import { DataTypeEnum } from '../../../shared/enums/data-type.enum';
 import { SidenavService } from '../../../shared/services/frontend/sidenav.service';
+import { SimpleFormField } from '../../../shared/models/frontend/form/simple-form-field';
 
 /**
  * Manage the login page
@@ -45,7 +45,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   /**
    * The description of the form
    */
-  formFields: FormField[];
+  formFields: SimpleFormField[];
   /**
    * Used for display spinner when form has been submitted
    * @type {boolean}
@@ -104,14 +104,13 @@ export class LoginComponent implements OnInit, OnDestroy {
   /**
    * Generate the form fields used for the form creation
    */
-  generateFormFields() {
+  generateFormFields(): void {
     this.translateService.get(['username', 'password']).subscribe((translations: string) => {
       this.formFields = [
         {
           key: 'username',
           label: translations['username'],
           type: DataTypeEnum.TEXT,
-          value: '',
           validators: [Validators.required],
           matIconPrefix: 'android'
         },
@@ -119,7 +118,6 @@ export class LoginComponent implements OnInit, OnDestroy {
           key: 'password',
           label: translations['password'],
           type: DataTypeEnum.PASSWORD,
-          value: '',
           validators: [Validators.required],
           matIconPrefix: 'lock'
         }

@@ -16,22 +16,19 @@
  *
  */
 
-import { DataTypeEnum } from '../../../enums/data-type.enum';
+import { FormField } from './form-field';
+import { SimpleFormField } from './simple-form-field';
 
 /**
- * Describe a field used to manage the form
+ * Used for inner form fields (in Form Array)
  */
-export abstract class FormField {
+export class ComplexFormField extends FormField {
   /**
-   * The key of the field
+   * The list of fields in case of a (FIELDS data type)
    */
-  key: string;
+  fields: SimpleFormField[];
   /**
-   * The value displayed by the form
+   * The list of values to used in the array
    */
-  label: string;
-  /**
-   * The type of the data to insert
-   */
-  type: DataTypeEnum;
+  values?: unknown[];
 }

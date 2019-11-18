@@ -21,8 +21,8 @@ import { AbstractControl, FormGroup, ValidatorFn, Validators } from '@angular/fo
 import { animate, style, transition, trigger } from '@angular/animations';
 
 import { DataTypeEnum } from '../../enums/data-type.enum';
-import { FormField } from '../../models/frontend/form/form-field';
 import { ValueChangedEvent } from '../../models/frontend/form/value-changed-event';
+import { SimpleFormField } from '../../models/frontend/form/simple-form-field';
 
 /**
  * Manage the instantiation of different form inputs
@@ -50,7 +50,7 @@ export class InputComponent {
    * Object that hold different information used for the instantiation of the input
    */
   @Input()
-  field: FormField;
+  field: SimpleFormField;
   /**
    * Event sent when the value of the input has changed
    */

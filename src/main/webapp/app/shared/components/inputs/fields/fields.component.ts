@@ -21,6 +21,7 @@ import { InputComponent } from '../input.component';
 import { MaterialIconRecords } from '../../../records/material-icon.record';
 import { IconEnum } from '../../../enums/icon.enum';
 import { FormArray } from '@angular/forms';
+import { ComplexFormField } from '../../../models/frontend/form/complex-form-field';
 
 /**
  * Used to display fields of type Fields
@@ -31,8 +32,16 @@ import { FormArray } from '@angular/forms';
   styleUrls: ['./fields.component.scss']
 })
 export class FieldsComponent extends InputComponent {
+  /**
+   * The form array
+   */
   @Input()
   formArray: FormArray;
+  /**
+   * Object that hold different information used for the instantiation of the inputs
+   */
+  @Input()
+  field: ComplexFormField;
 
   /**
    * The list of icons

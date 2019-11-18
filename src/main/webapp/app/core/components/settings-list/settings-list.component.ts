@@ -29,9 +29,9 @@ import { Setting } from '../../../shared/models/backend/setting/setting';
 import { SettingsTypeEnum } from '../../../shared/enums/settings-type.enum';
 import { AllowedSettingValue } from '../../../shared/models/backend/setting/allowed-setting-value';
 import { DataTypeEnum } from '../../../shared/enums/data-type.enum';
-import { FormField } from '../../../shared/models/frontend/form/form-field';
 import { FormService } from '../../../shared/services/frontend/form.service';
 import { FormOption } from '../../../shared/models/frontend/form/form-option';
+import { SimpleFormField } from '../../../shared/models/frontend/form/simple-form-field';
 
 /**
  * Represent the Admin Setting list page
@@ -50,7 +50,7 @@ export class SettingsListComponent implements OnInit {
   /**
    * The description of the form
    */
-  formFields: FormField[];
+  formFields: SimpleFormField[];
 
   /**
    * The connected user
@@ -133,7 +133,7 @@ export class SettingsListComponent implements OnInit {
     this.formFields = [];
 
     this.settings.forEach((setting: Setting) => {
-      const formField: FormField = {
+      const formField: SimpleFormField = {
         key: setting.type,
         label: setting.description,
         type: setting.dataType,

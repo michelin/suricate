@@ -22,13 +22,13 @@ import { Project } from '../../../../../shared/models/backend/project/project';
 import { WebsocketClient } from '../../../../../shared/models/backend/websocket-client';
 import { HttpScreenService } from '../../../../../shared/services/backend/http-screen.service';
 import { HttpProjectService } from '../../../../../shared/services/backend/http-project.service';
-import { FormField } from '../../../../../shared/models/frontend/form/form-field';
 import { FormService } from '../../../../../shared/services/frontend/form.service';
 import { TranslateService } from '@ngx-translate/core';
 import { map } from 'rxjs/operators';
 import { DataTypeEnum } from '../../../../../shared/enums/data-type.enum';
 import { CustomValidators } from 'ng2-validation';
 import { Observable } from 'rxjs';
+import { SimpleFormField } from '../../../../../shared/models/frontend/form/simple-form-field';
 
 /**
  * Component that manage the popup for Dashboard TV Management
@@ -48,7 +48,7 @@ export class TvManagementDialogComponent implements OnInit {
   /**
    * The description of the form
    */
-  formFields: FormField[];
+  formFields: SimpleFormField[];
 
   /**
    * The current project
