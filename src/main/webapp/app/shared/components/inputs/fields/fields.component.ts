@@ -20,8 +20,10 @@ import { Component, Input } from '@angular/core';
 import { InputComponent } from '../input.component';
 import { MaterialIconRecords } from '../../../records/material-icon.record';
 import { IconEnum } from '../../../enums/icon.enum';
-import { FormArray } from '@angular/forms';
+import { FormArray, FormGroup } from '@angular/forms';
 import { ComplexFormField } from '../../../models/frontend/form/complex-form-field';
+import { FormField } from '../../../models/frontend/form/form-field';
+import { DataTypeEnum } from '../../../enums/data-type.enum';
 
 /**
  * Used to display fields of type Fields
@@ -59,10 +61,19 @@ export class FieldsComponent extends InputComponent {
   ngOnInit() {}
 
   getInnerFormSize(): number {
-    return this.field.fields && this.field.fields.length > 0 ? 87 / this.field.fields.length : 87;
+    let cellSize = 87;
+
+    if (this.field.fields && this.field.fields.length > 0) {
+      const numberOfFieldDisplayed = this.field.fields.filter((field: FormField) => field.type !== DataTypeEnum.HIDDEN);
+      cellSize = 87 / numberOfFieldDisplayed.length;
+    }
+
+    return cellSize;
   }
 
-  deleteRow(index: number) {
-    this.formArray.removeAt(index);
+  deleteRow(innerFormGroup: FormGroup, index: number) {
+    this.field.deleteRow.callback(innerFormGroup.value[this.field.deleteRow.attribute]).subscribe(() => {
+      this.formArray.removeAt(index);
+    });
   }
 }

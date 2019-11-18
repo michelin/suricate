@@ -62,26 +62,31 @@ export class ProjectUsersFormFieldsService {
             label: 'Users',
             type: DataTypeEnum.FIELDS,
             values: this.httpProjectService.getProjectUsers(projectToken),
+            deleteRow: {
+              attribute: 'id',
+              callback: (userId: number) => this.httpProjectService.deleteUserFromProject(projectToken, userId)
+            },
             fields: [
+              {
+                key: 'id',
+                type: DataTypeEnum.HIDDEN
+              },
               {
                 key: 'username',
                 label: translations['username'],
                 type: DataTypeEnum.TEXT,
-                value: null,
                 readOnly: true
               },
               {
                 key: 'firstname',
                 label: 'Firstname',
                 type: DataTypeEnum.TEXT,
-                value: null,
                 readOnly: true
               },
               {
                 key: 'lastname',
                 label: 'lastname',
                 type: DataTypeEnum.TEXT,
-                value: null,
                 readOnly: true
               }
             ]

@@ -24,6 +24,7 @@ export enum DataTypeEnum {
   NUMBER = 'NUMBER',
   TEXT = 'TEXT',
   PASSWORD = 'PASSWORD',
+  HIDDEN = 'HIDDEN',
   // Complex data types
   BOOLEAN = 'BOOLEAN',
   COMBO = 'COMBO',

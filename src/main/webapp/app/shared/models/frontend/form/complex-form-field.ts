@@ -32,4 +32,8 @@ export class ComplexFormField extends FormField {
    * The list of values to used in the array
    */
   values?: Observable<unknown[]>;
+  /**
+   * Function used to delete a row
+   */
+  deleteRow?: { attribute: string; callback: (object: unknown) => Observable<unknown> };
 }
