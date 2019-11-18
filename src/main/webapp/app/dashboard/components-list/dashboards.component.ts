@@ -176,6 +176,7 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
         this.sidenavService.openFormSidenav({
           title: translations['user.add'],
           formFields: formFields,
+          hideSaveAction: true,
           onValueChanged: (valueChangedEvent: ValueChangedEvent) => this.onValueChanged(valueChangedEvent)
         });
       });

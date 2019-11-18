@@ -42,4 +42,9 @@ export interface FormSidenavConfiguration {
    * Function to call when a value of a field has changed
    */
   onValueChanged?: (valueChangedEvent: ValueChangedEvent) => Observable<FormField[]>;
+
+  /**
+   * Used to hide the save action
+   */
+  hideSaveAction?: boolean;
 }

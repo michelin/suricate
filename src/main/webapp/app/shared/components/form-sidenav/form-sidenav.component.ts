@@ -104,6 +104,7 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
         label: 'Save',
         icon: IconEnum.SAVE,
         color: 'primary',
+        hidden: () => this.configuration.hideSaveAction,
         callback: () => this.save()
       }
     );
