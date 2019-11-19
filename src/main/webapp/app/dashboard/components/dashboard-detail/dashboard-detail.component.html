@@ -14,19 +14,17 @@
 
 <!-- Display the add card, if no widget inside the project -->
 <ng-template #dashboardNoWidget>
-  <div fxLayout="col wrap" fxLayoutAlign="start start">
-    <!-- Add Dashboard Card -->
-    <mat-card class="card-link" id="add-dashboard-card" fxFlex="31%">
-      <a class="mat-card-link" (click)="openAddWidgetDialog()">
-        <div class="card-icon-container">
+  <mat-grid-list cols="4" rowHeight="250px" gutterSize="17px">
+    <mat-grid-tile class="mat-elevation-z3">
+      <div class="grid-tile-content-wrapper">
+        <div class="grid-tile-body">
           <mat-icon color="primary">add_box</mat-icon>
         </div>
-      </a>
-      <mat-card-actions align="start">
-        <button #addDashboardButton mat-button (click)="openAddWidgetDialog()">
-          <suricate-translate [key]="'widget.add'"></suricate-translate>
-        </button>
-      </mat-card-actions>
-    </mat-card>
-  </div>
+
+        <div class="grid-tile-footer">
+          Add widget
+        </div>
+      </div>
+    </mat-grid-tile>
+  </mat-grid-list>
 </ng-template>

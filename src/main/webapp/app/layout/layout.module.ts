@@ -17,7 +17,6 @@
 import { NgModule } from '@angular/core';
 
 import { AddWidgetDialogComponent } from './components/header/components/add-widget-dialog/add-widget-dialog.component';
-import { DashboardActionsComponent } from './components/header/components/dashboard-actions/dashboard-actions.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { TvManagementDialogComponent } from './components/header/components/tv-management-dialog/tv-management-dialog.component';
 import { SharedModule } from '../shared/shared.module';
@@ -27,15 +26,7 @@ import { MenuComponent } from './components/menu/menu.component';
 
 @NgModule({
   imports: [SharedModule],
-  declarations: [
-    AddWidgetDialogComponent,
-    DashboardActionsComponent,
-    FooterComponent,
-    HeaderComponent,
-    SidenavComponent,
-    TvManagementDialogComponent,
-    MenuComponent
-  ],
+  declarations: [AddWidgetDialogComponent, FooterComponent, HeaderComponent, SidenavComponent, TvManagementDialogComponent, MenuComponent],
   entryComponents: [AddWidgetDialogComponent, TvManagementDialogComponent],
   exports: [AddWidgetDialogComponent, FooterComponent, HeaderComponent, SidenavComponent]
 })

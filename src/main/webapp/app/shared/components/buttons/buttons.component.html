@@ -37,7 +37,7 @@
     *ngIf="!configuration.hidden || !configuration.hidden()"
     mat-mini-fab
     class="button button-single"
-    [matTooltip]="configuration.tooltip?.message"
+    [matTooltip]="configuration.tooltip?.message | translate"
     [matTooltipPosition]="configuration.tooltip?.position ? $any(configuration.tooltip?.position) : 'below'"
     [type]="configuration.type ? configuration.type : buttonTypeEnum.BUTTON"
     [color]="$any(configuration.color)"

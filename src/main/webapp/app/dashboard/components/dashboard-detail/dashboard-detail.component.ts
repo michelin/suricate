@@ -28,6 +28,16 @@ import { WebsocketService } from '../../../shared/services/frontend/websocket.se
 import { ImageUtils } from '../../../shared/utils/image.utils';
 import { FileUtils } from '../../../shared/utils/file.utils';
 import { HeaderConfiguration } from '../../../shared/models/frontend/header/header-configuration';
+import { IconEnum } from '../../../shared/enums/icon.enum';
+import { HttpScreenService } from '../../../shared/services/backend/http-screen.service';
+import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
+import { ToastService } from '../../../shared/services/frontend/toast.service';
+import { SidenavService } from '../../../shared/services/frontend/sidenav.service';
+import { DialogService } from '../../../shared/services/frontend/dialog.service';
+import { TranslateService } from '@ngx-translate/core';
+import { FormField } from '../../../shared/models/frontend/form/form-field';
+import { ProjectRequest } from '../../../shared/models/backend/project/project-request';
+import { ProjectFormFieldsService } from '../../../shared/form-fields/project-form-fields.service';
 
 /**
  * Component that display a specific dashboard
@@ -93,6 +103,12 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
     private dashboardService: DashboardService,
     private websocketService: WebsocketService,
     private httpProjectService: HttpProjectService,
+    private readonly httpScreenService: HttpScreenService,
+    private readonly toastService: ToastService,
+    private readonly dialogService: DialogService,
+    private readonly translateService: TranslateService,
+    private readonly projectFormFieldsService: ProjectFormFieldsService,
+    private readonly sidenavService: SidenavService,
     private matDialog: MatDialog,
     private router: Router
   ) {}
@@ -122,7 +138,100 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
   }
 
   private initHeaderConfiguration(): void {
-    this.headerConfiguration = { title: this.project.name };
+    this.headerConfiguration = {
+      title: this.project.name,
+      actions: [
+        {
+          icon: IconEnum.ADD,
+          color: 'primary',
+          variant: 'miniFab',
+          tooltip: { message: 'widget.add' }
+        },
+        {
+          icon: IconEnum.EDIT,
+          color: 'primary',
+          variant: 'miniFab',
+          tooltip: { message: 'dashboard.settings' },
+          callback: () => this.openDashboardFormSidenav()
+        },
+        {
+          icon: IconEnum.REFRESH,
+          color: 'primary',
+          variant: 'miniFab',
+          tooltip: { message: 'screen.refresh' },
+          hidden: () => !this.projectWidgets || this.projectWidgets.length === 0,
+          callback: () => this.refreshConnectedScreens()
+        },
+        {
+          icon: IconEnum.TV,
+          color: 'primary',
+          variant: 'miniFab',
+          tooltip: { message: 'tv.view' },
+          hidden: () => !this.projectWidgets || this.projectWidgets.length === 0,
+          callback: () => this.redirectToTvView()
+        },
+        {
+          icon: IconEnum.TV_LIVE,
+          color: 'primary',
+          variant: 'miniFab',
+          tooltip: { message: 'screen.management' },
+          hidden: () => !this.projectWidgets || this.projectWidgets.length === 0
+        },
+        {
+          icon: IconEnum.DELETE,
+          color: 'warn',
+          variant: 'miniFab',
+          tooltip: { message: 'dashboard.delete' },
+          callback: () => this.deleteDashboard()
+        }
+      ]
+    };
+  }
+
+  private openDashboardFormSidenav(): void {
+    this.projectFormFieldsService.generateProjectFormFields(this.project).subscribe((formFields: FormField[]) => {
+      this.sidenavService.openFormSidenav({
+        title: 'Create dashboard',
+        formFields: formFields,
+        save: (formData: ProjectRequest) => this.editDashboard(formData)
+      });
+    });
+  }
+
+  private editDashboard(formData: ProjectRequest): void {
+    formData.cssStyle = `.grid { background-color: ${formData['gridBackgroundColor']}; }`;
+
+    this.httpProjectService.update(this.project.token, formData).subscribe(() => {
+      this.toastService.sendMessage('Dashboard updated', ToastTypeEnum.SUCCESS);
+      this.refreshConnectedScreens();
+    });
+  }
+
+  private refreshConnectedScreens(): void {
+    this.httpScreenService.refreshEveryConnectedScreensForProject(this.project.token).subscribe(() => {
+      this.toastService.sendMessage('Screens refreshed', ToastTypeEnum.SUCCESS);
+    });
+  }
+
+  private redirectToTvView(): void {
+    const url = this.router.createUrlTree(['/tv'], { queryParams: { token: this.project.token } });
+    window.open(url.toString(), '_blank');
+  }
+
+  private deleteDashboard(): void {
+    this.translateService.get(['dashboard.delete', 'delete.confirm']).subscribe((translations: string[]) => {
+      this.dialogService.confirm({
+        title: translations['dashboard.delete'],
+        message: `${translations['delete.confirm']} ${this.project.name.toUpperCase()}`,
+        accept: () => {
+          this.httpProjectService.delete(this.project.token).subscribe(() => {
+            this.toastService.sendMessage('Project deleted successfully', ToastTypeEnum.SUCCESS);
+
+            this.router.navigate(['/home']);
+          });
+        }
+      });
+    });
   }
 
   /**

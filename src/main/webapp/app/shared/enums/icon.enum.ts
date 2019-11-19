@@ -27,5 +27,7 @@ export enum IconEnum {
   SAVE = 'SAVE',
   REFRESH = 'REFRESH',
   GENERAL_INFORMATION = 'GENERAL_INFORMATION',
-  USERS = 'USERS'
+  USERS = 'USERS',
+  TV = 'TV',
+  TV_LIVE = 'TV_LIVE'
 }

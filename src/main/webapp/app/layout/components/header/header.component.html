@@ -7,11 +7,6 @@
   </div>
 
   <div class="actions" *ngIf="showMenu">
-    <!-- Dashboard actions -->
-    <div *ngIf="pageName === 'dashboards'">
-      <suricate-dashboard-actions></suricate-dashboard-actions>
-    </div>
-
     <suricate-buttons *ngIf="configuration.actions" [configurations]="configuration.actions"> </suricate-buttons>
   </div>
 

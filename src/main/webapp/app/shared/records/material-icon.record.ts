@@ -23,11 +23,13 @@ import { IconEnum } from '../enums/icon.enum';
  */
 export const MaterialIconRecords: Record<IconEnum, string> = {
   [IconEnum.ADD]: 'add',
-  [IconEnum.DELETE]: 'delete',
+  [IconEnum.DELETE]: 'delete_forever',
   [IconEnum.EDIT]: 'edit',
   [IconEnum.CLOSE]: 'close',
   [IconEnum.SAVE]: 'done',
   [IconEnum.REFRESH]: 'refresh',
   [IconEnum.GENERAL_INFORMATION]: 'menu_book',
-  [IconEnum.USERS]: 'supervisor_account'
+  [IconEnum.USERS]: 'supervisor_account',
+  [IconEnum.TV]: 'tv',
+  [IconEnum.TV_LIVE]: 'live_tv'
 };
