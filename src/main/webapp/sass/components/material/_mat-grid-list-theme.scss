@@ -20,7 +20,7 @@
 /**
  * Component for that modify the theme of Angular Material mat-card
  */
-@mixin custom-mat-card-theme($theme) {
+@mixin custom-mat-grid-list-theme($theme) {
   // Angular Material colors
   $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);
@@ -29,67 +29,48 @@
   $foreground: map-get($theme, foreground);
   $background: map-get($theme, background);
 
-  .mat-card {
-    & {
+  .mat-grid-tile {
+    .grid-tile-content-wrapper,
+    .grid-tile-content-wrapper > a {
       display: flex;
-      flex-direction: column;
-      flex-shrink: 1;
-      flex-grow: 1;
-      height: auto;
-      margin: 15px;
-      @include mat-elevation(4);
-    }
+      height: 100%;
+      width: 100%;
+      flex-flow: column;
+      box-sizing: border-box;
 
-    &.card-link:hover {
-      @include mat-elevation(8);
-    }
+      & > a {
+        text-decoration: none;
+        color: currentColor;
 
-    .mat-card-header {
-      display: block;
-      text-align: center;
-    }
-
-    .mat-card-link {
-      & {
-        display: flex;
-        flex: 1 1 auto;
-        flex-flow: column nowrap;
-        cursor: pointer;
+        &:visited {
+          color: currentColor;
+        }
       }
 
-      .card-image-container, .card-icon-container {
-        & {
-          display: flex;
-          justify-content: center;
-          height: 100%;
-        }
+      .grid-tile-body {
+        display: flex;
+        flex-grow: 1;
+        align-items: center;
+        justify-content: center;
 
-        .mat-card-image {
-          & {
-            object-fit: contain;
-            width: 100%;
-          }
-
-          &:first-child {
-            margin-top: unset;
-          }
+        img {
+          max-width: 100%;
+          max-height: 100%;
         }
 
         .mat-icon {
-          align-self: center;
-          font-size: 5rem;
-          width: auto;
-          height: auto;
+          height: 35px;
+          width: 35px;
+          font-size: 35px;
         }
       }
-    }
 
-    .mat-card-actions {
-      min-height: 30px;
-    }
-
-    .mat-card-actions {
-      width: 100%;
+      .grid-tile-footer {
+        display: flex;
+        align-items: center;
+        height: 50px;
+        padding: 0 16px;
+      }
     }
   }
 }

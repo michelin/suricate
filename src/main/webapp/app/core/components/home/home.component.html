@@ -1,35 +1,30 @@
 <suricate-pages-header [configuration]="headerConfiguration"></suricate-pages-header>
 
-<div fxLayout="col wrap" fxLayoutAlign="start start">
-  <!-- Add Dashboard Card -->
-  <mat-card id="add-dashboard-card" fxFlex="31%" class="card-link">
-    <a class="mat-card-link" (click)="openAddDashboardDialog()">
-      <div class="card-icon-container">
+<mat-grid-list cols="4" rowHeight="250px" gutterSize="17px">
+  <mat-grid-tile class="mat-elevation-z3">
+    <div class="grid-tile-content-wrapper">
+      <div class="grid-tile-body">
         <mat-icon color="primary">add_box</mat-icon>
       </div>
-    </a>
-    <mat-card-actions align="start">
-      <button #addDashboardButton mat-button (click)="openAddDashboardDialog()">
-        <suricate-translate [key]="'dashboard.add'"></suricate-translate>
-      </button>
-    </mat-card-actions>
-  </mat-card>
 
-  <!-- Other dashboards -->
-  <mat-card *ngFor="let dashboard of dashboards" fxFlex="31%" class="card-link">
-    <a class="mat-card-link" (click)="navigateToDashboard(dashboard.token)">
-      <div *ngIf="dashboard.screenshotToken" class="card-image-container">
-        <img mat-card-image [src]="getContentUrl(dashboard.screenshotToken)" />
+      <div class="grid-tile-footer">
+        test
       </div>
+    </div>
+  </mat-grid-tile>
 
-      <div *ngIf="!dashboard.screenshotToken" class="card-icon-container">
-        <mat-icon>dashboard</mat-icon>
-      </div>
-    </a>
-    <mat-card-actions align="start">
-      <button mat-button (click)="navigateToDashboard(dashboard.token)">
-        {{ dashboard.name }}
-      </button>
-    </mat-card-actions>
-  </mat-card>
-</div>
+  <mat-grid-tile *ngFor="let dashboard of dashboards" class="mat-elevation-z3">
+    <div class="grid-tile-content-wrapper">
+      <a [routerLink]="['/dashboards', dashboard.token]">
+        <div class="grid-tile-body">
+          <img *ngIf="dashboard.screenshotToken" [src]="getContentUrl(dashboard.screenshotToken)" alt="Dashbaord screenshot" />
+          <mat-icon *ngIf="!dashboard.screenshotToken" color="primary">dashboard</mat-icon>
+        </div>
+
+        <div class="grid-tile-footer">
+          {{ dashboard.name }}
+        </div>
+      </a>
+    </div>
+  </mat-grid-tile>
+</mat-grid-list>
