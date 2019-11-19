@@ -23,6 +23,12 @@ import { DashboardService } from '../../../dashboard/services/dashboard.service'
 import { HttpAssetService } from '../../../shared/services/backend/http-asset.service';
 import { HttpProjectService } from '../../../shared/services/backend/http-project.service';
 import { HeaderConfiguration } from '../../../shared/models/frontend/header/header-configuration';
+import { SidenavService } from '../../../shared/services/frontend/sidenav.service';
+import { ProjectFormFieldsService } from '../../../shared/form-fields/project-form-fields.service';
+import { FormField } from '../../../shared/models/frontend/form/form-field';
+import { ProjectRequest } from '../../../shared/models/backend/project/project-request';
+import { ToastService } from '../../../shared/services/frontend/toast.service';
+import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
 
 /**
  * Manage the home page
@@ -59,7 +65,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     private readonly httpProjectService: HttpProjectService,
     private httpAssetService: HttpAssetService,
     private matDialog: MatDialog,
-    private router: Router
+    private readonly sidenavService: SidenavService,
+    private readonly projectFormFieldsService: ProjectFormFieldsService,
+    private router: Router,
+    private readonly toastService: ToastService
   ) {
     this.initHeaderConfiguration();
   }
@@ -77,13 +86,23 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.headerConfiguration = { title: 'dashboards.my' };
   }
 
-  /**
-   * Navigate to a dashboard
-   *
-   * @param {string} projectToken The project token
-   */
-  navigateToDashboard(projectToken: string) {
-    this.router.navigate(['/dashboards', projectToken]);
+  protected openDashboardFormSidenav(): void {
+    this.projectFormFieldsService.generateProjectFormFields().subscribe((formFields: FormField[]) => {
+      this.sidenavService.openFormSidenav({
+        title: 'Create dashboard',
+        formFields: formFields,
+        save: (formData: ProjectRequest) => this.addDashboard(formData)
+      });
+    });
+  }
+
+  private addDashboard(projectRequest: ProjectRequest): void {
+    projectRequest.cssStyle = `.grid { background-color: ${projectRequest['gridBackgroundColor']}; }`;
+
+    this.httpProjectService.create(projectRequest).subscribe((project: Project) => {
+      this.toastService.sendMessage('Project created successfully', ToastTypeEnum.SUCCESS);
+      this.router.navigate(['/dashboards', project.token]);
+    });
   }
 
   /**
