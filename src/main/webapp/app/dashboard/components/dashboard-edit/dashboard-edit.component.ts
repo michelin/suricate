@@ -31,6 +31,7 @@ import { FormStep } from '../../../shared/models/frontend/form/form-step';
 import { FormService } from '../../../shared/services/frontend/form.service';
 import { DataTypeEnum } from '../../../shared/enums/data-type.enum';
 import { SimpleFormField } from '../../../shared/models/frontend/form/simple-form-field';
+import { HeaderConfiguration } from '../../../shared/models/frontend/header/header-configuration';
 
 /**
  * Component that display the edit page for a dashboard
@@ -41,6 +42,8 @@ import { SimpleFormField } from '../../../shared/models/frontend/form/simple-for
   styleUrls: ['./dashboard-edit.component.scss']
 })
 export class DashboardEditComponent implements OnInit {
+  protected headerConfiguration: HeaderConfiguration;
+
   /**
    * The dashboard form
    * @type {FormGroup}
@@ -96,9 +99,14 @@ export class DashboardEditComponent implements OnInit {
           map((users: User[]) => (this.dashboardUsers = users))
         )
         .subscribe(() => {
+          this.initHeaderConfiguration();
           this.initDashboardForm();
         });
     });
+  }
+
+  private initHeaderConfiguration(): void {
+    this.headerConfiguration = { title: this.dashboard.name };
   }
 
   /**

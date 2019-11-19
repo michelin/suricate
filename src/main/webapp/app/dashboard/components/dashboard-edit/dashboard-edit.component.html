@@ -1,4 +1,4 @@
-<suricate-pages-header [secondTitle]="dashboard?.name"></suricate-pages-header>
+<suricate-pages-header [configuration]="headerConfiguration"></suricate-pages-header>
 
 <form *ngIf="dashboardForm" [formGroup]="dashboardForm" (ngSubmit)="saveDashboard()">
   <mat-card id="card-edit-dashboard" class="mat-elevation-z8" fxLayout="row wrap" fxLayoutAlign="center center">

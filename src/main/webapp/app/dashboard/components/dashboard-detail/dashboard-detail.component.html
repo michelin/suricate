@@ -1,4 +1,4 @@
-<suricate-pages-header [secondTitle]="project?.name"></suricate-pages-header>
+<suricate-pages-header [configuration]="headerConfiguration"></suricate-pages-header>
 
 <!-- Dashboard screen -->
 <div #dashboardScreen *ngIf="projectWidgets?.length > 0; else dashboardNoWidget">

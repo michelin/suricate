@@ -34,18 +34,10 @@ export class HeaderComponent implements OnInit {
   @Input()
   configuration: HeaderConfiguration;
   /**
-   * The second title
-   * @type {string}
-   */
-  @Input()
-  secondTitle: string;
-
-  /**
    * True if the menu should be display on the page
    */
   @Input()
   showMenu = true;
-
   /**
    * The page name
    * @type {string}

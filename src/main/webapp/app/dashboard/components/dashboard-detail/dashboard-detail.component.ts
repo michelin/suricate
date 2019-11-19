@@ -27,6 +27,7 @@ import { ProjectWidget } from '../../../shared/models/backend/project-widget/pro
 import { WebsocketService } from '../../../shared/services/frontend/websocket.service';
 import { ImageUtils } from '../../../shared/utils/image.utils';
 import { FileUtils } from '../../../shared/utils/file.utils';
+import { HeaderConfiguration } from '../../../shared/models/frontend/header/header-configuration';
 
 /**
  * Component that display a specific dashboard
@@ -37,6 +38,8 @@ import { FileUtils } from '../../../shared/utils/file.utils';
   styleUrls: ['./dashboard-detail.component.scss']
 })
 export class DashboardDetailComponent implements OnInit, OnDestroy {
+  protected headerConfiguration: HeaderConfiguration;
+
   /**
    * Tell if the component is displayed
    * @type {boolean}
@@ -118,6 +121,10 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
     });
   }
 
+  private initHeaderConfiguration(): void {
+    this.headerConfiguration = { title: this.project.name };
+  }
+
   /**
    * Refresh the project widget list
    */
@@ -134,6 +141,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
   refreshProject(dashboardToken: string): void {
     this.httpProjectService.getById(dashboardToken).subscribe(project => {
       this.project = project;
+      this.initHeaderConfiguration();
       this.refreshReadOnlyDashboard(dashboardToken);
       this.refreshProjectWidgets(dashboardToken);
     });

@@ -22,6 +22,7 @@ import { Project } from '../../../shared/models/backend/project/project';
 import { DashboardService } from '../../../dashboard/services/dashboard.service';
 import { HttpAssetService } from '../../../shared/services/backend/http-asset.service';
 import { HttpProjectService } from '../../../shared/services/backend/http-project.service';
+import { HeaderConfiguration } from '../../../shared/models/frontend/header/header-configuration';
 
 /**
  * Manage the home page
@@ -32,6 +33,7 @@ import { HttpProjectService } from '../../../shared/services/backend/http-projec
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit, OnDestroy {
+  protected headerConfiguration: HeaderConfiguration;
   /**
    * True while the component is instantiate
    * @type {boolean}
@@ -58,7 +60,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     private httpAssetService: HttpAssetService,
     private matDialog: MatDialog,
     private router: Router
-  ) {}
+  ) {
+    this.initHeaderConfiguration();
+  }
 
   /**
    * Init objects
@@ -67,6 +71,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.httpProjectService.getAllForCurrentUser().subscribe(dashboards => {
       this.dashboards = dashboards;
     });
+  }
+
+  private initHeaderConfiguration(): void {
+    this.headerConfiguration = { title: 'dashboards.my' };
   }
 
   /**

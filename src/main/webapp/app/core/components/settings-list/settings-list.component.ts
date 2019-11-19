@@ -32,6 +32,7 @@ import { DataTypeEnum } from '../../../shared/enums/data-type.enum';
 import { FormService } from '../../../shared/services/frontend/form.service';
 import { FormOption } from '../../../shared/models/frontend/form/form-option';
 import { SimpleFormField } from '../../../shared/models/frontend/form/simple-form-field';
+import { HeaderConfiguration } from '../../../shared/models/frontend/header/header-configuration';
 
 /**
  * Represent the Admin Setting list page
@@ -42,6 +43,8 @@ import { SimpleFormField } from '../../../shared/models/frontend/form/simple-for
   styleUrls: ['./settings-list.component.scss']
 })
 export class SettingsListComponent implements OnInit {
+  protected headerConfiguration: HeaderConfiguration;
+
   /**
    * The user setting form
    * @type {FormGroup}
@@ -90,7 +93,9 @@ export class SettingsListComponent implements OnInit {
     private settingsService: SettingsService,
     private translateService: TranslateService,
     private formService: FormService
-  ) {}
+  ) {
+    this.initHeaderConfiguration();
+  }
 
   /**
    * When the component is init
@@ -116,6 +121,10 @@ export class SettingsListComponent implements OnInit {
         // When we have every objects needed we can create the form
         this.initUserSettingForm();
       });
+  }
+
+  private initHeaderConfiguration(): void {
+    this.headerConfiguration = { title: 'user.settings' };
   }
 
   /**
