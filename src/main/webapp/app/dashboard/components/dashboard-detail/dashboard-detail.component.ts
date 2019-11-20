@@ -190,7 +190,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
   }
 
   private displayProjectWidgetWizard(): void {
-    this.router.navigate(['/dashboards', this.project.token, 'wizards', 'create']);
+    this.router.navigate(['/dashboards', this.project.token, 'widgets', 'create']);
   }
 
   private openDashboardFormSidenav(): void {

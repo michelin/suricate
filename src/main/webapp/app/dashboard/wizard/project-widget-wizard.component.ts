@@ -18,6 +18,7 @@ import { Component, Injector, OnInit } from '@angular/core';
 import { WizardComponent } from '../../shared/components/wizard/wizard.component';
 import { ProjectWidgetFormStepsService } from '../../shared/form-steps/project-widget-form-steps.service';
 import { FormStep } from '../../shared/models/frontend/form/form-step';
+import { RoutesService } from '../../shared/services/frontend/route.service';
 
 /**
  * Component used to display the list of widgets
@@ -53,5 +54,10 @@ export class ProjectWidgetWizardComponent extends WizardComponent implements OnI
 
       super.ngOnInit();
     });
+  }
+
+  protected closeWizard(): void {
+    const dashboardToken = RoutesService.getParamValueFromActivatedRoute(this.activatedRoute, 'dashboardToken');
+    this.router.navigate(['/dashboards', dashboardToken]);
   }
 }

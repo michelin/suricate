@@ -36,4 +36,14 @@ export class RoutesService {
 
     return activatedRoute;
   }
+
+  /**
+   * Get the param value store in the activated route
+   *
+   * @param activatedRoute The route activated by the component
+   * @param paramName The name of the param to retrieve
+   */
+  public static getParamValueFromActivatedRoute(activatedRoute: ActivatedRoute, paramName: string): string | number {
+    return activatedRoute.snapshot.params[paramName];
+  }
 }

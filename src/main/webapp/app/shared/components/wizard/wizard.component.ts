@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component, Injector, OnInit, ViewChild } from '@angular/core';
+import { Component, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { HeaderConfiguration } from '../../models/frontend/header/header-configuration';
 import { FormGroup } from '@angular/forms';
 import { WizardConfiguration } from '../../models/frontend/wizard/wizard-configuration';
@@ -23,10 +23,11 @@ import { FormStep } from '../../models/frontend/form/form-step';
 import { MaterialIconRecords } from '../../records/material-icon.record';
 import { MatStepper } from '@angular/material';
 import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { ValueChangedEvent } from '../../models/frontend/form/value-changed-event';
 import { FormField } from '../../models/frontend/form/form-field';
+import { takeWhile } from 'rxjs/operators';
 
 /**
  * Generic component used to display wizards
@@ -35,7 +36,7 @@ import { FormField } from '../../models/frontend/form/form-field';
   template: '',
   styleUrls: ['./wizard.component.scss']
 })
-export class WizardComponent implements OnInit {
+export class WizardComponent implements OnInit, OnDestroy {
   /**
    * Reference on the stepper
    */
@@ -47,10 +48,18 @@ export class WizardComponent implements OnInit {
    */
   private readonly formService: FormService;
   /**
-   * @param activatedRoute Angular service used to manage the route activated by the current component
+   * Angular service used to manage the route activated by the current component
    */
   protected readonly activatedRoute: ActivatedRoute;
+  /**
+   * Angular service used to manage application routes
+   */
+  protected readonly router: Router;
 
+  /**
+   * Used to know if the component is instantiated
+   */
+  private isAlive = true;
   /**
    * The configuration of the header
    */
@@ -80,6 +89,7 @@ export class WizardComponent implements OnInit {
   constructor(protected readonly injector: Injector) {
     this.formService = injector.get(FormService);
     this.activatedRoute = injector.get(ActivatedRoute);
+    this.router = injector.get(Router);
 
     this.initWizardButtons();
   }
@@ -91,7 +101,8 @@ export class WizardComponent implements OnInit {
     this.wizardButtons = [
       {
         label: 'Close',
-        color: 'warn'
+        color: 'warn',
+        callback: () => this.closeWizard()
       },
       {
         label: 'Back',
@@ -113,8 +124,12 @@ export class WizardComponent implements OnInit {
     ];
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.stepperFormGroup = this.formService.generateFormGroupForSteps(this.wizardConfiguration.steps);
+  }
+
+  ngOnDestroy(): void {
+    this.isAlive = false;
   }
 
   protected onStepChanged(stepperSelectionEvent: StepperSelectionEvent): void {
@@ -123,6 +138,7 @@ export class WizardComponent implements OnInit {
     if (currentStep && currentStep.asyncFields) {
       currentStep
         .asyncFields((stepperSelectionEvent.selectedStep.stepControl as unknown) as FormGroup, currentStep)
+        .pipe(takeWhile(() => this.isAlive))
         .subscribe((formFields: FormField[]) => {
           currentStep.fields = formFields;
           this.stepperFormGroup.setControl(currentStep.key, this.formService.generateFormGroupForFields(formFields));
@@ -155,6 +171,10 @@ export class WizardComponent implements OnInit {
    */
   private shouldDisplayDoneButton(): boolean {
     return this.wizardStepper && this.wizardStepper.steps && this.wizardStepper.selectedIndex === this.wizardStepper.steps.length - 1;
+  }
+
+  protected closeWizard(): void {
+    this.router.navigate(['/home']);
   }
 
   /**
