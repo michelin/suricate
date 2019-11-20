@@ -19,14 +19,20 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { Role } from '../../models/backend/role/role';
-import { rolesApiEndpoint } from '../../../app.constant';
 import { User } from '../../models/backend/user/user';
+import { AbstractHttpService } from './abstract-http.service';
 
 /**
  * Manage the http role calls
  */
 @Injectable({ providedIn: 'root' })
 export class HttpRoleService {
+  /**
+   * Global roles endpoint
+   * @type {string}
+   */
+  private static readonly rolesApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/roles`;
+
   /**
    * Constructor
    *
@@ -40,7 +46,7 @@ export class HttpRoleService {
    * @returns {Observable<Role[]>}
    */
   getRoles(): Observable<Role[]> {
-    const url = `${rolesApiEndpoint}`;
+    const url = `${HttpRoleService.rolesApiEndpoint}`;
 
     return this.httpClient.get<Role[]>(url);
   }
@@ -51,7 +57,7 @@ export class HttpRoleService {
    * @param roleId The role id
    */
   getOneById(roleId: number): Observable<Role> {
-    const url = `${rolesApiEndpoint}/${roleId}`;
+    const url = `${HttpRoleService.rolesApiEndpoint}/${roleId}`;
 
     return this.httpClient.get<Role>(url);
   }
@@ -62,7 +68,7 @@ export class HttpRoleService {
    * @param roleId The role id
    */
   getUsersByRole(roleId: number): Observable<User[]> {
-    const url = `${rolesApiEndpoint}/${roleId}/users`;
+    const url = `${HttpRoleService.rolesApiEndpoint}/${roleId}/users`;
 
     return this.httpClient.get<User[]>(url);
   }

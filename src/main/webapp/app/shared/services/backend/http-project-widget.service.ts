@@ -21,14 +21,20 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { ProjectWidget } from '../../models/backend/project-widget/project-widget';
-import { projectWidgetsApiEndpoint } from '../../../app.constant';
 import { ProjectWidgetRequest } from '../../models/backend/project-widget/project-widget-request';
+import { AbstractHttpService } from './abstract-http.service';
 
 /**
  * Manage the http project widget calls
  */
 @Injectable({ providedIn: 'root' })
 export class HttpProjectWidgetService {
+  /**
+   * Global endpoint for project widgets
+   * @type {string}
+   */
+  private static readonly projectWidgetsApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/projectWidgets`;
+
   /**
    * Constructor
    *
@@ -42,7 +48,7 @@ export class HttpProjectWidgetService {
    * @param projectWidgetId The project widget id
    */
   getOneById(projectWidgetId: number): Observable<ProjectWidget> {
-    const url = `${projectWidgetsApiEndpoint}/${projectWidgetId}`;
+    const url = `${HttpProjectWidgetService.projectWidgetsApiEndpoint}/${projectWidgetId}`;
     return this.httpClient.get<ProjectWidget>(url);
   }
 
@@ -53,7 +59,7 @@ export class HttpProjectWidgetService {
    * @param projectWidgetRequest The new project widget
    */
   updateOneById(projectWidgetId: number, projectWidgetRequest: ProjectWidgetRequest): Observable<void> {
-    const url = `${projectWidgetsApiEndpoint}/${projectWidgetId}`;
+    const url = `${HttpProjectWidgetService.projectWidgetsApiEndpoint}/${projectWidgetId}`;
     return this.httpClient.put<void>(url, projectWidgetRequest);
   }
 
@@ -63,7 +69,7 @@ export class HttpProjectWidgetService {
    * @param projectWidgetId The project widget id
    */
   deleteOneById(projectWidgetId: number): Observable<void> {
-    const url = `${projectWidgetsApiEndpoint}/${projectWidgetId}`;
+    const url = `${HttpProjectWidgetService.projectWidgetsApiEndpoint}/${projectWidgetId}`;
     return this.httpClient.delete<void>(url);
   }
 }

@@ -18,30 +18,32 @@
 
 import { Injectable } from '@angular/core';
 
-import { AbstractHttpService } from './abstract-http.service';
+import { environment } from '../../../../environments/environment';
 
 /**
- * Manage the asset http calls
+ * The service used to manage environment variables
  */
 @Injectable({ providedIn: 'root' })
-export class HttpAssetService {
+export class EnvironmentService {
   /**
-   * Global assets endpoint
+   * Base url for http/ws calls
+   */
+  public static readonly baseEndpoint = `${environment.BASE_URL}`;
+
+  /**
+   * The global app version
    * @type {string}
    */
-  private static readonly assetsApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/assets`;
+  public static readonly appVersion = `${environment.VERSION}`;
 
   /**
-   * Constructor
+   * The global app environment
+   * @type {string}
+   */
+  public static readonly appEnv = `${environment.ENVIRONMENT}`;
+
+  /**
+   * The constructor
    */
   constructor() {}
-
-  /**
-   * Get the asset content url
-   *
-   * @param assetToken The asset token
-   */
-  getContentUrl(assetToken: string): string {
-    return assetToken ? `${HttpAssetService.assetsApiEndpoint}/${assetToken}/content` : ``;
-  }
 }

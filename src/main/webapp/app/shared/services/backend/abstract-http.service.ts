@@ -16,12 +16,19 @@
 
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { EnvironmentService } from '../frontend/environment.service';
 
 /**
  * Service used to define the minimum requirement for an http service
  */
 @Injectable({ providedIn: 'root' })
 export abstract class AbstractHttpService<T> {
+  /**
+   * The base API url
+   * @type {string}
+   */
+  public static readonly baseApiEndpoint = `${EnvironmentService.baseEndpoint}/api`;
+
   /**
    * Function used to retrieve the list of Objects
    */

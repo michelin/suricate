@@ -21,7 +21,6 @@ import { HttpClient } from '@angular/common/http';
 import { EMPTY, Observable } from 'rxjs';
 
 import { Configuration } from '../../models/backend/configuration/configuration';
-import { configurationsApiEndpoint } from '../../../app.constant';
 import { ApplicationProperties } from '../../models/backend/application-properties';
 import { ConfigurationRequest } from '../../models/backend/configuration/configuration-request';
 import { AbstractHttpService } from './abstract-http.service';
@@ -31,6 +30,12 @@ import { AbstractHttpService } from './abstract-http.service';
  */
 @Injectable({ providedIn: 'root' })
 export class HttpConfigurationService extends AbstractHttpService<Configuration> {
+  /**
+   * Global configurations enpoint
+   * @type {string}
+   */
+  private static readonly configurationsApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/configurations`;
+
   /**
    * Constructor
    *
@@ -46,7 +51,7 @@ export class HttpConfigurationService extends AbstractHttpService<Configuration>
    * @returns {Observable<Configuration[]>} The configuration as observable
    */
   getAll(): Observable<Configuration[]> {
-    const url = `${configurationsApiEndpoint}`;
+    const url = `${HttpConfigurationService.configurationsApiEndpoint}`;
 
     return this.httpClient.get<Configuration[]>(url);
   }
@@ -58,7 +63,7 @@ export class HttpConfigurationService extends AbstractHttpService<Configuration>
    * @returns {Observable<Configuration>} The configuration as observable
    */
   getById(configurationKey: string): Observable<Configuration> {
-    const url = `${configurationsApiEndpoint}/${configurationKey}`;
+    const url = `${HttpConfigurationService.configurationsApiEndpoint}/${configurationKey}`;
 
     return this.httpClient.get<Configuration>(url);
   }
@@ -80,7 +85,7 @@ export class HttpConfigurationService extends AbstractHttpService<Configuration>
    * @returns {Observable<Configuration>} The config updated
    */
   update(configurationKey: string, configurationRequest: ConfigurationRequest): Observable<void> {
-    const url = `${configurationsApiEndpoint}/${configurationKey}`;
+    const url = `${HttpConfigurationService.configurationsApiEndpoint}/${configurationKey}`;
 
     return this.httpClient.put<void>(url, configurationRequest);
   }
@@ -92,7 +97,7 @@ export class HttpConfigurationService extends AbstractHttpService<Configuration>
    * @returns {Observable<Configuration>} The configuration delete as observable
    */
   delete(configurationKey: string): Observable<void> {
-    const url = `${configurationsApiEndpoint}/${configurationKey}`;
+    const url = `${HttpConfigurationService.configurationsApiEndpoint}/${configurationKey}`;
 
     return this.httpClient.delete<void>(url);
   }
@@ -103,7 +108,7 @@ export class HttpConfigurationService extends AbstractHttpService<Configuration>
    * @return {Observable<ApplicationProperties>} Configuration for Authentication Provider
    */
   getAuthenticationProvider(): Observable<ApplicationProperties> {
-    const url = `${configurationsApiEndpoint}/authentication-provider`;
+    const url = `${HttpConfigurationService.configurationsApiEndpoint}/authentication-provider`;
 
     return this.httpClient.get<ApplicationProperties>(url);
   }

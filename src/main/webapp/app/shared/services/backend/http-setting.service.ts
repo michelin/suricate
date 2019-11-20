@@ -21,14 +21,20 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { Setting } from '../../models/backend/setting/setting';
-import { settingsApiEndpoint } from '../../../app.constant';
 import { SettingsTypeEnum } from '../../enums/settings-type.enum';
+import { AbstractHttpService } from './abstract-http.service';
 
 /**
  * Manage the setting http calls
  */
 @Injectable({ providedIn: 'root' })
 export class HttpSettingService {
+  /**
+   * Global endpoint for settings
+   * @type {string}
+   */
+  private static readonly settingsApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/settings`;
+
   /**
    * Constructor
    *
@@ -42,7 +48,7 @@ export class HttpSettingService {
    * @param type Filter the result by type
    */
   getAll(type?: SettingsTypeEnum): Observable<Setting[]> {
-    let url = `${settingsApiEndpoint}`;
+    let url = `${HttpSettingService.settingsApiEndpoint}`;
     if (type) {
       url = url.concat(`?type=${type.toLowerCase()}`);
     }
@@ -56,7 +62,7 @@ export class HttpSettingService {
    * @param settingId The setting id to get
    */
   getOneById(settingId: number): Observable<Setting> {
-    const url = `${settingsApiEndpoint}/${settingId}`;
+    const url = `${HttpSettingService.settingsApiEndpoint}/${settingId}`;
 
     return this.httpClient.get<Setting>(url);
   }

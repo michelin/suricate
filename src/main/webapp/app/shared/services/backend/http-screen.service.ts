@@ -17,14 +17,19 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-
-import { screensApiEndpoint } from '../../../app.constant';
+import { AbstractHttpService } from './abstract-http.service';
 
 /**
  * Screen that manage the Http calls for screens
  */
 @Injectable({ providedIn: 'root' })
 export class HttpScreenService {
+  /**
+   * Global endpoint for screens
+   * @type {string}
+   */
+  private static readonly screensApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/screens`;
+
   /**
    * The constructor
    *
@@ -39,7 +44,7 @@ export class HttpScreenService {
    * @param {number} screenCode The tv screen code
    */
   connectProjectToScreen(projectToken: string, screenCode: number): Observable<void> {
-    const url = `${screensApiEndpoint}/${projectToken}/connect?screenCode=${screenCode}`;
+    const url = `${HttpScreenService.screensApiEndpoint}/${projectToken}/connect?screenCode=${screenCode}`;
 
     return this.httpClient.get<void>(url);
   }
@@ -51,7 +56,7 @@ export class HttpScreenService {
    * @param {number} screenCode The screen to disconnect
    */
   disconnectScreen(projectToken: string, screenCode: number): Observable<void> {
-    const url = `${screensApiEndpoint}/${projectToken}/disconnect?screenCode=${screenCode}`;
+    const url = `${HttpScreenService.screensApiEndpoint}/${projectToken}/disconnect?screenCode=${screenCode}`;
 
     return this.httpClient.get<void>(url);
   }
@@ -62,7 +67,7 @@ export class HttpScreenService {
    * @param {string} projectToken The project token to refresh
    */
   refreshEveryConnectedScreensForProject(projectToken: string): Observable<void> {
-    const url = `${screensApiEndpoint}/${projectToken}/refresh`;
+    const url = `${HttpScreenService.screensApiEndpoint}/${projectToken}/refresh`;
 
     return this.httpClient.get<void>(url);
   }
@@ -72,7 +77,7 @@ export class HttpScreenService {
    * @param {string} projectToken The project token
    */
   displayScreenCodeEveryConnectedScreensForProject(projectToken: string): Observable<void> {
-    const url = `${screensApiEndpoint}/${projectToken}/showscreencode`;
+    const url = `${HttpScreenService.screensApiEndpoint}/${projectToken}/showscreencode`;
 
     return this.httpClient.get<void>(url);
   }

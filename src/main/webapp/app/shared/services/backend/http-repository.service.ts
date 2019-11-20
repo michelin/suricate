@@ -21,7 +21,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/internal/Observable';
 
 import { Repository } from '../../models/backend/repository/repository';
-import { repositoriesApiEndpoint } from '../../../app.constant';
 import { RepositoryRequest } from '../../models/backend/repository/repository-request';
 import { Widget } from '../../models/backend/widget/widget';
 import { AbstractHttpService } from './abstract-http.service';
@@ -33,6 +32,12 @@ import { EMPTY } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class HttpRepositoryService implements AbstractHttpService<Repository | RepositoryRequest> {
   /**
+   * Global repositories endpoint
+   * @type {string}
+   */
+  private static readonly repositoriesApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/repositories`;
+
+  /**
    * Constructor
    *
    * @param {HttpClient} httpClient The http client to inject
@@ -43,7 +48,7 @@ export class HttpRepositoryService implements AbstractHttpService<Repository | R
    * Return the list of every repositories
    */
   getAll(): Observable<Repository[]> {
-    const url = `${repositoriesApiEndpoint}`;
+    const url = `${HttpRepositoryService.repositoriesApiEndpoint}`;
 
     return this.httpClient.get<Repository[]>(url);
   }
@@ -54,7 +59,7 @@ export class HttpRepositoryService implements AbstractHttpService<Repository | R
    * @param repositoryId The repository id
    */
   getById(repositoryId: number): Observable<Repository> {
-    const url = `${repositoriesApiEndpoint}/${repositoryId}`;
+    const url = `${HttpRepositoryService.repositoriesApiEndpoint}/${repositoryId}`;
 
     return this.httpClient.get<Repository>(url);
   }
@@ -65,7 +70,7 @@ export class HttpRepositoryService implements AbstractHttpService<Repository | R
    * @param repositoryRequest The repository to add
    */
   create(repositoryRequest: RepositoryRequest): Observable<Repository> {
-    const url = `${repositoriesApiEndpoint}`;
+    const url = `${HttpRepositoryService.repositoriesApiEndpoint}`;
 
     return this.httpClient.post<Repository>(url, repositoryRequest);
   }
@@ -77,7 +82,7 @@ export class HttpRepositoryService implements AbstractHttpService<Repository | R
    * @param repositoryRequest The repository with informations updated
    */
   update(repositoryId: number, repositoryRequest: RepositoryRequest): Observable<void> {
-    const url = `${repositoriesApiEndpoint}/${repositoryId}`;
+    const url = `${HttpRepositoryService.repositoriesApiEndpoint}/${repositoryId}`;
 
     return this.httpClient.put<void>(url, repositoryRequest);
   }
@@ -97,7 +102,7 @@ export class HttpRepositoryService implements AbstractHttpService<Repository | R
    * @param repositoryId The repository ID
    */
   getRepositoryWidgets(repositoryId: number): Observable<Widget[]> {
-    const url = `${repositoriesApiEndpoint}/${repositoryId}/widgets`;
+    const url = `${HttpRepositoryService.repositoriesApiEndpoint}/${repositoryId}/widgets`;
 
     return this.httpClient.get<Widget[]>(url);
   }

@@ -19,7 +19,7 @@ import { StompConfig, StompRService, StompState } from '@stomp/ng2-stompjs';
 import { Observable } from 'rxjs';
 
 import { NumberUtils } from '../../utils/number.utils';
-import { baseWsEndpoint } from '../../../app.constant';
+import { EnvironmentService } from './environment.service';
 
 import * as Stomp from '@stomp/stompjs';
 import * as SockJS from 'sockjs-client';
@@ -29,6 +29,12 @@ import * as SockJS from 'sockjs-client';
  */
 @Injectable({ providedIn: 'root' })
 export class WebsocketService {
+  /**
+   * The base WS url
+   * @type {string}
+   */
+  private static readonly baseWsEndpoint = `${EnvironmentService.baseEndpoint}/ws`;
+
   /**
    * Define the min bound for the screen code random generation
    * @type {number}
@@ -82,7 +88,7 @@ export class WebsocketService {
    */
   getWebsocketConfig(): StompConfig {
     const stompConfig = new StompConfig();
-    stompConfig.url = () => new SockJS(baseWsEndpoint);
+    stompConfig.url = () => new SockJS(WebsocketService.baseWsEndpoint);
     stompConfig.heartbeat_in = 0;
     stompConfig.heartbeat_out = 20000;
     stompConfig.reconnect_delay = 1000;

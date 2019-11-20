@@ -18,8 +18,8 @@ import { Injectable } from '@angular/core';
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { baseApiEndpoint } from '../../app.constant';
 import { AuthenticationService } from '../services/frontend/authentication.service';
+import { AbstractHttpService } from '../services/backend/abstract-http.service';
 
 /**
  * Used to put the token in the request
@@ -34,7 +34,11 @@ export class TokenInterceptor implements HttpInterceptor {
    * @returns {Observable<HttpEvent<any>>}
    */
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (!request || !request.url || (/^http/.test(request.url) && !(baseApiEndpoint && request.url.startsWith(baseApiEndpoint)))) {
+    if (
+      !request ||
+      !request.url ||
+      (/^http/.test(request.url) && !(AbstractHttpService.baseApiEndpoint && request.url.startsWith(AbstractHttpService.baseApiEndpoint)))
+    ) {
       return next.handle(request);
     }
 

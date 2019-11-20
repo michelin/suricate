@@ -19,7 +19,6 @@ import { HttpClient } from '@angular/common/http';
 import { EMPTY, Observable } from 'rxjs';
 
 import { User } from '../../models/backend/user/user';
-import { usersApiEndpoint } from '../../../app.constant';
 import { UserRequest } from '../../models/backend/user/user-request';
 import { UserSettingRequest } from '../../models/backend/setting/user-setting-request';
 import { UserSetting } from '../../models/backend/setting/user-setting';
@@ -30,6 +29,12 @@ import { AbstractHttpService } from './abstract-http.service';
  */
 @Injectable({ providedIn: 'root' })
 export class HttpUserService implements AbstractHttpService<User | UserRequest> {
+  /**
+   * Global endpoint for Users
+   * @type {string}
+   */
+  public static readonly usersApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/users`;
+
   /**
    * Constructor
    *
@@ -43,7 +48,7 @@ export class HttpUserService implements AbstractHttpService<User | UserRequest> 
    * @returns {Observable<User[]>} The list of users
    */
   getAll(filter: string = ''): Observable<User[]> {
-    const url = `${usersApiEndpoint}?filter=${filter}`;
+    const url = `${HttpUserService.usersApiEndpoint}?filter=${filter}`;
 
     return this.httpClient.get<User[]>(url);
   }
@@ -55,7 +60,7 @@ export class HttpUserService implements AbstractHttpService<User | UserRequest> 
    * @returns {Observable<User>} The user found
    */
   getById(userId: number): Observable<User> {
-    const url = `${usersApiEndpoint}/${userId}`;
+    const url = `${HttpUserService.usersApiEndpoint}/${userId}`;
 
     return this.httpClient.get<User>(url);
   }
@@ -76,7 +81,7 @@ export class HttpUserService implements AbstractHttpService<User | UserRequest> 
    * @param entity The user request
    */
   update(id: number, entity: User | UserRequest): Observable<void> {
-    const url = `${usersApiEndpoint}/${id}`;
+    const url = `${HttpUserService.usersApiEndpoint}/${id}`;
 
     return this.httpClient.put<void>(url, entity);
   }
@@ -87,7 +92,7 @@ export class HttpUserService implements AbstractHttpService<User | UserRequest> 
    * @param userId The user id to delete
    */
   delete(userId: number): Observable<void> {
-    const url = `${usersApiEndpoint}/${userId}`;
+    const url = `${HttpUserService.usersApiEndpoint}/${userId}`;
 
     return this.httpClient.delete<void>(url);
   }
@@ -98,7 +103,7 @@ export class HttpUserService implements AbstractHttpService<User | UserRequest> 
    * @param userId The user id
    */
   getUserSettings(userId: number): Observable<UserSetting[]> {
-    const url = `${usersApiEndpoint}/${userId}/settings`;
+    const url = `${HttpUserService.usersApiEndpoint}/${userId}/settings`;
 
     return this.httpClient.get<UserSetting[]>(url);
   }
@@ -110,7 +115,7 @@ export class HttpUserService implements AbstractHttpService<User | UserRequest> 
    * @param settingId The setting id
    */
   getUserSetting(userId: number, settingId: number): Observable<UserSetting> {
-    const url = `${usersApiEndpoint}/${userId}/settings/${settingId}`;
+    const url = `${HttpUserService.usersApiEndpoint}/${userId}/settings/${settingId}`;
 
     return this.httpClient.get<UserSetting>(url);
   }
@@ -123,7 +128,7 @@ export class HttpUserService implements AbstractHttpService<User | UserRequest> 
    * @param {UserSettingRequest} userSettingRequest The user setting request
    */
   updateUserSetting(userId: number, settingId: number, userSettingRequest: UserSettingRequest): Observable<void> {
-    const url = `${usersApiEndpoint}/${userId}/settings/${settingId}`;
+    const url = `${HttpUserService.usersApiEndpoint}/${userId}/settings/${settingId}`;
 
     return this.httpClient.put<void>(url, userSettingRequest);
   }
@@ -134,7 +139,7 @@ export class HttpUserService implements AbstractHttpService<User | UserRequest> 
    * @returns {Observable<User>} The connected user
    */
   getConnectedUser(): Observable<User> {
-    const url = `${usersApiEndpoint}/current`;
+    const url = `${HttpUserService.usersApiEndpoint}/current`;
 
     return this.httpClient.get<User>(url);
   }

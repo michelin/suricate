@@ -19,7 +19,6 @@ import { HttpClient } from '@angular/common/http';
 import { EMPTY, Observable } from 'rxjs';
 
 import { Widget } from '../../models/backend/widget/widget';
-import { widgetsApiEndpoint } from '../../../app.constant';
 import { ApiActionEnum } from '../../enums/api-action.enum';
 import { WidgetRequest } from '../../models/backend/widget/widget-request';
 import { AbstractHttpService } from './abstract-http.service';
@@ -29,6 +28,12 @@ import { AbstractHttpService } from './abstract-http.service';
  */
 @Injectable({ providedIn: 'root' })
 export class HttpWidgetService extends AbstractHttpService<Widget> {
+  /**
+   * Global endpoint for Widgets
+   * @type {string}
+   */
+  private static readonly widgetsApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/widgets`;
+
   /**
    * Constructor
    *
@@ -46,7 +51,7 @@ export class HttpWidgetService extends AbstractHttpService<Widget> {
    * @returns {Observable<Widget[]>} The list of widgets as observable
    */
   getAll(filter?: string, action?: ApiActionEnum): Observable<Widget[]> {
-    let url = `${widgetsApiEndpoint}`;
+    let url = `${HttpWidgetService.widgetsApiEndpoint}`;
     if (action) {
       url = url.concat(`?action=${action}`);
     }
@@ -60,7 +65,7 @@ export class HttpWidgetService extends AbstractHttpService<Widget> {
    * @param widgetId
    */
   getById(widgetId: number): Observable<Widget> {
-    const url = `${widgetsApiEndpoint}/${widgetId}`;
+    const url = `${HttpWidgetService.widgetsApiEndpoint}/${widgetId}`;
 
     return this.httpClient.get<Widget>(url);
   }
@@ -81,7 +86,7 @@ export class HttpWidgetService extends AbstractHttpService<Widget> {
    * @param widgetRequest The widget request
    */
   update(widgetId: number, widgetRequest: WidgetRequest): Observable<void> {
-    const url = `${widgetsApiEndpoint}/${widgetId}`;
+    const url = `${HttpWidgetService.widgetsApiEndpoint}/${widgetId}`;
 
     return this.httpClient.put<void>(url, widgetRequest);
   }

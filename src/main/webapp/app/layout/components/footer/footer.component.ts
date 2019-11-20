@@ -15,8 +15,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-
-import { appEnv, appVersion } from '../../../app.constant';
+import { EnvironmentService } from '../../../shared/services/frontend/environment.service';
 
 /**
  * The footer of the application
@@ -31,13 +30,13 @@ export class FooterComponent implements OnInit {
    * The app version
    * @type {string}
    */
-  version: string = appVersion;
+  version: string = EnvironmentService.appVersion;
 
   /**
    * The env type
    * @type {string}
    */
-  env: string = appEnv;
+  env: string = EnvironmentService.appEnv;
 
   /**
    * The constructor

@@ -20,10 +20,10 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { categoriesApiEndpoint } from '../../../app.constant';
 import { Category } from '../../models/backend/widget/category';
 import { Widget } from '../../models/backend/widget/widget';
 import { Configuration } from '../../models/backend/configuration/configuration';
+import { AbstractHttpService } from './abstract-http.service';
 
 /**
  * Manage the widget Http calls
@@ -31,6 +31,12 @@ import { Configuration } from '../../models/backend/configuration/configuration'
 
 @Injectable({ providedIn: 'root' })
 export class HttpCategoryService {
+  /**
+   * Global endpoint for Widgets
+   * @type {string}
+   */
+  private static readonly categoriesApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/categories`;
+
   /**
    * Constructor
    *
@@ -44,7 +50,7 @@ export class HttpCategoryService {
    * @returns {Observable<Category[]>} The categories as observable
    */
   getAll(): Observable<Category[]> {
-    const url = `${categoriesApiEndpoint}`;
+    const url = `${HttpCategoryService.categoriesApiEndpoint}`;
 
     return this.httpClient.get<Category[]>(url);
   }
@@ -54,7 +60,7 @@ export class HttpCategoryService {
    * @param categoryId The category id
    */
   getCategoryConfigurations(categoryId: number): Observable<Configuration[]> {
-    const url = `${categoriesApiEndpoint}/${categoryId}/configurations`;
+    const url = `${HttpCategoryService.categoriesApiEndpoint}/${categoryId}/configurations`;
     return this.httpClient.get<Configuration[]>(url);
   }
 
@@ -64,7 +70,7 @@ export class HttpCategoryService {
    * @param categoryId The category id
    */
   getCategoryWidgets(categoryId: number): Observable<Widget[]> {
-    const url = `${categoriesApiEndpoint}/${categoryId}/widgets`;
+    const url = `${HttpCategoryService.categoriesApiEndpoint}/${categoryId}/widgets`;
 
     return this.httpClient.get<Widget[]>(url);
   }

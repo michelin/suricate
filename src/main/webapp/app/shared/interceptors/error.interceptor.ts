@@ -22,7 +22,6 @@ import { tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 
 import { ToastService } from '../services/frontend/toast.service';
-import { badCredentialError } from '../../app.constant';
 import { ToastTypeEnum } from '../enums/toast-type.enum';
 
 /**
@@ -30,6 +29,12 @@ import { ToastTypeEnum } from '../enums/toast-type.enum';
  */
 @Injectable({ providedIn: 'root' })
 export class ErrorInterceptor implements HttpInterceptor {
+  /**
+   * Invalid grant error returned by spring oauth2
+   * @type {string}
+   */
+  private static readonly badCredentialError = 'invalid_grant';
+
   /**
    * Constructor
    *
@@ -52,7 +57,7 @@ export class ErrorInterceptor implements HttpInterceptor {
           if (httpError instanceof HttpErrorResponse) {
             switch (httpError.status) {
               case 400:
-                if (httpError.error.error === badCredentialError) {
+                if (httpError.error.error === ErrorInterceptor.badCredentialError) {
                   this.toastService.sendMessage('Bad credentials', ToastTypeEnum.DANGER, 'Wrong login or password');
                 }
                 break;

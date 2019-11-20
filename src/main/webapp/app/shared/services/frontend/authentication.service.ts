@@ -20,7 +20,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { authenticationApiEndpoint, usersApiEndpoint } from '../../../app.constant';
 import { Credentials } from '../../models/backend/user/credentials';
 import { AuthenticationResponse } from '../../models/backend/authentication/authentication-response';
 import { User } from '../../models/backend/user/user';
@@ -29,12 +28,20 @@ import { AccessTokenDecoded } from '../../models/frontend/token/access-token-dec
 import { Role } from '../../models/backend/role/role';
 import { RoleEnum } from '../../enums/role.enum';
 import { UserRequest } from '../../models/backend/user/user-request';
+import { AbstractHttpService } from '../backend/abstract-http.service';
+import { HttpUserService } from '../backend/http-user.service';
 
 /**
  * The authentication service
  */
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
+  /**
+   * Global endpoint for Authentication
+   * @type {string}
+   */
+  private static readonly authenticationApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/oauth/token`;
+
   /**
    * Auth0 service used to manage JWT with Angular
    */
@@ -183,7 +190,7 @@ export class AuthenticationService {
     params.append('username', credentials.username);
     params.append('password', credentials.password);
 
-    const url = `${authenticationApiEndpoint}`;
+    const url = `${AuthenticationService.authenticationApiEndpoint}`;
 
     return this.httpClient.post<AuthenticationResponse>(url, params.toString(), { headers: headers }).pipe(
       tap((authenticationResponse: AuthenticationResponse) => {
@@ -203,7 +210,7 @@ export class AuthenticationService {
    * @returns {Observable<User>} The user registered
    */
   register(userRequest: UserRequest): Observable<User> {
-    const url = `${usersApiEndpoint}/register`;
+    const url = `${HttpUserService.usersApiEndpoint}/register`;
 
     return this.httpClient.post<User>(url, userRequest);
   }
