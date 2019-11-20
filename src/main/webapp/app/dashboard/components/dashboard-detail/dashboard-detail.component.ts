@@ -191,7 +191,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
   private openDashboardFormSidenav(): void {
     this.projectFormFieldsService.generateProjectFormFields(this.project).subscribe((formFields: FormField[]) => {
       this.sidenavService.openFormSidenav({
-        title: 'Create dashboard',
+        title: 'Edit dashboard',
         formFields: formFields,
         save: (formData: ProjectRequest) => this.editDashboard(formData)
       });

@@ -171,4 +171,12 @@ export class ListComponent<T> implements OnInit {
   protected getObjectImageURL(object: T): string {
     return null;
   }
+
+  /**
+   * Redirect to bean detail
+   * Implemented in child component
+   *
+   * @param object The object used for the redirection
+   */
+  protected redirectToBean(object: T): void {}
 }

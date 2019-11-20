@@ -27,6 +27,13 @@
       border-top: 1px solid rgba(0, 0, 0, 0.12);
     }
 
+    &.list-item-show {
+      &:hover {
+        cursor: pointer;
+        background-color: #a4a4a41f;
+      }
+    }
+
     .list-image {
       height: inherit;
       padding: 10px;

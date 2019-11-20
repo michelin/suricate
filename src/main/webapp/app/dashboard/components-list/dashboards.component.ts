@@ -75,6 +75,7 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
    */
   private initListConfiguration(): void {
     this.listConfiguration = {
+      enableShowBean: true,
       buttons: [
         {
           icon: IconEnum.USERS,
@@ -110,6 +111,13 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
   }
 
   /**
+   * {@inheritDoc}
+   */
+  protected redirectToBean(project: Project): void {
+    this.router.navigate(['/dashboards', project.token]);
+  }
+
+  /**
    * Open the form sidenav
    *
    * @param event The click event
@@ -117,6 +125,7 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
    * @param saveCallback The function to call when save button is clicked
    */
   private openFormSidenav(event: Event, project: Project, saveCallback: (projectRequest: ProjectRequest) => void): void {
+    this.stopEventPropagation(event);
     this.projectSelected = project;
 
     this.translateService.get(['dashboard.edit', 'dashboard.add']).subscribe((translations: string[]) => {
@@ -148,6 +157,8 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
    * @param project The project to delete
    */
   private deleteProject(event: Event, project: Project): void {
+    this.stopEventPropagation(event);
+
     this.translateService.get(['dashboard.delete', 'delete.confirm']).subscribe((translations: string[]) => {
       this.dialogService.confirm({
         title: translations['dashboard.delete'],
@@ -166,9 +177,9 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
    * Open the form sidenav used to manage users
    * @param event The click event
    * @param project The project clicked on the list
-   * @param saveCallback The function to call when save button is clicked
    */
   private openUserFormSidenav(event: Event, project: Project): void {
+    this.stopEventPropagation(event);
     this.projectSelected = project;
 
     this.translateService.get(['user.add']).subscribe((translations: string[]) => {
@@ -181,6 +192,16 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
         });
       });
     });
+  }
+
+  /**
+   * Function used to not propagate the event
+   *
+   * @param event The event to stop
+   */
+  private stopEventPropagation(event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
   }
 
   onValueChanged(valueChangedEvent: ValueChangedEvent): Observable<FormField[]> {

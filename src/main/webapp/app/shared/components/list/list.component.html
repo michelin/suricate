@@ -7,7 +7,13 @@
     </ng-container>
 
     <ng-container *ngIf="!isLoading">
-      <div *ngFor="let object of objects" class="list-item" fxLayout="row wrap">
+      <div
+        *ngFor="let object of objects"
+        class="list-item"
+        fxLayout="row wrap"
+        [ngClass]="{ 'list-item-show': listConfiguration.enableShowBean }"
+        (click)="redirectToBean(object)"
+      >
         <div *ngIf="getObjectImageURL(object)" class="list-image" fxLayoutAlign="center center" fxFlex="20%">
           <img [src]="getObjectImageURL(object)" fxFlex="0" fxGrow="0" alt="Object image" />
         </div>
