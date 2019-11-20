@@ -24,6 +24,9 @@ import { MaterialIconRecords } from '../../records/material-icon.record';
 import { MatStepper } from '@angular/material';
 import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
 import { ActivatedRoute } from '@angular/router';
+import { StepperSelectionEvent } from '@angular/cdk/stepper';
+import { ValueChangedEvent } from '../../models/frontend/form/value-changed-event';
+import { FormField } from '../../models/frontend/form/form-field';
 
 /**
  * Generic component used to display wizards
@@ -93,25 +96,44 @@ export class WizardComponent implements OnInit {
       {
         label: 'Back',
         color: 'primary',
-        hidden: () => this.shouldDisplayBackButton(),
+        hidden: () => !this.shouldDisplayBackButton(),
         callback: () => this.backAction()
       },
       {
         label: 'Next',
         color: 'primary',
-        hidden: () => this.shouldDisplayNextButton(),
+        hidden: () => !this.shouldDisplayNextButton(),
         callback: () => this.nextAction()
       },
       {
         label: 'Done',
         color: 'primary',
-        hidden: () => this.shouldDisplayDoneButton()
+        hidden: () => !this.shouldDisplayDoneButton()
       }
     ];
   }
 
   ngOnInit() {
     this.stepperFormGroup = this.formService.generateFormGroupForSteps(this.wizardConfiguration.steps);
+  }
+
+  protected onStepChanged(stepperSelectionEvent: StepperSelectionEvent): void {
+    const currentStep = this.wizardConfiguration.steps[stepperSelectionEvent.selectedIndex];
+
+    if (currentStep && currentStep.asyncFields) {
+      currentStep
+        .asyncFields((stepperSelectionEvent.selectedStep.stepControl as unknown) as FormGroup, currentStep)
+        .subscribe((formFields: FormField[]) => {
+          currentStep.fields = formFields;
+          this.stepperFormGroup.setControl(currentStep.key, this.formService.generateFormGroupForFields(formFields));
+        });
+    }
+  }
+
+  protected onValueChanged(valueChangeEvent: ValueChangedEvent) {
+    if (valueChangeEvent.type === 'mosaicOptionSelected' && !this.shouldDisplayDoneButton()) {
+      setTimeout(() => this.wizardStepper.next(), 500);
+    }
   }
 
   /**

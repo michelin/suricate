@@ -125,3 +125,11 @@
 </div>
 
 <suricate-fields *ngIf="field.type === dataType.FIELDS" [field]="$any(field)" [formArray]="$any(getFormControl())"> </suricate-fields>
+
+<suricate-mosaic
+  *ngIf="field.type === dataType.MOSAIC"
+  [field]="$any(field)"
+  [formGroup]="formGroup"
+  (valueChangeEvent)="emitValueChange('mosaicOptionSelected')"
+>
+</suricate-mosaic>

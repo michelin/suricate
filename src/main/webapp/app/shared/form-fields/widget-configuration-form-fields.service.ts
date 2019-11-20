@@ -38,7 +38,7 @@ export class WidgetConfigurationFormFieldsService {
   /**
    * Get the list of steps for a dashboard
    *
-   * @param project The project used for an edition
+   * @param configuration The project used for an edition
    */
   public generateFormFields(configuration?: Configuration): Observable<FormField[]> {
     return this.translateService.get(['key', 'configuration.category', 'value']).pipe(

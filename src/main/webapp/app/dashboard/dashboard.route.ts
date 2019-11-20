@@ -19,9 +19,9 @@ import { Routes } from '@angular/router';
 import { DashboardTvComponent } from './components/dashboard-tv/dashboard-tv.component';
 import { AuthGuard } from '../shared/guards/auth.guard';
 import { AdminGuard } from '../shared/guards/admin.guard';
-import { DashboardEditComponent } from './components/dashboard-edit/dashboard-edit.component';
 import { DashboardDetailComponent } from './components/dashboard-detail/dashboard-detail.component';
 import { DashboardsComponent } from './components-list/dashboards.component';
+import { ProjectWidgetWizardComponent } from './wizard/project-widget-wizard.component';
 
 export const DashboardRoutes: Routes = [
   {
@@ -34,14 +34,13 @@ export const DashboardRoutes: Routes = [
     component: DashboardTvComponent
   },
   {
-    path: 'dashboards/all/:dashboardToken/edit',
-    component: DashboardEditComponent,
-    canActivate: [AuthGuard, AdminGuard],
-    data: { breadcrumb: 'Edit Dashboard' }
-  },
-  {
     path: 'dashboards/:dashboardToken',
     component: DashboardDetailComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'dashboards/:dashboardToken/widgets/create',
+    component: ProjectWidgetWizardComponent,
     canActivate: [AuthGuard]
   }
 ];

@@ -16,21 +16,21 @@
  *
  */
 
+import { FormField } from './form-field';
+import { Observable } from 'rxjs';
+import { MosaicFormOption } from './mosaic-form-option';
+import { FormGroup } from '@angular/forms';
+
 /**
- * Hold the different icons of the application
+ * Used for mosaic form fields (in Mosaic datatype)
  */
-export enum IconEnum {
-  ADD = 'ADD',
-  DELETE = 'DELETE',
-  EDIT = 'EDIT',
-  CLOSE = 'CLOSE',
-  SAVE = 'SAVE',
-  REFRESH = 'REFRESH',
-  GENERAL_INFORMATION = 'GENERAL_INFORMATION',
-  USERS = 'USERS',
-  TV = 'TV',
-  TV_LIVE = 'TV_LIVE',
-  CATEGORY = 'CATEGORY',
-  WIDGET = 'WIDGET',
-  WIDGET_CONFIGURATION = 'WIDGET_CONFIGURATION'
+export class MosaicFormField extends FormField {
+  /**
+   * The number of columns to display in the mosaic
+   */
+  columnNumber = 4;
+  /**
+   * The mosaic options
+   */
+  mosaicOptions: (formGroup?: FormGroup) => Observable<MosaicFormOption[]>;
 }

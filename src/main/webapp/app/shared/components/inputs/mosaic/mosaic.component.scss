@@ -1,4 +1,4 @@
-/*!
+/*
  *  /*
  *  * Copyright 2012-2018 the original author or authors.
  *  *
@@ -15,29 +15,19 @@
  *  * limitations under the License.
  *
  */
+@import '../../../../../sass/dashboard-themes';
 
-#card-edit-dashboard {
-  & {
-    width: 100%;
+.mat-grid-tile {
+  @include mat-elevation-transition();
+  cursor: pointer;
+
+  &:hover {
+    @include mat-elevation(7);
   }
-
-  .mat-card-content {
-    & {
-      width: 70%;
-    }
-
-    suricate-input {
-      padding-left: 25px;
-    }
+  &.option-selected {
+    box-shadow: 0 4px 5px -2px rgba(46, 97, 126, 0.39), 0 7px 10px 1px rgba(46, 97, 126, 0.36), 0 2px 16px 1px rgba(46, 97, 126, 0.67);
   }
-
-  .title {
-    font-weight: 300;
-    line-height: 1.4rem;
-  }
-
-  button {
-    display: block;
-    width: 100%;
+  .grid-tile-body {
+    max-height: 180px;
   }
 }

@@ -20,16 +20,16 @@
  * Hold the data type for a configuration
  */
 export enum DataTypeEnum {
-  // Simple data types
   NUMBER = 'NUMBER',
   TEXT = 'TEXT',
   PASSWORD = 'PASSWORD',
   HIDDEN = 'HIDDEN',
-  // Complex data types
+
   BOOLEAN = 'BOOLEAN',
   COMBO = 'COMBO',
   MULTIPLE = 'MULTIPLE',
   FILE = 'FILE',
   COLOR_PICKER = 'COLOR_PICKER',
-  FIELDS = 'FIELDS'
+  FIELDS = 'FIELDS',
+  MOSAIC = 'MOSAIC'
 }

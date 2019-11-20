@@ -29,6 +29,24 @@
   $foreground: map-get($theme, foreground);
   $background: map-get($theme, background);
 
+  .mat-stepper-horizontal {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+
+    .mat-horizontal-stepper-header-container {
+      justify-content: space-around;
+    }
+
+    .mat-horizontal-content-container {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      justify-content: center;
+      padding: 24px;
+    }
+  }
+
   .mat-stepper-horizontal,
   .mat-stepper-vertical {
     min-height: 90%;
@@ -39,9 +57,11 @@
         width: 30px;
         height: 30px;
 
-        &.mat-step-icon-selected,
         &.mat-step-icon-state-done {
           background-color: #8bc34a !important;
+        }
+        &.mat-step-icon-selected {
+          background-color: mat-color($primary, A700);
         }
       }
 
@@ -61,6 +81,11 @@
         &.mat-step-label-active {
           hr {
             border-color: #8bc34a;
+          }
+        }
+        &.mat-step-label-selected {
+          hr {
+            border-color: mat-color($primary, A700);
           }
         }
       }

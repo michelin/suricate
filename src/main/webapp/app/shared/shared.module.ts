@@ -51,6 +51,7 @@ import { WizardComponent } from './components/wizard/wizard.component';
 import { ColorPickerModule } from 'ngx-color-picker';
 import { ColorPickerComponent } from './components/inputs/color-picker/color-picker.component';
 import { FieldsComponent } from './components/inputs/fields/fields.component';
+import { MosaicComponent } from './components/inputs/mosaic/mosaic.component';
 
 @NgModule({
   imports: [
@@ -89,7 +90,8 @@ import { FieldsComponent } from './components/inputs/fields/fields.component';
     FormSidenavComponent,
     WizardComponent,
     ColorPickerComponent,
-    FieldsComponent
+    FieldsComponent,
+    MosaicComponent
   ],
   exports: [
     BrowserAnimationsModule,

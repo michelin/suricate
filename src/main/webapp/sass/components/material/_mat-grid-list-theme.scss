@@ -52,11 +52,11 @@
         flex-grow: 1;
         align-items: center;
         justify-content: center;
-        padding-top: 10px;
+        padding: 10px;
 
         img {
           max-width: 100%;
-          max-height: 200px;
+          max-height: 160px;
         }
 
         .mat-icon {
@@ -70,7 +70,7 @@
         display: flex;
         align-items: center;
         height: 50px;
-        padding: 0 16px;
+        padding: 10px 16px;
       }
     }
   }

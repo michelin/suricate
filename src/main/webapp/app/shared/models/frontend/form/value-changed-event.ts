@@ -16,7 +16,7 @@
  *
  */
 
-export type ValueChangedType = 'inputChange' | 'optionSelected' | 'fileChanged' | 'checkbox';
+export type ValueChangedType = 'inputChange' | 'optionSelected' | 'fileChanged' | 'checkbox' | 'mosaicOptionSelected';
 
 /**
  * Event that manage change event on form

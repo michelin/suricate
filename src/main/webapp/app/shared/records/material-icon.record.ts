@@ -31,5 +31,8 @@ export const MaterialIconRecords: Record<IconEnum, string> = {
   [IconEnum.GENERAL_INFORMATION]: 'menu_book',
   [IconEnum.USERS]: 'supervisor_account',
   [IconEnum.TV]: 'tv',
-  [IconEnum.TV_LIVE]: 'live_tv'
+  [IconEnum.TV_LIVE]: 'live_tv',
+  [IconEnum.CATEGORY]: 'category',
+  [IconEnum.WIDGET]: 'widgets',
+  [IconEnum.WIDGET_CONFIGURATION]: 'list_alt'
 };

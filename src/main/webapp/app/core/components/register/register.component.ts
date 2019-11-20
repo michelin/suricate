@@ -185,7 +185,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
             return this.authenticationService.authenticate(credentials);
           }),
           catchError(error => {
-            console.log(error);
             return throwError(error);
           })
         )
@@ -195,7 +194,6 @@ export class RegisterComponent implements OnInit, OnDestroy {
             this.navigateToHomePage();
           },
           error => {
-            console.log(error);
             this.formSubmitAttempt = false;
           }
         );

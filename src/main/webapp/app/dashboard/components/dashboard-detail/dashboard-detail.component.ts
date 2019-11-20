@@ -145,7 +145,8 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
           icon: IconEnum.ADD,
           color: 'primary',
           variant: 'miniFab',
-          tooltip: { message: 'widget.add' }
+          tooltip: { message: 'widget.add' },
+          callback: () => this.displayProjectWidgetWizard()
         },
         {
           icon: IconEnum.EDIT,
@@ -186,6 +187,10 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
         }
       ]
     };
+  }
+
+  private displayProjectWidgetWizard(): void {
+    this.router.navigate(['/dashboards', this.project.token, 'wizards', 'create']);
   }
 
   private openDashboardFormSidenav(): void {

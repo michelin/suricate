@@ -18,11 +18,14 @@
 
 import { FormField } from './form-field';
 import { IconEnum } from '../../../enums/icon.enum';
+import { Observable } from 'rxjs';
+import { FormGroup } from '@angular/forms';
+import { LinkConfiguration } from '../link/link-configuration';
 
 /**
  * Describe a step of the wizard
  */
-export interface FormStep {
+export class FormStep {
   /**
    * The key of the step
    */
@@ -36,9 +39,21 @@ export interface FormStep {
    */
   icon: IconEnum;
   /**
+   * If we want to display an image on the step
+   */
+  imageLink?: LinkConfiguration;
+  /**
+   * Description of the step
+   */
+  description?: string;
+  /**
    * The form field for the step
    */
-  fields: FormField[];
+  fields?: FormField[];
+  /**
+   * Used to retrieve fields in an async way
+   */
+  asyncFields?: (formGroup?: FormGroup, step?: FormStep) => Observable<FormField[]>;
   /**
    * If the step is optional
    */

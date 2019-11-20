@@ -16,21 +16,26 @@
  *
  */
 
+import { ValidatorFn } from '@angular/forms';
+
 /**
- * Hold the different icons of the application
+ * Describe a the options used by the mosaic input component
  */
-export enum IconEnum {
-  ADD = 'ADD',
-  DELETE = 'DELETE',
-  EDIT = 'EDIT',
-  CLOSE = 'CLOSE',
-  SAVE = 'SAVE',
-  REFRESH = 'REFRESH',
-  GENERAL_INFORMATION = 'GENERAL_INFORMATION',
-  USERS = 'USERS',
-  TV = 'TV',
-  TV_LIVE = 'TV_LIVE',
-  CATEGORY = 'CATEGORY',
-  WIDGET = 'WIDGET',
-  WIDGET_CONFIGURATION = 'WIDGET_CONFIGURATION'
+export interface MosaicFormOption {
+  /**
+   * The value related to the entry
+   */
+  value: string | number;
+  /**
+   * The image url to display
+   */
+  imageUrl: string;
+  /**
+   * The displayed displayed to the user
+   */
+  description: string;
+  /**
+   * The list of validators for this field
+   */
+  validators?: ValidatorFn | ValidatorFn[] | null;
 }

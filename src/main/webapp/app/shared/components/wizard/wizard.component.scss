@@ -16,6 +16,17 @@
  *
  */
 
+::ng-deep .mat-horizontal-stepper-content {
+  .step-detail {
+    img {
+      max-width: 100%;
+      max-height: 200px;
+    }
+  }
+}
+
 .stepper-actions-wrapper {
   padding-left: 24px;
+  margin-block-end: 40px;
+  margin-block-start: 30px;
 }
