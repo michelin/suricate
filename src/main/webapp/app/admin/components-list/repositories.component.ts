@@ -36,15 +36,17 @@ import { RepositoryTypeEnum } from '../../shared/enums/repository-type.enum';
 export class RepositoriesComponent extends ListComponent<Repository> {
   /**
    * Reflect the state of the repository in the form sidenav
+   * @type {Repository}
+   * @private
    */
   private repositoryFormSidenav: Repository;
 
   /**
    * Constructor
    *
-   * @param httpRepositoryService Suricate service used to manage the http calls for a repository
-   * @param repositoryFormFieldsService Frontend service used tu get the form fields related to a repository
-   * @param injector Angular Service used to manage the injection of services
+   * @param {HttpRepositoryService} httpRepositoryService Suricate service used to manage the http calls for a repository
+   * @param {RepositoryFormFieldsService} repositoryFormFieldsService Frontend service used tu get the form fields related to a repository
+   * @param {Injector} injector Angular Service used to manage the injection of services
    */
   constructor(
     private readonly httpRepositoryService: HttpRepositoryService,
@@ -136,7 +138,7 @@ export class RepositoriesComponent extends ListComponent<Repository> {
   /**
    * Manage the value changes
    *
-   * @param valueChangedEvent The value changed
+   * @param valueChangedEvent Represent the changes on a form field
    */
   private onValueChanged(valueChangedEvent: ValueChangedEvent): Observable<FormField[]> {
     this.repositoryFormSidenav[valueChangedEvent.fieldKey] = valueChangedEvent.value;
@@ -150,6 +152,8 @@ export class RepositoriesComponent extends ListComponent<Repository> {
 
   /**
    * Function used to update a repository
+   *
+   * @param repositoryRequest The new repository with the modification made on the form
    */
   private updateRepository(repositoryRequest: RepositoryRequest): void {
     this.httpRepositoryService.update(this.repositoryFormSidenav.id, repositoryRequest).subscribe(() => {
@@ -159,6 +163,8 @@ export class RepositoriesComponent extends ListComponent<Repository> {
 
   /**
    * Function used to add a repository
+   *
+   * @param repositoryRequest The new repository to add with the modification made on the form
    */
   private addRepository(repositoryRequest: RepositoryRequest): void {
     this.httpRepositoryService.create(repositoryRequest).subscribe(() => {

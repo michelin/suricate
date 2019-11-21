@@ -52,16 +52,17 @@ export class AppComponent implements OnInit, OnDestroy {
   /**
    * The constructor
    *
-   * @param {SettingsService} settingsService Suricate service used to manage the settings
-   * @param {OverlayContainer} overlayContainer The overlay container service
-   * @param {DialogService} dialogService Angular service used to manage dialogs
+   *
    * @param {MatDialog} matDialog Angular material service used to display dialog
+   * @param {OverlayContainer} overlayContainer Angular service used to manage DOM information
+   * @param {SettingsService} settingsService Suricate service used to manage the settings
+   * @param {DialogService} dialogService Frontend service used to manage dialogs
    */
   constructor(
-    private readonly settingsService: SettingsService,
+    private readonly matDialog: MatDialog,
     private readonly overlayContainer: OverlayContainer,
-    private readonly dialogService: DialogService,
-    private readonly matDialog: MatDialog
+    private readonly settingsService: SettingsService,
+    private readonly dialogService: DialogService
   ) {}
 
   /**

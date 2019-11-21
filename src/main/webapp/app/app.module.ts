@@ -29,17 +29,13 @@ import { SharedModule } from './shared/shared.module';
 import { WidgetModule } from './widget/widget.module';
 import { appRoutes } from './app.routes';
 
-export function createTranslateLoader(http: HttpClient) {
-  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
-}
-
 @NgModule({
   imports: [
     // Tiers App module
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
-        useFactory: createTranslateLoader,
+        useFactory: (httpClient: HttpClient) => new TranslateHttpLoader(httpClient, './assets/i18n/', '.json'),
         deps: [HttpClient]
       }
     }),

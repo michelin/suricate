@@ -19,7 +19,6 @@ import { RouterModule } from '@angular/router';
 
 import { SharedModule } from '../shared/shared.module';
 import { DashboardDetailComponent } from './components/dashboard-detail/dashboard-detail.component';
-import { EditProjectWidgetDialogComponent } from './components/edit-project-widget-dialog/edit-project-widget-dialog.component';
 import { DashboardScreenComponent } from './components/dashboard-screen/dashboard-screen.component';
 import { DashboardTvComponent } from './components/dashboard-tv/dashboard-tv.component';
 import { LayoutModule } from '../layout/layout.module';
@@ -32,14 +31,12 @@ import { ProjectWidgetWizardComponent } from './wizard/project-widget-wizard.com
   imports: [RouterModule.forChild(DashboardRoutes), LayoutModule, SharedModule],
   declarations: [
     DashboardDetailComponent,
-    EditProjectWidgetDialogComponent,
     DashboardScreenComponent,
     DashboardScreenWidgetComponent,
     DashboardTvComponent,
     DashboardsComponent,
     ProjectWidgetWizardComponent
   ],
-  entryComponents: [EditProjectWidgetDialogComponent],
   exports: [RouterModule]
 })
 export class DashboardModule {}

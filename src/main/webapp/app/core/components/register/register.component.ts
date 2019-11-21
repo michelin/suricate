@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CustomValidators } from 'ng2-validation';
@@ -33,60 +33,59 @@ import { AuthenticationProviderEnum } from '../../../shared/enums/authentication
 import { DataTypeEnum } from '../../../shared/enums/data-type.enum';
 import { FormService } from '../../../shared/services/frontend/form.service';
 import { CustomValidator } from '../../../shared/validators/custom-validator';
-import { SidenavService } from '../../../shared/services/frontend/sidenav.service';
 import { SimpleFormField } from '../../../shared/models/frontend/form/simple-form-field';
 
 /**
- * Component that register a new user
+ * Component used to register a new user
  */
 @Component({
   selector: 'suricate-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
 })
-export class RegisterComponent implements OnInit, OnDestroy {
+export class RegisterComponent implements OnInit {
   /**
    * The register form
    * @type {FormGroup}
+   * @protected
    */
-  registerForm: FormGroup;
+  protected registerForm: FormGroup;
   /**
    * The description of the form
+   * @type {SimpleFormField[]}
+   * @protected
    */
-  formFields: SimpleFormField[];
+  protected formFields: SimpleFormField[];
   /**
-   * Tell if the form has been submit or not
+   * Tell if the form is in submit state (used to display the spinner)
    * @type {boolean} true if the form is submitting, false otherwise
+   * @protected
    */
-  formSubmitAttempt = false;
+  protected formSubmitAttempt = false;
 
   /**
    * Constructor
    *
-   * @param {AuthenticationService} authenticationService The authentication service to inject
-   * @param {Router} router The router service to inject
-   * @param {ToastService} toastService The toast service to inject
-   * @param {TranslateService} translateService The service used for translations
-   * @param {FormService} formService The form service used for the form creation
-   * @param {SidenavService} sidenavService Manage the sidenav
-   * @param {HttpConfigurationService} httpConfigurationService The configuration service to inject
+   * @param {Router} router Angular service used to manage application routes
+   * @param {TranslateService} translateService NgxTranslate service used to manage the translations
+   * @param {HttpConfigurationService} httpConfigurationService Suricate service used to manage the configuration of the application
+   * @param {AuthenticationService} authenticationService Suricate service used to manage the authentication on the application
+   * @param {FormService} formService Frontend service used to manage the forms creations
+   * @param {ToastService} toastService Frontend service used to display the toast messages
    */
   constructor(
-    private authenticationService: AuthenticationService,
-    private router: Router,
-    private toastService: ToastService,
-    private translateService: TranslateService,
-    private formService: FormService,
-    private sidenavService: SidenavService,
-    private httpConfigurationService: HttpConfigurationService
+    private readonly router: Router,
+    private readonly translateService: TranslateService,
+    private readonly httpConfigurationService: HttpConfigurationService,
+    private readonly authenticationService: AuthenticationService,
+    private readonly formService: FormService,
+    private readonly toastService: ToastService
   ) {}
 
   /**
    * Called when the component is init
    */
-  ngOnInit() {
-    this.sidenavService.closeSidenav();
-
+  public ngOnInit(): void {
     if (AuthenticationService.isLoggedIn()) {
       this.navigateToHomePage();
       return;
@@ -104,7 +103,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   /**
    * Init the register form
    */
-  initRegisterForm() {
+  private initRegisterForm(): void {
     this.generateFormFields();
     this.registerForm = this.formService.generateFormGroupForFields(this.formFields);
     this.formService.setValidatorsForControl(this.registerForm.get('confirmPassword'), [
@@ -117,7 +116,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
   /**
    * Generate the form fields used for the form creation
    */
-  generateFormFields() {
+  private generateFormFields(): void {
     this.translateService
       .get(['username', 'firstname', 'lastname', 'email', 'password', 'password.confirm'])
       .subscribe((translations: string) => {
@@ -168,9 +167,9 @@ export class RegisterComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Send the register form
+   * Send the register form, and authenticate the user when everything is ok
    */
-  signUp() {
+  protected signUp(): void {
     this.formService.validate(this.registerForm);
 
     if (this.registerForm.valid) {
@@ -202,14 +201,10 @@ export class RegisterComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Redirect to the home page
+   */
   private navigateToHomePage(): void {
     this.router.navigate(['/home']);
-  }
-
-  /**
-   * Called when the component is destroyed
-   */
-  ngOnDestroy() {
-    this.sidenavService.openSidenav();
   }
 }

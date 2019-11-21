@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as html2canvas from 'html2canvas';
@@ -40,27 +40,26 @@ import { ProjectRequest } from '../../../shared/models/backend/project/project-r
 import { ProjectFormFieldsService } from '../../../shared/form-fields/project-form-fields.service';
 
 /**
- * Component that display a specific dashboard
+ * Component used to display a specific dashboard
  */
 @Component({
   selector: 'suricate-dashboard-detail',
   templateUrl: './dashboard-detail.component.html',
   styleUrls: ['./dashboard-detail.component.scss']
 })
-export class DashboardDetailComponent implements OnInit, OnDestroy {
-  protected headerConfiguration: HeaderConfiguration;
-
+export class DashboardDetailComponent implements OnInit {
   /**
-   * Tell if the component is displayed
-   * @type {boolean}
-   * @private
+   * Hold the configuration of the header component
+   * @type {HeaderConfiguration}
+   * @protected
    */
-  private isAlive = true;
+  protected headerConfiguration: HeaderConfiguration;
 
   /**
    * The dashboard html (as HTML Element)
    */
-  @ViewChild('dashboardScreen', { static: false }) dashboardScreen: ElementRef;
+  @ViewChild('dashboardScreen', { static: false })
+  dashboardScreen: ElementRef;
 
   /**
    * The timer used to take the screenshot
@@ -319,12 +318,5 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    */
   handlingDashboardDisconnect() {
     this.router.navigate(['/home']);
-  }
-
-  /**
-   * When the component is destroyed
-   */
-  ngOnDestroy() {
-    this.isAlive = false;
   }
 }

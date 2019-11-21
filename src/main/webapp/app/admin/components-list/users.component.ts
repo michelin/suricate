@@ -37,16 +37,18 @@ import { UserRequest } from '../../shared/models/backend/user/user-request';
 export class UsersComponent extends ListComponent<User> implements OnInit {
   /**
    * User selected in the list for modification
+   * @type {User}
+   * @private
    */
   private userSelected: User;
 
   /**
    * Constructor
    *
-   * @param httpUserService Suricate service used to manage the http calls for users
-   * @param httpRoleService Suricate service used to manage the http calls for roles
-   * @param userFormFieldsService Frontend service used to build the form fields for a user
-   * @param injector Angular Service used to manage the injection of services
+   * @param {HttpUserService} httpUserService Suricate service used to manage the http calls for users
+   * @param {HttpRoleService} httpRoleService Suricate service used to manage the http calls for roles
+   * @param {UserFormFieldsService} userFormFieldsService Frontend service used to build the form fields for a user
+   * @param {Injector} injector Angular Service used to manage the injection of services
    */
   constructor(
     private readonly httpUserService: HttpUserService,
@@ -60,7 +62,10 @@ export class UsersComponent extends ListComponent<User> implements OnInit {
     this.initListConfiguration();
   }
 
-  ngOnInit(): void {
+  /**
+   * Called when the component is init
+   */
+  public ngOnInit(): void {
     super.ngOnInit();
   }
 
@@ -68,9 +73,7 @@ export class UsersComponent extends ListComponent<User> implements OnInit {
    * Function used to configure the header of the list component
    */
   private initHeaderConfiguration(): void {
-    this.headerConfiguration = {
-      title: 'users.list'
-    };
+    this.headerConfiguration = { title: 'users.list' };
   }
 
   /**

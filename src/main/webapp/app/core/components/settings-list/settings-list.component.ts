@@ -18,7 +18,6 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { from, of } from 'rxjs';
 import { flatMap, map } from 'rxjs/operators';
-import { TranslateService } from '@ngx-translate/core';
 
 import { SettingsService } from '../../services/settings.service';
 import { User } from '../../../shared/models/backend/user/user';
@@ -28,14 +27,13 @@ import { HttpSettingService } from '../../../shared/services/backend/http-settin
 import { Setting } from '../../../shared/models/backend/setting/setting';
 import { SettingsTypeEnum } from '../../../shared/enums/settings-type.enum';
 import { AllowedSettingValue } from '../../../shared/models/backend/setting/allowed-setting-value';
-import { DataTypeEnum } from '../../../shared/enums/data-type.enum';
 import { FormService } from '../../../shared/services/frontend/form.service';
 import { FormOption } from '../../../shared/models/frontend/form/form-option';
 import { SimpleFormField } from '../../../shared/models/frontend/form/simple-form-field';
 import { HeaderConfiguration } from '../../../shared/models/frontend/header/header-configuration';
 
 /**
- * Represent the Admin Setting list page
+ * Used to display/manage users preferences
  */
 @Component({
   selector: 'suricate-settings-list',
@@ -43,64 +41,65 @@ import { HeaderConfiguration } from '../../../shared/models/frontend/header/head
   styleUrls: ['./settings-list.component.scss']
 })
 export class SettingsListComponent implements OnInit {
-  protected headerConfiguration: HeaderConfiguration;
-
-  /**
-   * The user setting form
-   * @type {FormGroup}
-   */
-  userSettingForm: FormGroup;
-  /**
-   * The description of the form
-   */
-  formFields: SimpleFormField[];
-
   /**
    * The connected user
    * @type {User}
+   * @private
    */
-  connectedUser: User;
-
+  private connectedUser: User;
   /**
    * The list of user settings
    * @type {UserSetting[]}
+   * @private
    */
-  userSettings: UserSetting[];
+  private userSettings: UserSetting[];
+  /**
+   * The list of available settings
+   * @type {Setting[]}
+   * @private
+   */
+  private settings: Setting[];
 
   /**
-   * The list of settings
+   * Hold the configuration of the header
+   * @type {HeaderConfiguration}
+   * @protected
    */
-  settings: Setting[];
-
+  protected headerConfiguration: HeaderConfiguration;
   /**
-   * The setting data types
-   * @type {DataTypeEnum}
+   * Hold the form
+   * @type {FormGroup}
+   * @protected
    */
-  dataType = DataTypeEnum;
+  protected userSettingForm: FormGroup;
+  /**
+   * The description of the form
+   * @type {SimpleFormField[]}
+   * @protected
+   */
+  protected formFields: SimpleFormField[];
 
   /**
    * Constructor
    *
-   * @param {HttpUserService} httpUserService The http user service
-   * @param {HttpSettingService} httpSettingService The http setting service
-   * @param {SettingsService} settingsService The settings service to inject
-   * @param {TranslateService} translateService The service used for translations
-   * @param {FormService} formService The form service used for the form creation
+   * @param {HttpUserService} httpUserService Suricate service used to manage http calls for users
+   * @param {HttpSettingService} httpSettingService Suricate service used to manage http calls for settings
+   * @param {SettingsService} settingsService Frontend service used to manage settings in App
+   * @param {FormService} formService Frontend service used to manage forms
    */
   constructor(
-    private httpUserService: HttpUserService,
-    private httpSettingService: HttpSettingService,
-    private settingsService: SettingsService,
-    private translateService: TranslateService,
-    private formService: FormService
+    private readonly httpUserService: HttpUserService,
+    private readonly httpSettingService: HttpSettingService,
+    private readonly settingsService: SettingsService,
+    private readonly formService: FormService
   ) {
     this.initHeaderConfiguration();
   }
 
   /**
-   * When the component is init
+   * Called when the component is init
    */
-  ngOnInit(): void {
+  public ngOnInit(): void {
     // Get the connected user
     this.httpUserService
       .getConnectedUser()
@@ -123,6 +122,9 @@ export class SettingsListComponent implements OnInit {
       });
   }
 
+  /**
+   * Used to init the configuration of the header
+   */
   private initHeaderConfiguration(): void {
     this.headerConfiguration = { title: 'user.settings' };
   }
@@ -130,7 +132,7 @@ export class SettingsListComponent implements OnInit {
   /**
    * Init the user setting form
    */
-  initUserSettingForm() {
+  private initUserSettingForm(): void {
     this.generateFormFields();
     this.userSettingForm = this.formService.generateFormGroupForFields(this.formFields);
   }
@@ -138,7 +140,7 @@ export class SettingsListComponent implements OnInit {
   /**
    * Generate the form fields used for the form creation
    */
-  generateFormFields() {
+  private generateFormFields(): void {
     this.formFields = [];
 
     this.settings.forEach((setting: Setting) => {
@@ -166,18 +168,18 @@ export class SettingsListComponent implements OnInit {
   }
 
   /**
-   * Get a user setting from a setting
+   * Get The user setting related to a setting
    *
    * @param settingId The setting id to find
    */
-  getUserSettingFromSetting(settingId: number): UserSetting {
+  private getUserSettingFromSetting(settingId: number): UserSetting {
     return this.userSettings.find(userSetting => userSetting.settingId === settingId);
   }
 
   /**
    * Save the user settings
    */
-  saveUserSettings() {
+  private saveUserSettings(): void {
     this.formService.validate(this.userSettingForm);
 
     if (this.userSettingForm.valid) {
@@ -209,7 +211,7 @@ export class SettingsListComponent implements OnInit {
    * @param settingType The setting type
    * @param allowedSettingValue The allowed setting value as String
    */
-  getAllowedSettingValueFromSettingTypeAndAllowedSettingValue(
+  private getAllowedSettingValueFromSettingTypeAndAllowedSettingValue(
     settingType: SettingsTypeEnum,
     allowedSettingValue: string
   ): AllowedSettingValue {

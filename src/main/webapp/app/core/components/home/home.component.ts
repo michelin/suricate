@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { Project } from '../../../shared/models/backend/project/project';
-import { DashboardService } from '../../../dashboard/services/dashboard.service';
 import { HttpAssetService } from '../../../shared/services/backend/http-asset.service';
 import { HttpProjectService } from '../../../shared/services/backend/http-project.service';
 import { HeaderConfiguration } from '../../../shared/models/frontend/header/header-configuration';
@@ -38,54 +36,60 @@ import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit, OnDestroy {
-  protected headerConfiguration: HeaderConfiguration;
+export class HomeComponent implements OnInit {
   /**
-   * True while the component is instantiate
-   * @type {boolean}
+   * Configuration of the header
+   * @type {HeaderConfiguration}
+   * @protected
    */
-  private isAlive = true;
-
+  protected headerConfiguration: HeaderConfiguration;
   /**
    * The list of dashboards
    * @type {Project[]}
+   * @protected
    */
-  dashboards: Project[];
+  protected dashboards: Project[];
 
   /**
    * The constructor
    *
-   * @param {DashboardService} dashboardService The dashboard service
-   * @param {HttpAssetService} httpAssetService The http asset service to inject
-   * @param {MatDialog} matDialog The mat dialog service
-   * @param {Router} router The router service
+   * @param {Router} router Angular service used to manage routes
+   * @param {HttpProjectService} httpProjectService Suricate service used to manage http calls on projects
+   * @param {HttpAssetService} httpAssetService Suricate service used to manage http calls on assets
+   * @param {ProjectFormFieldsService} projectFormFieldsService Frontend service used to retrieve the form fields for projects
+   * @param {SidenavService} sidenavService Frontend service used to manage sidenav's
+   * @param {ToastService} toastService Frontend service used to display toast messages
    */
   constructor(
-    private dashboardService: DashboardService,
+    private readonly router: Router,
     private readonly httpProjectService: HttpProjectService,
-    private httpAssetService: HttpAssetService,
-    private matDialog: MatDialog,
-    private readonly sidenavService: SidenavService,
+    private readonly httpAssetService: HttpAssetService,
     private readonly projectFormFieldsService: ProjectFormFieldsService,
-    private router: Router,
+    private readonly sidenavService: SidenavService,
     private readonly toastService: ToastService
   ) {
     this.initHeaderConfiguration();
   }
 
   /**
-   * Init objects
+   * Called when the home page is init
    */
-  ngOnInit() {
+  public ngOnInit(): void {
     this.httpProjectService.getAllForCurrentUser().subscribe(dashboards => {
       this.dashboards = dashboards;
     });
   }
 
+  /**
+   * Used to init the header component
+   */
   private initHeaderConfiguration(): void {
     this.headerConfiguration = { title: 'dashboards.my' };
   }
 
+  /**
+   * Function that display the sidenav used to create a new dashboard
+   */
   protected openDashboardFormSidenav(): void {
     this.projectFormFieldsService.generateProjectFormFields().subscribe((formFields: FormField[]) => {
       this.sidenavService.openFormSidenav({
@@ -96,6 +100,11 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Called by the form sidenav used to create a new dashboard on save
+   *
+   * @param projectRequest The request to send to the backend with the information written on the form
+   */
   private addDashboard(projectRequest: ProjectRequest): void {
     projectRequest.cssStyle = `.grid { background-color: ${projectRequest['gridBackgroundColor']}; }`;
 
@@ -108,16 +117,9 @@ export class HomeComponent implements OnInit, OnDestroy {
   /**
    * Get the asset url
    *
-   * @param assetToken The asset token
+   * @param assetToken The asset used to build the url
    */
-  getContentUrl(assetToken: string): string {
+  protected getContentUrl(assetToken: string): string {
     return this.httpAssetService.getContentUrl(assetToken);
-  }
-
-  /**
-   * Called when the component is destroy
-   */
-  ngOnDestroy() {
-    this.isAlive = false;
   }
 }

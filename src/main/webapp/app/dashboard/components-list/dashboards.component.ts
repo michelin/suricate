@@ -38,16 +38,18 @@ import { switchMap } from 'rxjs/operators';
 export class DashboardsComponent extends ListComponent<Project | ProjectRequest> {
   /**
    * Project selected in the list for modification
+   * @type {Project}
+   * @private
    */
   private projectSelected: Project;
 
   /**
    * Constructor
    *
-   * @param httpProjectService Suricate service used to manage the http calls for a project
-   * @param projectFormFieldsService Frontend service used to build form fields for a project
-   * @param projectUsersFormFieldsService Frontend service used to build form fields for a project users
-   * @param injector Angular Service used to manage the injection of services
+   * @param {HttpProjectService} httpProjectService Suricate service used to manage the http calls for a project
+   * @param {ProjectFormFieldsService} projectFormFieldsService Frontend service used to build form fields for a project
+   * @param {ProjectUsersFormFieldsService} projectUsersFormFieldsService Frontend service used to build form fields for a project users
+   * @param {Injector} injector Angular Service used to manage the injection of services
    */
   constructor(
     private readonly httpProjectService: HttpProjectService,
@@ -175,6 +177,7 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
 
   /**
    * Open the form sidenav used to manage users
+   *
    * @param event The click event
    * @param project The project clicked on the list
    */

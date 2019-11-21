@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
@@ -25,7 +25,6 @@ import { ApplicationProperties } from '../../../shared/models/backend/applicatio
 import { AuthenticationProviderEnum } from '../../../shared/enums/authentication-provider.enum';
 import { FormService } from '../../../shared/services/frontend/form.service';
 import { DataTypeEnum } from '../../../shared/enums/data-type.enum';
-import { SidenavService } from '../../../shared/services/frontend/sidenav.service';
 import { SimpleFormField } from '../../../shared/models/frontend/form/simple-form-field';
 
 /**
@@ -36,51 +35,53 @@ import { SimpleFormField } from '../../../shared/models/frontend/form/simple-for
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit, OnDestroy {
+export class LoginComponent implements OnInit {
   /**
    * The login form
    * @type {FormGroup}
+   * @protected
    */
-  loginForm: FormGroup;
+  protected loginForm: FormGroup;
   /**
-   * The description of the form
+   * Fields used to describe/create the form
+   * @type {SimpleFormField[]}
+   * @protected
    */
-  formFields: SimpleFormField[];
+  protected formFields: SimpleFormField[];
   /**
-   * Used for display spinner when form has been submitted
+   * Used to display spinner when form has been submitted
    * @type {boolean}
+   * @protected
    */
-  formSubmitAttempt = false;
+  protected formSubmitAttempt = false;
   /**
    * True if the user provider is LDAP
+   * @type {boolean}
+   * @protected
    */
-  isLdapServerUserProvider: boolean;
+  protected isLdapServerUserProvider: boolean;
 
   /**
    * Constructor
    *
-   * @param {Router} router The router service
-   * @param {AuthenticationService} authenticationService The authentication service
-   * @param {FormService} formService Generic service used to manage the initiations of forms
-   * @param {TranslateService} translateService The translate service
-   * @param {SidenavService} sidenavService Manage the sidenav
-   * @param {HttpConfigurationService} httpConfigurationService The configuration service to inject
+   * @param {Router} router Angular service used to manage the application routes
+   * @param {TranslateService} translateService NgxTranslate service used to manage the translations
+   * @param {HttpConfigurationService} httpConfigurationService Suricate service used to manage http calls for configurations
+   * @param {AuthenticationService} authenticationService Suricate service used to manage authentications
+   * @param {FormService} formService Frontend service used manage/create forms
    */
   constructor(
-    private router: Router,
-    private authenticationService: AuthenticationService,
-    private formService: FormService,
-    private translateService: TranslateService,
-    private sidenavService: SidenavService,
-    private httpConfigurationService: HttpConfigurationService
+    private readonly router: Router,
+    private readonly translateService: TranslateService,
+    private readonly httpConfigurationService: HttpConfigurationService,
+    private readonly authenticationService: AuthenticationService,
+    private readonly formService: FormService
   ) {}
 
   /**
-   * Init objects
+   * Called when the component is init
    */
-  ngOnInit() {
-    this.sidenavService.closeSidenav();
-
+  public ngOnInit(): void {
     if (AuthenticationService.isLoggedIn()) {
       this.navigateToHomePage();
       return;
@@ -94,9 +95,9 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Init the form
+   * Create the login form
    */
-  initLoginForm() {
+  private initLoginForm(): void {
     this.generateFormFields();
     this.loginForm = this.formService.generateFormGroupForFields(this.formFields);
   }
@@ -104,7 +105,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   /**
    * Generate the form fields used for the form creation
    */
-  generateFormFields(): void {
+  private generateFormFields(): void {
     this.translateService.get(['username', 'password']).subscribe((translations: string) => {
       this.formFields = [
         {
@@ -128,7 +129,7 @@ export class LoginComponent implements OnInit, OnDestroy {
   /**
    * Execute login action
    */
-  login() {
+  protected login(): void {
     this.formService.validate(this.loginForm);
 
     if (this.loginForm.valid) {
@@ -148,14 +149,10 @@ export class LoginComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Redirect to the home page
+   */
   private navigateToHomePage(): void {
     this.router.navigate(['/home']);
-  }
-
-  /**
-   * Called when the component is destroyed
-   */
-  ngOnDestroy() {
-    this.sidenavService.openSidenav();
   }
 }
