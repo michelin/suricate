@@ -25,6 +25,9 @@ body {
 
   .container {
     height: 89vh;
+    &.without-header {
+      min-height: 100vh;
+    }
   }
 
   h1.little {

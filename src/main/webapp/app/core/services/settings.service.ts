@@ -138,14 +138,20 @@ export class SettingsService {
    * Init the plugin language settings
    */
   initDefaultLanguageSettings() {
-    this.httpSettingService.getAll(SettingsTypeEnum.LANGUAGE).subscribe(settings => {
-      const defaultLanguageCode = settings[0].allowedSettingValues.find(allowedSettingValue => allowedSettingValue.default).value;
+    this.httpSettingService.getAll(SettingsTypeEnum.LANGUAGE).subscribe(
+      settings => {
+        const defaultLanguageCode = settings[0].allowedSettingValues.find(allowedSettingValue => allowedSettingValue.default).value;
 
-      // this language will be used as a fallback when a translation isn't found in the current language
-      this.translateService.setDefaultLang(defaultLanguageCode);
-      // the lang to use, if the lang isn't available, it will use the current loader to get them
-      this.translateService.use(defaultLanguageCode);
-    });
+        // this language will be used as a fallback when a translation isn't found in the current language
+        this.translateService.setDefaultLang(defaultLanguageCode);
+        // the lang to use, if the lang isn't available, it will use the current loader to get them
+        this.translateService.use(defaultLanguageCode);
+      },
+      () => {
+        this.translateService.setDefaultLang('en');
+        this.translateService.use('en');
+      }
+    );
   }
 
   /**

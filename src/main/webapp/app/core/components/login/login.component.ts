@@ -26,6 +26,7 @@ import { AuthenticationProviderEnum } from '../../../shared/enums/authentication
 import { FormService } from '../../../shared/services/frontend/form.service';
 import { DataTypeEnum } from '../../../shared/enums/data-type.enum';
 import { SimpleFormField } from '../../../shared/models/frontend/form/simple-form-field';
+import { ButtonConfiguration } from '../../../shared/models/frontend/button/button-configuration';
 
 /**
  * Manage the login page
@@ -48,6 +49,12 @@ export class LoginComponent implements OnInit {
    * @protected
    */
   protected formFields: SimpleFormField[];
+  /**
+   * The list of buttons to display in the form login
+   * @type {ButtonConfiguration[]}
+   * @protected
+   */
+  protected buttonConfigurations: ButtonConfiguration<unknown>[];
   /**
    * Used to display spinner when form has been submitted
    * @type {boolean}
@@ -76,7 +83,28 @@ export class LoginComponent implements OnInit {
     private readonly httpConfigurationService: HttpConfigurationService,
     private readonly authenticationService: AuthenticationService,
     private readonly formService: FormService
-  ) {}
+  ) {
+    this.initButtons();
+  }
+
+  /**
+   * Initialize the list of buttons to use in the application
+   */
+  private initButtons(): void {
+    this.buttonConfigurations = [
+      {
+        color: 'primary',
+        label: 'sign.in',
+        callback: () => this.login()
+      },
+      {
+        color: 'primary',
+        label: 'sign.up',
+        callback: () => this.navigateToRegisterPage(),
+        hidden: () => this.isLdapServerUserProvider
+      }
+    ];
+  }
 
   /**
    * Called when the component is init
@@ -106,24 +134,22 @@ export class LoginComponent implements OnInit {
    * Generate the form fields used for the form creation
    */
   private generateFormFields(): void {
-    this.translateService.get(['username', 'password']).subscribe((translations: string) => {
-      this.formFields = [
-        {
-          key: 'username',
-          label: translations['username'],
-          type: DataTypeEnum.TEXT,
-          validators: [Validators.required],
-          matIconPrefix: 'android'
-        },
-        {
-          key: 'password',
-          label: translations['password'],
-          type: DataTypeEnum.PASSWORD,
-          validators: [Validators.required],
-          matIconPrefix: 'lock'
-        }
-      ];
-    });
+    this.formFields = [
+      {
+        key: 'username',
+        label: 'username',
+        type: DataTypeEnum.TEXT,
+        validators: [Validators.required],
+        matIconPrefix: 'android'
+      },
+      {
+        key: 'password',
+        label: 'password',
+        type: DataTypeEnum.PASSWORD,
+        validators: [Validators.required],
+        matIconPrefix: 'lock'
+      }
+    ];
   }
 
   /**
@@ -133,10 +159,8 @@ export class LoginComponent implements OnInit {
     this.formService.validate(this.loginForm);
 
     if (this.loginForm.valid) {
-      // Display spinner
       this.formSubmitAttempt = true;
 
-      // Try to authenticate
       this.authenticationService.authenticate(this.loginForm.value).subscribe(
         () => {
           this.navigateToHomePage();
@@ -154,5 +178,12 @@ export class LoginComponent implements OnInit {
    */
   private navigateToHomePage(): void {
     this.router.navigate(['/home']);
+  }
+
+  /**
+   * Redirect to the register page
+   */
+  private navigateToRegisterPage(): void {
+    this.router.navigate(['/register']);
   }
 }

@@ -16,38 +16,35 @@
  *
  */
 
-.container {
-  height: 95vh;
-}
+.wrapper {
+  width: 50%;
+  padding: 2% 8%;
 
-.content {
-  width: 40%;
-}
+  .brand-image {
+    max-height: 40%;
 
-#login-form {
-  width: 100%;
-}
+    img {
+      max-height: 100%;
+      max-width: 100%;
+    }
+  }
 
-#card-login {
-  & {
+  .login-form {
     width: 100%;
+    height: 100%;
+    padding: 20px 0;
   }
 
-  .mat-form-field {
-    margin-top: 15px;
+  suricate-buttons {
+    width: 100%;
+
+    ::ng-deep .button {
+      margin: auto;
+      width: 48%;
+
+      &:only-child {
+        width: 100%;
+      }
+    }
   }
-}
-
-.not-registered-sentance {
-  margin-left: 9%;
-}
-
-.mat-icon.prefix {
-  margin-right: 10px;
-}
-
-#login-div img {
-  width: 185px;
-  height: auto;
-  margin: 0 auto;
 }

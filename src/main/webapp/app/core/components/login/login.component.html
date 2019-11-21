@@ -1,52 +1,15 @@
-<div class="container" fxLayout="column wrap" fxLayoutAlign="center center">
-  <div class="content" fxFlex="100" fxLayout="column wrap" fxLayoutAlign="center center" fxLayoutGap="7%">
-    <form *ngIf="loginForm" id="login-form" [formGroup]="loginForm" (ngSubmit)="login()" fxFlex="70" novalidate>
-      <mat-card id="card-login" fxFlexFill fxLayout="column wrap" fxLayoutAlign="center" class="mat-elevation-z12">
-        <mat-card-content fxFlex="80" fxLayout="row wrap" fxLayoutAlign="center center">
-          <!-- When form has been submitted -->
-          <mat-spinner *ngIf="formSubmitAttempt"></mat-spinner>
+<div class="container without-header" fxLayout="column" fxLayoutAlign="center center">
+  <div class="wrapper mat-elevation-z12" fxLayout="column" fxLayoutAlign="center center" fxFlex="580px">
+    <div class="brand-image">
+      <img src="../../../../../assets/images/logo.png" alt="brand image" />
+    </div>
 
-          <!-- Before Submit the form -->
-          <div id="login-div" fxFlex="90" fxLayout="column wrap" fxLayoutAlign="center" *ngIf="!formSubmitAttempt" class="form-content">
-            <img src="../../../../../assets/images/logo.png" />
+    <suricate-spinner *ngIf="formSubmitAttempt"></suricate-spinner>
 
-            <suricate-input *ngFor="let field of formFields" [formGroup]="loginForm" [field]="field"></suricate-input>
-          </div>
-        </mat-card-content>
-
-        <mat-card-actions fxFlex="13" fxLayout="row wrap" fxLayoutAlign="center" fxLayoutGap="15px" *ngIf="!formSubmitAttempt">
-          <button fxFlex="85" mat-raised-button class="mat-elevation-z2" color="primary" type="submit">
-            {{ 'sign.in' | translate | uppercase }}
-          </button>
-        </mat-card-actions>
-      </mat-card>
+    <form *ngIf="!formSubmitAttempt" class="login-form" [formGroup]="loginForm" fxLayout="column" fxLayoutAlign="center">
+      <suricate-input *ngFor="let field of formFields" [formGroup]="loginForm" [field]="field"> </suricate-input>
     </form>
 
-    <!-- If we are on DB auth provider -->
-    <div
-      *ngIf="!isLdapServerUserProvider"
-      class="not-registered-sentance"
-      fxFlex="5"
-      fxFlexAlign="start"
-      fxLayout="col wrap"
-      fxLayoutGap="6px"
-    >
-      <suricate-translate [key]="'not.registered'"></suricate-translate>
-      <a [routerLink]="['/register']">
-        <suricate-translate [key]="'sign.up'"></suricate-translate>
-      </a>
-    </div>
-
-    <!-- If we are on LDAP auth provider -->
-    <div
-      *ngIf="isLdapServerUserProvider"
-      class="not-registered-sentance"
-      fxFlex="5"
-      fxFlexAlign="start"
-      fxLayout="col wrap"
-      fxLayoutGap="6px"
-    >
-      <suricate-translate [key]="'login.ldap.auth'"></suricate-translate>
-    </div>
+    <suricate-buttons [configurations]="buttonConfigurations" fxLayout="row" fxLayoutAlign="center center"></suricate-buttons>
   </div>
 </div>

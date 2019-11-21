@@ -27,7 +27,6 @@ import { HttpWidgetService } from '../../../shared/services/backend/http-widget.
 import { WidgetStateEnum } from '../../../shared/enums/widget-sate.enum';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { HttpProjectWidgetService } from '../../../shared/services/backend/http-project-widget.service';
-import { EditProjectWidgetDialogComponent } from '../edit-project-widget-dialog/edit-project-widget-dialog.component';
 import { RunScriptsDirective } from '../../../shared/directives/run-scripts.directive';
 import { WebsocketService } from '../../../shared/services/frontend/websocket.service';
 import { WebsocketUpdateEvent } from '../../../shared/models/frontend/websocket/websocket-update-event';
@@ -193,16 +192,6 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
             this.httpProjectWidgetService.deleteOneById(this.projectWidget.id).subscribe();
           }
         });
-    });
-  }
-
-  /**
-   * Display the dialog to edit a project widget
-   */
-  displayEditProjectWidgetDialog(): void {
-    this.matDialog.open(EditProjectWidgetDialogComponent, {
-      minWidth: 700,
-      data: { projectWidgetId: this.projectWidget.id }
     });
   }
 

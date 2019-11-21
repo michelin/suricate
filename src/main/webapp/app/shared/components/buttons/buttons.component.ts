@@ -55,4 +55,8 @@ export class ButtonsComponent<T> {
    * Constructor
    */
   constructor() {}
+
+  shouldDisplayButton(configuration: ButtonConfiguration<T>): boolean {
+    return !configuration.hidden || !configuration.hidden();
+  }
 }

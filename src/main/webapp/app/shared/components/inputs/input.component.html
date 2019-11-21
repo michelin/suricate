@@ -15,9 +15,7 @@
     </mat-icon>
 
     <!-- Mat label -->
-    <mat-label>
-      <suricate-translate [key]="field.label"></suricate-translate>
-    </mat-label>
+    <mat-label> {{ field.label | translate }} </mat-label>
 
     <!-- SIMPLE INPUT -->
     <ng-container *ngIf="[dataType.NUMBER, dataType.TEXT, dataType.PASSWORD].includes(field.type)">
@@ -95,7 +93,7 @@
   <div *ngIf="dataType.FILE !== field.type && isInputFieldOnError()" [@animationError] class="input-error">
     <!-- Error message : Required -->
     <div *ngIf="getFormControl()['errors']?.required">
-      <suricate-translate [key]="'field.required'"></suricate-translate>
+      <suricate-translate key="field.required"></suricate-translate>
     </div>
     <!-- Error message : Length -->
     <div *ngIf="getFormControl()['errors']?.minlength">
