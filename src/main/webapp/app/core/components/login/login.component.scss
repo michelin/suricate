@@ -32,18 +32,19 @@
   .login-form {
     width: 100%;
     height: 100%;
-    padding: 20px 0;
-  }
+    padding-top: 20px;
 
-  suricate-buttons {
-    width: 100%;
+    suricate-buttons {
+      width: 100%;
+      padding-top: 20px;
 
-    ::ng-deep .button {
-      margin: auto;
-      width: 48%;
+      ::ng-deep .button {
+        margin: auto;
+        width: 48%;
 
-      &:only-child {
-        width: 100%;
+        &:only-child {
+          width: 100%;
+        }
       }
     }
   }

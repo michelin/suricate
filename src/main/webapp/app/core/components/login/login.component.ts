@@ -26,6 +26,7 @@ import { FormService } from '../../../shared/services/frontend/form.service';
 import { ButtonConfiguration } from '../../../shared/models/frontend/button/button-configuration';
 import { FormField } from '../../../shared/models/frontend/form/form-field';
 import { LoginFormFieldsService } from '../../../shared/form-fields/login-form-fields.service';
+import { ButtonTypeEnum } from '../../../shared/enums/button-type.enum';
 
 /**
  * Manage the login page
@@ -92,7 +93,7 @@ export class LoginComponent implements OnInit {
       {
         color: 'primary',
         label: 'sign.in',
-        callback: () => this.login()
+        type: ButtonTypeEnum.SUBMIT
       },
       {
         color: 'primary',

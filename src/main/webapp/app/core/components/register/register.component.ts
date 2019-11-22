@@ -33,6 +33,7 @@ import { CustomValidator } from '../../../shared/validators/custom-validator';
 import { FormField } from '../../../shared/models/frontend/form/form-field';
 import { ButtonConfiguration } from '../../../shared/models/frontend/button/button-configuration';
 import { RegisterFormFieldsService } from '../../../shared/form-fields/register-form-fields.service';
+import { ButtonTypeEnum } from '../../../shared/enums/button-type.enum';
 
 /**
  * Component used to register a new user
@@ -95,7 +96,7 @@ export class RegisterComponent implements OnInit {
       {
         color: 'primary',
         label: 'sign.up',
-        callback: () => this.signUp()
+        type: ButtonTypeEnum.SUBMIT
       }
     ];
   }
