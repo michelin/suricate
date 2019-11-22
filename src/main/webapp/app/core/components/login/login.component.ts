@@ -15,7 +15,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, Validators } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { AuthenticationService } from '../../../shared/services/frontend/authentication.service';
@@ -23,9 +23,9 @@ import { HttpConfigurationService } from '../../../shared/services/backend/http-
 import { ApplicationProperties } from '../../../shared/models/backend/application-properties';
 import { AuthenticationProviderEnum } from '../../../shared/enums/authentication-provider.enum';
 import { FormService } from '../../../shared/services/frontend/form.service';
-import { DataTypeEnum } from '../../../shared/enums/data-type.enum';
 import { ButtonConfiguration } from '../../../shared/models/frontend/button/button-configuration';
 import { FormField } from '../../../shared/models/frontend/form/form-field';
+import { LoginFormFieldsService } from '../../../shared/form-fields/login-form-fields.service';
 
 /**
  * Manage the login page
@@ -123,30 +123,8 @@ export class LoginComponent implements OnInit {
    * Create the login form
    */
   private initLoginForm(): void {
-    this.generateFormFields();
+    this.formFields = LoginFormFieldsService.generateFormFields();
     this.loginForm = this.formService.generateFormGroupForFields(this.formFields);
-  }
-
-  /**
-   * Generate the form fields used for the form creation
-   */
-  private generateFormFields(): void {
-    this.formFields = [
-      {
-        key: 'username',
-        label: 'username',
-        type: DataTypeEnum.TEXT,
-        validators: [Validators.required],
-        matIconPrefix: 'android'
-      },
-      {
-        key: 'password',
-        label: 'password',
-        type: DataTypeEnum.PASSWORD,
-        validators: [Validators.required],
-        matIconPrefix: 'lock'
-      }
-    ];
   }
 
   /**
