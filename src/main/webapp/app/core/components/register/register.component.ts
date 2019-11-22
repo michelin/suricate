@@ -33,7 +33,7 @@ import { AuthenticationProviderEnum } from '../../../shared/enums/authentication
 import { DataTypeEnum } from '../../../shared/enums/data-type.enum';
 import { FormService } from '../../../shared/services/frontend/form.service';
 import { CustomValidator } from '../../../shared/validators/custom-validator';
-import { SimpleFormField } from '../../../shared/models/frontend/form/simple-form-field';
+import { FormField } from '../../../shared/models/frontend/form/form-field';
 
 /**
  * Component used to register a new user
@@ -52,10 +52,10 @@ export class RegisterComponent implements OnInit {
   protected registerForm: FormGroup;
   /**
    * The description of the form
-   * @type {SimpleFormField[]}
+   * @type {FormField[]}
    * @protected
    */
-  protected formFields: SimpleFormField[];
+  protected formFields: FormField[];
   /**
    * Tell if the form is in submit state (used to display the spinner)
    * @type {boolean} true if the form is submitting, false otherwise
@@ -117,53 +117,49 @@ export class RegisterComponent implements OnInit {
    * Generate the form fields used for the form creation
    */
   private generateFormFields(): void {
-    this.translateService
-      .get(['username', 'firstname', 'lastname', 'email', 'password', 'password.confirm'])
-      .subscribe((translations: string) => {
-        this.formFields = [
-          {
-            key: 'username',
-            label: translations['username'],
-            type: DataTypeEnum.TEXT,
-            validators: [Validators.required, Validators.minLength(3)],
-            matIconPrefix: 'android'
-          },
-          {
-            key: 'firstname',
-            label: translations['firstname'],
-            type: DataTypeEnum.TEXT,
-            validators: [Validators.required, Validators.minLength(3)],
-            matIconPrefix: 'person'
-          },
-          {
-            key: 'lastname',
-            label: translations['lastname'],
-            type: DataTypeEnum.TEXT,
-            validators: [Validators.required, Validators.minLength(3)],
-            matIconPrefix: 'person'
-          },
-          {
-            key: 'email',
-            label: translations['email'],
-            type: DataTypeEnum.TEXT,
-            validators: [Validators.required, CustomValidators.email],
-            matIconPrefix: 'email'
-          },
-          {
-            key: 'password',
-            label: translations['password'],
-            type: DataTypeEnum.PASSWORD,
-            validators: [Validators.required, Validators.minLength(3)],
-            matIconPrefix: 'lock'
-          },
-          {
-            key: 'confirmPassword',
-            label: translations['password.confirm'],
-            type: DataTypeEnum.PASSWORD,
-            matIconPrefix: 'lock'
-          }
-        ];
-      });
+    this.formFields = [
+      {
+        key: 'username',
+        label: 'username',
+        type: DataTypeEnum.TEXT,
+        validators: [Validators.required, Validators.minLength(3)],
+        matIconPrefix: 'android'
+      },
+      {
+        key: 'firstname',
+        label: 'firstname',
+        type: DataTypeEnum.TEXT,
+        validators: [Validators.required, Validators.minLength(3)],
+        matIconPrefix: 'person'
+      },
+      {
+        key: 'lastname',
+        label: 'lastname',
+        type: DataTypeEnum.TEXT,
+        validators: [Validators.required, Validators.minLength(3)],
+        matIconPrefix: 'person'
+      },
+      {
+        key: 'email',
+        label: 'email',
+        type: DataTypeEnum.TEXT,
+        validators: [Validators.required, CustomValidators.email],
+        matIconPrefix: 'email'
+      },
+      {
+        key: 'password',
+        label: 'password',
+        type: DataTypeEnum.PASSWORD,
+        validators: [Validators.required, Validators.minLength(3)],
+        matIconPrefix: 'lock'
+      },
+      {
+        key: 'confirmPassword',
+        label: 'password.confirm',
+        type: DataTypeEnum.PASSWORD,
+        matIconPrefix: 'lock'
+      }
+    ];
   }
 
   /**

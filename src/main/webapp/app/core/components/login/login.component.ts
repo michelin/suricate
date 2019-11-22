@@ -17,7 +17,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { TranslateService } from '@ngx-translate/core';
 
 import { AuthenticationService } from '../../../shared/services/frontend/authentication.service';
 import { HttpConfigurationService } from '../../../shared/services/backend/http-configuration.service';
@@ -25,8 +24,8 @@ import { ApplicationProperties } from '../../../shared/models/backend/applicatio
 import { AuthenticationProviderEnum } from '../../../shared/enums/authentication-provider.enum';
 import { FormService } from '../../../shared/services/frontend/form.service';
 import { DataTypeEnum } from '../../../shared/enums/data-type.enum';
-import { SimpleFormField } from '../../../shared/models/frontend/form/simple-form-field';
 import { ButtonConfiguration } from '../../../shared/models/frontend/button/button-configuration';
+import { FormField } from '../../../shared/models/frontend/form/form-field';
 
 /**
  * Manage the login page
@@ -45,10 +44,10 @@ export class LoginComponent implements OnInit {
   protected loginForm: FormGroup;
   /**
    * Fields used to describe/create the form
-   * @type {SimpleFormField[]}
+   * @type {FormField[]}
    * @protected
    */
-  protected formFields: SimpleFormField[];
+  protected formFields: FormField[];
   /**
    * The list of buttons to display in the form login
    * @type {ButtonConfiguration[]}
@@ -72,14 +71,12 @@ export class LoginComponent implements OnInit {
    * Constructor
    *
    * @param {Router} router Angular service used to manage the application routes
-   * @param {TranslateService} translateService NgxTranslate service used to manage the translations
    * @param {HttpConfigurationService} httpConfigurationService Suricate service used to manage http calls for configurations
    * @param {AuthenticationService} authenticationService Suricate service used to manage authentications
    * @param {FormService} formService Frontend service used manage/create forms
    */
   constructor(
     private readonly router: Router,
-    private readonly translateService: TranslateService,
     private readonly httpConfigurationService: HttpConfigurationService,
     private readonly authenticationService: AuthenticationService,
     private readonly formService: FormService

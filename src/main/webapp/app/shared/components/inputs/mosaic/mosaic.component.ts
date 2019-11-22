@@ -16,9 +16,8 @@
  *
  */
 
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { InputComponent } from '../input.component';
-import { MosaicFormField } from '../../../models/frontend/form/mosaic-form-field';
 import { MosaicFormOption } from '../../../models/frontend/form/mosaic-form-option';
 
 /**
@@ -30,12 +29,6 @@ import { MosaicFormOption } from '../../../models/frontend/form/mosaic-form-opti
   styleUrls: ['./mosaic.component.scss']
 })
 export class MosaicComponent extends InputComponent implements OnInit {
-  /**
-   * The mosaic field
-   */
-  @Input()
-  field: MosaicFormField;
-
   /**
    * The options related to the mosaic
    */

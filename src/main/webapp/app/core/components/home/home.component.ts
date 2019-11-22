@@ -23,7 +23,6 @@ import { HttpProjectService } from '../../../shared/services/backend/http-projec
 import { HeaderConfiguration } from '../../../shared/models/frontend/header/header-configuration';
 import { SidenavService } from '../../../shared/services/frontend/sidenav.service';
 import { ProjectFormFieldsService } from '../../../shared/form-fields/project-form-fields.service';
-import { FormField } from '../../../shared/models/frontend/form/form-field';
 import { ProjectRequest } from '../../../shared/models/backend/project/project-request';
 import { ToastService } from '../../../shared/services/frontend/toast.service';
 import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
@@ -56,7 +55,6 @@ export class HomeComponent implements OnInit {
    * @param {Router} router Angular service used to manage routes
    * @param {HttpProjectService} httpProjectService Suricate service used to manage http calls on projects
    * @param {HttpAssetService} httpAssetService Suricate service used to manage http calls on assets
-   * @param {ProjectFormFieldsService} projectFormFieldsService Frontend service used to retrieve the form fields for projects
    * @param {SidenavService} sidenavService Frontend service used to manage sidenav's
    * @param {ToastService} toastService Frontend service used to display toast messages
    */
@@ -64,7 +62,6 @@ export class HomeComponent implements OnInit {
     private readonly router: Router,
     private readonly httpProjectService: HttpProjectService,
     private readonly httpAssetService: HttpAssetService,
-    private readonly projectFormFieldsService: ProjectFormFieldsService,
     private readonly sidenavService: SidenavService,
     private readonly toastService: ToastService
   ) {
@@ -91,12 +88,10 @@ export class HomeComponent implements OnInit {
    * Function that display the sidenav used to create a new dashboard
    */
   protected openDashboardFormSidenav(): void {
-    this.projectFormFieldsService.generateProjectFormFields().subscribe((formFields: FormField[]) => {
-      this.sidenavService.openFormSidenav({
-        title: 'Create dashboard',
-        formFields: formFields,
-        save: (formData: ProjectRequest) => this.addDashboard(formData)
-      });
+    this.sidenavService.openFormSidenav({
+      title: 'Create dashboard',
+      formFields: ProjectFormFieldsService.generateProjectFormFields(),
+      save: (formData: ProjectRequest) => this.addDashboard(formData)
     });
   }
 

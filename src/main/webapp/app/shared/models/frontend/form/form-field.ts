@@ -17,11 +17,18 @@
  */
 
 import { DataTypeEnum } from '../../../enums/data-type.enum';
+import { Observable } from 'rxjs';
+import { FormOption } from './form-option';
+import { AsyncValidatorFn, FormGroup, ValidatorFn } from '@angular/forms';
+import { MosaicFormOption } from './mosaic-form-option';
 
 /**
  * Describe a field used to manage the form
  */
-export abstract class FormField {
+export class FormField {
+  /* ***************************************************************************************************************** */
+  /*                        Generic Field                                                                              */
+  /* ***************************************************************************************************************** */
   /**
    * The key of the field
    */
@@ -34,4 +41,76 @@ export abstract class FormField {
    * The type of the data to insert
    */
   type: DataTypeEnum;
+
+  /* ***************************************************************************************************************** */
+  /*                        Simple Field                                                                               */
+  /* ***************************************************************************************************************** */
+  /**
+   * The placeholder to display if needed
+   */
+  placeholder?: string;
+  /**
+   * The value to display
+   */
+  value?: any;
+  /**
+   * If the type contains a list of values to display insert them in this attribute
+   */
+  options?: (filter?: string) => Observable<FormOption[]>;
+  /**
+   * The mat-icon name that should be used as prefix
+   */
+  matIconPrefix?: string;
+  /**
+   * The mat-icon nam that should be used as suffix
+   */
+  matIconSuffix?: string;
+  /**
+   * Hint to display to the user
+   */
+  hint?: string;
+  /**
+   * True if the field should be disabled
+   */
+  disabled?: boolean;
+  /**
+   * True if the field should be readonly
+   */
+  readOnly?: boolean;
+  /**
+   * The list of validators for this field
+   */
+  validators?: ValidatorFn | ValidatorFn[] | null;
+  /**
+   * Async validators (require an http call)
+   */
+  asyncValidators?: AsyncValidatorFn | AsyncValidatorFn[] | null;
+
+  /* ***************************************************************************************************************** */
+  /*                        Inner Field                                                                                */
+  /* ***************************************************************************************************************** */
+  /**
+   * The list of fields in case of a (FIELDS data type)
+   */
+  fields?: FormField[];
+  /**
+   * The list of values to used in the array
+   */
+  values?: Observable<unknown[]>;
+  /**
+   * Function used to delete a row
+   */
+  deleteRow?: { attribute: string; callback: (object: unknown) => Observable<unknown> };
+
+  /* ***************************************************************************************************************** */
+  /*                        Mosaic Field                                                                                */
+  /* ***************************************************************************************************************** */
+  /**
+   * The number of columns to display in the mosaic
+   */
+  columnNumber?: number;
+  /**
+   * The mosaic options
+   */
+  mosaicOptions?: (formGroup?: FormGroup) => Observable<MosaicFormOption[]>;
 }

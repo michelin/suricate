@@ -47,53 +47,50 @@ export class ProjectUsersFormFieldsService {
    *
    * @param projectToken The project token used to retrieve the users
    */
-  public generateProjectUsersFormFields(projectToken: string): Observable<FormField[]> {
-    return this.translateService.get(['username']).pipe(
-      map((translations: string) => {
-        return [
+  public generateProjectUsersFormFields(projectToken: string): FormField[] {
+    return [
+      {
+        key: 'usernameAutocomplete',
+        label: 'username',
+        type: DataTypeEnum.TEXT,
+        options: filter => this.getUsersAutocomplete(filter)
+      },
+      {
+        key: 'users',
+        label: 'Users',
+        type: DataTypeEnum.FIELDS,
+        values: this.httpProjectService.getProjectUsers(projectToken),
+        deleteRow: {
+          attribute: 'id',
+          callback: (userId: number) => this.httpProjectService.deleteUserFromProject(projectToken, userId)
+        },
+        fields: [
           {
-            key: 'usernameAutocomplete',
-            label: translations['username'],
-            type: DataTypeEnum.TEXT,
-            options: filter => this.getUsersAutocomplete(filter)
+            key: 'id',
+            label: 'id',
+            type: DataTypeEnum.HIDDEN
           },
           {
-            key: 'users',
-            label: 'Users',
-            type: DataTypeEnum.FIELDS,
-            values: this.httpProjectService.getProjectUsers(projectToken),
-            deleteRow: {
-              attribute: 'id',
-              callback: (userId: number) => this.httpProjectService.deleteUserFromProject(projectToken, userId)
-            },
-            fields: [
-              {
-                key: 'id',
-                type: DataTypeEnum.HIDDEN
-              },
-              {
-                key: 'username',
-                label: translations['username'],
-                type: DataTypeEnum.TEXT,
-                readOnly: true
-              },
-              {
-                key: 'firstname',
-                label: 'Firstname',
-                type: DataTypeEnum.TEXT,
-                readOnly: true
-              },
-              {
-                key: 'lastname',
-                label: 'lastname',
-                type: DataTypeEnum.TEXT,
-                readOnly: true
-              }
-            ]
+            key: 'username',
+            label: 'username',
+            type: DataTypeEnum.TEXT,
+            readOnly: true
+          },
+          {
+            key: 'firstname',
+            label: 'Firstname',
+            type: DataTypeEnum.TEXT,
+            readOnly: true
+          },
+          {
+            key: 'lastname',
+            label: 'lastname',
+            type: DataTypeEnum.TEXT,
+            readOnly: true
           }
-        ];
-      })
-    );
+        ]
+      }
+    ];
   }
 
   private getUsersAutocomplete(filter: string): Observable<FormOption[]> {

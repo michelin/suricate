@@ -25,7 +25,7 @@ import { FormField } from '../../shared/models/frontend/form/form-field';
 import { ProjectFormFieldsService } from '../../shared/form-fields/project-form-fields.service';
 import { ProjectUsersFormFieldsService } from '../../shared/form-fields/project-users-form-fields.service';
 import { ValueChangedEvent } from '../../shared/models/frontend/form/value-changed-event';
-import { EMPTY, Observable } from 'rxjs';
+import { EMPTY, Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 /**
@@ -67,9 +67,7 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
    * Function used to configure the header of the list component
    */
   private initHeaderConfiguration(): void {
-    this.headerConfiguration = {
-      title: 'dashboards'
-    };
+    this.headerConfiguration = { title: 'dashboards' };
   }
 
   /**
@@ -130,14 +128,10 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
     this.stopEventPropagation(event);
     this.projectSelected = project;
 
-    this.translateService.get(['dashboard.edit', 'dashboard.add']).subscribe((translations: string[]) => {
-      this.projectFormFieldsService.generateProjectFormFields(project).subscribe((formFields: FormField[]) => {
-        this.sidenavService.openFormSidenav({
-          title: project ? translations['dashboard.edit'] : translations['dashboard.add'],
-          formFields: formFields,
-          save: (projectRequest: ProjectRequest) => saveCallback(projectRequest)
-        });
-      });
+    this.sidenavService.openFormSidenav({
+      title: project ? 'dashboard.edit' : 'dashboard.add',
+      formFields: ProjectFormFieldsService.generateProjectFormFields(project),
+      save: (projectRequest: ProjectRequest) => saveCallback(projectRequest)
     });
   }
 
@@ -161,17 +155,15 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
   private deleteProject(event: Event, project: Project): void {
     this.stopEventPropagation(event);
 
-    this.translateService.get(['dashboard.delete', 'delete.confirm']).subscribe((translations: string[]) => {
-      this.dialogService.confirm({
-        title: translations['dashboard.delete'],
-        message: `${translations['delete.confirm']} ${project.name.toUpperCase()}`,
-        accept: () => {
-          this.httpProjectService.delete(project.token).subscribe(() => {
-            this.toastService.sendMessage('Project deleted successfully', ToastTypeEnum.SUCCESS);
-            this.refreshList();
-          });
-        }
-      });
+    this.dialogService.confirm({
+      title: 'dashboard.delete',
+      message: `${this.translateService.instant('delete.confirm')} ${project.name.toUpperCase()}`,
+      accept: () => {
+        this.httpProjectService.delete(project.token).subscribe(() => {
+          this.toastService.sendMessage('Project deleted successfully', ToastTypeEnum.SUCCESS);
+          this.refreshList();
+        });
+      }
     });
   }
 
@@ -185,15 +177,11 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
     this.stopEventPropagation(event);
     this.projectSelected = project;
 
-    this.translateService.get(['user.add']).subscribe((translations: string[]) => {
-      this.projectUsersFormFieldsService.generateProjectUsersFormFields(project.token).subscribe((formFields: FormField[]) => {
-        this.sidenavService.openFormSidenav({
-          title: translations['user.add'],
-          formFields: formFields,
-          hideSaveAction: true,
-          onValueChanged: (valueChangedEvent: ValueChangedEvent) => this.onValueChanged(valueChangedEvent)
-        });
-      });
+    this.sidenavService.openFormSidenav({
+      title: 'user.add',
+      formFields: this.projectUsersFormFieldsService.generateProjectUsersFormFields(project.token),
+      hideSaveAction: true,
+      onValueChanged: (valueChangedEvent: ValueChangedEvent) => this.onValueChanged(valueChangedEvent)
     });
   }
 
@@ -211,7 +199,7 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
     if (valueChangedEvent.type === 'optionSelected' && valueChangedEvent.fieldKey === 'usernameAutocomplete') {
       return this.httpProjectService
         .addUserToProject(this.projectSelected.token, valueChangedEvent.value)
-        .pipe(switchMap(() => this.projectUsersFormFieldsService.generateProjectUsersFormFields(this.projectSelected.token)));
+        .pipe(switchMap(() => of(this.projectUsersFormFieldsService.generateProjectUsersFormFields(this.projectSelected.token))));
     }
 
     return EMPTY;

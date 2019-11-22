@@ -16,7 +16,6 @@
 
 import { NgModule } from '@angular/core';
 
-import { AddWidgetDialogComponent } from './components/header/components/add-widget-dialog/add-widget-dialog.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { TvManagementDialogComponent } from './components/header/components/tv-management-dialog/tv-management-dialog.component';
 import { SharedModule } from '../shared/shared.module';
@@ -26,8 +25,8 @@ import { MenuComponent } from './components/menu/menu.component';
 
 @NgModule({
   imports: [SharedModule],
-  declarations: [AddWidgetDialogComponent, FooterComponent, HeaderComponent, SidenavComponent, TvManagementDialogComponent, MenuComponent],
-  entryComponents: [AddWidgetDialogComponent, TvManagementDialogComponent],
-  exports: [AddWidgetDialogComponent, FooterComponent, HeaderComponent, SidenavComponent]
+  declarations: [FooterComponent, HeaderComponent, SidenavComponent, TvManagementDialogComponent, MenuComponent],
+  entryComponents: [TvManagementDialogComponent],
+  exports: [FooterComponent, HeaderComponent, SidenavComponent]
 })
 export class LayoutModule {}

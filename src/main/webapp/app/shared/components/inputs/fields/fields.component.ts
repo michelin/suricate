@@ -21,7 +21,6 @@ import { InputComponent } from '../input.component';
 import { MaterialIconRecords } from '../../../records/material-icon.record';
 import { IconEnum } from '../../../enums/icon.enum';
 import { FormArray, FormGroup } from '@angular/forms';
-import { ComplexFormField } from '../../../models/frontend/form/complex-form-field';
 import { FormField } from '../../../models/frontend/form/form-field';
 import { DataTypeEnum } from '../../../enums/data-type.enum';
 
@@ -39,11 +38,6 @@ export class FieldsComponent extends InputComponent {
    */
   @Input()
   formArray: FormArray;
-  /**
-   * Object that hold different information used for the instantiation of the inputs
-   */
-  @Input()
-  field: ComplexFormField;
 
   /**
    * The list of icons
@@ -57,8 +51,6 @@ export class FieldsComponent extends InputComponent {
   constructor() {
     super();
   }
-
-  ngOnInit() {}
 
   getInnerFormSize(): number {
     let cellSize = 87;

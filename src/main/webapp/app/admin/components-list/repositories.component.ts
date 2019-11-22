@@ -20,11 +20,11 @@ import { IconEnum } from '../../shared/enums/icon.enum';
 import { Repository } from '../../shared/models/backend/repository/repository';
 import { HttpRepositoryService } from '../../shared/services/backend/http-repository.service';
 import { FormField } from '../../shared/models/frontend/form/form-field';
-import { EMPTY, Observable } from 'rxjs';
 import { ValueChangedEvent } from '../../shared/models/frontend/form/value-changed-event';
 import { RepositoryFormFieldsService } from '../../shared/form-fields/repository-form-fields.service';
 import { RepositoryRequest } from '../../shared/models/backend/repository/repository-request';
 import { RepositoryTypeEnum } from '../../shared/enums/repository-type.enum';
+import { EMPTY, Observable, of } from 'rxjs';
 
 /**
  * Component used to display the list of git repositories
@@ -45,14 +45,9 @@ export class RepositoriesComponent extends ListComponent<Repository> {
    * Constructor
    *
    * @param {HttpRepositoryService} httpRepositoryService Suricate service used to manage the http calls for a repository
-   * @param {RepositoryFormFieldsService} repositoryFormFieldsService Frontend service used tu get the form fields related to a repository
    * @param {Injector} injector Angular Service used to manage the injection of services
    */
-  constructor(
-    private readonly httpRepositoryService: HttpRepositoryService,
-    private readonly repositoryFormFieldsService: RepositoryFormFieldsService,
-    protected injector: Injector
-  ) {
+  constructor(private readonly httpRepositoryService: HttpRepositoryService, protected injector: Injector) {
     super(httpRepositoryService, injector);
 
     this.initHeaderConfiguration();
@@ -123,15 +118,11 @@ export class RepositoriesComponent extends ListComponent<Repository> {
   private openFormSidenav(event: Event, repository: Repository, saveCallback: (repositoryRequest: RepositoryRequest) => void): void {
     this.repositoryFormSidenav = repository ? Object.assign({}, repository) : new Repository();
 
-    this.translateService.get(['repository.edit', 'repository.add']).subscribe((translations: string[]) => {
-      this.repositoryFormFieldsService.generateFormFields(repository).subscribe((formFields: FormField[]) => {
-        this.sidenavService.openFormSidenav({
-          title: repository ? translations['repository.edit'] : translations['repository.add'],
-          formFields: formFields,
-          save: (repositoryRequest: RepositoryRequest) => saveCallback(repositoryRequest),
-          onValueChanged: (valueChangedEvent: ValueChangedEvent) => this.onValueChanged(valueChangedEvent)
-        });
-      });
+    this.sidenavService.openFormSidenav({
+      title: repository ? 'repository.edit' : 'repository.add',
+      formFields: RepositoryFormFieldsService.generateFormFields(repository),
+      save: (repositoryRequest: RepositoryRequest) => saveCallback(repositoryRequest),
+      onValueChanged: (valueChangedEvent: ValueChangedEvent) => this.onValueChanged(valueChangedEvent)
     });
   }
 
@@ -144,7 +135,7 @@ export class RepositoriesComponent extends ListComponent<Repository> {
     this.repositoryFormSidenav[valueChangedEvent.fieldKey] = valueChangedEvent.value;
 
     if (valueChangedEvent.fieldKey === 'type') {
-      return this.repositoryFormFieldsService.generateFormFields(this.repositoryFormSidenav);
+      return of(RepositoryFormFieldsService.generateFormFields(this.repositoryFormSidenav));
     }
 
     return EMPTY;

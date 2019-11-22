@@ -22,8 +22,6 @@ import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, Valida
 import { FormField } from '../../models/frontend/form/form-field';
 import { FormStep } from '../../models/frontend/form/form-step';
 import { DataTypeEnum } from '../../enums/data-type.enum';
-import { ComplexFormField } from '../../models/frontend/form/complex-form-field';
-import { SimpleFormField } from '../../models/frontend/form/simple-form-field';
 
 /**
  * Service class that manage the instantiations of forms
@@ -61,7 +59,7 @@ export class FormService {
    * @return The generated form group for the list of steps give in argument
    */
   public generateFormGroupForSteps(steps: FormStep[]): FormGroup {
-    let formGroup = this.formBuilder.group({});
+    const formGroup = this.formBuilder.group({});
 
     steps.forEach((step: FormStep) => {
       formGroup.addControl(step.key, this.generateFormGroupForFields(step.fields));
@@ -82,7 +80,7 @@ export class FormService {
     if (fields) {
       fields.forEach(field => {
         if (field.type === DataTypeEnum.FIELDS) {
-          formGroup.addControl(field.key, this.generateFormArrayForField(field as ComplexFormField));
+          formGroup.addControl(field.key, this.generateFormArrayForField(field));
         } else {
           formGroup.addControl(field.key, this.generateFormControl(field));
         }
@@ -97,15 +95,15 @@ export class FormService {
    *
    * @param field The parent field (with type equals to dataType.fields)
    */
-  private generateFormArrayForField(field: ComplexFormField): FormArray {
+  private generateFormArrayForField(field: FormField): FormArray {
     const formArray = this.formBuilder.array([]);
 
     if (field && field.fields && field.values) {
       field.values.subscribe((values: unknown[]) => {
         values.forEach((value: unknown) => {
           const formGroup = this.formBuilder.group({});
-          field.fields.forEach(field => {
-            formGroup.addControl(field.key, this.generateFormControl(field, value[field.key] ? value[field.key] : ''));
+          field.fields.forEach((innerField: FormField) => {
+            formGroup.addControl(innerField.key, this.generateFormControl(innerField, value[innerField.key] ? value[innerField.key] : ''));
           });
 
           formArray.push(formGroup);
@@ -123,7 +121,7 @@ export class FormService {
    * @param value if we want to force the value
    * @return The form control that represent the field
    */
-  private generateFormControl(field: SimpleFormField, value?: string | number): FormControl {
+  private generateFormControl(field: FormField, value?: string | number): FormControl {
     return this.formBuilder.control(
       { value: value ? value : field.value, disabled: field.disabled },
       field.validators,

@@ -21,7 +21,6 @@ import { map } from 'rxjs/operators';
 import { DataTypeEnum } from '../enums/data-type.enum';
 import { Validators } from '@angular/forms';
 import { FormOption } from '../models/frontend/form/form-option';
-import { TranslateService } from '@ngx-translate/core';
 import { User } from '../models/backend/user/user';
 import { CustomValidators } from 'ng2-validation';
 import { Role } from '../models/backend/role/role';
@@ -37,61 +36,57 @@ export class UserFormFieldsService {
    *
    * @param translateService Ngx translate service used to manage the translations
    */
-  constructor(private readonly translateService: TranslateService, private readonly httpRoleService: HttpRoleService) {}
+  constructor(private readonly httpRoleService: HttpRoleService) {}
 
   /**
    * Build the form fields of the user
    *
    * @param user The bean
    */
-  generateFormFields(user?: User): Observable<FormField[]> {
-    return this.translateService.get(['username', 'firstname', 'lastname', 'email', 'roles']).pipe(
-      map((translations: string) => {
-        return [
-          {
-            key: 'username',
-            label: translations['username'],
-            type: DataTypeEnum.TEXT,
-            value: user.username ? user.username : null,
-            readOnly: true,
-            validators: [Validators.required, Validators.minLength(3)],
-            matIconPrefix: 'android'
-          },
-          {
-            key: 'firstname',
-            label: translations['firstname'],
-            type: DataTypeEnum.TEXT,
-            value: user.firstname ? user.firstname : null,
-            validators: [Validators.required, Validators.minLength(3)],
-            matIconPrefix: 'person'
-          },
-          {
-            key: 'lastname',
-            label: translations['lastname'],
-            type: DataTypeEnum.TEXT,
-            value: user.lastname ? user.lastname : null,
-            validators: [Validators.required, Validators.minLength(3)],
-            matIconPrefix: 'person'
-          },
-          {
-            key: 'email',
-            label: translations['email'],
-            type: DataTypeEnum.TEXT,
-            value: user.email ? user.email : null,
-            validators: [Validators.required, CustomValidators.email],
-            matIconPrefix: 'email'
-          },
-          {
-            key: 'roles',
-            label: translations['roles'],
-            type: DataTypeEnum.MULTIPLE,
-            value: user.roles && user.roles.length > 0 ? user.roles.map(role => role.name) : null,
-            options: () => this.getRoleOptions(),
-            validators: [Validators.required]
-          }
-        ];
-      })
-    );
+  generateFormFields(user?: User): FormField[] {
+    return [
+      {
+        key: 'username',
+        label: 'username',
+        type: DataTypeEnum.TEXT,
+        value: user.username ? user.username : null,
+        readOnly: true,
+        validators: [Validators.required, Validators.minLength(3)],
+        matIconPrefix: 'android'
+      },
+      {
+        key: 'firstname',
+        label: 'firstname',
+        type: DataTypeEnum.TEXT,
+        value: user.firstname ? user.firstname : null,
+        validators: [Validators.required, Validators.minLength(3)],
+        matIconPrefix: 'person'
+      },
+      {
+        key: 'lastname',
+        label: 'lastname',
+        type: DataTypeEnum.TEXT,
+        value: user.lastname ? user.lastname : null,
+        validators: [Validators.required, Validators.minLength(3)],
+        matIconPrefix: 'person'
+      },
+      {
+        key: 'email',
+        label: 'email',
+        type: DataTypeEnum.TEXT,
+        value: user.email ? user.email : null,
+        validators: [Validators.required, CustomValidators.email],
+        matIconPrefix: 'email'
+      },
+      {
+        key: 'roles',
+        label: 'roles',
+        type: DataTypeEnum.MULTIPLE,
+        value: user.roles && user.roles.length > 0 ? user.roles.map(role => role.name) : null,
+        options: () => this.getRoleOptions(),
+        validators: [Validators.required]
+      }
+    ];
   }
 
   /**

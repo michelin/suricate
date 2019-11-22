@@ -20,7 +20,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { DataTypeEnum } from '../enums/data-type.enum';
 import { FormStep } from '../models/frontend/form/form-step';
 import { IconEnum } from '../enums/icon.enum';
-import { ProjectWidget } from '../models/backend/project-widget/project-widget';
 import { HttpCategoryService } from '../services/backend/http-category.service';
 import { map, switchMap, tap, toArray } from 'rxjs/operators';
 import { MosaicFormOption } from '../models/frontend/form/mosaic-form-option';
@@ -30,7 +29,6 @@ import { FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { Widget } from '../models/backend/widget/widget';
 import { FormField } from '../models/frontend/form/form-field';
 import { HttpWidgetService } from '../services/backend/http-widget.service';
-import { SimpleFormField } from '../models/frontend/form/simple-form-field';
 import { WidgetParam } from '../models/backend/widget/widget-param';
 import { FormOption } from '../models/frontend/form/form-option';
 import { WidgetParamValue } from '../models/backend/widget/widget-param-value';
@@ -54,9 +52,29 @@ export class ProjectWidgetFormStepsService {
   ) {}
 
   /**
+   * Generation of the form options for widget params
+   *
+   * @param widgetParam The widget param
+   */
+  private static getFormOptionsForWidgetParam(widgetParam: WidgetParam): Observable<FormOption[]> {
+    let formOptions: FormOption[] = [];
+
+    if (widgetParam.values && widgetParam.values.length > 0) {
+      formOptions = widgetParam.values.map((widgetParamValue: WidgetParamValue) => {
+        return {
+          label: widgetParamValue.value,
+          value: widgetParamValue.jsKey
+        };
+      });
+    }
+
+    return of(formOptions);
+  }
+
+  /**
    * Get the list of steps for a widget
    */
-  public generateGlobalSteps(projectWidget?: ProjectWidget): Observable<FormStep[]> {
+  public generateGlobalSteps(): Observable<FormStep[]> {
     return of([
       {
         key: 'categoryStep',
@@ -159,13 +177,13 @@ export class ProjectWidgetFormStepsService {
     const formFields = [];
 
     widgetParams.forEach((widgetParam: WidgetParam) => {
-      const formField: SimpleFormField = {
+      const formField: FormField = {
         key: widgetParam.name,
         type: widgetParam.type,
         label: widgetParam.description,
         placeholder: widgetParam.usageExample,
         value: widgetParam.defaultValue,
-        options: () => this.getFormOptionsForWidgetParam(widgetParam),
+        options: () => ProjectWidgetFormStepsService.getFormOptionsForWidgetParam(widgetParam),
         validators: this.getValidatorsForWidgetParam(widgetParam)
       };
 
@@ -177,26 +195,6 @@ export class ProjectWidgetFormStepsService {
     });
 
     return formFields;
-  }
-
-  /**
-   * Generation of the form options for widget params
-   *
-   * @param widgetParam The widget param
-   */
-  private getFormOptionsForWidgetParam(widgetParam: WidgetParam): Observable<FormOption[]> {
-    let formOptions: FormOption[] = [];
-
-    if (widgetParam.values && widgetParam.values.length > 0) {
-      formOptions = widgetParam.values.map((widgetParamValue: WidgetParamValue) => {
-        return {
-          label: widgetParamValue.value,
-          value: widgetParamValue.jsKey
-        };
-      });
-    }
-
-    return of(formOptions);
   }
 
   /**

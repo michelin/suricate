@@ -22,8 +22,8 @@ import { animate, style, transition, trigger } from '@angular/animations';
 
 import { DataTypeEnum } from '../../enums/data-type.enum';
 import { ValueChangedEvent, ValueChangedType } from '../../models/frontend/form/value-changed-event';
-import { SimpleFormField } from '../../models/frontend/form/simple-form-field';
 import { FormOption } from '../../models/frontend/form/form-option';
+import { FormField } from '../../models/frontend/form/form-field';
 
 /**
  * Manage the instantiation of different form inputs
@@ -51,7 +51,7 @@ export class InputComponent implements OnInit {
    * Object that hold different information used for the instantiation of the input
    */
   @Input()
-  field: SimpleFormField;
+  field: FormField;
   /**
    * Event sent when the value of the input has changed
    */

@@ -15,14 +15,11 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { FormField } from '../models/frontend/form/form-field';
-import { TranslateService } from '@ngx-translate/core';
 import { Project } from '../models/backend/project/project';
-import { map } from 'rxjs/operators';
 import { DataTypeEnum } from '../enums/data-type.enum';
 import { Validators } from '@angular/forms';
 import { CustomValidators } from 'ng2-validation';
+import { FormField } from '../models/frontend/form/form-field';
 
 /**
  * Service used to build the form fields related to a project
@@ -31,49 +28,43 @@ import { CustomValidators } from 'ng2-validation';
 export class ProjectFormFieldsService {
   /**
    * Constructor
-   *
-   * @param translateService Ngx translate service used to manage the translations
    */
-  constructor(private readonly translateService: TranslateService) {}
+  constructor() {}
 
   /**
    * Get the list of steps for a dashboard
    *
    * @param project The project used for an edition
    */
-  public generateProjectFormFields(project?: Project): Observable<FormField[]> {
-    return this.translateService.get(['dashboard.name', 'widget.heigth.px', 'grid.nb.columns', 'grid.background.color']).pipe(
-      map((translations: string) => {
-        return [
-          {
-            key: 'name',
-            label: translations['dashboard.name'],
-            type: DataTypeEnum.TEXT,
-            value: project ? project.name : null,
-            validators: [Validators.required]
-          },
-          {
-            key: 'widgetHeight',
-            label: translations['widget.heigth.px'],
-            type: DataTypeEnum.NUMBER,
-            value: project ? project.gridProperties.widgetHeight : 360,
-            validators: [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]
-          },
-          {
-            key: 'maxColumn',
-            label: translations['grid.nb.columns'],
-            type: DataTypeEnum.NUMBER,
-            value: project ? project.gridProperties.maxColumn : 5,
-            validators: [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]
-          },
-          {
-            key: 'gridBackgroundColor',
-            label: translations['grid.background.color'],
-            type: DataTypeEnum.COLOR_PICKER,
-            value: null
-          }
-        ];
-      })
-    );
+  public static generateProjectFormFields(project?: Project): FormField[] {
+    return [
+      {
+        key: 'name',
+        label: 'dashboard.name',
+        type: DataTypeEnum.TEXT,
+        value: project ? project.name : null,
+        validators: [Validators.required]
+      },
+      {
+        key: 'widgetHeight',
+        label: 'widget.heigth.px',
+        type: DataTypeEnum.NUMBER,
+        value: project ? project.gridProperties.widgetHeight : 360,
+        validators: [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]
+      },
+      {
+        key: 'maxColumn',
+        label: 'grid.nb.columns',
+        type: DataTypeEnum.NUMBER,
+        value: project ? project.gridProperties.maxColumn : 5,
+        validators: [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]
+      },
+      {
+        key: 'gridBackgroundColor',
+        label: 'grid.background.color',
+        type: DataTypeEnum.COLOR_PICKER,
+        value: null
+      }
+    ];
   }
 }

@@ -24,11 +24,9 @@ import { HttpScreenService } from '../../../../../shared/services/backend/http-s
 import { HttpProjectService } from '../../../../../shared/services/backend/http-project.service';
 import { FormService } from '../../../../../shared/services/frontend/form.service';
 import { TranslateService } from '@ngx-translate/core';
-import { map } from 'rxjs/operators';
 import { DataTypeEnum } from '../../../../../shared/enums/data-type.enum';
 import { CustomValidators } from 'ng2-validation';
-import { Observable } from 'rxjs';
-import { SimpleFormField } from '../../../../../shared/models/frontend/form/simple-form-field';
+import { FormField } from '../../../../../shared/models/frontend/form/form-field';
 
 /**
  * Component that manage the popup for Dashboard TV Management
@@ -48,7 +46,7 @@ export class TvManagementDialogComponent implements OnInit {
   /**
    * The description of the form
    */
-  formFields: SimpleFormField[];
+  formFields: FormField[];
 
   /**
    * The current project
@@ -88,24 +86,19 @@ export class TvManagementDialogComponent implements OnInit {
       this.refreshWebsocketClients();
     });
 
-    this.generateFormFields().subscribe(() => {
-      this.screenRegisterForm = this.formService.generateFormGroupForFields(this.formFields);
-    });
+    this.generateFormFields();
+    this.screenRegisterForm = this.formService.generateFormGroupForFields(this.formFields);
   }
 
-  generateFormFields(): Observable<void> {
-    this.formFields = [];
-    return this.translateService.get(['screen.field.code']).pipe(
-      map((translations: string) => {
-        this.formFields.push({
-          key: 'screenCode',
-          label: translations['screen.field.code'],
-          type: DataTypeEnum.NUMBER,
-          value: '',
-          validators: [CustomValidators.digits, CustomValidators.gt(0)]
-        });
-      })
-    );
+  generateFormFields(): void {
+    this.formFields = [
+      {
+        key: 'screenCode',
+        label: 'screen.field.code',
+        type: DataTypeEnum.NUMBER,
+        validators: [CustomValidators.digits, CustomValidators.gt(0)]
+      }
+    ];
   }
 
   refreshWebsocketClients() {

@@ -29,8 +29,8 @@ import { SettingsTypeEnum } from '../../../shared/enums/settings-type.enum';
 import { AllowedSettingValue } from '../../../shared/models/backend/setting/allowed-setting-value';
 import { FormService } from '../../../shared/services/frontend/form.service';
 import { FormOption } from '../../../shared/models/frontend/form/form-option';
-import { SimpleFormField } from '../../../shared/models/frontend/form/simple-form-field';
 import { HeaderConfiguration } from '../../../shared/models/frontend/header/header-configuration';
+import { FormField } from '../../../shared/models/frontend/form/form-field';
 
 /**
  * Used to display/manage users preferences
@@ -74,10 +74,10 @@ export class SettingsListComponent implements OnInit {
   protected userSettingForm: FormGroup;
   /**
    * The description of the form
-   * @type {SimpleFormField[]}
+   * @type {FormField[]}
    * @protected
    */
-  protected formFields: SimpleFormField[];
+  protected formFields: FormField[];
 
   /**
    * Constructor
@@ -144,7 +144,7 @@ export class SettingsListComponent implements OnInit {
     this.formFields = [];
 
     this.settings.forEach((setting: Setting) => {
-      const formField: SimpleFormField = {
+      const formField: FormField = {
         key: setting.type,
         label: setting.description,
         type: setting.dataType,

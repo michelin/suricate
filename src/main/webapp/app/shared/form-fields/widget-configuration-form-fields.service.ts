@@ -15,10 +15,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
 import { FormField } from '../models/frontend/form/form-field';
-import { TranslateService } from '@ngx-translate/core';
-import { map } from 'rxjs/operators';
 import { DataTypeEnum } from '../enums/data-type.enum';
 import { Validators } from '@angular/forms';
 import { Configuration } from '../models/backend/configuration/configuration';
@@ -30,46 +27,40 @@ import { Configuration } from '../models/backend/configuration/configuration';
 export class WidgetConfigurationFormFieldsService {
   /**
    * Constructor
-   *
-   * @param translateService Ngx translate service used to manage the translations
    */
-  constructor(private readonly translateService: TranslateService) {}
+  constructor() {}
 
   /**
    * Get the list of steps for a dashboard
    *
    * @param configuration The project used for an edition
    */
-  public generateFormFields(configuration?: Configuration): Observable<FormField[]> {
-    return this.translateService.get(['key', 'configuration.category', 'value']).pipe(
-      map((translations: string) => {
-        return [
-          {
-            key: 'key',
-            label: translations['key'],
-            type: DataTypeEnum.TEXT,
-            value: configuration ? configuration.key : null,
-            readOnly: true,
-            matIconPrefix: 'vpn_key'
-          },
-          {
-            key: 'category',
-            label: translations['configuration.category'],
-            type: DataTypeEnum.TEXT,
-            value: configuration.category ? configuration.category.name : null,
-            readOnly: true,
-            matIconPrefix: 'widgets'
-          },
-          {
-            key: 'value',
-            label: translations['value'],
-            type: configuration.dataType,
-            value: configuration ? configuration.value : null,
-            matIconPrefix: 'input',
-            validators: [Validators.required]
-          }
-        ];
-      })
-    );
+  public generateFormFields(configuration?: Configuration): FormField[] {
+    return [
+      {
+        key: 'key',
+        label: 'key',
+        type: DataTypeEnum.TEXT,
+        value: configuration ? configuration.key : null,
+        readOnly: true,
+        matIconPrefix: 'vpn_key'
+      },
+      {
+        key: 'category',
+        label: 'configuration.category',
+        type: DataTypeEnum.TEXT,
+        value: configuration.category ? configuration.category.name : null,
+        readOnly: true,
+        matIconPrefix: 'widgets'
+      },
+      {
+        key: 'value',
+        label: 'value',
+        type: configuration.dataType,
+        value: configuration ? configuration.value : null,
+        matIconPrefix: 'input',
+        validators: [Validators.required]
+      }
+    ];
   }
 }

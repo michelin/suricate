@@ -21,7 +21,6 @@ import * as html2canvas from 'html2canvas';
 
 import { DashboardService } from '../../services/dashboard.service';
 import { Project } from '../../../shared/models/backend/project/project';
-import { AddWidgetDialogComponent } from '../../../layout/components/header/components/add-widget-dialog/add-widget-dialog.component';
 import { HttpProjectService } from '../../../shared/services/backend/http-project.service';
 import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';
 import { WebsocketService } from '../../../shared/services/frontend/websocket.service';
@@ -35,7 +34,6 @@ import { ToastService } from '../../../shared/services/frontend/toast.service';
 import { SidenavService } from '../../../shared/services/frontend/sidenav.service';
 import { DialogService } from '../../../shared/services/frontend/dialog.service';
 import { TranslateService } from '@ngx-translate/core';
-import { FormField } from '../../../shared/models/frontend/form/form-field';
 import { ProjectRequest } from '../../../shared/models/backend/project/project-request';
 import { ProjectFormFieldsService } from '../../../shared/form-fields/project-form-fields.service';
 
@@ -193,12 +191,10 @@ export class DashboardDetailComponent implements OnInit {
   }
 
   private openDashboardFormSidenav(): void {
-    this.projectFormFieldsService.generateProjectFormFields(this.project).subscribe((formFields: FormField[]) => {
-      this.sidenavService.openFormSidenav({
-        title: 'Edit dashboard',
-        formFields: formFields,
-        save: (formData: ProjectRequest) => this.editDashboard(formData)
-      });
+    this.sidenavService.openFormSidenav({
+      title: 'Edit dashboard',
+      formFields: ProjectFormFieldsService.generateProjectFormFields(this.project),
+      save: (formData: ProjectRequest) => this.editDashboard(formData)
     });
   }
 
@@ -223,18 +219,16 @@ export class DashboardDetailComponent implements OnInit {
   }
 
   private deleteDashboard(): void {
-    this.translateService.get(['dashboard.delete', 'delete.confirm']).subscribe((translations: string[]) => {
-      this.dialogService.confirm({
-        title: translations['dashboard.delete'],
-        message: `${translations['delete.confirm']} ${this.project.name.toUpperCase()}`,
-        accept: () => {
-          this.httpProjectService.delete(this.project.token).subscribe(() => {
-            this.toastService.sendMessage('Project deleted successfully', ToastTypeEnum.SUCCESS);
+    this.dialogService.confirm({
+      title: 'dashboard.delete',
+      message: `${this.translateService.instant('delete.confirm')} ${this.project.name.toUpperCase()}`,
+      accept: () => {
+        this.httpProjectService.delete(this.project.token).subscribe(() => {
+          this.toastService.sendMessage('Project deleted successfully', ToastTypeEnum.SUCCESS);
 
-            this.router.navigate(['/home']);
-          });
-        }
-      });
+          this.router.navigate(['/home']);
+        });
+      }
     });
   }
 
@@ -268,17 +262,6 @@ export class DashboardDetailComponent implements OnInit {
   refreshReadOnlyDashboard(dashboardToken: string): void {
     this.dashboardService.shouldDisplayedReadOnly(dashboardToken).subscribe(shouldDisplayReadOnly => {
       this.isReadOnly = shouldDisplayReadOnly;
-    });
-  }
-
-  /**
-   * The add widget dialog ref
-   */
-  openAddWidgetDialog() {
-    this.matDialog.open(AddWidgetDialogComponent, {
-      minWidth: 900,
-      minHeight: 500,
-      data: { projectToken: this.project.token }
     });
   }
 

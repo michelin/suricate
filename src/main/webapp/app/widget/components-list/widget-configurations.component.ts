@@ -20,7 +20,6 @@ import { IconEnum } from '../../shared/enums/icon.enum';
 import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
 import { HttpConfigurationService } from '../../shared/services/backend/http-configuration.service';
 import { Configuration } from '../../shared/models/backend/configuration/configuration';
-import { FormField } from '../../shared/models/frontend/form/form-field';
 import { WidgetConfigurationFormFieldsService } from '../../shared/form-fields/widget-configuration-form-fields.service';
 
 /**
@@ -89,14 +88,10 @@ export class WidgetConfigurationsComponent extends ListComponent<Configuration> 
   private openFormSidenav(event: Event, configuration: Configuration, saveCallback: (configuration: Configuration) => void): void {
     this.configurationSelected = configuration ? Object.assign({}, configuration) : new Configuration();
 
-    this.translateService.get(['configurations.edit']).subscribe((translations: string[]) => {
-      this.widgetConfigurationFormFieldsService.generateFormFields(configuration).subscribe((formFields: FormField[]) => {
-        this.sidenavService.openFormSidenav({
-          title: translations['configurations.edit'],
-          formFields: formFields,
-          save: (configuration: Configuration) => saveCallback(configuration)
-        });
-      });
+    this.sidenavService.openFormSidenav({
+      title: 'configurations.edit',
+      formFields: this.widgetConfigurationFormFieldsService.generateFormFields(configuration),
+      save: (configurationRequest: Configuration) => saveCallback(configurationRequest)
     });
   }
 
@@ -107,17 +102,15 @@ export class WidgetConfigurationsComponent extends ListComponent<Configuration> 
    * @param configuration The project to delete
    */
   private deleteConfiguration(event: Event, configuration: Configuration): void {
-    this.translateService.get(['configuration.delete', 'delete.confirm']).subscribe((translations: string[]) => {
-      this.dialogService.confirm({
-        title: translations['configuration.delete'],
-        message: `${translations['delete.confirm']} ${configuration.key.toUpperCase()}`,
-        accept: () => {
-          this.httpConfigurationsService.delete(configuration.key).subscribe(() => {
-            this.toastService.sendMessage('Configuration deleted successfully', ToastTypeEnum.SUCCESS);
-            this.refreshList();
-          });
-        }
-      });
+    this.dialogService.confirm({
+      title: 'configuration.delete',
+      message: `${this.translateService.instant('delete.confirm')} ${configuration.key.toUpperCase()}`,
+      accept: () => {
+        this.httpConfigurationsService.delete(configuration.key).subscribe(() => {
+          this.toastService.sendMessage('Configuration deleted successfully', ToastTypeEnum.SUCCESS);
+          this.refreshList();
+        });
+      }
     });
   }
 

@@ -22,8 +22,6 @@ import { Role } from '../../shared/models/backend/role/role';
 import { IconEnum } from '../../shared/enums/icon.enum';
 import { TitleCasePipe } from '@angular/common';
 import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
-import { FormField } from '../../shared/models/frontend/form/form-field';
-import { HttpRoleService } from '../../shared/services/backend/http-role.service';
 import { UserFormFieldsService } from '../../shared/form-fields/user-form-fields.service';
 import { UserRequest } from '../../shared/models/backend/user/user-request';
 
@@ -46,13 +44,11 @@ export class UsersComponent extends ListComponent<User> implements OnInit {
    * Constructor
    *
    * @param {HttpUserService} httpUserService Suricate service used to manage the http calls for users
-   * @param {HttpRoleService} httpRoleService Suricate service used to manage the http calls for roles
    * @param {UserFormFieldsService} userFormFieldsService Frontend service used to build the form fields for a user
    * @param {Injector} injector Angular Service used to manage the injection of services
    */
   constructor(
     private readonly httpUserService: HttpUserService,
-    private readonly httpRoleService: HttpRoleService,
     private readonly userFormFieldsService: UserFormFieldsService,
     protected injector: Injector
   ) {
@@ -127,14 +123,10 @@ export class UsersComponent extends ListComponent<User> implements OnInit {
   private openFormSidenav(event: Event, user: User, saveCallback: (userRequest: UserRequest) => void): void {
     this.userSelected = user;
 
-    this.translateService.get(['user.edit', 'user.add']).subscribe((translations: string[]) => {
-      this.userFormFieldsService.generateFormFields(user).subscribe((formFields: FormField[]) => {
-        this.sidenavService.openFormSidenav({
-          title: user ? translations['user.edit'] : translations['user.add'],
-          formFields: formFields,
-          save: (userRequest: UserRequest) => saveCallback(userRequest)
-        });
-      });
+    this.sidenavService.openFormSidenav({
+      title: user ? 'user.edit' : 'user.add',
+      formFields: this.userFormFieldsService.generateFormFields(user),
+      save: (userRequest: UserRequest) => saveCallback(userRequest)
     });
   }
 
@@ -155,19 +147,17 @@ export class UsersComponent extends ListComponent<User> implements OnInit {
    * @param user The user to delete
    */
   private deleteUser(event: Event, user: User): void {
-    this.translateService.get(['user.delete', 'delete.confirm']).subscribe((translations: string[]) => {
-      const titlecasePipe = new TitleCasePipe();
+    const titlecasePipe = new TitleCasePipe();
 
-      this.dialogService.confirm({
-        title: translations['user.delete'],
-        message: `${translations['delete.confirm']} ${titlecasePipe.transform(user.username)}`,
-        accept: () => {
-          this.httpUserService.delete(user.id).subscribe(() => {
-            this.toastService.sendMessage('User deleted successfully', ToastTypeEnum.SUCCESS);
-            this.refreshList();
-          });
-        }
-      });
+    this.dialogService.confirm({
+      title: 'user.delete',
+      message: `${this.translateService.instant('delete.confirm')} ${titlecasePipe.transform(user.username)}`,
+      accept: () => {
+        this.httpUserService.delete(user.id).subscribe(() => {
+          this.toastService.sendMessage('User deleted successfully', ToastTypeEnum.SUCCESS);
+          this.refreshList();
+        });
+      }
     });
   }
 }
