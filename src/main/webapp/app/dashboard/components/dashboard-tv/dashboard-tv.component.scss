@@ -16,22 +16,28 @@
  *
  */
 
-.wrapper {
-  width: 50%;
-  padding: 2% 8%;
-  background-color: #424242;
+.tv-wrapper {
+  color: white;
+  background-color: #303030;
+  margin: 0 -10px;
 
-  .brand-image {
-    max-height: 60%;
+  .wrapper {
+    width: 50%;
+    padding: 2% 8%;
+    background-color: #424242;
 
-    img {
-      max-height: 100%;
-      max-width: 100%;
+    .brand-image {
+      max-height: 60%;
+
+      img {
+        max-height: 100%;
+        max-width: 100%;
+      }
     }
-  }
 
-  #screen-code-wrapper {
-    height: 26%;
-    font-size: 3.2rem;
+    #screen-code-wrapper {
+      height: 26%;
+      font-size: 3.2rem;
+    }
   }
 }

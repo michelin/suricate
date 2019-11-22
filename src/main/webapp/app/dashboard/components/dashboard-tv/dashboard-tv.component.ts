@@ -25,13 +25,10 @@ import * as Stomp from '@stomp/stompjs';
 import { Project } from '../../../shared/models/backend/project/project';
 import { WebsocketUpdateEvent } from '../../../shared/models/frontend/websocket/websocket-update-event';
 import { WebsocketUpdateTypeEnum } from '../../../shared/enums/websocket-update-type.enum';
-import { SettingsService } from '../../../core/services/settings.service';
-import { SidenavService } from '../../../shared/services/frontend/sidenav.service';
 import { HttpProjectService } from '../../../shared/services/backend/http-project.service';
 import { WebsocketService } from '../../../shared/services/frontend/websocket.service';
 import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';
 import { DashboardService } from '../../services/dashboard.service';
-import { AuthenticationService } from '../../../shared/services/frontend/authentication.service';
 
 /**
  * Dashboard TV Management
@@ -49,7 +46,18 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * @protected
    */
   protected projectToken: string;
-
+  /**
+   * The list of project widgets related to the project token
+   * @type {ProjectWidget[]}
+   * @protected
+   */
+  protected projectWidgets: ProjectWidget[];
+  /**
+   * The screen code to display
+   * @type {number}
+   * @protected
+   */
+  protected screenCode = DashboardService.generateScreenCode();
   /**
    * True if the screen is loading
    * @type {boolean}
@@ -64,53 +72,33 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   private isAlive = true;
 
   /**
+   * The stompJS connection event subscription
+   * @type {Subscription}
+   * @private
+   */
+  private connectionEventSubscription: Subscription;
+
+  /**
    * The project
    * @type {Project}
    */
   project: Project;
 
   /**
-   * The list of project widgets related to the project
-   * @type {ProjectWidget[]}
-   */
-  projectWidgets: ProjectWidget[];
-
-  /**
-   * The screen code to display
-   * @type {number}
-   * @protected
-   */
-  protected screenCode = DashboardService.generateScreenCode();
-
-  /**
-   * The stompJS connection event subscription
-   * @type {Subscription}
-   */
-  connectionEventSubscription: Subscription;
-
-  /**
    * The constructor
    *
-   * @param settingsService The setting service
-   * @param sidenavService The sidenav service
-   * @param activatedRoute The activated route
-   * @param router The router service
-   * @param httpProjectService The http service for project management
-   * @param websocketService The websocket management
-   * @param userService The user service
-   * @param dashboardService The dashboard service
+   * @param {Router} router Angular service used to manage app's route
+   * @param {ActivatedRoute} activatedRoute Angular service used to manage the route activated by the component
+   * @param {HttpProjectService} httpProjectService Suricate service used to manage http calls for a project
+   * @param {WebsocketService} websocketService Frontend service used to manage websocket
    */
   constructor(
-    private settingsService: SettingsService,
-    private sidenavService: SidenavService,
-    private activatedRoute: ActivatedRoute,
-    private router: Router,
-    private httpProjectService: HttpProjectService,
-    private websocketService: WebsocketService,
-    private dashboardService: DashboardService
+    private readonly router: Router,
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly httpProjectService: HttpProjectService,
+    private readonly websocketService: WebsocketService
   ) {
     this.projectToken = this.activatedRoute.snapshot.queryParams['token'];
-    setTimeout(() => (this.settingsService.currentTheme = 'dark-theme'), 500);
   }
 
   /**********************************************************************************************************/
@@ -119,7 +107,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   /**********************************************************************************************************/
 
   /**
-   * Init of the component
+   * Called when the component is init for the first time
    */
   public ngOnInit(): void {
     this.listenForConnection();
@@ -127,7 +115,29 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Refresh the project displayed
+   * Subscribe to websocket used to wait for new connections request
+   */
+  private listenForConnection(): void {
+    this.websocketService.startConnection();
+
+    const waitingConnectionUrl = `/user/${this.screenCode}/queue/connect`;
+    this.connectionEventSubscription = this.websocketService
+      .subscribeToDestination(waitingConnectionUrl)
+      .pipe(takeWhile(() => this.isAlive))
+      .subscribe((stompMessage: Stomp.Message) => {
+        const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
+
+        if (updateEvent.type === WebsocketUpdateTypeEnum.CONNECT) {
+          const project: Project = updateEvent.content;
+          if (project) {
+            this.router.navigate(['/tv'], { queryParams: { token: project.token } });
+          }
+        }
+      });
+  }
+
+  /**
+   * Initialise the component
    */
   private initComponent(): void {
     if (this.projectToken) {
@@ -147,15 +157,6 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Refresh the project widget list
-   */
-  private refreshProjectWidgets(dashboardToken: string): Observable<ProjectWidget[]> {
-    return this.httpProjectService
-      .getProjectProjectWidgets(dashboardToken)
-      .pipe(tap((projectWidgets: ProjectWidget[]) => (this.projectWidgets = projectWidgets)));
-  }
-
-  /**
    * Refresh the project
    *
    * @param dashboardToken The token used for the refresh
@@ -165,59 +166,47 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * When the component is destroyed
+   * Refresh the project widget list
+   *
+   * @param dashboardToken The token used for the refresh
    */
-  ngOnDestroy() {
-    this.settingsService.initUserThemeSetting(AuthenticationService.getConnectedUser());
-    this.isAlive = false;
-    this.disconnectTV();
-  }
-
-  /**
-   * When on code view screen we wait for new connection
-   */
-  listenForConnection() {
-    this.isAlive = true;
-    this.websocketService.startConnection();
-
-    const waitingConnectionUrl = `/user/${this.screenCode}/queue/connect`;
-    this.connectionEventSubscription = this.websocketService
-      .subscribeToDestination(waitingConnectionUrl)
-      .pipe(takeWhile(() => this.isAlive))
-      .subscribe((stompMessage: Stomp.Message) => {
-        const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
-
-        if (updateEvent.type === WebsocketUpdateTypeEnum.CONNECT) {
-          const project: Project = updateEvent.content;
-          if (project) {
-            this.router.navigate(['/tv'], { queryParams: { token: project.token } });
-          }
-        }
-      });
-  }
-
-  unsubscribeToConnectionEvent() {
-    if (this.connectionEventSubscription) {
-      this.connectionEventSubscription.unsubscribe();
-      this.connectionEventSubscription = null;
-    }
-
-    this.isAlive = false;
-  }
-
-  /**
-   * Disconnect TV from stompJS
-   */
-  disconnectTV() {
-    this.unsubscribeToConnectionEvent();
-    this.websocketService.disconnect();
+  private refreshProjectWidgets(dashboardToken: string): Observable<ProjectWidget[]> {
+    return this.httpProjectService
+      .getProjectProjectWidgets(dashboardToken)
+      .pipe(tap((projectWidgets: ProjectWidget[]) => (this.projectWidgets = projectWidgets)));
   }
 
   /**
    * Handle the disconnection of a dashboard
    */
-  handlingDashboardDisconnect() {
+  protected handlingDashboardDisconnect(): void {
     this.router.navigate(['/tv']);
     setTimeout(() => this.listenForConnection(), 500);
+  }
+
+  /**
+   * When the component is destroyed
+   */
+  public ngOnDestroy(): void {
+    this.isAlive = false;
+    this.disconnectTV();
+  }
+
+  /**
+   * Disconnect TV from stompJS
+   */
+  private disconnectTV(): void {
+    this.unsubscribeToConnectionEvent();
+    this.websocketService.disconnect();
+  }
+
+  /**
+   * Used to unsubscribe to the websocket
+   */
+  private unsubscribeToConnectionEvent(): void {
+    if (this.connectionEventSubscription) {
+      this.connectionEventSubscription.unsubscribe();
+      this.connectionEventSubscription = null;
+    }
   }
 }
