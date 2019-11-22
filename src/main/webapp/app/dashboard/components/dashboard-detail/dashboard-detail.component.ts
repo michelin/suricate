@@ -15,7 +15,6 @@
  */
 
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as html2canvas from 'html2canvas';
 
@@ -23,7 +22,6 @@ import { DashboardService } from '../../services/dashboard.service';
 import { Project } from '../../../shared/models/backend/project/project';
 import { HttpProjectService } from '../../../shared/services/backend/http-project.service';
 import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';
-import { WebsocketService } from '../../../shared/services/frontend/websocket.service';
 import { ImageUtils } from '../../../shared/utils/image.utils';
 import { FileUtils } from '../../../shared/utils/file.utils';
 import { HeaderConfiguration } from '../../../shared/models/frontend/header/header-configuration';
@@ -36,6 +34,8 @@ import { DialogService } from '../../../shared/services/frontend/dialog.service'
 import { TranslateService } from '@ngx-translate/core';
 import { ProjectRequest } from '../../../shared/models/backend/project/project-request';
 import { ProjectFormFieldsService } from '../../../shared/form-fields/project-form-fields.service';
+import { flatMap, tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 /**
  * Component used to display a specific dashboard
@@ -47,93 +47,134 @@ import { ProjectFormFieldsService } from '../../../shared/form-fields/project-fo
 })
 export class DashboardDetailComponent implements OnInit {
   /**
+   * The dashboard html (as HTML Element)
+   * @type {ElementRef}
+   * @private
+   */
+  @ViewChild('dashboardScreen', { static: false })
+  private dashboardScreen: ElementRef;
+
+  /**
    * Hold the configuration of the header component
    * @type {HeaderConfiguration}
    * @protected
    */
   protected headerConfiguration: HeaderConfiguration;
-
   /**
-   * The dashboard html (as HTML Element)
-   */
-  @ViewChild('dashboardScreen', { static: false })
-  dashboardScreen: ElementRef;
-
-  /**
-   * The timer used to take the screenshot
-   */
-  screenshotTimer: NodeJS.Timer;
-
-  /**
-   * The project
+   * The project used to display the dashboard
    * @type {Project}
+   * @protected
    */
-  project: Project;
-
+  protected project: Project;
   /**
-   * The list of projectWidgets
+   * The list of widget instance of this project
+   * @type {ProjectWidget[]}
+   * @protected
    */
-  projectWidgets: ProjectWidget[];
-
+  protected projectWidgets: ProjectWidget[];
   /**
    * True if the dashboard should be displayed readonly, false otherwise
+   * @type {boolean}
+   * @protected
    */
-  isReadOnly = true;
-
+  protected isReadOnly = true;
   /**
    * The screen code of the client;
+   * @type number
+   * @protected
    */
-  screenCode: number;
+  protected screenCode = DashboardService.generateScreenCode();
+  /**
+   * Used to know if the dashboard is loading
+   * @type boolean
+   * @protected
+   */
+  protected isDashboardLoading = true;
+  /**
+   * The timer used to take the screenshot
+   * @type {NodeJS.Timer}
+   * @private
+   */
+  private screenshotTimer: NodeJS.Timer;
 
   /**
-   * constructor
+   * Constructor
    *
-   * @param {ActivatedRoute} activatedRoute The activated route service
-   * @param {DashboardService} dashboardService The dashboard service
-   * @param {WebsocketService} websocketService The websocket service
-   * @param {HttpProjectService} httpProjectService The http project service
-   * @param {MatDialog} matDialog The mat dialog service
-   * @param {Router} router The router service on Angular
+   * @param {Router} router Angular service used to manage App's route
+   * @param {ActivatedRoute} activatedRoute Angular service used to manage the route activated by the component
+   * @param {TranslateService} translateService NgxTranslate service used to manage translations
+   * @param {HttpProjectService} httpProjectService Suricate service used to manage http calls for project
+   * @param {HttpScreenService} httpScreenService Suricate service used to manage http calls for screen service
+   * @param {DashboardService} dashboardService Frontend service used to manage dashboards
+   * @param {SidenavService} sidenavService Frontend service used to manage sidenav
+   * @param {ToastService} toastService Frontend service used to manage toast message
+   * @param {DialogService} dialogService Frontend service used to manage dialog
    */
   constructor(
-    private activatedRoute: ActivatedRoute,
-    private dashboardService: DashboardService,
-    private websocketService: WebsocketService,
-    private httpProjectService: HttpProjectService,
-    private readonly httpScreenService: HttpScreenService,
-    private readonly toastService: ToastService,
-    private readonly dialogService: DialogService,
+    private readonly router: Router,
+    private readonly activatedRoute: ActivatedRoute,
     private readonly translateService: TranslateService,
-    private readonly projectFormFieldsService: ProjectFormFieldsService,
+    private readonly httpProjectService: HttpProjectService,
+    private readonly httpScreenService: HttpScreenService,
+    private readonly dashboardService: DashboardService,
     private readonly sidenavService: SidenavService,
-    private matDialog: MatDialog,
-    private router: Router
+    private readonly toastService: ToastService,
+    private readonly dialogService: DialogService
   ) {}
 
   /**
-   * Init objects
+   * Called when the component is init
    */
-  ngOnInit() {
-    this.screenCode = this.websocketService.getscreenCode();
+  public ngOnInit(): void {
+    const dashboardToken = this.activatedRoute.snapshot.params['dashboardToken'];
 
-    this.dashboardService.refreshProjectEvent().subscribe(shouldRefresh => {
-      if (shouldRefresh) {
-        this.refreshProject(this.project.token);
-      }
-    });
-
-    this.dashboardService.refreshProjectWidgetsEvent().subscribe(shouldRefresh => {
-      if (shouldRefresh) {
-        this.refreshProjectWidgets(this.project.token);
-      }
-    });
-
-    // Global init from project
-    this.activatedRoute.params.subscribe(params => {
-      this.refreshProject(params['dashboardToken']);
-    });
+    this.refreshProject(dashboardToken)
+      .pipe(
+        flatMap(() => this.isReadOnlyDashboard(dashboardToken)),
+        flatMap(() => this.refreshProjectWidgets(dashboardToken))
+      )
+      .subscribe(
+        () => {
+          this.isDashboardLoading = false;
+          this.initHeaderConfiguration();
+          this.takeDashboardScreenshot();
+        },
+        () => {
+          this.isDashboardLoading = false;
+        }
+      );
   }
 
+  /**
+   * Refresh the project
+   *
+   * @param dashboardToken The token used for the refresh
+   */
+  private refreshProject(dashboardToken: string): Observable<Project> {
+    return this.httpProjectService.getById(dashboardToken).pipe(tap((project: Project) => (this.project = project)));
+  }
+
+  /**
+   * Check if the dashboard should be displayed as readonly
+   *
+   * @param dashboardToken The dashboard token to check
+   */
+  private isReadOnlyDashboard(dashboardToken: string): Observable<boolean> {
+    return this.dashboardService.shouldDisplayedReadOnly(dashboardToken).pipe(tap((isReadonly: boolean) => (this.isReadOnly = isReadonly)));
+  }
+
+  /**
+   * Refresh the project widget list
+   */
+  private refreshProjectWidgets(dashboardToken: string): Observable<ProjectWidget[]> {
+    return this.httpProjectService
+      .getProjectProjectWidgets(dashboardToken)
+      .pipe(tap((projectWidgets: ProjectWidget[]) => (this.projectWidgets = projectWidgets)));
+  }
+
+  /**
+   * Init the header of the dashboard detail screen
+   */
   private initHeaderConfiguration(): void {
     this.headerConfiguration = {
       title: this.project.name,
@@ -186,7 +227,38 @@ export class DashboardDetailComponent implements OnInit {
     };
   }
 
-  private displayProjectWidgetWizard(): void {
+  /**
+   * Take screenshot of dashboard
+   */
+  private takeDashboardScreenshot(): void {
+    if (!this.isReadOnly) {
+      // We clear the timer so if the user is doing modification, on the dashboard it will not disturbed
+      clearTimeout(this.screenshotTimer);
+
+      // We are waiting 10sec before taking the screenshot
+      this.screenshotTimer = global.setTimeout(() => {
+        this.isReadOnly = true;
+
+        // Waiting for behing readonly and take the screenshot
+        setTimeout(() => {
+          html2canvas(this.dashboardScreen.nativeElement).then(canvas => {
+            this.isReadOnly = false;
+            const imgUrl = canvas.toDataURL('image/png');
+
+            const blob: Blob = FileUtils.base64ToBlob(
+              ImageUtils.getDataFromBase64URL(imgUrl),
+              ImageUtils.getContentTypeFromBase64URL(imgUrl)
+            );
+            const imageFile: File = FileUtils.convertBlobToFile(blob, `${this.project.token}.png`, new Date());
+
+            this.httpProjectService.addOrUpdateProjectScreenshot(this.project.token, imageFile).subscribe();
+          });
+        }, 0);
+      }, 10000);
+    }
+  }
+
+  protected displayProjectWidgetWizard(): void {
     this.router.navigate(['/dashboards', this.project.token, 'widgets', 'create']);
   }
 
@@ -225,7 +297,6 @@ export class DashboardDetailComponent implements OnInit {
       accept: () => {
         this.httpProjectService.delete(this.project.token).subscribe(() => {
           this.toastService.sendMessage('Project deleted successfully', ToastTypeEnum.SUCCESS);
-
           this.router.navigate(['/home']);
         });
       }
@@ -233,73 +304,9 @@ export class DashboardDetailComponent implements OnInit {
   }
 
   /**
-   * Refresh the project widget list
-   */
-  refreshProjectWidgets(dashboardToken: string): void {
-    this.httpProjectService.getProjectProjectWidgets(dashboardToken).subscribe(projectWidgets => {
-      this.projectWidgets = projectWidgets;
-      this.takeDashboardScreenshot();
-    });
-  }
-
-  /**
-   * Refresh the project
-   */
-  refreshProject(dashboardToken: string): void {
-    this.httpProjectService.getById(dashboardToken).subscribe(project => {
-      this.project = project;
-      this.initHeaderConfiguration();
-      this.refreshReadOnlyDashboard(dashboardToken);
-      this.refreshProjectWidgets(dashboardToken);
-    });
-  }
-
-  /**
-   * Check if the dashboard should be displayed as readonly
-   *
-   * @param dashboardToken
-   */
-  refreshReadOnlyDashboard(dashboardToken: string): void {
-    this.dashboardService.shouldDisplayedReadOnly(dashboardToken).subscribe(shouldDisplayReadOnly => {
-      this.isReadOnly = shouldDisplayReadOnly;
-    });
-  }
-
-  /**
-   * Take screenshot of dashboard
-   */
-  takeDashboardScreenshot() {
-    if (!this.isReadOnly) {
-      // We clear the timer so if the user is doing modification, on the dashboard it will not disturbed
-      clearTimeout(this.screenshotTimer);
-
-      // We are waiting 10sec before taking the screenshot
-      this.screenshotTimer = global.setTimeout(() => {
-        this.isReadOnly = true;
-
-        // Waiting for behing readonly and take the screenshot
-        setTimeout(() => {
-          html2canvas(this.dashboardScreen.nativeElement).then(canvas => {
-            this.isReadOnly = false;
-            const imgUrl = canvas.toDataURL('image/png');
-
-            const blob: Blob = FileUtils.base64ToBlob(
-              ImageUtils.getDataFromBase64URL(imgUrl),
-              ImageUtils.getContentTypeFromBase64URL(imgUrl)
-            );
-            const imageFile: File = FileUtils.convertBlobToFile(blob, `${this.project.token}.png`, new Date());
-
-            this.httpProjectService.addOrUpdateProjectScreenshot(this.project.token, imageFile).subscribe();
-          });
-        }, 0);
-      }, 10000);
-    }
-  }
-
-  /**
    * Handle the disconnection of a dashboard
    */
-  handlingDashboardDisconnect() {
+  protected handlingDashboardDisconnect(): void {
     this.router.navigate(['/home']);
   }
 }

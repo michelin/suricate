@@ -17,8 +17,6 @@
 import { Injectable } from '@angular/core';
 import { StompConfig, StompRService, StompState } from '@stomp/ng2-stompjs';
 import { Observable } from 'rxjs';
-
-import { NumberUtils } from '../../utils/number.utils';
 import { EnvironmentService } from './environment.service';
 
 import * as Stomp from '@stomp/stompjs';
@@ -36,36 +34,11 @@ export class WebsocketService {
   private static readonly baseWsEndpoint = `${EnvironmentService.baseEndpoint}/ws`;
 
   /**
-   * Define the min bound for the screen code random generation
-   * @type {number}
-   */
-  private readonly minScreenCodeBound = 100000;
-
-  /**
-   * Define the max bound for the screen code random generation
-   * @type {number}
-   */
-  private readonly maxScreenCodeBound = 999999;
-
-  /**
    * The constructor
    *
    * @param {StompRService} stompRService The stomp Service to inject
    */
   constructor(private stompRService: StompRService) {}
-
-  /* ****************************************************************** */
-  /*                    Screen code management                          */
-
-  /* ****************************************************************** */
-
-  /**
-   * Get the screen code
-   * @returns {number} The screen code
-   */
-  getscreenCode(): number {
-    return NumberUtils.getRandomIntBetween(this.minScreenCodeBound, this.maxScreenCodeBound);
-  }
 
   /* ****************************************************************** */
   /*                    WebSocket Management                            */

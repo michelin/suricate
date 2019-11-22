@@ -19,12 +19,25 @@ import { Observable, Subject } from 'rxjs';
 import { HttpProjectService } from '../../shared/services/backend/http-project.service';
 import { map } from 'rxjs/operators';
 import { AuthenticationService } from '../../shared/services/frontend/authentication.service';
+import { NumberUtils } from '../../shared/utils/number.utils';
 
 /**
  * The dashboard service, manage http calls
  */
 @Injectable({ providedIn: 'root' })
 export class DashboardService {
+  /**
+   * Define the min bound for the screen code random generation
+   * @type {number}
+   */
+  private static readonly minScreenCodeBound = 100000;
+
+  /**
+   * Define the max bound for the screen code random generation
+   * @type {number}
+   */
+  private static readonly maxScreenCodeBound = 999999;
+
   /**
    * Tell if the dashboard screen should refresh
    */
@@ -39,6 +52,13 @@ export class DashboardService {
    * The constructor
    */
   constructor(private httpProjectService: HttpProjectService) {}
+
+  /**
+   * Generate a random screen code
+   */
+  public static generateScreenCode(): number {
+    return NumberUtils.getRandomIntBetween(this.minScreenCodeBound, this.maxScreenCodeBound);
+  }
 
   /* ******* Event refresh dashboard screen **************** */
 
