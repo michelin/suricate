@@ -16,39 +16,22 @@
  *
  */
 
-.mat-sidenav-content {
-  padding: unset !important;
-}
+.wrapper {
+  width: 50%;
+  padding: 2% 8%;
+  background-color: #424242;
 
-.container {
-  height: 97vh;
-}
+  .brand-image {
+    max-height: 60%;
 
-.content {
-  width: 40%;
-}
-
-.logo-container {
-  height: 70%;
-}
-
-#tv-code-card {
-  & {
-    height: 50%;
-  }
-
-  img {
-    margin: 0 auto;
+    img {
+      max-height: 100%;
+      max-width: 100%;
+    }
   }
 
   #screen-code-wrapper {
     height: 26%;
     font-size: 3.2rem;
   }
-}
-
-#tv-view {
-  overflow-x: auto;
-  min-height: 100vh;
-  margin: auto;
 }

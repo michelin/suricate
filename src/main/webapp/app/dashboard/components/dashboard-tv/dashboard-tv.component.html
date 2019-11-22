@@ -1,29 +1,57 @@
-<div id="tv-view">
+<div
+  *ngIf="!projectToken || !projectWidgets; else dashboardScreen"
+  class="container without-header"
+  fxLayout="column"
+  fxLayoutAlign="center center"
+>
+  <div class="wrapper mat-elevation-z12" fxLayout="column" fxLayoutAlign="center center" fxFlex="400px">
+    <div class="brand-image">
+      <img src="../../../../../assets/images/logo.png" alt="brand image" />
+    </div>
+
+    <suricate-spinner *ngIf="isDashboardLoading" color="accent"></suricate-spinner>
+    <div *ngIf="!isDashboardLoading" id="screen-code-wrapper" fxFlex="100" fxLayout="row" fxLayoutAlign="center center">
+      {{ screenCode }}
+    </div>
+  </div>
+</div>
+
+<ng-template #dashboardScreen>
   <suricate-dashboard-screen
-    *ngIf="project; else displayScreenCode"
     [project]="project"
     [projectWidgets]="projectWidgets"
     [screenCode]="screenCode"
     [readOnly]="true"
     (disconnectEvent)="handlingDashboardDisconnect()"
-  >
-  </suricate-dashboard-screen>
+  ></suricate-dashboard-screen>
+</ng-template>
 
-  <ng-template #displayScreenCode>
-    <div class="container" fxLayout="column wrap" fxLayoutAlign="center center">
-      <div class="content" fxFlex="100" fxLayout="row wrap" fxLayoutAlign="center center">
-        <mat-card id="tv-code-card" fxFlex="100" fxLayout="column wrap" fxLayoutAlign="center" class="mat-elevation-z12">
-          <mat-card-content fxFlex="100" fxLayout="row wrap" fxLayoutAlign="center start">
-            <div class="logo-container" fxFlex="100" fxLayout="column wrap" fxLayoutAlign="center center">
-              <img fxFlex="100" src="../../../../../assets/images/logo.png" />
-            </div>
+<!--<div id="tv-view">-->
+<!--  <suricate-dashboard-screen-->
+<!--    *ngIf="project; else displayScreenCode"-->
+<!--    [project]="project"-->
+<!--    [projectWidgets]="projectWidgets"-->
+<!--    [screenCode]="screenCode"-->
+<!--    [readOnly]="true"-->
+<!--    (disconnectEvent)="handlingDashboardDisconnect()"-->
+<!--  >-->
+<!--  </suricate-dashboard-screen>-->
 
-            <div id="screen-code-wrapper" fxFlex="100" fxLayout="row" fxLayoutAlign="center center">
-              {{ screenCode }}
-            </div>
-          </mat-card-content>
-        </mat-card>
-      </div>
-    </div>
-  </ng-template>
-</div>
+<!--  <ng-template #displayScreenCode>-->
+<!--    <div class="container" fxLayout="column wrap" fxLayoutAlign="center center">-->
+<!--      <div class="content" fxFlex="100" fxLayout="row wrap" fxLayoutAlign="center center">-->
+<!--        <mat-card id="tv-code-card" fxFlex="100" fxLayout="column wrap" fxLayoutAlign="center" class="mat-elevation-z12">-->
+<!--          <mat-card-content fxFlex="100" fxLayout="row wrap" fxLayoutAlign="center start">-->
+<!--            <div class="logo-container" fxFlex="100" fxLayout="column wrap" fxLayoutAlign="center center">-->
+<!--              <img fxFlex="100" src="../../../../../assets/images/logo.png" />-->
+<!--            </div>-->
+
+<!--            <div id="screen-code-wrapper" fxFlex="100" fxLayout="row" fxLayoutAlign="center center">-->
+<!--              {{ screenCode }}-->
+<!--            </div>-->
+<!--          </mat-card-content>-->
+<!--        </mat-card>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </ng-template>-->
+<!--</div>-->

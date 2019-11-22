@@ -16,7 +16,8 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { ThemePalette } from '@angular/material';
 
 /**
  * Components used to display the spinner
@@ -27,6 +28,9 @@ import { Component } from '@angular/core';
   styleUrls: ['./spinner.component.scss']
 })
 export class SpinnerComponent {
+  @Input()
+  color: ThemePalette;
+
   /**
    * Constructor
    */

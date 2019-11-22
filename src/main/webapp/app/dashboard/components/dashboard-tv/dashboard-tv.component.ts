@@ -17,8 +17,8 @@
  */
 
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
-import { takeWhile } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
+import { flatMap, takeWhile, tap } from 'rxjs/operators';
+import { Observable, Subscription } from 'rxjs';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as Stomp from '@stomp/stompjs';
 
@@ -44,6 +44,19 @@ import { AuthenticationService } from '../../../shared/services/frontend/authent
 })
 export class DashboardTvComponent implements OnInit, OnDestroy {
   /**
+   * The project token in the url
+   * @type {string}
+   * @protected
+   */
+  protected projectToken: string;
+
+  /**
+   * True if the screen is loading
+   * @type {boolean}
+   * @protected
+   */
+  protected isDashboardLoading = false;
+  /**
    * Tell if the component is displayed
    * @type {boolean}
    * @private
@@ -65,8 +78,9 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   /**
    * The screen code to display
    * @type {number}
+   * @protected
    */
-  screenCode: number;
+  protected screenCode = DashboardService.generateScreenCode();
 
   /**
    * The stompJS connection event subscription
@@ -94,7 +108,10 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
     private httpProjectService: HttpProjectService,
     private websocketService: WebsocketService,
     private dashboardService: DashboardService
-  ) {}
+  ) {
+    this.projectToken = this.activatedRoute.snapshot.queryParams['token'];
+    setTimeout(() => (this.settingsService.currentTheme = 'dark-theme'), 500);
+  }
 
   /**********************************************************************************************************/
   /*                      COMPONENT LIFE CYCLE                                                              */
@@ -104,23 +121,47 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   /**
    * Init of the component
    */
-  ngOnInit() {
-    this.initDefaultScreenSettings();
-    this.screenCode = this.websocketService.getscreenCode();
+  public ngOnInit(): void {
     this.listenForConnection();
-    this.retrieveProjectTokenFromURL();
+    this.initComponent();
+  }
 
-    this.dashboardService.refreshProjectEvent().subscribe(shouldRefresh => {
-      if (shouldRefresh) {
-        this.refreshProject(this.project.token);
-      }
-    });
+  /**
+   * Refresh the project displayed
+   */
+  private initComponent(): void {
+    if (this.projectToken) {
+      this.isDashboardLoading = true;
 
-    this.dashboardService.refreshProjectWidgetsEvent().subscribe(shouldRefresh => {
-      if (shouldRefresh) {
-        this.refreshProjectWidgets(this.project.token);
-      }
-    });
+      this.refreshProject(this.projectToken)
+        .pipe(flatMap(() => this.refreshProjectWidgets(this.projectToken)))
+        .subscribe(
+          () => {
+            this.isDashboardLoading = false;
+          },
+          () => {
+            this.isDashboardLoading = false;
+          }
+        );
+    }
+  }
+
+  /**
+   * Refresh the project widget list
+   */
+  private refreshProjectWidgets(dashboardToken: string): Observable<ProjectWidget[]> {
+    return this.httpProjectService
+      .getProjectProjectWidgets(dashboardToken)
+      .pipe(tap((projectWidgets: ProjectWidget[]) => (this.projectWidgets = projectWidgets)));
+  }
+
+  /**
+   * Refresh the project
+   *
+   * @param dashboardToken The token used for the refresh
+   */
+  private refreshProject(dashboardToken: string): Observable<Project> {
+    return this.httpProjectService.getById(dashboardToken).pipe(tap((project: Project) => (this.project = project)));
   }
 
   /**
@@ -128,55 +169,9 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    */
   ngOnDestroy() {
     this.settingsService.initUserThemeSetting(AuthenticationService.getConnectedUser());
-    this.sidenavService.openSidenav();
     this.isAlive = false;
     this.disconnectTV();
   }
-
-  /**
-   * Init the settings to be in TV Mode
-   */
-  initDefaultScreenSettings() {
-    setTimeout(() => (this.settingsService.currentTheme = 'dark-theme'), 500);
-    this.sidenavService.closeSidenav();
-  }
-
-  /**
-   * Get the project informations from the url query params
-   */
-  retrieveProjectTokenFromURL() {
-    this.activatedRoute.queryParams.subscribe(params => {
-      if (params['token']) {
-        this.refreshProject(params['token']);
-      } else {
-        this.project = null;
-      }
-    });
-  }
-
-  /**
-   * Refresh the project widget list
-   */
-  refreshProjectWidgets(dashboardToken: string): void {
-    this.httpProjectService.getProjectProjectWidgets(dashboardToken).subscribe(projectWidgets => {
-      this.projectWidgets = projectWidgets;
-    });
-  }
-
-  /**
-   * Refresh the project widget list
-   */
-  refreshProject(projectToken: string): void {
-    this.httpProjectService.getById(projectToken).subscribe(project => {
-      this.project = project;
-      this.refreshProjectWidgets(projectToken);
-    });
-  }
-
-  /**********************************************************************************************************/
-  /*                      WEBSOCKET MANAGEMENT                                                              */
-
-  /**********************************************************************************************************/
 
   /**
    * When on code view screen we wait for new connection
