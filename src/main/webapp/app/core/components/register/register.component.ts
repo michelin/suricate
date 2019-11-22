@@ -17,10 +17,8 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { CustomValidators } from 'ng2-validation';
 import { catchError, flatMap } from 'rxjs/operators';
 import { throwError } from 'rxjs';
-import { TranslateService } from '@ngx-translate/core';
 
 import { AuthenticationService } from '../../../shared/services/frontend/authentication.service';
 import { ToastService } from '../../../shared/services/frontend/toast.service';
@@ -30,10 +28,11 @@ import { Credentials } from '../../../shared/models/backend/user/credentials';
 import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
 import { UserRequest } from '../../../shared/models/backend/user/user-request';
 import { AuthenticationProviderEnum } from '../../../shared/enums/authentication-provider.enum';
-import { DataTypeEnum } from '../../../shared/enums/data-type.enum';
 import { FormService } from '../../../shared/services/frontend/form.service';
 import { CustomValidator } from '../../../shared/validators/custom-validator';
 import { FormField } from '../../../shared/models/frontend/form/form-field';
+import { ButtonConfiguration } from '../../../shared/models/frontend/button/button-configuration';
+import { RegisterFormFieldsService } from '../../../shared/form-fields/register-form-fields.service';
 
 /**
  * Component used to register a new user
@@ -62,12 +61,17 @@ export class RegisterComponent implements OnInit {
    * @protected
    */
   protected formSubmitAttempt = false;
+  /**
+   * The list of buttons to display in the form
+   * @type {ButtonConfiguration[]}
+   * @protected
+   */
+  protected buttonConfigurations: ButtonConfiguration<unknown>[];
 
   /**
    * Constructor
    *
    * @param {Router} router Angular service used to manage application routes
-   * @param {TranslateService} translateService NgxTranslate service used to manage the translations
    * @param {HttpConfigurationService} httpConfigurationService Suricate service used to manage the configuration of the application
    * @param {AuthenticationService} authenticationService Suricate service used to manage the authentication on the application
    * @param {FormService} formService Frontend service used to manage the forms creations
@@ -75,12 +79,26 @@ export class RegisterComponent implements OnInit {
    */
   constructor(
     private readonly router: Router,
-    private readonly translateService: TranslateService,
     private readonly httpConfigurationService: HttpConfigurationService,
     private readonly authenticationService: AuthenticationService,
     private readonly formService: FormService,
     private readonly toastService: ToastService
-  ) {}
+  ) {
+    this.initButtons();
+  }
+
+  /**
+   * Initialize the list of buttons to use in the application
+   */
+  private initButtons(): void {
+    this.buttonConfigurations = [
+      {
+        color: 'primary',
+        label: 'sign.up',
+        callback: () => this.signUp()
+      }
+    ];
+  }
 
   /**
    * Called when the component is init
@@ -104,62 +122,13 @@ export class RegisterComponent implements OnInit {
    * Init the register form
    */
   private initRegisterForm(): void {
-    this.generateFormFields();
+    this.formFields = RegisterFormFieldsService.generateFormFields();
     this.registerForm = this.formService.generateFormGroupForFields(this.formFields);
     this.formService.setValidatorsForControl(this.registerForm.get('confirmPassword'), [
       Validators.required,
       Validators.minLength(3),
       CustomValidator.checkPasswordMatch(this.registerForm.get('password'))
     ]);
-  }
-
-  /**
-   * Generate the form fields used for the form creation
-   */
-  private generateFormFields(): void {
-    this.formFields = [
-      {
-        key: 'username',
-        label: 'username',
-        type: DataTypeEnum.TEXT,
-        validators: [Validators.required, Validators.minLength(3)],
-        matIconPrefix: 'android'
-      },
-      {
-        key: 'firstname',
-        label: 'firstname',
-        type: DataTypeEnum.TEXT,
-        validators: [Validators.required, Validators.minLength(3)],
-        matIconPrefix: 'person'
-      },
-      {
-        key: 'lastname',
-        label: 'lastname',
-        type: DataTypeEnum.TEXT,
-        validators: [Validators.required, Validators.minLength(3)],
-        matIconPrefix: 'person'
-      },
-      {
-        key: 'email',
-        label: 'email',
-        type: DataTypeEnum.TEXT,
-        validators: [Validators.required, CustomValidators.email],
-        matIconPrefix: 'email'
-      },
-      {
-        key: 'password',
-        label: 'password',
-        type: DataTypeEnum.PASSWORD,
-        validators: [Validators.required, Validators.minLength(3)],
-        matIconPrefix: 'lock'
-      },
-      {
-        key: 'confirmPassword',
-        label: 'password.confirm',
-        type: DataTypeEnum.PASSWORD,
-        matIconPrefix: 'lock'
-      }
-    ];
   }
 
   /**
@@ -188,7 +157,7 @@ export class RegisterComponent implements OnInit {
             // Authentication succeed
             this.navigateToHomePage();
           },
-          error => {
+          () => {
             this.formSubmitAttempt = false;
           }
         );

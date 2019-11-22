@@ -16,22 +16,35 @@
  *
  */
 
-.container {
-  height: 95vh;
-}
+.wrapper {
+  width: 50%;
+  padding: 2% 8%;
 
-.content {
-  width: 40%;
-}
+  .brand-image {
+    max-height: 40%;
 
-#register-form {
-  width: 100%;
-}
+    img {
+      max-height: 100%;
+      max-width: 100%;
+    }
+  }
 
-#card-register {
-  width: 100%;
-}
+  .register-form {
+    width: 100%;
+    height: 100%;
+    padding: 20px 0;
+  }
 
-.registered-sentance {
-  margin-left: 9%;
+  suricate-buttons {
+    width: 100%;
+
+    ::ng-deep .button {
+      margin: auto;
+      width: 48%;
+
+      &:only-child {
+        width: 100%;
+      }
+    }
+  }
 }
