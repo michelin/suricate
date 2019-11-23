@@ -9,6 +9,7 @@
     [projectWidgets]="projectWidgets"
     [screenCode]="screenCode"
     [readOnly]="isReadOnly"
+    (refreshProjectWidget)="refreshProjectWidgetsAction()"
     (disconnectEvent)="handlingDashboardDisconnect()"
   ></suricate-dashboard-screen>
 

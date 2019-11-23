@@ -23,6 +23,7 @@
       [projectWidgets]="projectWidgets"
       [screenCode]="screenCode"
       [readOnly]="true"
+      (refreshProjectWidget)="refreshProjectWidgetsAction()"
       (disconnectEvent)="handlingDashboardDisconnect()"
     ></suricate-dashboard-screen>
   </ng-template>

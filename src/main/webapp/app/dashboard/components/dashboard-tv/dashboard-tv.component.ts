@@ -166,6 +166,12 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Activate the action of refresh project widgets
+   */
+  protected refreshProjectWidgetsAction(): void {
+    this.refreshProjectWidgets(this.project.token).subscribe();
+  }
+  /**
    * Refresh the project widget list
    *
    * @param dashboardToken The token used for the refresh

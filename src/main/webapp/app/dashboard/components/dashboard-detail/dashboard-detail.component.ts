@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as html2canvas from 'html2canvas';
 
@@ -22,7 +22,6 @@ import { DashboardService } from '../../services/dashboard.service';
 import { Project } from '../../../shared/models/backend/project/project';
 import { HttpProjectService } from '../../../shared/services/backend/http-project.service';
 import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';
-import { ImageUtils } from '../../../shared/utils/image.utils';
 import { FileUtils } from '../../../shared/utils/file.utils';
 import { HeaderConfiguration } from '../../../shared/models/frontend/header/header-configuration';
 import { IconEnum } from '../../../shared/enums/icon.enum';
@@ -36,6 +35,7 @@ import { ProjectRequest } from '../../../shared/models/backend/project/project-r
 import { ProjectFormFieldsService } from '../../../shared/form-fields/project-form-fields.service';
 import { flatMap, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { DashboardScreenComponent } from '../dashboard-screen/dashboard-screen.component';
 
 /**
  * Component used to display a specific dashboard
@@ -48,11 +48,11 @@ import { Observable } from 'rxjs';
 export class DashboardDetailComponent implements OnInit {
   /**
    * The dashboard html (as HTML Element)
-   * @type {ElementRef}
+   * @type {DashboardScreenComponent}
    * @private
    */
   @ViewChild('dashboardScreen', { static: false })
-  private dashboardScreen: ElementRef;
+  private dashboardScreen: DashboardScreenComponent;
 
   /**
    * Hold the configuration of the header component
@@ -137,7 +137,7 @@ export class DashboardDetailComponent implements OnInit {
         () => {
           this.isDashboardLoading = false;
           this.initHeaderConfiguration();
-          this.takeDashboardScreenshot();
+          this.engageDashboardScreenshotsAction();
         },
         () => {
           this.isDashboardLoading = false;
@@ -163,6 +163,12 @@ export class DashboardDetailComponent implements OnInit {
     return this.dashboardService.shouldDisplayedReadOnly(dashboardToken).pipe(tap((isReadonly: boolean) => (this.isReadOnly = isReadonly)));
   }
 
+  /**
+   * Activate the action of refresh project widgets
+   */
+  protected refreshProjectWidgetsAction(): void {
+    this.refreshProjectWidgets(this.project.token).subscribe();
+  }
   /**
    * Refresh the project widget list
    */
@@ -228,9 +234,9 @@ export class DashboardDetailComponent implements OnInit {
   }
 
   /**
-   * Take screenshot of dashboard
+   * Try to engage the action of taking a screenshots
    */
-  private takeDashboardScreenshot(): void {
+  private engageDashboardScreenshotsAction(): void {
     if (!this.isReadOnly) {
       // We clear the timer so if the user is doing modification, on the dashboard it will not disturbed
       clearTimeout(this.screenshotTimer);
@@ -238,30 +244,41 @@ export class DashboardDetailComponent implements OnInit {
       // We are waiting 10sec before taking the screenshot
       this.screenshotTimer = global.setTimeout(() => {
         this.isReadOnly = true;
-
-        // Waiting for behing readonly and take the screenshot
-        setTimeout(() => {
-          html2canvas(this.dashboardScreen.nativeElement).then(canvas => {
-            this.isReadOnly = false;
-            const imgUrl = canvas.toDataURL('image/png');
-
-            const blob: Blob = FileUtils.base64ToBlob(
-              ImageUtils.getDataFromBase64URL(imgUrl),
-              ImageUtils.getContentTypeFromBase64URL(imgUrl)
-            );
-            const imageFile: File = FileUtils.convertBlobToFile(blob, `${this.project.token}.png`, new Date());
-
-            this.httpProjectService.addOrUpdateProjectScreenshot(this.project.token, imageFile).subscribe();
-          });
-        }, 0);
+        this.takeScreenshots();
       }, 10000);
     }
   }
 
+  /**
+   * Execute the take screenshots action
+   */
+  private takeScreenshots(): void {
+    // Waiting for behing readonly and take the screenshot
+    setTimeout(() => {
+      html2canvas(this.dashboardScreen['elementRef'].nativeElement).then(
+        (htmlCanvasElement: HTMLCanvasElement) => {
+          this.isReadOnly = false;
+          this.httpProjectService
+            .addOrUpdateProjectScreenshot(this.project.token, FileUtils.takeScreenShot(htmlCanvasElement, `${this.project.token}.png`))
+            .subscribe();
+        },
+        () => {
+          this.isReadOnly = false;
+        }
+      );
+    }, 0);
+  }
+
+  /**
+   * Redirect to the wizard used to add a new widget
+   */
   protected displayProjectWidgetWizard(): void {
     this.router.navigate(['/dashboards', this.project.token, 'widgets', 'create']);
   }
 
+  /**
+   * Open the form sidenav used to edit the dashboard
+   */
   private openDashboardFormSidenav(): void {
     this.sidenavService.openFormSidenav({
       title: 'Edit dashboard',
@@ -270,6 +287,11 @@ export class DashboardDetailComponent implements OnInit {
     });
   }
 
+  /**
+   * Execute the action edit the dashboard when the sidenav as been saved
+   *
+   * @param formData The data retrieve from the form sidenav
+   */
   private editDashboard(formData: ProjectRequest): void {
     formData.cssStyle = `.grid { background-color: ${formData['gridBackgroundColor']}; }`;
 
@@ -279,17 +301,26 @@ export class DashboardDetailComponent implements OnInit {
     });
   }
 
+  /**
+   * Refresh every connected dashboards
+   */
   private refreshConnectedScreens(): void {
     this.httpScreenService.refreshEveryConnectedScreensForProject(this.project.token).subscribe(() => {
       this.toastService.sendMessage('Screens refreshed', ToastTypeEnum.SUCCESS);
     });
   }
 
+  /**
+   * Open a new tab with the TV view
+   */
   private redirectToTvView(): void {
     const url = this.router.createUrlTree(['/tv'], { queryParams: { token: this.project.token } });
     window.open(url.toString(), '_blank');
   }
 
+  /**
+   * Delete the current dashboard
+   */
   private deleteDashboard(): void {
     this.dialogService.confirm({
       title: 'dashboard.delete',

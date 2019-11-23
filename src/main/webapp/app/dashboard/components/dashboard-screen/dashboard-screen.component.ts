@@ -42,70 +42,90 @@ import { GridItemUtils } from '../../../shared/utils/grid-item.utils';
 })
 export class DashboardScreenComponent implements OnChanges, OnDestroy {
   /**
+   * The project to display
+   * @type {Project}
+   * @public
+   */
+  @Input()
+  public project: Project;
+  /**
+   * The project widget list
+   * @type {ProjectWidget[]}
+   * @public
+   */
+  @Input()
+  public projectWidgets: ProjectWidget[];
+  /**
+   * Tell if the dashboard should be on readOnly or not
+   * @type {boolean}
+   * @public
+   */
+  @Input()
+  public readOnly = true;
+  /**
+   * The screen code
+   * @type {number}
+   * @public
+   */
+  @Input()
+  public screenCode: number;
+  /**
+   * Event for handling the disconnection
+   * @type {EventEmitter<void>}
+   * @public
+   */
+  @Output()
+  public disconnectEvent = new EventEmitter<void>();
+  /**
+   * Use to tell to the parent component that he should refresh the project widgets
+   * @type {EventEmitter<void>}
+   * @public
+   */
+  @Output()
+  public refreshProjectWidget = new EventEmitter<void>();
+  /**
+   * Add runScriptsDirective, so we can recall it
+   * @type {RunScriptsDirective}
+   * @public
+   */
+  @HostBinding('attr.appRunScripts')
+  public appRunScriptDirective = new RunScriptsDirective(this.elementRef);
+
+  /**
    * Tell to subscriptions if the component is alive
    * When the component is destroyed, the associated subscriptions will be deleted
    */
   private isAlive = true;
-
-  /**
-   * The project to display
-   * @type {Project}
-   */
-  @Input() project: Project;
-  /**
-   * The project widget list
-   * @type {ProjectWidget[]}
-   */
-  @Input() projectWidgets: ProjectWidget[];
-  /**
-   * Tell if the dashboard should be on readOnly or not
-   * @type {boolean}
-   */
-  @Input() readOnly = true;
-  /**
-   * The screen code
-   * @type {number}
-   */
-  @Input() screenCode: number;
-
-  /**
-   * Event for handling the disconnection
-   * @type {EventEmitter<any>}
-   */
-  @Output() disconnectEvent = new EventEmitter<any>();
-
-  /**
-   * Add runScriptsDirective, so we can recall it
-   */
-  @HostBinding('attr.appRunScripts') appRunScriptDirective = new RunScriptsDirective(this.elementRef);
-
-  /**
-   * The stompJS Subscription for screen event
-   */
-  screenEventSubscription: Subscription;
-
-  /**
-   * Tell if we should display the screen code
-   * @type {boolean}
-   */
-  shouldDisplayScreenCode = false;
-
   /**
    * The options for the plugin angular2-grid
    * @type {NgGridConfig}
+   * @protected
    */
-  gridOptions: NgGridConfig = {};
-
+  protected gridOptions: NgGridConfig = {};
   /**
    * Grid state when widgets were first loaded
+   * @type {NgGridItemConfig[]}
+   * @protected
    */
-  startGridStackItems: NgGridItemConfig[] = [];
-
+  protected startGridStackItems: NgGridItemConfig[] = [];
   /**
    * The grid items description
    * @type {NgGridItemConfig[]}
+   * @protected
    */
-  gridStackItems: NgGridItemConfig[] = [];
+  protected gridStackItems: NgGridItemConfig[] = [];
+  /**
+   * The stompJS Subscription for screen event
+   * @type {Subscription}
+   * @private
+   */
+  private screenEventSubscription: Subscription;
+  /**
+   * Tell if we should display the screen code
+   * @type {boolean}
+   * @protected
+   */
+  protected shouldDisplayScreenCode = false;
 
   /**
    * The constructor
@@ -124,15 +144,10 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
     private elementRef: ElementRef
   ) {}
 
-  /**********************************************************************************************************/
-  /*                      COMPONENT LIFE CYCLE                                                              */
-
-  /**********************************************************************************************************/
-
   /**
    * Each time a value change, this function will be called
    */
-  ngOnChanges(changes: SimpleChanges): void {
+  public ngOnChanges(changes: SimpleChanges): void {
     if (changes.project) {
       if (!changes.project.previousValue) {
         // We have to inject this variable in the window scope (because some Widgets use it for init the js)
@@ -167,14 +182,14 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
   /**
    * When the component is destroyed (new page)
    */
-  ngOnDestroy(): void {
+  public ngOnDestroy(): void {
     this.disconnectFromWebsocket();
   }
 
   /**
    * Display the screen code
    */
-  displayScreenCode() {
+  private displayScreenCode(): void {
     this.shouldDisplayScreenCode = true;
     setTimeout(() => (this.shouldDisplayScreenCode = false), 10000);
   }
@@ -187,9 +202,9 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
   /**
    * Init the options for Grid Stack plugin
    */
-  initGridStackOptions(): void {
+  private initGridStackOptions(): void {
     this.gridOptions = {
-      max_cols: this.project.gridProperties.maxColumn,
+      visible_cols: this.project.gridProperties.maxColumn,
       min_cols: 1,
       row_height: this.project.gridProperties.widgetHeight,
       min_rows: 1,
@@ -211,7 +226,7 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
   /**
    * Create the list of gridStackItems used to display widgets on the grid
    */
-  initGridStackItems(): void {
+  private initGridStackItems(): void {
     this.gridStackItems = [];
 
     if (this.projectWidgets) {
@@ -252,7 +267,7 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
    *
    * @returns {string} The src script
    */
-  getJSLibraries(): string {
+  protected getJSLibraries(): string {
     let scriptUrls = '';
 
     if (this.project.librariesToken) {
@@ -272,14 +287,14 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
   /**
    * Start the websocket connection using sockJS
    */
-  startWebsocketConnection() {
+  private startWebsocketConnection(): void {
     this.websocketService.startConnection();
   }
 
   /**
    * Disconnect from websockets
    */
-  disconnectFromWebsocket() {
+  private disconnectFromWebsocket(): void {
     this.unsubscribeToWebsocket();
     this.websocketService.disconnect();
   }
@@ -287,7 +302,7 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
   /**
    * Init the websocket subscriptions
    */
-  initWebsocketSubscriptions() {
+  private initWebsocketSubscriptions(): void {
     this.isAlive = true;
     this.websocketProjectEventSubscription();
     this.websocketScreenEventSubscription();
@@ -296,7 +311,7 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
   /**
    * Unsubscribe to every current websocket connections
    */
-  unsubscribeToWebsocket() {
+  private unsubscribeToWebsocket(): void {
     if (this.screenEventSubscription) {
       this.screenEventSubscription.unsubscribe();
       this.screenEventSubscription = null;
@@ -308,7 +323,7 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
   /**
    * Reset the websocket subscription
    */
-  resetWebsocketSubscriptions() {
+  private resetWebsocketSubscriptions(): void {
     this.unsubscribeToWebsocket();
     this.initWebsocketSubscriptions();
   }
@@ -316,7 +331,7 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
   /**
    * Create a websocket subscription for the current project
    */
-  websocketProjectEventSubscription() {
+  private websocketProjectEventSubscription(): void {
     const projectSubscriptionUrl = `/user/${this.project.token}/queue/live`;
 
     this.websocketService
@@ -330,7 +345,7 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
         } else if (updateEvent.type === WebsocketUpdateTypeEnum.DISPLAY_NUMBER) {
           this.displayScreenCode();
         } else if (updateEvent.type === WebsocketUpdateTypeEnum.POSITION) {
-          this.dashboardService.refreshProjectWidgets();
+          this.refreshProjectWidget.emit();
         } else if (updateEvent.type === WebsocketUpdateTypeEnum.DISCONNECT) {
           this.disconnectFromWebsocket();
           this.disconnectEvent.emit();
@@ -343,7 +358,7 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
   /**
    * Create a websocket subscription for the current screen
    */
-  websocketScreenEventSubscription() {
+  private websocketScreenEventSubscription(): void {
     const screenSubscriptionUrl = `/user/${this.project.token}-${this.screenCode}/queue/unique`;
 
     this.screenEventSubscription = this.websocketService
@@ -362,7 +377,7 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
   /**
    * Update the project widget position
    */
-  updateProjectWidgetsPosition() {
+  protected updateProjectWidgetsPosition(): void {
     if (this.isGridItemsHasMoved()) {
       const projectWidgetPositionRequests: ProjectWidgetPositionRequest[] = [];
       this.gridStackItems.forEach(gridStackItem => {
