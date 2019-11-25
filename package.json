@@ -8,7 +8,7 @@
     "start": "ng serve -o",
     "start-compatibility-mode": "ng serve -o --configuration es5",
     "build-all": "yarn install && ng build --prod",
-    "build": "ng build --prod",
+    "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
     "e2e": "ng e2e"
