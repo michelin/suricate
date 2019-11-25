@@ -1,25 +1,25 @@
 // Animation colors
 @-webkit-keyframes status-warning-background {
   0% {
-    background-color: #eeae32
+    background-color: #eeae32;
   }
   50% {
-    background-color: #ff9618
+    background-color: #ff9618;
   }
   100% {
-    background-color: #eeae32
+    background-color: #eeae32;
   }
 }
 
 @-webkit-keyframes status-danger-background {
   0% {
-    background-color: #e82711
+    background-color: #e82711;
   }
   50% {
-    background-color: #9b2d23
+    background-color: #9b2d23;
   }
   100% {
-    background-color: #e82711
+    background-color: #e82711;
   }
 }
 
@@ -34,10 +34,9 @@ body .grid {
   margin: 0;
   font-size: 20px;
   color: #fff;
-  font-family: 'Open Sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
   min-height: 100% !important;
 }
-
 
 .grid-stack {
   &.white {
@@ -46,7 +45,8 @@ body .grid {
     }
   }
 
-  b, strong {
+  b,
+  strong {
     font-weight: bold;
   }
 
@@ -61,7 +61,8 @@ body .grid {
     vertical-align: middle;
   }
 
-  img, object {
+  img,
+  object {
     max-width: 100%;
   }
 
@@ -79,7 +80,12 @@ body .grid {
     vertical-align: middle;
   }
 
-  h1, h2, h3, h4, h5, p {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  p {
     padding: 0;
     margin: 0;
   }
@@ -114,9 +120,13 @@ body .grid {
     left: 0;
     top: 0;
     opacity: 0.1;
-    font-size: 275px;
+    font-size: 9em;
     text-align: center;
-    margin-top: 82px;
+
+    &:before {
+      display: block;
+      transform: translateY(38%);
+    }
   }
 
   .widget {
@@ -138,7 +148,8 @@ body .grid {
         display: inline-block;
       }
 
-      .title, .more-info {
+      .title,
+      .more-info {
         color: #fff;
       }
     }
@@ -148,12 +159,14 @@ body .grid {
         display: inline-block;
       }
 
-      .title, .more-info {
+      .title,
+      .more-info {
         color: #fff;
       }
     }
 
-    .status-danger, .status-warning {
+    .status-danger,
+    .status-warning {
       font-size: 14px;
       padding: 8px;
       color: rgba(255, 255, 255, 0.82);
@@ -224,8 +237,9 @@ body .grid {
     display: none;
   }
 
-  clearfix:before, .clearfix:after {
-    content: "\0020";
+  clearfix:before,
+  .clearfix:after {
+    content: '\0020';
     display: block;
     height: 0;
     overflow: hidden;
