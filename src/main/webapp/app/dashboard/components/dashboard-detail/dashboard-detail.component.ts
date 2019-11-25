@@ -242,10 +242,7 @@ export class DashboardDetailComponent implements OnInit {
       clearTimeout(this.screenshotTimer);
 
       // We are waiting 10sec before taking the screenshot
-      this.screenshotTimer = global.setTimeout(() => {
-        this.isReadOnly = true;
-        this.takeScreenshots();
-      }, 10000);
+      this.screenshotTimer = global.setTimeout(() => this.takeScreenshots(), 10000);
     }
   }
 
@@ -255,17 +252,11 @@ export class DashboardDetailComponent implements OnInit {
   private takeScreenshots(): void {
     // Waiting for behing readonly and take the screenshot
     setTimeout(() => {
-      html2canvas(this.dashboardScreen['elementRef'].nativeElement).then(
-        (htmlCanvasElement: HTMLCanvasElement) => {
-          this.isReadOnly = false;
-          this.httpProjectService
-            .addOrUpdateProjectScreenshot(this.project.token, FileUtils.takeScreenShot(htmlCanvasElement, `${this.project.token}.png`))
-            .subscribe();
-        },
-        () => {
-          this.isReadOnly = false;
-        }
-      );
+      html2canvas(this.dashboardScreen['elementRef'].nativeElement).then((htmlCanvasElement: HTMLCanvasElement) => {
+        this.httpProjectService
+          .addOrUpdateProjectScreenshot(this.project.token, FileUtils.takeScreenShot(htmlCanvasElement, `${this.project.token}.png`))
+          .subscribe();
+      });
     }, 0);
   }
 

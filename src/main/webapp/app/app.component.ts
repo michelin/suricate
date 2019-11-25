@@ -24,6 +24,8 @@ import { ConfirmationDialogConfiguration } from './shared/models/frontend/dialog
 import { ConfirmDialogComponent } from './shared/components/confirm-dialog/confirm-dialog.component';
 import { MatDialogConfig } from '@angular/material/typings/dialog';
 import { SettingsService } from './core/services/settings.service';
+import { CommunicationDialogConfiguration } from './shared/models/frontend/dialog/communication-dialog-configuration';
+import { CommunicationDialogComponent } from './shared/components/communication-dialog/communication-dialog.component';
 
 /**
  * Main component init the application
@@ -70,6 +72,7 @@ export class AppComponent implements OnInit, OnDestroy {
    */
   public ngOnInit(): void {
     this.subscribeToConfirmationDialog();
+    this.subscribeToCommunicationDialog();
     this.subscribeToThemeChanging();
 
     this.settingsService.initDefaultSettings();
@@ -99,11 +102,31 @@ export class AppComponent implements OnInit, OnDestroy {
       .subscribe((confirmationConfiguration: ConfirmationDialogConfiguration) => {
         const dialogConfig: MatDialogConfig = {
           role: 'dialog',
-          width: '500px',
+          width: '700px',
+          height: '50%',
           data: confirmationConfiguration
         };
 
         this.matDialog.open(ConfirmDialogComponent, dialogConfig);
+      });
+  }
+
+  /**
+   * Function that display the communication dialog when using the dialog service
+   */
+  private subscribeToCommunicationDialog(): void {
+    this.dialogService
+      .listenCommunicationMessages()
+      .pipe(takeWhile(() => this.isAlive))
+      .subscribe((communicationDialogConfiguration: CommunicationDialogConfiguration) => {
+        const dialogConfig: MatDialogConfig = {
+          role: 'dialog',
+          width: '700px',
+          height: '80%',
+          data: communicationDialogConfiguration
+        };
+
+        this.matDialog.open(CommunicationDialogComponent, dialogConfig);
       });
   }
 

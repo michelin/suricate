@@ -19,9 +19,13 @@
 /**
  * Configuration used by the confirmation dialog
  */
-export interface DialogConfiguration {
+export class DialogConfiguration {
   /**
    * The title of the confirmation dialog
    */
   title: string;
+  /**
+   * The message to display
+   */
+  message: string;
 }

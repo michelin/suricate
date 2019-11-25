@@ -173,7 +173,7 @@ export class ProjectWidgetFormStepsService {
     return EMPTY;
   }
 
-  private generateProjectWidgetFormFields(widgetParams: WidgetParam[]): FormField[] {
+  public generateProjectWidgetFormFields(widgetParams: WidgetParam[]): FormField[] {
     const formFields = [];
 
     widgetParams.forEach((widgetParam: WidgetParam) => {

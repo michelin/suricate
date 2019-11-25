@@ -17,6 +17,8 @@
  */
 
 .widget {
+  background-color: transparent;
+
   &.moving {
     & {
       z-index: 1000;

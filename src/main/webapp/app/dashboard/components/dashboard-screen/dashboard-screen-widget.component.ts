@@ -17,24 +17,24 @@
 import { Component, ElementRef, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { TitleCasePipe } from '@angular/common';
-import { MatDialog } from '@angular/material/dialog';
 import { NgGridItemConfig, NgGridItemEvent } from 'angular2-grid';
-import { takeWhile } from 'rxjs/operators';
+import { takeWhile, tap } from 'rxjs/operators';
 
 import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';
 import { Widget } from '../../../shared/models/backend/widget/widget';
 import { HttpWidgetService } from '../../../shared/services/backend/http-widget.service';
 import { WidgetStateEnum } from '../../../shared/enums/widget-sate.enum';
-import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { HttpProjectWidgetService } from '../../../shared/services/backend/http-project-widget.service';
 import { RunScriptsDirective } from '../../../shared/directives/run-scripts.directive';
 import { WebsocketService } from '../../../shared/services/frontend/websocket.service';
 import { WebsocketUpdateEvent } from '../../../shared/models/frontend/websocket/websocket-update-event';
 import { WebsocketUpdateTypeEnum } from '../../../shared/enums/websocket-update-type.enum';
 import { GridItemUtils } from '../../../shared/utils/grid-item.utils';
-import { CommunicationDialogComponent } from '../../../shared/components/communication-dialog/communication-dialog.component';
 
 import * as Stomp from '@stomp/stompjs';
+import { SidenavService } from '../../../shared/services/frontend/sidenav.service';
+import { DialogService } from '../../../shared/services/frontend/dialog.service';
+import { ProjectWidgetFormStepsService } from '../../../shared/form-steps/project-widget-form-steps.service';
 
 /**
  * Display the grid stack widgets
@@ -105,24 +105,39 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    * @private
    */
   private startGridStackItem: NgGridItemConfig;
+  /**
+   * Tell if the component is Loading widget
+   * @type {boolean}
+   * @protected
+   */
+  protected isComponentLoading = true;
+  /**
+   * Used to display the buttons when the screen is not readonly
+   * @type {boolean}
+   * @protected
+   */
+  protected displayButtons = false;
 
   /**
    * Constructor
    *
-   * @param matDialog The material dialog
-   * @param httpWidgetService The Http widget service
-   * @param httpProjectWidgetService The http project widget service
-   * @param translateService The translation service
-   * @param websocketService The service that manage the websocket
-   * @param elementRef Object that get the references of the HTML Elements
+   * @param {ElementRef} elementRef Angular service used to inject a reference on the component
+   * @param {TranslateService} translateService NgxTranslate service used to manage translations
+   * @param {HttpWidgetService} httpWidgetService Suricate service used to manage http calls for widgets
+   * @param {HttpProjectWidgetService} httpProjectWidgetService Suricate service used to manage http calls for project widgets
+   * @param {WebsocketService} websocketService Frontend service used to manage websocket connections
+   * @param {DialogService} dialogService Frontend service used to manage dialog
+   * @param {SidenavService} sidenavService Frontend service used to manage sidenav's
    */
   constructor(
-    private matDialog: MatDialog,
-    private httpWidgetService: HttpWidgetService,
-    private httpProjectWidgetService: HttpProjectWidgetService,
-    private translateService: TranslateService,
-    private websocketService: WebsocketService,
-    private elementRef: ElementRef
+    private readonly elementRef: ElementRef,
+    private readonly translateService: TranslateService,
+    private readonly httpWidgetService: HttpWidgetService,
+    private readonly httpProjectWidgetService: HttpProjectWidgetService,
+    private readonly websocketService: WebsocketService,
+    private readonly dialogService: DialogService,
+    private readonly sidenavService: SidenavService,
+    private readonly projectWidgetFormStepsService: ProjectWidgetFormStepsService
   ) {}
 
   /**
@@ -130,12 +145,15 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    */
   public ngOnInit(): void {
     this.initWebsocketConnectionForProjectWidget();
-    setTimeout(() => this.appRunScriptDirective.ngOnInit(), 1000);
     this.startGridStackItem = { ...this.gridStackItem };
 
-    this.httpWidgetService.getById(this.projectWidget.widgetId).subscribe(widget => {
-      this.widget = widget;
-    });
+    this.httpWidgetService
+      .getById(this.projectWidget.widgetId)
+      .pipe(tap((widget: Widget) => (this.widget = widget)))
+      .subscribe(() => {
+        this.isComponentLoading = false;
+        setTimeout(() => this.appRunScriptDirective.ngOnInit(), 100);
+      });
   }
 
   /**
@@ -192,22 +210,23 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    * Delete The project widget
    */
   protected displayDeleteProjectWidgetDialog(): void {
-    this.translateService.get(['widget.delete', 'delete.confirm']).subscribe(translations => {
-      const titlecasePipe = new TitleCasePipe();
+    const titlecasePipe = new TitleCasePipe();
 
-      this.matDialog
-        .open(ConfirmDialogComponent, {
-          data: {
-            title: translations['widget.delete'],
-            message: `${translations['delete.confirm']} ${titlecasePipe.transform(this.widget.name)}`
-          }
-        })
-        .afterClosed()
-        .subscribe(shouldDeleteProjectWidget => {
-          if (shouldDeleteProjectWidget) {
-            this.httpProjectWidgetService.deleteOneById(this.projectWidget.id).subscribe();
-          }
-        });
+    this.dialogService.confirm({
+      title: 'widget.delete',
+      message: `${this.translateService.instant('delete.confirm')} ${titlecasePipe.transform(this.widget.name)} widget`,
+      accept: () => this.httpProjectWidgetService.deleteOneById(this.projectWidget.id).subscribe()
+    });
+  }
+
+  /**
+   * Display the form sidenav used to edit a project widget
+   */
+  protected displayEditForm(): void {
+    this.sidenavService.openFormSidenav({
+      title: 'Edit widget',
+      formFields: this.projectWidgetFormStepsService.generateProjectWidgetFormFields(this.widget.params),
+      save: () => {}
     });
   }
 
@@ -215,18 +234,10 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    * call the popup that display the execution log
    */
   protected displayLogProjectWidgetDialog(): void {
-    this.translateService.get(['widget.display.log']).subscribe(translations => {
-      const titlecasePipe = new TitleCasePipe();
-
-      this.matDialog.open(CommunicationDialogComponent, {
-        minWidth: 700,
-        height: '80%',
-        data: {
-          title: titlecasePipe.transform(translations['widget.display.log']),
-          message: this.projectWidget.log ? this.projectWidget.log : '',
-          isErrorMessage: !!this.projectWidget.log
-        }
-      });
+    this.dialogService.info({
+      title: 'widget.display.log',
+      message: this.projectWidget.log ? this.projectWidget.log : '',
+      isErrorMessage: !!this.projectWidget.log
     });
   }
 

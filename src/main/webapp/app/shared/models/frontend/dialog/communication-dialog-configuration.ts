@@ -1,4 +1,4 @@
-/*!
+/*
  *  /*
  *  * Copyright 2012-2018 the original author or authors.
  *  *
@@ -16,12 +16,14 @@
  *
  */
 
-.dialog-wrapper {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+import { DialogConfiguration } from './dialog-configuration';
 
-  .spacer {
-    flex-grow: 1;
-  }
+/**
+ * Configuration used by the communication dialog
+ */
+export class CommunicationDialogConfiguration extends DialogConfiguration {
+  /**
+   * True if the message to display is an error
+   */
+  isErrorMessage?: boolean;
 }

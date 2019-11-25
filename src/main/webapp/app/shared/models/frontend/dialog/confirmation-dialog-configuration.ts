@@ -21,11 +21,7 @@ import { DialogConfiguration } from './dialog-configuration';
 /**
  * Configuration used by the confirmation dialog
  */
-export interface ConfirmationDialogConfiguration extends DialogConfiguration {
-  /**
-   * The message to display
-   */
-  message: string;
+export class ConfirmationDialogConfiguration extends DialogConfiguration {
   /**
    * The function to call when the user has confirmed the action
    */

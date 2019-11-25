@@ -1,15 +1,17 @@
-<h2 mat-dialog-title>{{ configuration.title | translate }}</h2>
+<div class="dialog-wrapper">
+  <h2 mat-dialog-title>{{ configuration.title | translate }}</h2>
 
-<mat-dialog-content>
-  <p>{{ configuration.message }}</p>
-</mat-dialog-content>
+  <mat-dialog-content class="spacer" fxLayout="column" fxLayoutAlign="center">
+    <p>{{ configuration.message }}</p>
+  </mat-dialog-content>
 
-<mat-dialog-actions>
-  <button mat-button color="primary" [mat-dialog-close]="false">
-    <suricate-translate [key]="'no'"></suricate-translate>
-  </button>
+  <mat-dialog-actions>
+    <button mat-button color="primary" [mat-dialog-close]="false">
+      <suricate-translate [key]="'no'"></suricate-translate>
+    </button>
 
-  <button mat-button color="warn" (click)="accepted()">
-    <suricate-translate [key]="'yes'"></suricate-translate>
-  </button>
-</mat-dialog-actions>
+    <button mat-button color="warn" (click)="accepted()">
+      <suricate-translate [key]="'yes'"></suricate-translate>
+    </button>
+  </mat-dialog-actions>
+</div>
