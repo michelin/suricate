@@ -1,2 +1,1 @@
-export class AppPage {
-}
+export class AppPage {}

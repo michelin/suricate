@@ -48,47 +48,63 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   /**
    * The projectWidget to display
    * @type {ProjectWidget}
+   * @public
    */
-  @Input() projectWidget: ProjectWidget;
+  @Input()
+  public projectWidget: ProjectWidget;
   /**
    * The grid item config
    * @type {NgGridItemConfig}
+   * @public
    */
-  @Input() gridStackItem: NgGridItemConfig;
+  @Input()
+  public gridStackItem: NgGridItemConfig;
   /**
    * Tell if we are on
    * @type {boolean}
+   * @public
    */
-  @Input() readOnly: boolean;
+  @Input()
+  public readOnly: boolean;
   /**
    * The project token
    * @type {string}
+   * @public
    */
-  @Input() projectToken: string;
-
+  @Input()
+  public projectToken: string;
   /**
    * Add runScriptsDirective, so we can recall it
+   * @type {RunScriptsDirective}
+   * @public
    */
-  @HostBinding('attr.appRunScripts') appRunScriptDirective = new RunScriptsDirective(this.elementRef);
+  @HostBinding('attr.appRunScripts')
+  public appRunScriptDirective = new RunScriptsDirective(this.elementRef);
 
   /**
    * The widget related to this project widget
+   * @type {Widget}
+   * @protected
    */
-  widget: Widget;
-
+  protected widget: Widget;
   /**
    * The enumeration that hold the state of a widget (used in HTML)
+   * @type {widgetStateEnum}
+   * @protected
    */
-  WidgetStateEnum = WidgetStateEnum;
-
+  protected widgetStateEnum = WidgetStateEnum;
   /**
    * True when the component is alive
+   * @type {boolean}
+   * @private
    */
-  isAlive = true;
+  private isAlive = true;
   /**
-   * Init element info
+   * The configuration of this project widget on the grid
+   * @type {NgGridItemConfig}
+   * @private
    */
-  startGridStackItem: NgGridItemConfig;
+  private startGridStackItem: NgGridItemConfig;
 
   /**
    * Constructor
@@ -112,7 +128,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   /**
    * Called when the component is init
    */
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.initWebsocketConnectionForProjectWidget();
     setTimeout(() => this.appRunScriptDirective.ngOnInit(), 1000);
     this.startGridStackItem = { ...this.gridStackItem };
@@ -127,7 +143,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    *
    * @param gridItemEvent The grid item event
    */
-  registerNewPosition(gridItemEvent: NgGridItemEvent) {
+  protected registerNewPosition(gridItemEvent: NgGridItemEvent): void {
     this.gridStackItem.col = gridItemEvent.col;
     this.gridStackItem.row = gridItemEvent.row;
     this.gridStackItem.sizey = gridItemEvent.sizey;
@@ -138,7 +154,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    * Disable click event if the item have been moved
    * @param event The click event
    */
-  preventDefault(event: MouseEvent) {
+  protected preventDefault(event: MouseEvent): void {
     if (GridItemUtils.isItemHaveBeenMoved(this.startGridStackItem, this.gridStackItem)) {
       event.preventDefault();
     }
@@ -147,7 +163,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   /**
    * Refresh this project widget
    */
-  refreshProjectWidget() {
+  private refreshProjectWidget(): void {
     this.httpProjectWidgetService.getOneById(this.projectWidget.id).subscribe(projectWidget => {
       this.projectWidget = projectWidget;
       this.appRunScriptDirective.ngOnInit();
@@ -157,7 +173,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   /**
    * Subscribe to widget events
    */
-  initWebsocketConnectionForProjectWidget() {
+  private initWebsocketConnectionForProjectWidget(): void {
     const projectWidgetSubscriptionUrl = `/user/${this.projectToken}-projectWidget-${this.projectWidget.id}/queue/live`;
 
     this.websocketService
@@ -175,7 +191,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   /**
    * Delete The project widget
    */
-  displayDeleteProjectWidgetDialog(): void {
+  protected displayDeleteProjectWidgetDialog(): void {
     this.translateService.get(['widget.delete', 'delete.confirm']).subscribe(translations => {
       const titlecasePipe = new TitleCasePipe();
 
@@ -198,7 +214,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   /**
    * call the popup that display the execution log
    */
-  displayLogProjectWidgetDialog(): void {
+  protected displayLogProjectWidgetDialog(): void {
     this.translateService.get(['widget.display.log']).subscribe(translations => {
       const titlecasePipe = new TitleCasePipe();
 
@@ -217,7 +233,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   /**
    * Called when the component is destroyed
    */
-  ngOnDestroy(): void {
+  public ngOnDestroy(): void {
     this.isAlive = false;
   }
 }

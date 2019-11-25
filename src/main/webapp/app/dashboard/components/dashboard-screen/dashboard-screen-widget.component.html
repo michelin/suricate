@@ -24,7 +24,7 @@
   <!--------------------------------------------------->
   <div *ngIf="widget.delay > 0 && projectWidget.log">
     <!-- Stopped -->
-    <div *ngIf="projectWidget.state === WidgetStateEnum.STOPPED" class="issue execution-error">
+    <div *ngIf="projectWidget.state === widgetStateEnum.STOPPED" class="issue execution-error">
       <mat-icon class="material-icons" style="color: #cfd2da !important;">warning</mat-icon>
       <span class="text">
         Widget execution error
@@ -32,7 +32,7 @@
     </div>
 
     <!-- warning -->
-    <div *ngIf="projectWidget.state === WidgetStateEnum.WARNING" class="issue execution-warning">
+    <div *ngIf="projectWidget.state === widgetStateEnum.WARNING" class="issue execution-warning">
       <span>
         <mat-icon class="material-icons" style="color: #cfd2da !important;">warning</mat-icon>
       </span>
