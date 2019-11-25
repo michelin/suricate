@@ -192,15 +192,17 @@ export class AuthenticationService {
 
     const url = `${AuthenticationService.authenticationApiEndpoint}`;
 
-    return this.httpClient.post<AuthenticationResponse>(url, params.toString(), { headers: headers }).pipe(
-      tap((authenticationResponse: AuthenticationResponse) => {
-        if (authenticationResponse && authenticationResponse.access_token) {
-          AuthenticationService.setTokenType(authenticationResponse.token_type);
-          AuthenticationService.setAccessToken(authenticationResponse.access_token);
-          AuthenticationService.setRefreshToken(authenticationResponse.refresh_token);
-        }
-      })
-    );
+    return this.httpClient
+      .post<AuthenticationResponse>(url, params.toString(), { headers: headers })
+      .pipe(
+        tap((authenticationResponse: AuthenticationResponse) => {
+          if (authenticationResponse && authenticationResponse.access_token) {
+            AuthenticationService.setTokenType(authenticationResponse.token_type);
+            AuthenticationService.setAccessToken(authenticationResponse.access_token);
+            AuthenticationService.setRefreshToken(authenticationResponse.refresh_token);
+          }
+        })
+      );
   }
 
   /**
