@@ -26,6 +26,7 @@ import { DashboardRoutes } from './dashboard.route';
 import { DashboardScreenWidgetComponent } from './components/dashboard-screen/dashboard-screen-widget.component';
 import { DashboardsComponent } from './components-list/dashboards.component';
 import { ProjectWidgetWizardComponent } from './wizard/project-widget-wizard.component';
+import { TvManagementDialogComponent } from './components/tv-management-dialog/tv-management-dialog.component';
 
 @NgModule({
   imports: [RouterModule.forChild(DashboardRoutes), LayoutModule, SharedModule],
@@ -35,8 +36,10 @@ import { ProjectWidgetWizardComponent } from './wizard/project-widget-wizard.com
     DashboardScreenWidgetComponent,
     DashboardTvComponent,
     DashboardsComponent,
-    ProjectWidgetWizardComponent
+    ProjectWidgetWizardComponent,
+    TvManagementDialogComponent
   ],
+  entryComponents: [TvManagementDialogComponent],
   exports: [RouterModule]
 })
 export class DashboardModule {}

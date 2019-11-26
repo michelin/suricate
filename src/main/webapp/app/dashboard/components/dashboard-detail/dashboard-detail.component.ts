@@ -36,6 +36,8 @@ import { ProjectFormFieldsService } from '../../../shared/form-fields/project-fo
 import { flatMap, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { DashboardScreenComponent } from '../dashboard-screen/dashboard-screen.component';
+import { MatDialog } from '@angular/material/dialog';
+import { TvManagementDialogComponent } from '../tv-management-dialog/tv-management-dialog.component';
 
 /**
  * Component used to display a specific dashboard
@@ -102,6 +104,7 @@ export class DashboardDetailComponent implements OnInit {
    *
    * @param {Router} router Angular service used to manage App's route
    * @param {ActivatedRoute} activatedRoute Angular service used to manage the route activated by the component
+   * @param {MatDialog} matDialog Angular material service used to manage dialog
    * @param {TranslateService} translateService NgxTranslate service used to manage translations
    * @param {HttpProjectService} httpProjectService Suricate service used to manage http calls for project
    * @param {HttpScreenService} httpScreenService Suricate service used to manage http calls for screen service
@@ -113,6 +116,7 @@ export class DashboardDetailComponent implements OnInit {
   constructor(
     private readonly router: Router,
     private readonly activatedRoute: ActivatedRoute,
+    private readonly matDialog: MatDialog,
     private readonly translateService: TranslateService,
     private readonly httpProjectService: HttpProjectService,
     private readonly httpScreenService: HttpScreenService,
@@ -220,7 +224,8 @@ export class DashboardDetailComponent implements OnInit {
           color: 'primary',
           variant: 'miniFab',
           tooltip: { message: 'screen.management' },
-          hidden: () => !this.projectWidgets || this.projectWidgets.length === 0
+          hidden: () => !this.projectWidgets || this.projectWidgets.length === 0,
+          callback: () => this.openScreenManagementDialog()
         },
         {
           icon: IconEnum.DELETE,
@@ -307,6 +312,18 @@ export class DashboardDetailComponent implements OnInit {
   private redirectToTvView(): void {
     const url = this.router.createUrlTree(['/tv'], { queryParams: { token: this.project.token } });
     window.open(url.toString(), '_blank');
+  }
+
+  /**
+   * Open the dialog used to manage screens
+   */
+  private openScreenManagementDialog(): void {
+    this.matDialog.open(TvManagementDialogComponent, {
+      role: 'dialog',
+      width: '700px',
+      maxHeight: '80%',
+      data: { project: this.project }
+    });
   }
 
   /**

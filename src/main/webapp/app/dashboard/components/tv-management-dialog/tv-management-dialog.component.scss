@@ -16,38 +16,42 @@
  *
  */
 
-#register-div {
-  margin: 30px 0 40px 0;
-}
+.mat-dialog-content {
+  margin-top: 20px;
 
-mat-divider {
-  margin: 10px 0 15px 0;
-}
-
-#screen-container {
-  padding-bottom: 15px;
-}
-
-#registered-div {
-  .screen-line {
-    min-height: 50px;
+  .mat-divider {
+    margin: 10px 0 15px 0;
   }
 
-  .screen-icon {
-    font-size: 2em;
-    margin-right: 15px;
+  .input-wrapper {
+    suricate-buttons {
+      margin-top: 5px;
+
+      ::ng-deep .button {
+        height: 52px;
+      }
+    }
   }
 
-  .screen-code {
-    font-size: 1.6em;
-    font-variant: all-small-caps;
-    margin-top: -5px;
-  }
-}
+  #connected-screen-container {
+    .screen-icon {
+      font-size: 40px;
+      width: 40px;
+      height: 40px;
+    }
 
-#display-code-link {
-  a {
-    text-decoration: none;
-    cursor: pointer;
+    .screen-code {
+      font-size: 1.5em;
+      font-variant: all-small-caps;
+    }
+  }
+
+  #display-code-link {
+    margin-top: 40px;
+
+    a {
+      text-decoration: none;
+      cursor: pointer;
+    }
   }
 }

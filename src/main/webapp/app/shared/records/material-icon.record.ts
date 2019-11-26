@@ -34,5 +34,7 @@ export const MaterialIconRecords: Record<IconEnum, string> = {
   [IconEnum.TV_LIVE]: 'live_tv',
   [IconEnum.CATEGORY]: 'category',
   [IconEnum.WIDGET]: 'widgets',
-  [IconEnum.WIDGET_CONFIGURATION]: 'list_alt'
+  [IconEnum.WIDGET_CONFIGURATION]: 'list_alt',
+  [IconEnum.STOP_SHARE_SCREEN]: 'stop_screen_share',
+  [IconEnum.SHARE_SCREEN]: 'screen_share'
 };

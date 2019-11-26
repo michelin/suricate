@@ -17,7 +17,6 @@
 import { NgModule } from '@angular/core';
 
 import { FooterComponent } from './components/footer/footer.component';
-import { TvManagementDialogComponent } from './components/header/components/tv-management-dialog/tv-management-dialog.component';
 import { SharedModule } from '../shared/shared.module';
 import { HeaderComponent } from './components/header/header.component';
 import { SidenavComponent } from './components/sidenav/sidenav.component';
@@ -25,8 +24,7 @@ import { MenuComponent } from './components/menu/menu.component';
 
 @NgModule({
   imports: [SharedModule],
-  declarations: [FooterComponent, HeaderComponent, SidenavComponent, TvManagementDialogComponent, MenuComponent],
-  entryComponents: [TvManagementDialogComponent],
+  declarations: [FooterComponent, HeaderComponent, SidenavComponent, MenuComponent],
   exports: [FooterComponent, HeaderComponent, SidenavComponent]
 })
 export class LayoutModule {}

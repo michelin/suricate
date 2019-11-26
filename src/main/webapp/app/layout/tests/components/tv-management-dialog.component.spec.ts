@@ -16,7 +16,7 @@
 
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TvManagementDialogComponent } from '../../components/header/components/tv-management-dialog/tv-management-dialog.component';
+import { TvManagementDialogComponent } from '../../../dashboard/components/tv-management-dialog/tv-management-dialog.component';
 
 describe('TvManagementDialogComponent', () => {
   let component: TvManagementDialogComponent;
