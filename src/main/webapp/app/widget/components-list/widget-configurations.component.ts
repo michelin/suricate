@@ -30,15 +30,20 @@ import { WidgetConfigurationFormFieldsService } from '../../shared/form-fields/w
   styleUrls: ['../../shared/components/list/list.component.scss']
 })
 export class WidgetConfigurationsComponent extends ListComponent<Configuration> {
+  /**
+   * The item selected on the list
+   */
   private configurationSelected: Configuration;
 
   /**
    * Constructor
    *
+   * @param httpConfigurationsService Suricate service used to manage http calls for configuration
+   * @param widgetConfigurationFormFieldsService Frontend service used to build form fields for project configuration
    * @param injector Angular Service used to manage the injection of services
    */
   constructor(
-    private httpConfigurationsService: HttpConfigurationService,
+    private readonly httpConfigurationsService: HttpConfigurationService,
     private readonly widgetConfigurationFormFieldsService: WidgetConfigurationFormFieldsService,
     protected injector: Injector
   ) {
@@ -140,7 +145,7 @@ export class WidgetConfigurationsComponent extends ListComponent<Configuration> 
    *
    * @param configuration The configuration to update
    */
-  private updateConfiguration(configuration: Configuration) {
+  private updateConfiguration(configuration: Configuration): void {
     this.httpConfigurationsService.update(configuration.key, configuration).subscribe(() => {
       this.refreshList();
       this.toastService.sendMessage('Configuration updated successfully', ToastTypeEnum.SUCCESS);

@@ -32,31 +32,42 @@ import { ButtonTypeEnum } from '../../enums/button-type.enum';
 export class ButtonsComponent<T> {
   /**
    * The list of buttons to display
+   * @type {ButtonConfiguration[]}
+   * @public
    */
   @Input()
   public configurations: ButtonConfiguration<T>[];
   /**
    * Object to raised with the click event
+   * @public
    */
   @Input()
   public object: T;
 
   /**
    * The different type of buttons
+   * @type {ButtonTypeEnum}
+   * @protected
    */
-  public buttonTypeEnum = ButtonTypeEnum;
-
+  protected buttonTypeEnum = ButtonTypeEnum;
   /**
    * Records that store the icons code for an enum
+   * @type {MaterialIconRecords}
+   * @protected
    */
-  public materialIconRecords = MaterialIconRecords;
+  protected materialIconRecords = MaterialIconRecords;
 
   /**
    * Constructor
    */
   constructor() {}
 
-  shouldDisplayButton(configuration: ButtonConfiguration<T>): boolean {
+  /**
+   * Used to know if the button should be hidden
+   *
+   * @param configuration The button configuration related to this button
+   */
+  protected shouldDisplayButton(configuration: ButtonConfiguration<T>): boolean {
     return !configuration.hidden || !configuration.hidden();
   }
 }

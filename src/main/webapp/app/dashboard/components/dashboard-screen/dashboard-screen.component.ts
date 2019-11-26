@@ -130,18 +130,16 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
   /**
    * The constructor
    *
-   * @param websocketService The websocket service
-   * @param httpAssetService The http asset service
-   * @param httpProjectService The http project service
-   * @param dashboardService The dashboard service
-   * @param elementRef The element Ref service
+   * @param {ElementRef} elementRef Angular service used to inject a reference on the component
+   * @param {httpProjectService} httpProjectService Suricate service used to manage project
+   * @param {DashboardService} dashboardService Frontend service used to manage dashboards
+   * @param {WebsocketService} websocketService Frontend service used to manage websocket connections
    */
   constructor(
-    private websocketService: WebsocketService,
-    private httpAssetService: HttpAssetService,
-    private httpProjectService: HttpProjectService,
-    private dashboardService: DashboardService,
-    private elementRef: ElementRef
+    private readonly elementRef: ElementRef,
+    private readonly httpProjectService: HttpProjectService,
+    private readonly dashboardService: DashboardService,
+    private readonly websocketService: WebsocketService
   ) {}
 
   /**
@@ -241,7 +239,7 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
    *
    * @param projectWidgets The project widgets
    */
-  private getGridStackItemsFromProjectWidgets(projectWidgets: ProjectWidget[]) {
+  private getGridStackItemsFromProjectWidgets(projectWidgets: ProjectWidget[]): NgGridItemConfig[] {
     const gridStackItemsConfig: NgGridItemConfig[] = [];
 
     this.projectWidgets.forEach((projectWidget: ProjectWidget) => {
@@ -272,7 +270,7 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
 
     if (this.project.librariesToken) {
       this.project.librariesToken.forEach(libraryToken => {
-        scriptUrls = scriptUrls.concat(`<script src="${this.httpAssetService.getContentUrl(libraryToken)}"></script>`);
+        scriptUrls = scriptUrls.concat(`<script src="${HttpAssetService.getContentUrl(libraryToken)}"></script>`);
       });
     }
 
@@ -350,7 +348,7 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
           this.disconnectFromWebsocket();
           this.disconnectEvent.emit();
         } else {
-          this.dashboardService.refreshProject();
+          // Refresh project
         }
       });
   }

@@ -42,14 +42,14 @@ export class HttpProjectService implements AbstractHttpService<Project | Project
    *
    * @param httpClient the http client to inject
    */
-  constructor(private httpClient: HttpClient) {}
+  constructor(private readonly httpClient: HttpClient) {}
 
   /**
    * Get every dashboards and update the list
    *
    * @returns {Observable<Project[]>} The list as observable
    */
-  getAll(): Observable<Project[]> {
+  public getAll(): Observable<Project[]> {
     const url = `${HttpProjectService.projectsApiEndpoint}`;
 
     return this.httpClient.get<Project[]>(url);
@@ -61,7 +61,7 @@ export class HttpProjectService implements AbstractHttpService<Project | Project
    * @param {string} projectToken The dashboard token
    * @returns {Observable<Project>} The dashboard as observable
    */
-  getById(projectToken: string): Observable<Project> {
+  public getById(projectToken: string): Observable<Project> {
     const url = `${HttpProjectService.projectsApiEndpoint}/${projectToken}`;
 
     return this.httpClient.get<Project>(url);
@@ -72,7 +72,7 @@ export class HttpProjectService implements AbstractHttpService<Project | Project
    *
    * @param {ProjectRequest} projectRequest The project request
    */
-  create(projectRequest: ProjectRequest): Observable<Project> {
+  public create(projectRequest: ProjectRequest): Observable<Project> {
     const url = `${HttpProjectService.projectsApiEndpoint}`;
 
     return this.httpClient.post<Project>(url, projectRequest);
@@ -84,7 +84,7 @@ export class HttpProjectService implements AbstractHttpService<Project | Project
    * @param projectToken The project token
    * @param projectRequest The project request
    */
-  update(projectToken: string, projectRequest: ProjectRequest): Observable<void> {
+  public update(projectToken: string, projectRequest: ProjectRequest): Observable<void> {
     const url = `${HttpProjectService.projectsApiEndpoint}/${projectToken}`;
 
     return this.httpClient.put<void>(url, projectRequest);
@@ -95,7 +95,7 @@ export class HttpProjectService implements AbstractHttpService<Project | Project
    *
    * @param {string} projectToken
    */
-  delete(projectToken: string): Observable<void> {
+  public delete(projectToken: string): Observable<void> {
     const url = `${HttpProjectService.projectsApiEndpoint}/${projectToken}`;
 
     return this.httpClient.delete<void>(url);
@@ -107,7 +107,7 @@ export class HttpProjectService implements AbstractHttpService<Project | Project
    * @param projectToken The project token
    * @param screenshotFile The screenshot file
    */
-  addOrUpdateProjectScreenshot(projectToken: string, screenshotFile: File): Observable<void> {
+  public addOrUpdateProjectScreenshot(projectToken: string, screenshotFile: File): Observable<void> {
     const url = `${HttpProjectService.projectsApiEndpoint}/${projectToken}/screenshot`;
 
     const formData: FormData = new FormData();
@@ -126,7 +126,10 @@ export class HttpProjectService implements AbstractHttpService<Project | Project
    * @param projectToken The project token
    * @param projectWidgetPositionRequests The list of positions to update
    */
-  updateProjectWidgetPositions(projectToken: string, projectWidgetPositionRequests: ProjectWidgetPositionRequest[]): Observable<void> {
+  public updateProjectWidgetPositions(
+    projectToken: string,
+    projectWidgetPositionRequests: ProjectWidgetPositionRequest[]
+  ): Observable<void> {
     const url = `${HttpProjectService.projectsApiEndpoint}/${projectToken}/projectWidgetPositions`;
 
     return this.httpClient.put<void>(url, projectWidgetPositionRequests);
@@ -137,7 +140,7 @@ export class HttpProjectService implements AbstractHttpService<Project | Project
    *
    * @param projectToken The project token
    */
-  getProjectProjectWidgets(projectToken: string): Observable<ProjectWidget[]> {
+  public getProjectProjectWidgets(projectToken: string): Observable<ProjectWidget[]> {
     const url = `${HttpProjectService.projectsApiEndpoint}/${projectToken}/projectWidgets`;
 
     return this.httpClient.get<ProjectWidget[]>(url);
@@ -149,7 +152,7 @@ export class HttpProjectService implements AbstractHttpService<Project | Project
    * @param projectToken The project token
    * @param projectWidgetRequest The project widget to add
    */
-  addProjectWidgetToProject(projectToken: string, projectWidgetRequest: ProjectWidgetRequest): Observable<ProjectWidget> {
+  public addProjectWidgetToProject(projectToken: string, projectWidgetRequest: ProjectWidgetRequest): Observable<ProjectWidget> {
     const url = `${HttpProjectService.projectsApiEndpoint}/${projectToken}/projectWidgets`;
 
     return this.httpClient.post<ProjectWidget>(url, projectWidgetRequest);
@@ -160,7 +163,7 @@ export class HttpProjectService implements AbstractHttpService<Project | Project
    *
    * @param projectToken The project token
    */
-  getProjectUsers(projectToken: string): Observable<User[]> {
+  public getProjectUsers(projectToken: string): Observable<User[]> {
     const url = `${HttpProjectService.projectsApiEndpoint}/${projectToken}/users`;
 
     return this.httpClient.get<User[]>(url);
@@ -173,7 +176,7 @@ export class HttpProjectService implements AbstractHttpService<Project | Project
    * @param {string} username The username to add
    * @returns {Observable<Project>} The project as observable
    */
-  addUserToProject(projectToken: string, username: string): Observable<void> {
+  public addUserToProject(projectToken: string, username: string): Observable<void> {
     const url = `${HttpProjectService.projectsApiEndpoint}/${projectToken}/users`;
 
     return this.httpClient.post<void>(url, { username: username });
@@ -185,7 +188,7 @@ export class HttpProjectService implements AbstractHttpService<Project | Project
    * @param {string} projectToken The project token
    * @param {number} userId The userId
    */
-  deleteUserFromProject(projectToken: string, userId: number): Observable<void> {
+  public deleteUserFromProject(projectToken: string, userId: number): Observable<void> {
     const url = `${HttpProjectService.projectsApiEndpoint}/${projectToken}/users/${userId}`;
 
     return this.httpClient.delete<void>(url);
@@ -196,7 +199,7 @@ export class HttpProjectService implements AbstractHttpService<Project | Project
    *
    * @param projectToken The project token
    */
-  getProjectWebsocketClients(projectToken: string): Observable<WebsocketClient[]> {
+  public getProjectWebsocketClients(projectToken: string): Observable<WebsocketClient[]> {
     const url = `${HttpProjectService.projectsApiEndpoint}/${projectToken}/websocket/clients`;
     return this.httpClient.get<WebsocketClient[]>(url);
   }
@@ -206,7 +209,7 @@ export class HttpProjectService implements AbstractHttpService<Project | Project
    *
    * @returns {Observable<Project[]>} The list as observable
    */
-  getAllForCurrentUser(): Observable<Project[]> {
+  public getAllForCurrentUser(): Observable<Project[]> {
     const url = `${HttpProjectService.projectsApiEndpoint}/currentUser`;
 
     return this.httpClient.get<Project[]>(url);

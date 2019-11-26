@@ -29,7 +29,7 @@ export class SafeUrlPipe implements PipeTransform {
    *
    * @param {DomSanitizer} domSanitizer The dom sanitizer service
    */
-  constructor(private domSanitizer: DomSanitizer) {}
+  constructor(private readonly domSanitizer: DomSanitizer) {}
 
   /**
    * The transformation function
@@ -37,7 +37,7 @@ export class SafeUrlPipe implements PipeTransform {
    * @param {string} valueToSanitize The url to sanitize
    * @returns {SafeUrl}
    */
-  transform(valueToSanitize: string): SafeUrl {
+  public transform(valueToSanitize: string): SafeUrl {
     return this.domSanitizer.bypassSecurityTrustUrl(valueToSanitize);
   }
 }

@@ -36,14 +36,9 @@ export class WidgetsComponent extends ListComponent<Widget | WidgetRequest> {
    * Constructor
    *
    * @param httpWidgetService Suricate service used to manage the http calls for widgets
-   * @param httpAssetService Suricate service used to manage the assets
    * @param injector Angular Service used to manage the injection of services
    */
-  constructor(
-    private readonly httpWidgetService: HttpWidgetService,
-    private readonly httpAssetService: HttpAssetService,
-    protected injector: Injector
-  ) {
+  constructor(private readonly httpWidgetService: HttpWidgetService, protected injector: Injector) {
     super(httpWidgetService, injector);
 
     this.initHeaderConfiguration();
@@ -101,6 +96,6 @@ export class WidgetsComponent extends ListComponent<Widget | WidgetRequest> {
    * {@inheritDoc}
    */
   protected getObjectImageURL(widget: Widget): string {
-    return this.httpAssetService.getContentUrl(widget.imageToken);
+    return HttpAssetService.getContentUrl(widget.imageToken);
   }
 }

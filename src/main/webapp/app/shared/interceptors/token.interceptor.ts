@@ -29,11 +29,11 @@ export class TokenInterceptor implements HttpInterceptor {
   /**
    * Method implemented from HttpInterceptor
    *
-   * @param {HttpRequest<any>} request The request sent
+   * @param {HttpRequest} request The request sent
    * @param {HttpHandler} next The next interceptor
-   * @returns {Observable<HttpEvent<any>>}
+   * @returns {Observable<HttpEvent>}
    */
-  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (
       !request ||
       !request.url ||

@@ -39,12 +39,12 @@ export class CommunicationDialogComponent implements OnInit {
    *
    * @param data The data object that contains every information to display
    */
-  constructor(@Inject(MAT_DIALOG_DATA) private data: CommunicationDialogConfiguration) {}
+  constructor(@Inject(MAT_DIALOG_DATA) private readonly data: CommunicationDialogConfiguration) {}
 
   /**
    * Called when the dialog is init
    */
-  ngOnInit() {
+  public ngOnInit(): void {
     this.configuration = this.data;
   }
 }

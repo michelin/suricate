@@ -41,7 +41,7 @@ export class HttpAssetService {
    *
    * @param assetToken The asset token
    */
-  getContentUrl(assetToken: string): string {
+  public static getContentUrl(assetToken: string): string {
     return assetToken ? `${HttpAssetService.assetsApiEndpoint}/${assetToken}/content` : ``;
   }
 }

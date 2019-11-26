@@ -64,6 +64,16 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
   }
 
   /**
+   * Function used to not propagate the event
+   *
+   * @param event The event to stop
+   */
+  private static stopEventPropagation(event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  /**
    * Function used to configure the header of the list component
    */
   private initHeaderConfiguration(): void {
@@ -125,7 +135,7 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
    * @param saveCallback The function to call when save button is clicked
    */
   private openFormSidenav(event: Event, project: Project, saveCallback: (projectRequest: ProjectRequest) => void): void {
-    this.stopEventPropagation(event);
+    DashboardsComponent.stopEventPropagation(event);
     this.projectSelected = project;
 
     this.sidenavService.openFormSidenav({
@@ -153,7 +163,7 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
    * @param project The project to delete
    */
   private deleteProject(event: Event, project: Project): void {
-    this.stopEventPropagation(event);
+    DashboardsComponent.stopEventPropagation(event);
 
     this.dialogService.confirm({
       title: 'dashboard.delete',
@@ -174,7 +184,7 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
    * @param project The project clicked on the list
    */
   private openUserFormSidenav(event: Event, project: Project): void {
-    this.stopEventPropagation(event);
+    DashboardsComponent.stopEventPropagation(event);
     this.projectSelected = project;
 
     this.sidenavService.openFormSidenav({
@@ -185,17 +195,7 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
     });
   }
 
-  /**
-   * Function used to not propagate the event
-   *
-   * @param event The event to stop
-   */
-  private stopEventPropagation(event: Event): void {
-    event.preventDefault();
-    event.stopPropagation();
-  }
-
-  onValueChanged(valueChangedEvent: ValueChangedEvent): Observable<FormField[]> {
+  private onValueChanged(valueChangedEvent: ValueChangedEvent): Observable<FormField[]> {
     if (valueChangedEvent.type === 'optionSelected' && valueChangedEvent.fieldKey === 'usernameAutocomplete') {
       return this.httpProjectService
         .addUserToProject(this.projectSelected.token, valueChangedEvent.value)

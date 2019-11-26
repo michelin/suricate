@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { EnvironmentService } from '../../../shared/services/frontend/environment.service';
 
 /**
@@ -25,26 +25,23 @@ import { EnvironmentService } from '../../../shared/services/frontend/environmen
   templateUrl: './footer.component.html',
   styleUrls: ['./footer.component.scss']
 })
-export class FooterComponent implements OnInit {
+export class FooterComponent {
   /**
    * The app version
    * @type {string}
+   * @protected
    */
-  version: string = EnvironmentService.appVersion;
+  protected version = EnvironmentService.appVersion;
 
   /**
    * The env type
    * @type {string}
+   * @protected
    */
-  env: string = EnvironmentService.appEnv;
+  protected env = EnvironmentService.appEnv;
 
   /**
    * The constructor
    */
   constructor() {}
-
-  /**
-   * When the component is init
-   */
-  ngOnInit() {}
 }

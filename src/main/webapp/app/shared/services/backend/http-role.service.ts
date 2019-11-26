@@ -38,14 +38,14 @@ export class HttpRoleService {
    *
    * @param httpClient The http client service to inject
    */
-  constructor(private httpClient: HttpClient) {}
+  constructor(private readonly httpClient: HttpClient) {}
 
   /**
    * Get the list of roles
    *
    * @returns {Observable<Role[]>}
    */
-  getRoles(): Observable<Role[]> {
+  public getRoles(): Observable<Role[]> {
     const url = `${HttpRoleService.rolesApiEndpoint}`;
 
     return this.httpClient.get<Role[]>(url);
@@ -56,7 +56,7 @@ export class HttpRoleService {
    *
    * @param roleId The role id
    */
-  getOneById(roleId: number): Observable<Role> {
+  public getOneById(roleId: number): Observable<Role> {
     const url = `${HttpRoleService.rolesApiEndpoint}/${roleId}`;
 
     return this.httpClient.get<Role>(url);
@@ -67,7 +67,7 @@ export class HttpRoleService {
    *
    * @param roleId The role id
    */
-  getUsersByRole(roleId: number): Observable<User[]> {
+  public getUsersByRole(roleId: number): Observable<User[]> {
     const url = `${HttpRoleService.rolesApiEndpoint}/${roleId}/users`;
 
     return this.httpClient.get<User[]>(url);

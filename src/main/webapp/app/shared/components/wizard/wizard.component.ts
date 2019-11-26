@@ -67,19 +67,19 @@ export class WizardComponent implements OnInit, OnDestroy {
   /**
    * The configuration of the wizard
    */
-  public wizardConfiguration: WizardConfiguration;
+  protected wizardConfiguration: WizardConfiguration;
   /**
    * The list of wizard buttons
    */
-  public wizardButtons: ButtonConfiguration<unknown>[];
+  protected wizardButtons: ButtonConfiguration<unknown>[];
   /**
    * Form group of the stepper
    */
-  public stepperFormGroup: FormGroup;
+  private stepperFormGroup: FormGroup;
   /**
    * The list of material icons
    */
-  public materialIconRecords = MaterialIconRecords;
+  protected materialIconRecords = MaterialIconRecords;
 
   /**
    * Constructor
@@ -97,7 +97,7 @@ export class WizardComponent implements OnInit, OnDestroy {
   /**
    * Init the buttons of the wizard
    */
-  initWizardButtons(): void {
+  private initWizardButtons(): void {
     this.wizardButtons = [
       {
         label: 'Close',
@@ -124,11 +124,11 @@ export class WizardComponent implements OnInit, OnDestroy {
     ];
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.stepperFormGroup = this.formService.generateFormGroupForSteps(this.wizardConfiguration.steps);
   }
 
-  ngOnDestroy(): void {
+  public ngOnDestroy(): void {
     this.isAlive = false;
   }
 

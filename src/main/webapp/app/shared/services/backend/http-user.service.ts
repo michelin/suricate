@@ -40,14 +40,14 @@ export class HttpUserService implements AbstractHttpService<User | UserRequest> 
    *
    * @param httpClient The http client
    */
-  constructor(private httpClient: HttpClient) {}
+  constructor(private readonly httpClient: HttpClient) {}
 
   /**
    * Get the list of users
    *
    * @returns {Observable<User[]>} The list of users
    */
-  getAll(filter: string = ''): Observable<User[]> {
+  public getAll(filter: string = ''): Observable<User[]> {
     const url = `${HttpUserService.usersApiEndpoint}?filter=${filter}`;
 
     return this.httpClient.get<User[]>(url);
@@ -59,7 +59,7 @@ export class HttpUserService implements AbstractHttpService<User | UserRequest> 
    * @param {number} userId The user id to find
    * @returns {Observable<User>} The user found
    */
-  getById(userId: number): Observable<User> {
+  public getById(userId: number): Observable<User> {
     const url = `${HttpUserService.usersApiEndpoint}/${userId}`;
 
     return this.httpClient.get<User>(url);
@@ -70,7 +70,7 @@ export class HttpUserService implements AbstractHttpService<User | UserRequest> 
    *
    * @param entity The user to create
    */
-  create(entity: User | UserRequest): Observable<User> {
+  public create(entity: User | UserRequest): Observable<User> {
     return EMPTY;
   }
 
@@ -80,7 +80,7 @@ export class HttpUserService implements AbstractHttpService<User | UserRequest> 
    * @param {number} id The userId to update
    * @param entity The user request
    */
-  update(id: number, entity: User | UserRequest): Observable<void> {
+  public update(id: number, entity: User | UserRequest): Observable<void> {
     const url = `${HttpUserService.usersApiEndpoint}/${id}`;
 
     return this.httpClient.put<void>(url, entity);
@@ -91,7 +91,7 @@ export class HttpUserService implements AbstractHttpService<User | UserRequest> 
    *
    * @param userId The user id to delete
    */
-  delete(userId: number): Observable<void> {
+  public delete(userId: number): Observable<void> {
     const url = `${HttpUserService.usersApiEndpoint}/${userId}`;
 
     return this.httpClient.delete<void>(url);
@@ -102,7 +102,7 @@ export class HttpUserService implements AbstractHttpService<User | UserRequest> 
    *
    * @param userId The user id
    */
-  getUserSettings(userId: number): Observable<UserSetting[]> {
+  public getUserSettings(userId: number): Observable<UserSetting[]> {
     const url = `${HttpUserService.usersApiEndpoint}/${userId}/settings`;
 
     return this.httpClient.get<UserSetting[]>(url);
@@ -114,7 +114,7 @@ export class HttpUserService implements AbstractHttpService<User | UserRequest> 
    * @param userId The user id
    * @param settingId The setting id
    */
-  getUserSetting(userId: number, settingId: number): Observable<UserSetting> {
+  public getUserSetting(userId: number, settingId: number): Observable<UserSetting> {
     const url = `${HttpUserService.usersApiEndpoint}/${userId}/settings/${settingId}`;
 
     return this.httpClient.get<UserSetting>(url);
@@ -127,7 +127,7 @@ export class HttpUserService implements AbstractHttpService<User | UserRequest> 
    * @param {number} settingId The setting id
    * @param {UserSettingRequest} userSettingRequest The user setting request
    */
-  updateUserSetting(userId: number, settingId: number, userSettingRequest: UserSettingRequest): Observable<void> {
+  public updateUserSetting(userId: number, settingId: number, userSettingRequest: UserSettingRequest): Observable<void> {
     const url = `${HttpUserService.usersApiEndpoint}/${userId}/settings/${settingId}`;
 
     return this.httpClient.put<void>(url, userSettingRequest);
@@ -138,7 +138,7 @@ export class HttpUserService implements AbstractHttpService<User | UserRequest> 
    *
    * @returns {Observable<User>} The connected user
    */
-  getConnectedUser(): Observable<User> {
+  public getConnectedUser(): Observable<User> {
     const url = `${HttpUserService.usersApiEndpoint}/current`;
 
     return this.httpClient.get<User>(url);

@@ -41,7 +41,7 @@ export class HttpConfigurationService extends AbstractHttpService<Configuration>
    *
    * @param {HttpClient} httpClient The http client service
    */
-  constructor(private httpClient: HttpClient) {
+  constructor(private readonly httpClient: HttpClient) {
     super();
   }
 
@@ -50,7 +50,7 @@ export class HttpConfigurationService extends AbstractHttpService<Configuration>
    *
    * @returns {Observable<Configuration[]>} The configuration as observable
    */
-  getAll(): Observable<Configuration[]> {
+  public getAll(): Observable<Configuration[]> {
     const url = `${HttpConfigurationService.configurationsApiEndpoint}`;
 
     return this.httpClient.get<Configuration[]>(url);
@@ -62,7 +62,7 @@ export class HttpConfigurationService extends AbstractHttpService<Configuration>
    * @param {string} configurationKey The key to find
    * @returns {Observable<Configuration>} The configuration as observable
    */
-  getById(configurationKey: string): Observable<Configuration> {
+  public getById(configurationKey: string): Observable<Configuration> {
     const url = `${HttpConfigurationService.configurationsApiEndpoint}/${configurationKey}`;
 
     return this.httpClient.get<Configuration>(url);
@@ -73,7 +73,7 @@ export class HttpConfigurationService extends AbstractHttpService<Configuration>
    *
    * @param configuration The configuration that we want to create
    */
-  create(configuration: Configuration): Observable<Configuration> {
+  public create(configuration: Configuration): Observable<Configuration> {
     return EMPTY;
   }
 
@@ -84,7 +84,7 @@ export class HttpConfigurationService extends AbstractHttpService<Configuration>
    * @param {ConfigurationRequest} configurationRequest The value updated
    * @returns {Observable<Configuration>} The config updated
    */
-  update(configurationKey: string, configurationRequest: ConfigurationRequest): Observable<void> {
+  public update(configurationKey: string, configurationRequest: ConfigurationRequest): Observable<void> {
     const url = `${HttpConfigurationService.configurationsApiEndpoint}/${configurationKey}`;
 
     return this.httpClient.put<void>(url, configurationRequest);
@@ -96,7 +96,7 @@ export class HttpConfigurationService extends AbstractHttpService<Configuration>
    * @param {string} configurationKey The configuration to delete
    * @returns {Observable<Configuration>} The configuration delete as observable
    */
-  delete(configurationKey: string): Observable<void> {
+  public delete(configurationKey: string): Observable<void> {
     const url = `${HttpConfigurationService.configurationsApiEndpoint}/${configurationKey}`;
 
     return this.httpClient.delete<void>(url);
@@ -107,7 +107,7 @@ export class HttpConfigurationService extends AbstractHttpService<Configuration>
    *
    * @return {Observable<ApplicationProperties>} Configuration for Authentication Provider
    */
-  getAuthenticationProvider(): Observable<ApplicationProperties> {
+  public getAuthenticationProvider(): Observable<ApplicationProperties> {
     const url = `${HttpConfigurationService.configurationsApiEndpoint}/authentication-provider`;
 
     return this.httpClient.get<ApplicationProperties>(url);

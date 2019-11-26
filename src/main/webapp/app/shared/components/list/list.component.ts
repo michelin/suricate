@@ -59,19 +59,19 @@ export class ListComponent<T> implements OnInit {
   /**
    * Configuration of the header component
    */
-  public headerConfiguration: HeaderConfiguration;
+  protected headerConfiguration: HeaderConfiguration;
   /**
    * The configuration of the list component
    */
-  public listConfiguration = new ListConfiguration<unknown>();
+  protected listConfiguration = new ListConfiguration<unknown>();
   /**
    * The object list to display
    */
-  public objects: T[];
+  protected objects: T[];
   /**
    * Display the loader when it's true, end hide when it's false
    */
-  public isLoading = true;
+  protected isLoading = true;
 
   /**
    * Constructor
@@ -90,7 +90,7 @@ export class ListComponent<T> implements OnInit {
   /**
    * Called when the component is init
    */
-  ngOnInit() {
+  public ngOnInit(): void {
     this.refreshList();
   }
 

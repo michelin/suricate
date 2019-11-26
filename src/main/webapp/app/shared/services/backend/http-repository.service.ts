@@ -42,12 +42,12 @@ export class HttpRepositoryService implements AbstractHttpService<Repository | R
    *
    * @param {HttpClient} httpClient The http client to inject
    */
-  constructor(private httpClient: HttpClient) {}
+  constructor(private readonly httpClient: HttpClient) {}
 
   /**
    * Return the list of every repositories
    */
-  getAll(): Observable<Repository[]> {
+  public getAll(): Observable<Repository[]> {
     const url = `${HttpRepositoryService.repositoriesApiEndpoint}`;
 
     return this.httpClient.get<Repository[]>(url);
@@ -58,7 +58,7 @@ export class HttpRepositoryService implements AbstractHttpService<Repository | R
    *
    * @param repositoryId The repository id
    */
-  getById(repositoryId: number): Observable<Repository> {
+  public getById(repositoryId: number): Observable<Repository> {
     const url = `${HttpRepositoryService.repositoriesApiEndpoint}/${repositoryId}`;
 
     return this.httpClient.get<Repository>(url);
@@ -69,7 +69,7 @@ export class HttpRepositoryService implements AbstractHttpService<Repository | R
    *
    * @param repositoryRequest The repository to add
    */
-  create(repositoryRequest: RepositoryRequest): Observable<Repository> {
+  public create(repositoryRequest: RepositoryRequest): Observable<Repository> {
     const url = `${HttpRepositoryService.repositoriesApiEndpoint}`;
 
     return this.httpClient.post<Repository>(url, repositoryRequest);
@@ -81,7 +81,7 @@ export class HttpRepositoryService implements AbstractHttpService<Repository | R
    * @param repositoryId The repository id
    * @param repositoryRequest The repository with informations updated
    */
-  update(repositoryId: number, repositoryRequest: RepositoryRequest): Observable<void> {
+  public update(repositoryId: number, repositoryRequest: RepositoryRequest): Observable<void> {
     const url = `${HttpRepositoryService.repositoriesApiEndpoint}/${repositoryId}`;
 
     return this.httpClient.put<void>(url, repositoryRequest);
@@ -92,7 +92,7 @@ export class HttpRepositoryService implements AbstractHttpService<Repository | R
    *
    * @param id The repository id to delete
    */
-  delete(id: number): Observable<void> {
+  public delete(id: number): Observable<void> {
     return EMPTY;
   }
 
@@ -101,7 +101,7 @@ export class HttpRepositoryService implements AbstractHttpService<Repository | R
    *
    * @param repositoryId The repository ID
    */
-  getRepositoryWidgets(repositoryId: number): Observable<Widget[]> {
+  public getRepositoryWidgets(repositoryId: number): Observable<Widget[]> {
     const url = `${HttpRepositoryService.repositoriesApiEndpoint}/${repositoryId}/widgets`;
 
     return this.httpClient.get<Widget[]>(url);

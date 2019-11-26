@@ -16,7 +16,6 @@
 
 import { Injectable } from '@angular/core';
 import { EMPTY, from, Observable, of } from 'rxjs';
-import { TranslateService } from '@ngx-translate/core';
 import { DataTypeEnum } from '../enums/data-type.enum';
 import { FormStep } from '../models/frontend/form/form-step';
 import { IconEnum } from '../enums/icon.enum';
@@ -42,14 +41,10 @@ export class ProjectWidgetFormStepsService {
   /**
    * Constructor
    *
-   * @param translateService Ngx translate service used to manage the translations
+   * @param httpCategoryService Suricate service used to manage HTTP calls
+   * @param httpWidgetService Suricate service used to manage http calls for widget
    */
-  constructor(
-    private readonly translateService: TranslateService,
-    private readonly httpCategoryService: HttpCategoryService,
-    private readonly httpAssetService: HttpAssetService,
-    private readonly httpWidgetService: HttpWidgetService
-  ) {}
+  constructor(private readonly httpCategoryService: HttpCategoryService, private readonly httpWidgetService: HttpWidgetService) {}
 
   /**
    * Generation of the form options for widget params
@@ -123,7 +118,7 @@ export class ProjectWidgetFormStepsService {
             return {
               value: category.id,
               description: category.name,
-              imageUrl: this.httpAssetService.getContentUrl(category.assetToken)
+              imageUrl: HttpAssetService.getContentUrl(category.assetToken)
             };
           }),
           toArray()
@@ -143,7 +138,7 @@ export class ProjectWidgetFormStepsService {
               return {
                 value: widget.id,
                 description: widget.description,
-                imageUrl: this.httpAssetService.getContentUrl(widget.imageToken)
+                imageUrl: HttpAssetService.getContentUrl(widget.imageToken)
               };
             }),
             toArray()
@@ -162,7 +157,7 @@ export class ProjectWidgetFormStepsService {
       return this.httpWidgetService.getById(widgetId).pipe(
         tap((widget: Widget) => {
           step.description = widget.description;
-          step.imageLink = { link: this.httpAssetService.getContentUrl(widget.imageToken) };
+          step.imageLink = { link: HttpAssetService.getContentUrl(widget.imageToken) };
         }),
         map((widget: Widget) => {
           return this.generateProjectWidgetFormFields(widget.params);

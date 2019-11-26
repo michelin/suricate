@@ -28,18 +28,20 @@ import { ConfirmationDialogConfiguration } from '../../models/frontend/dialog/co
 export class ConfirmDialogComponent {
   /**
    * The configuration of the confirmation dialog
+   * @type {ConfirmationDialogConfiguration}
+   * @protected
    */
-  public configuration: ConfirmationDialogConfiguration;
+  protected configuration: ConfirmationDialogConfiguration;
 
   /**
    * Constructor
    *
-   * @param confirmationDialogRef Reference on the instance of this dialog
-   * @param data The data given to the dialog
+   * @param {MatDialogRef<ConfirmDialogComponent>} confirmationDialogRef Reference on the instance of this dialog
+   * @param {ConfirmationDialogConfiguration} data The data given to the dialog
    */
   constructor(
-    private confirmationDialogRef: MatDialogRef<ConfirmDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) private data: ConfirmationDialogConfiguration
+    private readonly confirmationDialogRef: MatDialogRef<ConfirmDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) private readonly data: ConfirmationDialogConfiguration
   ) {
     this.configuration = data;
   }

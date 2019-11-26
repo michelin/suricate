@@ -15,7 +15,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { StompConfig, StompRService, StompState } from '@stomp/ng2-stompjs';
+import { StompConfig, StompRService } from '@stomp/ng2-stompjs';
 import { Observable } from 'rxjs';
 import { EnvironmentService } from './environment.service';
 
@@ -38,7 +38,7 @@ export class WebsocketService {
    *
    * @param {StompRService} stompRService The stomp Service to inject
    */
-  constructor(private stompRService: StompRService) {}
+  constructor(private readonly stompRService: StompRService) {}
 
   /* ****************************************************************** */
   /*                    WebSocket Management                            */
@@ -46,20 +46,11 @@ export class WebsocketService {
   /* ****************************************************************** */
 
   /**
-   * Get the stomp connection state
-   *
-   * @returns {Observable<StompState>}
-   */
-  get stompConnectionState$(): Observable<StompState> {
-    return this.stompRService.state.asObservable();
-  }
-
-  /**
    * Get the websocket config
    *
    * @returns {StompConfig} The config
    */
-  getWebsocketConfig(): StompConfig {
+  private getWebsocketConfig(): StompConfig {
     const stompConfig = new StompConfig();
     stompConfig.url = () => new SockJS(WebsocketService.baseWsEndpoint);
     stompConfig.heartbeat_in = 0;
@@ -73,7 +64,7 @@ export class WebsocketService {
   /**
    * Start the websocket connection
    */
-  startConnection() {
+  public startConnection(): void {
     this.stompRService.config = this.getWebsocketConfig();
     this.stompRService.initAndConnect();
   }
@@ -83,14 +74,14 @@ export class WebsocketService {
    *
    * @param {string} destination The subcription url
    */
-  subscribeToDestination(destination: string): Observable<Stomp.Message> {
+  public subscribeToDestination(destination: string): Observable<Stomp.Message> {
     return this.stompRService.subscribe(destination);
   }
 
   /**
    * Disconnect the client
    */
-  disconnect() {
+  public disconnect() {
     this.stompRService.disconnect();
   }
 }

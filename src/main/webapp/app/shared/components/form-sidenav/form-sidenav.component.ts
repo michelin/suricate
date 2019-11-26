@@ -36,40 +36,52 @@ import { FormField } from '../../models/frontend/form/form-field';
 export class FormSidenavComponent implements OnInit, OnDestroy {
   /**
    * Send an event to the parent component used to open the sidebar
+   * @type {EventEmitter}
+   * @public
    */
   @Output()
   public open = new EventEmitter<void>();
   /**
    * Send an event to the parent component used to close the sidebar
+   * @type {EventEmitter}
+   * @public
    */
   @Output()
   public close = new EventEmitter<void>();
 
   /**
    * The configuration of the sidenav
+   * @type {FormSidenavConfiguration}
+   * @private
    */
   private configuration: FormSidenavConfiguration;
 
   /**
    * The form displayed by the sidenav
+   * @type {FormGroup}
+   * @private
    */
   private formGroup: FormGroup;
 
   /**
    * Used to unsubscribe observables when the component is destroyed
+   * @type {boolean}
+   * @private
    */
   private isAlive = true;
 
   /**
    * The buttons
+   * @type {ButtonConfiguration[]}
+   * @protected
    */
-  public buttons: ButtonConfiguration<unknown>[] = [];
+  protected buttons: ButtonConfiguration<unknown>[] = [];
 
   /**
    * Constructor
    *
-   * @param formService Frontend service used to manage the forms
-   * @param sidenavService Sidenav service used to manage the sidenavs
+   * @param {FormService} formService Frontend service used to manage the forms
+   * @param {SidenavService} sidenavService Sidenav service used to manage the sidenavs
    */
   constructor(private readonly formService: FormService, private readonly sidenavService: SidenavService) {
     this.initButtons();
@@ -78,7 +90,7 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
   /**
    * Called when the component is init
    */
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.sidenavService
       .listenFormSidenavMessages()
       .pipe(takeWhile(() => this.isAlive))
@@ -92,7 +104,7 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
   /**
    * Init the buttons
    */
-  initButtons() {
+  private initButtons(): void {
     this.buttons.push(
       {
         label: 'Close',
@@ -141,7 +153,7 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
    *
    * @param valueChangedEvent The value changed
    */
-  public valueChanged(valueChangedEvent: ValueChangedEvent): void {
+  protected valueChanged(valueChangedEvent: ValueChangedEvent): void {
     if (this.configuration.onValueChanged) {
       this.configuration.onValueChanged(valueChangedEvent).subscribe((formFields: FormField[]) => {
         this.formGroup = this.formService.generateFormGroupForFields(formFields);
@@ -153,7 +165,7 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
   /**
    * Called when the component is destroyed
    */
-  ngOnDestroy(): void {
+  public ngOnDestroy(): void {
     this.isAlive = false;
   }
 }

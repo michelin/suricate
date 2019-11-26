@@ -43,7 +43,7 @@ export class ToastService {
    * get the toast message events
    * @returns {Observable<ToastMessage>}
    */
-  get toastMessage$(): Observable<ToastMessage> {
+  public listenForToastMessages(): Observable<ToastMessage> {
     return this.toastMessageSubject.asObservable();
   }
 
@@ -53,7 +53,7 @@ export class ToastService {
    * @param {ToastTypeEnum} style The message style
    * @param {string} content The content of the message
    */
-  sendMessage(title: string, style?: ToastTypeEnum, content?: string): void {
+  public sendMessage(title: string, style?: ToastTypeEnum, content?: string): void {
     this.toastMessageSubject.next(new ToastMessage(title, content, style));
   }
 }

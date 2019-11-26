@@ -30,7 +30,7 @@ export class FileUtils {
    * @param contentType The img content type
    * @param sliceSize Buffer size
    */
-  static base64ToBlob(base64Data: string, contentType: string, sliceSize?: number): Blob {
+  public static base64ToBlob(base64Data: string, contentType: string, sliceSize?: number): Blob {
     contentType = contentType || '';
     sliceSize = sliceSize || 512;
 
@@ -60,7 +60,7 @@ export class FileUtils {
    * @param filename The filename
    * @param lastModifiedDate The last modified date
    */
-  static convertBlobToFile(blob: Blob, filename: string, lastModifiedDate: Date): File {
+  public static convertBlobToFile(blob: Blob, filename: string, lastModifiedDate: Date): File {
     const file: any = blob;
     file.lastModified = lastModifiedDate;
     file.name = filename;
@@ -73,7 +73,7 @@ export class FileUtils {
    *
    * @param file The file to convert
    */
-  static convertFileToBase64(file: File): Observable<string | ArrayBuffer> {
+  public static convertFileToBase64(file: File): Observable<string | ArrayBuffer> {
     return Observable.create(observable => {
       const fileReader = new FileReader();
 
@@ -90,7 +90,7 @@ export class FileUtils {
    * Test if the base 64 url is an image
    * @param base64Url
    */
-  static isBase64UrlIsAnImage(base64Url: string) {
+  public static isBase64UrlIsAnImage(base64Url: string) {
     const base64ImagePattern = '^data:image/(gif|jpe?g|png);base64,.+$';
     const regexp = new RegExp(base64ImagePattern);
 
@@ -103,7 +103,7 @@ export class FileUtils {
    * @param htmlCanvasElement The html code of the element to take in screenshot
    * @param filename The name of the png file
    */
-  static takeScreenShot(htmlCanvasElement: HTMLCanvasElement, filename: string): File {
+  public static takeScreenShot(htmlCanvasElement: HTMLCanvasElement, filename: string): File {
     const imgUrl = htmlCanvasElement.toDataURL('image/png');
 
     const blob: Blob = FileUtils.base64ToBlob(ImageUtils.getDataFromBase64URL(imgUrl), ImageUtils.getContentTypeFromBase64URL(imgUrl));

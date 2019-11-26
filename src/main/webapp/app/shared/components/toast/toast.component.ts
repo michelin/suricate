@@ -18,7 +18,7 @@
 
 import { animate, group, state, style, transition, trigger } from '@angular/animations';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 
 import { ToastService } from '../../services/frontend/toast.service';
@@ -108,25 +108,25 @@ export class ToastComponent implements OnInit, OnDestroy {
    * The component state
    * @type {string}
    */
-  animationState = 'out';
+  protected animationState = 'out';
 
   /**
    * The enums of toast type
-   * @type {ToastType}
+   * @type {toastType}
    */
-  ToastType = ToastTypeEnum;
+  protected toastType = ToastTypeEnum;
 
   /**
    * The message to display
    * @type {Observable<ToastMessage>}
    */
-  message$: Observable<ToastMessage>;
+  protected message: ToastMessage;
 
   /**
    * The current timer for @function {hideWithinTimeout} function
    * @type {NodeJS.Timer}
    */
-  hideTimer: NodeJS.Timer;
+  private hideTimer: NodeJS.Timer;
 
   /**
    * Constructor
@@ -138,19 +138,22 @@ export class ToastComponent implements OnInit, OnDestroy {
   /**
    * Called when the component is init
    */
-  ngOnInit() {
-    this.toastService.toastMessage$.pipe(takeWhile(() => this.isAlive)).subscribe((message: ToastMessage) => {
-      this.message$ = of(message);
-      if (message) {
-        this.showToast();
-      }
-    });
+  public ngOnInit(): void {
+    this.toastService
+      .listenForToastMessages()
+      .pipe(takeWhile(() => this.isAlive))
+      .subscribe((message: ToastMessage) => {
+        this.message = message;
+        if (message) {
+          this.showToast();
+        }
+      });
   }
 
   /**
    * Show the toast notification
    */
-  showToast() {
+  private showToast(): void {
     this.clearTimeout();
     this.animationState = 'in';
     this.hideWithinTimeout();
@@ -159,7 +162,7 @@ export class ToastComponent implements OnInit, OnDestroy {
   /**
    * Hide manually the toast notification
    */
-  hideToast() {
+  public hideToast(): void {
     this.clearTimeout();
     this.animationState = 'out';
   }
@@ -167,21 +170,21 @@ export class ToastComponent implements OnInit, OnDestroy {
   /**
    * Hide the toast notification with timer
    */
-  hideWithinTimeout() {
+  private hideWithinTimeout(): void {
     this.hideTimer = global.setTimeout(() => this.hideToast(), 4000);
   }
 
   /**
    * Clear the timer
    */
-  clearTimeout() {
+  private clearTimeout(): void {
     clearTimeout(this.hideTimer);
   }
 
   /**
    * Called when the component is destroyed
    */
-  ngOnDestroy() {
+  public ngOnDestroy(): void {
     this.isAlive = false;
   }
 }

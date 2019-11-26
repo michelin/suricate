@@ -40,14 +40,14 @@ export class HttpProjectWidgetService {
    *
    * @param {HttpClient} httpClient The http client service
    */
-  constructor(private httpClient: HttpClient) {}
+  constructor(private readonly httpClient: HttpClient) {}
 
   /**
    * Get a project widget by id
    *
    * @param projectWidgetId The project widget id
    */
-  getOneById(projectWidgetId: number): Observable<ProjectWidget> {
+  public getOneById(projectWidgetId: number): Observable<ProjectWidget> {
     const url = `${HttpProjectWidgetService.projectWidgetsApiEndpoint}/${projectWidgetId}`;
     return this.httpClient.get<ProjectWidget>(url);
   }
@@ -58,7 +58,7 @@ export class HttpProjectWidgetService {
    * @param projectWidgetId The project widget id
    * @param projectWidgetRequest The new project widget
    */
-  updateOneById(projectWidgetId: number, projectWidgetRequest: ProjectWidgetRequest): Observable<void> {
+  public updateOneById(projectWidgetId: number, projectWidgetRequest: ProjectWidgetRequest): Observable<void> {
     const url = `${HttpProjectWidgetService.projectWidgetsApiEndpoint}/${projectWidgetId}`;
     return this.httpClient.put<void>(url, projectWidgetRequest);
   }
@@ -68,7 +68,7 @@ export class HttpProjectWidgetService {
    *
    * @param projectWidgetId The project widget id
    */
-  deleteOneById(projectWidgetId: number): Observable<void> {
+  public deleteOneById(projectWidgetId: number): Observable<void> {
     const url = `${HttpProjectWidgetService.projectWidgetsApiEndpoint}/${projectWidgetId}`;
     return this.httpClient.delete<void>(url);
   }

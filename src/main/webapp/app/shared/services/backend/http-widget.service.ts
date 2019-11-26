@@ -39,7 +39,7 @@ export class HttpWidgetService extends AbstractHttpService<Widget> {
    *
    * @param {HttpClient} httpClient The http client service
    */
-  constructor(private httpClient: HttpClient) {
+  constructor(private readonly httpClient: HttpClient) {
     super();
   }
 
@@ -50,7 +50,7 @@ export class HttpWidgetService extends AbstractHttpService<Widget> {
    * @param {ApiActionEnum} action Action to be executed by the backend
    * @returns {Observable<Widget[]>} The list of widgets as observable
    */
-  getAll(filter?: string, action?: ApiActionEnum): Observable<Widget[]> {
+  public getAll(filter?: string, action?: ApiActionEnum): Observable<Widget[]> {
     let url = `${HttpWidgetService.widgetsApiEndpoint}`;
     if (action) {
       url = url.concat(`?action=${action}`);
@@ -64,7 +64,7 @@ export class HttpWidgetService extends AbstractHttpService<Widget> {
    *
    * @param widgetId
    */
-  getById(widgetId: number): Observable<Widget> {
+  public getById(widgetId: number): Observable<Widget> {
     const url = `${HttpWidgetService.widgetsApiEndpoint}/${widgetId}`;
 
     return this.httpClient.get<Widget>(url);
@@ -75,7 +75,7 @@ export class HttpWidgetService extends AbstractHttpService<Widget> {
    *
    * @param widget The object that we want to create
    */
-  create(widget: Widget): Observable<Widget> {
+  public create(widget: Widget): Observable<Widget> {
     return EMPTY;
   }
 
@@ -85,7 +85,7 @@ export class HttpWidgetService extends AbstractHttpService<Widget> {
    * @param widgetId The widget id
    * @param widgetRequest The widget request
    */
-  update(widgetId: number, widgetRequest: WidgetRequest): Observable<void> {
+  public update(widgetId: number, widgetRequest: WidgetRequest): Observable<void> {
     const url = `${HttpWidgetService.widgetsApiEndpoint}/${widgetId}`;
 
     return this.httpClient.put<void>(url, widgetRequest);
@@ -96,7 +96,7 @@ export class HttpWidgetService extends AbstractHttpService<Widget> {
    *
    * @param widgetId The widget id
    */
-  delete(widgetId: number): Observable<void> {
+  public delete(widgetId: number): Observable<void> {
     return EMPTY;
   }
 }

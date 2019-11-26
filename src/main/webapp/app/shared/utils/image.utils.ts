@@ -25,11 +25,11 @@ export class ImageUtils {
    *
    * @param base64URL The base 64 URL
    */
-  static getContentTypeFromBase64URL(base64URL: string): string {
+  public static getContentTypeFromBase64URL(base64URL: string): string {
     return base64URL ? base64URL.split(';base64,')[0].split(':')[1] : null;
   }
 
-  static getDataFromBase64URL(base64URL: string): string {
+  public static getDataFromBase64URL(base64URL: string): string {
     return base64URL ? base64URL.split(';base64,')[1] : null;
   }
 }

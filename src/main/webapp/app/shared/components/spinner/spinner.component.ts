@@ -28,8 +28,11 @@ import { ThemePalette } from '@angular/material';
   styleUrls: ['./spinner.component.scss']
 })
 export class SpinnerComponent {
+  /**
+   * The color to use with the spinner
+   */
   @Input()
-  color: ThemePalette;
+  public color: ThemePalette;
 
   /**
    * Constructor

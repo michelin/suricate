@@ -42,7 +42,7 @@ export class AppComponent implements OnInit, OnDestroy {
    * @private
    */
   @HostBinding('class')
-  private appHtmlClass: string;
+  public appHtmlClass: string;
 
   /**
    * Tell if the component is instantiate or not

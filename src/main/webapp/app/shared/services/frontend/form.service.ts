@@ -33,14 +33,14 @@ export class FormService {
    *
    * @param formBuilder The form builder service
    */
-  constructor(private formBuilder: FormBuilder) {}
+  constructor(private readonly formBuilder: FormBuilder) {}
 
   /**
    * Validate the form
    *
    * @param formGroup The form to validate
    */
-  validate(formGroup: FormGroup) {
+  public validate(formGroup: FormGroup): void {
     Object.keys(formGroup.controls).forEach(field => {
       const control = formGroup.get(field);
 
@@ -74,7 +74,7 @@ export class FormService {
    * @param fields The form fields to instantiate
    * @return The generated form group for the list of fields give in argument
    */
-  generateFormGroupForFields(fields: FormField[]): FormGroup {
+  public generateFormGroupForFields(fields: FormField[]): FormGroup {
     const formGroup = this.formBuilder.group({});
 
     if (fields) {
@@ -135,7 +135,7 @@ export class FormService {
    * @param formControl The form control
    * @param validators The validators to set
    */
-  setValidatorsForControl(formControl: AbstractControl, validators: ValidatorFn | ValidatorFn[] | null) {
+  public setValidatorsForControl(formControl: AbstractControl, validators: ValidatorFn | ValidatorFn[] | null) {
     formControl.setValidators(validators);
   }
 }

@@ -26,13 +26,6 @@ import { FormSidenavConfiguration } from '../../models/frontend/sidenav/form-sid
 @Injectable({ providedIn: 'root' })
 export class SidenavService {
   /**
-   * The side nav subject
-   * @type {Subject<boolean>} True open, false close
-   * @private
-   */
-  private sidenavOpenCloseEventSubject = new Subject<boolean>();
-
-  /**
    * Subject used to manage form sidenav messages
    */
   private formSidenavSubject = new Subject<FormSidenavConfiguration>();
@@ -41,29 +34,6 @@ export class SidenavService {
    * Constructor
    */
   constructor() {}
-
-  /**
-   * Observable that hold events close/open events
-   *
-   * @returns {Observable<boolean>}
-   */
-  subscribeToSidenavOpenCloseEvent(): Observable<boolean> {
-    return this.sidenavOpenCloseEventSubject.asObservable();
-  }
-
-  /**
-   * Send a close event
-   */
-  closeSidenav(): void {
-    this.sidenavOpenCloseEventSubject.next(false);
-  }
-
-  /**
-   * Send an open event
-   */
-  openSidenav(): void {
-    this.sidenavOpenCloseEventSubject.next(true);
-  }
 
   /**
    * Function used to listen for new form sidenav request

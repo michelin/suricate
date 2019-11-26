@@ -28,7 +28,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { CheckboxComponent } from './components/inputs/checkbox/checkbox.component';
 import { CommunicationDialogComponent } from './components/communication-dialog/communication-dialog.component';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
-import { EnumKeysPipe } from './pipes/enum-keys.pipe';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
 import { FileInputComponent } from './components/inputs/file-input/file-input.component';
 import { InputComponent } from './components/inputs/input.component';
@@ -75,7 +74,6 @@ import { MosaicComponent } from './components/inputs/mosaic/mosaic.component';
     CheckboxComponent,
     CommunicationDialogComponent,
     ConfirmDialogComponent,
-    EnumKeysPipe,
     FileInputComponent,
     InputComponent,
     PasswordPipe,
@@ -101,7 +99,6 @@ import { MosaicComponent } from './components/inputs/mosaic/mosaic.component';
     CommunicationDialogComponent,
     ConfirmDialogComponent,
     CustomFormsModule,
-    EnumKeysPipe,
     FileInputComponent,
     FlexLayoutModule,
     FormsModule,

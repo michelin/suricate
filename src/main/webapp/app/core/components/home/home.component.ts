@@ -54,14 +54,12 @@ export class HomeComponent implements OnInit {
    *
    * @param {Router} router Angular service used to manage routes
    * @param {HttpProjectService} httpProjectService Suricate service used to manage http calls on projects
-   * @param {HttpAssetService} httpAssetService Suricate service used to manage http calls on assets
    * @param {SidenavService} sidenavService Frontend service used to manage sidenav's
    * @param {ToastService} toastService Frontend service used to display toast messages
    */
   constructor(
     private readonly router: Router,
     private readonly httpProjectService: HttpProjectService,
-    private readonly httpAssetService: HttpAssetService,
     private readonly sidenavService: SidenavService,
     private readonly toastService: ToastService
   ) {
@@ -115,6 +113,6 @@ export class HomeComponent implements OnInit {
    * @param assetToken The asset used to build the url
    */
   protected getContentUrl(assetToken: string): string {
-    return this.httpAssetService.getContentUrl(assetToken);
+    return HttpAssetService.getContentUrl(assetToken);
   }
 }

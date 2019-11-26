@@ -30,25 +30,30 @@ export class HeaderComponent implements OnInit {
   /**
    * The configuration of the header
    * @type {HeaderConfiguration}
+   * @public
    */
   @Input()
-  configuration: HeaderConfiguration;
+  public configuration: HeaderConfiguration;
   /**
    * True if the menu should be display on the page
+   * @type {boolean}
+   * @public
    */
   @Input()
-  showMenu = true;
+  public showMenu = true;
   /**
    * The page name
    * @type {string}
+   * @protected
    */
-  pageName: string;
+  protected pageName: string;
 
   /**
    * The constructor
-   * @param {Router} route The router service
+   *
+   * @param {Router} route Angular service used to manage routes
    */
-  constructor(private route: Router) {}
+  constructor(private readonly route: Router) {}
 
   /**
    * When the component is init

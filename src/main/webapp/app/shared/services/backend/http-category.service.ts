@@ -42,14 +42,14 @@ export class HttpCategoryService {
    *
    * @param httpClient the http client to inject
    */
-  constructor(private httpClient: HttpClient) {}
+  constructor(private readonly httpClient: HttpClient) {}
 
   /**
    * Retrieve the full list of categories
    *
    * @returns {Observable<Category[]>} The categories as observable
    */
-  getAll(): Observable<Category[]> {
+  public getAll(): Observable<Category[]> {
     const url = `${HttpCategoryService.categoriesApiEndpoint}`;
 
     return this.httpClient.get<Category[]>(url);
@@ -59,7 +59,7 @@ export class HttpCategoryService {
    * Get the list of configurations for a category
    * @param categoryId The category id
    */
-  getCategoryConfigurations(categoryId: number): Observable<Configuration[]> {
+  public getCategoryConfigurations(categoryId: number): Observable<Configuration[]> {
     const url = `${HttpCategoryService.categoriesApiEndpoint}/${categoryId}/configurations`;
     return this.httpClient.get<Configuration[]>(url);
   }
@@ -69,7 +69,7 @@ export class HttpCategoryService {
    *
    * @param categoryId The category id
    */
-  getCategoryWidgets(categoryId: number): Observable<Widget[]> {
+  public getCategoryWidgets(categoryId: number): Observable<Widget[]> {
     const url = `${HttpCategoryService.categoriesApiEndpoint}/${categoryId}/widgets`;
 
     return this.httpClient.get<Widget[]>(url);

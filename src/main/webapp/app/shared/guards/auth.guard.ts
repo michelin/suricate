@@ -31,14 +31,14 @@ export class AuthGuard implements CanActivate, CanActivateChild {
    *
    * @param {Router} router The router
    */
-  constructor(private router: Router) {}
+  constructor(private readonly router: Router) {}
 
   /**
    * Manage user roles
    *
    * @returns {Observable<boolean>}
    */
-  canActivate(): Observable<boolean> {
+  public canActivate(): Observable<boolean> {
     if (!AuthenticationService.isTokenExpired()) {
       return of(true);
     }
@@ -52,7 +52,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
    * Activation for child routes
    * @returns {Observable<boolean>}
    */
-  canActivateChild(): Observable<boolean> {
+  public canActivateChild(): Observable<boolean> {
     return this.canActivate();
   }
 }

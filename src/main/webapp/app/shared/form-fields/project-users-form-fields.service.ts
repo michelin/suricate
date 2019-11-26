@@ -35,6 +35,7 @@ export class ProjectUsersFormFieldsService {
    *
    * @param translateService Ngx translate service used to manage the translations
    * @param httpProjectService Suricate service used to manage project
+   * @param httpUserService Suricate service used to manage http calls for user
    */
   constructor(
     private readonly translateService: TranslateService,

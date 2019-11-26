@@ -25,7 +25,7 @@ export class CustomValidator {
    * @param {AbstractControl} passwordControl The password that hold the validator
    * @return {ValidatorFn} True if the passwords are different
    */
-  static checkPasswordMatch(passwordControl: AbstractControl): ValidatorFn {
+  public static checkPasswordMatch(passwordControl: AbstractControl): ValidatorFn {
     return (confirmPasswordControl: AbstractControl): ValidationErrors => {
       if ((passwordControl.dirty || passwordControl.touched) && (confirmPasswordControl.dirty || confirmPasswordControl.touched)) {
         return passwordControl.value !== confirmPasswordControl.value ? { passwordMismatch: true } : null;

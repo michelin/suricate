@@ -46,40 +46,43 @@ export class InputComponent implements OnInit {
    * The form created in which we have to create the input
    */
   @Input()
-  formGroup: FormGroup;
+  public formGroup: FormGroup;
   /**
    * Object that hold different information used for the instantiation of the input
    */
   @Input()
-  field: FormField;
+  public field: FormField;
   /**
    * Event sent when the value of the input has changed
    */
   @Output()
-  valueChangeEvent = new EventEmitter<ValueChangedEvent>();
+  public valueChangeEvent = new EventEmitter<ValueChangedEvent>();
   /**
    * The data type enum
    */
-  dataType = DataTypeEnum;
+  protected dataType = DataTypeEnum;
 
   /**
    * The list of options to display
    */
-  options: FormOption[];
+  protected options: FormOption[];
 
   /**
    * Constructor
    */
   constructor() {}
 
-  ngOnInit(): void {
+  /**
+   * Called when the component is init
+   */
+  public ngOnInit(): void {
     this.initOptionsField();
   }
 
   /**
    * Init the field options
    */
-  initOptionsField(): void {
+  private initOptionsField(): void {
     if (this.field.options) {
       this.field.options().subscribe((options: FormOption[]) => {
         this.options = options;
@@ -90,14 +93,14 @@ export class InputComponent implements OnInit {
   /**
    * Retrieve the form control from the form
    */
-  getFormControl(): AbstractControl | null {
+  protected getFormControl(): AbstractControl | null {
     return this.formGroup.controls[this.field.key];
   }
 
   /**
    * Function called when a field has been changed in the form, emit and event that will be caught by the parent component
    */
-  emitValueChange(type: ValueChangedType): void {
+  protected emitValueChange(type: ValueChangedType): void {
     this.manageAutoCompleteChanges();
 
     this.valueChangeEvent.emit({
@@ -110,7 +113,7 @@ export class InputComponent implements OnInit {
   /**
    * Refresh the list to display in auto complete
    */
-  manageAutoCompleteChanges(): void {
+  private manageAutoCompleteChanges(): void {
     if (this.field.options && this.field.type === DataTypeEnum.TEXT) {
       const inputValue = this.formGroup.value[this.field.key];
 
@@ -123,7 +126,7 @@ export class InputComponent implements OnInit {
   /**
    * Tell if it's a required field
    */
-  isRequired(): boolean {
+  protected isRequired(): boolean {
     let isRequired = false;
 
     if (this.field && this.field.validators && this.field.validators && !this.field.readOnly) {
@@ -138,7 +141,7 @@ export class InputComponent implements OnInit {
   /**
    * Test if the field is on error
    */
-  isInputFieldOnError(): boolean {
+  protected isInputFieldOnError(): boolean {
     return (this.getFormControl().dirty || this.getFormControl().touched) && this.getFormControl().invalid;
   }
 }

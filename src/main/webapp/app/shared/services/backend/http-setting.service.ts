@@ -40,14 +40,14 @@ export class HttpSettingService {
    *
    * @param httpClient the http client to inject
    */
-  constructor(private httpClient: HttpClient) {}
+  constructor(private readonly httpClient: HttpClient) {}
 
   /**
    * Get the list of settings
    *
    * @param type Filter the result by type
    */
-  getAll(type?: SettingsTypeEnum): Observable<Setting[]> {
+  public getAll(type?: SettingsTypeEnum): Observable<Setting[]> {
     let url = `${HttpSettingService.settingsApiEndpoint}`;
     if (type) {
       url = url.concat(`?type=${type.toLowerCase()}`);
@@ -61,7 +61,7 @@ export class HttpSettingService {
    *
    * @param settingId The setting id to get
    */
-  getOneById(settingId: number): Observable<Setting> {
+  public getOneById(settingId: number): Observable<Setting> {
     const url = `${HttpSettingService.settingsApiEndpoint}/${settingId}`;
 
     return this.httpClient.get<Setting>(url);

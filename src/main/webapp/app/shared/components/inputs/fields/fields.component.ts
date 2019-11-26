@@ -35,24 +35,36 @@ import { DataTypeEnum } from '../../../enums/data-type.enum';
 export class FieldsComponent extends InputComponent {
   /**
    * The form array
+   * @type {FormArray}
+   * @public
    */
   @Input()
-  formArray: FormArray;
+  public formArray: FormArray;
 
   /**
    * The list of icons
+   * @type {IconEnum}
+   * @protected
    */
   protected iconEnum = IconEnum;
   /**
    * The list of material icon codes
+   * @type {MaterialIconRecords}
+   * @protected
    */
   protected materialIconRecords = MaterialIconRecords;
 
+  /**
+   * Contructor
+   */
   constructor() {
     super();
   }
 
-  getInnerFormSize(): number {
+  /**
+   * Calculate the size of a cell in a row
+   */
+  protected getInnerFormSize(): number {
     let cellSize = 87;
 
     if (this.field.fields && this.field.fields.length > 0) {
@@ -63,7 +75,13 @@ export class FieldsComponent extends InputComponent {
     return cellSize;
   }
 
-  deleteRow(innerFormGroup: FormGroup, index: number) {
+  /**
+   * Delete a row
+   *
+   * @param innerFormGroup The form group that reflect the row
+   * @param index The index of a the row in the parent form
+   */
+  protected deleteRow(innerFormGroup: FormGroup, index: number): void {
     this.field.deleteRow.callback(innerFormGroup.value[this.field.deleteRow.attribute]).subscribe(() => {
       this.formArray.removeAt(index);
     });

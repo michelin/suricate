@@ -30,7 +30,8 @@ export class TranslationComponent {
    * The translation input HTML
    * @type {string}
    */
-  @Input() key: string;
+  @Input()
+  public key: string;
 
   /**
    * The constructor

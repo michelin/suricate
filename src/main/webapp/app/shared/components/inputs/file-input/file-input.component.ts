@@ -40,13 +40,17 @@ import { FileUtils } from '../../../utils/file.utils';
 export class FileInputComponent extends InputComponent implements OnInit {
   /**
    * The image as base 64
+   * @type {string | ArrayBuffer}
+   * @protected
    */
-  imgBase64: string | ArrayBuffer;
+  protected imgBase64: string | ArrayBuffer;
 
   /**
    * If it's not an image we set the filename
+   * @type {string}
+   * @protected
    */
-  filename: string;
+  protected filename: string;
 
   /**
    * Constructor
@@ -58,11 +62,17 @@ export class FileInputComponent extends InputComponent implements OnInit {
   /**
    * When the component is init
    */
-  ngOnInit(): void {
-    this.setBase64Image(this.field.value);
+  public ngOnInit(): void {
+    this.setBase64File(this.field.value);
   }
 
-  setBase64Image(base64Url?, filename?: string) {
+  /**
+   * Use to display image or filename
+   *
+   * @param base64Url The base64 url of the image
+   * @param filename The filename if the file is not an image
+   */
+  private setBase64File(base64Url?: string, filename?: string): void {
     if (FileUtils.isBase64UrlIsAnImage(base64Url)) {
       this.imgBase64 = base64Url;
       this.filename = null;
@@ -75,9 +85,9 @@ export class FileInputComponent extends InputComponent implements OnInit {
   /**
    * Manage the change event return by the input
    *
-   * @param event The event
+   * @param event The file change event
    */
-  onFileChange(event) {
+  protected onFileChange(event: Event): void {
     this.convertFileBase64(event);
     this.emitValueChange('fileChanged');
   }
@@ -92,7 +102,7 @@ export class FileInputComponent extends InputComponent implements OnInit {
       const file: File = event.target.files[0];
 
       FileUtils.convertFileToBase64(file).subscribe(base64Url => {
-        this.setBase64Image(base64Url, file.name);
+        this.setBase64File(base64Url as string, file.name);
         super.getFormControl().setValue(base64Url);
         super.getFormControl().markAsDirty();
       });
@@ -100,12 +110,5 @@ export class FileInputComponent extends InputComponent implements OnInit {
 
     super.getFormControl().markAsTouched();
     this.emitValueChange('fileChanged');
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  isInputFieldOnError(): boolean {
-    return super.isInputFieldOnError();
   }
 }

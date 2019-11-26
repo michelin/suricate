@@ -211,7 +211,7 @@ export class AuthenticationService {
    * @param userRequest The user Request
    * @returns {Observable<User>} The user registered
    */
-  register(userRequest: UserRequest): Observable<User> {
+  public register(userRequest: UserRequest): Observable<User> {
     const url = `${HttpUserService.usersApiEndpoint}/register`;
 
     return this.httpClient.post<User>(url, userRequest);

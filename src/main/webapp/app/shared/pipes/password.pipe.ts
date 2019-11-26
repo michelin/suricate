@@ -37,9 +37,9 @@ export class PasswordPipe implements PipeTransform {
    * The transform function
    *
    * @param {Configuration} config The string value to sanitize
-   * @returns {String} The password hidden
+   * @returns {string} The password hidden
    */
-  transform(config: Configuration): String {
+  public transform(config: Configuration): string {
     return config.dataType && config.dataType === DataTypeEnum.PASSWORD ? '*****' : config.value;
   }
 }

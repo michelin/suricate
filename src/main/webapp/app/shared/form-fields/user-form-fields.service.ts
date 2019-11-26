@@ -34,7 +34,7 @@ export class UserFormFieldsService {
   /**
    * Constructor
    *
-   * @param translateService Ngx translate service used to manage the translations
+   * @param httpRoleService Suricate service used to manage http calls for role
    */
   constructor(private readonly httpRoleService: HttpRoleService) {}
 

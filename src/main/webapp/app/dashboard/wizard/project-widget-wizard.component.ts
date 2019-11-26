@@ -32,8 +32,9 @@ export class ProjectWidgetWizardComponent extends WizardComponent implements OnI
    * Constructor
    *
    * @param injector Angular Service used to manage the injection of services
+   * @param {ProjectWidgetFormStepsService} projectWidgetFormStepsService Frontend service used to build steps for project widget object
    */
-  constructor(private readonly projectWidgetFormStepsService: ProjectWidgetFormStepsService, protected injector: Injector) {
+  constructor(protected injector: Injector, private readonly projectWidgetFormStepsService: ProjectWidgetFormStepsService) {
     super(injector);
 
     this.initHeaderConfiguration();
@@ -48,6 +49,9 @@ export class ProjectWidgetWizardComponent extends WizardComponent implements OnI
     };
   }
 
+  /**
+   * Called when the component is init
+   */
   public ngOnInit(): void {
     this.projectWidgetFormStepsService.generateGlobalSteps().subscribe((formSteps: FormStep[]) => {
       this.wizardConfiguration = { steps: formSteps };
@@ -56,6 +60,9 @@ export class ProjectWidgetWizardComponent extends WizardComponent implements OnI
     });
   }
 
+  /**
+   * {@inheritDoc}
+   */
   protected closeWizard(): void {
     const dashboardToken = RoutesService.getParamValueFromActivatedRoute(this.activatedRoute, 'dashboardToken');
     this.router.navigate(['/dashboards', dashboardToken]);

@@ -30,14 +30,14 @@ export class RunScriptsDirective implements OnInit {
    */
   constructor(private elementRef: ElementRef) {}
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     setTimeout(() => this.reinsertScripts(), 0);
   }
 
   /**
    * Reinsert scripts tag inside DOM for execution
    */
-  reinsertScripts(): void {
+  private reinsertScripts(): void {
     let scripts: HTMLScriptElement[] = Array.from(this.elementRef.nativeElement.getElementsByTagName('script'));
     const scriptsWithSrc: HTMLScriptElement[] = scripts.filter(currentScript => currentScript.src);
     const scriptsInline: HTMLScriptElement[] = scripts.filter(currentScript => currentScript.innerHTML);

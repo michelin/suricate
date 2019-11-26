@@ -31,27 +31,27 @@ export class MenuComponent {
   /**
    * The user connected
    * @type {User}
-   * @public
+   * @protected
    */
-  public readonly connectedUser = AuthenticationService.getConnectedUser();
+  protected readonly connectedUser = AuthenticationService.getConnectedUser();
   /**
    * The menu to display
-   * @type {User}
-   * @public
+   * @type {MenuConfiguration}
+   * @protected
    */
-  public readonly menu = MenuService.buildMenu();
+  protected readonly menu = MenuService.buildMenu();
 
   /**
    * Constructor
    *
-   * @param {Router} router Angular service used to manage routing
+   * @param {Router} router Angular service used to manage routes
    */
   constructor(private readonly router: Router) {}
 
   /**
    * Get the initials of the connected user
    */
-  public getInitials(): string {
+  protected getInitials(): string {
     return this.connectedUser.firstname && this.connectedUser.lastname
       ? `${this.connectedUser.firstname.substring(0, 1)}${this.connectedUser.lastname.substring(0, 1)}`
       : '';
@@ -60,7 +60,7 @@ export class MenuComponent {
   /**
    * Logout the user
    */
-  public logout(): void {
+  protected logout(): void {
     AuthenticationService.logout();
     this.router.navigate(['/login']);
   }

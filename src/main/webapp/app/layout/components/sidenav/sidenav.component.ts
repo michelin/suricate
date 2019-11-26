@@ -49,14 +49,14 @@ export class SidenavComponent implements OnInit, OnDestroy {
   /**
    * Used to hide or display the menu using activated routes
    * @type {boolean}
-   * @public
+   * @protected
    */
-  public shouldHideMenu = true;
+  protected shouldHideMenu = true;
 
   /**
    * Constructor
    *
-   * @param {Router} router Angular service used to manage routing
+   * @param {Router} router Angular service used to manage routes
    * @param {ActivatedRoute} activatedRoute Angular service used to retrieve the component activated route
    */
   constructor(private readonly router: Router, private readonly activatedRoute: ActivatedRoute) {}
@@ -84,14 +84,14 @@ export class SidenavComponent implements OnInit, OnDestroy {
   /**
    * Used to open the form sidenav
    */
-  public openFormSidenav(): void {
+  protected openFormSidenav(): void {
     this.formSidenav.open();
   }
 
   /**
    * Used to close the form side nav
    */
-  public closeFormSidenav(): void {
+  protected closeFormSidenav(): void {
     this.formSidenav.close();
   }
 

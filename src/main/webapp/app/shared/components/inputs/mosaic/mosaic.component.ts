@@ -32,18 +32,24 @@ export class MosaicComponent extends InputComponent implements OnInit {
   /**
    * The options related to the mosaic
    */
-  mosaicOptions: MosaicFormOption[];
+  protected mosaicOptions: MosaicFormOption[];
 
   /**
    * The form options that has been selected
    */
   protected optionSelected: MosaicFormOption;
 
+  /**
+   * Constructor
+   */
   constructor() {
     super();
   }
 
-  ngOnInit(): void {
+  /**
+   * Called when the component is init
+   */
+  public ngOnInit(): void {
     if (this.field.mosaicOptions) {
       this.field.mosaicOptions(this.formGroup).subscribe((mosaicOptions: MosaicFormOption[]) => {
         this.mosaicOptions = mosaicOptions;
@@ -51,7 +57,12 @@ export class MosaicComponent extends InputComponent implements OnInit {
     }
   }
 
-  selectOption(mosaicOption: MosaicFormOption): void {
+  /**
+   * Called when object has been selected on the mosaic
+   *
+   * @param mosaicOption The option selected
+   */
+  protected selectOption(mosaicOption: MosaicFormOption): void {
     this.optionSelected = mosaicOption;
     this.formGroup.controls[this.field.key].setValue(mosaicOption.value);
 

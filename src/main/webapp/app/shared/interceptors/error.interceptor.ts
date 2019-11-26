@@ -40,16 +40,16 @@ export class ErrorInterceptor implements HttpInterceptor {
    *
    * @param {ToastService} toastService The toast service
    */
-  constructor(private toastService: ToastService) {}
+  constructor(private readonly toastService: ToastService) {}
 
   /**
    * Method that intercept the request
    *
-   * @param {HttpRequest<any>} request The request
+   * @param {HttpRequest>} request The request
    * @param {HttpHandler} next The next handler
-   * @return {Observable<HttpEvent<any>>} The http request as event
+   * @return {Observable<HttpEvent>} The http request as event
    */
-  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+  public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
       tap(
         (event: HttpEvent<any>) => {},
@@ -75,7 +75,7 @@ export class ErrorInterceptor implements HttpInterceptor {
   /**
    * Display the message when an unknown error occured
    */
-  displayUnknowErrorMessage() {
+  private displayUnknowErrorMessage(): void {
     this.toastService.sendMessage(
       'Server Unavailable',
       ToastTypeEnum.DANGER,
