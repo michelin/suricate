@@ -58,7 +58,7 @@ export class WidgetConfigurationsComponent extends ListComponent<Configuration> 
    */
   private initHeaderConfiguration(): void {
     this.headerConfiguration = {
-      title: 'Widget configurations'
+      title: 'widget.configuration.list'
     };
   }
 
@@ -94,7 +94,7 @@ export class WidgetConfigurationsComponent extends ListComponent<Configuration> 
     this.configurationSelected = configuration ? Object.assign({}, configuration) : new Configuration();
 
     this.sidenavService.openFormSidenav({
-      title: 'configurations.edit',
+      title: 'configuration.edit',
       formFields: this.widgetConfigurationFormFieldsService.generateFormFields(configuration),
       save: (configurationRequest: Configuration) => saveCallback(configurationRequest)
     });
@@ -109,10 +109,10 @@ export class WidgetConfigurationsComponent extends ListComponent<Configuration> 
   private deleteConfiguration(event: Event, configuration: Configuration): void {
     this.dialogService.confirm({
       title: 'configuration.delete',
-      message: `${this.translateService.instant('delete.confirm')} ${configuration.key.toUpperCase()}`,
+      message: `${this.translateService.instant('delete.confirm')} ${configuration.key.toUpperCase()} ?`,
       accept: () => {
         this.httpConfigurationsService.delete(configuration.key).subscribe(() => {
-          this.toastService.sendMessage('Configuration deleted successfully', ToastTypeEnum.SUCCESS);
+          this.toastService.sendMessage('configuration.delete.success', ToastTypeEnum.SUCCESS);
           this.refreshList();
         });
       }
@@ -148,7 +148,7 @@ export class WidgetConfigurationsComponent extends ListComponent<Configuration> 
   private updateConfiguration(configuration: Configuration): void {
     this.httpConfigurationsService.update(configuration.key, configuration).subscribe(() => {
       this.refreshList();
-      this.toastService.sendMessage('Configuration updated successfully', ToastTypeEnum.SUCCESS);
+      this.toastService.sendMessage('configuration.update.success', ToastTypeEnum.SUCCESS);
     });
   }
 }

@@ -21,6 +21,7 @@ import { Observable } from 'rxjs';
 import { FormOption } from './form-option';
 import { AsyncValidatorFn, FormGroup, ValidatorFn } from '@angular/forms';
 import { MosaicFormOption } from './mosaic-form-option';
+import { IconEnum } from '../../../enums/icon.enum';
 
 /**
  * Describe a field used to manage the form
@@ -36,7 +37,7 @@ export class FormField {
   /**
    * The value displayed by the form
    */
-  label: string;
+  label?: string;
   /**
    * The type of the data to insert
    */
@@ -60,11 +61,11 @@ export class FormField {
   /**
    * The mat-icon name that should be used as prefix
    */
-  matIconPrefix?: string;
+  iconPrefix?: IconEnum;
   /**
    * The mat-icon nam that should be used as suffix
    */
-  matIconSuffix?: string;
+  iconSuffix?: IconEnum;
   /**
    * Hint to display to the user
    */

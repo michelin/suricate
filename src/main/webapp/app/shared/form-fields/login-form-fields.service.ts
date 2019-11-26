@@ -18,6 +18,7 @@ import { Injectable } from '@angular/core';
 import { DataTypeEnum } from '../enums/data-type.enum';
 import { Validators } from '@angular/forms';
 import { FormField } from '../models/frontend/form/form-field';
+import { IconEnum } from '../enums/icon.enum';
 
 /**
  * Service used to build the form fields related to the login page
@@ -39,14 +40,14 @@ export class LoginFormFieldsService {
         label: 'username',
         type: DataTypeEnum.TEXT,
         validators: [Validators.required],
-        matIconPrefix: 'android'
+        iconPrefix: IconEnum.USERNAME
       },
       {
         key: 'password',
         label: 'password',
         type: DataTypeEnum.PASSWORD,
         validators: [Validators.required],
-        matIconPrefix: 'lock'
+        iconPrefix: IconEnum.PASSWORD
       }
     ];
   }

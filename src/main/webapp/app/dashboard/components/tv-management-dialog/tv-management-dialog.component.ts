@@ -30,6 +30,7 @@ import { FormField } from '../../../shared/models/frontend/form/form-field';
 import { ButtonConfiguration } from '../../../shared/models/frontend/button/button-configuration';
 import { ButtonTypeEnum } from '../../../shared/enums/button-type.enum';
 import { IconEnum } from '../../../shared/enums/icon.enum';
+import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
 
 /**
  * Component that manage the popup for Dashboard TV Management
@@ -58,26 +59,35 @@ export class TvManagementDialogComponent implements OnInit {
    * @protected
    */
   protected screenRegisterForm: FormGroup;
-
   /**
    * The description of the form
    * @type {FormField[]}
    */
   protected formFields: FormField[];
-
   /**
    * The current project
    * @type {Project}
    * @protected
    */
   protected project: Project;
-
   /**
    * The list of clients connected by websocket
    * @type {WebsocketClient[]}
    * @protected
    */
   protected websocketClients: WebsocketClient[];
+  /**
+   * The list of icons
+   * @type {IconEnum}
+   * @protected
+   */
+  protected iconEnum = IconEnum;
+  /**
+   * The list of material icons
+   * @type {MaterialIconRecords}
+   * @protected
+   */
+  protected materialIconRecords = MaterialIconRecords;
 
   /**
    * Constructor
@@ -108,7 +118,7 @@ export class TvManagementDialogComponent implements OnInit {
         icon: IconEnum.SHARE_SCREEN,
         color: 'primary',
         type: ButtonTypeEnum.SUBMIT,
-        tooltip: { message: 'Register' }
+        tooltip: { message: 'screen.subscribe' }
       }
     ];
 
@@ -117,7 +127,7 @@ export class TvManagementDialogComponent implements OnInit {
         icon: IconEnum.STOP_SHARE_SCREEN,
         color: 'primary',
         type: ButtonTypeEnum.BUTTON,
-        tooltip: { message: 'Unsubscribe' },
+        tooltip: { message: 'screen.unsubscribe' },
         callback: (event: Event, websocketClient: WebsocketClient) => this.disconnectScreen(websocketClient)
       }
     ];
@@ -141,7 +151,7 @@ export class TvManagementDialogComponent implements OnInit {
     this.formFields = [
       {
         key: 'screenCode',
-        label: 'screen.field.code',
+        label: 'screen.code',
         type: DataTypeEnum.NUMBER,
         validators: [CustomValidators.digits, CustomValidators.gt(0)]
       }

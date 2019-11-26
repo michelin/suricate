@@ -40,7 +40,6 @@ import { SafeUrlPipe } from './pipes/safe-url.pipe';
 import { ToastComponent } from './components/toast/toast.component';
 import { TokenInterceptor } from './interceptors/token.interceptor';
 import { TranslateModule } from '@ngx-translate/core';
-import { TranslationComponent } from './components/translations/translation.component';
 import { StompRService } from '@stomp/ng2-stompjs';
 import { ListComponent } from './components/list/list.component';
 import { SpinnerComponent } from './components/spinner/spinner.component';
@@ -81,7 +80,6 @@ import { MosaicComponent } from './components/inputs/mosaic/mosaic.component';
     SafeHtmlPipe,
     SafeUrlPipe,
     ToastComponent,
-    TranslationComponent,
     ListComponent,
     SpinnerComponent,
     ButtonsComponent,
@@ -116,7 +114,6 @@ import { MosaicComponent } from './components/inputs/mosaic/mosaic.component';
     SafeUrlPipe,
     ToastComponent,
     TranslateModule,
-    TranslationComponent,
     SpinnerComponent,
     ButtonsComponent,
     FormSidenavComponent,

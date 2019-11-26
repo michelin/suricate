@@ -20,14 +20,14 @@
       <mat-nav-list class="submenu">
         <div>
           <a mat-list-item routerLinkActive="active" [routerLink]="['/settings']">
-            <mat-icon>settings</mat-icon>
-            <suricate-translate [key]="'settings'"></suricate-translate>
+            <mat-icon> {{ materialIconRecords[iconEnum.SETTINGS] }} </mat-icon>
+            <span> {{ 'settings' | translate }} </span>
           </a>
         </div>
         <div>
           <a mat-list-item (click)="logout()">
-            <mat-icon>exit_to_app</mat-icon>
-            <suricate-translate [key]="'logout'"></suricate-translate>
+            <mat-icon> {{ materialIconRecords[iconEnum.LOGOUT] }} </mat-icon>
+            <span> {{ 'logout' | translate }} </span>
           </a>
         </div>
       </mat-nav-list>
@@ -40,12 +40,12 @@
   <div id="button-section" class="sidenav-section" fxLayout="row wrap" fxLayoutAlign="start center">
     <a fxFlex="40" routerLinkActive="active" [routerLink]="['/home']" [matTooltip]="'home' | translate">
       <div fxFlex="100" class="common-icon-button" fxLayout="row wrap" fxLayoutAlign="center center">
-        <mat-icon color="default">home</mat-icon>
+        <mat-icon color="default"> {{ materialIconRecords[iconEnum.HOME] }} </mat-icon>
       </div>
     </a>
     <a fxFlex="40" routerLinkActive="active" [routerLink]="['/tv']" [matTooltip]="'tv.view' | translate" target="_blank">
       <div fxFlex="100" class="common-icon-button" fxLayout="row wrap" fxLayoutAlign="center center">
-        <mat-icon color="default">tv</mat-icon>
+        <mat-icon color="default"> {{ materialIconRecords[iconEnum.TV] }} </mat-icon>
       </div>
     </a>
   </div>
@@ -53,13 +53,11 @@
 
   <!-- Build the menu -->
   <div *ngFor="let category of menu.categories" class="sidenav-section">
-    <h1 class="little title">
-      <suricate-translate [key]="category.label"></suricate-translate>
-    </h1>
+    <h1 class="little title">{{ category.label | translate }}</h1>
 
     <mat-nav-list>
       <a *ngFor="let item of category.items" mat-list-item routerLinkActive="active" [routerLink]="item.linkConfiguration.link">
-        <suricate-translate [key]="item.label"></suricate-translate>
+        {{ item.label | translate }}
       </a>
     </mat-nav-list>
   </div>

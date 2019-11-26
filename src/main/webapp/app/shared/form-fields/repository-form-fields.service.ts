@@ -97,7 +97,7 @@ export class RepositoryFormFieldsService {
     return [
       {
         key: 'localPath',
-        label: 'local.path',
+        label: 'path.local',
         type: DataTypeEnum.TEXT,
         value: repository ? repository.localPath : null,
         validators: [Validators.required]

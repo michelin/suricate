@@ -126,7 +126,7 @@ export class SettingsListComponent implements OnInit {
    * Used to init the configuration of the header
    */
   private initHeaderConfiguration(): void {
-    this.headerConfiguration = { title: 'user.settings' };
+    this.headerConfiguration = { title: 'settings' };
   }
 
   /**

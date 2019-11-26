@@ -73,12 +73,11 @@ export class ProjectWidgetFormStepsService {
     return of([
       {
         key: 'categoryStep',
-        title: 'Select category',
+        title: 'category.select',
         icon: IconEnum.CATEGORY,
         fields: [
           {
             key: 'categoryId',
-            label: 'Select a category',
             type: DataTypeEnum.MOSAIC,
             columnNumber: 4,
             mosaicOptions: () => this.getCategoryMosaicOptions(),
@@ -88,12 +87,11 @@ export class ProjectWidgetFormStepsService {
       },
       {
         key: 'widgetStep',
-        title: 'Select Widget',
+        title: 'widget.select',
         icon: IconEnum.WIDGET,
         fields: [
           {
             key: 'widgetId',
-            label: 'Select widget',
             type: DataTypeEnum.MOSAIC,
             columnNumber: 4,
             mosaicOptions: (formGroup: FormGroup) => this.getWidgetMosaicOptions(formGroup),
@@ -103,7 +101,7 @@ export class ProjectWidgetFormStepsService {
       },
       {
         key: 'widgetConfigurationStep',
-        title: 'Configure Widget',
+        title: 'widget.configuration',
         icon: IconEnum.WIDGET_CONFIGURATION,
         asyncFields: (formGroup: FormGroup, step: FormStep) => this.getWidgetFields(formGroup, step)
       }

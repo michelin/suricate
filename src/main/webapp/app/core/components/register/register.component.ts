@@ -163,7 +163,7 @@ export class RegisterComponent implements OnInit {
           }
         );
     } else {
-      this.toastService.sendMessage('Some fields are not properly filled', ToastTypeEnum.DANGER);
+      this.toastService.sendMessage('form.error.fields', ToastTypeEnum.DANGER);
     }
   }
 

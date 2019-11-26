@@ -7,11 +7,11 @@
 
   <mat-dialog-actions>
     <button mat-button color="primary" [mat-dialog-close]="false">
-      <suricate-translate [key]="'no'"></suricate-translate>
+      {{ 'no' | translate }}
     </button>
 
     <button mat-button color="warn" (click)="accepted()">
-      <suricate-translate [key]="'yes'"></suricate-translate>
+      {{ 'yes' | translate }}
     </button>
   </mat-dialog-actions>
 </div>

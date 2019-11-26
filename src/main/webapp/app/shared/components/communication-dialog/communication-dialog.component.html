@@ -6,8 +6,6 @@
   </mat-dialog-content>
 
   <mat-dialog-actions>
-    <button mat-button [mat-dialog-close]="false">
-      <suricate-translate [key]="'close'"></suricate-translate>
-    </button>
+    <button mat-button [mat-dialog-close]="false">{{ 'close' | translate }}</button>
   </mat-dialog-actions>
 </div>

@@ -10,8 +10,8 @@
     [ngClass]="{ 'mat-form-field-readonly': field.readOnly }"
   >
     <!-- Mat Icon prefix -->
-    <mat-icon *ngIf="field.matIconPrefix" class="prefix" matPrefix color="primary">
-      {{ field.matIconPrefix }}
+    <mat-icon *ngIf="field.iconPrefix" class="prefix" matPrefix color="primary">
+      {{ materialIconRecords[field.iconPrefix] }}
     </mat-icon>
 
     <!-- Mat label -->
@@ -54,13 +54,13 @@
     </mat-select>
 
     <!-- Mat Icon suffix -->
-    <mat-icon *ngIf="field.matIconSuffix" matSuffix color="primary">
-      {{ field.matIconSuffix }}
+    <mat-icon *ngIf="field.iconSuffix" matSuffix color="primary">
+      {{ materialIconRecords[field.iconSuffix] }}
     </mat-icon>
 
     <!-- Display an hint the user -->
     <mat-hint align="start" *ngIf="field.hint && !isInputFieldOnError()">
-      <span> {{ field.hint }}</span>
+      <span> {{ field.hint | translate }}</span>
     </mat-hint>
   </mat-form-field>
 
@@ -93,31 +93,31 @@
   <div *ngIf="dataType.FILE !== field.type && isInputFieldOnError()" [@animationError] class="input-error">
     <!-- Error message : Required -->
     <div *ngIf="getFormControl()['errors']?.required">
-      <suricate-translate key="field.required"></suricate-translate>
+      {{ 'field.error.required' | translate }}
     </div>
     <!-- Error message : Length -->
     <div *ngIf="getFormControl()['errors']?.minlength">
-      <suricate-translate [key]="'field.length'"></suricate-translate>
+      {{ 'field.error.length' | translate }}
     </div>
     <!-- Error message : Email -->
     <div *ngIf="getFormControl()['errors']?.email">
-      <suricate-translate [key]="'field.email.invalid.format'"></suricate-translate>
+      {{ 'field.error.email.format' | translate }}
     </div>
     <!-- Error message : Password confirmation -->
     <div *ngIf="getFormControl()['errors']?.passwordMismatch">
-      <suricate-translate [key]="'field.password.mismatch'"></suricate-translate>
+      {{ 'field.error.password.mismatch' | translate }}
     </div>
     <!-- Error message : Pattern -->
     <div *ngIf="getFormControl()['errors']?.pattern">
-      <suricate-translate [key]="'field.pattern'"></suricate-translate>
+      {{ 'field.error.pattern' | translate }}
     </div>
     <!-- Error message : Digits -->
     <div *ngIf="getFormControl()['errors']?.digits">
-      <suricate-translate [key]="'field.digits'"></suricate-translate>
+      {{ 'field.error.digits' | translate }}
     </div>
     <!-- Error message : Digits -->
     <div *ngIf="getFormControl()['errors']?.gt">
-      <suricate-translate [key]="'field.gt'"></suricate-translate>
+      {{ 'field.error.gt' | translate }}
     </div>
   </div>
 </div>

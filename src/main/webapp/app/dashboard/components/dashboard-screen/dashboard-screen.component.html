@@ -1,6 +1,6 @@
 <!-- Display Screen code -->
 <div *ngIf="shouldDisplayScreenCode" id="screen-code-div" fxLayout="col wrap" fxLayoutAlign="center center" fxLayoutGap="50px">
-  <mat-icon>tv</mat-icon>
+  <mat-icon> {{ materialIconRecords[iconEnum.TV] }} </mat-icon>
   <span> {{ screenCode }}</span>
 </div>
 

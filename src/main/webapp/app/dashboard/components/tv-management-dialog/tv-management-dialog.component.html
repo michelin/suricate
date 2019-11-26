@@ -1,9 +1,11 @@
-<h1 matDialogTitle class="little title">Screen Management</h1>
+<h1 matDialogTitle class="little title">
+  {{ 'screen.management' | translate }}
+</h1>
 
 <mat-dialog-content fxLayout="column" fxLayoutGap="20px">
   <!-- Register screen part -->
   <form *ngIf="screenRegisterForm" fxLayout="column" [formGroup]="screenRegisterForm" (submit)="registerScreen()">
-    <h2 class="little title">Enroll screen</h2>
+    <h2 class="little title">{{ 'screen.enroll' | translate }}</h2>
     <mat-divider></mat-divider>
 
     <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="25px" class="input-wrapper">
@@ -15,15 +17,17 @@
   <!-- Registered screen part -->
   <div fxLayout="column">
     <div>
-      <h2 class="little title">Linked screen - {{ websocketClients?.length }} client(s)</h2>
+      <h2 class="little title">{{ 'screen.linked' | translate }} - {{ websocketClients?.length }} {{ 'client' | translate }}</h2>
       <mat-divider></mat-divider>
     </div>
 
     <!-- screen codes -->
     <div id="connected-screen-container" fxLayout="column" fxLayoutGap="20px">
       <div *ngFor="let websocketClient of websocketClients" fxLayout="row" fxLayoutAlign="start center">
-        <mat-icon class="screen-icon" fxFlex="16%">tv</mat-icon>
-        <span class="screen-code" fxFlex>code: {{ websocketClient.screenCode }}</span>
+        <mat-icon class="screen-icon" fxFlex="16%">
+          {{ materialIconRecords[iconEnum.TV] }}
+        </mat-icon>
+        <span class="screen-code" fxFlex> {{ 'screen.code' | translate }}: {{ websocketClient.screenCode }} </span>
         <suricate-buttons [configurations]="connectedScreenButtonsConfiguration" [object]="websocketClient"></suricate-buttons>
       </div>
     </div>
@@ -32,12 +36,12 @@
   <!-- Show screen code -->
   <div id="display-code-link">
     <a fxLayout="col wrap" fxLayoutAlign="start center" (click)="displayScreenCode(project.token)">
-      <mat-icon>keyboard_arrow_right</mat-icon>
-      <span>Show code on clients to identify screen</span>
+      <mat-icon> {{ materialIconRecords[iconEnum.ARROW_DOWN] }} </mat-icon>
+      <span> {{ 'screen.display.code' | translate }} </span>
     </a>
   </div>
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button mat-button mat-dialog-close color="primary">Close</button>
+  <button mat-button mat-dialog-close color="primary">{{ 'close' | translate }}</button>
 </mat-dialog-actions>

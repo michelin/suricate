@@ -49,13 +49,13 @@ export class WidgetsComponent extends ListComponent<Widget | WidgetRequest> {
    */
   private initHeaderConfiguration(): void {
     this.headerConfiguration = {
-      title: 'widgets',
+      title: 'widget.list',
       actions: [
         {
           icon: IconEnum.REFRESH,
           color: 'primary',
           variant: 'miniFab',
-          tooltip: { message: 'Import widgets' },
+          tooltip: { message: 'widget.list.import' },
           callback: () => this.importWidgets()
         }
       ]
@@ -67,7 +67,7 @@ export class WidgetsComponent extends ListComponent<Widget | WidgetRequest> {
    */
   private importWidgets(): void {
     this.httpWidgetService.getAll(null, ApiActionEnum.REFRESH).subscribe(() => {
-      this.toastService.sendMessage('Widget successfully imported', ToastTypeEnum.SUCCESS);
+      this.toastService.sendMessage('widget.list.import.success', ToastTypeEnum.SUCCESS);
     });
   }
 

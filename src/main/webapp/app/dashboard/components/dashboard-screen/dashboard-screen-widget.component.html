@@ -29,16 +29,20 @@
     <div *ngIf="widget.delay > 0 && projectWidget.log">
       <!-- Stopped -->
       <div *ngIf="projectWidget.state === widgetStateEnum.STOPPED" class="issue execution-error">
-        <mat-icon class="material-icons" style="color: #cfd2da !important;"> warning </mat-icon>
-        <span class="text"> Widget execution error </span>
+        <mat-icon class="material-icons" style="color: #cfd2da !important;">
+          {{ materialIconRecords[iconEnum.WARNING] }}
+        </mat-icon>
+        <span class="text"> {{ 'widget.execution.error' | translate }} </span>
       </div>
 
       <!-- warning -->
       <div *ngIf="projectWidget.state === widgetStateEnum.WARNING" class="issue execution-warning">
         <span>
-          <mat-icon class="material-icons" style="color: #cfd2da !important;"> warning </mat-icon>
+          <mat-icon class="material-icons" style="color: #cfd2da !important;">
+            {{ materialIconRecords[iconEnum.WARNING] }}
+          </mat-icon>
         </span>
-        <span class="text"> Issue with remote server. Retrying ... </span>
+        <span class="text"> {{ 'widget.connection.server.error' | translate }} </span>
       </div>
     </div>
 
@@ -53,7 +57,9 @@
         matTooltip="{{ 'widget.delete' | translate }}"
         (click)="displayDeleteProjectWidgetDialog()"
       >
-        <mat-icon class="material-icons">delete_forever</mat-icon>
+        <mat-icon class="material-icons">
+          {{ materialIconRecords[iconEnum.DELETE] }}
+        </mat-icon>
       </button>
 
       <button
@@ -63,17 +69,21 @@
         matTooltip="{{ 'widget.edit' | translate }}"
         (click)="displayEditForm()"
       >
-        <mat-icon class="material-icons">edit</mat-icon>
+        <mat-icon class="material-icons">
+          {{ materialIconRecords[iconEnum.EDIT] }}
+        </mat-icon>
       </button>
 
       <button
         class="btn-widget btn-widget-log"
         role="button"
         aria-disabled="false"
-        matTooltip="{{ 'widget.display.log' | translate }}"
+        matTooltip="{{ 'widget.log' | translate }}"
         (click)="displayLogProjectWidgetDialog()"
       >
-        <mat-icon class="material-icons">notes</mat-icon>
+        <mat-icon class="material-icons">
+          {{ materialIconRecords[iconEnum.TEXT] }}
+        </mat-icon>
       </button>
     </span>
   </ng-container>

@@ -40,30 +40,29 @@ export class ProjectFormFieldsService {
     return [
       {
         key: 'name',
-        label: 'dashboard.name',
+        label: 'name',
         type: DataTypeEnum.TEXT,
         value: project ? project.name : null,
         validators: [Validators.required]
       },
       {
         key: 'widgetHeight',
-        label: 'widget.heigth.px',
+        label: 'widget.height.px',
         type: DataTypeEnum.NUMBER,
         value: project ? project.gridProperties.widgetHeight : 360,
         validators: [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]
       },
       {
         key: 'maxColumn',
-        label: 'grid.nb.columns',
+        label: 'column.number',
         type: DataTypeEnum.NUMBER,
         value: project ? project.gridProperties.maxColumn : 5,
         validators: [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]
       },
       {
         key: 'gridBackgroundColor',
-        label: 'grid.background.color',
-        type: DataTypeEnum.COLOR_PICKER,
-        value: null
+        label: 'background.color',
+        type: DataTypeEnum.COLOR_PICKER
       }
     ];
   }

@@ -36,5 +36,22 @@ export const MaterialIconRecords: Record<IconEnum, string> = {
   [IconEnum.WIDGET]: 'widgets',
   [IconEnum.WIDGET_CONFIGURATION]: 'list_alt',
   [IconEnum.STOP_SHARE_SCREEN]: 'stop_screen_share',
-  [IconEnum.SHARE_SCREEN]: 'screen_share'
+  [IconEnum.SHARE_SCREEN]: 'screen_share',
+  [IconEnum.DASHBOARD]: 'dashboard',
+  [IconEnum.WARNING]: 'warning',
+  [IconEnum.TEXT]: 'notes',
+  [IconEnum.ARROW_DOWN]: 'keyboard_arrow_right',
+  [IconEnum.SETTINGS]: 'settings',
+  [IconEnum.LOGOUT]: 'exit_to_app',
+  [IconEnum.HOME]: 'home',
+  [IconEnum.UPLOAD]: 'cloud_upload',
+  [IconEnum.INFO]: 'format_italic',
+  [IconEnum.ERROR]: 'error',
+  [IconEnum.SUCCESS]: 'done',
+  [IconEnum.USERNAME]: 'android',
+  [IconEnum.PASSWORD]: 'lock',
+  [IconEnum.USER]: 'person',
+  [IconEnum.EMAIL]: 'email',
+  [IconEnum.KEY]: 'vpn_key',
+  [IconEnum.VALUE]: 'input'
 };

@@ -77,7 +77,7 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
    * Function used to configure the header of the list component
    */
   private initHeaderConfiguration(): void {
-    this.headerConfiguration = { title: 'dashboards' };
+    this.headerConfiguration = { title: 'dashboard.list' };
   }
 
   /**
@@ -167,10 +167,10 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
 
     this.dialogService.confirm({
       title: 'dashboard.delete',
-      message: `${this.translateService.instant('delete.confirm')} ${project.name.toUpperCase()}`,
+      message: `${this.translateService.instant('delete.confirm')} ${project.name.toUpperCase()} ?`,
       accept: () => {
         this.httpProjectService.delete(project.token).subscribe(() => {
-          this.toastService.sendMessage('Project deleted successfully', ToastTypeEnum.SUCCESS);
+          this.toastService.sendMessage('dashboard.delete.success', ToastTypeEnum.SUCCESS);
           this.refreshList();
         });
       }

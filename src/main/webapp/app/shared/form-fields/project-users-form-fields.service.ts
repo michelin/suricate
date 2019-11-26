@@ -58,7 +58,7 @@ export class ProjectUsersFormFieldsService {
       },
       {
         key: 'users',
-        label: 'Users',
+        label: 'user.list',
         type: DataTypeEnum.FIELDS,
         values: this.httpProjectService.getProjectUsers(projectToken),
         deleteRow: {
@@ -79,7 +79,7 @@ export class ProjectUsersFormFieldsService {
           },
           {
             key: 'firstname',
-            label: 'Firstname',
+            label: 'firstname',
             type: DataTypeEnum.TEXT,
             readOnly: true
           },

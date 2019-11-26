@@ -24,6 +24,8 @@ import { takeWhile } from 'rxjs/operators';
 import { ToastService } from '../../services/frontend/toast.service';
 import { ToastMessage } from '../../models/frontend/toast/toast-message';
 import { ToastTypeEnum } from '../../enums/toast-type.enum';
+import { IconEnum } from '../../enums/icon.enum';
+import { MaterialIconRecords } from '../../records/material-icon.record';
 
 /**
  * Component that display toast notification messages
@@ -103,30 +105,38 @@ export class ToastComponent implements OnInit, OnDestroy {
    * @type {boolean}
    */
   private isAlive = true;
-
   /**
    * The component state
    * @type {string}
    */
   protected animationState = 'out';
-
   /**
    * The enums of toast type
    * @type {toastType}
    */
   protected toastType = ToastTypeEnum;
-
   /**
    * The message to display
    * @type {Observable<ToastMessage>}
    */
   protected message: ToastMessage;
-
   /**
    * The current timer for @function {hideWithinTimeout} function
    * @type {NodeJS.Timer}
    */
   private hideTimer: NodeJS.Timer;
+  /**
+   * The list of icons
+   * @type {IconEnum}
+   * @protected
+   */
+  protected iconEnum = IconEnum;
+  /**
+   * The list of material icon codes
+   * @type {MaterialIconRecords}
+   * @protected
+   */
+  protected materialIconRecords = MaterialIconRecords;
 
   /**
    * Constructor

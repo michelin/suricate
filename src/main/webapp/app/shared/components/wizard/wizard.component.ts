@@ -100,38 +100,49 @@ export class WizardComponent implements OnInit, OnDestroy {
   private initWizardButtons(): void {
     this.wizardButtons = [
       {
-        label: 'Close',
+        label: 'close',
         color: 'warn',
         callback: () => this.closeWizard()
       },
       {
-        label: 'Back',
+        label: 'back',
         color: 'primary',
         hidden: () => !this.shouldDisplayBackButton(),
         callback: () => this.backAction()
       },
       {
-        label: 'Next',
+        label: 'next',
         color: 'primary',
         hidden: () => !this.shouldDisplayNextButton(),
         callback: () => this.nextAction()
       },
       {
-        label: 'Done',
+        label: 'done',
         color: 'primary',
         hidden: () => !this.shouldDisplayDoneButton()
       }
     ];
   }
 
+  /**
+   * Called when the component is init
+   */
   public ngOnInit(): void {
     this.stepperFormGroup = this.formService.generateFormGroupForSteps(this.wizardConfiguration.steps);
   }
 
+  /**
+   * Called when the component is destroyed
+   */
   public ngOnDestroy(): void {
     this.isAlive = false;
   }
 
+  /**
+   * If we have async fields on the new step we load them
+   *
+   * @param stepperSelectionEvent The step change event
+   */
   protected onStepChanged(stepperSelectionEvent: StepperSelectionEvent): void {
     const currentStep = this.wizardConfiguration.steps[stepperSelectionEvent.selectedIndex];
 
@@ -146,7 +157,12 @@ export class WizardComponent implements OnInit, OnDestroy {
     }
   }
 
-  protected onValueChanged(valueChangeEvent: ValueChangedEvent) {
+  /**
+   * Called when a value of the form has changed
+   *
+   * @param valueChangeEvent The value change event
+   */
+  protected onValueChanged(valueChangeEvent: ValueChangedEvent): void {
     if (valueChangeEvent.type === 'mosaicOptionSelected' && !this.shouldDisplayDoneButton()) {
       setTimeout(() => this.wizardStepper.next(), 500);
     }
@@ -173,6 +189,9 @@ export class WizardComponent implements OnInit, OnDestroy {
     return this.wizardStepper && this.wizardStepper.steps && this.wizardStepper.selectedIndex === this.wizardStepper.steps.length - 1;
   }
 
+  /**
+   * By default we redirect to home on close event (you can override this on child component)
+   */
   protected closeWizard(): void {
     this.router.navigate(['/home']);
   }

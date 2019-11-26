@@ -1,6 +1,6 @@
-<div class="file-upload-wrapper" fxLayout="row wrap" fxLayoutAlign="space-around center" fxFlex="100" cdk-focus-start>
+<div class="file-upload-wrapper" fxLayout="row wrap" fxLayoutAlign="space-around center" fxFlex="100">
   <!-- Image uploaded -->
-  <img *ngIf="imgBase64" [src]="imgBase64" alt="file_uploaded" fxFlex="49" />
+  <img *ngIf="imgBase64" [src]="imgBase64" alt="Uploaded file" fxFlex="49" />
 
   <div *ngIf="filename" fxFlex="49">
     {{ filename }}
@@ -16,19 +16,18 @@
       [ngClass]="{ 'button-error': isInputFieldOnError() }"
       (click)="file.click()"
     >
-      <mat-icon>cloud_upload</mat-icon>
-      <suricate-translate class="sentence" [key]="'upload'"></suricate-translate>
+      <mat-icon> {{ materialIconRecords[iconEnum.UPLOAD] }} </mat-icon>
+      <span class="sentence"> {{ 'file.upload' | translate }} </span>
     </button>
 
     <!-- Error Message for file input -->
     <div *ngIf="isInputFieldOnError()" [@animationError] class="input-error" fxFlex="100">
-      <!-- Error message : Required -->
       <div *ngIf="getFormControl()['errors']?.required">
-        <suricate-translate [key]="'field.required'"></suricate-translate>
+        {{ 'field.error.required' | translate }}
       </div>
-      <!-- Error message : Pattern -->
+
       <div *ngIf="getFormControl()['errors']?.pattern">
-        <suricate-translate [key]="'field.pattern'"></suricate-translate>
+        {{ 'field.error.pattern' | translate }}
       </div>
     </div>
   </div>

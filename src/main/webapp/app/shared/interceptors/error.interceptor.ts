@@ -58,7 +58,7 @@ export class ErrorInterceptor implements HttpInterceptor {
             switch (httpError.status) {
               case 400:
                 if (httpError.error.error === ErrorInterceptor.badCredentialError) {
-                  this.toastService.sendMessage('Bad credentials', ToastTypeEnum.DANGER, 'Wrong login or password');
+                  this.toastService.sendMessage('credentials.error', ToastTypeEnum.DANGER);
                 }
                 break;
 
@@ -76,10 +76,6 @@ export class ErrorInterceptor implements HttpInterceptor {
    * Display the message when an unknown error occured
    */
   private displayUnknowErrorMessage(): void {
-    this.toastService.sendMessage(
-      'Server Unavailable',
-      ToastTypeEnum.DANGER,
-      'The server is not responsding, please contact an administrator'
-    );
+    this.toastService.sendMessage('server.unavailable', ToastTypeEnum.DANGER, 'server.unavailable.explanation');
   }
 }

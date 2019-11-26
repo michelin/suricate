@@ -18,11 +18,11 @@
     <mat-grid-tile class="mat-elevation-z3" (click)="displayProjectWidgetWizard()">
       <div class="grid-tile-content-wrapper">
         <div class="grid-tile-body">
-          <mat-icon color="primary">add_box</mat-icon>
+          <mat-icon color="primary"> {{ materialIconRecords[iconEnum.ADD] }} </mat-icon>
         </div>
 
         <div class="grid-tile-footer">
-          Add widget
+          {{ 'widget.add' | translate }}
         </div>
       </div>
     </mat-grid-tile>

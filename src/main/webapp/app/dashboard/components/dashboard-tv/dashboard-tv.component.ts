@@ -81,8 +81,9 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   /**
    * The project
    * @type {Project}
+   * @protected
    */
-  project: Project;
+  protected project: Project;
 
   /**
    * The constructor

@@ -26,10 +26,13 @@ export class RunScriptsDirective implements OnInit {
   /**
    * The constructor
    *
-   * @param {ElementRef} elementRef Represent a reference for an HTML Element
+   * @param {ElementRef} elementRef Represent a reference on an HTML Element
    */
-  constructor(private elementRef: ElementRef) {}
+  constructor(private readonly elementRef: ElementRef) {}
 
+  /**
+   * Called when the directive is init
+   */
   public ngOnInit(): void {
     setTimeout(() => this.reinsertScripts(), 0);
   }

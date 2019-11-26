@@ -25,6 +25,7 @@ import { User } from '../models/backend/user/user';
 import { CustomValidators } from 'ng2-validation';
 import { Role } from '../models/backend/role/role';
 import { HttpRoleService } from '../services/backend/http-role.service';
+import { IconEnum } from '../enums/icon.enum';
 
 /**
  * Service used to build the form fields related to a user
@@ -52,7 +53,7 @@ export class UserFormFieldsService {
         value: user.username ? user.username : null,
         readOnly: true,
         validators: [Validators.required, Validators.minLength(3)],
-        matIconPrefix: 'android'
+        iconPrefix: IconEnum.USERNAME
       },
       {
         key: 'firstname',
@@ -60,7 +61,7 @@ export class UserFormFieldsService {
         type: DataTypeEnum.TEXT,
         value: user.firstname ? user.firstname : null,
         validators: [Validators.required, Validators.minLength(3)],
-        matIconPrefix: 'person'
+        iconPrefix: IconEnum.USER
       },
       {
         key: 'lastname',
@@ -68,7 +69,7 @@ export class UserFormFieldsService {
         type: DataTypeEnum.TEXT,
         value: user.lastname ? user.lastname : null,
         validators: [Validators.required, Validators.minLength(3)],
-        matIconPrefix: 'person'
+        iconPrefix: IconEnum.USER
       },
       {
         key: 'email',
@@ -76,7 +77,7 @@ export class UserFormFieldsService {
         type: DataTypeEnum.TEXT,
         value: user.email ? user.email : null,
         validators: [Validators.required, CustomValidators.email],
-        matIconPrefix: 'email'
+        iconPrefix: IconEnum.EMAIL
       },
       {
         key: 'roles',

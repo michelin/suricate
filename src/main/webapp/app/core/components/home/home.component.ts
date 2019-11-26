@@ -26,6 +26,8 @@ import { ProjectFormFieldsService } from '../../../shared/form-fields/project-fo
 import { ProjectRequest } from '../../../shared/models/backend/project/project-request';
 import { ToastService } from '../../../shared/services/frontend/toast.service';
 import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
+import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
+import { IconEnum } from '../../../shared/enums/icon.enum';
 
 /**
  * Manage the home page
@@ -48,6 +50,18 @@ export class HomeComponent implements OnInit {
    * @protected
    */
   protected dashboards: Project[];
+  /**
+   * The list of icons
+   * @type {IconEnum}
+   * @protected
+   */
+  protected iconEnum = IconEnum;
+  /**
+   * The list of material icons
+   * @type {MaterialIconRecords}
+   * @protected
+   */
+  protected materialIconRecords = MaterialIconRecords;
 
   /**
    * The constructor
@@ -79,7 +93,7 @@ export class HomeComponent implements OnInit {
    * Used to init the header component
    */
   private initHeaderConfiguration(): void {
-    this.headerConfiguration = { title: 'dashboards.my' };
+    this.headerConfiguration = { title: 'dashboard.list.my' };
   }
 
   /**
@@ -87,7 +101,7 @@ export class HomeComponent implements OnInit {
    */
   protected openDashboardFormSidenav(): void {
     this.sidenavService.openFormSidenav({
-      title: 'Create dashboard',
+      title: 'dashboard.add',
       formFields: ProjectFormFieldsService.generateProjectFormFields(),
       save: (formData: ProjectRequest) => this.addDashboard(formData)
     });
@@ -102,7 +116,7 @@ export class HomeComponent implements OnInit {
     projectRequest.cssStyle = `.grid { background-color: ${projectRequest['gridBackgroundColor']}; }`;
 
     this.httpProjectService.create(projectRequest).subscribe((project: Project) => {
-      this.toastService.sendMessage('Project created successfully', ToastTypeEnum.SUCCESS);
+      this.toastService.sendMessage('dashboard.add.success', ToastTypeEnum.SUCCESS);
       this.router.navigate(['/dashboards', project.token]);
     });
   }

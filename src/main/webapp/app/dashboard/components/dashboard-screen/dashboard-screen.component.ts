@@ -31,6 +31,8 @@ import { ProjectWidgetPositionRequest } from '../../../shared/models/backend/pro
 import { HttpProjectService } from '../../../shared/services/backend/http-project.service';
 import { RunScriptsDirective } from '../../../shared/directives/run-scripts.directive';
 import { GridItemUtils } from '../../../shared/utils/grid-item.utils';
+import { IconEnum } from '../../../shared/enums/icon.enum';
+import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
 
 /**
  * Display the grid stack widgets
@@ -126,6 +128,18 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
    * @protected
    */
   protected shouldDisplayScreenCode = false;
+  /**
+   * The list of icons
+   * @type {IconEnum}
+   * @protected
+   */
+  protected iconEnum = IconEnum;
+  /**
+   * The list of material icons
+   * @type {MaterialIconRecords}
+   * @protected
+   */
+  protected materialIconRecords = MaterialIconRecords;
 
   /**
    * The constructor

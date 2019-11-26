@@ -27,7 +27,6 @@ import { ButtonConfiguration } from '../../../shared/models/frontend/button/butt
 import { FormField } from '../../../shared/models/frontend/form/form-field';
 import { LoginFormFieldsService } from '../../../shared/form-fields/login-form-fields.service';
 import { ButtonTypeEnum } from '../../../shared/enums/button-type.enum';
-import { ToastService } from '../../../shared/services/frontend/toast.service';
 
 /**
  * Manage the login page
@@ -81,8 +80,7 @@ export class LoginComponent implements OnInit {
     private readonly router: Router,
     private readonly httpConfigurationService: HttpConfigurationService,
     private readonly authenticationService: AuthenticationService,
-    private readonly formService: FormService,
-    private readonly toast: ToastService
+    private readonly formService: FormService
   ) {
     this.initButtons();
   }

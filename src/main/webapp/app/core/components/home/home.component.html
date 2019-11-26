@@ -4,11 +4,11 @@
   <mat-grid-tile class="mat-elevation-z3" (click)="openDashboardFormSidenav()">
     <div class="grid-tile-content-wrapper">
       <div class="grid-tile-body">
-        <mat-icon color="primary">add_box</mat-icon>
+        <mat-icon color="primary"> {{ materialIconRecords[iconEnum.ADD] }} </mat-icon>
       </div>
 
       <div class="grid-tile-footer">
-        Add dashboard
+        {{ 'dashboard.add' | translate }}
       </div>
     </div>
   </mat-grid-tile>
@@ -18,7 +18,9 @@
       <a [routerLink]="['/dashboards', dashboard.token]">
         <div class="grid-tile-body">
           <img *ngIf="dashboard.screenshotToken" [src]="getContentUrl(dashboard.screenshotToken)" alt="Dashboard screenshot" />
-          <mat-icon *ngIf="!dashboard.screenshotToken" color="primary">dashboard</mat-icon>
+          <mat-icon *ngIf="!dashboard.screenshotToken" color="primary">
+            {{ materialIconRecords[iconEnum.DASHBOARD] }}
+          </mat-icon>
         </div>
 
         <div class="grid-tile-footer">

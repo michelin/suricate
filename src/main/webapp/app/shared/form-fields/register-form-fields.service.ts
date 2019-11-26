@@ -19,6 +19,7 @@ import { DataTypeEnum } from '../enums/data-type.enum';
 import { Validators } from '@angular/forms';
 import { FormField } from '../models/frontend/form/form-field';
 import { CustomValidators } from 'ng2-validation';
+import { IconEnum } from '../enums/icon.enum';
 
 /**
  * Service used to build the form fields related to the register page
@@ -40,41 +41,41 @@ export class RegisterFormFieldsService {
         label: 'username',
         type: DataTypeEnum.TEXT,
         validators: [Validators.required, Validators.minLength(3)],
-        matIconPrefix: 'android'
+        iconPrefix: IconEnum.USERNAME
       },
       {
         key: 'firstname',
         label: 'firstname',
         type: DataTypeEnum.TEXT,
         validators: [Validators.required, Validators.minLength(3)],
-        matIconPrefix: 'person'
+        iconPrefix: IconEnum.USER
       },
       {
         key: 'lastname',
         label: 'lastname',
         type: DataTypeEnum.TEXT,
         validators: [Validators.required, Validators.minLength(3)],
-        matIconPrefix: 'person'
+        iconPrefix: IconEnum.USER
       },
       {
         key: 'email',
         label: 'email',
         type: DataTypeEnum.TEXT,
         validators: [Validators.required, CustomValidators.email],
-        matIconPrefix: 'email'
+        iconPrefix: IconEnum.EMAIL
       },
       {
         key: 'password',
         label: 'password',
         type: DataTypeEnum.PASSWORD,
         validators: [Validators.required, Validators.minLength(3)],
-        matIconPrefix: 'lock'
+        iconPrefix: IconEnum.PASSWORD
       },
       {
         key: 'confirmPassword',
         label: 'password.confirm',
         type: DataTypeEnum.PASSWORD,
-        matIconPrefix: 'lock'
+        iconPrefix: IconEnum.PASSWORD
       }
     ];
   }

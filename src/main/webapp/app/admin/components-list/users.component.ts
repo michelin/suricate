@@ -69,7 +69,7 @@ export class UsersComponent extends ListComponent<User> implements OnInit {
    * Function used to configure the header of the list component
    */
   private initHeaderConfiguration(): void {
-    this.headerConfiguration = { title: 'users.list' };
+    this.headerConfiguration = { title: 'user.list' };
   }
 
   /**
@@ -151,10 +151,10 @@ export class UsersComponent extends ListComponent<User> implements OnInit {
 
     this.dialogService.confirm({
       title: 'user.delete',
-      message: `${this.translateService.instant('delete.confirm')} ${titlecasePipe.transform(user.username)}`,
+      message: `${this.translateService.instant('delete.confirm')} ${titlecasePipe.transform(user.username)} ?`,
       accept: () => {
         this.httpUserService.delete(user.id).subscribe(() => {
-          this.toastService.sendMessage('User deleted successfully', ToastTypeEnum.SUCCESS);
+          this.toastService.sendMessage('user.delete.success', ToastTypeEnum.SUCCESS);
           this.refreshList();
         });
       }

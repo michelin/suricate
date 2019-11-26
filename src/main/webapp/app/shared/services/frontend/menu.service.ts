@@ -45,10 +45,9 @@ export class MenuService {
    * Function used to build the menu
    */
   public static buildMenu(): MenuConfiguration {
-    const isUserAdmin = AuthenticationService.isAdmin();
     const menuConfiguration = new MenuConfiguration();
 
-    if (isUserAdmin) {
+    if (AuthenticationService.isAdmin()) {
       menuConfiguration.categories.push(MenuService.buildAdminMenu());
     }
     menuConfiguration.categories.push(MenuService.buildWidgetMenu());
@@ -64,20 +63,16 @@ export class MenuService {
       label: 'admin',
       items: [
         {
-          label: 'users',
+          label: 'user.list',
           linkConfiguration: { link: ['/admin', 'users'] }
         },
         {
-          label: 'repositories',
+          label: 'repository.list',
           linkConfiguration: { link: ['/admin', 'repositories'] }
         },
         {
-          label: 'dashboards',
+          label: 'dashboard.list',
           linkConfiguration: { link: ['dashboards'] }
-        },
-        {
-          label: 'configurations',
-          linkConfiguration: { link: ['/widgets', 'configurations'] }
         }
       ]
     };
@@ -87,9 +82,19 @@ export class MenuService {
    * Build the widget menu
    */
   private static buildWidgetMenu(): MenuCategoryConfiguration {
+    const widgetMenuItems = [];
+
+    if (AuthenticationService.isAdmin()) {
+      widgetMenuItems.push({
+        label: 'configuration.list',
+        linkConfiguration: { link: ['/widgets', 'configurations'] }
+      });
+    }
+
     return {
-      label: 'widgets',
+      label: 'widget.list',
       items: [
+        ...widgetMenuItems,
         {
           label: 'catalog',
           linkConfiguration: { link: ['/widgets', 'catalog'] }

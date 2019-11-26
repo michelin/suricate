@@ -38,6 +38,7 @@ import { Observable } from 'rxjs';
 import { DashboardScreenComponent } from '../dashboard-screen/dashboard-screen.component';
 import { MatDialog } from '@angular/material/dialog';
 import { TvManagementDialogComponent } from '../tv-management-dialog/tv-management-dialog.component';
+import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
 
 /**
  * Component used to display a specific dashboard
@@ -98,6 +99,18 @@ export class DashboardDetailComponent implements OnInit {
    * @private
    */
   private screenshotTimer: NodeJS.Timer;
+  /**
+   * The list of icons
+   * @type {IconEnum}
+   * @protected
+   */
+  protected iconEnum = IconEnum;
+  /**
+   * The list of material icons
+   * @type {MaterialIconRecords}
+   * @protected
+   */
+  protected materialIconRecords = MaterialIconRecords;
 
   /**
    * Constructor
@@ -200,7 +213,7 @@ export class DashboardDetailComponent implements OnInit {
           icon: IconEnum.EDIT,
           color: 'primary',
           variant: 'miniFab',
-          tooltip: { message: 'dashboard.settings' },
+          tooltip: { message: 'dashboard.edit' },
           callback: () => this.openDashboardFormSidenav()
         },
         {
@@ -277,7 +290,7 @@ export class DashboardDetailComponent implements OnInit {
    */
   private openDashboardFormSidenav(): void {
     this.sidenavService.openFormSidenav({
-      title: 'Edit dashboard',
+      title: 'dashboard.edit',
       formFields: ProjectFormFieldsService.generateProjectFormFields(this.project),
       save: (formData: ProjectRequest) => this.editDashboard(formData)
     });
@@ -332,7 +345,7 @@ export class DashboardDetailComponent implements OnInit {
   private deleteDashboard(): void {
     this.dialogService.confirm({
       title: 'dashboard.delete',
-      message: `${this.translateService.instant('delete.confirm')} ${this.project.name.toUpperCase()}`,
+      message: `${this.translateService.instant('delete.confirm')} ${this.project.name.toUpperCase()} ?`,
       accept: () => {
         this.httpProjectService.delete(this.project.token).subscribe(() => {
           this.toastService.sendMessage('Project deleted successfully', ToastTypeEnum.SUCCESS);

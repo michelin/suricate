@@ -45,7 +45,7 @@ export class ProjectWidgetWizardComponent extends WizardComponent implements OnI
    */
   private initHeaderConfiguration(): void {
     this.headerConfiguration = {
-      title: 'Add widget'
+      title: 'widget.add'
     };
   }
 

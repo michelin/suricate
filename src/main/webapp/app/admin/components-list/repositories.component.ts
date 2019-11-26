@@ -59,14 +59,14 @@ export class RepositoriesComponent extends ListComponent<Repository> {
    */
   private initHeaderConfiguration(): void {
     this.headerConfiguration = {
-      title: 'repositories.list',
+      title: 'repository.list',
       actions: [
         {
           icon: IconEnum.ADD,
           variant: 'miniFab',
           color: 'primary',
           callback: (event: Event) => this.openFormSidenav(event, null, this.addRepository.bind(this)),
-          tooltip: { message: 'Add a new repository' }
+          tooltip: { message: 'repository.add' }
         }
       ]
     };

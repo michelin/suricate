@@ -24,6 +24,8 @@ import { DataTypeEnum } from '../../enums/data-type.enum';
 import { ValueChangedEvent, ValueChangedType } from '../../models/frontend/form/value-changed-event';
 import { FormOption } from '../../models/frontend/form/form-option';
 import { FormField } from '../../models/frontend/form/form-field';
+import { IconEnum } from '../../enums/icon.enum';
+import { MaterialIconRecords } from '../../records/material-icon.record';
 
 /**
  * Manage the instantiation of different form inputs
@@ -61,11 +63,22 @@ export class InputComponent implements OnInit {
    * The data type enum
    */
   protected dataType = DataTypeEnum;
-
   /**
    * The list of options to display
    */
   protected options: FormOption[];
+  /**
+   * The list of icons
+   * @type {IconEnum}
+   * @protected
+   */
+  protected iconEnum = IconEnum;
+  /**
+   * The list of material icon codes
+   * @type {MaterialIconRecords}
+   * @protected
+   */
+  protected materialIconRecords = MaterialIconRecords;
 
   /**
    * Constructor

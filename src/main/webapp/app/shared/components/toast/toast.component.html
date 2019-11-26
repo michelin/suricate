@@ -1,29 +1,29 @@
 <div [@slideInOut]="animationState">
   <div class="wrapper" *ngIf="message">
     <aside>
-      <div class="notification mat-elevation-z12" [ngClass]="message?.style">
+      <div class="notification mat-elevation-z12" [ngClass]="message.style">
         <button class="delete" (click)="hideToast()"></button>
         <div class="notification-body" fxLayout="row" fxLayoutAlign="start center">
-          <div fxFlex="30" class="icon-wrapper" fxLayoutAlign="center center" [ngSwitch]="message?.style">
+          <div fxFlex="30" class="icon-wrapper" fxLayoutAlign="center center" [ngSwitch]="message.style">
             <mat-icon class="material-icons" *ngSwitchCase="toastType.INFO">
-              format_italic
+              {{ materialIconRecords[iconEnum.INFO] }}
             </mat-icon>
             <mat-icon class="material-icons" *ngSwitchCase="toastType.WARNING">
-              warning
+              {{ materialIconRecords[iconEnum.WARNING] }}
             </mat-icon>
             <mat-icon class="material-icons" *ngSwitchCase="toastType.DANGER">
-              error
+              {{ materialIconRecords[iconEnum.ERROR] }}
             </mat-icon>
             <mat-icon class="material-icons" *ngSwitchCase="toastType.SUCCESS">
-              done
+              {{ materialIconRecords[iconEnum.SUCCESS] }}
             </mat-icon>
           </div>
           <div class="notification-content" fxFlex="70">
             <div class="notification-title">
-              {{ message?.title }}
+              {{ message.title | translate }}
             </div>
             <div class="notification-body">
-              {{ message.content }}
+              {{ message.content | translate }}
             </div>
           </div>
         </div>

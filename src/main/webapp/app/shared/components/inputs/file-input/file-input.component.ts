@@ -44,7 +44,6 @@ export class FileInputComponent extends InputComponent implements OnInit {
    * @protected
    */
   protected imgBase64: string | ArrayBuffer;
-
   /**
    * If it's not an image we set the filename
    * @type {string}

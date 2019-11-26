@@ -19,6 +19,7 @@ import { FormField } from '../models/frontend/form/form-field';
 import { DataTypeEnum } from '../enums/data-type.enum';
 import { Validators } from '@angular/forms';
 import { Configuration } from '../models/backend/configuration/configuration';
+import { IconEnum } from '../enums/icon.enum';
 
 /**
  * Service used to build the form fields related to a project
@@ -43,22 +44,22 @@ export class WidgetConfigurationFormFieldsService {
         type: DataTypeEnum.TEXT,
         value: configuration ? configuration.key : null,
         readOnly: true,
-        matIconPrefix: 'vpn_key'
+        iconPrefix: IconEnum.KEY
       },
       {
         key: 'category',
-        label: 'configuration.category',
+        label: 'category',
         type: DataTypeEnum.TEXT,
         value: configuration.category ? configuration.category.name : null,
         readOnly: true,
-        matIconPrefix: 'widgets'
+        iconPrefix: IconEnum.WIDGET
       },
       {
         key: 'value',
         label: 'value',
         type: configuration.dataType,
         value: configuration ? configuration.value : null,
-        matIconPrefix: 'input',
+        iconPrefix: IconEnum.VALUE,
         validators: [Validators.required]
       }
     ];

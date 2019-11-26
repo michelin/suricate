@@ -4,7 +4,7 @@
   <mat-horizontal-stepper #wizardStepper [linear]="true" labelPosition="bottom" (selectionChange)="onStepChanged($event)">
     <ng-container *ngFor="let step of wizardConfiguration?.steps; let index = index">
       <ng-template [matStepperIcon]="step.icon">
-        <mat-icon>{{ materialIconRecords[step.icon] }}</mat-icon>
+        <mat-icon> {{ materialIconRecords[step.icon] }} </mat-icon>
       </ng-template>
 
       <mat-step
@@ -17,7 +17,7 @@
       >
         <ng-template matStepLabel>
           <div class="step-index">Step {{ index + 1 }}</div>
-          <div>{{ step.title }}</div>
+          <div>{{ step.title | translate }}</div>
           <hr />
         </ng-template>
 
@@ -32,7 +32,7 @@
               class="step-detail"
             >
               <img *ngIf="step.imageLink" [src]="step.imageLink.link" alt="form image" />
-              <div>{{ step.description }}</div>
+              <div>{{ step.description | translate }}</div>
             </div>
 
             <form [formGroup]="getFormGroupOfStep(step)" fxFill>

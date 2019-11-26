@@ -18,8 +18,6 @@
 
 import { Component, Input } from '@angular/core';
 import { InputComponent } from '../input.component';
-import { MaterialIconRecords } from '../../../records/material-icon.record';
-import { IconEnum } from '../../../enums/icon.enum';
 import { FormArray, FormGroup } from '@angular/forms';
 import { FormField } from '../../../models/frontend/form/form-field';
 import { DataTypeEnum } from '../../../enums/data-type.enum';
@@ -40,19 +38,6 @@ export class FieldsComponent extends InputComponent {
    */
   @Input()
   public formArray: FormArray;
-
-  /**
-   * The list of icons
-   * @type {IconEnum}
-   * @protected
-   */
-  protected iconEnum = IconEnum;
-  /**
-   * The list of material icon codes
-   * @type {MaterialIconRecords}
-   * @protected
-   */
-  protected materialIconRecords = MaterialIconRecords;
 
   /**
    * Contructor

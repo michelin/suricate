@@ -35,6 +35,8 @@ import * as Stomp from '@stomp/stompjs';
 import { SidenavService } from '../../../shared/services/frontend/sidenav.service';
 import { DialogService } from '../../../shared/services/frontend/dialog.service';
 import { ProjectWidgetFormStepsService } from '../../../shared/form-steps/project-widget-form-steps.service';
+import { IconEnum } from '../../../shared/enums/icon.enum';
+import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
 
 /**
  * Display the grid stack widgets
@@ -117,6 +119,18 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    * @protected
    */
   protected displayButtons = false;
+  /**
+   * The list of icons
+   * @type {IconEnum}
+   * @protected
+   */
+  protected iconEnum = IconEnum;
+  /**
+   * The list of material icons
+   * @type {MaterialIconRecords}
+   * @protected
+   */
+  protected materialIconRecords = MaterialIconRecords;
 
   /**
    * Constructor
@@ -215,7 +229,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
 
     this.dialogService.confirm({
       title: 'widget.delete',
-      message: `${this.translateService.instant('delete.confirm')} ${titlecasePipe.transform(this.widget.name)} widget`,
+      message: `${this.translateService.instant('delete.confirm')} ${titlecasePipe.transform(this.widget.name)} widget ?`,
       accept: () => this.httpProjectWidgetService.deleteOneById(this.projectWidget.id).subscribe()
     });
   }
@@ -225,7 +239,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    */
   protected displayEditForm(): void {
     this.sidenavService.openFormSidenav({
-      title: 'Edit widget',
+      title: 'widget.edit',
       formFields: this.projectWidgetFormStepsService.generateProjectWidgetFormFields(this.widget.params),
       save: () => {}
     });
@@ -236,7 +250,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    */
   protected displayLogProjectWidgetDialog(): void {
     this.dialogService.info({
-      title: 'widget.display.log',
+      title: 'widget.log',
       message: this.projectWidget.log ? this.projectWidget.log : '',
       isErrorMessage: !!this.projectWidget.log
     });

@@ -1,5 +1,5 @@
 <div fxLayout="col wrap" class="input-wrapper inner-form-group">
-  <h1 fxFlex="100%">{{ field.label }}</h1>
+  <h1 fxFlex="100%">{{ field.label | translate }}</h1>
 
   <ng-container *ngFor="let innerFormGroup of $any(formArray.controls); let index = index">
     <div fxLayout="row wrap" fxLayoutGap="10px" fxFlex="100%">

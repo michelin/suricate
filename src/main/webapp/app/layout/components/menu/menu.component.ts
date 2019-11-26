@@ -18,6 +18,8 @@ import { Component } from '@angular/core';
 import { AuthenticationService } from '../../../shared/services/frontend/authentication.service';
 import { Router } from '@angular/router';
 import { MenuService } from '../../../shared/services/frontend/menu.service';
+import { IconEnum } from '../../../shared/enums/icon.enum';
+import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
 
 /**
  * Display the menu on the sidenav
@@ -40,6 +42,18 @@ export class MenuComponent {
    * @protected
    */
   protected readonly menu = MenuService.buildMenu();
+  /**
+   * The list of icons
+   * @type {IconEnum}
+   * @protected
+   */
+  protected iconEnum = IconEnum;
+  /**
+   * The list of material icons
+   * @type {MaterialIconRecords}
+   * @protected
+   */
+  protected materialIconRecords = MaterialIconRecords;
 
   /**
    * Constructor
