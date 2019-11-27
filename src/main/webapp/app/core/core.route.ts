@@ -18,7 +18,6 @@ import { Routes } from '@angular/router';
 
 import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from './components/login/login.component';
-import { SettingsListComponent } from './components/settings-list/settings-list.component';
 import { AuthGuard } from '../shared/guards/auth.guard';
 import { HomeComponent } from './components/home/home.component';
 
@@ -35,10 +34,5 @@ export const coreRoutes: Routes = [
   {
     path: 'register',
     component: RegisterComponent
-  },
-  {
-    path: 'settings',
-    component: SettingsListComponent,
-    canActivate: [AuthGuard]
   }
 ];

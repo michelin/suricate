@@ -23,10 +23,9 @@ import { RegisterComponent } from './components/register/register.component';
 import { LayoutModule } from '../layout/layout.module';
 import { coreRoutes } from './core.route';
 import { HomeComponent } from './components/home/home.component';
-import { SettingsListComponent } from './components/settings-list/settings-list.component';
 
 @NgModule({
   imports: [RouterModule.forChild(coreRoutes), LayoutModule, SharedModule],
-  declarations: [HomeComponent, LoginComponent, RegisterComponent, SettingsListComponent]
+  declarations: [HomeComponent, LoginComponent, RegisterComponent]
 })
 export class CoreModule {}

@@ -65,6 +65,7 @@
   "server.unavailable": "Serveur indisponible",
   "server.unavailable.explanation": "Le serveur ne répond pas, veuillez contacter un administrateur",
   "settings": "Paramètres",
+  "settings.manage": "Gestion des paramètres",
   "sign.in": "Se connecter",
   "sign.up": "S'enregister",
   "tv.view": "Vu TV",

@@ -105,7 +105,7 @@ export class SettingsService {
   getThemeUserSetting(user: User): Observable<UserSetting> {
     return this.httpSettingService
       .getAll(SettingsTypeEnum.TEMPLATE)
-      .pipe(flatMap(settings => this.httpUserService.getUserSetting(user.id, settings[0].id)));
+      .pipe(flatMap(settings => this.httpUserService.getUserSetting(user.username, settings[0].id)));
   }
 
   /**
@@ -176,6 +176,6 @@ export class SettingsService {
   getLanguageUserSetting(user: User): Observable<UserSetting> {
     return this.httpSettingService
       .getAll(SettingsTypeEnum.LANGUAGE)
-      .pipe(flatMap(settings => this.httpUserService.getUserSetting(user.id, settings[0].id)));
+      .pipe(flatMap(settings => this.httpUserService.getUserSetting(user.username, settings[0].id)));
   }
 }

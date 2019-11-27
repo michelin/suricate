@@ -19,7 +19,7 @@
 
       <mat-nav-list class="submenu">
         <div>
-          <a mat-list-item routerLinkActive="active" [routerLink]="['/settings']">
+          <a mat-list-item (click)="openSettingsFormSidenav()">
             <mat-icon> {{ materialIconRecords[iconEnum.SETTINGS] }} </mat-icon>
             <span> {{ 'settings' | translate }} </span>
           </a>

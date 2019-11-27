@@ -100,10 +100,10 @@ export class HttpUserService implements AbstractHttpService<User | UserRequest> 
   /**
    * Get the user settings
    *
-   * @param userId The user id
+   * @param userName The user name
    */
-  public getUserSettings(userId: number): Observable<UserSetting[]> {
-    const url = `${HttpUserService.usersApiEndpoint}/${userId}/settings`;
+  public getUserSettings(userName: string): Observable<UserSetting[]> {
+    const url = `${HttpUserService.usersApiEndpoint}/${userName}/settings`;
 
     return this.httpClient.get<UserSetting[]>(url);
   }
@@ -111,11 +111,11 @@ export class HttpUserService implements AbstractHttpService<User | UserRequest> 
   /**
    * Get a user setting by user id and setting id
    *
-   * @param userId The user id
+   * @param userName The user name
    * @param settingId The setting id
    */
-  public getUserSetting(userId: number, settingId: number): Observable<UserSetting> {
-    const url = `${HttpUserService.usersApiEndpoint}/${userId}/settings/${settingId}`;
+  public getUserSetting(userName: string, settingId: number): Observable<UserSetting> {
+    const url = `${HttpUserService.usersApiEndpoint}/${userName}/settings/${settingId}`;
 
     return this.httpClient.get<UserSetting>(url);
   }
@@ -123,12 +123,12 @@ export class HttpUserService implements AbstractHttpService<User | UserRequest> 
   /**
    * Update user settings
    *
-   * @param {number} userId The user id to update
+   * @param {string} userName The user to update
    * @param {number} settingId The setting id
    * @param {UserSettingRequest} userSettingRequest The user setting request
    */
-  public updateUserSetting(userId: number, settingId: number, userSettingRequest: UserSettingRequest): Observable<void> {
-    const url = `${HttpUserService.usersApiEndpoint}/${userId}/settings/${settingId}`;
+  public updateUserSetting(userName: string, settingId: number, userSettingRequest: UserSettingRequest): Observable<void> {
+    const url = `${HttpUserService.usersApiEndpoint}/${userName}/settings/${settingId}`;
 
     return this.httpClient.put<void>(url, userSettingRequest);
   }

@@ -19,7 +19,7 @@
 /**
  * Link between a setting and a user
  */
-export interface UserSettingRequest {
+export class UserSettingRequest {
   allowedSettingValueId?: number;
   unconstrainedValue?: string;
 }
