@@ -23,6 +23,7 @@ import { Validators } from '@angular/forms';
 import { Repository } from '../models/backend/repository/repository';
 import { FormOption } from '../models/frontend/form/form-option';
 import { TitleCasePipe } from '@angular/common';
+import { IconEnum } from '../enums/icon.enum';
 
 /**
  * Service used to build the form fields related to a repository
@@ -73,6 +74,7 @@ export class RepositoryFormFieldsService {
       {
         key: 'name',
         label: 'name',
+        iconPrefix: IconEnum.NAME,
         type: DataTypeEnum.TEXT,
         value: repository ? repository.name : null,
         validators: [Validators.required]
@@ -80,6 +82,7 @@ export class RepositoryFormFieldsService {
       {
         key: 'type',
         label: 'type',
+        iconPrefix: IconEnum.REPOSITORY_TYPE,
         type: DataTypeEnum.COMBO,
         options: () => RepositoryFormFieldsService.getRepositoryTypeOptions(),
         value: repository ? repository.type : null,
@@ -98,6 +101,7 @@ export class RepositoryFormFieldsService {
       {
         key: 'localPath',
         label: 'path.local',
+        iconPrefix: IconEnum.URL,
         type: DataTypeEnum.TEXT,
         value: repository ? repository.localPath : null,
         validators: [Validators.required]
@@ -115,6 +119,7 @@ export class RepositoryFormFieldsService {
       {
         key: 'url',
         label: 'url',
+        iconPrefix: IconEnum.URL,
         type: DataTypeEnum.TEXT,
         value: repository ? repository.url : null,
         validators: [Validators.required]
@@ -122,6 +127,7 @@ export class RepositoryFormFieldsService {
       {
         key: 'branch',
         label: 'branch',
+        iconPrefix: IconEnum.BRANCH,
         type: DataTypeEnum.TEXT,
         value: repository ? repository.branch : null,
         validators: [Validators.required]
@@ -129,6 +135,7 @@ export class RepositoryFormFieldsService {
       {
         key: 'login',
         label: 'login',
+        iconPrefix: IconEnum.USERNAME,
         type: DataTypeEnum.TEXT,
         value: repository ? repository.login : null,
         validators: [Validators.required]
@@ -136,6 +143,7 @@ export class RepositoryFormFieldsService {
       {
         key: 'password',
         label: 'password',
+        iconPrefix: IconEnum.PASSWORD,
         type: DataTypeEnum.PASSWORD,
         value: repository ? repository.password : null,
         validators: [Validators.required]

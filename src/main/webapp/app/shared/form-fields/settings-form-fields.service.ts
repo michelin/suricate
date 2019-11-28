@@ -25,6 +25,7 @@ import { UserSetting } from '../models/backend/setting/user-setting';
 import { flatMap, map, toArray } from 'rxjs/operators';
 import { FormOption } from '../models/frontend/form/form-option';
 import { AllowedSettingValue } from '../models/backend/setting/allowed-setting-value';
+import { IconEnum } from '../enums/icon.enum';
 
 /**
  * Service used to build the form fields related to the settings
@@ -56,6 +57,7 @@ export class SettingsFormFieldsService {
             return {
               key: userSettingForkJoin.setting.type,
               label: userSettingForkJoin.setting.description,
+              iconPrefix: IconEnum[userSettingForkJoin.setting.type],
               type: userSettingForkJoin.setting.dataType,
               value: userSettingForkJoin.userSetting.settingValue.value,
               options: () => this.generateOptions(userSettingForkJoin.setting)

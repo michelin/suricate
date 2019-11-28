@@ -24,6 +24,7 @@ import { HttpProjectService } from '../services/backend/http-project.service';
 import { FormOption } from '../models/frontend/form/form-option';
 import { HttpUserService } from '../services/backend/http-user.service';
 import { User } from '../models/backend/user/user';
+import { IconEnum } from '../enums/icon.enum';
 
 /**
  * Service used to build the form fields related to project users
@@ -53,6 +54,7 @@ export class ProjectUsersFormFieldsService {
       {
         key: 'usernameAutocomplete',
         label: 'username',
+        iconPrefix: IconEnum.USER_ADD,
         type: DataTypeEnum.TEXT,
         options: filter => this.getUsersAutocomplete(filter)
       },

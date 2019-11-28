@@ -20,6 +20,7 @@ import { DataTypeEnum } from '../enums/data-type.enum';
 import { Validators } from '@angular/forms';
 import { CustomValidators } from 'ng2-validation';
 import { FormField } from '../models/frontend/form/form-field';
+import { IconEnum } from '../enums/icon.enum';
 
 /**
  * Service used to build the form fields related to a project
@@ -41,6 +42,7 @@ export class ProjectFormFieldsService {
       {
         key: 'name',
         label: 'name',
+        iconPrefix: IconEnum.NAME,
         type: DataTypeEnum.TEXT,
         value: project ? project.name : null,
         validators: [Validators.required]
@@ -48,6 +50,7 @@ export class ProjectFormFieldsService {
       {
         key: 'widgetHeight',
         label: 'widget.height.px',
+        iconPrefix: IconEnum.HEIGHT,
         type: DataTypeEnum.NUMBER,
         value: project ? project.gridProperties.widgetHeight : 360,
         validators: [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]
@@ -55,6 +58,7 @@ export class ProjectFormFieldsService {
       {
         key: 'maxColumn',
         label: 'column.number',
+        iconPrefix: IconEnum.COLUMN,
         type: DataTypeEnum.NUMBER,
         value: project ? project.gridProperties.maxColumn : 5,
         validators: [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]
