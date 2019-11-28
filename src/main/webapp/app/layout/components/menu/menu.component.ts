@@ -80,6 +80,7 @@ export class MenuComponent implements OnInit {
    * @param {HttpUserService} httpUserService Suricate service used to manage user
    * @param {SidenavService} sidenavService Frontend service used to manage sidenavs
    * @param {SettingsFormFieldsService} settingsFormFieldsService Frontend service used to build form fields for settings management
+   * @param {SettingsService} settingsService Frontend service used to manage settings
    */
   constructor(
     private readonly router: Router,
@@ -114,7 +115,7 @@ export class MenuComponent implements OnInit {
   protected openSettingsFormSidenav(): void {
     this.settingsFormFieldsService.generateFormFields().subscribe((formFields: FormField[]) => {
       this.sidenavService.openFormSidenav({
-        title: 'settings.manage',
+        title: 'settings',
         formFields: formFields,
         save: (formData: FormData) => this.saveSettings(formData)
       });
@@ -127,13 +128,10 @@ export class MenuComponent implements OnInit {
    * @param formData The data from the form
    */
   private saveSettings(formData: FormData): void {
-    console.log(formData);
-
     from(this.settings)
       .pipe(
         flatMap((setting: Setting) => {
           const userSettingRequest = new UserSettingRequest();
-
           if (setting.constrained && setting.allowedSettingValues) {
             const selectedAllowedSetting = setting.allowedSettingValues.find((allowedSettingValue: AllowedSettingValue) => {
               return allowedSettingValue.value === formData[setting.type];
@@ -141,7 +139,7 @@ export class MenuComponent implements OnInit {
 
             userSettingRequest.allowedSettingValueId = selectedAllowedSetting.id;
           } else {
-            userSettingRequest.unconstrainedValue = formData.get(setting.type).toString();
+            userSettingRequest.unconstrainedValue = formData[setting.type];
           }
 
           return this.httpUserService.updateUserSetting(this.connectedUser.username, setting.id, userSettingRequest);
