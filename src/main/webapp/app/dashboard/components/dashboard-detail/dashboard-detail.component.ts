@@ -33,12 +33,15 @@ import { DialogService } from '../../../shared/services/frontend/dialog.service'
 import { TranslateService } from '@ngx-translate/core';
 import { ProjectRequest } from '../../../shared/models/backend/project/project-request';
 import { ProjectFormFieldsService } from '../../../shared/form-fields/project-form-fields.service';
-import { flatMap, tap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { flatMap, switchMap, tap } from 'rxjs/operators';
+import { EMPTY, Observable, of } from 'rxjs';
 import { DashboardScreenComponent } from '../dashboard-screen/dashboard-screen.component';
 import { MatDialog } from '@angular/material/dialog';
 import { TvManagementDialogComponent } from '../tv-management-dialog/tv-management-dialog.component';
 import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
+import { ValueChangedEvent } from '../../../shared/models/frontend/form/value-changed-event';
+import { FormField } from '../../../shared/models/frontend/form/form-field';
+import { ProjectUsersFormFieldsService } from '../../../shared/form-fields/project-users-form-fields.service';
 
 /**
  * Component used to display a specific dashboard
@@ -121,6 +124,7 @@ export class DashboardDetailComponent implements OnInit {
    * @param {TranslateService} translateService NgxTranslate service used to manage translations
    * @param {HttpProjectService} httpProjectService Suricate service used to manage http calls for project
    * @param {HttpScreenService} httpScreenService Suricate service used to manage http calls for screen service
+   * @param {ProjectUsersFormFieldsService} projectUsersFormFieldsService Frontend service used to generate form fields for projectUsers
    * @param {DashboardService} dashboardService Frontend service used to manage dashboards
    * @param {SidenavService} sidenavService Frontend service used to manage sidenav
    * @param {ToastService} toastService Frontend service used to manage toast message
@@ -133,6 +137,7 @@ export class DashboardDetailComponent implements OnInit {
     private readonly translateService: TranslateService,
     private readonly httpProjectService: HttpProjectService,
     private readonly httpScreenService: HttpScreenService,
+    private readonly projectUsersFormFieldsService: ProjectUsersFormFieldsService,
     private readonly dashboardService: DashboardService,
     private readonly sidenavService: SidenavService,
     private readonly toastService: ToastService,
@@ -217,6 +222,13 @@ export class DashboardDetailComponent implements OnInit {
           callback: () => this.openDashboardFormSidenav()
         },
         {
+          icon: IconEnum.USERS,
+          color: 'primary',
+          variant: 'miniFab',
+          tooltip: { message: 'user.edit' },
+          callback: () => this.openUserFormSidenav()
+        },
+        {
           icon: IconEnum.REFRESH,
           color: 'primary',
           variant: 'miniFab',
@@ -283,6 +295,28 @@ export class DashboardDetailComponent implements OnInit {
    */
   protected displayProjectWidgetWizard(): void {
     this.router.navigate(['/dashboards', this.project.token, 'widgets', 'create']);
+  }
+
+  /**
+   * Open the user form sidenav
+   */
+  private openUserFormSidenav(): void {
+    this.sidenavService.openFormSidenav({
+      title: 'user.add',
+      formFields: this.projectUsersFormFieldsService.generateProjectUsersFormFields(this.project.token),
+      hideSaveAction: true,
+      onValueChanged: (valueChangedEvent: ValueChangedEvent) => this.onValueChanged(valueChangedEvent)
+    });
+  }
+
+  private onValueChanged(valueChangedEvent: ValueChangedEvent): Observable<FormField[]> {
+    if (valueChangedEvent.type === 'optionSelected' && valueChangedEvent.fieldKey === 'usernameAutocomplete') {
+      return this.httpProjectService
+        .addUserToProject(this.project.token, valueChangedEvent.value)
+        .pipe(switchMap(() => of(this.projectUsersFormFieldsService.generateProjectUsersFormFields(this.project.token))));
+    }
+
+    return EMPTY;
   }
 
   /**
