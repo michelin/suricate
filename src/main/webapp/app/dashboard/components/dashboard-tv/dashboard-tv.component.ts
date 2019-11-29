@@ -19,7 +19,7 @@
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { flatMap, takeWhile, tap } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import * as Stomp from '@stomp/stompjs';
 
 import { Project } from '../../../shared/models/backend/project/project';
@@ -98,9 +98,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
     private readonly activatedRoute: ActivatedRoute,
     private readonly httpProjectService: HttpProjectService,
     private readonly websocketService: WebsocketService
-  ) {
-    this.projectToken = this.activatedRoute.snapshot.queryParams['token'];
-  }
+  ) {}
 
   /**********************************************************************************************************/
   /*                      COMPONENT LIFE CYCLE                                                              */
@@ -112,7 +110,16 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    */
   public ngOnInit(): void {
     this.listenForConnection();
-    this.initComponent();
+
+    this.activatedRoute.queryParams.subscribe((queryParams: Params) => {
+      if (queryParams['token']) {
+        this.projectToken = queryParams['token'];
+        this.initComponent();
+      } else {
+        this.projectToken = null;
+        this.projectWidgets = null;
+      }
+    });
   }
 
   /**
