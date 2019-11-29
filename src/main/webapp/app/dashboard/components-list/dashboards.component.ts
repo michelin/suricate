@@ -27,6 +27,7 @@ import { ProjectUsersFormFieldsService } from '../../shared/form-fields/project-
 import { ValueChangedEvent } from '../../shared/models/frontend/form/value-changed-event';
 import { EMPTY, Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+import { CssService } from '../../shared/services/frontend/css.service';
 
 /**
  * Component used to display the list of Dashboards
@@ -151,6 +152,8 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
    * @param projectRequest The project clicked on the list
    */
   private editProject(projectRequest: ProjectRequest): void {
+    projectRequest.cssStyle = CssService.buildCssFile([CssService.buildCssGridBackgroundColor(projectRequest['gridBackgroundColor'])]);
+
     this.httpProjectService.update(this.projectSelected.token, projectRequest).subscribe(() => {
       this.refreshList();
     });

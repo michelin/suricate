@@ -28,6 +28,7 @@ import { ToastService } from '../../../shared/services/frontend/toast.service';
 import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
 import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
 import { IconEnum } from '../../../shared/enums/icon.enum';
+import { CssService } from '../../../shared/services/frontend/css.service';
 
 /**
  * Manage the home page
@@ -113,7 +114,7 @@ export class HomeComponent implements OnInit {
    * @param projectRequest The request to send to the backend with the information written on the form
    */
   private addDashboard(projectRequest: ProjectRequest): void {
-    projectRequest.cssStyle = `.grid { background-color: ${projectRequest['gridBackgroundColor']}; }`;
+    projectRequest.cssStyle = CssService.buildCssFile([CssService.buildCssGridBackgroundColor(projectRequest['gridBackgroundColor'])]);
 
     this.httpProjectService.create(projectRequest).subscribe((project: Project) => {
       this.toastService.sendMessage('dashboard.add.success', ToastTypeEnum.SUCCESS);

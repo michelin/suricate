@@ -21,6 +21,7 @@ import { Validators } from '@angular/forms';
 import { CustomValidators } from 'ng2-validation';
 import { FormField } from '../models/frontend/form/form-field';
 import { IconEnum } from '../enums/icon.enum';
+import { CssService } from '../services/frontend/css.service';
 
 /**
  * Service used to build the form fields related to a project
@@ -38,6 +39,11 @@ export class ProjectFormFieldsService {
    * @param project The project used for an edition
    */
   public static generateProjectFormFields(project?: Project): FormField[] {
+    const backgroundColor =
+      project && project.gridProperties.cssStyle
+        ? CssService.extractCssValue(project.gridProperties.cssStyle, '.grid', 'background-color')
+        : '#87878700';
+
     return [
       {
         key: 'name',
@@ -66,7 +72,8 @@ export class ProjectFormFieldsService {
       {
         key: 'gridBackgroundColor',
         label: 'background.color',
-        type: DataTypeEnum.COLOR_PICKER
+        type: DataTypeEnum.COLOR_PICKER,
+        value: backgroundColor
       }
     ];
   }
