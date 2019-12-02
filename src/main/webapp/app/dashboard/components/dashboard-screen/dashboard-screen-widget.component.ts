@@ -37,6 +37,7 @@ import { DialogService } from '../../../shared/services/frontend/dialog.service'
 import { ProjectWidgetFormStepsService } from '../../../shared/form-steps/project-widget-form-steps.service';
 import { IconEnum } from '../../../shared/enums/icon.enum';
 import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
+import { ProjectWidgetRequest } from '../../../shared/models/backend/project-widget/project-widget-request';
 
 /**
  * Display the grid stack widgets
@@ -237,11 +238,24 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   /**
    * Display the form sidenav used to edit a project widget
    */
-  protected displayEditForm(): void {
+  protected displayEditFormSidenav(): void {
     this.sidenavService.openFormSidenav({
       title: 'widget.edit',
-      formFields: this.projectWidgetFormStepsService.generateProjectWidgetFormFields(this.widget.params),
-      save: () => {}
+      formFields: this.projectWidgetFormStepsService.generateProjectWidgetFormFields(this.widget.params, this.projectWidget.backendConfig),
+      save: (formData: FormData) => {
+        console.log(formData);
+
+        const projectWidgetRequest: ProjectWidgetRequest = {
+          widgetId: this.projectWidget.widgetId,
+          customStyle: this.projectWidget.customStyle,
+          backendConfig: Object.keys(formData)
+            .filter((key: string) => formData[key])
+            .map((key: string) => `${key}=${formData[key]}`)
+            .join('\n')
+        };
+
+        this.httpProjectWidgetService.updateOneById(this.projectWidget.id, projectWidgetRequest).subscribe();
+      }
     });
   }
 

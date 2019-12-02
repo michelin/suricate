@@ -166,16 +166,27 @@ export class ProjectWidgetFormStepsService {
     return EMPTY;
   }
 
-  public generateProjectWidgetFormFields(widgetParams: WidgetParam[]): FormField[] {
+  /**
+   * Generate the form fields for a project widget
+   *
+   * @param widgetParams The params of the widget
+   * @param widgetConfig The configuration already set
+   */
+  public generateProjectWidgetFormFields(widgetParams: WidgetParam[], widgetConfig?: string): FormField[] {
     const formFields = [];
 
     widgetParams.forEach((widgetParam: WidgetParam) => {
+      let configValue = null;
+      if (widgetConfig) {
+        configValue = this.retrieveProjectWidgetValueFromConfig(widgetParam.name, widgetConfig);
+      }
+
       const formField: FormField = {
         key: widgetParam.name,
         type: widgetParam.type,
         label: widgetParam.description,
         placeholder: widgetParam.usageExample,
-        value: widgetParam.defaultValue,
+        value: configValue ? configValue : widgetParam.defaultValue,
         options: () => ProjectWidgetFormStepsService.getFormOptionsForWidgetParam(widgetParam),
         validators: this.getValidatorsForWidgetParam(widgetParam)
       };
@@ -195,7 +206,7 @@ export class ProjectWidgetFormStepsService {
    *
    * @param widgetParam The widget param
    */
-  getValidatorsForWidgetParam(widgetParam: WidgetParam): ValidatorFn[] {
+  private getValidatorsForWidgetParam(widgetParam: WidgetParam): ValidatorFn[] {
     const formValidators: ValidatorFn[] = [];
 
     if (widgetParam.required) {
@@ -211,5 +222,25 @@ export class ProjectWidgetFormStepsService {
     }
 
     return formValidators;
+  }
+
+  /**
+   * Retrieve and existing value from project widget configs
+   *
+   * @param key The configuration key
+   * @param widgetConfig The list of configurations
+   */
+  private retrieveProjectWidgetValueFromConfig(key: string, widgetConfig?: string): string {
+    let value = null;
+
+    widgetConfig.split('\n').forEach((keyValue: string) => {
+      const keyValueSplitted = keyValue.split('=');
+      if (keyValueSplitted[0] === key) {
+        value = keyValueSplitted[1];
+        return;
+      }
+    });
+
+    return value;
   }
 }
