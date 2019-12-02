@@ -50,6 +50,7 @@ import { ColorPickerModule } from 'ngx-color-picker';
 import { ColorPickerComponent } from './components/inputs/color-picker/color-picker.component';
 import { FieldsComponent } from './components/inputs/fields/fields.component';
 import { MosaicComponent } from './components/inputs/mosaic/mosaic.component';
+import { PaginatorComponent } from './components/paginator/paginator.component';
 
 @NgModule({
   imports: [
@@ -87,7 +88,8 @@ import { MosaicComponent } from './components/inputs/mosaic/mosaic.component';
     WizardComponent,
     ColorPickerComponent,
     FieldsComponent,
-    MosaicComponent
+    MosaicComponent,
+    PaginatorComponent
   ],
   exports: [
     BrowserAnimationsModule,
@@ -119,7 +121,8 @@ import { MosaicComponent } from './components/inputs/mosaic/mosaic.component';
     FormSidenavComponent,
     ListComponent,
     WizardComponent,
-    ColorPickerComponent
+    ColorPickerComponent,
+    PaginatorComponent
   ],
   entryComponents: [CommunicationDialogComponent, ConfirmDialogComponent],
   providers: [

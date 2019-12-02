@@ -27,6 +27,8 @@ import { ToastService } from '../../services/frontend/toast.service';
 import { DialogService } from '../../services/frontend/dialog.service';
 import { SidenavService } from '../../services/frontend/sidenav.service';
 import { Page } from '../../models/backend/page';
+import { HttpFilterService } from '../../services/backend/http-filter.service';
+import { PageEvent } from '@angular/material';
 
 /**
  * Generic component used to display and manage lists
@@ -68,11 +70,15 @@ export class ListComponent<T> implements OnInit {
   /**
    * The object list to display
    */
-  protected objects: T[];
+  protected objectsPaged: Page<T>;
   /**
    * Display the loader when it's true, end hide when it's false
    */
   protected isLoading = true;
+  /**
+   * Used to filter the list
+   */
+  protected httpFilter = HttpFilterService.getDefaultFilter();
 
   /**
    * Constructor
@@ -100,8 +106,8 @@ export class ListComponent<T> implements OnInit {
    */
   protected refreshList(): void {
     this.displayLoader();
-    this.childService.getAll().subscribe((objects: Page<T>) => {
-      this.objects = objects.content;
+    this.childService.getAll(this.httpFilter).subscribe((objectsPaged: Page<T>) => {
+      this.objectsPaged = objectsPaged;
       this.hideLoader();
     });
   }
@@ -131,6 +137,17 @@ export class ListComponent<T> implements OnInit {
       return '80%';
     }
     return '100%';
+  }
+
+  /**
+   * Called when we change page from paginator
+   *
+   * @param pageEvent The angular material page event
+   */
+  private pageChanged(pageEvent: PageEvent): void {
+    console.log(pageEvent);
+    this.httpFilter.page = pageEvent.pageIndex;
+    this.refreshList();
   }
 
   /**

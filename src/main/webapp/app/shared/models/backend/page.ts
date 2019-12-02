@@ -48,4 +48,8 @@ export class Page<T> {
    * True if it's the first page
    */
   first: boolean;
+  /**
+   * Requested number of elements per pages
+   */
+  size: number;
 }
