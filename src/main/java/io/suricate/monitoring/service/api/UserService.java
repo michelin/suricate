@@ -22,11 +22,14 @@ import io.suricate.monitoring.model.entity.user.User;
 import io.suricate.monitoring.model.enums.UserRoleEnum;
 import io.suricate.monitoring.repository.UserRepository;
 import io.suricate.monitoring.service.mapper.UserMapper;
+import io.suricate.monitoring.service.specification.UserSearchSpecification;
 import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -218,13 +221,14 @@ public class UserService {
     }
 
     /**
-     * Search users with the username starting with query
+     * Method used to get the list of every users
      *
-     * @param username The part of username to find
-     * @return The list of related users
+     * @param search   The string to search
+     * @param pageable The configuration of the page
+     * @return List of users
      */
-    public Optional<List<User>> getAllByUsernameStartWith(String username) {
-        return userRepository.findByUsernameIgnoreCaseAndStartingWith(username);
+    public Page<User> getAll(String search, Pageable pageable) {
+        return userRepository.findAll(new UserSearchSpecification(search), pageable);
     }
 
     /**
