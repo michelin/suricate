@@ -14,8 +14,7 @@
  * limitations under the License.
  */
 
-
-import {Directive, ElementRef, OnInit} from '@angular/core';
+import { Directive, ElementRef, OnInit } from '@angular/core';
 
 /**
  * Directive used for running script under HTML Views
@@ -24,23 +23,24 @@ import {Directive, ElementRef, OnInit} from '@angular/core';
   selector: '[appRunScripts]'
 })
 export class RunScriptsDirective implements OnInit {
-
   /**
    * The constructor
    *
-   * @param {ElementRef} elementRef Represent a reference for an HTML Element
+   * @param {ElementRef} elementRef Represent a reference on an HTML Element
    */
-  constructor(private elementRef: ElementRef) {
-  }
+  constructor(private readonly elementRef: ElementRef) {}
 
-  ngOnInit(): void {
+  /**
+   * Called when the directive is init
+   */
+  public ngOnInit(): void {
     setTimeout(() => this.reinsertScripts(), 0);
   }
 
   /**
    * Reinsert scripts tag inside DOM for execution
    */
-  reinsertScripts(): void {
+  private reinsertScripts(): void {
     let scripts: HTMLScriptElement[] = Array.from(this.elementRef.nativeElement.getElementsByTagName('script'));
     const scriptsWithSrc: HTMLScriptElement[] = scripts.filter(currentScript => currentScript.src);
     const scriptsInline: HTMLScriptElement[] = scripts.filter(currentScript => currentScript.innerHTML);

@@ -16,20 +16,15 @@
             "main": "src/main/webapp/main.ts",
             "tsConfig": "src/main/webapp/tsconfig.app.json",
             "polyfills": "src/main/webapp/polyfills.ts",
-            "assets": [
-              "src/main/webapp/assets",
-              "src/main/webapp/favicon.ico"
-            ],
+            "assets": ["src/main/webapp/assets", "src/main/webapp/favicon.ico"],
             "stylePreprocessorOptions": {
               "includePaths": [
                 "node_modules/normalize-scss/sass",
-                "node_modules/material-design-icons-iconfont/src"
+                "node_modules/material-design-icons-iconfont/src",
+                "node_modules/@fortawesome/fontawesome-free/scss"
               ]
             },
-            "styles": [
-              "node_modules/font-awesome/scss/font-awesome.scss",
-              "src/main/webapp/sass/styles.scss"
-            ],
+            "styles": ["src/main/webapp/sass/styles.scss"],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
               "node_modules/lodash/lodash.min.js",
@@ -53,6 +48,9 @@
                   "with": "src/main/webapp/environments/environment.prod.ts"
                 }
               ]
+            },
+            "es5": {
+              "tsConfig": "src/tsconfig-es5.app.json"
             }
           }
         },
@@ -64,6 +62,9 @@
           "configurations": {
             "production": {
               "browserTarget": "suricate-frontend:build:production"
+            },
+            "es5": {
+              "browserTarget": "d4x:build:es5"
             }
           }
         },
@@ -80,20 +81,15 @@
             "karmaConfig": "./karma.conf.js",
             "polyfills": "src/main/webapp/polyfills.ts",
             "tsConfig": "src/main/webapp/tsconfig.spec.json",
-            "assets": [
-              "src/main/webapp/assets",
-              "src/main/webapp/favicon.ico"
-            ],
+            "assets": ["src/main/webapp/assets", "src/main/webapp/favicon.ico"],
             "stylePreprocessorOptions": {
               "includePaths": [
                 "node_modules/normalize-scss/sass",
-                "node_modules/material-design-icons-iconfont/src"
+                "node_modules/material-design-icons-iconfont/src",
+                "node_modules/@fortawesome/fontawesome-free/scss"
               ]
             },
-            "styles": [
-              "node_modules/font-awesome/scss/font-awesome.scss",
-              "src/main/webapp/sass/styles.scss"
-            ],
+            "styles": ["src/main/webapp/sass/styles.scss"],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
               "node_modules/lodash/lodash.min.js",
@@ -104,13 +100,29 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "src/main/webapp/tsconfig.app.json",
-              "src/main/webapp/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "tsConfig": ["src/main/webapp/tsconfig.app.json", "src/main/webapp/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**"]
+          }
+        }
+      }
+    },
+    "suricate-frontend-e2e": {
+      "root": "e2e",
+      "sourceRoot": "e2e",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@angular-devkit/build-angular:protractor",
+          "options": {
+            "protractorConfig": "./protractor.conf.js",
+            "devServerTarget": "suricate-frontend:serve"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["e2e/tsconfig.e2e.json"],
+            "exclude": ["**/node_modules/**"]
           }
         }
       }
@@ -119,11 +131,11 @@
   "defaultProject": "suricate-frontend",
   "schematics": {
     "@schematics/angular:component": {
-      "prefix": "app",
+      "prefix": "suricate",
       "styleext": "scss"
     },
     "@schematics/angular:directive": {
-      "prefix": "app"
+      "prefix": "suricate"
     }
   }
 }

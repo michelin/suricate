@@ -16,6 +16,7 @@
 
 package io.suricate.monitoring.configuration.security.token;
 
+import io.suricate.monitoring.configuration.security.ConnectedUser;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.oauth2.common.DefaultOAuth2AccessToken;
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
@@ -41,9 +42,14 @@ public class JwtAccessTokenConverterConfiguration extends JwtAccessTokenConverte
      */
     @Override
     public OAuth2AccessToken enhance(OAuth2AccessToken accessToken, OAuth2Authentication authentication) {
-        Map<String, Object> additionalTokenInformations = new HashMap<>();
+        ConnectedUser connectedUser = (ConnectedUser) authentication.getUserAuthentication().getPrincipal();
 
-        ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(additionalTokenInformations);
+        Map<String, Object> additionalTokenInformation = new HashMap<>();
+        additionalTokenInformation.put("firstname", connectedUser.getFirstname());
+        additionalTokenInformation.put("lastname", connectedUser.getLastname());
+        additionalTokenInformation.put("mail", connectedUser.getMail());
+
+        ((DefaultOAuth2AccessToken) accessToken).setAdditionalInformation(additionalTokenInformation);
         return super.enhance(accessToken, authentication);
     }
 }

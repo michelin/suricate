@@ -34,7 +34,7 @@
   $sidenav-background-secondary: #5a5a5a;
   $sidenav-text: #cfd2da;
 
-  .mat-sidenav {
+  .mat-sidenav.menu-sidenav {
     & {
       background-color: $sidenav-background-primary;
       color: $sidenav-text;
@@ -46,7 +46,6 @@
       width: 90%;
       color: #303030;
     }
-
 
     .sidenav-section {
       & {
@@ -109,7 +108,6 @@
         }
       }
     }
-
 
     .mat-list-item {
       & {

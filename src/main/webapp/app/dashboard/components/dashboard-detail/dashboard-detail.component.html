@@ -1,0 +1,34 @@
+<ng-container *ngIf="!isDashboardLoading">
+  <suricate-pages-header [configuration]="headerConfiguration"></suricate-pages-header>
+
+  <!-- Dashboard screen -->
+  <suricate-dashboard-screen
+    #dashboardScreen
+    *ngIf="projectWidgets?.length > 0"
+    [project]="project"
+    [projectWidgets]="projectWidgets"
+    [screenCode]="screenCode"
+    [readOnly]="isReadOnly"
+    (refreshProjectWidget)="refreshProjectWidgetsAction()"
+    (disconnectEvent)="handlingDashboardDisconnect()"
+  ></suricate-dashboard-screen>
+
+  <!-- Display the add card, if no widget inside the project -->
+  <mat-grid-list *ngIf="!projectWidgets || projectWidgets.length === 0" cols="4" rowHeight="250px" gutterSize="17px">
+    <mat-grid-tile class="mat-elevation-z3" (click)="displayProjectWidgetWizard()">
+      <div class="grid-tile-content-wrapper">
+        <div class="grid-tile-body">
+          <mat-icon color="primary"> {{ materialIconRecords[iconEnum.ADD] }} </mat-icon>
+        </div>
+
+        <div class="grid-tile-footer">
+          {{ 'widget.add' | translate }}
+        </div>
+      </div>
+    </mat-grid-tile>
+  </mat-grid-list>
+</ng-container>
+
+<div *ngIf="isDashboardLoading" class="container without-header" fxLayout="column" fxLayoutAlign="center center">
+  <suricate-spinner></suricate-spinner>
+</div>
