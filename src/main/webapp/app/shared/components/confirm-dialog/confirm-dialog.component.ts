@@ -14,24 +14,43 @@
  * limitations under the License.
  */
 
-import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA} from '@angular/material';
+import { Component, Inject } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { ConfirmationDialogConfiguration } from '../../models/frontend/dialog/confirmation-dialog-configuration';
 
+/**
+ * Confirmation dialog
+ */
 @Component({
   templateUrl: './confirm-dialog.component.html',
   styleUrls: ['./confirm-dialog.component.scss']
 })
-export class ConfirmDialogComponent implements OnInit {
+export class ConfirmDialogComponent {
+  /**
+   * The configuration of the confirmation dialog
+   * @type {ConfirmationDialogConfiguration}
+   * @protected
+   */
+  protected configuration: ConfirmationDialogConfiguration;
 
-  title: string;
-  message: string;
-
-  constructor(@Inject(MAT_DIALOG_DATA) private data: any) {
+  /**
+   * Constructor
+   *
+   * @param {MatDialogRef<ConfirmDialogComponent>} confirmationDialogRef Reference on the instance of this dialog
+   * @param {ConfirmationDialogConfiguration} data The data given to the dialog
+   */
+  constructor(
+    private readonly confirmationDialogRef: MatDialogRef<ConfirmDialogComponent>,
+    @Inject(MAT_DIALOG_DATA) private readonly data: ConfirmationDialogConfiguration
+  ) {
+    this.configuration = data;
   }
 
-  ngOnInit() {
-    this.title = this.data.title;
-    this.message = this.data.message;
+  /**
+   * Call the function when the user accept
+   */
+  public accepted(): void {
+    this.confirmationDialogRef.close();
+    this.configuration.accept();
   }
-
 }

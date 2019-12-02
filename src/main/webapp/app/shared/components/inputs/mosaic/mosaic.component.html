@@ -1,0 +1,22 @@
+<ng-container *ngIf="!mosaicOptions">
+  <suricate-spinner fxFill fxFlexAlign="center"></suricate-spinner>
+</ng-container>
+
+<mat-grid-list *ngIf="mosaicOptions?.length > 0" [cols]="field.columnNumber ? field.columnNumber : 4" rowHeight="250px" gutterSize="17px">
+  <mat-grid-tile
+    *ngFor="let mosaicOption of mosaicOptions"
+    class="mat-elevation-z3"
+    [ngClass]="{ 'option-selected': optionSelected?.value === mosaicOption.value }"
+    (click)="selectOption(mosaicOption)"
+  >
+    <div class="grid-tile-content-wrapper">
+      <div class="grid-tile-body">
+        <img [src]="mosaicOption.imageUrl" alt="Mosaic entry image" />
+      </div>
+
+      <div class="grid-tile-footer">
+        {{ mosaicOption.description }}
+      </div>
+    </div>
+  </mat-grid-tile>
+</mat-grid-list>

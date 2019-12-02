@@ -1,0 +1,56 @@
+<suricate-pages-header [configuration]="headerConfiguration"></suricate-pages-header>
+
+<section class="container">
+  <mat-horizontal-stepper #wizardStepper [linear]="true" labelPosition="bottom" (selectionChange)="onStepChanged($event)">
+    <ng-container *ngFor="let step of wizardConfiguration?.steps; let index = index">
+      <ng-template [matStepperIcon]="step.icon">
+        <mat-icon> {{ materialIconRecords[step.icon] }} </mat-icon>
+      </ng-template>
+
+      <mat-step
+        #matStep
+        [stepControl]="$any(getFormGroupOfStep(step))"
+        [optional]="step.optional"
+        [state]="step.icon"
+        fxFlex="100%"
+        fxLayout="column"
+      >
+        <ng-template matStepLabel>
+          <div class="step-index">Step {{ index + 1 }}</div>
+          <div>{{ step.title | translate }}</div>
+          <hr />
+        </ng-template>
+
+        <ng-container *ngIf="wizardStepper.selected === matStep">
+          <div fxLayout="column" fxLayoutGap="30px">
+            <div
+              *ngIf="step.imageLink || step.description"
+              fxLayout="row"
+              fxLayoutAlign="space-around center"
+              fxFlex="100%"
+              fxLayoutGap="50px"
+              class="step-detail"
+            >
+              <img *ngIf="step.imageLink" [src]="step.imageLink.link" alt="form image" />
+              <div>{{ step.description | translate }}</div>
+            </div>
+
+            <form [formGroup]="getFormGroupOfStep(step)" fxFill>
+              <suricate-input
+                *ngFor="let field of step.fields"
+                [formGroup]="getFormGroupOfStep(step)"
+                [field]="field"
+                (valueChangeEvent)="onValueChanged($event)"
+              >
+              </suricate-input>
+            </form>
+          </div>
+        </ng-container>
+      </mat-step>
+    </ng-container>
+  </mat-horizontal-stepper>
+
+  <div class="stepper-actions-wrapper">
+    <suricate-buttons [configurations]="wizardButtons"></suricate-buttons>
+  </div>
+</section>

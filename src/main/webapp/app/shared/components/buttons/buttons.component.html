@@ -1,0 +1,60 @@
+<ng-container *ngFor="let configuration of configurations" [ngSwitch]="configuration.variant">
+  <!-- Display stroked button -->
+  <ng-container *ngSwitchCase="'stroked'">
+    <ng-container *ngTemplateOutlet="strokedButton; context: { configuration: configuration }"> </ng-container>
+  </ng-container>
+
+  <ng-container *ngSwitchCase="'miniFab'">
+    <ng-container *ngTemplateOutlet="miniFabButton; context: { configuration: configuration }"> </ng-container>
+  </ng-container>
+
+  <ng-container *ngSwitchDefault>
+    <ng-container *ngTemplateOutlet="strokedButton; context: { configuration: configuration }"> </ng-container>
+  </ng-container>
+</ng-container>
+
+<!------------------------------------------------------------------------------------------------------------->
+<!--                                         BUTTON VARIANT                                                  -->
+<!------------------------------------------------------------------------------------------------------------->
+
+<ng-template #strokedButton let-configuration="configuration">
+  <button
+    *ngIf="shouldDisplayButton(configuration)"
+    mat-stroked-button
+    class="button button-single"
+    [matTooltip]="configuration.tooltip?.message | translate"
+    [matTooltipPosition]="configuration.tooltip?.position ? $any(configuration.tooltip.position) : 'below'"
+    [type]="configuration.type ? configuration.type : buttonTypeEnum.BUTTON"
+    [color]="$any(configuration.color)"
+    (click)="configuration.callback ? configuration.callback($event, object) : null"
+  >
+    <ng-template *ngTemplateOutlet="buttonContent; context: { configuration: configuration }"></ng-template>
+  </button>
+</ng-template>
+
+<ng-template #miniFabButton let-configuration="configuration">
+  <button
+    *ngIf="shouldDisplayButton(configuration)"
+    mat-mini-fab
+    class="button button-single"
+    [matTooltip]="configuration.tooltip?.message | translate"
+    [matTooltipPosition]="configuration.tooltip?.position ? $any(configuration.tooltip?.position) : 'below'"
+    [type]="configuration.type ? configuration.type : buttonTypeEnum.BUTTON"
+    [color]="$any(configuration.color)"
+    (click)="configuration.callback ? configuration.callback($event, object) : null"
+  >
+    <ng-template *ngTemplateOutlet="buttonContent; context: { configuration: configuration }"></ng-template>
+  </button>
+</ng-template>
+
+<!------------------------------------------------------------------------------------------------------------->
+<!--                                         BUTTON CONTENT                                                  -->
+<!------------------------------------------------------------------------------------------------------------->
+
+<ng-template #buttonContent let-configuration="configuration">
+  <mat-icon *ngIf="configuration.icon" [ngClass]="{ 'icon-with-label': configuration.icon && configuration.label }">
+    {{ materialIconRecords[configuration.icon] }}
+  </mat-icon>
+
+  <span *ngIf="configuration.label"> {{ configuration.label | translate }} </span>
+</ng-template>

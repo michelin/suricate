@@ -1,0 +1,33 @@
+<mat-sidenav-container fxFlex="100%" fxLayout="row wrap" fxLayoutAlign="start">
+  <!-- Sidenav used to display the form sidenav component -->
+  <mat-sidenav
+    #formSidenav
+    class="form-sidenav"
+    fxLayout="column wrap"
+    mode="over"
+    fxFlex="680px"
+    position="end"
+    opened="false"
+    [fixedInViewport]="true"
+  >
+    <suricate-form-sidenav (open)="openFormSidenav()" (close)="closeFormSidenav()"> </suricate-form-sidenav>
+  </mat-sidenav>
+
+  <!-- Sidenav used to display the menu -->
+  <mat-sidenav
+    *ngIf="!shouldHideMenu"
+    fxFlex="180px"
+    fxLayout="column wrap"
+    mode="side"
+    position="start"
+    opened="true"
+    class="menu-sidenav mat-elevation-z15"
+    [fixedInViewport]="true"
+  >
+    <suricate-menu> </suricate-menu>
+  </mat-sidenav>
+
+  <mat-sidenav-content fxFlex="auto">
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>
