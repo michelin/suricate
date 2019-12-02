@@ -93,6 +93,9 @@ export class UsersComponent extends ListComponent<User> implements OnInit {
     };
   }
 
+  /**
+   * Init filter for list component
+   */
   private initFilter(): void {
     this.httpFilter.sort = ['username,asc'];
   }
