@@ -14,50 +14,37 @@
  * limitations under the License.
  */
 
-
-import {Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA} from '@angular/material';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { CommunicationDialogConfiguration } from '../../models/frontend/dialog/communication-dialog-configuration';
 
 /**
  * This component is used to display information (without actions to do)
  */
 @Component({
-  selector: 'app-communication-dialog',
+  selector: 'suricate-communication-dialog',
   templateUrl: './communication-dialog.component.html',
   styleUrls: ['./communication-dialog.component.scss']
 })
 export class CommunicationDialogComponent implements OnInit {
-
   /**
-   * The dialog title
+   * The configuration of the confirmation dialog
+   * @type {CommunicationDialogConfiguration}
+   * @protected
    */
-  title: String;
-
-  /**
-   * The message to display
-   */
-  message: String;
-
-  /**
-   * True if it's an error message, false otherwise
-   */
-  isErrorMessage: boolean;
+  protected configuration: CommunicationDialogConfiguration;
 
   /**
    * Constructor
    *
-   * @param data The data object that contains every informations to display
+   * @param data The data object that contains every information to display
    */
-  constructor(@Inject(MAT_DIALOG_DATA) private data: any) {
-  }
+  constructor(@Inject(MAT_DIALOG_DATA) private readonly data: CommunicationDialogConfiguration) {}
 
   /**
    * Called when the dialog is init
    */
-  ngOnInit() {
-    this.title = this.data.title;
-    this.message = this.data.message;
-    this.isErrorMessage = this.data.isErrorMessage;
+  public ngOnInit(): void {
+    this.configuration = this.data;
   }
-
 }

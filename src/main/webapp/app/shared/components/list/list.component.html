@@ -1,0 +1,33 @@
+<suricate-pages-header [configuration]="headerConfiguration"></suricate-pages-header>
+
+<section class="container">
+  <div class="list-wrapper" fxLayout="column">
+    <ng-container *ngIf="isLoading">
+      <suricate-spinner></suricate-spinner>
+    </ng-container>
+
+    <ng-container *ngIf="!isLoading">
+      <div
+        *ngFor="let object of objects"
+        class="list-item"
+        fxLayout="row wrap"
+        [ngClass]="{ 'list-item-show': listConfiguration.enableShowBean }"
+        (click)="redirectToBean(object)"
+      >
+        <div *ngIf="getObjectImageURL(object)" class="list-image" fxLayoutAlign="center center" fxFlex="20%">
+          <img [src]="getObjectImageURL(object)" fxFlex="0" fxGrow="0" alt="Object image" />
+        </div>
+
+        <div class="list-detail" fxLayout="column wrap" fxLayoutAlign="center start" [fxFlex]="getDetailBlockSize(object)">
+          <h1>{{ getFirstLabel(object) }}</h1>
+          <h2>{{ getSecondLabel(object) }}</h2>
+          <h3>{{ getThirdLabel(object) }}</h3>
+        </div>
+
+        <div *ngIf="listConfiguration.buttons" class="list-buttons" fxLayout="row" fxLayoutAlign="end center" fxFlex="20%">
+          <suricate-buttons [configurations]="listConfiguration.buttons" [object]="object"> </suricate-buttons>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</section>

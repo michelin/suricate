@@ -30,14 +30,65 @@
   $background: map-get($theme, background);
 
   .mat-stepper-horizontal {
-    &.mat-primary {
-      .mat-step-header {
-        .mat-step-icon-selected,
-        .mat-step-icon-state-edit {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+
+    .mat-horizontal-stepper-header-container {
+      justify-content: space-around;
+    }
+
+    .mat-horizontal-content-container {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      justify-content: center;
+      padding: 24px;
+    }
+  }
+
+  .mat-stepper-horizontal,
+  .mat-stepper-vertical {
+    min-height: 90%;
+    background-color: #fafafa;
+
+    .mat-step-header {
+      .mat-step-icon {
+        width: 30px;
+        height: 30px;
+
+        &.mat-step-icon-state-done {
+          background-color: #8bc34a !important;
+        }
+        &.mat-step-icon-selected {
           background-color: mat-color($primary, A700);
+        }
+      }
+
+      .mat-step-label {
+        .step-index {
+          color: #9f9f9f;
+          font-size: 0.95em;
+          margin-block-end: 8px;
+        }
+
+        hr {
+          border-width: 1.3px;
+          border-style: solid;
+          width: 20px;
+        }
+
+        &.mat-step-label-active {
+          hr {
+            border-color: #8bc34a;
+          }
+        }
+        &.mat-step-label-selected {
+          hr {
+            border-color: mat-color($primary, A700);
+          }
         }
       }
     }
   }
-
 }
