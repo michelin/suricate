@@ -19,6 +19,10 @@ import { WizardComponent } from '../../shared/components/wizard/wizard.component
 import { ProjectWidgetFormStepsService } from '../../shared/form-steps/project-widget-form-steps.service';
 import { FormStep } from '../../shared/models/frontend/form/form-step';
 import { RoutesService } from '../../shared/services/frontend/route.service';
+import { ProjectWidgetRequest } from '../../shared/models/backend/project-widget/project-widget-request';
+import { HttpProjectService } from '../../shared/services/backend/http-project.service';
+import { ToastService } from '../../shared/services/frontend/toast.service';
+import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
 
 /**
  * Component used to display the list of widgets
@@ -29,14 +33,26 @@ import { RoutesService } from '../../shared/services/frontend/route.service';
 })
 export class ProjectWidgetWizardComponent extends WizardComponent implements OnInit {
   /**
+   * The token of the dashboard
+   */
+  private readonly dashboardToken: string;
+
+  /**
    * Constructor
    *
-   * @param injector Angular Service used to manage the injection of services
+   * @param {Injector} injector Angular Service used to manage the injection of services
+   * @param {HttpProjectService} httpProjectService Suricate service used to manage http calls for a dashboard
    * @param {ProjectWidgetFormStepsService} projectWidgetFormStepsService Frontend service used to build steps for project widget object
+   * @param {ToastService} toastService Frontend service used to display message
    */
-  constructor(protected injector: Injector, private readonly projectWidgetFormStepsService: ProjectWidgetFormStepsService) {
+  constructor(
+    protected injector: Injector,
+    private readonly httpProjectService: HttpProjectService,
+    private readonly projectWidgetFormStepsService: ProjectWidgetFormStepsService,
+    private readonly toastService: ToastService
+  ) {
     super(injector);
-
+    this.dashboardToken = RoutesService.getParamValueFromActivatedRoute(this.activatedRoute, 'dashboardToken');
     this.initHeaderConfiguration();
   }
 
@@ -64,7 +80,31 @@ export class ProjectWidgetWizardComponent extends WizardComponent implements OnI
    * {@inheritDoc}
    */
   protected closeWizard(): void {
-    const dashboardToken = RoutesService.getParamValueFromActivatedRoute(this.activatedRoute, 'dashboardToken');
-    this.router.navigate(['/dashboards', dashboardToken]);
+    this.redirectToDashboard();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  protected saveWizard(formData: FormData): void {
+    const projectWidgetRequest: ProjectWidgetRequest = {
+      widgetId: formData[ProjectWidgetFormStepsService.selectWidgetStepKey][ProjectWidgetFormStepsService.widgetIdFieldKey],
+      backendConfig: Object.keys(formData[ProjectWidgetFormStepsService.configureWidgetStepKey])
+        .filter((key: string) => formData[ProjectWidgetFormStepsService.configureWidgetStepKey][key])
+        .map((key: string) => `${key}=${formData[ProjectWidgetFormStepsService.configureWidgetStepKey][key]}`)
+        .join('\n')
+    };
+
+    this.httpProjectService.addProjectWidgetToProject(this.dashboardToken, projectWidgetRequest).subscribe(() => {
+      this.toastService.sendMessage('widget.add.success', ToastTypeEnum.SUCCESS);
+      this.redirectToDashboard();
+    });
+  }
+
+  /**
+   * Function used to redirect to the dashbaord
+   */
+  private redirectToDashboard(): void {
+    this.router.navigate(['/dashboards', this.dashboardToken]);
   }
 }

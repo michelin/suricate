@@ -362,7 +362,7 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
           this.disconnectFromWebsocket();
           this.disconnectEvent.emit();
         } else {
-          // Refresh project
+          this.refreshProjectWidget.emit();
         }
       });
   }

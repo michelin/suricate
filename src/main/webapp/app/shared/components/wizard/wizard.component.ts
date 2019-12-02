@@ -119,7 +119,8 @@ export class WizardComponent implements OnInit, OnDestroy {
       {
         label: 'done',
         color: 'primary',
-        hidden: () => !this.shouldDisplayDoneButton()
+        hidden: () => !this.shouldDisplayDoneButton(),
+        callback: () => this.saveWizard(this.stepperFormGroup.value)
       }
     ];
   }
@@ -218,4 +219,12 @@ export class WizardComponent implements OnInit, OnDestroy {
   protected getFormGroupOfStep(step: FormStep): FormGroup {
     return this.stepperFormGroup.controls[step.key] as FormGroup;
   }
+
+  /**
+   * Hook used to save the wizard
+   * Implemented by child component
+   *
+   * @param formData The value of the form
+   */
+  protected saveWizard(formData: FormData): void {}
 }

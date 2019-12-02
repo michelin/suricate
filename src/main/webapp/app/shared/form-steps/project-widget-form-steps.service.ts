@@ -39,6 +39,23 @@ import { CustomValidators } from 'ng2-validation';
 @Injectable({ providedIn: 'root' })
 export class ProjectWidgetFormStepsService {
   /**
+   * Key used for the step where we select a category
+   */
+  public static readonly selectCategoryStepKey = 'categoryStep';
+  /**
+   * Key used for the step where we select a widget
+   */
+  public static readonly selectWidgetStepKey = 'widgetStep';
+  /**
+   * Key used for the step where we configure a widget
+   */
+  public static readonly configureWidgetStepKey = 'widgetConfigurationStep';
+  /**
+   * Key used to store the widget ID
+   */
+  public static readonly widgetIdFieldKey = 'widgetId';
+
+  /**
    * Constructor
    *
    * @param httpCategoryService Suricate service used to manage HTTP calls
@@ -72,7 +89,7 @@ export class ProjectWidgetFormStepsService {
   public generateGlobalSteps(): Observable<FormStep[]> {
     return of([
       {
-        key: 'categoryStep',
+        key: ProjectWidgetFormStepsService.selectCategoryStepKey,
         title: 'category.select',
         icon: IconEnum.CATEGORY,
         fields: [
@@ -86,12 +103,12 @@ export class ProjectWidgetFormStepsService {
         ]
       },
       {
-        key: 'widgetStep',
+        key: ProjectWidgetFormStepsService.selectWidgetStepKey,
         title: 'widget.select',
         icon: IconEnum.WIDGET,
         fields: [
           {
-            key: 'widgetId',
+            key: ProjectWidgetFormStepsService.widgetIdFieldKey,
             type: DataTypeEnum.MOSAIC,
             columnNumber: 4,
             mosaicOptions: (formGroup: FormGroup) => this.getWidgetMosaicOptions(formGroup),
@@ -100,7 +117,7 @@ export class ProjectWidgetFormStepsService {
         ]
       },
       {
-        key: 'widgetConfigurationStep',
+        key: ProjectWidgetFormStepsService.configureWidgetStepKey,
         title: 'widget.configuration',
         icon: IconEnum.WIDGET_CONFIGURATION,
         asyncFields: (formGroup: FormGroup, step: FormStep) => this.getWidgetFields(formGroup, step)

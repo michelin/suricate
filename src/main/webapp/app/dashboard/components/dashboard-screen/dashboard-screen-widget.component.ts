@@ -38,6 +38,8 @@ import { ProjectWidgetFormStepsService } from '../../../shared/form-steps/projec
 import { IconEnum } from '../../../shared/enums/icon.enum';
 import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
 import { ProjectWidgetRequest } from '../../../shared/models/backend/project-widget/project-widget-request';
+import { ToastService } from '../../../shared/services/frontend/toast.service';
+import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
 
 /**
  * Display the grid stack widgets
@@ -144,6 +146,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    * @param {DialogService} dialogService Frontend service used to manage dialog
    * @param {SidenavService} sidenavService Frontend service used to manage sidenav's
    * @param {ProjectWidgetFormStepsService} projectWidgetFormStepsService Frontend service used to generate steps for project widget
+   * @param {ToastService} toastService Frontend service used to display messages
    */
   constructor(
     private readonly elementRef: ElementRef,
@@ -153,7 +156,8 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
     private readonly websocketService: WebsocketService,
     private readonly dialogService: DialogService,
     private readonly sidenavService: SidenavService,
-    private readonly projectWidgetFormStepsService: ProjectWidgetFormStepsService
+    private readonly projectWidgetFormStepsService: ProjectWidgetFormStepsService,
+    private readonly toastService: ToastService
   ) {}
 
   /**
@@ -254,7 +258,9 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
             .join('\n')
         };
 
-        this.httpProjectWidgetService.updateOneById(this.projectWidget.id, projectWidgetRequest).subscribe();
+        this.httpProjectWidgetService.updateOneById(this.projectWidget.id, projectWidgetRequest).subscribe(() => {
+          this.toastService.sendMessage('widget.edit.success', ToastTypeEnum.SUCCESS);
+        });
       }
     });
   }
