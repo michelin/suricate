@@ -17,6 +17,8 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { EnvironmentService } from '../frontend/environment.service';
+import { Page } from '../../models/backend/page';
+import { HttpFilter } from '../../models/backend/http-filter';
 
 /**
  * Service used to define the minimum requirement for an http service
@@ -32,7 +34,7 @@ export abstract class AbstractHttpService<T> {
   /**
    * Function used to retrieve the list of Objects
    */
-  abstract getAll(filter?: string): Observable<T[]>;
+  abstract getAll(filter?: HttpFilter): Observable<T[] | Page<T>>;
 
   /**
    * Function used to retrieve an Object of type T

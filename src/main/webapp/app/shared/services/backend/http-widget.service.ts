@@ -22,6 +22,7 @@ import { Widget } from '../../models/backend/widget/widget';
 import { ApiActionEnum } from '../../enums/api-action.enum';
 import { WidgetRequest } from '../../models/backend/widget/widget-request';
 import { AbstractHttpService } from './abstract-http.service';
+import { HttpFilter } from '../../models/backend/http-filter';
 
 /**
  * Manage the Http widget calls
@@ -46,11 +47,11 @@ export class HttpWidgetService extends AbstractHttpService<Widget> {
   /**
    * Get the list of widgets
    *
-   * @param filter
+   * @param {HttpFilter} filter Used to filter the result
    * @param {ApiActionEnum} action Action to be executed by the backend
    * @returns {Observable<Widget[]>} The list of widgets as observable
    */
-  public getAll(filter?: string, action?: ApiActionEnum): Observable<Widget[]> {
+  public getAll(filter?: HttpFilter, action?: ApiActionEnum): Observable<Widget[]> {
     let url = `${HttpWidgetService.widgetsApiEndpoint}`;
     if (action) {
       url = url.concat(`?action=${action}`);

@@ -26,6 +26,7 @@ import { HeaderConfiguration } from '../../models/frontend/header/header-configu
 import { ToastService } from '../../services/frontend/toast.service';
 import { DialogService } from '../../services/frontend/dialog.service';
 import { SidenavService } from '../../services/frontend/sidenav.service';
+import { Page } from '../../models/backend/page';
 
 /**
  * Generic component used to display and manage lists
@@ -99,8 +100,8 @@ export class ListComponent<T> implements OnInit {
    */
   protected refreshList(): void {
     this.displayLoader();
-    this.childService.getAll().subscribe((objects: T[]) => {
-      this.objects = objects;
+    this.childService.getAll().subscribe((objects: Page<T>) => {
+      this.objects = objects.content;
       this.hideLoader();
     });
   }
