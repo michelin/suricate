@@ -31,43 +31,46 @@ import java.util.List;
  */
 public interface LibraryRepository extends JpaRepository<Library, Long> {
 
-	/**
-	 * Method used to update library
-	 * 
-	 * @param technicalName widget technical name
-	 * @param content widget content
-	 * @return State
-	 */
-	@Modifying
-	@Query("UPDATE Library " +
-			"SET content = :content " +
-			"WHERE technicalName = :technicalName")
-	int updateLibrary(@Param("technicalName") String technicalName, @Param("content") Asset content);
+    /**
+     * Method used to update library
+     *
+     * @param technicalName widget technical name
+     * @param content       widget content
+     * @return State
+     */
+    @Modifying
+    @Query("UPDATE Library " +
+        "SET content = :content " +
+        "WHERE technicalName = :technicalName")
+    int updateLibrary(@Param("technicalName") String technicalName, @Param("content") Asset content);
 
-	/**
-	 * Method used to get a list of unique library id from widget ids
-	 * @param widgetIds list of widget ids
-	 * @return the list of library ids
-	 */
-	@Cacheable("lib-by-widget-id")
-	@Query("SELECT DISTINCT l.asset.id " +
-			"FROM Widget w " +
-			"JOIN w.libraries l " +
-			"WHERE w.id in (:ids) ")
-	List<Long> getLibs(@Param("ids") List<Long> widgetIds);
+    /**
+     * Method used to get a list of unique library id from widget ids
+     *
+     * @param widgetIds list of widget ids
+     * @return the list of library ids
+     */
+    @Cacheable("lib-by-widget-id")
+    @Query("SELECT DISTINCT l.asset.id " +
+        "FROM Widget w " +
+        "JOIN w.libraries l " +
+        "WHERE w.id in (:ids) ")
+    List<Long> getLibs(@Param("ids") List<Long> widgetIds);
 
-	/**
-	 * Find a list of librairies by widget id
-	 * @param id The widget id
-	 * @return The list of related librairies
-	 */
-	List<Library> findByWidgets_Id(Long id);
+    /**
+     * Find a list of librairies by widget id
+     *
+     * @param id The widget id
+     * @return The list of related librairies
+     */
+    List<Library> findByWidgets_Id(Long id);
 
-	/**
-	 * Find a librairie by technical name
-	 * @param technicalname The technical name
-	 * @return The related library
-	 */
-	Library findByTechnicalName(String technicalname);
+    /**
+     * Find a librairie by technical name
+     *
+     * @param technicalname The technical name
+     * @return The related library
+     */
+    Library findByTechnicalName(String technicalname);
 
 }

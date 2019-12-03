@@ -18,7 +18,7 @@ package io.suricate.monitoring.model.entity.widget;
 
 import io.suricate.monitoring.model.entity.AbstractAuditingEntity;
 import io.suricate.monitoring.model.entity.Asset;
-import io.suricate.monitoring.model.entity.Configuration;
+import io.suricate.monitoring.model.entity.WidgetConfiguration;
 import lombok.*;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
@@ -76,5 +76,5 @@ public class Category extends AbstractAuditingEntity<Long> {
      * The associated categories for this configuration
      */
     @OneToMany(mappedBy = "category", cascade = CascadeType.REMOVE)
-    private List<Configuration> configurations = new ArrayList<>();
+    private List<WidgetConfiguration> widgetConfigurations = new ArrayList<>();
 }

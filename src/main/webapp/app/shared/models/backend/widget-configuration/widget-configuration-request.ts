@@ -16,15 +16,9 @@
  *
  */
 
-import { Category } from '../widget/category';
-import { DataTypeEnum } from '../../../enums/data-type.enum';
-
 /**
- * The configuration entity
+ * The configuration request
  */
-export class Configuration {
-  key: string;
+export interface WidgetConfigurationRequest {
   value: string;
-  dataType: DataTypeEnum;
-  category: Category;
 }

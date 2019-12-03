@@ -18,6 +18,7 @@ package io.suricate.monitoring.repository;
 
 import io.suricate.monitoring.model.entity.widget.Repository;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,7 +26,7 @@ import java.util.Optional;
 /**
  * Repository used to manage Répository Data from DB
  */
-public interface RepositoryRepository extends JpaRepository<Repository, Long> {
+public interface RepositoryRepository extends JpaRepository<Repository, Long>, JpaSpecificationExecutor<Repository> {
 
     /**
      * Find every repositories order by name

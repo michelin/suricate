@@ -18,7 +18,7 @@ import { Injectable } from '@angular/core';
 import { FormField } from '../models/frontend/form/form-field';
 import { DataTypeEnum } from '../enums/data-type.enum';
 import { Validators } from '@angular/forms';
-import { Configuration } from '../models/backend/configuration/configuration';
+import { WidgetConfiguration } from '../models/backend/widget-configuration/widget-configuration';
 import { IconEnum } from '../enums/icon.enum';
 
 /**
@@ -36,7 +36,7 @@ export class WidgetConfigurationFormFieldsService {
    *
    * @param configuration The project used for an edition
    */
-  public generateFormFields(configuration?: Configuration): FormField[] {
+  public generateFormFields(configuration?: WidgetConfiguration): FormField[] {
     return [
       {
         key: 'key',

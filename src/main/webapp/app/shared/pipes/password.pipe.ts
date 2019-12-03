@@ -18,7 +18,7 @@
 
 import { Pipe, PipeTransform } from '@angular/core';
 
-import { Configuration } from '../models/backend/configuration/configuration';
+import { WidgetConfiguration } from '../models/backend/widget-configuration/widget-configuration';
 import { DataTypeEnum } from '../enums/data-type.enum';
 
 /**
@@ -36,10 +36,10 @@ export class PasswordPipe implements PipeTransform {
   /**
    * The transform function
    *
-   * @param {Configuration} config The string value to sanitize
+   * @param {WidgetConfiguration} config The string value to sanitize
    * @returns {string} The password hidden
    */
-  public transform(config: Configuration): string {
+  public transform(config: WidgetConfiguration): string {
     return config.dataType && config.dataType === DataTypeEnum.PASSWORD ? '*****' : config.value;
   }
 }

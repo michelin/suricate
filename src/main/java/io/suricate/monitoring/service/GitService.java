@@ -25,7 +25,7 @@ import io.suricate.monitoring.service.api.LibraryService;
 import io.suricate.monitoring.service.api.RepositoryService;
 import io.suricate.monitoring.service.api.WidgetService;
 import io.suricate.monitoring.service.scheduler.NashornWidgetScheduler;
-import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
+import io.suricate.monitoring.service.websocket.DashboardWebSocketService;
 import io.suricate.monitoring.utils.WidgetUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -201,9 +201,9 @@ public class GitService {
     /**
      * Clone a remote repository on local system.
      *
-     * @param url    git repository url
-     * @param branch git branch
-     * @param login The login of the git repo
+     * @param url      git repository url
+     * @param branch   git branch
+     * @param login    The login of the git repo
      * @param password The password of the git repo
      * @return File object on local repo
      */
@@ -224,7 +224,7 @@ public class GitService {
             .setBranch(branch)
             .setDirectory(localRepo);
 
-        if(StringUtils.isNoneBlank(login, password)) {
+        if (StringUtils.isNoneBlank(login, password)) {
             cloneCmd.setCredentialsProvider(new UsernamePasswordCredentialsProvider(login, password));
         }
 
@@ -253,7 +253,7 @@ public class GitService {
                 File libraryFolder = new File(folder.getAbsoluteFile().getAbsolutePath() + SystemUtils.FILE_SEPARATOR + "libraries" + SystemUtils.FILE_SEPARATOR);
                 List<Library> libraries = WidgetUtils.parseLibraryFolder(libraryFolder);
                 libraries = libraryService.updateLibraryInDatabase(libraries);
-                Map<String, Library> mapLib = libraries.stream().collect(Collectors.toMap(item -> ((Library) item).getTechnicalName(), item -> item));
+                Map<String, Library> mapLib = libraries.stream().collect(Collectors.toMap(item -> item.getTechnicalName(), item -> item));
 
                 // Parse folder
                 File widgetFolder = new File(folder.getAbsoluteFile().getAbsolutePath() + SystemUtils.FILE_SEPARATOR + "content" + SystemUtils.FILE_SEPARATOR);

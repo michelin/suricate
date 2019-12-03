@@ -21,8 +21,6 @@ import { Widget } from '../../shared/models/backend/widget/widget';
 import { WidgetRequest } from '../../shared/models/backend/widget/widget-request';
 import { HttpWidgetService } from '../../shared/services/backend/http-widget.service';
 import { HttpAssetService } from '../../shared/services/backend/http-asset.service';
-import { ApiActionEnum } from '../../shared/enums/api-action.enum';
-import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
 
 /**
  * Component used to display the list of widgets
@@ -42,33 +40,7 @@ export class WidgetsComponent extends ListComponent<Widget | WidgetRequest> {
     super(httpWidgetService, injector);
 
     this.initHeaderConfiguration();
-  }
-
-  /**
-   * Function used to configure the header of the list component
-   */
-  private initHeaderConfiguration(): void {
-    this.headerConfiguration = {
-      title: 'widget.list',
-      actions: [
-        {
-          icon: IconEnum.REFRESH,
-          color: 'primary',
-          variant: 'miniFab',
-          tooltip: { message: 'widget.list.import' },
-          callback: () => this.importWidgets()
-        }
-      ]
-    };
-  }
-
-  /**
-   * Used to ré-imports the widgets
-   */
-  private importWidgets(): void {
-    this.httpWidgetService.getAll(null, ApiActionEnum.REFRESH).subscribe(() => {
-      this.toastService.sendMessage('widget.list.import.success', ToastTypeEnum.SUCCESS);
-    });
+    this.initFilter();
   }
 
   /**
@@ -97,5 +69,37 @@ export class WidgetsComponent extends ListComponent<Widget | WidgetRequest> {
    */
   protected getObjectImageURL(widget: Widget): string {
     return HttpAssetService.getContentUrl(widget.imageToken);
+  }
+
+  /**
+   * Function used to configure the header of the list component
+   */
+  private initHeaderConfiguration(): void {
+    this.headerConfiguration = {
+      title: 'widget.list',
+      actions: [
+        {
+          icon: IconEnum.REFRESH,
+          color: 'primary',
+          variant: 'miniFab',
+          tooltip: { message: 'widget.list.import' },
+          callback: () => this.importWidgets()
+        }
+      ]
+    };
+  }
+
+  /**
+   * Init filter for list component
+   */
+  private initFilter(): void {
+    this.httpFilter.sort = ['name,asc'];
+  }
+
+  /**
+   * Used to import widgets
+   */
+  private importWidgets(): void {
+    //TODO: New endpoint
   }
 }

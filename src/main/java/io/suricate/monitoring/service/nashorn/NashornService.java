@@ -17,7 +17,7 @@
 package io.suricate.monitoring.service.nashorn;
 
 import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
-import io.suricate.monitoring.model.entity.Configuration;
+import io.suricate.monitoring.model.entity.WidgetConfiguration;
 import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.enums.WidgetState;
@@ -95,7 +95,7 @@ public class NashornService {
      * @return The related nashorn request
      */
     private NashornRequest createNashornRequestByProjectWidget(final ProjectWidget projectWidget) {
-        String properties = getProjectWidgetConfigurationsWithGlobalOne(projectWidget, projectWidget.getWidget().getCategory().getConfigurations());
+        String properties = getProjectWidgetConfigurationsWithGlobalOne(projectWidget, projectWidget.getWidget().getCategory().getWidgetConfigurations());
         String script = projectWidget.getWidget().getBackendJs();
         String previousData = projectWidget.getData();
         Long projectId = projectWidget.getProject().getId();
@@ -131,21 +131,21 @@ public class NashornService {
     /**
      * Get the project widget configurations with the global ones
      *
-     * @param projectWidget  The project widget
-     * @param configurations The global configurations
+     * @param projectWidget        The project widget
+     * @param widgetConfigurations The global configurations
      * @return Get the full configuration for project widget
      */
-    private String getProjectWidgetConfigurationsWithGlobalOne(final ProjectWidget projectWidget, final List<Configuration> configurations) {
+    private String getProjectWidgetConfigurationsWithGlobalOne(final ProjectWidget projectWidget, final List<WidgetConfiguration> widgetConfigurations) {
         StringBuilder builder = new StringBuilder(Objects.toString(projectWidget.getBackendConfig(), StringUtils.EMPTY));
 
-        if (configurations != null && !configurations.isEmpty()) {
+        if (widgetConfigurations != null && !widgetConfigurations.isEmpty()) {
             builder.append('\n');
-            for (Configuration configuration : configurations) {
-                if (!projectWidget.getBackendConfig().contains(configuration.getKey())) {
+            for (WidgetConfiguration widgetConfiguration : widgetConfigurations) {
+                if (!projectWidget.getBackendConfig().contains(widgetConfiguration.getKey())) {
                     builder
-                        .append(configuration.getKey())
+                        .append(widgetConfiguration.getKey())
                         .append('=')
-                        .append(configuration.getValue())
+                        .append(widgetConfiguration.getValue())
                         .append('\n');
                 }
             }

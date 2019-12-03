@@ -1,4 +1,4 @@
-package io.suricate.monitoring.service.annotation.swagger;
+package io.suricate.monitoring.configuration.swagger;
 
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;

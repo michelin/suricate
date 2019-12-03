@@ -16,13 +16,16 @@
 
 package io.suricate.monitoring.service.api;
 
-import io.suricate.monitoring.model.entity.Configuration;
+import io.suricate.monitoring.model.entity.WidgetConfiguration;
 import io.suricate.monitoring.model.entity.widget.Category;
 import io.suricate.monitoring.repository.CategoryRepository;
+import io.suricate.monitoring.service.specification.CategorySearchSpecification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -53,23 +56,23 @@ public class CategoryService {
     /**
      * The configuration service
      */
-    private final ConfigurationService configurationService;
+    private final WidgetConfigurationService widgetConfigurationService;
 
 
     /**
      * The contructor
      *
-     * @param categoryRepository   The category repository to inject
-     * @param assetService         The asset service
-     * @param configurationService The configuration service
+     * @param categoryRepository         The category repository to inject
+     * @param assetService               The asset service
+     * @param widgetConfigurationService The configuration service
      */
     @Autowired
     public CategoryService(final CategoryRepository categoryRepository,
                            final AssetService assetService,
-                           final ConfigurationService configurationService) {
+                           final WidgetConfigurationService widgetConfigurationService) {
         this.categoryRepository = categoryRepository;
         this.assetService = assetService;
-        this.configurationService = configurationService;
+        this.widgetConfigurationService = widgetConfigurationService;
     }
 
     /**
@@ -79,8 +82,8 @@ public class CategoryService {
      */
     @Transactional
     @Cacheable("widget-categories")
-    public List<Category> getCategoriesOrderByName() {
-        return categoryRepository.findAllByOrderByNameAsc();
+    public Page<Category> getAll(String search, Pageable pageable) {
+        return categoryRepository.findAll(new CategorySearchSpecification(search), pageable);
     }
 
     /**
@@ -127,15 +130,15 @@ public class CategoryService {
         }
 
         // Save the configurations
-        List<Configuration> configurations = category.getConfigurations();
-        category.setConfigurations(new ArrayList<>());
+        List<WidgetConfiguration> widgetConfigurations = category.getWidgetConfigurations();
+        category.setWidgetConfigurations(new ArrayList<>());
 
         // Create/Update category
         categoryRepository.save(category);
 
         // Create/Update configurations
-        if (configurations != null && !configurations.isEmpty()) {
-            configurationService.addOrUpdateConfigurations(configurations, category);
+        if (widgetConfigurations != null && !widgetConfigurations.isEmpty()) {
+            widgetConfigurationService.addOrUpdateConfigurations(widgetConfigurations, category);
         }
     }
 }

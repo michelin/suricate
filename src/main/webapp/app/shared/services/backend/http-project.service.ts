@@ -28,6 +28,9 @@ import { ProjectWidgetRequest } from '../../models/backend/project-widget/projec
 import { User } from '../../models/backend/user/user';
 import { WebsocketClient } from '../../models/backend/websocket-client';
 import { AbstractHttpService } from './abstract-http.service';
+import { HttpFilter } from '../../models/backend/http-filter';
+import { HttpFilterService } from './http-filter.service';
+import { Page } from '../../models/backend/page';
 
 @Injectable({ providedIn: 'root' })
 export class HttpProjectService implements AbstractHttpService<Project | ProjectRequest> {
@@ -49,10 +52,10 @@ export class HttpProjectService implements AbstractHttpService<Project | Project
    *
    * @returns {Observable<Project[]>} The list as observable
    */
-  public getAll(): Observable<Project[]> {
+  public getAll(filter?: HttpFilter): Observable<Page<Project>> {
     const url = `${HttpProjectService.projectsApiEndpoint}`;
 
-    return this.httpClient.get<Project[]>(url);
+    return this.httpClient.get<Page<Project>>(HttpFilterService.getFilteredUrl(url, filter));
   }
 
   /**

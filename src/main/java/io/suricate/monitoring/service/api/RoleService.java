@@ -18,11 +18,13 @@ package io.suricate.monitoring.service.api;
 
 import io.suricate.monitoring.model.entity.user.Role;
 import io.suricate.monitoring.repository.RoleRepository;
+import io.suricate.monitoring.service.specification.RoleSearchSpecification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -64,14 +66,8 @@ public class RoleService {
      *
      * @return
      */
-    public Optional<List<Role>> getRoles() {
-        List<Role> roles = roleRepository.findAll();
-
-        if (roles == null || roles.isEmpty()) {
-            return Optional.empty();
-        }
-
-        return Optional.of(roles);
+    public Page<Role> getRoles(String search, Pageable pageable) {
+        return roleRepository.findAll(new RoleSearchSpecification(search), pageable);
     }
 
     /**

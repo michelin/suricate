@@ -16,6 +16,7 @@
 
 package io.suricate.monitoring.controllers.api;
 
+import io.suricate.monitoring.configuration.swagger.ApiPageable;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.user.UserRequestDto;
 import io.suricate.monitoring.model.dto.api.user.UserResponseDto;
@@ -26,7 +27,6 @@ import io.suricate.monitoring.model.entity.setting.UserSetting;
 import io.suricate.monitoring.model.entity.user.User;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.model.enums.AuthenticationMethod;
-import io.suricate.monitoring.service.annotation.swagger.ApiPageable;
 import io.suricate.monitoring.service.api.SettingService;
 import io.suricate.monitoring.service.api.UserService;
 import io.suricate.monitoring.service.api.UserSettingService;
@@ -121,11 +121,9 @@ public class UserController {
     @ApiPageable
     @GetMapping(value = "/v1/users")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public Page<UserResponseDto> getAll(
-        @ApiParam(name = "search", value = "Search keyword")
-        @RequestParam(value = "search", required = false) String search,
-        @ApiIgnore Pageable pageable
-    ) {
+    public Page<UserResponseDto> getAll(@ApiParam(name = "search", value = "Search keyword")
+                                        @RequestParam(value = "search", required = false) String search,
+                                        Pageable pageable) {
         Page<User> usersPaged = userService.getAll(search, pageable);
 
         return usersPaged.map(userMapper::toUserDtoDefault);

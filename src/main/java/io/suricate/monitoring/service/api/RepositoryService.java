@@ -18,9 +18,12 @@ package io.suricate.monitoring.service.api;
 
 import io.suricate.monitoring.model.entity.widget.Repository;
 import io.suricate.monitoring.repository.RepositoryRepository;
+import io.suricate.monitoring.service.specification.RepositorySearchSpecification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -50,6 +53,10 @@ public class RepositoryService {
     @Autowired
     public RepositoryService(final RepositoryRepository repositoryRepository) {
         this.repositoryRepository = repositoryRepository;
+    }
+
+    public Page<Repository> getAll(String search, Pageable pageable) {
+        return repositoryRepository.findAll(new RepositorySearchSpecification(search), pageable);
     }
 
     /**

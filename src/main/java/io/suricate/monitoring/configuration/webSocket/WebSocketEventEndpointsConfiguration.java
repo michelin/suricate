@@ -17,7 +17,7 @@
 package io.suricate.monitoring.configuration.webSocket;
 
 import io.suricate.monitoring.model.dto.websocket.WebsocketClient;
-import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
+import io.suricate.monitoring.service.websocket.DashboardWebSocketService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;

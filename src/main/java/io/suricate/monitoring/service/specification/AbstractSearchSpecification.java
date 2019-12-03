@@ -1,6 +1,5 @@
 package io.suricate.monitoring.service.specification;
 
-import io.suricate.monitoring.model.entity.user.User;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -42,7 +41,7 @@ public abstract class AbstractSearchSpecification<T> implements Specification<T>
      * @param search           The search query
      * @param filterAttributes The attribute used to filter on search attribute
      */
-    public AbstractSearchSpecification(final String search, final SingularAttribute<User, String>... filterAttributes) {
+    public AbstractSearchSpecification(final String search, final SingularAttribute<T, String>... filterAttributes) {
         this.search = search;
         this.attributes = Arrays.stream(filterAttributes).map(Attribute::getName).collect(Collectors.toList());
     }

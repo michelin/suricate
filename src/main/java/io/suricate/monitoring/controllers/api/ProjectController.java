@@ -16,6 +16,7 @@
 
 package io.suricate.monitoring.controllers.api;
 
+import io.suricate.monitoring.configuration.swagger.ApiPageable;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.project.ProjectRequestDto;
 import io.suricate.monitoring.model.dto.api.project.ProjectResponseDto;
@@ -34,7 +35,7 @@ import io.suricate.monitoring.service.api.UserService;
 import io.suricate.monitoring.service.mapper.ProjectMapper;
 import io.suricate.monitoring.service.mapper.ProjectWidgetMapper;
 import io.suricate.monitoring.service.mapper.UserMapper;
-import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
+import io.suricate.monitoring.service.websocket.DashboardWebSocketService;
 import io.suricate.monitoring.utils.exception.ApiException;
 import io.suricate.monitoring.utils.exception.InvalidFileException;
 import io.suricate.monitoring.utils.exception.NoContentException;
@@ -42,6 +43,8 @@ import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -142,22 +145,15 @@ public class ProjectController {
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
+    @ApiPageable
     @GetMapping("/v1/projects")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Transactional
-    public ResponseEntity<List<ProjectResponseDto>> getAll() {
-
-        return Optional
-            .ofNullable(projectService.getAll())
-            .map(projects ->
-                ResponseEntity
-                    .ok()
-                    .contentType(MediaType.APPLICATION_JSON)
-                    .body(projectMapper.toProjectDtosDefault(projects))
-            )
-            .orElseGet(() -> {
-                throw new NoContentException(Project.class);
-            });
+    public Page<ProjectResponseDto> getAll(@ApiParam(name = "search", value = "Search keyword")
+                                           @RequestParam(value = "search", required = false) String search,
+                                           Pageable pageable) {
+        Page<Project> projectsPaged = projectService.getAll(search, pageable);
+        return projectsPaged.map(projectMapper::toProjectDtoDefault);
     }
 
     /**

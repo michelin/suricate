@@ -16,29 +16,29 @@
 
 package io.suricate.monitoring.controllers.api;
 
-import io.suricate.monitoring.model.dto.api.configuration.ConfigurationResponseDto;
+import io.suricate.monitoring.configuration.swagger.ApiPageable;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.widget.CategoryResponseDto;
 import io.suricate.monitoring.model.dto.api.widget.WidgetResponseDto;
-import io.suricate.monitoring.model.entity.Configuration;
+import io.suricate.monitoring.model.dto.api.widgetconfiguration.WidgetConfigurationResponseDto;
+import io.suricate.monitoring.model.entity.WidgetConfiguration;
 import io.suricate.monitoring.model.entity.widget.Category;
 import io.suricate.monitoring.model.entity.widget.Widget;
 import io.suricate.monitoring.service.api.CategoryService;
-import io.suricate.monitoring.service.api.ConfigurationService;
+import io.suricate.monitoring.service.api.WidgetConfigurationService;
 import io.suricate.monitoring.service.api.WidgetService;
 import io.suricate.monitoring.service.mapper.CategoryMapper;
-import io.suricate.monitoring.service.mapper.ConfigurationMapper;
+import io.suricate.monitoring.service.mapper.WidgetConfigurationMapper;
 import io.suricate.monitoring.service.mapper.WidgetMapper;
 import io.suricate.monitoring.utils.exception.NoContentException;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -65,12 +65,12 @@ public class CategoryController {
     /**
      * The configuration service
      */
-    private final ConfigurationService configurationService;
+    private final WidgetConfigurationService widgetConfigurationService;
 
     /**
      * The configuration mapper
      */
-    private final ConfigurationMapper configurationMapper;
+    private final WidgetConfigurationMapper widgetConfigurationMapper;
 
     /**
      * The widget service to inject
@@ -85,24 +85,24 @@ public class CategoryController {
     /**
      * Constructor
      *
-     * @param categoryService      The category service to inject
-     * @param categoryMapper       The category mapper to inject
-     * @param configurationService The configuration service to inject
-     * @param configurationMapper  The configuration mapper
-     * @param widgetService        The widget service to inject
-     * @param widgetMapper         The widget mapper to inject
+     * @param categoryService            The category service to inject
+     * @param categoryMapper             The category mapper to inject
+     * @param widgetConfigurationService The configuration service to inject
+     * @param widgetConfigurationMapper  The configuration mapper
+     * @param widgetService              The widget service to inject
+     * @param widgetMapper               The widget mapper to inject
      */
     @Autowired
     public CategoryController(final CategoryService categoryService,
                               final CategoryMapper categoryMapper,
-                              final ConfigurationService configurationService,
-                              final ConfigurationMapper configurationMapper,
+                              final WidgetConfigurationService widgetConfigurationService,
+                              final WidgetConfigurationMapper widgetConfigurationMapper,
                               final WidgetService widgetService,
                               final WidgetMapper widgetMapper) {
         this.categoryService = categoryService;
         this.categoryMapper = categoryMapper;
-        this.configurationService = configurationService;
-        this.configurationMapper = configurationMapper;
+        this.widgetConfigurationService = widgetConfigurationService;
+        this.widgetConfigurationMapper = widgetConfigurationMapper;
         this.widgetService = widgetService;
         this.widgetMapper = widgetMapper;
     }
@@ -120,46 +120,41 @@ public class CategoryController {
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
+    @ApiPageable
     @GetMapping(value = "/v1/categories")
     @PreAuthorize("hasRole('ROLE_USER')")
     @Transactional
-    public ResponseEntity<List<CategoryResponseDto>> getCategories() {
-        List<Category> categories = categoryService.getCategoriesOrderByName();
-
-        if (categories == null || categories.isEmpty()) {
-            throw new NoContentException(Category.class);
-        }
-
-        return ResponseEntity
-            .ok()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(categoryMapper.toCategoryDtosDefault(categories));
+    public Page<CategoryResponseDto> getCategories(@ApiParam(name = "search", value = "Search keyword")
+                                                   @RequestParam(value = "search", required = false) String search,
+                                                   Pageable pageable) {
+        Page<Category> categoriesPaged = categoryService.getAll(search, pageable);
+        return categoriesPaged.map(categoryMapper::toCategoryDtoDefault);
     }
 
     /**
      * Return the list of configurations associated to the category
      */
-    @ApiOperation(value = "Get the list of configurations for a category", response = ConfigurationResponseDto.class)
+    @ApiOperation(value = "Get the list of configurations for a category", response = WidgetConfigurationResponseDto.class)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = ConfigurationResponseDto.class, responseContainer = "List"),
+        @ApiResponse(code = 200, message = "Ok", response = WidgetConfigurationResponseDto.class, responseContainer = "List"),
         @ApiResponse(code = 204, message = "No Content"),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
     @GetMapping(value = "/v1/categories/{categoryId}/configurations")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<List<ConfigurationResponseDto>> getConfigurationsByCategory(@ApiParam(name = "categoryId", value = "The category id", required = true)
-                                                                                      @PathVariable("categoryId") final Long categoryId) {
-        Optional<List<Configuration>> configurationsOptional = configurationService.getConfigurationForCategory(categoryId);
+    public ResponseEntity<List<WidgetConfigurationResponseDto>> getConfigurationsByCategory(@ApiParam(name = "categoryId", value = "The category id", required = true)
+                                                                                            @PathVariable("categoryId") final Long categoryId) {
+        Optional<List<WidgetConfiguration>> configurationsOptional = widgetConfigurationService.getConfigurationForCategory(categoryId);
 
         if (!configurationsOptional.isPresent()) {
-            throw new NoContentException(Configuration.class);
+            throw new NoContentException(WidgetConfiguration.class);
         }
 
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(configurationMapper.toConfigurationDtosDefault(configurationsOptional.get()));
+            .body(widgetConfigurationMapper.toConfigurationDtosDefault(configurationsOptional.get()));
     }
 
     /**

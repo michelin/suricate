@@ -49,6 +49,17 @@ export class HttpFilterService {
   }
 
   /**
+   * Get infinit page filter
+   */
+  public static getInfiniteFilter(): HttpFilter {
+    const httpFilter = new HttpFilter();
+    httpFilter['size'] = HttpFilterService.INFINITE_PAGE_SIZE;
+    httpFilter['page'] = HttpFilterService.DEFAULT_PAGE;
+
+    return httpFilter;
+  }
+
+  /**
    * Build query param using filters
    *
    * @param url The url

@@ -18,8 +18,8 @@ import { Component, Injector } from '@angular/core';
 import { ListComponent } from '../../shared/components/list/list.component';
 import { IconEnum } from '../../shared/enums/icon.enum';
 import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
-import { HttpConfigurationService } from '../../shared/services/backend/http-configuration.service';
-import { Configuration } from '../../shared/models/backend/configuration/configuration';
+import { HttpWidgetConfigurationService } from '../../shared/services/backend/http-widget-configuration.service';
+import { WidgetConfiguration } from '../../shared/models/backend/widget-configuration/widget-configuration';
 import { WidgetConfigurationFormFieldsService } from '../../shared/form-fields/widget-configuration-form-fields.service';
 
 /**
@@ -29,11 +29,11 @@ import { WidgetConfigurationFormFieldsService } from '../../shared/form-fields/w
   templateUrl: '../../shared/components/list/list.component.html',
   styleUrls: ['../../shared/components/list/list.component.scss']
 })
-export class WidgetConfigurationsComponent extends ListComponent<Configuration> {
+export class WidgetConfigurationsComponent extends ListComponent<WidgetConfiguration> {
   /**
    * The item selected on the list
    */
-  private configurationSelected: Configuration;
+  private configurationSelected: WidgetConfiguration;
 
   /**
    * Constructor
@@ -43,7 +43,7 @@ export class WidgetConfigurationsComponent extends ListComponent<Configuration> 
    * @param injector Angular Service used to manage the injection of services
    */
   constructor(
-    private readonly httpConfigurationsService: HttpConfigurationService,
+    private readonly httpConfigurationsService: HttpWidgetConfigurationService,
     private readonly widgetConfigurationFormFieldsService: WidgetConfigurationFormFieldsService,
     protected injector: Injector
   ) {
@@ -51,6 +51,28 @@ export class WidgetConfigurationsComponent extends ListComponent<Configuration> 
 
     this.initHeaderConfiguration();
     this.initListConfiguration();
+    this.initFilter();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  protected getFirstLabel(configuration: WidgetConfiguration): string {
+    return configuration.key;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  protected getSecondLabel(configuration: WidgetConfiguration): string {
+    return configuration.value;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  protected getThirdLabel(configuration: WidgetConfiguration): string {
+    return configuration.category.name;
   }
 
   /**
@@ -71,16 +93,23 @@ export class WidgetConfigurationsComponent extends ListComponent<Configuration> 
         {
           icon: IconEnum.EDIT,
           color: 'primary',
-          callback: (event: Event, configuration: Configuration) =>
+          callback: (event: Event, configuration: WidgetConfiguration) =>
             this.openFormSidenav(event, configuration, this.updateConfiguration.bind(this))
         },
         {
           icon: IconEnum.DELETE,
           color: 'warn',
-          callback: (event: Event, configuration: Configuration) => this.deleteConfiguration(event, configuration)
+          callback: (event: Event, configuration: WidgetConfiguration) => this.deleteConfiguration(event, configuration)
         }
       ]
     };
+  }
+
+  /**
+   * Init filter for list component
+   */
+  private initFilter(): void {
+    this.httpFilter.sort = ['key,asc'];
   }
 
   /**
@@ -90,13 +119,17 @@ export class WidgetConfigurationsComponent extends ListComponent<Configuration> 
    * @param configuration The repository clicked on the list
    * @param saveCallback The function to call when save button is clicked
    */
-  private openFormSidenav(event: Event, configuration: Configuration, saveCallback: (configuration: Configuration) => void): void {
-    this.configurationSelected = configuration ? Object.assign({}, configuration) : new Configuration();
+  private openFormSidenav(
+    event: Event,
+    configuration: WidgetConfiguration,
+    saveCallback: (configuration: WidgetConfiguration) => void
+  ): void {
+    this.configurationSelected = configuration ? Object.assign({}, configuration) : new WidgetConfiguration();
 
     this.sidenavService.openFormSidenav({
       title: 'configuration.edit',
       formFields: this.widgetConfigurationFormFieldsService.generateFormFields(configuration),
-      save: (configurationRequest: Configuration) => saveCallback(configurationRequest)
+      save: (configurationRequest: WidgetConfiguration) => saveCallback(configurationRequest)
     });
   }
 
@@ -106,7 +139,7 @@ export class WidgetConfigurationsComponent extends ListComponent<Configuration> 
    * @param event The click event
    * @param configuration The project to delete
    */
-  private deleteConfiguration(event: Event, configuration: Configuration): void {
+  private deleteConfiguration(event: Event, configuration: WidgetConfiguration): void {
     this.dialogService.confirm({
       title: 'configuration.delete',
       message: `${this.translateService.instant('delete.confirm')} ${configuration.key.toUpperCase()} ?`,
@@ -120,32 +153,11 @@ export class WidgetConfigurationsComponent extends ListComponent<Configuration> 
   }
 
   /**
-   * {@inheritDoc}
-   */
-  protected getFirstLabel(configuration: Configuration): string {
-    return configuration.key;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  protected getSecondLabel(configuration: Configuration): string {
-    return configuration.value;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  protected getThirdLabel(configuration: Configuration): string {
-    return configuration.category.name;
-  }
-
-  /**
    * Update a configuration
    *
    * @param configuration The configuration to update
    */
-  private updateConfiguration(configuration: Configuration): void {
+  private updateConfiguration(configuration: WidgetConfiguration): void {
     this.httpConfigurationsService.update(configuration.key, configuration).subscribe(() => {
       this.refreshList();
       this.toastService.sendMessage('configuration.update.success', ToastTypeEnum.SUCCESS);

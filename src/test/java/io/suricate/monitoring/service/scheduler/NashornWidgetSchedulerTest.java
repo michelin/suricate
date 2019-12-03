@@ -56,7 +56,7 @@ public class NashornWidgetSchedulerTest {
     CategoryRepository categoryRepository;
 
     @Autowired
-    ConfigurationRepository configurationRepository;
+    WidgetConfigurationRepository widgetConfigurationRepository;
 
     @Autowired
     ProjectWidgetRepository projectWidgetRepository;

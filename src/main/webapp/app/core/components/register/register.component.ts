@@ -23,7 +23,7 @@ import { throwError } from 'rxjs';
 import { AuthenticationService } from '../../../shared/services/frontend/authentication.service';
 import { ToastService } from '../../../shared/services/frontend/toast.service';
 import { ApplicationProperties } from '../../../shared/models/backend/application-properties';
-import { HttpConfigurationService } from '../../../shared/services/backend/http-configuration.service';
+import { HttpWidgetConfigurationService } from '../../../shared/services/backend/http-widget-configuration.service';
 import { Credentials } from '../../../shared/models/backend/user/credentials';
 import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
 import { UserRequest } from '../../../shared/models/backend/user/user-request';
@@ -73,32 +73,19 @@ export class RegisterComponent implements OnInit {
    * Constructor
    *
    * @param {Router} router Angular service used to manage application routes
-   * @param {HttpConfigurationService} httpConfigurationService Suricate service used to manage the configuration of the application
+   * @param {HttpWidgetConfigurationService} httpConfigurationService Suricate service used to manage the configuration of the application
    * @param {AuthenticationService} authenticationService Suricate service used to manage the authentication on the application
    * @param {FormService} formService Frontend service used to manage the forms creations
    * @param {ToastService} toastService Frontend service used to display the toast messages
    */
   constructor(
     private readonly router: Router,
-    private readonly httpConfigurationService: HttpConfigurationService,
+    private readonly httpConfigurationService: HttpWidgetConfigurationService,
     private readonly authenticationService: AuthenticationService,
     private readonly formService: FormService,
     private readonly toastService: ToastService
   ) {
     this.initButtons();
-  }
-
-  /**
-   * Initialize the list of buttons to use in the application
-   */
-  private initButtons(): void {
-    this.buttonConfigurations = [
-      {
-        color: 'primary',
-        label: 'sign.up',
-        type: ButtonTypeEnum.SUBMIT
-      }
-    ];
   }
 
   /**
@@ -117,19 +104,6 @@ export class RegisterComponent implements OnInit {
     });
 
     this.initRegisterForm();
-  }
-
-  /**
-   * Init the register form
-   */
-  private initRegisterForm(): void {
-    this.formFields = RegisterFormFieldsService.generateFormFields();
-    this.registerForm = this.formService.generateFormGroupForFields(this.formFields);
-    this.formService.setValidatorsForControl(this.registerForm.get('confirmPassword'), [
-      Validators.required,
-      Validators.minLength(3),
-      CustomValidator.checkPasswordMatch(this.registerForm.get('password'))
-    ]);
   }
 
   /**
@@ -165,6 +139,32 @@ export class RegisterComponent implements OnInit {
     } else {
       this.toastService.sendMessage('form.error.fields', ToastTypeEnum.DANGER);
     }
+  }
+
+  /**
+   * Initialize the list of buttons to use in the application
+   */
+  private initButtons(): void {
+    this.buttonConfigurations = [
+      {
+        color: 'primary',
+        label: 'sign.up',
+        type: ButtonTypeEnum.SUBMIT
+      }
+    ];
+  }
+
+  /**
+   * Init the register form
+   */
+  private initRegisterForm(): void {
+    this.formFields = RegisterFormFieldsService.generateFormFields();
+    this.registerForm = this.formService.generateFormGroupForFields(this.formFields);
+    this.formService.setValidatorsForControl(this.registerForm.get('confirmPassword'), [
+      Validators.required,
+      Validators.minLength(3),
+      CustomValidator.checkPasswordMatch(this.registerForm.get('password'))
+    ]);
   }
 
   /**

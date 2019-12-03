@@ -22,8 +22,8 @@ import io.suricate.monitoring.model.dto.nashorn.WidgetVariableResponse;
 import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.enums.WidgetState;
-import io.suricate.monitoring.service.api.ConfigurationService;
 import io.suricate.monitoring.service.api.ProjectWidgetService;
+import io.suricate.monitoring.service.api.WidgetConfigurationService;
 import io.suricate.monitoring.service.api.WidgetService;
 import io.suricate.monitoring.service.nashorn.NashornService;
 import io.suricate.monitoring.service.nashorn.task.NashornResultAsyncTask;
@@ -91,7 +91,7 @@ public class NashornWidgetScheduler implements Schedulable {
     /**
      * The configuration service
      */
-    private ConfigurationService configurationService;
+    private WidgetConfigurationService widgetConfigurationService;
     /**
      * The Spring boot application context
      */
@@ -100,33 +100,48 @@ public class NashornWidgetScheduler implements Schedulable {
      * The string encryptor
      */
     private StringEncryptor stringEncryptor;
+    /**
+     * Map containing all current scheduled jobs
+     */
+    private Map<Long, Pair<WeakReference<ScheduledFuture<NashornResponse>>, WeakReference<ScheduledFuture<Void>>>> jobs = new ConcurrentHashMap<>();
 
     /**
      * Constructor
      *
-     * @param applicationContext   The application context to inject
-     * @param projectWidgetService The project widget service to inject
-     * @param nashornService       The nashorn service to inject
-     * @param configurationService The configuration service to inject
-     * @param stringEncryptor      The string encryptor to inject
+     * @param applicationContext         The application context to inject
+     * @param projectWidgetService       The project widget service to inject
+     * @param nashornService             The nashorn service to inject
+     * @param widgetConfigurationService The configuration service to inject
+     * @param stringEncryptor            The string encryptor to inject
      */
     @Autowired
     public NashornWidgetScheduler(final ApplicationContext applicationContext,
                                   @Lazy final ProjectWidgetService projectWidgetService,
                                   final NashornService nashornService,
-                                  final ConfigurationService configurationService,
+                                  final WidgetConfigurationService widgetConfigurationService,
                                   @Qualifier("jasyptStringEncryptor") final StringEncryptor stringEncryptor) {
         this.ctx = applicationContext;
         this.projectWidgetService = projectWidgetService;
         this.nashornService = nashornService;
-        this.configurationService = configurationService;
+        this.widgetConfigurationService = widgetConfigurationService;
         this.stringEncryptor = stringEncryptor;
     }
 
     /**
-     * Map containing all current scheduled jobs
+     * Method used to cancel a scheduled future for an widget instance
+     *
+     * @param projectWidgetId project widget Id
+     * @param weakReference   weakReference containing the ScheduledFuture or null
      */
-    private Map<Long, Pair<WeakReference<ScheduledFuture<NashornResponse>>, WeakReference<ScheduledFuture<Void>>>> jobs = new ConcurrentHashMap<>();
+    private static void cancel(Long projectWidgetId, WeakReference<? extends ScheduledFuture> weakReference) {
+        if (weakReference != null) {
+            ScheduledFuture scheduledFuture = weakReference.get();
+            if (scheduledFuture != null && (!scheduledFuture.isDone() || !scheduledFuture.isCancelled())) {
+                LOGGER.debug("Cancel task for widget instance {} ({})", projectWidgetId, scheduledFuture);
+                scheduledFuture.cancel(true);
+            }
+        }
+    }
 
     /**
      * Method used to init scheduler
@@ -151,7 +166,6 @@ public class NashornWidgetScheduler implements Schedulable {
 
         projectWidgetService.resetProjectWidgetsState();
     }
-
 
     /**
      * Schedule a list of nashorn request
@@ -254,22 +268,5 @@ public class NashornWidgetScheduler implements Schedulable {
             cancel(projectWidgetId, pair.getRight());
         }
         projectWidgetService.updateState(WidgetState.STOPPED, projectWidgetId);
-    }
-
-
-    /**
-     * Method used to cancel a scheduled future for an widget instance
-     *
-     * @param projectWidgetId project widget Id
-     * @param weakReference   weakReference containing the ScheduledFuture or null
-     */
-    private static void cancel(Long projectWidgetId, WeakReference<? extends ScheduledFuture> weakReference) {
-        if (weakReference != null) {
-            ScheduledFuture scheduledFuture = weakReference.get();
-            if (scheduledFuture != null && (!scheduledFuture.isDone() || !scheduledFuture.isCancelled())) {
-                LOGGER.debug("Cancel task for widget instance {} ({})", projectWidgetId, scheduledFuture);
-                scheduledFuture.cancel(true);
-            }
-        }
     }
 }
