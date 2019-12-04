@@ -117,12 +117,7 @@ public class WidgetService {
      */
     public Widget findOne(final Long id) {
         Optional<Widget> widgetOptional = widgetRepository.findById(id);
-
-        if (!widgetOptional.isPresent()) {
-            return null;
-        }
-
-        return widgetOptional.get();
+        return widgetOptional.orElse(null);
     }
 
     /**
@@ -192,9 +187,6 @@ public class WidgetService {
             if (widgetVariableResponse.getType() != null) {
                 switch (widgetVariableResponse.getType()) {
                     case COMBO:
-                        widgetVariableResponse.setValues(getWidgetParamValuesAsMap(widgetParam.getPossibleValuesMap()));
-                        break;
-
                     case MULTIPLE:
                         widgetVariableResponse.setValues(getWidgetParamValuesAsMap(widgetParam.getPossibleValuesMap()));
                         break;

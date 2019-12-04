@@ -111,16 +111,6 @@ public class ProjectService {
     }
 
     /**
-     * Test if the project exists by token
-     *
-     * @param token The project token
-     * @return True the project exists false otherwise
-     */
-    public boolean isProjectExists(final String token) {
-        return this.getOneByToken(token).isPresent();
-    }
-
-    /**
      * Get a project by the project id
      *
      * @param id The id of the project
@@ -214,9 +204,9 @@ public class ProjectService {
      * @param project The project related
      * @return The project with user deleted
      */
-    public Project deleteUserFromProject(User user, Project project) {
+    public void deleteUserFromProject(User user, Project project) {
         project.getUsers().remove(user);
-        return projectRepository.save(project);
+        projectRepository.save(project);
     }
 
     /**

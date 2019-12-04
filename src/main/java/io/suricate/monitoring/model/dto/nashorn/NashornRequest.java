@@ -16,8 +16,8 @@
 
 package io.suricate.monitoring.model.dto.nashorn;
 
-import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.model.dto.api.AbstractDto;
+import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.utils.JsonUtils;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
@@ -90,7 +90,17 @@ public class NashornRequest extends AbstractDto {
      * @param state The project widget state
      * @param lastSuccess The last success date
      */
-    public NashornRequest(String properties, String script, String previousData, Long projectId, Long technicalId, Long delay, Long timeout, WidgetState state, Date lastSuccess) {
+    public NashornRequest(
+        String properties,
+        String script,
+        String previousData,
+        Long projectId,
+        Long technicalId,
+        Long delay,
+        Long timeout,
+        WidgetState state,
+        Date lastSuccess
+    ) {
         this.properties = properties;
         this.script = script;
         this.previousData = previousData;

@@ -182,15 +182,6 @@ public class UserService {
     }
 
     /**
-     * Get every user in database
-     *
-     * @return The list of users
-     */
-    public Optional<List<User>> getAllOrderByUsername() {
-        return userRepository.findAllByOrderByUsername();
-    }
-
-    /**
      * Get a user by id
      *
      * @param userId The user id

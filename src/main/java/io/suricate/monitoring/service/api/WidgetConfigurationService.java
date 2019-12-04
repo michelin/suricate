@@ -25,8 +25,6 @@ import io.suricate.monitoring.model.enums.DataType;
 import io.suricate.monitoring.repository.WidgetConfigurationRepository;
 import io.suricate.monitoring.service.specification.WidgetConfigurationSearchSpecification;
 import org.jasypt.encryption.StringEncryptor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
@@ -42,12 +40,6 @@ import java.util.Optional;
  */
 @Service
 public class WidgetConfigurationService {
-
-    /**
-     * Class logger
-     */
-    private final static Logger LOGGER = LoggerFactory.getLogger(WidgetConfigurationService.class);
-
     /**
      * The configuration repository
      */
@@ -119,11 +111,10 @@ public class WidgetConfigurationService {
      *
      * @param widgetConfiguration The config to update
      * @param newValue            The new value
-     * @return The config updated
      */
-    public WidgetConfiguration updateConfiguration(WidgetConfiguration widgetConfiguration, final String newValue) {
+    public void updateConfiguration(WidgetConfiguration widgetConfiguration, final String newValue) {
         widgetConfiguration.setValue(widgetConfiguration.getDataType() == DataType.PASSWORD ? stringEncryptor.encrypt(newValue) : newValue);
-        return widgetConfigurationRepository.save(widgetConfiguration);
+        widgetConfigurationRepository.save(widgetConfiguration);
     }
 
     /**
@@ -136,31 +127,12 @@ public class WidgetConfigurationService {
     }
 
     /**
-     * Get the configurations for widgets
-     *
-     * @return The list of config for the widgets
-     */
-    public List<WidgetConfiguration> getConfigurationForWidgets() {
-        return this.widgetConfigurationRepository.findConfigurationForWidgets();
-    }
-
-    /**
      * Get the server configuration properties
      *
      * @return The list of usefull server configuration properties
      */
     public ApplicationPropertiesDto getAuthenticationProvider() {
         return new ApplicationPropertiesDto("authentication.provider", applicationProperties.authentication.provider, "The user provider source (Database or LDAP)");
-    }
-
-    /**
-     * FIXME : MVT
-     *
-     * @return
-     */
-    public List<ApplicationPropertiesDto> getServerConfiguration() {
-        // FIXME : MVT
-        return null;
     }
 
     /**

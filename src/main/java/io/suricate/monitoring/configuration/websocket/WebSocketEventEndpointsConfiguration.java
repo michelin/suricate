@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.configuration.webSocket;
+package io.suricate.monitoring.configuration.websocket;
 
 import io.suricate.monitoring.model.dto.websocket.WebsocketClient;
 import io.suricate.monitoring.service.websocket.DashboardWebSocketService;

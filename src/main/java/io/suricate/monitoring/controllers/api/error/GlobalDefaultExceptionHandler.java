@@ -21,7 +21,6 @@ import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.utils.exception.ApiException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -33,6 +32,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.validation.ConstraintViolationException;
+import java.util.Objects;
 
 /**
  * Manage Rest exceptions
@@ -46,20 +46,13 @@ public class GlobalDefaultExceptionHandler {
     public static final Logger LOGGER = LoggerFactory.getLogger(GlobalDefaultExceptionHandler.class);
 
     /**
-     * Constructor
-     */
-    @Autowired
-    public GlobalDefaultExceptionHandler() {
-    }
-
-    /**
      * Manage the API Exception
      *
      * @param ex The exception
      * @return The exception as Response Entity
      */
     @ExceptionHandler(ApiException.class)
-    public ResponseEntity<?> handleApiException(ApiException ex) {
+    public ResponseEntity<ApiErrorDto> handleApiException(ApiException ex) {
         LOGGER.debug(ex.getMessage());
         return ResponseEntity
             .status(ex.getError().getStatus())
@@ -67,7 +60,7 @@ public class GlobalDefaultExceptionHandler {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<?> handleRequestException(MethodArgumentNotValidException ex) {
+    public ResponseEntity<ApiErrorDto> handleRequestException(MethodArgumentNotValidException ex) {
         LOGGER.debug(ex.getMessage());
         return ResponseEntity
             .status(ApiErrorEnum.BAD_REQUEST.getStatus())
@@ -81,7 +74,7 @@ public class GlobalDefaultExceptionHandler {
      * @return The related response entity
      */
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<?> handleAccessDeniedException(AccessDeniedException ex) {
+    public ResponseEntity<ApiErrorDto> handleAccessDeniedException(AccessDeniedException ex) {
         LOGGER.debug(ex.getMessage());
         return ResponseEntity
             .status(ApiErrorEnum.FORBIDDEN.getStatus())
@@ -95,7 +88,7 @@ public class GlobalDefaultExceptionHandler {
      * @return The response
      */
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public ResponseEntity<?> handleRequestException(HttpRequestMethodNotSupportedException ex) {
+    public ResponseEntity<ApiErrorDto> handleRequestException(HttpRequestMethodNotSupportedException ex) {
         LOGGER.debug(ex.getMessage());
         return ResponseEntity
             .status(ApiErrorEnum.BAD_REQUEST.getStatus())
@@ -109,7 +102,7 @@ public class GlobalDefaultExceptionHandler {
      * @return The related response entity
      */
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> handleException(Exception ex) {
+    public ResponseEntity<ApiErrorDto> handleException(Exception ex) {
         LOGGER.error(ex.getMessage(), ex);
         return ResponseEntity
             .status(ApiErrorEnum.INTERNAL_SERVER_ERROR.getStatus())
@@ -124,7 +117,7 @@ public class GlobalDefaultExceptionHandler {
      * @return the response entity
      */
     @ExceptionHandler({ConstraintViolationException.class})
-    public ResponseEntity<?> handleRequestException(ConstraintViolationException ex) {
+    public ResponseEntity<ApiErrorDto> handleRequestException(ConstraintViolationException ex) {
         LOGGER.debug(ex.getMessage());
         return ResponseEntity
             .status(ApiErrorEnum.BAD_REQUEST.getStatus())
@@ -139,11 +132,11 @@ public class GlobalDefaultExceptionHandler {
      * @return the response entity
      */
     @ExceptionHandler({DataIntegrityViolationException.class})
-    public ResponseEntity<?> handleRequestException(DataIntegrityViolationException ex) {
+    public ResponseEntity<ApiErrorDto> handleRequestException(DataIntegrityViolationException ex) {
         LOGGER.debug(ex.getMessage());
         return ResponseEntity
             .status(ApiErrorEnum.BAD_REQUEST.getStatus())
-            .body(new ApiErrorDto(ex.getRootCause().getMessage(), ApiErrorEnum.BAD_REQUEST));
+            .body(new ApiErrorDto(Objects.requireNonNull(ex.getRootCause()).getMessage(), ApiErrorEnum.BAD_REQUEST));
     }
 
 

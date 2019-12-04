@@ -70,7 +70,7 @@ import java.util.Optional;
 @RequestMapping("/api")
 @Api(value = "Project Controller", tags = {"Projects"})
 public class ProjectController {
-
+    private static final String USER_NOT_ALLOWED = "The user is not allowed to modify this resource";
     /**
      * Project service
      */
@@ -252,7 +252,7 @@ public class ProjectController {
 
         Project project = projectOptional.get();
         if (!projectService.isConnectedUserCanAccessToProject(project, authentication.getUserAuthentication())) {
-            throw new ApiException("The user is not allowed to modify this resource", ApiErrorEnum.NOT_AUTHORIZED);
+            throw new ApiException(ProjectController.USER_NOT_ALLOWED, ApiErrorEnum.NOT_AUTHORIZED);
         }
 
         projectService.updateProject(
@@ -292,7 +292,7 @@ public class ProjectController {
 
         Project project = projectOptional.get();
         if (!projectService.isConnectedUserCanAccessToProject(project, authentication.getUserAuthentication())) {
-            throw new ApiException("The user is not allowed to modify this resource", ApiErrorEnum.NOT_AUTHORIZED);
+            throw new ApiException(ProjectController.USER_NOT_ALLOWED, ApiErrorEnum.NOT_AUTHORIZED);
         }
 
         try {
@@ -331,7 +331,7 @@ public class ProjectController {
 
         Project project = projectOptional.get();
         if (!projectService.isConnectedUserCanAccessToProject(project, authentication.getUserAuthentication())) {
-            throw new ApiException("The user is not allowed to delete this resource", ApiErrorEnum.NOT_AUTHORIZED);
+            throw new ApiException(ProjectController.USER_NOT_ALLOWED, ApiErrorEnum.NOT_AUTHORIZED);
         }
         projectService.deleteProject(projectOptional.get());
         return ResponseEntity.noContent().build();
@@ -366,7 +366,7 @@ public class ProjectController {
 
         Project project = projectOptional.get();
         if (!projectService.isConnectedUserCanAccessToProject(project, authentication.getUserAuthentication())) {
-            throw new ApiException("The user is not allowed to modify this resource", ApiErrorEnum.NOT_AUTHORIZED);
+            throw new ApiException(ProjectController.USER_NOT_ALLOWED, ApiErrorEnum.NOT_AUTHORIZED);
         }
 
         projectWidgetService.updateWidgetPositionByProject(projectOptional.get(), projectWidgetPositionRequestDtos);
@@ -434,7 +434,7 @@ public class ProjectController {
 
         Project project = projectOptional.get();
         if (!projectService.isConnectedUserCanAccessToProject(project, authentication)) {
-            throw new ApiException("The user is not allowed to modify this resource", ApiErrorEnum.NOT_AUTHORIZED);
+            throw new ApiException(ProjectController.USER_NOT_ALLOWED, ApiErrorEnum.NOT_AUTHORIZED);
         }
 
         ProjectWidget projectWidget = projectWidgetMapper.toNewProjectWidget(projectWidgetRequestDto, projectToken);
@@ -510,7 +510,7 @@ public class ProjectController {
 
         Project project = projectOptional.get();
         if (!projectService.isConnectedUserCanAccessToProject(project, authentication.getUserAuthentication())) {
-            throw new ApiException("The user is not allowed to modify this resource", ApiErrorEnum.NOT_AUTHORIZED);
+            throw new ApiException(ProjectController.USER_NOT_ALLOWED, ApiErrorEnum.NOT_AUTHORIZED);
         }
 
         Optional<User> userOptional = userService.getOneByUsername(usernameMap.get("username"));
@@ -552,7 +552,7 @@ public class ProjectController {
 
         Project project = projectOptional.get();
         if (!projectService.isConnectedUserCanAccessToProject(project, authentication.getUserAuthentication())) {
-            throw new ApiException("The user is not allowed to modify this resource", ApiErrorEnum.NOT_AUTHORIZED);
+            throw new ApiException(ProjectController.USER_NOT_ALLOWED, ApiErrorEnum.NOT_AUTHORIZED);
         }
 
         Optional<User> userOptional = userService.getOne(userId);

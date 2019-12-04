@@ -21,7 +21,6 @@ import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.widget.WidgetRequestDto;
 import io.suricate.monitoring.model.dto.api.widget.WidgetResponseDto;
 import io.suricate.monitoring.model.entity.widget.Widget;
-import io.suricate.monitoring.service.GitService;
 import io.suricate.monitoring.service.api.WidgetService;
 import io.suricate.monitoring.service.mapper.WidgetMapper;
 import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
@@ -51,11 +50,6 @@ public class WidgetController {
     private final WidgetService widgetService;
 
     /**
-     * The GIT service
-     */
-    private final GitService gitService;
-
-    /**
      * The widget mapper
      */
     private final WidgetMapper widgetMapper;
@@ -64,15 +58,12 @@ public class WidgetController {
      * Constructor
      *
      * @param widgetService Widget service to inject
-     * @param gitService    The git service
      * @param widgetMapper  The widget mapper
      */
     @Autowired
     public WidgetController(final WidgetService widgetService,
-                            final GitService gitService,
                             final WidgetMapper widgetMapper) {
         this.widgetService = widgetService;
-        this.gitService = gitService;
         this.widgetMapper = widgetMapper;
     }
 

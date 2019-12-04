@@ -85,7 +85,7 @@ public class NashornService {
      */
     public NashornRequest getNashornRequestByProjectWidgetId(final Long projectWidgetId) {
         Optional<ProjectWidget> projectWidgetOptional = projectWidgetService.getOne(projectWidgetId);
-        return createNashornRequestByProjectWidget(projectWidgetOptional.get());
+        return createNashornRequestByProjectWidget(projectWidgetOptional.orElse(new ProjectWidget()));
     }
 
     /**

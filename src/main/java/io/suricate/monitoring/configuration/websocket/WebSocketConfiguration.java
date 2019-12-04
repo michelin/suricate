@@ -14,27 +14,19 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.configuration.webSocket;
+package io.suricate.monitoring.configuration.websocket;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.socket.config.annotation.AbstractWebSocketMessageBrokerConfigurer;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
+import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
 /**
  * Configuration for websocket
  */
 @Configuration
 @EnableWebSocketMessageBroker
-public class WebSocketConfiguration extends AbstractWebSocketMessageBrokerConfigurer {
-
-    /**
-     * Class logger
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(WebSocketConfiguration.class);
-
+public class WebSocketConfiguration implements WebSocketMessageBrokerConfigurer {
     /**
      * Websocket endpoints (open a new flow)
      *
@@ -42,8 +34,6 @@ public class WebSocketConfiguration extends AbstractWebSocketMessageBrokerConfig
      */
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws")
-            .setAllowedOrigins("*")
-            .withSockJS();
+        registry.addEndpoint("/ws").setAllowedOrigins("*").withSockJS();
     }
 }

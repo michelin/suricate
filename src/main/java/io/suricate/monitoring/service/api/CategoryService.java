@@ -20,8 +20,6 @@ import io.suricate.monitoring.model.entity.WidgetConfiguration;
 import io.suricate.monitoring.model.entity.widget.Category;
 import io.suricate.monitoring.repository.CategoryRepository;
 import io.suricate.monitoring.service.specification.CategorySearchSpecification;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
@@ -37,12 +35,6 @@ import java.util.List;
  */
 @Service
 public class CategoryService {
-
-    /**
-     * Class logger
-     */
-    private final static Logger LOGGER = LoggerFactory.getLogger(CategoryService.class);
-
     /**
      * The category repository
      */
@@ -57,7 +49,6 @@ public class CategoryService {
      * The configuration service
      */
     private final WidgetConfigurationService widgetConfigurationService;
-
 
     /**
      * The contructor
@@ -84,16 +75,6 @@ public class CategoryService {
     @Cacheable("widget-categories")
     public Page<Category> getAll(String search, Pageable pageable) {
         return categoryRepository.findAll(new CategorySearchSpecification(search), pageable);
-    }
-
-    /**
-     * Check if the category exists
-     *
-     * @param categoryId The category id
-     * @return Tru if exists false otherwise
-     */
-    public boolean isCategoryExists(final Long categoryId) {
-        return this.categoryRepository.existsById(categoryId);
     }
 
     /**

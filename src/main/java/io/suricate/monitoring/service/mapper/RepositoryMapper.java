@@ -19,20 +19,15 @@ package io.suricate.monitoring.service.mapper;
 import io.suricate.monitoring.model.dto.api.repository.RepositoryRequestDto;
 import io.suricate.monitoring.model.dto.api.repository.RepositoryResponseDto;
 import io.suricate.monitoring.model.entity.widget.Repository;
-import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
-import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 /**
  * Interface that manage the generation DTO/Model objects for Widget class
  */
-@Component
 @Mapper(componentModel = "spring")
-public abstract class RepositoryMapper {
+public interface RepositoryMapper {
 
     /* ************************* TO DTO ********************************************** */
 
@@ -47,21 +42,7 @@ public abstract class RepositoryMapper {
      * @return The related repository DTO
      */
     @Named("toRepositoryDtoDefault")
-    public abstract RepositoryResponseDto toRepositoryDtoDefault(Repository repository);
-
-    /* ******************************************************* */
-    /*                    List Mapping                         */
-    /* ******************************************************* */
-
-    /**
-     * Tranform a list of repositories into a list of RepositoryResponseDto
-     *
-     * @param repositories The list of repositories to transform
-     * @return The related DTOs
-     */
-    @Named("toRepositoryDtosDefault")
-    @IterableMapping(qualifiedByName = "toRepositoryDtoDefault")
-    public abstract List<RepositoryResponseDto> toRepositoryDtosDefault(List<Repository> repositories);
+    RepositoryResponseDto toRepositoryDtoDefault(Repository repository);
 
     /* ************************* TO MODEL **************************************** */
 
@@ -79,5 +60,5 @@ public abstract class RepositoryMapper {
     @Named("toRepositoryDefaultModel")
     @Mapping(target = "id", source = "repositoryId")
     @Mapping(target = "widgets", ignore = true)
-    public abstract Repository toRepositoryDefaultModel(Long repositoryId, RepositoryRequestDto repositoryRequestDto);
+    Repository toRepositoryDefaultModel(Long repositoryId, RepositoryRequestDto repositoryRequestDto);
 }

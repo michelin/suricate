@@ -23,7 +23,6 @@ import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.service.api.ProjectWidgetService;
-import io.suricate.monitoring.service.api.WidgetConfigurationService;
 import io.suricate.monitoring.service.api.WidgetService;
 import io.suricate.monitoring.service.nashorn.NashornService;
 import io.suricate.monitoring.service.nashorn.task.NashornResultAsyncTask;
@@ -89,10 +88,6 @@ public class NashornWidgetScheduler implements Schedulable {
      */
     private NashornService nashornService;
     /**
-     * The configuration service
-     */
-    private WidgetConfigurationService widgetConfigurationService;
-    /**
      * The Spring boot application context
      */
     private ApplicationContext ctx;
@@ -111,19 +106,16 @@ public class NashornWidgetScheduler implements Schedulable {
      * @param applicationContext         The application context to inject
      * @param projectWidgetService       The project widget service to inject
      * @param nashornService             The nashorn service to inject
-     * @param widgetConfigurationService The configuration service to inject
      * @param stringEncryptor            The string encryptor to inject
      */
     @Autowired
     public NashornWidgetScheduler(final ApplicationContext applicationContext,
                                   @Lazy final ProjectWidgetService projectWidgetService,
                                   final NashornService nashornService,
-                                  final WidgetConfigurationService widgetConfigurationService,
                                   @Qualifier("jasyptStringEncryptor") final StringEncryptor stringEncryptor) {
         this.ctx = applicationContext;
         this.projectWidgetService = projectWidgetService;
         this.nashornService = nashornService;
-        this.widgetConfigurationService = widgetConfigurationService;
         this.stringEncryptor = stringEncryptor;
     }
 
@@ -195,18 +187,18 @@ public class NashornWidgetScheduler implements Schedulable {
             return;
         }
         // Get the beans inside schedule
-        ProjectWidgetService projectWidgetService = ctx.getBean(ProjectWidgetService.class);
+        ProjectWidgetService projectWidgetServiceInjected = ctx.getBean(ProjectWidgetService.class);
         WidgetService widgetService = ctx.getBean(WidgetService.class);
 
         if (!nashornService.isNashornRequestExecutable(nashornRequest)) {
-            projectWidgetService.updateState(WidgetState.STOPPED, nashornRequest.getProjectWidgetId(), new Date());
+            projectWidgetServiceInjected.updateState(WidgetState.STOPPED, nashornRequest.getProjectWidgetId(), new Date());
             return;
         }
 
         // Update the status if necessary
         if (WidgetState.STOPPED == nashornRequest.getWidgetState()) {
             LOGGER.debug("Scheduled widget instance:{}", nashornRequest.getProjectWidgetId());
-            projectWidgetService.updateState(WidgetState.RUNNING, nashornRequest.getProjectWidgetId(), new Date());
+            projectWidgetServiceInjected.updateState(WidgetState.RUNNING, nashornRequest.getProjectWidgetId(), new Date());
         }
 
         Long delay = nashornRequest.getDelay();
@@ -216,7 +208,7 @@ public class NashornWidgetScheduler implements Schedulable {
             delay = SMALL_DELAY;
         }
 
-        ProjectWidget projectWidget = projectWidgetService.getOne(nashornRequest.getProjectWidgetId()).get();
+        ProjectWidget projectWidget = projectWidgetServiceInjected.getOne(nashornRequest.getProjectWidgetId()).orElse(new ProjectWidget());
         List<WidgetVariableResponse> widgetVariableResponses = widgetService.getWidgetVariables(projectWidget.getWidget());
 
         // Create scheduled future task
@@ -229,8 +221,8 @@ public class NashornWidgetScheduler implements Schedulable {
         // Update job
         jobs.put(nashornRequest.getProjectWidgetId(),
             new ImmutablePair<>(
-                new WeakReference<ScheduledFuture<NashornResponse>>(future),
-                new WeakReference<ScheduledFuture<Void>>(futureResult)
+                new WeakReference<>(future),
+                new WeakReference<>(futureResult)
             ));
 
     }

@@ -124,7 +124,7 @@ public class DashboardScheduleService {
     private void notifyWidgetUpdate(Long projectWidgetId, Long projectId) {
         // Notify the dashboard
         UpdateEvent event = new UpdateEvent(UpdateType.WIDGET);
-        ProjectWidget projectWidget = projectWidgetService.getOne(projectWidgetId).get();
+        ProjectWidget projectWidget = projectWidgetService.getOne(projectWidgetId).orElse(null);
         event.setContent(projectWidgetMapper.toProjectWidgetDtoDefault(projectWidget));
 
         dashboardWebSocketService.updateGlobalScreensByIdAndProjectWidgetId(projectId, projectWidgetId, event);

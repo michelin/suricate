@@ -58,14 +58,6 @@ public interface LibraryRepository extends JpaRepository<Library, Long> {
     List<Long> getLibs(@Param("ids") List<Long> widgetIds);
 
     /**
-     * Find a list of librairies by widget id
-     *
-     * @param id The widget id
-     * @return The list of related librairies
-     */
-    List<Library> findByWidgets_Id(Long id);
-
-    /**
      * Find a librairie by technical name
      *
      * @param technicalname The technical name

@@ -23,5 +23,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * Repository used to manage Asset data
  */
 public interface AssetRepository extends JpaRepository<Asset, Long> {
-
 }

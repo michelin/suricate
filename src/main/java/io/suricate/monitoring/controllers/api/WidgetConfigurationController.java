@@ -35,7 +35,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -181,7 +180,6 @@ public class WidgetConfigurationController {
         }
 
         widgetConfigurationService.deleteOneByKey(key);
-
         return ResponseEntity.noContent().build();
     }
 
@@ -198,20 +196,5 @@ public class WidgetConfigurationController {
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
             .body(widgetConfigurationService.getAuthenticationProvider());
-    }
-
-    /**
-     * Return the value needed for the frontend on the server configuration
-     */
-    @ApiOperation(value = "Get the server full configuration", response = ApplicationPropertiesDto.class)
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = ApplicationPropertiesDto.class, responseContainer = "List")
-    })
-    @GetMapping(value = "/v1/configurations/server")
-    public ResponseEntity<List<ApplicationPropertiesDto>> getServerConfiguration() {
-        return ResponseEntity
-            .ok()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(widgetConfigurationService.getServerConfiguration());
     }
 }

@@ -18,8 +18,6 @@ package io.suricate.monitoring.service.api;
 
 import io.suricate.monitoring.model.entity.setting.AllowedSettingValue;
 import io.suricate.monitoring.repository.AllowedSettingValueRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,12 +25,6 @@ import java.util.Optional;
 
 @Service
 public class AllowedSettingValueService {
-
-    /**
-     * Class logger
-     */
-    private final static Logger LOGGER = LoggerFactory.getLogger(AllowedSettingValueService.class);
-
     /**
      * The allowed setting value repository
      */
