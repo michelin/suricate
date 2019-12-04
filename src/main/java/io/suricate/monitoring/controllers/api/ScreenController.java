@@ -34,7 +34,7 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/api")
-@Api(value = "Screen controller", tags = {"Screens"})
+@Api(value = "Screen actions controller", tags = {"Screens"})
 public class ScreenController {
 
     /**
