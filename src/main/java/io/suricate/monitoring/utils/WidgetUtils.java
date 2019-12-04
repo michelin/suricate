@@ -62,7 +62,7 @@ public final class WidgetUtils {
         List<Library> libraries = null;
         try {
             List<File> list = FilesUtils.getFiles(rootFolder);
-            if (list != null) {
+            if (!list.isEmpty()) {
                 libraries = new ArrayList<>();
                 for (File file : list) {
                     Library lib = new Library();
@@ -88,7 +88,7 @@ public final class WidgetUtils {
         List<Category> categories = null;
         try {
             List<File> list = FilesUtils.getFolders(rootFolder);
-            if (list == null) {
+            if (list.isEmpty()) {
                 return Collections.emptyList();
             }
             categories = new ArrayList<>();
@@ -117,7 +117,7 @@ public final class WidgetUtils {
         }
         Category category = new Category();
         List<File> files = FilesUtils.getFiles(folderCategory);
-        if (files == null) {
+        if (files.isEmpty()) {
             return category;
         }
         for (File file : files) {
@@ -160,7 +160,7 @@ public final class WidgetUtils {
         }
         Widget widget = new Widget();
         List<File> files = FilesUtils.getFiles(widgetFolder);
-        if (files != null) {
+        if (!files.isEmpty()) {
             for (File file : files) {
                 readWidgetConfig(widget, file);
             }

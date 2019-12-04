@@ -14,7 +14,7 @@ public class WidgetUtilsTest {
 
     @Test
     public void testNullFile() throws Exception {
-        assertThat(WidgetUtils.parseWidgetFolder(null)).isNull();
+        assertThat(WidgetUtils.parseWidgetFolder(null)).hasSize(0);
     }
 
     @Test
