@@ -14,97 +14,126 @@
  * limitations under the License.
  */
 
-import {OverlayContainer} from '@angular/cdk/overlay';
-import {Component, HostBinding, OnDestroy, OnInit} from '@angular/core';
-import {Observable} from 'rxjs';
-import {takeWhile} from 'rxjs/operators';
+import { Component, HostBinding, OnDestroy, OnInit } from '@angular/core';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { takeWhile } from 'rxjs/operators';
 
-import {AuthenticationService} from './modules/authentication/authentication.service';
-import {SettingsService} from './modules/settings/settings.service';
-import {UserService} from './modules/security/user/user.service';
+import { DialogService } from './shared/services/frontend/dialog.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmationDialogConfiguration } from './shared/models/frontend/dialog/confirmation-dialog-configuration';
+import { ConfirmDialogComponent } from './shared/components/confirm-dialog/confirm-dialog.component';
+import { MatDialogConfig } from '@angular/material/typings/dialog';
+import { SettingsService } from './core/services/settings.service';
+import { CommunicationDialogConfiguration } from './shared/models/frontend/dialog/communication-dialog-configuration';
+import { CommunicationDialogComponent } from './shared/components/communication-dialog/communication-dialog.component';
 
-
+/**
+ * Main component init the application
+ */
 @Component({
-  selector: 'app-root',
+  selector: 'suricate-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit, OnDestroy {
-
   /**
    * The HTML class attribute
+   * @type {string}
+   * @private
    */
-  @HostBinding('class') appHtmlClass;
+  @HostBinding('class')
+  public appHtmlClass: string;
 
   /**
    * Tell if the component is instantiate or not
-   *
    * @type {boolean}
    * @private
    */
   private isAlive = true;
 
   /**
-   * Observable that tell to the app if the user is connected
-   * @type {Observable<boolean>}
-   */
-  isLoggedIn$: Observable<boolean>;
-
-  /**
-   * The title app
-   * @type {string}
-   */
-  title = 'Dashboard - Monitoring';
-
-  /**
    * The constructor
    *
-   * @param {AuthenticationService} authenticationService Authentication service to inject
-   * @param {OverlayContainer} overlayContainer The overlay container service
-   * @param {UserService} userService The user service
-   * @param {SettingsService} settingsService The settings service to inject
+   *
+   * @param {MatDialog} matDialog Angular material service used to display dialog
+   * @param {OverlayContainer} overlayContainer Angular service used to manage DOM information
+   * @param {SettingsService} settingsService Suricate service used to manage the settings
+   * @param {DialogService} dialogService Frontend service used to manage dialogs
    */
-  constructor(private authenticationService: AuthenticationService,
-              private overlayContainer: OverlayContainer,
-              private userService: UserService,
-              private settingsService: SettingsService) {
-  }
+  constructor(
+    private readonly matDialog: MatDialog,
+    private readonly overlayContainer: OverlayContainer,
+    private readonly settingsService: SettingsService,
+    private readonly dialogService: DialogService
+  ) {}
 
   /**
    * Called at the init of the app
    */
-  ngOnInit() {
-    this.isLoggedIn$ = this.authenticationService.isLoggedIn$.pipe(takeWhile(() => this.isAlive));
-    this.settingsService.currentTheme$.pipe(
-      takeWhile(() => this.isAlive)
-    ).subscribe(themeValue => {
-      this.switchTheme(themeValue);
-    });
+  public ngOnInit(): void {
+    this.subscribeToConfirmationDialog();
+    this.subscribeToCommunicationDialog();
+    this.subscribeToThemeChanging();
 
     this.settingsService.initDefaultSettings();
-    this.userService.connectedUser$.subscribe(user => {
-      if (user) {
-        this.settingsService.initUserSettings(user);
-      } else {
-        this.settingsService.initDefaultSettings();
-      }
-    });
   }
 
   /**
-   * Switch the theme
-   * @param {string} themeValue The new theme value
+   * Used to change the current when asked
    */
-  switchTheme(themeValue: string) {
-    this.overlayContainer.getContainerElement().classList.remove(this.appHtmlClass);
-    this.overlayContainer.getContainerElement().classList.add(themeValue);
-    this.appHtmlClass = themeValue;
+  private subscribeToThemeChanging(): void {
+    this.settingsService
+      .getThemeChangingMessages()
+      .pipe(takeWhile(() => this.isAlive))
+      .subscribe(themeValue => {
+        this.overlayContainer.getContainerElement().classList.remove(this.appHtmlClass);
+        this.overlayContainer.getContainerElement().classList.add(themeValue);
+        this.appHtmlClass = themeValue;
+      });
+  }
+
+  /**
+   * Function that display the confirmation dialog when using the dialog service
+   */
+  private subscribeToConfirmationDialog(): void {
+    this.dialogService
+      .listenConfirmationMessages()
+      .pipe(takeWhile(() => this.isAlive))
+      .subscribe((confirmationConfiguration: ConfirmationDialogConfiguration) => {
+        const dialogConfig: MatDialogConfig = {
+          role: 'dialog',
+          width: '700px',
+          height: '50%',
+          data: confirmationConfiguration
+        };
+
+        this.matDialog.open(ConfirmDialogComponent, dialogConfig);
+      });
+  }
+
+  /**
+   * Function that display the communication dialog when using the dialog service
+   */
+  private subscribeToCommunicationDialog(): void {
+    this.dialogService
+      .listenCommunicationMessages()
+      .pipe(takeWhile(() => this.isAlive))
+      .subscribe((communicationDialogConfiguration: CommunicationDialogConfiguration) => {
+        const dialogConfig: MatDialogConfig = {
+          role: 'dialog',
+          width: '700px',
+          height: '80%',
+          data: communicationDialogConfiguration
+        };
+
+        this.matDialog.open(CommunicationDialogComponent, dialogConfig);
+      });
   }
 
   /**
    * Called when the component is destroyed
    */
-  ngOnDestroy() {
+  public ngOnDestroy(): void {
     this.isAlive = false;
   }
 }

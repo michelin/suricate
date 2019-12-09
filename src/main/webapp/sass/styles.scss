@@ -17,10 +17,16 @@
  */
 // Custom variables
 @import '~sass/variables';
-//Normalize SCSS
+// Normalize SCSS
 @import '~normalize-scss/sass/normalize';
+// Icons
+@import '~@fortawesome/fontawesome-free/scss/v4-shims';
+@import '~@fortawesome/fontawesome-free/scss/fontawesome';
+@import '~@fortawesome/fontawesome-free/scss/brands';
+@import '~@fortawesome/fontawesome-free/scss/regular';
+@import '~@fortawesome/fontawesome-free/scss/solid';
 @import '~material-design-icons-iconfont/src/material-design-icons';
-//Suricate Specifics
+// Suricate Specifics
 @import '~sass/dashboard-themes';
 @import '~sass/global-styles';
 @import '~sass/dashboard-screen';
