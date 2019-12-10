@@ -18,7 +18,7 @@
 
 :host {
   position: absolute;
-  Z-index: 10;
+  z-index: 10;
 }
 
 .wrapper {
@@ -155,16 +155,18 @@
   }
 
   &:active {
-    background-color: rgba(10, 10, 10, .4);
+    background-color: rgba(10, 10, 10, 0.4);
   }
 
-  &:focus, &:hover {
-    background-color: rgba(10, 10, 10, .3);
+  &:focus,
+  &:hover {
+    background-color: rgba(10, 10, 10, 0.3);
   }
 
-  &::after, &::before {
+  &::after,
+  &::before {
     background-color: #fff;
-    content: "";
+    content: '';
     display: block;
     left: 50%;
     position: absolute;

@@ -30,6 +30,11 @@
   $background: map-get($theme, background);
 
   .mat-form-field {
+    &.mat-form-field-readonly {
+      .mat-form-field-outline {
+        background-color: #7f7f7f0f;
+      }
+    }
 
     .mat-icon.prefix {
       margin-right: 10px;
