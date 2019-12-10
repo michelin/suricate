@@ -27,11 +27,11 @@ import java.util.Optional;
 public interface UserSettingRepository extends JpaRepository<UserSetting, Long> {
 
     /**
-     * Get a setting by userId and setting Id
+     * Get a setting by userName and setting Id
      *
-     * @param userId    The userId
+     * @param userName  The userName
      * @param settingId The setting Id
      * @return The user setting associated
      */
-    Optional<UserSetting> findByUser_IdAndSetting_Id(Long userId, Long settingId);
+    Optional<UserSetting> findByUser_UsernameAndSetting_Id(String userName, Long settingId);
 }

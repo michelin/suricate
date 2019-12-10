@@ -1,13 +1,11 @@
-<div class="fixActionRow">
-  <h2 mat-dialog-title> {{ title }} </h2>
+<div class="dialog-wrapper">
+  <h2 mat-dialog-title>{{ configuration.title | translate }}</h2>
 
-  <mat-dialog-content class="spacer" [ngClass]="{'error': isErrorMessage}">
-    {{ message }}
+  <mat-dialog-content class="spacer" [ngClass]="{ error: configuration.isErrorMessage }">
+    {{ configuration.message }}
   </mat-dialog-content>
 
   <mat-dialog-actions>
-    <button mat-button [mat-dialog-close]="false">
-      <app-translate [key]="'close'"></app-translate>
-    </button>
+    <button mat-button [mat-dialog-close]="false">{{ 'close' | translate }}</button>
   </mat-dialog-actions>
 </div>

@@ -1,0 +1,37 @@
+<div class="file-upload-wrapper" fxLayout="row wrap" fxLayoutAlign="space-around center" fxFlex="100">
+  <!-- Image uploaded -->
+  <img *ngIf="imgBase64" [src]="imgBase64" alt="Uploaded file" fxFlex="49" />
+
+  <div *ngIf="filename" fxFlex="49">
+    {{ filename }}
+  </div>
+
+  <!-- Button visible -->
+  <div fxFlex="48" fxLayout="row wrap" class="upload-button-wrapper">
+    <button
+      mat-raised-button
+      type="button"
+      fxFlex="100"
+      class="upload-button"
+      [ngClass]="{ 'button-error': isInputFieldOnError() }"
+      (click)="file.click()"
+    >
+      <mat-icon> {{ materialIconRecords[iconEnum.UPLOAD] }} </mat-icon>
+      <span class="sentence"> {{ 'file.upload' | translate }} </span>
+    </button>
+
+    <!-- Error Message for file input -->
+    <div *ngIf="isInputFieldOnError()" [@animationError] class="input-error" fxFlex="100">
+      <div *ngIf="getFormControl()['errors']?.required">
+        {{ 'field.error.required' | translate }}
+      </div>
+
+      <div *ngIf="getFormControl()['errors']?.pattern">
+        {{ 'field.error.pattern' | translate }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Used to retrieve the file (hidden) -->
+  <input #file type="file" (change)="onFileChange($event)" />
+</div>
