@@ -15,14 +15,14 @@
  *  * limitations under the License.
  *
  */
-@import "~sass/components/material/mat-sidenav-theme";
-@import "~sass/components/material/mat-icon-theme";
-@import "~sass/components/material/mat-button-theme";
-@import "~sass/components/material/mat-slide-toggle-theme";
-@import "~sass/components/material/mat-checkbox-theme";
-@import "~sass/components/material/mat-stepper-theme";
-@import "~sass/components/material/mat-card-theme";
-@import "~sass/components/material/mat-form-field-theme";
+@import '~sass/components/material/mat-sidenav-theme';
+@import '~sass/components/material/mat-icon-theme';
+@import '~sass/components/material/mat-button-theme';
+@import '~sass/components/material/mat-slide-toggle-theme';
+@import '~sass/components/material/mat-checkbox-theme';
+@import '~sass/components/material/mat-stepper-theme';
+@import '~sass/components/material/mat-form-field-theme';
+@import '~sass/components/material/mat-grid-list-theme';
 
 /**
  * Mixin that inject every custom components (used in theme definitions)
@@ -34,6 +34,6 @@
   @include custom-mat-slide-toggle-theme($theme);
   @include custom-mat-checkbox-theme($theme);
   @include custom-mat-stepper-theme($theme);
-  @include custom-mat-card-theme($theme);
+  @include custom-mat-grid-list-theme($theme);
   @include custom-mat-form-field-theme($theme);
 }

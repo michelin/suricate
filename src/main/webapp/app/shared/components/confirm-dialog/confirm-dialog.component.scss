@@ -16,3 +16,12 @@
  *
  */
 
+.dialog-wrapper {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .spacer {
+    flex-grow: 1;
+  }
+}

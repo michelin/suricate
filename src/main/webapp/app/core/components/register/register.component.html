@@ -1,0 +1,17 @@
+<div class="container without-header" fxLayout="column" fxLayoutAlign="center center">
+  <div class="wrapper mat-elevation-z12" fxLayout="column" fxLayoutAlign="center center" fxFlex="640px">
+    <suricate-spinner *ngIf="formSubmitAttempt"></suricate-spinner>
+
+    <form
+      *ngIf="!formSubmitAttempt"
+      class="register-form"
+      fxLayout="column"
+      fxLayoutAlign="center"
+      [formGroup]="registerForm"
+      (ngSubmit)="signUp()"
+    >
+      <suricate-input *ngFor="let field of formFields" [formGroup]="registerForm" [field]="field"> </suricate-input>
+      <suricate-buttons [configurations]="buttonConfigurations" fxLayout="row" fxLayoutAlign="center center"></suricate-buttons>
+    </form>
+  </div>
+</div>
