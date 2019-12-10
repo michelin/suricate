@@ -28,8 +28,11 @@ import io.suricate.monitoring.service.scheduler.NashornWidgetScheduler;
 import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
 import io.suricate.monitoring.utils.WidgetUtils;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.SystemUtils;
+import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -174,10 +177,10 @@ public class GitService {
         try {
             for (Repository repository : repositories) {
                 if (repository.getType() == RepositoryTypeEnum.LOCAL) {
-                    LOGGER.info("Loading widget from local folder {}", repository.getLocalPath());
+                    LOGGER.info("Loading widget from local folder {}", repository.getLocalPath(), null, null);
                     updateWidgetFromFile(new File(repository.getLocalPath()), true, repository);
                 } else {
-                    File remoteFolder = cloneRepo(repository.getUrl(), repository.getBranch());
+                    File remoteFolder = cloneRepo(repository.getUrl(), repository.getBranch(), repository.getLogin(), repository.getPassword());
                     updateWidgetFromFile(remoteFolder, false, repository);
                 }
 
@@ -200,34 +203,37 @@ public class GitService {
      *
      * @param url    git repository url
      * @param branch git branch
+     * @param login The login of the git repo
+     * @param password The password of the git repo
      * @return File object on local repo
      */
-    public File cloneRepo(String url, String branch) throws Exception {
+    public File cloneRepo(String url, String branch, String login, String password) throws Exception {
         LOGGER.info("Cloning widget repo {}, branch {}", url, branch);
         File localRepo = null;
-        Git git = null;
-        try {
-            localRepo = File.createTempFile("tmp", Long.toString(System.nanoTime()));
-            if (localRepo.exists()) {
-                FileUtils.deleteQuietly(localRepo);
-            }
-            localRepo.mkdirs();
+        CloneCommand cloneCmd = null;
 
-            String remoteRepo = new URL(url).toExternalForm();
-            git = Git.cloneRepository()
-                .setURI(remoteRepo)
-                .setBranch(branch)
-                .setDirectory(localRepo)
-                .call();
+        localRepo = File.createTempFile("tmp", Long.toString(System.nanoTime()));
+        if (localRepo.exists()) {
+            FileUtils.deleteQuietly(localRepo);
+        }
+        localRepo.mkdirs();
 
+        String remoteRepo = new URL(url).toExternalForm();
+        cloneCmd = Git.cloneRepository()
+            .setURI(remoteRepo)
+            .setBranch(branch)
+            .setDirectory(localRepo);
+
+        if(StringUtils.isNoneBlank(login, password)) {
+            cloneCmd.setCredentialsProvider(new UsernamePasswordCredentialsProvider(login, password));
+        }
+
+        // Clone remote repo
+        try (Git git = cloneCmd.call()) {
+            LOGGER.info("Branch {} from remote repository was successfully cloned", git.getRepository().getBranch());
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
             FileUtils.deleteQuietly(localRepo);
-            throw e;
-        } finally {
-            if (git != null) {
-                git.getRepository().close();
-            }
         }
 
         return localRepo;

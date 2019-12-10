@@ -16,64 +16,66 @@
  *
  */
 
-import {HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {tap} from 'rxjs/operators';
-import {Injectable} from '@angular/core';
+import { HttpErrorResponse, HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { Injectable } from '@angular/core';
 
-import {ToastService} from '../components/toast/toast.service';
-import {badCredentialError} from '../../app.constant';
-import {ToastType} from '../components/toast/toast-objects/ToastType';
+import { ToastService } from '../services/frontend/toast.service';
+import { ToastTypeEnum } from '../enums/toast-type.enum';
 
 /**
- * Intercptor that manage http errors
+ * Interceptor that manage http errors
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class ErrorInterceptor implements HttpInterceptor {
+  /**
+   * Invalid grant error returned by spring oauth2
+   * @type {string}
+   */
+  private static readonly badCredentialError = 'invalid_grant';
 
   /**
    * Constructor
    *
    * @param {ToastService} toastService The toast service
    */
-  constructor(private toastService: ToastService) {
-  }
+  constructor(private readonly toastService: ToastService) {}
 
   /**
    * Method that intercept the request
    *
-   * @param {HttpRequest<any>} request The request
+   * @param {HttpRequest>} request The request
    * @param {HttpHandler} next The next handler
-   * @return {Observable<HttpEvent<any>>} The http request as event
+   * @return {Observable<HttpEvent>} The http request as event
    */
-  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    return next.handle(request)
-      .pipe(
-        tap(
-          (event: HttpEvent<any>) => {
-          },
-          (httpError: any) => {
-            if (httpError instanceof HttpErrorResponse) {
-              switch (httpError.status) {
-                case 400:
-                  if (httpError.error.error === badCredentialError) {
-                    this.toastService.sendMessage('Bad credentials', ToastType.DANGER, 'Wrong login or password');
-                  }
-                  break;
+  public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    return next.handle(request).pipe(
+      tap(
+        (event: HttpEvent<any>) => {},
+        (httpError: any) => {
+          if (httpError instanceof HttpErrorResponse) {
+            switch (httpError.status) {
+              case 400:
+                if (httpError.error.error === ErrorInterceptor.badCredentialError) {
+                  this.toastService.sendMessage('credentials.error', ToastTypeEnum.DANGER);
+                }
+                break;
 
-                case 0:
-                  this.displayUnknowErrorMessage();
-                  break;
-              }
+              case 0:
+                this.displayUnknowErrorMessage();
+                break;
             }
-          })
-      );
+          }
+        }
+      )
+    );
   }
 
   /**
    * Display the message when an unknown error occured
    */
-  displayUnknowErrorMessage() {
-    this.toastService.sendMessage('Server Unavailable', ToastType.DANGER, 'The server is not responsding, please contact an administrator');
+  private displayUnknowErrorMessage(): void {
+    this.toastService.sendMessage('server.unavailable', ToastTypeEnum.DANGER, 'server.unavailable.explanation');
   }
 }

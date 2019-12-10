@@ -46,4 +46,13 @@
       }
     }
   }
+
+  .mat-stroked-button {
+    &.mat-warn {
+      border: 1px solid mat-color($warn, 500);
+    }
+    &.mat-primary {
+      border: 1px solid mat-color($primary, 500);
+    }
+  }
 }
