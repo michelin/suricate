@@ -1,0 +1,19 @@
+<div *ngIf="formGroup" class="form-sidenav-container" fxLayout="column" fxFlex="100%">
+  <h1>{{ configuration.title | translate | uppercase }}</h1>
+
+  <div fxLayout="column" fxLayoutAlign="space-between" fxFlex="100">
+    <div fxLayout="column">
+      <suricate-input
+        *ngFor="let field of configuration.formFields"
+        [formGroup]="formGroup"
+        [field]="field"
+        (valueChangeEvent)="valueChanged($event)"
+      >
+      </suricate-input>
+    </div>
+
+    <div>
+      <suricate-buttons [configurations]="buttons"> </suricate-buttons>
+    </div>
+  </div>
+</div>

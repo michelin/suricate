@@ -14,48 +14,42 @@
  * limitations under the License.
  */
 
-import {Injectable} from '@angular/core';
-import {HttpEvent, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import { Injectable } from '@angular/core';
+import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
-import {TokenService} from '../auth/token.service';
-import {baseApiEndpoint} from '../../app.constant';
+import { AuthenticationService } from '../services/frontend/authentication.service';
+import { AbstractHttpService } from '../services/backend/abstract-http.service';
 
 /**
- * The token interceptor
+ * Used to put the token in the request
  */
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class TokenInterceptor implements HttpInterceptor {
-
-  /**
-   * Constructor
-   *
-   * @param {TokenService} tokenService The token service to inject
-   */
-  constructor(private tokenService: TokenService) {
-  }
-
   /**
    * Method implemented from HttpInterceptor
    *
-   * @param {HttpRequest<any>} request The request sent
+   * @param {HttpRequest} request The request sent
    * @param {HttpHandler} next The next interceptor
-   * @returns {Observable<HttpEvent<any>>}
+   * @returns {Observable<HttpEvent>}
    */
-  intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    if (!request || !request.url ||
-      (/^http/.test(request.url) && !(baseApiEndpoint && request.url.startsWith(baseApiEndpoint)))) {
+  public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    if (
+      !request ||
+      !request.url ||
+      (/^http/.test(request.url) && !(AbstractHttpService.baseApiEndpoint && request.url.startsWith(AbstractHttpService.baseApiEndpoint)))
+    ) {
       return next.handle(request);
     }
 
-    const token = this.tokenService.token || sessionStorage.getItem('token');
-    if (!!token) {
+    if (AuthenticationService.isLoggedIn()) {
       request = request.clone({
         setHeaders: {
-          Authorization: 'Bearer ' + token
+          Authorization: AuthenticationService.getFullToken()
         }
       });
     }
+
     return next.handle(request);
   }
 }
