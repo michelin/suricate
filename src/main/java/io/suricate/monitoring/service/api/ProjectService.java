@@ -22,13 +22,16 @@ import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.entity.user.User;
 import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.repository.ProjectRepository;
-import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
+import io.suricate.monitoring.service.specification.ProjectSearchSpecification;
+import io.suricate.monitoring.service.websocket.DashboardWebSocketService;
 import io.suricate.monitoring.utils.SecurityUtils;
 import io.suricate.monitoring.utils.logging.LogExecutionTime;
 import org.apache.commons.lang3.StringUtils;
 import org.jasypt.encryption.StringEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -85,8 +88,15 @@ public class ProjectService {
         this.assetService = assetService;
     }
 
-    public List<Project> getAll() {
-        return projectRepository.findAll();
+    /**
+     * Get the list of projects
+     *
+     * @param search   The search string
+     * @param pageable The page configurations
+     * @return The list paginated
+     */
+    public Page<Project> getAll(String search, Pageable pageable) {
+        return projectRepository.findAll(new ProjectSearchSpecification(search), pageable);
     }
 
     /**
@@ -98,16 +108,6 @@ public class ProjectService {
     @Transactional
     public List<Project> getAllByUser(User user) {
         return projectRepository.findByUsers_IdOrderByName(user.getId());
-    }
-
-    /**
-     * Test if the project exists by token
-     *
-     * @param token The project token
-     * @return True the project exists false otherwise
-     */
-    public boolean isProjectExists(final String token) {
-        return this.getOneByToken(token).isPresent();
     }
 
     /**
@@ -204,9 +204,9 @@ public class ProjectService {
      * @param project The project related
      * @return The project with user deleted
      */
-    public Project deleteUserFromProject(User user, Project project) {
+    public void deleteUserFromProject(User user, Project project) {
         project.getUsers().remove(user);
-        return projectRepository.save(project);
+        projectRepository.save(project);
     }
 
     /**

@@ -19,7 +19,7 @@ package io.suricate.monitoring.controllers.api;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.service.api.ProjectService;
-import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
+import io.suricate.monitoring.service.websocket.DashboardWebSocketService;
 import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +34,7 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/api")
-@Api(value = "Screen controller", tags = {"Screens"})
+@Api(value = "Screen actions controller", tags = {"Screens"})
 public class ScreenController {
 
     /**

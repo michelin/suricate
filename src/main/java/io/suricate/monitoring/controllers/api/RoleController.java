@@ -16,6 +16,7 @@
 
 package io.suricate.monitoring.controllers.api;
 
+import io.suricate.monitoring.configuration.swagger.ApiPageable;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.role.RoleResponseDto;
 import io.suricate.monitoring.model.dto.api.user.UserResponseDto;
@@ -23,17 +24,15 @@ import io.suricate.monitoring.model.entity.user.Role;
 import io.suricate.monitoring.service.api.RoleService;
 import io.suricate.monitoring.service.mapper.RoleMapper;
 import io.suricate.monitoring.service.mapper.UserMapper;
-import io.suricate.monitoring.utils.exception.NoContentException;
 import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -89,18 +88,14 @@ public class RoleController {
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
     })
+    @ApiPageable
     @GetMapping(value = "/v1/roles")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<List<RoleResponseDto>> getRoles() {
-        Optional<List<Role>> rolesOptional = roleService.getRoles();
-        if (!rolesOptional.isPresent()) {
-            throw new NoContentException(Role.class);
-        }
-
-        return ResponseEntity
-            .ok()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(roleMapper.toRoleDtosDefault(rolesOptional.get()));
+    public Page<RoleResponseDto> getRoles(@ApiParam(name = "search", value = "Search keyword")
+                                          @RequestParam(value = "search", required = false) String search,
+                                          Pageable pageable) {
+        Page<Role> rolesPaged = roleService.getRoles(search, pageable);
+        return rolesPaged.map(roleMapper::toRoleDtoDefault);
     }
 
     /**

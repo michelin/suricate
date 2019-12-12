@@ -16,15 +16,40 @@
  *
  */
 
-import { Category } from '../widget/category';
-import { DataTypeEnum } from '../../../enums/data-type.enum';
-
 /**
- * The configuration entity
+ * Class that represent a page from the backend
  */
-export class Configuration {
-  key: string;
-  value: string;
-  dataType: DataTypeEnum;
-  category: Category;
+export class Page<T> {
+  /**
+   * The list of object in this page
+   */
+  content: T[];
+  /**
+   * The number of elements on every pages
+   */
+  totalElements: number;
+  /**
+   * The number of elements in the page
+   */
+  numberOfElements: number;
+  /**
+   * The number of pages
+   */
+  totalPages: number;
+  /**
+   * The current page number
+   */
+  number: number;
+  /**
+   * True it's the last page
+   */
+  last: boolean;
+  /**
+   * True if it's the first page
+   */
+  first: boolean;
+  /**
+   * Requested number of elements per pages
+   */
+  size: number;
 }

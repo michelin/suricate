@@ -56,6 +56,7 @@ export class UsersComponent extends ListComponent<User> implements OnInit {
 
     this.initHeaderConfiguration();
     this.initListConfiguration();
+    this.initFilter();
   }
 
   /**
@@ -90,6 +91,13 @@ export class UsersComponent extends ListComponent<User> implements OnInit {
         }
       ]
     };
+  }
+
+  /**
+   * Init filter for list component
+   */
+  private initFilter(): void {
+    this.httpFilter.sort = ['username,asc'];
   }
 
   /**

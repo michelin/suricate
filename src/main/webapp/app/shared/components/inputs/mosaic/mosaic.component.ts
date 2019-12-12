@@ -32,7 +32,7 @@ export class MosaicComponent extends InputComponent implements OnInit {
   /**
    * The options related to the mosaic
    */
-  protected mosaicOptions: MosaicFormOption[];
+  public mosaicOptions: MosaicFormOption[];
 
   /**
    * The form options that has been selected

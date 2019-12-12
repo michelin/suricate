@@ -19,22 +19,24 @@ package io.suricate.monitoring.model.entity;
 import io.suricate.monitoring.utils.ToStringUtils;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import javax.persistence.*;
+import javax.persistence.EntityListeners;
+import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
 
 /**
  * Abstract Model
+ *
  * @param <ID> Entity id type
  */
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-public abstract class AbstractEntity<ID> implements Serializable {
+public abstract class AbstractEntity<T> implements Serializable {
 
     /**
      * Method used to get the Entity ID
      * @return the entity ID
      */
-    public abstract ID getId();
+    public abstract T getId();
 
     /**
      * Default toString

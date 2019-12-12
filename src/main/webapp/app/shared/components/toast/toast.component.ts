@@ -109,7 +109,7 @@ export class ToastComponent implements OnInit, OnDestroy {
    * The component state
    * @type {string}
    */
-  protected animationState = 'out';
+  public animationState = 'out';
   /**
    * The enums of toast type
    * @type {toastType}
@@ -119,7 +119,7 @@ export class ToastComponent implements OnInit, OnDestroy {
    * The message to display
    * @type {Observable<ToastMessage>}
    */
-  protected message: ToastMessage;
+  public message: ToastMessage;
   /**
    * The current timer for @function {hideWithinTimeout} function
    * @type {NodeJS.Timer}

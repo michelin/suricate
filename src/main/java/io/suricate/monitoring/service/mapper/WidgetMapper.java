@@ -22,14 +22,12 @@ import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 /**
  * Interface that manage the generation DTO/Model objects for Widget class
  */
-@Component
 @Mapper(
     componentModel = "spring",
     uses = {
@@ -37,7 +35,7 @@ import java.util.List;
         CategoryMapper.class
     }
 )
-public abstract class WidgetMapper {
+public interface WidgetMapper {
 
     /* ************************* TO DTO ********************************************** */
 
@@ -56,7 +54,7 @@ public abstract class WidgetMapper {
     @Mapping(target = "category", qualifiedByName = "toCategoryDtoDefault")
     @Mapping(target = "repositoryId", source = "widget.repository.id")
     @Mapping(target = "params", source = "widget.widgetParams", qualifiedByName = "toWidgetParamDtoDefault")
-    public abstract WidgetResponseDto toWidgetDtoDefault(Widget widget);
+    WidgetResponseDto toWidgetDtoDefault(Widget widget);
 
     /* ******************************************************* */
     /*                    List Mapping                         */
@@ -70,5 +68,5 @@ public abstract class WidgetMapper {
      */
     @Named("toWidgetDtosDefault")
     @IterableMapping(qualifiedByName = "toWidgetDtoDefault")
-    public abstract List<WidgetResponseDto> toWidgetDtosDefault(List<Widget> widgets);
+    List<WidgetResponseDto> toWidgetDtosDefault(List<Widget> widgets);
 }

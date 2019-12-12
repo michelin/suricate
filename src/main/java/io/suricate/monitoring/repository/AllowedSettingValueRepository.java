@@ -17,10 +17,10 @@
 package io.suricate.monitoring.repository;
 
 import io.suricate.monitoring.model.entity.setting.AllowedSettingValue;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.repository.CrudRepository;
 
 /**
  * AllowedSettingValue repository
  */
-public interface AllowedSettingValueRepository extends JpaRepository<AllowedSettingValue, Long> {
+public interface AllowedSettingValueRepository extends CrudRepository<AllowedSettingValue, Long> {
 }

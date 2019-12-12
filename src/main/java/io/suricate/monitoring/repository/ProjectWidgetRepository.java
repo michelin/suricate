@@ -19,6 +19,7 @@ package io.suricate.monitoring.repository;
 import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.enums.WidgetState;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -29,7 +30,7 @@ import java.util.Optional;
 /**
  * Repository used for request Project widget in database
  */
-public interface ProjectWidgetRepository extends JpaRepository<ProjectWidget, Long> {
+public interface ProjectWidgetRepository extends JpaRepository<ProjectWidget, Long>, JpaSpecificationExecutor<ProjectWidget> {
 
     /**
      * Method used to reset the state of every widget instances

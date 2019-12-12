@@ -46,13 +46,13 @@ export class MenuComponent implements OnInit {
    * @type {User}
    * @protected
    */
-  protected readonly connectedUser = AuthenticationService.getConnectedUser();
+  public readonly connectedUser = AuthenticationService.getConnectedUser();
   /**
    * The menu to display
    * @type {MenuConfiguration}
    * @protected
    */
-  protected readonly menu = MenuService.buildMenu();
+  public readonly menu = MenuService.buildMenu();
   /**
    * The list of settings
    * @type {Setting[]}
@@ -64,13 +64,13 @@ export class MenuComponent implements OnInit {
    * @type {IconEnum}
    * @protected
    */
-  protected iconEnum = IconEnum;
+  public iconEnum = IconEnum;
   /**
    * The list of material icons
    * @type {MaterialIconRecords}
    * @protected
    */
-  protected materialIconRecords = MaterialIconRecords;
+  public materialIconRecords = MaterialIconRecords;
 
   /**
    * Constructor
@@ -103,7 +103,7 @@ export class MenuComponent implements OnInit {
   /**
    * Get the initials of the connected user
    */
-  protected getInitials(): string {
+  public getInitials(): string {
     return this.connectedUser.firstname && this.connectedUser.lastname
       ? `${this.connectedUser.firstname.substring(0, 1)}${this.connectedUser.lastname.substring(0, 1)}`
       : '';
@@ -112,7 +112,7 @@ export class MenuComponent implements OnInit {
   /**
    * Open the form sidenav used to manage user settings
    */
-  protected openSettingsFormSidenav(): void {
+  public openSettingsFormSidenav(): void {
     this.settingsFormFieldsService.generateFormFields().subscribe((formFields: FormField[]) => {
       this.sidenavService.openFormSidenav({
         title: 'settings',
@@ -154,7 +154,7 @@ export class MenuComponent implements OnInit {
   /**
    * Logout the user
    */
-  protected logout(): void {
+  public logout(): void {
     AuthenticationService.logout();
     this.router.navigate(['/login']);
   }

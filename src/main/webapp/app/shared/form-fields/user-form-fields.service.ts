@@ -26,6 +26,8 @@ import { CustomValidators } from 'ng2-validation';
 import { Role } from '../models/backend/role/role';
 import { HttpRoleService } from '../services/backend/http-role.service';
 import { IconEnum } from '../enums/icon.enum';
+import { HttpFilterService } from '../services/backend/http-filter.service';
+import { Page } from '../models/backend/page';
 
 /**
  * Service used to build the form fields related to a user
@@ -94,10 +96,10 @@ export class UserFormFieldsService {
    * Get the role options
    */
   getRoleOptions(): Observable<FormOption[]> {
-    return this.httpRoleService.getRoles().pipe(
-      map((roles: Role[]) => {
+    return this.httpRoleService.getRoles(HttpFilterService.getInfiniteFilter()).pipe(
+      map((rolesPaged: Page<Role>) => {
         const roleOptions: FormOption[] = [];
-        roles.forEach((role: Role) => {
+        rolesPaged.content.forEach((role: Role) => {
           roleOptions.push({
             label: role.description,
             value: role.name

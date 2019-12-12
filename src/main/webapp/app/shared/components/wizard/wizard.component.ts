@@ -63,15 +63,15 @@ export class WizardComponent implements OnInit, OnDestroy {
   /**
    * The configuration of the header
    */
-  protected headerConfiguration = new HeaderConfiguration();
+  public headerConfiguration = new HeaderConfiguration();
   /**
    * The configuration of the wizard
    */
-  protected wizardConfiguration: WizardConfiguration;
+  public wizardConfiguration: WizardConfiguration;
   /**
    * The list of wizard buttons
    */
-  protected wizardButtons: ButtonConfiguration<unknown>[];
+  public wizardButtons: ButtonConfiguration<unknown>[];
   /**
    * Form group of the stepper
    */
@@ -144,7 +144,7 @@ export class WizardComponent implements OnInit, OnDestroy {
    *
    * @param stepperSelectionEvent The step change event
    */
-  protected onStepChanged(stepperSelectionEvent: StepperSelectionEvent): void {
+  public onStepChanged(stepperSelectionEvent: StepperSelectionEvent): void {
     const currentStep = this.wizardConfiguration.steps[stepperSelectionEvent.selectedIndex];
 
     if (currentStep && currentStep.asyncFields) {

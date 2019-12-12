@@ -18,16 +18,24 @@ package io.suricate.monitoring.utils;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+import java.security.KeyManagementException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.concurrent.TimeUnit;
 
 public final class OkHttpClientUtils {
-
+    /**
+     * Class logger
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(OkHttpClientUtils.class);
     /**
      * Default timeout
      */
@@ -54,11 +62,11 @@ public final class OkHttpClientUtils {
             final TrustManager[] trustAllCerts = new TrustManager[]{
                     new X509TrustManager() {
 
-                        public void checkClientTrusted(X509Certificate[] chain, String authType) {
+                        public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
                             // no check client
                         }
 
-                        public void checkServerTrusted(X509Certificate[] chain, String authType) {
+                        public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
                             // No check certificate
                         }
 
@@ -75,21 +83,25 @@ public final class OkHttpClientUtils {
             final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
 
             HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
+            loggingInterceptor.level(HttpLoggingInterceptor.Level.BASIC);
 
             OkHttpClient.Builder builder = new OkHttpClient.Builder()
-                    .sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0])
-                    .readTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .connectTimeout(CONNECT_TIMEOUT , TimeUnit.SECONDS)
-                    .writeTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
-                    .addInterceptor(loggingInterceptor)
-                    .retryOnConnectionFailure(true)
-                    .proxySelector(new MonitorProxySelector())
-                    .hostnameVerifier((s, sslSession) -> true);
+                .sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0])
+                .readTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
+                .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
+                .writeTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
+                .addInterceptor(loggingInterceptor)
+                .retryOnConnectionFailure(true)
+                .proxySelector(new MonitorProxySelector())
+                .hostnameVerifier((s, sslSession) -> true);
 
             return builder.build();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        } catch (NoSuchAlgorithmException e) {
+            LOGGER.error("SSL Algorithm Not found", e);
+        } catch (KeyManagementException e) {
+            LOGGER.error("Impossible to init SSL context", e);
         }
+
+        return null;
     }
 }

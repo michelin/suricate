@@ -21,12 +21,11 @@ import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.repository.LibraryRepository;
 import io.suricate.monitoring.utils.IdUtils;
 import io.suricate.monitoring.utils.logging.LogExecutionTime;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,12 +34,6 @@ import java.util.stream.Collectors;
  */
 @Service
 public class LibraryService {
-
-    /**
-     * Class logger
-     */
-    private final static Logger LOGGER = LoggerFactory.getLogger(LibraryService.class);
-
     /**
      * Library repository
      */
@@ -73,7 +66,7 @@ public class LibraryService {
     public List<String> getLibrariesToken(List<ProjectWidget> projectWidgets) {
         List<Long> widgetList = projectWidgets.stream().map(projectWidget -> projectWidget.getWidget().getId()).distinct().collect(Collectors.toList());
         if (widgetList.isEmpty()) {
-            return null;
+            return Collections.emptyList();
         }
         List<Long> ids = libraryRepository.getLibs(widgetList);
         return ids.stream().map(IdUtils::encrypt).collect(Collectors.toList());
@@ -89,7 +82,7 @@ public class LibraryService {
     @Transactional
     public List<Library> updateLibraryInDatabase(List<Library> list) {
         if (list == null) {
-            return null;
+            return Collections.emptyList();
         }
         for (Library library : list) {
             Library lib = libraryRepository.findByTechnicalName(library.getTechnicalName());

@@ -63,17 +63,17 @@ public class UserDetailsDatabaseService implements UserDetailsService {
      */
     @Override
     @Transactional
-    public ConnectedUser loadUserByUsername(String username) throws UsernameNotFoundException {
+    public ConnectedUser loadUserByUsername(String username) {
         Optional<User> currentUser = userService.getOneByUsername(username);
 
-        if(!currentUser.isPresent()) {
+        if (!currentUser.isPresent()) {
             throw new UsernameNotFoundException("The specified user has not been found");
         }
 
         Collection<? extends GrantedAuthority> authorities = currentUser
-                                                                    .map(user -> user.getRoles().stream()
-                                                                        .map( roles -> new SimpleGrantedAuthority(roles.getName()))
-                                                                        .collect(Collectors.toList()))
+            .map(user -> user.getRoles().stream()
+                .map(roles -> new SimpleGrantedAuthority(roles.getName()))
+                .collect(Collectors.toList()))
                                                                     .orElseThrow(() -> new UsernameNotFoundException("User " + username + " was not authorized"));
 
         return new ConnectedUser(currentUser.get(), authorities);

@@ -52,6 +52,28 @@ export class RepositoriesComponent extends ListComponent<Repository> {
 
     this.initHeaderConfiguration();
     this.initListConfiguration();
+    this.initFilter();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  protected getFirstLabel(repository: Repository): string {
+    return repository.name;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  protected getSecondLabel(repository: Repository): string {
+    return repository.type === RepositoryTypeEnum.REMOTE ? repository.url : repository.localPath;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  protected getThirdLabel(repository: Repository): string {
+    return repository.type;
   }
 
   /**
@@ -88,24 +110,10 @@ export class RepositoriesComponent extends ListComponent<Repository> {
   }
 
   /**
-   * {@inheritDoc}
+   * Init filter for list component
    */
-  protected getFirstLabel(repository: Repository): string {
-    return repository.name;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  protected getSecondLabel(repository: Repository): string {
-    return repository.type === RepositoryTypeEnum.REMOTE ? repository.url : repository.localPath;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  protected getThirdLabel(repository: Repository): string {
-    return repository.type;
+  private initFilter(): void {
+    this.httpFilter.sort = ['name,asc'];
   }
 
   /**

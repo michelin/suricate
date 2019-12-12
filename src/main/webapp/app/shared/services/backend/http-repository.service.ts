@@ -25,6 +25,9 @@ import { RepositoryRequest } from '../../models/backend/repository/repository-re
 import { Widget } from '../../models/backend/widget/widget';
 import { AbstractHttpService } from './abstract-http.service';
 import { EMPTY } from 'rxjs';
+import { HttpFilterService } from './http-filter.service';
+import { HttpFilter } from '../../models/backend/http-filter';
+import { Page } from '../../models/backend/page';
 
 /**
  * Service that manage HTTP repository calls
@@ -47,10 +50,10 @@ export class HttpRepositoryService implements AbstractHttpService<Repository | R
   /**
    * Return the list of every repositories
    */
-  public getAll(): Observable<Repository[]> {
+  public getAll(filter?: HttpFilter): Observable<Page<Repository>> {
     const url = `${HttpRepositoryService.repositoriesApiEndpoint}`;
 
-    return this.httpClient.get<Repository[]>(url);
+    return this.httpClient.get<Page<Repository>>(HttpFilterService.getFilteredUrl(url, filter));
   }
 
   /**

@@ -51,7 +51,7 @@ export class SidenavComponent implements OnInit, OnDestroy {
    * @type {boolean}
    * @protected
    */
-  protected shouldHideMenu = true;
+  public shouldHideMenu = true;
 
   /**
    * Constructor
@@ -84,14 +84,14 @@ export class SidenavComponent implements OnInit, OnDestroy {
   /**
    * Used to open the form sidenav
    */
-  protected openFormSidenav(): void {
+  public openFormSidenav(): void {
     this.formSidenav.open();
   }
 
   /**
    * Used to close the form side nav
    */
-  protected closeFormSidenav(): void {
+  public closeFormSidenav(): void {
     this.formSidenav.close();
   }
 

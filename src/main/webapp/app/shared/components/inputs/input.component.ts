@@ -62,7 +62,7 @@ export class InputComponent implements OnInit {
   /**
    * The data type enum
    */
-  protected dataType = DataTypeEnum;
+  public dataType = DataTypeEnum;
   /**
    * The list of options to display
    */
@@ -72,13 +72,13 @@ export class InputComponent implements OnInit {
    * @type {IconEnum}
    * @protected
    */
-  protected iconEnum = IconEnum;
+  public iconEnum = IconEnum;
   /**
    * The list of material icon codes
    * @type {MaterialIconRecords}
    * @protected
    */
-  protected materialIconRecords = MaterialIconRecords;
+  public materialIconRecords = MaterialIconRecords;
 
   /**
    * Constructor
@@ -106,7 +106,7 @@ export class InputComponent implements OnInit {
   /**
    * Retrieve the form control from the form
    */
-  protected getFormControl(): AbstractControl | null {
+  public getFormControl(): AbstractControl | null {
     return this.formGroup.controls[this.field.key];
   }
 
@@ -154,7 +154,7 @@ export class InputComponent implements OnInit {
   /**
    * Test if the field is on error
    */
-  protected isInputFieldOnError(): boolean {
+  public isInputFieldOnError(): boolean {
     return (this.getFormControl().dirty || this.getFormControl().touched) && this.getFormControl().invalid;
   }
 }

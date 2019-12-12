@@ -38,7 +38,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 @ToString
 public class Widget extends AbstractAuditingEntity<Long> {
 
@@ -172,7 +172,7 @@ public class Widget extends AbstractAuditingEntity<Long> {
      * @param widgetParams The list of widget params
      */
     public void addWidgetParams(List<WidgetParam> widgetParams) {
-        widgetParams.forEach(widgetParam -> this.addWidgetParam(widgetParam));
+        widgetParams.forEach(this::addWidgetParam);
     }
 
     /**

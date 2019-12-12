@@ -62,7 +62,6 @@ public class TokenConfiguration {
     @Primary
     public JwtAccessTokenConverter accessTokenConverter() {
         JwtAccessTokenConverterConfiguration accessTokenConverter = new JwtAccessTokenConverterConfiguration();
-        //TODO: refactor with .jks file ?
         accessTokenConverter.setSigningKey("123");
 
         return accessTokenConverter;

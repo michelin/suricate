@@ -19,9 +19,11 @@ import { HttpClient } from '@angular/common/http';
 import { EMPTY, Observable } from 'rxjs';
 
 import { Widget } from '../../models/backend/widget/widget';
-import { ApiActionEnum } from '../../enums/api-action.enum';
 import { WidgetRequest } from '../../models/backend/widget/widget-request';
 import { AbstractHttpService } from './abstract-http.service';
+import { HttpFilter } from '../../models/backend/http-filter';
+import { HttpFilterService } from './http-filter.service';
+import { Page } from '../../models/backend/page';
 
 /**
  * Manage the Http widget calls
@@ -46,17 +48,12 @@ export class HttpWidgetService extends AbstractHttpService<Widget> {
   /**
    * Get the list of widgets
    *
-   * @param filter
-   * @param {ApiActionEnum} action Action to be executed by the backend
+   * @param {HttpFilter} filter Used to filter the result
    * @returns {Observable<Widget[]>} The list of widgets as observable
    */
-  public getAll(filter?: string, action?: ApiActionEnum): Observable<Widget[]> {
-    let url = `${HttpWidgetService.widgetsApiEndpoint}`;
-    if (action) {
-      url = url.concat(`?action=${action}`);
-    }
-
-    return this.httpClient.get<Widget[]>(url);
+  public getAll(filter?: HttpFilter): Observable<Page<Widget>> {
+    const url = `${HttpWidgetService.widgetsApiEndpoint}`;
+    return this.httpClient.get<Page<Widget>>(HttpFilterService.getFilteredUrl(url, filter));
   }
 
   /**

@@ -18,8 +18,6 @@ package io.suricate.monitoring.service.api;
 
 import io.suricate.monitoring.model.entity.Asset;
 import io.suricate.monitoring.repository.AssetRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,12 +26,6 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class AssetService {
-
-    /**
-     * Class logger
-     */
-    private final static Logger LOGGER = LoggerFactory.getLogger(AssetService.class);
-
     /**
      * The asset repository
      */
@@ -56,7 +48,7 @@ public class AssetService {
      * @return The related asset
      */
     public Asset findOne(final Long id) {
-        return assetRepository.findById(id).get();
+        return assetRepository.getOne(id);
     }
 
     /**

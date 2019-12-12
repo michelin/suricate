@@ -61,7 +61,7 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
    * @type {FormGroup}
    * @private
    */
-  private formGroup: FormGroup;
+  public formGroup: FormGroup;
 
   /**
    * Used to unsubscribe observables when the component is destroyed

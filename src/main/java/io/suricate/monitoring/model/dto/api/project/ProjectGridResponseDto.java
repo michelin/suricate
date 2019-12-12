@@ -1,5 +1,6 @@
 package io.suricate.monitoring.model.dto.api.project;
 
+import io.suricate.monitoring.model.dto.api.AbstractDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -13,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value = "ProjectGridResponse", description = "Properties of the dashboard for the related project")
-public class ProjectGridResponseDto {
+public class ProjectGridResponseDto extends AbstractDto {
 
     /**
      * Number of column in the dashboard

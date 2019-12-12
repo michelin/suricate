@@ -16,30 +16,25 @@
 
 package io.suricate.monitoring.controllers.api;
 
+import io.suricate.monitoring.configuration.swagger.ApiPageable;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.widget.WidgetRequestDto;
 import io.suricate.monitoring.model.dto.api.widget.WidgetResponseDto;
 import io.suricate.monitoring.model.entity.widget.Widget;
-import io.suricate.monitoring.model.enums.ApiActionEnum;
-import io.suricate.monitoring.model.enums.ApiErrorEnum;
-import io.suricate.monitoring.service.GitService;
 import io.suricate.monitoring.service.api.WidgetService;
 import io.suricate.monitoring.service.mapper.WidgetMapper;
-import io.suricate.monitoring.utils.exception.ApiException;
-import io.suricate.monitoring.utils.exception.NoContentException;
 import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.PermitAll;
-import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 /**
  * The widget controller
@@ -55,11 +50,6 @@ public class WidgetController {
     private final WidgetService widgetService;
 
     /**
-     * The GIT service
-     */
-    private final GitService gitService;
-
-    /**
      * The widget mapper
      */
     private final WidgetMapper widgetMapper;
@@ -68,15 +58,12 @@ public class WidgetController {
      * Constructor
      *
      * @param widgetService Widget service to inject
-     * @param gitService    The git service
      * @param widgetMapper  The widget mapper
      */
     @Autowired
     public WidgetController(final WidgetService widgetService,
-                            final GitService gitService,
                             final WidgetMapper widgetMapper) {
         this.widgetService = widgetService;
-        this.gitService = gitService;
         this.widgetMapper = widgetMapper;
     }
 
@@ -92,32 +79,14 @@ public class WidgetController {
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
+    @ApiPageable
     @GetMapping(value = "/v1/widgets")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<List<WidgetResponseDto>> getWidgets(@ApiParam(name = "action", value = "REFRESH if we have to refresh widgets from GIT Repository", allowableValues = "refresh")
-                                                              @RequestParam(value = "action", required = false) String action) {
-        if (ApiActionEnum.REFRESH.name().equalsIgnoreCase(action)) {
-            Future<Boolean> isDone = this.gitService.updateWidgetFromEnabledGitRepositories();
-            try {
-                if (!isDone.get()) {
-                    throw new ApiException("Error while retrieving widgets from repository", ApiErrorEnum.INTERNAL_SERVER_ERROR);
-                }
-            } catch (InterruptedException e) {
-                throw new ApiException("Execution interrupted while retrieving widgets from repository", ApiErrorEnum.INTERNAL_SERVER_ERROR);
-            } catch (ExecutionException e) {
-                throw new ApiException("Unknown execution error while retrieving widgets from repository", ApiErrorEnum.INTERNAL_SERVER_ERROR);
-            }
-        }
-
-        Optional<List<Widget>> widgetsOptional = widgetService.getAll();
-        if (!widgetsOptional.isPresent()) {
-            throw new NoContentException(Widget.class);
-        }
-
-        return ResponseEntity
-            .ok()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(widgetMapper.toWidgetDtosDefault(widgetsOptional.get()));
+    public Page<WidgetResponseDto> getWidgets(@ApiParam(name = "search", value = "Search keyword")
+                                              @RequestParam(value = "search", required = false) String search,
+                                              Pageable pageable) {
+        Page<Widget> widgetsPaged = widgetService.getAll(search, pageable);
+        return widgetsPaged.map(widgetMapper::toWidgetDtoDefault);
     }
 
     /**

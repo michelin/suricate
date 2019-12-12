@@ -17,8 +17,23 @@
  */
 
 /**
- * The configuration request
+ * Class that represent a filter request
  */
-export interface ConfigurationRequest {
-  value: string;
+export class HttpFilter {
+  /**
+   * Search value
+   */
+  search: string;
+  /**
+   * The requested page number
+   */
+  page: number;
+  /**
+   * Number of elements per page
+   */
+  size: number;
+  /**
+   * sort properties
+   */
+  sort: string[];
 }

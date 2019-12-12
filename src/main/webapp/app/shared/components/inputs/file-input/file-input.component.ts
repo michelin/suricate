@@ -43,13 +43,13 @@ export class FileInputComponent extends InputComponent implements OnInit {
    * @type {string | ArrayBuffer}
    * @protected
    */
-  protected imgBase64: string | ArrayBuffer;
+  public imgBase64: string | ArrayBuffer;
   /**
    * If it's not an image we set the filename
    * @type {string}
    * @protected
    */
-  protected filename: string;
+  public filename: string;
 
   /**
    * Constructor
@@ -86,7 +86,7 @@ export class FileInputComponent extends InputComponent implements OnInit {
    *
    * @param event The file change event
    */
-  protected onFileChange(event: Event): void {
+  public onFileChange(event: Event): void {
     this.convertFileBase64(event);
     this.emitValueChange('fileChanged');
   }
@@ -96,7 +96,7 @@ export class FileInputComponent extends InputComponent implements OnInit {
    *
    * @param event The change event
    */
-  convertFileBase64(event) {
+  public convertFileBase64(event): void {
     if (event.target.files && event.target.files.length > 0) {
       const file: File = event.target.files[0];
 

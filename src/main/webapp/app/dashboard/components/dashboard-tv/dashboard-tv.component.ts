@@ -45,13 +45,13 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * @type {string}
    * @protected
    */
-  protected projectToken: string;
+  public projectToken: string;
   /**
    * The list of project widgets related to the project token
    * @type {ProjectWidget[]}
    * @protected
    */
-  protected projectWidgets: ProjectWidget[];
+  public projectWidgets: ProjectWidget[];
   /**
    * The screen code to display
    * @type {number}

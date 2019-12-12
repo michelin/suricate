@@ -22,21 +22,19 @@ import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 /**
  * Interface that manage the generation DTO/Model objects for Widget params class
  */
-@Component
 @Mapper(
     componentModel = "spring",
     uses = {
         WidgetParamValueMapper.class
     }
 )
-public abstract class WidgetParamMapper {
+public interface WidgetParamMapper {
 
     /* ************************* TO DTO ********************************************** */
 
@@ -52,7 +50,7 @@ public abstract class WidgetParamMapper {
      */
     @Named("toWidgetParamDtoDefault")
     @Mapping(target = "values", source = "widgetParam.possibleValuesMap", qualifiedByName = "toWidgetParamValueDtosDefault")
-    public abstract WidgetParamResponseDto toWidgetParamDtoDefault(WidgetParam widgetParam);
+    WidgetParamResponseDto toWidgetParamDtoDefault(WidgetParam widgetParam);
 
     /* ******************************************************* */
     /*                    List Mapping                         */
@@ -66,5 +64,5 @@ public abstract class WidgetParamMapper {
      */
     @Named("toWidgetParamDtosDefault")
     @IterableMapping(qualifiedByName = "toWidgetParamDtoDefault")
-    public abstract List<WidgetParamResponseDto> toWidgetParamDtosDefault(List<WidgetParam> widgetParams);
+    List<WidgetParamResponseDto> toWidgetParamDtosDefault(List<WidgetParam> widgetParams);
 }

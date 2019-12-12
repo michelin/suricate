@@ -14,60 +14,47 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.entity;
+package io.suricate.monitoring.model.dto.api.widgetconfiguration;
 
-import io.suricate.monitoring.model.entity.widget.Category;
+import io.suricate.monitoring.model.dto.api.AbstractDto;
+import io.suricate.monitoring.model.dto.api.widget.CategoryResponseDto;
 import io.suricate.monitoring.model.enums.DataType;
-import lombok.*;
-
-import javax.persistence.*;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 /**
- * The configuration entity
+ * Configuration used for communication with the clients via webservices
  */
-@Entity
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ToString
-public class Configuration extends AbstractAuditingEntity<String> {
+@ApiModel(value = "ConfigurationResponse", description = "Describe a configuration")
+public class WidgetConfigurationResponseDto extends AbstractDto {
 
     /**
-     * The key of the configuration (used in JS Files)
+     * The configuration key
      */
-    @Id
-    @Column(name = "config_key", nullable = false, unique = true)
+    @ApiModelProperty(value = "The configuration key")
     private String key;
 
     /**
-     * The related value enter by the user
+     * The configuration value
      */
-    @Column(name = "config_value")
+    @ApiModelProperty(value = "The configuration value")
     private String value;
-
-    /**
-     * export
-     */
-    @Column(name = "config_export")
-    private boolean export;
 
     /**
      * The data type of the configuration
      */
-    @Column(name = "data_type")
-    @Enumerated(value = EnumType.STRING)
+    @ApiModelProperty(value = "Configuration data type")
     private DataType dataType;
 
     /**
      * Make a link between category and configurations
      */
-    @ManyToOne
-    @JoinColumn(name = "category_id", referencedColumnName = "id")
-    private Category category;
-
-    @Override
-    public String getId() {
-        return key;
-    }
+    @ApiModelProperty(value = "Related category for this config")
+    private CategoryResponseDto category;
 }

@@ -103,7 +103,7 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
    * @type {NgGridConfig}
    * @protected
    */
-  protected gridOptions: NgGridConfig = {};
+  public gridOptions: NgGridConfig = {};
   /**
    * Grid state when widgets were first loaded
    * @type {NgGridItemConfig[]}
@@ -127,7 +127,7 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
    * @type {boolean}
    * @protected
    */
-  protected shouldDisplayScreenCode = false;
+  public shouldDisplayScreenCode = false;
   /**
    * The list of icons
    * @type {IconEnum}

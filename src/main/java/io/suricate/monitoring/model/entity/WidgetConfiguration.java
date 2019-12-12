@@ -14,47 +14,61 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.dto.api.configuration;
+package io.suricate.monitoring.model.entity;
 
-import io.suricate.monitoring.model.dto.api.AbstractDto;
-import io.suricate.monitoring.model.dto.api.widget.CategoryResponseDto;
+import io.suricate.monitoring.model.entity.widget.Category;
 import io.suricate.monitoring.model.enums.DataType;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import javax.persistence.*;
 
 /**
- * Configuration used for communication with the clients via webservices
+ * The configuration entity
  */
-@Data
+@Entity(name = "configuration")
+@Table(name = "configuration")
+@Getter
+@Setter
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "ConfigurationResponse", description = "Describe a configuration")
-public class ConfigurationResponseDto extends AbstractDto {
+@ToString
+public class WidgetConfiguration extends AbstractAuditingEntity<String> {
 
     /**
-     * The configuration key
+     * The key of the configuration (used in JS Files)
      */
-    @ApiModelProperty(value = "The configuration key")
+    @Id
+    @Column(name = "config_key", nullable = false, unique = true)
     private String key;
 
     /**
-     * The configuration value
+     * The related value enter by the user
      */
-    @ApiModelProperty(value = "The configuration value")
+    @Column(name = "config_value")
     private String value;
+
+    /**
+     * export
+     */
+    @Column(name = "config_export")
+    private boolean export;
 
     /**
      * The data type of the configuration
      */
-    @ApiModelProperty(value = "Configuration data type")
+    @Column(name = "data_type")
+    @Enumerated(value = EnumType.STRING)
     private DataType dataType;
 
     /**
      * Make a link between category and configurations
      */
-    @ApiModelProperty(value = "Related category for this config")
-    private CategoryResponseDto category;
+    @ManyToOne
+    @JoinColumn(name = "category_id", referencedColumnName = "id")
+    private Category category;
+
+    @Override
+    public String getId() {
+        return key;
+    }
 }

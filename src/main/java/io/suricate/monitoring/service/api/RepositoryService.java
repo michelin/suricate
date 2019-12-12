@@ -18,9 +18,10 @@ package io.suricate.monitoring.service.api;
 
 import io.suricate.monitoring.model.entity.widget.Repository;
 import io.suricate.monitoring.repository.RepositoryRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.suricate.monitoring.service.specification.RepositorySearchSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,12 +32,6 @@ import java.util.Optional;
  */
 @Service
 public class RepositoryService {
-
-    /**
-     * Class logger
-     */
-    private final static Logger LOGGER = LoggerFactory.getLogger(RepositoryService.class);
-
     /**
      * The repository for repository
      */
@@ -52,13 +47,8 @@ public class RepositoryService {
         this.repositoryRepository = repositoryRepository;
     }
 
-    /**
-     * Find the list of repositories order by name
-     *
-     * @return The list of repositories ordered by name
-     */
-    public Optional<List<Repository>> getAllOrderByName() {
-        return repositoryRepository.findAllByOrderByName();
+    public Page<Repository> getAll(String search, Pageable pageable) {
+        return repositoryRepository.findAll(new RepositorySearchSpecification(search), pageable);
     }
 
     /**
