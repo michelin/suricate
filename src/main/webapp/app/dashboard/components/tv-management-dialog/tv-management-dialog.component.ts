@@ -58,7 +58,7 @@ export class TvManagementDialogComponent implements OnInit {
    * @type {FormGroup}
    * @protected
    */
-  protected screenRegisterForm: FormGroup;
+  public screenRegisterForm: FormGroup;
   /**
    * The description of the form
    * @type {FormField[]}
@@ -69,25 +69,25 @@ export class TvManagementDialogComponent implements OnInit {
    * @type {Project}
    * @protected
    */
-  protected project: Project;
+  public project: Project;
   /**
    * The list of clients connected by websocket
    * @type {WebsocketClient[]}
    * @protected
    */
-  protected websocketClients: WebsocketClient[];
+  public websocketClients: WebsocketClient[];
   /**
    * The list of icons
    * @type {IconEnum}
    * @protected
    */
-  protected iconEnum = IconEnum;
+  public iconEnum = IconEnum;
   /**
    * The list of material icons
    * @type {MaterialIconRecords}
    * @protected
    */
-  protected materialIconRecords = MaterialIconRecords;
+  public materialIconRecords = MaterialIconRecords;
 
   /**
    * Constructor
@@ -197,7 +197,7 @@ export class TvManagementDialogComponent implements OnInit {
    *
    * @param {string} projectToken The project token
    */
-  protected displayScreenCode(projectToken: string): void {
+  public displayScreenCode(projectToken: string): void {
     if (projectToken) {
       this.httpScreenService.displayScreenCodeEveryConnectedScreensForProject(projectToken).subscribe();
     }

@@ -61,7 +61,7 @@ export class RegisterComponent implements OnInit {
    * @type {boolean} true if the form is submitting, false otherwise
    * @protected
    */
-  protected formSubmitAttempt = false;
+  public formSubmitAttempt = false;
   /**
    * The list of buttons to display in the form
    * @type {ButtonConfiguration[]}

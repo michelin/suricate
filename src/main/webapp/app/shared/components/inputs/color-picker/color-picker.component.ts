@@ -37,7 +37,7 @@ export class ColorPickerComponent extends InputComponent {
    *
    * @param color The new color
    */
-  protected colorChanged(color: string): void {
+  public colorChanged(color: string): void {
     this.getFormControl().setValue(color);
   }
 }

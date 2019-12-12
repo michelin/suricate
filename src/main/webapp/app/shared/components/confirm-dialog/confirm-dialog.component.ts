@@ -31,7 +31,7 @@ export class ConfirmDialogComponent {
    * @type {ConfirmationDialogConfiguration}
    * @protected
    */
-  protected configuration: ConfirmationDialogConfiguration;
+  public configuration: ConfirmationDialogConfiguration;
 
   /**
    * Constructor

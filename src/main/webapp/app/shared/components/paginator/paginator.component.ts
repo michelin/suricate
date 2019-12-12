@@ -55,7 +55,7 @@ export class PaginatorComponent {
    *
    * @param pageEvent The Angular material page event
    */
-  protected onPageChanged(pageEvent: PageEvent): void {
+  public onPageChanged(pageEvent: PageEvent): void {
     this.pageChange.emit(pageEvent);
   }
 }

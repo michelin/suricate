@@ -62,7 +62,7 @@ export class ListComponent<T> implements OnInit {
   /**
    * Configuration of the header component
    */
-  protected headerConfiguration: HeaderConfiguration;
+  public headerConfiguration: HeaderConfiguration;
   /**
    * The configuration of the list component
    */
@@ -74,7 +74,7 @@ export class ListComponent<T> implements OnInit {
   /**
    * Display the loader when it's true, end hide when it's false
    */
-  protected isLoading = true;
+  public isLoading = true;
   /**
    * Used to filter the list
    */

@@ -91,7 +91,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    * @type {Widget}
    * @protected
    */
-  protected widget: Widget;
+  public widget: Widget;
   /**
    * The enumeration that hold the state of a widget (used in HTML)
    * @type {widgetStateEnum}
@@ -115,13 +115,13 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    * @type {boolean}
    * @protected
    */
-  protected isComponentLoading = true;
+  public isComponentLoading = true;
   /**
    * Used to display the buttons when the screen is not readonly
    * @type {boolean}
    * @protected
    */
-  protected displayButtons = false;
+  public displayButtons = false;
   /**
    * The list of icons
    * @type {IconEnum}
@@ -181,7 +181,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    *
    * @param gridItemEvent The grid item event
    */
-  protected registerNewPosition(gridItemEvent: NgGridItemEvent): void {
+  public registerNewPosition(gridItemEvent: NgGridItemEvent): void {
     this.gridStackItem.col = gridItemEvent.col;
     this.gridStackItem.row = gridItemEvent.row;
     this.gridStackItem.sizey = gridItemEvent.sizey;
@@ -192,7 +192,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    * Disable click event if the item have been moved
    * @param event The click event
    */
-  protected preventDefault(event: MouseEvent): void {
+  public preventDefault(event: MouseEvent): void {
     if (GridItemUtils.isItemHaveBeenMoved(this.startGridStackItem, this.gridStackItem)) {
       event.preventDefault();
     }

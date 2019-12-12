@@ -60,7 +60,7 @@ export class LoginComponent implements OnInit {
    * @type {boolean}
    * @protected
    */
-  protected formSubmitAttempt = false;
+  public formSubmitAttempt = false;
   /**
    * True if the user provider is LDAP
    * @type {boolean}
