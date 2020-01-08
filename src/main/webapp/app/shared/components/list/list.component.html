@@ -1,6 +1,11 @@
 <suricate-pages-header [configuration]="headerConfiguration"></suricate-pages-header>
 
-<section class="container">
+<section class="container" fxLayout="column">
+  <div class="search-div" fxLayout="row">
+    <mat-icon> {{ materialIconRecords[iconEnum.SEARCH] }} </mat-icon>
+    <input #inputSearch fxFlex="100%" placeholder="Search ..." type="text" />
+  </div>
+
   <div class="list-wrapper" fxLayout="column">
     <ng-container *ngIf="isLoading">
       <suricate-spinner></suricate-spinner>

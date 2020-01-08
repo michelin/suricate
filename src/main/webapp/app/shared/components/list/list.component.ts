@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Injector, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -29,6 +29,10 @@ import { SidenavService } from '../../services/frontend/sidenav.service';
 import { Page } from '../../models/backend/page';
 import { HttpFilterService } from '../../services/backend/http-filter.service';
 import { PageEvent } from '@angular/material';
+import { MaterialIconRecords } from '../../records/material-icon.record';
+import { IconEnum } from '../../enums/icon.enum';
+import { fromEvent } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map, takeWhile } from 'rxjs/operators';
 
 /**
  * Generic component used to display and manage lists
@@ -37,7 +41,12 @@ import { PageEvent } from '@angular/material';
   template: '',
   styleUrls: ['./list.component.scss']
 })
-export class ListComponent<T> implements OnInit {
+export class ListComponent<T> implements OnInit, AfterViewInit, OnDestroy {
+  /**
+   * Reference on input search
+   */
+  @ViewChild('inputSearch', { static: false })
+  public inputSearch: ElementRef<HTMLInputElement>;
   /**
    * Frontend service used to display dialogs
    */
@@ -79,6 +88,18 @@ export class ListComponent<T> implements OnInit {
    * Used to filter the list
    */
   protected httpFilter = HttpFilterService.getDefaultFilter();
+  /**
+   * List of icons
+   */
+  public iconEnum = IconEnum;
+  /**
+   * List of material icon
+   */
+  public materialIconRecords = MaterialIconRecords;
+  /**
+   * Tell if the component is alive
+   */
+  public isAlive = true;
 
   /**
    * Constructor
@@ -99,6 +120,20 @@ export class ListComponent<T> implements OnInit {
    */
   public ngOnInit(): void {
     this.refreshList();
+  }
+
+  /**
+   * Called when the view has been init
+   */
+  public ngAfterViewInit(): void {
+    this.subscribeToInputSearchElement();
+  }
+
+  /**
+   * Called when the component is destroyed
+   */
+  public ngOnDestroy(): void {
+    this.isAlive = false;
   }
 
   /**
@@ -197,4 +232,21 @@ export class ListComponent<T> implements OnInit {
    * @param object The object used for the redirection
    */
   protected redirectToBean(object: T): void {}
+
+  /**
+   * Subscribe to input search event
+   */
+  private subscribeToInputSearchElement(): void {
+    fromEvent(this.inputSearch.nativeElement, 'keyup')
+      .pipe(
+        takeWhile(() => this.isAlive),
+        debounceTime(500),
+        map((event: Event) => (event.target as HTMLInputElement).value),
+        distinctUntilChanged()
+      )
+      .subscribe((searchValue: string) => {
+        this.httpFilter.search = searchValue;
+        this.refreshList();
+      });
+  }
 }
