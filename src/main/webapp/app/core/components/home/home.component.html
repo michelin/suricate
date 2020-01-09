@@ -1,32 +1,38 @@
 <suricate-pages-header [configuration]="headerConfiguration"></suricate-pages-header>
 
-<mat-grid-list cols="4" rowHeight="250px" gutterSize="17px">
-  <mat-grid-tile class="mat-elevation-z3" (click)="openDashboardFormSidenav()">
-    <div class="grid-tile-content-wrapper">
-      <div class="grid-tile-body">
-        <mat-icon color="primary"> {{ materialIconRecords[iconEnum.ADD] }} </mat-icon>
-      </div>
+<section class="container" fxLayout="column">
+  <suricate-spinner *ngIf="isLoading"> </suricate-spinner>
 
-      <div class="grid-tile-footer">
-        {{ 'dashboard.add' | translate }}
-      </div>
-    </div>
-  </mat-grid-tile>
+  <div *ngIf="!isLoading">
+    <mat-grid-list cols="4" gutterSize="17px" rowHeight="250px">
+      <mat-grid-tile (click)="openDashboardFormSidenav()" class="mat-elevation-z3">
+        <div class="grid-tile-content-wrapper">
+          <div class="grid-tile-body">
+            <mat-icon color="primary"> {{ materialIconRecords[iconEnum.ADD] }} </mat-icon>
+          </div>
 
-  <mat-grid-tile *ngFor="let dashboard of dashboards" class="mat-elevation-z3">
-    <div class="grid-tile-content-wrapper">
-      <a [routerLink]="['/dashboards', dashboard.token]">
-        <div class="grid-tile-body">
-          <img *ngIf="dashboard.screenshotToken" [src]="getContentUrl(dashboard.screenshotToken)" alt="Dashboard screenshot" />
-          <mat-icon *ngIf="!dashboard.screenshotToken" color="primary">
-            {{ materialIconRecords[iconEnum.DASHBOARD] }}
-          </mat-icon>
+          <div class="grid-tile-footer">
+            {{ 'dashboard.add' | translate }}
+          </div>
         </div>
+      </mat-grid-tile>
 
-        <div class="grid-tile-footer">
-          {{ dashboard.name }}
+      <mat-grid-tile *ngFor="let dashboard of dashboards" class="mat-elevation-z3">
+        <div class="grid-tile-content-wrapper">
+          <a [routerLink]="['/dashboards', dashboard.token]">
+            <div class="grid-tile-body">
+              <img *ngIf="dashboard.screenshotToken" [src]="getContentUrl(dashboard.screenshotToken)" alt="Dashboard screenshot" />
+              <mat-icon *ngIf="!dashboard.screenshotToken" color="primary">
+                {{ materialIconRecords[iconEnum.DASHBOARD] }}
+              </mat-icon>
+            </div>
+
+            <div class="grid-tile-footer">
+              {{ dashboard.name }}
+            </div>
+          </a>
         </div>
-      </a>
-    </div>
-  </mat-grid-tile>
-</mat-grid-list>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </div>
+</section>

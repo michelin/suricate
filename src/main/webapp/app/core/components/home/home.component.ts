@@ -63,6 +63,10 @@ export class HomeComponent implements OnInit {
    * @protected
    */
   public materialIconRecords = MaterialIconRecords;
+  /**
+   * Tell when the list of dashboards is loading
+   */
+  public isLoading: boolean;
 
   /**
    * The constructor
@@ -85,8 +89,11 @@ export class HomeComponent implements OnInit {
    * Called when the home page is init
    */
   public ngOnInit(): void {
+    this.isLoading = true;
+
     this.httpProjectService.getAllForCurrentUser().subscribe(dashboards => {
       this.dashboards = dashboards;
+      this.isLoading = false;
     });
   }
 
