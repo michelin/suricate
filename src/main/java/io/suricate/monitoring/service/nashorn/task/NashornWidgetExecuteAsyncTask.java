@@ -29,6 +29,7 @@ import io.suricate.monitoring.utils.JsonUtils;
 import io.suricate.monitoring.utils.PropertiesUtils;
 import io.suricate.monitoring.utils.ToStringUtils;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
+import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.jasypt.encryption.StringEncryptor;
@@ -90,7 +91,7 @@ public class NashornWidgetExecuteAsyncTask implements Callable<NashornResponse> 
      * @throws Exception Every uncaught execeptions
      */
     @Override
-    public NashornResponse call() throws Exception {
+    public NashornResponse call() {
         NashornResponse ret = new NashornResponse();
         ret.setLaunchDate(new Date());
         try {
@@ -208,7 +209,7 @@ public class NashornWidgetExecuteAsyncTask implements Callable<NashornResponse> 
         if (message == null) {
             return null;
         }
-        return StringUtils.replacePattern(message, "ExecutionException: java.lang.FatalError:|FatalError:", "").trim();
+        return RegExUtils.replacePattern(message, "ExecutionException: java.lang.FatalError:|FatalError:", "").trim();
     }
 
     /**

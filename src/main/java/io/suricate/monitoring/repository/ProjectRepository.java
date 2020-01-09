@@ -17,8 +17,9 @@
 package io.suricate.monitoring.repository;
 
 import io.suricate.monitoring.model.entity.project.Project;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
@@ -27,17 +28,17 @@ import java.util.Optional;
 /**
  * Repository used for request Projects in database
  */
-public interface ProjectRepository extends JpaRepository<Project, Long> {
+public interface ProjectRepository extends CrudRepository<Project, Long>, JpaSpecificationExecutor<Project> {
 
-	/**
-	 * Find projects by user id
-	 *
-	 * @param id The user id
-	 * @return List of related projects ordered by name
-	 */
-	List<Project> findByUsers_IdOrderByName(Long id);
+    /**
+     * Find projects by user id
+     *
+     * @param id The user id
+     * @return List of related projects ordered by name
+     */
+    List<Project> findByUsers_IdOrderByName(Long id);
 
-	/**
+    /**
 	 * Find a project by token
 	 *
 	 * @param token The token to find

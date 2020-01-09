@@ -17,17 +17,19 @@
 package io.suricate.monitoring.repository;
 
 import io.suricate.monitoring.model.entity.widget.Category;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
 /**
  * Repository used for request categories in database
  */
-public interface CategoryRepository extends JpaRepository<Category, Long> {
+public interface CategoryRepository extends CrudRepository<Category, Long>, JpaSpecificationExecutor<Category> {
 
     /**
      * Method used to find category by technical name
+     *
      * @param technicalName category technical name
      * @return the category found or null otherwise
      */

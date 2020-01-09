@@ -18,8 +18,8 @@ package io.suricate.monitoring.service.nashorn.task;
 
 import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
 import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
-import io.suricate.monitoring.service.scheduler.Schedulable;
 import io.suricate.monitoring.service.scheduler.DashboardScheduleService;
+import io.suricate.monitoring.service.scheduler.Schedulable;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -91,7 +91,7 @@ public class NashornResultAsyncTask implements Callable<Void>{
     }
 
     @Override
-    public Void call() throws Exception {
+    public Void call() {
         try {
             long timeout = request.getTimeout() == null || request.getTimeout() < TIMEOUT ? TIMEOUT : request.getTimeout();
             LOGGER.debug("Widget instance {} wait {} seconds", request.getProjectWidgetId(), timeout);
@@ -101,7 +101,7 @@ public class NashornResultAsyncTask implements Callable<Void>{
             // Handle response with retry
             retryTemplate.execute((RetryCallback<Void, Exception>) context -> {
                 LOGGER.debug("Trying {}/{} to update widgets instance {}", context.getRetryCount(), MAX_RETRY, nashornResponse.getProjectWidgetId());
-                dashboardScheduleService.handleResponse( nashornResponse, callBack);
+                dashboardScheduleService.handleResponse(nashornResponse, callBack);
                 return null;
             }, context -> {
                 LOGGER.error("Update data failed after {} attempts for widget instance:{}", MAX_RETRY, request.getProjectWidgetId());

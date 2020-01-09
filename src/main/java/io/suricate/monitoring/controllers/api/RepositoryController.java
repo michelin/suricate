@@ -16,6 +16,7 @@
 
 package io.suricate.monitoring.controllers.api;
 
+import io.suricate.monitoring.configuration.swagger.ApiPageable;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.repository.RepositoryRequestDto;
 import io.suricate.monitoring.model.dto.api.repository.RepositoryResponseDto;
@@ -25,10 +26,11 @@ import io.suricate.monitoring.service.GitService;
 import io.suricate.monitoring.service.api.RepositoryService;
 import io.suricate.monitoring.service.mapper.RepositoryMapper;
 import io.suricate.monitoring.service.mapper.WidgetMapper;
-import io.suricate.monitoring.utils.exception.NoContentException;
 import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -99,19 +101,15 @@ public class RepositoryController {
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
+    @ApiPageable
     @GetMapping(value = "/v1/repositories")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Transactional
-    public ResponseEntity<List<RepositoryResponseDto>> getAll() {
-        Optional<List<Repository>> optionalRepositories = repositoryService.getAllOrderByName();
-        if (!optionalRepositories.isPresent()) {
-            throw new NoContentException(Repository.class);
-        }
-
-        return ResponseEntity
-            .ok()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(repositoryMapper.toRepositoryDtosDefault(optionalRepositories.get()));
+    public Page<RepositoryResponseDto> getAll(@ApiParam(name = "search", value = "Search keyword")
+                                              @RequestParam(value = "search", required = false) String search,
+                                              Pageable pageable) {
+        Page<Repository> repositoriesPaged = repositoryService.getAll(search, pageable);
+        return repositoriesPaged.map(repositoryMapper::toRepositoryDtoDefault);
     }
 
     /**

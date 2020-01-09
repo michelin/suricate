@@ -21,12 +21,13 @@ import io.suricate.monitoring.model.dto.nashorn.error.RemoteError;
 import io.suricate.monitoring.model.dto.nashorn.error.RequestException;
 import io.suricate.monitoring.utils.OkHttpClientUtils;
 import okhttp3.*;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.Objects;
 import java.util.concurrent.TimeoutException;
 
 public final class Methods {
@@ -38,80 +39,128 @@ public final class Methods {
 
     /**
      * Method used to call a webservice
-     * @param url the url to call
-     * @param headerName the header name to add
-     * @param headerValue the header value to add
+     *
+     * @param url          the url to call
+     * @param headerName   the header name to add
+     * @param headerValue  the header value to add
      * @param returnHeader can be null, if it was not null this method return the header value
-     * @param body used to send body
+     * @param body         used to send body
+     * @param mediaType    media type
      * @return the response body of the request or the header value if returnHeader is defined
      */
-    private static String callRaw(String url, String headerName, String headerValue, String returnHeader, String body) throws Exception{
+    private static String callRaw(String url, String headerName, String headerValue, String returnHeader, String body, String mediaType)
+        throws IOException, RemoteError, RequestException {
 
         Request.Builder builder = new Request.Builder().url(url);
         if (StringUtils.isNotBlank(headerName)) {
             builder.addHeader(headerName, headerValue);
         }
-        if (StringUtils.isNotBlank(body)){
-            builder.post(RequestBody.create(MediaType.parse("application/json"), body));
+        if (StringUtils.isNotBlank(body)) {
+            builder.post(RequestBody.create(body, MediaType.parse(mediaType)));
         }
         Request request = builder.build();
-        Response response = null;
         String ret = null;
-        try {
-            response = client.newCall(request).execute();
-            if (response.isSuccessful()){
-                if (StringUtils.isNotBlank(returnHeader)){
+        try (Response response = client.newCall(request).execute()) {
+
+            if (response.isSuccessful()) {
+                if (StringUtils.isNotBlank(returnHeader)) {
                     ret = response.header(returnHeader);
                 } else {
-                    ret = response.body().string();
+                    ret = Objects.requireNonNull(response.body()).string();
                 }
             } else {
                 if (response.code() >= HttpStatus.INTERNAL_SERVER_ERROR.value()) {
-                    throw new RemoteError("Response error: " + response.message()+" code:"+response.code());
+                    throw new RemoteError("Response error: " + response.message() + " code:" + response.code());
                 } else {
-                    throw new RequestException(response.message() + " - code:" + response.code() , response.body() != null ? response.body().string() : null);
+                    throw new RequestException(
+                        response.message() + " - code:" + response.code(),
+                        response.body() != null ? response.body().string() : null
+                    );
                 }
             }
-        } finally {
-            IOUtils.closeQuietly(response);
-            IOUtils.closeQuietly();
         }
+
         return ret;
     }
 
+
     /**
      * Method used to call a webservice
-     * @param url the url to call
-     * @param headerName the header name to add
-     * @param headerValue the header value to add
+     *
+     * @param url          the url to call
+     * @param headerName   the header name to add
+     * @param headerValue  the header value to add
+     * @param returnHeader can be null, if it was not null this method return the header value
+     * @param body         used to send body
+     * @return the response body of the request or the header value if returnHeader is defined
+     */
+    private static String callRaw(String url, String headerName, String headerValue, String returnHeader, String body) throws RemoteError, IOException, RequestException {
+        return callRaw(url, headerName, headerValue, returnHeader, body, "application/json");
+    }
+
+
+    /**
+     * Method used to call a webservice
+     *
+     * @param url          the url to call
+     * @param headerName   the header name to add
+     * @param headerValue  the header value to add
      * @param returnHeader can be null, if it was not null this method return the header value
      * @return the response body of the request or the header value if returnHeader is defined
      */
-    public static String call(String url, String headerName, String headerValue, String returnHeader) throws Exception{
+    public static String call(String url, String headerName, String headerValue, String returnHeader) throws RemoteError, IOException, RequestException {
         return callRaw(url, headerName, headerValue, returnHeader, null);
     }
 
     /**
      * Method used to call a webservice
-     * @param url the url to call
-     * @param headerName the header name to add
+     *
+     * @param url         the url to call
+     * @param headerName  the header name to add
      * @param headerValue the header value to add
-     * @param body used to send body
+     * @param body        used to send body
      * @return the response body of the request or the header value if returnHeader is defined
      */
-    public static String callWithHeaderBody(String url, String headerName, String headerValue, String body) throws Exception{
+    public static String callWithHeaderBody(String url, String headerName, String headerValue, String body) throws RemoteError, IOException, RequestException {
         return callRaw(url, headerName, headerValue, null, body);
+    }
+
+    /**
+     * Method used to call a webservice
+     *
+     * @param url         the url to call
+     * @param headerName  the header name to add
+     * @param headerValue the header value to add
+     * @param body        used to send body
+     * @param mediaType   media type
+     * @return the response body of the request or the header value if returnHeader is defined
+     */
+    public static String callWithHeaderBody(String url, String headerName, String headerValue, String body, String mediaType) throws RemoteError, IOException, RequestException {
+        return callRaw(url, headerName, headerValue, null, body, mediaType);
     }
 
 
     /**
      * Method used to call a webservice
-     * @param url the url to call
+     *
+     * @param url  the url to call
      * @param body can be null, if it was not null this method return the header value
      * @return the response body of the request or the header value if returnHeader is defined
      */
-    public static String callWithBody(String url, String body) throws Exception{
+    public static String callWithBody(String url, String body) throws RemoteError, IOException, RequestException {
         return callRaw(url, null, null, null, body);
+    }
+
+    /**
+     * Method used to call a webservice
+     *
+     * @param url       the url to call
+     * @param body      can be null, if it was not null this method return the header value
+     * @param mediaType media type
+     * @return the response body of the request or the header value if returnHeader is defined
+     */
+    public static String callWithBody(String url, String body, String mediaType) throws RemoteError, IOException, RequestException {
+        return callRaw(url, null, null, null, body, mediaType);
     }
 
 

@@ -16,6 +16,7 @@
 
 package io.suricate.monitoring.model.entity;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedBy;
@@ -31,12 +32,13 @@ import java.util.Date;
 
 /**
  * Base abstract class for entity auditing (CreatedBy, CreatedDate, LastModifiedBy, LastModifiedDate)
- *
  */
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
-@Getter @Setter
-public abstract class AbstractAuditingEntity<ID> extends AbstractEntity<ID> {
+@EqualsAndHashCode(callSuper = true)
+@Getter
+@Setter
+public abstract class AbstractAuditingEntity<T> extends AbstractEntity<T> {
 
     /** Created by attribute */
     @CreatedBy

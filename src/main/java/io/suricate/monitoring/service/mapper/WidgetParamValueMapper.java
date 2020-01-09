@@ -21,16 +21,14 @@ import io.suricate.monitoring.model.entity.widget.WidgetParamValue;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 /**
  * Interface that manage the generation DTO/Model objects for widgetParamValue class
  */
-@Component
 @Mapper(componentModel = "spring")
-public abstract class WidgetParamValueMapper {
+public interface WidgetParamValueMapper {
 
     /* ************************* TO DTO ********************************************** */
 
@@ -45,7 +43,7 @@ public abstract class WidgetParamValueMapper {
      * @return The related widgetParamValue DTO
      */
     @Named("toWidgetParamValueDtoDefault")
-    public abstract WidgetParamValueResponseDto toWidgetParamValueDtoDefault(WidgetParamValue widgetParamValue);
+    WidgetParamValueResponseDto toWidgetParamValueDtoDefault(WidgetParamValue widgetParamValue);
 
     /* ******************************************************* */
     /*                    List Mapping                         */
@@ -59,5 +57,5 @@ public abstract class WidgetParamValueMapper {
      */
     @Named("toWidgetParamValueDtosDefault")
     @IterableMapping(qualifiedByName = "toWidgetParamValueDtoDefault")
-    public abstract List<WidgetParamValueResponseDto> toWidgetParamValueDtosDefault(List<WidgetParamValue> widgetParamValues);
+    List<WidgetParamValueResponseDto> toWidgetParamValueDtosDefault(List<WidgetParamValue> widgetParamValues);
 }

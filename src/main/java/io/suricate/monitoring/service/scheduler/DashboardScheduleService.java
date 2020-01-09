@@ -26,7 +26,7 @@ import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.service.api.ProjectWidgetService;
 import io.suricate.monitoring.service.mapper.ProjectWidgetMapper;
 import io.suricate.monitoring.service.nashorn.NashornService;
-import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
+import io.suricate.monitoring.service.websocket.DashboardWebSocketService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -124,7 +124,7 @@ public class DashboardScheduleService {
     private void notifyWidgetUpdate(Long projectWidgetId, Long projectId) {
         // Notify the dashboard
         UpdateEvent event = new UpdateEvent(UpdateType.WIDGET);
-        ProjectWidget projectWidget = projectWidgetService.getOne(projectWidgetId).get();
+        ProjectWidget projectWidget = projectWidgetService.getOne(projectWidgetId).orElse(null);
         event.setContent(projectWidgetMapper.toProjectWidgetDtoDefault(projectWidget));
 
         dashboardWebSocketService.updateGlobalScreensByIdAndProjectWidgetId(projectId, projectWidgetId, event);

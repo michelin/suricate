@@ -16,8 +16,8 @@
 
 package io.suricate.monitoring.controllers.api;
 
+import io.suricate.monitoring.configuration.swagger.ApiPageable;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
-import io.suricate.monitoring.model.dto.api.role.RoleResponseDto;
 import io.suricate.monitoring.model.dto.api.user.UserRequestDto;
 import io.suricate.monitoring.model.dto.api.user.UserResponseDto;
 import io.suricate.monitoring.model.dto.api.user.UserSettingRequestDto;
@@ -33,11 +33,12 @@ import io.suricate.monitoring.service.api.UserSettingService;
 import io.suricate.monitoring.service.mapper.UserMapper;
 import io.suricate.monitoring.service.mapper.UserSettingMapper;
 import io.suricate.monitoring.utils.exception.ApiException;
-import io.suricate.monitoring.utils.exception.NoContentException;
 import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
 import io.swagger.annotations.*;
 import org.apache.directory.shared.ldap.aci.UserClass;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -51,7 +52,6 @@ import java.net.URI;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * User controller
@@ -113,23 +113,20 @@ public class UserController {
      */
     @ApiOperation(value = "Get the full list of users", response = UserResponseDto.class, nickname = "getAllUsers")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = UserResponseDto.class, responseContainer = "List"),
+        @ApiResponse(code = 200, message = "Ok"),
         @ApiResponse(code = 204, message = "No Content"),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
+    @ApiPageable
     @GetMapping(value = "/v1/users")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<List<UserResponseDto>> getAll(@RequestParam(value = "filter", required = false, defaultValue = "") String filter) {
-        Optional<List<User>> usersOptional = userService.getAllByUsernameStartWith(filter);
-        if (!usersOptional.isPresent()) {
-            throw new NoContentException(User.class);
-        }
+    public Page<UserResponseDto> getAll(@ApiParam(name = "search", value = "Search keyword")
+                                        @RequestParam(value = "search", required = false) String search,
+                                        Pageable pageable) {
+        Page<User> usersPaged = userService.getAll(search, pageable);
 
-        return ResponseEntity
-            .ok()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(userMapper.toUserDtosDefault(usersOptional.get()));
+        return usersPaged.map(userMapper::toUserDtoDefault);
     }
 
     /**
@@ -185,7 +182,7 @@ public class UserController {
             userRequestDto.getFirstname(),
             userRequestDto.getLastname(),
             userRequestDto.getEmail(),
-            userRequestDto.getRoles().stream().map(RoleResponseDto::getName).collect(Collectors.toList())
+            userRequestDto.getRoles()
         );
 
         if (!userOptional.isPresent()) {
@@ -224,7 +221,7 @@ public class UserController {
     /**
      * Retrieve the user settings
      *
-     * @param userId The user id used in the url
+     * @param userName The user name
      */
     @ApiOperation(value = "Retrieve the user settings", response = UserSettingResponseDto.class)
     @ApiResponses(value = {
@@ -233,13 +230,13 @@ public class UserController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "User not found", response = ApiErrorDto.class)
     })
-    @GetMapping(value = "/v1/users/{userId}/settings")
+    @GetMapping(value = "/v1/users/{userName}/settings")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<List<UserSettingResponseDto>> getUserSettings(@ApiParam(name = "userId", value = "The user id", required = true)
-                                                                        @PathVariable("userId") Long userId) {
-        Optional<User> userOptional = userService.getOne(userId);
+    public ResponseEntity<List<UserSettingResponseDto>> getUserSettings(@ApiParam(name = "userName", value = "The user name", required = true)
+                                                                        @PathVariable("userName") String userName) {
+        Optional<User> userOptional = userService.getOneByUsername(userName);
         if (!userOptional.isPresent()) {
-            throw new ObjectNotFoundException(User.class, userId);
+            throw new ObjectNotFoundException(User.class, userName);
         }
 
         return ResponseEntity
@@ -251,7 +248,7 @@ public class UserController {
     /**
      * Get a user setting
      *
-     * @param userId    The user id to get
+     * @param userName  The user name to get
      * @param settingId The setting id to get
      * @return The userSetting
      */
@@ -261,15 +258,15 @@ public class UserController {
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
-    @GetMapping(value = "/v1/users/{userId}/settings/{settingId}")
+    @GetMapping(value = "/v1/users/{userName}/settings/{settingId}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<UserSettingResponseDto> getOne(@ApiParam(name = "userId", value = "The user id", required = true)
-                                                         @PathVariable("userId") Long userId,
+    public ResponseEntity<UserSettingResponseDto> getOne(@ApiParam(name = "userName", value = "The user name", required = true)
+                                                         @PathVariable("userName") String userName,
                                                          @ApiParam(name = "settingId", value = "The setting id", required = true)
                                                          @PathVariable("settingId") Long settingId) {
-        Optional<UserSetting> userSettingOptional = userSettingService.getUserSetting(userId, settingId);
+        Optional<UserSetting> userSettingOptional = userSettingService.getUserSetting(userName, settingId);
         if (!userSettingOptional.isPresent()) {
-            throw new ObjectNotFoundException(UserClass.class, "User: " + userId + "; setting: " + settingId);
+            throw new ObjectNotFoundException(UserClass.class, "User: " + userName + "; setting: " + settingId);
         }
 
         return ResponseEntity
@@ -282,7 +279,7 @@ public class UserController {
      * Update the user settings for a user
      *
      * @param principal             The connected user
-     * @param userId                The user id used in the url
+     * @param userName              The user name used in the url
      * @param userSettingRequestDto The new setting value
      * @return The user updated
      */
@@ -293,20 +290,20 @@ public class UserController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "User not found", response = ApiErrorDto.class)
     })
-    @PutMapping(value = "/v1/users/{userId}/settings/{settingId}")
+    @PutMapping(value = "/v1/users/{userName}/settings/{settingId}")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<UserResponseDto> updateUserSettings(@ApiIgnore Principal principal,
-                                                              @ApiParam(name = "userId", value = "The user id", required = true)
-                                                              @PathVariable("userId") Long userId,
+                                                              @ApiParam(name = "userName", value = "The user name", required = true)
+                                                              @PathVariable("userName") String userName,
                                                               @ApiParam(name = "settingId", value = "The setting id", required = true)
                                                               @PathVariable("settingId") Long settingId,
                                                               @ApiParam(name = "userSettingRequestDto", value = "The new value of the setting", required = true)
                                                               @RequestBody UserSettingRequestDto userSettingRequestDto) {
         Optional<User> userOptional = this.userService.getOneByUsername(principal.getName());
         if (!userOptional.isPresent()) {
-            throw new ObjectNotFoundException(User.class, userId);
+            throw new ObjectNotFoundException(User.class, userName);
         }
-        if (!userOptional.get().getId().equals(userId)) {
+        if (!principal.getName().equals(userName)) {
             throw new AccessDeniedException(String.format("User %s is not allowed to modify this resource", principal.getName()));
         }
 
@@ -315,7 +312,7 @@ public class UserController {
             throw new ObjectNotFoundException(Setting.class, settingId);
         }
 
-        userSettingService.updateUserSetting(userId, settingId, userSettingRequestDto);
+        userSettingService.updateUserSetting(userName, settingId, userSettingRequestDto);
 
         return ResponseEntity.noContent().build();
     }

@@ -14,48 +14,17 @@
  * limitations under the License.
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import { NgModule } from '@angular/core';
 
-import {AddWidgetDialogComponent} from './header/components/add-widget-dialog/add-widget-dialog.component';
-import {DashboardActionsComponent} from './header/components/dashboard-actions/dashboard-actions.component';
-import {PagesFooterComponent} from './footer/pages/pages-footer.component';
-import {TvManagementDialogComponent} from './header/components/tv-management-dialog/tv-management-dialog.component';
-import {WidgetListActionsComponent} from './header/components/widget-list-actions/widget-list-actions.component';
-import {SharedModule} from '../shared/shared.module';
-import {PagesHeaderComponent} from './header/pages/pages-header.component';
-import {SidenavComponent} from './sidenav/pages/sidenav.component';
-import {SidenavService} from './sidenav/sidenav.service';
-import {RepositoryActionsComponent} from './header/components/repository-actions/repository-actions.component';
+import { FooterComponent } from './components/footer/footer.component';
+import { SharedModule } from '../shared/shared.module';
+import { HeaderComponent } from './components/header/header.component';
+import { SidenavComponent } from './components/sidenav/sidenav.component';
+import { MenuComponent } from './components/menu/menu.component';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    SharedModule
-  ],
-  declarations: [
-    AddWidgetDialogComponent,
-    DashboardActionsComponent,
-    PagesFooterComponent,
-    PagesHeaderComponent,
-    SidenavComponent,
-    TvManagementDialogComponent,
-    WidgetListActionsComponent,
-    RepositoryActionsComponent
-  ],
-  entryComponents: [
-    AddWidgetDialogComponent,
-    TvManagementDialogComponent
-  ],
-  exports: [
-    AddWidgetDialogComponent,
-    PagesFooterComponent,
-    PagesHeaderComponent,
-    SidenavComponent
-  ],
-  providers: [
-    SidenavService
-  ]
+  imports: [SharedModule],
+  declarations: [FooterComponent, HeaderComponent, SidenavComponent, MenuComponent],
+  exports: [FooterComponent, HeaderComponent, SidenavComponent]
 })
-export class LayoutModule {
-}
+export class LayoutModule {}

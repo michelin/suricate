@@ -19,7 +19,7 @@ public class FilesUtilsTest {
 
     @Test
     public void testFilesUtilsError() throws Exception {
-        Assert.assertNull(FilesUtils.getFolders(null));
+        assertThat(FilesUtils.getFolders(null)).hasSize(0);
     }
 
     @Test
@@ -32,7 +32,7 @@ public class FilesUtilsTest {
 
     @Test
     public void testgetFileError() throws Exception {
-        Assert.assertNull(FilesUtils.getFiles(null));
+        assertThat(FilesUtils.getFiles(null)).hasSize(0);
     }
 
     @Test

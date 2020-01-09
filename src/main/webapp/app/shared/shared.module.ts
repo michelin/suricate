@@ -14,132 +14,121 @@
  * limitations under the License.
  */
 
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {HTTP_INTERCEPTORS, HttpClientModule} from '@angular/common/http';
-import {FlexLayoutModule} from '@angular/flex-layout';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {RouterModule} from '@angular/router';
-import {StompRService} from '@stomp/ng2-stompjs';
-import {NgGridModule} from 'angular2-grid';
-import {CustomFormsModule} from 'ng2-validation';
-import {ColorPickerModule} from 'ngx-color-picker';
+import { CommonModule } from '@angular/common';
+import { CustomFormsModule } from 'ng2-validation';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { NgGridModule } from 'angular2-grid';
+import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
 
-import {TokenInterceptor} from './interceptors/token.interceptor';
-import {AuthGuard} from './auth/guards/auth.guard';
-import {MaterialModule} from './modules/material.module';
-import {WebsocketService} from './services/websocket.service';
-import {ToastComponent} from './components/toast/toast.component';
-import {ToastService} from './components/toast/toast.service';
-import {SafeHtmlPipe} from './pipes/safe-html.pipe';
-import {SafeUrlPipe} from './pipes/safe-url.pipe';
-import {EnumKeysPipe} from './pipes/enum-keys.pipe';
-import {RunScriptsDirective} from './directives/run-scripts.directive';
-import {AdminGuard} from './auth/guards/admin.guard';
-import {TokenService} from './auth/token.service';
-import {TranslateModule} from '@ngx-translate/core';
-import {TranslationComponent} from './components/translations/translation.component';
-import {MaterialCDKModule} from './modules/metarialCDK.module';
-import {ErrorInterceptor} from './interceptors/error.interceptor';
-import {PasswordPipe} from './pipes/password-pipe';
-import {ConfirmDialogComponent} from './components/confirm-dialog/confirm-dialog.component';
-import {HttpCategoryService} from './services/api/http-category.service';
-import {HttpAssetService} from './services/api/http-asset.service';
-import {HttpProjectService} from './services/api/http-project.service';
-import {HttpScreenService} from './services/api/http-screen.service';
-import {HttpRoleService} from './services/api/http-role.service';
-import {HttpUserService} from './services/api/http-user.service';
-import {HttpRepositoryService} from './services/api/http-repository.service';
-import {HttpConfigurationService} from './services/api/http-configuration.service';
-import {HttpWidgetService} from './services/api/http-widget.service';
-import {HttpProjectWidgetService} from './services/api/http-project-widget.service';
-import {HttpSettingService} from './services/api/http-setting.service';
-import {CommunicationDialogComponent} from './components/communication-dialog/communication-dialog.component';
-import {InputComponent} from './components/form/inputs/input.component';
-import {CheckboxComponent} from './components/form/inputs/checkbox/checkbox.component';
-import {FileInputComponent} from './components/form/inputs/file-input/file-input.component';
-import {FormService} from './services/app/form.service';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserModule } from '@angular/platform-browser';
+import { CheckboxComponent } from './components/inputs/checkbox/checkbox.component';
+import { CommunicationDialogComponent } from './components/communication-dialog/communication-dialog.component';
+import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
+import { ErrorInterceptor } from './interceptors/error.interceptor';
+import { FileInputComponent } from './components/inputs/file-input/file-input.component';
+import { InputComponent } from './components/inputs/input.component';
+import { MaterialCDKModule } from './modules/material-cdk.module';
+import { MaterialModule } from './modules/material.module';
+import { PasswordPipe } from './pipes/password.pipe';
+import { RunScriptsDirective } from './directives/run-scripts.directive';
+import { SafeHtmlPipe } from './pipes/safe-html.pipe';
+import { SafeUrlPipe } from './pipes/safe-url.pipe';
+import { ToastComponent } from './components/toast/toast.component';
+import { TokenInterceptor } from './interceptors/token.interceptor';
+import { TranslateModule } from '@ngx-translate/core';
+import { StompRService } from '@stomp/ng2-stompjs';
+import { ListComponent } from './components/list/list.component';
+import { SpinnerComponent } from './components/spinner/spinner.component';
+import { ButtonsComponent } from './components/buttons/buttons.component';
+import { FormSidenavComponent } from './components/form-sidenav/form-sidenav.component';
+import { WizardComponent } from './components/wizard/wizard.component';
+import { ColorPickerModule } from 'ngx-color-picker';
+import { ColorPickerComponent } from './components/inputs/color-picker/color-picker.component';
+import { FieldsComponent } from './components/inputs/fields/fields.component';
+import { MosaicComponent } from './components/inputs/mosaic/mosaic.component';
+import { PaginatorComponent } from './components/paginator/paginator.component';
 
 @NgModule({
   imports: [
+    BrowserAnimationsModule,
+    BrowserModule,
     CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-    NgGridModule,
-    MaterialModule,
-    MaterialCDKModule,
-    FlexLayoutModule,
-    RouterModule,
     CustomFormsModule,
-    ColorPickerModule,
-    TranslateModule
+    FlexLayoutModule,
+    FormsModule,
+    HttpClientModule,
+    HttpClientModule,
+    MaterialCDKModule,
+    MaterialModule,
+    NgGridModule,
+    ReactiveFormsModule,
+    RouterModule,
+    TranslateModule,
+    ColorPickerModule
   ],
   declarations: [
-    ToastComponent,
+    CheckboxComponent,
+    CommunicationDialogComponent,
+    ConfirmDialogComponent,
+    FileInputComponent,
+    InputComponent,
+    PasswordPipe,
+    RunScriptsDirective,
     SafeHtmlPipe,
     SafeUrlPipe,
-    EnumKeysPipe,
-    RunScriptsDirective,
-    TranslationComponent,
-    PasswordPipe,
-    ConfirmDialogComponent,
-    CommunicationDialogComponent,
-    InputComponent,
-    CheckboxComponent,
-    FileInputComponent
+    ToastComponent,
+    ListComponent,
+    SpinnerComponent,
+    ButtonsComponent,
+    FormSidenavComponent,
+    WizardComponent,
+    ColorPickerComponent,
+    FieldsComponent,
+    MosaicComponent,
+    PaginatorComponent
   ],
   exports: [
-    FormsModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-    NgGridModule,
-    MaterialModule,
-    MaterialCDKModule,
-    FlexLayoutModule,
-    RouterModule,
+    BrowserAnimationsModule,
+    BrowserModule,
+    CheckboxComponent,
+    CommonModule,
+    CommunicationDialogComponent,
+    ConfirmDialogComponent,
     CustomFormsModule,
-    ColorPickerModule,
-    TranslateModule,
-    ToastComponent,
+    FileInputComponent,
+    FlexLayoutModule,
+    FormsModule,
+    HttpClientModule,
+    HttpClientModule,
+    InputComponent,
+    MaterialCDKModule,
+    MaterialModule,
+    NgGridModule,
+    PasswordPipe,
+    ReactiveFormsModule,
+    RouterModule,
+    RunScriptsDirective,
     SafeHtmlPipe,
     SafeUrlPipe,
-    EnumKeysPipe,
-    RunScriptsDirective,
-    TranslationComponent,
-    PasswordPipe,
-    ConfirmDialogComponent,
-    CommunicationDialogComponent,
-    InputComponent,
-    CheckboxComponent,
-    FileInputComponent
+    ToastComponent,
+    TranslateModule,
+    SpinnerComponent,
+    ButtonsComponent,
+    FormSidenavComponent,
+    ListComponent,
+    WizardComponent,
+    ColorPickerComponent,
+    PaginatorComponent
   ],
-  entryComponents: [
-    ConfirmDialogComponent,
-    CommunicationDialogComponent
-  ],
+  entryComponents: [CommunicationDialogComponent, ConfirmDialogComponent],
   providers: [
-    {provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true},
-    {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true},
-    AuthGuard,
-    AdminGuard,
-    WebsocketService,
-    ToastService,
-    StompRService,
-    TokenService,
-    FormService,
-    HttpAssetService,
-    HttpCategoryService,
-    HttpProjectService,
-    HttpProjectWidgetService,
-    HttpRoleService,
-    HttpScreenService,
-    HttpSettingService,
-    HttpUserService,
-    HttpRepositoryService,
-    HttpConfigurationService,
-    HttpWidgetService
+    { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
+    StompRService
   ]
 })
-export class SharedModule {
-}
+export class SharedModule {}

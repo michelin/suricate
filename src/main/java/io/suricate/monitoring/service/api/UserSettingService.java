@@ -111,27 +111,26 @@ public class UserSettingService {
     /**
      * Get a user setting
      *
-     * @param userId    The user Id
+     * @param userName   The user Name
      * @param settingId The setting id
      * @return The user setting as optional
      */
-    public Optional<UserSetting> getUserSetting(final Long userId, final Long settingId) {
-        return userSettingRepository.findByUser_IdAndSetting_Id(userId, settingId);
+    public Optional<UserSetting> getUserSetting(final String userName, final Long settingId) {
+        return userSettingRepository.findByUser_UsernameAndSetting_Id(userName, settingId);
     }
 
     /**
      * Update the settings for a user
      *
-     * @param userId                The user id
+     * @param userName              The user name
      * @param settingId             The setting id
      * @param userSettingRequestDto The new user setting value
-     * @return The user settings updated
      */
-    public UserSetting updateUserSetting(final Long userId, final Long settingId, final UserSettingRequestDto userSettingRequestDto) {
-        Optional<UserSetting> userSettingOptional = getUserSetting(userId, settingId);
+    public void updateUserSetting(final String userName, final Long settingId, final UserSettingRequestDto userSettingRequestDto) {
+        Optional<UserSetting> userSettingOptional = getUserSetting(userName, settingId);
 
         if (!userSettingOptional.isPresent()) {
-            throw new ObjectNotFoundException(UserSetting.class, "userId: " + userId + ", settingId: " + settingId);
+            throw new ObjectNotFoundException(UserSetting.class, "user: " + userName + ", settingId: " + settingId);
         }
 
         UserSetting userSetting = userSettingOptional.get();
@@ -143,7 +142,5 @@ public class UserSettingService {
             userSetting.setUnconstrainedValue(userSettingRequestDto.getUnconstrainedValue());
         }
         userSettingRepository.save(userSetting);
-
-        return userSetting;
     }
 }

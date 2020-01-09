@@ -1,0 +1,25 @@
+<!-- Display Screen code -->
+<div *ngIf="shouldDisplayScreenCode" id="screen-code-div" fxLayout="col wrap" fxLayoutAlign="center center" fxLayoutGap="50px">
+  <mat-icon> {{ materialIconRecords[iconEnum.TV] }} </mat-icon>
+  <span> {{ screenCode }}</span>
+</div>
+
+<!-- Grid project -->
+<div
+  *ngIf="gridOptions"
+  class="grid-stack"
+  [ngGrid]="gridOptions"
+  (onResizeStop)="updateProjectWidgetsPosition()"
+  (onDragStop)="updateProjectWidgetsPosition()"
+>
+  <span [innerHTML]="'<style>' + project.gridProperties.cssStyle + '</style>' | safeHtml"></span>
+  <span [innerHTML]="getJSLibraries() | safeHtml"></span>
+
+  <suricate-dashboard-screen-widget
+    *ngFor="let gridStackItem of gridStackItems"
+    [projectWidget]="gridStackItem.payload"
+    [gridStackItem]="gridStackItem"
+    [projectToken]="project.token"
+    [readOnly]="readOnly"
+  ></suricate-dashboard-screen-widget>
+</div>

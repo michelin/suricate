@@ -118,7 +118,7 @@ public class WidgetParam extends AbstractAuditingEntity<Long> {
      * @param possibleValuesMap The list values to add
      */
     public void addPossibleValuesMap(List<WidgetParamValue> possibleValuesMap) {
-        possibleValuesMap.forEach(possibleValueMap -> this.addPossibleValueMap(possibleValueMap));
+        possibleValuesMap.forEach(this::addPossibleValueMap);
     }
 
     /**

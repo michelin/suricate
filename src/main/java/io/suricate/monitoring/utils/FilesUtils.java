@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -47,14 +48,14 @@ public final class FilesUtils {
     public static List<File> getFolders(File rootFolder) throws IOException {
         if (rootFolder != null) {
             try (Stream<Path> list = Files.list(rootFolder.toPath())) {
-                return list.filter(Files::isDirectory)
+                return list.filter((Path path) -> path.toFile().isDirectory())
                     .map(Path::toFile)
                     .sorted()
                     .collect(Collectors.toList());
 
             }
         }
-        return null;
+        return Collections.emptyList();
     }
 
     /**
@@ -67,13 +68,13 @@ public final class FilesUtils {
     public static List<File> getFiles(File rootFolder) throws IOException {
         if (rootFolder != null) {
             try (Stream<Path> list = Files.list(rootFolder.toPath())) {
-                return list.filter(Files::isRegularFile)
+                return list.filter((Path path) -> path.toFile().isFile())
                     .map(Path::toFile)
                     .sorted()
                     .collect(Collectors.toList());
             }
         }
-        return null;
+        return Collections.emptyList();
     }
 
     /**

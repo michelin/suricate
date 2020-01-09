@@ -35,7 +35,7 @@ import io.suricate.monitoring.service.mapper.ProjectMapper;
 import io.suricate.monitoring.service.mapper.ProjectWidgetMapper;
 import io.suricate.monitoring.service.scheduler.DashboardScheduleService;
 import io.suricate.monitoring.service.scheduler.NashornWidgetScheduler;
-import io.suricate.monitoring.service.webSocket.DashboardWebSocketService;
+import io.suricate.monitoring.service.websocket.DashboardWebSocketService;
 import io.suricate.monitoring.utils.JavascriptUtils;
 import io.suricate.monitoring.utils.PropertiesUtils;
 import org.apache.commons.lang3.StringUtils;

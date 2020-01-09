@@ -15,7 +15,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collections;
 
 import static com.google.common.truth.Truth.assertThat;
@@ -41,7 +40,7 @@ public class LibraryServiceTest {
         assertThat(libraryRepository.count()).isEqualTo(0);
         assertThat(assetRepository.count()).isEqualTo(0);
 
-        assertThat(libraryService.updateLibraryInDatabase(null)).isNull();
+        assertThat(libraryService.updateLibraryInDatabase(null)).hasSize(0);
         // check empty
         assertThat(libraryRepository.count()).isEqualTo(0);
         assertThat(assetRepository.count()).isEqualTo(0);
