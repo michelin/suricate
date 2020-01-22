@@ -28,21 +28,23 @@ export class HttpFilterService {
    * Ask for the first page
    */
   public static readonly DEFAULT_PAGE = 0;
-  /**
-   * Default page size (number of elements return)
-   */
-  public static readonly DEFAULT_PAGE_SIZE = 6;
+
   /**
    * Used to ask for every elements in one request
    */
   public static readonly INFINITE_PAGE_SIZE = 2000;
 
   /**
+   * Default page size options
+   */
+  public static readonly DEFAULT_PAGE_SIZE_OPTIONS = [5, 10, 20, 50];
+
+  /**
    * Get the default filter
    */
   public static getDefaultFilter(): HttpFilter {
     const httpFilter = new HttpFilter();
-    httpFilter['size'] = HttpFilterService.DEFAULT_PAGE_SIZE;
+    httpFilter['size'] = HttpFilterService.DEFAULT_PAGE_SIZE_OPTIONS[1];
     httpFilter['page'] = HttpFilterService.DEFAULT_PAGE;
 
     return httpFilter;
