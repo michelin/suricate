@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Injector, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { HeaderConfiguration } from '../../models/frontend/header/header-configuration';
 import { FormGroup } from '@angular/forms';
 import { WizardConfiguration } from '../../models/frontend/wizard/wizard-configuration';
@@ -28,6 +28,13 @@ import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { ValueChangedEvent } from '../../models/frontend/form/value-changed-event';
 import { FormField } from '../../models/frontend/form/form-field';
 import { takeWhile } from 'rxjs/operators';
+import { ProjectWidgetFormStepsService } from '../../form-steps/project-widget-form-steps.service';
+import { HttpCategoryService } from '../../services/backend/http-category.service';
+import { WidgetConfiguration } from '../../models/backend/widget-configuration/widget-configuration';
+import { WidgetConfigurationFormFieldsService } from '../../form-fields/widget-configuration-form-fields.service';
+import { DataTypeEnum } from '../../enums/data-type.enum';
+import ChangeEvent = JQuery.ChangeEvent;
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
 /**
  * Generic component used to display wizards
@@ -47,6 +54,14 @@ export class WizardComponent implements OnInit, OnDestroy {
    * Frontend service used to help on the form creation
    */
   private readonly formService: FormService;
+  /**
+   * Frontend service used to retrieve category information
+   */
+  private readonly categoryService: HttpCategoryService;
+  /**
+   * Frontend service used to help on the widget configuration form fields creation
+   */
+  private readonly widgetConfigurationFormFieldsService: WidgetConfigurationFormFieldsService;
   /**
    * Angular service used to manage the route activated by the current component
    */
@@ -88,6 +103,8 @@ export class WizardComponent implements OnInit, OnDestroy {
    */
   constructor(protected readonly injector: Injector) {
     this.formService = injector.get(FormService);
+    this.widgetConfigurationFormFieldsService = injector.get(WidgetConfigurationFormFieldsService);
+    this.categoryService = injector.get(HttpCategoryService);
     this.activatedRoute = injector.get(ActivatedRoute);
     this.router = injector.get(Router);
 
@@ -170,6 +187,32 @@ export class WizardComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Get the category settings. Then, for each category settings, add a field and a control in the widget settings form.
+   *
+   * @param event the slide toggle change event
+   * @param step The step containing the widget and the category information from which to retrieve the category settings
+   */
+  protected getCategorySettings(event: MatSlideToggleChange, step: FormStep): void {
+    this.categoryService.getCategoryConfigurations(step.category.id).subscribe(value => {
+      const categorySettingsFormFields = this.widgetConfigurationFormFieldsService.generateWidgetConfigurationFormFields(value);
+
+      if (event.checked) {
+        step.fields.push(...categorySettingsFormFields);
+        this.formService.addControlsToFormGroupForFields(
+          this.stepperFormGroup.controls[ProjectWidgetFormStepsService.configureWidgetStepKey] as FormGroup,
+          categorySettingsFormFields
+        );
+      } else {
+        step.fields = step.fields.filter(field => categorySettingsFormFields.findIndex(setting => setting.key === field.key) === -1);
+        this.formService.removeControlsToFormGroupForFields(
+          this.stepperFormGroup.controls[ProjectWidgetFormStepsService.configureWidgetStepKey] as FormGroup,
+          categorySettingsFormFields
+        );
+      }
+    });
+  }
+
+  /**
    * Used to know if the back button should be displayed
    */
   private shouldDisplayBackButton(): boolean {
@@ -218,6 +261,15 @@ export class WizardComponent implements OnInit, OnDestroy {
    */
   protected getFormGroupOfStep(step: FormStep): FormGroup {
     return this.stepperFormGroup.controls[step.key] as FormGroup;
+  }
+
+  /**
+   * Does the current step is the widget configuration step or not
+   *
+   * @param step The step
+   */
+  protected isWidgetConfigurationStep(step: FormStep): boolean {
+    return step.imageLink != null || step.description != null || step.information != null;
   }
 
   /**

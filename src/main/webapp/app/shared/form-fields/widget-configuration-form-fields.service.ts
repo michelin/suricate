@@ -64,4 +64,26 @@ export class WidgetConfigurationFormFieldsService {
       }
     ];
   }
+
+  /**
+   * Generate an array of form fields for the given widget configuration
+   *
+   * @param configurations The widget settings
+   */
+  public generateWidgetConfigurationFormFields(configurations?: WidgetConfiguration[]): FormField[] {
+    const formFields: Array<FormField> = [];
+
+    configurations.forEach((configuration, index) => {
+      formFields.push({
+        key: configuration.key,
+        label: configuration.key,
+        type: configuration.dataType,
+        value: configuration ? configuration.value : null,
+        iconPrefix: IconEnum.VALUE,
+        validators: [Validators.required]
+      });
+    });
+
+    return formFields;
+  }
 }
