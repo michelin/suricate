@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Injector, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { HeaderConfiguration } from '../../models/frontend/header/header-configuration';
 import { FormGroup } from '@angular/forms';
 import { WizardConfiguration } from '../../models/frontend/wizard/wizard-configuration';
