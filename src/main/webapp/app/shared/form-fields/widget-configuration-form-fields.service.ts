@@ -108,7 +108,7 @@ export class WidgetConfigurationFormFieldsService {
         for (const categoryField of categorySettingsFormFields) {
           const index = fields.findIndex(field => field.key === categoryField.key);
 
-          if (index != -1) {
+          if (index !== -1) {
             fields.splice(index, 1);
           }
         }
