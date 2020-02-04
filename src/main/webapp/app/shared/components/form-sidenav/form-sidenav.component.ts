@@ -24,6 +24,7 @@ import { ButtonConfiguration } from '../../models/frontend/button/button-configu
 import { IconEnum } from '../../enums/icon.enum';
 import { ValueChangedEvent } from '../../models/frontend/form/value-changed-event';
 import { FormField } from '../../models/frontend/form/form-field';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
 /**
  * Component used to display the form sidenav
@@ -167,5 +168,14 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
    */
   public ngOnDestroy(): void {
     this.isAlive = false;
+  }
+
+  /**
+   * Add the settings of the widget's category to the current widget settings form
+   *
+   * @param event The values retrieved from the child component event emitter
+   */
+  protected getCategorySettings(event: MatSlideToggleChange): void {
+    this.configuration.slideToggleButtonPressed(event, this.formGroup, this.configuration.formFields);
   }
 }

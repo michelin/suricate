@@ -21,6 +21,7 @@ import { IconEnum } from '../../../enums/icon.enum';
 import { Observable } from 'rxjs';
 import { FormGroup } from '@angular/forms';
 import { LinkConfiguration } from '../link/link-configuration';
+import { Category } from '../../backend/widget/category';
 
 /**
  * Describe a step of the wizard
@@ -46,6 +47,14 @@ export class FormStep {
    * Description of the step
    */
   description?: string;
+  /**
+   * Information of the step
+   */
+  information?: string;
+  /**
+   * Category of the step
+   */
+  category?: Category;
   /**
    * The form field for the step
    */

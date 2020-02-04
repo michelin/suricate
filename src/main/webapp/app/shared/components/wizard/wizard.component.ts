@@ -28,6 +28,9 @@ import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { ValueChangedEvent } from '../../models/frontend/form/value-changed-event';
 import { FormField } from '../../models/frontend/form/form-field';
 import { takeWhile } from 'rxjs/operators';
+import { WidgetConfigurationFormFieldsService } from '../../form-fields/widget-configuration-form-fields.service';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { ProjectWidgetFormStepsService } from '../../form-steps/project-widget-form-steps.service';
 
 /**
  * Generic component used to display wizards
@@ -42,11 +45,14 @@ export class WizardComponent implements OnInit, OnDestroy {
    */
   @ViewChild('wizardStepper', { static: true })
   public wizardStepper: MatStepper;
-
   /**
    * Frontend service used to help on the form creation
    */
   private readonly formService: FormService;
+  /**
+   * Frontend service used to help on the widget configuration form fields creation
+   */
+  private readonly widgetConfigurationFormFieldsService: WidgetConfigurationFormFieldsService;
   /**
    * Angular service used to manage the route activated by the current component
    */
@@ -55,7 +61,6 @@ export class WizardComponent implements OnInit, OnDestroy {
    * Angular service used to manage application routes
    */
   protected readonly router: Router;
-
   /**
    * Used to know if the component is instantiated
    */
@@ -80,6 +85,10 @@ export class WizardComponent implements OnInit, OnDestroy {
    * The list of material icons
    */
   protected materialIconRecords = MaterialIconRecords;
+  /**
+   * The current step
+   */
+  protected currentStep: FormStep;
 
   /**
    * Constructor
@@ -88,6 +97,7 @@ export class WizardComponent implements OnInit, OnDestroy {
    */
   constructor(protected readonly injector: Injector) {
     this.formService = injector.get(FormService);
+    this.widgetConfigurationFormFieldsService = injector.get(WidgetConfigurationFormFieldsService);
     this.activatedRoute = injector.get(ActivatedRoute);
     this.router = injector.get(Router);
 
@@ -130,6 +140,7 @@ export class WizardComponent implements OnInit, OnDestroy {
    */
   public ngOnInit(): void {
     this.stepperFormGroup = this.formService.generateFormGroupForSteps(this.wizardConfiguration.steps);
+    this.currentStep = this.wizardConfiguration.steps[0];
   }
 
   /**
@@ -145,15 +156,15 @@ export class WizardComponent implements OnInit, OnDestroy {
    * @param stepperSelectionEvent The step change event
    */
   public onStepChanged(stepperSelectionEvent: StepperSelectionEvent): void {
-    const currentStep = this.wizardConfiguration.steps[stepperSelectionEvent.selectedIndex];
+    this.currentStep = this.wizardConfiguration.steps[stepperSelectionEvent.selectedIndex];
 
-    if (currentStep && currentStep.asyncFields) {
-      currentStep
-        .asyncFields((stepperSelectionEvent.selectedStep.stepControl as unknown) as FormGroup, currentStep)
+    if (this.currentStep && this.currentStep.asyncFields) {
+      this.currentStep
+        .asyncFields((stepperSelectionEvent.selectedStep.stepControl as unknown) as FormGroup, this.currentStep)
         .pipe(takeWhile(() => this.isAlive))
         .subscribe((formFields: FormField[]) => {
-          currentStep.fields = formFields;
-          this.stepperFormGroup.setControl(currentStep.key, this.formService.generateFormGroupForFields(formFields));
+          this.currentStep.fields = formFields;
+          this.stepperFormGroup.setControl(this.currentStep.key, this.formService.generateFormGroupForFields(formFields));
         });
     }
   }
@@ -167,6 +178,20 @@ export class WizardComponent implements OnInit, OnDestroy {
     if (valueChangeEvent.type === 'mosaicOptionSelected' && !this.shouldDisplayDoneButton()) {
       setTimeout(() => this.wizardStepper.next(), 500);
     }
+  }
+
+  /**
+   * Add the settings of the widget's category to the current widget settings form
+   *
+   * @param event The values retrieved from the child component event emitter
+   */
+  protected getCategorySettings(event: MatSlideToggleChange): void {
+    this.widgetConfigurationFormFieldsService.generateCategorySettingsFormFields(
+      this.currentStep.category.id,
+      event.checked,
+      this.stepperFormGroup.controls[this.currentStep.key] as FormGroup,
+      this.currentStep.fields
+    );
   }
 
   /**
@@ -218,6 +243,15 @@ export class WizardComponent implements OnInit, OnDestroy {
    */
   protected getFormGroupOfStep(step: FormStep): FormGroup {
     return this.stepperFormGroup.controls[step.key] as FormGroup;
+  }
+
+  /**
+   * Does the current step is the widget configuration step or not
+   *
+   * @param step The step
+   */
+  protected isWidgetConfigurationStep(step: FormStep): boolean {
+    return this.currentStep.key === ProjectWidgetFormStepsService.configureWidgetStepKey;
   }
 
   /**

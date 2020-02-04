@@ -40,6 +40,10 @@ import { MaterialIconRecords } from '../../../shared/records/material-icon.recor
 import { ProjectWidgetRequest } from '../../../shared/models/backend/project-widget/project-widget-request';
 import { ToastService } from '../../../shared/services/frontend/toast.service';
 import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
+import { WidgetConfigurationFormFieldsService } from '../../../shared/form-fields/widget-configuration-form-fields.service';
+import { FormGroup } from '@angular/forms';
+import { FormField } from '../../../shared/models/frontend/form/form-field';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
 /**
  * Display the grid stack widgets
@@ -147,6 +151,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    * @param {SidenavService} sidenavService Frontend service used to manage sidenav's
    * @param {ProjectWidgetFormStepsService} projectWidgetFormStepsService Frontend service used to generate steps for project widget
    * @param {ToastService} toastService Frontend service used to display messages
+   * @param widgetConfigurationFormFieldsService Frontend service used to manage the widget's category settings
    */
   constructor(
     private readonly elementRef: ElementRef,
@@ -157,7 +162,8 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
     private readonly dialogService: DialogService,
     private readonly sidenavService: SidenavService,
     private readonly projectWidgetFormStepsService: ProjectWidgetFormStepsService,
-    private readonly toastService: ToastService
+    private readonly toastService: ToastService,
+    private readonly widgetConfigurationFormFieldsService: WidgetConfigurationFormFieldsService
   ) {}
 
   /**
@@ -247,8 +253,6 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
       title: 'widget.edit',
       formFields: this.projectWidgetFormStepsService.generateProjectWidgetFormFields(this.widget.params, this.projectWidget.backendConfig),
       save: (formData: FormData) => {
-        console.log(formData);
-
         const projectWidgetRequest: ProjectWidgetRequest = {
           widgetId: this.projectWidget.widgetId,
           customStyle: this.projectWidget.customStyle,
@@ -261,7 +265,15 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
         this.httpProjectWidgetService.updateOneById(this.projectWidget.id, projectWidgetRequest).subscribe(() => {
           this.toastService.sendMessage('widget.edit.success', ToastTypeEnum.SUCCESS);
         });
-      }
+      },
+      displaySlideToggleButton: true,
+      slideToggleButtonPressed: (event: MatSlideToggleChange, formGroup: FormGroup, formFields: FormField[]) =>
+        this.widgetConfigurationFormFieldsService.generateCategorySettingsFormFields(
+          this.widget.category.id,
+          event.checked,
+          formGroup,
+          formFields
+        )
     });
   }
 

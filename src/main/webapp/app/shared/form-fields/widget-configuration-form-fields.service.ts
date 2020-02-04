@@ -17,9 +17,11 @@
 import { Injectable } from '@angular/core';
 import { FormField } from '../models/frontend/form/form-field';
 import { DataTypeEnum } from '../enums/data-type.enum';
-import { Validators } from '@angular/forms';
+import { FormGroup, Validators } from '@angular/forms';
 import { WidgetConfiguration } from '../models/backend/widget-configuration/widget-configuration';
 import { IconEnum } from '../enums/icon.enum';
+import { HttpCategoryService } from '../services/backend/http-category.service';
+import { FormService } from '../services/frontend/form.service';
 
 /**
  * Service used to build the form fields related to a project
@@ -29,7 +31,7 @@ export class WidgetConfigurationFormFieldsService {
   /**
    * Constructor
    */
-  constructor() {}
+  constructor(private readonly categoryService: HttpCategoryService, private readonly formService: FormService) {}
 
   /**
    * Get the list of steps for a dashboard
@@ -63,5 +65,56 @@ export class WidgetConfigurationFormFieldsService {
         validators: [Validators.required]
       }
     ];
+  }
+
+  /**
+   * Generate an array of form fields for the given widget configuration
+   *
+   * @param configurations The widget settings
+   */
+  public generateWidgetConfigurationFormFields(configurations?: WidgetConfiguration[]): FormField[] {
+    const formFields: Array<FormField> = [];
+
+    configurations.forEach((configuration, index) => {
+      formFields.push({
+        key: configuration.key,
+        label: configuration.key,
+        type: configuration.dataType,
+        value: configuration ? configuration.value : null,
+        iconPrefix: IconEnum.VALUE,
+        validators: [Validators.required]
+      });
+    });
+
+    return formFields;
+  }
+
+  /**
+   * Add or remove widget's category fields & controls to the given form
+   *
+   * @param categoryId The category ID from which retrieve the settings
+   * @param checked If yes, add the fields & controls to the given form, otherwise, remove them. Matches to the slide toggle button activation.
+   * @param formGroup The form group to which controls will be added
+   * @param fields A field array to which new fields will be added
+   */
+  generateCategorySettingsFormFields(categoryId: number, checked: boolean, formGroup: FormGroup, fields: FormField[]): void {
+    this.categoryService.getCategoryConfigurations(categoryId).subscribe(value => {
+      const categorySettingsFormFields = this.generateWidgetConfigurationFormFields(value);
+
+      if (checked) {
+        fields.push(...categorySettingsFormFields);
+        this.formService.addControlsToFormGroupForFields(formGroup, categorySettingsFormFields);
+      } else {
+        for (const categoryField of categorySettingsFormFields) {
+          const index = fields.findIndex(field => field.key === categoryField.key);
+
+          if (index != -1) {
+            fields.splice(index, 1);
+          }
+        }
+
+        this.formService.removeControlsToFormGroupForFields(formGroup, categorySettingsFormFields);
+      }
+    });
   }
 }
