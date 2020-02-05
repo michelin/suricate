@@ -251,7 +251,7 @@ export class ProjectWidgetFormStepsService {
    * @param key The configuration key
    * @param widgetConfig The list of configurations
    */
-  private retrieveProjectWidgetValueFromConfig(key: string, widgetConfig?: string): string {
+  public retrieveProjectWidgetValueFromConfig(key: string, widgetConfig?: string): string {
     let value = null;
 
     widgetConfig.split('\n').forEach((keyValue: string) => {

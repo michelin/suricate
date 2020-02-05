@@ -22,6 +22,7 @@ import { WidgetConfiguration } from '../models/backend/widget-configuration/widg
 import { IconEnum } from '../enums/icon.enum';
 import { HttpCategoryService } from '../services/backend/http-category.service';
 import { FormService } from '../services/frontend/form.service';
+import { ProjectWidgetFormStepsService } from '../form-steps/project-widget-form-steps.service';
 
 /**
  * Service used to build the form fields related to a project
@@ -31,7 +32,11 @@ export class WidgetConfigurationFormFieldsService {
   /**
    * Constructor
    */
-  constructor(private readonly categoryService: HttpCategoryService, private readonly formService: FormService) {}
+  constructor(
+    private readonly categoryService: HttpCategoryService,
+    private readonly formService: FormService,
+    private readonly projectWidgetFormStepsService: ProjectWidgetFormStepsService
+  ) {}
 
   /**
    * Get the list of steps for a dashboard
@@ -71,16 +76,26 @@ export class WidgetConfigurationFormFieldsService {
    * Generate an array of form fields for the given widget configuration
    *
    * @param configurations The widget settings
+   * @param widgetBackendConfig The current widget backend configuration
    */
-  public generateWidgetConfigurationFormFields(configurations?: WidgetConfiguration[]): FormField[] {
+  public generateWidgetConfigurationFormFields(configurations?: WidgetConfiguration[], widgetBackendConfig?: string): FormField[] {
     const formFields: Array<FormField> = [];
 
-    configurations.forEach((configuration, index) => {
+    configurations.forEach(configuration => {
+      let backendConfigValue = null;
+
+      if (widgetBackendConfig) {
+        backendConfigValue = this.projectWidgetFormStepsService.retrieveProjectWidgetValueFromConfig(
+          configuration.key,
+          widgetBackendConfig
+        );
+      }
+
       formFields.push({
         key: configuration.key,
         label: configuration.key,
         type: configuration.dataType,
-        value: configuration ? configuration.value : null,
+        value: backendConfigValue ? backendConfigValue : configuration.value,
         iconPrefix: IconEnum.VALUE,
         validators: [Validators.required]
       });
@@ -90,16 +105,23 @@ export class WidgetConfigurationFormFieldsService {
   }
 
   /**
-   * Add or remove widget's category fields & controls to the given form
+   * Add or remove widget's category fields & controls to the given form. The fields generated owns the default values defined by the category.
    *
    * @param categoryId The category ID from which retrieve the settings
    * @param checked If yes, add the fields & controls to the given form, otherwise, remove them. Matches to the slide toggle button activation.
    * @param formGroup The form group to which controls will be added
    * @param fields A field array to which new fields will be added
+   * @param widgetBackendConfig The current widget backend configuration
    */
-  generateCategorySettingsFormFields(categoryId: number, checked: boolean, formGroup: FormGroup, fields: FormField[]): void {
+  public generateCategorySettingsFormFields(
+    categoryId: number,
+    checked: boolean,
+    formGroup: FormGroup,
+    fields: FormField[],
+    widgetBackendConfig?: string
+  ): void {
     this.categoryService.getCategoryConfigurations(categoryId).subscribe(value => {
-      const categorySettingsFormFields = this.generateWidgetConfigurationFormFields(value);
+      const categorySettingsFormFields = this.generateWidgetConfigurationFormFields(value, widgetBackendConfig);
 
       if (checked) {
         fields.push(...categorySettingsFormFields);

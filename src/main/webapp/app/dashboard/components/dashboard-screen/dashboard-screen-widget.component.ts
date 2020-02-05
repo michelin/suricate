@@ -272,7 +272,8 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
           this.widget.category.id,
           event.checked,
           formGroup,
-          formFields
+          formFields,
+          this.projectWidget.backendConfig
         )
     });
   }
