@@ -72,6 +72,11 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
   private isAlive = true;
 
   /**
+   * Save if the slide toggle button has been pressed or not in order to init the category settings at the sidenav opening
+   */
+  public slideToggleButtonChecked = false;
+
+  /**
    * The buttons
    * @type {ButtonConfiguration[]}
    * @protected
@@ -98,6 +103,11 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
       .subscribe((configuration: FormSidenavConfiguration) => {
         this.configuration = configuration;
         this.formGroup = this.formService.generateFormGroupForFields(this.configuration.formFields);
+
+        if (this.slideToggleButtonChecked) {
+          this.configuration.slideToggleButtonPressed({ source: undefined, checked: true }, this.formGroup, this.configuration.formFields);
+        }
+
         this.openSidenav();
       });
   }
@@ -176,6 +186,7 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
    * @param event The values retrieved from the child component event emitter
    */
   protected getCategorySettings(event: MatSlideToggleChange): void {
+    this.slideToggleButtonChecked = event.checked;
     this.configuration.slideToggleButtonPressed(event, this.formGroup, this.configuration.formFields);
   }
 }

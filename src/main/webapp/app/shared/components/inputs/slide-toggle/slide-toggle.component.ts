@@ -33,12 +33,6 @@ export class SlideToggleComponent implements OnInit {
   public label: String;
 
   /**
-   * The current step
-   */
-  @Input()
-  public step?: FormStep;
-
-  /**
    * The event emitter
    */
   @Output()
