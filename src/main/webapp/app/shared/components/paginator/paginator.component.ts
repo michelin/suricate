@@ -16,6 +16,7 @@
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { PageEvent } from '@angular/material';
+import { HttpFilterService } from '../../services/backend/http-filter.service';
 
 /**
  * Component used to display the paginator
@@ -57,5 +58,12 @@ export class PaginatorComponent {
    */
   public onPageChanged(pageEvent: PageEvent): void {
     this.pageChange.emit(pageEvent);
+  }
+
+  /**
+   * Returns the default size options for paginated lists
+   */
+  public getDefaultSizeOptions(): number[] {
+    return HttpFilterService.DEFAULT_PAGE_SIZE_OPTIONS;
   }
 }
