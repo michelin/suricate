@@ -24,7 +24,7 @@ body {
   font: 15px Roboto, sans-serif;
 
   .container {
-    height: 89vh;
+    min-height: 89vh;
     &.without-header {
       min-height: 100vh;
     }
