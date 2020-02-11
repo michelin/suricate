@@ -2,7 +2,7 @@
   <h1>{{ configuration.title | translate | uppercase }}</h1>
 
   <suricate-slide-toggle
-    *ngIf="configuration.displaySlideToggleButton"
+    *ngIf="configuration.slideToggleButtonConfiguration.displaySlideToggleButton"
     [label]="'widget.parameters.category.override.title'"
     (slideToggleButtonPressed)="getCategorySettings($event)"
   >

@@ -105,7 +105,11 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
         this.formGroup = this.formService.generateFormGroupForFields(this.configuration.formFields);
 
         if (this.slideToggleButtonChecked) {
-          this.configuration.slideToggleButtonPressed({ source: undefined, checked: true }, this.formGroup, this.configuration.formFields);
+          this.configuration.slideToggleButtonConfiguration.slideToggleButtonPressed(
+            { source: undefined, checked: true },
+            this.formGroup,
+            this.configuration.formFields
+          );
         }
 
         this.openSidenav();
@@ -187,6 +191,6 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
    */
   protected getCategorySettings(event: MatSlideToggleChange): void {
     this.slideToggleButtonChecked = event.checked;
-    this.configuration.slideToggleButtonPressed(event, this.formGroup, this.configuration.formFields);
+    this.configuration.slideToggleButtonConfiguration.slideToggleButtonPressed(event, this.formGroup, this.configuration.formFields);
   }
 }

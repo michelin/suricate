@@ -266,15 +266,17 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
           this.toastService.sendMessage('widget.edit.success', ToastTypeEnum.SUCCESS);
         });
       },
-      displaySlideToggleButton: true,
-      slideToggleButtonPressed: (event: MatSlideToggleChange, formGroup: FormGroup, formFields: FormField[]) =>
-        this.widgetConfigurationFormFieldsService.generateCategorySettingsFormFields(
-          this.widget.category.id,
-          event.checked,
-          formGroup,
-          formFields,
-          this.projectWidget.backendConfig
-        )
+      slideToggleButtonConfiguration: {
+        displaySlideToggleButton: true,
+        slideToggleButtonPressed: (event: MatSlideToggleChange, formGroup: FormGroup, formFields: FormField[]) =>
+          this.widgetConfigurationFormFieldsService.generateCategorySettingsFormFields(
+            this.widget.category.id,
+            event.checked,
+            formGroup,
+            formFields,
+            this.projectWidget.backendConfig
+          )
+      }
     });
   }
 

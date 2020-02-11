@@ -19,8 +19,7 @@
 import { FormField } from '../form/form-field';
 import { ValueChangedEvent } from '../form/value-changed-event';
 import { Observable } from 'rxjs';
-import { FormGroup } from '@angular/forms';
-import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { SlideToggleButtonConfiguration } from '../button/slide-toggle/slide-toggle-button-configuration';
 
 /**
  * Configuration used by the form sidenav
@@ -51,12 +50,7 @@ export interface FormSidenavConfiguration {
   hideSaveAction?: boolean;
 
   /**
-   * Used to hide the slide toggle button
+   * Configuration of the slide toggle button
    */
-  displaySlideToggleButton?: boolean;
-
-  /**
-   * Function called when the slide toggle button is pressed
-   */
-  slideToggleButtonPressed?: (event: MatSlideToggleChange, formGroup: FormGroup, formField: FormField[]) => void;
+  slideToggleButtonConfiguration?: SlideToggleButtonConfiguration;
 }
