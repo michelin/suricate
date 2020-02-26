@@ -1,7 +1,14 @@
 <div *ngIf="formGroup" class="form-sidenav-container" fxLayout="column" fxFlex="100%">
   <h1>{{ configuration.title | translate | uppercase }}</h1>
 
-  <div fxLayout="column" fxLayoutAlign="space-between" fxFlex="100">
+  <suricate-slide-toggle
+    *ngIf="configuration.slideToggleButtonConfiguration.displaySlideToggleButton"
+    [label]="'widget.parameters.category.override.title'"
+    (slideToggleButtonPressed)="getCategorySettings($event)"
+  >
+  </suricate-slide-toggle>
+
+  <div fxLayout="column" fxLayoutAlign="space-between" fxFlex="100" class="settings-main-container">
     <div fxLayout="column">
       <suricate-input
         *ngFor="let field of configuration.formFields"

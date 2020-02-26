@@ -92,5 +92,8 @@
   "widget.list.import.success": "Widgets importés avec succès",
   "widget.log": "Widget log",
   "widget.select": "Choisir un widget",
+  "widget.description.title": "Description",
+  "widget.information.title": "Informations d'utilisation",
+  "widget.parameters.category.override.title": "Surcharger les paramètres de la catégorie",
   "yes": "Oui"
 }
