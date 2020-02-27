@@ -130,7 +130,7 @@ export class WizardComponent implements OnInit, OnDestroy {
         label: 'done',
         color: 'primary',
         hidden: () => !this.shouldDisplayDoneButton(),
-        callback: () => this.saveWizard(this.stepperFormGroup.value)
+        callback: () => this.validateFormBeforeSave()
       }
     ];
   }
@@ -261,4 +261,15 @@ export class WizardComponent implements OnInit, OnDestroy {
    * @param formData The value of the form
    */
   protected saveWizard(formData: FormData): void {}
+
+  /**
+   * Check if the stepper form is valid before saving the data
+   */
+  protected validateFormBeforeSave(): void {
+    this.formService.validate(this.stepperFormGroup);
+
+    if (this.stepperFormGroup.valid) {
+      this.saveWizard(this.stepperFormGroup.value);
+    }
+  }
 }
