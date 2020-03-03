@@ -18,20 +18,15 @@ package io.suricate.monitoring.service.mapper;
 
 import io.suricate.monitoring.model.dto.api.widget.LibraryResponseDto;
 import io.suricate.monitoring.model.entity.Library;
-import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
-import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 /**
  * Interface that manage the generation DTO/Model objects for library class
  */
-@Component
 @Mapper(componentModel = "spring")
-public abstract class LibraryMapper {
+public interface LibraryMapper {
 
     /* ************************* TO DTO ********************************************** */
 
@@ -47,20 +42,5 @@ public abstract class LibraryMapper {
      */
     @Named("toLibraryDtoDefault")
     @Mapping(target = "assetToken", expression = "java( library.getAsset() != null ? io.suricate.monitoring.utils.IdUtils.encrypt(library.getAsset().getId()) : null )")
-    public abstract LibraryResponseDto toLibraryDtoDefault(Library library);
-
-    /* ******************************************************* */
-    /*                    List Mapping                         */
-    /* ******************************************************* */
-
-    /**
-     * Tranform a list of libraries into a list of librarieDto
-     *
-     * @param libraries The libraries to transform
-     * @return The related list of libraries DTO
-     */
-    @Named("toLibraryDtosDefault")
-    @IterableMapping(qualifiedByName = "toLibraryDtoDefault")
-    public abstract List<LibraryResponseDto> toLibraryDtosDefault(List<Library> libraries);
-
+    LibraryResponseDto toLibraryDtoDefault(Library library);
 }

@@ -17,8 +17,8 @@
 package io.suricate.monitoring.service.mapper;
 
 
-import io.suricate.monitoring.model.dto.api.configuration.ConfigurationResponseDto;
-import io.suricate.monitoring.model.entity.Configuration;
+import io.suricate.monitoring.model.dto.api.widgetconfiguration.WidgetConfigurationResponseDto;
+import io.suricate.monitoring.model.entity.WidgetConfiguration;
 import org.jasypt.encryption.StringEncryptor;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
@@ -40,7 +40,7 @@ import java.util.List;
         CategoryMapper.class
     }
 )
-public abstract class ConfigurationMapper {
+public abstract class WidgetConfigurationMapper {
 
     @Autowired
     @Qualifier("jasyptStringEncryptor")
@@ -55,15 +55,15 @@ public abstract class ConfigurationMapper {
     /**
      * Tranform a configuration into a configurationDto
      *
-     * @param configuration The configuration to transform
+     * @param widgetConfiguration The configuration to transform
      * @return The related configuration DTO
      */
     @Named("toConfigurationDtoDefault")
     @Mapping(target = "category", qualifiedByName = "toCategoryDtoDefault")
     @Mapping(target = "value", expression = "java(" +
-        "configuration.getDataType() == io.suricate.monitoring.model.enums.DataType.PASSWORD ? stringEncryptor.decrypt(configuration.getValue()) : configuration.getValue())" +
+        "widgetConfiguration.getDataType() == io.suricate.monitoring.model.enums.DataType.PASSWORD ? stringEncryptor.decrypt(widgetConfiguration.getValue()) : widgetConfiguration.getValue())" +
         "")
-    public abstract ConfigurationResponseDto toConfigurationDtoDefault(Configuration configuration);
+    public abstract WidgetConfigurationResponseDto toConfigurationDtoDefault(WidgetConfiguration widgetConfiguration);
 
     /* ******************************************************* */
     /*                    List Mapping                         */
@@ -72,10 +72,10 @@ public abstract class ConfigurationMapper {
     /**
      * Tranform a list of configurations into a list of configurationDto
      *
-     * @param configurations The configurations to transform
+     * @param widgetConfigurations The configurations to transform
      * @return The related list of configurations DTO
      */
     @Named("toConfigurationDtosDefault")
     @IterableMapping(qualifiedByName = "toConfigurationDtoDefault")
-    public abstract List<ConfigurationResponseDto> toConfigurationDtosDefault(List<Configuration> configurations);
+    public abstract List<WidgetConfigurationResponseDto> toConfigurationDtosDefault(List<WidgetConfiguration> widgetConfigurations);
 }

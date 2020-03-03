@@ -25,6 +25,8 @@ import { FormOption } from '../models/frontend/form/form-option';
 import { HttpUserService } from '../services/backend/http-user.service';
 import { User } from '../models/backend/user/user';
 import { IconEnum } from '../enums/icon.enum';
+import { HttpFilterService } from '../services/backend/http-filter.service';
+import { Page } from '../models/backend/page';
 
 /**
  * Service used to build the form fields related to project users
@@ -56,7 +58,7 @@ export class ProjectUsersFormFieldsService {
         label: 'username',
         iconPrefix: IconEnum.USER_ADD,
         type: DataTypeEnum.TEXT,
-        options: filter => this.getUsersAutocomplete(filter)
+        options: (usernameFilter: string) => this.getUsersAutocomplete(usernameFilter)
       },
       {
         key: 'users',
@@ -96,19 +98,19 @@ export class ProjectUsersFormFieldsService {
     ];
   }
 
-  private getUsersAutocomplete(filter: string): Observable<FormOption[]> {
-    return this.httpUserService.getAll(filter).pipe(
-      map((users: User[]) => {
-        const formOptions: FormOption[] = [];
+  private getUsersAutocomplete(usernameFilter: string): Observable<FormOption[]> {
+    const filter = HttpFilterService.getDefaultFilter();
+    filter.search = usernameFilter;
 
-        if (filter) {
-          users.forEach((user: User) => {
-            formOptions.push({
-              label: `${user.firstname} ${user.lastname} (${user.username})`,
-              value: user.username
-            });
+    return this.httpUserService.getAll(filter).pipe(
+      map((usersPaged: Page<User>) => {
+        const formOptions: FormOption[] = [];
+        usersPaged.content.forEach((user: User) => {
+          formOptions.push({
+            label: `${user.firstname} ${user.lastname} (${user.username})`,
+            value: user.username
           });
-        }
+        });
 
         return formOptions;
       })

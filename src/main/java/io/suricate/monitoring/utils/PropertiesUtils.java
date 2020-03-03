@@ -16,7 +16,6 @@
 
 package io.suricate.monitoring.utils;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,15 +59,12 @@ public final class PropertiesUtils {
      */
     public static Properties loadFile(String filePath){
         Properties ret = null;
-        InputStream input = null;
         // Check parameter
         if (StringUtils.isBlank(filePath)){
             return ret;
         }
-        try {
-            input = PropertiesUtils.class.getResourceAsStream(filePath);
-
-            if (input != null){
+        try (InputStream input = PropertiesUtils.class.getResourceAsStream(filePath)) {
+            if (input != null) {
                 ret = new Properties();
                 // load a properties file
                 ret.load(input);
@@ -76,9 +72,8 @@ public final class PropertiesUtils {
 
         } catch (IOException ex) {
             LOGGER.error(ex.getMessage(), ex);
-        } finally {
-            IOUtils.closeQuietly(input);
         }
+
         return ret;
     }
 

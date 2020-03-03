@@ -18,7 +18,8 @@ package io.suricate.monitoring.repository;
 
 import io.suricate.monitoring.model.entity.setting.Setting;
 import io.suricate.monitoring.model.enums.SettingType;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,7 +27,7 @@ import java.util.Optional;
 /**
  * Repository used for request Settings in database
  */
-public interface SettingRepository extends JpaRepository<Setting, Long> {
+public interface SettingRepository extends CrudRepository<Setting, Long>, JpaSpecificationExecutor<Setting> {
 
     /**
      * Find every settings by description

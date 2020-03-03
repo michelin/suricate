@@ -24,6 +24,7 @@ import { ButtonConfiguration } from '../../models/frontend/button/button-configu
 import { IconEnum } from '../../enums/icon.enum';
 import { ValueChangedEvent } from '../../models/frontend/form/value-changed-event';
 import { FormField } from '../../models/frontend/form/form-field';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
 /**
  * Component used to display the form sidenav
@@ -61,7 +62,7 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
    * @type {FormGroup}
    * @private
    */
-  private formGroup: FormGroup;
+  public formGroup: FormGroup;
 
   /**
    * Used to unsubscribe observables when the component is destroyed
@@ -69,6 +70,11 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
    * @private
    */
   private isAlive = true;
+
+  /**
+   * Save if the slide toggle button has been pressed or not in order to init the category settings at the sidenav opening
+   */
+  public slideToggleButtonChecked = false;
 
   /**
    * The buttons
@@ -97,6 +103,15 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
       .subscribe((configuration: FormSidenavConfiguration) => {
         this.configuration = configuration;
         this.formGroup = this.formService.generateFormGroupForFields(this.configuration.formFields);
+
+        if (this.slideToggleButtonChecked) {
+          this.configuration.slideToggleButtonConfiguration.slideToggleButtonPressed(
+            { source: undefined, checked: true },
+            this.formGroup,
+            this.configuration.formFields
+          );
+        }
+
         this.openSidenav();
       });
   }
@@ -167,5 +182,15 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
    */
   public ngOnDestroy(): void {
     this.isAlive = false;
+  }
+
+  /**
+   * Add the settings of the widget's category to the current widget settings form
+   *
+   * @param event The values retrieved from the child component event emitter
+   */
+  protected getCategorySettings(event: MatSlideToggleChange): void {
+    this.slideToggleButtonChecked = event.checked;
+    this.configuration.slideToggleButtonConfiguration.slideToggleButtonPressed(event, this.formGroup, this.configuration.formFields);
   }
 }

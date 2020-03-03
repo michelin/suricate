@@ -21,16 +21,14 @@ import io.suricate.monitoring.model.entity.user.Role;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 /**
  * Interface that manage the generation DTO/Model objects for Role class
  */
-@Component
 @Mapper(componentModel = "spring")
-public abstract class RoleMapper {
+public interface RoleMapper {
 
     /* ************************* TO DTO ********************************************** */
 
@@ -45,7 +43,7 @@ public abstract class RoleMapper {
      * @return The related role DTO
      */
     @Named("toRoleDtoDefault")
-    public abstract RoleResponseDto toRoleDtoDefault(Role role);
+    RoleResponseDto toRoleDtoDefault(Role role);
 
     /* ******************************************************* */
     /*                    List Mapping                         */
@@ -59,5 +57,5 @@ public abstract class RoleMapper {
      */
     @Named("toRoleDtosDefault")
     @IterableMapping(qualifiedByName = "toRoleDtoDefault")
-    public abstract List<RoleResponseDto> toRoleDtosDefault(List<Role> roles);
+    List<RoleResponseDto> toRoleDtosDefault(List<Role> roles);
 }

@@ -125,9 +125,8 @@ public class UserSettingService {
      * @param userName              The user name
      * @param settingId             The setting id
      * @param userSettingRequestDto The new user setting value
-     * @return The user settings updated
      */
-    public UserSetting updateUserSetting(final String userName, final Long settingId, final UserSettingRequestDto userSettingRequestDto) {
+    public void updateUserSetting(final String userName, final Long settingId, final UserSettingRequestDto userSettingRequestDto) {
         Optional<UserSetting> userSettingOptional = getUserSetting(userName, settingId);
 
         if (!userSettingOptional.isPresent()) {
@@ -143,7 +142,5 @@ public class UserSettingService {
             userSetting.setUnconstrainedValue(userSettingRequestDto.getUnconstrainedValue());
         }
         userSettingRepository.save(userSetting);
-
-        return userSetting;
     }
 }

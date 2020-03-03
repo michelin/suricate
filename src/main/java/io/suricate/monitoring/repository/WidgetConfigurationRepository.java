@@ -16,9 +16,10 @@
 
 package io.suricate.monitoring.repository;
 
-import io.suricate.monitoring.model.entity.Configuration;
+import io.suricate.monitoring.model.entity.WidgetConfiguration;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
@@ -27,7 +28,7 @@ import java.util.Optional;
 /**
  * Repository used for request Configurations in database
  */
-public interface ConfigurationRepository extends JpaRepository<Configuration, String> {
+public interface WidgetConfigurationRepository extends JpaRepository<WidgetConfiguration, String>, JpaSpecificationExecutor<WidgetConfiguration> {
 
     /**
      * Method used to get all config linked to widget scripts
@@ -35,8 +36,8 @@ public interface ConfigurationRepository extends JpaRepository<Configuration, St
      * @return the list of configuration
      */
     @Cacheable("configuration")
-    @Query("SELECT c FROM Configuration c WHERE c.key LIKE 'WIDGET_CONFIG_%'")
-    List<Configuration> findConfigurationForWidgets();
+    @Query("SELECT c FROM configuration c WHERE c.key LIKE 'WIDGET_CONFIG_%'")
+    List<WidgetConfiguration> findConfigurationForWidgets();
 
     /**
      * Get the list of configurations for a category
@@ -44,6 +45,6 @@ public interface ConfigurationRepository extends JpaRepository<Configuration, St
      * @param categoryId The category to find
      * @return The list of related configurations
      */
-    Optional<List<Configuration>> findConfigurationByCategoryId(Long categoryId);
+    Optional<List<WidgetConfiguration>> findConfigurationByCategoryId(Long categoryId);
 
 }

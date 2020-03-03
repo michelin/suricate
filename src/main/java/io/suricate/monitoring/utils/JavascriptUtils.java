@@ -27,7 +27,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class JavascriptUtils {
-
+    private static final String PACKAGES_LITERAL = "Packages.";
     /**
      * Regex to find loop in script
      */
@@ -62,7 +62,7 @@ public final class JavascriptUtils {
     /**
      * String to inject in script
      */
-    private static final String INJECT_STRING = "Packages." + Methods.class.getName() + ".checkInterupted();";
+    private static final String INJECT_STRING = JavascriptUtils.PACKAGES_LITERAL + Methods.class.getName() + ".checkInterupted();";
 
     private static final int VARIABLE_NAME_INDEX = 0;
     private static final int VARIABLE_TITLE_INDEX = VARIABLE_NAME_INDEX + 1;
@@ -92,7 +92,7 @@ public final class JavascriptUtils {
      * @return the script with all class path updated
      */
     public static String prepare(String data) {
-        return injectInterrupt(StringUtils.trimToEmpty(data).replace("Packages.", "Packages." + Methods.class.getName() + "."));
+        return injectInterrupt(StringUtils.trimToEmpty(data).replace(JavascriptUtils.PACKAGES_LITERAL, JavascriptUtils.PACKAGES_LITERAL + Methods.class.getName() + "."));
     }
 
 
@@ -157,11 +157,7 @@ public final class JavascriptUtils {
         }
         if (array.length > VARIABLE_OPTIONAL_INDEX) {
             String optional = array[VARIABLE_OPTIONAL_INDEX];
-            if (StringUtils.isBlank(optional) || !OPTIONAL.equals(optional)) {
-                widgetVariableResponse.setRequired(true);
-            } else {
-                widgetVariableResponse.setRequired(false);
-            }
+            widgetVariableResponse.setRequired(StringUtils.isBlank(optional) || !OPTIONAL.equals(optional));
         } else {
             widgetVariableResponse.setRequired(true);
         }
@@ -178,7 +174,7 @@ public final class JavascriptUtils {
         if (StringUtils.isNotBlank(content)) {
             ret = new HashMap<>();
             for (String keyValue : content.split(",")) {
-                String tab[] = keyValue.split(":");
+                String[] tab = keyValue.split(":");
                 if (tab.length == KEY_VALUE_TAB_LENGTH) {
                     ret.put(tab[0], tab[1]);
                 }

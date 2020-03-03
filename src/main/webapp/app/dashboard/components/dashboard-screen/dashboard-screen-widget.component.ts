@@ -40,6 +40,10 @@ import { MaterialIconRecords } from '../../../shared/records/material-icon.recor
 import { ProjectWidgetRequest } from '../../../shared/models/backend/project-widget/project-widget-request';
 import { ToastService } from '../../../shared/services/frontend/toast.service';
 import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
+import { WidgetConfigurationFormFieldsService } from '../../../shared/form-fields/widget-configuration-form-fields.service';
+import { FormGroup } from '@angular/forms';
+import { FormField } from '../../../shared/models/frontend/form/form-field';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
 /**
  * Display the grid stack widgets
@@ -91,7 +95,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    * @type {Widget}
    * @protected
    */
-  protected widget: Widget;
+  public widget: Widget;
   /**
    * The enumeration that hold the state of a widget (used in HTML)
    * @type {widgetStateEnum}
@@ -115,13 +119,13 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    * @type {boolean}
    * @protected
    */
-  protected isComponentLoading = true;
+  public isComponentLoading = true;
   /**
    * Used to display the buttons when the screen is not readonly
    * @type {boolean}
    * @protected
    */
-  protected displayButtons = false;
+  public displayButtons = false;
   /**
    * The list of icons
    * @type {IconEnum}
@@ -147,6 +151,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    * @param {SidenavService} sidenavService Frontend service used to manage sidenav's
    * @param {ProjectWidgetFormStepsService} projectWidgetFormStepsService Frontend service used to generate steps for project widget
    * @param {ToastService} toastService Frontend service used to display messages
+   * @param widgetConfigurationFormFieldsService Frontend service used to manage the widget's category settings
    */
   constructor(
     private readonly elementRef: ElementRef,
@@ -157,7 +162,8 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
     private readonly dialogService: DialogService,
     private readonly sidenavService: SidenavService,
     private readonly projectWidgetFormStepsService: ProjectWidgetFormStepsService,
-    private readonly toastService: ToastService
+    private readonly toastService: ToastService,
+    private readonly widgetConfigurationFormFieldsService: WidgetConfigurationFormFieldsService
   ) {}
 
   /**
@@ -181,7 +187,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    *
    * @param gridItemEvent The grid item event
    */
-  protected registerNewPosition(gridItemEvent: NgGridItemEvent): void {
+  public registerNewPosition(gridItemEvent: NgGridItemEvent): void {
     this.gridStackItem.col = gridItemEvent.col;
     this.gridStackItem.row = gridItemEvent.row;
     this.gridStackItem.sizey = gridItemEvent.sizey;
@@ -192,7 +198,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    * Disable click event if the item have been moved
    * @param event The click event
    */
-  protected preventDefault(event: MouseEvent): void {
+  public preventDefault(event: MouseEvent): void {
     if (GridItemUtils.isItemHaveBeenMoved(this.startGridStackItem, this.gridStackItem)) {
       event.preventDefault();
     }
@@ -247,8 +253,6 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
       title: 'widget.edit',
       formFields: this.projectWidgetFormStepsService.generateProjectWidgetFormFields(this.widget.params, this.projectWidget.backendConfig),
       save: (formData: FormData) => {
-        console.log(formData);
-
         const projectWidgetRequest: ProjectWidgetRequest = {
           widgetId: this.projectWidget.widgetId,
           customStyle: this.projectWidget.customStyle,
@@ -261,6 +265,17 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
         this.httpProjectWidgetService.updateOneById(this.projectWidget.id, projectWidgetRequest).subscribe(() => {
           this.toastService.sendMessage('widget.edit.success', ToastTypeEnum.SUCCESS);
         });
+      },
+      slideToggleButtonConfiguration: {
+        displaySlideToggleButton: true,
+        slideToggleButtonPressed: (event: MatSlideToggleChange, formGroup: FormGroup, formFields: FormField[]) =>
+          this.widgetConfigurationFormFieldsService.generateCategorySettingsFormFields(
+            this.widget.category.id,
+            event.checked,
+            formGroup,
+            formFields,
+            this.projectWidget.backendConfig
+          )
       }
     });
   }

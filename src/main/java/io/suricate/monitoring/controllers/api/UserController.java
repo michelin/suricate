@@ -16,6 +16,7 @@
 
 package io.suricate.monitoring.controllers.api;
 
+import io.suricate.monitoring.configuration.swagger.ApiPageable;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.user.UserRequestDto;
 import io.suricate.monitoring.model.dto.api.user.UserResponseDto;
@@ -32,11 +33,12 @@ import io.suricate.monitoring.service.api.UserSettingService;
 import io.suricate.monitoring.service.mapper.UserMapper;
 import io.suricate.monitoring.service.mapper.UserSettingMapper;
 import io.suricate.monitoring.utils.exception.ApiException;
-import io.suricate.monitoring.utils.exception.NoContentException;
 import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
 import io.swagger.annotations.*;
 import org.apache.directory.shared.ldap.aci.UserClass;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -111,23 +113,20 @@ public class UserController {
      */
     @ApiOperation(value = "Get the full list of users", response = UserResponseDto.class, nickname = "getAllUsers")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = UserResponseDto.class, responseContainer = "List"),
+        @ApiResponse(code = 200, message = "Ok"),
         @ApiResponse(code = 204, message = "No Content"),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
+    @ApiPageable
     @GetMapping(value = "/v1/users")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<List<UserResponseDto>> getAll(@RequestParam(value = "filter", required = false, defaultValue = "") String filter) {
-        Optional<List<User>> usersOptional = userService.getAllByUsernameStartWith(filter);
-        if (!usersOptional.isPresent()) {
-            throw new NoContentException(User.class);
-        }
+    public Page<UserResponseDto> getAll(@ApiParam(name = "search", value = "Search keyword")
+                                        @RequestParam(value = "search", required = false) String search,
+                                        Pageable pageable) {
+        Page<User> usersPaged = userService.getAll(search, pageable);
 
-        return ResponseEntity
-            .ok()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(userMapper.toUserDtosDefault(usersOptional.get()));
+        return usersPaged.map(userMapper::toUserDtoDefault);
     }
 
     /**
@@ -249,7 +248,7 @@ public class UserController {
     /**
      * Get a user setting
      *
-     * @param userName    The user name to get
+     * @param userName  The user name to get
      * @param settingId The setting id to get
      * @return The userSetting
      */

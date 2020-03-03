@@ -16,24 +16,25 @@
 
 package io.suricate.monitoring.controllers.api;
 
+import io.suricate.monitoring.configuration.swagger.ApiPageable;
 import io.suricate.monitoring.model.dto.api.ApplicationPropertiesDto;
-import io.suricate.monitoring.model.dto.api.configuration.ConfigurationRequestDto;
-import io.suricate.monitoring.model.dto.api.configuration.ConfigurationResponseDto;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
-import io.suricate.monitoring.model.entity.Configuration;
+import io.suricate.monitoring.model.dto.api.widgetconfiguration.WidgetConfigurationRequestDto;
+import io.suricate.monitoring.model.dto.api.widgetconfiguration.WidgetConfigurationResponseDto;
+import io.suricate.monitoring.model.entity.WidgetConfiguration;
 import io.suricate.monitoring.service.CacheService;
-import io.suricate.monitoring.service.api.ConfigurationService;
-import io.suricate.monitoring.service.mapper.ConfigurationMapper;
-import io.suricate.monitoring.utils.exception.NoContentException;
+import io.suricate.monitoring.service.api.WidgetConfigurationService;
+import io.suricate.monitoring.service.mapper.WidgetConfigurationMapper;
 import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 /**
@@ -41,18 +42,18 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/api")
-@Api(value = "Configuration Controller", tags = {"Configurations"})
-public class ConfigurationController {
+@Api(value = "Widget Configuration Controller", tags = {"Widget Configurations"})
+public class WidgetConfigurationController {
 
     /**
      * The configuration Service
      */
-    private final ConfigurationService configurationService;
+    private final WidgetConfigurationService widgetConfigurationService;
 
     /**
      * The configuration mapper for Domain/Dto tranformation
      */
-    private final ConfigurationMapper configurationMapper;
+    private final WidgetConfigurationMapper widgetConfigurationMapper;
 
     /**
      * The cache service
@@ -62,15 +63,15 @@ public class ConfigurationController {
     /**
      * Constructor
      *
-     * @param configurationService Inject the configuration service
-     * @param configurationMapper  The configuration mapper
+     * @param widgetConfigurationService Inject the configuration service
+     * @param widgetConfigurationMapper  The configuration mapper
      */
     @Autowired
-    public ConfigurationController(final ConfigurationService configurationService,
-                                   final ConfigurationMapper configurationMapper,
-                                   final CacheService cacheService) {
-        this.configurationService = configurationService;
-        this.configurationMapper = configurationMapper;
+    public WidgetConfigurationController(final WidgetConfigurationService widgetConfigurationService,
+                                         final WidgetConfigurationMapper widgetConfigurationMapper,
+                                         final CacheService cacheService) {
+        this.widgetConfigurationService = widgetConfigurationService;
+        this.widgetConfigurationMapper = widgetConfigurationMapper;
         this.cacheService = cacheService;
     }
 
@@ -79,26 +80,21 @@ public class ConfigurationController {
      *
      * @return The list of configurations
      */
-    @ApiOperation(value = "Get the full list of configurations", response = ConfigurationResponseDto.class, nickname = "getAllConfigs")
+    @ApiOperation(value = "Get the full list of configurations", response = WidgetConfigurationResponseDto.class, nickname = "getAllConfigs")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = ConfigurationResponseDto.class, responseContainer = "List"),
+        @ApiResponse(code = 200, message = "Ok", response = WidgetConfigurationResponseDto.class, responseContainer = "List"),
         @ApiResponse(code = 204, message = "No Content"),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
+    @ApiPageable
     @GetMapping(value = "/v1/configurations")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<List<ConfigurationResponseDto>> getAll() {
-        Optional<List<Configuration>> configurationsOptional = configurationService.getAll();
-
-        if (!configurationsOptional.isPresent()) {
-            throw new NoContentException(Configuration.class);
-        }
-
-        return ResponseEntity
-            .ok()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(configurationMapper.toConfigurationDtosDefault(configurationsOptional.get()));
+    public Page<WidgetConfigurationResponseDto> getAll(@ApiParam(name = "search", value = "Search keyword")
+                                                       @RequestParam(value = "search", required = false) String search,
+                                                       Pageable pageable) {
+        Page<WidgetConfiguration> widgetConfigurationsPaged = widgetConfigurationService.getAll(search, pageable);
+        return widgetConfigurationsPaged.map(widgetConfigurationMapper::toConfigurationDtoDefault);
     }
 
     /**
@@ -107,34 +103,34 @@ public class ConfigurationController {
      * @param key The key to find
      * @return The related configuration
      */
-    @ApiOperation(value = "Get a configuration by the key", response = ConfigurationResponseDto.class)
+    @ApiOperation(value = "Get a configuration by the key", response = WidgetConfigurationResponseDto.class)
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = ConfigurationResponseDto.class),
+        @ApiResponse(code = 200, message = "Ok", response = WidgetConfigurationResponseDto.class),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Configuration not found", response = ApiErrorDto.class)
     })
     @GetMapping(value = "/v1/configurations/{key}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<ConfigurationResponseDto> getOneByKey(@ApiParam(name = "key", value = "The configuration key", required = true)
-                                                                @PathVariable("key") final String key) {
-        Optional<Configuration> configurationOptional = configurationService.getOneByKey(key);
+    public ResponseEntity<WidgetConfigurationResponseDto> getOneByKey(@ApiParam(name = "key", value = "The configuration key", required = true)
+                                                                      @PathVariable("key") final String key) {
+        Optional<WidgetConfiguration> configurationOptional = widgetConfigurationService.getOneByKey(key);
 
         if (!configurationOptional.isPresent()) {
-            throw new ObjectNotFoundException(Configuration.class, key);
+            throw new ObjectNotFoundException(WidgetConfiguration.class, key);
         }
 
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(configurationMapper.toConfigurationDtoDefault(configurationOptional.get()));
+            .body(widgetConfigurationMapper.toConfigurationDtoDefault(configurationOptional.get()));
     }
 
     /**
      * Update the configuration by the key
      *
-     * @param key                     The key of the config
-     * @param configurationRequestDto The new configuration values
+     * @param key                           The key of the config
+     * @param widgetConfigurationRequestDto The new configuration values
      * @return The config updated
      */
     @ApiOperation(value = "Update a configuration by the key")
@@ -149,13 +145,13 @@ public class ConfigurationController {
     public ResponseEntity<Void> updateOneByKey(@ApiParam(name = "key", value = "The configuration key", required = true)
                                                @PathVariable("key") final String key,
                                                @ApiParam(name = "configurationResponseDto", value = "The configuration updated", required = true)
-                                               @RequestBody final ConfigurationRequestDto configurationRequestDto) {
-        Optional<Configuration> configurationOptional = configurationService.getOneByKey(key);
+                                               @RequestBody final WidgetConfigurationRequestDto widgetConfigurationRequestDto) {
+        Optional<WidgetConfiguration> configurationOptional = widgetConfigurationService.getOneByKey(key);
         if (!configurationOptional.isPresent()) {
-            throw new ObjectNotFoundException(Configuration.class, key);
+            throw new ObjectNotFoundException(WidgetConfiguration.class, key);
         }
 
-        configurationService.updateConfiguration(configurationOptional.get(), configurationRequestDto.getValue());
+        widgetConfigurationService.updateConfiguration(configurationOptional.get(), widgetConfigurationRequestDto.getValue());
         cacheService.clearCache("configuration");
 
         return ResponseEntity.noContent().build();
@@ -178,13 +174,12 @@ public class ConfigurationController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Void> deleteOneByKey(@ApiParam(name = "key", value = "The configuration key", required = true)
                                                @PathVariable("key") final String key) {
-        Optional<Configuration> configurationOptional = configurationService.getOneByKey(key);
+        Optional<WidgetConfiguration> configurationOptional = widgetConfigurationService.getOneByKey(key);
         if (!configurationOptional.isPresent()) {
-            throw new ObjectNotFoundException(Configuration.class, key);
+            throw new ObjectNotFoundException(WidgetConfiguration.class, key);
         }
 
-        configurationService.deleteOneByKey(key);
-
+        widgetConfigurationService.deleteOneByKey(key);
         return ResponseEntity.noContent().build();
     }
 
@@ -200,21 +195,6 @@ public class ConfigurationController {
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(configurationService.getAuthenticationProvider());
-    }
-
-    /**
-     * Return the value needed for the frontend on the server configuration
-     */
-    @ApiOperation(value = "Get the server full configuration", response = ApplicationPropertiesDto.class)
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = ApplicationPropertiesDto.class, responseContainer = "List")
-    })
-    @GetMapping(value = "/v1/configurations/server")
-    public ResponseEntity<List<ApplicationPropertiesDto>> getServerConfiguration() {
-        return ResponseEntity
-            .ok()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(configurationService.getServerConfiguration());
+            .body(widgetConfigurationService.getAuthenticationProvider());
     }
 }

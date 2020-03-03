@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import springfox.documentation.service.*;
 import springfox.documentation.spi.DocumentationType;
@@ -115,7 +116,7 @@ public class SwaggerConfiguration {
             .groupName(applicationProperties.swagger.groupName)
             .securitySchemes(Collections.singletonList(apiKey()))
             .securityContexts(Collections.singletonList(securityContext()))
-            .ignoredParameterTypes(ConnectedUser.class, ResponseEntity.class)
+            .ignoredParameterTypes(ConnectedUser.class, ResponseEntity.class, Pageable.class)
             .forCodeGeneration(true)
             .useDefaultResponseMessages(false)
             .directModelSubstitute(ByteBuffer.class, String.class)

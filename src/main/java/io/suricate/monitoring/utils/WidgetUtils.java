@@ -25,7 +25,6 @@ import io.suricate.monitoring.model.entity.widget.Widget;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.SystemUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,6 +32,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public final class WidgetUtils {
@@ -62,7 +62,7 @@ public final class WidgetUtils {
         List<Library> libraries = null;
         try {
             List<File> list = FilesUtils.getFiles(rootFolder);
-            if (list != null) {
+            if (!list.isEmpty()) {
                 libraries = new ArrayList<>();
                 for (File file : list) {
                     Library lib = new Library();
@@ -88,8 +88,8 @@ public final class WidgetUtils {
         List<Category> categories = null;
         try {
             List<File> list = FilesUtils.getFolders(rootFolder);
-            if (list == null) {
-                return null;
+            if (list.isEmpty()) {
+                return Collections.emptyList();
             }
             categories = new ArrayList<>();
             for (File folderCategory : list) {
@@ -117,7 +117,7 @@ public final class WidgetUtils {
         }
         Category category = new Category();
         List<File> files = FilesUtils.getFiles(folderCategory);
-        if (files == null) {
+        if (files.isEmpty()) {
             return category;
         }
         for (File file : files) {
@@ -132,7 +132,7 @@ public final class WidgetUtils {
             LOGGER.error("Category {} invalid it's name must not be empty", folderCategory.getPath());
             return null;
         }
-        File widgetRootFolder = new File(folderCategory.getPath() + SystemUtils.FILE_SEPARATOR + "widgets" + SystemUtils.FILE_SEPARATOR);
+        File widgetRootFolder = new File(folderCategory.getPath() + File.separator + "widgets" + File.separator);
         if (widgetRootFolder.exists()) {
             ArrayList<Widget> widgets = new ArrayList<>();
             List<File> folders = FilesUtils.getFolders(widgetRootFolder);
@@ -160,7 +160,7 @@ public final class WidgetUtils {
         }
         Widget widget = new Widget();
         List<File> files = FilesUtils.getFiles(widgetFolder);
-        if (files != null) {
+        if (!files.isEmpty()) {
             for (File file : files) {
                 readWidgetConfig(widget, file);
             }

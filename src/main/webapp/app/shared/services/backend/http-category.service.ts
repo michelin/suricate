@@ -22,8 +22,11 @@ import { Observable } from 'rxjs';
 
 import { Category } from '../../models/backend/widget/category';
 import { Widget } from '../../models/backend/widget/widget';
-import { Configuration } from '../../models/backend/configuration/configuration';
+import { WidgetConfiguration } from '../../models/backend/widget-configuration/widget-configuration';
 import { AbstractHttpService } from './abstract-http.service';
+import { HttpFilter } from '../../models/backend/http-filter';
+import { HttpFilterService } from './http-filter.service';
+import { Page } from '../../models/backend/page';
 
 /**
  * Manage the widget Http calls
@@ -49,19 +52,19 @@ export class HttpCategoryService {
    *
    * @returns {Observable<Category[]>} The categories as observable
    */
-  public getAll(): Observable<Category[]> {
+  public getAll(filter?: HttpFilter): Observable<Page<Category>> {
     const url = `${HttpCategoryService.categoriesApiEndpoint}`;
 
-    return this.httpClient.get<Category[]>(url);
+    return this.httpClient.get<Page<Category>>(HttpFilterService.getFilteredUrl(url, filter));
   }
 
   /**
    * Get the list of configurations for a category
    * @param categoryId The category id
    */
-  public getCategoryConfigurations(categoryId: number): Observable<Configuration[]> {
+  public getCategoryConfigurations(categoryId: number): Observable<WidgetConfiguration[]> {
     const url = `${HttpCategoryService.categoriesApiEndpoint}/${categoryId}/configurations`;
-    return this.httpClient.get<Configuration[]>(url);
+    return this.httpClient.get<WidgetConfiguration[]>(url);
   }
 
   /**

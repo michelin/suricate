@@ -32,6 +32,8 @@ import { WidgetParam } from '../models/backend/widget/widget-param';
 import { FormOption } from '../models/frontend/form/form-option';
 import { WidgetParamValue } from '../models/backend/widget/widget-param-value';
 import { CustomValidators } from 'ng2-validation';
+import { HttpFilterService } from '../services/backend/http-filter.service';
+import { Page } from '../models/backend/page';
 
 /**
  * Service used to build the steps related to a project widget
@@ -125,10 +127,45 @@ export class ProjectWidgetFormStepsService {
     ]);
   }
 
+  /**
+   * Generate the form fields for a project widget
+   *
+   * @param widgetParams The params of the widget
+   * @param widgetConfig The configuration already set
+   */
+  public generateProjectWidgetFormFields(widgetParams: WidgetParam[], widgetConfig?: string): FormField[] {
+    const formFields = [];
+
+    widgetParams.forEach((widgetParam: WidgetParam) => {
+      let configValue = null;
+      if (widgetConfig) {
+        configValue = this.retrieveProjectWidgetValueFromConfig(widgetParam.name, widgetConfig);
+      }
+
+      const formField: FormField = {
+        key: widgetParam.name,
+        type: widgetParam.type,
+        label: widgetParam.description,
+        placeholder: widgetParam.usageExample,
+        value: configValue ? configValue : widgetParam.defaultValue,
+        options: () => ProjectWidgetFormStepsService.getFormOptionsForWidgetParam(widgetParam),
+        validators: this.getValidatorsForWidgetParam(widgetParam)
+      };
+
+      if (widgetParam.type === DataTypeEnum.BOOLEAN) {
+        formField.value = JSON.parse(formField.value ? formField.value : false);
+      }
+
+      formFields.push(formField);
+    });
+
+    return formFields;
+  }
+
   private getCategoryMosaicOptions(): Observable<MosaicFormOption[]> {
-    return this.httpCategoryService.getAll().pipe(
-      switchMap((categories: Category[]) => {
-        return from(categories).pipe(
+    return this.httpCategoryService.getAll(HttpFilterService.getInfiniteFilter()).pipe(
+      switchMap((categoriesPaged: Page<Category>) => {
+        return from(categoriesPaged.content).pipe(
           map((category: Category) => {
             return {
               value: category.id,
@@ -172,6 +209,8 @@ export class ProjectWidgetFormStepsService {
       return this.httpWidgetService.getById(widgetId).pipe(
         tap((widget: Widget) => {
           step.description = widget.description;
+          step.information = widget.info;
+          step.category = widget.category;
           step.imageLink = { link: HttpAssetService.getContentUrl(widget.imageToken) };
         }),
         map((widget: Widget) => {
@@ -181,41 +220,6 @@ export class ProjectWidgetFormStepsService {
     }
 
     return EMPTY;
-  }
-
-  /**
-   * Generate the form fields for a project widget
-   *
-   * @param widgetParams The params of the widget
-   * @param widgetConfig The configuration already set
-   */
-  public generateProjectWidgetFormFields(widgetParams: WidgetParam[], widgetConfig?: string): FormField[] {
-    const formFields = [];
-
-    widgetParams.forEach((widgetParam: WidgetParam) => {
-      let configValue = null;
-      if (widgetConfig) {
-        configValue = this.retrieveProjectWidgetValueFromConfig(widgetParam.name, widgetConfig);
-      }
-
-      const formField: FormField = {
-        key: widgetParam.name,
-        type: widgetParam.type,
-        label: widgetParam.description,
-        placeholder: widgetParam.usageExample,
-        value: configValue ? configValue : widgetParam.defaultValue,
-        options: () => ProjectWidgetFormStepsService.getFormOptionsForWidgetParam(widgetParam),
-        validators: this.getValidatorsForWidgetParam(widgetParam)
-      };
-
-      if (widgetParam.type === DataTypeEnum.BOOLEAN) {
-        formField.value = JSON.parse(formField.value);
-      }
-
-      formFields.push(formField);
-    });
-
-    return formFields;
   }
 
   /**
@@ -247,7 +251,7 @@ export class ProjectWidgetFormStepsService {
    * @param key The configuration key
    * @param widgetConfig The list of configurations
    */
-  private retrieveProjectWidgetValueFromConfig(key: string, widgetConfig?: string): string {
+  public retrieveProjectWidgetValueFromConfig(key: string, widgetConfig?: string): string {
     let value = null;
 
     widgetConfig.split('\n').forEach((keyValue: string) => {

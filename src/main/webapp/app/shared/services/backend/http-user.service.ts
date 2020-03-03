@@ -23,6 +23,9 @@ import { UserRequest } from '../../models/backend/user/user-request';
 import { UserSettingRequest } from '../../models/backend/setting/user-setting-request';
 import { UserSetting } from '../../models/backend/setting/user-setting';
 import { AbstractHttpService } from './abstract-http.service';
+import { Page } from '../../models/backend/page';
+import { HttpFilter } from '../../models/backend/http-filter';
+import { HttpFilterService } from './http-filter.service';
 
 /**
  * Manage the http user calls
@@ -47,10 +50,10 @@ export class HttpUserService implements AbstractHttpService<User | UserRequest> 
    *
    * @returns {Observable<User[]>} The list of users
    */
-  public getAll(filter: string = ''): Observable<User[]> {
-    const url = `${HttpUserService.usersApiEndpoint}?filter=${filter}`;
+  public getAll(filter?: HttpFilter): Observable<Page<User>> {
+    const url = `${HttpUserService.usersApiEndpoint}`;
 
-    return this.httpClient.get<User[]>(url);
+    return this.httpClient.get<Page<User>>(HttpFilterService.getFilteredUrl(url, filter));
   }
 
   /**

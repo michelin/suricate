@@ -113,7 +113,6 @@ public class OAuth2AuthorizationServerConfiguration extends AuthorizationServerC
     public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
         clients
             .inMemory()
-                //TODO: Refactor this with properties
                 .withClient(applicationProperties.oauth.client)
                 .secret(passwordEncoder.encode(applicationProperties.oauth.secret))
                 .authorizedGrantTypes("password", "refresh_token")

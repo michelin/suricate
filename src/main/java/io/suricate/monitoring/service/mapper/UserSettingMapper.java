@@ -22,21 +22,19 @@ import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
-import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 /**
  * Interface that manage the generation DTO/Model objects for UserSetting class
  */
-@Component
 @Mapper(
     componentModel = "spring",
     uses = {
         AllowedSettingValueMapper.class
     }
 )
-public abstract class UserSettingMapper {
+public interface UserSettingMapper {
 
     /* ************************* TO DTO ********************************************** */
 
@@ -54,7 +52,7 @@ public abstract class UserSettingMapper {
     @Mapping(target = "userId", source = "userSetting.user.id")
     @Mapping(target = "settingId", source = "userSetting.setting.id")
     @Mapping(target = "settingValue", qualifiedByName = "toAllowedSettingValueDtoDefault")
-    public abstract UserSettingResponseDto toUserSettingDtoDefault(UserSetting userSetting);
+    UserSettingResponseDto toUserSettingDtoDefault(UserSetting userSetting);
 
 
     /* ******************************************************* */
@@ -69,5 +67,5 @@ public abstract class UserSettingMapper {
      */
     @Named("toUserSettingDtosDefault")
     @IterableMapping(qualifiedByName = "toUserSettingDtoDefault")
-    public abstract List<UserSettingResponseDto> toUserSettingDtosDefault(List<UserSetting> userSettings);
+    List<UserSettingResponseDto> toUserSettingDtosDefault(List<UserSetting> userSettings);
 }

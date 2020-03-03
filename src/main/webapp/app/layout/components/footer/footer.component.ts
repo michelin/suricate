@@ -31,14 +31,14 @@ export class FooterComponent {
    * @type {string}
    * @protected
    */
-  protected version = EnvironmentService.appVersion;
+  public version = EnvironmentService.appVersion;
 
   /**
    * The env type
    * @type {string}
    * @protected
    */
-  protected env = EnvironmentService.appEnv;
+  public env = EnvironmentService.appEnv;
 
   /**
    * The constructor

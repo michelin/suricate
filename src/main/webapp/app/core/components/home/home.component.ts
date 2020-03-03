@@ -44,25 +44,29 @@ export class HomeComponent implements OnInit {
    * @type {HeaderConfiguration}
    * @protected
    */
-  protected headerConfiguration: HeaderConfiguration;
+  public headerConfiguration: HeaderConfiguration;
   /**
    * The list of dashboards
    * @type {Project[]}
    * @protected
    */
-  protected dashboards: Project[];
+  public dashboards: Project[];
   /**
    * The list of icons
    * @type {IconEnum}
    * @protected
    */
-  protected iconEnum = IconEnum;
+  public iconEnum = IconEnum;
   /**
    * The list of material icons
    * @type {MaterialIconRecords}
    * @protected
    */
-  protected materialIconRecords = MaterialIconRecords;
+  public materialIconRecords = MaterialIconRecords;
+  /**
+   * Tell when the list of dashboards is loading
+   */
+  public isLoading: boolean;
 
   /**
    * The constructor
@@ -85,8 +89,11 @@ export class HomeComponent implements OnInit {
    * Called when the home page is init
    */
   public ngOnInit(): void {
+    this.isLoading = true;
+
     this.httpProjectService.getAllForCurrentUser().subscribe(dashboards => {
       this.dashboards = dashboards;
+      this.isLoading = false;
     });
   }
 
@@ -100,7 +107,7 @@ export class HomeComponent implements OnInit {
   /**
    * Function that display the sidenav used to create a new dashboard
    */
-  protected openDashboardFormSidenav(): void {
+  public openDashboardFormSidenav(): void {
     this.sidenavService.openFormSidenav({
       title: 'dashboard.add',
       formFields: ProjectFormFieldsService.generateProjectFormFields(),

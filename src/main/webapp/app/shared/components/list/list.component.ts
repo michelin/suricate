@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Injector, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -26,6 +26,13 @@ import { HeaderConfiguration } from '../../models/frontend/header/header-configu
 import { ToastService } from '../../services/frontend/toast.service';
 import { DialogService } from '../../services/frontend/dialog.service';
 import { SidenavService } from '../../services/frontend/sidenav.service';
+import { Page } from '../../models/backend/page';
+import { HttpFilterService } from '../../services/backend/http-filter.service';
+import { PageEvent } from '@angular/material';
+import { MaterialIconRecords } from '../../records/material-icon.record';
+import { IconEnum } from '../../enums/icon.enum';
+import { fromEvent } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map, takeWhile } from 'rxjs/operators';
 
 /**
  * Generic component used to display and manage lists
@@ -34,7 +41,12 @@ import { SidenavService } from '../../services/frontend/sidenav.service';
   template: '',
   styleUrls: ['./list.component.scss']
 })
-export class ListComponent<T> implements OnInit {
+export class ListComponent<T> implements OnInit, AfterViewInit, OnDestroy {
+  /**
+   * Reference on input search
+   */
+  @ViewChild('inputSearch', { static: false })
+  public inputSearch: ElementRef<HTMLInputElement>;
   /**
    * Frontend service used to display dialogs
    */
@@ -59,7 +71,7 @@ export class ListComponent<T> implements OnInit {
   /**
    * Configuration of the header component
    */
-  protected headerConfiguration: HeaderConfiguration;
+  public headerConfiguration: HeaderConfiguration;
   /**
    * The configuration of the list component
    */
@@ -67,11 +79,27 @@ export class ListComponent<T> implements OnInit {
   /**
    * The object list to display
    */
-  protected objects: T[];
+  protected objectsPaged: Page<T>;
   /**
    * Display the loader when it's true, end hide when it's false
    */
-  protected isLoading = true;
+  public isLoading = true;
+  /**
+   * Used to filter the list
+   */
+  protected httpFilter = HttpFilterService.getDefaultFilter();
+  /**
+   * List of icons
+   */
+  public iconEnum = IconEnum;
+  /**
+   * List of material icon
+   */
+  public materialIconRecords = MaterialIconRecords;
+  /**
+   * Tell if the component is alive
+   */
+  public isAlive = true;
 
   /**
    * Constructor
@@ -95,12 +123,26 @@ export class ListComponent<T> implements OnInit {
   }
 
   /**
+   * Called when the view has been init
+   */
+  public ngAfterViewInit(): void {
+    this.subscribeToInputSearchElement();
+  }
+
+  /**
+   * Called when the component is destroyed
+   */
+  public ngOnDestroy(): void {
+    this.isAlive = false;
+  }
+
+  /**
    * Refresh the list displayed
    */
   protected refreshList(): void {
     this.displayLoader();
-    this.childService.getAll().subscribe((objects: T[]) => {
-      this.objects = objects;
+    this.childService.getAll(this.httpFilter).subscribe((objectsPaged: Page<T>) => {
+      this.objectsPaged = objectsPaged;
       this.hideLoader();
     });
   }
@@ -130,6 +172,18 @@ export class ListComponent<T> implements OnInit {
       return '80%';
     }
     return '100%';
+  }
+
+  /**
+   * Called when we change page from paginator
+   *
+   * @param pageEvent The angular material page event
+   */
+  private pageChanged(pageEvent: PageEvent): void {
+    console.log(pageEvent);
+    this.httpFilter.page = pageEvent.pageIndex;
+    this.httpFilter.size = pageEvent.pageSize;
+    this.refreshList();
   }
 
   /**
@@ -179,4 +233,21 @@ export class ListComponent<T> implements OnInit {
    * @param object The object used for the redirection
    */
   protected redirectToBean(object: T): void {}
+
+  /**
+   * Subscribe to input search event
+   */
+  private subscribeToInputSearchElement(): void {
+    fromEvent(this.inputSearch.nativeElement, 'keyup')
+      .pipe(
+        takeWhile(() => this.isAlive),
+        debounceTime(500),
+        map((event: Event) => (event.target as HTMLInputElement).value),
+        distinctUntilChanged()
+      )
+      .subscribe((searchValue: string) => {
+        this.httpFilter.search = searchValue;
+        this.refreshList();
+      });
+  }
 }

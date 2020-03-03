@@ -17,6 +17,7 @@
 package io.suricate.monitoring.configuration.security;
 
 import io.suricate.monitoring.configuration.ApplicationProperties;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.ldap.core.DirContextOperations;
@@ -30,7 +31,9 @@ import java.util.Collections;
  * Hold the user connected
  *
  */
-@Getter @Setter
+@Getter
+@Setter
+@EqualsAndHashCode(callSuper = true)
 public class ConnectedUser extends User {
 
     /**

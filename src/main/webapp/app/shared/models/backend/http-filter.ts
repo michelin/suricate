@@ -16,15 +16,24 @@
  *
  */
 
-import { Category } from '../widget/category';
-import { DataTypeEnum } from '../../../enums/data-type.enum';
-
 /**
- * The configuration entity
+ * Class that represent a filter request
  */
-export class Configuration {
-  key: string;
-  value: string;
-  dataType: DataTypeEnum;
-  category: Category;
+export class HttpFilter {
+  /**
+   * Search value
+   */
+  search: string;
+  /**
+   * The requested page number
+   */
+  page: number;
+  /**
+   * Number of elements per page
+   */
+  size: number;
+  /**
+   * sort properties
+   */
+  sort: string[];
 }

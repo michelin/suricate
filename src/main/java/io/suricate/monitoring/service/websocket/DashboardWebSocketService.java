@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.service.webSocket;
+package io.suricate.monitoring.service.websocket;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;

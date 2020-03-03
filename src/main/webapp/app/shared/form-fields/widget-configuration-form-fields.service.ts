@@ -17,9 +17,12 @@
 import { Injectable } from '@angular/core';
 import { FormField } from '../models/frontend/form/form-field';
 import { DataTypeEnum } from '../enums/data-type.enum';
-import { Validators } from '@angular/forms';
-import { Configuration } from '../models/backend/configuration/configuration';
+import { FormGroup, Validators } from '@angular/forms';
+import { WidgetConfiguration } from '../models/backend/widget-configuration/widget-configuration';
 import { IconEnum } from '../enums/icon.enum';
+import { HttpCategoryService } from '../services/backend/http-category.service';
+import { FormService } from '../services/frontend/form.service';
+import { ProjectWidgetFormStepsService } from '../form-steps/project-widget-form-steps.service';
 
 /**
  * Service used to build the form fields related to a project
@@ -29,14 +32,18 @@ export class WidgetConfigurationFormFieldsService {
   /**
    * Constructor
    */
-  constructor() {}
+  constructor(
+    private readonly categoryService: HttpCategoryService,
+    private readonly formService: FormService,
+    private readonly projectWidgetFormStepsService: ProjectWidgetFormStepsService
+  ) {}
 
   /**
    * Get the list of steps for a dashboard
    *
    * @param configuration The project used for an edition
    */
-  public generateFormFields(configuration?: Configuration): FormField[] {
+  public generateFormFields(configuration?: WidgetConfiguration): FormField[] {
     return [
       {
         key: 'key',
@@ -63,5 +70,73 @@ export class WidgetConfigurationFormFieldsService {
         validators: [Validators.required]
       }
     ];
+  }
+
+  /**
+   * Generate an array of form fields for the given widget configuration
+   *
+   * @param configurations The widget settings
+   * @param widgetBackendConfig The current widget backend configuration
+   */
+  public generateWidgetConfigurationFormFields(configurations?: WidgetConfiguration[], widgetBackendConfig?: string): FormField[] {
+    const formFields: Array<FormField> = [];
+
+    configurations.forEach(configuration => {
+      let backendConfigValue = null;
+
+      if (widgetBackendConfig) {
+        backendConfigValue = this.projectWidgetFormStepsService.retrieveProjectWidgetValueFromConfig(
+          configuration.key,
+          widgetBackendConfig
+        );
+      }
+
+      formFields.push({
+        key: configuration.key,
+        label: configuration.key,
+        type: configuration.dataType,
+        value: backendConfigValue ? backendConfigValue : configuration.value,
+        iconPrefix: IconEnum.VALUE,
+        validators: [Validators.required]
+      });
+    });
+
+    return formFields;
+  }
+
+  /**
+   * Add or remove widget's category fields & controls to the given form. The fields generated owns the default values defined by the category.
+   *
+   * @param categoryId The category ID from which retrieve the settings
+   * @param checked If yes, add the fields & controls to the given form, otherwise, remove them. Matches to the slide toggle button activation.
+   * @param formGroup The form group to which controls will be added
+   * @param fields A field array to which new fields will be added
+   * @param widgetBackendConfig The current widget backend configuration
+   */
+  public generateCategorySettingsFormFields(
+    categoryId: number,
+    checked: boolean,
+    formGroup: FormGroup,
+    fields: FormField[],
+    widgetBackendConfig?: string
+  ): void {
+    this.categoryService.getCategoryConfigurations(categoryId).subscribe(value => {
+      const categorySettingsFormFields = this.generateWidgetConfigurationFormFields(value, widgetBackendConfig);
+
+      if (checked) {
+        fields.push(...categorySettingsFormFields);
+        this.formService.addControlsToFormGroupForFields(formGroup, categorySettingsFormFields);
+      } else {
+        for (const categoryField of categorySettingsFormFields) {
+          const index = fields.findIndex(field => field.key === categoryField.key);
+
+          if (index !== -1) {
+            fields.splice(index, 1);
+          }
+        }
+
+        this.formService.removeControlsToFormGroupForFields(formGroup, categorySettingsFormFields);
+      }
+    });
   }
 }

@@ -21,6 +21,9 @@ import { Observable } from 'rxjs';
 import { Role } from '../../models/backend/role/role';
 import { User } from '../../models/backend/user/user';
 import { AbstractHttpService } from './abstract-http.service';
+import { HttpFilter } from '../../models/backend/http-filter';
+import { HttpFilterService } from './http-filter.service';
+import { Page } from '../../models/backend/page';
 
 /**
  * Manage the http role calls
@@ -45,10 +48,10 @@ export class HttpRoleService {
    *
    * @returns {Observable<Role[]>}
    */
-  public getRoles(): Observable<Role[]> {
+  public getRoles(filter?: HttpFilter): Observable<Page<Role>> {
     const url = `${HttpRoleService.rolesApiEndpoint}`;
 
-    return this.httpClient.get<Role[]>(url);
+    return this.httpClient.get<Page<Role>>(HttpFilterService.getFilteredUrl(url, filter));
   }
 
   /**

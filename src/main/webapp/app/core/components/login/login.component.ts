@@ -19,7 +19,7 @@ import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { AuthenticationService } from '../../../shared/services/frontend/authentication.service';
-import { HttpConfigurationService } from '../../../shared/services/backend/http-configuration.service';
+import { HttpWidgetConfigurationService } from '../../../shared/services/backend/http-widget-configuration.service';
 import { ApplicationProperties } from '../../../shared/models/backend/application-properties';
 import { AuthenticationProviderEnum } from '../../../shared/enums/authentication-provider.enum';
 import { FormService } from '../../../shared/services/frontend/form.service';
@@ -60,7 +60,7 @@ export class LoginComponent implements OnInit {
    * @type {boolean}
    * @protected
    */
-  protected formSubmitAttempt = false;
+  public formSubmitAttempt = false;
   /**
    * True if the user provider is LDAP
    * @type {boolean}
@@ -72,17 +72,54 @@ export class LoginComponent implements OnInit {
    * Constructor
    *
    * @param {Router} router Angular service used to manage the application routes
-   * @param {HttpConfigurationService} httpConfigurationService Suricate service used to manage http calls for configurations
+   * @param {HttpWidgetConfigurationService} httpConfigurationService Suricate service used to manage http calls for configurations
    * @param {AuthenticationService} authenticationService Suricate service used to manage authentications
    * @param {FormService} formService Frontend service used manage/create forms
    */
   constructor(
     private readonly router: Router,
-    private readonly httpConfigurationService: HttpConfigurationService,
+    private readonly httpConfigurationService: HttpWidgetConfigurationService,
     private readonly authenticationService: AuthenticationService,
     private readonly formService: FormService
   ) {
     this.initButtons();
+  }
+
+  /**
+   * Called when the component is init
+   */
+  public ngOnInit(): void {
+    if (AuthenticationService.isLoggedIn()) {
+      this.navigateToHomePage();
+      return;
+    }
+
+    this.httpConfigurationService.getAuthenticationProvider().subscribe((applicationProperties: ApplicationProperties) => {
+      this.isLdapServerUserProvider = applicationProperties.value.toUpperCase() === AuthenticationProviderEnum.LDAP;
+    });
+
+    this.initLoginForm();
+  }
+
+  /**
+   * Execute login action
+   */
+  protected login(): void {
+    this.formService.validate(this.loginForm);
+
+    if (this.loginForm.valid) {
+      this.formSubmitAttempt = true;
+
+      this.authenticationService.authenticate(this.loginForm.value).subscribe(
+        () => {
+          this.navigateToHomePage();
+        },
+        () => {
+          // Authentication failed
+          this.formSubmitAttempt = false;
+        }
+      );
+    }
   }
 
   /**
@@ -105,48 +142,11 @@ export class LoginComponent implements OnInit {
   }
 
   /**
-   * Called when the component is init
-   */
-  public ngOnInit(): void {
-    if (AuthenticationService.isLoggedIn()) {
-      this.navigateToHomePage();
-      return;
-    }
-
-    this.httpConfigurationService.getAuthenticationProvider().subscribe((applicationProperties: ApplicationProperties) => {
-      this.isLdapServerUserProvider = applicationProperties.value.toUpperCase() === AuthenticationProviderEnum.LDAP;
-    });
-
-    this.initLoginForm();
-  }
-
-  /**
    * Create the login form
    */
   private initLoginForm(): void {
     this.formFields = LoginFormFieldsService.generateFormFields();
     this.loginForm = this.formService.generateFormGroupForFields(this.formFields);
-  }
-
-  /**
-   * Execute login action
-   */
-  protected login(): void {
-    this.formService.validate(this.loginForm);
-
-    if (this.loginForm.valid) {
-      this.formSubmitAttempt = true;
-
-      this.authenticationService.authenticate(this.loginForm.value).subscribe(
-        () => {
-          this.navigateToHomePage();
-        },
-        () => {
-          // Authentication failed
-          this.formSubmitAttempt = false;
-        }
-      );
-    }
   }
 
   /**

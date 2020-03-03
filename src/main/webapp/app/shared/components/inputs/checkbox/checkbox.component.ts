@@ -35,7 +35,7 @@ export class CheckboxComponent extends InputComponent {
   /**
    * Manage the changes on checkbox
    */
-  protected checkboxChange(): void {
+  public checkboxChange(): void {
     this.emitValueChange('checkbox');
   }
 }

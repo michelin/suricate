@@ -32,7 +32,7 @@ export class CommunicationDialogComponent implements OnInit {
    * @type {CommunicationDialogConfiguration}
    * @protected
    */
-  protected configuration: CommunicationDialogConfiguration;
+  public configuration: CommunicationDialogConfiguration;
 
   /**
    * Constructor

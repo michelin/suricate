@@ -62,6 +62,7 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
 
     this.initHeaderConfiguration();
     this.initListConfiguration();
+    this.initFilter();
   }
 
   /**
@@ -72,6 +73,27 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
   private static stopEventPropagation(event: Event): void {
     event.preventDefault();
     event.stopPropagation();
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  protected getFirstLabel(project: Project): string {
+    return project.name;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  protected getSecondLabel(project: Project): string {
+    return project.token;
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  protected redirectToBean(project: Project): void {
+    this.router.navigate(['/dashboards', project.token]);
   }
 
   /**
@@ -108,24 +130,10 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
   }
 
   /**
-   * {@inheritDoc}
+   * Init filter for list component
    */
-  protected getFirstLabel(project: Project): string {
-    return project.name;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  protected getSecondLabel(project: Project): string {
-    return project.token;
-  }
-
-  /**
-   * {@inheritDoc}
-   */
-  protected redirectToBean(project: Project): void {
-    this.router.navigate(['/dashboards', project.token]);
+  private initFilter(): void {
+    this.httpFilter.sort = ['name,asc'];
   }
 
   /**

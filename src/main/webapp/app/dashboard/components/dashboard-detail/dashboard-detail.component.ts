@@ -95,7 +95,7 @@ export class DashboardDetailComponent implements OnInit {
    * @type boolean
    * @protected
    */
-  protected isDashboardLoading = true;
+  public isDashboardLoading = true;
   /**
    * The timer used to take the screenshot
    * @type {NodeJS.Timer}

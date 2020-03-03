@@ -18,16 +18,20 @@ package io.suricate.monitoring.service.api;
 
 import io.suricate.monitoring.model.dto.api.widget.WidgetRequestDto;
 import io.suricate.monitoring.model.dto.nashorn.WidgetVariableResponse;
-import io.suricate.monitoring.model.entity.Configuration;
 import io.suricate.monitoring.model.entity.Library;
+import io.suricate.monitoring.model.entity.WidgetConfiguration;
 import io.suricate.monitoring.model.entity.widget.*;
 import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
 import io.suricate.monitoring.repository.WidgetRepository;
 import io.suricate.monitoring.service.CacheService;
+import io.suricate.monitoring.service.specification.WidgetSearchSpecification;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -61,7 +65,7 @@ public class WidgetService {
     /**
      * Configuration Service
      */
-    private final ConfigurationService configurationService;
+    private final WidgetConfigurationService widgetConfigurationService;
 
     /**
      * Cache service
@@ -76,22 +80,22 @@ public class WidgetService {
     /**
      * Constructor
      *
-     * @param widgetRepository     The widget repository
-     * @param categoryService      The category service
-     * @param configurationService The configuration service
-     * @param cacheService         The cache service
-     * @param assetService         The asset service
+     * @param widgetRepository           The widget repository
+     * @param categoryService            The category service
+     * @param widgetConfigurationService The configuration service
+     * @param cacheService               The cache service
+     * @param assetService               The asset service
      */
     @Autowired
     public WidgetService(final WidgetRepository widgetRepository,
                          final CategoryService categoryService,
-                         final ConfigurationService configurationService,
+                         final WidgetConfigurationService widgetConfigurationService,
                          final CacheService cacheService,
                          final AssetService assetService) {
 
         this.widgetRepository = widgetRepository;
         this.categoryService = categoryService;
-        this.configurationService = configurationService;
+        this.widgetConfigurationService = widgetConfigurationService;
         this.cacheService = cacheService;
         this.assetService = assetService;
     }
@@ -102,14 +106,9 @@ public class WidgetService {
      * @return The list of widgets order by category name
      */
     @Transactional
-    public Optional<List<Widget>> getAll() {
-        List<Widget> widgets = widgetRepository.findAllByOrderByCategory_NameAsc();
-
-        if (widgets == null || widgets.isEmpty()) {
-            return Optional.empty();
-        }
-
-        return Optional.of(widgets);
+    public Page<Widget> getAll(String search, Pageable pageable) {
+        return widgetRepository.findAll(Specification.where(new WidgetSearchSpecification(search))
+                .or(WidgetSearchSpecification.getWidgetByCategoryNameSpecification(search)), pageable);
     }
 
     /**
@@ -120,12 +119,7 @@ public class WidgetService {
      */
     public Widget findOne(final Long id) {
         Optional<Widget> widgetOptional = widgetRepository.findById(id);
-
-        if (!widgetOptional.isPresent()) {
-            return null;
-        }
-
-        return widgetOptional.get();
+        return widgetOptional.orElse(null);
     }
 
     /**
@@ -152,10 +146,10 @@ public class WidgetService {
      * @return The related global configuration
      */
     public List<WidgetParam> getGlobalWidgetParamsFromConfiguration(final Widget widget) {
-        Optional<List<Configuration>> configurationsOptional = configurationService.getConfigurationForCategory(widget.getCategory().getId());
+        Optional<List<WidgetConfiguration>> configurationsOptional = widgetConfigurationService.getConfigurationForCategory(widget.getCategory().getId());
 
         return configurationsOptional
-            .map(configurations -> configurations.stream().map(ConfigurationService::initParamFromConfiguration).collect(Collectors.toList()))
+            .map(configurations -> configurations.stream().map(WidgetConfigurationService::initParamFromConfiguration).collect(Collectors.toList()))
             .orElseGet(ArrayList::new);
     }
 
@@ -195,9 +189,6 @@ public class WidgetService {
             if (widgetVariableResponse.getType() != null) {
                 switch (widgetVariableResponse.getType()) {
                     case COMBO:
-                        widgetVariableResponse.setValues(getWidgetParamValuesAsMap(widgetParam.getPossibleValuesMap()));
-                        break;
-
                     case MULTIPLE:
                         widgetVariableResponse.setValues(getWidgetParamValuesAsMap(widgetParam.getPossibleValuesMap()));
                         break;
