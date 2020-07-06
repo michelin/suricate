@@ -71,10 +71,10 @@ public class UserDetailsDatabaseService implements UserDetailsService {
         }
 
         Collection<? extends GrantedAuthority> authorities = currentUser
-            .map(user -> user.getRoles().stream()
-                .map(roles -> new SimpleGrantedAuthority(roles.getName()))
-                .collect(Collectors.toList()))
-                                                                    .orElseThrow(() -> new UsernameNotFoundException("User " + username + " was not authorized"));
+                .map(user -> user.getRoles().stream()
+                        .map(roles -> new SimpleGrantedAuthority(roles.getName()))
+                        .collect(Collectors.toList()))
+                .orElseThrow(() -> new UsernameNotFoundException("User " + username + " was not authorized"));
 
         return new ConnectedUser(currentUser.get(), authorities);
     }

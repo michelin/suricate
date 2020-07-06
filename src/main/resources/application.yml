@@ -55,7 +55,6 @@ security.oauth2:
   client:
     client-id: suricateAngular
     client-secret: suricateAngularSecret
-  resource.filter-order:  3
 
 ### Actuator ###
 management:
@@ -81,14 +80,14 @@ logging:
   file: /tmp/suricate-io/suricate/log
   level:
     io.suricate.monitoring: DEBUG
-    net.sf.jmimemagic.MagicParser:  off
+    net.sf.jmimemagic.MagicParser: off
     org.springframework.boot.actuate: INFO
     org.springframework.security.web.csrf.CsrfFilter: DEBUG
 
 ### Encryptor ###
 jasypt.encryptor:
-  password:  ZAkOZ9rIJCDVk6a10
-  stringOutputType:  hexadecimal
+  password: ZAkOZ9rIJCDVk6a10
+  stringOutputType: hexadecimal
 
 ##########################################
 ###       Application properties       ###
@@ -109,16 +108,16 @@ application:
       userSearchBase:
     ### JWT Configuration ###
     jwt:
-      secret:  ${random.value}
-      tokenValidity:  1800
-      tokenValidityRememberMe:  2592000
+      secret: ${random.value}
+      tokenValidity: 1800
+      tokenValidityRememberMe: 2592000
   ### Cors ###
   cors:
-    allow-credentials:  true
-    allowed-headers:  Content-Type, Accept, Authorization, X-Requested-With
-    allowed-methods:  GET,POST,OPTIONS,DELETE,PUT
-    allowed-origins:  "*"
-    max-age:  3600
+    allow-credentials: true
+    allowed-headers: Content-Type, Accept, Authorization, X-Requested-With
+    allowed-methods: GET,POST,OPTIONS,DELETE,PUT
+    allowed-origins: '*'
+    max-age: 3600
   ### OAuth ###
   oauth:
     client: suricateAngular
@@ -159,5 +158,3 @@ proxy:
   host:
   port:
   noProxyDomains:
-
-
