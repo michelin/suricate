@@ -141,7 +141,7 @@
         <dependency>
             <groupId>com.github.ulisesbocchio</groupId>
             <artifactId>jasypt-spring-boot-starter</artifactId>
-            <version>2.1.2</version>
+            <version>3.0.0</version>
         </dependency>
         <dependency>
             <groupId>org.ehcache</groupId>
@@ -162,7 +162,7 @@
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
-            <version>3.4.1</version>
+            <version>3.4.5</version>
         </dependency>
 
         <dependency>
@@ -264,7 +264,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>28.1-jre</version>
+            <version>29.0-jre</version>
         </dependency>
 
         <dependency>
@@ -294,14 +294,14 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.12</version>
+            <version>4.13</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>com.google.truth</groupId>
             <artifactId>truth</artifactId>
-            <version>1.0</version>
+            <version>1.0.1</version>
             <scope>test</scope>
         </dependency>
 
@@ -454,7 +454,7 @@
                     <plugin>
                         <groupId>com.github.eirslett</groupId>
                         <artifactId>frontend-maven-plugin</artifactId>
-                        <version>1.8.0</version>
+                        <version>1.10.0</version>
                         <configuration>
                             <installDirectory>target</installDirectory>
                         </configuration>
@@ -524,7 +524,7 @@
                     <plugin>
                         <groupId>com.github.eirslett</groupId>
                         <artifactId>frontend-maven-plugin</artifactId>
-                        <version>1.8.0</version>
+                        <version>1.10.0</version>
                         <configuration>
                             <installDirectory>target</installDirectory>
                         </configuration>
