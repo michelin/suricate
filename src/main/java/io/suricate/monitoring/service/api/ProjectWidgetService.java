@@ -422,6 +422,7 @@ public class ProjectWidgetService {
         return backendConfigAsMap
             .entrySet()
             .stream()
+            .filter(backendConfigEntrySet -> backendConfigEntrySet.getValue() != null)
             .map(backendConfigEntrySet -> backendConfigEntrySet.getKey() + "=" + backendConfigEntrySet.getValue())
             .collect(Collectors.joining("\n"));
     }

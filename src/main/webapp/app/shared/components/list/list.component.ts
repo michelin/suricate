@@ -182,6 +182,7 @@ export class ListComponent<T> implements OnInit, AfterViewInit, OnDestroy {
   private pageChanged(pageEvent: PageEvent): void {
     console.log(pageEvent);
     this.httpFilter.page = pageEvent.pageIndex;
+    this.httpFilter.size = pageEvent.pageSize;
     this.refreshList();
   }
 

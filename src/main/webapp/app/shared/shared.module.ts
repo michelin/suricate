@@ -51,6 +51,7 @@ import { ColorPickerComponent } from './components/inputs/color-picker/color-pic
 import { FieldsComponent } from './components/inputs/fields/fields.component';
 import { MosaicComponent } from './components/inputs/mosaic/mosaic.component';
 import { PaginatorComponent } from './components/paginator/paginator.component';
+import { SlideToggleComponent } from './components/inputs/slide-toggle/slide-toggle.component';
 
 @NgModule({
   imports: [
@@ -89,7 +90,8 @@ import { PaginatorComponent } from './components/paginator/paginator.component';
     ColorPickerComponent,
     FieldsComponent,
     MosaicComponent,
-    PaginatorComponent
+    PaginatorComponent,
+    SlideToggleComponent
   ],
   exports: [
     BrowserAnimationsModule,
@@ -122,7 +124,8 @@ import { PaginatorComponent } from './components/paginator/paginator.component';
     ListComponent,
     WizardComponent,
     ColorPickerComponent,
-    PaginatorComponent
+    PaginatorComponent,
+    SlideToggleComponent
   ],
   entryComponents: [CommunicationDialogComponent, ConfirmDialogComponent],
   providers: [

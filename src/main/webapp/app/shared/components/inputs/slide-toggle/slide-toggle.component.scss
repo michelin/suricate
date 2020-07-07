@@ -1,4 +1,4 @@
-/*!
+/*
  *  /*
  *  * Copyright 2012-2018 the original author or authors.
  *  *
@@ -15,20 +15,3 @@
  *  * limitations under the License.
  *
  */
-
-:host {
-  min-height: 100%;
-
-  .form-sidenav-container {
-    padding: 15px 35px 35px 35px;
-
-    h1 {
-      font-size: 1.4em;
-      margin-block-end: 1.4em;
-    }
-
-    .settings-main-container {
-      margin-top: 20px;
-    }
-  }
-}
