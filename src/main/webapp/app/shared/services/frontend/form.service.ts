@@ -91,6 +91,38 @@ export class FormService {
   }
 
   /**
+   * Add controls to the given form group for the given fields
+   *
+   * @param form The form from which add the controls
+   * @param fields The form fields to instantiate
+   */
+  public addControlsToFormGroupForFields(form: FormGroup, fields: FormField[]): void {
+    if (fields) {
+      fields.forEach(field => {
+        if (field.type === DataTypeEnum.FIELDS) {
+          form.addControl(field.key, this.generateFormArrayForField(field));
+        } else {
+          form.addControl(field.key, this.generateFormControl(field));
+        }
+      });
+    }
+  }
+
+  /**
+   * Remove controls from the given form group for the given fields
+   *
+   * @param form The form from which remove the controls
+   * @param fields The form fields for which we want to remove the controls
+   */
+  public removeControlsToFormGroupForFields(form: FormGroup, fields: FormField[]): void {
+    if (fields) {
+      fields.forEach(field => {
+        form.removeControl(field.key);
+      });
+    }
+  }
+
+  /**
    * Create a form array used for fields data type
    *
    * @param field The parent field (with type equals to dataType.fields)

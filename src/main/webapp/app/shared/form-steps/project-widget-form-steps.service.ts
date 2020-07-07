@@ -153,7 +153,7 @@ export class ProjectWidgetFormStepsService {
       };
 
       if (widgetParam.type === DataTypeEnum.BOOLEAN) {
-        formField.value = JSON.parse(formField.value);
+        formField.value = JSON.parse(formField.value ? formField.value : false);
       }
 
       formFields.push(formField);
@@ -209,6 +209,8 @@ export class ProjectWidgetFormStepsService {
       return this.httpWidgetService.getById(widgetId).pipe(
         tap((widget: Widget) => {
           step.description = widget.description;
+          step.information = widget.info;
+          step.category = widget.category;
           step.imageLink = { link: HttpAssetService.getContentUrl(widget.imageToken) };
         }),
         map((widget: Widget) => {
@@ -249,7 +251,7 @@ export class ProjectWidgetFormStepsService {
    * @param key The configuration key
    * @param widgetConfig The list of configurations
    */
-  private retrieveProjectWidgetValueFromConfig(key: string, widgetConfig?: string): string {
+  public retrieveProjectWidgetValueFromConfig(key: string, widgetConfig?: string): string {
     let value = null;
 
     widgetConfig.split('\n').forEach((keyValue: string) => {
