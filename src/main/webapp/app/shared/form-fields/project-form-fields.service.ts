@@ -18,7 +18,6 @@ import { Injectable } from '@angular/core';
 import { Project } from '../models/backend/project/project';
 import { DataTypeEnum } from '../enums/data-type.enum';
 import { Validators } from '@angular/forms';
-import { CustomValidators } from 'ng2-validation';
 import { FormField } from '../models/frontend/form/form-field';
 import { IconEnum } from '../enums/icon.enum';
 import { CssService } from '../services/frontend/css.service';
@@ -59,7 +58,7 @@ export class ProjectFormFieldsService {
         iconPrefix: IconEnum.HEIGHT,
         type: DataTypeEnum.NUMBER,
         value: project ? project.gridProperties.widgetHeight : 360,
-        validators: [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]
+        validators: [Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1)]
       },
       {
         key: 'maxColumn',
@@ -67,7 +66,7 @@ export class ProjectFormFieldsService {
         iconPrefix: IconEnum.COLUMN,
         type: DataTypeEnum.NUMBER,
         value: project ? project.gridProperties.maxColumn : 5,
-        validators: [Validators.required, CustomValidators.digits, CustomValidators.gt(0)]
+        validators: [Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1)]
       },
       {
         key: 'gridBackgroundColor',

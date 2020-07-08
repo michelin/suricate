@@ -18,7 +18,6 @@ import { Injectable } from '@angular/core';
 import { DataTypeEnum } from '../enums/data-type.enum';
 import { Validators } from '@angular/forms';
 import { FormField } from '../models/frontend/form/form-field';
-import { CustomValidators } from 'ng2-validation';
 import { IconEnum } from '../enums/icon.enum';
 
 /**
@@ -61,7 +60,7 @@ export class RegisterFormFieldsService {
         key: 'email',
         label: 'email',
         type: DataTypeEnum.TEXT,
-        validators: [Validators.required, CustomValidators.email],
+        validators: [Validators.required, Validators.email],
         iconPrefix: IconEnum.EMAIL
       },
       {

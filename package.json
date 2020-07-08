@@ -44,7 +44,6 @@
     "material-design-icons-iconfont": "^5.0.1",
     "moment": "^2.22.1",
     "ng2-stomp-service": "^1.2.2",
-    "ng2-validation": "^4.2.0",
     "ngx-color-picker": "^8.2.0",
     "normalize-scss": "^7.0.1",
     "rxjs": "6.5.3",

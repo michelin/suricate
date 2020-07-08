@@ -16,7 +16,7 @@
 
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormGroup } from '@angular/forms';
+import { FormGroup, Validators } from '@angular/forms';
 
 import { Project } from '../../../shared/models/backend/project/project';
 import { WebsocketClient } from '../../../shared/models/backend/websocket-client';
@@ -25,7 +25,6 @@ import { HttpProjectService } from '../../../shared/services/backend/http-projec
 import { FormService } from '../../../shared/services/frontend/form.service';
 import { TranslateService } from '@ngx-translate/core';
 import { DataTypeEnum } from '../../../shared/enums/data-type.enum';
-import { CustomValidators } from 'ng2-validation';
 import { FormField } from '../../../shared/models/frontend/form/form-field';
 import { ButtonConfiguration } from '../../../shared/models/frontend/button/button-configuration';
 import { ButtonTypeEnum } from '../../../shared/enums/button-type.enum';
@@ -153,7 +152,7 @@ export class TvManagementDialogComponent implements OnInit {
         key: 'screenCode',
         label: 'screen.code',
         type: DataTypeEnum.NUMBER,
-        validators: [CustomValidators.digits, CustomValidators.gt(0)]
+        validators: [Validators.pattern('^[0-9]*$'), Validators.min(1)]
       }
     ];
   }

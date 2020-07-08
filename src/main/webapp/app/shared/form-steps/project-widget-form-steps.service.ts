@@ -31,7 +31,6 @@ import { HttpWidgetService } from '../services/backend/http-widget.service';
 import { WidgetParam } from '../models/backend/widget/widget-param';
 import { FormOption } from '../models/frontend/form/form-option';
 import { WidgetParamValue } from '../models/backend/widget/widget-param-value';
-import { CustomValidators } from 'ng2-validation';
 import { HttpFilterService } from '../services/backend/http-filter.service';
 import { Page } from '../models/backend/page';
 
@@ -239,7 +238,7 @@ export class ProjectWidgetFormStepsService {
     }
 
     if (widgetParam.type === DataTypeEnum.NUMBER) {
-      formValidators.push(CustomValidators.digits);
+      formValidators.push(Validators.pattern('^[0-9]*$'));
     }
 
     return formValidators;
