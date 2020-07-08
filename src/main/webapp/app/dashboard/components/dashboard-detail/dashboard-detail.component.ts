@@ -57,7 +57,7 @@ export class DashboardDetailComponent implements OnInit {
    * @type {DashboardScreenComponent}
    * @private
    */
-  @ViewChild('dashboardScreen', { static: false })
+  @ViewChild('dashboardScreen')
   private dashboardScreen: DashboardScreenComponent;
 
   /**

@@ -45,7 +45,7 @@ export class ListComponent<T> implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Reference on input search
    */
-  @ViewChild('inputSearch', { static: false })
+  @ViewChild('inputSearch')
   public inputSearch: ElementRef<HTMLInputElement>;
   /**
    * Frontend service used to display dialogs
