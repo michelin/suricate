@@ -24,7 +24,7 @@ describe('FormService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));
 
   it('should be created', () => {
-    const service: FormService = TestBed.get(FormService);
+    const service: FormService = TestBed.inject(FormService);
     expect(service).toBeTruthy();
   });
 });

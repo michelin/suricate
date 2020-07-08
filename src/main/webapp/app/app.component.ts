@@ -19,10 +19,9 @@ import { OverlayContainer } from '@angular/cdk/overlay';
 import { takeWhile } from 'rxjs/operators';
 
 import { DialogService } from './shared/services/frontend/dialog.service';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ConfirmationDialogConfiguration } from './shared/models/frontend/dialog/confirmation-dialog-configuration';
 import { ConfirmDialogComponent } from './shared/components/confirm-dialog/confirm-dialog.component';
-import { MatDialogConfig } from '@angular/material/typings/dialog';
 import { SettingsService } from './core/services/settings.service';
 import { CommunicationDialogConfiguration } from './shared/models/frontend/dialog/communication-dialog-configuration';
 import { CommunicationDialogComponent } from './shared/components/communication-dialog/communication-dialog.component';
