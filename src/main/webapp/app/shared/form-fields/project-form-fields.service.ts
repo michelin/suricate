@@ -21,6 +21,7 @@ import { Validators } from '@angular/forms';
 import { FormField } from '../models/frontend/form/form-field';
 import { IconEnum } from '../enums/icon.enum';
 import { CssService } from '../services/frontend/css.service';
+import { CustomValidator } from '../validators/custom-validator';
 
 /**
  * Service used to build the form fields related to a project
@@ -58,7 +59,7 @@ export class ProjectFormFieldsService {
         iconPrefix: IconEnum.HEIGHT,
         type: DataTypeEnum.NUMBER,
         value: project ? project.gridProperties.widgetHeight : 360,
-        validators: [Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1)]
+        validators: [Validators.required, CustomValidator.isDigits, CustomValidator.greaterThan0]
       },
       {
         key: 'maxColumn',
@@ -66,7 +67,7 @@ export class ProjectFormFieldsService {
         iconPrefix: IconEnum.COLUMN,
         type: DataTypeEnum.NUMBER,
         value: project ? project.gridProperties.maxColumn : 5,
-        validators: [Validators.required, Validators.pattern('^[0-9]*$'), Validators.min(1)]
+        validators: [Validators.required, CustomValidator.isDigits, CustomValidator.greaterThan0]
       },
       {
         key: 'gridBackgroundColor',

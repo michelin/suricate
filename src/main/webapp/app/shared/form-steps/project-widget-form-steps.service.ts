@@ -33,6 +33,7 @@ import { FormOption } from '../models/frontend/form/form-option';
 import { WidgetParamValue } from '../models/backend/widget/widget-param-value';
 import { HttpFilterService } from '../services/backend/http-filter.service';
 import { Page } from '../models/backend/page';
+import { CustomValidator } from '../validators/custom-validator';
 
 /**
  * Service used to build the steps related to a project widget
@@ -238,7 +239,7 @@ export class ProjectWidgetFormStepsService {
     }
 
     if (widgetParam.type === DataTypeEnum.NUMBER) {
-      formValidators.push(Validators.pattern('^[0-9]*$'));
+      formValidators.push(CustomValidator.isDigits);
     }
 
     return formValidators;

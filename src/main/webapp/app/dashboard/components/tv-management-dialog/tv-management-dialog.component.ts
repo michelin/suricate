@@ -30,6 +30,7 @@ import { ButtonConfiguration } from '../../../shared/models/frontend/button/butt
 import { ButtonTypeEnum } from '../../../shared/enums/button-type.enum';
 import { IconEnum } from '../../../shared/enums/icon.enum';
 import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
+import { CustomValidator } from '../../../shared/validators/custom-validator';
 
 /**
  * Component that manage the popup for Dashboard TV Management
@@ -152,7 +153,7 @@ export class TvManagementDialogComponent implements OnInit {
         key: 'screenCode',
         label: 'screen.code',
         type: DataTypeEnum.NUMBER,
-        validators: [Validators.pattern('^[0-9]*$'), Validators.min(1)]
+        validators: [CustomValidator.isDigits, CustomValidator.greaterThan0]
       }
     ];
   }
