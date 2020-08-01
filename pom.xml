@@ -439,7 +439,7 @@
                     <dependency>
                         <groupId>io.swagger</groupId>
                         <artifactId>swagger-hibernate-validations</artifactId>
-                        <version>1.6.0</version>
+                        <version>1.6.2</version>
                     </dependency>
                 </dependencies>
             </plugin>
