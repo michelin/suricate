@@ -15,7 +15,7 @@
  */
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { PageEvent } from '@angular/material';
+import { PageEvent } from '@angular/material/paginator';
 import { HttpFilterService } from '../../services/backend/http-filter.service';
 
 /**

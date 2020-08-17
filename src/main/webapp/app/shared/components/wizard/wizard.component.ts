@@ -21,7 +21,7 @@ import { WizardConfiguration } from '../../models/frontend/wizard/wizard-configu
 import { FormService } from '../../services/frontend/form.service';
 import { FormStep } from '../../models/frontend/form/form-step';
 import { MaterialIconRecords } from '../../records/material-icon.record';
-import { MatStepper } from '@angular/material';
+import { MatStepper } from '@angular/material/stepper';
 import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StepperSelectionEvent } from '@angular/cdk/stepper';

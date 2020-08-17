@@ -116,8 +116,8 @@
       {{ 'field.error.digits' | translate }}
     </div>
     <!-- Error message : Digits -->
-    <div *ngIf="getFormControl()['errors']?.gt">
-      {{ 'field.error.gt' | translate }}
+    <div *ngIf="getFormControl()['errors']?.gt0">
+      {{ 'field.error.gt0' | translate }}
     </div>
   </div>
 </div>
