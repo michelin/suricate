@@ -134,7 +134,7 @@ export class HomeComponent implements OnInit {
    *
    * @param assetToken The asset used to build the url
    */
-  protected getContentUrl(assetToken: string): string {
+  public getContentUrl(assetToken: string): string {
     return HttpAssetService.getContentUrl(assetToken);
   }
 }

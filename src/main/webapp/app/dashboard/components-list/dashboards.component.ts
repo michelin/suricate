@@ -92,7 +92,7 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
   /**
    * {@inheritDoc}
    */
-  protected redirectToBean(project: Project): void {
+  public redirectToBean(project: Project): void {
     this.router.navigate(['/dashboards', project.token]);
   }
 

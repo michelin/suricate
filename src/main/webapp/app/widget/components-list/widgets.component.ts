@@ -67,7 +67,7 @@ export class WidgetsComponent extends ListComponent<Widget | WidgetRequest> {
   /**
    * {@inheritDoc}
    */
-  protected getObjectImageURL(widget: Widget): string {
+  public getObjectImageURL(widget: Widget): string {
     return HttpAssetService.getContentUrl(widget.imageToken);
   }
 

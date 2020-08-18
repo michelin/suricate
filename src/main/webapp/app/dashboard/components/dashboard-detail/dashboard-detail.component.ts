@@ -65,55 +65,63 @@ export class DashboardDetailComponent implements OnInit {
    * @type {HeaderConfiguration}
    * @protected
    */
-  protected headerConfiguration: HeaderConfiguration;
+  public headerConfiguration: HeaderConfiguration;
+
   /**
    * The project used to display the dashboard
    * @type {Project}
    * @protected
    */
-  protected project: Project;
+  public project: Project;
+
   /**
    * The list of widget instance of this project
    * @type {ProjectWidget[]}
    * @protected
    */
-  protected projectWidgets: ProjectWidget[];
+  public projectWidgets: ProjectWidget[];
+
   /**
    * True if the dashboard should be displayed readonly, false otherwise
    * @type {boolean}
    * @protected
    */
-  protected isReadOnly = true;
+  public isReadOnly = true;
+
   /**
    * The screen code of the client;
    * @type number
    * @protected
    */
-  protected screenCode = DashboardService.generateScreenCode();
+  public screenCode = DashboardService.generateScreenCode();
+
   /**
    * Used to know if the dashboard is loading
    * @type boolean
    * @protected
    */
   public isDashboardLoading = true;
+
   /**
    * The timer used to take the screenshot
    * @type {NodeJS.Timer}
    * @private
    */
   private screenshotTimer: NodeJS.Timer;
+
   /**
    * The list of icons
    * @type {IconEnum}
    * @protected
    */
-  protected iconEnum = IconEnum;
+  public iconEnum = IconEnum;
+
   /**
    * The list of material icons
    * @type {MaterialIconRecords}
    * @protected
    */
-  protected materialIconRecords = MaterialIconRecords;
+  public materialIconRecords = MaterialIconRecords;
 
   /**
    * Constructor
@@ -188,7 +196,7 @@ export class DashboardDetailComponent implements OnInit {
   /**
    * Activate the action of refresh project widgets
    */
-  protected refreshProjectWidgetsAction(): void {
+  public refreshProjectWidgetsAction(): void {
     this.refreshProjectWidgets(this.project.token).subscribe();
   }
   /**
@@ -293,7 +301,7 @@ export class DashboardDetailComponent implements OnInit {
   /**
    * Redirect to the wizard used to add a new widget
    */
-  protected displayProjectWidgetWizard(): void {
+  public displayProjectWidgetWizard(): void {
     this.router.navigate(['/dashboards', this.project.token, 'widgets', 'create']);
   }
 
@@ -392,7 +400,7 @@ export class DashboardDetailComponent implements OnInit {
   /**
    * Handle the disconnection of a dashboard
    */
-  protected handlingDashboardDisconnect(): void {
+  public handlingDashboardDisconnect(): void {
     this.router.navigate(['/home']);
   }
 }

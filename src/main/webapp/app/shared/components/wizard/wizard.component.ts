@@ -84,7 +84,7 @@ export class WizardComponent implements OnInit, OnDestroy {
   /**
    * The list of material icons
    */
-  protected materialIconRecords = MaterialIconRecords;
+  public materialIconRecords = MaterialIconRecords;
   /**
    * The current step
    */
@@ -174,7 +174,7 @@ export class WizardComponent implements OnInit, OnDestroy {
    *
    * @param valueChangeEvent The value change event
    */
-  protected onValueChanged(valueChangeEvent: ValueChangedEvent): void {
+  public onValueChanged(valueChangeEvent: ValueChangedEvent): void {
     if (valueChangeEvent.type === 'mosaicOptionSelected' && !this.shouldDisplayDoneButton()) {
       setTimeout(() => this.wizardStepper.next(), 500);
     }
@@ -185,7 +185,7 @@ export class WizardComponent implements OnInit, OnDestroy {
    *
    * @param event The values retrieved from the child component event emitter
    */
-  protected getCategorySettings(event: MatSlideToggleChange): void {
+  public getCategorySettings(event: MatSlideToggleChange): void {
     this.widgetConfigurationFormFieldsService.generateCategorySettingsFormFields(
       this.currentStep.category.id,
       event.checked,
@@ -241,7 +241,7 @@ export class WizardComponent implements OnInit, OnDestroy {
    *
    * @param step The step
    */
-  protected getFormGroupOfStep(step: FormStep): FormGroup {
+  public getFormGroupOfStep(step: FormStep): FormGroup {
     return this.stepperFormGroup.controls[step.key] as FormGroup;
   }
 
@@ -250,7 +250,7 @@ export class WizardComponent implements OnInit, OnDestroy {
    *
    * @param step The step
    */
-  protected isWidgetConfigurationStep(step: FormStep): boolean {
+  public isWidgetConfigurationStep(step: FormStep): boolean {
     return this.currentStep.key === ProjectWidgetFormStepsService.configureWidgetStepKey;
   }
 
