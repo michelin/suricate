@@ -22,7 +22,6 @@ import { DataTypeEnum } from '../enums/data-type.enum';
 import { Validators } from '@angular/forms';
 import { FormOption } from '../models/frontend/form/form-option';
 import { User } from '../models/backend/user/user';
-import { CustomValidators } from 'ng2-validation';
 import { Role } from '../models/backend/role/role';
 import { HttpRoleService } from '../services/backend/http-role.service';
 import { IconEnum } from '../enums/icon.enum';
@@ -78,7 +77,7 @@ export class UserFormFieldsService {
         label: 'email',
         type: DataTypeEnum.TEXT,
         value: user.email ? user.email : null,
-        validators: [Validators.required, CustomValidators.email],
+        validators: [Validators.required, Validators.email],
         iconPrefix: IconEnum.EMAIL
       },
       {

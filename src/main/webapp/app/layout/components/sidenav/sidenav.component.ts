@@ -36,7 +36,7 @@ export class SidenavComponent implements OnInit, OnDestroy {
    * @type {MatSidenav}
    * @public
    */
-  @ViewChild('formSidenav', { static: false })
+  @ViewChild('formSidenav')
   public formSidenav: MatSidenav;
 
   /**
