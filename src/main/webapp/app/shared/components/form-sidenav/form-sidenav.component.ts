@@ -55,7 +55,7 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
    * @type {FormSidenavConfiguration}
    * @private
    */
-  private configuration: FormSidenavConfiguration;
+  public configuration: FormSidenavConfiguration;
 
   /**
    * The form displayed by the sidenav
@@ -81,13 +81,13 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
    * @type {ButtonConfiguration[]}
    * @protected
    */
-  protected buttons: ButtonConfiguration<unknown>[] = [];
+  public buttons: ButtonConfiguration<unknown>[] = [];
 
   /**
    * Constructor
    *
    * @param {FormService} formService Frontend service used to manage the forms
-   * @param {SidenavService} sidenavService Sidenav service used to manage the sidenavs
+   * @param {SidenavService} sidenavService Sidenav service used to manage the side navs
    */
   constructor(private readonly formService: FormService, private readonly sidenavService: SidenavService) {
     this.initButtons();
@@ -168,7 +168,7 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
    *
    * @param valueChangedEvent The value changed
    */
-  protected valueChanged(valueChangedEvent: ValueChangedEvent): void {
+  public valueChanged(valueChangedEvent: ValueChangedEvent): void {
     if (this.configuration.onValueChanged) {
       this.configuration.onValueChanged(valueChangedEvent).subscribe((formFields: FormField[]) => {
         this.formGroup = this.formService.generateFormGroupForFields(formFields);
@@ -189,7 +189,7 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
    *
    * @param event The values retrieved from the child component event emitter
    */
-  protected getCategorySettings(event: MatSlideToggleChange): void {
+  public getCategorySettings(event: MatSlideToggleChange): void {
     this.slideToggleButtonChecked = event.checked;
     this.configuration.slideToggleButtonConfiguration.slideToggleButtonPressed(event, this.formGroup, this.configuration.formFields);
   }

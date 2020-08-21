@@ -114,7 +114,7 @@ export class ToastComponent implements OnInit, OnDestroy {
    * The enums of toast type
    * @type {toastType}
    */
-  protected toastType = ToastTypeEnum;
+  public toastType = ToastTypeEnum;
   /**
    * The message to display
    * @type {Observable<ToastMessage>}
@@ -130,13 +130,13 @@ export class ToastComponent implements OnInit, OnDestroy {
    * @type {IconEnum}
    * @protected
    */
-  protected iconEnum = IconEnum;
+  public iconEnum = IconEnum;
   /**
    * The list of material icon codes
    * @type {MaterialIconRecords}
    * @protected
    */
-  protected materialIconRecords = MaterialIconRecords;
+  public materialIconRecords = MaterialIconRecords;
 
   /**
    * Constructor

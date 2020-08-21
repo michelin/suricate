@@ -70,11 +70,11 @@ import { SlideToggleComponent } from './components/inputs/slide-toggle/slide-tog
     ColorPickerModule
   ],
   declarations: [
-    CheckboxComponent,
     CommunicationDialogComponent,
     ConfirmDialogComponent,
     FileInputComponent,
     InputComponent,
+    CheckboxComponent,
     PasswordPipe,
     RunScriptsDirective,
     SafeHtmlPipe,

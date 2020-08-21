@@ -121,21 +121,23 @@ export class WidgetConfigurationFormFieldsService {
     widgetBackendConfig?: string
   ): void {
     this.categoryService.getCategoryConfigurations(categoryId).subscribe(value => {
-      const categorySettingsFormFields = this.generateWidgetConfigurationFormFields(value, widgetBackendConfig);
+      if (value != null) {
+        const categorySettingsFormFields = this.generateWidgetConfigurationFormFields(value, widgetBackendConfig);
 
-      if (checked) {
-        fields.push(...categorySettingsFormFields);
-        this.formService.addControlsToFormGroupForFields(formGroup, categorySettingsFormFields);
-      } else {
-        for (const categoryField of categorySettingsFormFields) {
-          const index = fields.findIndex(field => field.key === categoryField.key);
+        if (checked) {
+          fields.push(...categorySettingsFormFields);
+          this.formService.addControlsToFormGroupForFields(formGroup, categorySettingsFormFields);
+        } else {
+          for (const categoryField of categorySettingsFormFields) {
+            const index = fields.findIndex(field => field.key === categoryField.key);
 
-          if (index !== -1) {
-            fields.splice(index, 1);
+            if (index !== -1) {
+              fields.splice(index, 1);
+            }
           }
-        }
 
-        this.formService.removeControlsToFormGroupForFields(formGroup, categorySettingsFormFields);
+          this.formService.removeControlsToFormGroupForFields(formGroup, categorySettingsFormFields);
+        }
       }
     });
   }

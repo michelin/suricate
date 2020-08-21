@@ -16,7 +16,7 @@
 
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormGroup, Validators } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 
 import { Project } from '../../../shared/models/backend/project/project';
 import { WebsocketClient } from '../../../shared/models/backend/websocket-client';
@@ -46,24 +46,28 @@ export class TvManagementDialogComponent implements OnInit {
    * @type {ButtonConfiguration[]}
    * @protected
    */
-  protected shareButtonsConfiguration: ButtonConfiguration<unknown>[] = [];
+  public shareButtonsConfiguration: ButtonConfiguration<unknown>[] = [];
+
   /**
    * The configuration of the share button
    * @type {ButtonConfiguration[]}
    * @protected
    */
-  protected connectedScreenButtonsConfiguration: ButtonConfiguration<WebsocketClient>[] = [];
+  public connectedScreenButtonsConfiguration: ButtonConfiguration<WebsocketClient>[] = [];
+
   /**
    * The register screen form
    * @type {FormGroup}
    * @protected
    */
   public screenRegisterForm: FormGroup;
+
   /**
    * The description of the form
    * @type {FormField[]}
    */
-  protected formFields: FormField[];
+  public formFields: FormField[];
+
   /**
    * The current project
    * @type {Project}
@@ -170,7 +174,7 @@ export class TvManagementDialogComponent implements OnInit {
   /**
    * Register a screen
    */
-  protected registerScreen(): void {
+  public registerScreen(): void {
     if (this.screenRegisterForm.valid) {
       const screenCode: string = this.screenRegisterForm.get('screenCode').value;
 

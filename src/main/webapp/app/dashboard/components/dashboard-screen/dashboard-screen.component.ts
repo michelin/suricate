@@ -115,7 +115,7 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
    * @type {NgGridItemConfig[]}
    * @protected
    */
-  protected gridStackItems: NgGridItemConfig[] = [];
+  public gridStackItems: NgGridItemConfig[] = [];
   /**
    * The stompJS Subscription for screen event
    * @type {Subscription}
@@ -133,13 +133,14 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
    * @type {IconEnum}
    * @protected
    */
-  protected iconEnum = IconEnum;
+  public iconEnum = IconEnum;
+
   /**
    * The list of material icons
    * @type {MaterialIconRecords}
    * @protected
    */
-  protected materialIconRecords = MaterialIconRecords;
+  public materialIconRecords = MaterialIconRecords;
 
   /**
    * The constructor
@@ -279,7 +280,7 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
    *
    * @returns {string} The src script
    */
-  protected getJSLibraries(): string {
+  public getJSLibraries(): string {
     let scriptUrls = '';
 
     if (this.project.librariesToken) {
@@ -389,7 +390,7 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
   /**
    * Update the project widget position
    */
-  protected updateProjectWidgetsPosition(): void {
+  public updateProjectWidgetsPosition(): void {
     if (this.isGridItemsHasMoved()) {
       const projectWidgetPositionRequests: ProjectWidgetPositionRequest[] = [];
       this.gridStackItems.forEach(gridStackItem => {
