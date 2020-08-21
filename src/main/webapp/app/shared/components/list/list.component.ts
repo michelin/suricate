@@ -154,6 +154,9 @@ export class ListComponent<T> implements OnInit, AfterViewInit, OnDestroy {
     this.isLoading = false;
   }
 
+  /**
+   * Display the loader during the research
+   */
   private displayLoader(): void {
     this.isLoading = true;
   }
@@ -246,6 +249,7 @@ export class ListComponent<T> implements OnInit, AfterViewInit, OnDestroy {
         distinctUntilChanged()
       )
       .subscribe((searchValue: string) => {
+        this.httpFilter.page = 0;
         this.httpFilter.search = searchValue;
         this.refreshList();
       });
