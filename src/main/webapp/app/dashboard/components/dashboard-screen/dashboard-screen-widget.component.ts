@@ -96,24 +96,28 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    * @protected
    */
   public widget: Widget;
+
   /**
    * The enumeration that hold the state of a widget (used in HTML)
    * @type {widgetStateEnum}
    * @protected
    */
-  protected widgetStateEnum = WidgetStateEnum;
+  public widgetStateEnum = WidgetStateEnum;
+
   /**
    * True when the component is alive
    * @type {boolean}
    * @private
    */
   private isAlive = true;
+
   /**
    * The configuration of this project widget on the grid
    * @type {NgGridItemConfig}
    * @private
    */
   private startGridStackItem: NgGridItemConfig;
+
   /**
    * Tell if the component is Loading widget
    * @type {boolean}
@@ -126,18 +130,20 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    * @protected
    */
   public displayButtons = false;
+
   /**
    * The list of icons
    * @type {IconEnum}
    * @protected
    */
-  protected iconEnum = IconEnum;
+  public iconEnum = IconEnum;
+
   /**
    * The list of material icons
    * @type {MaterialIconRecords}
    * @protected
    */
-  protected materialIconRecords = MaterialIconRecords;
+  public materialIconRecords = MaterialIconRecords;
 
   /**
    * Constructor
@@ -183,7 +189,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Register the new posisition of the element
+   * Register the new position of the element
    *
    * @param gridItemEvent The grid item event
    */
@@ -235,7 +241,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   /**
    * Delete The project widget
    */
-  protected displayDeleteProjectWidgetDialog(): void {
+  public displayDeleteProjectWidgetDialog(): void {
     const titlecasePipe = new TitleCasePipe();
 
     this.dialogService.confirm({
@@ -248,7 +254,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   /**
    * Display the form sidenav used to edit a project widget
    */
-  protected displayEditFormSidenav(): void {
+  public displayEditFormSidenav(): void {
     this.sidenavService.openFormSidenav({
       title: 'widget.edit',
       formFields: this.projectWidgetFormStepsService.generateProjectWidgetFormFields(this.widget.params, this.projectWidget.backendConfig),
@@ -283,7 +289,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   /**
    * call the popup that display the execution log
    */
-  protected displayLogProjectWidgetDialog(): void {
+  public displayLogProjectWidgetDialog(): void {
     this.dialogService.info({
       title: 'widget.log',
       message: this.projectWidget.log ? this.projectWidget.log : '',

@@ -49,13 +49,13 @@ export class RegisterComponent implements OnInit {
    * @type {FormGroup}
    * @protected
    */
-  protected registerForm: FormGroup;
+  public registerForm: FormGroup;
   /**
    * The description of the form
    * @type {FormField[]}
    * @protected
    */
-  protected formFields: FormField[];
+  public formFields: FormField[];
   /**
    * Tell if the form is in submit state (used to display the spinner)
    * @type {boolean} true if the form is submitting, false otherwise
@@ -67,7 +67,7 @@ export class RegisterComponent implements OnInit {
    * @type {ButtonConfiguration[]}
    * @protected
    */
-  protected buttonConfigurations: ButtonConfiguration<unknown>[];
+  public buttonConfigurations: ButtonConfiguration<unknown>[];
 
   /**
    * Constructor
@@ -109,7 +109,7 @@ export class RegisterComponent implements OnInit {
   /**
    * Send the register form, and authenticate the user when everything is ok
    */
-  protected signUp(): void {
+  public signUp(): void {
     this.formService.validate(this.registerForm);
 
     if (this.registerForm.valid) {

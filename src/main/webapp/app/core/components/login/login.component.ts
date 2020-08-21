@@ -42,19 +42,19 @@ export class LoginComponent implements OnInit {
    * @type {FormGroup}
    * @protected
    */
-  protected loginForm: FormGroup;
+  public loginForm: FormGroup;
   /**
    * Fields used to describe/create the form
    * @type {FormField[]}
    * @protected
    */
-  protected formFields: FormField[];
+  public formFields: FormField[];
   /**
    * The list of buttons to display in the form login
    * @type {ButtonConfiguration[]}
    * @protected
    */
-  protected buttonConfigurations: ButtonConfiguration<unknown>[];
+  public buttonConfigurations: ButtonConfiguration<unknown>[];
   /**
    * Used to display spinner when form has been submitted
    * @type {boolean}
@@ -104,7 +104,7 @@ export class LoginComponent implements OnInit {
   /**
    * Execute login action
    */
-  protected login(): void {
+  public login(): void {
     this.formService.validate(this.loginForm);
 
     if (this.loginForm.valid) {

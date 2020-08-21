@@ -49,30 +49,36 @@ export class InputComponent implements OnInit {
    */
   @Input()
   public formGroup: FormGroup;
+
   /**
    * Object that hold different information used for the instantiation of the input
    */
   @Input()
   public field: FormField;
+
   /**
    * Event sent when the value of the input has changed
    */
   @Output()
   public valueChangeEvent = new EventEmitter<ValueChangedEvent>();
+
   /**
    * The data type enum
    */
   public dataType = DataTypeEnum;
+
   /**
    * The list of options to display
    */
-  protected options: FormOption[];
+  public options: FormOption[];
+
   /**
    * The list of icons
    * @type {IconEnum}
    * @protected
    */
   public iconEnum = IconEnum;
+
   /**
    * The list of material icon codes
    * @type {MaterialIconRecords}
@@ -113,7 +119,7 @@ export class InputComponent implements OnInit {
   /**
    * Function called when a field has been changed in the form, emit and event that will be caught by the parent component
    */
-  protected emitValueChange(type: ValueChangedType): void {
+  public emitValueChange(type: ValueChangedType): void {
     this.manageAutoCompleteChanges();
 
     this.valueChangeEvent.emit({
@@ -139,7 +145,7 @@ export class InputComponent implements OnInit {
   /**
    * Tell if it's a required field
    */
-  protected isRequired(): boolean {
+  public isRequired(): boolean {
     let isRequired = false;
 
     if (this.field && this.field.validators && this.field.validators && !this.field.readOnly) {

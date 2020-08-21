@@ -52,18 +52,21 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * @protected
    */
   public projectWidgets: ProjectWidget[];
+
   /**
    * The screen code to display
    * @type {number}
    * @protected
    */
-  protected screenCode = DashboardService.generateScreenCode();
+  public screenCode = DashboardService.generateScreenCode();
+
   /**
    * True if the screen is loading
    * @type {boolean}
    * @protected
    */
-  protected isDashboardLoading = false;
+  public isDashboardLoading = false;
+
   /**
    * Tell if the component is displayed
    * @type {boolean}
@@ -83,7 +86,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * @type {Project}
    * @protected
    */
-  protected project: Project;
+  public project: Project;
 
   /**
    * The constructor
@@ -176,7 +179,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   /**
    * Activate the action of refresh project widgets
    */
-  protected refreshProjectWidgetsAction(): void {
+  public refreshProjectWidgetsAction(): void {
     this.refreshProjectWidgets(this.project.token).subscribe();
   }
   /**
@@ -193,7 +196,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   /**
    * Handle the disconnection of a dashboard
    */
-  protected handlingDashboardDisconnect(): void {
+  public handlingDashboardDisconnect(): void {
     this.router.navigate(['/tv']);
     setTimeout(() => this.listenForConnection(), 500);
   }

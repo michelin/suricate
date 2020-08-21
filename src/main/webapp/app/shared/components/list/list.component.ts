@@ -75,11 +75,11 @@ export class ListComponent<T> implements OnInit, AfterViewInit, OnDestroy {
   /**
    * The configuration of the list component
    */
-  protected listConfiguration = new ListConfiguration<unknown>();
+  public listConfiguration = new ListConfiguration<unknown>();
   /**
    * The object list to display
    */
-  protected objectsPaged: Page<T>;
+  public objectsPaged: Page<T>;
   /**
    * Display the loader when it's true, end hide when it's false
    */
@@ -161,7 +161,7 @@ export class ListComponent<T> implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Get the size of the block
    */
-  protected getDetailBlockSize(object: T): string {
+  public getDetailBlockSize(object: T): string {
     const hasImage = !!this.getObjectImageURL(object);
     const hasButtons = !!this.listConfiguration.buttons;
 
@@ -179,7 +179,7 @@ export class ListComponent<T> implements OnInit, AfterViewInit, OnDestroy {
    *
    * @param pageEvent The angular material page event
    */
-  private pageChanged(pageEvent: PageEvent): void {
+  public pageChanged(pageEvent: PageEvent): void {
     console.log(pageEvent);
     this.httpFilter.page = pageEvent.pageIndex;
     this.httpFilter.size = pageEvent.pageSize;
@@ -222,7 +222,7 @@ export class ListComponent<T> implements OnInit, AfterViewInit, OnDestroy {
    *
    * @param object The object of the list
    */
-  protected getObjectImageURL(object: T): string {
+  public getObjectImageURL(object: T): string {
     return null;
   }
 
@@ -232,7 +232,7 @@ export class ListComponent<T> implements OnInit, AfterViewInit, OnDestroy {
    *
    * @param object The object used for the redirection
    */
-  protected redirectToBean(object: T): void {}
+  public redirectToBean(object: T): void {}
 
   /**
    * Subscribe to input search event
