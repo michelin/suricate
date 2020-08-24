@@ -107,8 +107,7 @@ public class WidgetService {
      */
     @Transactional
     public Page<Widget> getAll(String search, Pageable pageable) {
-        return widgetRepository.findAll(Specification.where(new WidgetSearchSpecification(search))
-                .or(WidgetSearchSpecification.getWidgetByCategoryNameSpecification(search)), pageable);
+        return widgetRepository.findAll(new WidgetSearchSpecification(search), pageable);
     }
 
     /**
