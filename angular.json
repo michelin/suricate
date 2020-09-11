@@ -11,6 +11,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": ["sockjs-client", "@stomp/rx-stomp", "url"],
             "aot": false,
             "outputPath": "target/dist/public",
             "index": "src/main/webapp/index.html",
