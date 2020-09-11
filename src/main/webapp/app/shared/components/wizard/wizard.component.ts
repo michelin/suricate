@@ -14,14 +14,14 @@
  * limitations under the License.
  */
 
-import { Component, Injector, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Injector, Input, OnChanges, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { HeaderConfiguration } from '../../models/frontend/header/header-configuration';
 import { FormGroup } from '@angular/forms';
 import { WizardConfiguration } from '../../models/frontend/wizard/wizard-configuration';
 import { FormService } from '../../services/frontend/form.service';
 import { FormStep } from '../../models/frontend/form/form-step';
 import { MaterialIconRecords } from '../../records/material-icon.record';
-import { MatStepper } from '@angular/material/stepper';
+import { MatStep, MatStepper } from '@angular/material/stepper';
 import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
@@ -45,50 +45,61 @@ export class WizardComponent implements OnInit, OnDestroy {
    */
   @ViewChild('wizardStepper', { static: true })
   public wizardStepper: MatStepper;
+
   /**
    * Frontend service used to help on the form creation
    */
   private readonly formService: FormService;
+
   /**
    * Frontend service used to help on the widget configuration form fields creation
    */
   private readonly widgetConfigurationFormFieldsService: WidgetConfigurationFormFieldsService;
+
   /**
    * Angular service used to manage the route activated by the current component
    */
   protected readonly activatedRoute: ActivatedRoute;
+
   /**
    * Angular service used to manage application routes
    */
   protected readonly router: Router;
+
   /**
    * Used to know if the component is instantiated
    */
   private isAlive = true;
+
   /**
    * The configuration of the header
    */
   public headerConfiguration = new HeaderConfiguration();
+
   /**
    * The configuration of the wizard
    */
   public wizardConfiguration: WizardConfiguration;
+
   /**
    * The list of wizard buttons
    */
   public wizardButtons: ButtonConfiguration<unknown>[];
+
   /**
    * Form group of the stepper
    */
   private stepperFormGroup: FormGroup;
+
   /**
    * The list of material icons
    */
   public materialIconRecords = MaterialIconRecords;
+
   /**
    * The current step
    */
-  protected currentStep: FormStep;
+  public currentStep: FormStep;
 
   /**
    * Constructor
@@ -100,8 +111,22 @@ export class WizardComponent implements OnInit, OnDestroy {
     this.widgetConfigurationFormFieldsService = injector.get(WidgetConfigurationFormFieldsService);
     this.activatedRoute = injector.get(ActivatedRoute);
     this.router = injector.get(Router);
+  }
 
+  /**
+   * Called when the component is init
+   */
+  public ngOnInit(): void {
     this.initWizardButtons();
+    this.stepperFormGroup = this.formService.generateFormGroupForSteps(this.wizardConfiguration.steps);
+    this.currentStep = this.wizardConfiguration.steps[0];
+  }
+
+  /**
+   * Called when the component is destroyed
+   */
+  public ngOnDestroy(): void {
+    this.isAlive = false;
   }
 
   /**
@@ -133,21 +158,6 @@ export class WizardComponent implements OnInit, OnDestroy {
         callback: () => this.validateFormBeforeSave()
       }
     ];
-  }
-
-  /**
-   * Called when the component is init
-   */
-  public ngOnInit(): void {
-    this.stepperFormGroup = this.formService.generateFormGroupForSteps(this.wizardConfiguration.steps);
-    this.currentStep = this.wizardConfiguration.steps[0];
-  }
-
-  /**
-   * Called when the component is destroyed
-   */
-  public ngOnDestroy(): void {
-    this.isAlive = false;
   }
 
   /**

@@ -57,15 +57,6 @@ export class ProjectWidgetWizardComponent extends WizardComponent implements OnI
   }
 
   /**
-   * Function used to configure the header of the list component
-   */
-  private initHeaderConfiguration(): void {
-    this.headerConfiguration = {
-      title: 'widget.add'
-    };
-  }
-
-  /**
    * Called when the component is init
    */
   public ngOnInit(): void {
@@ -74,6 +65,15 @@ export class ProjectWidgetWizardComponent extends WizardComponent implements OnI
 
       super.ngOnInit();
     });
+  }
+
+  /**
+   * Function used to configure the header of the list component
+   */
+  private initHeaderConfiguration(): void {
+    this.headerConfiguration = {
+      title: 'widget.add'
+    };
   }
 
   /**

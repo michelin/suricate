@@ -86,7 +86,7 @@ export class ProjectWidgetFormStepsService {
   }
 
   /**
-   * Get the list of steps for a widget
+   * Get the list of steps for the widget addition to a dashboard
    */
   public generateGlobalSteps(): Observable<FormStep[]> {
     return of([
