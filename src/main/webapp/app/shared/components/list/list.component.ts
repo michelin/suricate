@@ -183,7 +183,6 @@ export class ListComponent<T> implements OnInit, AfterViewInit, OnDestroy {
    * @param pageEvent The angular material page event
    */
   public pageChanged(pageEvent: PageEvent): void {
-    console.log(pageEvent);
     this.httpFilter.page = pageEvent.pageIndex;
     this.httpFilter.size = pageEvent.pageSize;
     this.refreshList();

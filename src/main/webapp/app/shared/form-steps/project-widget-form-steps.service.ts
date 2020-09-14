@@ -86,7 +86,7 @@ export class ProjectWidgetFormStepsService {
   }
 
   /**
-   * Get the list of steps for a widget
+   * Get the list of steps for the widget addition to a dashboard
    */
   public generateGlobalSteps(): Observable<FormStep[]> {
     return of([
@@ -246,22 +246,18 @@ export class ProjectWidgetFormStepsService {
   }
 
   /**
-   * Retrieve and existing value from project widget configs
+   * Retrieve the value of an existing parameter from all the widget configuration from the given key.
    *
    * @param key The configuration key
    * @param widgetConfig The list of configurations
    */
   public retrieveProjectWidgetValueFromConfig(key: string, widgetConfig?: string): string {
-    let value = null;
+    const parameter = widgetConfig.split('\n').find(keyValue => keyValue.split('=')[0] === key);
 
-    widgetConfig.split('\n').forEach((keyValue: string) => {
-      const keyValueSplitted = keyValue.split('=');
-      if (keyValueSplitted[0] === key) {
-        value = keyValueSplitted[1];
-        return;
-      }
-    });
+    if (parameter) {
+      return parameter.replace(key, '').replace('=', '');
+    }
 
-    return value;
+    return null;
   }
 }

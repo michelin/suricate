@@ -8,7 +8,6 @@
       </ng-template>
 
       <mat-step
-        #matStep
         [stepControl]="$any(getFormGroupOfStep(step))"
         [optional]="step.optional"
         [state]="step.icon"
@@ -21,7 +20,7 @@
           <hr />
         </ng-template>
 
-        <ng-container *ngIf="wizardStepper.selected === matStep">
+        <ng-container *ngIf="this.currentStep.key === step.key">
           <div fxLayout="column" fxLayoutGap="30px">
             <div
               *ngIf="step.imageLink || step.description || step.information || step.category"
@@ -51,7 +50,6 @@
               [label]="'widget.parameters.category.override.title'"
               (slideToggleButtonPressed)="getCategorySettings($event)"
             ></suricate-slide-toggle>
-
             <form [formGroup]="getFormGroupOfStep(step)" fxFill>
               <suricate-input
                 *ngFor="let field of step.fields"
@@ -66,7 +64,6 @@
       </mat-step>
     </ng-container>
   </mat-horizontal-stepper>
-
   <div class="stepper-actions-wrapper">
     <suricate-buttons [configurations]="wizardButtons"></suricate-buttons>
   </div>
