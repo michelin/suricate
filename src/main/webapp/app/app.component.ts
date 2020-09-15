@@ -25,6 +25,7 @@ import { ConfirmDialogComponent } from './shared/components/confirm-dialog/confi
 import { SettingsService } from './core/services/settings.service';
 import { CommunicationDialogConfiguration } from './shared/models/frontend/dialog/communication-dialog-configuration';
 import { CommunicationDialogComponent } from './shared/components/communication-dialog/communication-dialog.component';
+import { AuthenticationService } from './shared/services/frontend/authentication.service';
 
 /**
  * Main component init the application
@@ -37,16 +38,12 @@ import { CommunicationDialogComponent } from './shared/components/communication-
 export class AppComponent implements OnInit, OnDestroy {
   /**
    * The HTML class attribute
-   * @type {string}
-   * @private
    */
   @HostBinding('class')
   public appHtmlClass: string;
 
   /**
    * Tell if the component is instantiate or not
-   * @type {boolean}
-   * @private
    */
   private isAlive = true;
 
@@ -72,9 +69,9 @@ export class AppComponent implements OnInit, OnDestroy {
   public ngOnInit(): void {
     this.subscribeToConfirmationDialog();
     this.subscribeToCommunicationDialog();
-    this.subscribeToThemeChanging();
 
-    this.settingsService.initDefaultSettings();
+    this.settingsService.initUserSettings(AuthenticationService.getConnectedUser());
+    this.subscribeToThemeChanging();
   }
 
   /**
