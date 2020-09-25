@@ -169,7 +169,7 @@ export class DashboardScreenComponent implements OnInit, OnChanges, OnDestroy {
   /**
    * URLs of the JS libraries required by the widgets
    */
-  public librariesURLs: string = '';
+  public librariesURLs = '';
 
   /**
    * The constructor

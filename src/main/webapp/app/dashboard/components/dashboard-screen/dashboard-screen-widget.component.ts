@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component, ElementRef, EventEmitter, HostBinding, Injector, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { TitleCasePipe } from '@angular/common';
 import { NgGridItemConfig, NgGridItemEvent } from 'angular2-grid';
@@ -44,7 +44,6 @@ import { WidgetConfigurationFormFieldsService } from '../../../shared/form-field
 import { FormGroup } from '@angular/forms';
 import { FormField } from '../../../shared/models/frontend/form/form-field';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-import { Observable } from 'rxjs';
 import { LibraryService } from '../../services/library.service';
 
 /**
@@ -192,7 +191,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
       this.widget = widget;
 
       this.libraryService.areJSScriptsLoaded.subscribe(value => {
-        this.isComponentLoading = false;
+        this.isComponentLoading = !value;
         // setTimeout(() => this.appRunScriptDirective.ngOnInit(), 100);
       });
     });
