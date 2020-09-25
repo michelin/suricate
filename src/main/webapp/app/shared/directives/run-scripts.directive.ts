@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-import { Directive, ElementRef, OnInit } from '@angular/core';
+import { Directive, ElementRef, Injector, OnInit } from '@angular/core';
+import { LibraryService } from '../../dashboard/services/library.service';
+import { Subject } from 'rxjs';
 
 /**
  * Directive used for running script under HTML Views
@@ -26,9 +28,10 @@ export class RunScriptsDirective implements OnInit {
   /**
    * The constructor
    *
-   * @param {ElementRef} elementRef Represent a reference on an HTML Element
+   * @param elementRef Represent a reference on an HTML Element
+   * @param libraryService Frontend service used to manage the libraries
    */
-  constructor(private readonly elementRef: ElementRef) {}
+  constructor(private readonly elementRef: ElementRef, private readonly libraryService: LibraryService) {}
 
   /**
    * Called when the directive is init
@@ -62,8 +65,20 @@ export class RunScriptsDirective implements OnInit {
         copyScript.src = script.src;
       }
 
+      copyScript.onload = () => {
+        this.scriptsLoadedCallback(this.libraryService);
+      };
       copyScript.async = false;
       script.parentNode.replaceChild(copyScript, script);
     });
+  }
+
+  /**
+   * Callback method called when all the required JS libraries are loaded
+   *
+   * @param libraryService The library service used to emit an event when the JS libraries are loaded
+   */
+  public scriptsLoadedCallback(libraryService: LibraryService): void {
+    return libraryService.emitAreJSScriptsLoaded(true);
   }
 }

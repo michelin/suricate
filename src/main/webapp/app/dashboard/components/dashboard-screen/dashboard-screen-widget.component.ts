@@ -14,11 +14,11 @@
  * limitations under the License.
  */
 
-import { Component, ElementRef, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostBinding, Injector, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { TitleCasePipe } from '@angular/common';
 import { NgGridItemConfig, NgGridItemEvent } from 'angular2-grid';
-import { takeWhile, tap } from 'rxjs/operators';
+import { takeWhile } from 'rxjs/operators';
 
 import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';
 import { Widget } from '../../../shared/models/backend/widget/widget';
@@ -44,6 +44,8 @@ import { WidgetConfigurationFormFieldsService } from '../../../shared/form-field
 import { FormGroup } from '@angular/forms';
 import { FormField } from '../../../shared/models/frontend/form/form-field';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { Observable } from 'rxjs';
+import { LibraryService } from '../../services/library.service';
 
 /**
  * Display the grid stack widgets
@@ -61,6 +63,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    */
   @Input()
   public projectWidget: ProjectWidget;
+
   /**
    * The grid item config
    * @type {NgGridItemConfig}
@@ -68,6 +71,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    */
   @Input()
   public gridStackItem: NgGridItemConfig;
+
   /**
    * Tell if we are on
    * @type {boolean}
@@ -75,6 +79,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    */
   @Input()
   public readOnly: boolean;
+
   /**
    * The project token
    * @type {string}
@@ -82,13 +87,14 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    */
   @Input()
   public projectToken: string;
+
   /**
    * Add runScriptsDirective, so we can recall it
    * @type {RunScriptsDirective}
    * @public
    */
   @HostBinding('attr.appRunScripts')
-  public appRunScriptDirective = new RunScriptsDirective(this.elementRef);
+  public appRunScriptDirective = new RunScriptsDirective(this.elementRef, this.libraryService);
 
   /**
    * The widget related to this project widget
@@ -124,6 +130,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    * @protected
    */
   public isComponentLoading = true;
+
   /**
    * Used to display the buttons when the screen is not readonly
    * @type {boolean}
@@ -158,6 +165,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    * @param {ProjectWidgetFormStepsService} projectWidgetFormStepsService Frontend service used to generate steps for project widget
    * @param {ToastService} toastService Frontend service used to display messages
    * @param widgetConfigurationFormFieldsService Frontend service used to manage the widget's category settings
+   * @param libraryService Frontend service used to manage the libraries
    */
   constructor(
     private readonly elementRef: ElementRef,
@@ -169,7 +177,8 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
     private readonly sidenavService: SidenavService,
     private readonly projectWidgetFormStepsService: ProjectWidgetFormStepsService,
     private readonly toastService: ToastService,
-    private readonly widgetConfigurationFormFieldsService: WidgetConfigurationFormFieldsService
+    private readonly widgetConfigurationFormFieldsService: WidgetConfigurationFormFieldsService,
+    private readonly libraryService: LibraryService
   ) {}
 
   /**
@@ -179,13 +188,14 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
     this.initWebsocketConnectionForProjectWidget();
     this.startGridStackItem = { ...this.gridStackItem };
 
-    this.httpWidgetService
-      .getById(this.projectWidget.widgetId)
-      .pipe(tap((widget: Widget) => (this.widget = widget)))
-      .subscribe(() => {
+    this.httpWidgetService.getById(this.projectWidget.widgetId).subscribe((widget: Widget) => {
+      this.widget = widget;
+
+      this.libraryService.areJSScriptsLoaded.subscribe(value => {
         this.isComponentLoading = false;
-        setTimeout(() => this.appRunScriptDirective.ngOnInit(), 100);
+        // setTimeout(() => this.appRunScriptDirective.ngOnInit(), 100);
       });
+    });
   }
 
   /**

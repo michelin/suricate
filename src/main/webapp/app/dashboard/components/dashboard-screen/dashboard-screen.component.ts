@@ -14,7 +14,18 @@
  * limitations under the License.
  */
 
-import { Component, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostBinding,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges
+} from '@angular/core';
 import { takeWhile } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { NgGridConfig, NgGridItemConfig } from 'angular2-grid';
@@ -33,6 +44,7 @@ import { RunScriptsDirective } from '../../../shared/directives/run-scripts.dire
 import { GridItemUtils } from '../../../shared/utils/grid-item.utils';
 import { IconEnum } from '../../../shared/enums/icon.enum';
 import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
+import { LibraryService } from '../../services/library.service';
 
 /**
  * Display the grid stack widgets
@@ -42,7 +54,7 @@ import { MaterialIconRecords } from '../../../shared/records/material-icon.recor
   templateUrl: './dashboard-screen.component.html',
   styleUrls: ['./dashboard-screen.component.scss']
 })
-export class DashboardScreenComponent implements OnChanges, OnDestroy {
+export class DashboardScreenComponent implements OnInit, OnChanges, OnDestroy {
   /**
    * The project to display
    * @type {Project}
@@ -50,6 +62,7 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
    */
   @Input()
   public project: Project;
+
   /**
    * The project widget list
    * @type {ProjectWidget[]}
@@ -57,6 +70,7 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
    */
   @Input()
   public projectWidgets: ProjectWidget[];
+
   /**
    * Tell if the dashboard should be on readOnly or not
    * @type {boolean}
@@ -64,6 +78,7 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
    */
   @Input()
   public readOnly = true;
+
   /**
    * The screen code
    * @type {number}
@@ -71,6 +86,7 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
    */
   @Input()
   public screenCode: number;
+
   /**
    * Event for handling the disconnection
    * @type {EventEmitter<void>}
@@ -78,6 +94,7 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
    */
   @Output()
   public disconnectEvent = new EventEmitter<void>();
+
   /**
    * Use to tell to the parent component that he should refresh the project widgets
    * @type {EventEmitter<void>}
@@ -85,49 +102,56 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
    */
   @Output()
   public refreshProjectWidget = new EventEmitter<void>();
+
   /**
    * Add runScriptsDirective, so we can recall it
    * @type {RunScriptsDirective}
    * @public
    */
   @HostBinding('attr.appRunScripts')
-  public appRunScriptDirective = new RunScriptsDirective(this.elementRef);
+  public appRunScriptDirective = new RunScriptsDirective(this.elementRef, this.libraryService);
 
   /**
    * Tell to subscriptions if the component is alive
    * When the component is destroyed, the associated subscriptions will be deleted
    */
   private isAlive = true;
+
   /**
    * The options for the plugin angular2-grid
    * @type {NgGridConfig}
    * @protected
    */
   public gridOptions: NgGridConfig = {};
+
   /**
    * Grid state when widgets were first loaded
    * @type {NgGridItemConfig[]}
    * @protected
    */
   protected startGridStackItems: NgGridItemConfig[] = [];
+
   /**
    * The grid items description
    * @type {NgGridItemConfig[]}
    * @protected
    */
   public gridStackItems: NgGridItemConfig[] = [];
+
   /**
    * The stompJS Subscription for screen event
    * @type {Subscription}
    * @private
    */
   private screenEventSubscription: Subscription;
+
   /**
    * Tell if we should display the screen code
    * @type {boolean}
    * @protected
    */
   public shouldDisplayScreenCode = false;
+
   /**
    * The list of icons
    * @type {IconEnum}
@@ -143,19 +167,33 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
   public materialIconRecords = MaterialIconRecords;
 
   /**
+   * URLs of the JS libraries required by the widgets
+   */
+  public librariesURLs: string = '';
+
+  /**
    * The constructor
    *
-   * @param {ElementRef} elementRef Angular service used to inject a reference on the component
-   * @param {httpProjectService} httpProjectService Suricate service used to manage project
-   * @param {DashboardService} dashboardService Frontend service used to manage dashboards
-   * @param {WebsocketService} websocketService Frontend service used to manage websocket connections
+   * @param elementRef Angular service used to inject a reference on the component
+   * @param httpProjectService Suricate service used to manage project
+   * @param dashboardService Frontend service used to manage dashboards
+   * @param websocketService Frontend service used to manage websocket connections
+   * @param libraryService Frontend service used to manage the libraries
    */
   constructor(
     private readonly elementRef: ElementRef,
     private readonly httpProjectService: HttpProjectService,
     private readonly dashboardService: DashboardService,
-    private readonly websocketService: WebsocketService
+    private readonly websocketService: WebsocketService,
+    private readonly libraryService: LibraryService
   ) {}
+
+  /**
+   * Init method
+   */
+  ngOnInit(): void {
+    this.loadJSLibrariesFromTokens();
+  }
 
   /**
    * Each time a value change, this function will be called
@@ -205,6 +243,17 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
   private displayScreenCode(): void {
     this.shouldDisplayScreenCode = true;
     setTimeout(() => (this.shouldDisplayScreenCode = false), 10000);
+  }
+
+  /**
+   * Build the list of JS libraries required by the widgets of the project
+   */
+  public loadJSLibrariesFromTokens() {
+    if (this.project.librariesToken) {
+      this.project.librariesToken.forEach(libraryToken => {
+        this.librariesURLs = this.librariesURLs.concat(`<script src="${HttpAssetService.getContentUrl(libraryToken)}"></script>`);
+      });
+    }
   }
 
   /**********************************************************************************************************/
@@ -268,28 +317,6 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
     });
 
     return gridStackItemsConfig;
-  }
-
-  /**********************************************************************************************************/
-  /*                      JS MANAGEMENT                                                                     */
-
-  /**********************************************************************************************************/
-
-  /**
-   * Get the JS libraries from project
-   *
-   * @returns {string} The src script
-   */
-  public getJSLibraries(): string {
-    let scriptUrls = '';
-
-    if (this.project.librariesToken) {
-      this.project.librariesToken.forEach(libraryToken => {
-        scriptUrls = scriptUrls.concat(`<script src="${HttpAssetService.getContentUrl(libraryToken)}"></script>`);
-      });
-    }
-
-    return scriptUrls;
   }
 
   /**********************************************************************************************************/
