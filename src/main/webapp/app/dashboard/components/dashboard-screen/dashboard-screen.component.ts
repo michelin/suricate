@@ -15,16 +15,17 @@
  */
 
 import {
+  AfterViewInit,
   Component,
   ElementRef,
   EventEmitter,
-  HostBinding,
   Input,
   OnChanges,
   OnDestroy,
-  OnInit,
   Output,
-  SimpleChanges
+  Renderer2,
+  SimpleChanges,
+  ViewChild
 } from '@angular/core';
 import { takeWhile } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
@@ -40,7 +41,6 @@ import { WebsocketUpdateTypeEnum } from '../../../shared/enums/websocket-update-
 import { DashboardService } from '../../services/dashboard.service';
 import { ProjectWidgetPositionRequest } from '../../../shared/models/backend/project-widget/project-widget-position-request';
 import { HttpProjectService } from '../../../shared/services/backend/http-project.service';
-import { RunScriptsDirective } from '../../../shared/directives/run-scripts.directive';
 import { GridItemUtils } from '../../../shared/utils/grid-item.utils';
 import { IconEnum } from '../../../shared/enums/icon.enum';
 import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
@@ -54,62 +54,48 @@ import { LibraryService } from '../../services/library.service';
   templateUrl: './dashboard-screen.component.html',
   styleUrls: ['./dashboard-screen.component.scss']
 })
-export class DashboardScreenComponent implements OnInit, OnChanges, OnDestroy {
+export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDestroy {
+  /**
+   * Reference on the span containing all the required JS libraries
+   */
+  @ViewChild('externalJsLibraries')
+  public externalJsLibrariesSpan: ElementRef<HTMLSpanElement>;
+
   /**
    * The project to display
-   * @type {Project}
-   * @public
    */
   @Input()
   public project: Project;
 
   /**
    * The project widget list
-   * @type {ProjectWidget[]}
-   * @public
    */
   @Input()
   public projectWidgets: ProjectWidget[];
 
   /**
    * Tell if the dashboard should be on readOnly or not
-   * @type {boolean}
-   * @public
    */
   @Input()
   public readOnly = true;
 
   /**
    * The screen code
-   * @type {number}
-   * @public
    */
   @Input()
   public screenCode: number;
 
   /**
    * Event for handling the disconnection
-   * @type {EventEmitter<void>}
-   * @public
    */
   @Output()
   public disconnectEvent = new EventEmitter<void>();
 
   /**
    * Use to tell to the parent component that he should refresh the project widgets
-   * @type {EventEmitter<void>}
-   * @public
    */
   @Output()
   public refreshProjectWidget = new EventEmitter<void>();
-
-  /**
-   * Add runScriptsDirective, so we can recall it
-   * @type {RunScriptsDirective}
-   * @public
-   */
-  @HostBinding('attr.appRunScripts')
-  public appRunScriptDirective = new RunScriptsDirective(this.elementRef, this.libraryService);
 
   /**
    * Tell to subscriptions if the component is alive
@@ -119,69 +105,50 @@ export class DashboardScreenComponent implements OnInit, OnChanges, OnDestroy {
 
   /**
    * The options for the plugin angular2-grid
-   * @type {NgGridConfig}
-   * @protected
    */
   public gridOptions: NgGridConfig = {};
 
   /**
    * Grid state when widgets were first loaded
-   * @type {NgGridItemConfig[]}
-   * @protected
    */
   protected startGridStackItems: NgGridItemConfig[] = [];
 
   /**
    * The grid items description
-   * @type {NgGridItemConfig[]}
-   * @protected
    */
   public gridStackItems: NgGridItemConfig[] = [];
 
   /**
    * The stompJS Subscription for screen event
-   * @type {Subscription}
-   * @private
    */
   private screenEventSubscription: Subscription;
 
   /**
    * Tell if we should display the screen code
-   * @type {boolean}
-   * @protected
    */
   public shouldDisplayScreenCode = false;
 
   /**
    * The list of icons
-   * @type {IconEnum}
-   * @protected
    */
   public iconEnum = IconEnum;
 
   /**
    * The list of material icons
-   * @type {MaterialIconRecords}
-   * @protected
    */
   public materialIconRecords = MaterialIconRecords;
 
   /**
-   * URLs of the JS libraries required by the widgets
-   */
-  public librariesURLs = '';
-
-  /**
    * The constructor
    *
-   * @param elementRef Angular service used to inject a reference on the component
-   * @param httpProjectService Suricate service used to manage project
-   * @param dashboardService Frontend service used to manage dashboards
-   * @param websocketService Frontend service used to manage websocket connections
-   * @param libraryService Frontend service used to manage the libraries
+   * @param renderer The renderer Angular entity
+   * @param httpProjectService Back-End service used to manage the project
+   * @param dashboardService Front-End service used to manage the dashboard
+   * @param websocketService Front-End service used to manage the web sockets
+   * @param libraryService Front-End service used to manage the libraries
    */
   constructor(
-    private readonly elementRef: ElementRef,
+    private renderer: Renderer2,
     private readonly httpProjectService: HttpProjectService,
     private readonly dashboardService: DashboardService,
     private readonly websocketService: WebsocketService,
@@ -189,10 +156,10 @@ export class DashboardScreenComponent implements OnInit, OnChanges, OnDestroy {
   ) {}
 
   /**
-   * Init method
+   * After view init method
    */
-  ngOnInit(): void {
-    this.loadJSLibrariesFromTokens();
+  ngAfterViewInit(): void {
+    this.addExternalJSLibrariesToTheDOM();
   }
 
   /**
@@ -206,8 +173,7 @@ export class DashboardScreenComponent implements OnInit, OnChanges, OnDestroy {
       }
 
       this.project = changes.project.currentValue;
-      this.appRunScriptDirective.ngOnInit();
-      setTimeout(() => this.initGridStackOptions());
+      this.initGridStackOptions();
 
       if (changes.project.previousValue) {
         if (changes.project.previousValue.token !== changes.project.currentValue.token) {
@@ -238,22 +204,29 @@ export class DashboardScreenComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   /**
+   * For each JS libraries linked with the project, create a script element with the URL of the library
+   * and a callback which notify subscribers when the library is loaded.
+   */
+  public addExternalJSLibrariesToTheDOM() {
+    this.libraryService.numberOfExternalLibrariesToLoad = this.project.librariesToken.length;
+
+    this.project.librariesToken.forEach(token => {
+      const script: HTMLScriptElement = document.createElement('script');
+      script.type = 'text/javascript';
+      script.src = HttpAssetService.getContentUrl(token);
+      script.onload = () => this.libraryService.markScriptAsLoaded(token);
+      script.async = false;
+
+      this.renderer.appendChild(this.externalJsLibrariesSpan.nativeElement, script);
+    });
+  }
+
+  /**
    * Display the screen code
    */
   private displayScreenCode(): void {
     this.shouldDisplayScreenCode = true;
     setTimeout(() => (this.shouldDisplayScreenCode = false), 10000);
-  }
-
-  /**
-   * Build the list of JS libraries required by the widgets of the project
-   */
-  public loadJSLibrariesFromTokens() {
-    if (this.project.librariesToken) {
-      this.project.librariesToken.forEach(libraryToken => {
-        this.librariesURLs = this.librariesURLs.concat(`<script src="${HttpAssetService.getContentUrl(libraryToken)}"></script>`);
-      });
-    }
   }
 
   /**********************************************************************************************************/
@@ -332,7 +305,7 @@ export class DashboardScreenComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   /**
-   * Disconnect from websockets
+   * Disconnect from web sockets
    */
   private disconnectFromWebsocket(): void {
     this.unsubscribeToWebsocket();
