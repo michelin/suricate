@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { RunScriptsDirective } from '../../directives/run-scripts.directive';
+import { WidgetJsScriptsDirective } from '../../directives/widget-js-scripts.directive';
 
-describe('RunScriptsDirective', () => {
+describe('WidgetJsScriptsDirective', () => {
   it('should create an instance', () => {});
 });

@@ -14,18 +14,17 @@
  * limitations under the License.
  */
 
-import { Component, ElementRef, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { TitleCasePipe } from '@angular/common';
 import { NgGridItemConfig, NgGridItemEvent } from 'angular2-grid';
-import { takeWhile, tap } from 'rxjs/operators';
+import { takeWhile } from 'rxjs/operators';
 
 import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';
 import { Widget } from '../../../shared/models/backend/widget/widget';
 import { HttpWidgetService } from '../../../shared/services/backend/http-widget.service';
 import { WidgetStateEnum } from '../../../shared/enums/widget-sate.enum';
 import { HttpProjectWidgetService } from '../../../shared/services/backend/http-project-widget.service';
-import { RunScriptsDirective } from '../../../shared/directives/run-scripts.directive';
 import { WebsocketService } from '../../../shared/services/frontend/websocket.service';
 import { WebsocketUpdateEvent } from '../../../shared/models/frontend/websocket/websocket-update-event';
 import { WebsocketUpdateTypeEnum } from '../../../shared/enums/websocket-update-type.enum';
@@ -44,6 +43,7 @@ import { WidgetConfigurationFormFieldsService } from '../../../shared/form-field
 import { FormGroup } from '@angular/forms';
 import { FormField } from '../../../shared/models/frontend/form/form-field';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { LibraryService } from '../../services/library.service';
 
 /**
  * Display the grid stack widgets
@@ -56,108 +56,82 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   /**
    * The projectWidget to display
-   * @type {ProjectWidget}
-   * @public
    */
   @Input()
   public projectWidget: ProjectWidget;
+
   /**
    * The grid item config
-   * @type {NgGridItemConfig}
-   * @public
    */
   @Input()
   public gridStackItem: NgGridItemConfig;
+
   /**
    * Tell if we are on
-   * @type {boolean}
-   * @public
    */
   @Input()
   public readOnly: boolean;
+
   /**
    * The project token
-   * @type {string}
-   * @public
    */
   @Input()
   public projectToken: string;
-  /**
-   * Add runScriptsDirective, so we can recall it
-   * @type {RunScriptsDirective}
-   * @public
-   */
-  @HostBinding('attr.appRunScripts')
-  public appRunScriptDirective = new RunScriptsDirective(this.elementRef);
 
   /**
    * The widget related to this project widget
-   * @type {Widget}
-   * @protected
    */
   public widget: Widget;
 
   /**
    * The enumeration that hold the state of a widget (used in HTML)
-   * @type {widgetStateEnum}
-   * @protected
    */
   public widgetStateEnum = WidgetStateEnum;
 
   /**
    * True when the component is alive
-   * @type {boolean}
-   * @private
    */
   private isAlive = true;
 
   /**
    * The configuration of this project widget on the grid
-   * @type {NgGridItemConfig}
-   * @private
    */
   private startGridStackItem: NgGridItemConfig;
 
   /**
    * Tell if the component is Loading widget
-   * @type {boolean}
-   * @protected
    */
   public isComponentLoading = true;
+
   /**
    * Used to display the buttons when the screen is not readonly
-   * @type {boolean}
-   * @protected
    */
   public displayButtons = false;
 
   /**
    * The list of icons
-   * @type {IconEnum}
-   * @protected
    */
   public iconEnum = IconEnum;
 
   /**
    * The list of material icons
-   * @type {MaterialIconRecords}
-   * @protected
    */
   public materialIconRecords = MaterialIconRecords;
 
   /**
    * Constructor
    *
-   * @param {ElementRef} elementRef Angular service used to inject a reference on the component
-   * @param {TranslateService} translateService NgxTranslate service used to manage translations
-   * @param {HttpWidgetService} httpWidgetService Suricate service used to manage http calls for widgets
-   * @param {HttpProjectWidgetService} httpProjectWidgetService Suricate service used to manage http calls for project widgets
-   * @param {WebsocketService} websocketService Frontend service used to manage websocket connections
-   * @param {DialogService} dialogService Frontend service used to manage dialog
-   * @param {SidenavService} sidenavService Frontend service used to manage sidenav's
-   * @param {ProjectWidgetFormStepsService} projectWidgetFormStepsService Frontend service used to generate steps for project widget
-   * @param {ToastService} toastService Frontend service used to display messages
-   * @param widgetConfigurationFormFieldsService Frontend service used to manage the widget's category settings
+   * @param elementRef A reference to the current element
+   * @param translateService Front-End service used to manage translations
+   * @param httpWidgetService Back-End service used to manage http calls for widgets
+   * @param httpProjectWidgetService Back-End service used to manage http calls for project widgets
+   * @param websocketService Front-End service used to manage websocket connections
+   * @param dialogService Front-End service used to manage dialog
+   * @param sidenavService Front-End service used to manage sidenav's
+   * @param projectWidgetFormStepsService Front-End service used to generate steps for project widget
+   * @param toastService Front-End service used to display messages
+   * @param widgetConfigurationFormFieldsService Front-End service used to manage the widget's category settings
+   * @param libraryService Front-End service used to manage the libraries
    */
   constructor(
     private readonly elementRef: ElementRef,
@@ -169,7 +143,8 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
     private readonly sidenavService: SidenavService,
     private readonly projectWidgetFormStepsService: ProjectWidgetFormStepsService,
     private readonly toastService: ToastService,
-    private readonly widgetConfigurationFormFieldsService: WidgetConfigurationFormFieldsService
+    private readonly widgetConfigurationFormFieldsService: WidgetConfigurationFormFieldsService,
+    private readonly libraryService: LibraryService
   ) {}
 
   /**
@@ -179,13 +154,13 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
     this.initWebsocketConnectionForProjectWidget();
     this.startGridStackItem = { ...this.gridStackItem };
 
-    this.httpWidgetService
-      .getById(this.projectWidget.widgetId)
-      .pipe(tap((widget: Widget) => (this.widget = widget)))
-      .subscribe(() => {
-        this.isComponentLoading = false;
-        setTimeout(() => this.appRunScriptDirective.ngOnInit(), 100);
+    this.httpWidgetService.getById(this.projectWidget.widgetId).subscribe((widget: Widget) => {
+      this.widget = widget;
+
+      this.libraryService.allExternalLibrariesLoaded.subscribe((areExternalLibrariesLoaded: boolean) => {
+        this.isComponentLoading = !areExternalLibrariesLoaded;
       });
+    });
   }
 
   /**
@@ -216,7 +191,6 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   private refreshProjectWidget(): void {
     this.httpProjectWidgetService.getOneById(this.projectWidget.id).subscribe(projectWidget => {
       this.projectWidget = projectWidget;
-      this.appRunScriptDirective.ngOnInit();
     });
   }
 
@@ -242,11 +216,11 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    * Delete The project widget
    */
   public displayDeleteProjectWidgetDialog(): void {
-    const titlecasePipe = new TitleCasePipe();
+    const titleCasePipe = new TitleCasePipe();
 
     this.dialogService.confirm({
       title: 'widget.delete',
-      message: `${this.translateService.instant('delete.confirm')} ${titlecasePipe.transform(this.widget.name)} widget ?`,
+      message: `${this.translateService.instant('delete.confirm')} ${titleCasePipe.transform(this.widget.name)} widget ?`,
       accept: () => this.httpProjectWidgetService.deleteOneById(this.projectWidget.id).subscribe()
     });
   }
