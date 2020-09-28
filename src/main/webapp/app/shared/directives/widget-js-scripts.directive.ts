@@ -24,7 +24,7 @@ export class WidgetJsScriptsDirective implements OnInit {
    * It executes the scripts again and render the widget properly.
    */
   private reloadJSScripts() {
-    let scripts: HTMLScriptElement[] = (<HTMLScriptElement[]>(
+    const scripts: HTMLScriptElement[] = (<HTMLScriptElement[]>(
       Array.from(this.elementRef.nativeElement.getElementsByTagName('script'))
     )).filter(currentScript => currentScript.src || currentScript.innerHTML);
 
