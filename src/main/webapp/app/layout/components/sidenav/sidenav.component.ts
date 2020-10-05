@@ -18,8 +18,8 @@ import { Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@ang
 import { ActivatedRoute, Event, NavigationEnd, Router } from '@angular/router';
 import { MatSidenav } from '@angular/material/sidenav';
 
-import { RoutesService } from '../../../shared/services/frontend/route.service';
-import { MenuService } from '../../../shared/services/frontend/menu.service';
+import { RoutesService } from '../../../shared/services/frontend/route/route.service';
+import { MenuService } from '../../../shared/services/frontend/menu/menu.service';
 
 /**
  * Hold the sidenav behavior and the main view

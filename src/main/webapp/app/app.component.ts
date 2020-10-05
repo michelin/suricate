@@ -18,14 +18,14 @@ import { Component, HostBinding, OnDestroy, OnInit } from '@angular/core';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { takeWhile } from 'rxjs/operators';
 
-import { DialogService } from './shared/services/frontend/dialog.service';
+import { DialogService } from './shared/services/frontend/dialog/dialog.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ConfirmationDialogConfiguration } from './shared/models/frontend/dialog/confirmation-dialog-configuration';
 import { ConfirmDialogComponent } from './shared/components/confirm-dialog/confirm-dialog.component';
 import { SettingsService } from './core/services/settings.service';
 import { CommunicationDialogConfiguration } from './shared/models/frontend/dialog/communication-dialog-configuration';
 import { CommunicationDialogComponent } from './shared/components/communication-dialog/communication-dialog.component';
-import { AuthenticationService } from './shared/services/frontend/authentication.service';
+import { AuthenticationService } from './shared/services/frontend/authentication/authentication.service';
 
 /**
  * Main component init the application

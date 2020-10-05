@@ -18,14 +18,14 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 
-import { AuthenticationService } from '../../../shared/services/frontend/authentication.service';
-import { HttpWidgetConfigurationService } from '../../../shared/services/backend/http-widget-configuration.service';
+import { AuthenticationService } from '../../../shared/services/frontend/authentication/authentication.service';
+import { HttpWidgetConfigurationService } from '../../../shared/services/backend/http-widget-configuration/http-widget-configuration.service';
 import { ApplicationProperties } from '../../../shared/models/backend/application-properties';
 import { AuthenticationProviderEnum } from '../../../shared/enums/authentication-provider.enum';
-import { FormService } from '../../../shared/services/frontend/form.service';
+import { FormService } from '../../../shared/services/frontend/form/form.service';
 import { ButtonConfiguration } from '../../../shared/models/frontend/button/button-configuration';
 import { FormField } from '../../../shared/models/frontend/form/form-field';
-import { LoginFormFieldsService } from '../../../shared/form-fields/login-form-fields.service';
+import { LoginFormFieldsService } from '../../../shared/services/frontend/form-fields/login-form-fields/login-form-fields.service';
 import { ButtonTypeEnum } from '../../../shared/enums/button-type.enum';
 
 /**

@@ -28,6 +28,7 @@ import { AdminModule } from './admin/admin.module';
 import { SharedModule } from './shared/shared.module';
 import { WidgetModule } from './widget/widget.module';
 import { appRoutes } from './app.routes';
+import { MockModule } from './mock/mock.module';
 
 @NgModule({
   imports: [

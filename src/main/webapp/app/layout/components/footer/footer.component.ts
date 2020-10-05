@@ -15,7 +15,7 @@
  */
 
 import { Component } from '@angular/core';
-import { EnvironmentService } from '../../../shared/services/frontend/environment.service';
+import { EnvironmentService } from '../../../shared/services/frontend/environment/environment.service';
 
 /**
  * The footer of the application

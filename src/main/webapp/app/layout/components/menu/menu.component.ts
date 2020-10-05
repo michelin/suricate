@@ -15,19 +15,19 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { AuthenticationService } from '../../../shared/services/frontend/authentication.service';
+import { AuthenticationService } from '../../../shared/services/frontend/authentication/authentication.service';
 import { Router } from '@angular/router';
-import { MenuService } from '../../../shared/services/frontend/menu.service';
+import { MenuService } from '../../../shared/services/frontend/menu/menu.service';
 import { IconEnum } from '../../../shared/enums/icon.enum';
 import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
-import { SidenavService } from '../../../shared/services/frontend/sidenav.service';
-import { SettingsFormFieldsService } from '../../../shared/form-fields/settings-form-fields.service';
+import { SidenavService } from '../../../shared/services/frontend/sidenav/sidenav.service';
+import { SettingsFormFieldsService } from '../../../shared/services/frontend/form-fields/settings-form-fields/settings-form-fields.service';
 import { FormField } from '../../../shared/models/frontend/form/form-field';
 import { from } from 'rxjs';
 import { flatMap, toArray } from 'rxjs/operators';
 import { Setting } from '../../../shared/models/backend/setting/setting';
-import { HttpUserService } from '../../../shared/services/backend/http-user.service';
-import { HttpSettingService } from '../../../shared/services/backend/http-setting.service';
+import { HttpUserService } from '../../../shared/services/backend/http-user/http-user.service';
+import { HttpSettingService } from '../../../shared/services/backend/http-setting/http-setting.service';
 import { UserSettingRequest } from '../../../shared/models/backend/setting/user-setting-request';
 import { AllowedSettingValue } from '../../../shared/models/backend/setting/allowed-setting-value';
 import { SettingsService } from '../../../core/services/settings.service';
@@ -47,24 +47,28 @@ export class MenuComponent implements OnInit {
    * @protected
    */
   public readonly connectedUser = AuthenticationService.getConnectedUser();
+
   /**
    * The menu to display
    * @type {MenuConfiguration}
    * @protected
    */
   public readonly menu = MenuService.buildMenu();
+
   /**
    * The list of settings
    * @type {Setting[]}
    * @private
    */
   private settings: Setting[];
+
   /**
    * The list of icons
    * @type {IconEnum}
    * @protected
    */
   public iconEnum = IconEnum;
+
   /**
    * The list of material icons
    * @type {MaterialIconRecords}

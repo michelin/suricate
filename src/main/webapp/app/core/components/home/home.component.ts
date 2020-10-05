@@ -18,17 +18,17 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { Project } from '../../../shared/models/backend/project/project';
-import { HttpAssetService } from '../../../shared/services/backend/http-asset.service';
-import { HttpProjectService } from '../../../shared/services/backend/http-project.service';
+import { HttpAssetService } from '../../../shared/services/backend/http-asset/http-asset.service';
+import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
 import { HeaderConfiguration } from '../../../shared/models/frontend/header/header-configuration';
-import { SidenavService } from '../../../shared/services/frontend/sidenav.service';
-import { ProjectFormFieldsService } from '../../../shared/form-fields/project-form-fields.service';
+import { SidenavService } from '../../../shared/services/frontend/sidenav/sidenav.service';
+import { ProjectFormFieldsService } from '../../../shared/services/frontend/form-fields/project-form-fields/project-form-fields.service';
 import { ProjectRequest } from '../../../shared/models/backend/project/project-request';
-import { ToastService } from '../../../shared/services/frontend/toast.service';
+import { ToastService } from '../../../shared/services/frontend/toast/toast.service';
 import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
 import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
 import { IconEnum } from '../../../shared/enums/icon.enum';
-import { CssService } from '../../../shared/services/frontend/css.service';
+import { CssService } from '../../../shared/services/frontend/css/css.service';
 
 /**
  * Manage the home page

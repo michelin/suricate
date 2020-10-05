@@ -18,21 +18,21 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as html2canvas from 'html2canvas';
 
-import { DashboardService } from '../../services/dashboard.service';
+import { DashboardService } from '../../services/dashboard/dashboard.service';
 import { Project } from '../../../shared/models/backend/project/project';
-import { HttpProjectService } from '../../../shared/services/backend/http-project.service';
+import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
 import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';
 import { FileUtils } from '../../../shared/utils/file.utils';
 import { HeaderConfiguration } from '../../../shared/models/frontend/header/header-configuration';
 import { IconEnum } from '../../../shared/enums/icon.enum';
-import { HttpScreenService } from '../../../shared/services/backend/http-screen.service';
+import { HttpScreenService } from '../../../shared/services/backend/http-screen/http-screen.service';
 import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
-import { ToastService } from '../../../shared/services/frontend/toast.service';
-import { SidenavService } from '../../../shared/services/frontend/sidenav.service';
-import { DialogService } from '../../../shared/services/frontend/dialog.service';
+import { ToastService } from '../../../shared/services/frontend/toast/toast.service';
+import { SidenavService } from '../../../shared/services/frontend/sidenav/sidenav.service';
+import { DialogService } from '../../../shared/services/frontend/dialog/dialog.service';
 import { TranslateService } from '@ngx-translate/core';
 import { ProjectRequest } from '../../../shared/models/backend/project/project-request';
-import { ProjectFormFieldsService } from '../../../shared/form-fields/project-form-fields.service';
+import { ProjectFormFieldsService } from '../../../shared/services/frontend/form-fields/project-form-fields/project-form-fields.service';
 import { flatMap, switchMap, tap } from 'rxjs/operators';
 import { EMPTY, Observable, of } from 'rxjs';
 import { DashboardScreenComponent } from '../dashboard-screen/dashboard-screen.component';
@@ -41,7 +41,7 @@ import { TvManagementDialogComponent } from '../tv-management-dialog/tv-manageme
 import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
 import { ValueChangedEvent } from '../../../shared/models/frontend/form/value-changed-event';
 import { FormField } from '../../../shared/models/frontend/form/form-field';
-import { ProjectUsersFormFieldsService } from '../../../shared/form-fields/project-users-form-fields.service';
+import { ProjectUsersFormFieldsService } from '../../../shared/services/frontend/form-fields/project-users-form-fields/project-users-form-fields.service';
 
 /**
  * Component used to display a specific dashboard

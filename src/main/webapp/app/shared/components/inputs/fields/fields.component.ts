@@ -17,7 +17,7 @@
  */
 
 import { Component, Input } from '@angular/core';
-import { InputComponent } from '../input.component';
+import { InputComponent } from '../input/input.component';
 import { FormArray, FormGroup } from '@angular/forms';
 import { FormField } from '../../../models/frontend/form/form-field';
 import { DataTypeEnum } from '../../../enums/data-type.enum';

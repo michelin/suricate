@@ -22,8 +22,8 @@ import { RouterModule } from '@angular/router';
 import { SharedModule } from '../shared/shared.module';
 import { LayoutModule } from '../layout/layout.module';
 import { widgetRoutes } from './widget.route';
-import { WidgetsComponent } from './components-list/widgets.component';
-import { WidgetConfigurationsComponent } from './components-list/widget-configurations.component';
+import { WidgetsComponent } from './components-list/widgets/widgets.component';
+import { WidgetConfigurationsComponent } from './components-list/widget-configurations/widget-configurations.component';
 
 @NgModule({
   imports: [LayoutModule, SharedModule, RouterModule.forChild(widgetRoutes)],

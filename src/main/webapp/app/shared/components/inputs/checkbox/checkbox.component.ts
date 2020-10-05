@@ -17,7 +17,7 @@
  */
 
 import { Component } from '@angular/core';
-import { InputComponent } from '../input.component';
+import { InputComponent } from '../input/input.component';
 
 /**
  * Manage the instantiation of the checkbox

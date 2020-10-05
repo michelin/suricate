@@ -31,20 +31,19 @@ import { takeWhile } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { NgGridConfig, NgGridItemConfig } from 'angular2-grid';
 import * as Stomp from '@stomp/stompjs';
-
 import { Project } from '../../../shared/models/backend/project/project';
 import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';
-import { WebsocketService } from '../../../shared/services/frontend/websocket.service';
-import { HttpAssetService } from '../../../shared/services/backend/http-asset.service';
+import { WebsocketService } from '../../../shared/services/frontend/websocket/websocket.service';
+import { HttpAssetService } from '../../../shared/services/backend/http-asset/http-asset.service';
 import { WebsocketUpdateEvent } from '../../../shared/models/frontend/websocket/websocket-update-event';
 import { WebsocketUpdateTypeEnum } from '../../../shared/enums/websocket-update-type.enum';
-import { DashboardService } from '../../services/dashboard.service';
+import { DashboardService } from '../../services/dashboard/dashboard.service';
 import { ProjectWidgetPositionRequest } from '../../../shared/models/backend/project-widget/project-widget-position-request';
-import { HttpProjectService } from '../../../shared/services/backend/http-project.service';
 import { GridItemUtils } from '../../../shared/utils/grid-item.utils';
 import { IconEnum } from '../../../shared/enums/icon.enum';
 import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
 import { LibraryService } from '../../services/library.service';
+import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
 
 /**
  * Display the grid stack widgets
