@@ -21,6 +21,7 @@ import { inject, TestBed } from '@angular/core/testing';
 import { HttpRepositoryService } from './http-repository.service';
 import { RouterTestingModule } from '@angular/router/testing';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { MockModule } from '../../../../mock/mock.module';
 
 describe('HttpRepositoryService', () => {
   beforeEach(() => {
