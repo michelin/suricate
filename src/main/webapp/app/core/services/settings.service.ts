@@ -21,9 +21,9 @@ import { flatMap } from 'rxjs/operators';
 
 import { UserSetting } from '../../shared/models/backend/setting/user-setting';
 import { User } from '../../shared/models/backend/user/user';
-import { HttpUserService } from '../../shared/services/backend/http-user.service';
+import { HttpUserService } from '../../shared/services/backend/http-user/http-user.service';
 import { SettingsTypeEnum } from '../../shared/enums/settings-type.enum';
-import { HttpSettingService } from '../../shared/services/backend/http-setting.service';
+import { HttpSettingService } from '../../shared/services/backend/http-setting/http-setting.service';
 
 /**
  * Manage the app theme

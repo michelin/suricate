@@ -21,13 +21,13 @@ import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
 import { ListConfiguration } from '../../models/frontend/list/list-configuration';
-import { AbstractHttpService } from '../../services/backend/abstract-http.service';
+import { AbstractHttpService } from '../../services/backend/abstract-http/abstract-http.service';
 import { HeaderConfiguration } from '../../models/frontend/header/header-configuration';
-import { ToastService } from '../../services/frontend/toast.service';
-import { DialogService } from '../../services/frontend/dialog.service';
-import { SidenavService } from '../../services/frontend/sidenav.service';
+import { ToastService } from '../../services/frontend/toast/toast.service';
+import { DialogService } from '../../services/frontend/dialog/dialog.service';
+import { SidenavService } from '../../services/frontend/sidenav/sidenav.service';
 import { Page } from '../../models/backend/page';
-import { HttpFilterService } from '../../services/backend/http-filter.service';
+import { HttpFilterService } from '../../services/backend/http-filter/http-filter.service';
 import { PageEvent } from '@angular/material/paginator';
 import { MaterialIconRecords } from '../../records/material-icon.record';
 import { IconEnum } from '../../enums/icon.enum';

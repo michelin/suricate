@@ -20,9 +20,9 @@ import { FormGroup } from '@angular/forms';
 
 import { Project } from '../../../shared/models/backend/project/project';
 import { WebsocketClient } from '../../../shared/models/backend/websocket-client';
-import { HttpScreenService } from '../../../shared/services/backend/http-screen.service';
-import { HttpProjectService } from '../../../shared/services/backend/http-project.service';
-import { FormService } from '../../../shared/services/frontend/form.service';
+import { HttpScreenService } from '../../../shared/services/backend/http-screen/http-screen.service';
+import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
+import { FormService } from '../../../shared/services/frontend/form/form.service';
 import { TranslateService } from '@ngx-translate/core';
 import { DataTypeEnum } from '../../../shared/enums/data-type.enum';
 import { FormField } from '../../../shared/models/frontend/form/form-field';
@@ -97,17 +97,14 @@ export class TvManagementDialogComponent implements OnInit {
    * Constructor
    *
    * @param data Angular service used to inject data in the modal
-   * @param {TranslateService} translateService NgxTranslate service used to manage translations
    * @param {HttpProjectService} httpProjectService Suricate service used to manage HTTP calls for project
    * @param {HttpScreenService} httpScreenService Suricate service used to manage HTTP calls for screens
    * @param {FormService} formService Frontend service used to help on form creation
-
    */
   constructor(
     @Inject(MAT_DIALOG_DATA) private readonly data: { project: Project },
     private readonly httpProjectService: HttpProjectService,
     private readonly httpScreenService: HttpScreenService,
-    private readonly translateService: TranslateService,
     private readonly formService: FormService
   ) {
     this.initButtonsConfiguration();

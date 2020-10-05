@@ -25,10 +25,10 @@ import * as Stomp from '@stomp/stompjs';
 import { Project } from '../../../shared/models/backend/project/project';
 import { WebsocketUpdateEvent } from '../../../shared/models/frontend/websocket/websocket-update-event';
 import { WebsocketUpdateTypeEnum } from '../../../shared/enums/websocket-update-type.enum';
-import { HttpProjectService } from '../../../shared/services/backend/http-project.service';
-import { WebsocketService } from '../../../shared/services/frontend/websocket.service';
+import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
+import { WebsocketService } from '../../../shared/services/frontend/websocket/websocket.service';
 import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';
-import { DashboardService } from '../../services/dashboard.service';
+import { DashboardService } from '../../services/dashboard/dashboard.service';
 
 /**
  * Dashboard TV Management
@@ -114,7 +114,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   public ngOnInit(): void {
     this.listenForConnection();
 
-    this.activatedRoute.queryParams.subscribe((queryParams: Params) => {
+    /* this.activatedRoute.queryParams.subscribe((queryParams: Params) => {
       if (queryParams['token']) {
         this.projectToken = queryParams['token'];
         this.initComponent();
@@ -122,7 +122,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
         this.projectToken = null;
         this.projectWidgets = null;
       }
-    });
+    }); */
   }
 
   /**
