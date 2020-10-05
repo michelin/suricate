@@ -19,10 +19,12 @@
 import { inject, TestBed } from '@angular/core/testing';
 
 import { ToastService } from './toast.service';
+import { MockModule } from '../../../../mock/mock.module';
 
 describe('ToastService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [MockModule],
       providers: [ToastService]
     });
   });

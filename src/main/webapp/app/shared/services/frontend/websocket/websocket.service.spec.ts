@@ -18,11 +18,13 @@ import { inject, TestBed } from '@angular/core/testing';
 
 import { WebsocketService } from './websocket.service';
 import { StompRService } from '@stomp/ng2-stompjs';
+import { MockModule } from '../../../../mock/mock.module';
 
 describe('WebsocketService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [WebsocketService, StompRService]
+      imports: [MockModule],
+      providers: [WebsocketService]
     });
   });
 

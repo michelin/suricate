@@ -15,7 +15,23 @@
  */
 
 import { SafeHtmlPipe } from './safe-html.pipe';
+import { PasswordPipe } from '../password/password.pipe';
+import { TestBed } from '@angular/core/testing';
+import { MockModule } from '../../../mock/mock.module';
 
 describe('SafeHtmlPipe', () => {
-  it('create an instance', () => {});
+  let pipe: SafeHtmlPipe;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [MockModule],
+      providers: [SafeHtmlPipe]
+    });
+
+    pipe = TestBed.inject(SafeHtmlPipe);
+  });
+
+  it('should create', () => {
+    expect(pipe).toBeTruthy();
+  });
 });

@@ -35,7 +35,7 @@ describe('TvManagementDialogComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MockModule],
-      declarations: [TvManagementDialogComponent, TranslatePipe],
+      declarations: [TvManagementDialogComponent],
       providers: [{ provide: MAT_DIALOG_DATA, useValue: { project: buildMockedProject() } }]
     }).compileComponents();
 

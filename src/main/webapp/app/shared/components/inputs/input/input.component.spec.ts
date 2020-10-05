@@ -19,7 +19,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { InputComponent } from './input.component';
-import { MockUnitTestsService } from '../../../../mock/services/mock-unit-tests/mock-unit-tests.service';
+import { MockedModelBuilderService } from '../../../../mock/services/mocked-model-builder/mocked-model-builder.service';
 import { DataTypeEnum } from '../../../enums/data-type.enum';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -39,12 +39,12 @@ describe('InputComponent', () => {
       declarations: [InputComponent]
     }).compileComponents();
 
-    const mockUnitTestsService = TestBed.inject(MockUnitTestsService);
+    const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
 
     fixture = TestBed.createComponent(InputComponent);
     component = fixture.componentInstance;
-    component.field = mockUnitTestsService.buildMockedFormField(DataTypeEnum.TEXT);
-    component.formGroup = mockUnitTestsService.buildMockedFormGroup(DataTypeEnum.TEXT);
+    component.field = mockedModelBuilderService.buildMockedFormField(DataTypeEnum.TEXT);
+    component.formGroup = mockedModelBuilderService.buildMockedFormGroup(DataTypeEnum.TEXT);
 
     fixture.detectChanges();
   }));

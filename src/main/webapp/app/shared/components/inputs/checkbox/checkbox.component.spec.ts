@@ -26,7 +26,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DataTypeEnum } from '../../../enums/data-type.enum';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from '../../../modules/material.module';
-import { MockUnitTestsService } from '../../../../mock/services/mock-unit-tests/mock-unit-tests.service';
+import { MockedModelBuilderService } from '../../../../mock/services/mocked-model-builder/mocked-model-builder.service';
 import { MockModule } from '../../../../mock/mock.module';
 
 describe('CheckboxComponent', () => {
@@ -39,12 +39,12 @@ describe('CheckboxComponent', () => {
       declarations: [CheckboxComponent]
     }).compileComponents();
 
-    const mockUnitTestsService = TestBed.inject(MockUnitTestsService);
+    const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
 
     fixture = TestBed.createComponent(CheckboxComponent);
     component = fixture.componentInstance;
-    component.field = mockUnitTestsService.buildMockedFormField(DataTypeEnum.BOOLEAN);
-    component.formGroup = mockUnitTestsService.buildMockedFormGroup(DataTypeEnum.BOOLEAN);
+    component.field = mockedModelBuilderService.buildMockedFormField(DataTypeEnum.BOOLEAN);
+    component.formGroup = mockedModelBuilderService.buildMockedFormGroup(DataTypeEnum.BOOLEAN);
 
     fixture.detectChanges();
   }));

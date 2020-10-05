@@ -19,10 +19,12 @@
 import { inject, TestBed } from '@angular/core/testing';
 
 import { DialogService } from './dialog.service';
+import { MockModule } from '../../../../mock/mock.module';
 
 describe('DialogService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [MockModule],
       providers: [DialogService]
     });
   });

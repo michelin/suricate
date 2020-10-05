@@ -22,7 +22,7 @@ import { StompRService } from '@stomp/ng2-stompjs';
 import { SafeHtmlPipe } from '../../../shared/pipes/safe-html/safe-html.pipe';
 import { Project } from '../../../shared/models/backend/project/project';
 import { ProjectGrid } from '../../../shared/models/backend/project/project-grid';
-import { MockUnitTestsService } from '../../../mock/services/mock-unit-tests/mock-unit-tests.service';
+import { MockedModelBuilderService } from '../../../mock/services/mocked-model-builder/mocked-model-builder.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MockModule } from '../../../mock/mock.module';
 
@@ -36,11 +36,11 @@ describe('DashboardScreenComponent', () => {
       declarations: [DashboardScreenComponent, SafeHtmlPipe]
     }).compileComponents();
 
-    const mockUnitTestsService = TestBed.inject(MockUnitTestsService);
+    const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
 
     fixture = TestBed.createComponent(DashboardScreenComponent);
     component = fixture.componentInstance;
-    component.project = mockUnitTestsService.buildMockedProject();
+    component.project = mockedModelBuilderService.buildMockedProject();
 
     fixture.detectChanges();
   }));

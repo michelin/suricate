@@ -17,10 +17,12 @@
 import { inject, TestBed } from '@angular/core/testing';
 
 import { SidenavService } from './sidenav.service';
+import { MockModule } from '../../../../mock/mock.module';
 
 describe('SidenavService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [MockModule],
       providers: [SidenavService]
     });
   });

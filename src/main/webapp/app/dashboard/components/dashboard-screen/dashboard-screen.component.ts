@@ -42,7 +42,7 @@ import { ProjectWidgetPositionRequest } from '../../../shared/models/backend/pro
 import { GridItemUtils } from '../../../shared/utils/grid-item.utils';
 import { IconEnum } from '../../../shared/enums/icon.enum';
 import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
-import { LibraryService } from '../../services/library.service';
+import { LibraryService } from '../../services/library/library.service';
 import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
 
 /**

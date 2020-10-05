@@ -19,7 +19,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MosaicComponent } from './mosaic.component';
-import { MockUnitTestsService } from '../../../../mock/services/mock-unit-tests/mock-unit-tests.service';
+import { MockedModelBuilderService } from '../../../../mock/services/mocked-model-builder/mocked-model-builder.service';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DataTypeEnum } from '../../../enums/data-type.enum';
 import { MockModule } from '../../../../mock/mock.module';
@@ -34,11 +34,11 @@ describe('MosaicComponent', () => {
       declarations: [MosaicComponent]
     }).compileComponents();
 
-    const mockUnitTestsService = TestBed.inject(MockUnitTestsService);
+    const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
 
     fixture = TestBed.createComponent(MosaicComponent);
     component = fixture.componentInstance;
-    component.field = mockUnitTestsService.buildMockedFormField(DataTypeEnum.MOSAIC);
+    component.field = mockedModelBuilderService.buildMockedFormField(DataTypeEnum.MOSAIC);
 
     fixture.detectChanges();
   }));

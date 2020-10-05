@@ -26,7 +26,7 @@ import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormField } from '../../../models/frontend/form/form-field';
 import { DataTypeEnum } from '../../../enums/data-type.enum';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MockUnitTestsService } from '../../../../mock/services/mock-unit-tests/mock-unit-tests.service';
+import { MockedModelBuilderService } from '../../../../mock/services/mocked-model-builder/mocked-model-builder.service';
 import { MockModule } from '../../../../mock/mock.module';
 
 describe('ColorPickerComponent', () => {
@@ -39,12 +39,12 @@ describe('ColorPickerComponent', () => {
       declarations: [ColorPickerComponent]
     }).compileComponents();
 
-    const mockUnitTestsService = TestBed.inject(MockUnitTestsService);
+    const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
 
     fixture = TestBed.createComponent(ColorPickerComponent);
     component = fixture.componentInstance;
-    component.field = mockUnitTestsService.buildMockedFormField(DataTypeEnum.COLOR_PICKER);
-    component.formGroup = mockUnitTestsService.buildMockedFormGroup(DataTypeEnum.COLOR_PICKER);
+    component.field = mockedModelBuilderService.buildMockedFormField(DataTypeEnum.COLOR_PICKER);
+    component.formGroup = mockedModelBuilderService.buildMockedFormGroup(DataTypeEnum.COLOR_PICKER);
 
     fixture.detectChanges();
   }));

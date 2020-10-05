@@ -40,6 +40,8 @@ import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { MockModule } from '../../../../mock/mock.module';
 import { SafeHtmlPipe } from '../../../../shared/pipes/safe-html/safe-html.pipe';
+import { NgGridModule } from 'angular2-grid';
+import { MockedModelBuilderService } from '../../../../mock/services/mocked-model-builder/mocked-model-builder.service';
 
 describe('DashboardScreenWidgetComponent', () => {
   let component: DashboardScreenWidgetComponent;
@@ -48,44 +50,20 @@ describe('DashboardScreenWidgetComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       imports: [MockModule],
-      declarations: [DashboardScreenWidgetComponent, SafeHtmlPipe]
+      declarations: [DashboardScreenWidgetComponent]
     }).compileComponents();
+
+    const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
 
     fixture = TestBed.createComponent(DashboardScreenWidgetComponent);
     component = fixture.componentInstance;
-    component.projectWidget = buildMockedProjectWidget();
+    component.projectWidget = mockedModelBuilderService.buildMockedProjectWidget();
+    component.gridStackItem = mockedModelBuilderService.buildGridStackItem();
+
     fixture.detectChanges();
   }));
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
-  /**
-   * Build a mocked project widget for the unit tests
-   */
-  function buildMockedProjectWidget(): ProjectWidget {
-    const widgetPosition: ProjectWidgetPosition = {
-      col: 1,
-      row: 1,
-      width: 200,
-      height: 200
-    };
-
-    return {
-      id: 1,
-      data: 'Data',
-      widgetPosition: widgetPosition,
-      customStyle: '',
-      instantiateHtml: '',
-      backendConfig: '',
-      log: '',
-      lastExecutionDate: '',
-      lastSuccessDate: '',
-      globalConfigOverridden: true,
-      state: WidgetStateEnum.RUNNING,
-      projectToken: 'Token',
-      widgetId: 1
-    };
-  }
 });
