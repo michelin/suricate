@@ -48,8 +48,7 @@ import { MockModule } from './mock/mock.module';
     RouterModule.forRoot(appRoutes),
     AdminModule,
     SharedModule,
-    WidgetModule,
-    MockModule
+    WidgetModule
   ],
   declarations: [AppComponent],
   bootstrap: [AppComponent]
