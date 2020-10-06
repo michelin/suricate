@@ -51,21 +51,9 @@ export class SettingsService {
     private httpUserService: HttpUserService
   ) {}
 
-  /* ************************************************************************ */
-  /*                Global Part                                                */
-
-  /* ************************************************************************ */
-
   /**
-   * When any user is not connected
-   */
-  initDefaultSettings() {
-    this.initDefaultThemeSetting();
-    this.initDefaultLanguageSettings();
-  }
-
-  /**
-   * init the user settings at connection
+   * Init the user settings at connection
+   *
    * @param {User} user The user use for set the settings
    */
   initUserSettings(user: User) {

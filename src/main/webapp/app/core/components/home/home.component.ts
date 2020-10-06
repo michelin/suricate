@@ -45,24 +45,28 @@ export class HomeComponent implements OnInit {
    * @protected
    */
   public headerConfiguration: HeaderConfiguration;
+
   /**
    * The list of dashboards
    * @type {Project[]}
    * @protected
    */
   public dashboards: Project[];
+
   /**
    * The list of icons
    * @type {IconEnum}
    * @protected
    */
   public iconEnum = IconEnum;
+
   /**
    * The list of material icons
    * @type {MaterialIconRecords}
    * @protected
    */
   public materialIconRecords = MaterialIconRecords;
+
   /**
    * Tell when the list of dashboards is loading
    */

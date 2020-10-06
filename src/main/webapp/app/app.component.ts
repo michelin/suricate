@@ -70,7 +70,6 @@ export class AppComponent implements OnInit, OnDestroy {
     this.subscribeToConfirmationDialog();
     this.subscribeToCommunicationDialog();
 
-    this.settingsService.initUserSettings(AuthenticationService.getConnectedUser());
     this.subscribeToThemeChanging();
   }
 
