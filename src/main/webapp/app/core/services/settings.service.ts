@@ -32,9 +32,6 @@ import { HttpSettingService } from '../../shared/services/backend/http-setting/h
 export class SettingsService {
   /**
    * Hold the current theme
-   *
-   * @type {BehaviorSubject<string>}
-   * @private
    */
   private currentThemeSubject = new Subject<string>();
 
@@ -51,9 +48,21 @@ export class SettingsService {
     private httpUserService: HttpUserService
   ) {}
 
+  /* ************************************************************************ */
+  /*                Global Part                                                */
+
+  /* ************************************************************************ */
+
+  /**
+   * When any user is not connected
+   */
+  initDefaultSettings() {
+    this.initDefaultThemeSetting();
+    this.initDefaultLanguageSettings();
+  }
+
   /**
    * Init the user settings at connection
-   *
    * @param {User} user The user use for set the settings
    */
   initUserSettings(user: User) {
