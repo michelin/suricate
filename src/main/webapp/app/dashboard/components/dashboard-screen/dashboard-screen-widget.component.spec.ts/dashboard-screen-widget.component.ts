@@ -38,7 +38,7 @@ import { WidgetStateEnum } from '../../../../shared/enums/widget-sate.enum';
 import { HttpWidgetService } from '../../../../shared/services/backend/http-widget/http-widget.service';
 import { HttpProjectWidgetService } from '../../../../shared/services/backend/http-project-widget/http-project-widget.service';
 import { WebsocketService } from '../../../../shared/services/frontend/websocket/websocket.service';
-import { LibraryService } from '../../../services/library.service';
+import { LibraryService } from '../../../services/library/library.service';
 import { GridItemUtils } from '../../../../shared/utils/grid-item.utils';
 import { WebsocketUpdateEvent } from '../../../../shared/models/frontend/websocket/websocket-update-event';
 import { WebsocketUpdateTypeEnum } from '../../../../shared/enums/websocket-update-type.enum';

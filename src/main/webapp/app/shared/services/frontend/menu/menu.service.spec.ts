@@ -19,9 +19,16 @@
 import { TestBed } from '@angular/core/testing';
 
 import { MenuService } from './menu.service';
+import { MockModule } from '../../../../mock/mock.module';
+import { FormService } from '../form/form.service';
 
 describe('MenuService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [MockModule],
+      providers: [MenuService]
+    });
+  });
 
   it('should create', () => {
     const service: MenuService = TestBed.inject(MenuService);

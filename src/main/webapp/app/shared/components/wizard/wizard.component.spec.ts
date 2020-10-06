@@ -22,7 +22,7 @@ import { WizardComponent } from './wizard.component';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { MockUnitTestsService } from '../../../mock/services/mock-unit-tests/mock-unit-tests.service';
+import { MockedModelBuilderService } from '../../../mock/services/mocked-model-builder/mocked-model-builder.service';
 import { MockModule } from '../../../mock/mock.module';
 
 describe('WizardComponent', () => {
@@ -35,11 +35,11 @@ describe('WizardComponent', () => {
       declarations: [WizardComponent]
     }).compileComponents();
 
-    const mockUnitTestsService = TestBed.inject(MockUnitTestsService);
+    const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
 
     fixture = TestBed.createComponent(WizardComponent);
     component = fixture.componentInstance;
-    component.wizardConfiguration = mockUnitTestsService.buildWizardConfiguration();
+    component.wizardConfiguration = mockedModelBuilderService.buildWizardConfiguration();
 
     fixture.detectChanges();
   }));

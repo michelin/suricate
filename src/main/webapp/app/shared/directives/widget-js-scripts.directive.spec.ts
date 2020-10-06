@@ -15,7 +15,24 @@
  */
 
 import { WidgetJsScriptsDirective } from './widget-js-scripts.directive';
+import { TestBed } from '@angular/core/testing';
+import { MockModule } from '../../mock/mock.module';
+import { AbstractHttpService } from '../services/backend/abstract-http/abstract-http.service';
+import { MockStompRService } from '../../mock/services/mock-stomp-r/mock-stomp-r.service';
 
 describe('WidgetJsScriptsDirective', () => {
-  it('should create an instance', () => {});
+  let directive: WidgetJsScriptsDirective;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [MockModule],
+      providers: [WidgetJsScriptsDirective]
+    });
+
+    directive = TestBed.inject(WidgetJsScriptsDirective);
+  });
+
+  it('should create', () => {
+    expect(directive).toBeTruthy();
+  });
 });

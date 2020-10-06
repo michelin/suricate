@@ -16,7 +16,7 @@
  *
  */
 
-import { NgModule } from '@angular/core';
+import { ElementRef, NgModule } from '@angular/core';
 import { StompRService } from '@stomp/ng2-stompjs';
 import { MockStompRService } from './services/mock-stomp-r/mock-stomp-r.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -27,6 +27,9 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { SharedModule } from '../shared/shared.module';
 import { LayoutModule } from '../layout/layout.module';
 import { SafeHtmlPipe } from '../shared/pipes/safe-html/safe-html.pipe';
+import { MockElementRef } from './models/mock-element-ref';
+import { NgGrid } from 'angular2-grid';
+import { MockNgGrid } from './models/mock-ng-grid';
 
 @NgModule({
   imports: [
@@ -42,6 +45,7 @@ import { SafeHtmlPipe } from '../shared/pipes/safe-html/safe-html.pipe';
     HttpClientTestingModule,
     RouterTestingModule
   ],
-  providers: [{ provide: StompRService, useClass: MockStompRService }]
+  providers: [{ provide: StompRService, useClass: MockStompRService }, { provide: ElementRef, useClass: MockElementRef }, NgGrid],
+  exports: [LayoutModule, SharedModule, HttpClientTestingModule, RouterTestingModule]
 })
 export class MockModule {}

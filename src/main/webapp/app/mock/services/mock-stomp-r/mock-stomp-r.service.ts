@@ -26,4 +26,9 @@ export class MockStompRService {
   public subscribe(queueName: string, headers?: StompHeaders): Observable<void> {
     return of();
   }
+
+  /**
+   * Mocked disconnect method for the unit tests
+   */
+  public disconnect(): void {}
 }

@@ -19,10 +19,12 @@
 import { inject, TestBed } from '@angular/core/testing';
 
 import { CssService } from './css.service';
+import { MockModule } from '../../../../mock/mock.module';
 
 describe('CssService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [MockModule],
       providers: [CssService]
     });
   });

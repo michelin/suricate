@@ -19,9 +19,16 @@
 import { TestBed } from '@angular/core/testing';
 
 import { RoutesService } from './route.service';
+import { MockModule } from '../../../../mock/mock.module';
+import { MenuService } from '../menu/menu.service';
 
 describe('RoutesService', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [MockModule],
+      providers: [RoutesService]
+    });
+  });
 
   it('should create', () => {
     const service: RoutesService = TestBed.inject(RoutesService);

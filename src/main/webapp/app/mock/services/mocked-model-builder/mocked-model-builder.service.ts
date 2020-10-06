@@ -7,11 +7,15 @@ import { FormStep } from '../../../shared/models/frontend/form/form-step';
 import { IconEnum } from '../../../shared/enums/icon.enum';
 import { Project } from '../../../shared/models/backend/project/project';
 import { ProjectGrid } from '../../../shared/models/backend/project/project-grid';
+import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';
+import { ProjectWidgetPosition } from '../../../shared/models/backend/project-widget/project-widget-position';
+import { WidgetStateEnum } from '../../../shared/enums/widget-sate.enum';
+import { NgGridItemConfig } from 'angular2-grid';
 
 @Injectable({
   providedIn: 'root'
 })
-export class MockUnitTestsService {
+export class MockedModelBuilderService {
   /**
    * Constructor
    *
@@ -89,6 +93,46 @@ export class MockUnitTestsService {
 
     return {
       steps: formSteps
+    };
+  }
+
+  /**
+   * Build a mocked project widget for the unit tests
+   */
+  public buildMockedProjectWidget(): ProjectWidget {
+    const widgetPosition: ProjectWidgetPosition = {
+      col: 1,
+      row: 1,
+      width: 200,
+      height: 200
+    };
+
+    return {
+      id: 1,
+      data: 'Data',
+      widgetPosition: widgetPosition,
+      customStyle: '',
+      instantiateHtml: '',
+      backendConfig: '',
+      log: '',
+      lastExecutionDate: '',
+      lastSuccessDate: '',
+      globalConfigOverridden: true,
+      state: WidgetStateEnum.RUNNING,
+      projectToken: 'Token',
+      widgetId: 1
+    };
+  }
+
+  /**
+   * Build a mocked gridItemConfig for the unit tests
+   */
+  public buildGridStackItem(): NgGridItemConfig {
+    return {
+      col: 0,
+      row: 0,
+      sizey: 50,
+      sizex: 50
     };
   }
 }

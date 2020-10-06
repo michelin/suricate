@@ -19,10 +19,12 @@
 import { inject, TestBed } from '@angular/core/testing';
 
 import { EnvironmentService } from './environment.service';
+import { MockModule } from '../../../../mock/mock.module';
 
 describe('EnvironmentService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
+      imports: [MockModule],
       providers: [EnvironmentService]
     });
   });

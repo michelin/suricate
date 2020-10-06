@@ -25,7 +25,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DataTypeEnum } from '../../../enums/data-type.enum';
-import { MockUnitTestsService } from '../../../../mock/services/mock-unit-tests/mock-unit-tests.service';
+import { MockedModelBuilderService } from '../../../../mock/services/mocked-model-builder/mocked-model-builder.service';
 import { MockModule } from '../../../../mock/mock.module';
 
 describe('FieldsComponent', () => {
@@ -38,13 +38,13 @@ describe('FieldsComponent', () => {
       declarations: [FieldsComponent]
     }).compileComponents();
 
-    const mockUnitTestsService = TestBed.inject(MockUnitTestsService);
+    const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
 
     fixture = TestBed.createComponent(FieldsComponent);
     component = fixture.componentInstance;
-    component.field = mockUnitTestsService.buildMockedFormField(DataTypeEnum.FIELDS);
-    component.formGroup = mockUnitTestsService.buildMockedFormGroup(DataTypeEnum.FIELDS);
-    component.formArray = mockUnitTestsService.buildMockedFormArray(DataTypeEnum.FIELDS);
+    component.field = mockedModelBuilderService.buildMockedFormField(DataTypeEnum.FIELDS);
+    component.formGroup = mockedModelBuilderService.buildMockedFormGroup(DataTypeEnum.FIELDS);
+    component.formArray = mockedModelBuilderService.buildMockedFormArray(DataTypeEnum.FIELDS);
 
     fixture.detectChanges();
   }));

@@ -61,7 +61,6 @@ import { WidgetJsScriptsDirective } from './directives/widget-js-scripts.directi
     FlexLayoutModule,
     FormsModule,
     HttpClientModule,
-    HttpClientModule,
     MaterialCDKModule,
     MaterialModule,
     NgGridModule,

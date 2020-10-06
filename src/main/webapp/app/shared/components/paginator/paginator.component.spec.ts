@@ -17,6 +17,7 @@
  */
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { PaginatorComponent } from './paginator.component';
+import { MockModule } from '../../../mock/mock.module';
 
 describe('PaginatorComponent', () => {
   let component: PaginatorComponent;
@@ -24,6 +25,7 @@ describe('PaginatorComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [MockModule],
       declarations: [PaginatorComponent]
     }).compileComponents();
 

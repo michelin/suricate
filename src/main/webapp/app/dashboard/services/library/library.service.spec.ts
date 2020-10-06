@@ -14,27 +14,20 @@
  * limitations under the License.
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { inject, TestBed } from '@angular/core/testing';
 
-import { FooterComponent } from './footer.component';
+import { LibraryService } from './library.service';
 import { MockModule } from '../../../mock/mock.module';
 
-describe('FooterComponent', () => {
-  let component: FooterComponent;
-  let fixture: ComponentFixture<FooterComponent>;
-
-  beforeEach(async(() => {
+describe('LibraryService', () => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [MockModule],
-      declarations: [FooterComponent]
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(FooterComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  }));
-
-  it('should create', () => {
-    expect(component).toBeTruthy();
+      providers: [LibraryService]
+    });
   });
+
+  it('should create', inject([LibraryService], (service: LibraryService) => {
+    expect(service).toBeTruthy();
+  }));
 });
