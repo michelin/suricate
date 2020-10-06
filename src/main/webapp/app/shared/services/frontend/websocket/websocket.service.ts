@@ -71,7 +71,7 @@ export class WebsocketService {
   /**
    * Subcribe to a queue name
    *
-   * @param {string} destination The subcription url
+   * @param {string} destination The subscription url
    */
   public subscribeToDestination(destination: string): Observable<Stomp.Message> {
     return this.stompRService.subscribe(destination);

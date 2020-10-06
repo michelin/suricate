@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 /**
  * Service managing the external JS libraries used by the widgets
@@ -19,7 +19,7 @@ export class LibraryService {
   /**
    * Are the required JS libraries loaded
    */
-  public allExternalLibrariesLoaded = new Subject<boolean>();
+  public allExternalLibrariesLoaded = new BehaviorSubject<boolean>(false);
 
   /**
    * Emit a new event according to the given value
@@ -38,7 +38,9 @@ export class LibraryService {
    * @param token A token representing a JS library
    */
   public markScriptAsLoaded(token: string) {
-    this.loadedExternalLibraries.push(token);
+    if (this.loadedExternalLibraries.indexOf(token) === -1) {
+      this.loadedExternalLibraries.push(token);
+    }
 
     if (this.loadedExternalLibraries.length === this.numberOfExternalLibrariesToLoad) {
       this.emitAreJSScriptsLoaded(true);
