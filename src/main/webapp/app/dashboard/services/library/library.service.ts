@@ -38,7 +38,9 @@ export class LibraryService {
    * @param token A token representing a JS library
    */
   public markScriptAsLoaded(token: string) {
-    this.loadedExternalLibraries.push(token);
+    if (this.loadedExternalLibraries.indexOf(token) === -1) {
+      this.loadedExternalLibraries.push(token);
+    }
 
     if (this.loadedExternalLibraries.length === this.numberOfExternalLibrariesToLoad) {
       this.emitAreJSScriptsLoaded(true);

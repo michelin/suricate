@@ -114,7 +114,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   public ngOnInit(): void {
     this.listenForConnection();
 
-    /* this.activatedRoute.queryParams.subscribe((queryParams: Params) => {
+    this.activatedRoute.queryParams.subscribe((queryParams: Params) => {
       if (queryParams['token']) {
         this.projectToken = queryParams['token'];
         this.initComponent();
@@ -122,7 +122,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
         this.projectToken = null;
         this.projectWidgets = null;
       }
-    }); */
+    });
   }
 
   /**
