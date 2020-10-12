@@ -69,9 +69,13 @@ export class AppComponent implements OnInit, OnDestroy {
   public ngOnInit(): void {
     this.subscribeToConfirmationDialog();
     this.subscribeToCommunicationDialog();
-
-    this.settingsService.initUserSettings(AuthenticationService.getConnectedUser());
     this.subscribeToThemeChanging();
+
+    if (AuthenticationService.isLoggedIn()) {
+      this.settingsService.initUserSettings(AuthenticationService.getConnectedUser());
+    } else {
+      this.settingsService.initDefaultSettings();
+    }
   }
 
   /**

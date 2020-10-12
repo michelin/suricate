@@ -27,6 +27,7 @@ import { ButtonConfiguration } from '../../../shared/models/frontend/button/butt
 import { FormField } from '../../../shared/models/frontend/form/form-field';
 import { LoginFormFieldsService } from '../../../shared/services/frontend/form-fields/login-form-fields/login-form-fields.service';
 import { ButtonTypeEnum } from '../../../shared/enums/button-type.enum';
+import { SettingsService } from '../../services/settings.service';
 
 /**
  * Manage the login page
@@ -71,16 +72,18 @@ export class LoginComponent implements OnInit {
   /**
    * Constructor
    *
-   * @param {Router} router Angular service used to manage the application routes
-   * @param {HttpWidgetConfigurationService} httpConfigurationService Suricate service used to manage http calls for configurations
-   * @param {AuthenticationService} authenticationService Suricate service used to manage authentications
-   * @param {FormService} formService Frontend service used manage/create forms
+   * @param router Angular service used to manage the application routes
+   * @param httpConfigurationService Suricate service used to manage http calls for configurations
+   * @param authenticationService Suricate service used to manage authentications
+   * @param formService Front-End service used to manage forms
+   * @param settingsService Front-End service used to manage the user's settings
    */
   constructor(
     private readonly router: Router,
     private readonly httpConfigurationService: HttpWidgetConfigurationService,
     private readonly authenticationService: AuthenticationService,
-    private readonly formService: FormService
+    private readonly formService: FormService,
+    private readonly settingsService: SettingsService
   ) {
     this.initButtons();
   }
@@ -112,12 +115,10 @@ export class LoginComponent implements OnInit {
 
       this.authenticationService.authenticate(this.loginForm.value).subscribe(
         () => {
+          this.settingsService.initUserSettings(AuthenticationService.getConnectedUser());
           this.navigateToHomePage();
         },
-        () => {
-          // Authentication failed
-          this.formSubmitAttempt = false;
-        }
+        () => (this.formSubmitAttempt = false) // Authentication failed
       );
     }
   }

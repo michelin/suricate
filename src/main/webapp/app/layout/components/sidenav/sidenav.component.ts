@@ -96,7 +96,7 @@ export class SidenavComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Called when the component is destoyed
+   * Called when the component is destroyed
    * All the subscriptions are closed
    */
   public ngOnDestroy(): void {
