@@ -17,10 +17,8 @@ steps:
       npm -v
       npm install --no-progress
       npm run build -- --configuration="production"
-    displayName: 'Front-End - Build'
-
-  - script: npm run test-headless-no-sandbox -- --watch=false --progress=false --code-coverage
-    displayName: 'Front-End - Tests'
+      npm run test-headless-no-sandbox -- --watch=false --progress=false --code-coverage
+    displayName: 'Front-End - Build & Tests'
 
   - task: Maven@3
     inputs:
