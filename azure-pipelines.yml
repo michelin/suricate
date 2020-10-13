@@ -19,9 +19,8 @@ steps:
       npm run build -- --configuration="production"
     displayName: 'Front-End - Build'
     
-  - script: |
-    npm run test-headless-no-sandbox -- --watch=false --progress=false --code-coverage
-  displayName: 'Front-End - Tests'
+  - script: npm run test-headless-no-sandbox -- --watch=false --progress=false --code-coverage
+    displayName: 'Front-End - Tests'
   
   - task: Maven@3
     inputs:
@@ -35,6 +34,5 @@ steps:
       goals: 'package -P build-prod'
     displayName: 'Back-End - Build'
 
-  - script: |
-    mvn -DXss50m test
-  displayName: 'Back-End - Tests'
+  - script: mvn -DXss50m test
+    displayName: 'Back-End - Tests'
