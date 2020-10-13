@@ -7,6 +7,18 @@ pool:
   vmImage: 'Ubuntu 16.04'
 
 steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '10.19.0'
+    displayName: 'Install Node.js'
+    
+  - script: |
+      node -v
+      npm -v
+      npm install --no-progress
+      npm run build -- --configuration="production"
+    displayName: 'Build Front-End'
+  
   - task: Maven@3
     inputs:
       mavenPomFile: 'pom.xml'
@@ -17,3 +29,4 @@ steps:
       publishJUnitResults: true
       testResultsFiles: '**/TEST-*.xml'
       goals: 'package -P docker,build-prod'
+    displayName: 'Build Back-End'
