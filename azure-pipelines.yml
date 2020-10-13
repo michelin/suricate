@@ -31,8 +31,9 @@ steps:
       jdkArchitectureOption: 'x64'
       publishJUnitResults: true
       testResultsFiles: '**/TEST-*.xml'
-      goals: 'package -P build-prod'
-    displayName: 'Back-End - Build'
 
+  - script: mvn -DskipTests package -P build-prod
+    displayName: 'Back-End - Build'
+    
   - script: mvn -DXss50m test
     displayName: 'Back-End - Tests'
