@@ -60,10 +60,13 @@ public final class WidgetUtils {
      */
     public static List<Library> parseLibraryFolder(File rootFolder) {
         List<Library> libraries = null;
+
         try {
             List<File> list = FilesUtils.getFiles(rootFolder);
+
             if (!list.isEmpty()) {
                 libraries = new ArrayList<>();
+
                 for (File file : list) {
                     Library lib = new Library();
                     lib.setAsset(FilesUtils.readAsset(file));
@@ -86,14 +89,19 @@ public final class WidgetUtils {
      */
     public static List<Category> parseWidgetFolder(File rootFolder) {
         List<Category> categories = null;
+
         try {
             List<File> list = FilesUtils.getFolders(rootFolder);
+
             if (list.isEmpty()) {
                 return Collections.emptyList();
             }
+
             categories = new ArrayList<>();
+
             for (File folderCategory : list) {
                 Category category = getCategory(folderCategory);
+
                 if (category != null) {
                     categories.add(category);
                 }
@@ -115,11 +123,14 @@ public final class WidgetUtils {
         if (folderCategory == null) {
             return null;
         }
+
         Category category = new Category();
         List<File> files = FilesUtils.getFiles(folderCategory);
+
         if (files.isEmpty()) {
             return category;
         }
+
         for (File file : files) {
             if ("icon".equals(FilenameUtils.getBaseName(file.getName()))) {
                 category.setImage(FilesUtils.readAsset(file));
@@ -127,23 +138,29 @@ public final class WidgetUtils {
                 mapper.readerForUpdating(category).readValue(file);
             }
         }
+
         // Avoid not well formed category
         if (StringUtils.isBlank(category.getName())) {
             LOGGER.error("Category {} invalid it's name must not be empty", folderCategory.getPath());
             return null;
         }
+
         File widgetRootFolder = new File(folderCategory.getPath() + File.separator + "widgets" + File.separator);
+
         if (widgetRootFolder.exists()) {
             ArrayList<Widget> widgets = new ArrayList<>();
             List<File> folders = FilesUtils.getFolders(widgetRootFolder);
+
             for (File widgetFolder : folders) {
                 Widget widget = getWidget(widgetFolder);
+
                 if (widget != null) {
                     widgets.add(widget);
                 }
             }
             category.setWidgets(widgets);
         }
+
         return category;
     }
 
@@ -158,16 +175,20 @@ public final class WidgetUtils {
         if (widgetFolder == null) {
             return null;
         }
+
         Widget widget = new Widget();
         List<File> files = FilesUtils.getFiles(widgetFolder);
+
         if (!files.isEmpty()) {
             for (File file : files) {
                 readWidgetConfig(widget, file);
             }
+
             if (widget.getDelay() == null) {
                 LOGGER.error("Widget delay must no be null : {}", widgetFolder.getPath());
                 return null;
             }
+
             if (widget.getDelay() > 0 && StringUtils.isBlank(widget.getBackendJs())) {
                 LOGGER.error("Widget script must not be empty when delay > 0 : {}", widgetFolder.getPath());
                 return null;
@@ -191,15 +212,24 @@ public final class WidgetUtils {
     private static void readWidgetConfig(Widget widget, File file) throws IOException {
         if ("image".equals(FilenameUtils.getBaseName(file.getName()))) {
             widget.setImage(FilesUtils.readAsset(file));
-        } else if ("description".equals(FilenameUtils.getBaseName(file.getName()))) {
+        }
+        else if ("description".equals(FilenameUtils.getBaseName(file.getName()))) {
             mapper.readerForUpdating(widget).readValue(file);
-        } else if ("script".equals(FilenameUtils.getBaseName(file.getName()))) {
+        }
+
+        else if ("script".equals(FilenameUtils.getBaseName(file.getName()))) {
             widget.setBackendJs(StringUtils.trimToNull(FileUtils.readFileToString(file, StandardCharsets.UTF_8)));
-        } else if ("style".equals(FilenameUtils.getBaseName(file.getName()))) {
+        }
+
+        else if ("style".equals(FilenameUtils.getBaseName(file.getName()))) {
             widget.setCssContent(StringUtils.trimToNull(FileUtils.readFileToString(file, StandardCharsets.UTF_8)));
-        } else if ("content".equals(FilenameUtils.getBaseName(file.getName()))) {
+        }
+
+        else if ("content".equals(FilenameUtils.getBaseName(file.getName()))) {
             widget.setHtmlContent(StringUtils.trimToNull(FileUtils.readFileToString(file, StandardCharsets.UTF_8)));
-        } else if ("params".equals(FilenameUtils.getBaseName(file.getName()))) {
+        }
+
+        else if ("params".equals(FilenameUtils.getBaseName(file.getName()))) {
             mapper.readerForUpdating(widget).readValue(file);
         }
     }
@@ -207,6 +237,5 @@ public final class WidgetUtils {
     /**
      * Private constructor
      */
-    private WidgetUtils() {
-    }
+    private WidgetUtils() { }
 }
