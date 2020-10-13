@@ -7,6 +7,21 @@ pool:
   vmImage: 'Ubuntu 16.04'
 
 steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '10.19.0'
+    displayName: 'Install Node.js'
+
+  - script: |
+      node -v
+      npm -v
+      npm install --no-progress
+      npm run build -- --configuration="production"
+    displayName: 'Front-End - Build'
+
+  - script: npm run test-headless-no-sandbox -- --watch=false --progress=false --code-coverage
+    displayName: 'Front-End - Tests'
+
   - task: Maven@3
     inputs:
       mavenPomFile: 'pom.xml'
@@ -16,4 +31,5 @@ steps:
       jdkArchitectureOption: 'x64'
       publishJUnitResults: true
       testResultsFiles: '**/TEST-*.xml'
-      goals: 'package -P docker,build-prod'
+      goals: 'package -P build-prod'
+    displayName: 'Back-End - Build & Tests'
