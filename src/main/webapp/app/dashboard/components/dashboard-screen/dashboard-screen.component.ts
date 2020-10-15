@@ -209,15 +209,22 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   public addExternalJSLibrariesToTheDOM() {
     this.libraryService.numberOfExternalLibrariesToLoad = this.project.librariesToken.length;
 
-    this.project.librariesToken.forEach(token => {
-      const script: HTMLScriptElement = document.createElement('script');
-      script.type = 'text/javascript';
-      script.src = HttpAssetService.getContentUrl(token);
-      script.onload = () => this.libraryService.markScriptAsLoaded(token);
-      script.async = false;
+    if (this.project.librariesToken.length > 0) {
+      this.project.librariesToken.forEach(token => {
+        const script: HTMLScriptElement = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = HttpAssetService.getContentUrl(token);
+        script.onload = () => this.libraryService.markScriptAsLoaded(token);
+        script.async = false;
 
-      this.renderer.appendChild(this.externalJsLibrariesSpan.nativeElement, script);
-    });
+        this.renderer.appendChild(this.externalJsLibrariesSpan.nativeElement, script);
+      });
+    }
+
+    // No library to load
+    else {
+      this.libraryService.emitAreJSScriptsLoaded(true);
+    }
   }
 
   /**

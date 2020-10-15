@@ -23,7 +23,7 @@ import { DashboardScreenComponent } from './components/dashboard-screen/dashboar
 import { DashboardTvComponent } from './components/dashboard-tv/dashboard-tv.component';
 import { LayoutModule } from '../layout/layout.module';
 import { DashboardRoutes } from './dashboard.route';
-import { DashboardScreenWidgetComponent } from './components/dashboard-screen/dashboard-screen-widget.component.spec.ts/dashboard-screen-widget.component';
+import { DashboardScreenWidgetComponent } from './components/dashboard-screen/dashboard-screen-widget/dashboard-screen-widget.component';
 import { DashboardsComponent } from './components-list/dashboards/dashboards.component';
 import { ProjectWidgetWizardComponent } from './components/wizard/project-widget-wizard.component';
 import { TvManagementDialogComponent } from './components/tv-management-dialog/tv-management-dialog.component';
