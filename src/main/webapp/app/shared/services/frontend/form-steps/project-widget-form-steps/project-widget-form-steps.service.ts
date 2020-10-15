@@ -128,7 +128,7 @@ export class ProjectWidgetFormStepsService {
   }
 
   /**
-   * Generate the form fields for a project widget
+   * Generate the form fields for a project widget when editing it
    *
    * @param widgetParams The params of the widget
    * @param widgetConfig The configuration already set

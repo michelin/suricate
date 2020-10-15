@@ -235,7 +235,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
           widgetId: this.projectWidget.widgetId,
           customStyle: this.projectWidget.customStyle,
           backendConfig: Object.keys(formData)
-            .filter((key: string) => formData[key])
+            .filter((key: string) => formData[key] != undefined)
             .map((key: string) => `${key}=${formData[key]}`)
             .join('\n')
         };
