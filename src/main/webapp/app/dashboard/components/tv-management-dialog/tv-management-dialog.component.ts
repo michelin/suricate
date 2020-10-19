@@ -60,7 +60,7 @@ export class TvManagementDialogComponent implements OnInit {
    * @type {FormGroup}
    * @protected
    */
-  public screenRegisterForm: FormGroup;
+  public registerScreenCodeFormField: FormGroup;
 
   /**
    * The description of the form
@@ -97,9 +97,9 @@ export class TvManagementDialogComponent implements OnInit {
    * Constructor
    *
    * @param data Angular service used to inject data in the modal
-   * @param {HttpProjectService} httpProjectService Suricate service used to manage HTTP calls for project
-   * @param {HttpScreenService} httpScreenService Suricate service used to manage HTTP calls for screens
-   * @param {FormService} formService Frontend service used to help on form creation
+   * @param httpProjectService Suricate service used to manage HTTP calls for project
+   * @param httpScreenService Suricate service used to manage HTTP calls for screens
+   * @param formService Frontend service used to help on form creation
    */
   constructor(
     @Inject(MAT_DIALOG_DATA) private readonly data: { project: Project },
@@ -119,7 +119,8 @@ export class TvManagementDialogComponent implements OnInit {
         icon: IconEnum.SHARE_SCREEN,
         color: 'primary',
         type: ButtonTypeEnum.SUBMIT,
-        tooltip: { message: 'screen.subscribe' }
+        tooltip: { message: 'screen.subscribe' },
+        callback: () => this.validateFormBeforeSave()
       }
     ];
 
@@ -142,7 +143,7 @@ export class TvManagementDialogComponent implements OnInit {
     this.getConnectedWebsocketClient();
     this.generateFormFields();
 
-    this.screenRegisterForm = this.formService.generateFormGroupForFields(this.formFields);
+    this.registerScreenCodeFormField = this.formService.generateFormGroupForFields(this.formFields);
   }
 
   /**
@@ -172,11 +173,11 @@ export class TvManagementDialogComponent implements OnInit {
    * Register a screen
    */
   public registerScreen(): void {
-    if (this.screenRegisterForm.valid) {
-      const screenCode: string = this.screenRegisterForm.get('screenCode').value;
+    if (this.registerScreenCodeFormField.valid) {
+      const screenCode: string = this.registerScreenCodeFormField.get('screenCode').value;
 
       this.httpScreenService.connectProjectToScreen(this.project.token, +screenCode).subscribe(() => {
-        this.screenRegisterForm.reset();
+        this.registerScreenCodeFormField.reset();
         setTimeout(() => this.getConnectedWebsocketClient(), 2000);
       });
     }
@@ -201,6 +202,17 @@ export class TvManagementDialogComponent implements OnInit {
   public displayScreenCode(projectToken: string): void {
     if (projectToken) {
       this.httpScreenService.displayScreenCodeEveryConnectedScreensForProject(projectToken).subscribe();
+    }
+  }
+
+  /**
+   * Check if the stepper form is valid before saving the data
+   */
+  protected validateFormBeforeSave(): void {
+    this.formService.validate(this.registerScreenCodeFormField);
+
+    if (this.registerScreenCodeFormField.valid) {
+      this.registerScreen();
     }
   }
 }
