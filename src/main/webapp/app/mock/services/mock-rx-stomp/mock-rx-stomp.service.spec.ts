@@ -1,19 +1,18 @@
 import { TestBed } from '@angular/core/testing';
 
-import { MockStompRService } from './mock-rx-stomp.service';
+import { MockRxStompService } from './mock-rx-stomp.service';
 import { MockModule } from '../../mock.module';
-import { MockedModelBuilderService } from '../mocked-model-builder/mocked-model-builder.service';
 
-describe('MockStompRService', () => {
-  let service: MockStompRService;
+describe('MockRxStompService', () => {
+  let service: MockRxStompService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [MockModule],
-      providers: [MockStompRService]
+      providers: [MockRxStompService]
     });
 
-    service = TestBed.inject(MockStompRService);
+    service = TestBed.inject(MockRxStompService);
   });
 
   it('should create', () => {

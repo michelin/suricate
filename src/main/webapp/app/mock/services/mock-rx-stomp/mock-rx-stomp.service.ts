@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { StompHeaders } from '@stomp/ng2-stompjs/src/stomp-headers';
 import { Observable, of } from 'rxjs';
+import { RxStompConfig } from '@stomp/rx-stomp/esm5/rx-stomp-config';
 
 @Injectable({
   providedIn: 'root'
@@ -30,4 +31,11 @@ export class MockRxStompService {
    * Mocked disconnect method for the unit tests
    */
   public deactivate(): void {}
+
+  /**
+   * Mocked configure method for the unit tests
+   *
+   * @param rxStompConfig The configuration
+   */
+  public configure(rxStompConfig: RxStompConfig): void {}
 }
