@@ -91,10 +91,10 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   /**
    * The constructor
    *
-   * @param {Router} router Angular service used to manage app's route
-   * @param {ActivatedRoute} activatedRoute Angular service used to manage the route activated by the component
-   * @param {HttpProjectService} httpProjectService Suricate service used to manage http calls for a project
-   * @param {WebsocketService} websocketService Frontend service used to manage websocket
+   * @param router Angular service used to manage app's route
+   * @param activatedRoute Angular service used to manage the route activated by the component
+   * @param httpProjectService Suricate service used to manage http calls for a project
+   * @param websocketService Frontend service used to manage websocket
    */
   constructor(
     private readonly router: Router,

@@ -17,13 +17,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DashboardScreenComponent } from './dashboard-screen.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { StompRService } from '@stomp/ng2-stompjs';
 import { SafeHtmlPipe } from '../../../shared/pipes/safe-html/safe-html.pipe';
-import { Project } from '../../../shared/models/backend/project/project';
-import { ProjectGrid } from '../../../shared/models/backend/project/project-grid';
 import { MockedModelBuilderService } from '../../../mock/services/mocked-model-builder/mocked-model-builder.service';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MockModule } from '../../../mock/mock.module';
 
 describe('DashboardScreenComponent', () => {
