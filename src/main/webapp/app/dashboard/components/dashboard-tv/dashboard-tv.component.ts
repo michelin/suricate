@@ -21,7 +21,7 @@ import { flatMap, takeWhile, tap } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import * as Stomp from '@stomp/stompjs';
-
+import { RxStompState } from '@stomp/rx-stomp/esm5/rx-stomp-state';
 import { Project } from '../../../shared/models/backend/project/project';
 import { WebsocketUpdateEvent } from '../../../shared/models/frontend/websocket/websocket-update-event';
 import { WebsocketUpdateTypeEnum } from '../../../shared/enums/websocket-update-type.enum';
@@ -131,20 +131,25 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   private listenForConnection(): void {
     this.websocketService.startConnection();
 
-    const waitingConnectionUrl = `/user/${this.screenCode}/queue/connect`;
-    this.connectionEventSubscription = this.websocketService
-      .subscribeToDestination(waitingConnectionUrl)
-      .pipe(takeWhile(() => this.isAlive))
-      .subscribe((stompMessage: Stomp.Message) => {
-        const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
+    this.websocketService.currentConnectionState().subscribe(state => {
+      if (state === RxStompState.OPEN) {
+        const waitingConnectionUrl = `/user/${this.screenCode}/queue/connect`;
 
-        if (updateEvent.type === WebsocketUpdateTypeEnum.CONNECT) {
-          const project: Project = updateEvent.content;
-          if (project) {
-            this.router.navigate(['/tv'], { queryParams: { token: project.token } });
-          }
-        }
-      });
+        this.connectionEventSubscription = this.websocketService
+          .subscribeToDestination(waitingConnectionUrl)
+          .pipe(takeWhile(() => this.isAlive))
+          .subscribe((stompMessage: Stomp.Message) => {
+            const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
+
+            if (updateEvent.type === WebsocketUpdateTypeEnum.CONNECT) {
+              const project: Project = updateEvent.content;
+              if (project) {
+                this.router.navigate(['/tv'], { queryParams: { token: project.token } });
+              }
+            }
+          });
+      }
+    });
   }
 
   /**

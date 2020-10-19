@@ -44,6 +44,7 @@ import { IconEnum } from '../../../shared/enums/icon.enum';
 import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
 import { LibraryService } from '../../services/library/library.service';
 import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
+import { RxStompState } from '@stomp/rx-stomp/esm5/rx-stomp-state';
 
 /**
  * Display the grid stack widgets
@@ -353,25 +354,34 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   private websocketProjectEventSubscription(): void {
     const projectSubscriptionUrl = `/user/${this.project.token}/queue/live`;
 
-    this.websocketService
-      .subscribeToDestination(projectSubscriptionUrl)
-      .pipe(takeWhile(() => this.isAlive))
-      .subscribe((stompMessage: Stomp.Message) => {
-        const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
+    this.websocketService.currentConnectionState().subscribe(state => {
+      if (state === RxStompState.OPEN) {
+        this.websocketService
+          .subscribeToDestination(projectSubscriptionUrl)
+          .pipe(takeWhile(() => this.isAlive))
+          .subscribe((stompMessage: Stomp.Message) => {
+            const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 
-        if (updateEvent.type === WebsocketUpdateTypeEnum.RELOAD) {
-          location.reload();
-        } else if (updateEvent.type === WebsocketUpdateTypeEnum.DISPLAY_NUMBER) {
-          this.displayScreenCode();
-        } else if (updateEvent.type === WebsocketUpdateTypeEnum.POSITION) {
-          this.refreshProjectWidget.emit();
-        } else if (updateEvent.type === WebsocketUpdateTypeEnum.DISCONNECT) {
-          this.disconnectFromWebsocket();
-          this.disconnectEvent.emit();
-        } else {
-          this.refreshProjectWidget.emit();
-        }
-      });
+            switch (updateEvent.type) {
+              case WebsocketUpdateTypeEnum.RELOAD:
+                location.reload();
+                break;
+              case WebsocketUpdateTypeEnum.DISPLAY_NUMBER:
+                this.displayScreenCode();
+                break;
+              case WebsocketUpdateTypeEnum.POSITION:
+                this.refreshProjectWidget.emit();
+                break;
+              case WebsocketUpdateTypeEnum.DISCONNECT:
+                this.disconnectFromWebsocket();
+                this.disconnectEvent.emit();
+                break;
+              default:
+                this.refreshProjectWidget.emit();
+            }
+          });
+      }
+    });
   }
 
   /**
