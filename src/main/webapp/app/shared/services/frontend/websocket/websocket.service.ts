@@ -16,11 +16,12 @@
 
 import { Injectable } from '@angular/core';
 import { InjectableRxStompConfig, RxStompService } from '@stomp/ng2-stompjs';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { EnvironmentService } from '../environment/environment.service';
 
 import * as Stomp from '@stomp/stompjs';
 import * as SockJS from 'sockjs-client';
+import { RxStompState } from '@stomp/rx-stomp/esm5/rx-stomp-state';
 
 /**
  * Service that manage the web sockets connections
@@ -41,7 +42,6 @@ export class WebsocketService {
 
   /* ****************************************************************** */
   /*                    WebSocket Management                            */
-
   /* ****************************************************************** */
 
   /**
@@ -82,5 +82,12 @@ export class WebsocketService {
    */
   public disconnect() {
     this.rxStompService.deactivate();
+  }
+
+  /**
+   * Get the current state of the connection
+   */
+  public currentConnectionState(): BehaviorSubject<RxStompState> {
+    return this.rxStompService.connectionState$;
   }
 }
