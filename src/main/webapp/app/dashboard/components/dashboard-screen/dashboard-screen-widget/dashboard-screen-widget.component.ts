@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 
+import { RxStompState } from '@stomp/rx-stomp/esm5/rx-stomp-state';
 import { Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { TitleCasePipe } from '@angular/common';
@@ -42,6 +43,7 @@ import { LibraryService } from '../../../services/library/library.service';
 import { GridItemUtils } from '../../../../shared/utils/grid-item.utils';
 import { WebsocketUpdateEvent } from '../../../../shared/models/frontend/websocket/websocket-update-event';
 import { WebsocketUpdateTypeEnum } from '../../../../shared/enums/websocket-update-type.enum';
+import { Subscription } from 'rxjs';
 
 /**
  * Display the grid stack widgets
@@ -87,11 +89,6 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   public widgetStateEnum = WidgetStateEnum;
 
   /**
-   * True when the component is alive
-   */
-  private isAlive = true;
-
-  /**
    * The configuration of this project widget on the grid
    */
   private startGridStackItem: NgGridItemConfig;
@@ -115,6 +112,11 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    * The list of material icons
    */
   public materialIconRecords = MaterialIconRecords;
+
+  /**
+   * The stompJS Subscription for widgets events
+   */
+  private widgetsEventsSubscription: Subscription;
 
   /**
    * Constructor
@@ -198,9 +200,8 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   private initWebsocketConnectionForProjectWidget(): void {
     const projectWidgetSubscriptionUrl = `/user/${this.projectToken}-projectWidget-${this.projectWidget.id}/queue/live`;
 
-    this.websocketService
+    this.widgetsEventsSubscription = this.websocketService
       .subscribeToDestination(projectWidgetSubscriptionUrl)
-      .pipe(takeWhile(() => this.isAlive))
       .subscribe((stompMessage: Stomp.Message) => {
         const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 
@@ -273,6 +274,8 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    * Called when the component is destroyed
    */
   public ngOnDestroy(): void {
-    this.isAlive = false;
+    if (this.widgetsEventsSubscription) {
+      this.widgetsEventsSubscription.unsubscribe();
+    }
   }
 }

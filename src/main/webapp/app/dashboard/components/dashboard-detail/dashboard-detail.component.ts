@@ -126,17 +126,17 @@ export class DashboardDetailComponent implements OnInit {
   /**
    * Constructor
    *
-   * @param {Router} router Angular service used to manage App's route
-   * @param {ActivatedRoute} activatedRoute Angular service used to manage the route activated by the component
-   * @param {MatDialog} matDialog Angular material service used to manage dialog
-   * @param {TranslateService} translateService NgxTranslate service used to manage translations
-   * @param {HttpProjectService} httpProjectService Suricate service used to manage http calls for project
-   * @param {HttpScreenService} httpScreenService Suricate service used to manage http calls for screen service
-   * @param {ProjectUsersFormFieldsService} projectUsersFormFieldsService Frontend service used to generate form fields for projectUsers
-   * @param {DashboardService} dashboardService Frontend service used to manage dashboards
-   * @param {SidenavService} sidenavService Frontend service used to manage sidenav
-   * @param {ToastService} toastService Frontend service used to manage toast message
-   * @param {DialogService} dialogService Frontend service used to manage dialog
+   * @param router Angular service used to manage App's route
+   * @param activatedRoute Angular service used to manage the route activated by the component
+   * @param matDialog Angular material service used to manage dialog
+   * @param translateService NgxTranslate service used to manage translations
+   * @param httpProjectService Suricate service used to manage http calls for project
+   * @param httpScreenService Suricate service used to manage http calls for screen service
+   * @param projectUsersFormFieldsService Frontend service used to generate form fields for projectUsers
+   * @param dashboardService Frontend service used to manage dashboards
+   * @param sidenavService Frontend service used to manage sidenav
+   * @param toastService Frontend service used to manage toast message
+   * @param dialogService Frontend service used to manage dialog
    */
   constructor(
     private readonly router: Router,
@@ -317,6 +317,11 @@ export class DashboardDetailComponent implements OnInit {
     });
   }
 
+  /**
+   * Add the selected user to dashboard when values change
+   *
+   * @param valueChangedEvent The value changed event
+   */
   private onValueChanged(valueChangedEvent: ValueChangedEvent): Observable<FormField[]> {
     if (valueChangedEvent.type === 'optionSelected' && valueChangedEvent.fieldKey === 'usernameAutocomplete') {
       return this.httpProjectService
@@ -377,6 +382,7 @@ export class DashboardDetailComponent implements OnInit {
       role: 'dialog',
       width: '700px',
       maxHeight: '80%',
+      autoFocus: false,
       data: { project: this.project }
     });
   }

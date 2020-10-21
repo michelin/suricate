@@ -36,7 +36,7 @@ export class WebsocketService {
   /**
    * The constructor
    *
-   * @param rxStompService The stomp Service to inject
+   * @param rxStompService The stomp service for websockets
    */
   constructor(private readonly rxStompService: RxStompService) {}
 
@@ -52,10 +52,10 @@ export class WebsocketService {
   private getWebsocketConfig(): InjectableRxStompConfig {
     const configuration = new InjectableRxStompConfig();
     configuration.webSocketFactory = () => new SockJS(WebsocketService.baseWsEndpoint);
-    configuration.heartbeatIncoming = 0;
-    configuration.heartbeatOutgoing = 20000;
-    configuration.reconnectDelay = 1000;
-    configuration.debug = (str: string) => console.log(new Date(), str);
+    configuration.heartbeatIncoming = EnvironmentService.wsHeartbeatIncoming;
+    configuration.heartbeatOutgoing = EnvironmentService.wsHeartbeatOutgoing;
+    configuration.reconnectDelay = EnvironmentService.wsReconnectDelay;
+    configuration.debug = EnvironmentService.wsDebug ? (str: string) => console.log(new Date(), str) : null;
 
     return configuration;
   }
@@ -82,12 +82,5 @@ export class WebsocketService {
    */
   public disconnect() {
     this.rxStompService.deactivate();
-  }
-
-  /**
-   * Get the current state of the connection
-   */
-  public currentConnectionState(): BehaviorSubject<RxStompState> {
-    return this.rxStompService.connectionState$;
   }
 }

@@ -98,12 +98,6 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   public refreshProjectWidget = new EventEmitter<void>();
 
   /**
-   * Tell to subscriptions if the component is alive
-   * When the component is destroyed, the associated subscriptions will be deleted
-   */
-  private isAlive = true;
-
-  /**
    * The options for the plugin angular2-grid
    */
   public gridOptions: NgGridConfig = {};
@@ -119,9 +113,14 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   public gridStackItems: NgGridItemConfig[] = [];
 
   /**
-   * The stompJS Subscription for screen event
+   * The stompJS Subscription for disconnect event
    */
-  private screenEventSubscription: Subscription;
+  private disconnectEventSubscription: Subscription;
+
+  /**
+   * The stompJS Subscription for dashboard events
+   */
+  private dashboardEventsSubscription: Subscription;
 
   /**
    * Tell if we should display the screen code
@@ -180,7 +179,6 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
           this.resetWebsocketSubscriptions();
         }
       } else {
-        this.startWebsocketConnection();
         this.initWebsocketSubscriptions();
       }
     }
@@ -305,13 +303,6 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   /**********************************************************************************************************/
 
   /**
-   * Start the websocket connection using sockJS
-   */
-  private startWebsocketConnection(): void {
-    this.websocketService.startConnection();
-  }
-
-  /**
    * Disconnect from web sockets
    */
   private disconnectFromWebsocket(): void {
@@ -323,7 +314,6 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
    * Init the websocket subscriptions
    */
   private initWebsocketSubscriptions(): void {
-    this.isAlive = true;
     this.websocketProjectEventSubscription();
     this.websocketScreenEventSubscription();
   }
@@ -332,12 +322,13 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
    * Unsubscribe to every current websocket connections
    */
   private unsubscribeToWebsocket(): void {
-    if (this.screenEventSubscription) {
-      this.screenEventSubscription.unsubscribe();
-      this.screenEventSubscription = null;
+    if (this.disconnectEventSubscription) {
+      this.disconnectEventSubscription.unsubscribe();
     }
 
-    this.isAlive = false;
+    if (this.dashboardEventsSubscription) {
+      this.disconnectEventSubscription.unsubscribe();
+    }
   }
 
   /**
@@ -354,34 +345,29 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   private websocketProjectEventSubscription(): void {
     const projectSubscriptionUrl = `/user/${this.project.token}/queue/live`;
 
-    this.websocketService.currentConnectionState().subscribe(state => {
-      if (state === RxStompState.OPEN) {
-        this.websocketService
-          .subscribeToDestination(projectSubscriptionUrl)
-          .pipe(takeWhile(() => this.isAlive))
-          .subscribe((stompMessage: Stomp.Message) => {
-            const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
+    this.dashboardEventsSubscription = this.websocketService
+      .subscribeToDestination(projectSubscriptionUrl)
+      .subscribe((stompMessage: Stomp.Message) => {
+        const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 
-            switch (updateEvent.type) {
-              case WebsocketUpdateTypeEnum.RELOAD:
-                location.reload();
-                break;
-              case WebsocketUpdateTypeEnum.DISPLAY_NUMBER:
-                this.displayScreenCode();
-                break;
-              case WebsocketUpdateTypeEnum.POSITION:
-                this.refreshProjectWidget.emit();
-                break;
-              case WebsocketUpdateTypeEnum.DISCONNECT:
-                this.disconnectFromWebsocket();
-                this.disconnectEvent.emit();
-                break;
-              default:
-                this.refreshProjectWidget.emit();
-            }
-          });
-      }
-    });
+        switch (updateEvent.type) {
+          case WebsocketUpdateTypeEnum.RELOAD:
+            location.reload();
+            break;
+          case WebsocketUpdateTypeEnum.DISPLAY_NUMBER:
+            this.displayScreenCode();
+            break;
+          case WebsocketUpdateTypeEnum.POSITION:
+            this.refreshProjectWidget.emit();
+            break;
+          case WebsocketUpdateTypeEnum.DISCONNECT:
+            this.disconnectFromWebsocket();
+            this.disconnectEvent.emit();
+            break;
+          default:
+            this.refreshProjectWidget.emit();
+        }
+      });
   }
 
   /**
@@ -390,9 +376,8 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   private websocketScreenEventSubscription(): void {
     const screenSubscriptionUrl = `/user/${this.project.token}-${this.screenCode}/queue/unique`;
 
-    this.screenEventSubscription = this.websocketService
+    this.disconnectEventSubscription = this.websocketService
       .subscribeToDestination(screenSubscriptionUrl)
-      .pipe(takeWhile(() => this.isAlive))
       .subscribe((stompMessage: Stomp.Message) => {
         const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 

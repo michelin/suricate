@@ -68,13 +68,6 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   public isDashboardLoading = false;
 
   /**
-   * Tell if the component is displayed
-   * @type {boolean}
-   * @private
-   */
-  private isAlive = true;
-
-  /**
    * The stompJS connection event subscription
    * @type {Subscription}
    * @private
@@ -129,27 +122,22 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * Subscribe to websocket used to wait for new connections request
    */
   private listenForConnection(): void {
+    const waitingConnectionUrl = `/user/${this.screenCode}/queue/connect`;
+
     this.websocketService.startConnection();
 
-    this.websocketService.currentConnectionState().subscribe(state => {
-      if (state === RxStompState.OPEN) {
-        const waitingConnectionUrl = `/user/${this.screenCode}/queue/connect`;
+    this.connectionEventSubscription = this.websocketService
+      .subscribeToDestination(waitingConnectionUrl)
+      .subscribe((stompMessage: Stomp.Message) => {
+        const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 
-        this.connectionEventSubscription = this.websocketService
-          .subscribeToDestination(waitingConnectionUrl)
-          .pipe(takeWhile(() => this.isAlive))
-          .subscribe((stompMessage: Stomp.Message) => {
-            const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
-
-            if (updateEvent.type === WebsocketUpdateTypeEnum.CONNECT) {
-              const project: Project = updateEvent.content;
-              if (project) {
-                this.router.navigate(['/tv'], { queryParams: { token: project.token } });
-              }
-            }
-          });
-      }
-    });
+        if (updateEvent.type === WebsocketUpdateTypeEnum.CONNECT) {
+          const project: Project = updateEvent.content;
+          if (project) {
+            this.router.navigate(['/tv'], { queryParams: { token: project.token } });
+          }
+        }
+      });
   }
 
   /**
@@ -210,7 +198,6 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * When the component is destroyed
    */
   public ngOnDestroy(): void {
-    this.isAlive = false;
     this.disconnectTV();
   }
 
@@ -228,7 +215,6 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   private unsubscribeToConnectionEvent(): void {
     if (this.connectionEventSubscription) {
       this.connectionEventSubscription.unsubscribe();
-      this.connectionEventSubscription = null;
     }
   }
 }

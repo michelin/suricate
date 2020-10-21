@@ -9,11 +9,6 @@ import { RxStompState } from '@stomp/rx-stomp/esm5/rx-stomp-state';
 })
 export class MockRxStompService {
   /**
-   * Mocked connectionState for the unit tests
-   */
-  readonly connectionState$ = new BehaviorSubject<RxStompState>(RxStompState.OPEN);
-
-  /**
    * Constructor
    */
   constructor() {}

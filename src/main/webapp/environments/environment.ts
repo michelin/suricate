@@ -23,5 +23,11 @@ export const environment = {
   production: false,
   version: require('../../../../package.json').version,
   environment: require('../../../../package.json').environment,
-  base_url: 'http://localhost:8080'
+  base_url: 'http://localhost:8080',
+
+  // Configuration for WebSockets
+  wsHeartbeatIncoming: 0,
+  wsHeartbeatOutgoing: 20000,
+  wsReconnectDelay: 5000,
+  wsDebug: true
 };
