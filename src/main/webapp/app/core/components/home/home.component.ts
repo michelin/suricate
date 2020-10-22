@@ -75,10 +75,10 @@ export class HomeComponent implements OnInit {
   /**
    * The constructor
    *
-   * @param {Router} router Angular service used to manage routes
-   * @param {HttpProjectService} httpProjectService Suricate service used to manage http calls on projects
-   * @param {SidenavService} sidenavService Frontend service used to manage sidenav's
-   * @param {ToastService} toastService Frontend service used to display toast messages
+   * @param router Angular service used to manage routes
+   * @param httpProjectService Suricate service used to manage http calls on projects
+   * @param sidenavService Frontend service used to manage sidenav's
+   * @param toastService Frontend service used to display toast messages
    */
   constructor(
     private readonly router: Router,

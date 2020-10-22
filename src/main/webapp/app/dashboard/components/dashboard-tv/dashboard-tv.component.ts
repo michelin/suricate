@@ -46,6 +46,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * @protected
    */
   public projectToken: string;
+
   /**
    * The list of project widgets related to the project token
    * @type {ProjectWidget[]}
@@ -150,12 +151,8 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
       this.refreshProject(this.projectToken)
         .pipe(flatMap(() => this.refreshProjectWidgets(this.projectToken)))
         .subscribe(
-          () => {
-            this.isDashboardLoading = false;
-          },
-          () => {
-            this.isDashboardLoading = false;
-          }
+          () => (this.isDashboardLoading = false),
+          () => (this.isDashboardLoading = false)
         );
     }
   }

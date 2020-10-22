@@ -46,37 +46,32 @@ import { ButtonTypeEnum } from '../../../shared/enums/button-type.enum';
 export class RegisterComponent implements OnInit {
   /**
    * The register form
-   * @type {FormGroup}
-   * @protected
    */
   public registerForm: FormGroup;
+
   /**
    * The description of the form
-   * @type {FormField[]}
-   * @protected
    */
   public formFields: FormField[];
-  /**
-   * Tell if the form is in submit state (used to display the spinner)
-   * @type {boolean} true if the form is submitting, false otherwise
-   * @protected
-   */
-  public formSubmitAttempt = false;
+
   /**
    * The list of buttons to display in the form
-   * @type {ButtonConfiguration[]}
-   * @protected
    */
   public buttonConfigurations: ButtonConfiguration<unknown>[];
 
   /**
+   * Define if the spinner should be running or not
+   */
+  public loading = true;
+
+  /**
    * Constructor
    *
-   * @param {Router} router Angular service used to manage application routes
-   * @param {HttpWidgetConfigurationService} httpConfigurationService Suricate service used to manage the configuration of the application
-   * @param {AuthenticationService} authenticationService Suricate service used to manage the authentication on the application
-   * @param {FormService} formService Frontend service used to manage the forms creations
-   * @param {ToastService} toastService Frontend service used to display the toast messages
+   * @param router Angular service used to manage application routes
+   * @param httpConfigurationService Suricate service used to manage the configuration of the application
+   * @param authenticationService Suricate service used to manage the authentication on the application
+   * @param formService Frontend service used to manage the forms creations
+   * @param toastService Frontend service used to display the toast messages
    */
   constructor(
     private readonly router: Router,
@@ -84,9 +79,7 @@ export class RegisterComponent implements OnInit {
     private readonly authenticationService: AuthenticationService,
     private readonly formService: FormService,
     private readonly toastService: ToastService
-  ) {
-    this.initButtons();
-  }
+  ) {}
 
   /**
    * Called when the component is init
@@ -103,7 +96,10 @@ export class RegisterComponent implements OnInit {
       }
     });
 
+    this.initButtons();
     this.initRegisterForm();
+
+    this.loading = false;
   }
 
   /**
@@ -113,7 +109,7 @@ export class RegisterComponent implements OnInit {
     this.formService.validate(this.registerForm);
 
     if (this.registerForm.valid) {
-      this.formSubmitAttempt = true;
+      this.loading = true;
       const userRequest: UserRequest = this.registerForm.value;
 
       this.authenticationService
@@ -128,13 +124,8 @@ export class RegisterComponent implements OnInit {
           })
         )
         .subscribe(
-          () => {
-            // Authentication succeed
-            this.navigateToHomePage();
-          },
-          () => {
-            this.formSubmitAttempt = false;
-          }
+          () => this.navigateToHomePage(),
+          () => (this.loading = false)
         );
     } else {
       this.toastService.sendMessage('form.error.fields', ToastTypeEnum.DANGER);

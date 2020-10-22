@@ -40,34 +40,28 @@ import { SettingsService } from '../../services/settings.service';
 export class LoginComponent implements OnInit {
   /**
    * The login form
-   * @type {FormGroup}
-   * @protected
    */
   public loginForm: FormGroup;
+
   /**
    * Fields used to describe/create the form
-   * @type {FormField[]}
-   * @protected
    */
   public formFields: FormField[];
+
   /**
    * The list of buttons to display in the form login
-   * @type {ButtonConfiguration[]}
-   * @protected
    */
   public buttonConfigurations: ButtonConfiguration<unknown>[];
-  /**
-   * Used to display spinner when form has been submitted
-   * @type {boolean}
-   * @protected
-   */
-  public formSubmitAttempt = false;
+
   /**
    * True if the user provider is LDAP
-   * @type {boolean}
-   * @protected
    */
   protected isLdapServerUserProvider: boolean;
+
+  /**
+   * Define if the spinner should be running or not
+   */
+  public loading = true;
 
   /**
    * Constructor
@@ -84,9 +78,7 @@ export class LoginComponent implements OnInit {
     private readonly authenticationService: AuthenticationService,
     private readonly formService: FormService,
     private readonly settingsService: SettingsService
-  ) {
-    this.initButtons();
-  }
+  ) {}
 
   /**
    * Called when the component is init
@@ -101,7 +93,10 @@ export class LoginComponent implements OnInit {
       this.isLdapServerUserProvider = applicationProperties.value.toUpperCase() === AuthenticationProviderEnum.LDAP;
     });
 
+    this.initButtons();
     this.initLoginForm();
+
+    this.loading = false;
   }
 
   /**
@@ -111,14 +106,14 @@ export class LoginComponent implements OnInit {
     this.formService.validate(this.loginForm);
 
     if (this.loginForm.valid) {
-      this.formSubmitAttempt = true;
+      this.loading = true;
 
       this.authenticationService.authenticate(this.loginForm.value).subscribe(
         () => {
           this.settingsService.initUserSettings(AuthenticationService.getConnectedUser());
           this.navigateToHomePage();
         },
-        () => (this.formSubmitAttempt = false) // Authentication failed
+        () => (this.loading = false)
       );
     }
   }
