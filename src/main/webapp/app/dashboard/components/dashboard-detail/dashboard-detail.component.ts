@@ -42,6 +42,7 @@ import { MaterialIconRecords } from '../../../shared/records/material-icon.recor
 import { ValueChangedEvent } from '../../../shared/models/frontend/form/value-changed-event';
 import { FormField } from '../../../shared/models/frontend/form/form-field';
 import { ProjectUsersFormFieldsService } from '../../../shared/services/frontend/form-fields/project-users-form-fields/project-users-form-fields.service';
+import { WebsocketService } from '../../../shared/services/frontend/websocket/websocket.service';
 
 /**
  * Component used to display a specific dashboard
@@ -137,6 +138,7 @@ export class DashboardDetailComponent implements OnInit {
    * @param sidenavService Frontend service used to manage sidenav
    * @param toastService Frontend service used to manage toast message
    * @param dialogService Frontend service used to manage dialog
+   * @param websocketService Frontend service used to manage websockets
    */
   constructor(
     private readonly router: Router,
@@ -149,7 +151,8 @@ export class DashboardDetailComponent implements OnInit {
     private readonly dashboardService: DashboardService,
     private readonly sidenavService: SidenavService,
     private readonly toastService: ToastService,
-    private readonly dialogService: DialogService
+    private readonly dialogService: DialogService,
+    private readonly websocketService: WebsocketService
   ) {}
 
   /**
@@ -157,6 +160,8 @@ export class DashboardDetailComponent implements OnInit {
    */
   public ngOnInit(): void {
     const dashboardToken = this.activatedRoute.snapshot.params['dashboardToken'];
+
+    this.websocketService.startConnection();
 
     this.refreshProject(dashboardToken)
       .pipe(
@@ -169,9 +174,7 @@ export class DashboardDetailComponent implements OnInit {
           this.initHeaderConfiguration();
           this.engageDashboardScreenshotsAction();
         },
-        () => {
-          this.isDashboardLoading = false;
-        }
+        () => (this.isDashboardLoading = false)
       );
   }
 
