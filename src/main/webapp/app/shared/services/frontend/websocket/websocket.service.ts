@@ -16,12 +16,11 @@
 
 import { Injectable } from '@angular/core';
 import { InjectableRxStompConfig, RxStompService } from '@stomp/ng2-stompjs';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { EnvironmentService } from '../environment/environment.service';
 
 import * as Stomp from '@stomp/stompjs';
 import * as SockJS from 'sockjs-client';
-import { RxStompState } from '@stomp/rx-stomp/esm5/rx-stomp-state';
 
 /**
  * Service that manage the web sockets connections
@@ -55,7 +54,7 @@ export class WebsocketService {
     configuration.heartbeatIncoming = EnvironmentService.wsHeartbeatIncoming;
     configuration.heartbeatOutgoing = EnvironmentService.wsHeartbeatOutgoing;
     configuration.reconnectDelay = EnvironmentService.wsReconnectDelay;
-    configuration.debug = EnvironmentService.wsDebug ? (str: string) => console.log(new Date(), str) : null;
+    configuration.debug = EnvironmentService.wsDebug ? (str: string) => console.log(new Date(), str) : () => {};
 
     return configuration;
   }
