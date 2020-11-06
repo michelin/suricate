@@ -46,7 +46,7 @@ export class HeaderComponent implements OnInit {
    * @type {string}
    * @protected
    */
-  protected pageName: string;
+  public pageName: string;
 
   /**
    * The constructor

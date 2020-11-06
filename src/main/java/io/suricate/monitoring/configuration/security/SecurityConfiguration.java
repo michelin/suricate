@@ -20,8 +20,10 @@ import io.suricate.monitoring.configuration.ApplicationProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -98,13 +100,16 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
      * Cors filter policy from Application properties
      */
     @Bean
-    public CorsFilter corsFilter() {
+    public FilterRegistrationBean<CorsFilter> corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        if (!CollectionUtils.isEmpty(applicationProperties.cors.getAllowedOrigins()) ) {
+        if (!CollectionUtils.isEmpty(applicationProperties.cors.getAllowedOrigins())) {
             LOGGER.debug("Registering CORS filter");
             source.registerCorsConfiguration("/api/**", applicationProperties.cors);
         }
-        return new CorsFilter(source);
+
+        FilterRegistrationBean<CorsFilter> filterRegistrationBean = new FilterRegistrationBean<>(new CorsFilter(source));
+        filterRegistrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE);
+        return filterRegistrationBean;
     }
 
     /**

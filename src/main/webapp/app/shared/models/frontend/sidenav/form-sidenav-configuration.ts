@@ -19,6 +19,7 @@
 import { FormField } from '../form/form-field';
 import { ValueChangedEvent } from '../form/value-changed-event';
 import { Observable } from 'rxjs';
+import { SlideToggleButtonConfiguration } from '../button/slide-toggle/slide-toggle-button-configuration';
 
 /**
  * Configuration used by the form sidenav
@@ -47,4 +48,9 @@ export interface FormSidenavConfiguration {
    * Used to hide the save action
    */
   hideSaveAction?: boolean;
+
+  /**
+   * Configuration of the slide toggle button
+   */
+  slideToggleButtonConfiguration?: SlideToggleButtonConfiguration;
 }

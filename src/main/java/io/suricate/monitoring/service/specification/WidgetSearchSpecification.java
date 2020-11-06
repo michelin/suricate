@@ -1,7 +1,16 @@
 package io.suricate.monitoring.service.specification;
 
+import io.suricate.monitoring.model.entity.widget.Category;
+import io.suricate.monitoring.model.entity.widget.Category_;
 import io.suricate.monitoring.model.entity.widget.Widget;
 import io.suricate.monitoring.model.entity.widget.Widget_;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.jpa.domain.Specification;
+
+import javax.persistence.criteria.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -16,5 +25,36 @@ public class WidgetSearchSpecification extends AbstractSearchSpecification<Widge
      */
     public WidgetSearchSpecification(final String search) {
         super(search, Widget_.name);
+    }
+
+    /**
+     * Used to add search predicates
+     *
+     * @param root            The root entity
+     * @param criteriaBuilder Used to build new predicate
+     * @param predicates      The list of predicates to add for this entity
+     */
+    @Override
+    protected void addSearchPredicate(Root<Widget> root, CriteriaBuilder criteriaBuilder, List<Predicate> predicates) {
+        if (StringUtils.isNotBlank(search)) {
+            Predicate searchByName = criteriaBuilder.like(criteriaBuilder.lower(root.get(Widget_.name)), String.format(LIKE_OPERATOR_FORMATTER, search.toLowerCase()));
+            Predicate searchByCategoryName = widgetByCategoryName(root, criteriaBuilder);
+
+            predicates.add(criteriaBuilder.or(searchByName, searchByCategoryName));
+        }
+    }
+
+    /**
+     * Add a predicate which allow widgets to be searched by the category name
+     *
+     * @param root The root entity
+     * @param criteriaBuilder The criteria builder
+     * @return A predicate on the category name
+     */
+    private Predicate widgetByCategoryName(Root<Widget> root, CriteriaBuilder criteriaBuilder) {
+        Join<Widget, Category> join = root.join(Widget_.category);
+
+        return criteriaBuilder.like(
+                criteriaBuilder.lower(join.get(Category_.name)), String.format(LIKE_OPERATOR_FORMATTER, search.toLowerCase()));
     }
 }

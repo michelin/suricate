@@ -15,8 +15,8 @@
  */
 
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormService } from '../../services/frontend/form.service';
-import { SidenavService } from '../../services/frontend/sidenav.service';
+import { FormService } from '../../services/frontend/form/form.service';
+import { SidenavService } from '../../services/frontend/sidenav/sidenav.service';
 import { FormSidenavConfiguration } from '../../models/frontend/sidenav/form-sidenav-configuration';
 import { FormGroup } from '@angular/forms';
 import { takeWhile } from 'rxjs/operators';
@@ -24,6 +24,7 @@ import { ButtonConfiguration } from '../../models/frontend/button/button-configu
 import { IconEnum } from '../../enums/icon.enum';
 import { ValueChangedEvent } from '../../models/frontend/form/value-changed-event';
 import { FormField } from '../../models/frontend/form/form-field';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
 /**
  * Component used to display the form sidenav
@@ -54,7 +55,7 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
    * @type {FormSidenavConfiguration}
    * @private
    */
-  private configuration: FormSidenavConfiguration;
+  public configuration: FormSidenavConfiguration;
 
   /**
    * The form displayed by the sidenav
@@ -71,17 +72,22 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
   private isAlive = true;
 
   /**
+   * Save if the slide toggle button has been pressed or not in order to init the category settings at the sidenav opening
+   */
+  public slideToggleButtonChecked = false;
+
+  /**
    * The buttons
    * @type {ButtonConfiguration[]}
    * @protected
    */
-  protected buttons: ButtonConfiguration<unknown>[] = [];
+  public buttons: ButtonConfiguration<unknown>[] = [];
 
   /**
    * Constructor
    *
    * @param {FormService} formService Frontend service used to manage the forms
-   * @param {SidenavService} sidenavService Sidenav service used to manage the sidenavs
+   * @param {SidenavService} sidenavService Sidenav service used to manage the side navs
    */
   constructor(private readonly formService: FormService, private readonly sidenavService: SidenavService) {
     this.initButtons();
@@ -97,6 +103,15 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
       .subscribe((configuration: FormSidenavConfiguration) => {
         this.configuration = configuration;
         this.formGroup = this.formService.generateFormGroupForFields(this.configuration.formFields);
+
+        if (this.slideToggleButtonChecked) {
+          this.configuration.slideToggleButtonConfiguration.slideToggleButtonPressed(
+            { source: undefined, checked: true },
+            this.formGroup,
+            this.configuration.formFields
+          );
+        }
+
         this.openSidenav();
       });
   }
@@ -153,7 +168,7 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
    *
    * @param valueChangedEvent The value changed
    */
-  protected valueChanged(valueChangedEvent: ValueChangedEvent): void {
+  public valueChanged(valueChangedEvent: ValueChangedEvent): void {
     if (this.configuration.onValueChanged) {
       this.configuration.onValueChanged(valueChangedEvent).subscribe((formFields: FormField[]) => {
         this.formGroup = this.formService.generateFormGroupForFields(formFields);
@@ -167,5 +182,15 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
    */
   public ngOnDestroy(): void {
     this.isAlive = false;
+  }
+
+  /**
+   * Add the settings of the widget's category to the current widget settings form
+   *
+   * @param event The values retrieved from the child component event emitter
+   */
+  public getCategorySettings(event: MatSlideToggleChange): void {
+    this.slideToggleButtonChecked = event.checked;
+    this.configuration.slideToggleButtonConfiguration.slideToggleButtonPressed(event, this.formGroup, this.configuration.formFields);
   }
 }

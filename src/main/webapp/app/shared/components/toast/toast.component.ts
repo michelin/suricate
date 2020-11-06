@@ -21,7 +21,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 
-import { ToastService } from '../../services/frontend/toast.service';
+import { ToastService } from '../../services/frontend/toast/toast.service';
 import { ToastMessage } from '../../models/frontend/toast/toast-message';
 import { ToastTypeEnum } from '../../enums/toast-type.enum';
 import { IconEnum } from '../../enums/icon.enum';
@@ -114,7 +114,7 @@ export class ToastComponent implements OnInit, OnDestroy {
    * The enums of toast type
    * @type {toastType}
    */
-  protected toastType = ToastTypeEnum;
+  public toastType = ToastTypeEnum;
   /**
    * The message to display
    * @type {Observable<ToastMessage>}
@@ -130,13 +130,13 @@ export class ToastComponent implements OnInit, OnDestroy {
    * @type {IconEnum}
    * @protected
    */
-  protected iconEnum = IconEnum;
+  public iconEnum = IconEnum;
   /**
    * The list of material icon codes
    * @type {MaterialIconRecords}
    * @protected
    */
-  protected materialIconRecords = MaterialIconRecords;
+  public materialIconRecords = MaterialIconRecords;
 
   /**
    * Constructor

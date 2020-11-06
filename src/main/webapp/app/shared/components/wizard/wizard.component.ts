@@ -14,20 +14,23 @@
  * limitations under the License.
  */
 
-import { Component, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Injector, Input, OnChanges, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { HeaderConfiguration } from '../../models/frontend/header/header-configuration';
 import { FormGroup } from '@angular/forms';
 import { WizardConfiguration } from '../../models/frontend/wizard/wizard-configuration';
-import { FormService } from '../../services/frontend/form.service';
+import { FormService } from '../../services/frontend/form/form.service';
 import { FormStep } from '../../models/frontend/form/form-step';
 import { MaterialIconRecords } from '../../records/material-icon.record';
-import { MatStepper } from '@angular/material';
+import { MatStep, MatStepper } from '@angular/material/stepper';
 import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { ValueChangedEvent } from '../../models/frontend/form/value-changed-event';
 import { FormField } from '../../models/frontend/form/form-field';
 import { takeWhile } from 'rxjs/operators';
+import { WidgetConfigurationFormFieldsService } from '../../services/frontend/form-fields/widget-configuration-form-fields/widget-configuration-form-fields.service';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { ProjectWidgetFormStepsService } from '../../services/frontend/form-steps/project-widget-form-steps/project-widget-form-steps.service';
 
 /**
  * Generic component used to display wizards
@@ -47,10 +50,17 @@ export class WizardComponent implements OnInit, OnDestroy {
    * Frontend service used to help on the form creation
    */
   private readonly formService: FormService;
+
+  /**
+   * Frontend service used to help on the widget configuration form fields creation
+   */
+  private readonly widgetConfigurationFormFieldsService: WidgetConfigurationFormFieldsService;
+
   /**
    * Angular service used to manage the route activated by the current component
    */
   protected readonly activatedRoute: ActivatedRoute;
+
   /**
    * Angular service used to manage application routes
    */
@@ -60,26 +70,36 @@ export class WizardComponent implements OnInit, OnDestroy {
    * Used to know if the component is instantiated
    */
   private isAlive = true;
+
   /**
    * The configuration of the header
    */
   public headerConfiguration = new HeaderConfiguration();
+
   /**
    * The configuration of the wizard
    */
   public wizardConfiguration: WizardConfiguration;
+
   /**
    * The list of wizard buttons
    */
   public wizardButtons: ButtonConfiguration<unknown>[];
+
   /**
    * Form group of the stepper
    */
   private stepperFormGroup: FormGroup;
+
   /**
    * The list of material icons
    */
-  protected materialIconRecords = MaterialIconRecords;
+  public materialIconRecords = MaterialIconRecords;
+
+  /**
+   * The current step
+   */
+  public currentStep: FormStep;
 
   /**
    * Constructor
@@ -88,10 +108,25 @@ export class WizardComponent implements OnInit, OnDestroy {
    */
   constructor(protected readonly injector: Injector) {
     this.formService = injector.get(FormService);
+    this.widgetConfigurationFormFieldsService = injector.get(WidgetConfigurationFormFieldsService);
     this.activatedRoute = injector.get(ActivatedRoute);
     this.router = injector.get(Router);
+  }
 
+  /**
+   * Called when the component is init
+   */
+  public ngOnInit(): void {
     this.initWizardButtons();
+    this.stepperFormGroup = this.formService.generateFormGroupForSteps(this.wizardConfiguration.steps);
+    this.currentStep = this.wizardConfiguration.steps[0];
+  }
+
+  /**
+   * Called when the component is destroyed
+   */
+  public ngOnDestroy(): void {
+    this.isAlive = false;
   }
 
   /**
@@ -120,23 +155,9 @@ export class WizardComponent implements OnInit, OnDestroy {
         label: 'done',
         color: 'primary',
         hidden: () => !this.shouldDisplayDoneButton(),
-        callback: () => this.saveWizard(this.stepperFormGroup.value)
+        callback: () => this.validateFormBeforeSave()
       }
     ];
-  }
-
-  /**
-   * Called when the component is init
-   */
-  public ngOnInit(): void {
-    this.stepperFormGroup = this.formService.generateFormGroupForSteps(this.wizardConfiguration.steps);
-  }
-
-  /**
-   * Called when the component is destroyed
-   */
-  public ngOnDestroy(): void {
-    this.isAlive = false;
   }
 
   /**
@@ -145,15 +166,15 @@ export class WizardComponent implements OnInit, OnDestroy {
    * @param stepperSelectionEvent The step change event
    */
   public onStepChanged(stepperSelectionEvent: StepperSelectionEvent): void {
-    const currentStep = this.wizardConfiguration.steps[stepperSelectionEvent.selectedIndex];
+    this.currentStep = this.wizardConfiguration.steps[stepperSelectionEvent.selectedIndex];
 
-    if (currentStep && currentStep.asyncFields) {
-      currentStep
-        .asyncFields((stepperSelectionEvent.selectedStep.stepControl as unknown) as FormGroup, currentStep)
+    if (this.currentStep && this.currentStep.asyncFields) {
+      this.currentStep
+        .asyncFields((stepperSelectionEvent.selectedStep.stepControl as unknown) as FormGroup, this.currentStep)
         .pipe(takeWhile(() => this.isAlive))
         .subscribe((formFields: FormField[]) => {
-          currentStep.fields = formFields;
-          this.stepperFormGroup.setControl(currentStep.key, this.formService.generateFormGroupForFields(formFields));
+          this.currentStep.fields = formFields;
+          this.stepperFormGroup.setControl(this.currentStep.key, this.formService.generateFormGroupForFields(formFields));
         });
     }
   }
@@ -163,10 +184,24 @@ export class WizardComponent implements OnInit, OnDestroy {
    *
    * @param valueChangeEvent The value change event
    */
-  protected onValueChanged(valueChangeEvent: ValueChangedEvent): void {
+  public onValueChanged(valueChangeEvent: ValueChangedEvent): void {
     if (valueChangeEvent.type === 'mosaicOptionSelected' && !this.shouldDisplayDoneButton()) {
       setTimeout(() => this.wizardStepper.next(), 500);
     }
+  }
+
+  /**
+   * Add the settings of the widget's category to the current widget settings form
+   *
+   * @param event The values retrieved from the child component event emitter
+   */
+  public getCategorySettings(event: MatSlideToggleChange): void {
+    this.widgetConfigurationFormFieldsService.generateCategorySettingsFormFields(
+      this.currentStep.category.id,
+      event.checked,
+      this.stepperFormGroup.controls[this.currentStep.key] as FormGroup,
+      this.currentStep.fields
+    );
   }
 
   /**
@@ -216,8 +251,17 @@ export class WizardComponent implements OnInit, OnDestroy {
    *
    * @param step The step
    */
-  protected getFormGroupOfStep(step: FormStep): FormGroup {
+  public getFormGroupOfStep(step: FormStep): FormGroup {
     return this.stepperFormGroup.controls[step.key] as FormGroup;
+  }
+
+  /**
+   * Does the current step is the widget configuration step or not
+   *
+   * @param step The step
+   */
+  public isWidgetConfigurationStep(step: FormStep): boolean {
+    return this.currentStep.key === ProjectWidgetFormStepsService.configureWidgetStepKey;
   }
 
   /**
@@ -227,4 +271,15 @@ export class WizardComponent implements OnInit, OnDestroy {
    * @param formData The value of the form
    */
   protected saveWizard(formData: FormData): void {}
+
+  /**
+   * Check if the stepper form is valid before saving the data
+   */
+  protected validateFormBeforeSave(): void {
+    this.formService.validate(this.stepperFormGroup);
+
+    if (this.stepperFormGroup.valid) {
+      this.saveWizard(this.stepperFormGroup.value);
+    }
+  }
 }
