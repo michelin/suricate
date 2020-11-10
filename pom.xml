@@ -355,7 +355,7 @@
                 <configuration>
                     <tagNameFormat>v@{project.version}</tagNameFormat>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
-                    <arguments>-Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true</arguments>
+                    <arguments>-Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true -Ddependency-check.skip=true -DskipTests -Dmaven.javadoc.skip=true</arguments>
                 </configuration>
             </plugin>
 
@@ -445,6 +445,7 @@
             </plugin>
         </plugins>
     </build>
+
     <profiles>
         <profile>
             <id>build-prod</id>
