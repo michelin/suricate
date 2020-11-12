@@ -16,11 +16,11 @@
  *
  */
 
-import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import { AbstractControl, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 
 export class CustomValidator {
   /**
-   * Custom validator that check if the two passwords match
+   * Custom validator that checks if the two passwords match
    *
    * @param {AbstractControl} passwordControl The password that hold the validator
    * @return {ValidatorFn} True if the passwords are different
@@ -31,5 +31,23 @@ export class CustomValidator {
         return passwordControl.value !== confirmPasswordControl.value ? { passwordMismatch: true } : null;
       }
     };
+  }
+
+  /**
+   * Custom validator that checks if an input data is a digit
+   *
+   * @param control The field control
+   */
+  public static isDigits(control: AbstractControl) {
+    return String(control.value).match(new RegExp('^[0-9]*$')) ? null : { digits: true };
+  }
+
+  /**
+   * Custom validator that checks if an input data is gt than 0
+   *
+   * @param control The field control
+   */
+  public static greaterThan0(control: AbstractControl) {
+    return control.value > 0 ? null : { gt0: true };
   }
 }

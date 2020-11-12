@@ -2,7 +2,7 @@
   color="primary"
   [name]="field.key"
   [checked]="field.value === undefined ? false : field.value"
-  [formControl]="getFormControl()"
+  [formControl]="$any(getFormControl())"
   (change)="checkboxChange()"
 >
   {{ field.label | translate }}

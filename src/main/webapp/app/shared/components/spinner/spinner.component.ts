@@ -17,7 +17,7 @@
  */
 
 import { Component, Input } from '@angular/core';
-import { ThemePalette } from '@angular/material';
+import { ThemePalette } from '@angular/material/core';
 
 /**
  * Components used to display the spinner

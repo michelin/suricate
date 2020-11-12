@@ -17,7 +17,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { InputComponent } from '../input.component';
+import { InputComponent } from '../input/input.component';
 import { MosaicFormOption } from '../../../models/frontend/form/mosaic-form-option';
 
 /**
@@ -37,7 +37,7 @@ export class MosaicComponent extends InputComponent implements OnInit {
   /**
    * The form options that has been selected
    */
-  protected optionSelected: MosaicFormOption;
+  public optionSelected: MosaicFormOption;
 
   /**
    * Constructor
@@ -62,7 +62,7 @@ export class MosaicComponent extends InputComponent implements OnInit {
    *
    * @param mosaicOption The option selected
    */
-  protected selectOption(mosaicOption: MosaicFormOption): void {
+  public selectOption(mosaicOption: MosaicFormOption): void {
     this.optionSelected = mosaicOption;
     this.formGroup.controls[this.field.key].setValue(mosaicOption.value);
 

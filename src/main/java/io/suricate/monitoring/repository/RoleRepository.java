@@ -36,11 +36,4 @@ public interface RoleRepository extends CrudRepository<Role, Long>, JpaSpecifica
      */
     Optional<Role> findByName(String name);
 
-    /**
-     * Find the list of roles for a user
-     *
-     * @param id The user id
-     * @return The list of related roles
-     */
-    List<Role> findByUsers_Id(Long id);
 }

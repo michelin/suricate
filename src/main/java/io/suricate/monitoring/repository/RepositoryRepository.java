@@ -29,13 +29,6 @@ import java.util.Optional;
 public interface RepositoryRepository extends JpaRepository<Repository, Long>, JpaSpecificationExecutor<Repository> {
 
     /**
-     * Find every repositories order by name
-     *
-     * @return The list of repositories order by name
-     */
-    Optional<List<Repository>> findAllByOrderByName();
-
-    /**
      * Find All by enabled order by name
      *
      * @param enabled True if the we want every enabled repository, false otherwise
