@@ -18,7 +18,7 @@ import { Component, ElementRef, Injector, Input, OnChanges, OnDestroy, OnInit, Q
 import { HeaderConfiguration } from '../../models/frontend/header/header-configuration';
 import { FormGroup } from '@angular/forms';
 import { WizardConfiguration } from '../../models/frontend/wizard/wizard-configuration';
-import { FormService } from '../../services/frontend/form.service';
+import { FormService } from '../../services/frontend/form/form.service';
 import { FormStep } from '../../models/frontend/form/form-step';
 import { MaterialIconRecords } from '../../records/material-icon.record';
 import { MatStep, MatStepper } from '@angular/material/stepper';
@@ -28,9 +28,9 @@ import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { ValueChangedEvent } from '../../models/frontend/form/value-changed-event';
 import { FormField } from '../../models/frontend/form/form-field';
 import { takeWhile } from 'rxjs/operators';
-import { WidgetConfigurationFormFieldsService } from '../../form-fields/widget-configuration-form-fields.service';
+import { WidgetConfigurationFormFieldsService } from '../../services/frontend/form-fields/widget-configuration-form-fields/widget-configuration-form-fields.service';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-import { ProjectWidgetFormStepsService } from '../../form-steps/project-widget-form-steps.service';
+import { ProjectWidgetFormStepsService } from '../../services/frontend/form-steps/project-widget-form-steps/project-widget-form-steps.service';
 
 /**
  * Generic component used to display wizards

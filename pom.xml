@@ -4,7 +4,7 @@
 
     <groupId>io.suricate</groupId>
     <artifactId>suricate</artifactId>
-    <version>3.0.0-SNAPSHOT</version>
+    <version>2.4.0-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>Suricate Application</name>
 
@@ -355,7 +355,7 @@
                 <configuration>
                     <tagNameFormat>v@{project.version}</tagNameFormat>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
-                    <arguments>-Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true</arguments>
+                    <arguments>-Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true -Ddependency-check.skip=true -DskipTests -Dmaven.javadoc.skip=true</arguments>
                 </configuration>
             </plugin>
 
@@ -445,123 +445,12 @@
             </plugin>
         </plugins>
     </build>
-    <profiles>
-        <profile>
-            <id>build-dev</id>
-            <build>
-                <plugins>
-                    <!-- Build frontend -->
-                    <plugin>
-                        <groupId>com.github.eirslett</groupId>
-                        <artifactId>frontend-maven-plugin</artifactId>
-                        <version>1.10.0</version>
-                        <configuration>
-                            <installDirectory>target</installDirectory>
-                        </configuration>
-                        <executions>
-                            <!-- Install node and yarn -->
-                            <execution>
-                                <id>install node and npm</id>
-                                <goals>
-                                    <goal>install-node-and-npm</goal>
-                                </goals>
-                                <configuration>
-                                    <!-- For Node > 4.0.0 the plugin will use npm embedded by node -->
-                                    <nodeVersion>v12.13.1</nodeVersion>
-                                </configuration>
-                            </execution>
-                            <!-- Install Angular dependencies -->
-                            <execution>
-                                <id>npm run install</id>
-                                <goals>
-                                    <goal>npm</goal>
-                                </goals>
-                                <configuration>
-                                    <arguments>install</arguments>
-                                </configuration>
-                            </execution>
-                            <!-- Build frontend project -->
-                            <execution>
-                                <id>npm run build</id>
-                                <goals>
-                                    <goal>npm</goal>
-                                </goals>
-                                <configuration>
-                                    <arguments>run build</arguments>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-antrun-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>move angular dist files into public spring boot folder</id>
-                                <phase>prepare-package</phase>
-                                <goals>
-                                    <goal>run</goal>
-                                </goals>
-                                <configuration>
-                                    <target>
-                                        <move todir="${basedir}/target/classes">
-                                            <fileset dir="${basedir}/target/dist/" />
-                                        </move>
-                                    </target>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
 
+    <profiles>
         <profile>
             <id>build-prod</id>
             <build>
                 <plugins>
-                    <!-- Build frontend -->
-                    <plugin>
-                        <groupId>com.github.eirslett</groupId>
-                        <artifactId>frontend-maven-plugin</artifactId>
-                        <version>1.10.0</version>
-                        <configuration>
-                            <installDirectory>target</installDirectory>
-                        </configuration>
-                        <executions>
-                            <!-- Install node and yarn -->
-                            <execution>
-                                <id>install node and npm</id>
-                                <goals>
-                                    <goal>install-node-and-npm</goal>
-                                </goals>
-                                <configuration>
-                                    <!-- For Node > 4.0.0 the plugin will use npm embedded by node -->
-                                    <nodeVersion>v12.13.1</nodeVersion>
-                                </configuration>
-                            </execution>
-                            <!-- Install Angular dependencies -->
-                            <execution>
-                                <id>npm run install</id>
-                                <goals>
-                                    <goal>npm</goal>
-                                </goals>
-                                <configuration>
-                                    <arguments>install</arguments>
-                                </configuration>
-                            </execution>
-                            <!-- Build frontend project -->
-                            <execution>
-                                <id>npm run build</id>
-                                <goals>
-                                    <goal>npm</goal>
-                                </goals>
-                                <configuration>
-                                    <arguments>run build -- --prod</arguments>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-antrun-plugin</artifactId>

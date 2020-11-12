@@ -14,30 +14,38 @@
  * limitations under the License.
  */
 
-import { async, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AppComponent } from './app.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { HttpClient } from '@angular/common/http';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ToastComponent } from './shared/components/toast/toast.component';
+import { AuthenticationService } from './shared/services/frontend/authentication/authentication.service';
+import { MockModule } from './mock/mock.module';
 
 describe('AppComponent', () => {
+  let component: AppComponent;
+  let fixture: ComponentFixture<AppComponent>;
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [MockModule],
       declarations: [AppComponent]
     }).compileComponents();
-  }));
-  it('should create the app', async(() => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
-    expect(app).toBeTruthy();
-  }));
-  it(`should have as title 'app'`, async(() => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
-    expect(app.title).toEqual('app');
-  }));
-  it('should render title in a h1 tag', async(() => {
-    const fixture = TestBed.createComponent(AppComponent);
+
+    AuthenticationService.setAccessToken(
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaXJzdG5hbWUiOiJMb2ljIiwibWFpbCI6ImxvaWMuZ3JlZmZpZXJfZXh0QG1pY2hlbGluLmNvbSIsInVzZXJfbmFtZSI6ImZ4MzA2MzIiLCJzY29wZSI6WyJyZWFkIiwid3JpdGUiXSwiZXhwIjoxNjAxNjUzMjQzLCJhdXRob3JpdGllcyI6WyJST0xFX0FETUlOIl0sImp0aSI6IjgxNWY4M2VmLWYxMDktNDQ4My1hZGYzLTRhNDBkNzBlMzc5YSIsImNsaWVudF9pZCI6InN1cmljYXRlQW5ndWxhciIsImxhc3RuYW1lIjoiR3JlZmZpZXIifQ.B6C4CckHoOoDZi83dPJaxJZ7-SPaIwT7FNUgwGiKLm0'
+    );
+
+    fixture = TestBed.createComponent(AppComponent);
+    component = fixture.componentInstance;
     fixture.detectChanges();
-    const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('h1').textContent).toContain('Welcome to app!');
+  }));
+
+  it('should create', async(() => {
+    expect(component).toBeTruthy();
   }));
 });
