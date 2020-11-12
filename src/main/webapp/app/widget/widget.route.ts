@@ -18,10 +18,10 @@
 
 import { Routes } from '@angular/router';
 
-import { AuthGuard } from '../shared/guards/auth.guard';
-import { AdminGuard } from '../shared/guards/admin.guard';
-import { WidgetsComponent } from './components-list/widgets.component';
-import { WidgetConfigurationsComponent } from './components-list/widget-configurations.component';
+import { AuthGuard } from '../shared/guards/auth/auth.guard';
+import { AdminGuard } from '../shared/guards/admin/admin.guard';
+import { WidgetsComponent } from './components-list/widgets/widgets.component';
+import { WidgetConfigurationsComponent } from './components-list/widget-configurations/widget-configurations.component';
 
 export const widgetRoutes: Routes = [
   {

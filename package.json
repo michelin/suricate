@@ -1,6 +1,6 @@
 {
   "name": "suricate-frontend",
-  "version": "3.0.0-next.0",
+  "version": "2.4.0-next.0",
   "license": "Apache2",
   "scripts": {
     "prettyformat": "pretty-quick --staged",
@@ -10,6 +10,7 @@
     "build-all": "yarn install && ng build --prod",
     "build": "ng build",
     "test": "ng test",
+    "test-headless-no-sandbox": "ng test --browsers=ChromeHeadlessNoSandbox",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
@@ -40,7 +41,7 @@
     "intl": "^1.2.5",
     "jotform-css.js": "^1.0.1",
     "jquery": "^3.5.0",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "material-design-icons-iconfont": "^5.0.1",
     "moment": "^2.22.1",
     "ng2-stomp-service": "^1.2.2",

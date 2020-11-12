@@ -15,8 +15,8 @@
  */
 
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormService } from '../../services/frontend/form.service';
-import { SidenavService } from '../../services/frontend/sidenav.service';
+import { FormService } from '../../services/frontend/form/form.service';
+import { SidenavService } from '../../services/frontend/sidenav/sidenav.service';
 import { FormSidenavConfiguration } from '../../models/frontend/sidenav/form-sidenav-configuration';
 import { FormGroup } from '@angular/forms';
 import { takeWhile } from 'rxjs/operators';

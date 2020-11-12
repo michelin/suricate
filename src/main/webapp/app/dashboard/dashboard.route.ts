@@ -17,11 +17,11 @@
 import { Routes } from '@angular/router';
 
 import { DashboardTvComponent } from './components/dashboard-tv/dashboard-tv.component';
-import { AuthGuard } from '../shared/guards/auth.guard';
-import { AdminGuard } from '../shared/guards/admin.guard';
+import { AuthGuard } from '../shared/guards/auth/auth.guard';
+import { AdminGuard } from '../shared/guards/admin/admin.guard';
 import { DashboardDetailComponent } from './components/dashboard-detail/dashboard-detail.component';
-import { DashboardsComponent } from './components-list/dashboards.component';
-import { ProjectWidgetWizardComponent } from './wizard/project-widget-wizard.component';
+import { DashboardsComponent } from './components-list/dashboards/dashboards.component';
+import { ProjectWidgetWizardComponent } from './components/wizard/project-widget-wizard.component';
 
 export const DashboardRoutes: Routes = [
   {
