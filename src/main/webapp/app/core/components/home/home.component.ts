@@ -18,17 +18,17 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { Project } from '../../../shared/models/backend/project/project';
-import { HttpAssetService } from '../../../shared/services/backend/http-asset.service';
-import { HttpProjectService } from '../../../shared/services/backend/http-project.service';
+import { HttpAssetService } from '../../../shared/services/backend/http-asset/http-asset.service';
+import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
 import { HeaderConfiguration } from '../../../shared/models/frontend/header/header-configuration';
-import { SidenavService } from '../../../shared/services/frontend/sidenav.service';
-import { ProjectFormFieldsService } from '../../../shared/form-fields/project-form-fields.service';
+import { SidenavService } from '../../../shared/services/frontend/sidenav/sidenav.service';
+import { ProjectFormFieldsService } from '../../../shared/services/frontend/form-fields/project-form-fields/project-form-fields.service';
 import { ProjectRequest } from '../../../shared/models/backend/project/project-request';
-import { ToastService } from '../../../shared/services/frontend/toast.service';
+import { ToastService } from '../../../shared/services/frontend/toast/toast.service';
 import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
 import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
 import { IconEnum } from '../../../shared/enums/icon.enum';
-import { CssService } from '../../../shared/services/frontend/css.service';
+import { CssService } from '../../../shared/services/frontend/css/css.service';
 
 /**
  * Manage the home page
@@ -45,24 +45,28 @@ export class HomeComponent implements OnInit {
    * @protected
    */
   public headerConfiguration: HeaderConfiguration;
+
   /**
    * The list of dashboards
    * @type {Project[]}
    * @protected
    */
   public dashboards: Project[];
+
   /**
    * The list of icons
    * @type {IconEnum}
    * @protected
    */
   public iconEnum = IconEnum;
+
   /**
    * The list of material icons
    * @type {MaterialIconRecords}
    * @protected
    */
   public materialIconRecords = MaterialIconRecords;
+
   /**
    * Tell when the list of dashboards is loading
    */
@@ -71,10 +75,10 @@ export class HomeComponent implements OnInit {
   /**
    * The constructor
    *
-   * @param {Router} router Angular service used to manage routes
-   * @param {HttpProjectService} httpProjectService Suricate service used to manage http calls on projects
-   * @param {SidenavService} sidenavService Frontend service used to manage sidenav's
-   * @param {ToastService} toastService Frontend service used to display toast messages
+   * @param router Angular service used to manage routes
+   * @param httpProjectService Suricate service used to manage http calls on projects
+   * @param sidenavService Frontend service used to manage sidenav's
+   * @param toastService Frontend service used to display toast messages
    */
   constructor(
     private readonly router: Router,
@@ -134,7 +138,7 @@ export class HomeComponent implements OnInit {
    *
    * @param assetToken The asset used to build the url
    */
-  protected getContentUrl(assetToken: string): string {
+  public getContentUrl(assetToken: string): string {
     return HttpAssetService.getContentUrl(assetToken);
   }
 }

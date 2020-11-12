@@ -1,0 +1,132 @@
+<div fxLayout="column wrap" class="input-wrapper" *ngIf="field.type !== dataType.FIELDS">
+  <!------------------------------------------------------------------------------------------------------->
+  <!---                        MAT FORM FIELDS/ERROR                                                    --->
+  <!------------------------------------------------------------------------------------------------------->
+  <mat-form-field
+    appearance="outline"
+    *ngIf="[dataType.NUMBER, dataType.TEXT, dataType.PASSWORD, dataType.COMBO, dataType.MULTIPLE].includes(field.type)"
+    [floatLabel]="field.placeholder ? 'always' : 'auto'"
+    [ngClass]="{ 'mat-form-field-readonly': field.readOnly }"
+  >
+    <!-- Mat Icon prefix -->
+    <mat-icon *ngIf="field.iconPrefix" class="prefix" matPrefix color="primary">
+      {{ materialIconRecords[field.iconPrefix] }}
+    </mat-icon>
+
+    <!-- Mat label -->
+    <mat-label> {{ field.label | translate }} </mat-label>
+
+    <!-- SIMPLE INPUT -->
+    <ng-container *ngIf="[dataType.NUMBER, dataType.TEXT, dataType.PASSWORD].includes(field.type)">
+      <input
+        matInput
+        [id]="field.key"
+        [placeholder]="field.placeholder"
+        [type]="field.type.toString().toLowerCase()"
+        [formControl]="$any(getFormControl())"
+        [required]="isRequired()"
+        [readonly]="field.readOnly"
+        [matAutocomplete]="autocomplete"
+        (input)="emitValueChange('inputChange')"
+      />
+
+      <!-- Autocomplete -->
+      <mat-autocomplete #autocomplete="matAutocomplete" (optionSelected)="emitValueChange('optionSelected')">
+        <mat-option *ngFor="let option of options" [value]="option.value">
+          {{ option.label }}
+        </mat-option>
+      </mat-autocomplete>
+    </ng-container>
+
+    <!-- SELECT INPUT -->
+    <mat-select
+      *ngIf="[dataType.COMBO, dataType.MULTIPLE].includes(field.type)"
+      [id]="field.key"
+      [formControl]="$any(getFormControl())"
+      [multiple]="field.type === dataType.MULTIPLE"
+      [required]="isRequired()"
+      (selectionChange)="emitValueChange('optionSelected')"
+    >
+      <mat-option *ngFor="let option of options" [value]="option.value">
+        {{ option.label }}
+      </mat-option>
+    </mat-select>
+
+    <!-- Mat Icon suffix -->
+    <mat-icon *ngIf="field.iconSuffix" matSuffix color="primary">
+      {{ materialIconRecords[field.iconSuffix] }}
+    </mat-icon>
+
+    <!-- Display an hint the user -->
+    <mat-hint align="start" *ngIf="field.hint && !isInputFieldOnError()">
+      <span> {{ field.hint | translate }}</span>
+    </mat-hint>
+  </mat-form-field>
+
+  <!------------------------------------------------------------------------------------------------------->
+  <!---                        OTHER FIELDS                                                             --->
+  <!------------------------------------------------------------------------------------------------------->
+
+  <suricate-checkbox
+    *ngIf="dataType.BOOLEAN === field.type"
+    [field]="field"
+    [formGroup]="formGroup"
+    (valueChangeEvent)="emitValueChange('checkbox')"
+  >
+  </suricate-checkbox>
+
+  <suricate-file-input
+    *ngIf="dataType.FILE === field.type"
+    [field]="field"
+    [formGroup]="formGroup"
+    (valueChangeEvent)="emitValueChange('fileChanged')"
+  >
+  </suricate-file-input>
+
+  <suricate-color-picker *ngIf="dataType.COLOR_PICKER === field.type" [field]="field" [formGroup]="formGroup"> </suricate-color-picker>
+
+  <!------------------------------------------------------------------------------------------------------->
+  <!---                        FIELDS ERROR MANAGEMENT                                                  --->
+  <!------------------------------------------------------------------------------------------------------->
+
+  <div *ngIf="dataType.FILE !== field.type && isInputFieldOnError()" [@animationError] class="input-error">
+    <!-- Error message : Required -->
+    <div *ngIf="getFormControl()['errors']?.required">
+      {{ 'field.error.required' | translate }}
+    </div>
+    <!-- Error message : Length -->
+    <div *ngIf="getFormControl()['errors']?.minlength">
+      {{ 'field.error.length' | translate }}
+    </div>
+    <!-- Error message : Email -->
+    <div *ngIf="getFormControl()['errors']?.email">
+      {{ 'field.error.email.format' | translate }}
+    </div>
+    <!-- Error message : Password confirmation -->
+    <div *ngIf="getFormControl()['errors']?.passwordMismatch">
+      {{ 'field.error.password.mismatch' | translate }}
+    </div>
+    <!-- Error message : Pattern -->
+    <div *ngIf="getFormControl()['errors']?.pattern">
+      {{ 'field.error.pattern' | translate }}
+    </div>
+    <!-- Error message : Digits -->
+    <div *ngIf="getFormControl()['errors']?.digits">
+      {{ 'field.error.digits' | translate }}
+    </div>
+    <!-- Error message : Digits -->
+    <div *ngIf="getFormControl()['errors']?.gt0">
+      {{ 'field.error.gt0' | translate }}
+    </div>
+  </div>
+</div>
+
+<suricate-fields *ngIf="field.type === dataType.FIELDS" [field]="field" [formArray]="$any(getFormControl())"> </suricate-fields>
+
+<suricate-mosaic
+  *ngIf="field.type === dataType.MOSAIC"
+  [field]="field"
+  [formGroup]="formGroup"
+  (valueChangeEvent)="emitValueChange('mosaicOptionSelected')"
+>
+</suricate-mosaic>

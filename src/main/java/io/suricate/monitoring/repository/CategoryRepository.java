@@ -35,9 +35,4 @@ public interface CategoryRepository extends CrudRepository<Category, Long>, JpaS
      */
     Category findByTechnicalName(String technicalName);
 
-    /**
-     * Method used to get all categorgy ordered by name
-     * @return
-     */
-    List<Category> findAllByOrderByNameAsc();
 }

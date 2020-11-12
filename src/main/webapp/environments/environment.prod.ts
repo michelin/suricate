@@ -16,7 +16,13 @@
 
 export const environment = {
   production: true,
-  VERSION: require('../../../../package.json').version,
-  ENVIRONMENT: require('../../../../package.json').environment,
-  BASE_URL: ''
+  version: require('../../../../package.json').version,
+  environment: require('../../../../package.json').environment,
+  base_url: '',
+
+  // Configuration for WebSockets
+  wsHeartbeatIncoming: 0,
+  wsHeartbeatOutgoing: 20000,
+  wsReconnectDelay: 5000,
+  wsDebug: false
 };

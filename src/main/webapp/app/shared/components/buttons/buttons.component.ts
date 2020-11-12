@@ -49,13 +49,14 @@ export class ButtonsComponent<T> {
    * @type {ButtonTypeEnum}
    * @protected
    */
-  protected buttonTypeEnum = ButtonTypeEnum;
+  public buttonTypeEnum = ButtonTypeEnum;
+
   /**
    * Records that store the icons code for an enum
    * @type {MaterialIconRecords}
    * @protected
    */
-  protected materialIconRecords = MaterialIconRecords;
+  public materialIconRecords = MaterialIconRecords;
 
   /**
    * Constructor
@@ -67,7 +68,7 @@ export class ButtonsComponent<T> {
    *
    * @param configuration The button configuration related to this button
    */
-  protected shouldDisplayButton(configuration: ButtonConfiguration<T>): boolean {
+  public shouldDisplayButton(configuration: ButtonConfiguration<T>): boolean {
     return !configuration.hidden || !configuration.hidden();
   }
 }

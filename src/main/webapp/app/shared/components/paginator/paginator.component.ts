@@ -15,8 +15,8 @@
  */
 
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { PageEvent } from '@angular/material';
-import { HttpFilterService } from '../../services/backend/http-filter.service';
+import { PageEvent } from '@angular/material/paginator';
+import { HttpFilterService } from '../../services/backend/http-filter/http-filter.service';
 
 /**
  * Component used to display the paginator

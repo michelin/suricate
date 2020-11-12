@@ -14,23 +14,23 @@
  * limitations under the License.
  */
 
-import { Component, Injector, Input, OnChanges, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Injector, Input, OnChanges, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { HeaderConfiguration } from '../../models/frontend/header/header-configuration';
 import { FormGroup } from '@angular/forms';
 import { WizardConfiguration } from '../../models/frontend/wizard/wizard-configuration';
-import { FormService } from '../../services/frontend/form.service';
+import { FormService } from '../../services/frontend/form/form.service';
 import { FormStep } from '../../models/frontend/form/form-step';
 import { MaterialIconRecords } from '../../records/material-icon.record';
-import { MatStepper } from '@angular/material';
+import { MatStep, MatStepper } from '@angular/material/stepper';
 import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { ValueChangedEvent } from '../../models/frontend/form/value-changed-event';
 import { FormField } from '../../models/frontend/form/form-field';
 import { takeWhile } from 'rxjs/operators';
-import { WidgetConfigurationFormFieldsService } from '../../form-fields/widget-configuration-form-fields.service';
+import { WidgetConfigurationFormFieldsService } from '../../services/frontend/form-fields/widget-configuration-form-fields/widget-configuration-form-fields.service';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-import { ProjectWidgetFormStepsService } from '../../form-steps/project-widget-form-steps.service';
+import { ProjectWidgetFormStepsService } from '../../services/frontend/form-steps/project-widget-form-steps/project-widget-form-steps.service';
 
 /**
  * Generic component used to display wizards
@@ -45,50 +45,61 @@ export class WizardComponent implements OnInit, OnDestroy {
    */
   @ViewChild('wizardStepper', { static: true })
   public wizardStepper: MatStepper;
+
   /**
    * Frontend service used to help on the form creation
    */
   private readonly formService: FormService;
+
   /**
    * Frontend service used to help on the widget configuration form fields creation
    */
   private readonly widgetConfigurationFormFieldsService: WidgetConfigurationFormFieldsService;
+
   /**
    * Angular service used to manage the route activated by the current component
    */
   protected readonly activatedRoute: ActivatedRoute;
+
   /**
    * Angular service used to manage application routes
    */
   protected readonly router: Router;
+
   /**
    * Used to know if the component is instantiated
    */
   private isAlive = true;
+
   /**
    * The configuration of the header
    */
   public headerConfiguration = new HeaderConfiguration();
+
   /**
    * The configuration of the wizard
    */
   public wizardConfiguration: WizardConfiguration;
+
   /**
    * The list of wizard buttons
    */
   public wizardButtons: ButtonConfiguration<unknown>[];
+
   /**
    * Form group of the stepper
    */
   private stepperFormGroup: FormGroup;
+
   /**
    * The list of material icons
    */
-  protected materialIconRecords = MaterialIconRecords;
+  public materialIconRecords = MaterialIconRecords;
+
   /**
    * The current step
    */
-  protected currentStep: FormStep;
+  public currentStep: FormStep;
 
   /**
    * Constructor
@@ -100,8 +111,22 @@ export class WizardComponent implements OnInit, OnDestroy {
     this.widgetConfigurationFormFieldsService = injector.get(WidgetConfigurationFormFieldsService);
     this.activatedRoute = injector.get(ActivatedRoute);
     this.router = injector.get(Router);
+  }
 
+  /**
+   * Called when the component is init
+   */
+  public ngOnInit(): void {
     this.initWizardButtons();
+    this.stepperFormGroup = this.formService.generateFormGroupForSteps(this.wizardConfiguration.steps);
+    this.currentStep = this.wizardConfiguration.steps[0];
+  }
+
+  /**
+   * Called when the component is destroyed
+   */
+  public ngOnDestroy(): void {
+    this.isAlive = false;
   }
 
   /**
@@ -136,21 +161,6 @@ export class WizardComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Called when the component is init
-   */
-  public ngOnInit(): void {
-    this.stepperFormGroup = this.formService.generateFormGroupForSteps(this.wizardConfiguration.steps);
-    this.currentStep = this.wizardConfiguration.steps[0];
-  }
-
-  /**
-   * Called when the component is destroyed
-   */
-  public ngOnDestroy(): void {
-    this.isAlive = false;
-  }
-
-  /**
    * If we have async fields on the new step we load them
    *
    * @param stepperSelectionEvent The step change event
@@ -174,7 +184,7 @@ export class WizardComponent implements OnInit, OnDestroy {
    *
    * @param valueChangeEvent The value change event
    */
-  protected onValueChanged(valueChangeEvent: ValueChangedEvent): void {
+  public onValueChanged(valueChangeEvent: ValueChangedEvent): void {
     if (valueChangeEvent.type === 'mosaicOptionSelected' && !this.shouldDisplayDoneButton()) {
       setTimeout(() => this.wizardStepper.next(), 500);
     }
@@ -185,7 +195,7 @@ export class WizardComponent implements OnInit, OnDestroy {
    *
    * @param event The values retrieved from the child component event emitter
    */
-  protected getCategorySettings(event: MatSlideToggleChange): void {
+  public getCategorySettings(event: MatSlideToggleChange): void {
     this.widgetConfigurationFormFieldsService.generateCategorySettingsFormFields(
       this.currentStep.category.id,
       event.checked,
@@ -241,7 +251,7 @@ export class WizardComponent implements OnInit, OnDestroy {
    *
    * @param step The step
    */
-  protected getFormGroupOfStep(step: FormStep): FormGroup {
+  public getFormGroupOfStep(step: FormStep): FormGroup {
     return this.stepperFormGroup.controls[step.key] as FormGroup;
   }
 
@@ -250,7 +260,7 @@ export class WizardComponent implements OnInit, OnDestroy {
    *
    * @param step The step
    */
-  protected isWidgetConfigurationStep(step: FormStep): boolean {
+  public isWidgetConfigurationStep(step: FormStep): boolean {
     return this.currentStep.key === ProjectWidgetFormStepsService.configureWidgetStepKey;
   }
 

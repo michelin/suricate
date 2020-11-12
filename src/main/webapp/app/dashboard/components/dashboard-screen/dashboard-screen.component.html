@@ -13,7 +13,7 @@
   (onDragStop)="updateProjectWidgetsPosition()"
 >
   <span [innerHTML]="'<style>' + project.gridProperties.cssStyle + '</style>' | safeHtml"></span>
-  <span [innerHTML]="getJSLibraries() | safeHtml"></span>
+  <span #externalJsLibraries></span>
 
   <suricate-dashboard-screen-widget
     *ngFor="let gridStackItem of gridStackItems"
@@ -21,5 +21,6 @@
     [gridStackItem]="gridStackItem"
     [projectToken]="project.token"
     [readOnly]="readOnly"
-  ></suricate-dashboard-screen-widget>
+  >
+  </suricate-dashboard-screen-widget>
 </div>
