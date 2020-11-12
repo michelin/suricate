@@ -16,10 +16,10 @@
 
 import { Routes } from '@angular/router';
 
-import { AuthGuard } from '../shared/guards/auth.guard';
-import { AdminGuard } from '../shared/guards/admin.guard';
-import { UsersComponent } from './components-list/users.component';
-import { RepositoriesComponent } from './components-list/repositories.component';
+import { AuthGuard } from '../shared/guards/auth/auth.guard';
+import { AdminGuard } from '../shared/guards/admin/admin.guard';
+import { UsersComponent } from './components-list/users/users.component';
+import { RepositoriesComponent } from './components-list/repositories/repositories.component';
 
 export const adminRoutes: Routes = [
   {

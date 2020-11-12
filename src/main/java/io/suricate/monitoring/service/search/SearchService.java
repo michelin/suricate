@@ -47,38 +47,11 @@ public class SearchService {
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(SearchService.class);
 
+    /**
+     * Entity manager
+     */
     @PersistenceContext
     private EntityManager entityManager;
-
-    /**
-     * Method used to search widget using lucene
-     * @param searchQuery the search query terms
-     * @param widgetAvailability widget availability
-     * @return the list of widgets
-     */
-    public List<Widget> searchWidgets(WidgetAvailabilityEnum widgetAvailability, String searchQuery) {
-
-        // Query questions first
-        FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
-
-        QueryBuilder widgetQb =  fullTextEntityManager.getSearchFactory().buildQueryBuilder()
-                .forEntity(Widget.class)
-                .get();
-
-        Query questionQuery = widgetQb.bool()
-                // Check availability
-                .must(widgetQb.keyword().onField("widgetAvailability").matching(widgetAvailability).createQuery())
-                // Check category and widget name
-                .must(widgetQb.keyword().wildcard().onField("name").andField("description").andField("category.name").matching("*"+ StringUtils.lowerCase(searchQuery)+"*").createQuery())
-                .createQuery();
-
-        FullTextQuery jpaQuery = fullTextEntityManager.createFullTextQuery(questionQuery, Widget.class);
-        // Sort response
-        Sort sort = new Sort( new SortField( "name", SortField.Type.STRING, false ) );
-        jpaQuery.setSort( sort );
-
-        return (List<Widget>) jpaQuery.getResultList();
-    }
 
     /**
      * Create an initial Lucene index for the data already present in the database.

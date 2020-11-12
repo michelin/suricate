@@ -23,7 +23,7 @@ public abstract class AbstractSearchSpecification<T> implements Specification<T>
     /**
      * Like formatter
      */
-    private static final String LIKE_OPERATOR_FORMATTER = "%%%s%%";
+    protected static final String LIKE_OPERATOR_FORMATTER = "%%%s%%";
 
     /**
      * The list of attributes to use to filter the Object
@@ -33,7 +33,7 @@ public abstract class AbstractSearchSpecification<T> implements Specification<T>
     /**
      * The string to search
      */
-    private final String search;
+    protected final String search;
 
     /**
      * Constructor
@@ -53,7 +53,7 @@ public abstract class AbstractSearchSpecification<T> implements Specification<T>
      * @param criteriaBuilder Used to build new predicate
      * @param predicates      The list of predicates to add for this entity
      */
-    private void addSearchPredicate(Root<T> root, CriteriaBuilder criteriaBuilder, List<Predicate> predicates) {
+    protected void addSearchPredicate(Root<T> root, CriteriaBuilder criteriaBuilder, List<Predicate> predicates) {
         if (StringUtils.isNotBlank(search)) {
             String likeSearchString = String.format(LIKE_OPERATOR_FORMATTER, search.toLowerCase());
             Optional
