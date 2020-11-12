@@ -14,25 +14,37 @@
  * limitations under the License.
  */
 
-import { Component, ElementRef, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, Output, SimpleChanges } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  Output,
+  Renderer2,
+  SimpleChanges,
+  ViewChild
+} from '@angular/core';
 import { takeWhile } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { NgGridConfig, NgGridItemConfig } from 'angular2-grid';
 import * as Stomp from '@stomp/stompjs';
-
 import { Project } from '../../../shared/models/backend/project/project';
 import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';
-import { WebsocketService } from '../../../shared/services/frontend/websocket.service';
-import { HttpAssetService } from '../../../shared/services/backend/http-asset.service';
+import { WebsocketService } from '../../../shared/services/frontend/websocket/websocket.service';
+import { HttpAssetService } from '../../../shared/services/backend/http-asset/http-asset.service';
 import { WebsocketUpdateEvent } from '../../../shared/models/frontend/websocket/websocket-update-event';
 import { WebsocketUpdateTypeEnum } from '../../../shared/enums/websocket-update-type.enum';
-import { DashboardService } from '../../services/dashboard.service';
+import { DashboardService } from '../../services/dashboard/dashboard.service';
 import { ProjectWidgetPositionRequest } from '../../../shared/models/backend/project-widget/project-widget-position-request';
-import { HttpProjectService } from '../../../shared/services/backend/http-project.service';
-import { RunScriptsDirective } from '../../../shared/directives/run-scripts.directive';
 import { GridItemUtils } from '../../../shared/utils/grid-item.utils';
 import { IconEnum } from '../../../shared/enums/icon.enum';
 import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
+import { LibraryService } from '../../services/library/library.service';
+import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
+import { RxStompState } from '@stomp/rx-stomp/esm5/rx-stomp-state';
 
 /**
  * Display the grid stack widgets
@@ -42,120 +54,112 @@ import { MaterialIconRecords } from '../../../shared/records/material-icon.recor
   templateUrl: './dashboard-screen.component.html',
   styleUrls: ['./dashboard-screen.component.scss']
 })
-export class DashboardScreenComponent implements OnChanges, OnDestroy {
+export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDestroy {
+  /**
+   * Reference on the span containing all the required JS libraries
+   */
+  @ViewChild('externalJsLibraries')
+  public externalJsLibrariesSpan: ElementRef<HTMLSpanElement>;
+
   /**
    * The project to display
-   * @type {Project}
-   * @public
    */
   @Input()
   public project: Project;
+
   /**
    * The project widget list
-   * @type {ProjectWidget[]}
-   * @public
    */
   @Input()
   public projectWidgets: ProjectWidget[];
+
   /**
    * Tell if the dashboard should be on readOnly or not
-   * @type {boolean}
-   * @public
    */
   @Input()
   public readOnly = true;
+
   /**
    * The screen code
-   * @type {number}
-   * @public
    */
   @Input()
   public screenCode: number;
+
   /**
    * Event for handling the disconnection
-   * @type {EventEmitter<void>}
-   * @public
    */
   @Output()
   public disconnectEvent = new EventEmitter<void>();
+
   /**
    * Use to tell to the parent component that he should refresh the project widgets
-   * @type {EventEmitter<void>}
-   * @public
    */
   @Output()
   public refreshProjectWidget = new EventEmitter<void>();
-  /**
-   * Add runScriptsDirective, so we can recall it
-   * @type {RunScriptsDirective}
-   * @public
-   */
-  @HostBinding('attr.appRunScripts')
-  public appRunScriptDirective = new RunScriptsDirective(this.elementRef);
 
   /**
-   * Tell to subscriptions if the component is alive
-   * When the component is destroyed, the associated subscriptions will be deleted
-   */
-  private isAlive = true;
-  /**
    * The options for the plugin angular2-grid
-   * @type {NgGridConfig}
-   * @protected
    */
   public gridOptions: NgGridConfig = {};
+
   /**
    * Grid state when widgets were first loaded
-   * @type {NgGridItemConfig[]}
-   * @protected
    */
   protected startGridStackItems: NgGridItemConfig[] = [];
+
   /**
    * The grid items description
-   * @type {NgGridItemConfig[]}
-   * @protected
    */
   public gridStackItems: NgGridItemConfig[] = [];
+
   /**
-   * The stompJS Subscription for screen event
-   * @type {Subscription}
-   * @private
+   * The stompJS Subscription for disconnect event
    */
-  private screenEventSubscription: Subscription;
+  private disconnectEventSubscription: Subscription;
+
+  /**
+   * The stompJS Subscription for dashboard events
+   */
+  private dashboardEventsSubscription: Subscription;
+
   /**
    * Tell if we should display the screen code
-   * @type {boolean}
-   * @protected
    */
   public shouldDisplayScreenCode = false;
+
   /**
    * The list of icons
-   * @type {IconEnum}
-   * @protected
    */
   public iconEnum = IconEnum;
 
   /**
    * The list of material icons
-   * @type {MaterialIconRecords}
-   * @protected
    */
   public materialIconRecords = MaterialIconRecords;
 
   /**
    * The constructor
    *
-   * @param {ElementRef} elementRef Angular service used to inject a reference on the component
-   * @param {httpProjectService} httpProjectService Suricate service used to manage project
-   * @param {DashboardService} dashboardService Frontend service used to manage dashboards
-   * @param {WebsocketService} websocketService Frontend service used to manage websocket connections
+   * @param renderer The renderer Angular entity
+   * @param httpProjectService Back-End service used to manage the project
+   * @param dashboardService Front-End service used to manage the dashboard
+   * @param websocketService Front-End service used to manage the web sockets
+   * @param libraryService Front-End service used to manage the libraries
    */
   constructor(
-    private readonly elementRef: ElementRef,
+    private renderer: Renderer2,
     private readonly httpProjectService: HttpProjectService,
     private readonly dashboardService: DashboardService,
-    private readonly websocketService: WebsocketService
+    private readonly websocketService: WebsocketService,
+    private readonly libraryService: LibraryService
   ) {}
+
+  /**
+   * After view init method
+   */
+  ngAfterViewInit(): void {
+    this.addExternalJSLibrariesToTheDOM();
+  }
 
   /**
    * Each time a value change, this function will be called
@@ -168,15 +172,13 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
       }
 
       this.project = changes.project.currentValue;
-      this.appRunScriptDirective.ngOnInit();
-      setTimeout(() => this.initGridStackOptions());
+      this.initGridStackOptions();
 
       if (changes.project.previousValue) {
         if (changes.project.previousValue.token !== changes.project.currentValue.token) {
           this.resetWebsocketSubscriptions();
         }
       } else {
-        this.startWebsocketConnection();
         this.initWebsocketSubscriptions();
       }
     }
@@ -197,6 +199,31 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
    */
   public ngOnDestroy(): void {
     this.disconnectFromWebsocket();
+  }
+
+  /**
+   * For each JS libraries linked with the project, create a script element with the URL of the library
+   * and a callback which notify subscribers when the library is loaded.
+   */
+  public addExternalJSLibrariesToTheDOM() {
+    this.libraryService.numberOfExternalLibrariesToLoad = this.project.librariesToken.length;
+
+    if (this.project.librariesToken.length > 0) {
+      this.project.librariesToken.forEach(token => {
+        const script: HTMLScriptElement = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = HttpAssetService.getContentUrl(token);
+        script.onload = () => this.libraryService.markScriptAsLoaded(token);
+        script.async = false;
+
+        this.renderer.appendChild(this.externalJsLibrariesSpan.nativeElement, script);
+      });
+    }
+
+    // No library to load
+    else {
+      this.libraryService.emitAreJSScriptsLoaded(true);
+    }
   }
 
   /**
@@ -271,41 +298,12 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
   }
 
   /**********************************************************************************************************/
-  /*                      JS MANAGEMENT                                                                     */
-
-  /**********************************************************************************************************/
-
-  /**
-   * Get the JS libraries from project
-   *
-   * @returns {string} The src script
-   */
-  public getJSLibraries(): string {
-    let scriptUrls = '';
-
-    if (this.project.librariesToken) {
-      this.project.librariesToken.forEach(libraryToken => {
-        scriptUrls = scriptUrls.concat(`<script src="${HttpAssetService.getContentUrl(libraryToken)}"></script>`);
-      });
-    }
-
-    return scriptUrls;
-  }
-
-  /**********************************************************************************************************/
   /*                      WEBSOCKET MANAGEMENT                                                              */
 
   /**********************************************************************************************************/
 
   /**
-   * Start the websocket connection using sockJS
-   */
-  private startWebsocketConnection(): void {
-    this.websocketService.startConnection();
-  }
-
-  /**
-   * Disconnect from websockets
+   * Disconnect from web sockets
    */
   private disconnectFromWebsocket(): void {
     this.unsubscribeToWebsocket();
@@ -316,7 +314,6 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
    * Init the websocket subscriptions
    */
   private initWebsocketSubscriptions(): void {
-    this.isAlive = true;
     this.websocketProjectEventSubscription();
     this.websocketScreenEventSubscription();
   }
@@ -325,12 +322,13 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
    * Unsubscribe to every current websocket connections
    */
   private unsubscribeToWebsocket(): void {
-    if (this.screenEventSubscription) {
-      this.screenEventSubscription.unsubscribe();
-      this.screenEventSubscription = null;
+    if (this.disconnectEventSubscription) {
+      this.disconnectEventSubscription.unsubscribe();
     }
 
-    this.isAlive = false;
+    if (this.dashboardEventsSubscription) {
+      this.disconnectEventSubscription.unsubscribe();
+    }
   }
 
   /**
@@ -347,23 +345,27 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
   private websocketProjectEventSubscription(): void {
     const projectSubscriptionUrl = `/user/${this.project.token}/queue/live`;
 
-    this.websocketService
+    this.dashboardEventsSubscription = this.websocketService
       .subscribeToDestination(projectSubscriptionUrl)
-      .pipe(takeWhile(() => this.isAlive))
       .subscribe((stompMessage: Stomp.Message) => {
         const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 
-        if (updateEvent.type === WebsocketUpdateTypeEnum.RELOAD) {
-          location.reload();
-        } else if (updateEvent.type === WebsocketUpdateTypeEnum.DISPLAY_NUMBER) {
-          this.displayScreenCode();
-        } else if (updateEvent.type === WebsocketUpdateTypeEnum.POSITION) {
-          this.refreshProjectWidget.emit();
-        } else if (updateEvent.type === WebsocketUpdateTypeEnum.DISCONNECT) {
-          this.disconnectFromWebsocket();
-          this.disconnectEvent.emit();
-        } else {
-          this.refreshProjectWidget.emit();
+        switch (updateEvent.type) {
+          case WebsocketUpdateTypeEnum.RELOAD:
+            location.reload();
+            break;
+          case WebsocketUpdateTypeEnum.DISPLAY_NUMBER:
+            this.displayScreenCode();
+            break;
+          case WebsocketUpdateTypeEnum.POSITION:
+            this.refreshProjectWidget.emit();
+            break;
+          case WebsocketUpdateTypeEnum.DISCONNECT:
+            this.disconnectFromWebsocket();
+            this.disconnectEvent.emit();
+            break;
+          default:
+            this.refreshProjectWidget.emit();
         }
       });
   }
@@ -374,9 +376,8 @@ export class DashboardScreenComponent implements OnChanges, OnDestroy {
   private websocketScreenEventSubscription(): void {
     const screenSubscriptionUrl = `/user/${this.project.token}-${this.screenCode}/queue/unique`;
 
-    this.screenEventSubscription = this.websocketService
+    this.disconnectEventSubscription = this.websocketService
       .subscribeToDestination(screenSubscriptionUrl)
-      .pipe(takeWhile(() => this.isAlive))
       .subscribe((stompMessage: Stomp.Message) => {
         const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 

@@ -21,14 +21,14 @@ import { flatMap, takeWhile, tap } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import * as Stomp from '@stomp/stompjs';
-
+import { RxStompState } from '@stomp/rx-stomp/esm5/rx-stomp-state';
 import { Project } from '../../../shared/models/backend/project/project';
 import { WebsocketUpdateEvent } from '../../../shared/models/frontend/websocket/websocket-update-event';
 import { WebsocketUpdateTypeEnum } from '../../../shared/enums/websocket-update-type.enum';
-import { HttpProjectService } from '../../../shared/services/backend/http-project.service';
-import { WebsocketService } from '../../../shared/services/frontend/websocket.service';
+import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
+import { WebsocketService } from '../../../shared/services/frontend/websocket/websocket.service';
 import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';
-import { DashboardService } from '../../services/dashboard.service';
+import { DashboardService } from '../../services/dashboard/dashboard.service';
 
 /**
  * Dashboard TV Management
@@ -46,6 +46,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * @protected
    */
   public projectToken: string;
+
   /**
    * The list of project widgets related to the project token
    * @type {ProjectWidget[]}
@@ -68,13 +69,6 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   public isDashboardLoading = false;
 
   /**
-   * Tell if the component is displayed
-   * @type {boolean}
-   * @private
-   */
-  private isAlive = true;
-
-  /**
    * The stompJS connection event subscription
    * @type {Subscription}
    * @private
@@ -91,10 +85,10 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   /**
    * The constructor
    *
-   * @param {Router} router Angular service used to manage app's route
-   * @param {ActivatedRoute} activatedRoute Angular service used to manage the route activated by the component
-   * @param {HttpProjectService} httpProjectService Suricate service used to manage http calls for a project
-   * @param {WebsocketService} websocketService Frontend service used to manage websocket
+   * @param router Angular service used to manage app's route
+   * @param activatedRoute Angular service used to manage the route activated by the component
+   * @param httpProjectService Suricate service used to manage http calls for a project
+   * @param websocketService Frontend service used to manage websocket
    */
   constructor(
     private readonly router: Router,
@@ -129,12 +123,12 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * Subscribe to websocket used to wait for new connections request
    */
   private listenForConnection(): void {
+    const waitingConnectionUrl = `/user/${this.screenCode}/queue/connect`;
+
     this.websocketService.startConnection();
 
-    const waitingConnectionUrl = `/user/${this.screenCode}/queue/connect`;
     this.connectionEventSubscription = this.websocketService
       .subscribeToDestination(waitingConnectionUrl)
-      .pipe(takeWhile(() => this.isAlive))
       .subscribe((stompMessage: Stomp.Message) => {
         const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 
@@ -157,12 +151,8 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
       this.refreshProject(this.projectToken)
         .pipe(flatMap(() => this.refreshProjectWidgets(this.projectToken)))
         .subscribe(
-          () => {
-            this.isDashboardLoading = false;
-          },
-          () => {
-            this.isDashboardLoading = false;
-          }
+          () => (this.isDashboardLoading = false),
+          () => (this.isDashboardLoading = false)
         );
     }
   }
@@ -205,7 +195,6 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * When the component is destroyed
    */
   public ngOnDestroy(): void {
-    this.isAlive = false;
     this.disconnectTV();
   }
 
@@ -223,7 +212,6 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   private unsubscribeToConnectionEvent(): void {
     if (this.connectionEventSubscription) {
       this.connectionEventSubscription.unsubscribe();
-      this.connectionEventSubscription = null;
     }
   }
 }
