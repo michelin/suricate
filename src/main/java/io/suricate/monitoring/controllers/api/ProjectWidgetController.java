@@ -33,10 +33,12 @@ public class ProjectWidgetController {
      * The project widget service
      */
     private final ProjectWidgetService projectWidgetService;
+
     /**
      * The model/DTO for project widget
      */
     private final ProjectWidgetMapper projectWidgetMapper;
+
     /**
      * The project service
      */

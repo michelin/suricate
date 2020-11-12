@@ -107,8 +107,7 @@ public class WidgetService {
      */
     @Transactional
     public Page<Widget> getAll(String search, Pageable pageable) {
-        return widgetRepository.findAll(Specification.where(new WidgetSearchSpecification(search))
-                .or(WidgetSearchSpecification.getWidgetByCategoryNameSpecification(search)), pageable);
+        return widgetRepository.findAll(new WidgetSearchSpecification(search), pageable);
     }
 
     /**
@@ -276,12 +275,8 @@ public class WidgetService {
             // Find existing widget
             Widget currentWidget = widgetRepository.findByTechnicalName(widget.getTechnicalName());
             if (currentWidget != null && !repository.equals(currentWidget.getRepository())) {
-                LOGGER.info(
-                    "The widget {} has been found on another repository ''{}'' and will be replace by {}",
-                    currentWidget.getTechnicalName(),
-                    (currentWidget.getRepository() != null) ? currentWidget.getRepository().getName() : StringUtils.EMPTY,
-                    repository.getName()
-                );
+                LOGGER.info("The widget {} has been found on another repository ''{}'' and will be replace by {}", currentWidget.getTechnicalName(),
+                    (currentWidget.getRepository() != null) ? currentWidget.getRepository().getName() : StringUtils.EMPTY, repository.getName());
 
                 widget.setRepository(repository);
             }
@@ -290,28 +285,27 @@ public class WidgetService {
                 if (currentWidget != null && currentWidget.getImage() != null) {
                     widget.getImage().setId(currentWidget.getImage().getId());
                 }
+
                 assetService.save(widget.getImage());
             }
 
-            //Replace The existing list of params and values by the new one
+            // Replace The existing list of params and values by the new one
             if (widget.getWidgetParams() != null && !widget.getWidgetParams().isEmpty() &&
                 currentWidget != null && currentWidget.getWidgetParams() != null && !currentWidget.getWidgetParams().isEmpty()) {
 
                 List<WidgetParam> currentWidgetParams = currentWidget.getWidgetParams();
 
-                //List of params
                 widget.getWidgetParams().forEach(widgetParam -> {
-                    //Search in current list in DB
                     Optional<WidgetParam> widgetParamToFind = currentWidgetParams
                         .stream()
                         .filter(currentParam -> currentParam.getName().equals(widgetParam.getName()))
                         .findAny();
 
                     widgetParamToFind.ifPresent(currentWidgetParamFound -> {
-                        //Set the ID of the new object with the current one
+                        // Set the ID of the new object with the current one
                         widgetParam.setId(currentWidgetParamFound.getId());
 
-                        //Search params with the current WidgetParam in DB
+                        // Search params with the current WidgetParam in DB
                         if (widgetParam.getPossibleValuesMap() != null && !widgetParam.getPossibleValuesMap().isEmpty() &&
                             currentWidgetParamFound.getPossibleValuesMap() != null && !currentWidgetParamFound.getPossibleValuesMap().isEmpty()) {
 
@@ -334,6 +328,7 @@ public class WidgetService {
                 widget.setWidgetAvailability(currentWidget.getWidgetAvailability()); // Keep the previous widget state
                 widget.setId(currentWidget.getId());
             }
+
             // Set activated state by default
             if (widget.getWidgetAvailability() == null) {
                 widget.setWidgetAvailability(WidgetAvailabilityEnum.ACTIVATED);

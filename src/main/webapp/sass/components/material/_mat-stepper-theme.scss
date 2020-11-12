@@ -50,16 +50,18 @@
   .mat-stepper-horizontal,
   .mat-stepper-vertical {
     min-height: 90%;
-    background-color: #fafafa;
+    background-color: mat-color($background, background);
 
     .mat-step-header {
       .mat-step-icon {
         width: 30px;
         height: 30px;
+        background-color: mat-color($primary, A100);
 
         &.mat-step-icon-state-done {
           background-color: #8bc34a !important;
         }
+
         &.mat-step-icon-selected {
           background-color: mat-color($primary, A700);
         }
@@ -83,6 +85,7 @@
             border-color: #8bc34a;
           }
         }
+
         &.mat-step-label-selected {
           hr {
             border-color: mat-color($primary, A700);

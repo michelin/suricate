@@ -21,14 +21,14 @@ import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
 import { ListConfiguration } from '../../models/frontend/list/list-configuration';
-import { AbstractHttpService } from '../../services/backend/abstract-http.service';
+import { AbstractHttpService } from '../../services/backend/abstract-http/abstract-http.service';
 import { HeaderConfiguration } from '../../models/frontend/header/header-configuration';
-import { ToastService } from '../../services/frontend/toast.service';
-import { DialogService } from '../../services/frontend/dialog.service';
-import { SidenavService } from '../../services/frontend/sidenav.service';
+import { ToastService } from '../../services/frontend/toast/toast.service';
+import { DialogService } from '../../services/frontend/dialog/dialog.service';
+import { SidenavService } from '../../services/frontend/sidenav/sidenav.service';
 import { Page } from '../../models/backend/page';
-import { HttpFilterService } from '../../services/backend/http-filter.service';
-import { PageEvent } from '@angular/material';
+import { HttpFilterService } from '../../services/backend/http-filter/http-filter.service';
+import { PageEvent } from '@angular/material/paginator';
 import { MaterialIconRecords } from '../../records/material-icon.record';
 import { IconEnum } from '../../enums/icon.enum';
 import { fromEvent } from 'rxjs';
@@ -45,7 +45,7 @@ export class ListComponent<T> implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Reference on input search
    */
-  @ViewChild('inputSearch', { static: false })
+  @ViewChild('inputSearch')
   public inputSearch: ElementRef<HTMLInputElement>;
   /**
    * Frontend service used to display dialogs
@@ -75,11 +75,11 @@ export class ListComponent<T> implements OnInit, AfterViewInit, OnDestroy {
   /**
    * The configuration of the list component
    */
-  protected listConfiguration = new ListConfiguration<unknown>();
+  public listConfiguration = new ListConfiguration<unknown>();
   /**
    * The object list to display
    */
-  protected objectsPaged: Page<T>;
+  public objectsPaged: Page<T>;
   /**
    * Display the loader when it's true, end hide when it's false
    */
@@ -154,6 +154,9 @@ export class ListComponent<T> implements OnInit, AfterViewInit, OnDestroy {
     this.isLoading = false;
   }
 
+  /**
+   * Display the loader during the research
+   */
   private displayLoader(): void {
     this.isLoading = true;
   }
@@ -161,7 +164,7 @@ export class ListComponent<T> implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Get the size of the block
    */
-  protected getDetailBlockSize(object: T): string {
+  public getDetailBlockSize(object: T): string {
     const hasImage = !!this.getObjectImageURL(object);
     const hasButtons = !!this.listConfiguration.buttons;
 
@@ -179,8 +182,7 @@ export class ListComponent<T> implements OnInit, AfterViewInit, OnDestroy {
    *
    * @param pageEvent The angular material page event
    */
-  private pageChanged(pageEvent: PageEvent): void {
-    console.log(pageEvent);
+  public pageChanged(pageEvent: PageEvent): void {
     this.httpFilter.page = pageEvent.pageIndex;
     this.httpFilter.size = pageEvent.pageSize;
     this.refreshList();
@@ -222,7 +224,7 @@ export class ListComponent<T> implements OnInit, AfterViewInit, OnDestroy {
    *
    * @param object The object of the list
    */
-  protected getObjectImageURL(object: T): string {
+  public getObjectImageURL(object: T): string {
     return null;
   }
 
@@ -232,7 +234,7 @@ export class ListComponent<T> implements OnInit, AfterViewInit, OnDestroy {
    *
    * @param object The object used for the redirection
    */
-  protected redirectToBean(object: T): void {}
+  public redirectToBean(object: T): void {}
 
   /**
    * Subscribe to input search event
@@ -246,6 +248,7 @@ export class ListComponent<T> implements OnInit, AfterViewInit, OnDestroy {
         distinctUntilChanged()
       )
       .subscribe((searchValue: string) => {
+        this.httpFilter.page = 0;
         this.httpFilter.search = searchValue;
         this.refreshList();
       });

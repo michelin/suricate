@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { TooltipPosition } from '@angular/material';
+import { TooltipPosition } from '@angular/material/tooltip';
 
 /**
  * Model of Tooltip

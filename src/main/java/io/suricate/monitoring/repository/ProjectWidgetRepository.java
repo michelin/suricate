@@ -106,12 +106,4 @@ public interface ProjectWidgetRepository extends JpaRepository<ProjectWidget, Lo
      */
     Long deleteByProjectIdAndId(Long projectId, Long id);
 
-    /**
-     * Get project Widget Id from id and projectId
-     *
-     * @param projectWidgetId project widget Id
-     * @param projectToken    project token
-     * @return project widget id
-     */
-    Optional<ProjectWidget> findByIdAndProject_Token(Long projectWidgetId, String projectToken);
 }

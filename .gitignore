@@ -6,3 +6,4 @@ h2/
 lucene/
 node_modules/
 *.log
+coverage/

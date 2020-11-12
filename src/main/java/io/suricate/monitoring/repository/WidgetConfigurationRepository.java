@@ -31,15 +31,6 @@ import java.util.Optional;
 public interface WidgetConfigurationRepository extends JpaRepository<WidgetConfiguration, String>, JpaSpecificationExecutor<WidgetConfiguration> {
 
     /**
-     * Method used to get all config linked to widget scripts
-     *
-     * @return the list of configuration
-     */
-    @Cacheable("configuration")
-    @Query("SELECT c FROM configuration c WHERE c.key LIKE 'WIDGET_CONFIG_%'")
-    List<WidgetConfiguration> findConfigurationForWidgets();
-
-    /**
      * Get the list of configurations for a category
      *
      * @param categoryId The category to find

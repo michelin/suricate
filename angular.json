@@ -11,6 +11,8 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
+            "allowedCommonJsDependencies": ["sockjs-client", "@stomp/rx-stomp", "url"],
+            "aot": false,
             "outputPath": "target/dist/public",
             "index": "src/main/webapp/index.html",
             "main": "src/main/webapp/main.ts",
@@ -33,6 +35,12 @@
           },
           "configurations": {
             "production": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -50,6 +58,12 @@
               ]
             },
             "es5": {
+              "budgets": [
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
               "tsConfig": "src/tsconfig-es5.app.json"
             }
           }
@@ -132,7 +146,7 @@
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "suricate",
-      "styleext": "scss"
+      "style": "scss"
     },
     "@schematics/angular:directive": {
       "prefix": "suricate"

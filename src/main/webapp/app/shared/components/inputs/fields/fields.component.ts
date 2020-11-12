@@ -17,7 +17,7 @@
  */
 
 import { Component, Input } from '@angular/core';
-import { InputComponent } from '../input.component';
+import { InputComponent } from '../input/input.component';
 import { FormArray, FormGroup } from '@angular/forms';
 import { FormField } from '../../../models/frontend/form/form-field';
 import { DataTypeEnum } from '../../../enums/data-type.enum';
@@ -40,7 +40,7 @@ export class FieldsComponent extends InputComponent {
   public formArray: FormArray;
 
   /**
-   * Contructor
+   * Constructor
    */
   constructor() {
     super();
@@ -49,7 +49,7 @@ export class FieldsComponent extends InputComponent {
   /**
    * Calculate the size of a cell in a row
    */
-  protected getInnerFormSize(): number {
+  public getInnerFormSize(): number {
     let cellSize = 87;
 
     if (this.field.fields && this.field.fields.length > 0) {
@@ -66,7 +66,7 @@ export class FieldsComponent extends InputComponent {
    * @param innerFormGroup The form group that reflect the row
    * @param index The index of a the row in the parent form
    */
-  protected deleteRow(innerFormGroup: FormGroup, index: number): void {
+  public deleteRow(innerFormGroup: FormGroup, index: number): void {
     this.field.deleteRow.callback(innerFormGroup.value[this.field.deleteRow.attribute]).subscribe(() => {
       this.formArray.removeAt(index);
     });
