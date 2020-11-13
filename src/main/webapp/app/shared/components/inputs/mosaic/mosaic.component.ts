@@ -17,7 +17,7 @@
  */
 
 import { Component, OnInit } from '@angular/core';
-import { InputComponent } from '../input.component';
+import { InputComponent } from '../input/input.component';
 import { MosaicFormOption } from '../../../models/frontend/form/mosaic-form-option';
 
 /**

@@ -21,7 +21,7 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 
-import { ToastService } from '../services/frontend/toast.service';
+import { ToastService } from '../services/frontend/toast/toast.service';
 import { ToastTypeEnum } from '../enums/toast-type.enum';
 
 /**
