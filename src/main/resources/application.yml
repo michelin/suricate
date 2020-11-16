@@ -97,6 +97,7 @@ jasypt:
     password: ZAkOZ9rIJCDVk6a10
     stringOutputType: hexadecimal
 
+### Application ###
 application:
   authentication:
     provider: database
