@@ -7,6 +7,7 @@ parameters:
   - name: releaseNumber
     displayName: Release number
     type: string
+    default: null
 
 pool:
   vmImage: 'Ubuntu 16.04'
@@ -45,7 +46,7 @@ jobs:
         displayName: 'Back-End - Build & Tests'
   - job: Prepare_Release
     dependsOn: Build
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'), gt(length(parameters.version), 0))
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'), ne('${{ parameters.releaseNumber }}', 'null')
     steps:
       - task: NodeTool@0
         inputs:
