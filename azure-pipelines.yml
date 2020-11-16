@@ -46,7 +46,7 @@ jobs:
         displayName: 'Back-End - Build & Tests'
   - job: Prepare_Release
     dependsOn: Build
-    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'), ne('${{ parameters.releaseNumber }}', 'null')
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'), ne('${{ parameters.releaseNumber }}', 'null'))
     steps:
       - task: NodeTool@0
         inputs:
