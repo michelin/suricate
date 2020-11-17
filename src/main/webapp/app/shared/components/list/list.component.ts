@@ -47,22 +47,27 @@ export class ListComponent<T> implements OnInit, AfterViewInit, OnDestroy {
    */
   @ViewChild('inputSearch')
   public inputSearch: ElementRef<HTMLInputElement>;
+
   /**
    * Frontend service used to display dialogs
    */
   protected dialogService: DialogService;
+
   /**
    * The sidenav service used to display the sidenav
    */
   protected sidenavService: SidenavService;
+
   /**
    * ngx-translate service used to manage the translations
    */
   protected translateService: TranslateService;
+
   /**
    * Frontend service used to display messages
    */
   protected toastService: ToastService;
+
   /**
    * Angular service used to manage routes
    */
@@ -72,30 +77,37 @@ export class ListComponent<T> implements OnInit, AfterViewInit, OnDestroy {
    * Configuration of the header component
    */
   public headerConfiguration: HeaderConfiguration;
+
   /**
    * The configuration of the list component
    */
   public listConfiguration = new ListConfiguration<unknown>();
+
   /**
    * The object list to display
    */
   public objectsPaged: Page<T>;
+
   /**
    * Display the loader when it's true, end hide when it's false
    */
   public isLoading = true;
+
   /**
    * Used to filter the list
    */
   protected httpFilter = HttpFilterService.getDefaultFilter();
+
   /**
    * List of icons
    */
   public iconEnum = IconEnum;
+
   /**
    * List of material icon
    */
   public materialIconRecords = MaterialIconRecords;
+
   /**
    * Tell if the component is alive
    */
