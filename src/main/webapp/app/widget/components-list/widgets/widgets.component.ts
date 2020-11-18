@@ -84,6 +84,6 @@ export class WidgetsComponent extends ListComponent<Widget | WidgetRequest> {
    * Init filter for list component
    */
   private initFilter(): void {
-    this.httpFilter.sort = ['name,asc'];
+    this.httpFilter.sort = ['category.name,name,asc'];
   }
 }

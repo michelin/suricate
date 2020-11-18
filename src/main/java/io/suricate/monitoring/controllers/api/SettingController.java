@@ -113,7 +113,6 @@ public class SettingController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
     @GetMapping(value = "/v1/settings/{settingId}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<SettingResponseDto> getOne(@ApiParam(name = "settingId", value = "The setting id", required = true)
                                                      @PathVariable("settingId") Long settingId) {
         Optional<Setting> settingOptional = settingService.getOneById(settingId);
