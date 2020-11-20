@@ -82,3 +82,8 @@ jobs:
           testResultsFiles: '**/TEST-*.xml'
           goals: '--batch-mode release:update-versions -DdevelopmentVersion=${{ parameters.releaseNumber }}'
         displayName: 'Prepare Back-End for release : Update version, Create tag '
+        
+        
+      - script: |
+          git -v
+        displayName: 'Push to GitHub'
