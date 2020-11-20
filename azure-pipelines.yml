@@ -85,5 +85,5 @@ jobs:
         
         
       - script: |
-          git -v
+          git version
         displayName: 'Push to GitHub'
