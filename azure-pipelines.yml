@@ -86,4 +86,5 @@ jobs:
         
       - script: |
           git version
+          git status
         displayName: 'Push to GitHub'
