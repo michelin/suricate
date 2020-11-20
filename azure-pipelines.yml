@@ -12,10 +12,6 @@ parameters:
 pool:
   vmImage: 'Ubuntu 16.04'
 
-variables:
-  - name: one
-    value: initialValue
-
 jobs:
   - job: Build
     steps:
@@ -87,4 +83,6 @@ jobs:
       - script: |
           git version
           git status
-        displayName: 'Push to GitHub'
+          git commit -a -m "Update project with new release version ${{ parameters.releaseNumber }}"
+          git push origin HEAD
+        displayName: 'Push new release version to GitHub'
