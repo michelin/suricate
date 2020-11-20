@@ -85,7 +85,7 @@ jobs:
           git status
           git config --global user.email "loic.greffier_ext@michelin.com"
           git config --global user.name "Azure Pipelines"
-          git add *
+          git add .
           git commit -m "Update project with new release version ${{ parameters.releaseNumber }}"
           git push origin HEAD
         displayName: 'Push new release version to GitHub'
