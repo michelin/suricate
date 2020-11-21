@@ -45,11 +45,11 @@ import org.springframework.web.filter.CorsFilter;
 @EnableOAuth2Client
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-
     /**
      * The logger
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(SecurityConfiguration.class);
+
     /**
      * Application properties from properties file
      */
@@ -113,9 +113,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     /**
+     * Authentication Manager
      *
      * @return Default authentication manager
-     * @throws Exception
+     * @throws Exception Any triggered exception during the authentication process
      */
     @Bean
     @Override

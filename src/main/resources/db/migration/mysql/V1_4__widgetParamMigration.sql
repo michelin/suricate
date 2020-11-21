@@ -1,4 +1,0 @@
-CREATE TABLE widget_param (id bigint NOT NULL AUTO_INCREMENT, description varchar(255), name varchar(255) NOT NULL, required char(1) NOT NULL, type varchar(255) NOT NULL, usage_example varchar(255), widget_id bigint(20), default_value varchar(255), accept_file_regex varchar(255), PRIMARY KEY (id));
-CREATE TABLE widget_param_value (id bigint NOT NULL AUTO_INCREMENT, js_key varchar(255) NOT NULL, value varchar(255) NOT NULL, widget_param_id bigint, PRIMARY KEY (id));
-ALTER TABLE widget_param ADD CONSTRAINT FK7m7h1brgfbjhcl02jlxi8k04g FOREIGN KEY (widget_id) REFERENCES widget(id);
-ALTER TABLE widget_param_value ADD CONSTRAINT FKbmrk48cj343xxj4uobehc3kof FOREIGN KEY (widget_param_id) REFERENCES widget_param (id);

@@ -1,15 +1,23 @@
-### App Info ###
-info.app.version: 1.0-SNAPSHOT
+##########################################
+###         Default properties         ###
+##########################################
+info:
+  app:
+    version: 1.0-SNAPSHOT
+server:
+  port: 8080
+  error:
+    whitelabel:
+      enabled: false
 
-## tomcat server port
-server.port: 8080
-
-## Spring modules info ##
+### Spring ###
 spring:
   profiles:
-    active: h2
-  ### Database ###
+    include: h2
   datasource:
+    url: null
+    username: null
+    password: null
     continueOnError: true
     type: com.zaxxer.hikari.HikariDataSource
     hikari:
@@ -19,49 +27,44 @@ spring:
         prepStmtCacheSqlLimit: 2048
         useServerPrepStmts: true
     initialization-mode: always
-  ### Flyway ###
   flyway:
     table: schema_version
-
-  ### JPA ###
   jpa:
-    ###   DDL   ###
     hibernate:
       ddl-auto: validate
       use-new-id-generator-mappings: false
-    ## Hibernate Search
-    # Specify the DirectoryProvider to use (the Lucene Directory)
-    properties.hibernate.search.default:
-      directory_provider: filesystem
-      # Using the filesystem DirectoryProvider you also have to specify the default
-      # base directory for all indexes (make sure that the application have write
-      # permissions on such directory)
-      indexBase: /tmp/suricate-io/suricate/lucene/indexes/
-  ### Mustache ###
-  mustache.check-template-location: false
-  ### Enable cache ###
-  cache.jcache.config: classpath:ehcache3.xml
-  ### Servlet
+    properties:
+      hibernate:
+        search:
+          default:
+            directory_provider: filesystem
+            indexBase: /tmp/suricate-io/suricate/lucene/indexes/
+  mustache:
+    check-template-location: false
+  cache:
+    jcache:
+      config: 'classpath:ehcache3.xml'
   servlet:
     multipart:
       max-file-size: 10Mb
       max-request-size: 10Mb
 
-### Default error page ###
-server.error.whitelabel.enabled: false
-
-### Security ###
-security.oauth2:
-  client:
-    client-id: suricateAngular
-    client-secret: suricateAngularSecret
+security:
+  oauth2:
+    client:
+      client-id: suricateAngular
+      client-secret: suricateAngularSecret
 
 ### Actuator ###
 management:
   endpoints:
-    health.enabled: true
-    flyway.web.enabled: true
-    configprops;enabled: true
+    health:
+      enabled: true
+    flyway:
+      web:
+        enabled: true
+    configprops:
+      enabled: true
     enabled-by-default: false
     jmx:
       exposure:
@@ -74,87 +77,79 @@ management:
     servlet:
       context-path: /api/manage
 
-### logging ###
-## Keep this enable to see csrf issues
+### Logging ###
 logging:
-  file: /tmp/suricate-io/suricate/log
+  file: /tmp/suricate-io/suricate/suricate.log
   level:
     io.suricate.monitoring: DEBUG
-    net.sf.jmimemagic.MagicParser: off
-    org.springframework.boot.actuate: INFO
-    org.springframework.security.web.csrf.CsrfFilter: DEBUG
+    net.sf.jmimemagic.MagicParser: 'off'
+    org.springframework:
+      boot:
+        actuate: INFO
+      security:
+        web:
+          csrf:
+            CsrfFilter: DEBUG
 
 ### Encryptor ###
-jasypt.encryptor:
-  password: ZAkOZ9rIJCDVk6a10
-  stringOutputType: hexadecimal
+jasypt:
+  encryptor:
+    password: ZAkOZ9rIJCDVk6a10
+    stringOutputType: hexadecimal
 
-##########################################
-###       Application properties       ###
-##########################################
+### Application ###
 application:
   authentication:
-    ### Authentication Management (ldap | database) ###
     provider: database
-    ###   LDAP Authentication   ###
     ldap:
-      url:
-      userSearchFilter:
-      firstNameAttributName:
-      lastNameAttributName:
-      mailAttributName:
-      username:
-      password:
-      userSearchBase:
-    ### JWT Configuration ###
+      url: null
+      userSearchFilter: null
+      firstNameAttributName: null
+      lastNameAttributName: null
+      mailAttributName: null
+      username: null
+      password: null
+      userSearchBase: null
     jwt:
-      secret: ${random.value}
+      secret: '${random.value}'
       tokenValidity: 1800
       tokenValidityRememberMe: 2592000
-  ### Cors ###
   cors:
     allow-credentials: true
-    allowed-headers: Content-Type, Accept, Authorization, X-Requested-With
-    allowed-methods: GET,POST,OPTIONS,DELETE,PUT
+    allowed-headers: 'Content-Type, Accept, Authorization, X-Requested-With'
+    allowed-methods: 'GET,POST,OPTIONS,DELETE,PUT'
     allowed-origins: '*'
     max-age: 3600
-  ### OAuth ###
   oauth:
     client: suricateAngular
     secret: suricateAngularSecret
-  ### SSL Properties ###
   ssl:
-    ## Key store
     keyStore:
-      path:
-      password:
-      type:
-    ## Trust store
+      path: null
+      password: null
+      type: null
     trustStore:
-      path:
-      password:
-      type:
-  ### Widgets Repo ###
-  # Widget Repo
-  widgets.updateEnable: true
-
-  ### Swagger Springfox properties ###
+      path: null
+      password: null
+      type: null
+  widgets:
+    updateEnable: true
   swagger:
     title: Suricate API
     description: Rest API for integrating with backend layer.
-    version: 1.0
-    termsOfServiceUrl:
+    version: 1
+    termsOfServiceUrl: null
     license: Apache 2.0
-    licenseUrl: http://www.apache.org/licenses/LICENSE-2.0.html
+    licenseUrl: 'http://www.apache.org/licenses/LICENSE-2.0.html'
     groupName: suricate-api
-    protocols: http,https
+    protocols: 'http,https'
     defaultIncludePattern: /api/.*
     contactName: Suricate-io
-    contactUrl: https://github.com/suricate-io/suricate
-    contactEmail:
+    contactUrl: 'https://github.com/suricate-io/suricate'
+    contactEmail: null
 
-### proxy ###
+### Proxy ###
 proxy:
-  host:
-  port:
-  noProxyDomains:
+  host: null
+  port: null
+  noProxyDomains: null

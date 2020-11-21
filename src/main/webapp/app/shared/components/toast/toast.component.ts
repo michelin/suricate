@@ -21,7 +21,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { takeWhile } from 'rxjs/operators';
 
-import { ToastService } from '../../services/frontend/toast.service';
+import { ToastService } from '../../services/frontend/toast/toast.service';
 import { ToastMessage } from '../../models/frontend/toast/toast-message';
 import { ToastTypeEnum } from '../../enums/toast-type.enum';
 import { IconEnum } from '../../enums/icon.enum';

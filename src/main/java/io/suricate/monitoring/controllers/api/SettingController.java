@@ -77,6 +77,7 @@ public class SettingController {
         @ApiResponse(code = 204, message = "No Content")
     })
     @GetMapping(value = "/v1/settings")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<List<SettingResponseDto>> getAll(@ApiParam(name = "type", value = "The setting type to get", allowableValues = "template, language")
                                                            @RequestParam(value = "type", required = false) String type) {
         Optional<List<Setting>> settingsOptional = Optional.empty();
@@ -113,7 +114,7 @@ public class SettingController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
     @GetMapping(value = "/v1/settings/{settingId}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<SettingResponseDto> getOne(@ApiParam(name = "settingId", value = "The setting id", required = true)
                                                      @PathVariable("settingId") Long settingId) {
         Optional<Setting> settingOptional = settingService.getOneById(settingId);

@@ -15,7 +15,7 @@
  */
 
 import { Component } from '@angular/core';
-import { EnvironmentService } from '../../../shared/services/frontend/environment.service';
+import { EnvironmentService } from '../../../shared/services/frontend/environment/environment.service';
 
 /**
  * The footer of the application
@@ -28,17 +28,18 @@ import { EnvironmentService } from '../../../shared/services/frontend/environmen
 export class FooterComponent {
   /**
    * The app version
-   * @type {string}
-   * @protected
    */
   public version = EnvironmentService.appVersion;
 
   /**
    * The env type
-   * @type {string}
-   * @protected
    */
-  public env = EnvironmentService.appEnv;
+  public environment = EnvironmentService.appEnv;
+
+  /**
+   * The current year
+   */
+  public year = new Date().getFullYear();
 
   /**
    * The constructor
