@@ -23,6 +23,7 @@ import { IconEnum } from '../../../../enums/icon.enum';
 import { HttpCategoryService } from '../../../backend/http-category/http-category.service';
 import { FormService } from '../../form/form.service';
 import { ProjectWidgetFormStepsService } from '../../form-steps/project-widget-form-steps/project-widget-form-steps.service';
+import { Observable } from 'rxjs';
 
 /**
  * Service used to build the form fields related to a project
@@ -105,40 +106,45 @@ export class WidgetConfigurationFormFieldsService {
   }
 
   /**
+   * Load the information of the settings of a given category
+   *
+   * @param categoryId The given category id from which to load the settings
+   */
+  public getCategorySettings(categoryId: number): Observable<WidgetConfiguration[]> {
+    return this.categoryService.getCategoryConfigurations(categoryId);
+  }
+
+  /**
    * Add or remove widget's category fields & controls to the given form. The fields generated owns the default values defined by the category.
    *
-   * @param categoryId The category ID from which retrieve the settings
+   * @param categorySettings The information about the settings of the category
    * @param checked If yes, add the fields & controls to the given form, otherwise, remove them. Matches to the slide toggle button activation.
    * @param formGroup The form group to which controls will be added
    * @param fields A field array to which new fields will be added
    * @param widgetBackendConfig The current widget backend configuration
    */
   public generateCategorySettingsFormFields(
-    categoryId: number,
+    categorySettings: WidgetConfiguration[],
     checked: boolean,
     formGroup: FormGroup,
     fields: FormField[],
     widgetBackendConfig?: string
   ): void {
-    this.categoryService.getCategoryConfigurations(categoryId).subscribe(value => {
-      if (value != null) {
-        const categorySettingsFormFields = this.generateWidgetConfigurationFormFields(value, widgetBackendConfig);
+    const categorySettingsFormFields = this.generateWidgetConfigurationFormFields(categorySettings, widgetBackendConfig);
 
-        if (checked) {
-          fields.push(...categorySettingsFormFields);
-          this.formService.addControlsToFormGroupForFields(formGroup, categorySettingsFormFields);
-        } else {
-          for (const categoryField of categorySettingsFormFields) {
-            const index = fields.findIndex(field => field.key === categoryField.key);
+    if (checked) {
+      fields.push(...categorySettingsFormFields);
+      this.formService.addControlsToFormGroupForFields(formGroup, categorySettingsFormFields);
+    } else {
+      for (const categoryField of categorySettingsFormFields) {
+        const index = fields.findIndex(field => field.key === categoryField.key);
 
-            if (index !== -1) {
-              fields.splice(index, 1);
-            }
-          }
-
-          this.formService.removeControlsToFormGroupForFields(formGroup, categorySettingsFormFields);
+        if (index !== -1) {
+          fields.splice(index, 1);
         }
       }
-    });
+
+      this.formService.removeControlsToFormGroupForFields(formGroup, categorySettingsFormFields);
+    }
   }
 }
