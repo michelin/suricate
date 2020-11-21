@@ -3,31 +3,82 @@
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/java
 
+parameters:
+  - name: releaseNumber
+    displayName: Release number
+    type: string
+    default: null
+
 pool:
   vmImage: 'Ubuntu 16.04'
 
-steps:
-  - task: NodeTool@0
-    inputs:
-      versionSpec: '10.19.0'
-    displayName: 'Install Node.js'
+variables:
+  - name: one
+    value: initialValue
 
-  - script: |
-      node -v
-      npm -v
-      npm install --no-progress
-      npm run build -- --configuration="production"
-      npm run test-headless-no-sandbox -- --watch=false --progress=false --code-coverage
-    displayName: 'Front-End - Build & Tests'
+jobs:
+  - job: Build
+    steps:
+      - task: NodeTool@0
+        inputs:
+          versionSpec: '10.19.0'
+        displayName: 'Install Node.js'
 
-  - task: Maven@3
-    inputs:
-      mavenPomFile: 'pom.xml'
-      mavenOptions: '-Xmx3072m'
-      javaHomeOption: 'JDKVersion'
-      jdkVersionOption: '1.8'
-      jdkArchitectureOption: 'x64'
-      publishJUnitResults: true
-      testResultsFiles: '**/TEST-*.xml'
-      goals: 'package -P build-prod'
-    displayName: 'Back-End - Build & Tests'
+      - script: |
+          node -v
+          npm -v
+          npm install --no-progress
+          npm run build -- --configuration="production"
+          npm run lint
+          npm run test-headless-no-sandbox -- --watch=false --progress=false --code-coverage
+        displayName: 'Front-End - Build & Tests'
+
+      - task: Maven@3
+        inputs:
+          mavenPomFile: 'pom.xml'
+          mavenOptions: '-Xmx3072m'
+          javaHomeOption: 'JDKVersion'
+          jdkVersionOption: '1.8'
+          jdkArchitectureOption: 'x64'
+          publishJUnitResults: true
+          testResultsFiles: '**/TEST-*.xml'
+          goals: 'package -P build-prod'
+        displayName: 'Back-End - Build & Tests'
+  - job: Prepare_Release
+    dependsOn: Build
+    condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'), ne('${{ parameters.releaseNumber }}', 'null'))
+    steps:
+      - task: NodeTool@0
+        inputs:
+          versionSpec: '10.19.0'
+        displayName: 'Install Node.js'
+
+      - script: |
+          node -v
+          npm -v
+          npm --no-git-tag-version version ${{ parameters.releaseNumber }}
+        displayName: 'Update Front-End version'
+
+      - task: Maven@3
+        inputs:
+          mavenPomFile: 'pom.xml'
+          mavenOptions: '-Xmx3072m'
+          javaHomeOption: 'JDKVersion'
+          jdkVersionOption: '1.8'
+          jdkArchitectureOption: 'x64'
+          publishJUnitResults: true
+          testResultsFiles: '**/TEST-*.xml'
+          goals: '--batch-mode release:clean'
+        displayName: 'Clean Back-End for release'
+
+      - task: Maven@3
+        inputs:
+          mavenPomFile: 'pom.xml'
+          mavenOptions: '-Xmx3072m'
+          javaHomeOption: 'JDKVersion'
+          jdkVersionOption: '1.8'
+          jdkArchitectureOption: 'x64'
+          publishJUnitResults: true
+          testResultsFiles: '**/TEST-*.xml'
+          goals: '--batch-mode release:update-versions -DdevelopmentVersion=${{ parameters.releaseNumber }}'
+        displayName: 'Prepare Back-End for release : Update version, Create tag '

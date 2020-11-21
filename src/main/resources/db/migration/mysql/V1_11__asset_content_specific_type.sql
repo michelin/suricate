@@ -1,1 +1,0 @@
-ALTER TABLE asset modify column content tinyblob;

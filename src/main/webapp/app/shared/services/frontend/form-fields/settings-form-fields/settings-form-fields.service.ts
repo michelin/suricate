@@ -35,8 +35,8 @@ export class SettingsFormFieldsService {
   /**
    * Constructor
    *
-   * @param {HttpSettingService} httpSettingService Suricate service used to manage http calls for settings
-   * @param {HttpUserService} httpUserService Suricate service used to manage http calls for users
+   * @param httpSettingService Service used to manage http calls for settings
+   * @param httpUserService Service used to manage http calls for users
    */
   constructor(private readonly httpSettingService: HttpSettingService, private readonly httpUserService: HttpUserService) {}
 

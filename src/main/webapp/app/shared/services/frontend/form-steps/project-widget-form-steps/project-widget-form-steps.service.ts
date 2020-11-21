@@ -44,14 +44,17 @@ export class ProjectWidgetFormStepsService {
    * Key used for the step where we select a category
    */
   public static readonly selectCategoryStepKey = 'categoryStep';
+
   /**
    * Key used for the step where we select a widget
    */
   public static readonly selectWidgetStepKey = 'widgetStep';
+
   /**
    * Key used for the step where we configure a widget
    */
   public static readonly configureWidgetStepKey = 'widgetConfigurationStep';
+
   /**
    * Key used to store the widget ID
    */
@@ -99,7 +102,7 @@ export class ProjectWidgetFormStepsService {
             key: 'categoryId',
             type: DataTypeEnum.MOSAIC,
             columnNumber: 4,
-            mosaicOptions: () => this.getCategoryMosaicOptions(),
+            mosaicOptions: () => this.getAvailableCategories(),
             validators: [Validators.required]
           }
         ]
@@ -113,7 +116,7 @@ export class ProjectWidgetFormStepsService {
             key: ProjectWidgetFormStepsService.widgetIdFieldKey,
             type: DataTypeEnum.MOSAIC,
             columnNumber: 4,
-            mosaicOptions: (formGroup: FormGroup) => this.getWidgetMosaicOptions(formGroup),
+            mosaicOptions: (formGroup: FormGroup) => this.getAvailableWidgetsByCategory(formGroup),
             validators: [Validators.required]
           }
         ]
@@ -122,7 +125,7 @@ export class ProjectWidgetFormStepsService {
         key: ProjectWidgetFormStepsService.configureWidgetStepKey,
         title: 'widget.configuration',
         icon: IconEnum.WIDGET_CONFIGURATION,
-        asyncFields: (formGroup: FormGroup, step: FormStep) => this.getWidgetFields(formGroup, step)
+        asyncFields: (formGroup: FormGroup, step: FormStep) => this.getWidgetConfigurationFields(formGroup, step)
       }
     ]);
   }
@@ -162,8 +165,11 @@ export class ProjectWidgetFormStepsService {
     return formFields;
   }
 
-  private getCategoryMosaicOptions(): Observable<MosaicFormOption[]> {
-    return this.httpCategoryService.getAll(HttpFilterService.getInfiniteFilter()).pipe(
+  /**
+   * Get the available categories for widgets
+   */
+  private getAvailableCategories(): Observable<MosaicFormOption[]> {
+    return this.httpCategoryService.getAll(HttpFilterService.getInfiniteFilter(['name,asc'])).pipe(
       switchMap((categoriesPaged: Page<Category>) => {
         return from(categoriesPaged.content).pipe(
           map((category: Category) => {
@@ -179,7 +185,10 @@ export class ProjectWidgetFormStepsService {
     );
   }
 
-  private getWidgetMosaicOptions(formGroup: FormGroup): Observable<MosaicFormOption[]> {
+  /**
+   * Get the available widgets for a given category
+   */
+  private getAvailableWidgetsByCategory(formGroup: FormGroup): Observable<MosaicFormOption[]> {
     const categoryId = formGroup.root.value['categoryStep']['categoryId'];
 
     if (categoryId || categoryId === 0) {
@@ -202,7 +211,13 @@ export class ProjectWidgetFormStepsService {
     return EMPTY;
   }
 
-  private getWidgetFields(formGroup: FormGroup, step: FormStep): Observable<FormField[]> {
+  /**
+   * Get the widget configuration fields to configure it
+   *
+   * @param formGroup The form group of the selected widget
+   * @param step the current step
+   */
+  private getWidgetConfigurationFields(formGroup: FormGroup, step: FormStep): Observable<FormField[]> {
     const widgetId = formGroup.root.value['widgetStep']['widgetId'];
 
     if (widgetId || widgetId === 0) {

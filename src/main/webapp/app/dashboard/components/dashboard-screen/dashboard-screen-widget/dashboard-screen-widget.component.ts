@@ -14,12 +14,10 @@
  * limitations under the License.
  */
 
-import { RxStompState } from '@stomp/rx-stomp/esm5/rx-stomp-state';
 import { Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { TitleCasePipe } from '@angular/common';
 import { NgGridItemConfig, NgGridItemEvent } from 'angular2-grid';
-import { takeWhile } from 'rxjs/operators';
 import * as Stomp from '@stomp/stompjs';
 import { SidenavService } from '../../../../shared/services/frontend/sidenav/sidenav.service';
 import { DialogService } from '../../../../shared/services/frontend/dialog/dialog.service';
@@ -44,6 +42,7 @@ import { GridItemUtils } from '../../../../shared/utils/grid-item.utils';
 import { WebsocketUpdateEvent } from '../../../../shared/models/frontend/websocket/websocket-update-event';
 import { WebsocketUpdateTypeEnum } from '../../../../shared/enums/websocket-update-type.enum';
 import { Subscription } from 'rxjs';
+import { WidgetConfiguration } from '../../../../shared/models/backend/widget-configuration/widget-configuration';
 
 /**
  * Display the grid stack widgets
@@ -164,6 +163,23 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Subscribe to widget events
+   */
+  private initWebsocketConnectionForProjectWidget(): void {
+    const projectWidgetSubscriptionUrl = `/user/${this.projectToken}-projectWidget-${this.projectWidget.id}/queue/live`;
+
+    this.widgetsEventsSubscription = this.websocketService
+      .subscribeToDestination(projectWidgetSubscriptionUrl)
+      .subscribe((stompMessage: Stomp.Message) => {
+        const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
+
+        if (updateEvent.type === WebsocketUpdateTypeEnum.WIDGET) {
+          this.refreshProjectWidget();
+        }
+      });
+  }
+
+  /**
    * Register the new position of the element
    *
    * @param gridItemEvent The grid item event
@@ -195,23 +211,6 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Subscribe to widget events
-   */
-  private initWebsocketConnectionForProjectWidget(): void {
-    const projectWidgetSubscriptionUrl = `/user/${this.projectToken}-projectWidget-${this.projectWidget.id}/queue/live`;
-
-    this.widgetsEventsSubscription = this.websocketService
-      .subscribeToDestination(projectWidgetSubscriptionUrl)
-      .subscribe((stompMessage: Stomp.Message) => {
-        const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
-
-        if (updateEvent.type === WebsocketUpdateTypeEnum.WIDGET) {
-          this.refreshProjectWidget();
-        }
-      });
-  }
-
-  /**
    * Delete The project widget
    */
   public displayDeleteProjectWidgetDialog(): void {
@@ -228,35 +227,56 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    * Display the form sidenav used to edit a project widget
    */
   public displayEditFormSidenav(): void {
-    this.sidenavService.openFormSidenav({
-      title: 'widget.edit',
-      formFields: this.projectWidgetFormStepsService.generateProjectWidgetFormFields(this.widget.params, this.projectWidget.backendConfig),
-      save: (formData: FormData) => {
-        const projectWidgetRequest: ProjectWidgetRequest = {
-          widgetId: this.projectWidget.widgetId,
-          customStyle: this.projectWidget.customStyle,
-          backendConfig: Object.keys(formData)
-            .filter((key: string) => formData[key] !== undefined)
-            .map((key: string) => `${key}=${formData[key]}`)
-            .join('\n')
-        };
-
-        this.httpProjectWidgetService.updateOneById(this.projectWidget.id, projectWidgetRequest).subscribe(() => {
-          this.toastService.sendMessage('widget.edit.success', ToastTypeEnum.SUCCESS);
-        });
-      },
-      slideToggleButtonConfiguration: {
-        displaySlideToggleButton: true,
-        slideToggleButtonPressed: (event: MatSlideToggleChange, formGroup: FormGroup, formFields: FormField[]) =>
-          this.widgetConfigurationFormFieldsService.generateCategorySettingsFormFields(
-            this.widget.category.id,
-            event.checked,
-            formGroup,
-            formFields,
-            this.projectWidget.backendConfig
-          )
-      }
+    this.widgetConfigurationFormFieldsService.getCategorySettings(this.widget.category.id).subscribe(categorySettings => {
+      this.sidenavService.openFormSidenav({
+        title: 'widget.edit',
+        formFields: this.projectWidgetFormStepsService.generateProjectWidgetFormFields(
+          this.widget.params,
+          this.projectWidget.backendConfig
+        ),
+        save: (formData: FormData) => this.saveWidget(formData),
+        slideToggleButtonConfiguration: this.buildSlideToggleButtonConfiguration(categorySettings)
+      });
     });
+  }
+
+  /**
+   * Save the widget modifications
+   *
+   * @param formData The form data
+   */
+  public saveWidget(formData: FormData) {
+    const projectWidgetRequest: ProjectWidgetRequest = {
+      widgetId: this.projectWidget.widgetId,
+      customStyle: this.projectWidget.customStyle,
+      backendConfig: Object.keys(formData)
+        .filter((key: string) => formData[key] !== undefined)
+        .map((key: string) => `${key}=${formData[key]}`)
+        .join('\n')
+    };
+
+    this.httpProjectWidgetService.updateOneById(this.projectWidget.id, projectWidgetRequest).subscribe(() => {
+      this.toastService.sendMessage('widget.edit.success', ToastTypeEnum.SUCCESS);
+    });
+  }
+
+  /**
+   * Build the configuration to display the slide toggle button for editing the category of the widget
+   *
+   * @param categorySettings The settings of the category
+   */
+  public buildSlideToggleButtonConfiguration(categorySettings: WidgetConfiguration[]): any {
+    return {
+      displaySlideToggleButton: categorySettings !== null,
+      slideToggleButtonPressed: (event: MatSlideToggleChange, formGroup: FormGroup, formFields: FormField[]) =>
+        this.widgetConfigurationFormFieldsService.generateCategorySettingsFormFields(
+          categorySettings,
+          event.checked,
+          formGroup,
+          formFields,
+          this.projectWidget.backendConfig
+        )
+    };
   }
 
   /**
