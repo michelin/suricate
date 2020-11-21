@@ -1,11 +1,12 @@
-## Spring modules info ##
+##############################################
+###  Datasource Properties for PostgreSQL  ###
+##############################################
 spring:
-  ### Database ###
   datasource:
     driverClassName: org.postgresql.Driver
   ### Flyway ###
   flyway:
-    locations: ["classpath:db/migration/postgresql"]
+    locations: ['classpath:db/migration/postgresql']
   ### JPA ###
   jpa:
     properties:

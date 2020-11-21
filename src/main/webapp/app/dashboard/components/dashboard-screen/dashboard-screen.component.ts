@@ -31,20 +31,20 @@ import { takeWhile } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { NgGridConfig, NgGridItemConfig } from 'angular2-grid';
 import * as Stomp from '@stomp/stompjs';
-
 import { Project } from '../../../shared/models/backend/project/project';
 import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';
-import { WebsocketService } from '../../../shared/services/frontend/websocket.service';
-import { HttpAssetService } from '../../../shared/services/backend/http-asset.service';
+import { WebsocketService } from '../../../shared/services/frontend/websocket/websocket.service';
+import { HttpAssetService } from '../../../shared/services/backend/http-asset/http-asset.service';
 import { WebsocketUpdateEvent } from '../../../shared/models/frontend/websocket/websocket-update-event';
 import { WebsocketUpdateTypeEnum } from '../../../shared/enums/websocket-update-type.enum';
-import { DashboardService } from '../../services/dashboard.service';
+import { DashboardService } from '../../services/dashboard/dashboard.service';
 import { ProjectWidgetPositionRequest } from '../../../shared/models/backend/project-widget/project-widget-position-request';
-import { HttpProjectService } from '../../../shared/services/backend/http-project.service';
 import { GridItemUtils } from '../../../shared/utils/grid-item.utils';
 import { IconEnum } from '../../../shared/enums/icon.enum';
 import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
-import { LibraryService } from '../../services/library.service';
+import { LibraryService } from '../../services/library/library.service';
+import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
+import { RxStompState } from '@stomp/rx-stomp/esm5/rx-stomp-state';
 
 /**
  * Display the grid stack widgets
@@ -98,12 +98,6 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   public refreshProjectWidget = new EventEmitter<void>();
 
   /**
-   * Tell to subscriptions if the component is alive
-   * When the component is destroyed, the associated subscriptions will be deleted
-   */
-  private isAlive = true;
-
-  /**
    * The options for the plugin angular2-grid
    */
   public gridOptions: NgGridConfig = {};
@@ -119,9 +113,14 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   public gridStackItems: NgGridItemConfig[] = [];
 
   /**
-   * The stompJS Subscription for screen event
+   * The stompJS Subscription for disconnect event
    */
-  private screenEventSubscription: Subscription;
+  private disconnectEventSubscription: Subscription;
+
+  /**
+   * The stompJS Subscription for dashboard events
+   */
+  private dashboardEventsSubscription: Subscription;
 
   /**
    * Tell if we should display the screen code
@@ -180,7 +179,6 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
           this.resetWebsocketSubscriptions();
         }
       } else {
-        this.startWebsocketConnection();
         this.initWebsocketSubscriptions();
       }
     }
@@ -210,15 +208,22 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   public addExternalJSLibrariesToTheDOM() {
     this.libraryService.numberOfExternalLibrariesToLoad = this.project.librariesToken.length;
 
-    this.project.librariesToken.forEach(token => {
-      const script: HTMLScriptElement = document.createElement('script');
-      script.type = 'text/javascript';
-      script.src = HttpAssetService.getContentUrl(token);
-      script.onload = () => this.libraryService.markScriptAsLoaded(token);
-      script.async = false;
+    if (this.project.librariesToken.length > 0) {
+      this.project.librariesToken.forEach(token => {
+        const script: HTMLScriptElement = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = HttpAssetService.getContentUrl(token);
+        script.onload = () => this.libraryService.markScriptAsLoaded(token);
+        script.async = false;
 
-      this.renderer.appendChild(this.externalJsLibrariesSpan.nativeElement, script);
-    });
+        this.renderer.appendChild(this.externalJsLibrariesSpan.nativeElement, script);
+      });
+    }
+
+    // No library to load
+    else {
+      this.libraryService.emitAreJSScriptsLoaded(true);
+    }
   }
 
   /**
@@ -298,13 +303,6 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   /**********************************************************************************************************/
 
   /**
-   * Start the websocket connection using sockJS
-   */
-  private startWebsocketConnection(): void {
-    this.websocketService.startConnection();
-  }
-
-  /**
    * Disconnect from web sockets
    */
   private disconnectFromWebsocket(): void {
@@ -316,7 +314,6 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
    * Init the websocket subscriptions
    */
   private initWebsocketSubscriptions(): void {
-    this.isAlive = true;
     this.websocketProjectEventSubscription();
     this.websocketScreenEventSubscription();
   }
@@ -325,12 +322,13 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
    * Unsubscribe to every current websocket connections
    */
   private unsubscribeToWebsocket(): void {
-    if (this.screenEventSubscription) {
-      this.screenEventSubscription.unsubscribe();
-      this.screenEventSubscription = null;
+    if (this.disconnectEventSubscription) {
+      this.disconnectEventSubscription.unsubscribe();
     }
 
-    this.isAlive = false;
+    if (this.dashboardEventsSubscription) {
+      this.disconnectEventSubscription.unsubscribe();
+    }
   }
 
   /**
@@ -347,23 +345,27 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   private websocketProjectEventSubscription(): void {
     const projectSubscriptionUrl = `/user/${this.project.token}/queue/live`;
 
-    this.websocketService
+    this.dashboardEventsSubscription = this.websocketService
       .subscribeToDestination(projectSubscriptionUrl)
-      .pipe(takeWhile(() => this.isAlive))
       .subscribe((stompMessage: Stomp.Message) => {
         const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 
-        if (updateEvent.type === WebsocketUpdateTypeEnum.RELOAD) {
-          location.reload();
-        } else if (updateEvent.type === WebsocketUpdateTypeEnum.DISPLAY_NUMBER) {
-          this.displayScreenCode();
-        } else if (updateEvent.type === WebsocketUpdateTypeEnum.POSITION) {
-          this.refreshProjectWidget.emit();
-        } else if (updateEvent.type === WebsocketUpdateTypeEnum.DISCONNECT) {
-          this.disconnectFromWebsocket();
-          this.disconnectEvent.emit();
-        } else {
-          this.refreshProjectWidget.emit();
+        switch (updateEvent.type) {
+          case WebsocketUpdateTypeEnum.RELOAD:
+            location.reload();
+            break;
+          case WebsocketUpdateTypeEnum.DISPLAY_NUMBER:
+            this.displayScreenCode();
+            break;
+          case WebsocketUpdateTypeEnum.POSITION:
+            this.refreshProjectWidget.emit();
+            break;
+          case WebsocketUpdateTypeEnum.DISCONNECT:
+            this.disconnectFromWebsocket();
+            this.disconnectEvent.emit();
+            break;
+          default:
+            this.refreshProjectWidget.emit();
         }
       });
   }
@@ -374,9 +376,8 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   private websocketScreenEventSubscription(): void {
     const screenSubscriptionUrl = `/user/${this.project.token}-${this.screenCode}/queue/unique`;
 
-    this.screenEventSubscription = this.websocketService
+    this.disconnectEventSubscription = this.websocketService
       .subscribeToDestination(screenSubscriptionUrl)
-      .pipe(takeWhile(() => this.isAlive))
       .subscribe((stompMessage: Stomp.Message) => {
         const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 

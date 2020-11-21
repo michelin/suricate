@@ -4,12 +4,12 @@
 
 <mat-dialog-content fxLayout="column" fxLayoutGap="20px">
   <!-- Register screen part -->
-  <form *ngIf="screenRegisterForm" fxLayout="column" [formGroup]="screenRegisterForm" (submit)="registerScreen()">
+  <form *ngIf="registerScreenCodeFormField" fxLayout="column">
     <h2 class="little title">{{ 'screen.enroll' | translate }}</h2>
     <mat-divider></mat-divider>
 
     <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="25px" class="input-wrapper">
-      <suricate-input *ngFor="let field of formFields" fxFlex [formGroup]="screenRegisterForm" [field]="field"></suricate-input>
+      <suricate-input *ngFor="let field of formFields" fxFlex [formGroup]="registerScreenCodeFormField" [field]="field"></suricate-input>
       <suricate-buttons class="share-button" [configurations]="shareButtonsConfiguration"></suricate-buttons>
     </div>
   </form>

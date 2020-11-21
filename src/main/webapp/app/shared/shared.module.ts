@@ -29,16 +29,17 @@ import { CommunicationDialogComponent } from './components/communication-dialog/
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 import { ErrorInterceptor } from './interceptors/error.interceptor';
 import { FileInputComponent } from './components/inputs/file-input/file-input.component';
-import { InputComponent } from './components/inputs/input.component';
+import { InputComponent } from './components/inputs/input/input.component';
 import { MaterialCDKModule } from './modules/material-cdk.module';
 import { MaterialModule } from './modules/material.module';
-import { PasswordPipe } from './pipes/password.pipe';
-import { SafeHtmlPipe } from './pipes/safe-html.pipe';
-import { SafeUrlPipe } from './pipes/safe-url.pipe';
+import { PasswordPipe } from './pipes/password/password.pipe';
+import { SafeHtmlPipe } from './pipes/safe-html/safe-html.pipe';
+import { SafeUrlPipe } from './pipes/safe-url/safe-url.pipe';
+
 import { ToastComponent } from './components/toast/toast.component';
 import { TokenInterceptor } from './interceptors/token.interceptor';
 import { TranslateModule } from '@ngx-translate/core';
-import { StompRService } from '@stomp/ng2-stompjs';
+import { RxStompService } from '@stomp/ng2-stompjs';
 import { ListComponent } from './components/list/list.component';
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { ButtonsComponent } from './components/buttons/buttons.component';
@@ -59,7 +60,6 @@ import { WidgetJsScriptsDirective } from './directives/widget-js-scripts.directi
     CommonModule,
     FlexLayoutModule,
     FormsModule,
-    HttpClientModule,
     HttpClientModule,
     MaterialCDKModule,
     MaterialModule,
@@ -128,7 +128,7 @@ import { WidgetJsScriptsDirective } from './directives/widget-js-scripts.directi
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-    StompRService
+    { provide: RxStompService }
   ]
 })
 export class SharedModule {}

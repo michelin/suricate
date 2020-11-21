@@ -1,8 +1,8 @@
 *.iml
 target
 *.idea/
-h2/
 *.db
 lucene/
 node_modules/
 *.log
+coverage/
