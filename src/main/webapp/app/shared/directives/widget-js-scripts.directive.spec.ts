@@ -17,8 +17,6 @@
 import { WidgetJsScriptsDirective } from './widget-js-scripts.directive';
 import { TestBed } from '@angular/core/testing';
 import { MockModule } from '../../mock/mock.module';
-import { AbstractHttpService } from '../services/backend/abstract-http/abstract-http.service';
-import { MockStompRService } from '../../mock/services/mock-stomp-r/mock-stomp-r.service';
 
 describe('WidgetJsScriptsDirective', () => {
   let directive: WidgetJsScriptsDirective;

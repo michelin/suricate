@@ -42,6 +42,7 @@ import { MaterialIconRecords } from '../../../shared/records/material-icon.recor
 import { ValueChangedEvent } from '../../../shared/models/frontend/form/value-changed-event';
 import { FormField } from '../../../shared/models/frontend/form/form-field';
 import { ProjectUsersFormFieldsService } from '../../../shared/services/frontend/form-fields/project-users-form-fields/project-users-form-fields.service';
+import { WebsocketService } from '../../../shared/services/frontend/websocket/websocket.service';
 
 /**
  * Component used to display a specific dashboard
@@ -126,17 +127,18 @@ export class DashboardDetailComponent implements OnInit {
   /**
    * Constructor
    *
-   * @param {Router} router Angular service used to manage App's route
-   * @param {ActivatedRoute} activatedRoute Angular service used to manage the route activated by the component
-   * @param {MatDialog} matDialog Angular material service used to manage dialog
-   * @param {TranslateService} translateService NgxTranslate service used to manage translations
-   * @param {HttpProjectService} httpProjectService Suricate service used to manage http calls for project
-   * @param {HttpScreenService} httpScreenService Suricate service used to manage http calls for screen service
-   * @param {ProjectUsersFormFieldsService} projectUsersFormFieldsService Frontend service used to generate form fields for projectUsers
-   * @param {DashboardService} dashboardService Frontend service used to manage dashboards
-   * @param {SidenavService} sidenavService Frontend service used to manage sidenav
-   * @param {ToastService} toastService Frontend service used to manage toast message
-   * @param {DialogService} dialogService Frontend service used to manage dialog
+   * @param router Angular service used to manage App's route
+   * @param activatedRoute Angular service used to manage the route activated by the component
+   * @param matDialog Angular material service used to manage dialog
+   * @param translateService NgxTranslate service used to manage translations
+   * @param httpProjectService Suricate service used to manage http calls for project
+   * @param httpScreenService Suricate service used to manage http calls for screen service
+   * @param projectUsersFormFieldsService Frontend service used to generate form fields for projectUsers
+   * @param dashboardService Frontend service used to manage dashboards
+   * @param sidenavService Frontend service used to manage sidenav
+   * @param toastService Frontend service used to manage toast message
+   * @param dialogService Frontend service used to manage dialog
+   * @param websocketService Frontend service used to manage websockets
    */
   constructor(
     private readonly router: Router,
@@ -149,7 +151,8 @@ export class DashboardDetailComponent implements OnInit {
     private readonly dashboardService: DashboardService,
     private readonly sidenavService: SidenavService,
     private readonly toastService: ToastService,
-    private readonly dialogService: DialogService
+    private readonly dialogService: DialogService,
+    private readonly websocketService: WebsocketService
   ) {}
 
   /**
@@ -157,6 +160,8 @@ export class DashboardDetailComponent implements OnInit {
    */
   public ngOnInit(): void {
     const dashboardToken = this.activatedRoute.snapshot.params['dashboardToken'];
+
+    this.websocketService.startConnection();
 
     this.refreshProject(dashboardToken)
       .pipe(
@@ -169,9 +174,7 @@ export class DashboardDetailComponent implements OnInit {
           this.initHeaderConfiguration();
           this.engageDashboardScreenshotsAction();
         },
-        () => {
-          this.isDashboardLoading = false;
-        }
+        () => (this.isDashboardLoading = false)
       );
   }
 
@@ -317,6 +320,11 @@ export class DashboardDetailComponent implements OnInit {
     });
   }
 
+  /**
+   * Add the selected user to dashboard when values change
+   *
+   * @param valueChangedEvent The value changed event
+   */
   private onValueChanged(valueChangedEvent: ValueChangedEvent): Observable<FormField[]> {
     if (valueChangedEvent.type === 'optionSelected' && valueChangedEvent.fieldKey === 'usernameAutocomplete') {
       return this.httpProjectService
@@ -377,6 +385,7 @@ export class DashboardDetailComponent implements OnInit {
       role: 'dialog',
       width: '700px',
       maxHeight: '80%',
+      autoFocus: false,
       data: { project: this.project }
     });
   }

@@ -15,7 +15,7 @@
  */
 
 import { Injectable } from '@angular/core';
-import { StompConfig, StompRService } from '@stomp/ng2-stompjs';
+import { InjectableRxStompConfig, RxStompService } from '@stomp/ng2-stompjs';
 import { Observable } from 'rxjs';
 import { EnvironmentService } from '../environment/environment.service';
 
@@ -35,52 +35,51 @@ export class WebsocketService {
   /**
    * The constructor
    *
-   * @param {StompRService} stompRService The stomp Service to inject
+   * @param rxStompService The stomp service for websockets
    */
-  constructor(private readonly stompRService: StompRService) {}
+  constructor(private readonly rxStompService: RxStompService) {}
 
   /* ****************************************************************** */
   /*                    WebSocket Management                            */
-
   /* ****************************************************************** */
 
   /**
    * Get the websocket config
    *
-   * @returns {StompConfig} The config
+   * @returns The config
    */
-  private getWebsocketConfig(): StompConfig {
-    const stompConfig = new StompConfig();
-    stompConfig.url = () => new SockJS(WebsocketService.baseWsEndpoint);
-    stompConfig.heartbeat_in = 0;
-    stompConfig.heartbeat_out = 20000;
-    stompConfig.reconnect_delay = 1000;
-    stompConfig.debug = false;
+  private getWebsocketConfig(): InjectableRxStompConfig {
+    const configuration = new InjectableRxStompConfig();
+    configuration.webSocketFactory = () => new SockJS(WebsocketService.baseWsEndpoint);
+    configuration.heartbeatIncoming = EnvironmentService.wsHeartbeatIncoming;
+    configuration.heartbeatOutgoing = EnvironmentService.wsHeartbeatOutgoing;
+    configuration.reconnectDelay = EnvironmentService.wsReconnectDelay;
+    configuration.debug = EnvironmentService.wsDebug ? (str: string) => console.log(new Date(), str) : () => {};
 
-    return stompConfig;
+    return configuration;
   }
 
   /**
    * Start the websocket connection
    */
   public startConnection(): void {
-    this.stompRService.config = this.getWebsocketConfig();
-    this.stompRService.initAndConnect();
+    this.rxStompService.configure(this.getWebsocketConfig());
+    this.rxStompService.activate();
   }
 
   /**
-   * Subcribe to a queue name
+   * Subscribe to a queue name
    *
    * @param {string} destination The subscription url
    */
   public subscribeToDestination(destination: string): Observable<Stomp.Message> {
-    return this.stompRService.subscribe(destination);
+    return this.rxStompService.watch(destination);
   }
 
   /**
    * Disconnect the client
    */
   public disconnect() {
-    this.stompRService.disconnect();
+    this.rxStompService.deactivate();
   }
 }

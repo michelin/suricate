@@ -19,13 +19,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { DashboardTvComponent } from './dashboard-tv.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-import { StompRService } from '@stomp/ng2-stompjs';
 import { MockModule } from '../../../mock/mock.module';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { HttpClient } from '@angular/common/http';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 
 describe('DashboardTvComponent', () => {
   let component: DashboardTvComponent;

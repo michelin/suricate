@@ -39,7 +39,7 @@ import { SafeUrlPipe } from './pipes/safe-url/safe-url.pipe';
 import { ToastComponent } from './components/toast/toast.component';
 import { TokenInterceptor } from './interceptors/token.interceptor';
 import { TranslateModule } from '@ngx-translate/core';
-import { StompRService } from '@stomp/ng2-stompjs';
+import { RxStompService } from '@stomp/ng2-stompjs';
 import { ListComponent } from './components/list/list.component';
 import { SpinnerComponent } from './components/spinner/spinner.component';
 import { ButtonsComponent } from './components/buttons/buttons.component';
@@ -128,7 +128,7 @@ import { WidgetJsScriptsDirective } from './directives/widget-js-scripts.directi
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-    StompRService
+    { provide: RxStompService }
   ]
 })
 export class SharedModule {}

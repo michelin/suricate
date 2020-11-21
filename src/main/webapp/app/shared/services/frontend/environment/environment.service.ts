@@ -41,6 +41,26 @@ export class EnvironmentService {
   public static readonly appEnv = `${environment.environment}`;
 
   /**
+   * Incoming heartbeat for how often to heartbeat the websocket
+   */
+  public static readonly wsHeartbeatIncoming = environment.wsHeartbeatIncoming;
+
+  /**
+   * Outgoing heartbeat for how often to heartbeat the websocket
+   */
+  public static readonly wsHeartbeatOutgoing = environment.wsHeartbeatOutgoing;
+
+  /**
+   * Delay to wait before attempting to reconnect the websocket
+   */
+  public static readonly wsReconnectDelay = environment.wsReconnectDelay;
+
+  /**
+   * Enable the debug logs for the websockets
+   */
+  public static readonly wsDebug = environment.wsDebug;
+
+  /**
    * The constructor
    */
   constructor() {}

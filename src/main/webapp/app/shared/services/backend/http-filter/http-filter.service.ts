@@ -41,22 +41,34 @@ export class HttpFilterService {
 
   /**
    * Get the default filter
+   *
+   * @param search A string defining a filter on a field to apply on the research
    */
-  public static getDefaultFilter(): HttpFilter {
+  public static getDefaultFilter(search?: string): HttpFilter {
     const httpFilter = new HttpFilter();
-    httpFilter['size'] = HttpFilterService.DEFAULT_PAGE_SIZE_OPTIONS[1];
-    httpFilter['page'] = HttpFilterService.DEFAULT_PAGE;
+    httpFilter.size = HttpFilterService.DEFAULT_PAGE_SIZE_OPTIONS[1];
+    httpFilter.page = HttpFilterService.DEFAULT_PAGE;
+
+    if (search) {
+      httpFilter.search = search;
+    }
 
     return httpFilter;
   }
 
   /**
-   * Get infinit page filter
+   * Get infinite page filter
+   *
+   * @param sort A string defining the order to apply
    */
-  public static getInfiniteFilter(): HttpFilter {
+  public static getInfiniteFilter(sort?: string[]): HttpFilter {
     const httpFilter = new HttpFilter();
-    httpFilter['size'] = HttpFilterService.INFINITE_PAGE_SIZE;
-    httpFilter['page'] = HttpFilterService.DEFAULT_PAGE;
+    httpFilter.size = HttpFilterService.INFINITE_PAGE_SIZE;
+    httpFilter.page = HttpFilterService.DEFAULT_PAGE;
+
+    if (sort) {
+      httpFilter.sort = sort;
+    }
 
     return httpFilter;
   }

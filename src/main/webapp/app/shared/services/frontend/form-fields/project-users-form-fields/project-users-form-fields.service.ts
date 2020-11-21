@@ -47,7 +47,9 @@ export class ProjectUsersFormFieldsService {
   ) {}
 
   /**
-   * Get the list of steps for a dashboard
+   * Generate the configuration between a dashboard and the associated users.
+   * Generate the autocomplete window information.
+   * Get the associated users and generate the fields information.
    *
    * @param projectToken The project token used to retrieve the users
    */
@@ -98,11 +100,13 @@ export class ProjectUsersFormFieldsService {
     ];
   }
 
+  /**
+   * Generate the autocomplete window to link a user with a dashboard
+   *
+   * @param usernameFilter A filter on the username
+   */
   private getUsersAutocomplete(usernameFilter: string): Observable<FormOption[]> {
-    const filter = HttpFilterService.getDefaultFilter();
-    filter.search = usernameFilter;
-
-    return this.httpUserService.getAll(filter).pipe(
+    return this.httpUserService.getAll(HttpFilterService.getDefaultFilter(usernameFilter)).pipe(
       map((usersPaged: Page<User>) => {
         const formOptions: FormOption[] = [];
         usersPaged.content.forEach((user: User) => {

@@ -76,16 +76,7 @@ export class WidgetsComponent extends ListComponent<Widget | WidgetRequest> {
    */
   private initHeaderConfiguration(): void {
     this.headerConfiguration = {
-      title: 'widget.list',
-      actions: [
-        {
-          icon: IconEnum.REFRESH,
-          color: 'primary',
-          variant: 'miniFab',
-          tooltip: { message: 'widget.list.import' },
-          callback: () => this.importWidgets()
-        }
-      ]
+      title: 'widget.list'
     };
   }
 
@@ -93,13 +84,6 @@ export class WidgetsComponent extends ListComponent<Widget | WidgetRequest> {
    * Init filter for list component
    */
   private initFilter(): void {
-    this.httpFilter.sort = ['name,asc'];
-  }
-
-  /**
-   * Used to import widgets
-   */
-  private importWidgets(): void {
-    //TODO: New endpoint
+    this.httpFilter.sort = ['category.name,name,asc'];
   }
 }

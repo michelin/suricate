@@ -1,1 +1,0 @@
-update widget set technical_name = 'jenkinsJobsRunningOnAPeriod' where technical_name = 'jenkinsJobsRunningOnAWeek'
