@@ -41,14 +41,13 @@ jobs:
     steps:
       - task: InstallSSHKey@0
         inputs:
-          knownHostsEntry: 'github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ=='
-          sshPublicKey: $(SSH_GITHUB_SURICATE_PUBLIC_KEY)
-          sshKeySecureFile: 'suricate-cicd'
-          
-      - task: NodeTool@0
-        inputs:
-          versionSpec: '10.19.0'
-        displayName: 'Install Node.js'
+          knownHostsEntry: $SSH_GITHUB_KNOWN_HOSTS_ENTRY
+          sshPublicKey: $SSH_GITHUB_SURICATE_PUBLIC_KEY
+          sshKeySecureFile: $SSH_GITHUB_SURICATE_PRIVATE_KEY_FILE_NAME
+        env:
+          SSH_GITHUB_KNOWN_HOSTS_ENTRY: $(SSH_GITHUB_KNOWN_HOSTS_ENTRY)
+          SSH_GITHUB_SURICATE_PUBLIC_KEY: $(SSH_GITHUB_SURICATE_PUBLIC_KEY)
+          SSH_GITHUB_SURICATE_PRIVATE_KEY_FILE_NAME: $(SSH_GITHUB_SURICATE_PRIVATE_KEY_FILE_NAME)
 
       - script: |
           node -v
@@ -65,19 +64,7 @@ jobs:
           jdkArchitectureOption: 'x64'
           publishJUnitResults: true
           testResultsFiles: '**/TEST-*.xml'
-          goals: '--batch-mode release:clean'
-        displayName: 'Clean Back-End for release'
-
-      - task: Maven@3
-        inputs:
-          mavenPomFile: 'pom.xml'
-          mavenOptions: '-Xmx3072m'
-          javaHomeOption: 'JDKVersion'
-          jdkVersionOption: '1.8'
-          jdkArchitectureOption: 'x64'
-          publishJUnitResults: true
-          testResultsFiles: '**/TEST-*.xml'
-          goals: '--batch-mode release:update-versions -DdevelopmentVersion=${{ parameters.releaseNumber }}'
+          goals: 'versions:set -DnewVersion=${{ parameters.releaseNumber }}'
         displayName: 'Prepare Back-End for release : Update version, Create tag '
                 
       - script: |
@@ -87,7 +74,9 @@ jobs:
           git config --global user.name "Azure Pipelines"
           git switch master
           git status
-          git add .
+          git add pom.xml
+          git add package.json
+          git add package-lock.json
           git commit -m "Update project with new release version ${{ parameters.releaseNumber }}"
           git push origin HEAD
         displayName: 'Push new release version ${{ parameters.releaseNumber }} to GitHub'
