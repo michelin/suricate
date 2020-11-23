@@ -3,7 +3,7 @@
 
     <groupId>io.suricate</groupId>
     <artifactId>suricate</artifactId>
-    <version>2.4.1-SNAPSHOT</version>
+    <version>2.3.1</version>
     <packaging>war</packaging>
     <name>Suricate Application</name>
 
@@ -11,7 +11,7 @@
         <connection>scm:git:https://github.com/suricate-io/suricate.git</connection>
         <url>scm:git:https://github.com/suricate-io/suricate.git</url>
         <developerConnection>scm:git:https://github.com/suricate-io/suricate.git</developerConnection>
-        <tag>v2.3.0</tag>
+        <tag>v2.3.1</tag>
     </scm>
 
     <parent>
