@@ -1,8 +1,3 @@
-# Maven
-# Build your Java project and run tests with Apache Maven.
-# Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/java
-
 parameters:
   - name: releaseNumber
     displayName: Release number
@@ -11,10 +6,6 @@ parameters:
 
 pool:
   vmImage: 'Ubuntu 16.04'
-
-variables:
-  - name: one
-    value: initialValue
 
 jobs:
   - job: Build
@@ -48,10 +39,11 @@ jobs:
     dependsOn: Build
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'), ne('${{ parameters.releaseNumber }}', 'null'))
     steps:
-      - task: NodeTool@0
+      - task: InstallSSHKey@0
         inputs:
-          versionSpec: '10.19.0'
-        displayName: 'Install Node.js'
+          knownHostsEntry: '$(SSH_GITHUB_KNOWN_HOSTS_ENTRY)'
+          sshPublicKey: '$(SSH_GITHUB_SURICATE_PUBLIC_KEY)'
+          sshKeySecureFile: 'suricate-cicd'
 
       - script: |
           node -v
@@ -68,17 +60,19 @@ jobs:
           jdkArchitectureOption: 'x64'
           publishJUnitResults: true
           testResultsFiles: '**/TEST-*.xml'
-          goals: '--batch-mode release:clean'
-        displayName: 'Clean Back-End for release'
-
-      - task: Maven@3
-        inputs:
-          mavenPomFile: 'pom.xml'
-          mavenOptions: '-Xmx3072m'
-          javaHomeOption: 'JDKVersion'
-          jdkVersionOption: '1.8'
-          jdkArchitectureOption: 'x64'
-          publishJUnitResults: true
-          testResultsFiles: '**/TEST-*.xml'
-          goals: '--batch-mode release:update-versions -DdevelopmentVersion=${{ parameters.releaseNumber }}'
+          goals: 'versions:set -DnewVersion=${{ parameters.releaseNumber }}'
         displayName: 'Prepare Back-End for release : Update version, Create tag '
+
+      - script: |
+          git version
+          git config --global url.ssh://git@github.com/.insteadOf https://github.com/
+          git config --global user.email "loic.greffier_ext@michelin.com"
+          git config --global user.name "Azure Pipelines"
+          git switch master
+          git status
+          git add pom.xml
+          git add package.json
+          git add package-lock.json
+          git commit -m "Update project with new release version ${{ parameters.releaseNumber }}"
+          git push origin HEAD
+        displayName: 'Push new release version ${{ parameters.releaseNumber }} to GitHub'
