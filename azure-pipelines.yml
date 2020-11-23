@@ -43,11 +43,7 @@ jobs:
         inputs:
           knownHostsEntry: '$(SSH_GITHUB_KNOWN_HOSTS_ENTRY)'
           sshPublicKey: '$(SSH_GITHUB_SURICATE_PUBLIC_KEY)'
-          sshKeySecureFile: '$(SSH_GITHUB_SURICATE_PRIVATE_KEY_FILE_NAME)'
-        env:
-          SSH_GITHUB_KNOWN_HOSTS_ENTRY: $(SSH_GITHUB_KNOWN_HOSTS_ENTRY)
-          SSH_GITHUB_SURICATE_PUBLIC_KEY: $(SSH_GITHUB_SURICATE_PUBLIC_KEY)
-          SSH_GITHUB_SURICATE_PRIVATE_KEY_FILE_NAME: $(SSH_GITHUB_SURICATE_PRIVATE_KEY_FILE_NAME)
+          sshKeySecureFile: 'suricate-cicd'
 
       - script: |
           node -v
