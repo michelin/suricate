@@ -66,7 +66,7 @@ jobs:
       - script: |
           git version
           git config --global url.ssh://git@github.com/.insteadOf https://github.com/
-          git config --global user.email "loic.greffier_ext@michelin.com"
+          git config --global user.email "$(SSH_GITHUB_COMMIT_EMAIL)"
           git config --global user.name "Azure Pipelines"
           git switch master
           git status
