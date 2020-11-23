@@ -1,8 +1,3 @@
-# Maven
-# Build your Java project and run tests with Apache Maven.
-# Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/java
-
 parameters:
   - name: releaseNumber
     displayName: Release number
@@ -79,6 +74,11 @@ jobs:
           goals: '--batch-mode release:update-versions -DdevelopmentVersion=${{ parameters.releaseNumber }}'
         displayName: 'Prepare Back-End for release : Update version, Create tag '
         
+      - task: InstallSSHKey@0
+        inputs:
+          knownHostsEntry: '$(SSH_GITHUB_KNOWN_HOSTS_ENTRY)'
+          sshPublicKey: '$(SSH_GITHUB_SURICATE_PUBLIC_KEY)'
+          sshKeySecureFile: '$(SSH_GITHUB_SURICATE_PRIVATE_KEY_FILE_NAME)'
         
       - script: |
           git version
