@@ -39,6 +39,12 @@ jobs:
     dependsOn: Build
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'), ne('${{ parameters.releaseNumber }}', 'null'))
     steps:
+      - task: InstallSSHKey@0
+        inputs:
+          knownHostsEntry: '$(SSH_GITHUB_KNOWN_HOSTS_ENTRY)'
+          sshPublicKey: '$(SSH_GITHUB_SURICATE_PUBLIC_KEY)'
+          sshKeySecureFile: '$(SSH_GITHUB_SURICATE_PRIVATE_KEY_FILE_NAME)'
+          
       - task: NodeTool@0
         inputs:
           versionSpec: '10.19.0'
@@ -73,13 +79,7 @@ jobs:
           testResultsFiles: '**/TEST-*.xml'
           goals: '--batch-mode release:update-versions -DdevelopmentVersion=${{ parameters.releaseNumber }}'
         displayName: 'Prepare Back-End for release : Update version, Create tag '
-        
-      - task: InstallSSHKey@0
-        inputs:
-          knownHostsEntry: '$(SSH_GITHUB_KNOWN_HOSTS_ENTRY)'
-          sshPublicKey: '$(SSH_GITHUB_SURICATE_PUBLIC_KEY)'
-          sshKeySecureFile: '$(SSH_GITHUB_SURICATE_PRIVATE_KEY_FILE_NAME)'
-        
+                
       - script: |
           git version
           git config --global url.ssh://git@github.com/.insteadOf https://github.com/
