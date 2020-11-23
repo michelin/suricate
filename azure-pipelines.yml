@@ -81,10 +81,11 @@ jobs:
         displayName: 'Prepare Back-End for release : Update version, Create tag '
                 
       - script: |
-          git version
           git config --global url.ssh://git@github.com/.insteadOf https://github.com/
           git config --global user.email "loic.greffier_ext@michelin.com"
           git config --global user.name "Azure Pipelines"
+          git version
+          git branch
           git add .
           git status
           git commit -m "Update project with new release version ${{ parameters.releaseNumber }}"
