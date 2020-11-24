@@ -77,7 +77,6 @@ public class SettingController {
         @ApiResponse(code = 204, message = "No Content")
     })
     @GetMapping(value = "/v1/settings")
-    @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<List<SettingResponseDto>> getAll(@ApiParam(name = "type", value = "The setting type to get", allowableValues = "template, language")
                                                            @RequestParam(value = "type", required = false) String type) {
         Optional<List<Setting>> settingsOptional = Optional.empty();
