@@ -96,7 +96,7 @@ export class ListComponent<T> implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Display the loader when it's true, end hide when it's false
    */
-  public isLoading: boolean = true;
+  public isLoading = true;
 
   /**
    * Used to filter the list

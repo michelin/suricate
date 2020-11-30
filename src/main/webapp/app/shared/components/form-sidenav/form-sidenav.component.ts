@@ -66,7 +66,7 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
   /**
    * Save if the slide toggle button has been pressed or not in order to init the category settings at the sidenav opening
    */
-  public slideToggleButtonChecked: boolean = false;
+  public slideToggleButtonChecked = false;
 
   /**
    * The buttons

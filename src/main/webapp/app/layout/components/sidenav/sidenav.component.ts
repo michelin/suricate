@@ -47,7 +47,7 @@ export class SidenavComponent implements OnInit, OnDestroy {
   /**
    * Used to hide or display the menu using activated routes
    */
-  public shouldHideMenu: boolean = true;
+  public shouldHideMenu = true;
 
   /**
    * Constructor
