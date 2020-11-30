@@ -61,7 +61,7 @@ export class LoginComponent implements OnInit {
   /**
    * Define if the spinner should be running or not
    */
-  public loading = true;
+  public loading: boolean = true;
 
   /**
    * Constructor

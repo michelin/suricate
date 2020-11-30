@@ -19,12 +19,13 @@ import { FormService } from '../../services/frontend/form/form.service';
 import { SidenavService } from '../../services/frontend/sidenav/sidenav.service';
 import { FormSidenavConfiguration } from '../../models/frontend/sidenav/form-sidenav-configuration';
 import { FormGroup } from '@angular/forms';
-import { takeWhile } from 'rxjs/operators';
+import { takeUntil, takeWhile } from 'rxjs/operators';
 import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
 import { IconEnum } from '../../enums/icon.enum';
 import { ValueChangedEvent } from '../../models/frontend/form/value-changed-event';
 import { FormField } from '../../models/frontend/form/form-field';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
+import { Subject } from 'rxjs';
 
 /**
  * Component used to display the form sidenav
@@ -37,57 +38,46 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 export class FormSidenavComponent implements OnInit, OnDestroy {
   /**
    * Send an event to the parent component used to open the sidebar
-   * @type {EventEmitter}
-   * @public
    */
   @Output()
-  public open = new EventEmitter<void>();
+  public open: EventEmitter<void> = new EventEmitter<void>();
+
   /**
    * Send an event to the parent component used to close the sidebar
-   * @type {EventEmitter}
-   * @public
    */
   @Output()
-  public close = new EventEmitter<void>();
+  public close: EventEmitter<void> = new EventEmitter<void>();
 
   /**
    * The configuration of the sidenav
-   * @type {FormSidenavConfiguration}
-   * @private
    */
   public configuration: FormSidenavConfiguration;
 
   /**
    * The form displayed by the sidenav
-   * @type {FormGroup}
-   * @private
    */
   public formGroup: FormGroup;
 
   /**
-   * Used to unsubscribe observables when the component is destroyed
-   * @type {boolean}
-   * @private
+   * Subject used to unsubscribe all the subscriptions when the component is destroyed
    */
-  private isAlive = true;
+  private unsubscribe: Subject<void> = new Subject<void>();
 
   /**
    * Save if the slide toggle button has been pressed or not in order to init the category settings at the sidenav opening
    */
-  public slideToggleButtonChecked = false;
+  public slideToggleButtonChecked: boolean = false;
 
   /**
    * The buttons
-   * @type {ButtonConfiguration[]}
-   * @protected
    */
   public buttons: ButtonConfiguration<unknown>[] = [];
 
   /**
    * Constructor
    *
-   * @param {FormService} formService Frontend service used to manage the forms
-   * @param {SidenavService} sidenavService Sidenav service used to manage the side navs
+   * @param formService Frontend service used to manage the forms
+   * @param sidenavService Sidenav service used to manage the side navs
    */
   constructor(private readonly formService: FormService, private readonly sidenavService: SidenavService) {
     this.initButtons();
@@ -99,7 +89,7 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
   public ngOnInit(): void {
     this.sidenavService
       .listenFormSidenavMessages()
-      .pipe(takeWhile(() => this.isAlive))
+      .pipe(takeUntil(this.unsubscribe))
       .subscribe((configuration: FormSidenavConfiguration) => {
         this.configuration = configuration;
         this.formGroup = this.formService.generateFormGroupForFields(this.configuration.formFields);
@@ -114,6 +104,14 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
 
         this.openSidenav();
       });
+  }
+
+  /**
+   * Called when the component is destroyed
+   */
+  public ngOnDestroy(): void {
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
   }
 
   /**
@@ -170,18 +168,14 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
    */
   public valueChanged(valueChangedEvent: ValueChangedEvent): void {
     if (this.configuration.onValueChanged) {
-      this.configuration.onValueChanged(valueChangedEvent).subscribe((formFields: FormField[]) => {
-        this.formGroup = this.formService.generateFormGroupForFields(formFields);
-        this.configuration.formFields = formFields;
-      });
+      this.configuration
+        .onValueChanged(valueChangedEvent)
+        .pipe(takeUntil(this.unsubscribe))
+        .subscribe((formFields: FormField[]) => {
+          this.formGroup = this.formService.generateFormGroupForFields(formFields);
+          this.configuration.formFields = formFields;
+        });
     }
-  }
-
-  /**
-   * Called when the component is destroyed
-   */
-  public ngOnDestroy(): void {
-    this.isAlive = false;
   }
 
   /**

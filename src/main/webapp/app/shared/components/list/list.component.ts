@@ -31,8 +31,8 @@ import { HttpFilterService } from '../../services/backend/http-filter/http-filte
 import { PageEvent } from '@angular/material/paginator';
 import { MaterialIconRecords } from '../../records/material-icon.record';
 import { IconEnum } from '../../enums/icon.enum';
-import { fromEvent } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map, takeWhile } from 'rxjs/operators';
+import { fromEvent, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, map, takeUntil, takeWhile } from 'rxjs/operators';
 
 /**
  * Generic component used to display and manage lists
@@ -47,6 +47,11 @@ export class ListComponent<T> implements OnInit, AfterViewInit, OnDestroy {
    */
   @ViewChild('inputSearch')
   public inputSearch: ElementRef<HTMLInputElement>;
+
+  /**
+   * Subject used to unsubscribe all the subscriptions when the component is destroyed
+   */
+  protected unsubscribe: Subject<void> = new Subject<void>();
 
   /**
    * Frontend service used to display dialogs
@@ -91,7 +96,7 @@ export class ListComponent<T> implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Display the loader when it's true, end hide when it's false
    */
-  public isLoading = true;
+  public isLoading: boolean = true;
 
   /**
    * Used to filter the list
@@ -107,11 +112,6 @@ export class ListComponent<T> implements OnInit, AfterViewInit, OnDestroy {
    * List of material icon
    */
   public materialIconRecords = MaterialIconRecords;
-
-  /**
-   * Tell if the component is alive
-   */
-  public isAlive = true;
 
   /**
    * Constructor
@@ -145,7 +145,8 @@ export class ListComponent<T> implements OnInit, AfterViewInit, OnDestroy {
    * Called when the component is destroyed
    */
   public ngOnDestroy(): void {
-    this.isAlive = false;
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
   }
 
   /**
@@ -153,6 +154,7 @@ export class ListComponent<T> implements OnInit, AfterViewInit, OnDestroy {
    */
   protected refreshList(): void {
     this.displayLoader();
+
     this.childService.getAll(this.httpFilter).subscribe((objectsPaged: Page<T>) => {
       this.objectsPaged = objectsPaged;
       this.hideLoader();
@@ -254,7 +256,7 @@ export class ListComponent<T> implements OnInit, AfterViewInit, OnDestroy {
   private subscribeToInputSearchElement(): void {
     fromEvent(this.inputSearch.nativeElement, 'keyup')
       .pipe(
-        takeWhile(() => this.isAlive),
+        takeUntil(this.unsubscribe),
         debounceTime(500),
         map((event: Event) => (event.target as HTMLInputElement).value),
         distinctUntilChanged()
