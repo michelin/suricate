@@ -4,9 +4,12 @@
 spring:
   datasource:
     driverClassName: org.postgresql.Driver
+    url: null
+    username: null
+    password: null
   ### Flyway ###
   flyway:
-    locations: ['classpath:db/migration/postgresql']
+    locations: ['classpath:flyway/postgresql']
   ### JPA ###
   jpa:
     properties:

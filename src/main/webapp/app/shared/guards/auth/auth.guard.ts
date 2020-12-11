@@ -29,7 +29,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
   /**
    * The constructor
    *
-   * @param {Router} router The router
+   * @param router The router
    */
   constructor(private readonly router: Router) {}
 

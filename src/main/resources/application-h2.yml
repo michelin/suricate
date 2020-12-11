@@ -17,5 +17,5 @@ spring:
         dialect: org.hibernate.dialect.H2Dialect
   flyway:
     locations:
-      - 'classpath:db/migration/postgresql'
-      - 'classpath:db/migration/h2'
+      - 'classpath:flyway/postgresql'
+      - 'classpath:flyway/h2'

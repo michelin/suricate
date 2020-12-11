@@ -39,106 +39,119 @@ import java.util.Objects;
  */
 @RestControllerAdvice
 public class GlobalDefaultExceptionHandler {
-
     /**
      * The Logger
      */
     public static final Logger LOGGER = LoggerFactory.getLogger(GlobalDefaultExceptionHandler.class);
 
     /**
-     * Manage the API Exception
+     * Manage the API exception.
      *
-     * @param ex The exception
+     * @param exception The exception
      * @return The exception as Response Entity
      */
     @ExceptionHandler(ApiException.class)
-    public ResponseEntity<ApiErrorDto> handleApiException(ApiException ex) {
-        LOGGER.debug(ex.getMessage());
-        return ResponseEntity
-            .status(ex.getError().getStatus())
-            .body(ex.getError());
-    }
+    public ResponseEntity<ApiErrorDto> handleApiException(ApiException exception) {
+        GlobalDefaultExceptionHandler.LOGGER.debug(exception.getMessage());
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiErrorDto> handleRequestException(MethodArgumentNotValidException ex) {
-        LOGGER.debug(ex.getMessage());
         return ResponseEntity
-            .status(ApiErrorEnum.BAD_REQUEST.getStatus())
-            .body(new ApiErrorDto(extractMessage(ex.getBindingResult()), ApiErrorEnum.BAD_REQUEST));
+            .status(exception.getError().getStatus())
+            .body(exception.getError());
     }
 
     /**
-     * Throw when a user try access a resource that he can't
+     * Manage the MethodArgumentNotValidException exception.
      *
-     * @param ex the exception
+     * @param exception The exception
+     * @return The exception as Response Entity
+     */
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ApiErrorDto> handleRequestException(MethodArgumentNotValidException exception) {
+        GlobalDefaultExceptionHandler.LOGGER.debug(exception.getMessage());
+
+        return ResponseEntity
+            .status(ApiErrorEnum.BAD_REQUEST.getStatus())
+            .body(new ApiErrorDto(extractMessage(exception.getBindingResult()), ApiErrorEnum.BAD_REQUEST));
+    }
+
+    /**
+     * Manage the AccessDeniedException exception.
+     * Throw when a user try access a resource that he can't.
+     *
+     * @param exception the exception
      * @return The related response entity
      */
     @ExceptionHandler(AccessDeniedException.class)
-    public ResponseEntity<ApiErrorDto> handleAccessDeniedException(AccessDeniedException ex) {
-        LOGGER.debug(ex.getMessage());
+    public ResponseEntity<ApiErrorDto> handleAccessDeniedException(AccessDeniedException exception) {
+        GlobalDefaultExceptionHandler.LOGGER.debug(exception.getMessage());
+
         return ResponseEntity
             .status(ApiErrorEnum.FORBIDDEN.getStatus())
             .body(new ApiErrorDto(ApiErrorEnum.FORBIDDEN));
     }
 
     /**
-     * Throw when a user try to access a resource with a not supported Http Verb
+     * Manage the HttpRequestMethodNotSupportedException exception.
+     * Throw when a user try to access a resource with a not supported Http Verb.
      *
-     * @param ex The exception
+     * @param exception The exception
      * @return The response
      */
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
-    public ResponseEntity<ApiErrorDto> handleRequestException(HttpRequestMethodNotSupportedException ex) {
-        LOGGER.debug(ex.getMessage());
+    public ResponseEntity<ApiErrorDto> handleRequestException(HttpRequestMethodNotSupportedException exception) {
+        GlobalDefaultExceptionHandler.LOGGER.debug(exception.getMessage());
+
         return ResponseEntity
             .status(ApiErrorEnum.BAD_REQUEST.getStatus())
-            .body(new ApiErrorDto(ex.getMessage(), ApiErrorEnum.BAD_REQUEST));
+            .body(new ApiErrorDto(exception.getMessage(), ApiErrorEnum.BAD_REQUEST));
     }
 
     /**
-     * Manage the unknown exception
+     * Manage the default Exception exception.
      *
-     * @param ex the exception
+     * @param exception the exception
      * @return The related response entity
      */
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiErrorDto> handleException(Exception ex) {
-        LOGGER.error(ex.getMessage(), ex);
+    public ResponseEntity<ApiErrorDto> handleException(Exception exception) {
+        GlobalDefaultExceptionHandler.LOGGER.error(exception.getMessage(), exception);
+
         return ResponseEntity
             .status(ApiErrorEnum.INTERNAL_SERVER_ERROR.getStatus())
             .body(new ApiErrorDto(ApiErrorEnum.INTERNAL_SERVER_ERROR));
     }
 
     /**
-     * Exception handler for {@link ConstraintViolationException} raised when
-     * Spring fails to validate a bean in the service layer.
+     * Manage the ConstraintViolationException exception.
+     * Throw when Spring fails to validate a bean in the service layer.
      *
-     * @param ex the exception being raised
+     * @param exception the exception being raised
      * @return the response entity
      */
     @ExceptionHandler({ConstraintViolationException.class})
-    public ResponseEntity<ApiErrorDto> handleRequestException(ConstraintViolationException ex) {
-        LOGGER.debug(ex.getMessage());
+    public ResponseEntity<ApiErrorDto> handleRequestException(ConstraintViolationException exception) {
+        GlobalDefaultExceptionHandler.LOGGER.debug(exception.getMessage());
+
         return ResponseEntity
             .status(ApiErrorEnum.BAD_REQUEST.getStatus())
-            .body(new ApiErrorDto(ex.getMessage(), ApiErrorEnum.BAD_REQUEST));
+            .body(new ApiErrorDto(exception.getMessage(), ApiErrorEnum.BAD_REQUEST));
     }
 
     /**
-     * Exception handler for {@link DataIntegrityViolationException} raised when
-     * Hibernate validators fail to validate a bean in the JPA layer.
+     * Manage the DataIntegrityViolationException exception.
+     * Throw when Hibernate validators fail to validate a bean in the JPA layer.
      *
-     * @param ex the exception being raised
+     * @param exception the exception being raised
      * @return the response entity
      */
     @ExceptionHandler({DataIntegrityViolationException.class})
-    public ResponseEntity<ApiErrorDto> handleRequestException(DataIntegrityViolationException ex) {
-        LOGGER.debug(ex.getMessage());
+    public ResponseEntity<ApiErrorDto> handleRequestException(DataIntegrityViolationException exception) {
+        GlobalDefaultExceptionHandler.LOGGER.debug(exception.getMessage());
+
         return ResponseEntity
             .status(ApiErrorEnum.BAD_REQUEST.getStatus())
-            .body(new ApiErrorDto(Objects.requireNonNull(ex.getRootCause()).getMessage(), ApiErrorEnum.BAD_REQUEST));
+            .body(new ApiErrorDto(Objects.requireNonNull(exception.getRootCause()).getMessage(), ApiErrorEnum.BAD_REQUEST));
     }
-
 
     /**
      * Method used to extract message from MethodArgumentNotValidException exception
@@ -148,14 +161,14 @@ public class GlobalDefaultExceptionHandler {
      */
     private static String extractMessage(BindingResult bindingResult) {
         StringBuilder builder = new StringBuilder();
+
         for (FieldError error : bindingResult.getFieldErrors()) {
             if (builder.length() > 0) {
                 builder.append(", ");
             }
             builder.append(error.getField()).append(' ').append(error.getDefaultMessage());
         }
+
         return builder.toString();
     }
-
-
 }
