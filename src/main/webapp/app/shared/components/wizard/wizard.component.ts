@@ -27,11 +27,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { ValueChangedEvent } from '../../models/frontend/form/value-changed-event';
 import { FormField } from '../../models/frontend/form/form-field';
-import { takeWhile } from 'rxjs/operators';
+import { takeUntil, takeWhile } from 'rxjs/operators';
 import { WidgetConfigurationFormFieldsService } from '../../services/frontend/form-fields/widget-configuration-form-fields/widget-configuration-form-fields.service';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { ProjectWidgetFormStepsService } from '../../services/frontend/form-steps/project-widget-form-steps/project-widget-form-steps.service';
 import { WidgetConfiguration } from '../../models/backend/widget-configuration/widget-configuration';
+import { Subject } from 'rxjs';
 
 /**
  * Generic component used to display wizards
@@ -40,7 +41,7 @@ import { WidgetConfiguration } from '../../models/backend/widget-configuration/w
   template: '',
   styleUrls: ['./wizard.component.scss']
 })
-export class WizardComponent implements OnInit, OnDestroy {
+export class WizardComponent implements OnInit {
   /**
    * Reference on the stepper
    */
@@ -66,11 +67,6 @@ export class WizardComponent implements OnInit, OnDestroy {
    * Angular service used to manage application routes
    */
   protected readonly router: Router;
-
-  /**
-   * Used to know if the component is instantiated
-   */
-  private isAlive = true;
 
   /**
    * The configuration of the header
@@ -129,13 +125,6 @@ export class WizardComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Called when the component is destroyed
-   */
-  public ngOnDestroy(): void {
-    this.isAlive = false;
-  }
-
-  /**
    * Init the buttons of the wizard
    */
   private initWizardButtons(): void {
@@ -177,7 +166,6 @@ export class WizardComponent implements OnInit, OnDestroy {
     if (this.currentStep && this.currentStep.asyncFields) {
       this.currentStep
         .asyncFields((stepperSelectionEvent.selectedStep.stepControl as unknown) as FormGroup, this.currentStep)
-        .pipe(takeWhile(() => this.isAlive))
         .subscribe((formFields: FormField[]) => {
           this.currentStep.fields = formFields;
           this.stepperFormGroup.setControl(this.currentStep.key, this.formService.generateFormGroupForFields(formFields));

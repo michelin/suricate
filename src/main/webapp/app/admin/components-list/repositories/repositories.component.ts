@@ -36,16 +36,14 @@ import { EMPTY, Observable, of } from 'rxjs';
 export class RepositoriesComponent extends ListComponent<Repository> {
   /**
    * Reflect the state of the repository in the form sidenav
-   * @type {Repository}
-   * @private
    */
   private repositoryFormSidenav: Repository;
 
   /**
    * Constructor
    *
-   * @param {HttpRepositoryService} httpRepositoryService Suricate service used to manage the http calls for a repository
-   * @param {Injector} injector Angular Service used to manage the injection of services
+   * @param httpRepositoryService Suricate service used to manage the http calls for a repository
+   * @param injector Angular Service used to manage the injection of services
    */
   constructor(private readonly httpRepositoryService: HttpRepositoryService, protected injector: Injector) {
     super(httpRepositoryService, injector);

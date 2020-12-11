@@ -41,29 +41,21 @@ import { CssService } from '../../../shared/services/frontend/css/css.service';
 export class HomeComponent implements OnInit {
   /**
    * Configuration of the header
-   * @type {HeaderConfiguration}
-   * @protected
    */
   public headerConfiguration: HeaderConfiguration;
 
   /**
    * The list of dashboards
-   * @type {Project[]}
-   * @protected
    */
   public dashboards: Project[];
 
   /**
    * The list of icons
-   * @type {IconEnum}
-   * @protected
    */
   public iconEnum = IconEnum;
 
   /**
    * The list of material icons
-   * @type {MaterialIconRecords}
-   * @protected
    */
   public materialIconRecords = MaterialIconRecords;
 
@@ -95,7 +87,7 @@ export class HomeComponent implements OnInit {
   public ngOnInit(): void {
     this.isLoading = true;
 
-    this.httpProjectService.getAllForCurrentUser().subscribe(dashboards => {
+    this.httpProjectService.getAllForCurrentUser().subscribe((dashboards: Project[]) => {
       this.dashboards = dashboards;
       this.isLoading = false;
     });

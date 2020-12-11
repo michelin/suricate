@@ -41,8 +41,9 @@ import { LibraryService } from '../../../services/library/library.service';
 import { GridItemUtils } from '../../../../shared/utils/grid-item.utils';
 import { WebsocketUpdateEvent } from '../../../../shared/models/frontend/websocket/websocket-update-event';
 import { WebsocketUpdateTypeEnum } from '../../../../shared/enums/websocket-update-type.enum';
-import { Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
 import { WidgetConfiguration } from '../../../../shared/models/backend/widget-configuration/widget-configuration';
+import { takeUntil } from 'rxjs/operators';
 
 /**
  * Display the grid stack widgets
@@ -78,6 +79,11 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   public projectToken: string;
 
   /**
+   * Subject used to unsubscribe all the subscriptions when the component is destroyed
+   */
+  private unsubscribe: Subject<void> = new Subject<void>();
+
+  /**
    * The widget related to this project widget
    */
   public widget: Widget;
@@ -111,11 +117,6 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    * The list of material icons
    */
   public materialIconRecords = MaterialIconRecords;
-
-  /**
-   * The stompJS Subscription for widgets events
-   */
-  private widgetsEventsSubscription: Subscription;
 
   /**
    * Constructor
@@ -163,13 +164,22 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Called when the component is destroyed
+   */
+  public ngOnDestroy(): void {
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
+  }
+
+  /**
    * Subscribe to widget events
    */
   private initWebsocketConnectionForProjectWidget(): void {
     const projectWidgetSubscriptionUrl = `/user/${this.projectToken}-projectWidget-${this.projectWidget.id}/queue/live`;
 
-    this.widgetsEventsSubscription = this.websocketService
+    this.websocketService
       .subscribeToDestination(projectWidgetSubscriptionUrl)
+      .pipe(takeUntil(this.unsubscribe))
       .subscribe((stompMessage: Stomp.Message) => {
         const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 
@@ -288,14 +298,5 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
       message: this.projectWidget.log ? this.projectWidget.log : '',
       isErrorMessage: !!this.projectWidget.log
     });
-  }
-
-  /**
-   * Called when the component is destroyed
-   */
-  public ngOnDestroy(): void {
-    if (this.widgetsEventsSubscription) {
-      this.widgetsEventsSubscription.unsubscribe();
-    }
   }
 }
