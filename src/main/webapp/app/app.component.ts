@@ -16,7 +16,7 @@
 
 import { Component, HostBinding, OnDestroy, OnInit } from '@angular/core';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { takeWhile } from 'rxjs/operators';
+import { takeUntil, takeWhile } from 'rxjs/operators';
 
 import { DialogService } from './shared/services/frontend/dialog/dialog.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
@@ -26,6 +26,7 @@ import { SettingsService } from './core/services/settings.service';
 import { CommunicationDialogConfiguration } from './shared/models/frontend/dialog/communication-dialog-configuration';
 import { CommunicationDialogComponent } from './shared/components/communication-dialog/communication-dialog.component';
 import { AuthenticationService } from './shared/services/frontend/authentication/authentication.service';
+import { from, Subject } from 'rxjs';
 
 /**
  * Main component init the application
@@ -43,9 +44,9 @@ export class AppComponent implements OnInit, OnDestroy {
   public appHtmlClass: string;
 
   /**
-   * Tell if the component is instantiate or not
+   * Subject used to unsubscribe all the subscriptions when the component is destroyed
    */
-  private isAlive = true;
+  private unsubscribe: Subject<void> = new Subject<void>();
 
   /**
    * The constructor
@@ -78,12 +79,20 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Called when the component is destroyed
+   */
+  public ngOnDestroy(): void {
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
+  }
+
+  /**
    * Used to change the current when asked
    */
   private subscribeToThemeChanging(): void {
     this.settingsService
       .getThemeChangingMessages()
-      .pipe(takeWhile(() => this.isAlive))
+      .pipe(takeUntil(this.unsubscribe))
       .subscribe(themeValue => {
         this.overlayContainer.getContainerElement().classList.remove(this.appHtmlClass);
         this.overlayContainer.getContainerElement().classList.add(themeValue);
@@ -97,7 +106,7 @@ export class AppComponent implements OnInit, OnDestroy {
   private subscribeToConfirmationDialog(): void {
     this.dialogService
       .listenConfirmationMessages()
-      .pipe(takeWhile(() => this.isAlive))
+      .pipe(takeUntil(this.unsubscribe))
       .subscribe((confirmationConfiguration: ConfirmationDialogConfiguration) => {
         const dialogConfig: MatDialogConfig = {
           role: 'dialog',
@@ -116,7 +125,7 @@ export class AppComponent implements OnInit, OnDestroy {
   private subscribeToCommunicationDialog(): void {
     this.dialogService
       .listenCommunicationMessages()
-      .pipe(takeWhile(() => this.isAlive))
+      .pipe(takeUntil(this.unsubscribe))
       .subscribe((communicationDialogConfiguration: CommunicationDialogConfiguration) => {
         const dialogConfig: MatDialogConfig = {
           role: 'dialog',
@@ -127,12 +136,5 @@ export class AppComponent implements OnInit, OnDestroy {
 
         this.matDialog.open(CommunicationDialogComponent, dialogConfig);
       });
-  }
-
-  /**
-   * Called when the component is destroyed
-   */
-  public ngOnDestroy(): void {
-    this.isAlive = false;
   }
 }

@@ -20,6 +20,8 @@ import { MatSidenav } from '@angular/material/sidenav';
 
 import { RoutesService } from '../../../shared/services/frontend/route/route.service';
 import { MenuService } from '../../../shared/services/frontend/menu/menu.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 /**
  * Hold the sidenav behavior and the main view
@@ -33,46 +35,49 @@ import { MenuService } from '../../../shared/services/frontend/menu/menu.service
 export class SidenavComponent implements OnInit, OnDestroy {
   /**
    * Reference on the form sidenav
-   * @type {MatSidenav}
-   * @public
    */
   @ViewChild('formSidenav')
   public formSidenav: MatSidenav;
 
   /**
-   * Used to close observable subscriptions
-   * @type {boolean}
-   * @private
+   * Subject used to unsubscribe all the subscriptions when the component is destroyed
    */
-  private isAlive = true;
+  private unsubscribe: Subject<void> = new Subject<void>();
 
   /**
    * Used to hide or display the menu using activated routes
-   * @type {boolean}
-   * @protected
    */
   public shouldHideMenu = true;
 
   /**
    * Constructor
    *
-   * @param {Router} router Angular service used to manage routes
-   * @param {ActivatedRoute} activatedRoute Angular service used to retrieve the component activated route
+   * @param router Angular service used to manage routes
+   * @param activatedRoute Angular service used to retrieve the component activated route
    */
   constructor(private readonly router: Router, private readonly activatedRoute: ActivatedRoute) {}
 
   /**
-   * Init objects
+   * Init method
    */
   public ngOnInit(): void {
     this.subscribeToRouteEvents();
   }
 
   /**
+   * Called when the component is destroyed
+   * All the subscriptions are closed
+   */
+  public ngOnDestroy(): void {
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
+  }
+
+  /**
    * Manage route events
    */
   private subscribeToRouteEvents(): void {
-    this.router.events.subscribe((event: Event) => {
+    this.router.events.pipe(takeUntil(this.unsubscribe)).subscribe((event: Event) => {
       if (event instanceof NavigationEnd) {
         const deeperActivatedRoute = RoutesService.getDeeperActivatedRoute(this.activatedRoute);
 
@@ -93,13 +98,5 @@ export class SidenavComponent implements OnInit, OnDestroy {
    */
   public closeFormSidenav(): void {
     this.formSidenav.close();
-  }
-
-  /**
-   * Called when the component is destroyed
-   * All the subscriptions are closed
-   */
-  public ngOnDestroy(): void {
-    this.isAlive = false;
   }
 }
