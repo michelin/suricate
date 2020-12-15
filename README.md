@@ -21,4 +21,4 @@ Everyone is welcome to contribute. Here's how:
 - Suggest a [feature](https://github.com/suricate-io/suricate/issues/new?template=improvement.md)
 - Develop a feature and create a [pull request](https://github.com/suricate-io/suricate/pulls)
 
-Please read our [Contribution guide](https://github.com/suricate-io/suricate/blob/dev/CONTRIBUTING.md) before contributing 🙏
+Please read our [contribution guide](https://github.com/suricate-io/suricate/blob/dev/CONTRIBUTING.md) before contributing 🙏
