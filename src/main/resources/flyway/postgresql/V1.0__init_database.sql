@@ -243,13 +243,13 @@ ALTER TABLE category                ADD CONSTRAINT fk_category_image_id         
 ALTER TABLE allowed_setting_value   ADD CONSTRAINT fk_allowed_setting_value_setting_id      FOREIGN KEY (setting_id)                REFERENCES setting (id) ;
 
 -- Insert default settings
-INSERT INTO setting(id, constrained, data_type, type, description) VALUES (1 , E'Y' , E'COMBO' , E'TEMPLATE' , E'Template');
-INSERT INTO setting(id, constrained, data_type, type, description) VALUES (2 , E'Y' , E'COMBO' , E'LANGUAGE' , E'Language');
-INSERT INTO allowed_setting_value(id, title, value, is_default, setting_id) VALUES (1 , E'Default' , E'default-theme' , E'Y' , 1);
-INSERT INTO allowed_setting_value(id, title, value, is_default, setting_id) VALUES (2 , E'Dark' , E'dark-theme' , E'N' , 1);
-INSERT INTO allowed_setting_value(id, title, value, is_default, setting_id) VALUES (3 , E'English' , E'en' , E'Y' , 2);
-INSERT INTO allowed_setting_value(id, title, value, is_default, setting_id) VALUES (4 , E'Français' , E'fr' , E'N' , 2);
+INSERT INTO setting(constrained, data_type, type, description) VALUES (E'Y' , E'COMBO' , E'TEMPLATE' , E'Template');
+INSERT INTO setting(constrained, data_type, type, description) VALUES (E'Y' , E'COMBO' , E'LANGUAGE' , E'Language');
+INSERT INTO allowed_setting_value(title, value, is_default, setting_id) VALUES (E'Default' , E'default-theme' , E'Y' , 1);
+INSERT INTO allowed_setting_value(title, value, is_default, setting_id) VALUES (E'Dark' , E'dark-theme' , E'N' , 1);
+INSERT INTO allowed_setting_value(title, value, is_default, setting_id) VALUES (E'English' , E'en' , E'Y' , 2);
+INSERT INTO allowed_setting_value(title, value, is_default, setting_id) VALUES (E'Français' , E'fr' , E'N' , 2);
 
--- Insert deles
-INSERT INTO role(id, description, name) VALUES (1 , E'Administrator Role' , E'ROLE_ADMIN');
-INSERT INTO role(id, description, name) VALUES (2 , E'User role' , E'ROLE_USER');
+-- Insert default roles
+INSERT INTO role(description, name) VALUES (E'Administrator Role' , E'ROLE_ADMIN');
+INSERT INTO role(description, name) VALUES (E'User role' , E'ROLE_USER');
