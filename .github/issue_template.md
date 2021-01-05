@@ -2,10 +2,10 @@
 A clear and concise description of what the issue is.
 
 **Issue type**
-- [] Bug
-- [] Improvment
-- [] Documentation
-- [] Feature
+- [ ] Bug
+- [ ] Improvment
+- [ ] Documentation
+- [ ] Feature
 
 **Expected behavior**
 A clear and concise description of what you expected to happen.
