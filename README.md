@@ -20,7 +20,7 @@ Instructions for setting up and self-hosted the application are located in [the 
 Everyone is welcome to contribute. Here's how:
 
 - Report a [bug](https://github.com/suricate-io/suricate/issues/new?assignees=&labels=bug&template=bug_report.md&title=) 🐛
-- Suggest a [feature](https://github.com/suricate-io/suricate/issues/new?template=feature_request.md) 💡
+- Suggest a [feature](https://github.com/suricate-io/suricate/issues/new?assignees=&labels=enhancement%2C+new+feature&template=feature-request.md&title=) 💡
 - Develop a feature and create a [pull request](https://github.com/suricate-io/suricate/pulls) 💻
 
 Please read our [contribution guide](https://github.com/suricate-io/suricate/blob/dev/CONTRIBUTING.md) before contributing 🙏
