@@ -9,6 +9,8 @@
 
 This repository contains the source code of the Suricate application.
 
+![Suricate dashboard developer environment](readme/dashboard.png)
+
 ## 📚 Wiki
 
 Instructions for setting up and self-hosted the application are located in [the brand-new wiki](https://github.com/suricate-io/suricate/wiki) 🙌 !
@@ -17,8 +19,8 @@ Instructions for setting up and self-hosted the application are located in [the 
 
 Everyone is welcome to contribute. Here's how:
 
-- Report a [bug](https://github.com/suricate-io/suricate/issues/new?template=bug_report.md)
-- Suggest a [feature](https://github.com/suricate-io/suricate/issues/new?template=feature_request.md)
-- Develop a feature and create a [pull request](https://github.com/suricate-io/suricate/pulls)
+- Report a [bug](https://github.com/suricate-io/suricate/issues/new?template=bug_report.md) 🐛
+- Suggest a [feature](https://github.com/suricate-io/suricate/issues/new?template=feature_request.md) 💡
+- Develop a feature and create a [pull request](https://github.com/suricate-io/suricate/pulls) 💻
 
 Please read our [contribution guide](https://github.com/suricate-io/suricate/blob/dev/CONTRIBUTING.md) before contributing 🙏
