@@ -32,4 +32,4 @@ If applicable, add screenshots to help explain your problem.
 **Additional context**
 Add any other context about the problem here.
 
-**NB:** Specify label(s) in right panel to ease the requests organization
+**NB:** Specify label(s) in the right panel to ease the requests organization
