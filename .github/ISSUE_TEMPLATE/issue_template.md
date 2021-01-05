@@ -10,9 +10,7 @@ A clear and concise description of what the issue is.
 **Expected behavior**
 A clear and concise description of what you expected to happen.
 
-___
-
-**For bugs only:**
+### For bugs only
 **Environment (please complete the following information):**
  - OS: [e.g. iOS]
  - Browser [e.g. chrome, safari]
