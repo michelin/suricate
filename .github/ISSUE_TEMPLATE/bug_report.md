@@ -1,5 +1,5 @@
 ---
-name: Bug report
+name: Bug Report
 about: Create a report to help us improve
 
 ---
@@ -8,7 +8,7 @@ about: Create a report to help us improve
 A clear and concise description of what the bug is.
 
 **To Reproduce**
-Steps to reproduce the behavior:
+Steps to reproduce the behavior.
 
 **Expected behavior**
 A clear and concise description of what you expected to happen.
@@ -22,4 +22,4 @@ If applicable, add screenshots to help explain your problem.
 * java version
 * browser and its version
 
-**NB**: Specify label(s) in right panel to ease requests organization
+**NB**: Specify label(s) in right panel to ease requests organization.
