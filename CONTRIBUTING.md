@@ -1,7 +1,5 @@
 ## How to contribute to Suricate
 
-:running: :running: Work in progress... :running: :running:
-
 [How Can I Contribute?](#how-to-contribute)
   * [Reporting Bugs](#reporting-bugs)
   * [Pull Requests](#pull-requests)
