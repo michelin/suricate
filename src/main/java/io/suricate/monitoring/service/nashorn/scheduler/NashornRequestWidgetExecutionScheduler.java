@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.service.scheduler;
+package io.suricate.monitoring.service.nashorn.scheduler;
 
 import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
 import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
@@ -24,9 +24,9 @@ import io.suricate.monitoring.model.entity.project.ProjectWidget;
 import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.service.api.ProjectWidgetService;
 import io.suricate.monitoring.service.api.WidgetService;
-import io.suricate.monitoring.service.nashorn.NashornService;
-import io.suricate.monitoring.service.nashorn.task.NashornResultAsyncTask;
-import io.suricate.monitoring.service.nashorn.task.NashornWidgetExecuteAsyncTask;
+import io.suricate.monitoring.service.nashorn.service.NashornService;
+import io.suricate.monitoring.service.nashorn.task.NashornRequestWidgetExecutionResultAsyncTask;
+import io.suricate.monitoring.service.nashorn.task.NashornRequestWidgetExecutionAsyncTask;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
@@ -47,54 +47,58 @@ import java.util.Map;
 import java.util.concurrent.*;
 
 @Service
-public class NashornWidgetScheduler implements Schedulable {
-
+public class NashornRequestWidgetExecutionScheduler {
     /**
      * Class logger
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger(NashornWidgetScheduler.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(NashornRequestWidgetExecutionScheduler.class.getName());
 
     /**
      * The number of executor
      */
     private static final int EXECUTOR_POOL_SIZE = 60;
-    /**
-     * Start widget process immediately
-     */
-    private static final long SMALL_DELAY = 2L;
 
     /**
-     * Widget start delay inclusive
+     * Very short delay to execute a Nashorn request
+     */
+    private static final long SHORT_DELAY = 2L;
+
+    /**
+     * An inclusive starting delay to execute a Nashorn request
      */
     private static final int START_DELAY_INCLUSIVE = 30;
 
     /**
-     * Widget end delay exclusive
+     * An exclusive ending delay to execute a Nashorn request
      */
     private static final int END_DELAY_EXCLUSIVE = 120;
 
     /**
-     * thread executor service
+     * The Spring boot application context
      */
-    private ScheduledThreadPoolExecutor scheduledExecutorService;
+    private ApplicationContext ctx;
+
+    /**
+     * Thread scheduler scheduling the asynchronous task which will execute a Nashorn request
+     */
+    private ScheduledThreadPoolExecutor scheduleNashornRequestExecutionThread;
     private ScheduledThreadPoolExecutor scheduledExecutorServiceFuture;
 
     /**
      * The project widget service
      */
     private ProjectWidgetService projectWidgetService;
+
     /**
      * The nashorn service
      */
     private NashornService nashornService;
+
     /**
-     * The Spring boot application context
-     */
-    private ApplicationContext ctx;
-    /**
-     * The string encryptor
+     * The string encryptor used to encrypt/decrypt the encrypted/decrypted secret properties
      */
     private StringEncryptor stringEncryptor;
+
     /**
      * Map containing all current scheduled jobs
      */
@@ -109,10 +113,10 @@ public class NashornWidgetScheduler implements Schedulable {
      * @param stringEncryptor            The string encryptor to inject
      */
     @Autowired
-    public NashornWidgetScheduler(final ApplicationContext applicationContext,
-                                  @Lazy final ProjectWidgetService projectWidgetService,
-                                  final NashornService nashornService,
-                                  @Qualifier("jasyptStringEncryptor") final StringEncryptor stringEncryptor) {
+    public NashornRequestWidgetExecutionScheduler(final ApplicationContext applicationContext,
+                                                  @Lazy final ProjectWidgetService projectWidgetService,
+                                                  final NashornService nashornService,
+                                                  @Qualifier("jasyptStringEncryptor") final StringEncryptor stringEncryptor) {
         this.ctx = applicationContext;
         this.projectWidgetService = projectWidgetService;
         this.nashornService = nashornService;
@@ -136,93 +140,119 @@ public class NashornWidgetScheduler implements Schedulable {
     }
 
     /**
-     * Method used to init scheduler
+     * Init the Nashorn scheduler
      */
     @Transactional
-    public void initScheduler() {
-        LOGGER.info("Init widget scheduler");
+    public void init() {
+        LOGGER.debug("Initializing the Nashorn scheduler");
 
-        if (scheduledExecutorService != null) {
-            scheduledExecutorService.shutdownNow();
+        if (scheduleNashornRequestExecutionThread != null) {
+            scheduleNashornRequestExecutionThread.shutdownNow();
         }
-        scheduledExecutorService = (ScheduledThreadPoolExecutor) Executors.newScheduledThreadPool(EXECUTOR_POOL_SIZE);
-        scheduledExecutorService.setRemoveOnCancelPolicy(true);
+
+        scheduleNashornRequestExecutionThread = (ScheduledThreadPoolExecutor) Executors.newScheduledThreadPool(EXECUTOR_POOL_SIZE);
+        scheduleNashornRequestExecutionThread.setRemoveOnCancelPolicy(true);
 
         if (scheduledExecutorServiceFuture != null) {
             scheduledExecutorServiceFuture.shutdownNow();
         }
+
         scheduledExecutorServiceFuture = (ScheduledThreadPoolExecutor) Executors.newScheduledThreadPool(EXECUTOR_POOL_SIZE);
         scheduledExecutorServiceFuture.setRemoveOnCancelPolicy(true);
-        // clear jobs
+
         jobs.clear();
 
         projectWidgetService.resetProjectWidgetsState();
     }
 
     /**
-     * Schedule a list of nashorn request
+     * Schedule a list of Nashorn requests
      *
      * @param nashornRequests The list of nashorn requests to schedule
      * @param start           If the scheduling should start now
      * @param init            If it's an initialisation of the scheduling
      */
-    public void scheduleList(final List<NashornRequest> nashornRequests, boolean start, boolean init) {
+    public void scheduleNashornRequests(final List<NashornRequest> nashornRequests, boolean start, boolean init) {
         try {
-            nashornRequests.forEach(nashornRequest -> schedule(nashornRequest, start, init));
-
+            nashornRequests
+                    .forEach(nashornRequest -> schedule(nashornRequest, start, init));
         } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
+            LOGGER.error("An error has occurred when scheduling a Nashorn request for a new project subscription", e);
         }
     }
 
     /**
-     * Method used to schedule widget update
+     * Method used to schedule the Nashorn request updating the associated widget.
      *
-     * @param nashornRequest nashorn request
-     * @param start          force widget update to start now
-     * @param init           force widget to update randomly between START_DELAY_INCLUSIVE and END_DELAY_EXCLUSIVE
+     * Checks if the given Nashorn request can be executed and set the widget in a pause state
+     * if it cannot be.
+     *
+     * If the widget was in a pause state from a previous execution, then set the widget in a running
+     * state before executing the request.
+     *
+     * Compute the Nashorn request execution delay
+     *
+     * Create an asynchronous task which will execute the Nashorn request and execute the widget. Schedule
+     * this task according to the computed delay.
+     *
+     * Create another ansynchronous task which will
+     *
+     * @param nashornRequest The Nashorn request
+     * @param start          Force the Nashorn request to start now
+     * @param init           Force the Nashorn request to start randomly between START_DELAY_INCLUSIVE and END_DELAY_EXCLUSIVE
      */
     public void schedule(final NashornRequest nashornRequest, boolean start, boolean init) {
-        if (nashornRequest == null) {
+        if (nashornRequest == null || scheduleNashornRequestExecutionThread == null || scheduledExecutorServiceFuture == null) {
             return;
         }
+
+        LOGGER.debug("Scheduling the Nashorn request of the widget instance {}", nashornRequest.getProjectWidgetId());
+
         // Get the beans inside schedule
         ProjectWidgetService projectWidgetServiceInjected = ctx.getBean(ProjectWidgetService.class);
         WidgetService widgetService = ctx.getBean(WidgetService.class);
 
         if (!nashornService.isNashornRequestExecutable(nashornRequest)) {
+            LOGGER.debug("The Nashorn request of the widget instance {} is not valid. Stopping the widget", nashornRequest.getProjectWidgetId());
             projectWidgetServiceInjected.updateState(WidgetState.STOPPED, nashornRequest.getProjectWidgetId(), new Date());
             return;
         }
 
-        // Update the status if necessary
         if (WidgetState.STOPPED == nashornRequest.getWidgetState()) {
-            LOGGER.debug("Scheduled widget instance:{}", nashornRequest.getProjectWidgetId());
+            LOGGER.debug("The widget instance {} of the Nashorn request was stopped. Setting the widget instance to running", nashornRequest.getProjectWidgetId());
             projectWidgetServiceInjected.updateState(WidgetState.RUNNING, nashornRequest.getProjectWidgetId(), new Date());
         }
 
-        Long delay = nashornRequest.getDelay();
+        Long nashornRequestExecutionDelay = nashornRequest.getDelay();
         if (start) {
-            delay = RandomUtils.nextLong(START_DELAY_INCLUSIVE, END_DELAY_EXCLUSIVE);
+            nashornRequestExecutionDelay = RandomUtils.nextLong(START_DELAY_INCLUSIVE, END_DELAY_EXCLUSIVE);
         } else if (init) {
-            delay = SMALL_DELAY;
+            nashornRequestExecutionDelay = SHORT_DELAY;
         }
 
-        ProjectWidget projectWidget = projectWidgetServiceInjected.getOne(nashornRequest.getProjectWidgetId()).orElse(new ProjectWidget());
-        List<WidgetVariableResponse> widgetVariableResponses = widgetService.getWidgetVariables(projectWidget.getWidget());
+        ProjectWidget projectWidget = projectWidgetServiceInjected
+                .getOne(nashornRequest.getProjectWidgetId()).orElse(new ProjectWidget());
 
-        // Create scheduled future task
-        ScheduledFuture<NashornResponse> future = scheduledExecutorService.schedule(new NashornWidgetExecuteAsyncTask(nashornRequest, stringEncryptor, widgetVariableResponses), delay, TimeUnit.SECONDS);
+        List<WidgetVariableResponse> widgetParameters = widgetService
+                .getWidgetParametersForNashorn(projectWidget.getWidget());
 
-        // Create result future task
-        NashornResultAsyncTask nashornResultAsyncTask = ctx.getBean(NashornResultAsyncTask.class, future, nashornRequest, this);
-        ScheduledFuture<Void> futureResult = scheduledExecutorServiceFuture.schedule(nashornResultAsyncTask, delay, TimeUnit.SECONDS);
+        LOGGER.debug("The Nashorn request of the widget instance {} will start in {} seconds", nashornRequest.getProjectWidgetId(), nashornRequestExecutionDelay);
+
+        ScheduledFuture<NashornResponse> scheduledNashornRequestTask = scheduleNashornRequestExecutionThread
+                .schedule(new NashornRequestWidgetExecutionAsyncTask(nashornRequest, stringEncryptor, widgetParameters),
+                        nashornRequestExecutionDelay,
+                        TimeUnit.SECONDS);
+
+        ScheduledFuture<Void> scheduledNashornResultTask = scheduledExecutorServiceFuture
+                .schedule(new NashornRequestWidgetExecutionResultAsyncTask(scheduledNashornRequestTask, nashornRequest, this),
+                nashornRequestExecutionDelay,
+                TimeUnit.SECONDS);
 
         // Update job
         jobs.put(nashornRequest.getProjectWidgetId(),
             new ImmutablePair<>(
-                new WeakReference<>(future),
-                new WeakReference<>(futureResult)
+                new WeakReference<>(scheduledNashornRequestTask),
+                new WeakReference<>(scheduledNashornResultTask)
             ));
 
     }

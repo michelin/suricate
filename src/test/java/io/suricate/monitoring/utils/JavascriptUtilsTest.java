@@ -32,13 +32,13 @@ public class JavascriptUtilsTest {
 
     @Test
     public void testInjectInterruptLoop() {
-        Assert.assertEquals("function(){Packages." + Methods.class.getName() + ".checkInterupted();};", JavascriptUtils.injectInterrupt("function(){};"));
-        Assert.assertEquals("function(){Packages." + Methods.class.getName() + ".checkInterupted();\nwhile(true){Packages." + Methods.class.getName() + ".checkInterupted();\n}\n};", JavascriptUtils.injectInterrupt("function()\n{\nwhile(true)\n{\n}\n};"));
+        Assert.assertEquals("function(){Packages." + Methods.class.getName() + ".checkInterrupted();};", JavascriptUtils.injectInterrupt("function(){};"));
+        Assert.assertEquals("function(){Packages." + Methods.class.getName() + ".checkInterrupted();\nwhile(true){Packages." + Methods.class.getName() + ".checkInterrupted();\n}\n};", JavascriptUtils.injectInterrupt("function()\n{\nwhile(true)\n{\n}\n};"));
     }
 
     @Test
     public void testprepare() {
-        Assert.assertEquals("Packages." + Methods.class.getName() + ".checkInterupted()", JavascriptUtils.prepare("Packages.checkInterupted()"));
+        Assert.assertEquals("Packages." + Methods.class.getName() + ".checkInterrupted()", JavascriptUtils.prepare("Packages.checkInterrupted()"));
     }
 
     @Test

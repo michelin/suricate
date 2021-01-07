@@ -23,6 +23,7 @@ public class JavaClassFilter implements ClassFilter {
 
     /**
      * Method used to authorize access to some Java class
+     *
      * @param s class name to check
      * @return true is the class name is authorized, false otherwise
      */

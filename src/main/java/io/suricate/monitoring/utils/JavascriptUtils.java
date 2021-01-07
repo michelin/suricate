@@ -27,21 +27,31 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class JavascriptUtils {
+
+    /**
+     * "Packages." constant used in Javascript to call REST API
+     */
     private static final String PACKAGES_LITERAL = "Packages.";
+
     /**
      * Regex to find loop in script
      */
     private static final String REGEX_LOOP = "\\)\\s*\\{";
 
     /**
-     * This variable is used to store previous widget data to Nashorn job
+     * Name of the variable used to store the widget data from previous execution
      */
-    public static final String INTERNAL_PREVIOUS_VARIABLE = "SURI_PREVIOUS";
+    public static final String PREVIOUS_DATA_VARIABLE = "SURI_PREVIOUS";
 
     /**
-     * This variable is used to store instance id widget
+     * Name of the variable used to store the widget instance ID
      */
-    public static final String INSTANCE_ID_VARIABLE = "SURI_INSTANCE_ID";
+    public static final String WIDGET_INSTANCE_ID_VARIABLE = "SURI_INSTANCE_ID";
+
+    /**
+     * Full path to the checkInterrupted Java method
+     */
+    private static final String INJECT_INTERRUPT_STRING = JavascriptUtils.PACKAGES_LITERAL + Methods.class.getName() + ".checkInterrupted();";
 
     /**
      * This variable is used to add optional variable
@@ -58,12 +68,6 @@ public final class JavascriptUtils {
      */
     private static final Pattern REGEX_GLOBAL_VARIABLE = Pattern.compile("(WIDGET_CONFIG_[A-Z0-9_]+)");
 
-
-    /**
-     * String to inject in script
-     */
-    private static final String INJECT_STRING = JavascriptUtils.PACKAGES_LITERAL + Methods.class.getName() + ".checkInterupted();";
-
     private static final int VARIABLE_NAME_INDEX = 0;
     private static final int VARIABLE_TITLE_INDEX = VARIABLE_NAME_INDEX + 1;
     private static final int VARIABLE_TYPE_INDEX = VARIABLE_TITLE_INDEX + 1;
@@ -76,25 +80,26 @@ public final class JavascriptUtils {
     private static final int KEY_VALUE_TAB_LENGTH = 2;
 
     /**
+     * Method used to prepare Nashorn script and update path
+     *
+     * @param data javascript script
+     * @return the script with all class path updated
+     */
+    public static String prepare(String data) {
+        return injectInterrupt(
+                StringUtils.trimToEmpty(data).replace(
+                        JavascriptUtils.PACKAGES_LITERAL, JavascriptUtils.PACKAGES_LITERAL + Methods.class.getName() + "."));
+    }
+
+    /**
      * Method used to inject interruption in loop for javascript code
      *
      * @param data javascript code
      * @return the javascript code with interruption on it
      */
     public static String injectInterrupt(String data) {
-        return StringUtils.trimToEmpty(data).replaceAll(REGEX_LOOP, "){" + INJECT_STRING);
+        return StringUtils.trimToEmpty(data).replaceAll(REGEX_LOOP, "){" + INJECT_INTERRUPT_STRING);
     }
-
-    /**
-     * Method used to prepare nashorn script and update path
-     *
-     * @param data javascript script
-     * @return the script with all class path updated
-     */
-    public static String prepare(String data) {
-        return injectInterrupt(StringUtils.trimToEmpty(data).replace(JavascriptUtils.PACKAGES_LITERAL, JavascriptUtils.PACKAGES_LITERAL + Methods.class.getName() + "."));
-    }
-
 
     /**
      * Method used to extract variable from javascript. Some documentation can be added to the variable like:
@@ -103,6 +108,7 @@ public final class JavascriptUtils {
      * @param javascript string content representing javascript
      * @return list of object containing (variable name, description and type)
      */
+    @Deprecated
     public static List<WidgetVariableResponse> extractVariables(String javascript) {
         List<WidgetVariableResponse> ret = new ArrayList<>();
 
@@ -121,8 +127,8 @@ public final class JavascriptUtils {
                 widgetVariableResponse.setName(matcher.group(2));
                 widgetVariableResponse.setRequired(true);
             }
-            if (!INTERNAL_PREVIOUS_VARIABLE.equals(widgetVariableResponse.getName())
-                && !INSTANCE_ID_VARIABLE.equals(widgetVariableResponse.getName())
+            if (!PREVIOUS_DATA_VARIABLE.equals(widgetVariableResponse.getName())
+                && !WIDGET_INSTANCE_ID_VARIABLE.equals(widgetVariableResponse.getName())
                 && (!map.containsKey(widgetVariableResponse.getName()) || StringUtils.isNotBlank(widgetVariableResponse.getDescription()))) {
                 map.put(widgetVariableResponse.getName(), widgetVariableResponse);
             }

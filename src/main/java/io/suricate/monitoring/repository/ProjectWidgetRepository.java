@@ -37,7 +37,7 @@ public interface ProjectWidgetRepository extends JpaRepository<ProjectWidget, Lo
      */
     @Modifying
     @Query("UPDATE ProjectWidget " +
-        "SET    lastSuccessDate = null, " +
+        "SET lastSuccessDate = null, " +
         "log = null," +
         "state = 'STOPPED'")
     void resetProjectWidgetsState();
@@ -61,7 +61,7 @@ public interface ProjectWidgetRepository extends JpaRepository<ProjectWidget, Lo
     int updateRowAndColAndWidthAndHeightById(@Param("row") int row, @Param("col") int col, @Param("width") int width, @Param("height") int height, @Param("id") Long id);
 
     /**
-     * Update the state of a project widget when nashorn execution end by a success
+     * Update the state of a widget instance when Nashorn execution ends successfully
      *
      * @param date        The last execution date
      * @param log         The log of nashorn execution
@@ -78,10 +78,14 @@ public interface ProjectWidgetRepository extends JpaRepository<ProjectWidget, Lo
         "log = :log, " +
         "data = :data " +
         "WHERE id = :id")
-    int updateSuccessExecution(@Param("lastExecutionDate") Date date, @Param("log") String log, @Param("data") String data, @Param("id") Long id, @Param("state") WidgetState widgetState);
+    int updateSuccessExecution(@Param("lastExecutionDate") Date executionDate,
+                               @Param("log") String log,
+                               @Param("data") String data,
+                               @Param("id") Long id,
+                               @Param("state") WidgetState widgetState);
 
     /**
-     * Update the state of a project widget when nashorn execution end with errors
+     * Update the state of a project widget when nashorn execution ends with errors
      *
      * @param date        The last execution date
      * @param log         The logs of the execution
@@ -95,7 +99,7 @@ public interface ProjectWidgetRepository extends JpaRepository<ProjectWidget, Lo
         "state = :state, " +
         "log = :log " +
         "WHERE id = :id")
-    int updateExecutionLog(@Param("lastExecutionDate") Date date, @Param("log") String log, @Param("id") Long id, @Param("state") WidgetState widgetState);
+    int updateLastExecutionDateAndStateAndLog(@Param("lastExecutionDate") Date date, @Param("log") String log, @Param("id") Long id, @Param("state") WidgetState widgetState);
 
     /**
      * Method used to delete a widget instance by it's id and the project id

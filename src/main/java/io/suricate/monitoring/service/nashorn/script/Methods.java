@@ -38,6 +38,11 @@ public final class Methods {
     private static OkHttpClient client = OkHttpClientUtils.getUnsafeOkHttpClient();
 
     /**
+     * private constructor
+     */
+    private Methods() { }
+
+    /**
      * Method used to call a webservice
      *
      * @param url          the url to call
@@ -168,7 +173,7 @@ public final class Methods {
      * Method used to isValid is a thread is interrupted
      * @throws InterruptedException an exception if the thread is interrupted
      */
-    public static void checkInterupted() throws InterruptedException {
+    public static void checkInterrupted() throws InterruptedException {
         if (Thread.currentThread().isInterrupted()){
             throw new InterruptedException("Script Interrupted");
         }
@@ -209,11 +214,5 @@ public final class Methods {
      */
     public static void throwTimeout() throws TimeoutException {
         throw new TimeoutException("Timeout");
-    }
-
-    /**
-     * private constructor
-     */
-    private Methods() {
     }
 }

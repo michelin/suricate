@@ -46,21 +46,10 @@ import java.util.stream.Collectors;
  */
 @Service
 public class WidgetService {
-
     /**
      * Class logger
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(WidgetService.class);
-
-    /**
-     * Widget repository
-     */
-    private final WidgetRepository widgetRepository;
-
-    /**
-     * Category repository
-     */
-    private final CategoryService categoryService;
 
     /**
      * Configuration Service
@@ -78,6 +67,16 @@ public class WidgetService {
     private final AssetService assetService;
 
     /**
+     * Widget repository
+     */
+    private final WidgetRepository widgetRepository;
+
+    /**
+     * Category repository
+     */
+    private final CategoryService categoryService;
+
+    /**
      * Constructor
      *
      * @param widgetRepository           The widget repository
@@ -92,7 +91,6 @@ public class WidgetService {
                          final WidgetConfigurationService widgetConfigurationService,
                          final CacheService cacheService,
                          final AssetService assetService) {
-
         this.widgetRepository = widgetRepository;
         this.categoryService = categoryService;
         this.widgetConfigurationService = widgetConfigurationService;
@@ -139,12 +137,12 @@ public class WidgetService {
     }
 
     /**
-     * Get the global widget params for a widget
+     * Get the parameters of the category linked with the widget
      *
      * @param widget The widget
      * @return The related global configuration
      */
-    public List<WidgetParam> getGlobalWidgetParamsFromConfiguration(final Widget widget) {
+    public List<WidgetParam> getCategoryParametersFromWidget(final Widget widget) {
         Optional<List<WidgetConfiguration>> configurationsOptional = widgetConfigurationService.getConfigurationForCategory(widget.getCategory().getId());
 
         return configurationsOptional
@@ -153,47 +151,47 @@ public class WidgetService {
     }
 
     /**
-     * Return the full list of params for a widget including
-     * - Params directly directed to the widget
-     * - Global configurations related to the category of this widget
+     * Return the full list of parameters of a widget including the parameters of the widget
+     * and the global parameters of the category
      *
      * @param widget The widget
-     * @return The full list of params
+     * @return A list of parameters
      */
-    public List<WidgetParam> getFullListOfParams(final Widget widget) {
-        List<WidgetParam> widgetParams = new ArrayList<>(widget.getWidgetParams());
-        widgetParams.addAll(getGlobalWidgetParamsFromConfiguration(widget));
+    public List<WidgetParam> getWidgetParametersWithCategoryParameters(final Widget widget) {
+        List<WidgetParam> widgetParameters = new ArrayList<>(widget.getWidgetParams());
+        widgetParameters.addAll(getCategoryParametersFromWidget(widget));
 
-        return widgetParams;
+        return widgetParameters;
     }
 
     /**
-     * Get the list of the variables for a widget
+     * Get the list of widget parameters
      *
      * @param widget The widget
-     * @return The list of variables related
+     * @return The list of widget parameters
      */
-    public List<WidgetVariableResponse> getWidgetVariables(final Widget widget) {
+    public List<WidgetVariableResponse> getWidgetParametersForNashorn(final Widget widget) {
         List<WidgetVariableResponse> widgetVariableResponses = new ArrayList<>();
 
-        List<WidgetParam> widgetParams = getFullListOfParams(widget);
+        List<WidgetParam> widgetParameters = getWidgetParametersWithCategoryParameters(widget);
 
-        for (WidgetParam widgetParam : widgetParams) {
+        for (WidgetParam widgetParameter : widgetParameters) {
             WidgetVariableResponse widgetVariableResponse = new WidgetVariableResponse();
-            widgetVariableResponse.setName(widgetParam.getName());
-            widgetVariableResponse.setDescription(widgetParam.getDescription());
-            widgetVariableResponse.setType(widgetParam.getType());
-            widgetVariableResponse.setDefaultValue(widgetParam.getDefaultValue());
+            widgetVariableResponse.setName(widgetParameter.getName());
+            widgetVariableResponse.setDescription(widgetParameter.getDescription());
+            widgetVariableResponse.setType(widgetParameter.getType());
+            widgetVariableResponse.setDefaultValue(widgetParameter.getDefaultValue());
 
             if (widgetVariableResponse.getType() != null) {
                 switch (widgetVariableResponse.getType()) {
                     case COMBO:
+
                     case MULTIPLE:
-                        widgetVariableResponse.setValues(getWidgetParamValuesAsMap(widgetParam.getPossibleValuesMap()));
+                        widgetVariableResponse.setValues(getWidgetParamValuesAsMap(widgetParameter.getPossibleValuesMap()));
                         break;
 
                     default:
-                        widgetVariableResponse.setData(StringUtils.trimToNull(widgetParam.getDefaultValue()));
+                        widgetVariableResponse.setData(StringUtils.trimToNull(widgetParameter.getDefaultValue()));
                         break;
                 }
             }

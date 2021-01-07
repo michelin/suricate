@@ -34,7 +34,7 @@ public class NashornWidgetExecuteAsyncTaskTest {
         request.setScript("fdsqdfs");
 
         List<WidgetVariableResponse> widgetVariableResponses = new ArrayList<>();
-        NashornWidgetExecuteAsyncTask widgetJob = new NashornWidgetExecuteAsyncTask(request, null, widgetVariableResponses);
+        NashornRequestWidgetExecutionAsyncTask widgetJob = new NashornRequestWidgetExecutionAsyncTask(request, null, widgetVariableResponses);
         NashornResponse response = widgetJob.call();
 
         Assert.assertTrue(response.isFatal());
@@ -50,7 +50,7 @@ public class NashornWidgetExecuteAsyncTaskTest {
         request.setScript("function test() {}");
 
         List<WidgetVariableResponse> widgetVariableResponses = new ArrayList<>();
-        NashornWidgetExecuteAsyncTask widgetJob = new NashornWidgetExecuteAsyncTask(request, null, widgetVariableResponses);
+        NashornRequestWidgetExecutionAsyncTask widgetJob = new NashornRequestWidgetExecutionAsyncTask(request, null, widgetVariableResponses);
         NashornResponse response = widgetJob.call();
 
         Assert.assertTrue(response.isFatal());
@@ -67,7 +67,7 @@ public class NashornWidgetExecuteAsyncTaskTest {
         request.setScript("function run () {}");
 
         List<WidgetVariableResponse> widgetVariableResponses = new ArrayList<>();
-        NashornWidgetExecuteAsyncTask widgetJob = new NashornWidgetExecuteAsyncTask(request, null, widgetVariableResponses);
+        NashornRequestWidgetExecutionAsyncTask widgetJob = new NashornRequestWidgetExecutionAsyncTask(request, null, widgetVariableResponses);
         NashornResponse response = widgetJob.call();
 
 
@@ -100,7 +100,7 @@ public class NashornWidgetExecuteAsyncTaskTest {
         request.setScript("function run () { return '{}'}");
 
         List<WidgetVariableResponse> widgetVariableResponses = new ArrayList<>();
-        NashornWidgetExecuteAsyncTask widgetJob = new NashornWidgetExecuteAsyncTask(request, null, widgetVariableResponses);
+        NashornRequestWidgetExecutionAsyncTask widgetJob = new NashornRequestWidgetExecutionAsyncTask(request, null, widgetVariableResponses);
         NashornResponse response = widgetJob.call();
 
 
@@ -122,7 +122,7 @@ public class NashornWidgetExecuteAsyncTaskTest {
         request.setScript("function run () { print('ok'); return '{}'}");
 
         List<WidgetVariableResponse> widgetVariableResponses = new ArrayList<>();
-        NashornWidgetExecuteAsyncTask widgetJob = new NashornWidgetExecuteAsyncTask(request, null, widgetVariableResponses);
+        NashornRequestWidgetExecutionAsyncTask widgetJob = new NashornRequestWidgetExecutionAsyncTask(request, null, widgetVariableResponses);
         NashornResponse response = widgetJob.call();
 
 
@@ -144,7 +144,7 @@ public class NashornWidgetExecuteAsyncTaskTest {
         request.setScript("function run () { var file = Java.type('java.io.File'); file.listRoots(); return '{}'}");
 
         List<WidgetVariableResponse> widgetVariableResponses = new ArrayList<>();
-        NashornWidgetExecuteAsyncTask widgetJob = new NashornWidgetExecuteAsyncTask(request, null, widgetVariableResponses);
+        NashornRequestWidgetExecutionAsyncTask widgetJob = new NashornRequestWidgetExecutionAsyncTask(request, null, widgetVariableResponses);
         NashornResponse response = widgetJob.call();
 
         Assert.assertNotNull(response.getError());
@@ -165,7 +165,7 @@ public class NashornWidgetExecuteAsyncTaskTest {
         request.setScript("function run () { print(Packages.btoa('test')); return '{}'}");
 
         List<WidgetVariableResponse> widgetVariableResponses = new ArrayList<>();
-        NashornWidgetExecuteAsyncTask widgetJob = new NashornWidgetExecuteAsyncTask(request, null, widgetVariableResponses);
+        NashornRequestWidgetExecutionAsyncTask widgetJob = new NashornRequestWidgetExecutionAsyncTask(request, null, widgetVariableResponses);
         NashornResponse response = widgetJob.call();
 
         Assert.assertNull(response.getError());
@@ -186,7 +186,7 @@ public class NashornWidgetExecuteAsyncTaskTest {
         request.setScript("function run () { Packages.call(\"https://localhost/rzer/\", null, null, null); return '{}'}");
 
         List<WidgetVariableResponse> widgetVariableResponses = new ArrayList<>();
-        NashornWidgetExecuteAsyncTask widgetJob = new NashornWidgetExecuteAsyncTask(request, null, widgetVariableResponses);
+        NashornRequestWidgetExecutionAsyncTask widgetJob = new NashornRequestWidgetExecutionAsyncTask(request, null, widgetVariableResponses);
         NashornResponse response = widgetJob.call();
 
         Assert.assertNotNull(response.getError());
@@ -207,7 +207,7 @@ public class NashornWidgetExecuteAsyncTaskTest {
         request.setScript("function run () { Packages.throwError(); return '{}'}");
 
         List<WidgetVariableResponse> widgetVariableResponses = new ArrayList<>();
-        NashornWidgetExecuteAsyncTask widgetJob = new NashornWidgetExecuteAsyncTask(request, null, widgetVariableResponses);
+        NashornRequestWidgetExecutionAsyncTask widgetJob = new NashornRequestWidgetExecutionAsyncTask(request, null, widgetVariableResponses);
         NashornResponse response = widgetJob.call();
 
         Assert.assertNotNull(response.getError());
@@ -240,7 +240,7 @@ public class NashornWidgetExecuteAsyncTaskTest {
         request.setScript("function run () { Packages.throwTimeout(); return '{}'}");
 
         List<WidgetVariableResponse> widgetVariableResponses = new ArrayList<>();
-        NashornWidgetExecuteAsyncTask widgetJob = new NashornWidgetExecuteAsyncTask(request, null, widgetVariableResponses);
+        NashornRequestWidgetExecutionAsyncTask widgetJob = new NashornRequestWidgetExecutionAsyncTask(request, null, widgetVariableResponses);
         NashornResponse response = widgetJob.call();
 
         Assert.assertNotNull(response.getError());
@@ -292,7 +292,7 @@ public class NashornWidgetExecuteAsyncTaskTest {
         request.setProperties("SURI_SECRET=" + encryptor.encrypt(encryptedString));
         request.setScript("function run () { print(SURI_SECRET); return '{}'}");
 
-        NashornWidgetExecuteAsyncTask widgetJob = new NashornWidgetExecuteAsyncTask(request, encryptor, widgetVariableResponses);
+        NashornRequestWidgetExecutionAsyncTask widgetJob = new NashornRequestWidgetExecutionAsyncTask(request, encryptor, widgetVariableResponses);
         NashornResponse response = widgetJob.call();
 
         Assert.assertNull(response.getError());
@@ -330,7 +330,7 @@ public class NashornWidgetExecuteAsyncTaskTest {
         request.setProperties("SURI_SECRET=A054578BC");
         request.setScript("function run () { print(SURI_SECRET); return '{}'}");
 
-        NashornWidgetExecuteAsyncTask widgetJob = new NashornWidgetExecuteAsyncTask(request, encryptor, widgetVariableResponses);
+        NashornRequestWidgetExecutionAsyncTask widgetJob = new NashornRequestWidgetExecutionAsyncTask(request, encryptor, widgetVariableResponses);
         NashornResponse response = widgetJob.call();
 
         Assert.assertNotNull(response.getError());
@@ -343,7 +343,7 @@ public class NashornWidgetExecuteAsyncTaskTest {
         NashornRequest nashornRequest = new NashornRequest();
         List<WidgetVariableResponse> widgetVariableResponses = new ArrayList<>();
 
-        NashornWidgetExecuteAsyncTask widgetJob = new NashornWidgetExecuteAsyncTask(nashornRequest, null, widgetVariableResponses);
+        NashornRequestWidgetExecutionAsyncTask widgetJob = new NashornRequestWidgetExecutionAsyncTask(nashornRequest, null, widgetVariableResponses);
         nashornRequest.setAlreadySuccess(false);
 
         Assert.assertTrue(widgetJob.isFatalError(new Exception(""), new Exception("")));
@@ -366,7 +366,7 @@ public class NashornWidgetExecuteAsyncTaskTest {
     public void testPrettiFy() throws Exception {
         NashornRequest nashornRequest = new NashornRequest();
         List<WidgetVariableResponse> widgetVariableResponses = new ArrayList<>();
-        NashornWidgetExecuteAsyncTask widgetJob = new NashornWidgetExecuteAsyncTask(nashornRequest, null, widgetVariableResponses);
+        NashornRequestWidgetExecutionAsyncTask widgetJob = new NashornRequestWidgetExecutionAsyncTask(nashornRequest, null, widgetVariableResponses);
         nashornRequest.setAlreadySuccess(false);
 
         Assert.assertEquals("", widgetJob.prettify("ExecutionException: java.lang.FatalError:"));

@@ -24,7 +24,7 @@ import io.suricate.monitoring.model.enums.RepositoryTypeEnum;
 import io.suricate.monitoring.service.api.LibraryService;
 import io.suricate.monitoring.service.api.RepositoryService;
 import io.suricate.monitoring.service.api.WidgetService;
-import io.suricate.monitoring.service.scheduler.NashornWidgetScheduler;
+import io.suricate.monitoring.service.nashorn.scheduler.NashornRequestWidgetExecutionScheduler;
 import io.suricate.monitoring.service.websocket.DashboardWebSocketService;
 import io.suricate.monitoring.utils.WidgetUtils;
 import org.apache.commons.io.FileUtils;
@@ -89,7 +89,7 @@ public class GitService {
     /**
      * The nashorn widget executor
      */
-    private final NashornWidgetScheduler nashornWidgetScheduler;
+    private final NashornRequestWidgetExecutionScheduler nashornWidgetScheduler;
 
     /**
      * Contructor using fields
@@ -106,7 +106,7 @@ public class GitService {
                       final LibraryService libraryService,
                       final RepositoryService repositoryService,
                       final DashboardWebSocketService dashboardWebSocketService,
-                      final NashornWidgetScheduler nashornWidgetScheduler,
+                      final NashornRequestWidgetExecutionScheduler nashornWidgetScheduler,
                       final ApplicationProperties applicationProperties) {
         this.widgetService = widgetService;
         this.libraryService = libraryService;
@@ -189,9 +189,8 @@ public class GitService {
 
         } catch (Exception ioe) {
             LOGGER.error(ioe.getMessage(), ioe);
-
         } finally {
-            nashornWidgetScheduler.initScheduler();
+            nashornWidgetScheduler.init();
             dashboardWebSocketService.reloadAllConnectedDashboard();
         }
 

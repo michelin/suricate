@@ -26,8 +26,8 @@ import io.suricate.monitoring.model.entity.project.Project;
 import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.service.api.ProjectService;
 import io.suricate.monitoring.service.mapper.ProjectMapper;
-import io.suricate.monitoring.service.nashorn.NashornService;
-import io.suricate.monitoring.service.scheduler.NashornWidgetScheduler;
+import io.suricate.monitoring.service.nashorn.service.NashornService;
+import io.suricate.monitoring.service.nashorn.scheduler.NashornRequestWidgetExecutionScheduler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,7 +74,7 @@ public class DashboardWebSocketService {
     /**
      * The nashorn widget Scheduler
      */
-    private final NashornWidgetScheduler nashornWidgetScheduler;
+    private final NashornRequestWidgetExecutionScheduler nashornWidgetScheduler;
 
     /**
      * MultiMap containing the projectToken as Key and the list of the WebsocketClient connected as value
@@ -100,7 +100,7 @@ public class DashboardWebSocketService {
                                      @Lazy final ProjectService projectService,
                                      @Lazy final ProjectMapper projectMapper,
                                      final NashornService nashornService,
-                                     final NashornWidgetScheduler nashornWidgetScheduler) {
+                                     final NashornRequestWidgetExecutionScheduler nashornWidgetScheduler) {
         this.simpMessagingTemplate = simpMessagingTemplate;
         this.projectService = projectService;
         this.projectMapper = projectMapper;
@@ -109,23 +109,27 @@ public class DashboardWebSocketService {
     }
 
     /**
-     * Add a new link between the projectToken and a WebsocketClient
-     * Used when a new Websocket connection is done
+     * Add a new link between a project (dashboard) materialized by its projectToken
+     * and a client materialized by its WebsocketClient.
+     * Triggered when a new subscription to a dashboard is done.
+     *
+     * Initialize a Nashorn request for each widget of the project.
+     * Schedule the Nashorn requests execution.
      *
      * @param projectToken    The connected projectToken
      * @param websocketClient The related websocket client
      */
     @Transactional
-    public void addProjectClient(final String projectToken, final WebsocketClient websocketClient) {
-        boolean shouldInstantiateProject = !projectClients.containsKey(projectToken);
+    public void addClientToProject(final String projectToken, final WebsocketClient websocketClient) {
+        boolean refreshProject = !projectClients.containsKey(projectToken);
         projectClients.put(projectToken, websocketClient);
 
-        if (shouldInstantiateProject) {
-            Optional<Project> projectOpt = projectService.getOneByToken(projectToken);
+        if (refreshProject) {
+            Optional<Project> project = projectService.getOneByToken(projectToken);
 
-            if (projectOpt.isPresent()) {
-                List<NashornRequest> nashornRequest = nashornService.getNashornRequestsByProject(projectOpt.get());
-                nashornWidgetScheduler.scheduleList(nashornRequest, true, false);
+            if (project.isPresent()) {
+                List<NashornRequest> nashornRequests = nashornService.getNashornRequestsByProject(project.get());
+                nashornWidgetScheduler.scheduleNashornRequests(nashornRequests, true, false);
             }
         }
     }
@@ -262,15 +266,14 @@ public class DashboardWebSocketService {
      */
     @Async
     public void updateGlobalScreensByProjectTokenAndProjectWidgetId(final String projectToken, final Long projectWidgetId, final Object payload) {
-        LOGGER.debug("Update project's screen {}, project widget {}", projectToken, projectWidgetId);
-        LOGGER.trace("Update project's screen {}, , project widget {}, data: {}", projectToken, projectWidgetId, payload);
+        LOGGER.debug("Update the widget instance {} of the project {}", projectWidgetId, projectToken);
 
         if (projectToken == null) {
             LOGGER.error("Project token not found for payload: {}", payload);
             return;
         }
         if (projectWidgetId == null) {
-            LOGGER.error("Project widget id not found for payload: {}", payload);
+            LOGGER.error("Widget instance ID not found for payload: {}", payload);
             return;
         }
 

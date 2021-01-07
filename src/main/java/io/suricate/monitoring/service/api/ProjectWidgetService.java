@@ -33,8 +33,8 @@ import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.repository.ProjectWidgetRepository;
 import io.suricate.monitoring.service.mapper.ProjectMapper;
 import io.suricate.monitoring.service.mapper.ProjectWidgetMapper;
-import io.suricate.monitoring.service.scheduler.DashboardScheduleService;
-import io.suricate.monitoring.service.scheduler.NashornWidgetScheduler;
+import io.suricate.monitoring.service.nashorn.service.DashboardScheduleService;
+import io.suricate.monitoring.service.nashorn.scheduler.NashornRequestWidgetExecutionScheduler;
 import io.suricate.monitoring.service.websocket.DashboardWebSocketService;
 import io.suricate.monitoring.utils.JavascriptUtils;
 import io.suricate.monitoring.utils.PropertiesUtils;
@@ -241,7 +241,7 @@ public class ProjectWidgetService {
         Optional<ProjectWidget> projectWidgetOptional = this.getOne(projectWidgetId);
 
         if (projectWidgetOptional.isPresent()) {
-            ctx.getBean(NashornWidgetScheduler.class).cancelWidgetInstance(projectWidgetId);
+            ctx.getBean(NashornRequestWidgetExecutionScheduler.class).cancelWidgetInstance(projectWidgetId);
 
             projectWidgetRepository.deleteByProjectIdAndId(projectWidgetOptional.get().getProject().getId(), projectWidgetId);
             projectWidgetRepository.flush();
@@ -273,10 +273,10 @@ public class ProjectWidgetService {
     }
 
     /**
-     * Method used to update application state
+     * Update the state of a widget instance
      *
-     * @param widgetState widget state
-     * @param id          project widget id
+     * @param widgetState The widget state
+     * @param id          The project widget ID
      * @param date        The last execution date
      */
     @Transactional
@@ -316,11 +316,11 @@ public class ProjectWidgetService {
                     }
                 );
                 // Add backend config
-                map.putAll(PropertiesUtils.getMap(projectWidget.getBackendConfig()));
-                map.put(JavascriptUtils.INSTANCE_ID_VARIABLE, projectWidget.getId());
+                map.putAll(PropertiesUtils.convertStringWidgetPropertiesToMap(projectWidget.getBackendConfig()));
+                map.put(JavascriptUtils.WIDGET_INSTANCE_ID_VARIABLE, projectWidget.getId());
 
                 // Add global variables if needed
-                for (WidgetParam widgetParam : widgetService.getFullListOfParams(projectWidget.getWidget())) {
+                for (WidgetParam widgetParam : widgetService.getWidgetParametersWithCategoryParameters(projectWidget.getWidget())) {
                     if (!map.containsKey(widgetParam.getName()) && widgetParam.isRequired()) {
                         map.put(widgetParam.getName(), widgetParam.getDefaultValue());
                     }
@@ -353,7 +353,7 @@ public class ProjectWidgetService {
      */
     @Transactional
     public void updateProjectWidget(ProjectWidget projectWidget, final String customStyle, final String backendConfig) {
-        ctx.getBean(NashornWidgetScheduler.class).cancelWidgetInstance(projectWidget.getId());
+        ctx.getBean(NashornRequestWidgetExecutionScheduler.class).cancelWidgetInstance(projectWidget.getId());
 
         if (customStyle != null) {
             projectWidget.setCustomStyle(customStyle);
@@ -374,27 +374,27 @@ public class ProjectWidgetService {
     }
 
     /**
-     * Update nashorn execution log
+     * Update the state of a widget instance when Nashorn execution ends with a failure
      *
      * @param executionDate   The execution date
      * @param log             The message to log
      * @param projectWidgetId The project widget id to update
      * @param widgetState     The widget sate
      */
-    public void updateLogExecution(final Date executionDate, final String log, final Long projectWidgetId, final WidgetState widgetState) {
-        projectWidgetRepository.updateExecutionLog(executionDate, log, projectWidgetId, widgetState);
+    public void updateWidgetInstanceAfterFailedExecution(final Date executionDate, final String log, final Long projectWidgetId, final WidgetState widgetState) {
+        projectWidgetRepository.updateLastExecutionDateAndStateAndLog(executionDate, log, projectWidgetId, widgetState);
     }
 
     /**
-     * Update project widget when nashorn execution is a success
+     * Update the state of a widget instance when Nashorn execution ends successfully
      *
-     * @param projectWidgetId The projectwidget id
-     * @param executionDate   The execution date
-     * @param executionLog    The execution log
-     * @param data            The data return by the execution
-     * @param widgetState     The state of the widget
+     * @param date        The last execution date
+     * @param log         The log of nashorn execution
+     * @param data        The data returned by nashorn
+     * @param id          The id of the project widget
+     * @param widgetState The widget state
      */
-    public void updateSuccessExecution(final Long projectWidgetId, final Date executionDate, final String executionLog, final String data, final WidgetState widgetState) {
+    public void updateWidgetInstanceAfterSucceededExecution(final Date executionDate, final String executionLog, final String data, final Long projectWidgetId, final WidgetState widgetState) {
         projectWidgetRepository.updateSuccessExecution(executionDate, executionLog, data, projectWidgetId, widgetState);
     }
 
@@ -406,9 +406,9 @@ public class ProjectWidgetService {
      * @return The list of param decrypted
      */
     public String decryptSecretParamsIfNeeded(final Widget widget, String backendConfig) {
-        Map<String, String> backendConfigAsMap = PropertiesUtils.getMap(backendConfig);
+        Map<String, String> backendConfigAsMap = PropertiesUtils.convertStringWidgetPropertiesToMap(backendConfig);
 
-        List<WidgetParam> widgetParams = widgetService.getFullListOfParams(widget);
+        List<WidgetParam> widgetParams = widgetService.getWidgetParametersWithCategoryParameters(widget);
         for (WidgetParam widgetParam : widgetParams) {
             if (widgetParam.getType() == DataType.PASSWORD) {
                 String valueToEncrypt = StringUtils.trimToNull(backendConfigAsMap.get(widgetParam.getName()));
@@ -435,9 +435,9 @@ public class ProjectWidgetService {
      * @return The backend config with the secret params encrypted
      */
     private String encryptSecretParamsIfNeeded(final Widget widget, String backendConfig) {
-        Map<String, String> backendConfigAsMap = PropertiesUtils.getMap(backendConfig);
+        Map<String, String> backendConfigAsMap = PropertiesUtils.convertStringWidgetPropertiesToMap(backendConfig);
 
-        List<WidgetParam> widgetParams = widgetService.getFullListOfParams(widget);
+        List<WidgetParam> widgetParams = widgetService.getWidgetParametersWithCategoryParameters(widget);
         for (WidgetParam widgetParam : widgetParams) {
             if (widgetParam.getType() == DataType.PASSWORD) {
                 String valueToEncrypt = StringUtils.trimToNull(backendConfigAsMap.get(widgetParam.getName()));

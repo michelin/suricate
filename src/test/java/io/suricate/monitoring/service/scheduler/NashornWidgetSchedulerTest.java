@@ -9,7 +9,8 @@ import io.suricate.monitoring.model.entity.widget.Widget;
 import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.repository.*;
 import io.suricate.monitoring.service.api.ProjectWidgetService;
-import io.suricate.monitoring.service.nashorn.NashornService;
+import io.suricate.monitoring.service.nashorn.service.NashornService;
+import io.suricate.monitoring.service.nashorn.scheduler.NashornRequestWidgetExecutionScheduler;
 import io.suricate.monitoring.utils.FilesUtilsTest;
 import io.suricate.monitoring.utils.WidgetUtils;
 import org.apache.commons.lang3.tuple.Pair;
@@ -41,7 +42,7 @@ import static com.google.common.truth.Truth.assertThat;
 public class NashornWidgetSchedulerTest {
 
     @Autowired
-    NashornWidgetScheduler nashornWidgetScheduler;
+    NashornRequestWidgetExecutionScheduler nashornWidgetScheduler;
 
     @Autowired
     NashornService nashornService;
@@ -73,7 +74,7 @@ public class NashornWidgetSchedulerTest {
     @PostConstruct
     @Transactional
     public void before() throws IOException {
-        nashornWidgetScheduler.initScheduler();
+        nashornWidgetScheduler.init();
         scheduledExecutorService = (ScheduledThreadPoolExecutor) ReflectionTestUtils.getField(nashornWidgetScheduler, "scheduledExecutorService");
         scheduledExecutorServiceFuture = (ScheduledThreadPoolExecutor) ReflectionTestUtils.getField(nashornWidgetScheduler, "scheduledExecutorServiceFuture");
         jobs = (Map<Long, Pair<WeakReference<ScheduledFuture<NashornResponse>>, WeakReference<ScheduledFuture<Void>>>>) ReflectionTestUtils.getField(nashornWidgetScheduler, "jobs");
@@ -139,7 +140,7 @@ public class NashornWidgetSchedulerTest {
         assertThat(newFuture.isDone()).isTrue();
 
         // reinit
-        nashornWidgetScheduler.initScheduler();
+        nashornWidgetScheduler.init();
         scheduledExecutorService = (ScheduledThreadPoolExecutor) ReflectionTestUtils.getField(nashornWidgetScheduler, "scheduledExecutorService");
         scheduledExecutorServiceFuture = (ScheduledThreadPoolExecutor) ReflectionTestUtils.getField(nashornWidgetScheduler, "scheduledExecutorServiceFuture");
         // TODO : Check behavior randomly switch from 1 to 2

@@ -1,20 +1,22 @@
 /*
- * Copyright 2012-2018 the original author or authors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  * Copyright 2012-2018 the original author or authors.
+ *  *
+ *  * Licensed under the Apache License, Version 2.0 (the "License");
+ *  * you may not use this file except in compliance with the License.
+ *  * You may obtain a copy of the License at
+ *  *
+ *  *      http://www.apache.org/licenses/LICENSE-2.0
+ *  *
+ *  * Unless required by applicable law or agreed to in writing, software
+ *  * distributed under the License is distributed on an "AS IS" BASIS,
+ *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  * See the License for the specific language governing permissions and
+ *  * limitations under the License.
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
  */
 
-package io.suricate.monitoring.service.nashorn;
+package io.suricate.monitoring.service.nashorn.service;
 
 import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
 import io.suricate.monitoring.model.entity.WidgetConfiguration;
@@ -63,10 +65,10 @@ public class NashornService {
     }
 
     /**
-     * Get the list of related nashorn request for a project
+     * Get the list of related Nashorn requests for each widget of a project
      *
      * @param project The project
-     * @return The list of related nashorn request
+     * @return The list of related Nashorn requests
      */
     @Transactional
     public List<NashornRequest> getNashornRequestsByProject(final Project project) {
@@ -89,10 +91,10 @@ public class NashornService {
     }
 
     /**
-     * Create a nashorn request by a project widget
+     * Create a Nashorn request by a project widget
      *
      * @param projectWidget The project widget
-     * @return The related nashorn request
+     * @return The related Nashorn request
      */
     private NashornRequest createNashornRequestByProjectWidget(final ProjectWidget projectWidget) {
         String properties = getProjectWidgetConfigurationsWithGlobalOne(projectWidget, projectWidget.getWidget().getCategory().getWidgetConfigurations());
@@ -109,19 +111,19 @@ public class NashornService {
     }
 
     /**
-     * Test if the nashorn request is ok for being execute
+     * Check if the given Nashorn request can be executed
      *
-     * @param nashornRequest The nashorn request to test
-     * @return True is it's ok, false otherwise
+     * @param nashornRequest The nashorn request to check
+     * @return True is it is ok, false otherwise
      */
     public boolean isNashornRequestExecutable(final NashornRequest nashornRequest) {
         if (!nashornRequest.isValid()) {
-            LOGGER.debug("Widget content not isValid for widget instance :{}", nashornRequest.getProjectWidgetId());
+            LOGGER.debug("The Nashorn request is not valid for the widget instance: {}", nashornRequest.getProjectWidgetId());
             return false;
         }
 
         if (nashornRequest.getDelay() < 0) {
-            LOGGER.debug("Stop widget instance because delay < 0 for projectWidgetId:{}", nashornRequest.getProjectWidgetId());
+            LOGGER.debug("The Nashorn request has a delay < 0 for widget instance: {}", nashornRequest.getProjectWidgetId());
             return false;
         }
 
@@ -140,6 +142,7 @@ public class NashornService {
 
         if (widgetConfigurations != null && !widgetConfigurations.isEmpty()) {
             builder.append('\n');
+
             for (WidgetConfiguration widgetConfiguration : widgetConfigurations) {
                 if (!projectWidget.getBackendConfig().contains(widgetConfiguration.getKey())) {
                     builder
