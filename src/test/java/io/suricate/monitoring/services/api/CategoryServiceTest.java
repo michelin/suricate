@@ -1,7 +1,7 @@
 package io.suricate.monitoring.services.api;
 
-import io.suricate.monitoring.model.entity.Asset;
-import io.suricate.monitoring.model.entity.widget.Category;
+import io.suricate.monitoring.model.entities.Asset;
+import io.suricate.monitoring.model.entities.Category;
 import io.suricate.monitoring.repositories.AssetRepository;
 import io.suricate.monitoring.repositories.CategoryRepository;
 import org.junit.Test;

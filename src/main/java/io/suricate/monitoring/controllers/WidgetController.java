@@ -22,7 +22,7 @@ import io.suricate.monitoring.configuration.swagger.ApiPageable;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.widget.WidgetRequestDto;
 import io.suricate.monitoring.model.dto.api.widget.WidgetResponseDto;
-import io.suricate.monitoring.model.entity.widget.Widget;
+import io.suricate.monitoring.model.entities.Widget;
 import io.suricate.monitoring.services.api.WidgetService;
 import io.suricate.monitoring.services.mapper.WidgetMapper;
 import io.suricate.monitoring.utils.exception.ObjectNotFoundException;

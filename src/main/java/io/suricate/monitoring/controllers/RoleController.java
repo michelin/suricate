@@ -22,7 +22,7 @@ import io.suricate.monitoring.configuration.swagger.ApiPageable;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.role.RoleResponseDto;
 import io.suricate.monitoring.model.dto.api.user.UserResponseDto;
-import io.suricate.monitoring.model.entity.user.Role;
+import io.suricate.monitoring.model.entities.Role;
 import io.suricate.monitoring.services.api.RoleService;
 import io.suricate.monitoring.services.mapper.RoleMapper;
 import io.suricate.monitoring.services.mapper.UserMapper;

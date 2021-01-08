@@ -1,7 +1,7 @@
 package io.suricate.monitoring.services.specifications;
 
-import io.suricate.monitoring.model.entity.user.Role;
-import io.suricate.monitoring.model.entity.user.Role_;
+import io.suricate.monitoring.model.entities.Role;
+import io.suricate.monitoring.model.entities.Role_;
 
 
 /**

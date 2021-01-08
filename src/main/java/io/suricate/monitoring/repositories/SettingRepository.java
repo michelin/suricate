@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.repositories;
 
-import io.suricate.monitoring.model.entity.setting.Setting;
+import io.suricate.monitoring.model.entities.Setting;
 import io.suricate.monitoring.model.enums.SettingType;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;

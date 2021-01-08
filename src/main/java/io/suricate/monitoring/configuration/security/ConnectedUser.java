@@ -89,7 +89,7 @@ public class ConnectedUser extends User {
      * @param user The user to connect
      * @param authorities The list of authorities for this user
      */
-    public ConnectedUser(io.suricate.monitoring.model.entity.user.User user, Collection<? extends GrantedAuthority> authorities) {
+    public ConnectedUser(io.suricate.monitoring.model.entities.User user, Collection<? extends GrantedAuthority> authorities) {
         super(user.getUsername(), user.getPassword(), true, true, true, true, authorities);
 
         this.id = user.getId();

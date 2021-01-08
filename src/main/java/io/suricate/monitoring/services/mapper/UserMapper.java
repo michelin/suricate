@@ -19,7 +19,7 @@ package io.suricate.monitoring.services.mapper;
 import io.suricate.monitoring.configuration.security.ConnectedUser;
 import io.suricate.monitoring.model.dto.api.user.UserRequestDto;
 import io.suricate.monitoring.model.dto.api.user.UserResponseDto;
-import io.suricate.monitoring.model.entity.user.User;
+import io.suricate.monitoring.model.entities.User;
 import io.suricate.monitoring.model.enums.AuthenticationMethod;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;

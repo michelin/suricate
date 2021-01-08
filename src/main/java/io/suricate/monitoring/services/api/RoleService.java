@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.services.api;
 
-import io.suricate.monitoring.model.entity.user.Role;
+import io.suricate.monitoring.model.entities.Role;
 import io.suricate.monitoring.repositories.RoleRepository;
 import io.suricate.monitoring.services.specifications.RoleSearchSpecification;
 import org.springframework.data.domain.Page;

@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.repositories;
 
-import io.suricate.monitoring.model.entity.setting.UserSetting;
+import io.suricate.monitoring.model.entities.UserSetting;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

@@ -17,7 +17,7 @@
 package io.suricate.monitoring.services.mapper;
 
 import io.suricate.monitoring.model.dto.api.setting.AllowedSettingValueResponseDto;
-import io.suricate.monitoring.model.entity.setting.AllowedSettingValue;
+import io.suricate.monitoring.model.entities.AllowedSettingValue;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;

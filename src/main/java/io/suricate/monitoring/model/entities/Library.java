@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.entity;
+package io.suricate.monitoring.model.entities;
 
-
+import io.suricate.monitoring.model.entities.generic.AbstractAuditingEntity;
 import lombok.*;
-import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Library entity
@@ -31,7 +32,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @ToString
-public class Asset extends AbstractAuditingEntity<Long> {
+public class Library extends AbstractAuditingEntity<Long> {
 
     /**
      * The id
@@ -41,28 +42,29 @@ public class Asset extends AbstractAuditingEntity<Long> {
     private Long id;
 
     /**
-     * The content of this asset
+     * The technical name
      */
-    @Type(type = "org.hibernate.type.BinaryType")
-    @Basic(fetch = FetchType.LAZY)
-    @Column(name = "content", nullable = false)
-    private byte[] content;
+    @Column(nullable = false, unique = true)
+    private String technicalName;
 
     /**
-     * The content type
+     * The asset
      */
-    @Column(length = 100)
-    private String contentType;
+    @OneToOne(cascade = {CascadeType.REMOVE, CascadeType.DETACH})
+    private Asset asset;
 
     /**
-     * The size
+     * The list of widgets related to it
      */
-    @Column
-    private long size;
+    @ManyToMany(mappedBy = "libraries")
+    private List<Widget> widgets = new ArrayList<>();
 
-
-    public void setContent(byte[] content) {
-        this.content = content;
-        this.size = content.length;
+    /**
+     * Constructor minimal
+     *
+     * @param technicalName The technical name
+     */
+    public Library(String technicalName) {
+        this.technicalName = technicalName;
     }
 }

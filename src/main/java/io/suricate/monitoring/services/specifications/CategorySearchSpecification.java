@@ -1,7 +1,7 @@
 package io.suricate.monitoring.services.specifications;
 
-import io.suricate.monitoring.model.entity.widget.Category;
-import io.suricate.monitoring.model.entity.widget.Category_;
+import io.suricate.monitoring.model.entities.Category;
+import io.suricate.monitoring.model.entities.Category_;
 
 
 /**

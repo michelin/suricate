@@ -17,7 +17,7 @@
 package io.suricate.monitoring.configuration.security.database;
 
 import io.suricate.monitoring.configuration.security.ConnectedUser;
-import io.suricate.monitoring.model.entity.user.User;
+import io.suricate.monitoring.model.entities.User;
 import io.suricate.monitoring.services.api.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

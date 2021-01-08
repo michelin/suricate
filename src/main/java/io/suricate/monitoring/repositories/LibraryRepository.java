@@ -16,8 +16,8 @@
 
 package io.suricate.monitoring.repositories;
 
-import io.suricate.monitoring.model.entity.Asset;
-import io.suricate.monitoring.model.entity.Library;
+import io.suricate.monitoring.model.entities.Asset;
+import io.suricate.monitoring.model.entities.Library;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

@@ -17,9 +17,9 @@
 package io.suricate.monitoring.services.api;
 
 import io.suricate.monitoring.model.dto.api.user.UserSettingRequestDto;
-import io.suricate.monitoring.model.entity.setting.AllowedSettingValue;
-import io.suricate.monitoring.model.entity.setting.UserSetting;
-import io.suricate.monitoring.model.entity.user.User;
+import io.suricate.monitoring.model.entities.AllowedSettingValue;
+import io.suricate.monitoring.model.entities.UserSetting;
+import io.suricate.monitoring.model.entities.User;
 import io.suricate.monitoring.repositories.UserSettingRepository;
 import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;

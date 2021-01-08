@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.repositories;
 
-import io.suricate.monitoring.model.entity.widget.Repository;
+import io.suricate.monitoring.model.entities.Repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 

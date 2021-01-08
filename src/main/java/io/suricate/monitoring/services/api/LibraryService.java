@@ -16,8 +16,8 @@
 
 package io.suricate.monitoring.services.api;
 
-import io.suricate.monitoring.model.entity.Library;
-import io.suricate.monitoring.model.entity.project.ProjectWidget;
+import io.suricate.monitoring.model.entities.Library;
+import io.suricate.monitoring.model.entities.ProjectWidget;
 import io.suricate.monitoring.repositories.LibraryRepository;
 import io.suricate.monitoring.utils.IdUtils;
 import io.suricate.monitoring.utils.logging.LogExecutionTime;

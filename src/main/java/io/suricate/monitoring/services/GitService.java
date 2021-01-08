@@ -17,9 +17,9 @@
 package io.suricate.monitoring.services;
 
 import io.suricate.monitoring.configuration.ApplicationProperties;
-import io.suricate.monitoring.model.entity.Library;
-import io.suricate.monitoring.model.entity.widget.Category;
-import io.suricate.monitoring.model.entity.widget.Repository;
+import io.suricate.monitoring.model.entities.Library;
+import io.suricate.monitoring.model.entities.Category;
+import io.suricate.monitoring.model.entities.Repository;
 import io.suricate.monitoring.model.enums.RepositoryTypeEnum;
 import io.suricate.monitoring.services.api.LibraryService;
 import io.suricate.monitoring.services.api.RepositoryService;

@@ -19,9 +19,9 @@
 package io.suricate.monitoring.services.nashorn.services;
 
 import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
-import io.suricate.monitoring.model.entity.WidgetConfiguration;
-import io.suricate.monitoring.model.entity.project.Project;
-import io.suricate.monitoring.model.entity.project.ProjectWidget;
+import io.suricate.monitoring.model.entities.WidgetConfiguration;
+import io.suricate.monitoring.model.entities.Project;
+import io.suricate.monitoring.model.entities.ProjectWidget;
 import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.services.api.ProjectWidgetService;
 import org.apache.commons.lang3.StringUtils;

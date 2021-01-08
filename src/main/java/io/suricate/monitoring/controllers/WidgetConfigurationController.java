@@ -23,7 +23,7 @@ import io.suricate.monitoring.model.dto.api.ApplicationPropertiesDto;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.widgetconfiguration.WidgetConfigurationRequestDto;
 import io.suricate.monitoring.model.dto.api.widgetconfiguration.WidgetConfigurationResponseDto;
-import io.suricate.monitoring.model.entity.WidgetConfiguration;
+import io.suricate.monitoring.model.entities.WidgetConfiguration;
 import io.suricate.monitoring.services.CacheService;
 import io.suricate.monitoring.services.api.WidgetConfigurationService;
 import io.suricate.monitoring.services.mapper.WidgetConfigurationMapper;

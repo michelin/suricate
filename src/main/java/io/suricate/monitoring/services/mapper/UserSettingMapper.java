@@ -17,7 +17,7 @@
 package io.suricate.monitoring.services.mapper;
 
 import io.suricate.monitoring.model.dto.api.user.UserSettingResponseDto;
-import io.suricate.monitoring.model.entity.setting.UserSetting;
+import io.suricate.monitoring.model.entities.UserSetting;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

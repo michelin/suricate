@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.entity;
+package io.suricate.monitoring.model.entities;
 
-import io.suricate.monitoring.model.entity.widget.Category;
+import io.suricate.monitoring.model.entities.generic.AbstractAuditingEntity;
 import io.suricate.monitoring.model.enums.DataType;
 import lombok.*;
 

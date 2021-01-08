@@ -27,9 +27,9 @@ import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetRequestDt
 import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetResponseDto;
 import io.suricate.monitoring.model.dto.api.user.UserResponseDto;
 import io.suricate.monitoring.model.dto.websocket.WebsocketClient;
-import io.suricate.monitoring.model.entity.project.Project;
-import io.suricate.monitoring.model.entity.project.ProjectWidget;
-import io.suricate.monitoring.model.entity.user.User;
+import io.suricate.monitoring.model.entities.Project;
+import io.suricate.monitoring.model.entities.ProjectWidget;
+import io.suricate.monitoring.model.entities.User;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.services.api.ProjectService;
 import io.suricate.monitoring.services.api.ProjectWidgetService;

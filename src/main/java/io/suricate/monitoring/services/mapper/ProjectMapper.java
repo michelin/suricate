@@ -18,7 +18,7 @@ package io.suricate.monitoring.services.mapper;
 
 import io.suricate.monitoring.model.dto.api.project.ProjectRequestDto;
 import io.suricate.monitoring.model.dto.api.project.ProjectResponseDto;
-import io.suricate.monitoring.model.entity.project.Project;
+import io.suricate.monitoring.model.entities.Project;
 import io.suricate.monitoring.services.api.LibraryService;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;

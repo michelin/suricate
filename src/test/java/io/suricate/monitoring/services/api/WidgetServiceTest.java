@@ -1,11 +1,11 @@
 package io.suricate.monitoring.services.api;
 
-import io.suricate.monitoring.model.entity.Asset;
-import io.suricate.monitoring.model.entity.Library;
-import io.suricate.monitoring.model.entity.project.ProjectWidget;
-import io.suricate.monitoring.model.entity.widget.Category;
-import io.suricate.monitoring.model.entity.widget.Repository;
-import io.suricate.monitoring.model.entity.widget.Widget;
+import io.suricate.monitoring.model.entities.Asset;
+import io.suricate.monitoring.model.entities.Library;
+import io.suricate.monitoring.model.entities.ProjectWidget;
+import io.suricate.monitoring.model.entities.Category;
+import io.suricate.monitoring.model.entities.Repository;
+import io.suricate.monitoring.model.entities.Widget;
 import io.suricate.monitoring.model.enums.RepositoryTypeEnum;
 import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
 import io.suricate.monitoring.model.enums.WidgetState;

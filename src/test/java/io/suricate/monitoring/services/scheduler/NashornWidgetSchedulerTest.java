@@ -2,10 +2,10 @@ package io.suricate.monitoring.services.scheduler;
 
 import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
 import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
-import io.suricate.monitoring.model.entity.project.Project;
-import io.suricate.monitoring.model.entity.project.ProjectWidget;
-import io.suricate.monitoring.model.entity.widget.Category;
-import io.suricate.monitoring.model.entity.widget.Widget;
+import io.suricate.monitoring.model.entities.Project;
+import io.suricate.monitoring.model.entities.ProjectWidget;
+import io.suricate.monitoring.model.entities.Category;
+import io.suricate.monitoring.model.entities.Widget;
 import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.repositories.*;
 import io.suricate.monitoring.services.api.ProjectWidgetService;

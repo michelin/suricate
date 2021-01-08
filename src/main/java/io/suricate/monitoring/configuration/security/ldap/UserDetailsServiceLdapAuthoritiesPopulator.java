@@ -18,7 +18,7 @@ package io.suricate.monitoring.configuration.security.ldap;
 
 import io.suricate.monitoring.configuration.ApplicationProperties;
 import io.suricate.monitoring.configuration.security.ConnectedUser;
-import io.suricate.monitoring.model.entity.user.User;
+import io.suricate.monitoring.model.entities.User;
 import io.suricate.monitoring.services.api.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

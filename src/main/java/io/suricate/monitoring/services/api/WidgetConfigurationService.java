@@ -18,9 +18,9 @@ package io.suricate.monitoring.services.api;
 
 import io.suricate.monitoring.configuration.ApplicationProperties;
 import io.suricate.monitoring.model.dto.api.ApplicationPropertiesDto;
-import io.suricate.monitoring.model.entity.WidgetConfiguration;
-import io.suricate.monitoring.model.entity.widget.Category;
-import io.suricate.monitoring.model.entity.widget.WidgetParam;
+import io.suricate.monitoring.model.entities.WidgetConfiguration;
+import io.suricate.monitoring.model.entities.Category;
+import io.suricate.monitoring.model.entities.WidgetParam;
 import io.suricate.monitoring.model.enums.DataType;
 import io.suricate.monitoring.repositories.WidgetConfigurationRepository;
 import io.suricate.monitoring.services.specifications.WidgetConfigurationSearchSpecification;

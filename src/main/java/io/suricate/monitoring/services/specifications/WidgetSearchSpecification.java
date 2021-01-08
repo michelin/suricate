@@ -1,9 +1,9 @@
 package io.suricate.monitoring.services.specifications;
 
-import io.suricate.monitoring.model.entity.widget.Category;
-import io.suricate.monitoring.model.entity.widget.Category_;
-import io.suricate.monitoring.model.entity.widget.Widget;
-import io.suricate.monitoring.model.entity.widget.Widget_;
+import io.suricate.monitoring.model.entities.Category;
+import io.suricate.monitoring.model.entities.Category_;
+import io.suricate.monitoring.model.entities.Widget;
+import io.suricate.monitoring.model.entities.Widget_;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.criteria.*;

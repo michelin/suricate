@@ -1,8 +1,8 @@
 package io.suricate.monitoring.services.specifications;
 
 
-import io.suricate.monitoring.model.entity.project.Project;
-import io.suricate.monitoring.model.entity.project.Project_;
+import io.suricate.monitoring.model.entities.Project;
+import io.suricate.monitoring.model.entities.Project_;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.criteria.CriteriaBuilder;

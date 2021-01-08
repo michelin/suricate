@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.services.api;
 
-import io.suricate.monitoring.model.entity.setting.AllowedSettingValue;
+import io.suricate.monitoring.model.entities.AllowedSettingValue;
 import io.suricate.monitoring.repositories.AllowedSettingValueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -21,7 +21,7 @@ package io.suricate.monitoring.services.nashorn.services;
 import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
 import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
 import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
-import io.suricate.monitoring.model.entity.project.ProjectWidget;
+import io.suricate.monitoring.model.entities.ProjectWidget;
 import io.suricate.monitoring.model.enums.NashornErrorTypeEnum;
 import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.model.enums.WidgetState;

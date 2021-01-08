@@ -20,7 +20,7 @@ package io.suricate.monitoring.controllers;
 
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.setting.SettingResponseDto;
-import io.suricate.monitoring.model.entity.setting.Setting;
+import io.suricate.monitoring.model.entities.Setting;
 import io.suricate.monitoring.model.enums.SettingType;
 import io.suricate.monitoring.services.api.SettingService;
 import io.suricate.monitoring.services.mapper.SettingMapper;

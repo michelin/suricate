@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.services.api;
 
-import io.suricate.monitoring.model.entity.Asset;
+import io.suricate.monitoring.model.entities.Asset;
 import io.suricate.monitoring.repositories.AssetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

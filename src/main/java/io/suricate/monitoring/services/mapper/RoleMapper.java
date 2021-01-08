@@ -17,7 +17,7 @@
 package io.suricate.monitoring.services.mapper;
 
 import io.suricate.monitoring.model.dto.api.role.RoleResponseDto;
-import io.suricate.monitoring.model.entity.user.Role;
+import io.suricate.monitoring.model.entities.Role;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;

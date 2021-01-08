@@ -1,25 +1,24 @@
 /*
- * Copyright 2012-2018 the original author or authors.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ *  * Copyright 2012-2018 the original author or authors.
+ *  *
+ *  * Licensed under the Apache License, Version 2.0 (the "License");
+ *  * you may not use this file except in compliance with the License.
+ *  * You may obtain a copy of the License at
+ *  *
+ *  *      http://www.apache.org/licenses/LICENSE-2.0
+ *  *
+ *  * Unless required by applicable law or agreed to in writing, software
+ *  * distributed under the License is distributed on an "AS IS" BASIS,
+ *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  * See the License for the specific language governing permissions and
+ *  * limitations under the License.
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
  */
 
-package io.suricate.monitoring.model.entity.widget;
+package io.suricate.monitoring.model.entities;
 
-import io.suricate.monitoring.model.entity.AbstractAuditingEntity;
-import io.suricate.monitoring.model.entity.Asset;
-import io.suricate.monitoring.model.entity.Library;
-import io.suricate.monitoring.model.entity.project.ProjectWidget;
+import io.suricate.monitoring.model.entities.generic.AbstractAuditingEntity;
 import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
 import lombok.*;
 import org.hibernate.annotations.Type;
@@ -155,6 +154,7 @@ public class Widget extends AbstractAuditingEntity<Long> {
      * The list of params for this widget
      */
     @OneToMany(mappedBy = "widget", cascade = CascadeType.ALL)
+    @OrderBy("id ASC")
     private List<WidgetParam> widgetParams = new ArrayList<>();
 
     /**

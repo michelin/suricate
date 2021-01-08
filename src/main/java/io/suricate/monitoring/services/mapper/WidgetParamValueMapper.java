@@ -17,7 +17,7 @@
 package io.suricate.monitoring.services.mapper;
 
 import io.suricate.monitoring.model.dto.api.widget.WidgetParamValueResponseDto;
-import io.suricate.monitoring.model.entity.widget.WidgetParamValue;
+import io.suricate.monitoring.model.entities.WidgetParamValue;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;

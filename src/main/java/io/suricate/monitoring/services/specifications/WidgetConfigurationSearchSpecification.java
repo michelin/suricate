@@ -1,7 +1,7 @@
 package io.suricate.monitoring.services.specifications;
 
-import io.suricate.monitoring.model.entity.WidgetConfiguration;
-import io.suricate.monitoring.model.entity.WidgetConfiguration_;
+import io.suricate.monitoring.model.entities.WidgetConfiguration;
+import io.suricate.monitoring.model.entities.WidgetConfiguration_;
 
 
 /**

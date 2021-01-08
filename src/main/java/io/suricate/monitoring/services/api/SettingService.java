@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.services.api;
 
-import io.suricate.monitoring.model.entity.setting.Setting;
+import io.suricate.monitoring.model.entities.Setting;
 import io.suricate.monitoring.model.enums.SettingType;
 import io.suricate.monitoring.repositories.SettingRepository;
 import org.springframework.beans.factory.annotation.Autowired;

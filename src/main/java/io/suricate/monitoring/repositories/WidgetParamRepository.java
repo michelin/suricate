@@ -19,7 +19,7 @@
 
 package io.suricate.monitoring.repositories;
 
-import io.suricate.monitoring.model.entity.widget.WidgetParam;
+import io.suricate.monitoring.model.entities.WidgetParam;
 import org.springframework.data.repository.CrudRepository;
 
 /**

@@ -22,7 +22,7 @@ import com.google.common.collect.Multimaps;
 import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
 import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
 import io.suricate.monitoring.model.dto.websocket.WebsocketClient;
-import io.suricate.monitoring.model.entity.project.Project;
+import io.suricate.monitoring.model.entities.Project;
 import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.services.api.ProjectService;
 import io.suricate.monitoring.services.mapper.ProjectMapper;

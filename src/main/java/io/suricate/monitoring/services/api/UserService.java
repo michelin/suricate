@@ -17,8 +17,8 @@
 package io.suricate.monitoring.services.api;
 
 import io.suricate.monitoring.configuration.security.ConnectedUser;
-import io.suricate.monitoring.model.entity.user.Role;
-import io.suricate.monitoring.model.entity.user.User;
+import io.suricate.monitoring.model.entities.Role;
+import io.suricate.monitoring.model.entities.User;
 import io.suricate.monitoring.model.enums.UserRoleEnum;
 import io.suricate.monitoring.repositories.UserRepository;
 import io.suricate.monitoring.services.mapper.UserMapper;

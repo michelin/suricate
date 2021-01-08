@@ -1,8 +1,8 @@
 package io.suricate.monitoring.utils;
 
-import io.suricate.monitoring.model.entity.Library;
-import io.suricate.monitoring.model.entity.widget.Category;
-import io.suricate.monitoring.model.entity.widget.Widget;
+import io.suricate.monitoring.model.entities.Library;
+import io.suricate.monitoring.model.entities.Category;
+import io.suricate.monitoring.model.entities.Widget;
 import org.junit.Test;
 
 import java.io.File;

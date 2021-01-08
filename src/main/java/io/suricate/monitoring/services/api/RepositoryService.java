@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.services.api;
 
-import io.suricate.monitoring.model.entity.widget.Repository;
+import io.suricate.monitoring.model.entities.Repository;
 import io.suricate.monitoring.repositories.RepositoryRepository;
 import io.suricate.monitoring.services.specifications.RepositorySearchSpecification;
 import org.springframework.beans.factory.annotation.Autowired;

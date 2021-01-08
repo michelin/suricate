@@ -1,8 +1,8 @@
 package io.suricate.monitoring.services.specifications;
 
 
-import io.suricate.monitoring.model.entity.user.User;
-import io.suricate.monitoring.model.entity.user.User_;
+import io.suricate.monitoring.model.entities.User;
+import io.suricate.monitoring.model.entities.User_;
 
 
 /**

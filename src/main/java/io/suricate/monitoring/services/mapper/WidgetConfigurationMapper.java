@@ -18,7 +18,7 @@ package io.suricate.monitoring.services.mapper;
 
 
 import io.suricate.monitoring.model.dto.api.widgetconfiguration.WidgetConfigurationResponseDto;
-import io.suricate.monitoring.model.entity.WidgetConfiguration;
+import io.suricate.monitoring.model.entities.WidgetConfiguration;
 import org.jasypt.encryption.StringEncryptor;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
