@@ -1,6 +1,6 @@
 package io.suricate.monitoring.utils;
 
-import io.suricate.monitoring.service.nashorn.script.Methods;
+import io.suricate.monitoring.services.nashorn.script.Methods;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
