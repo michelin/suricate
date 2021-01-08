@@ -13,7 +13,7 @@ This repository contains the source code of the Suricate application.
 
 ## 📚 Wiki
 
-Instructions for setting up and self-hosted the application are located in [the brand-new wiki](https://github.com/suricate-io/suricate/wiki) 🙌 !
+Instructions for setting up and self-hosted the application are located in [the Suricate wiki](https://github.com/suricate-io/suricate/wiki) 🙌 !
 
 ## :beers: Contribution
 
