@@ -335,7 +335,7 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
     const projectSubscriptionUrl = `/user/${this.project.token}/queue/live`;
 
     this.websocketService
-      .subscribeToDestination(projectSubscriptionUrl)
+      .watch(projectSubscriptionUrl)
       .pipe(takeUntil(this.unsubscribe))
       .subscribe((stompMessage: Stomp.Message) => {
         const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
@@ -367,7 +367,7 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
     const screenSubscriptionUrl = `/user/${this.project.token}-${this.screenCode}/queue/unique`;
 
     this.websocketService
-      .subscribeToDestination(screenSubscriptionUrl)
+      .watch(screenSubscriptionUrl)
       .pipe(takeUntil(this.unsubscribe))
       .subscribe((stompMessage: Stomp.Message) => {
         const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);

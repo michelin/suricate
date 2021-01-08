@@ -31,6 +31,33 @@ import java.util.List;
 public final class ToStringUtils {
 
     /**
+     * Constructor
+     */
+    private ToStringUtils() { }
+
+    /**
+     * Hide the widget properties from the given logs
+     *
+     * @param outputLogs The logs to clear
+     * @param widgetPropertiesValues The widget properties values to hide
+     * @return The cleared logs without widget properties
+     */
+    public static String hideWidgetConfigurationInLogs(String outputLogs, Collection<String> widgetPropertiesValues){
+        String clearedLogs = StringUtils.trimToNull(outputLogs);
+
+        if (widgetPropertiesValues != null && clearedLogs != null) {
+            for (String widgetPropertiesValue : widgetPropertiesValues) {
+                if (widgetPropertiesValue != null) {
+                    clearedLogs = clearedLogs.replaceAll(widgetPropertiesValue,
+                            StringUtils.leftPad(StringUtils.EMPTY, widgetPropertiesValue.length(), "*"));
+                }
+            }
+        }
+
+        return clearedLogs;
+    }
+
+    /**
      * Method used to generate to String an excluding all sub entity
      * @return
      */
@@ -56,29 +83,5 @@ public final class ToStringUtils {
         return new ReflectionToStringBuilder(object)
                 .setExcludeFieldNames(excludeFieldNames.toArray(new String[excludeFieldNames.size()]))
                 .toString();
-    }
-
-    /**
-     * Method used to hide all configuration from logs
-     * @param log the output log
-     * @param values the values to mask
-     * @return the logs without any configuration
-     */
-    public static String hideConfig(String log, Collection<String> values){
-        String ret = StringUtils.trimToNull(log);
-        if (values != null && ret != null) {
-            for (String val : values) {
-                if (val != null) {
-                    ret = ret.replaceAll(val, StringUtils.leftPad(StringUtils.EMPTY, val.length(), "*"));
-                }
-            }
-        }
-        return ret;
-    }
-
-    /**
-     * Private constructor
-     */
-    private ToStringUtils() {
     }
 }

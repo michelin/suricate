@@ -122,7 +122,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
     this.websocketService.startConnection();
 
     this.websocketService
-      .subscribeToDestination(waitingConnectionUrl)
+      .watch(waitingConnectionUrl)
       .pipe(takeUntil(this.unsubscribe))
       .subscribe((stompMessage: Stomp.Message) => {
         const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);

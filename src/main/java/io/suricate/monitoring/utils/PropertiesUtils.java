@@ -28,72 +28,52 @@ import java.util.Properties;
 import java.util.TreeMap;
 
 public final class PropertiesUtils {
-
     /**
      * Class logger
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(PropertiesUtils.class);
 
     /**
-     * Method used to load properties form string
-     * @param properties the string containing properties
-     * @return the properties object
+     * Constructor
      */
-    public static Properties loadProperties(String properties){
-        Properties ret = null;
-        if (StringUtils.isNotBlank(properties)) {
-            try (StringReader reader = new StringReader(properties)){
-                ret = new Properties();
-                ret.load(reader);
+    private PropertiesUtils() { }
+
+    /**
+     * Convert widget parameters values from string to map
+     *
+     * @param widgetProperties the string containing the widget parameters values (key1=value1)
+     * @return The widget parameters values as map
+     */
+    public static Map<String, String> convertStringWidgetPropertiesToMap(String widgetProperties) {
+        Map<String, String> mappedWidgetProperties = new TreeMap<>();
+        Properties properties = convertStringWidgetPropertiesToProperties(widgetProperties);
+
+        if (properties != null) {
+            for (String propertyName : properties.stringPropertyNames()) {
+                mappedWidgetProperties.put(propertyName, StringUtils.trimToNull(properties.getProperty(propertyName)));
+            }
+        }
+        return mappedWidgetProperties;
+    }
+
+    /**
+     * Convert widget parameters values from string to Properties
+     *
+     * @param widgetProperties the string containing the widget parameters values
+     * @return The widget parameters values as Properties
+     */
+    public static Properties convertStringWidgetPropertiesToProperties(String widgetProperties) {
+        Properties properties = null;
+
+        if (StringUtils.isNotBlank(widgetProperties)) {
+            try (StringReader reader = new StringReader(widgetProperties)){
+                properties = new Properties();
+                properties.load(reader);
             } catch (IOException e) {
-                LOGGER.error(e.getMessage(), e);
+                LOGGER.error("An error has occurred converting widget parameters values from string to Properties: {}", widgetProperties, e);
             }
         }
-        return ret;
-    }
 
-    /**
-     * Method used to load properties form file
-     * @param filePath the file path containing properties
-     * @return the properties object
-     */
-    public static Properties loadFile(String filePath){
-        Properties ret = null;
-        // Check parameter
-        if (StringUtils.isBlank(filePath)){
-            return ret;
-        }
-        try (InputStream input = PropertiesUtils.class.getResourceAsStream(filePath)) {
-            if (input != null) {
-                ret = new Properties();
-                // load a properties file
-                ret.load(input);
-            }
-
-        } catch (IOException ex) {
-            LOGGER.error(ex.getMessage(), ex);
-        }
-
-        return ret;
-    }
-
-
-    /**
-     * Method used to convert string properties to map
-     * @param properties properties file with key=value
-     * @return a map representing the Tuple key=value
-     */
-    public static Map<String, String> getMap(String properties){
-        Map<String, String> ret = new TreeMap<>();
-        Properties prop = loadProperties(properties);
-        if (prop != null) {
-            for (String name : prop.stringPropertyNames()) {
-                ret.put(name, StringUtils.trimToNull(prop.getProperty(name)));
-            }
-        }
-        return ret;
-    }
-
-    private PropertiesUtils() {
+        return properties;
     }
 }

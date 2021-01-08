@@ -55,15 +55,15 @@ public class ToStringUtilsTest {
 
     @Test
     public void testHideLogNull() throws Exception {
-        assertThat(ToStringUtils.hideConfig(null,null)).isNull();
-        assertThat(ToStringUtils.hideConfig("",null)).isNull();
-        assertThat(ToStringUtils.hideConfig("test",null)).isEqualTo("test");
-        assertThat(ToStringUtils.hideConfig(null, Collections.emptyList())).isNull();
+        assertThat(ToStringUtils.hideWidgetConfigurationInLogs(null,null)).isNull();
+        assertThat(ToStringUtils.hideWidgetConfigurationInLogs("",null)).isNull();
+        assertThat(ToStringUtils.hideWidgetConfigurationInLogs("test",null)).isEqualTo("test");
+        assertThat(ToStringUtils.hideWidgetConfigurationInLogs(null, Collections.emptyList())).isNull();
     }
 
     @Test
     public void testHideLog() throws Exception {
-        assertThat(ToStringUtils.hideConfig("test mypassword ok", Collections.singletonList("mypassword"))).isEqualTo("test ********** ok");
+        assertThat(ToStringUtils.hideWidgetConfigurationInLogs("test mypassword ok", Collections.singletonList("mypassword"))).isEqualTo("test ********** ok");
     }
 
 }

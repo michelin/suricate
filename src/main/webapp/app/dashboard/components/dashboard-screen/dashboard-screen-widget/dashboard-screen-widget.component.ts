@@ -178,7 +178,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
     const projectWidgetSubscriptionUrl = `/user/${this.projectToken}-projectWidget-${this.projectWidget.id}/queue/live`;
 
     this.websocketService
-      .subscribeToDestination(projectWidgetSubscriptionUrl)
+      .watch(projectWidgetSubscriptionUrl)
       .pipe(takeUntil(this.unsubscribe))
       .subscribe((stompMessage: Stomp.Message) => {
         const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);

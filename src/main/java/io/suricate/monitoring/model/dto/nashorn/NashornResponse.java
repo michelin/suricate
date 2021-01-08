@@ -24,9 +24,13 @@ import lombok.*;
 import java.util.Date;
 
 /**
- * Represent the response after nashorn execution
+ * Represent the response after Nashorn execution
  */
-@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
+@Getter
+@Setter
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+@ToString
 public class NashornResponse extends AbstractDto {
 
     /**
@@ -40,12 +44,12 @@ public class NashornResponse extends AbstractDto {
     private String log;
 
     /**
-     * The project Id
+     * The project ID
      */
     private Long projectId;
 
     /**
-     * The projectwidget Id
+     * The projectWidget ID
      */
     private Long projectWidgetId;
 
@@ -60,13 +64,22 @@ public class NashornResponse extends AbstractDto {
     private NashornErrorTypeEnum error;
 
     /**
-     * Method used to check if the object is isValid
-     * @return true if this object is isValid, false otherwise
+     * Check if the Nashorn response is valid
+     *
+     * @return true if the Nashorn response is valid, false otherwise
      */
-    public boolean isValid(){
-        return JsonUtils.isJsonValid(data) && projectId != null && projectWidgetId != null && error == null;
+    public boolean isValid() {
+        return JsonUtils.isValid(data)
+                && projectId != null
+                && projectWidgetId != null
+                && error == null;
     }
 
+    /**
+     * Check if the Nashorn error response type is fatal
+     *
+     * @return true if the Nashorn error response is fatal, false otherwise
+     */
     public boolean isFatal() {
         return NashornErrorTypeEnum.FATAL == error;
     }
