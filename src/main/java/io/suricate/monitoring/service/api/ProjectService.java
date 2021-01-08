@@ -181,7 +181,7 @@ public class ProjectService {
 
         projectRepository.save(project);
         // Update grid
-        dashboardWebsocketService.updateGlobalScreensByProjectToken(project.getToken(), new UpdateEvent(UpdateType.GRID));
+        dashboardWebsocketService.sendEventToProjectSubscribers(project.getToken(), new UpdateEvent(UpdateType.GRID));
     }
 
     /**
@@ -239,7 +239,7 @@ public class ProjectService {
     @Transactional
     public void deleteProject(Project project) {
         // notify clients
-        dashboardWebsocketService.updateGlobalScreensByProjectToken(project.getToken(), new UpdateEvent(UpdateType.DISCONNECT));
+        dashboardWebsocketService.sendEventToProjectSubscribers(project.getToken(), new UpdateEvent(UpdateType.DISCONNECT));
         // delete project
         projectRepository.delete(project);
     }

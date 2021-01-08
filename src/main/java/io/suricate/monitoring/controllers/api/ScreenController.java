@@ -85,7 +85,7 @@ public class ScreenController {
             throw new ObjectNotFoundException(Project.class, projectOptional);
         }
 
-        this.dashboardWebSocketService.connectUniqueScreen(projectOptional.get(), screenCode);
+        this.dashboardWebSocketService.sendConnectEventToScreenSubscriber(projectOptional.get(), screenCode);
         return ResponseEntity.noContent().build();
     }
 
@@ -124,7 +124,7 @@ public class ScreenController {
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Void> refreshEveryConnectedScreensForProject(@ApiParam(name = "projectToken", value = "The project token", required = true)
                                                                        @PathVariable("projectToken") String projectToken) {
-        this.dashboardWebSocketService.reloadAllConnectedDashboardForAProject(projectToken);
+        this.dashboardWebSocketService.reloadAllConnectedClientsToAProject(projectToken);
         return ResponseEntity.noContent().build();
     }
 

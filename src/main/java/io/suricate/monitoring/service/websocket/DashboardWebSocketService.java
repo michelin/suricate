@@ -52,6 +52,21 @@ public class DashboardWebSocketService {
     private static final Logger LOGGER = LoggerFactory.getLogger(DashboardWebSocketService.class);
 
     /**
+     * The scheduler scheduling the widget execution through Nashorn
+     */
+    private final NashornRequestWidgetExecutionScheduler nashornWidgetScheduler;
+
+    /**
+     * The multimap containing all the connected web socket clients to a project token
+     */
+    private Multimap<String, WebsocketClient> clientsByProjectToken = Multimaps.synchronizedListMultimap(ArrayListMultimap.create());
+
+    /**
+     * SynchronizedMap containing the websocket session ID as key and the related WebsocketClient
+     */
+    private Map<String, WebsocketClient> sessionClient = Collections.synchronizedMap(new HashMap<>());
+
+    /**
      * The stomp websocket message template
      */
     private final SimpMessagingTemplate simpMessagingTemplate;
@@ -70,21 +85,6 @@ public class DashboardWebSocketService {
      * The nashorn service
      */
     private final NashornService nashornService;
-
-    /**
-     * The nashorn widget Scheduler
-     */
-    private final NashornRequestWidgetExecutionScheduler nashornWidgetScheduler;
-
-    /**
-     * MultiMap containing the projectToken as Key and the list of the WebsocketClient connected as value
-     */
-    private Multimap<String, WebsocketClient> projectClients = Multimaps.synchronizedListMultimap(ArrayListMultimap.create());
-
-    /**
-     * SynchronizedMap containing the websocket session ID as key and the related WebsocketClient
-     */
-    private Map<String, WebsocketClient> sessionClient = Collections.synchronizedMap(new HashMap<>());
 
     /**
      * Constructor
@@ -109,6 +109,110 @@ public class DashboardWebSocketService {
     }
 
     /**
+     * Send an event through the associated websocket to all subscribers.
+     * The path of the websocket contains a project token and a project widget ID so it is unique for each
+     * project widget.
+     * Used to update a widget.
+     *
+     * @param projectToken    The project token
+     * @param projectWidgetId The project widget id
+     * @param payload         The payload content
+     */
+    @Async
+    public void sendEventToProjectWidgetSubscribers(final String projectToken, final Long projectWidgetId, final UpdateEvent payload) {
+        LOGGER.debug("Sending the event {} to the widget instance {} of the project {}", payload.getType(), projectWidgetId, projectToken);
+
+        if (projectToken == null) {
+            LOGGER.error("Project token null for payload: {}", payload);
+            return;
+        }
+        if (projectWidgetId == null) {
+            LOGGER.error("Widget instance ID null for payload: {}", payload);
+            return;
+        }
+
+        simpMessagingTemplate.convertAndSendToUser(
+                projectToken.trim() + "-projectWidget-" + projectWidgetId,
+                "/queue/live",
+                payload
+        );
+    }
+
+    /**
+     * Send an event through the associated websocket to all subscribers.
+     * The path of the websocket contains a project token so it is unique for each
+     * project.
+     *
+     * Used to reload a project,
+     * display the screen code number of a project,
+     * disconnect all screens from a project
+     * or reposition a widget of a project.
+     *
+     * @param projectToken    The project token
+     * @param payload         The payload content
+     */
+    @Async
+    public void sendEventToProjectSubscribers(String projectToken, UpdateEvent payload) {
+        LOGGER.debug("Sending the event {} to the project {}", payload.getType(), projectToken);
+
+        if (projectToken == null) {
+            LOGGER.error("Project token null for payload: {}", payload);
+            return;
+        }
+
+        simpMessagingTemplate.convertAndSendToUser(
+                projectToken.trim(),
+                "/queue/live",
+                payload
+        );
+    }
+
+    /**
+     * Send an event through the associated websocket to the unique subscriber.
+     * The path of the websocket contains a project token and a screen code so it is unique for each
+     * screen (so each subscriber).
+     *
+     * Used to disconnect a given single screen from a dashboard.
+     *
+     * @param project The project
+     * @param screenCode The unique screen code
+     */
+    @Async
+    public void sendEventToScreenProjectSubscriber(String projectToken, int screenCode, UpdateEvent payload) {
+        LOGGER.debug("Sending the event {} to the project {} of the screen {}", payload.getType(), projectToken, screenCode);
+
+        simpMessagingTemplate.convertAndSendToUser(
+                projectToken.trim() + "-" + screenCode,
+                "/queue/unique",
+                payload
+        );
+    }
+
+    /**
+     * Send a connect event through the associated websocket to the unique subscriber.
+     * The path of the websocket contains a screen code so it is unique for each
+     * screen (so each subscriber).
+     *
+     * Used to connect a screen to a dashboard just after the subscriber waits on the screen code
+     * waiting screen.
+     *
+     * @param project The project
+     * @param screenCode The unique screen code
+     */
+    public void sendConnectEventToScreenSubscriber(final Project project, final String screenCode) {
+        UpdateEvent updateEvent = new UpdateEvent(UpdateType.CONNECT);
+        updateEvent.setContent(projectMapper.toProjectDtoDefault(project));
+
+        LOGGER.debug("Sending the event {} to the screen {}", updateEvent.getType(), screenCode);
+
+        simpMessagingTemplate.convertAndSendToUser(
+                screenCode,
+                "/queue/connect",
+                updateEvent
+        );
+    }
+
+    /**
      * Add a new link between a project (dashboard) materialized by its projectToken
      * and a client materialized by its WebsocketClient.
      * Triggered when a new subscription to a dashboard is done.
@@ -121,8 +225,8 @@ public class DashboardWebSocketService {
      */
     @Transactional
     public void addClientToProject(final String projectToken, final WebsocketClient websocketClient) {
-        boolean refreshProject = !projectClients.containsKey(projectToken);
-        projectClients.put(projectToken, websocketClient);
+        boolean refreshProject = !clientsByProjectToken.containsKey(projectToken);
+        clientsByProjectToken.put(projectToken, websocketClient);
 
         if (refreshProject) {
             Optional<Project> project = projectService.getOneByToken(projectToken);
@@ -142,7 +246,7 @@ public class DashboardWebSocketService {
      */
     @Transactional
     public List<WebsocketClient> getWebsocketClientsByProjectToken(final String projectToken) {
-        return new ArrayList<>(projectClients.get(projectToken));
+        return new ArrayList<>(clientsByProjectToken.get(projectToken));
     }
 
     /**
@@ -153,10 +257,10 @@ public class DashboardWebSocketService {
      */
     @Transactional
     public void removeProjectClient(final String projectToken, final WebsocketClient websocketClient) {
-        projectClients.remove(projectToken, websocketClient);
+        clientsByProjectToken.remove(projectToken, websocketClient);
 
-        if (!projectClients.containsKey(projectToken)) {
-            projectService.getOneByToken(projectToken).ifPresent(nashornWidgetScheduler::cancelProjectScheduling);
+        if (!clientsByProjectToken.containsKey(projectToken)) {
+            projectService.getOneByToken(projectToken).ifPresent(nashornWidgetScheduler::cancelWidgetsExecutionByProject);
         }
     }
 
@@ -219,31 +323,8 @@ public class DashboardWebSocketService {
      * @param projectId the project id
      * @param payload   the payload content
      */
-    public void updateGlobalScreensByProjectId(Long projectId, Object payload) {
-        updateGlobalScreensByProjectToken(projectService.getTokenByProjectId(projectId), payload);
-    }
-
-    /**
-     * Method used for updates by project token every screens connected to this project
-     *
-     * @param projectToken the project token
-     * @param payload      the payload content
-     */
-    @Async
-    public void updateGlobalScreensByProjectToken(String projectToken, Object payload) {
-        LOGGER.debug("Update project's screen {}", projectToken);
-        LOGGER.trace("Update project's screen {}, data: {}", projectToken, payload);
-
-        if (projectToken == null) {
-            LOGGER.error("Project token not found for payload: {}", payload);
-            return;
-        }
-
-        simpMessagingTemplate.convertAndSendToUser(
-            projectToken.trim(),
-            "/queue/live",
-            payload
-        );
+    public void updateGlobalScreensByProjectId(Long projectId, UpdateEvent payload) {
+        sendEventToProjectSubscribers(projectService.getTokenByProjectId(projectId), payload);
     }
 
     /**
@@ -253,71 +334,8 @@ public class DashboardWebSocketService {
      * @param projectWidgetId The project widget id
      * @param payload         the payload content
      */
-    public void updateGlobalScreensByIdAndProjectWidgetId(final Long projectId, final Long projectWidgetId, final Object payload) {
-        updateGlobalScreensByProjectTokenAndProjectWidgetId(projectService.getTokenByProjectId(projectId), projectWidgetId, payload);
-    }
-
-    /**
-     * Method used to update widget by project token, projectWidgetId for every screens connected to this widget
-     *
-     * @param projectToken    the project token
-     * @param projectWidgetId The project widget id
-     * @param payload         the payload content
-     */
-    @Async
-    public void updateGlobalScreensByProjectTokenAndProjectWidgetId(final String projectToken, final Long projectWidgetId, final Object payload) {
-        LOGGER.debug("Update the widget instance {} of the project {}", projectWidgetId, projectToken);
-
-        if (projectToken == null) {
-            LOGGER.error("Project token not found for payload: {}", payload);
-            return;
-        }
-        if (projectWidgetId == null) {
-            LOGGER.error("Widget instance ID not found for payload: {}", payload);
-            return;
-        }
-
-        simpMessagingTemplate.convertAndSendToUser(
-            projectToken.trim() + "-projectWidget-" + projectWidgetId,
-            "/queue/live",
-            payload
-        );
-    }
-
-    /**
-     * Method used to update unique screen by project token and screen code
-     *
-     * @param projectToken project token
-     * @param screenCode   The screen code
-     * @param payload      data to send
-     */
-    @Async
-    public void updateUniqueScreen(String projectToken, int screenCode, Object payload) {
-        LOGGER.debug("screen unique");
-        LOGGER.debug("Update project's screen {} for user {}, data: {}", projectToken, screenCode, payload);
-
-        simpMessagingTemplate.convertAndSendToUser(
-            projectToken.trim() + "-" + screenCode,
-            "/queue/unique",
-            payload
-        );
-    }
-
-    /**
-     * Method used to connect a screen by screen code
-     *
-     * @param screenCode The screen code
-     */
-    public void connectUniqueScreen(final Project project, final String screenCode) {
-        LOGGER.debug("screen unique");
-        UpdateEvent updateEvent = new UpdateEvent(UpdateType.CONNECT);
-        updateEvent.setContent(projectMapper.toProjectDtoDefault(project));
-
-        simpMessagingTemplate.convertAndSendToUser(
-            screenCode,
-            "/queue/connect",
-            updateEvent
-        );
+    public void updateGlobalScreensByIdAndProjectWidgetId(final Long projectId, final Long projectWidgetId, final UpdateEvent payload) {
+        sendEventToProjectWidgetSubscribers(projectService.getTokenByProjectId(projectId), projectWidgetId, payload);
     }
 
     /**
@@ -326,7 +344,7 @@ public class DashboardWebSocketService {
      * @param projectToken the specified project token
      */
     public void displayScreenCodeForProject(String projectToken) {
-        updateGlobalScreensByProjectToken(projectToken, new UpdateEvent(UpdateType.DISPLAY_NUMBER));
+        sendEventToProjectSubscribers(projectToken, new UpdateEvent(UpdateType.DISPLAY_NUMBER));
     }
 
     /**
@@ -336,18 +354,15 @@ public class DashboardWebSocketService {
      * @param screenCode   The screen code
      */
     public void disconnectClient(final String projectToken, final int screenCode) {
-        updateUniqueScreen(projectToken, screenCode, new UpdateEvent(UpdateType.DISCONNECT));
+        sendEventToScreenProjectSubscriber(projectToken, screenCode, new UpdateEvent(UpdateType.DISCONNECT));
     }
 
     /**
-     * Method used to force reload all connected client
+     * Reload all the connected clients to all the projects
      */
-    public void reloadAllConnectedDashboard() {
-        Iterator<String> it = projectClients.keySet().iterator();
-
-        while (it.hasNext()) {
-            updateGlobalScreensByProjectToken(it.next(), new UpdateEvent(UpdateType.RELOAD));
-        }
+    public void reloadAllConnectedClientsToAllProjects() {
+        clientsByProjectToken.forEach((key, value) ->
+                sendEventToProjectSubscribers(key, new UpdateEvent(UpdateType.RELOAD)));
     }
 
     /**
@@ -355,7 +370,7 @@ public class DashboardWebSocketService {
      *
      * @param projectToken The project token
      */
-    public void reloadAllConnectedDashboardForAProject(final String projectToken) {
-        updateGlobalScreensByProjectToken(projectToken, new UpdateEvent(UpdateType.RELOAD));
+    public void reloadAllConnectedClientsToAProject(final String projectToken) {
+        sendEventToProjectSubscribers(projectToken, new UpdateEvent(UpdateType.RELOAD));
     }
 }

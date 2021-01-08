@@ -25,7 +25,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
-import org.springframework.retry.RetryCallback;
 import org.springframework.retry.backoff.UniformRandomBackOffPolicy;
 import org.springframework.retry.policy.SimpleRetryPolicy;
 import org.springframework.retry.support.RetryTemplate;
@@ -38,11 +37,11 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 @Scope(value="prototype")
-public class NashornRequestWidgetExecutionResultAsyncTask implements Callable<Void>{
+public class NashornRequestResultAsyncTask implements Callable<Void>{
     /**
      * Class logger
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger(NashornRequestWidgetExecutionResultAsyncTask.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(NashornRequestResultAsyncTask.class.getName());
 
     /**
      * Minimum time to wait for a result from the Nashorn request
@@ -97,9 +96,9 @@ public class NashornRequestWidgetExecutionResultAsyncTask implements Callable<Vo
      * @param nashornRequest The Nashorn request itself
      * @param scheduler The Nashorn requests scheduler
      */
-    public NashornRequestWidgetExecutionResultAsyncTask(ScheduledFuture<NashornResponse> scheduledNashornRequestTask,
-                                                        NashornRequest nashornRequest,
-                                                        NashornRequestWidgetExecutionScheduler scheduler) {
+    public NashornRequestResultAsyncTask(ScheduledFuture<NashornResponse> scheduledNashornRequestTask,
+                                         NashornRequest nashornRequest,
+                                         NashornRequestWidgetExecutionScheduler scheduler) {
         this.scheduledNashornRequestTask = scheduledNashornRequestTask;
         this.nashornRequest = nashornRequest;
         this.scheduler = scheduler;
@@ -150,9 +149,9 @@ public class NashornRequestWidgetExecutionResultAsyncTask implements Callable<Vo
             scheduledNashornRequestTask.cancel(true);
 
             try {
-                dashboardScheduleService.updateWidgetInstanceNoNashornResponse(e, nashornRequest.getProjectWidgetId(), nashornRequest.getProjectId());
+                dashboardScheduleService.updateWidgetInstanceNoNashornResponse(exception, nashornRequest.getProjectWidgetId(), nashornRequest.getProjectId());
             } catch (Exception exception1) {
-                LOGGER.error("Database issue, reschedule instance:{} - error {}", nashornRequest.getProjectWidgetId(), ExceptionUtils.getMessage(exception1));
+                LOGGER.error("Cannot update the widget instance {} with no Nashorn response cause of database issue. Rescheduling a new Nashorn request", nashornRequest.getProjectWidgetId(), exception1);
 
                 scheduler.schedule(nashornRequest, false, false);
             }

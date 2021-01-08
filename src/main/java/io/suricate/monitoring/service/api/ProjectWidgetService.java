@@ -36,7 +36,7 @@ import io.suricate.monitoring.service.mapper.ProjectWidgetMapper;
 import io.suricate.monitoring.service.nashorn.service.DashboardScheduleService;
 import io.suricate.monitoring.service.nashorn.scheduler.NashornRequestWidgetExecutionScheduler;
 import io.suricate.monitoring.service.websocket.DashboardWebSocketService;
-import io.suricate.monitoring.utils.JavascriptUtils;
+import io.suricate.monitoring.utils.JavaScriptUtils;
 import io.suricate.monitoring.utils.PropertiesUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jasypt.encryption.StringEncryptor;
@@ -150,21 +150,12 @@ public class ProjectWidgetService {
     }
 
     /**
-     * Test if a project widget exists
-     *
-     * @param projectWidgetId The project widget id
-     * @return True if exists false otherwise
-     */
-    public boolean isProjectWidgetExists(final Long projectWidgetId) {
-        return this.projectWidgetRepository.existsById(projectWidgetId);
-    }
-
-    /**
      * Get the project widget by id
      *
      * @param projectWidgetId The project widget id
      * @return The project widget
      */
+    @Transactional
     public Optional<ProjectWidget> getOne(final Long projectWidgetId) {
         return projectWidgetRepository.findById(projectWidgetId);
     }
@@ -189,7 +180,7 @@ public class ProjectWidgetService {
         // Update grid
         UpdateEvent updateEvent = new UpdateEvent(UpdateType.GRID);
         updateEvent.setContent(projectMapper.toProjectDtoDefault(projectWidget.getProject()));
-        dashboardWebsocketService.updateGlobalScreensByProjectToken(projectWidget.getProject().getToken(), updateEvent);
+        dashboardWebsocketService.sendEventToProjectSubscribers(projectWidget.getProject().getToken(), updateEvent);
 
         return projectWidget;
     }
@@ -228,7 +219,7 @@ public class ProjectWidgetService {
         // notify clients
         UpdateEvent updateEvent = new UpdateEvent(UpdateType.POSITION);
         updateEvent.setContent(projectMapper.toProjectDtoDefault(project));
-        dashboardWebsocketService.updateGlobalScreensByProjectToken(project.getToken(), updateEvent);
+        dashboardWebsocketService.sendEventToProjectSubscribers(project.getToken(), updateEvent);
     }
 
     /**
@@ -241,7 +232,7 @@ public class ProjectWidgetService {
         Optional<ProjectWidget> projectWidgetOptional = this.getOne(projectWidgetId);
 
         if (projectWidgetOptional.isPresent()) {
-            ctx.getBean(NashornRequestWidgetExecutionScheduler.class).cancelWidgetInstance(projectWidgetId);
+            ctx.getBean(NashornRequestWidgetExecutionScheduler.class).cancelWidgetExecution(projectWidgetId);
 
             projectWidgetRepository.deleteByProjectIdAndId(projectWidgetOptional.get().getProject().getId(), projectWidgetId);
             projectWidgetRepository.flush();
@@ -317,7 +308,7 @@ public class ProjectWidgetService {
                 );
                 // Add backend config
                 map.putAll(PropertiesUtils.convertStringWidgetPropertiesToMap(projectWidget.getBackendConfig()));
-                map.put(JavascriptUtils.WIDGET_INSTANCE_ID_VARIABLE, projectWidget.getId());
+                map.put(JavaScriptUtils.WIDGET_INSTANCE_ID_VARIABLE, projectWidget.getId());
 
                 // Add global variables if needed
                 for (WidgetParam widgetParam : widgetService.getWidgetParametersWithCategoryParameters(projectWidget.getWidget())) {
@@ -353,7 +344,7 @@ public class ProjectWidgetService {
      */
     @Transactional
     public void updateProjectWidget(ProjectWidget projectWidget, final String customStyle, final String backendConfig) {
-        ctx.getBean(NashornRequestWidgetExecutionScheduler.class).cancelWidgetInstance(projectWidget.getId());
+        ctx.getBean(NashornRequestWidgetExecutionScheduler.class).cancelWidgetExecution(projectWidget.getId());
 
         if (customStyle != null) {
             projectWidget.setCustomStyle(customStyle);
@@ -370,7 +361,7 @@ public class ProjectWidgetService {
         // notify client
         UpdateEvent updateEvent = new UpdateEvent(UpdateType.WIDGET);
         updateEvent.setContent(projectMapper.toProjectDtoDefault(projectWidget.getProject()));
-        dashboardWebsocketService.updateGlobalScreensByProjectTokenAndProjectWidgetId(projectWidget.getProject().getToken(), projectWidget.getId(), updateEvent);
+        dashboardWebsocketService.sendEventToProjectWidgetSubscribers(projectWidget.getProject().getToken(), projectWidget.getId(), updateEvent);
     }
 
     /**

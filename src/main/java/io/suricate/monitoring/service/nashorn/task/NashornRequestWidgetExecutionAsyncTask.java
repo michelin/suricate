@@ -24,7 +24,7 @@ import io.suricate.monitoring.model.dto.nashorn.error.RequestException;
 import io.suricate.monitoring.model.enums.DataType;
 import io.suricate.monitoring.model.enums.NashornErrorTypeEnum;
 import io.suricate.monitoring.service.nashorn.JavaClassFilter;
-import io.suricate.monitoring.utils.JavascriptUtils;
+import io.suricate.monitoring.utils.JavaScriptUtils;
 import io.suricate.monitoring.utils.JsonUtils;
 import io.suricate.monitoring.utils.PropertiesUtils;
 import io.suricate.monitoring.utils.ToStringUtils;
@@ -127,17 +127,17 @@ public class NashornRequestWidgetExecutionAsyncTask implements Callable<NashornR
             }
 
             // Add the data of the previous execution
-            scriptEngine.getBindings(ScriptContext.ENGINE_SCOPE).put(JavascriptUtils.PREVIOUS_DATA_VARIABLE, nashornRequest.getPreviousData());
+            scriptEngine.getBindings(ScriptContext.ENGINE_SCOPE).put(JavaScriptUtils.PREVIOUS_DATA_VARIABLE, nashornRequest.getPreviousData());
 
             // Add the project widget id (id of the widget instance)
-            scriptEngine.getBindings(ScriptContext.ENGINE_SCOPE).put(JavascriptUtils.WIDGET_INSTANCE_ID_VARIABLE, nashornRequest.getProjectWidgetId());
+            scriptEngine.getBindings(ScriptContext.ENGINE_SCOPE).put(JavaScriptUtils.WIDGET_INSTANCE_ID_VARIABLE, nashornRequest.getProjectWidgetId());
 
             // Add output buffer
             try (StringWriter sw = new StringWriter()) {
                 scriptEngine.getContext().setWriter(sw);
 
                 // Compile the widget Javascript script
-                CompiledScript widgetScript = ((Compilable) scriptEngine).compile(JavascriptUtils.prepare(nashornRequest.getScript()));
+                CompiledScript widgetScript = ((Compilable) scriptEngine).compile(JavaScriptUtils.prepare(nashornRequest.getScript()));
 
                 widgetScript.eval();
 

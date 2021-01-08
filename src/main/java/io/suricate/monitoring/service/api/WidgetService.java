@@ -157,6 +157,7 @@ public class WidgetService {
      * @param widget The widget
      * @return A list of parameters
      */
+    @Transactional
     public List<WidgetParam> getWidgetParametersWithCategoryParameters(final Widget widget) {
         List<WidgetParam> widgetParameters = new ArrayList<>(widget.getWidgetParams());
         widgetParameters.addAll(getCategoryParametersFromWidget(widget));
@@ -170,6 +171,7 @@ public class WidgetService {
      * @param widget The widget
      * @return The list of widget parameters
      */
+    @Transactional
     public List<WidgetVariableResponse> getWidgetParametersForNashorn(final Widget widget) {
         List<WidgetVariableResponse> widgetVariableResponses = new ArrayList<>();
 

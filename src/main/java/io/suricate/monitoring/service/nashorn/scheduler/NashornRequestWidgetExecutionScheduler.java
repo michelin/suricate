@@ -25,7 +25,7 @@ import io.suricate.monitoring.model.enums.WidgetState;
 import io.suricate.monitoring.service.api.ProjectWidgetService;
 import io.suricate.monitoring.service.api.WidgetService;
 import io.suricate.monitoring.service.nashorn.service.NashornService;
-import io.suricate.monitoring.service.nashorn.task.NashornRequestWidgetExecutionResultAsyncTask;
+import io.suricate.monitoring.service.nashorn.task.NashornRequestResultAsyncTask;
 import io.suricate.monitoring.service.nashorn.task.NashornRequestWidgetExecutionAsyncTask;
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
@@ -82,7 +82,17 @@ public class NashornRequestWidgetExecutionScheduler {
      * Thread scheduler scheduling the asynchronous task which will execute a Nashorn request
      */
     private ScheduledThreadPoolExecutor scheduleNashornRequestExecutionThread;
-    private ScheduledThreadPoolExecutor scheduledExecutorServiceFuture;
+
+    /**
+     * Thread scheduler scheduling the asynchronous task which will wait for the Nashorn response
+     */
+    private ScheduledThreadPoolExecutor scheduleNashornRequestResponseThread;
+
+    /**
+     * For each widget instance, this map stores both Nashorn tasks : the task which will execute the widget
+     * and the task which will wait for the response
+     */
+    private Map<Long, Pair<WeakReference<ScheduledFuture<NashornResponse>>, WeakReference<ScheduledFuture<Void>>>> nashornTasksByProjectWidgetId = new ConcurrentHashMap<>();
 
     /**
      * The project widget service
@@ -98,11 +108,6 @@ public class NashornRequestWidgetExecutionScheduler {
      * The string encryptor used to encrypt/decrypt the encrypted/decrypted secret properties
      */
     private StringEncryptor stringEncryptor;
-
-    /**
-     * Map containing all current scheduled jobs
-     */
-    private Map<Long, Pair<WeakReference<ScheduledFuture<NashornResponse>>, WeakReference<ScheduledFuture<Void>>>> jobs = new ConcurrentHashMap<>();
 
     /**
      * Constructor
@@ -124,22 +129,6 @@ public class NashornRequestWidgetExecutionScheduler {
     }
 
     /**
-     * Method used to cancel a scheduled future for an widget instance
-     *
-     * @param projectWidgetId project widget Id
-     * @param weakReference   weakReference containing the ScheduledFuture or null
-     */
-    private static void cancel(Long projectWidgetId, WeakReference<? extends ScheduledFuture> weakReference) {
-        if (weakReference != null) {
-            ScheduledFuture scheduledFuture = weakReference.get();
-            if (scheduledFuture != null && (!scheduledFuture.isDone() || !scheduledFuture.isCancelled())) {
-                LOGGER.debug("Cancel task for widget instance {} ({})", projectWidgetId, scheduledFuture);
-                scheduledFuture.cancel(true);
-            }
-        }
-    }
-
-    /**
      * Init the Nashorn scheduler
      */
     @Transactional
@@ -153,14 +142,14 @@ public class NashornRequestWidgetExecutionScheduler {
         scheduleNashornRequestExecutionThread = (ScheduledThreadPoolExecutor) Executors.newScheduledThreadPool(EXECUTOR_POOL_SIZE);
         scheduleNashornRequestExecutionThread.setRemoveOnCancelPolicy(true);
 
-        if (scheduledExecutorServiceFuture != null) {
-            scheduledExecutorServiceFuture.shutdownNow();
+        if (scheduleNashornRequestResponseThread != null) {
+            scheduleNashornRequestResponseThread.shutdownNow();
         }
 
-        scheduledExecutorServiceFuture = (ScheduledThreadPoolExecutor) Executors.newScheduledThreadPool(EXECUTOR_POOL_SIZE);
-        scheduledExecutorServiceFuture.setRemoveOnCancelPolicy(true);
+        scheduleNashornRequestResponseThread = (ScheduledThreadPoolExecutor) Executors.newScheduledThreadPool(EXECUTOR_POOL_SIZE);
+        scheduleNashornRequestResponseThread.setRemoveOnCancelPolicy(true);
 
-        jobs.clear();
+        nashornTasksByProjectWidgetId.clear();
 
         projectWidgetService.resetProjectWidgetsState();
     }
@@ -202,7 +191,7 @@ public class NashornRequestWidgetExecutionScheduler {
      * @param init           Force the Nashorn request to start randomly between START_DELAY_INCLUSIVE and END_DELAY_EXCLUSIVE
      */
     public void schedule(final NashornRequest nashornRequest, boolean start, boolean init) {
-        if (nashornRequest == null || scheduleNashornRequestExecutionThread == null || scheduledExecutorServiceFuture == null) {
+        if (nashornRequest == null || scheduleNashornRequestExecutionThread == null || scheduleNashornRequestResponseThread == null) {
             return;
         }
 
@@ -238,57 +227,74 @@ public class NashornRequestWidgetExecutionScheduler {
 
         LOGGER.debug("The Nashorn request of the widget instance {} will start in {} seconds", nashornRequest.getProjectWidgetId(), nashornRequestExecutionDelay);
 
-        ScheduledFuture<NashornResponse> scheduledNashornRequestTask = scheduleNashornRequestExecutionThread
+        ScheduledFuture<NashornResponse> scheduledNashornRequestExecutionTask = scheduleNashornRequestExecutionThread
                 .schedule(new NashornRequestWidgetExecutionAsyncTask(nashornRequest, stringEncryptor, widgetParameters),
                         nashornRequestExecutionDelay,
                         TimeUnit.SECONDS);
 
-        ScheduledFuture<Void> scheduledNashornResultTask = scheduledExecutorServiceFuture
-                .schedule(new NashornRequestWidgetExecutionResultAsyncTask(scheduledNashornRequestTask, nashornRequest, this),
+        ScheduledFuture<Void> scheduledNashornRequestResponseTask = scheduleNashornRequestResponseThread
+                .schedule(new NashornRequestResultAsyncTask(scheduledNashornRequestExecutionTask, nashornRequest, this),
                 nashornRequestExecutionDelay,
                 TimeUnit.SECONDS);
 
-        // Update job
-        jobs.put(nashornRequest.getProjectWidgetId(),
-            new ImmutablePair<>(
-                new WeakReference<>(scheduledNashornRequestTask),
-                new WeakReference<>(scheduledNashornResultTask)
+        nashornTasksByProjectWidgetId.put(nashornRequest.getProjectWidgetId(), ImmutablePair.of(
+                new WeakReference<>(scheduledNashornRequestExecutionTask),
+                new WeakReference<>(scheduledNashornRequestResponseTask)
             ));
 
     }
 
     /**
-     * Method used to cancelWidgetInstance the existing scheduled widget instance and launch a new instance
+     * Cancel the current widget execution and schedule a new Nashorn request for this widget
      *
-     * @param nashornRequest the nashorn request to execute
+     * @param nashornRequest The new Nashorn request to schedule
      */
-    public void cancelAndSchedule(NashornRequest nashornRequest) {
-        cancelWidgetInstance(nashornRequest.getProjectWidgetId());
+    public void cancelAndScheduleNashornRequest(NashornRequest nashornRequest) {
+        cancelWidgetExecution(nashornRequest.getProjectWidgetId());
         schedule(nashornRequest, false, true);
     }
 
     /**
-     * Method is used for cancelling the projectWidgets hold by a project
+     * Cancel all the widgets executions from a given project
      *
      * @param project The project
      */
-    public void cancelProjectScheduling(final Project project) {
+    public void cancelWidgetsExecutionByProject(final Project project) {
         project
             .getWidgets()
-            .forEach(projectWidget -> cancelWidgetInstance(projectWidget.getId()));
+            .forEach(projectWidget -> cancelWidgetExecution(projectWidget.getId()));
     }
 
     /**
-     * Method used to cancelWidgetInstance the existing scheduled widget instance
+     * Cancel the widget execution by canceling both Nashorn tasks
      *
-     * @param projectWidgetId the widget instance id
+     * @param projectWidgetId the widget instance ID
      */
-    public void cancelWidgetInstance(Long projectWidgetId) {
-        Pair<WeakReference<ScheduledFuture<NashornResponse>>, WeakReference<ScheduledFuture<Void>>> pair = jobs.get(projectWidgetId);
-        if (pair != null) {
-            cancel(projectWidgetId, pair.getLeft());
-            cancel(projectWidgetId, pair.getRight());
+    public void cancelWidgetExecution(Long projectWidgetId) {
+        Pair<WeakReference<ScheduledFuture<NashornResponse>>, WeakReference<ScheduledFuture<Void>>> pairOfNashornFutureTasks = nashornTasksByProjectWidgetId.get(projectWidgetId);
+
+        if (pairOfNashornFutureTasks != null) {
+            this.cancelScheduledFutureTask(projectWidgetId, pairOfNashornFutureTasks.getLeft());
+            this.cancelScheduledFutureTask(projectWidgetId, pairOfNashornFutureTasks.getRight());
         }
+
         projectWidgetService.updateState(WidgetState.STOPPED, projectWidgetId);
+    }
+
+    /**
+     * Cancel a scheduled future task for a widget instance
+     *
+     * @param projectWidgetId The widget instance ID
+     * @param scheduledFutureTaskReference The reference containing the future task
+     */
+    private void cancelScheduledFutureTask(Long projectWidgetId, WeakReference<? extends ScheduledFuture<?>> scheduledFutureTaskReference) {
+        if (scheduledFutureTaskReference != null) {
+            ScheduledFuture<?> scheduledFutureTask = scheduledFutureTaskReference.get();
+
+            if (scheduledFutureTask != null && (!scheduledFutureTask.isDone() || !scheduledFutureTask.isCancelled())) {
+                LOGGER.debug("Canceling the future task for the widget instance {} ({})", projectWidgetId, scheduledFutureTask);
+                scheduledFutureTask.cancel(true);
+            }
+        }
     }
 }

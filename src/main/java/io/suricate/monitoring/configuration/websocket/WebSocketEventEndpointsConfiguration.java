@@ -90,7 +90,7 @@ public class WebSocketEventEndpointsConfiguration {
                     matcher.group(SCREEN_CODE_REGEX_GROUP)
                 );
 
-                LOGGER.debug("A new client (web socket session ID: {}, screen code ID: {}) subscribes to the project {}", websocketClient.getSessionId(), websocketClient.getScreenCode(),
+                LOGGER.debug("A new client (web socket session ID: {}, screen code ID: {}) is trying to subscribe to the project {}", websocketClient.getSessionId(), websocketClient.getScreenCode(),
                         websocketClient.getProjectToken());
 
                 dashboardWebSocketService.addClientToProject(websocketClient.getProjectToken(), websocketClient);
@@ -110,7 +110,7 @@ public class WebSocketEventEndpointsConfiguration {
         WebsocketClient websocketClient = dashboardWebSocketService.removeSessionClientByWebsocketSessionIdAndSubscriptionId(stompHeaderAccessor.getSessionId(), stompHeaderAccessor.getSubscriptionId());
 
         if (websocketClient != null) {
-            LOGGER.debug("Disconnected Client {} with id {} for project {}", websocketClient.getSessionId(), websocketClient.getScreenCode(), websocketClient.getProjectToken());
+            LOGGER.debug("Disconnected client {} with id {} for project {}", websocketClient.getSessionId(), websocketClient.getScreenCode(), websocketClient.getProjectToken());
             dashboardWebSocketService.removeProjectClient(websocketClient.getProjectToken(), websocketClient);
         }
     }

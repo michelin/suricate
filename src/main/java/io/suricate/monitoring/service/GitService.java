@@ -62,6 +62,11 @@ public class GitService {
     private static final Logger LOGGER = LoggerFactory.getLogger(GitService.class);
 
     /**
+     * The scheduler scheduling the widget execution through Nashorn
+     */
+    private final NashornRequestWidgetExecutionScheduler nashornWidgetScheduler;
+
+    /**
      * The application properties
      */
     private final ApplicationProperties applicationProperties;
@@ -85,11 +90,6 @@ public class GitService {
      * The dashboard websocket service
      */
     private final DashboardWebSocketService dashboardWebSocketService;
-
-    /**
-     * The nashorn widget executor
-     */
-    private final NashornRequestWidgetExecutionScheduler nashornWidgetScheduler;
 
     /**
      * Contructor using fields
@@ -169,29 +169,29 @@ public class GitService {
     }
 
     /**
-     * Methods used to clone and update the full list of widget repositories
+     * Clone and update the widgets from the given list of repositories
      *
-     * @return true if the update has been done correctly
+     * @return true if the widgets update has been done properly
      */
     private boolean cloneAndUpdateWidgetRepositories(final List<Repository> repositories) {
         try {
             for (Repository repository : repositories) {
                 if (repository.getType() == RepositoryTypeEnum.LOCAL) {
-                    LOGGER.info("Loading widget from local folder {}", repository.getLocalPath(), null, null);
+                    LOGGER.info("Loading widgets from the local folder {}", repository.getLocalPath());
+
                     updateWidgetFromFile(new File(repository.getLocalPath()), true, repository);
                 } else {
                     File remoteFolder = cloneRepo(repository.getUrl(), repository.getBranch(), repository.getLogin(), repository.getPassword());
                     updateWidgetFromFile(remoteFolder, false, repository);
                 }
-
             }
-            return true;
 
-        } catch (Exception ioe) {
-            LOGGER.error(ioe.getMessage(), ioe);
+            return true;
+        } catch (Exception exception) {
+            LOGGER.error("An error has occurred when cloning and updating the widgets from the repositories", exception);
         } finally {
             nashornWidgetScheduler.init();
-            dashboardWebSocketService.reloadAllConnectedDashboard();
+            dashboardWebSocketService.reloadAllConnectedClientsToAllProjects();
         }
 
         return false;
@@ -207,35 +207,34 @@ public class GitService {
      * @return File object on local repo
      */
     public File cloneRepo(String url, String branch, String login, String password) throws IOException {
-        LOGGER.info("Cloning widget repo {}, branch {}", url, branch);
-        File localRepo = null;
-        CloneCommand cloneCmd = null;
+        LOGGER.info("Loading widgets from the branch {} of the remote repository {}", branch, url);
 
-        localRepo = File.createTempFile("tmp", Long.toString(System.nanoTime()));
-        if (localRepo.exists()) {
-            FileUtils.deleteQuietly(localRepo);
+        File localRepository = File.createTempFile("tmp", Long.toString(System.nanoTime()));
+
+        if (localRepository.exists()) {
+            FileUtils.deleteQuietly(localRepository);
         }
-        localRepo.mkdirs();
 
-        String remoteRepo = new URL(url).toExternalForm();
-        cloneCmd = Git.cloneRepository()
-            .setURI(remoteRepo)
+        localRepository.mkdirs();
+
+        String remoteRepository = new URL(url).toExternalForm();
+        CloneCommand cloneCmd = Git.cloneRepository()
+            .setURI(remoteRepository)
             .setBranch(branch)
-            .setDirectory(localRepo);
+            .setDirectory(localRepository);
 
         if (StringUtils.isNoneBlank(login, password)) {
             cloneCmd.setCredentialsProvider(new UsernamePasswordCredentialsProvider(login, password));
         }
 
-        // Clone remote repo
         try (Git git = cloneCmd.call()) {
-            LOGGER.info("Branch {} from remote repository was successfully cloned", git.getRepository().getBranch());
+            LOGGER.info("The branch {} from the remote repository {} was successfully cloned", git.getRepository().getBranch(), url);
         } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
-            FileUtils.deleteQuietly(localRepo);
+            LOGGER.error("An error has occurred while trying to clone the branch {} of the remote repository {}", branch, url, e);
+            FileUtils.deleteQuietly(localRepository);
         }
 
-        return localRepo;
+        return localRepository;
     }
 
     /**

@@ -175,6 +175,6 @@ public class DashboardScheduleService {
     @Transactional
     public void scheduleWidget(final Long projectWidgetId) {
         NashornRequest nashornRequest = nashornService.getNashornRequestByProjectWidgetId(projectWidgetId);
-        applicationContext.getBean(NashornRequestWidgetExecutionScheduler.class).cancelAndSchedule(nashornRequest);
+        applicationContext.getBean(NashornRequestWidgetExecutionScheduler.class).cancelAndScheduleNashornRequest(nashornRequest);
     }
 }

@@ -30,6 +30,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
@@ -41,92 +42,109 @@ import static com.google.common.truth.Truth.assertThat;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class NashornWidgetSchedulerTest {
 
+    /**
+     * The scheduler scheduling the widget execution through Nashorn
+     */
     @Autowired
     NashornRequestWidgetExecutionScheduler nashornWidgetScheduler;
 
-    @Autowired
-    NashornService nashornService;
+    /**
+     * Thread scheduler scheduling the asynchronous task which will execute a Nashorn request
+     */
+    private ScheduledThreadPoolExecutor scheduleNashornRequestExecutionThread;
 
-    @Autowired
-    WidgetRepository widgetRepository;
+    /**
+     * Thread scheduler scheduling the asynchronous task which will wait for the Nashorn response
+     */
+    private ScheduledThreadPoolExecutor scheduleNashornRequestResponseThread;
 
-    @Autowired
-    ProjectRepository projectRepository;
+    /**
+     * For each widget instance, this map stores both Nashorn tasks : the task which will execute the widget
+     * and the task which will wait for the response
+     */
+    private Map<Long, Pair<WeakReference<ScheduledFuture<NashornResponse>>, WeakReference<ScheduledFuture<Void>>>> nashornTasksByProjectWidgetId = new ConcurrentHashMap<>();
 
-    @Autowired
-    CategoryRepository categoryRepository;
-
-    @Autowired
-    WidgetConfigurationRepository widgetConfigurationRepository;
-
-    @Autowired
-    ProjectWidgetRepository projectWidgetRepository;
-
+    /**
+     * The project widget service
+     */
     @Autowired
     ProjectWidgetService projectWidgetService;
 
-    private ScheduledThreadPoolExecutor scheduledExecutorService;
-    private ScheduledThreadPoolExecutor scheduledExecutorServiceFuture;
-    private Map<Long, Pair<WeakReference<ScheduledFuture<NashornResponse>>, WeakReference<ScheduledFuture<Void>>>> jobs;
+    /**
+     * The Nashorn service
+     */
+    @Autowired
+    NashornService nashornService;
+
+    /**
+     * The widget repository
+     */
+    @Autowired
+    WidgetRepository widgetRepository;
+
+    /**
+     * The project repository
+     */
+    @Autowired
+    ProjectRepository projectRepository;
+
+    /**
+     * The category repository
+     */
+    @Autowired
+    CategoryRepository categoryRepository;
+
+    /**
+     * The widget configuration repository
+     */
+    @Autowired
+    WidgetConfigurationRepository widgetConfigurationRepository;
+
+    /**
+     * The project widget repository
+     */
+    @Autowired
+    ProjectWidgetRepository projectWidgetRepository;
 
     private ProjectWidget projectWidget;
 
+    /**
+     * Initialize the unit tests
+     */
     @PostConstruct
     @Transactional
     public void before() throws IOException {
-        nashornWidgetScheduler.init();
-        scheduledExecutorService = (ScheduledThreadPoolExecutor) ReflectionTestUtils.getField(nashornWidgetScheduler, "scheduledExecutorService");
-        scheduledExecutorServiceFuture = (ScheduledThreadPoolExecutor) ReflectionTestUtils.getField(nashornWidgetScheduler, "scheduledExecutorServiceFuture");
-        jobs = (Map<Long, Pair<WeakReference<ScheduledFuture<NashornResponse>>, WeakReference<ScheduledFuture<Void>>>>) ReflectionTestUtils.getField(nashornWidgetScheduler, "jobs");
+        this.nashornWidgetScheduler.init();
 
-        // init database
-        Project project = new Project();
-        project.setName("test");
-        project.setToken("999999");
-        projectRepository.save(project);
+        this.scheduleNashornRequestExecutionThread = (ScheduledThreadPoolExecutor) ReflectionTestUtils.getField(nashornWidgetScheduler, "scheduleNashornRequestExecutionThread");
+        this.scheduleNashornRequestResponseThread = (ScheduledThreadPoolExecutor) ReflectionTestUtils.getField(nashornWidgetScheduler, "scheduleNashornRequestResponseThread");
+        this.nashornTasksByProjectWidgetId = (Map<Long, Pair<WeakReference<ScheduledFuture<NashornResponse>>, WeakReference<ScheduledFuture<Void>>>>) ReflectionTestUtils.getField(nashornWidgetScheduler, "nashornTasksByProjectWidgetId");
 
-        // Add Category
-        Category category = new Category();
-        category.setName("Test");
-        category.setTechnicalName("Test");
-        categoryRepository.save(category);
-
-        // Add widget
-        Widget widget = WidgetUtils.getWidget(new File(FilesUtilsTest.class.getResource("/widgets/test/widgets/alwaysRun").getFile()));
-        widget.setCategory(category);
-        widgetRepository.save(widget);
-
-        // Add widget Instance
-        projectWidget = new ProjectWidget();
-        projectWidget.setState(WidgetState.STOPPED);
-        projectWidget.setProject(project);
-        projectWidget.setWidget(widget);
-        projectWidget.setData("{}");
-        projectWidgetRepository.save(projectWidget);
+        this.initDatabase();
     }
 
     @Test
     @Transactional
-    public void testCancelAndSchedule() throws IOException, InterruptedException {
-        assertThat(scheduledExecutorService.getTaskCount()).isEqualTo(0);
-        assertThat(scheduledExecutorServiceFuture.getTaskCount()).isEqualTo(0);
+    public void testCancelAndSchedule() throws InterruptedException {
+        assertThat(scheduleNashornRequestExecutionThread.getTaskCount()).isEqualTo(0);
+        assertThat(scheduleNashornRequestResponseThread.getTaskCount()).isEqualTo(0);
         assertThat(widgetRepository.count()).isEqualTo(1);
 
         // Schedule widget
         NashornRequest nashornRequest = nashornService.getNashornRequestByProjectWidgetId(projectWidget.getId());
-        nashornWidgetScheduler.cancelAndSchedule(nashornRequest);
+        nashornWidgetScheduler.cancelAndScheduleNashornRequest(nashornRequest);
         // TODO : Check behavior randomly switch from 1 to 2
-        assertThat(scheduledExecutorServiceFuture.getTaskCount()).isGreaterThan(0L);
+        assertThat(scheduleNashornRequestResponseThread.getTaskCount()).isGreaterThan(0L);
 
         // Get running task
-        WeakReference<ScheduledFuture<NashornResponse>> response = jobs.get(projectWidget.getId()).getKey();
+        WeakReference<ScheduledFuture<NashornResponse>> response = nashornTasksByProjectWidgetId.get(projectWidget.getId()).getKey();
         ScheduledFuture<NashornResponse> future = response.get();
         assertThat(future).isNotNull();
 
         // Reschedule widget
-        nashornWidgetScheduler.cancelAndSchedule(nashornService.getNashornRequestByProjectWidgetId(projectWidget.getId()));
+        nashornWidgetScheduler.cancelAndScheduleNashornRequest(nashornService.getNashornRequestByProjectWidgetId(projectWidget.getId()));
 
-        ScheduledFuture<NashornResponse> newFuture = jobs.get(projectWidget.getId()).getKey().get();
+        ScheduledFuture<NashornResponse> newFuture = nashornTasksByProjectWidgetId.get(projectWidget.getId()).getKey().get();
 
         // Check task canceled
         assertThat(future.isCancelled()).isTrue();
@@ -134,15 +152,16 @@ public class NashornWidgetSchedulerTest {
         assertThat(newFuture).isNotEqualTo(future);
         Thread.sleep(2100);
         // Wait completion
-        while (scheduledExecutorServiceFuture.getActiveCount() != 0) {
+        while (scheduleNashornRequestResponseThread.getActiveCount() != 0) {
         }
+
         Assert.assertNotNull(newFuture);
         assertThat(newFuture.isDone()).isTrue();
 
         // reinit
         nashornWidgetScheduler.init();
-        scheduledExecutorService = (ScheduledThreadPoolExecutor) ReflectionTestUtils.getField(nashornWidgetScheduler, "scheduledExecutorService");
-        scheduledExecutorServiceFuture = (ScheduledThreadPoolExecutor) ReflectionTestUtils.getField(nashornWidgetScheduler, "scheduledExecutorServiceFuture");
+        scheduleNashornRequestExecutionThread = (ScheduledThreadPoolExecutor) ReflectionTestUtils.getField(nashornWidgetScheduler, "scheduleNashornRequestExecutionThread");
+        scheduleNashornRequestResponseThread = (ScheduledThreadPoolExecutor) ReflectionTestUtils.getField(nashornWidgetScheduler, "scheduleNashornRequestResponseThread");
         // TODO : Check behavior randomly switch from 1 to 2
     }
 
@@ -154,7 +173,7 @@ public class NashornWidgetSchedulerTest {
         nashornRequest.setPreviousData(null);
 
         // Schedule widget
-        nashornWidgetScheduler.cancelAndSchedule(nashornRequest);
+        nashornWidgetScheduler.cancelAndScheduleNashornRequest(nashornRequest);
         ProjectWidget current = projectWidgetService.getOne(projectWidget.getId()).get();
         assertThat(current.getState()).isEqualTo(WidgetState.STOPPED);
         assertThat(current.getLastExecutionDate()).isNotNull();
@@ -163,15 +182,42 @@ public class NashornWidgetSchedulerTest {
 
     @Test
     @Transactional
-    public void testBadDelay() throws IOException, InterruptedException {
+    public void testBadDelay() {
         projectWidgetService.updateState(null, projectWidget.getId(), null);
         NashornRequest nashornRequest = nashornService.getNashornRequestByProjectWidgetId(projectWidget.getId());
         nashornRequest.setDelay(-1L);
         // Schedule widget
-        nashornWidgetScheduler.cancelAndSchedule(nashornRequest);
+        nashornWidgetScheduler.cancelAndScheduleNashornRequest(nashornRequest);
         ProjectWidget current = projectWidgetService.getOne(projectWidget.getId()).get();
         assertThat(current.getState()).isEqualTo(WidgetState.STOPPED);
         assertThat(current.getLastExecutionDate()).isNotNull();
         assertThat(current.getLastSuccessDate()).isNull();
+    }
+
+    /**
+     * Init a mocked database for the unit tests
+     */
+    private void initDatabase() throws IOException {
+        Project project = new Project();
+        project.setName("test");
+        project.setToken("999999");
+        projectRepository.save(project);
+
+        Category category = new Category();
+        category.setName("Test");
+        category.setTechnicalName("Test");
+        categoryRepository.save(category);
+
+        Widget widget = WidgetUtils.getWidget(new File(FilesUtilsTest.class.getResource("/widgets/test/widgets/alwaysRun").getFile()));
+        widget.setCategory(category);
+        widgetRepository.save(widget);
+
+        // Add widget Instance
+        projectWidget = new ProjectWidget();
+        projectWidget.setState(WidgetState.STOPPED);
+        projectWidget.setProject(project);
+        projectWidget.setWidget(widget);
+        projectWidget.setData("{}");
+        projectWidgetRepository.save(projectWidget);
     }
 }
