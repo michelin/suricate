@@ -10,22 +10,22 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 @ActiveProfiles("test")
 @SpringBootTest
-public class MethodsTest {
+public class NashornWidgetScriptTest {
 
     @Test
     public void testAtobNull(){
-        Assert.assertNull(Methods.btoa(null));
+        Assert.assertNull(NashornWidgetScript.btoa(null));
     }
 
     @Test
     public void testAtobEmpty(){
-        Assert.assertNull(Methods.btoa(""));
+        Assert.assertNull(NashornWidgetScript.btoa(""));
     }
 
     @Test
     public void testAtob(){
-        Assert.assertEquals("c2Rmc2ZkZg==", Methods.btoa("sdfsfdf"));
-        Assert.assertEquals("YWZzZGZkZnFzZGYgcXNmIHQnKHQgdHJlenQgYWV0cnpldHpldHJ0", Methods.btoa("afsdfdfqsdf qsf t'(t trezt aetrzetzetrt"));
+        Assert.assertEquals("c2Rmc2ZkZg==", NashornWidgetScript.btoa("sdfsfdf"));
+        Assert.assertEquals("YWZzZGZkZnFzZGYgcXNmIHQnKHQgdHJlenQgYWV0cnpldHpldHJ0", NashornWidgetScript.btoa("afsdfdfqsdf qsf t'(t trezt aetrzetzetrt"));
     }
 
 }

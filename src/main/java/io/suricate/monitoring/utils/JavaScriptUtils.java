@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.utils;
 
-import io.suricate.monitoring.services.nashorn.script.Methods;
+import io.suricate.monitoring.services.nashorn.script.NashornWidgetScript;
 import org.apache.commons.lang3.StringUtils;
 
 public final class JavaScriptUtils {
@@ -44,7 +44,7 @@ public final class JavaScriptUtils {
     /**
      * Full path to the checkInterrupted Java method
      */
-    private static final String INJECT_INTERRUPT_STRING = JavaScriptUtils.PACKAGES_LITERAL + Methods.class.getName() + ".checkInterrupted();";
+    private static final String INJECT_INTERRUPT_STRING = JavaScriptUtils.PACKAGES_LITERAL + NashornWidgetScript.class.getName() + ".checkInterrupted();";
 
     /**
      * Constructor
@@ -60,7 +60,7 @@ public final class JavaScriptUtils {
     public static String prepare(String data) {
         return injectInterrupt(
                 StringUtils.trimToEmpty(data).replace(
-                        JavaScriptUtils.PACKAGES_LITERAL, JavaScriptUtils.PACKAGES_LITERAL + Methods.class.getName() + "."));
+                        JavaScriptUtils.PACKAGES_LITERAL, JavaScriptUtils.PACKAGES_LITERAL + NashornWidgetScript.class.getName() + "."));
     }
 
     /**

@@ -23,7 +23,7 @@ import io.suricate.monitoring.model.dto.nashorn.error.RemoteError;
 import io.suricate.monitoring.model.dto.nashorn.error.RequestException;
 import io.suricate.monitoring.model.enums.DataType;
 import io.suricate.monitoring.model.enums.NashornErrorTypeEnum;
-import io.suricate.monitoring.services.nashorn.filter.JavaClassFilter;
+import io.suricate.monitoring.services.nashorn.filters.JavaClassFilter;
 import io.suricate.monitoring.utils.JavaScriptUtils;
 import io.suricate.monitoring.utils.JsonUtils;
 import io.suricate.monitoring.utils.PropertiesUtils;
@@ -38,6 +38,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.script.*;
 import java.io.StringWriter;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Date;
 import java.util.List;
@@ -116,10 +117,10 @@ public class NashornRequestWidgetExecutionAsyncTask implements Callable<NashornR
             Map<String, String> widgetProperties = PropertiesUtils.convertStringWidgetPropertiesToMap(nashornRequest.getProperties());
 
             // Decrypt widget secret properties
-            decryptWidgetProperties(widgetProperties, widgetParameters);
+            decryptWidgetProperties(widgetProperties);
 
             // Set default value to widget properties
-            setDefaultValueToWidgetProperties(widgetProperties, widgetParameters);
+            setDefaultValueToWidgetProperties(widgetProperties);
 
             // Populate properties in the engine
             for (Map.Entry<String, String> entry : widgetProperties.entrySet()) {
@@ -132,7 +133,6 @@ public class NashornRequestWidgetExecutionAsyncTask implements Callable<NashornR
             // Add the project widget id (id of the widget instance)
             scriptEngine.getBindings(ScriptContext.ENGINE_SCOPE).put(JavaScriptUtils.WIDGET_INSTANCE_ID_VARIABLE, nashornRequest.getProjectWidgetId());
 
-            // Add output buffer
             try (StringWriter sw = new StringWriter()) {
                 scriptEngine.getContext().setWriter(sw);
 
@@ -155,15 +155,13 @@ public class NashornRequestWidgetExecutionAsyncTask implements Callable<NashornR
                     nashornResponse.setError(nashornRequest.isAlreadySuccess() ? NashornErrorTypeEnum.ERROR : NashornErrorTypeEnum.FATAL);
                 }
             }
-        } catch (Exception e) {
-            LOGGER.error("An error has occurred during the Nashorn request execution of the widget instance: {}", nashornRequest.getProjectWidgetId(), e);
-
-            LOGGER.debug(ExceptionUtils.getMessage(e), e);
+        } catch (Exception exception) {
+            LOGGER.error("An error has occurred during the Nashorn request execution of the widget instance {}", nashornRequest.getProjectWidgetId(), exception);
 
             // Check timeout error and remote error
-            Throwable rootCause = ExceptionUtils.getRootCause(e);
+            Throwable rootCause = ExceptionUtils.getRootCause(exception);
 
-            if (isFatalError(e, rootCause)) {
+            if (isFatalError(exception, rootCause)) {
                 nashornResponse.setError(NashornErrorTypeEnum.FATAL);
             } else {
                 nashornResponse.setError(NashornErrorTypeEnum.ERROR);
@@ -171,8 +169,11 @@ public class NashornRequestWidgetExecutionAsyncTask implements Callable<NashornR
 
             if (rootCause instanceof RequestException) {
                 nashornResponse.setLog("Service Response:\n\n" + ((RequestException) rootCause).getResponse() + "\n\nTechnical Data:\n\n" + ((RequestException) rootCause).getTechnicalData());
+            } else if (rootCause instanceof SocketException) {
+                LOGGER.error("Cannot execute the widget instance {} behind the configured proxy", nashornRequest.getProjectWidgetId());
+                nashornResponse.setLog(prettify(ExceptionUtils.getRootCauseMessage(exception)) + ". Cannot execute the widget instance " + nashornRequest.getProjectWidgetId() + " behind the configured proxy.");
             } else {
-                nashornResponse.setLog(prettify(ExceptionUtils.getRootCauseMessage(e)));
+                nashornResponse.setLog(prettify(ExceptionUtils.getRootCauseMessage(exception)));
             }
         } finally {
             nashornResponse.setProjectId(nashornRequest.getProjectId());
@@ -186,11 +187,10 @@ public class NashornRequestWidgetExecutionAsyncTask implements Callable<NashornR
      * Decrypt the encrypted widget secret properties
      *
      * @param widgetProperties        The widget properties
-     * @param widgetParameters        The list of widget parameters
      */
-    private void decryptWidgetProperties(Map<String, String> widgetProperties, List<WidgetVariableResponse> widgetParameters) {
-        if (widgetParameters != null) {
-            for (WidgetVariableResponse widgetParameter : widgetParameters) {
+    private void decryptWidgetProperties(Map<String, String> widgetProperties) {
+        if (this.widgetParameters != null) {
+            for (WidgetVariableResponse widgetParameter : this.widgetParameters) {
                 if (widgetParameter.getType() == DataType.PASSWORD) {
                     widgetProperties.put(widgetParameter.getName(), stringEncryptor.decrypt(widgetProperties.get(widgetParameter.getName())));
                 }
@@ -202,11 +202,10 @@ public class NashornRequestWidgetExecutionAsyncTask implements Callable<NashornR
      * Set the unset variables in the map properties
      *
      * @param widgetProperties        The widget properties
-     * @param widgetParameters        The list of widget parameters
      */
-    private void setDefaultValueToWidgetProperties(Map<String, String> widgetProperties, List<WidgetVariableResponse> widgetParameters) {
-        if (widgetParameters != null) {
-            for (WidgetVariableResponse widgetVariableResponse : widgetParameters) {
+    private void setDefaultValueToWidgetProperties(Map<String, String> widgetProperties) {
+        if (this.widgetParameters != null) {
+            for (WidgetVariableResponse widgetVariableResponse : this.widgetParameters) {
                 if (!widgetProperties.containsKey(widgetVariableResponse.getName())) {
                     if (!widgetVariableResponse.isRequired()) {
                         widgetProperties.put(widgetVariableResponse.getName(), null);

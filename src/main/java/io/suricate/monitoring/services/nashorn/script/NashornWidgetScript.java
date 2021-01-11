@@ -19,7 +19,7 @@ package io.suricate.monitoring.services.nashorn.script;
 import io.suricate.monitoring.model.dto.nashorn.error.FatalError;
 import io.suricate.monitoring.model.dto.nashorn.error.RemoteError;
 import io.suricate.monitoring.model.dto.nashorn.error.RequestException;
-import io.suricate.monitoring.utils.OkHttpClientUtils;
+import io.suricate.monitoring.utils.http.OkHttpClientUtils;
 import okhttp3.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
@@ -30,7 +30,7 @@ import java.util.Base64;
 import java.util.Objects;
 import java.util.concurrent.TimeoutException;
 
-public final class Methods {
+public final class NashornWidgetScript {
 
     /**
      * Default httpClient
@@ -40,7 +40,7 @@ public final class Methods {
     /**
      * private constructor
      */
-    private Methods() { }
+    private NashornWidgetScript() { }
 
     /**
      * Method used to call a webservice
@@ -178,7 +178,6 @@ public final class Methods {
             throw new InterruptedException("Script Interrupted");
         }
     }
-
 
     /**
      * Method used to convert ASCII string to base 64
