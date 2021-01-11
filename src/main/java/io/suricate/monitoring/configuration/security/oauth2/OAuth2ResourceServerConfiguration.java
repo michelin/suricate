@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.configuration.security.oauth2;
 
-import io.suricate.monitoring.controllers.error.ApiAuthenticationFailureHandler;
+import io.suricate.monitoring.controllers.handlers.ApiAuthenticationFailureHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
