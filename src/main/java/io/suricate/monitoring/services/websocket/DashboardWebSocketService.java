@@ -120,7 +120,7 @@ public class DashboardWebSocketService {
      */
     @Async
     public void sendEventToProjectWidgetSubscribers(final String projectToken, final Long projectWidgetId, final UpdateEvent payload) {
-        LOGGER.debug("Sending the event {} to the widget instance {} of the project {}", payload.getType(), projectWidgetId, projectToken);
+        LOGGER.debug("Sending the event {} for the widget instance {} of the project {}", payload.getType(), projectWidgetId, projectToken);
 
         if (projectToken == null) {
             LOGGER.error("Project token null for payload: {}", payload);
