@@ -16,9 +16,9 @@
  *
  */
 
-package io.suricate.monitoring.services.nashorn.filter;
+package io.suricate.monitoring.services.nashorn.filters;
 
-import io.suricate.monitoring.services.nashorn.script.Methods;
+import io.suricate.monitoring.services.nashorn.script.NashornWidgetScript;
 import jdk.nashorn.api.scripting.ClassFilter;
 
 public class JavaClassFilter implements ClassFilter {
@@ -30,6 +30,6 @@ public class JavaClassFilter implements ClassFilter {
      * @return true is the class name is authorized, false otherwise
      */
     public boolean exposeToScripts(String s) {
-        return s.compareTo(Methods.class.getName()) == 0;
+        return s.compareTo(NashornWidgetScript.class.getName()) == 0;
     }
 }

@@ -31,6 +31,11 @@ public final class JsonUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(JsonUtils.class);
 
     /**
+     * Constructor
+     */
+    private JsonUtils() { }
+
+    /**
      * Validate the JSON parameter
      *
      * @param jsonInString the json string to test
@@ -48,8 +53,5 @@ public final class JsonUtils {
             }
         }
         return false;
-    }
-
-    private JsonUtils() {
     }
 }

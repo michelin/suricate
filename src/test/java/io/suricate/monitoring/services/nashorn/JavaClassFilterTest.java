@@ -1,7 +1,7 @@
 package io.suricate.monitoring.services.nashorn;
 
-import io.suricate.monitoring.services.nashorn.filter.JavaClassFilter;
-import io.suricate.monitoring.services.nashorn.script.Methods;
+import io.suricate.monitoring.services.nashorn.filters.JavaClassFilter;
+import io.suricate.monitoring.services.nashorn.script.NashornWidgetScript;
 import io.suricate.monitoring.utils.ApplicationConstant;
 import org.junit.Assert;
 import org.junit.Test;
@@ -21,7 +21,7 @@ public class JavaClassFilterTest {
 
     @Test
     public void testAuthorizedClass() throws Exception {
-        Assert.assertTrue(classFilter.exposeToScripts(Methods.class.getName()));
+        Assert.assertTrue(classFilter.exposeToScripts(NashornWidgetScript.class.getName()));
     }
 
 }

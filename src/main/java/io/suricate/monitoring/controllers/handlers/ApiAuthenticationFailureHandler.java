@@ -16,7 +16,7 @@
  *
  */
 
-package io.suricate.monitoring.controllers.error;
+package io.suricate.monitoring.controllers.handlers;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;

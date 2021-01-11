@@ -1,6 +1,6 @@
 package io.suricate.monitoring.utils;
 
-import io.suricate.monitoring.services.nashorn.script.Methods;
+import io.suricate.monitoring.services.nashorn.script.NashornWidgetScript;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Assert;
 import org.junit.Test;
@@ -27,12 +27,12 @@ public class JavaScriptUtilsTest {
 
     @Test
     public void testInjectInterruptLoop() {
-        Assert.assertEquals("function(){Packages." + Methods.class.getName() + ".checkInterrupted();};", JavaScriptUtils.injectInterrupt("function(){};"));
-        Assert.assertEquals("function(){Packages." + Methods.class.getName() + ".checkInterrupted();\nwhile(true){Packages." + Methods.class.getName() + ".checkInterrupted();\n}\n};", JavaScriptUtils.injectInterrupt("function()\n{\nwhile(true)\n{\n}\n};"));
+        Assert.assertEquals("function(){Packages." + NashornWidgetScript.class.getName() + ".checkInterrupted();};", JavaScriptUtils.injectInterrupt("function(){};"));
+        Assert.assertEquals("function(){Packages." + NashornWidgetScript.class.getName() + ".checkInterrupted();\nwhile(true){Packages." + NashornWidgetScript.class.getName() + ".checkInterrupted();\n}\n};", JavaScriptUtils.injectInterrupt("function()\n{\nwhile(true)\n{\n}\n};"));
     }
 
     @Test
     public void testprepare() {
-        Assert.assertEquals("Packages." + Methods.class.getName() + ".checkInterrupted()", JavaScriptUtils.prepare("Packages.checkInterrupted()"));
+        Assert.assertEquals("Packages." + NashornWidgetScript.class.getName() + ".checkInterrupted()", JavaScriptUtils.prepare("Packages.checkInterrupted()"));
     }
 }
