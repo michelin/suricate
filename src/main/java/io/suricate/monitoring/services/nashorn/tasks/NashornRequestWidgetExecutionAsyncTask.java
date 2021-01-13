@@ -29,6 +29,7 @@ import io.suricate.monitoring.utils.JsonUtils;
 import io.suricate.monitoring.utils.PropertiesUtils;
 import io.suricate.monitoring.utils.ToStringUtils;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
+import jdk.nashorn.internal.runtime.ECMAException;
 import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
@@ -172,6 +173,9 @@ public class NashornRequestWidgetExecutionAsyncTask implements Callable<NashornR
             } else if (rootCause instanceof SocketException) {
                 LOGGER.error("Cannot execute the widget instance {} behind the configured proxy", nashornRequest.getProjectWidgetId());
                 nashornResponse.setLog(prettify(ExceptionUtils.getRootCauseMessage(exception)) + ". Cannot execute the widget instance " + nashornRequest.getProjectWidgetId() + " behind the configured proxy.");
+            } else if (rootCause instanceof ECMAException) {
+                LOGGER.error("An error has been thrown during the script execution of the widget instance {}", nashornRequest.getProjectWidgetId());
+                nashornResponse.setLog(prettify(ExceptionUtils.getRootCauseMessage(exception)) + ". An error has been thrown during the script execution of the widget instance " + nashornRequest.getProjectWidgetId() + ".");
             } else {
                 nashornResponse.setLog(prettify(ExceptionUtils.getRootCauseMessage(exception)));
             }

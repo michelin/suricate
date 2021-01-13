@@ -37,6 +37,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 @Scope(value="prototype")
 public class NashornRequestResultAsyncTask implements Callable<Void>{
+
     /**
      * Class logger
      */
@@ -114,7 +115,6 @@ public class NashornRequestResultAsyncTask implements Callable<Void>{
      *
      * Update the widget from the Nashorn response and notify the Front-End. Perform some retries
      * on the widget update. If all the retries fail, then schedule a new Nashorn request execution.
-     *
      */
     @Override
     public Void call() {

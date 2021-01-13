@@ -43,134 +43,173 @@ public final class NashornWidgetScript {
     private NashornWidgetScript() { }
 
     /**
-     * Method used to call a webservice
+     * Create and submit a HTTP request according to the given parameters
      *
-     * @param url          the url to call
-     * @param headerName   the header name to add
-     * @param headerValue  the header value to add
-     * @param returnHeader can be null, if it was not null this method return the header value
-     * @param body         used to send body
-     * @param mediaType    media type
-     * @return the response body of the request or the header value if returnHeader is defined
+     * @param url The URL of the endpoint to call
+     * @param headerName The name of the header to add
+     * @param headerValue The value to set to the added header
+     * @param returnedHeader The name of the header to return
+     * @param body The body of the request. Can be null in case of GET HTTP request
+     * @param mediaType The requested media type
+     * @return The response body of the request or the value of the requested header
+     * @throws IOException
+     * @throws RemoteError
+     * @throws RequestException
      */
-    private static String callRaw(String url, String headerName, String headerValue, String returnHeader, String body, String mediaType)
-        throws IOException, RemoteError, RequestException {
-
+    private static String executeRequest(String url, String headerName, String headerValue, String returnedHeader, String body, String mediaType)
+            throws IOException, RemoteError, RequestException {
         Request.Builder builder = new Request.Builder().url(url);
+
         if (StringUtils.isNotBlank(headerName)) {
             builder.addHeader(headerName, headerValue);
         }
+
         if (StringUtils.isNotBlank(body)) {
             builder.post(RequestBody.create(body, MediaType.parse(mediaType)));
         }
-        Request request = builder.build();
-        String ret = null;
-        try (Response response = client.newCall(request).execute()) {
 
+        Request request = builder.build();
+        String returnedValue = null;
+
+        try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful()) {
-                if (StringUtils.isNotBlank(returnHeader)) {
-                    ret = response.header(returnHeader);
+                if (StringUtils.isNotBlank(returnedHeader)) {
+                    returnedValue = response.header(returnedHeader);
                 } else {
-                    ret = Objects.requireNonNull(response.body()).string();
+                    returnedValue = Objects.requireNonNull(response.body()).string();
                 }
             } else {
                 if (response.code() >= HttpStatus.INTERNAL_SERVER_ERROR.value()) {
                     throw new RemoteError("Response error: " + response.message() + " code:" + response.code());
                 } else {
                     throw new RequestException(
-                        response.message() + " - code:" + response.code(),
-                        response.body() != null ? response.body().string() : null
+                            response.message() + " - code:" + response.code(),
+                            response.body() != null ? response.body().string() : null
                     );
                 }
             }
         }
 
-        return ret;
+        return returnedValue;
     }
 
-
     /**
-     * Method used to call a webservice
+     * Perform a GET HTTP call
+     * This method is directly called by the widgets
      *
-     * @param url          the url to call
-     * @param headerName   the header name to add
-     * @param headerValue  the header value to add
-     * @param returnHeader can be null, if it was not null this method return the header value
-     * @param body         used to send body
-     * @return the response body of the request or the header value if returnHeader is defined
+     * @param url The URL of the endpoint to call
+     * @return The response body of the request
+     * @throws RemoteError
+     * @throws IOException
+     * @throws RequestException
      */
-    private static String callRaw(String url, String headerName, String headerValue, String returnHeader, String body) throws RemoteError, IOException, RequestException {
-        return callRaw(url, headerName, headerValue, returnHeader, body, "application/json");
+    public static String get(String url) throws RemoteError, IOException, RequestException {
+        return NashornWidgetScript.executeRequest(url, null, null, null, null, "application/json");
     }
 
-
     /**
-     * Method used to call a webservice
+     * Perform a GET HTTP call
+     * This method is directly called by the widgets
      *
-     * @param url          the url to call
-     * @param headerName   the header name to add
-     * @param headerValue  the header value to add
-     * @param returnHeader can be null, if it was not null this method return the header value
-     * @return the response body of the request or the header value if returnHeader is defined
-     */
-    public static String call(String url, String headerName, String headerValue, String returnHeader) throws RemoteError, IOException, RequestException {
-        return callRaw(url, headerName, headerValue, returnHeader, null);
-    }
-
-    /**
-     * Method used to call a webservice
+     * Accept the name of a header as parameter and a value to set it to
+     * add them to the request
      *
-     * @param url         the url to call
-     * @param headerName  the header name to add
-     * @param headerValue the header value to add
-     * @param body        used to send body
-     * @return the response body of the request or the header value if returnHeader is defined
+     * @param url The URL of the endpoint to call
+     * @param headerName The name of the header to add
+     * @param headerValue The value to set to the added header
+     * @return The response body of the request
+     * @throws RemoteError
+     * @throws IOException
+     * @throws RequestException
      */
-    public static String callWithHeaderBody(String url, String headerName, String headerValue, String body) throws RemoteError, IOException, RequestException {
-        return callRaw(url, headerName, headerValue, null, body);
+    public static String get(String url, String headerName, String headerValue) throws RemoteError, IOException, RequestException {
+        return NashornWidgetScript.executeRequest(url, headerName, headerValue, null, null, "application/json");
     }
 
     /**
-     * Method used to call a webservice
+     * Perform a GET HTTP call
+     * This method is directly called by the widgets
      *
-     * @param url         the url to call
-     * @param headerName  the header name to add
-     * @param headerValue the header value to add
-     * @param body        used to send body
-     * @param mediaType   media type
-     * @return the response body of the request or the header value if returnHeader is defined
-     */
-    public static String callWithHeaderBody(String url, String headerName, String headerValue, String body, String mediaType) throws RemoteError, IOException, RequestException {
-        return callRaw(url, headerName, headerValue, null, body, mediaType);
-    }
-
-
-    /**
-     * Method used to call a webservice
+     * Accept the name of a header as parameter and a value to set it to
+     * add them to the request
      *
-     * @param url  the url to call
-     * @param body can be null, if it was not null this method return the header value
-     * @return the response body of the request or the header value if returnHeader is defined
-     */
-    public static String callWithBody(String url, String body) throws RemoteError, IOException, RequestException {
-        return callRaw(url, null, null, null, body);
-    }
-
-    /**
-     * Method used to call a webservice
+     * Accept the name of a header as parameter to return its value
      *
-     * @param url       the url to call
-     * @param body      can be null, if it was not null this method return the header value
-     * @param mediaType media type
-     * @return the response body of the request or the header value if returnHeader is defined
+     * @param url The URL of the endpoint to call
+     * @param headerName The name of the header to add
+     * @param headerValue The value to set to the added header
+     * @param returnedHeader The name of the header to return
+     * @return The requested header
+     * @throws RemoteError
+     * @throws IOException
+     * @throws RequestException
      */
-    public static String callWithBody(String url, String body, String mediaType) throws RemoteError, IOException, RequestException {
-        return callRaw(url, null, null, null, body, mediaType);
+    public static String get(String url, String headerName, String headerValue, String returnedHeader) throws RemoteError, IOException, RequestException {
+        return NashornWidgetScript.executeRequest(url, headerName, headerValue, returnedHeader, null, "application/json");
     }
 
+    /**
+     * Perform a POST HTTP call
+     * This method is directly called by the widgets
+     *
+     * @param url The URL of the endpoint to call
+     * @param body The body of the POST request
+     * @return The response body of the request or the value of the requested header
+     * @throws RemoteError
+     * @throws IOException
+     * @throws RequestException
+     */
+    public static String post(String url, String body) throws RemoteError, IOException, RequestException {
+        return NashornWidgetScript.executeRequest(url, null, null, null, body == null ? "{}" : body, "application/json");
+    }
 
     /**
-     * Method used to isValid is a thread is interrupted
+     * Perform a POST HTTP call
+     * This method is directly called by the widgets
+     *
+     * Accept the name of a header as parameter and a value to set it to
+     * add them to the request
+     *
+     * @param url The URL of the endpoint to call
+     * @param headerName The name of the header to add
+     * @param headerValue The value to set to the added header
+     * @param body The body of the POST request
+     * @return The response body of the request or the value of the requested header
+     * @throws RemoteError
+     * @throws IOException
+     * @throws RequestException
+     */
+    public static String post(String url, String headerName, String headerValue, String body) throws RemoteError, IOException, RequestException {
+        return NashornWidgetScript.executeRequest(url, headerName, headerValue, null, body == null ? "{}" : body, "application/json");
+    }
+
+    /**
+     * Perform a POST HTTP call
+     * This method is directly called by the widgets
+     *
+     * Accept the name of a header as parameter and a value to set it to
+     * add them to the request
+     *
+     * Accept the name of a header as parameter to return its value
+     *
+     * @param url The URL of the endpoint to call
+     * @param headerName The name of the header to add
+     * @param headerValue The value to set to the added header
+     * @param returnedHeader The name of the header to return
+     * @param body The body of the POST request
+     * @return The response body of the request or the value of the requested header
+     * @throws RemoteError
+     * @throws IOException
+     * @throws RequestException
+     */
+    public static String post(String url, String headerName, String headerValue, String returnedHeader, String body) throws RemoteError, IOException, RequestException {
+        return NashornWidgetScript.executeRequest(url, headerName, headerValue, returnedHeader, body == null ? "{}" : body, "application/json");
+    }
+
+    /**
+     * Check if a thread is interrupted
+     * This method is injected during the Nashorn request preparation
+     *
      * @throws InterruptedException an exception if the thread is interrupted
      */
     public static void checkInterrupted() throws InterruptedException {
@@ -180,36 +219,41 @@ public final class NashornWidgetScript {
     }
 
     /**
-     * Method used to convert ASCII string to base 64
-     * @param data string to convert
-     * @return Base64 string
+     * Convert ASCII string to base 64
+     * This method is directly called by the widgets especially to encrypt credentials
+     *
+     * @param data The string to convert
+     * @return A String encoded with Base64
      */
-    public static String btoa(String data){
-        if (StringUtils.isBlank(data)){
+    public static String btoa(String data) {
+        if (StringUtils.isBlank(data)) {
             return null;
         }
         return Base64.getEncoder().encodeToString(data.getBytes(StandardCharsets.UTF_8));
     }
 
     /**
-     * Method used to throw new error
-     * @throws RemoteError error throws
+     * Throw a remote error
+     *
+     * @throws RemoteError The error thrown
      */
     public static void throwError() throws RemoteError {
         throw new RemoteError("Error");
     }
 
     /**
-     * Method used to throw new fatal error
-     * @throws FatalError the exception throw
+     * Throw a fatal error
+     *
+     * @throws FatalError The error thrown
      */
     public static void throwFatalError(String msg) throws FatalError {
         throw new FatalError(msg);
     }
 
     /**
-     * Method used to throw new timeout exception
-     * @throws TimeoutException timeout exception
+     * Throw a timeout exception
+     *
+     * @throws TimeoutException The error thrown
      */
     public static void throwTimeout() throws TimeoutException {
         throw new TimeoutException("Timeout");

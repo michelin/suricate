@@ -184,7 +184,8 @@ public class NashornRequestWidgetExecutionScheduler {
      * Create an asynchronous task which will execute the Nashorn request and execute the widget. Schedule
      * this task according to the computed delay.
      *
-     * Create another ansynchronous task which will
+     * Create another asynchronous task which will wait for the result of the first task (the result of the widget execution).
+     * It waits during the whole duration set in the widget description as timeout.
      *
      * @param nashornRequest The Nashorn request
      * @param start          Force the Nashorn request to start now
