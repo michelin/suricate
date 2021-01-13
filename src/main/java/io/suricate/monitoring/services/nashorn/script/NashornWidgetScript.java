@@ -48,7 +48,7 @@ public final class NashornWidgetScript {
      * @param url The URL of the endpoint to call
      * @param headerName The name of the header to add
      * @param headerValue The value to set to the added header
-     * @param returnedHeader The name of the header to return
+     * @param headerToReturn The name of the header to return
      * @param body The body of the request. Can be null in case of GET HTTP request
      * @param mediaType The requested media type
      * @return The response body of the request or the value of the requested header
@@ -56,7 +56,7 @@ public final class NashornWidgetScript {
      * @throws RemoteError
      * @throws RequestException
      */
-    private static String executeRequest(String url, String headerName, String headerValue, String returnedHeader, String body, String mediaType)
+    private static String executeRequest(String url, String headerName, String headerValue, String headerToReturn, String body, String mediaType)
             throws IOException, RemoteError, RequestException {
         Request.Builder builder = new Request.Builder().url(url);
 
@@ -73,8 +73,8 @@ public final class NashornWidgetScript {
 
         try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful()) {
-                if (StringUtils.isNotBlank(returnedHeader)) {
-                    returnedValue = response.header(returnedHeader);
+                if (StringUtils.isNotBlank(headerToReturn)) {
+                    returnedValue = response.header(headerToReturn);
                 } else {
                     returnedValue = Objects.requireNonNull(response.body()).string();
                 }
@@ -138,14 +138,14 @@ public final class NashornWidgetScript {
      * @param url The URL of the endpoint to call
      * @param headerName The name of the header to add
      * @param headerValue The value to set to the added header
-     * @param returnedHeader The name of the header to return
+     * @param headerToReturn The name of the header to return
      * @return The requested header
      * @throws RemoteError
      * @throws IOException
      * @throws RequestException
      */
-    public static String get(String url, String headerName, String headerValue, String returnedHeader) throws RemoteError, IOException, RequestException {
-        return NashornWidgetScript.executeRequest(url, headerName, headerValue, returnedHeader, null, "application/json");
+    public static String get(String url, String headerName, String headerValue, String headerToReturn) throws RemoteError, IOException, RequestException {
+        return NashornWidgetScript.executeRequest(url, headerName, headerValue, headerToReturn, null, "application/json");
     }
 
     /**
@@ -154,13 +154,13 @@ public final class NashornWidgetScript {
      *
      * @param url The URL of the endpoint to call
      * @param body The body of the POST request
-     * @return The response body of the request or the value of the requested header
+     * @return The response body of the request
      * @throws RemoteError
      * @throws IOException
      * @throws RequestException
      */
     public static String post(String url, String body) throws RemoteError, IOException, RequestException {
-        return NashornWidgetScript.executeRequest(url, null, null, null, body == null ? "{}" : body, "application/json");
+        return NashornWidgetScript.executeRequest(url, null, null, null, StringUtils.isBlank(body) ? "{}" : body, "application/json");
     }
 
     /**
@@ -171,16 +171,16 @@ public final class NashornWidgetScript {
      * add them to the request
      *
      * @param url The URL of the endpoint to call
+     * @param body The body of the POST request
      * @param headerName The name of the header to add
      * @param headerValue The value to set to the added header
-     * @param body The body of the POST request
-     * @return The response body of the request or the value of the requested header
+     * @return The response body of the request
      * @throws RemoteError
      * @throws IOException
      * @throws RequestException
      */
-    public static String post(String url, String headerName, String headerValue, String body) throws RemoteError, IOException, RequestException {
-        return NashornWidgetScript.executeRequest(url, headerName, headerValue, null, body == null ? "{}" : body, "application/json");
+    public static String post(String url, String body, String headerName, String headerValue) throws RemoteError, IOException, RequestException {
+        return NashornWidgetScript.executeRequest(url, headerName, headerValue, null, StringUtils.isBlank(body) ? "{}" : body, "application/json");
     }
 
     /**
@@ -190,20 +190,20 @@ public final class NashornWidgetScript {
      * Accept the name of a header as parameter and a value to set it to
      * add them to the request
      *
-     * Accept the name of a header as parameter to return its value
+     * Accept a given media type
      *
      * @param url The URL of the endpoint to call
+     * @param body The body of the POST request
      * @param headerName The name of the header to add
      * @param headerValue The value to set to the added header
-     * @param returnedHeader The name of the header to return
-     * @param body The body of the POST request
-     * @return The response body of the request or the value of the requested header
+     * @param mediaType The requested media type
+     * @return The response body of the request
      * @throws RemoteError
      * @throws IOException
      * @throws RequestException
      */
-    public static String post(String url, String headerName, String headerValue, String returnedHeader, String body) throws RemoteError, IOException, RequestException {
-        return NashornWidgetScript.executeRequest(url, headerName, headerValue, returnedHeader, body == null ? "{}" : body, "application/json");
+    public static String post(String url, String body, String headerName, String headerValue, String mediaType) throws RemoteError, IOException, RequestException {
+        return NashornWidgetScript.executeRequest(url, headerName, headerValue, null, StringUtils.isBlank(body) ? "{}" : body, mediaType);
     }
 
     /**
