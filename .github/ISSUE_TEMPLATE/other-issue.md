@@ -1,15 +1,16 @@
 ---
-
 name: Other issue
-about: Any other things to be reported ?
+about: Something else to report ?
 title: ''
 labels: ''
 assignees: ''
----**Describe the issue**
+
+---
+
+**Describe the issue**
 A clear and concise description of what the issue is.
 
 **Issue type**
-
 - [ ] Bug
 - [ ] Improvment
 - [ ] Documentation
