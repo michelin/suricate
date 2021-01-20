@@ -76,5 +76,5 @@ public class Category extends AbstractAuditingEntity<Long> {
      * The associated categories for this configuration
      */
     @OneToMany(mappedBy = "category", cascade = CascadeType.REMOVE)
-    private List<WidgetConfiguration> widgetConfigurations = new ArrayList<>();
+    private List<WidgetConfiguration> configurations = new ArrayList<>();
 }

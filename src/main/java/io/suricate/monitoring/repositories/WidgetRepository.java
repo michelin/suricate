@@ -30,10 +30,10 @@ public interface WidgetRepository extends JpaRepository<Widget, Long>, JpaSpecif
     /**
      * Find a widget by technical name
      *
-     * @param technicalname The technical name
+     * @param technicalName The technical name
      * @return The related widget
      */
-    Widget findByTechnicalName(String technicalname);
+    Widget findByTechnicalName(String technicalName);
 
     /**
      * Find every widgets by category id

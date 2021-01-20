@@ -20,6 +20,7 @@ import io.suricate.monitoring.model.dto.api.widget.WidgetRequestDto;
 import io.suricate.monitoring.model.dto.nashorn.WidgetVariableResponse;
 import io.suricate.monitoring.model.entities.*;
 import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
+import io.suricate.monitoring.repositories.WidgetParamRepository;
 import io.suricate.monitoring.repositories.WidgetRepository;
 import io.suricate.monitoring.services.CacheService;
 import io.suricate.monitoring.services.specifications.WidgetSearchSpecification;
@@ -69,6 +70,11 @@ public class WidgetService {
     private final WidgetRepository widgetRepository;
 
     /**
+     * Widget parameter repository
+     */
+    private final WidgetParamRepository widgetParamRepository;
+
+    /**
      * Category repository
      */
     private final CategoryService categoryService;
@@ -77,6 +83,7 @@ public class WidgetService {
      * Constructor
      *
      * @param widgetRepository           The widget repository
+     * @param widgetParamRepository      The widget param repository
      * @param categoryService            The category service
      * @param widgetConfigurationService The configuration service
      * @param cacheService               The cache service
@@ -84,11 +91,13 @@ public class WidgetService {
      */
     @Autowired
     public WidgetService(final WidgetRepository widgetRepository,
+                         final WidgetParamRepository widgetParamRepository,
                          final CategoryService categoryService,
                          final WidgetConfigurationService widgetConfigurationService,
                          final CacheService cacheService,
                          final AssetService assetService) {
         this.widgetRepository = widgetRepository;
+        this.widgetParamRepository = widgetParamRepository;
         this.categoryService = categoryService;
         this.widgetConfigurationService = widgetConfigurationService;
         this.cacheService = cacheService;
@@ -286,7 +295,7 @@ public class WidgetService {
                 assetService.save(widget.getImage());
             }
 
-            // Replace The existing list of params and values by the new one
+            // Replace the existing list of params and values by the new one
             if (widget.getWidgetParams() != null && !widget.getWidgetParams().isEmpty() &&
                 currentWidget != null && currentWidget.getWidgetParams() != null && !currentWidget.getWidgetParams().isEmpty()) {
 
@@ -320,16 +329,24 @@ public class WidgetService {
                 });
             }
 
-            // Set Id
+            // Set ID and remove parameters which are not present anymore
             if (currentWidget != null) {
                 widget.setWidgetAvailability(currentWidget.getWidgetAvailability()); // Keep the previous widget state
                 widget.setId(currentWidget.getId());
+
+                for (WidgetParam oldWidgetParameter : currentWidget.getWidgetParams()) {
+                    if (!widget.getWidgetParams().contains(oldWidgetParameter)) {
+                        widgetParamRepository.deleteById(oldWidgetParameter.getId());
+                    }
+                }
             }
 
             // Set activated state by default
             if (widget.getWidgetAvailability() == null) {
                 widget.setWidgetAvailability(WidgetAvailabilityEnum.ACTIVATED);
             }
+
+
 
             // set category
             widget.setCategory(category);

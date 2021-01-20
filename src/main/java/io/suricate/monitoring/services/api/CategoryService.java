@@ -88,9 +88,9 @@ public class CategoryService {
     }
 
     /**
-     * Method used to add or update an category
+     * Add or update a category
      *
-     * @param category the category to add
+     * @param category The category to add or update
      */
     @Transactional
     public void addOrUpdateCategory(Category category) {
@@ -98,21 +98,22 @@ public class CategoryService {
             return;
         }
 
-        // Find and existing category with the same id
-        Category currentCateg = findByTechnicalName(category.getTechnicalName());
+        Category existingCategory = findByTechnicalName(category.getTechnicalName());
         if (category.getImage() != null) {
-            if (currentCateg != null && currentCateg.getImage() != null) {
-                category.getImage().setId(currentCateg.getImage().getId());
+            if (existingCategory != null && existingCategory.getImage() != null) {
+                category.getImage().setId(existingCategory.getImage().getId());
             }
+
             assetService.save(category.getImage());
         }
-        if (currentCateg != null) {
-            category.setId(currentCateg.getId());
+
+        if (existingCategory != null) {
+            category.setId(existingCategory.getId());
         }
 
         // Save the configurations
-        List<WidgetConfiguration> widgetConfigurations = category.getWidgetConfigurations();
-        category.setWidgetConfigurations(new ArrayList<>());
+        List<WidgetConfiguration> widgetConfigurations = category.getConfigurations();
+        category.setConfigurations(new ArrayList<>());
 
         // Create/Update category
         categoryRepository.save(category);
