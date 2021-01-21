@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-import { WidgetJsScriptsDirective } from './widget-js-scripts.directive';
+import { WidgetHtmlDirective } from './widget-html.directive';
 import { TestBed } from '@angular/core/testing';
 import { MockModule } from '../../mock/mock.module';
 
 describe('WidgetJsScriptsDirective', () => {
-  let directive: WidgetJsScriptsDirective;
+  let directive: WidgetHtmlDirective;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [MockModule],
-      providers: [WidgetJsScriptsDirective]
+      providers: [WidgetHtmlDirective]
     });
 
-    directive = TestBed.inject(WidgetJsScriptsDirective);
+    directive = TestBed.inject(WidgetHtmlDirective);
   });
 
   it('should create', () => {

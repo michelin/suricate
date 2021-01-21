@@ -25,6 +25,7 @@ import io.suricate.monitoring.model.entities.ProjectWidget;
 import io.suricate.monitoring.model.enums.NashornErrorTypeEnum;
 import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.model.enums.WidgetState;
+import io.suricate.monitoring.services.api.ProjectService;
 import io.suricate.monitoring.services.api.ProjectWidgetService;
 import io.suricate.monitoring.services.mapper.ProjectWidgetMapper;
 import io.suricate.monitoring.services.nashorn.scheduler.NashornRequestWidgetExecutionScheduler;
@@ -73,9 +74,15 @@ public class DashboardScheduleService {
     private final NashornService nashornService;
 
     /**
+     * The project service
+     */
+    private final ProjectService projectService;
+
+    /**
      * Constructor
      *
      * @param dashboardWebSocketService The dashboard websocket service
+     * @param projectService            The project service
      * @param projectWidgetService      The project widget service
      * @param projectWidgetMapper       The project widget mapper
      * @param nashornService            The nashorn service to inject
@@ -83,11 +90,13 @@ public class DashboardScheduleService {
      */
     @Autowired
     public DashboardScheduleService(final DashboardWebSocketService dashboardWebSocketService,
+                                    final ProjectService projectService,
                                     final ProjectWidgetService projectWidgetService,
                                     final ProjectWidgetMapper projectWidgetMapper,
                                     final NashornService nashornService,
                                     final ApplicationContext applicationContext) {
         this.dashboardWebSocketService = dashboardWebSocketService;
+        this.projectService = projectService;
         this.projectWidgetService = projectWidgetService;
         this.projectWidgetMapper = projectWidgetMapper;
         this.nashornService = nashornService;
@@ -165,13 +174,15 @@ public class DashboardScheduleService {
         ProjectWidget projectWidget = projectWidgetService.getOne(projectWidgetId).orElse(null);
         event.setContent(projectWidgetMapper.toProjectWidgetDtoDefault(projectWidget));
 
-        dashboardWebSocketService.updateGlobalScreensByIdAndProjectWidgetId(projectId, projectWidgetId, event);
+        dashboardWebSocketService.sendEventToWidgetInstanceSubscribers(projectService.getTokenByProjectId(projectId), projectWidgetId, event);
     }
 
     /**
-     * Method used to schedule a widget
+     * Schedule the execution of a given widget instance.
+     * Prepare the Nashorn request then cancel the current request
+     * and schedule a new request.
      *
-     * @param projectWidgetId The project widget id
+     * @param projectWidgetId The widget instance ID
      */
     @Transactional
     public void scheduleWidget(final Long projectWidgetId) {

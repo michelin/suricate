@@ -7,9 +7,9 @@
   (mouseenter)="displayButtons = true"
   (mouseleave)="displayButtons = false"
 >
-  <suricate-spinner *ngIf="isComponentLoading" color="accent"></suricate-spinner>
+  <suricate-spinner *ngIf="loading" color="accent"></suricate-spinner>
 
-  <ng-container *ngIf="!isComponentLoading">
+  <ng-container *ngIf="!loading">
     <!--------------------------------------------------->
     <!--                 WIDGET CSS                    -->
     <!--------------------------------------------------->
@@ -20,7 +20,7 @@
     <!--                 WIDGET HTML                   -->
     <!--------------------------------------------------->
     <div class="grid-stack-item-content">
-      <div class="widget-html-content" suricateWidgetJsScripts [innerHTML]="projectWidget.instantiateHtml | safeHtml"></div>
+      <div class="widget-html-content" widgetHtmlDirective [innerHTML]="projectWidget.instantiateHtml | safeHtml"></div>
     </div>
 
     <!--------------------------------------------------->

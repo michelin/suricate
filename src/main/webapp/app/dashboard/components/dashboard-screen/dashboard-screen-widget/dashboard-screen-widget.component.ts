@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { TitleCasePipe } from '@angular/common';
 import { NgGridItemConfig, NgGridItemEvent } from 'angular2-grid';
@@ -99,9 +99,9 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   private startGridStackItem: NgGridItemConfig;
 
   /**
-   * Tell if the component is Loading widget
+   * Is the widget loading or not
    */
-  public isComponentLoading = true;
+  public loading = true;
 
   /**
    * Used to display the buttons when the screen is not readonly
@@ -158,7 +158,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
       this.widget = widget;
 
       this.libraryService.allExternalLibrariesLoaded.subscribe((areExternalLibrariesLoaded: boolean) => {
-        this.isComponentLoading = !areExternalLibrariesLoaded;
+        this.loading = !areExternalLibrariesLoaded;
       });
     });
   }
@@ -190,6 +190,17 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Refresh this project widget
+   */
+  private refreshProjectWidget(): void {
+    this.loading = true;
+    this.httpProjectWidgetService.getOneById(this.projectWidget.id).subscribe(projectWidget => {
+      this.projectWidget = projectWidget;
+      this.loading = false;
+    });
+  }
+
+  /**
    * Register the new position of the element
    *
    * @param gridItemEvent The grid item event
@@ -209,15 +220,6 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
     if (GridItemUtils.isItemHaveBeenMoved(this.startGridStackItem, this.gridStackItem)) {
       event.preventDefault();
     }
-  }
-
-  /**
-   * Refresh this project widget
-   */
-  private refreshProjectWidget(): void {
-    this.httpProjectWidgetService.getOneById(this.projectWidget.id).subscribe(projectWidget => {
-      this.projectWidget = projectWidget;
-    });
   }
 
   /**
@@ -260,7 +262,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
       widgetId: this.projectWidget.widgetId,
       customStyle: this.projectWidget.customStyle,
       backendConfig: Object.keys(formData)
-        .filter((key: string) => formData[key] !== undefined && formData[key].trim() !== '')
+        .filter((key: string) => formData[key] !== undefined && `${formData[key]}`.trim() !== '')
         .map((key: string) => `${key}=${formData[key]}`)
         .join('\n')
     };

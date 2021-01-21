@@ -1,10 +1,10 @@
-import { Directive, ElementRef, OnInit } from '@angular/core';
+import { Directive, ElementRef, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 
 /**
  * Directive for Widget's JS scripts
  */
-@Directive({ selector: '[suricateWidgetJsScripts]' })
-export class WidgetJsScriptsDirective implements OnInit {
+@Directive({ selector: '[widgetHtmlDirective]' })
+export class WidgetHtmlDirective implements OnInit {
   /**
    * Constructor
    *
@@ -20,8 +20,9 @@ export class WidgetJsScriptsDirective implements OnInit {
   }
 
   /**
-   * From all the JS scripts contained by the current widget, build new scripts then insert them in the DOM.
+   * From all the JS scripts contained by the current widget HTML section, build new scripts then insert them in the DOM.
    * It executes the scripts again and render the widget properly.
+   * This is called once the HTML of the widget is fully loaded.
    */
   private reloadJSScripts() {
     const scripts: HTMLScriptElement[] = (<HTMLScriptElement[]>(

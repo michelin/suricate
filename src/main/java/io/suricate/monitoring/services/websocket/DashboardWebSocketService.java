@@ -119,7 +119,7 @@ public class DashboardWebSocketService {
      * @param payload         The payload content
      */
     @Async
-    public void sendEventToProjectWidgetSubscribers(final String projectToken, final Long projectWidgetId, final UpdateEvent payload) {
+    public void sendEventToWidgetInstanceSubscribers(final String projectToken, final Long projectWidgetId, final UpdateEvent payload) {
         LOGGER.debug("Sending the event {} for the widget instance {} of the project {}", payload.getType(), projectWidgetId, projectToken);
 
         if (projectToken == null) {
@@ -325,17 +325,6 @@ public class DashboardWebSocketService {
      */
     public void updateGlobalScreensByProjectId(Long projectId, UpdateEvent payload) {
         sendEventToProjectSubscribers(projectService.getTokenByProjectId(projectId), payload);
-    }
-
-    /**
-     * Method used to update widget by project id, projectWidgetId for every screens connected to this widget
-     *
-     * @param projectId       the project id
-     * @param projectWidgetId The project widget id
-     * @param payload         the payload content
-     */
-    public void updateGlobalScreensByIdAndProjectWidgetId(final Long projectId, final Long projectWidgetId, final UpdateEvent payload) {
-        sendEventToProjectWidgetSubscribers(projectService.getTokenByProjectId(projectId), projectWidgetId, payload);
     }
 
     /**

@@ -286,11 +286,11 @@ public class ProjectWidgetService {
     }
 
     /**
-     * Method used to get instantiate html for a projectwidget
-     * Call inside {@link ProjectWidgetMapper}
+     * Instantiate the HTML of a widget with the data resulting from
+     * the Nashorn execution.
      *
-     * @param projectWidget the project widget
-     * @return The html instantiate
+     * @param projectWidget the widget instance
+     * @return The instantiated HTML
      */
     @Transactional
     public String instantiateProjectWidgetHtml(ProjectWidget projectWidget) {
@@ -336,11 +336,12 @@ public class ProjectWidgetService {
     }
 
     /**
-     * Method used to update the configuration and custom css for project widget
+     * Update the configuration and the custom CSS for a widget instance.
+     * Then schedule a new Nashorn execution for the updated widget.
      *
-     * @param projectWidget The project widget id
-     * @param customStyle   The new css style
-     * @param backendConfig The new config
+     * @param projectWidget The widget instance
+     * @param customStyle   The new CSS style
+     * @param backendConfig The new configuration
      */
     @Transactional
     public void updateProjectWidget(ProjectWidget projectWidget, final String customStyle, final String backendConfig) {
@@ -349,19 +350,16 @@ public class ProjectWidgetService {
         if (customStyle != null) {
             projectWidget.setCustomStyle(customStyle);
         }
+
         if (backendConfig != null) {
             projectWidget.setBackendConfig(
                 encryptSecretParamsIfNeeded(projectWidget.getWidget(), backendConfig)
             );
         }
+
         projectWidgetRepository.save(projectWidget);
 
         dashboardScheduleService.scheduleWidget(projectWidget.getId());
-
-        // notify client
-        UpdateEvent updateEvent = new UpdateEvent(UpdateType.WIDGET);
-        updateEvent.setContent(projectMapper.toProjectDtoDefault(projectWidget.getProject()));
-        dashboardWebsocketService.sendEventToProjectWidgetSubscribers(projectWidget.getProject().getToken(), projectWidget.getId(), updateEvent);
     }
 
     /**
