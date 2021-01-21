@@ -111,7 +111,6 @@ public class ProjectWidgetController {
      * @param authentication          The connected user
      * @param projectWidgetId         The project widget id
      * @param projectWidgetRequestDto The project widget updated
-     * @return The project updated
      */
     @ApiOperation(value = "Edit a project widget")
     @ApiResponses(value = {

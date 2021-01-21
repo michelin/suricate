@@ -50,9 +50,12 @@ public final class PropertiesUtils {
 
         if (properties != null) {
             for (String propertyName : properties.stringPropertyNames()) {
-                mappedWidgetProperties.put(propertyName, StringUtils.trimToNull(properties.getProperty(propertyName)));
+                if (!properties.getProperty(propertyName).trim().isEmpty()) {
+                    mappedWidgetProperties.put(propertyName, properties.getProperty(propertyName));
+                }
             }
         }
+
         return mappedWidgetProperties;
     }
 

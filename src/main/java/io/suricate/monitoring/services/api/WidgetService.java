@@ -281,8 +281,8 @@ public class WidgetService {
             // Find existing widget
             Widget currentWidget = widgetRepository.findByTechnicalName(widget.getTechnicalName());
             if (currentWidget != null && !repository.equals(currentWidget.getRepository())) {
-                LOGGER.info("The widget {} has been found on another repository ''{}'' and will be replace by {}", currentWidget.getTechnicalName(),
-                    (currentWidget.getRepository() != null) ? currentWidget.getRepository().getName() : StringUtils.EMPTY, repository.getName());
+                LOGGER.info("The widget {} has been found on the repository {} which will be replace by {}", currentWidget.getTechnicalName(),
+                    currentWidget.getRepository() != null ? currentWidget.getRepository().getName() : "null", repository.getName());
 
                 widget.setRepository(repository);
             }

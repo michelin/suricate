@@ -431,7 +431,7 @@ public class ProjectWidgetService {
         List<WidgetParam> widgetParams = widgetService.getWidgetParametersWithCategoryParameters(widget);
         for (WidgetParam widgetParam : widgetParams) {
             if (widgetParam.getType() == DataType.PASSWORD) {
-                String valueToEncrypt = StringUtils.trimToNull(backendConfigAsMap.get(widgetParam.getName()));
+                String valueToEncrypt = backendConfigAsMap.get(widgetParam.getName());
 
                 if (valueToEncrypt != null) {
                     backendConfigAsMap.put(widgetParam.getName(), stringEncryptor.encrypt(valueToEncrypt));
