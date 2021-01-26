@@ -3,17 +3,13 @@ parameters:
     displayName: Release number
     type: string
     default: null
-  - name: skipBuild
-    displayName: Skip the build step
-    type: boolean
-    default: false
 
 pool:
   vmImage: 'Ubuntu 16.04'
 
 jobs:
   - job: Build
-    condition: ne('${{ parameters.skipBuild }}', true)
+    condition: eq('${{ parameters.releaseNumber }}', 'null')
     steps:
       - task: NodeTool@0
         inputs:
