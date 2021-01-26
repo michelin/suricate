@@ -3,7 +3,6 @@ parameters:
     displayName: Release number
     type: string
     default: null
-parameters:
   - name: skipBuild
     displayName: Skip the build step
     type: boolean
