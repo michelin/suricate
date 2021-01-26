@@ -41,7 +41,6 @@ jobs:
           goals: 'package -P build-prod'
         displayName: 'Back-End - Build & Tests'
   - job: Prepare_Release
-    dependsOn: Build
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'), ne('${{ parameters.releaseNumber }}', 'null'))
     steps:
       - task: InstallSSHKey@0
