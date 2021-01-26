@@ -257,7 +257,6 @@ public class GitService {
                 File widgetFolder = new File(folder.getAbsoluteFile().getAbsolutePath() + File.separator + "content" + File.separator);
                 List<Category> list = WidgetUtils.parseWidgetFolder(widgetFolder);
                 widgetService.updateWidgetInDatabase(list, mapLib, repository);
-
             } finally {
                 if (!isLocalRepository) {
                     FileUtils.deleteQuietly(folder);

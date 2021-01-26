@@ -260,7 +260,7 @@ public class WidgetService {
     }
 
     /**
-     * Add or update a list of widgets in database
+     * Add or update a list of widgets
      *
      * @param category   The category
      * @param widgets    The related widgets
