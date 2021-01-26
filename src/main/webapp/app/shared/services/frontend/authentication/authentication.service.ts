@@ -131,12 +131,14 @@ export class AuthenticationService {
   public static isLoggedIn(): boolean {
     return !AuthenticationService.isTokenExpired();
   }
+
   /**
    * Used to know if the token is expired or not
    */
   public static isTokenExpired(): boolean {
     return this.jwtHelperService.isTokenExpired(AuthenticationService.getAccessToken());
   }
+
   /**
    * Return the full token (token type + access token)
    */

@@ -18,8 +18,8 @@
 
 import { animate, group, state, style, transition, trigger } from '@angular/animations';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { takeWhile } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil, takeWhile } from 'rxjs/operators';
 
 import { ToastService } from '../../services/frontend/toast/toast.service';
 import { ToastMessage } from '../../models/frontend/toast/toast-message';
@@ -101,47 +101,44 @@ import { MaterialIconRecords } from '../../records/material-icon.record';
 })
 export class ToastComponent implements OnInit, OnDestroy {
   /**
-   * Used for keep the subscription of subjects/Observables open
-   * @type {boolean}
+   * Subject used to unsubscribe all the subscriptions when the component is destroyed
    */
-  private isAlive = true;
+  private unsubscribe: Subject<void> = new Subject<void>();
+
   /**
    * The component state
-   * @type {string}
    */
   public animationState = 'out';
+
   /**
    * The enums of toast type
-   * @type {toastType}
    */
   public toastType = ToastTypeEnum;
+
   /**
    * The message to display
-   * @type {Observable<ToastMessage>}
    */
   public message: ToastMessage;
+
   /**
    * The current timer for @function {hideWithinTimeout} function
-   * @type {NodeJS.Timer}
    */
   private hideTimer: NodeJS.Timer;
+
   /**
    * The list of icons
-   * @type {IconEnum}
-   * @protected
    */
   public iconEnum = IconEnum;
+
   /**
    * The list of material icon codes
-   * @type {MaterialIconRecords}
-   * @protected
    */
   public materialIconRecords = MaterialIconRecords;
 
   /**
    * Constructor
    *
-   * @param {ToastService} toastService The toast service to inject
+   * @param toastService The toast service to inject
    */
   constructor(private toastService: ToastService) {}
 
@@ -151,13 +148,21 @@ export class ToastComponent implements OnInit, OnDestroy {
   public ngOnInit(): void {
     this.toastService
       .listenForToastMessages()
-      .pipe(takeWhile(() => this.isAlive))
+      .pipe(takeUntil(this.unsubscribe))
       .subscribe((message: ToastMessage) => {
         this.message = message;
         if (message) {
           this.showToast();
         }
       });
+  }
+
+  /**
+   * Called when the component is destroyed
+   */
+  public ngOnDestroy(): void {
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
   }
 
   /**
@@ -189,12 +194,5 @@ export class ToastComponent implements OnInit, OnDestroy {
    */
   private clearTimeout(): void {
     clearTimeout(this.hideTimer);
-  }
-
-  /**
-   * Called when the component is destroyed
-   */
-  public ngOnDestroy(): void {
-    this.isAlive = false;
   }
 }

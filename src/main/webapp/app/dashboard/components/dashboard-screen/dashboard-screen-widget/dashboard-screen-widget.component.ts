@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { TitleCasePipe } from '@angular/common';
 import { NgGridItemConfig, NgGridItemEvent } from 'angular2-grid';
@@ -41,8 +41,9 @@ import { LibraryService } from '../../../services/library/library.service';
 import { GridItemUtils } from '../../../../shared/utils/grid-item.utils';
 import { WebsocketUpdateEvent } from '../../../../shared/models/frontend/websocket/websocket-update-event';
 import { WebsocketUpdateTypeEnum } from '../../../../shared/enums/websocket-update-type.enum';
-import { Subscription } from 'rxjs';
+import { Subject } from 'rxjs';
 import { WidgetConfiguration } from '../../../../shared/models/backend/widget-configuration/widget-configuration';
+import { takeUntil } from 'rxjs/operators';
 
 /**
  * Display the grid stack widgets
@@ -78,6 +79,11 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   public projectToken: string;
 
   /**
+   * Subject used to unsubscribe all the subscriptions when the component is destroyed
+   */
+  private unsubscribe: Subject<void> = new Subject<void>();
+
+  /**
    * The widget related to this project widget
    */
   public widget: Widget;
@@ -93,9 +99,9 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   private startGridStackItem: NgGridItemConfig;
 
   /**
-   * Tell if the component is Loading widget
+   * Is the widget loading or not
    */
-  public isComponentLoading = true;
+  public loading = true;
 
   /**
    * Used to display the buttons when the screen is not readonly
@@ -111,11 +117,6 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    * The list of material icons
    */
   public materialIconRecords = MaterialIconRecords;
-
-  /**
-   * The stompJS Subscription for widgets events
-   */
-  private widgetsEventsSubscription: Subscription;
 
   /**
    * Constructor
@@ -157,9 +158,17 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
       this.widget = widget;
 
       this.libraryService.allExternalLibrariesLoaded.subscribe((areExternalLibrariesLoaded: boolean) => {
-        this.isComponentLoading = !areExternalLibrariesLoaded;
+        this.loading = !areExternalLibrariesLoaded;
       });
     });
+  }
+
+  /**
+   * Called when the component is destroyed
+   */
+  public ngOnDestroy(): void {
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
   }
 
   /**
@@ -168,8 +177,9 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   private initWebsocketConnectionForProjectWidget(): void {
     const projectWidgetSubscriptionUrl = `/user/${this.projectToken}-projectWidget-${this.projectWidget.id}/queue/live`;
 
-    this.widgetsEventsSubscription = this.websocketService
-      .subscribeToDestination(projectWidgetSubscriptionUrl)
+    this.websocketService
+      .watch(projectWidgetSubscriptionUrl)
+      .pipe(takeUntil(this.unsubscribe))
       .subscribe((stompMessage: Stomp.Message) => {
         const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 
@@ -177,6 +187,17 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
           this.refreshProjectWidget();
         }
       });
+  }
+
+  /**
+   * Refresh this project widget
+   */
+  private refreshProjectWidget(): void {
+    this.loading = true;
+    this.httpProjectWidgetService.getOneById(this.projectWidget.id).subscribe(projectWidget => {
+      this.projectWidget = projectWidget;
+      this.loading = false;
+    });
   }
 
   /**
@@ -199,15 +220,6 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
     if (GridItemUtils.isItemHaveBeenMoved(this.startGridStackItem, this.gridStackItem)) {
       event.preventDefault();
     }
-  }
-
-  /**
-   * Refresh this project widget
-   */
-  private refreshProjectWidget(): void {
-    this.httpProjectWidgetService.getOneById(this.projectWidget.id).subscribe(projectWidget => {
-      this.projectWidget = projectWidget;
-    });
   }
 
   /**
@@ -250,7 +262,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
       widgetId: this.projectWidget.widgetId,
       customStyle: this.projectWidget.customStyle,
       backendConfig: Object.keys(formData)
-        .filter((key: string) => formData[key] !== undefined)
+        .filter((key: string) => formData[key] !== undefined && `${formData[key]}`.trim() !== '')
         .map((key: string) => `${key}=${formData[key]}`)
         .join('\n')
     };
@@ -288,14 +300,5 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
       message: this.projectWidget.log ? this.projectWidget.log : '',
       isErrorMessage: !!this.projectWidget.log
     });
-  }
-
-  /**
-   * Called when the component is destroyed
-   */
-  public ngOnDestroy(): void {
-    if (this.widgetsEventsSubscription) {
-      this.widgetsEventsSubscription.unsubscribe();
-    }
   }
 }

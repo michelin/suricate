@@ -35,17 +35,15 @@ import { UserRequest } from '../../../shared/models/backend/user/user-request';
 export class UsersComponent extends ListComponent<User> implements OnInit {
   /**
    * User selected in the list for modification
-   * @type {User}
-   * @private
    */
   private userSelected: User;
 
   /**
    * Constructor
    *
-   * @param {HttpUserService} httpUserService Suricate service used to manage the http calls for users
-   * @param {UserFormFieldsService} userFormFieldsService Frontend service used to build the form fields for a user
-   * @param {Injector} injector Angular Service used to manage the injection of services
+   * @param httpUserService Suricate service used to manage the http calls for users
+   * @param userFormFieldsService Frontend service used to build the form fields for a user
+   * @param injector Angular Service used to manage the injection of services
    */
   constructor(
     private readonly httpUserService: HttpUserService,
@@ -155,11 +153,11 @@ export class UsersComponent extends ListComponent<User> implements OnInit {
    * @param user The user to delete
    */
   private deleteUser(event: Event, user: User): void {
-    const titlecasePipe = new TitleCasePipe();
+    const titleCasePipe = new TitleCasePipe();
 
     this.dialogService.confirm({
       title: 'user.delete',
-      message: `${this.translateService.instant('delete.confirm')} ${titlecasePipe.transform(user.username)} ?`,
+      message: `${this.translateService.instant('delete.confirm')} ${titleCasePipe.transform(user.username)} ?`,
       accept: () => {
         this.httpUserService.delete(user.id).subscribe(() => {
           this.toastService.sendMessage('user.delete.success', ToastTypeEnum.SUCCESS);

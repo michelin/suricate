@@ -1,6 +1,6 @@
 package io.suricate.monitoring.utils;
 
-import io.suricate.monitoring.model.entity.Asset;
+import io.suricate.monitoring.model.entities.Asset;
 import org.junit.Assert;
 import org.junit.Test;
 

@@ -51,7 +51,7 @@ import { FieldsComponent } from './components/inputs/fields/fields.component';
 import { MosaicComponent } from './components/inputs/mosaic/mosaic.component';
 import { PaginatorComponent } from './components/paginator/paginator.component';
 import { SlideToggleComponent } from './components/inputs/slide-toggle/slide-toggle.component';
-import { WidgetJsScriptsDirective } from './directives/widget-js-scripts.directive';
+import { WidgetHtmlDirective } from './directives/widget-html.directive';
 
 @NgModule({
   imports: [
@@ -76,7 +76,7 @@ import { WidgetJsScriptsDirective } from './directives/widget-js-scripts.directi
     InputComponent,
     CheckboxComponent,
     PasswordPipe,
-    WidgetJsScriptsDirective,
+    WidgetHtmlDirective,
     SafeHtmlPipe,
     SafeUrlPipe,
     ToastComponent,
@@ -110,7 +110,7 @@ import { WidgetJsScriptsDirective } from './directives/widget-js-scripts.directi
     PasswordPipe,
     ReactiveFormsModule,
     RouterModule,
-    WidgetJsScriptsDirective,
+    WidgetHtmlDirective,
     SafeHtmlPipe,
     SafeUrlPipe,
     ToastComponent,

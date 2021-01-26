@@ -17,7 +17,7 @@
 package io.suricate.monitoring.configuration.websocket;
 
 import io.suricate.monitoring.model.dto.websocket.WebsocketClient;
-import io.suricate.monitoring.service.websocket.DashboardWebSocketService;
+import io.suricate.monitoring.services.websocket.DashboardWebSocketService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
@@ -31,7 +31,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Configuration class managing the subscription and disconnect events of web sockets
+ * Manage the subscription/unsubscription events of the web sockets
  */
 @Configuration
 public class WebSocketEventEndpointsConfiguration {
@@ -66,7 +66,10 @@ public class WebSocketEventEndpointsConfiguration {
     }
 
     /**
-     * Entry point when a client subscribe to the web sockets
+     * Entry point when a client subscribes to a dashboard.
+     * The server opens a unique web socket on /user/dashboard_token/queue/unique.
+     * When a client subscribes to a dashboard, then an event is sent to the socket.
+     * The client is added to the project through a dynamic map.
      *
      * @param event The subscription event
      */
@@ -86,9 +89,11 @@ public class WebSocketEventEndpointsConfiguration {
                     stompHeaderAccessor.getSubscriptionId(),
                     matcher.group(SCREEN_CODE_REGEX_GROUP)
                 );
-                LOGGER.debug("New Client {} with id {} for project {}", websocketClient.getSessionId(), websocketClient.getScreenCode(), websocketClient.getProjectToken());
 
-                dashboardWebSocketService.addProjectClient(websocketClient.getProjectToken(), websocketClient);
+                LOGGER.debug("A new client (web socket session ID: {}, screen code ID: {}) is trying to subscribe to the project {}", websocketClient.getSessionId(), websocketClient.getScreenCode(),
+                        websocketClient.getProjectToken());
+
+                dashboardWebSocketService.addClientToProject(websocketClient.getProjectToken(), websocketClient);
                 dashboardWebSocketService.addSessionClient(websocketClient.getSessionId(), websocketClient);
             }
         }
@@ -105,7 +110,7 @@ public class WebSocketEventEndpointsConfiguration {
         WebsocketClient websocketClient = dashboardWebSocketService.removeSessionClientByWebsocketSessionIdAndSubscriptionId(stompHeaderAccessor.getSessionId(), stompHeaderAccessor.getSubscriptionId());
 
         if (websocketClient != null) {
-            LOGGER.debug("Disconnected Client {} with id {} for project {}", websocketClient.getSessionId(), websocketClient.getScreenCode(), websocketClient.getProjectToken());
+            LOGGER.debug("Disconnected client {} with id {} for project {}", websocketClient.getSessionId(), websocketClient.getScreenCode(), websocketClient.getProjectToken());
             dashboardWebSocketService.removeProjectClient(websocketClient.getProjectToken(), websocketClient);
         }
     }

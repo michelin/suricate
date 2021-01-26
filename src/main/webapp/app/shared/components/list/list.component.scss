@@ -93,6 +93,9 @@
 
         h2 {
           font-size: 0.9em;
+          max-width: 100%;
+          text-overflow: ellipsis;
+          overflow: hidden;
         }
 
         h3 {

@@ -7,20 +7,20 @@
 [![GitHub PR](https://img.shields.io/github/issues-pr/suricate-io/suricate.svg)](https://github.com/suricate-io/suricate/pulls/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
-:construction_worker: **Work in progress... First release in plan for July 2018 but feel free to help** :construction_worker:
+This repository contains the source code of the Suricate application.
 
-## 📚 Wiki :construction_worker:
+![Suricate dashboard developer environment](readme/dashboard.png)
 
-Brand new wiki is in construction talking about a few things but much more to come 🙌
+## 📚 Wiki
 
-👉 [I wanna see it](https://github.com/suricate-io/suricate/wiki)
+Instructions for setting up and self-hosted the application are located in [the Suricate wiki](https://github.com/suricate-io/suricate/wiki) 🙌 !
 
 ## :beers: Contribution
 
 Everyone is welcome to contribute. Here's how:
 
-* Report a [bug](https://github.com/suricate-io/suricate/issues/new?template=bug.md)
-* Suggest a [feature](https://github.com/suricate-io/suricate/issues/new?template=improvement.md)
-* Develop a feature and create a [pull request](https://github.com/suricate-io/suricate/pulls)
+- Report a [bug](https://github.com/suricate-io/suricate/issues/new?assignees=&labels=bug&template=bug_report.md&title=) 🐛
+- Suggest a [feature](https://github.com/suricate-io/suricate/issues/new?assignees=&labels=enhancement%2C+new+feature&template=feature_request.md&title=) 💡
+- Develop a feature and create a [pull request](https://github.com/suricate-io/suricate/pulls) 💻
 
-Please read our [Contribution guide](https://github.com/suricate-io/suricate/blob/dev/CONTRIBUTING.md) before contributing 🙏
+Please read our [contribution guide](https://github.com/suricate-io/suricate/blob/dev/CONTRIBUTING.md) before contributing 🙏

@@ -17,7 +17,6 @@
 import { PasswordPipe } from './password.pipe';
 import { TestBed } from '@angular/core/testing';
 import { MockModule } from '../../../mock/mock.module';
-import { WidgetJsScriptsDirective } from '../../directives/widget-js-scripts.directive';
 
 describe('PasswordPipe', () => {
   let pipe: PasswordPipe;

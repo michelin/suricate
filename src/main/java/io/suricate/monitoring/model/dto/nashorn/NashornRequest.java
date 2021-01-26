@@ -27,9 +27,12 @@ import java.util.Date;
 /**
  * Represent a nashorn request (used for execute the widget JS, with nashorn)
  */
-@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
+@Getter
+@Setter
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+@ToString
 public class NashornRequest extends AbstractDto {
-
 
     /**
      * Nashorn Properties
@@ -50,7 +53,6 @@ public class NashornRequest extends AbstractDto {
      * project id
      */
     private Long projectId;
-
 
     /**
      * Project widget ID
@@ -90,17 +92,8 @@ public class NashornRequest extends AbstractDto {
      * @param state The project widget state
      * @param lastSuccess The last success date
      */
-    public NashornRequest(
-        String properties,
-        String script,
-        String previousData,
-        Long projectId,
-        Long technicalId,
-        Long delay,
-        Long timeout,
-        WidgetState state,
-        Date lastSuccess
-    ) {
+    public NashornRequest(String properties, String script, String previousData, Long projectId, Long technicalId, Long delay, Long timeout,
+                          WidgetState state, Date lastSuccess) {
         this.properties = properties;
         this.script = script;
         this.previousData = previousData;
@@ -113,13 +106,14 @@ public class NashornRequest extends AbstractDto {
     }
 
     /**
-     * Method used to validate all bean data
-     * @return true if all data are Valid, false otherwise
+     * Validate the Nashorn request
+     *
+     * @return true if the data is valid, false otherwise
      */
-    public boolean isValid(){
+    public boolean isValid() {
         return projectId != null
                 && projectWidgetId != null
-                && JsonUtils.isJsonValid(previousData)
+                && JsonUtils.isValid(previousData)
                 && StringUtils.isNotEmpty(script)
                 && delay != null;
     }

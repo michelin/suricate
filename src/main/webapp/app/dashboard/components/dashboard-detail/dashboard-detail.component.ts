@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as html2canvas from 'html2canvas';
 
@@ -33,8 +33,8 @@ import { DialogService } from '../../../shared/services/frontend/dialog/dialog.s
 import { TranslateService } from '@ngx-translate/core';
 import { ProjectRequest } from '../../../shared/models/backend/project/project-request';
 import { ProjectFormFieldsService } from '../../../shared/services/frontend/form-fields/project-form-fields/project-form-fields.service';
-import { flatMap, switchMap, tap } from 'rxjs/operators';
-import { EMPTY, Observable, of } from 'rxjs';
+import { flatMap, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { EMPTY, Observable, of, Subject } from 'rxjs';
 import { DashboardScreenComponent } from '../dashboard-screen/dashboard-screen.component';
 import { MatDialog } from '@angular/material/dialog';
 import { TvManagementDialogComponent } from '../tv-management-dialog/tv-management-dialog.component';
@@ -55,72 +55,52 @@ import { WebsocketService } from '../../../shared/services/frontend/websocket/we
 export class DashboardDetailComponent implements OnInit {
   /**
    * The dashboard html (as HTML Element)
-   * @type {DashboardScreenComponent}
-   * @private
    */
   @ViewChild('dashboardScreen')
   private dashboardScreen: DashboardScreenComponent;
 
   /**
    * Hold the configuration of the header component
-   * @type {HeaderConfiguration}
-   * @protected
    */
   public headerConfiguration: HeaderConfiguration;
 
   /**
    * The project used to display the dashboard
-   * @type {Project}
-   * @protected
    */
   public project: Project;
 
   /**
    * The list of widget instance of this project
-   * @type {ProjectWidget[]}
-   * @protected
    */
   public projectWidgets: ProjectWidget[];
 
   /**
    * True if the dashboard should be displayed readonly, false otherwise
-   * @type {boolean}
-   * @protected
    */
   public isReadOnly = true;
 
   /**
    * The screen code of the client;
-   * @type number
-   * @protected
    */
   public screenCode = DashboardService.generateScreenCode();
 
   /**
    * Used to know if the dashboard is loading
-   * @type boolean
-   * @protected
    */
   public isDashboardLoading = true;
 
   /**
    * The timer used to take the screenshot
-   * @type {NodeJS.Timer}
-   * @private
    */
   private screenshotTimer: NodeJS.Timer;
 
   /**
    * The list of icons
-   * @type {IconEnum}
-   * @protected
    */
   public iconEnum = IconEnum;
 
   /**
    * The list of material icons
-   * @type {MaterialIconRecords}
-   * @protected
    */
   public materialIconRecords = MaterialIconRecords;
 

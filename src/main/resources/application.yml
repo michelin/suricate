@@ -13,11 +13,8 @@ server:
 ### Spring ###
 spring:
   profiles:
-    include: h2
+    active: h2
   datasource:
-    url: null
-    username: null
-    password: null
     continueOnError: true
     type: com.zaxxer.hikari.HikariDataSource
     hikari:
@@ -100,6 +97,7 @@ jasypt:
 ### Application ###
 application:
   authentication:
+    ### Provider should be 'database' or 'ldap'
     provider: database
     ldap:
       url: null

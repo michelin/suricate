@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup } from '@angular/forms';
 
@@ -31,6 +31,8 @@ import { ButtonTypeEnum } from '../../../shared/enums/button-type.enum';
 import { IconEnum } from '../../../shared/enums/icon.enum';
 import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
 import { CustomValidator } from '../../../shared/validators/custom-validator';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 /**
  * Component that manage the popup for Dashboard TV Management
@@ -43,53 +45,41 @@ import { CustomValidator } from '../../../shared/validators/custom-validator';
 export class TvManagementDialogComponent implements OnInit {
   /**
    * The configuration of the share button
-   * @type {ButtonConfiguration[]}
-   * @protected
    */
   public shareButtonsConfiguration: ButtonConfiguration<unknown>[] = [];
 
   /**
    * The configuration of the share button
-   * @type {ButtonConfiguration[]}
-   * @protected
    */
   public connectedScreenButtonsConfiguration: ButtonConfiguration<WebsocketClient>[] = [];
 
   /**
    * The register screen form
-   * @type {FormGroup}
-   * @protected
    */
   public registerScreenCodeFormField: FormGroup;
 
   /**
-   * The description of the form
-   * @type {FormField[]}
+   * The description of the form}
    */
   public formFields: FormField[];
 
   /**
    * The current project
-   * @type {Project}
-   * @protected
    */
   public project: Project;
+
   /**
    * The list of clients connected by websocket
-   * @type {WebsocketClient[]}
-   * @protected
    */
   public websocketClients: WebsocketClient[];
+
   /**
    * The list of icons
-   * @type {IconEnum}
-   * @protected
    */
   public iconEnum = IconEnum;
+
   /**
    * The list of material icons
-   * @type {MaterialIconRecords}
-   * @protected
    */
   public materialIconRecords = MaterialIconRecords;
 
@@ -108,6 +98,17 @@ export class TvManagementDialogComponent implements OnInit {
     private readonly formService: FormService
   ) {
     this.initButtonsConfiguration();
+  }
+
+  /**
+   * When the component is initialized
+   */
+  public ngOnInit(): void {
+    this.project = this.data.project;
+    this.getConnectedWebsocketClient();
+    this.generateFormFields();
+
+    this.registerScreenCodeFormField = this.formService.generateFormGroupForFields(this.formFields);
   }
 
   /**
@@ -133,17 +134,6 @@ export class TvManagementDialogComponent implements OnInit {
         callback: (event: Event, websocketClient: WebsocketClient) => this.disconnectScreen(websocketClient)
       }
     ];
-  }
-
-  /**
-   * When the component is initialized
-   */
-  public ngOnInit(): void {
-    this.project = this.data.project;
-    this.getConnectedWebsocketClient();
-    this.generateFormFields();
-
-    this.registerScreenCodeFormField = this.formService.generateFormGroupForFields(this.formFields);
   }
 
   /**

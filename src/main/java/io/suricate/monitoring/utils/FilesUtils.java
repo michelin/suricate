@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.utils;
 
-import io.suricate.monitoring.model.entity.Asset;
+import io.suricate.monitoring.model.entities.Asset;
 import net.sf.jmimemagic.*;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;

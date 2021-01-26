@@ -72,7 +72,7 @@ export class WebsocketService {
    *
    * @param {string} destination The subscription url
    */
-  public subscribeToDestination(destination: string): Observable<Stomp.Message> {
+  public watch(destination: string): Observable<Stomp.Message> {
     return this.rxStompService.watch(destination);
   }
 

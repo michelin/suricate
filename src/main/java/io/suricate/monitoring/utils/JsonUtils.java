@@ -31,11 +31,17 @@ public final class JsonUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(JsonUtils.class);
 
     /**
-     * Method used to isValid if the JSON in parameter is isValid
+     * Constructor
+     */
+    private JsonUtils() { }
+
+    /**
+     * Validate the JSON parameter
+     *
      * @param jsonInString the json string to test
      * @return true if the json is isValid false otherwise
      */
-    public static boolean isJsonValid(String jsonInString) {
+    public static boolean isValid(String jsonInString) {
         if (StringUtils.isNotBlank(jsonInString)) {
             try {
                 final ObjectMapper mapper = new ObjectMapper();
@@ -47,8 +53,5 @@ public final class JsonUtils {
             }
         }
         return false;
-    }
-
-    private JsonUtils() {
     }
 }

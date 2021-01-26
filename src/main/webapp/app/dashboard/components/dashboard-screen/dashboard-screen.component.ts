@@ -27,8 +27,8 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import { takeWhile } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 import { NgGridConfig, NgGridItemConfig } from 'angular2-grid';
 import * as Stomp from '@stomp/stompjs';
 import { Project } from '../../../shared/models/backend/project/project';
@@ -44,7 +44,6 @@ import { IconEnum } from '../../../shared/enums/icon.enum';
 import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
 import { LibraryService } from '../../services/library/library.service';
 import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
-import { RxStompState } from '@stomp/rx-stomp/esm5/rx-stomp-state';
 
 /**
  * Display the grid stack widgets
@@ -98,6 +97,11 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   public refreshProjectWidget = new EventEmitter<void>();
 
   /**
+   * Subject used to unsubscribe all the subscriptions when the component is destroyed
+   */
+  private unsubscribe: Subject<void> = new Subject<void>();
+
+  /**
    * The options for the plugin angular2-grid
    */
   public gridOptions: NgGridConfig = {};
@@ -111,16 +115,6 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
    * The grid items description
    */
   public gridStackItems: NgGridItemConfig[] = [];
-
-  /**
-   * The stompJS Subscription for disconnect event
-   */
-  private disconnectEventSubscription: Subscription;
-
-  /**
-   * The stompJS Subscription for dashboard events
-   */
-  private dashboardEventsSubscription: Subscription;
 
   /**
    * Tell if we should display the screen code
@@ -155,13 +149,6 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   ) {}
 
   /**
-   * After view init method
-   */
-  ngAfterViewInit(): void {
-    this.addExternalJSLibrariesToTheDOM();
-  }
-
-  /**
    * Each time a value change, this function will be called
    */
   public ngOnChanges(changes: SimpleChanges): void {
@@ -192,6 +179,13 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
       this.projectWidgets = changes.projectWidgets.currentValue;
       this.initGridStackItems();
     }
+  }
+
+  /**
+   * After view init method
+   */
+  public ngAfterViewInit(): void {
+    this.addExternalJSLibrariesToTheDOM();
   }
 
   /**
@@ -303,32 +297,11 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   /**********************************************************************************************************/
 
   /**
-   * Disconnect from web sockets
-   */
-  private disconnectFromWebsocket(): void {
-    this.unsubscribeToWebsocket();
-    this.websocketService.disconnect();
-  }
-
-  /**
    * Init the websocket subscriptions
    */
   private initWebsocketSubscriptions(): void {
     this.websocketProjectEventSubscription();
     this.websocketScreenEventSubscription();
-  }
-
-  /**
-   * Unsubscribe to every current websocket connections
-   */
-  private unsubscribeToWebsocket(): void {
-    if (this.disconnectEventSubscription) {
-      this.disconnectEventSubscription.unsubscribe();
-    }
-
-    if (this.dashboardEventsSubscription) {
-      this.disconnectEventSubscription.unsubscribe();
-    }
   }
 
   /**
@@ -340,13 +313,30 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   }
 
   /**
+   * Disconnect from web sockets
+   */
+  private disconnectFromWebsocket(): void {
+    this.unsubscribeToWebsocket();
+    this.websocketService.disconnect();
+  }
+
+  /**
+   * Unsubscribe to every current websocket connections
+   */
+  private unsubscribeToWebsocket(): void {
+    this.unsubscribe.next();
+    this.unsubscribe.complete();
+  }
+
+  /**
    * Create a websocket subscription for the current project
    */
   private websocketProjectEventSubscription(): void {
     const projectSubscriptionUrl = `/user/${this.project.token}/queue/live`;
 
-    this.dashboardEventsSubscription = this.websocketService
-      .subscribeToDestination(projectSubscriptionUrl)
+    this.websocketService
+      .watch(projectSubscriptionUrl)
+      .pipe(takeUntil(this.unsubscribe))
       .subscribe((stompMessage: Stomp.Message) => {
         const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 
@@ -376,8 +366,9 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   private websocketScreenEventSubscription(): void {
     const screenSubscriptionUrl = `/user/${this.project.token}-${this.screenCode}/queue/unique`;
 
-    this.disconnectEventSubscription = this.websocketService
-      .subscribeToDestination(screenSubscriptionUrl)
+    this.websocketService
+      .watch(screenSubscriptionUrl)
+      .pipe(takeUntil(this.unsubscribe))
       .subscribe((stompMessage: Stomp.Message) => {
         const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 
