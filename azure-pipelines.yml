@@ -9,6 +9,7 @@ pool:
 
 jobs:
   - job: Build
+    condition: eq('${{ parameters.releaseNumber }}', 'null')
     steps:
       - task: NodeTool@0
         inputs:
@@ -36,7 +37,6 @@ jobs:
           goals: 'package -P build-prod'
         displayName: 'Back-End - Build & Tests'
   - job: Prepare_Release
-    dependsOn: Build
     condition: and(succeeded(), eq(variables['Build.SourceBranch'], 'refs/heads/master'), ne('${{ parameters.releaseNumber }}', 'null'))
     steps:
       - task: InstallSSHKey@0
@@ -46,9 +46,21 @@ jobs:
           sshKeySecureFile: 'suricate-cicd'
 
       - script: |
+          git version
+          git config --global url.ssh://git@github.com/.insteadOf https://github.com/
+          git config --global user.email "$(SSH_GITHUB_COMMIT_EMAIL)"
+          git config --global user.name "Azure Pipelines"
+        displayName: 'Set Git configuration'
+
+      - script: |
           node -v
           npm -v
           npm --no-git-tag-version version ${{ parameters.releaseNumber }}
+          git switch master
+          git add package.json
+          git add package-lock.json
+          git commit -m "Update Front-End with new release version ${{ parameters.releaseNumber }}"
+          git push origin HEAD
         displayName: 'Update Front-End version'
 
       - task: Maven@3
@@ -60,19 +72,5 @@ jobs:
           jdkArchitectureOption: 'x64'
           publishJUnitResults: true
           testResultsFiles: '**/TEST-*.xml'
-          goals: 'versions:set -DnewVersion=${{ parameters.releaseNumber }}'
-        displayName: 'Prepare Back-End for release : Update version, Create tag '
-
-      - script: |
-          git version
-          git config --global url.ssh://git@github.com/.insteadOf https://github.com/
-          git config --global user.email "loic.greffier_ext@michelin.com"
-          git config --global user.name "Azure Pipelines"
-          git switch master
-          git status
-          git add pom.xml
-          git add package.json
-          git add package-lock.json
-          git commit -m "Update project with new release version ${{ parameters.releaseNumber }}"
-          git push origin HEAD
-        displayName: 'Push new release version ${{ parameters.releaseNumber }} to GitHub'
+          goals: '-B release:clean release:prepare -DreleaseVersion=${{ parameters.releaseNumber }}'
+        displayName: 'Update Back-End version'
