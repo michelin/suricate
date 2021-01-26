@@ -76,5 +76,5 @@ jobs:
           jdkArchitectureOption: 'x64'
           publishJUnitResults: true
           testResultsFiles: '**/TEST-*.xml'
-          goals: 'release:clean release:prepare -DreleaseVersion=${{ parameters.releaseNumber }}'
+          goals: '-B release:clean release:prepare -DreleaseVersion=${{ parameters.releaseNumber }}'
         displayName: 'Update Back-End version'
