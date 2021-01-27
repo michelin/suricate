@@ -51,7 +51,7 @@ jobs:
           git config --global user.email "$(SSH_GITHUB_COMMIT_EMAIL)"
           git config --global user.name "Azure Pipelines"
         displayName: 'Set Git configuration'
-        
+
       - script: |
           node -v
           npm -v
