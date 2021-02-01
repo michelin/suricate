@@ -38,7 +38,7 @@ CREATE TABLE category (
 CREATE TABLE configuration (
     config_key          character varying           NOT NULL,
     config_export       boolean,
-    config_value        character varying(500),
+    config_value        character varying(1000),
     category_id         bigint,
     data_type           character varying(255),
     created_by          character varying(255)      DEFAULT 'APPLICATION'::character varying NOT NULL,

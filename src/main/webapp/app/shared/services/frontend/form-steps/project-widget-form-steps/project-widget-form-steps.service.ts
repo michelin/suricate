@@ -155,6 +155,10 @@ export class ProjectWidgetFormStepsService {
         validators: this.getValidatorsForWidgetParam(widgetParam)
       };
 
+      if (widgetParam.type === DataTypeEnum.MULTIPLE) {
+        formField.value = formField.value ? formField.value.split(',') : undefined;
+      }
+
       if (widgetParam.type === DataTypeEnum.BOOLEAN) {
         formField.value = JSON.parse(formField.value ? formField.value : false);
       }
