@@ -39,7 +39,9 @@ export class CustomValidator {
    * @param control The field control
    */
   public static isDigits(control: AbstractControl) {
-    return String(control.value).match(new RegExp('^[0-9]*$')) ? null : { digits: true };
+    if (control.value) {
+      return String(control.value).match(new RegExp('^-?[0-9]\\d*(\\.\\d+)?$')) ? null : { digits: true };
+    }
   }
 
   /**
