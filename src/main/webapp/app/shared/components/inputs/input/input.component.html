@@ -91,33 +91,8 @@
   <!------------------------------------------------------------------------------------------------------->
 
   <div *ngIf="dataType.FILE !== field.type && isInputFieldOnError()" [@animationError] class="input-error">
-    <!-- Error message : Required -->
-    <div *ngIf="getFormControl()['errors']?.required">
-      {{ 'field.error.required' | translate }}
-    </div>
-    <!-- Error message : Length -->
-    <div *ngIf="getFormControl()['errors']?.minlength">
-      {{ 'field.error.length' | translate }}
-    </div>
-    <!-- Error message : Email -->
-    <div *ngIf="getFormControl()['errors']?.email">
-      {{ 'field.error.email.format' | translate }}
-    </div>
-    <!-- Error message : Password confirmation -->
-    <div *ngIf="getFormControl()['errors']?.passwordMismatch">
-      {{ 'field.error.password.mismatch' | translate }}
-    </div>
-    <!-- Error message : Pattern -->
-    <div *ngIf="getFormControl()['errors']?.pattern">
-      {{ 'field.error.pattern' | translate }}
-    </div>
-    <!-- Error message : Digits -->
-    <div *ngIf="getFormControl()['errors']?.digits">
-      {{ 'field.error.digits' | translate }}
-    </div>
-    <!-- Error message : Digits -->
-    <div *ngIf="getFormControl()['errors']?.gt0">
-      {{ 'field.error.gt0' | translate }}
+    <div>
+      {{ getInputErrors() | translate }}
     </div>
   </div>
 </div>

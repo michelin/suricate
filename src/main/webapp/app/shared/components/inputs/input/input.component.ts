@@ -117,6 +117,40 @@ export class InputComponent implements OnInit {
   }
 
   /**
+   * Get the first error triggered by the current field.
+   * Return the string code of the error to display it.
+   */
+  public getInputErrors(): string {
+    if (this.getFormControl()['errors']?.required) {
+      return 'field.error.required';
+    }
+
+    if (this.getFormControl()['errors']?.minlength) {
+      return 'field.error.length';
+    }
+
+    if (this.getFormControl()['errors']?.email) {
+      return 'field.error.email.format';
+    }
+
+    if (this.getFormControl()['errors']?.passwordMismatch) {
+      return 'field.error.password.mismatch';
+    }
+
+    if (this.getFormControl()['errors']?.pattern) {
+      return 'field.error.pattern';
+    }
+
+    if (this.getFormControl()['errors']?.digits) {
+      return 'field.error.digits';
+    }
+
+    if (this.getFormControl()['errors']?.gt0) {
+      return 'field.error.gt0';
+    }
+  }
+
+  /**
    * Function called when a field has been changed in the form, emit and event that will be caught by the parent component
    */
   public emitValueChange(type: ValueChangedType): void {
