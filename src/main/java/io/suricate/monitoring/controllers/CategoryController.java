@@ -43,6 +43,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -149,14 +150,10 @@ public class CategoryController {
                                                                                             @PathVariable("categoryId") final Long categoryId) {
         Optional<List<WidgetConfiguration>> configurationsOptional = widgetConfigurationService.getConfigurationForCategory(categoryId);
 
-        if (!configurationsOptional.isPresent()) {
-            throw new NoContentException(WidgetConfiguration.class);
-        }
-
         return ResponseEntity
-            .ok()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(widgetConfigurationMapper.toConfigurationDtosDefault(configurationsOptional.get()));
+                    .ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(widgetConfigurationMapper.toConfigurationDtosDefault(configurationsOptional.orElse(new ArrayList<>())));
     }
 
     /**

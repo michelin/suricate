@@ -35,5 +35,4 @@ public interface WidgetConfigurationRepository extends JpaRepository<WidgetConfi
      * @return The list of related configurations
      */
     Optional<List<WidgetConfiguration>> findConfigurationByCategoryId(Long categoryId);
-
 }
