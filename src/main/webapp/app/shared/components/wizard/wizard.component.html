@@ -46,7 +46,7 @@
             </div>
 
             <suricate-slide-toggle
-              *ngIf="isWidgetConfigurationStep(step) && categorySettings"
+              *ngIf="isWidgetConfigurationStep(step) && categorySettings?.length > 0"
               [label]="'widget.parameters.category.override.title'"
               (slideToggleButtonPressed)="displayCategorySettings($event)"
             ></suricate-slide-toggle>

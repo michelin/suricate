@@ -279,7 +279,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    */
   public buildSlideToggleButtonConfiguration(categorySettings: WidgetConfiguration[]): any {
     return {
-      displaySlideToggleButton: categorySettings !== null,
+      displaySlideToggleButton: categorySettings.length > 0,
       slideToggleButtonPressed: (event: MatSlideToggleChange, formGroup: FormGroup, formFields: FormField[]) =>
         this.widgetConfigurationFormFieldsService.generateCategorySettingsFormFields(
           categorySettings,
