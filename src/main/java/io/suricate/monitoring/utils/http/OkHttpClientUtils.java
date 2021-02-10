@@ -43,17 +43,17 @@ public final class OkHttpClientUtils {
     /**
      * Read timeout
      */
-    private static final int READ_TIMEOUT = 180;
+    private static final int READ_TIMEOUT = 300;
 
     /**
      * Write timeout
      */
-    private static final int WRITE_TIMEOUT = 180;
+    private static final int WRITE_TIMEOUT = 300;
 
     /**
      * Connect timeout
      */
-    private static final int CONNECT_TIMEOUT = 180;
+    private static final int CONNECT_TIMEOUT = 300;
 
     /**
      * Private constructor

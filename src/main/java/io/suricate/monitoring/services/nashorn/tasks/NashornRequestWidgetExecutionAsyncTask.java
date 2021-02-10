@@ -172,10 +172,10 @@ public class NashornRequestWidgetExecutionAsyncTask implements Callable<NashornR
                 nashornResponse.setLog("Service Response:\n\n" + ((RequestException) rootCause).getResponse() + "\n\nTechnical Data:\n\n" + ((RequestException) rootCause).getTechnicalData());
             } else if (rootCause instanceof SocketException) {
                 LOGGER.error("An error has been thrown by the http call during the script execution of the widget instance", nashornRequest.getProjectWidgetId());
-                nashornResponse.setLog(prettify(ExceptionUtils.getRootCauseMessage(exception)) + ". An error has been thrown by the http call during the script execution of the widget instance " + nashornRequest.getProjectWidgetId());
+                nashornResponse.setLog("An error has been thrown by the http call during the script execution of the widget instance " + nashornRequest.getProjectWidgetId() + ". " + prettify(ExceptionUtils.getRootCauseMessage(exception)));
             } else if (rootCause instanceof ECMAException) {
                 LOGGER.error("An error has been thrown during the script execution of the widget instance {}", nashornRequest.getProjectWidgetId());
-                nashornResponse.setLog(prettify(ExceptionUtils.getRootCauseMessage(exception)) + ". An error has been thrown during the script execution of the widget instance " + nashornRequest.getProjectWidgetId() + ".");
+                nashornResponse.setLog("An error has been thrown during the script execution of the widget instance " + nashornRequest.getProjectWidgetId() + ". " + prettify(ExceptionUtils.getRootCauseMessage(exception)));
             } else {
                 nashornResponse.setLog(prettify(ExceptionUtils.getRootCauseMessage(exception)));
             }
