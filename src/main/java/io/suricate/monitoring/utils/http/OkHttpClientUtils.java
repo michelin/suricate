@@ -41,14 +41,19 @@ public final class OkHttpClientUtils {
     private static final Logger LOGGER = LoggerFactory.getLogger(OkHttpClientUtils.class);
 
     /**
-     * Default timeout
+     * Read timeout
      */
-    private static final int DEFAULT_TIMEOUT = 45;
+    private static final int READ_TIMEOUT = 180;
+
+    /**
+     * Write timeout
+     */
+    private static final int WRITE_TIMEOUT = 180;
 
     /**
      * Connect timeout
      */
-    private static final int CONNECT_TIMEOUT = 15;
+    private static final int CONNECT_TIMEOUT = 180;
 
     /**
      * Private constructor
@@ -79,9 +84,9 @@ public final class OkHttpClientUtils {
 
             OkHttpClient.Builder builder = new OkHttpClient.Builder()
                 .sslSocketFactory(sslSocketFactory, (X509TrustManager) trustManager[0])
-                .readTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
+                .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
                 .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
-                .writeTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
+                .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)
                 .addInterceptor(loggingInterceptor)
                 .retryOnConnectionFailure(true)
                 .proxySelector(new WidgetProxySelector())
