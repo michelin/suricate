@@ -44,7 +44,7 @@ public final class NashornWidgetScript {
 
     /**
      * Create and submit a HTTP request according to the given parameters
-     *
+     *Gi
      * @param url The URL of the endpoint to call
      * @param headerName The name of the header to add
      * @param headerValue The value to set to the added header

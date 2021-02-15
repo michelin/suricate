@@ -26,11 +26,10 @@ import org.springframework.data.repository.CrudRepository;
 public interface CategoryRepository extends CrudRepository<Category, Long>, JpaSpecificationExecutor<Category> {
 
     /**
-     * Method used to find category by technical name
+     * Find a category by technical name
      *
-     * @param technicalName category technical name
-     * @return the category found or null otherwise
+     * @param technicalName The technical name
+     * @return The category
      */
     Category findByTechnicalName(String technicalName);
-
 }

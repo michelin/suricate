@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.repositories;
 
-import io.suricate.monitoring.model.entities.WidgetConfiguration;
+import io.suricate.monitoring.model.entities.CategoryParameter;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
@@ -26,13 +26,13 @@ import java.util.Optional;
 /**
  * Repository used for request Configurations in database
  */
-public interface WidgetConfigurationRepository extends JpaRepository<WidgetConfiguration, String>, JpaSpecificationExecutor<WidgetConfiguration> {
+public interface CategoryParametersRepository extends JpaRepository<CategoryParameter, String>, JpaSpecificationExecutor<CategoryParameter> {
 
     /**
-     * Get the list of configurations for a category
+     * Get the list of category parameters for a category ID
      *
-     * @param categoryId The category to find
-     * @return The list of related configurations
+     * @param categoryId The category ID
+     * @return The list of category parameters
      */
-    Optional<List<WidgetConfiguration>> findConfigurationByCategoryId(Long categoryId);
+    Optional<List<CategoryParameter>> findCategoryParametersByCategoryId(Long categoryId);
 }

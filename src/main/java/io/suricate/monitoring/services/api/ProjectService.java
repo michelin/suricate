@@ -43,7 +43,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 /**
- * Service used to manage projects
+ * Manage the projects
  */
 @Service
 public class ProjectService {
@@ -81,7 +81,6 @@ public class ProjectService {
                           final ProjectRepository projectRepository,
                           final DashboardWebSocketService dashboardWebSocketService,
                           final AssetService assetService) {
-
         this.stringEncryptor = stringEncryptor;
         this.projectRepository = projectRepository;
         this.dashboardWebsocketService = dashboardWebSocketService;

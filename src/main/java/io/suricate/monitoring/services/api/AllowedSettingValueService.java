@@ -23,8 +23,12 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+/**
+ * Manager the allowed setting values
+ */
 @Service
 public class AllowedSettingValueService {
+
     /**
      * The allowed setting value repository
      */
@@ -33,7 +37,7 @@ public class AllowedSettingValueService {
     /**
      * Constructor
      *
-     * @param allowedSettingValueRepository The allowedSettingRepository
+     * @param allowedSettingValueRepository The allowed setting value repository
      */
     @Autowired
     public AllowedSettingValueService(final AllowedSettingValueRepository allowedSettingValueRepository) {
@@ -41,10 +45,10 @@ public class AllowedSettingValueService {
     }
 
     /**
-     * Get an allowedSetting value by id
+     * Get an allowed setting value by ID
      *
-     * @param id The id to find
-     * @return The related allowed setting value
+     * @param id The ID
+     * @return The allowed setting value
      */
     public Optional<AllowedSettingValue> getOneById(final Long id) {
         return allowedSettingValueRepository.findById(id);

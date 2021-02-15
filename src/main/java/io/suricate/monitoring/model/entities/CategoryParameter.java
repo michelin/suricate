@@ -25,14 +25,14 @@ import javax.persistence.*;
 /**
  * The configuration entity
  */
-@Entity(name = "configuration")
-@Table(name = "configuration")
+@Entity
+@Table(name = "category_param")
 @Getter
 @Setter
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @ToString
-public class WidgetConfiguration extends AbstractAuditingEntity<String> {
+public class CategoryParameter extends AbstractAuditingEntity<String> {
 
     /**
      * The key of the configuration (used in JS Files)

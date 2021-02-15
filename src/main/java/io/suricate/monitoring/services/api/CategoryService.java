@@ -16,8 +16,10 @@
 
 package io.suricate.monitoring.services.api;
 
-import io.suricate.monitoring.model.entities.WidgetConfiguration;
+import io.suricate.monitoring.model.entities.CategoryParameter;
 import io.suricate.monitoring.model.entities.Category;
+import io.suricate.monitoring.model.entities.Widget;
+import io.suricate.monitoring.model.entities.WidgetParam;
 import io.suricate.monitoring.repositories.CategoryRepository;
 import io.suricate.monitoring.services.specifications.CategorySearchSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,16 +31,14 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
- * The service that manage categories
+ * Manage the categories
  */
 @Service
 public class CategoryService {
-    /**
-     * The category repository
-     */
-    private final CategoryRepository categoryRepository;
 
     /**
      * The asset service
@@ -46,28 +46,33 @@ public class CategoryService {
     private final AssetService assetService;
 
     /**
-     * The configuration service
+     * The category repository
      */
-    private final WidgetConfigurationService widgetConfigurationService;
+    private final CategoryRepository categoryRepository;
 
     /**
-     * The contructor
+     * The category parameters service
+     */
+    private final CategoryParametersService categoryParametersService;
+
+    /**
+     * Constructor
      *
-     * @param categoryRepository         The category repository to inject
      * @param assetService               The asset service
-     * @param widgetConfigurationService The configuration service
+     * @param categoryRepository         The category repository
+     * @param categoryParametersService  The category parameters service
      */
     @Autowired
-    public CategoryService(final CategoryRepository categoryRepository,
-                           final AssetService assetService,
-                           final WidgetConfigurationService widgetConfigurationService) {
-        this.categoryRepository = categoryRepository;
+    public CategoryService(final AssetService assetService,
+                           final CategoryRepository categoryRepository,
+                           final CategoryParametersService categoryParametersService) {
         this.assetService = assetService;
-        this.widgetConfigurationService = widgetConfigurationService;
+        this.categoryRepository = categoryRepository;
+        this.categoryParametersService = categoryParametersService;
     }
 
     /**
-     * Get every categories order by name
+     * Get all the categories
      *
      * @return The list of categories
      */
@@ -99,6 +104,7 @@ public class CategoryService {
         }
 
         Category existingCategory = findByTechnicalName(category.getTechnicalName());
+
         if (category.getImage() != null) {
             if (existingCategory != null && existingCategory.getImage() != null) {
                 category.getImage().setId(existingCategory.getImage().getId());
@@ -112,15 +118,47 @@ public class CategoryService {
         }
 
         // Save the configurations
-        List<WidgetConfiguration> widgetConfigurations = category.getConfigurations();
+        List<CategoryParameter> categoryOldConfigurations = existingCategory != null ?
+                new ArrayList<>(existingCategory.getConfigurations()) : new ArrayList<>();
+
+        List<CategoryParameter> categoryNewConfigurations = category.getConfigurations();
         category.setConfigurations(new ArrayList<>());
 
         // Create/Update category
         categoryRepository.save(category);
 
         // Create/Update configurations
-        if (widgetConfigurations != null && !widgetConfigurations.isEmpty()) {
-            widgetConfigurationService.addOrUpdateConfigurations(widgetConfigurations, category);
+        if (categoryNewConfigurations != null && !categoryNewConfigurations.isEmpty()) {
+            List<String> categoryNewConfigurationsKeys = categoryNewConfigurations
+                    .stream()
+                    .map(CategoryParameter::getId)
+                    .collect(Collectors.toList());
+
+            for (CategoryParameter categoryConfiguration : categoryOldConfigurations) {
+                if (!categoryNewConfigurationsKeys.contains(categoryConfiguration.getId())) {
+                    categoryParametersService.deleteOneByKey(categoryConfiguration.getId());
+                }
+            }
+
+            categoryParametersService.addOrUpdateCategoryConfiguration(categoryNewConfigurations, category);
         }
+    }
+
+    /**
+     * Get the parameters of the category linked with the given widget
+     *
+     * @param widget The widget
+     * @return The category parameters
+     */
+    public List<WidgetParam> getCategoryParametersByWidget(final Widget widget) {
+        Optional<List<CategoryParameter>> configurationsOptional = categoryParametersService
+                .getParametersByCategoryId(widget.getCategory().getId());
+
+        return configurationsOptional
+                .map(configurations -> configurations
+                        .stream()
+                        .map(CategoryParametersService::convertCategoryParametersToWidgetParameters)
+                        .collect(Collectors.toList()))
+                .orElseGet(ArrayList::new);
     }
 }

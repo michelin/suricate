@@ -44,15 +44,11 @@ import java.util.stream.Collectors;
  */
 @Service
 public class WidgetService {
-    /**
-     * Class logger
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(WidgetService.class);
 
     /**
-     * Configuration Service
+     * Logger
      */
-    private final WidgetConfigurationService widgetConfigurationService;
+    private static final Logger LOGGER = LoggerFactory.getLogger(WidgetService.class);
 
     /**
      * Cache service
@@ -75,7 +71,7 @@ public class WidgetService {
     private final WidgetParamRepository widgetParamRepository;
 
     /**
-     * Category repository
+     * Category service
      */
     private final CategoryService categoryService;
 
@@ -85,7 +81,7 @@ public class WidgetService {
      * @param widgetRepository           The widget repository
      * @param widgetParamRepository      The widget param repository
      * @param categoryService            The category service
-     * @param widgetConfigurationService The configuration service
+     * @param widgetParametersService The configuration service
      * @param cacheService               The cache service
      * @param assetService               The asset service
      */
@@ -93,13 +89,11 @@ public class WidgetService {
     public WidgetService(final WidgetRepository widgetRepository,
                          final WidgetParamRepository widgetParamRepository,
                          final CategoryService categoryService,
-                         final WidgetConfigurationService widgetConfigurationService,
                          final CacheService cacheService,
                          final AssetService assetService) {
         this.widgetRepository = widgetRepository;
         this.widgetParamRepository = widgetParamRepository;
         this.categoryService = categoryService;
-        this.widgetConfigurationService = widgetConfigurationService;
         this.cacheService = cacheService;
         this.assetService = assetService;
     }
@@ -143,20 +137,6 @@ public class WidgetService {
     }
 
     /**
-     * Get the parameters of the category linked with the widget
-     *
-     * @param widget The widget
-     * @return The related global configuration
-     */
-    public List<WidgetParam> getCategoryParametersFromWidget(final Widget widget) {
-        Optional<List<WidgetConfiguration>> configurationsOptional = widgetConfigurationService.getConfigurationForCategory(widget.getCategory().getId());
-
-        return configurationsOptional
-            .map(configurations -> configurations.stream().map(WidgetConfigurationService::initParamFromConfiguration).collect(Collectors.toList()))
-            .orElseGet(ArrayList::new);
-    }
-
-    /**
      * Return the full list of parameters of a widget including the parameters of the widget
      * and the global parameters of the category
      *
@@ -166,7 +146,7 @@ public class WidgetService {
     @Transactional
     public List<WidgetParam> getWidgetParametersWithCategoryParameters(final Widget widget) {
         List<WidgetParam> widgetParameters = new ArrayList<>(widget.getWidgetParams());
-        widgetParameters.addAll(getCategoryParametersFromWidget(widget));
+        widgetParameters.addAll(this.categoryService.getCategoryParametersByWidget(widget));
 
         return widgetParameters;
     }
@@ -253,7 +233,6 @@ public class WidgetService {
         for (Category category : list) {
             categoryService.addOrUpdateCategory(category);
 
-            // Create/update widgets
             addOrUpdateWidgets(category, category.getWidgets(), mapLibrary, repository);
         }
         cacheService.clearAllCache();

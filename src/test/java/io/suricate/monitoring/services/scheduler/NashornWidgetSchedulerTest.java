@@ -98,7 +98,7 @@ public class NashornWidgetSchedulerTest {
      * The widget configuration repository
      */
     @Autowired
-    WidgetConfigurationRepository widgetConfigurationRepository;
+    CategoryParametersRepository categoryParametersRepository;
 
     /**
      * The project widget repository
