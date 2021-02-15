@@ -68,23 +68,24 @@ export class InputComponent implements OnInit {
   public dataType = DataTypeEnum;
 
   /**
-   * The list of options to display
-   */
-  public options: FormOption[];
-
-  /**
    * The list of icons
-   * @type {IconEnum}
-   * @protected
    */
   public iconEnum = IconEnum;
 
   /**
    * The list of material icon codes
-   * @type {MaterialIconRecords}
-   * @protected
    */
   public materialIconRecords = MaterialIconRecords;
+
+  /**
+   * The list of options to display
+   */
+  public options: FormOption[];
+
+  /**
+   * Is the current field a password or not
+   */
+  public originalTypeIsPassword: boolean;
 
   /**
    * Constructor
@@ -95,6 +96,8 @@ export class InputComponent implements OnInit {
    * Called when the component is init
    */
   public ngOnInit(): void {
+    this.originalTypeIsPassword = this.field.type === DataTypeEnum.PASSWORD;
+
     this.initOptionsField();
   }
 
@@ -196,5 +199,21 @@ export class InputComponent implements OnInit {
    */
   public isInputFieldOnError(): boolean {
     return (this.getFormControl().dirty || this.getFormControl().touched) && this.getFormControl().invalid;
+  }
+
+  /**
+   * Execute an action when clicking on the suffix icon depending on the type of
+   * the field
+   */
+  public suffixActions(): void {
+    if (this.originalTypeIsPassword) {
+      if (this.field.type === DataTypeEnum.PASSWORD) {
+        this.field.type = DataTypeEnum.TEXT;
+        this.field.iconSuffix = IconEnum.HIDE_PASSWORD;
+      } else {
+        this.field.type = DataTypeEnum.PASSWORD;
+        this.field.iconSuffix = IconEnum.SHOW_PASSWORD;
+      }
+    }
   }
 }

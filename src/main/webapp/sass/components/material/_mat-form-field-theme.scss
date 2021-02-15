@@ -39,5 +39,10 @@
     .mat-icon.prefix {
       margin-right: 10px;
     }
+
+    .mat-icon.suffix {
+      margin-left: 10px;
+      cursor: pointer;
+    }
   }
 }

@@ -42,6 +42,8 @@ export const MaterialIconRecords: Record<IconEnum, string> = {
   [IconEnum.LOGOUT]: 'exit_to_app',
   [IconEnum.NAME]: 'short_text',
   [IconEnum.PASSWORD]: 'lock',
+  [IconEnum.SHOW_PASSWORD]: 'label',
+  [IconEnum.HIDE_PASSWORD]: 'label_off',
   [IconEnum.REFRESH]: 'refresh',
   [IconEnum.REPOSITORY_TYPE]: 'cloud_queue',
   [IconEnum.SAVE]: 'done',

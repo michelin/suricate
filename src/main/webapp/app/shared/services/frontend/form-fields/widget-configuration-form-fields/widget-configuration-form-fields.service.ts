@@ -68,6 +68,7 @@ export class WidgetConfigurationFormFieldsService {
         type: configuration.dataType,
         value: configuration ? configuration.value : null,
         iconPrefix: IconEnum.VALUE,
+        iconSuffix: configuration.dataType === DataTypeEnum.PASSWORD ? IconEnum.SHOW_PASSWORD : undefined,
         validators: [Validators.required]
       }
     ];

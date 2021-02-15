@@ -47,7 +47,8 @@ export class LoginFormFieldsService {
         label: 'password',
         type: DataTypeEnum.PASSWORD,
         validators: [Validators.required],
-        iconPrefix: IconEnum.PASSWORD
+        iconPrefix: IconEnum.PASSWORD,
+        iconSuffix: IconEnum.SHOW_PASSWORD
       }
     ];
   }
