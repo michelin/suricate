@@ -33,6 +33,12 @@ export class SlideToggleComponent implements OnInit {
   public label: String;
 
   /**
+   * Is the toggle button checked or not
+   */
+  @Input()
+  public toggleChecked: boolean;
+
+  /**
    * The event emitter
    */
   @Output()
