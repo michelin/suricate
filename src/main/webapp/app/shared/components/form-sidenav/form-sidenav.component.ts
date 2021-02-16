@@ -89,7 +89,7 @@ export class FormSidenavComponent implements OnInit, OnDestroy {
         this.configuration = configuration;
         this.formGroup = this.formService.generateFormGroupForFields(this.configuration.formFields);
 
-        if (this.configuration?.slideToggleButtonConfiguration.toggleChecked) {
+        if (this.configuration?.slideToggleButtonConfiguration?.toggleChecked) {
           this.configuration.slideToggleButtonConfiguration.slideToggleButtonPressed(
             { source: undefined, checked: true },
             this.formGroup,
