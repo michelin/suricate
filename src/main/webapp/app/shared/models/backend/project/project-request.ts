@@ -22,4 +22,5 @@ export interface ProjectRequest {
   maxColumn: number;
   widgetHeight: number;
   cssStyle: string;
+  image: string;
 }

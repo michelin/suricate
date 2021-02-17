@@ -19,6 +19,11 @@
 import { Injectable } from '@angular/core';
 
 import { AbstractHttpService } from '../abstract-http/abstract-http.service';
+import { HttpFilter } from '../../../models/backend/http-filter';
+import { Observable } from 'rxjs';
+import { Page } from '../../../models/backend/page';
+import { Project } from '../../../models/backend/project/project';
+import { HttpFilterService } from '../http-filter/http-filter.service';
 
 /**
  * Manage the asset http calls
@@ -27,7 +32,6 @@ import { AbstractHttpService } from '../abstract-http/abstract-http.service';
 export class HttpAssetService {
   /**
    * Global assets endpoint
-   * @type {string}
    */
   private static readonly assetsApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/assets`;
 

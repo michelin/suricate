@@ -1,11 +1,4 @@
 <div class="file-upload-wrapper" fxLayout="row wrap" fxLayoutAlign="space-around center" fxFlex="100">
-  <!-- Image uploaded -->
-  <img *ngIf="imgBase64" [src]="imgBase64" alt="Uploaded file" fxFlex="49" />
-
-  <div *ngIf="filename" fxFlex="49">
-    {{ filename }}
-  </div>
-
   <!-- Button visible -->
   <div fxFlex="48" fxLayout="row wrap" class="upload-button-wrapper">
     <button
@@ -13,11 +6,26 @@
       type="button"
       fxFlex="100"
       class="upload-button"
+      color="primary"
       [ngClass]="{ 'button-error': isInputFieldOnError() }"
       (click)="file.click()"
     >
       <mat-icon> {{ materialIconRecords[iconEnum.UPLOAD] }} </mat-icon>
-      <span class="sentence"> {{ 'file.upload' | translate }} </span>
+      <span class="sentence"> {{ field.label | translate }} </span>
+    </button>
+
+    <button
+      *ngIf="belongingComponent"
+      mat-raised-button
+      type="button"
+      fxFlex="100"
+      class="take-screenshot-button"
+      color="primary"
+      [ngClass]="{ 'button-error': isInputFieldOnError() }"
+      (click)="takeScreenshot()"
+    >
+      <mat-icon> {{ materialIconRecords[iconEnum.UPLOAD] }} </mat-icon>
+      <span class="sentence"> {{ 'dashboard.take.screenshot' | translate }} </span>
     </button>
 
     <!-- Error Message for file input -->
@@ -26,6 +34,13 @@
         {{ getInputErrors() | translate }}
       </div>
     </div>
+  </div>
+
+  <!-- Image uploaded -->
+  <img *ngIf="imgBase64" [src]="imgBase64" class="uploaded-file" alt="Uploaded file" fxFlex="290px" />
+
+  <div *ngIf="filename" fxFlex="49">
+    {{ filename }}
   </div>
 
   <!-- Used to retrieve the file (hidden) -->

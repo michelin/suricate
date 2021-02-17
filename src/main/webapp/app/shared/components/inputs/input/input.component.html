@@ -80,6 +80,7 @@
     *ngIf="dataType.FILE === field.type"
     [field]="field"
     [formGroup]="formGroup"
+    [belongingComponent]="belongingComponent"
     (valueChangeEvent)="emitValueChange('fileChanged')"
   >
   </suricate-file-input>

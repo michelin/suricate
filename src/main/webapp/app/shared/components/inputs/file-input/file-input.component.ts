@@ -16,10 +16,14 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { InputComponent } from '../input/input.component';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { FileUtils } from '../../../utils/file.utils';
+import * as html2canvas from 'html2canvas';
+import { DashboardScreenComponent } from '../../../../dashboard/components/dashboard-screen/dashboard-screen.component';
+import { HttpProjectService } from '../../../services/backend/http-project/http-project.service';
+import { ImageUtils } from '../../../utils/image.utils';
 
 /**
  * Component that manage the file input
@@ -40,14 +44,11 @@ import { FileUtils } from '../../../utils/file.utils';
 export class FileInputComponent extends InputComponent implements OnInit {
   /**
    * The image as base 64
-   * @type {string | ArrayBuffer}
-   * @protected
    */
   public imgBase64: string | ArrayBuffer;
+
   /**
    * If it's not an image we set the filename
-   * @type {string}
-   * @protected
    */
   public filename: string;
 
@@ -109,5 +110,23 @@ export class FileInputComponent extends InputComponent implements OnInit {
 
     super.getFormControl().markAsTouched();
     this.emitValueChange('fileChanged');
+  }
+
+  /**
+   * Take a screen shot of the dashboard
+   */
+  public takeScreenshot(): void {
+    html2canvas(this.belongingComponent['nativeElement'], {
+      backgroundColor: 'transparent'
+    }).then((htmlCanvasElement: HTMLCanvasElement) => {
+      const b64: string = htmlCanvasElement.toDataURL('image/png');
+
+      this.setBase64File(b64);
+      super.getFormControl().setValue(b64);
+      super.getFormControl().markAsDirty();
+      super.getFormControl().markAsTouched();
+
+      this.emitValueChange('fileChanged');
+    });
   }
 }

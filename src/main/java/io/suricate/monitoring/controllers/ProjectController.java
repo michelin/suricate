@@ -215,6 +215,7 @@ public class ProjectController {
     public ResponseEntity<ProjectResponseDto> getOneByToken(@ApiParam(name = "projectToken", value = "The project token", required = true)
                                                             @PathVariable("projectToken") String projectToken) {
         Optional<Project> projectOptional = projectService.getOneByToken(projectToken);
+
         if (!projectOptional.isPresent()) {
             throw new ObjectNotFoundException(Project.class, projectToken);
         }

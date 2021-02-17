@@ -22,6 +22,9 @@ import { FormField } from '../../../../models/frontend/form/form-field';
 import { IconEnum } from '../../../../enums/icon.enum';
 import { CssService } from '../../css/css.service';
 import { CustomValidator } from '../../../../validators/custom-validator';
+import { HttpAssetService } from '../../../backend/http-asset/http-asset.service';
+import { FileUtils } from '../../../../utils/file.utils';
+import { ImageUtils } from '../../../../utils/image.utils';
 
 /**
  * Service used to build the form fields related to a project
@@ -68,6 +71,13 @@ export class ProjectFormFieldsService {
         type: DataTypeEnum.NUMBER,
         value: project ? project.gridProperties.maxColumn : 5,
         validators: [Validators.required, CustomValidator.isDigits, CustomValidator.greaterThan0]
+      },
+      {
+        key: 'image',
+        label: 'dashboard.upload.logo',
+        type: DataTypeEnum.FILE,
+        value: project?.image ? `data:${project.image.contentType};base64,${project.image.content}` : undefined,
+        validators: [CustomValidator.fileHasFormat()]
       },
       {
         key: 'gridBackgroundColor',

@@ -15,6 +15,7 @@
  */
 
 import { ProjectGrid } from './project-grid';
+import { Asset } from '../asset/asset';
 
 /**
  * The project entity
@@ -25,4 +26,5 @@ export interface Project {
   gridProperties: ProjectGrid;
   screenshotToken: string;
   librariesToken: string[];
+  image: Asset;
 }

@@ -29,6 +29,8 @@ import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
 import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
 import { IconEnum } from '../../../shared/enums/icon.enum';
 import { CssService } from '../../../shared/services/frontend/css/css.service';
+import { FileUtils } from '../../../shared/utils/file.utils';
+import { ImageUtils } from '../../../shared/utils/image.utils';
 
 /**
  * Manage the home page
@@ -120,6 +122,17 @@ export class HomeComponent implements OnInit {
     projectRequest.cssStyle = CssService.buildCssFile([CssService.buildCssGridBackgroundColor(projectRequest['gridBackgroundColor'])]);
 
     this.httpProjectService.create(projectRequest).subscribe((project: Project) => {
+      if (projectRequest.image) {
+        const contentType: string = ImageUtils.getContentTypeFromBase64URL(projectRequest.image);
+        const blob: Blob = FileUtils.base64ToBlob(
+          ImageUtils.getDataFromBase64URL(projectRequest.image),
+          ImageUtils.getContentTypeFromBase64URL(projectRequest.image)
+        );
+        const file: File = FileUtils.convertBlobToFile(blob, `${project.token}.${contentType.split('/')[1]}`, new Date());
+
+        this.httpProjectService.addOrUpdateProjectScreenshot(project.token, file).subscribe();
+      }
+
       this.toastService.sendMessage('dashboard.add.success', ToastTypeEnum.SUCCESS);
       this.router.navigate(['/dashboards', project.token]);
     });

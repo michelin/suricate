@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { animate, style, transition, trigger } from '@angular/animations';
 
@@ -26,6 +26,7 @@ import { FormOption } from '../../../models/frontend/form/form-option';
 import { FormField } from '../../../models/frontend/form/form-field';
 import { IconEnum } from '../../../enums/icon.enum';
 import { MaterialIconRecords } from '../../../records/material-icon.record';
+import { DashboardScreenComponent } from '../../../../dashboard/components/dashboard-screen/dashboard-screen.component';
 
 /**
  * Manage the instantiation of different form inputs
@@ -44,6 +45,12 @@ import { MaterialIconRecords } from '../../../records/material-icon.record';
   ]
 })
 export class InputComponent implements OnInit {
+  /**
+   * The form created in which we have to create the input
+   */
+  @Input()
+  public belongingComponent: DashboardScreenComponent;
+
   /**
    * The form created in which we have to create the input
    */

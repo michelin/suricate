@@ -20,6 +20,8 @@ import { FormField } from '../form/form-field';
 import { ValueChangedEvent } from '../form/value-changed-event';
 import { Observable } from 'rxjs';
 import { SlideToggleButtonConfiguration } from '../button/slide-toggle/slide-toggle-button-configuration';
+import { Component, ComponentRef, ElementRef } from '@angular/core';
+import { DashboardScreenComponent } from '../../../../dashboard/components/dashboard-screen/dashboard-screen.component';
 
 /**
  * Configuration used by the form sidenav
@@ -53,4 +55,9 @@ export interface FormSidenavConfiguration {
    * Configuration of the slide toggle button
    */
   slideToggleButtonConfiguration?: SlideToggleButtonConfiguration;
+
+  /**
+   * Reference on the belonging component
+   */
+  belongingComponent?: DashboardScreenComponent;
 }

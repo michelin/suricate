@@ -33,7 +33,11 @@ import java.util.List;
  * Interface that manage the generation DTO/Model objects for project class
  */
 @Component
-@Mapper(componentModel = "spring")
+@Mapper(
+        componentModel = "spring",
+        uses = {
+                AssetMapper.class
+        })
 public abstract class ProjectMapper {
 
     /**
@@ -60,6 +64,7 @@ public abstract class ProjectMapper {
     @Mapping(target = "gridProperties.cssStyle", source = "project.cssStyle")
     @Mapping(target = "screenshotToken", expression = "java( project.getScreenshot() != null ? io.suricate.monitoring.utils.IdUtils.encrypt(project.getScreenshot().getId()) : null )")
     @Mapping(target = "librariesToken", expression = "java(libraryService.getLibrariesToken(project.getWidgets()))")
+    @Mapping(target = "image", source = "project.screenshot", qualifiedByName = "toAssetDtoDefault")
     public abstract ProjectResponseDto toProjectDtoDefault(Project project);
 
     /* ******************************************************* */
@@ -67,7 +72,7 @@ public abstract class ProjectMapper {
     /* ******************************************************* */
 
     /**
-     * Tranform a list of projects into a list of projectDtos
+     * Transform a list of projects into a list of projectDtos
      *
      * @param projects The list of project to tranform
      * @return The related list of dto object
