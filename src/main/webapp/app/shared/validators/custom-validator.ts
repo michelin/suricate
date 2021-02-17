@@ -19,7 +19,7 @@
 import { AbstractControl, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 
 export class CustomValidator {
-  private static fileFormat: string = '^data:image\\/(gif|jpe?g|png);base64,.+$';
+  private static fileFormat = '^data:image\\/(gif|jpe?g|png);base64,.+$';
 
   /**
    * Custom validator that checks if the two passwords match
