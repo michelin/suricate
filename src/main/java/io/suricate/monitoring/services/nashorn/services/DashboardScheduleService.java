@@ -110,7 +110,7 @@ public class DashboardScheduleService {
      * If the Nashorn execution is successful then update the data.
      * If the Nashorn execution is failed, then just update the log.
      *
-     * Schedule the next Nashorn execution except if the current execution threw a fatal error
+     * Schedule the next Nashorn execution except if the current execution did not throw a fatal error
      *
      * @param nashornResponse The Nashorn response
      * @param scheduler       The Nashorn requests scheduler
@@ -142,7 +142,7 @@ public class DashboardScheduleService {
                     nashornResponse.getProjectWidgetId(), nashornResponse.getLog(), nashornResponse);
         } else {
             NashornRequest newNashornRequest = nashornService.getNashornRequestByProjectWidgetId(nashornResponse.getProjectWidgetId());
-            scheduler.schedule(newNashornRequest, false, false);
+            scheduler.schedule(newNashornRequest, false);
         }
 
         sendWidgetUpdateNotification(nashornResponse.getProjectWidgetId(), nashornResponse.getProjectId());

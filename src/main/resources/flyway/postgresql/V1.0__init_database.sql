@@ -243,7 +243,7 @@ ALTER TABLE category                ADD CONSTRAINT fk_category_image_id         
 ALTER TABLE allowed_setting_value   ADD CONSTRAINT fk_allowed_setting_value_setting_id      FOREIGN KEY (setting_id)                REFERENCES setting (id) ;
 
 -- Insert default settings
-INSERT INTO setting(constrained, data_type, type, description) VALUES (E'Y' , E'COMBO' , E'TEMPLATE' , E'Template');
+INSERT INTO setting(constrained, data_type, type, description) VALUES (E'Y' , E'COMBO' , E'THEME' , E'Theme');
 INSERT INTO setting(constrained, data_type, type, description) VALUES (E'Y' , E'COMBO' , E'LANGUAGE' , E'Language');
 INSERT INTO allowed_setting_value(title, value, is_default, setting_id) VALUES (E'Default' , E'default-theme' , E'Y' , 1);
 INSERT INTO allowed_setting_value(title, value, is_default, setting_id) VALUES (E'Dark' , E'dark-theme' , E'N' , 1);

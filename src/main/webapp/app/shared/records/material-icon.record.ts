@@ -53,7 +53,7 @@ export const MaterialIconRecords: Record<IconEnum, string> = {
   [IconEnum.STOP_SHARE_SCREEN]: 'stop_screen_share',
   [IconEnum.SUCCESS]: 'done',
   [IconEnum.TEXT]: 'notes',
-  [IconEnum.TEMPLATE]: 'color_lens',
+  [IconEnum.THEME]: 'color_lens',
   [IconEnum.TV]: 'tv',
   [IconEnum.TV_LIVE]: 'live_tv',
   [IconEnum.UPLOAD]: 'cloud_upload',

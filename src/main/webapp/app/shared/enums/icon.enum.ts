@@ -51,7 +51,7 @@ export enum IconEnum {
   STOP_SHARE_SCREEN = 'STOP_SHARE_SCREEN',
   SUCCESS = 'SUCCESS',
   TEXT = 'TEXT',
-  TEMPLATE = 'TEMPLATE',
+  THEME = 'THEME',
   TV = 'TV',
   TV_LIVE = 'TV_LIVE',
   UPLOAD = 'UPLOAD',

@@ -101,7 +101,7 @@ export class SettingsService {
    */
   getThemeUserSetting(user: User): Observable<UserSetting> {
     return this.httpSettingService
-      .getAll(SettingsTypeEnum.TEMPLATE)
+      .getAll(SettingsTypeEnum.THEME)
       .pipe(flatMap(settings => this.httpUserService.getUserSetting(user.username, settings[0].id)));
   }
 
@@ -121,7 +121,7 @@ export class SettingsService {
    * Init the default theme settings
    */
   initDefaultThemeSetting() {
-    this.httpSettingService.getAll(SettingsTypeEnum.TEMPLATE).subscribe(settings => {
+    this.httpSettingService.getAll(SettingsTypeEnum.THEME).subscribe(settings => {
       this.currentTheme = settings[0].allowedSettingValues.find(allowedSettingValue => allowedSettingValue.default).value;
     });
   }

@@ -59,19 +59,9 @@ public class NashornRequestWidgetExecutionScheduler {
     private static final int EXECUTOR_POOL_SIZE = 60;
 
     /**
-     * Very short delay to execute a Nashorn request
+     * Nashorn request immediate execution delay
      */
-    private static final long SHORT_DELAY = 2L;
-
-    /**
-     * An inclusive starting delay to execute a Nashorn request
-     */
-    private static final int START_DELAY_INCLUSIVE = 30;
-
-    /**
-     * An exclusive ending delay to execute a Nashorn request
-     */
-    private static final int END_DELAY_EXCLUSIVE = 120;
+    private static final long NASHORN_IMMEDIATE_EXECUTION_DELAY = 1L;
 
     /**
      * The Spring boot application context
@@ -157,14 +147,14 @@ public class NashornRequestWidgetExecutionScheduler {
     /**
      * Schedule a list of Nashorn requests
      *
-     * @param nashornRequests The list of nashorn requests to schedule
-     * @param start           If the scheduling should start now
-     * @param init            If it's an initialisation of the scheduling
+     * @param nashornRequests           The list of nashorn requests to schedule
+     * @param startNashornRequestNow    Should the Nashorn request starts now or from the widget configured delay
      */
-    public void scheduleNashornRequests(final List<NashornRequest> nashornRequests, boolean start, boolean init) {
+    public void scheduleNashornRequests(final List<NashornRequest> nashornRequests, boolean startNashornRequestNow) {
         try {
             nashornRequests
-                    .forEach(nashornRequest -> schedule(nashornRequest, start, init));
+                    .forEach(nashornRequest -> schedule(nashornRequest,
+                            startNashornRequestNow));
         } catch (Exception e) {
             LOGGER.error("An error has occurred when scheduling a Nashorn request for a new project subscription", e);
         }
@@ -179,19 +169,16 @@ public class NashornRequestWidgetExecutionScheduler {
      * If the widget was in a pause state from a previous execution, then set the widget in a running
      * state before executing the request.
      *
-     * Compute the Nashorn request execution delay
-     *
      * Create an asynchronous task which will execute the Nashorn request and execute the widget. Schedule
      * this task according to the computed delay.
      *
      * Create another asynchronous task which will wait for the result of the first task (the result of the widget execution).
      * It waits during the whole duration set in the widget description as timeout.
      *
-     * @param nashornRequest The Nashorn request
-     * @param start          Force the Nashorn request to start now
-     * @param init           Force the Nashorn request to start randomly between START_DELAY_INCLUSIVE and END_DELAY_EXCLUSIVE
+     * @param nashornRequest         The Nashorn request
+     * @param startNashornRequestNow Should the Nashorn request starts now or from the widget configured delay
      */
-    public void schedule(final NashornRequest nashornRequest, boolean start, boolean init) {
+    public void schedule(final NashornRequest nashornRequest, final boolean startNashornRequestNow) {
         if (nashornRequest == null || scheduleNashornRequestExecutionThread == null || scheduleNashornRequestResponseThread == null) {
             return;
         }
@@ -213,20 +200,15 @@ public class NashornRequestWidgetExecutionScheduler {
             projectWidgetServiceInjected.updateState(WidgetState.RUNNING, nashornRequest.getProjectWidgetId(), new Date());
         }
 
-        Long nashornRequestExecutionDelay = nashornRequest.getDelay();
-        if (start) {
-            nashornRequestExecutionDelay = RandomUtils.nextLong(START_DELAY_INCLUSIVE, END_DELAY_EXCLUSIVE);
-        } else if (init) {
-            nashornRequestExecutionDelay = SHORT_DELAY;
-        }
-
         ProjectWidget projectWidget = projectWidgetServiceInjected
                 .getOne(nashornRequest.getProjectWidgetId()).orElse(new ProjectWidget());
 
         List<WidgetVariableResponse> widgetParameters = widgetService
                 .getWidgetParametersForNashorn(projectWidget.getWidget());
 
-        LOGGER.debug("The Nashorn request of the widget instance {} will start in {} seconds", nashornRequest.getProjectWidgetId(), nashornRequestExecutionDelay);
+        long nashornRequestExecutionDelay = startNashornRequestNow ? NASHORN_IMMEDIATE_EXECUTION_DELAY : nashornRequest.getDelay();
+
+        LOGGER.debug("The Nashorn request of the widget instance {} will start in {} second(s)", nashornRequest.getProjectWidgetId(), nashornRequestExecutionDelay);
 
         ScheduledFuture<NashornResponse> scheduledNashornRequestExecutionTask = scheduleNashornRequestExecutionThread
                 .schedule(new NashornRequestWidgetExecutionAsyncTask(nashornRequest, stringEncryptor, widgetParameters),
@@ -253,7 +235,7 @@ public class NashornRequestWidgetExecutionScheduler {
      */
     public void cancelAndScheduleNashornRequest(NashornRequest nashornRequest) {
         cancelWidgetExecution(nashornRequest.getProjectWidgetId());
-        schedule(nashornRequest, false, true);
+        schedule(nashornRequest, true);
     }
 
     /**

@@ -136,7 +136,7 @@ public class NashornRequestResultAsyncTask implements Callable<Void>{
             }, context -> {
                 LOGGER.error("Updating the widget instance {} failed after {} attempts", nashornRequest.getProjectWidgetId(), MAX_RETRY);
 
-                scheduler.schedule(nashornRequest, false, false);
+                scheduler.schedule(nashornRequest, false);
 
                 return null;
             });
@@ -152,7 +152,7 @@ public class NashornRequestResultAsyncTask implements Callable<Void>{
             } catch (Exception exception1) {
                 LOGGER.error("Cannot update the widget instance {} with no Nashorn response cause of database issue. Rescheduling a new Nashorn request", nashornRequest.getProjectWidgetId(), exception1);
 
-                scheduler.schedule(nashornRequest, false, false);
+                scheduler.schedule(nashornRequest, false);
             }
         }
 

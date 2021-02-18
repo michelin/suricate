@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
  * Hold every settings types
  */
 public enum SettingType {
-    TEMPLATE,
+    THEME,
     LANGUAGE;
 
 

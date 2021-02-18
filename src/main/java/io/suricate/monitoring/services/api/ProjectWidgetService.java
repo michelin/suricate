@@ -161,28 +161,27 @@ public class ProjectWidgetService {
     }
 
     /**
-     * Add a new project widget
+     * Add a new widget instance to a project
      *
-     * @param projectWidget The project widget to add
-     * @return The projectwidget instantiate
+     * Encrypt the secret configuration of the widget instance
+     *
+     * Save it
+     *
+     * Send an event to the subscribers to update the dashboards
+     *
+     * @param widgetInstance The widget instance
      */
     @Transactional
-    public ProjectWidget addProjectWidget(ProjectWidget projectWidget) {
-        //Encrypt Secret params
-        projectWidget.setBackendConfig(
-            encryptSecretParamsIfNeeded(projectWidget.getWidget(), projectWidget.getBackendConfig())
+    public void addWidgetInstanceToProject(ProjectWidget widgetInstance) {
+        widgetInstance.setBackendConfig(
+            encryptSecretParamsIfNeeded(widgetInstance.getWidget(), widgetInstance.getBackendConfig())
         );
 
-        // Add project widget
-        projectWidget = projectWidgetRepository.saveAndFlush(projectWidget);
-        dashboardScheduleService.scheduleWidget(projectWidget.getId());
+        widgetInstance = projectWidgetRepository.saveAndFlush(widgetInstance);
 
-        // Update grid
         UpdateEvent updateEvent = new UpdateEvent(UpdateType.GRID);
-        updateEvent.setContent(projectMapper.toProjectDtoDefault(projectWidget.getProject()));
-        dashboardWebsocketService.sendEventToProjectSubscribers(projectWidget.getProject().getToken(), updateEvent);
-
-        return projectWidget;
+        updateEvent.setContent(projectMapper.toProjectDtoDefault(widgetInstance.getProject()));
+        dashboardWebsocketService.sendEventToProjectSubscribers(widgetInstance.getProject().getToken(), updateEvent);
     }
 
     /**

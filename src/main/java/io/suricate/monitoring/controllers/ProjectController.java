@@ -441,7 +441,7 @@ public class ProjectController {
         }
 
         ProjectWidget projectWidget = projectWidgetMapper.toNewProjectWidget(projectWidgetRequestDto, projectToken);
-        projectWidgetService.addProjectWidget(projectWidget);
+        projectWidgetService.addWidgetInstanceToProject(projectWidget);
 
         URI resourceLocation = ServletUriComponentsBuilder
             .fromCurrentContextPath()
