@@ -207,7 +207,7 @@ public class GitService {
      * @return File object on local repo
      */
     public File cloneRepo(String url, String branch, String login, String password) throws IOException {
-        LOGGER.info("Loading widgets from the branch {} of the remote repository {}", branch, url);
+        LOGGER.info("Cloning the branch {} of the remote repository {}", branch, url);
 
         File localRepository = File.createTempFile("tmp", Long.toString(System.nanoTime()));
 

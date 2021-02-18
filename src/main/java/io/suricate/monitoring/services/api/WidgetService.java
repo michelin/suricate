@@ -224,22 +224,36 @@ public class WidgetService {
     /**
      * Update categories and widgets in database with the new list
      *
-     * @param list       The list of categories + widgets
+     * @param categories The list of categories with widgets
      * @param mapLibrary The libraries
      * @param repository The Git Repository
      */
     @Transactional
-    public void updateWidgetInDatabase(List<Category> list, Map<String, Library> mapLibrary, final Repository repository) {
-        for (Category category : list) {
+    public void updateWidgetInDatabase(List<Category> categories, Map<String, Library> mapLibrary, final Repository repository) {
+        for (Category category : categories) {
             categoryService.addOrUpdateCategory(category);
 
             addOrUpdateWidgets(category, category.getWidgets(), mapLibrary, repository);
         }
+
         cacheService.clearAllCache();
     }
 
     /**
-     * Add or update a list of widgets
+     * Add or update the given widgets from the given repository
+     *
+     * Find the matching existing widget if it exists.
+     *
+     * Update the libraries of the widget.
+     *
+     * Update the image of the widget.
+     *
+     * Update the parameters of the widget. If the new widget does not contain some
+     * parameters anymore, then delete these parameters.
+     *
+     * Set the activated state by default to the widget.
+     *
+     * Set the category and the repository to the widget.
      *
      * @param category   The category
      * @param widgets    The related widgets
@@ -253,17 +267,11 @@ public class WidgetService {
         }
 
         for (Widget widget : widgets) {
-            if (widget.getLibraries() != null && mapLibrary != null) {
-                widget.getLibraries().replaceAll(x -> mapLibrary.get(x.getTechnicalName()));
-            }
-
-            // Find existing widget
             Widget currentWidget = widgetRepository.findByTechnicalName(widget.getTechnicalName());
-            if (currentWidget != null && !repository.equals(currentWidget.getRepository())) {
-                LOGGER.info("The widget {} has been found on the repository {} which will be replace by {}", currentWidget.getTechnicalName(),
-                    currentWidget.getRepository() != null ? currentWidget.getRepository().getName() : "null", repository.getName());
 
-                widget.setRepository(repository);
+            if (widget.getLibraries() != null && mapLibrary != null) {
+                widget.getLibraries()
+                        .replaceAll(library -> mapLibrary.get(library.getTechnicalName()));
             }
 
             if (widget.getImage() != null) {
@@ -320,15 +328,15 @@ public class WidgetService {
                 }
             }
 
-            // Set activated state by default
             if (widget.getWidgetAvailability() == null) {
                 widget.setWidgetAvailability(WidgetAvailabilityEnum.ACTIVATED);
             }
 
-
-
-            // set category
             widget.setCategory(category);
+            widget.setRepository(repository);
+
+            LOGGER.info("Widget {} updated from the branch {} of the repository {}", widget.getTechnicalName(),
+                    widget.getRepository().getBranch(), widget.getRepository().getName());
 
             widgetRepository.save(widget);
         }
