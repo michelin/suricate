@@ -233,7 +233,7 @@ public class DashboardWebSocketService {
 
             if (project.isPresent()) {
                 List<NashornRequest> nashornRequests = nashornService.getNashornRequestsByProject(project.get());
-                nashornWidgetScheduler.scheduleNashornRequests(nashornRequests, true, false);
+                nashornWidgetScheduler.scheduleNashornRequests(nashornRequests, true);
             }
         }
     }

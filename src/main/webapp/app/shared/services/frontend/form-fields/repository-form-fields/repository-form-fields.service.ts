@@ -144,6 +144,7 @@ export class RepositoryFormFieldsService {
         key: 'password',
         label: 'password',
         iconPrefix: IconEnum.PASSWORD,
+        iconSuffix: IconEnum.SHOW_PASSWORD,
         type: DataTypeEnum.PASSWORD,
         value: repository ? repository.password : null,
         validators: [Validators.required]

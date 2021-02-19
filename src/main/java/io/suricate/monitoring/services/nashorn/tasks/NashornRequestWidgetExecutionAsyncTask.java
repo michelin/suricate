@@ -171,11 +171,11 @@ public class NashornRequestWidgetExecutionAsyncTask implements Callable<NashornR
             if (rootCause instanceof RequestException) {
                 nashornResponse.setLog("Service Response:\n\n" + ((RequestException) rootCause).getResponse() + "\n\nTechnical Data:\n\n" + ((RequestException) rootCause).getTechnicalData());
             } else if (rootCause instanceof SocketException) {
-                LOGGER.error("Cannot execute the widget instance {} behind the configured proxy", nashornRequest.getProjectWidgetId());
-                nashornResponse.setLog(prettify(ExceptionUtils.getRootCauseMessage(exception)) + ". Cannot execute the widget instance " + nashornRequest.getProjectWidgetId() + " behind the configured proxy.");
+                LOGGER.error("An error has been thrown by the http call during the script execution of the widget instance", nashornRequest.getProjectWidgetId());
+                nashornResponse.setLog("An error has been thrown by the http call during the script execution of the widget instance " + nashornRequest.getProjectWidgetId() + ". " + prettify(ExceptionUtils.getRootCauseMessage(exception)));
             } else if (rootCause instanceof ECMAException) {
                 LOGGER.error("An error has been thrown during the script execution of the widget instance {}", nashornRequest.getProjectWidgetId());
-                nashornResponse.setLog(prettify(ExceptionUtils.getRootCauseMessage(exception)) + ". An error has been thrown during the script execution of the widget instance " + nashornRequest.getProjectWidgetId() + ".");
+                nashornResponse.setLog("An error has been thrown during the script execution of the widget instance " + nashornRequest.getProjectWidgetId() + ". " + prettify(ExceptionUtils.getRootCauseMessage(exception)));
             } else {
                 nashornResponse.setLog(prettify(ExceptionUtils.getRootCauseMessage(exception)));
             }

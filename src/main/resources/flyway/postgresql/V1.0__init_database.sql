@@ -35,7 +35,7 @@ CREATE TABLE category (
 
 );
 
-CREATE TABLE configuration (
+CREATE TABLE category_param (
     config_key          character varying           NOT NULL,
     config_export       boolean,
     config_value        character varying(1000),
@@ -45,7 +45,7 @@ CREATE TABLE configuration (
     created_date        timestamp without time zone DEFAULT now() NOT NULL,
     last_modified_by    character varying(255)      DEFAULT 'APPLICATION'::character varying,
     last_modified_date  timestamp without time zone DEFAULT now(),
-    CONSTRAINT pk_configuration_config_key          PRIMARY KEY (config_key)
+    CONSTRAINT pk_category_param_config_key          PRIMARY KEY (config_key)
 );
 
 CREATE TABLE library (
@@ -238,12 +238,12 @@ ALTER TABLE project_widget          ADD CONSTRAINT fk_project_widget_widget_id  
 ALTER TABLE project_widget          ADD CONSTRAINT fk_project_widget_project_id             FOREIGN KEY (project_id)                REFERENCES project (id) ;
 ALTER TABLE project                 ADD CONSTRAINT fk_project_screenshot_id                 FOREIGN KEY (screenshot_id)             REFERENCES asset (id) ;
 ALTER TABLE library                 ADD CONSTRAINT fk_library_asset_id                      FOREIGN KEY (asset_id)                  REFERENCES asset (id) ;
-ALTER TABLE configuration           ADD CONSTRAINT fk_configuration_category_id             FOREIGN KEY (category_id)               REFERENCES category (id) ;
+ALTER TABLE category_param          ADD CONSTRAINT fk_category_param_category_id             FOREIGN KEY (category_id)               REFERENCES category (id) ;
 ALTER TABLE category                ADD CONSTRAINT fk_category_image_id                     FOREIGN KEY (image_id)                  REFERENCES asset (id) ;
 ALTER TABLE allowed_setting_value   ADD CONSTRAINT fk_allowed_setting_value_setting_id      FOREIGN KEY (setting_id)                REFERENCES setting (id) ;
 
 -- Insert default settings
-INSERT INTO setting(constrained, data_type, type, description) VALUES (E'Y' , E'COMBO' , E'TEMPLATE' , E'Template');
+INSERT INTO setting(constrained, data_type, type, description) VALUES (E'Y' , E'COMBO' , E'THEME' , E'Theme');
 INSERT INTO setting(constrained, data_type, type, description) VALUES (E'Y' , E'COMBO' , E'LANGUAGE' , E'Language');
 INSERT INTO allowed_setting_value(title, value, is_default, setting_id) VALUES (E'Default' , E'default-theme' , E'Y' , 1);
 INSERT INTO allowed_setting_value(title, value, is_default, setting_id) VALUES (E'Dark' , E'dark-theme' , E'N' , 1);

@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class AssetService {
+
     /**
      * The asset repository
      */
@@ -34,7 +35,7 @@ public class AssetService {
     /**
      * Constructor
      *
-     * @param assetRepository The asset repository to inject
+     * @param assetRepository The asset repository
      */
     @Autowired
     public AssetService(final AssetRepository assetRepository) {
@@ -42,7 +43,7 @@ public class AssetService {
     }
 
     /**
-     * Find an asset by id
+     * Find an asset by ID
      *
      * @param id The asset id
      * @return The related asset
@@ -52,10 +53,10 @@ public class AssetService {
     }
 
     /**
-     * Save a new asset in database
+     * Save an asset
      *
      * @param asset The asset to save
-     * @return The asset saved
+     * @return The saved asset
      */
     public Asset save(Asset asset) {
         return assetRepository.save(asset);

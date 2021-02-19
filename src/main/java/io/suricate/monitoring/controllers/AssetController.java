@@ -76,11 +76,13 @@ public class AssetController {
                                            @ApiParam(name = "token", value = "The asset Token", required = true)
                                            @PathVariable("token") String token) {
         Asset asset = assetService.findOne(IdUtils.decrypt(token));
+
         if (asset == null) {
             throw new ObjectNotFoundException(Asset.class, token);
-
-        } else if (webRequest.checkNotModified(asset.getLastModifiedDate().getTime())) {
-            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
+        } else {
+            if (webRequest.checkNotModified(asset.getLastModifiedDate().getTime())) {
+                return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
+            }
         }
 
         return ResponseEntity

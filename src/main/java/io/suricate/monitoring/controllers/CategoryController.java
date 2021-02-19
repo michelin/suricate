@@ -23,11 +23,11 @@ import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.widget.CategoryResponseDto;
 import io.suricate.monitoring.model.dto.api.widget.WidgetResponseDto;
 import io.suricate.monitoring.model.dto.api.widgetconfiguration.WidgetConfigurationResponseDto;
-import io.suricate.monitoring.model.entities.WidgetConfiguration;
+import io.suricate.monitoring.model.entities.CategoryParameter;
 import io.suricate.monitoring.model.entities.Category;
 import io.suricate.monitoring.model.entities.Widget;
+import io.suricate.monitoring.services.api.CategoryParametersService;
 import io.suricate.monitoring.services.api.CategoryService;
-import io.suricate.monitoring.services.api.WidgetConfigurationService;
 import io.suricate.monitoring.services.api.WidgetService;
 import io.suricate.monitoring.services.mapper.CategoryMapper;
 import io.suricate.monitoring.services.mapper.WidgetConfigurationMapper;
@@ -43,6 +43,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -65,9 +66,9 @@ public class CategoryController {
     private final CategoryMapper categoryMapper;
 
     /**
-     * The configuration service
+     * The category parameters service
      */
-    private final WidgetConfigurationService widgetConfigurationService;
+    private final CategoryParametersService categoryParametersService;
 
     /**
      * The configuration mapper
@@ -89,7 +90,8 @@ public class CategoryController {
      *
      * @param categoryService            The category service to inject
      * @param categoryMapper             The category mapper to inject
-     * @param widgetConfigurationService The configuration service to inject
+     * @param widgetParametersService    The widget parameters service
+     * @param categoryParametersService  The category parameters service
      * @param widgetConfigurationMapper  The configuration mapper
      * @param widgetService              The widget service to inject
      * @param widgetMapper               The widget mapper to inject
@@ -97,13 +99,13 @@ public class CategoryController {
     @Autowired
     public CategoryController(final CategoryService categoryService,
                               final CategoryMapper categoryMapper,
-                              final WidgetConfigurationService widgetConfigurationService,
+                              final CategoryParametersService categoryParametersService,
                               final WidgetConfigurationMapper widgetConfigurationMapper,
                               final WidgetService widgetService,
                               final WidgetMapper widgetMapper) {
         this.categoryService = categoryService;
         this.categoryMapper = categoryMapper;
-        this.widgetConfigurationService = widgetConfigurationService;
+        this.categoryParametersService = categoryParametersService;
         this.widgetConfigurationMapper = widgetConfigurationMapper;
         this.widgetService = widgetService;
         this.widgetMapper = widgetMapper;
@@ -147,16 +149,12 @@ public class CategoryController {
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<List<WidgetConfigurationResponseDto>> getConfigurationsByCategory(@ApiParam(name = "categoryId", value = "The category id", required = true)
                                                                                             @PathVariable("categoryId") final Long categoryId) {
-        Optional<List<WidgetConfiguration>> configurationsOptional = widgetConfigurationService.getConfigurationForCategory(categoryId);
-
-        if (!configurationsOptional.isPresent()) {
-            throw new NoContentException(WidgetConfiguration.class);
-        }
+        Optional<List<CategoryParameter>> configurationsOptional = this.categoryParametersService.getParametersByCategoryId(categoryId);
 
         return ResponseEntity
-            .ok()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(widgetConfigurationMapper.toConfigurationDtosDefault(configurationsOptional.get()));
+                    .ok()
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(widgetConfigurationMapper.toConfigurationDtosDefault(configurationsOptional.orElse(new ArrayList<>())));
     }
 
     /**

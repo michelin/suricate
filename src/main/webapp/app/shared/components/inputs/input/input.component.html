@@ -54,7 +54,7 @@
     </mat-select>
 
     <!-- Mat Icon suffix -->
-    <mat-icon *ngIf="field.iconSuffix" matSuffix color="primary">
+    <mat-icon *ngIf="field.iconSuffix" (click)="suffixActions()" class="suffix" matSuffix color="primary">
       {{ materialIconRecords[field.iconSuffix] }}
     </mat-icon>
 
@@ -80,6 +80,7 @@
     *ngIf="dataType.FILE === field.type"
     [field]="field"
     [formGroup]="formGroup"
+    [belongingComponent]="belongingComponent"
     (valueChangeEvent)="emitValueChange('fileChanged')"
   >
   </suricate-file-input>

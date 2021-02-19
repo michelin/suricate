@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as html2canvas from 'html2canvas';
 
@@ -43,6 +43,7 @@ import { ValueChangedEvent } from '../../../shared/models/frontend/form/value-ch
 import { FormField } from '../../../shared/models/frontend/form/form-field';
 import { ProjectUsersFormFieldsService } from '../../../shared/services/frontend/form-fields/project-users-form-fields/project-users-form-fields.service';
 import { WebsocketService } from '../../../shared/services/frontend/websocket/websocket.service';
+import { ImageUtils } from '../../../shared/utils/image.utils';
 
 /**
  * Component used to display a specific dashboard
@@ -56,8 +57,7 @@ export class DashboardDetailComponent implements OnInit {
   /**
    * The dashboard html (as HTML Element)
    */
-  @ViewChild('dashboardScreen')
-  private dashboardScreen: DashboardScreenComponent;
+  public dashboardScreen: DashboardScreenComponent;
 
   /**
    * Hold the configuration of the header component
@@ -88,11 +88,6 @@ export class DashboardDetailComponent implements OnInit {
    * Used to know if the dashboard is loading
    */
   public isDashboardLoading = true;
-
-  /**
-   * The timer used to take the screenshot
-   */
-  private screenshotTimer: NodeJS.Timer;
 
   /**
    * The list of icons
@@ -152,7 +147,6 @@ export class DashboardDetailComponent implements OnInit {
         () => {
           this.isDashboardLoading = false;
           this.initHeaderConfiguration();
-          this.engageDashboardScreenshotsAction();
         },
         () => (this.isDashboardLoading = false)
       );
@@ -182,6 +176,7 @@ export class DashboardDetailComponent implements OnInit {
   public refreshProjectWidgetsAction(): void {
     this.refreshProjectWidgets(this.project.token).subscribe();
   }
+
   /**
    * Refresh the project widget list
    */
@@ -255,33 +250,6 @@ export class DashboardDetailComponent implements OnInit {
   }
 
   /**
-   * Try to engage the action of taking a screenshots
-   */
-  private engageDashboardScreenshotsAction(): void {
-    if (!this.isReadOnly) {
-      // We clear the timer so if the user is doing modification, on the dashboard it will not disturbed
-      clearTimeout(this.screenshotTimer);
-
-      // We are waiting 10sec before taking the screenshot
-      this.screenshotTimer = global.setTimeout(() => this.takeScreenshots(), 10000);
-    }
-  }
-
-  /**
-   * Execute the take screenshots action
-   */
-  private takeScreenshots(): void {
-    // Waiting for behing readonly and take the screenshot
-    setTimeout(() => {
-      html2canvas(this.dashboardScreen['elementRef'].nativeElement).then((htmlCanvasElement: HTMLCanvasElement) => {
-        this.httpProjectService
-          .addOrUpdateProjectScreenshot(this.project.token, FileUtils.takeScreenShot(htmlCanvasElement, `${this.project.token}.png`))
-          .subscribe();
-      });
-    }, 0);
-  }
-
-  /**
    * Redirect to the wizard used to add a new widget
    */
   public displayProjectWidgetWizard(): void {
@@ -322,6 +290,7 @@ export class DashboardDetailComponent implements OnInit {
     this.sidenavService.openFormSidenav({
       title: 'dashboard.edit',
       formFields: ProjectFormFieldsService.generateProjectFormFields(this.project),
+      belongingComponent: this.dashboardScreen,
       save: (formData: ProjectRequest) => this.editDashboard(formData)
     });
   }
@@ -335,6 +304,17 @@ export class DashboardDetailComponent implements OnInit {
     formData.cssStyle = `.grid { background-color: ${formData['gridBackgroundColor']}; }`;
 
     this.httpProjectService.update(this.project.token, formData).subscribe(() => {
+      if (formData.image) {
+        const contentType: string = ImageUtils.getContentTypeFromBase64URL(formData.image);
+        const blob: Blob = FileUtils.base64ToBlob(
+          ImageUtils.getDataFromBase64URL(formData.image),
+          ImageUtils.getContentTypeFromBase64URL(formData.image)
+        );
+        const file: File = FileUtils.convertBlobToFile(blob, `${this.project.token}.${contentType.split('/')[1]}`, new Date());
+
+        this.httpProjectService.addOrUpdateProjectScreenshot(this.project.token, file).subscribe();
+      }
+
       this.toastService.sendMessage('Dashboard updated', ToastTypeEnum.SUCCESS);
       this.refreshConnectedScreens();
     });
@@ -391,5 +371,16 @@ export class DashboardDetailComponent implements OnInit {
    */
   public handlingDashboardDisconnect(): void {
     this.router.navigate(['/home']);
+  }
+
+  /**
+   *
+   * @param content
+   */
+  @ViewChild('dashboardScreen', { read: ElementRef })
+  public set content(content: DashboardScreenComponent) {
+    if (content) {
+      this.dashboardScreen = content;
+    }
   }
 }

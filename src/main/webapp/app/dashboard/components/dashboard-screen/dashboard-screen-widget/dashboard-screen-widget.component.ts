@@ -44,6 +44,7 @@ import { WebsocketUpdateTypeEnum } from '../../../../shared/enums/websocket-upda
 import { Subject } from 'rxjs';
 import { WidgetConfiguration } from '../../../../shared/models/backend/widget-configuration/widget-configuration';
 import { takeUntil } from 'rxjs/operators';
+import { SlideToggleButtonConfiguration } from '../../../../shared/models/frontend/button/slide-toggle/slide-toggle-button-configuration';
 
 /**
  * Display the grid stack widgets
@@ -262,7 +263,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
       widgetId: this.projectWidget.widgetId,
       customStyle: this.projectWidget.customStyle,
       backendConfig: Object.keys(formData)
-        .filter((key: string) => formData[key] && `${formData[key]}`.trim() !== '')
+        .filter((key: string) => formData[key] != null && `${formData[key]}`.trim() !== '')
         .map((key: string) => `${key}=${formData[key]}`)
         .join('\n')
     };
@@ -277,9 +278,13 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    *
    * @param categorySettings The settings of the category
    */
-  public buildSlideToggleButtonConfiguration(categorySettings: WidgetConfiguration[]): any {
+  public buildSlideToggleButtonConfiguration(categorySettings: WidgetConfiguration[]): SlideToggleButtonConfiguration {
     return {
-      displaySlideToggleButton: categorySettings !== null,
+      displaySlideToggleButton: categorySettings.length > 0,
+      toggleChecked:
+        categorySettings.filter(categorySetting =>
+          this.projectWidgetFormStepsService.retrieveProjectWidgetValueFromConfig(categorySetting.key, this.projectWidget.backendConfig)
+        ).length > 0,
       slideToggleButtonPressed: (event: MatSlideToggleChange, formGroup: FormGroup, formFields: FormField[]) =>
         this.widgetConfigurationFormFieldsService.generateCategorySettingsFormFields(
           categorySettings,

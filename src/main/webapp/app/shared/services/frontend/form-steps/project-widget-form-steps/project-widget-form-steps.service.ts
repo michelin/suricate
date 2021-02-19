@@ -151,6 +151,7 @@ export class ProjectWidgetFormStepsService {
         label: widgetParam.description,
         placeholder: widgetParam.usageExample,
         value: configValue ? configValue : widgetParam.defaultValue,
+        iconSuffix: widgetParam.type === DataTypeEnum.PASSWORD ? IconEnum.SHOW_PASSWORD : undefined,
         options: () => ProjectWidgetFormStepsService.getFormOptionsForWidgetParam(widgetParam),
         validators: this.getValidatorsForWidgetParam(widgetParam)
       };

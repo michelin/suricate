@@ -39,5 +39,19 @@
     .mat-icon.prefix {
       margin-right: 10px;
     }
+
+    .mat-icon.suffix {
+      margin-left: 10px;
+      cursor: pointer;
+    }
+  }
+
+  // Stylize the autofill suggestions of the browser
+  input:-webkit-autofill::first-line,
+  input:-webkit-autofill,
+  input:-webkit-autofill:hover,
+  input:-webkit-autofill:focus,
+  input:-webkit-autofill:active {
+    font: 15px Roboto, sans-serif !important;
   }
 }

@@ -4,9 +4,14 @@ import { FormGroup } from '@angular/forms';
 
 export class SlideToggleButtonConfiguration {
   /**
-   * Used to hide the slide toggle button
+   * Display or hide the slide toggle button
    */
   displaySlideToggleButton?: boolean;
+
+  /**
+   * Check the slide toggle button
+   */
+  toggleChecked?: boolean;
 
   /**
    * Function called when the slide toggle button is pressed

@@ -4,6 +4,7 @@
   <suricate-slide-toggle
     *ngIf="configuration.slideToggleButtonConfiguration?.displaySlideToggleButton"
     [label]="'widget.parameters.category.override.title'"
+    [toggleChecked]="configuration?.slideToggleButtonConfiguration?.toggleChecked"
     (slideToggleButtonPressed)="getCategorySettings($event)"
   >
   </suricate-slide-toggle>
@@ -13,6 +14,7 @@
       <suricate-input
         *ngFor="let field of configuration.formFields"
         [formGroup]="formGroup"
+        [belongingComponent]="configuration.belongingComponent"
         [field]="field"
         (valueChangeEvent)="valueChanged($event)"
       >

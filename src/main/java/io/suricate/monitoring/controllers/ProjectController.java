@@ -215,6 +215,7 @@ public class ProjectController {
     public ResponseEntity<ProjectResponseDto> getOneByToken(@ApiParam(name = "projectToken", value = "The project token", required = true)
                                                             @PathVariable("projectToken") String projectToken) {
         Optional<Project> projectOptional = projectService.getOneByToken(projectToken);
+
         if (!projectOptional.isPresent()) {
             throw new ObjectNotFoundException(Project.class, projectToken);
         }
@@ -440,7 +441,7 @@ public class ProjectController {
         }
 
         ProjectWidget projectWidget = projectWidgetMapper.toNewProjectWidget(projectWidgetRequestDto, projectToken);
-        projectWidgetService.addProjectWidget(projectWidget);
+        projectWidgetService.addWidgetInstanceToProject(projectWidget);
 
         URI resourceLocation = ServletUriComponentsBuilder
             .fromCurrentContextPath()

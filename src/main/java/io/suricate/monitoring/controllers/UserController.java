@@ -267,6 +267,7 @@ public class UserController {
                                                          @ApiParam(name = "settingId", value = "The setting id", required = true)
                                                          @PathVariable("settingId") Long settingId) {
         Optional<UserSetting> userSettingOptional = userSettingService.getUserSetting(userName, settingId);
+
         if (!userSettingOptional.isPresent()) {
             throw new ObjectNotFoundException(UserClass.class, "User: " + userName + "; setting: " + settingId);
         }

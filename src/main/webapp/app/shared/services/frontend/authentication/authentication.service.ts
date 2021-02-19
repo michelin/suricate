@@ -191,7 +191,7 @@ export class AuthenticationService {
 
     const params = new URLSearchParams();
     params.append('grant_type', 'password');
-    params.append('username', credentials.username);
+    params.append('username', credentials.username.toLowerCase());
     params.append('password', credentials.password);
 
     const url = `${AuthenticationService.authenticationApiEndpoint}`;

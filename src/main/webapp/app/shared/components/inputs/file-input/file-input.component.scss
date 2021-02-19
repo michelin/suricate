@@ -19,8 +19,8 @@
 
 .file-upload-wrapper {
   & {
-    margin-bottom: 45px;
-    margin-top: 45px;
+    margin-bottom: 20px;
+    place-content: baseline !important;
   }
 
   img {
@@ -29,25 +29,16 @@
   }
 
   .upload-button-wrapper {
-    & {
-      float: right;
-    }
+    margin-right: 15px;
 
     .upload-button {
-      & {
-        background-color: #fff;
-        box-shadow: none;
-        border: 1px solid black;
-        border-radius: 0;
-      }
-
       .mat-icon {
-        margin-right: 20px;
+        margin-right: 10px;
       }
+    }
 
-      .sentence {
-        font-weight: bold;
-      }
+    .take-screenshot-button {
+      margin: 10px 0;
     }
   }
 
@@ -69,4 +60,9 @@
   overflow: hidden;
   font-size: 75%;
   color: mat-color(map-get($theme, warn));
+}
+
+.uploaded-file {
+  min-height: 290px;
+  max-height: 290px;
 }

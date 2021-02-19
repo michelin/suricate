@@ -23,10 +23,11 @@ import io.suricate.monitoring.model.dto.api.ApplicationPropertiesDto;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.widgetconfiguration.WidgetConfigurationRequestDto;
 import io.suricate.monitoring.model.dto.api.widgetconfiguration.WidgetConfigurationResponseDto;
-import io.suricate.monitoring.model.entities.WidgetConfiguration;
+import io.suricate.monitoring.model.entities.CategoryParameter;
 import io.suricate.monitoring.services.CacheService;
-import io.suricate.monitoring.services.api.WidgetConfigurationService;
+import io.suricate.monitoring.services.api.CategoryParametersService;
 import io.suricate.monitoring.services.mapper.WidgetConfigurationMapper;
+import io.suricate.monitoring.services.properties.ApplicationPropertiesService;
 import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,12 +46,17 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api")
 @Api(value = "Widget Configuration Controller", tags = {"Widget Configurations"})
-public class WidgetConfigurationController {
+public class CategoryParametersController {
 
     /**
      * The configuration Service
      */
-    private final WidgetConfigurationService widgetConfigurationService;
+    private final ApplicationPropertiesService applicationPropertiesService;
+
+    /**
+     * The category parameters service
+     */
+    private final CategoryParametersService categoryParametersService;
 
     /**
      * The configuration mapper for Domain/Dto tranformation
@@ -65,14 +71,16 @@ public class WidgetConfigurationController {
     /**
      * Constructor
      *
-     * @param widgetConfigurationService Inject the configuration service
+     * @param widgetParametersService Inject the configuration service
      * @param widgetConfigurationMapper  The configuration mapper
      */
     @Autowired
-    public WidgetConfigurationController(final WidgetConfigurationService widgetConfigurationService,
-                                         final WidgetConfigurationMapper widgetConfigurationMapper,
-                                         final CacheService cacheService) {
-        this.widgetConfigurationService = widgetConfigurationService;
+    public CategoryParametersController(final ApplicationPropertiesService applicationPropertiesService,
+                                        final CategoryParametersService categoryParametersService,
+                                        final WidgetConfigurationMapper widgetConfigurationMapper,
+                                        final CacheService cacheService) {
+        this.applicationPropertiesService = applicationPropertiesService;
+        this.categoryParametersService = categoryParametersService;
         this.widgetConfigurationMapper = widgetConfigurationMapper;
         this.cacheService = cacheService;
     }
@@ -95,7 +103,7 @@ public class WidgetConfigurationController {
     public Page<WidgetConfigurationResponseDto> getAll(@ApiParam(name = "search", value = "Search keyword")
                                                        @RequestParam(value = "search", required = false) String search,
                                                        Pageable pageable) {
-        Page<WidgetConfiguration> widgetConfigurationsPaged = widgetConfigurationService.getAll(search, pageable);
+        Page<CategoryParameter> widgetConfigurationsPaged = categoryParametersService.getAll(search, pageable);
         return widgetConfigurationsPaged.map(widgetConfigurationMapper::toConfigurationDtoDefault);
     }
 
@@ -116,10 +124,10 @@ public class WidgetConfigurationController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<WidgetConfigurationResponseDto> getOneByKey(@ApiParam(name = "key", value = "The configuration key", required = true)
                                                                       @PathVariable("key") final String key) {
-        Optional<WidgetConfiguration> configurationOptional = widgetConfigurationService.getOneByKey(key);
+        Optional<CategoryParameter> configurationOptional = categoryParametersService.getOneByKey(key);
 
         if (!configurationOptional.isPresent()) {
-            throw new ObjectNotFoundException(WidgetConfiguration.class, key);
+            throw new ObjectNotFoundException(CategoryParameter.class, key);
         }
 
         return ResponseEntity
@@ -148,12 +156,13 @@ public class WidgetConfigurationController {
                                                @PathVariable("key") final String key,
                                                @ApiParam(name = "configurationResponseDto", value = "The configuration updated", required = true)
                                                @RequestBody final WidgetConfigurationRequestDto widgetConfigurationRequestDto) {
-        Optional<WidgetConfiguration> configurationOptional = widgetConfigurationService.getOneByKey(key);
+        Optional<CategoryParameter> configurationOptional = categoryParametersService.getOneByKey(key);
+
         if (!configurationOptional.isPresent()) {
-            throw new ObjectNotFoundException(WidgetConfiguration.class, key);
+            throw new ObjectNotFoundException(CategoryParameter.class, key);
         }
 
-        widgetConfigurationService.updateConfiguration(configurationOptional.get(), widgetConfigurationRequestDto.getValue());
+        categoryParametersService.updateConfiguration(configurationOptional.get(), widgetConfigurationRequestDto.getValue());
         cacheService.clearCache("configuration");
 
         return ResponseEntity.noContent().build();
@@ -176,12 +185,14 @@ public class WidgetConfigurationController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Void> deleteOneByKey(@ApiParam(name = "key", value = "The configuration key", required = true)
                                                @PathVariable("key") final String key) {
-        Optional<WidgetConfiguration> configurationOptional = widgetConfigurationService.getOneByKey(key);
+        Optional<CategoryParameter> configurationOptional = categoryParametersService.getOneByKey(key);
+
         if (!configurationOptional.isPresent()) {
-            throw new ObjectNotFoundException(WidgetConfiguration.class, key);
+            throw new ObjectNotFoundException(CategoryParameter.class, key);
         }
 
-        widgetConfigurationService.deleteOneByKey(key);
+        categoryParametersService.deleteOneByKey(key);
+
         return ResponseEntity.noContent().build();
     }
 
@@ -197,6 +208,6 @@ public class WidgetConfigurationController {
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(widgetConfigurationService.getAuthenticationProvider());
+            .body(applicationPropertiesService.getAuthenticationProvider());
     }
 }

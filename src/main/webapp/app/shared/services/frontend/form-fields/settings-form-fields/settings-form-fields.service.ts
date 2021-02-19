@@ -26,6 +26,7 @@ import { flatMap, map, toArray } from 'rxjs/operators';
 import { FormOption } from '../../../../models/frontend/form/form-option';
 import { AllowedSettingValue } from '../../../../models/backend/setting/allowed-setting-value';
 import { IconEnum } from '../../../../enums/icon.enum';
+import { Validators } from '@angular/forms';
 
 /**
  * Service used to build the form fields related to the settings
@@ -60,6 +61,7 @@ export class SettingsFormFieldsService {
               iconPrefix: IconEnum[userSettingForkJoin.setting.type],
               type: userSettingForkJoin.setting.dataType,
               value: userSettingForkJoin.userSetting.settingValue.value,
+              validators: [Validators.required],
               options: () => this.generateOptions(userSettingForkJoin.setting)
             };
           }),

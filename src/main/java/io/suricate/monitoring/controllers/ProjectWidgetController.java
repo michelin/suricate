@@ -159,6 +159,7 @@ public class ProjectWidgetController {
                                                     @ApiParam(name = "projectWidgetId", value = "The project widget id", required = true)
                                                     @PathVariable("projectWidgetId") Long projectWidgetId) {
         Optional<ProjectWidget> projectWidgetOptional = projectWidgetService.getOne(projectWidgetId);
+
         if (!projectWidgetOptional.isPresent()) {
             throw new ObjectNotFoundException(ProjectWidget.class, projectWidgetId);
         }

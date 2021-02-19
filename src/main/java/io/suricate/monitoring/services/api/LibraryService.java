@@ -30,25 +30,26 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * The library service
+ * Manage the libraries
  */
 @Service
 public class LibraryService {
+
     /**
-     * Library repository
+     * The library repository
      */
     private final LibraryRepository libraryRepository;
 
     /**
-     * Asset repository
+     * The asset repository
      */
     private final AssetService assetService;
 
     /**
      * The constructor
      *
-     * @param libraryRepository Inject the library repository
-     * @param assetService      Inject the asset service
+     * @param libraryRepository The library repository
+     * @param assetService      The asset repository
      */
     @Autowired
     public LibraryService(final LibraryRepository libraryRepository, final AssetService assetService) {
@@ -57,46 +58,59 @@ public class LibraryService {
     }
 
     /**
-     * Method used to get all library for the displayed widget
+     * Get all libraries of the given widgets
      *
-     * @param projectWidgets The list of project widget
-     * @return The list of related libraries
+     * @param widgetInstances The widgets
+     * @return The libraries
      */
     @LogExecutionTime
-    public List<String> getLibrariesToken(List<ProjectWidget> projectWidgets) {
-        List<Long> widgetList = projectWidgets.stream().map(projectWidget -> projectWidget.getWidget().getId()).distinct().collect(Collectors.toList());
+    public List<String> getLibrariesToken(List<ProjectWidget> widgetInstances) {
+        List<Long> widgetList = widgetInstances
+                .stream()
+                .map(projectWidget -> projectWidget.getWidget().getId())
+                .distinct()
+                .collect(Collectors.toList());
+
         if (widgetList.isEmpty()) {
             return Collections.emptyList();
         }
-        List<Long> ids = libraryRepository.getLibs(widgetList);
-        return ids.stream().map(IdUtils::encrypt).collect(Collectors.toList());
+
+        return libraryRepository.getLibs(widgetList)
+                .stream()
+                .map(IdUtils::encrypt)
+                .collect(Collectors.toList());
     }
 
 
     /**
-     * Method used to update library in database
+     * Update a list of libraries
      *
-     * @param list all library to add
-     * @return the list of library available in database
+     * @param libraries All the libraries to add
+     * @return All the available libraries
      */
     @Transactional
-    public List<Library> updateLibraryInDatabase(List<Library> list) {
-        if (list == null) {
+    public List<Library> updateLibraryInDatabase(List<Library> libraries) {
+        if (libraries == null) {
             return Collections.emptyList();
         }
-        for (Library library : list) {
+
+        for (Library library : libraries) {
             Library lib = libraryRepository.findByTechnicalName(library.getTechnicalName());
+
             if (library.getAsset() != null) {
                 if (lib != null && lib.getAsset() != null) {
                     library.getAsset().setId(lib.getAsset().getId());
                 }
                 assetService.save(library.getAsset());
             }
+
             if (lib != null) {
                 library.setId(lib.getId());
             }
         }
-        libraryRepository.saveAll(list);
+
+        libraryRepository.saveAll(libraries);
+
         return libraryRepository.findAll();
     }
 

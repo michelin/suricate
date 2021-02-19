@@ -68,13 +68,15 @@ export class RegisterFormFieldsService {
         label: 'password',
         type: DataTypeEnum.PASSWORD,
         validators: [Validators.required, Validators.minLength(3)],
-        iconPrefix: IconEnum.PASSWORD
+        iconPrefix: IconEnum.PASSWORD,
+        iconSuffix: IconEnum.SHOW_PASSWORD
       },
       {
         key: 'confirmPassword',
         label: 'password.confirm',
         type: DataTypeEnum.PASSWORD,
-        iconPrefix: IconEnum.PASSWORD
+        iconPrefix: IconEnum.PASSWORD,
+        iconSuffix: IconEnum.SHOW_PASSWORD
       }
     ];
   }

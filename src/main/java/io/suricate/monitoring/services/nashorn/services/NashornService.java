@@ -19,7 +19,7 @@
 package io.suricate.monitoring.services.nashorn.services;
 
 import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
-import io.suricate.monitoring.model.entities.WidgetConfiguration;
+import io.suricate.monitoring.model.entities.CategoryParameter;
 import io.suricate.monitoring.model.entities.Project;
 import io.suricate.monitoring.model.entities.ProjectWidget;
 import io.suricate.monitoring.model.enums.WidgetState;
@@ -134,21 +134,21 @@ public class NashornService {
      * Get the project widget configurations with the global ones
      *
      * @param projectWidget        The project widget
-     * @param widgetConfigurations The global configurations
+     * @param categoryParameters The global configurations
      * @return Get the full configuration for project widget
      */
-    private String getProjectWidgetConfigurationsWithGlobalOne(final ProjectWidget projectWidget, final List<WidgetConfiguration> widgetConfigurations) {
+    private String getProjectWidgetConfigurationsWithGlobalOne(final ProjectWidget projectWidget, final List<CategoryParameter> categoryParameters) {
         StringBuilder builder = new StringBuilder(Objects.toString(projectWidget.getBackendConfig(), StringUtils.EMPTY));
 
-        if (widgetConfigurations != null && !widgetConfigurations.isEmpty()) {
+        if (categoryParameters != null && !categoryParameters.isEmpty()) {
             builder.append('\n');
 
-            for (WidgetConfiguration widgetConfiguration : widgetConfigurations) {
-                if (!projectWidget.getBackendConfig().contains(widgetConfiguration.getKey())) {
+            for (CategoryParameter categoryParameter : categoryParameters) {
+                if (!projectWidget.getBackendConfig().contains(categoryParameter.getKey())) {
                     builder
-                        .append(widgetConfiguration.getKey())
+                        .append(categoryParameter.getKey())
                         .append('=')
-                        .append(widgetConfiguration.getValue())
+                        .append(categoryParameter.getValue())
                         .append('\n');
                 }
             }

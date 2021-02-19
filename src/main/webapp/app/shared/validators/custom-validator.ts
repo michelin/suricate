@@ -19,6 +19,8 @@
 import { AbstractControl, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 
 export class CustomValidator {
+  private static fileFormat = '^data:image\\/(gif|jpe?g|png);base64,.+$';
+
   /**
    * Custom validator that checks if the two passwords match
    *
@@ -51,5 +53,14 @@ export class CustomValidator {
    */
   public static greaterThan0(control: AbstractControl) {
     return control.value > 0 ? null : { gt0: true };
+  }
+
+  /**
+   * Custom validator that checks if an input file has the expected format
+   *
+   * @param control The field control
+   */
+  public static fileHasFormat(): ValidatorFn {
+    return Validators.pattern(this.fileFormat);
   }
 }

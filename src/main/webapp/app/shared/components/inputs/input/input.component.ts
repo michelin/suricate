@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { AbstractControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { animate, style, transition, trigger } from '@angular/animations';
 
@@ -26,6 +26,7 @@ import { FormOption } from '../../../models/frontend/form/form-option';
 import { FormField } from '../../../models/frontend/form/form-field';
 import { IconEnum } from '../../../enums/icon.enum';
 import { MaterialIconRecords } from '../../../records/material-icon.record';
+import { DashboardScreenComponent } from '../../../../dashboard/components/dashboard-screen/dashboard-screen.component';
 
 /**
  * Manage the instantiation of different form inputs
@@ -44,6 +45,12 @@ import { MaterialIconRecords } from '../../../records/material-icon.record';
   ]
 })
 export class InputComponent implements OnInit {
+  /**
+   * The form created in which we have to create the input
+   */
+  @Input()
+  public belongingComponent: DashboardScreenComponent;
+
   /**
    * The form created in which we have to create the input
    */
@@ -68,23 +75,24 @@ export class InputComponent implements OnInit {
   public dataType = DataTypeEnum;
 
   /**
-   * The list of options to display
-   */
-  public options: FormOption[];
-
-  /**
    * The list of icons
-   * @type {IconEnum}
-   * @protected
    */
   public iconEnum = IconEnum;
 
   /**
    * The list of material icon codes
-   * @type {MaterialIconRecords}
-   * @protected
    */
   public materialIconRecords = MaterialIconRecords;
+
+  /**
+   * The list of options to display
+   */
+  public options: FormOption[];
+
+  /**
+   * Is the current field a password or not
+   */
+  public originalTypeIsPassword: boolean;
 
   /**
    * Constructor
@@ -95,6 +103,8 @@ export class InputComponent implements OnInit {
    * Called when the component is init
    */
   public ngOnInit(): void {
+    this.originalTypeIsPassword = this.field.type === DataTypeEnum.PASSWORD;
+
     this.initOptionsField();
   }
 
@@ -196,5 +206,21 @@ export class InputComponent implements OnInit {
    */
   public isInputFieldOnError(): boolean {
     return (this.getFormControl().dirty || this.getFormControl().touched) && this.getFormControl().invalid;
+  }
+
+  /**
+   * Execute an action when clicking on the suffix icon depending on the type of
+   * the field
+   */
+  public suffixActions(): void {
+    if (this.originalTypeIsPassword) {
+      if (this.field.type === DataTypeEnum.PASSWORD) {
+        this.field.type = DataTypeEnum.TEXT;
+        this.field.iconSuffix = IconEnum.HIDE_PASSWORD;
+      } else {
+        this.field.type = DataTypeEnum.PASSWORD;
+        this.field.iconSuffix = IconEnum.SHOW_PASSWORD;
+      }
+    }
   }
 }

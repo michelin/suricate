@@ -63,6 +63,13 @@ describe('TvManagementDialogComponent', () => {
       librariesToken: ['Token1', 'Token2'],
       name: 'ProjectName',
       screenshotToken: 'ScreenToken',
+      image: {
+        content: 'content',
+        contentType: 'image/png',
+        id: 'id',
+        lastUpdateDate: new Date(),
+        size: 10
+      },
       token: 'Token'
     };
   }
