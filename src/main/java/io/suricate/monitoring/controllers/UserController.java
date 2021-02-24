@@ -122,7 +122,7 @@ public class UserController {
     })
     @ApiPageable
     @GetMapping(value = "/v1/users")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ROLE_USER')")
     public Page<UserResponseDto> getAll(@ApiParam(name = "search", value = "Search keyword")
                                         @RequestParam(value = "search", required = false) String search,
                                         Pageable pageable) {
