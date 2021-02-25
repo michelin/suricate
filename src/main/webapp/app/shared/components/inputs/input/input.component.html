@@ -47,7 +47,7 @@
       [required]="isRequired()"
       (selectionChange)="emitValueChange('optionSelected')"
     >
-      <mat-option *ngIf="!isRequired()" [value]="">None</mat-option>
+      <mat-option *ngIf="!isRequired() && field.type == dataType.COMBO" [value]="">None</mat-option>
       <mat-option *ngFor="let option of options" [value]="option.value">
         {{ option.label }}
       </mat-option>
