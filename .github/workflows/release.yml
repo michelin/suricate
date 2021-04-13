@@ -1,0 +1,27 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      release_version:
+        description: 'Release version'
+        required: true
+
+jobs:
+  Release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v2
+      - name: Set up JDK 8
+        uses: actions/setup-java@v2
+      - name: Set up NodeJS 12.x
+        uses: actions/setup-node@v1
+      - name: Release application
+        run: |
+          npm --no-git-tag-version version ${{ github.event.inputs.release_version }}
+          git add package.json
+          git add package-lock.json
+          git commit -m "Update Front-End with new release version ${{ github.event.inputs.release_version }}"
+          git push origin HEAD
+          mvn -B release:clean release:prepare -DreleaseVersion=${{ github.event.inputs.release_version }}
