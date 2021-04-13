@@ -7,13 +7,12 @@ spring:
     url: null
     username: null
     password: null
-  ### Flyway ###
-  flyway:
-    locations: ['classpath:flyway/postgresql']
-  ### JPA ###
   jpa:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         temp:
           use_jdbc_metadata_defaults: false
+  flyway:
+    locations:
+      - 'classpath:flyway/postgresql'
