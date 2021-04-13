@@ -35,8 +35,9 @@ jobs:
         with:
           node-version: '12.x'
       - name: Build with NPM
-      - run: npm install --no-progress
-      - run: npm run build
+        run: |
+             npm install --no-progress
+             npm run build
       - name: Lint with NPM
         run: npm run lint
       - name: Test with NPM
