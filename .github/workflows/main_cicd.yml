@@ -1,4 +1,4 @@
-name: CI/CD
+name: Main CI/CD
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
       - '**'
 
 jobs:
-  build:
+  Back-End:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout project
@@ -25,3 +25,19 @@ jobs:
         run: mvn -B test
       - name: Check dependencies with Maven
         run: mvn -B -DskipTests -DcentralAnalyzerEnabled=false verify
+  Front-End:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout project
+        uses: actions/checkout@v2
+      - name: Set up NodeJS 12.x
+        uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+      - name: Build with NPM
+      - run: npm install --no-progress
+      - run: npm run build
+      - name: Lint with NPM
+        run: npm run lint
+      - name: Test with NPM
+        run: npm run test-headless-no-sandbox -- --watch=false --progress=false --code-coverage
