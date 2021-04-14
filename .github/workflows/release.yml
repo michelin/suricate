@@ -22,6 +22,11 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '12.x'
+      - name: Set up Git
+        run: |
+             git config --global url.ssh://git@github.com/.insteadOf https://github.com/
+             git config --global user.email "$(SSH_GITHUB_COMMIT_EMAIL)"
+             git config --global user.name "Azure Pipelines"
       - name: Release application
         run: |
           npm --no-git-tag-version version ${{ github.event.inputs.release_version }}
