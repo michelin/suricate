@@ -6,6 +6,7 @@ info:
     version: 1.0-SNAPSHOT
 server:
   port: 8080
+  address: localhost
   error:
     whitelabel:
       enabled: false

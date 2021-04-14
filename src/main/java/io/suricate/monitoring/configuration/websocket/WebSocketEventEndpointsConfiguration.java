@@ -101,6 +101,7 @@ public class WebSocketEventEndpointsConfiguration {
 
     /**
      * Entry point when a client unsubscribe to the web sockets
+     * Called when an unsubscription is triggered manually
      *
      * @param event The unsubscribe event
      */
@@ -110,13 +111,14 @@ public class WebSocketEventEndpointsConfiguration {
         WebsocketClient websocketClient = dashboardWebSocketService.removeSessionClientByWebsocketSessionIdAndSubscriptionId(stompHeaderAccessor.getSessionId(), stompHeaderAccessor.getSubscriptionId());
 
         if (websocketClient != null) {
-            LOGGER.debug("Disconnected client {} with id {} for project {}", websocketClient.getSessionId(), websocketClient.getScreenCode(), websocketClient.getProjectToken());
+            LOGGER.debug("Unsubscribe client {} with id {} for project {}", websocketClient.getSessionId(), websocketClient.getScreenCode(), websocketClient.getProjectToken());
             dashboardWebSocketService.removeProjectClient(websocketClient.getProjectToken(), websocketClient);
         }
     }
 
     /**
      * Entry point when a client disconnect to the web sockets
+     * Called when a disconnection is triggered by a page refreshment
      *
      * @param event The disconnect event
      */
@@ -126,7 +128,7 @@ public class WebSocketEventEndpointsConfiguration {
         WebsocketClient websocketClient = dashboardWebSocketService.removeSessionClientByWebsocketSessionId(stompHeaderAccessor.getSessionId());
 
         if (websocketClient != null) {
-            LOGGER.debug("Disconnected client {} with id {} for project {}", websocketClient.getSessionId(), websocketClient.getScreenCode(), websocketClient.getProjectToken());
+            LOGGER.debug("Disconnect client {} with id {} for project {}", websocketClient.getSessionId(), websocketClient.getScreenCode(), websocketClient.getProjectToken());
             dashboardWebSocketService.removeProjectClient(websocketClient.getProjectToken(), websocketClient);
         }
     }

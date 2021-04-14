@@ -1,0 +1,24 @@
+database:
+  image: mysql:5
+  environment:
+    MYSQL_PASSWORD: demo
+    MYSQL_USER: demo
+    MYSQL_DATABASE: suricate
+    MYSQL_ROOT_PASSWORD: demo
+    default-authentication-plugin: mysql_native_password
+
+backend:
+  build: ./backend
+  environment:
+    - 'SPRING_PROFILES_ACTIVE=docker'
+  links:
+    - database:mysql-db
+  ports:
+    - '18080:8080'
+
+frontend:
+  build: ./frontend
+  links:
+    - backend:suricate-backend
+  ports:
+    - '80:80'
