@@ -3,7 +3,7 @@
 
     <groupId>io.suricate</groupId>
     <artifactId>suricate</artifactId>
-    <version>2.3.3-SNAPSHOT</version>
+    <version>2.3.6-SNAPSHOT</version>
     <packaging>${packaging.type}</packaging>
     <name>Suricate Application</name>
 
