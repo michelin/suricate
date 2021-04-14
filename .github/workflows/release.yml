@@ -22,16 +22,15 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '12.x'
-      - name: Set up Git
-        run: |
-             git config --global url.ssh://git@github.com/.insteadOf https://github.com/
-             git config --global user.email "$(SSH_GITHUB_COMMIT_EMAIL)"
-             git config --global user.name "Azure Pipelines"
-      - name: Release application
+      - name: Update Front-End release version
         run: |
           npm --no-git-tag-version version ${{ github.event.inputs.release_version }}
-          git add package.json
-          git add package-lock.json
-          git commit -m "Update Front-End with new release version ${{ github.event.inputs.release_version }}"
-          git push origin HEAD
-          mvn -B release:clean release:prepare -DreleaseVersion=${{ github.event.inputs.release_version }}
+      - name: Commit Front-End release version
+        uses: EndBug/add-and-commit@v7.1.1
+        with:
+          author_name: GitHub CI/CD
+          author_email: loic.greffier_ext@michelin.com
+          message: 'Update Front-End with new release version ${{ github.event.inputs.release_version }}'
+          add: 'package.json package-lock.json'
+      - name: Release Back-End
+        run: mvn -B release:clean release:prepare -DreleaseVersion=${{ github.event.inputs.release_version }}
