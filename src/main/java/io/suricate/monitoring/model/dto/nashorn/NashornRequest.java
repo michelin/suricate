@@ -17,7 +17,7 @@
 package io.suricate.monitoring.model.dto.nashorn;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
-import io.suricate.monitoring.model.enums.WidgetState;
+import io.suricate.monitoring.model.enums.WidgetStateEnum;
 import io.suricate.monitoring.utils.JsonUtils;
 import lombok.*;
 import org.apache.commons.lang3.StringUtils;
@@ -25,7 +25,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Date;
 
 /**
- * Represent a nashorn request (used for execute the widget JS, with nashorn)
+ * Nashorn request, used to execute the widget JS, with Nashorn
  */
 @Getter
 @Setter
@@ -67,7 +67,7 @@ public class NashornRequest extends AbstractDto {
     /**
      * Widget State
      */
-    private WidgetState widgetState;
+    private WidgetStateEnum widgetState;
 
     /**
      * Boolean to indicate if the
@@ -80,7 +80,7 @@ public class NashornRequest extends AbstractDto {
     private Long timeout;
 
     /**
-     * Full constructor
+     * Constructor
      *
      * @param properties The project widget backend config
      * @param script The widget js script
@@ -93,7 +93,7 @@ public class NashornRequest extends AbstractDto {
      * @param lastSuccess The last success date
      */
     public NashornRequest(String properties, String script, String previousData, Long projectId, Long technicalId, Long delay, Long timeout,
-                          WidgetState state, Date lastSuccess) {
+                          WidgetStateEnum state, Date lastSuccess) {
         this.properties = properties;
         this.script = script;
         this.previousData = previousData;

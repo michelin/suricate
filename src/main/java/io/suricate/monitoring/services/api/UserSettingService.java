@@ -21,7 +21,7 @@ import io.suricate.monitoring.model.entities.AllowedSettingValue;
 import io.suricate.monitoring.model.entities.UserSetting;
 import io.suricate.monitoring.model.entities.User;
 import io.suricate.monitoring.repositories.UserSettingRepository;
-import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
+import io.suricate.monitoring.utils.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

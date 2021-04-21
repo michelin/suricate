@@ -28,7 +28,7 @@ import io.suricate.monitoring.services.GitService;
 import io.suricate.monitoring.services.api.RepositoryService;
 import io.suricate.monitoring.services.mapper.RepositoryMapper;
 import io.suricate.monitoring.services.mapper.WidgetMapper;
-import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
+import io.suricate.monitoring.utils.exceptions.ObjectNotFoundException;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

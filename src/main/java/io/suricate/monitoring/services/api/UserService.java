@@ -23,7 +23,7 @@ import io.suricate.monitoring.model.enums.UserRoleEnum;
 import io.suricate.monitoring.repositories.UserRepository;
 import io.suricate.monitoring.services.mapper.UserMapper;
 import io.suricate.monitoring.services.specifications.UserSearchSpecification;
-import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
+import io.suricate.monitoring.utils.exceptions.ObjectNotFoundException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

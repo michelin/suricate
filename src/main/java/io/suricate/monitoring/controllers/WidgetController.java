@@ -25,7 +25,7 @@ import io.suricate.monitoring.model.dto.api.widget.WidgetResponseDto;
 import io.suricate.monitoring.model.entities.Widget;
 import io.suricate.monitoring.services.api.WidgetService;
 import io.suricate.monitoring.services.mapper.WidgetMapper;
-import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
+import io.suricate.monitoring.utils.exceptions.ObjectNotFoundException;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

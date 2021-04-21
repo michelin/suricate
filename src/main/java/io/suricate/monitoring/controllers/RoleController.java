@@ -26,7 +26,7 @@ import io.suricate.monitoring.model.entities.Role;
 import io.suricate.monitoring.services.api.RoleService;
 import io.suricate.monitoring.services.mapper.RoleMapper;
 import io.suricate.monitoring.services.mapper.UserMapper;
-import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
+import io.suricate.monitoring.utils.exceptions.ObjectNotFoundException;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

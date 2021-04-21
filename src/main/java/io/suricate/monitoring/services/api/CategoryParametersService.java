@@ -21,7 +21,7 @@ package io.suricate.monitoring.services.api;
 import io.suricate.monitoring.model.entities.Category;
 import io.suricate.monitoring.model.entities.CategoryParameter;
 import io.suricate.monitoring.model.entities.WidgetParam;
-import io.suricate.monitoring.model.enums.DataType;
+import io.suricate.monitoring.model.enums.DataTypeEnum;
 import io.suricate.monitoring.repositories.CategoryParametersRepository;
 import io.suricate.monitoring.services.specifications.CategoryParametersSearchSpecification;
 import org.jasypt.encryption.StringEncryptor;
@@ -99,7 +99,7 @@ public class CategoryParametersService {
      * @param newValue          The new value to set
      */
     public void updateConfiguration(CategoryParameter categoryParameter, final String newValue) {
-        categoryParameter.setValue(categoryParameter.getDataType() == DataType.PASSWORD ?
+        categoryParameter.setValue(categoryParameter.getDataType() == DataTypeEnum.PASSWORD ?
                 stringEncryptor.encrypt(newValue) : newValue);
 
         categoryParametersRepository.save(categoryParameter);

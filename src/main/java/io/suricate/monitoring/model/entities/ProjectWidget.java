@@ -19,7 +19,7 @@
 package io.suricate.monitoring.model.entities;
 
 import io.suricate.monitoring.model.entities.generic.AbstractAuditingEntity;
-import io.suricate.monitoring.model.enums.WidgetState;
+import io.suricate.monitoring.model.enums.WidgetStateEnum;
 import lombok.*;
 import org.hibernate.annotations.Type;
 
@@ -110,11 +110,11 @@ public class ProjectWidget extends AbstractAuditingEntity<Long> {
     private Date lastSuccessDate;
     
     /**
-     * The widget state {@link WidgetState}
+     * The widget state {@link WidgetStateEnum}
      */
     @Column
     @Enumerated(EnumType.STRING)
-    private WidgetState state;
+    private WidgetStateEnum state;
 
     /**
      * The related project

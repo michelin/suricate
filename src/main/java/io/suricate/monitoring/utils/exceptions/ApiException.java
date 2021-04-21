@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.utils.exception;
+package io.suricate.monitoring.utils.exceptions;
 
 
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;

@@ -6,7 +6,7 @@ import io.suricate.monitoring.model.entities.Project;
 import io.suricate.monitoring.model.entities.ProjectWidget;
 import io.suricate.monitoring.model.entities.Category;
 import io.suricate.monitoring.model.entities.Widget;
-import io.suricate.monitoring.model.enums.WidgetState;
+import io.suricate.monitoring.model.enums.WidgetStateEnum;
 import io.suricate.monitoring.repositories.*;
 import io.suricate.monitoring.services.api.ProjectWidgetService;
 import io.suricate.monitoring.services.nashorn.services.NashornService;
@@ -175,7 +175,7 @@ public class NashornWidgetSchedulerTest {
         // Schedule widget
         nashornWidgetScheduler.cancelAndScheduleNashornRequest(nashornRequest);
         ProjectWidget current = projectWidgetService.getOne(projectWidget.getId()).get();
-        assertThat(current.getState()).isEqualTo(WidgetState.STOPPED);
+        assertThat(current.getState()).isEqualTo(WidgetStateEnum.STOPPED);
         assertThat(current.getLastExecutionDate()).isNotNull();
         assertThat(current.getLastSuccessDate()).isNull();
     }
@@ -189,7 +189,7 @@ public class NashornWidgetSchedulerTest {
         // Schedule widget
         nashornWidgetScheduler.cancelAndScheduleNashornRequest(nashornRequest);
         ProjectWidget current = projectWidgetService.getOne(projectWidget.getId()).get();
-        assertThat(current.getState()).isEqualTo(WidgetState.STOPPED);
+        assertThat(current.getState()).isEqualTo(WidgetStateEnum.STOPPED);
         assertThat(current.getLastExecutionDate()).isNotNull();
         assertThat(current.getLastSuccessDate()).isNull();
     }
@@ -214,7 +214,7 @@ public class NashornWidgetSchedulerTest {
 
         // Add widget Instance
         projectWidget = new ProjectWidget();
-        projectWidget.setState(WidgetState.STOPPED);
+        projectWidget.setState(WidgetStateEnum.STOPPED);
         projectWidget.setProject(project);
         projectWidget.setWidget(widget);
         projectWidget.setData("{}");

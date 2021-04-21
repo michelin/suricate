@@ -17,7 +17,7 @@
 package io.suricate.monitoring.repositories;
 
 import io.suricate.monitoring.model.entities.ProjectWidget;
-import io.suricate.monitoring.model.enums.WidgetState;
+import io.suricate.monitoring.model.enums.WidgetStateEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
@@ -81,7 +81,7 @@ public interface ProjectWidgetRepository extends JpaRepository<ProjectWidget, Lo
                                @Param("log") String log,
                                @Param("data") String data,
                                @Param("id") Long id,
-                               @Param("state") WidgetState widgetState);
+                               @Param("state") WidgetStateEnum widgetState);
 
     /**
      * Update the state of a project widget when nashorn execution ends with errors
@@ -98,7 +98,7 @@ public interface ProjectWidgetRepository extends JpaRepository<ProjectWidget, Lo
         "state = :state, " +
         "log = :log " +
         "WHERE id = :id")
-    int updateLastExecutionDateAndStateAndLog(@Param("lastExecutionDate") Date date, @Param("log") String log, @Param("id") Long id, @Param("state") WidgetState widgetState);
+    int updateLastExecutionDateAndStateAndLog(@Param("lastExecutionDate") Date date, @Param("log") String log, @Param("id") Long id, @Param("state") WidgetStateEnum widgetState);
 
     /**
      * Method used to delete a widget instance by it's id and the project id

@@ -61,7 +61,7 @@ public abstract class WidgetConfigurationMapper {
     @Named("toConfigurationDtoDefault")
     @Mapping(target = "category", qualifiedByName = "toCategoryDtoDefault")
     @Mapping(target = "value", expression = "java(" +
-        "categoryParameter.getDataType() == io.suricate.monitoring.model.enums.DataType.PASSWORD ? stringEncryptor.decrypt(categoryParameter.getValue()) : categoryParameter.getValue())" +
+        "categoryParameter.getDataType() == io.suricate.monitoring.model.enums.DataTypeEnum.PASSWORD ? stringEncryptor.decrypt(categoryParameter.getValue()) : categoryParameter.getValue())" +
         "")
     public abstract WidgetConfigurationResponseDto toConfigurationDtoDefault(CategoryParameter categoryParameter);
 
@@ -70,7 +70,7 @@ public abstract class WidgetConfigurationMapper {
     /* ******************************************************* */
 
     /**
-     * Tranform a list of configurations into a list of configurationDto
+     * Transform a list of configurations into a list of configurationDto
      *
      * @param categoryParameters The configurations to transform
      * @return The related list of configurations DTO

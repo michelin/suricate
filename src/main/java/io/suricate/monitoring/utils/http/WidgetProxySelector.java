@@ -19,7 +19,7 @@
 package io.suricate.monitoring.utils.http;
 
 import io.suricate.monitoring.configuration.web.ProxyConfiguration;
-import io.suricate.monitoring.utils.SpringContextHolder;
+import io.suricate.monitoring.utils.SpringContextUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,7 +51,7 @@ public class WidgetProxySelector extends ProxySelector {
     @Override
     public List<Proxy> select(URI uri) {
         Proxy proxy = Proxy.NO_PROXY;
-        ProxyConfiguration proxyConfiguration = SpringContextHolder.getApplicationContext().getBean(ProxyConfiguration.class);
+        ProxyConfiguration proxyConfiguration = SpringContextUtils.getApplicationContext().getBean(ProxyConfiguration.class);
 
         if (StringUtils.isNotBlank(proxyConfiguration.getNoProxyDomains())) {
             try (Stream<String> stream = Arrays.stream(proxyConfiguration.getNoProxyDomains().split(","))) {

@@ -17,15 +17,15 @@
 package io.suricate.monitoring.model.enums;
 
 /**
- * States of a widget instantiate
+ * Possible states for widget instance
  */
-public enum WidgetState {
+public enum WidgetStateEnum {
     /**
      * Widget is running normally
      */
     RUNNING,
     /**
-     * Widget is running with some anomaly
+     * Widget is running with some anomalies
      */
     WARNING,
     /**

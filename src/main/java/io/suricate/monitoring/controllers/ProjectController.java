@@ -38,10 +38,10 @@ import io.suricate.monitoring.services.mapper.ProjectMapper;
 import io.suricate.monitoring.services.mapper.ProjectWidgetMapper;
 import io.suricate.monitoring.services.mapper.UserMapper;
 import io.suricate.monitoring.services.websocket.DashboardWebSocketService;
-import io.suricate.monitoring.utils.exception.ApiException;
-import io.suricate.monitoring.utils.exception.InvalidFileException;
-import io.suricate.monitoring.utils.exception.NoContentException;
-import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
+import io.suricate.monitoring.utils.exceptions.ApiException;
+import io.suricate.monitoring.utils.exceptions.InvalidFileException;
+import io.suricate.monitoring.utils.exceptions.NoContentException;
+import io.suricate.monitoring.utils.exceptions.ObjectNotFoundException;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -617,14 +617,9 @@ public class ProjectController {
             throw new ObjectNotFoundException(User.class, principal.getName());
         }
 
-        List<Project> projects = projectService.getAllByUser(userOptional.get());
-        if (projects == null || projects.isEmpty()) {
-            throw new NoContentException(Project.class);
-        }
-
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(projectMapper.toProjectDtosDefault(projects));
+            .body(projectMapper.toProjectDtosDefault(projectService.getAllByUser(userOptional.get())));
     }
 }

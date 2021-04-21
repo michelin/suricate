@@ -22,7 +22,7 @@ import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
 import io.suricate.monitoring.model.entities.CategoryParameter;
 import io.suricate.monitoring.model.entities.Project;
 import io.suricate.monitoring.model.entities.ProjectWidget;
-import io.suricate.monitoring.model.enums.WidgetState;
+import io.suricate.monitoring.model.enums.WidgetStateEnum;
 import io.suricate.monitoring.services.api.ProjectWidgetService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -104,7 +104,7 @@ public class NashornService {
         Long technicalId = projectWidget.getId();
         Long delay = projectWidget.getWidget().getDelay();
         Long timeout = projectWidget.getWidget().getTimeout();
-        WidgetState state = projectWidget.getState();
+        WidgetStateEnum state = projectWidget.getState();
         Date lastSuccess = projectWidget.getLastSuccessDate();
 
         return new NashornRequest(properties, script, previousData, projectId, technicalId, delay, timeout, state, lastSuccess);

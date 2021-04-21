@@ -22,7 +22,7 @@ import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.entities.Asset;
 import io.suricate.monitoring.services.api.AssetService;
 import io.suricate.monitoring.utils.IdUtils;
-import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
+import io.suricate.monitoring.utils.exceptions.ObjectNotFoundException;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;

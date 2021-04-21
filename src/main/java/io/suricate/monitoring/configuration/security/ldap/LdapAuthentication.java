@@ -19,7 +19,7 @@ package io.suricate.monitoring.configuration.security.ldap;
 import io.suricate.monitoring.configuration.ApplicationProperties;
 import io.suricate.monitoring.configuration.security.ConnectedUser;
 import io.suricate.monitoring.services.api.UserService;
-import io.suricate.monitoring.utils.exception.ConfigurationException;
+import io.suricate.monitoring.utils.exceptions.ConfigurationException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;

@@ -24,7 +24,7 @@ import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
 import io.suricate.monitoring.model.entities.ProjectWidget;
 import io.suricate.monitoring.model.enums.NashornErrorTypeEnum;
 import io.suricate.monitoring.model.enums.UpdateType;
-import io.suricate.monitoring.model.enums.WidgetState;
+import io.suricate.monitoring.model.enums.WidgetStateEnum;
 import io.suricate.monitoring.services.api.ProjectService;
 import io.suricate.monitoring.services.api.ProjectWidgetService;
 import io.suricate.monitoring.services.mapper.ProjectWidgetMapper;
@@ -126,7 +126,7 @@ public class DashboardScheduleService {
                     nashornResponse.getLog(),
                     nashornResponse.getData(),
                     nashornResponse.getProjectWidgetId(),
-                    WidgetState.RUNNING);
+                    WidgetStateEnum.RUNNING);
         } else {
             LOGGER.debug("The Nashorn response is not valid for the widget instance: {}. Logs: {}. Response data: {}",
                     nashornResponse.getProjectWidgetId(), nashornResponse.getLog(), nashornResponse);
@@ -134,7 +134,7 @@ public class DashboardScheduleService {
             projectWidgetService.updateWidgetInstanceAfterFailedExecution(nashornResponse.getLaunchDate(),
                     nashornResponse.getLog(),
                     nashornResponse.getProjectWidgetId(),
-                    nashornResponse.getError() == NashornErrorTypeEnum.FATAL ? WidgetState.STOPPED : WidgetState.WARNING);
+                    nashornResponse.getError() == NashornErrorTypeEnum.FATAL ? WidgetStateEnum.STOPPED : WidgetStateEnum.WARNING);
         }
 
         if (nashornResponse.isFatal()) {
@@ -157,7 +157,7 @@ public class DashboardScheduleService {
      */
     @Transactional
     public void updateWidgetInstanceNoNashornResponse(Exception exception, Long projectWidgetId, Long projectId) {
-        projectWidgetService.updateWidgetInstanceAfterFailedExecution(new Date(), ExceptionUtils.getMessage(exception), projectWidgetId, WidgetState.STOPPED);
+        projectWidgetService.updateWidgetInstanceAfterFailedExecution(new Date(), ExceptionUtils.getMessage(exception), projectWidgetId, WidgetStateEnum.STOPPED);
 
         sendWidgetUpdateNotification(projectWidgetId, projectId);
     }

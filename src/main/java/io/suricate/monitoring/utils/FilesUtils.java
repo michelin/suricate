@@ -59,15 +59,15 @@ public final class FilesUtils {
     }
 
     /**
-     * Method used to list all files inside a root folder
+     * Get all the files inside a given folder
      *
-     * @param rootFolder the root folder used to find files
-     * @return the list of folder
-     * @throws IOException exception with file
+     * @param folder The folder containing the files
+     * @return The list of files
+     * @throws IOException Exception triggered during the files fetching
      */
-    public static List<File> getFiles(File rootFolder) throws IOException {
-        if (rootFolder != null) {
-            try (Stream<Path> list = Files.list(rootFolder.toPath())) {
+    public static List<File> getFiles(File folder) throws IOException {
+        if (folder != null) {
+            try (Stream<Path> list = Files.list(folder.toPath())) {
                 return list.filter((Path path) -> path.toFile().isFile())
                     .map(Path::toFile)
                     .sorted()

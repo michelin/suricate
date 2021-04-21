@@ -27,12 +27,11 @@ import io.suricate.monitoring.model.entities.Project;
 import io.suricate.monitoring.model.entities.ProjectWidget;
 import io.suricate.monitoring.model.entities.Widget;
 import io.suricate.monitoring.model.entities.WidgetParam;
-import io.suricate.monitoring.model.enums.DataType;
+import io.suricate.monitoring.model.enums.DataTypeEnum;
 import io.suricate.monitoring.model.enums.UpdateType;
-import io.suricate.monitoring.model.enums.WidgetState;
+import io.suricate.monitoring.model.enums.WidgetStateEnum;
 import io.suricate.monitoring.repositories.ProjectWidgetRepository;
 import io.suricate.monitoring.services.mapper.ProjectMapper;
-import io.suricate.monitoring.services.mapper.ProjectWidgetMapper;
 import io.suricate.monitoring.services.nashorn.services.DashboardScheduleService;
 import io.suricate.monitoring.services.nashorn.scheduler.NashornRequestWidgetExecutionScheduler;
 import io.suricate.monitoring.services.websocket.DashboardWebSocketService;
@@ -258,7 +257,7 @@ public class ProjectWidgetService {
      * @param id          project widget id
      */
     @Transactional
-    public void updateState(WidgetState widgetState, Long id) {
+    public void updateState(WidgetStateEnum widgetState, Long id) {
         updateState(widgetState, id, null);
     }
 
@@ -270,7 +269,7 @@ public class ProjectWidgetService {
      * @param date        The last execution date
      */
     @Transactional
-    public void updateState(WidgetState widgetState, Long id, Date date) {
+    public void updateState(WidgetStateEnum widgetState, Long id, Date date) {
         Optional<ProjectWidget> projectWidgetOptional = this.getOne(id);
 
         if (projectWidgetOptional.isPresent()) {
@@ -369,7 +368,7 @@ public class ProjectWidgetService {
      * @param projectWidgetId The project widget id to update
      * @param widgetState     The widget sate
      */
-    public void updateWidgetInstanceAfterFailedExecution(final Date executionDate, final String log, final Long projectWidgetId, final WidgetState widgetState) {
+    public void updateWidgetInstanceAfterFailedExecution(final Date executionDate, final String log, final Long projectWidgetId, final WidgetStateEnum widgetState) {
         projectWidgetRepository.updateLastExecutionDateAndStateAndLog(executionDate, log, projectWidgetId, widgetState);
     }
 
@@ -382,7 +381,7 @@ public class ProjectWidgetService {
      * @param id          The id of the project widget
      * @param widgetState The widget state
      */
-    public void updateWidgetInstanceAfterSucceededExecution(final Date executionDate, final String executionLog, final String data, final Long projectWidgetId, final WidgetState widgetState) {
+    public void updateWidgetInstanceAfterSucceededExecution(final Date executionDate, final String executionLog, final String data, final Long projectWidgetId, final WidgetStateEnum widgetState) {
         projectWidgetRepository.updateSuccessExecution(executionDate, executionLog, data, projectWidgetId, widgetState);
     }
 
@@ -398,7 +397,7 @@ public class ProjectWidgetService {
 
         List<WidgetParam> widgetParams = widgetService.getWidgetParametersWithCategoryParameters(widget);
         for (WidgetParam widgetParam : widgetParams) {
-            if (widgetParam.getType() == DataType.PASSWORD) {
+            if (widgetParam.getType() == DataTypeEnum.PASSWORD) {
                 String valueToEncrypt = StringUtils.trimToNull(backendConfigAsMap.get(widgetParam.getName()));
 
                 if (valueToEncrypt != null) {
@@ -427,7 +426,7 @@ public class ProjectWidgetService {
 
         List<WidgetParam> widgetParams = widgetService.getWidgetParametersWithCategoryParameters(widget);
         for (WidgetParam widgetParam : widgetParams) {
-            if (widgetParam.getType() == DataType.PASSWORD) {
+            if (widgetParam.getType() == DataTypeEnum.PASSWORD) {
                 String valueToEncrypt = backendConfigAsMap.get(widgetParam.getName());
 
                 if (valueToEncrypt != null) {

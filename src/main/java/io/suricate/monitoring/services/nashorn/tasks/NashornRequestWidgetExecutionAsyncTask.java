@@ -19,9 +19,9 @@ package io.suricate.monitoring.services.nashorn.tasks;
 import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
 import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
 import io.suricate.monitoring.model.dto.nashorn.WidgetVariableResponse;
-import io.suricate.monitoring.model.dto.nashorn.error.RemoteError;
-import io.suricate.monitoring.model.dto.nashorn.error.RequestException;
-import io.suricate.monitoring.model.enums.DataType;
+import io.suricate.monitoring.utils.exceptions.nashorn.RemoteException;
+import io.suricate.monitoring.utils.exceptions.nashorn.RequestException;
+import io.suricate.monitoring.model.enums.DataTypeEnum;
 import io.suricate.monitoring.model.enums.NashornErrorTypeEnum;
 import io.suricate.monitoring.services.nashorn.filters.JavaClassFilter;
 import io.suricate.monitoring.utils.JavaScriptUtils;
@@ -195,7 +195,7 @@ public class NashornRequestWidgetExecutionAsyncTask implements Callable<NashornR
     private void decryptWidgetProperties(Map<String, String> widgetProperties) {
         if (this.widgetParameters != null) {
             for (WidgetVariableResponse widgetParameter : this.widgetParameters) {
-                if (widgetParameter.getType() == DataType.PASSWORD) {
+                if (widgetParameter.getType() == DataTypeEnum.PASSWORD) {
                     widgetProperties.put(widgetParameter.getName(), stringEncryptor.decrypt(widgetProperties.get(widgetParameter.getName())));
                 }
             }
@@ -242,7 +242,7 @@ public class NashornRequestWidgetExecutionAsyncTask implements Callable<NashornR
      * @return true if the error is fatal, false otherwise
      */
     protected boolean isFatalError(Exception e, Throwable rootCause) {
-        return !(rootCause instanceof RemoteError
+        return !(rootCause instanceof RemoteException
             || StringUtils.containsIgnoreCase(ExceptionUtils.getMessage(e), "timeout")
             || rootCause instanceof UnknownHostException
             || nashornRequest.isAlreadySuccess()

@@ -8,7 +8,7 @@ import io.suricate.monitoring.model.entities.Repository;
 import io.suricate.monitoring.model.entities.Widget;
 import io.suricate.monitoring.model.enums.RepositoryTypeEnum;
 import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
-import io.suricate.monitoring.model.enums.WidgetState;
+import io.suricate.monitoring.model.enums.WidgetStateEnum;
 import io.suricate.monitoring.repositories.*;
 import io.suricate.monitoring.utils.EntityUtils;
 import org.junit.Test;
@@ -68,14 +68,14 @@ public class WidgetServiceTest {
     @Test
     public void updateStateTest() {
         ProjectWidget projectWidget = new ProjectWidget();
-        projectWidget.setState(WidgetState.STOPPED);
+        projectWidget.setState(WidgetStateEnum.STOPPED);
         projectWidgetRepository.save(projectWidget);
         assertThat(projectWidgetRepository.count()).isEqualTo(1);
 
         Date date = new Date();
-        projectWidgetService.updateState(WidgetState.RUNNING, projectWidget.getId(), date);
+        projectWidgetService.updateState(WidgetStateEnum.RUNNING, projectWidget.getId(), date);
         ProjectWidget currentPw = projectWidgetRepository.findAll().get(0);
-        assertThat(currentPw.getState()).isEqualTo(WidgetState.RUNNING);
+        assertThat(currentPw.getState()).isEqualTo(WidgetStateEnum.RUNNING);
         assertThat(currentPw.getLastExecutionDate().getTime()).isEqualTo(date.getTime());
     }
 

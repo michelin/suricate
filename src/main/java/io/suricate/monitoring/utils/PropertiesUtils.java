@@ -28,8 +28,9 @@ import java.util.Properties;
 import java.util.TreeMap;
 
 public final class PropertiesUtils {
+
     /**
-     * Class logger
+     * Logger
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(PropertiesUtils.class);
 

@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.utils;
 
-import io.suricate.monitoring.utils.exception.ProjectTokenInvalidException;
+import io.suricate.monitoring.utils.exceptions.ProjectTokenInvalidException;
 import org.jasypt.encryption.StringEncryptor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +35,7 @@ public final class IdUtils {
      * @return the decoded id or null
      */
     public static Long decrypt(String token) {
-        StringEncryptor stringEncryptor = (StringEncryptor) SpringContextHolder.getApplicationContext().getBean("noSaltEncrypter");
+        StringEncryptor stringEncryptor = (StringEncryptor) SpringContextUtils.getApplicationContext().getBean("noSaltEncrypter");
         Long id = null;
         try {
             id = Long.parseLong(stringEncryptor.decrypt(token));
@@ -53,7 +53,7 @@ public final class IdUtils {
      * @return the encrypted id
      */
     public static String encrypt(Long id) {
-        StringEncryptor stringEncryptor = (StringEncryptor) SpringContextHolder.getApplicationContext().getBean("noSaltEncrypter");
+        StringEncryptor stringEncryptor = (StringEncryptor) SpringContextUtils.getApplicationContext().getBean("noSaltEncrypter");
         String token = null;
         if (id != null) {
             try {

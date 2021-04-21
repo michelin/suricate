@@ -17,7 +17,7 @@
 package io.suricate.monitoring.model.entities;
 
 import io.suricate.monitoring.model.entities.generic.AbstractAuditingEntity;
-import io.suricate.monitoring.model.enums.DataType;
+import io.suricate.monitoring.model.enums.DataTypeEnum;
 import lombok.*;
 
 import javax.persistence.*;
@@ -58,7 +58,7 @@ public class CategoryParameter extends AbstractAuditingEntity<String> {
      */
     @Column(name = "data_type")
     @Enumerated(value = EnumType.STRING)
-    private DataType dataType;
+    private DataTypeEnum dataType;
 
     /**
      * Make a link between category and configurations

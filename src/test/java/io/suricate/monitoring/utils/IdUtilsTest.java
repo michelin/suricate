@@ -1,6 +1,6 @@
 package io.suricate.monitoring.utils;
 
-import io.suricate.monitoring.utils.exception.ApiException;
+import io.suricate.monitoring.utils.exceptions.ApiException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;

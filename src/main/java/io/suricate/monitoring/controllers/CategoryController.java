@@ -32,7 +32,7 @@ import io.suricate.monitoring.services.api.WidgetService;
 import io.suricate.monitoring.services.mapper.CategoryMapper;
 import io.suricate.monitoring.services.mapper.WidgetConfigurationMapper;
 import io.suricate.monitoring.services.mapper.WidgetMapper;
-import io.suricate.monitoring.utils.exception.NoContentException;
+import io.suricate.monitoring.utils.exceptions.NoContentException;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

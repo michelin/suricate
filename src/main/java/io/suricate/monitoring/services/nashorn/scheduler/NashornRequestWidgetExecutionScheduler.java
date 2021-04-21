@@ -21,13 +21,12 @@ import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
 import io.suricate.monitoring.model.dto.nashorn.WidgetVariableResponse;
 import io.suricate.monitoring.model.entities.Project;
 import io.suricate.monitoring.model.entities.ProjectWidget;
-import io.suricate.monitoring.model.enums.WidgetState;
+import io.suricate.monitoring.model.enums.WidgetStateEnum;
 import io.suricate.monitoring.services.api.ProjectWidgetService;
 import io.suricate.monitoring.services.api.WidgetService;
 import io.suricate.monitoring.services.nashorn.services.NashornService;
 import io.suricate.monitoring.services.nashorn.tasks.NashornRequestResultAsyncTask;
 import io.suricate.monitoring.services.nashorn.tasks.NashornRequestWidgetExecutionAsyncTask;
-import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jasypt.encryption.StringEncryptor;
@@ -191,13 +190,13 @@ public class NashornRequestWidgetExecutionScheduler {
 
         if (!nashornService.isNashornRequestExecutable(nashornRequest)) {
             LOGGER.debug("The Nashorn request of the widget instance {} is not valid. Stopping the widget", nashornRequest.getProjectWidgetId());
-            projectWidgetServiceInjected.updateState(WidgetState.STOPPED, nashornRequest.getProjectWidgetId(), new Date());
+            projectWidgetServiceInjected.updateState(WidgetStateEnum.STOPPED, nashornRequest.getProjectWidgetId(), new Date());
             return;
         }
 
-        if (WidgetState.STOPPED == nashornRequest.getWidgetState()) {
+        if (WidgetStateEnum.STOPPED == nashornRequest.getWidgetState()) {
             LOGGER.debug("The widget instance {} of the Nashorn request was stopped. Setting the widget instance to running", nashornRequest.getProjectWidgetId());
-            projectWidgetServiceInjected.updateState(WidgetState.RUNNING, nashornRequest.getProjectWidgetId(), new Date());
+            projectWidgetServiceInjected.updateState(WidgetStateEnum.RUNNING, nashornRequest.getProjectWidgetId(), new Date());
         }
 
         ProjectWidget projectWidget = projectWidgetServiceInjected
@@ -262,7 +261,7 @@ public class NashornRequestWidgetExecutionScheduler {
             this.cancelScheduledFutureTask(projectWidgetId, pairOfNashornFutureTasks.getRight());
         }
 
-        projectWidgetService.updateState(WidgetState.STOPPED, projectWidgetId);
+        projectWidgetService.updateState(WidgetStateEnum.STOPPED, projectWidgetId);
     }
 
     /**

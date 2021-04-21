@@ -19,7 +19,7 @@
 package io.suricate.monitoring.model.entities;
 
 import io.suricate.monitoring.model.entities.generic.AbstractAuditingEntity;
-import io.suricate.monitoring.model.enums.DataType;
+import io.suricate.monitoring.model.enums.DataTypeEnum;
 import lombok.*;
 import org.hibernate.annotations.Type;
 
@@ -64,11 +64,11 @@ public class WidgetParam extends AbstractAuditingEntity<Long> {
     private String defaultValue;
 
     /**
-     * The variable type {@link DataType}
+     * The variable type {@link DataTypeEnum}
      */
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private DataType type;
+    private DataTypeEnum type;
 
     /**
      * The regex used for accept the file uploaded (if the type is FILE)

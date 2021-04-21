@@ -20,7 +20,7 @@
 package io.suricate.monitoring.model.dto.api.projectwidget;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
-import io.suricate.monitoring.model.enums.WidgetState;
+import io.suricate.monitoring.model.enums.WidgetStateEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -95,10 +95,10 @@ public class ProjectWidgetResponseDto extends AbstractDto {
     private Date lastSuccessDate;
 
     /**
-     * The widget state {@link WidgetState}
+     * The widget state {@link WidgetStateEnum}
      */
     @ApiModelProperty(value = "The current widget state")
-    private WidgetState state;
+    private WidgetStateEnum state;
 
     /**
      * The related project token

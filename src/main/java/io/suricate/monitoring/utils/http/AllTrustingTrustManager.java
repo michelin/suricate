@@ -29,7 +29,6 @@ public class AllTrustingTrustManager implements X509TrustManager {
      *
      * @param x509Certificates
      * @param s
-     * @throws CertificateException
      */
     @Override
     public void checkClientTrusted(X509Certificate[] x509Certificates, String s) {
@@ -41,7 +40,6 @@ public class AllTrustingTrustManager implements X509TrustManager {
      *
      * @param x509Certificates
      * @param s
-     * @throws CertificateException
      */
     @Override
     public void checkServerTrusted(X509Certificate[] x509Certificates, String s) {
