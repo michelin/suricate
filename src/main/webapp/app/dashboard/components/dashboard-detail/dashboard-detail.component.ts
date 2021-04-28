@@ -148,7 +148,7 @@ export class DashboardDetailComponent implements OnInit {
           this.isDashboardLoading = false;
           this.initHeaderConfiguration();
         },
-        () => (this.isDashboardLoading = false)
+        () => this.isDashboardLoading = false
       );
   }
 
@@ -158,7 +158,8 @@ export class DashboardDetailComponent implements OnInit {
    * @param dashboardToken The token used for the refresh
    */
   private refreshProject(dashboardToken: string): Observable<Project> {
-    return this.httpProjectService.getById(dashboardToken).pipe(tap((project: Project) => (this.project = project)));
+    return this.httpProjectService.getById(dashboardToken)
+        .pipe(tap((project: Project) => this.project = project));
   }
 
   /**
@@ -167,7 +168,8 @@ export class DashboardDetailComponent implements OnInit {
    * @param dashboardToken The dashboard token to check
    */
   private isReadOnlyDashboard(dashboardToken: string): Observable<boolean> {
-    return this.dashboardService.shouldDisplayedReadOnly(dashboardToken).pipe(tap((isReadonly: boolean) => (this.isReadOnly = isReadonly)));
+    return this.dashboardService.shouldDisplayedReadOnly(dashboardToken)
+        .pipe(tap((isReadonly: boolean) => (this.isReadOnly = isReadonly)));
   }
 
   /**
@@ -198,6 +200,7 @@ export class DashboardDetailComponent implements OnInit {
           color: 'primary',
           variant: 'miniFab',
           tooltip: { message: 'widget.add' },
+          hidden: () => this.isReadOnly,
           callback: () => this.displayProjectWidgetWizard()
         },
         {
@@ -205,6 +208,7 @@ export class DashboardDetailComponent implements OnInit {
           color: 'primary',
           variant: 'miniFab',
           tooltip: { message: 'dashboard.edit' },
+          hidden: () => this.isReadOnly,
           callback: () => this.openDashboardFormSidenav()
         },
         {
@@ -212,6 +216,7 @@ export class DashboardDetailComponent implements OnInit {
           color: 'primary',
           variant: 'miniFab',
           tooltip: { message: 'user.edit' },
+          hidden: () => this.isReadOnly,
           callback: () => this.openUserFormSidenav()
         },
         {
@@ -219,7 +224,7 @@ export class DashboardDetailComponent implements OnInit {
           color: 'primary',
           variant: 'miniFab',
           tooltip: { message: 'screen.refresh' },
-          hidden: () => !this.projectWidgets || this.projectWidgets.length === 0,
+          hidden: () => this.isReadOnly || !this.projectWidgets || this.projectWidgets.length === 0,
           callback: () => this.refreshConnectedScreens()
         },
         {
@@ -235,7 +240,7 @@ export class DashboardDetailComponent implements OnInit {
           color: 'primary',
           variant: 'miniFab',
           tooltip: { message: 'screen.management' },
-          hidden: () => !this.projectWidgets || this.projectWidgets.length === 0,
+          hidden: () => this.isReadOnly || !this.projectWidgets || this.projectWidgets.length === 0,
           callback: () => this.openScreenManagementDialog()
         },
         {
@@ -243,6 +248,7 @@ export class DashboardDetailComponent implements OnInit {
           color: 'warn',
           variant: 'miniFab',
           tooltip: { message: 'dashboard.delete' },
+          hidden: () => this.isReadOnly,
           callback: () => this.deleteDashboard()
         }
       ]

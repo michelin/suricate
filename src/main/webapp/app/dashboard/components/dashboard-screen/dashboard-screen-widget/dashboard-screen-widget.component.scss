@@ -98,3 +98,9 @@
     height: 100%;
   }
 }
+
+.widget-disable-move-cursor {
+  & {
+    cursor: default;
+  }
+}
