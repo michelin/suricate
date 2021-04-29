@@ -32,6 +32,9 @@ public class SearchIndexBuilder implements ApplicationListener<ApplicationReadyE
      */
     private final SearchService searchService;
 
+    /**
+     * Constructor
+     */
     @Autowired
     public SearchIndexBuilder(final SearchService searchService) {
         this.searchService = searchService;
@@ -45,7 +48,5 @@ public class SearchIndexBuilder implements ApplicationListener<ApplicationReadyE
     public void onApplicationEvent(final ApplicationReadyEvent event) {
         searchService.runSearchIndexer();
     }
-
-
 }
 

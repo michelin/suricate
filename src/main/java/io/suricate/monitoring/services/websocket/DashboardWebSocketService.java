@@ -174,7 +174,7 @@ public class DashboardWebSocketService {
      *
      * Used to disconnect a given single screen from a dashboard.
      *
-     * @param project The project
+     * @param projectToken The project
      * @param screenCode The unique screen code
      */
     @Async

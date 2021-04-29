@@ -17,13 +17,9 @@
 package io.suricate.monitoring.configuration.security;
 
 import io.suricate.monitoring.configuration.ApplicationProperties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.Ordered;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,7 +28,6 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
-import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
@@ -45,10 +40,6 @@ import org.springframework.web.filter.CorsFilter;
 @EnableOAuth2Client
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-    /**
-     * The logger
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(SecurityConfiguration.class);
 
     /**
      * Application properties from properties file
@@ -66,28 +57,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     /**
-     * Global Security
+     * Configure the web security of the application
      */
     @Override
-    public void configure(WebSecurity web) {
-        web
-            .expressionHandler(defaultWebSecurityExpressionHandler())
-            .ignoring()
+    public void configure(WebSecurity webSecurity) {
+        webSecurity
+                .ignoring()
                 .antMatchers(HttpMethod.OPTIONS);
     }
 
     /**
-     * Get the expression handler
-     */
-    private DefaultWebSecurityExpressionHandler defaultWebSecurityExpressionHandler() {
-        DefaultWebSecurityExpressionHandler defaultWebSecurityExpressionHandler = new DefaultWebSecurityExpressionHandler();
-        defaultWebSecurityExpressionHandler.setRoleHierarchy(roleHierarchy());
-
-        return defaultWebSecurityExpressionHandler;
-    }
-
-    /**
-     * Application Role hierarchy for security management
+     * Configure the role hierarchy
      */
     @Bean
     protected RoleHierarchyImpl roleHierarchy() {
@@ -97,19 +77,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     }
 
     /**
-     * Cors filter policy from Application properties
+     * Configure the CORS filters
      */
     @Bean
-    public FilterRegistrationBean<CorsFilter> corsFilter() {
+    public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        if (!CollectionUtils.isEmpty(applicationProperties.cors.getAllowedOrigins())) {
-            LOGGER.debug("Registering CORS filter");
+
+        if (!CollectionUtils.isEmpty(applicationProperties.cors.getAllowedOrigins()) ||
+                !CollectionUtils.isEmpty(applicationProperties.cors.getAllowedOriginPatterns())) {
             source.registerCorsConfiguration("/api/**", applicationProperties.cors);
         }
 
-        FilterRegistrationBean<CorsFilter> filterRegistrationBean = new FilterRegistrationBean<>(new CorsFilter(source));
-        filterRegistrationBean.setOrder(Ordered.HIGHEST_PRECEDENCE);
-        return filterRegistrationBean;
+        return new CorsFilter(source);
     }
 
     /**

@@ -38,6 +38,7 @@ public class OAuth2ResourceServerConfiguration extends ResourceServerConfigurerA
      * Token service management
      */
     private final DefaultTokenServices defaultTokenServices;
+
     /**
      * Authentication failure manager
      */
