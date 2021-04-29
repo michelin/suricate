@@ -149,6 +149,9 @@
     },
     "@schematics/angular:directive": {
       "prefix": "suricate"
+    },
+    "@schematics/angular:application": {
+      "strict": true
     }
   }
 }
