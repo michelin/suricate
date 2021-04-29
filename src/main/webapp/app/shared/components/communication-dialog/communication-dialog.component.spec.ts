@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { CommunicationDialogComponent } from './communication-dialog.component';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
@@ -29,17 +29,19 @@ describe('CommunicationDialogComponent', () => {
   let component: CommunicationDialogComponent;
   let fixture: ComponentFixture<CommunicationDialogComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [MockModule],
-      declarations: [CommunicationDialogComponent],
-      providers: [{ provide: MAT_DIALOG_DATA, useValue: { data: buildCommunicationDialogConfiguration() } }]
-    }).compileComponents();
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [MockModule],
+        declarations: [CommunicationDialogComponent],
+        providers: [{ provide: MAT_DIALOG_DATA, useValue: { data: buildCommunicationDialogConfiguration() } }]
+      }).compileComponents();
 
-    fixture = TestBed.createComponent(CommunicationDialogComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  }));
+      fixture = TestBed.createComponent(CommunicationDialogComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

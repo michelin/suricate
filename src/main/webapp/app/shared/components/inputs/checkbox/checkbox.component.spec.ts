@@ -16,7 +16,7 @@
  *
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { CheckboxComponent } from './checkbox.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -33,21 +33,23 @@ describe('CheckboxComponent', () => {
   let component: CheckboxComponent;
   let fixture: ComponentFixture<CheckboxComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [MockModule],
-      declarations: [CheckboxComponent]
-    }).compileComponents();
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [MockModule],
+        declarations: [CheckboxComponent]
+      }).compileComponents();
 
-    const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
+      const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
 
-    fixture = TestBed.createComponent(CheckboxComponent);
-    component = fixture.componentInstance;
-    component.field = mockedModelBuilderService.buildMockedFormField(DataTypeEnum.BOOLEAN);
-    component.formGroup = mockedModelBuilderService.buildMockedFormGroup(DataTypeEnum.BOOLEAN);
+      fixture = TestBed.createComponent(CheckboxComponent);
+      component = fixture.componentInstance;
+      component.field = mockedModelBuilderService.buildMockedFormField(DataTypeEnum.BOOLEAN);
+      component.formGroup = mockedModelBuilderService.buildMockedFormGroup(DataTypeEnum.BOOLEAN);
 
-    fixture.detectChanges();
-  }));
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

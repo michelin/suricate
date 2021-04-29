@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { DashboardDetailComponent } from './dashboard-detail.component';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -41,16 +41,18 @@ describe('DashboardDetailComponent', () => {
   let component: DashboardDetailComponent;
   let fixture: ComponentFixture<DashboardDetailComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [MockModule],
-      declarations: [DashboardDetailComponent]
-    }).compileComponents();
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [MockModule],
+        declarations: [DashboardDetailComponent]
+      }).compileComponents();
 
-    fixture = TestBed.createComponent(DashboardDetailComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  }));
+      fixture = TestBed.createComponent(DashboardDetailComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

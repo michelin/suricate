@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { WidgetConfigurationsComponent } from './widget-configurations.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -29,16 +29,18 @@ describe('WidgetConfigurationsComponent', () => {
   let component: WidgetConfigurationsComponent;
   let fixture: ComponentFixture<WidgetConfigurationsComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [MockModule],
-      declarations: [WidgetConfigurationsComponent]
-    }).compileComponents();
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [MockModule],
+        declarations: [WidgetConfigurationsComponent]
+      }).compileComponents();
 
-    fixture = TestBed.createComponent(WidgetConfigurationsComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  }));
+      fixture = TestBed.createComponent(WidgetConfigurationsComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();
