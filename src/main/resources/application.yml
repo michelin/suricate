@@ -1,9 +1,6 @@
 ##########################################
 ###         Default properties         ###
 ##########################################
-info:
-  app:
-    version: 1.0-SNAPSHOT
 server:
   port: 8080
   address: localhost
@@ -44,8 +41,8 @@ spring:
       config: 'classpath:ehcache3.xml'
   servlet:
     multipart:
-      max-file-size: 10Mb
-      max-request-size: 10Mb
+      max-file-size: 10MB
+      max-request-size: 10MB
 
 security:
   oauth2:
@@ -114,11 +111,11 @@ application:
       tokenValidity: 1800
       tokenValidityRememberMe: 2592000
   cors:
-    allow-credentials: true
-    allowed-headers: 'Content-Type, Accept, Authorization, X-Requested-With'
-    allowed-methods: 'GET,POST,OPTIONS,DELETE,PUT'
-    allowed-origins: '*'
-    max-age: 3600
+    allowCredentials: true
+    allowedHeaders: 'Content-Type, Accept, Authorization, X-Requested-With'
+    allowedMethods: 'GET,POST,OPTIONS,DELETE,PUT'
+    allowedOriginPatterns: '*'
+    maxAge: 3600
   oauth:
     client: suricateAngular
     secret: suricateAngularSecret
