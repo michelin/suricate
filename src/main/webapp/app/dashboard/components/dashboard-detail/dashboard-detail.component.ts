@@ -148,7 +148,7 @@ export class DashboardDetailComponent implements OnInit {
           this.isDashboardLoading = false;
           this.initHeaderConfiguration();
         },
-        () => this.isDashboardLoading = false
+        () => (this.isDashboardLoading = false)
       );
   }
 
@@ -158,8 +158,7 @@ export class DashboardDetailComponent implements OnInit {
    * @param dashboardToken The token used for the refresh
    */
   private refreshProject(dashboardToken: string): Observable<Project> {
-    return this.httpProjectService.getById(dashboardToken)
-        .pipe(tap((project: Project) => this.project = project));
+    return this.httpProjectService.getById(dashboardToken).pipe(tap((project: Project) => (this.project = project)));
   }
 
   /**
@@ -168,8 +167,7 @@ export class DashboardDetailComponent implements OnInit {
    * @param dashboardToken The dashboard token to check
    */
   private isReadOnlyDashboard(dashboardToken: string): Observable<boolean> {
-    return this.dashboardService.shouldDisplayedReadOnly(dashboardToken)
-        .pipe(tap((isReadonly: boolean) => (this.isReadOnly = isReadonly)));
+    return this.dashboardService.shouldDisplayedReadOnly(dashboardToken).pipe(tap((isReadonly: boolean) => (this.isReadOnly = isReadonly)));
   }
 
   /**
