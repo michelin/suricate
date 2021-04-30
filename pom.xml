@@ -491,7 +491,7 @@
                     <plugin>
                         <groupId>com.github.eirslett</groupId>
                         <artifactId>frontend-maven-plugin</artifactId>
-                        <version>1.10.0</version>
+                        <version>1.11.3</version>
                         <configuration>
                             <installDirectory>target</installDirectory>
                         </configuration>
@@ -524,7 +524,7 @@
                                     <goal>npm</goal>
                                 </goals>
                                 <configuration>
-                                    <arguments>run build -- --configuration="production"</arguments>
+                                    <arguments>run build -- --prod</arguments>
                                 </configuration>
                             </execution>
                         </executions>
