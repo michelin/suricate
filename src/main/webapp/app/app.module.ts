@@ -44,7 +44,7 @@ import { appRoutes } from './app.routes';
     CoreModule,
     DashboardModule,
     LayoutModule,
-    RouterModule.forRoot(appRoutes),
+    RouterModule.forRoot(appRoutes, { relativeLinkResolution: 'legacy' }),
     AdminModule,
     SharedModule,
     WidgetModule

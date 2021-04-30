@@ -16,7 +16,7 @@
  *
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { InputComponent } from './input.component';
 import { MockedModelBuilderService } from '../../../../mock/services/mocked-model-builder/mocked-model-builder.service';
@@ -33,21 +33,23 @@ describe('InputComponent', () => {
   let component: InputComponent;
   let fixture: ComponentFixture<InputComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [MockModule],
-      declarations: [InputComponent]
-    }).compileComponents();
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [MockModule],
+        declarations: [InputComponent]
+      }).compileComponents();
 
-    const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
+      const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
 
-    fixture = TestBed.createComponent(InputComponent);
-    component = fixture.componentInstance;
-    component.field = mockedModelBuilderService.buildMockedFormField(DataTypeEnum.TEXT);
-    component.formGroup = mockedModelBuilderService.buildMockedFormGroup(DataTypeEnum.TEXT);
+      fixture = TestBed.createComponent(InputComponent);
+      component = fixture.componentInstance;
+      component.field = mockedModelBuilderService.buildMockedFormField(DataTypeEnum.TEXT);
+      component.formGroup = mockedModelBuilderService.buildMockedFormGroup(DataTypeEnum.TEXT);
 
-    fixture.detectChanges();
-  }));
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

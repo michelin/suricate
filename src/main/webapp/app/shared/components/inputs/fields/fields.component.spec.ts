@@ -16,7 +16,7 @@
  *
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { FieldsComponent } from './fields.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -32,22 +32,24 @@ describe('FieldsComponent', () => {
   let component: FieldsComponent;
   let fixture: ComponentFixture<FieldsComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [MockModule],
-      declarations: [FieldsComponent]
-    }).compileComponents();
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [MockModule],
+        declarations: [FieldsComponent]
+      }).compileComponents();
 
-    const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
+      const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
 
-    fixture = TestBed.createComponent(FieldsComponent);
-    component = fixture.componentInstance;
-    component.field = mockedModelBuilderService.buildMockedFormField(DataTypeEnum.FIELDS);
-    component.formGroup = mockedModelBuilderService.buildMockedFormGroup(DataTypeEnum.FIELDS);
-    component.formArray = mockedModelBuilderService.buildMockedFormArray(DataTypeEnum.FIELDS);
+      fixture = TestBed.createComponent(FieldsComponent);
+      component = fixture.componentInstance;
+      component.field = mockedModelBuilderService.buildMockedFormField(DataTypeEnum.FIELDS);
+      component.formGroup = mockedModelBuilderService.buildMockedFormGroup(DataTypeEnum.FIELDS);
+      component.formArray = mockedModelBuilderService.buildMockedFormArray(DataTypeEnum.FIELDS);
 
-    fixture.detectChanges();
-  }));
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

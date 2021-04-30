@@ -16,7 +16,7 @@
  *
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { WizardComponent } from './wizard.component';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -29,20 +29,22 @@ describe('WizardComponent', () => {
   let component: WizardComponent;
   let fixture: ComponentFixture<WizardComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [MockModule],
-      declarations: [WizardComponent]
-    }).compileComponents();
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [MockModule],
+        declarations: [WizardComponent]
+      }).compileComponents();
 
-    const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
+      const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
 
-    fixture = TestBed.createComponent(WizardComponent);
-    component = fixture.componentInstance;
-    component.wizardConfiguration = mockedModelBuilderService.buildWizardConfiguration();
+      fixture = TestBed.createComponent(WizardComponent);
+      component = fixture.componentInstance;
+      component.wizardConfiguration = mockedModelBuilderService.buildWizardConfiguration();
 
-    fixture.detectChanges();
-  }));
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

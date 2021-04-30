@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ButtonsComponent } from './buttons.component';
 
@@ -21,15 +21,17 @@ describe('ButtonsComponent', () => {
   let component: ButtonsComponent<unknown>;
   let fixture: ComponentFixture<ButtonsComponent<unknown>>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      declarations: [ButtonsComponent]
-    }).compileComponents();
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        declarations: [ButtonsComponent]
+      }).compileComponents();
 
-    fixture = TestBed.createComponent(ButtonsComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  }));
+      fixture = TestBed.createComponent(ButtonsComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

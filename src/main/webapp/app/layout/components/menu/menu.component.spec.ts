@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { MenuComponent } from './menu.component';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -29,20 +29,22 @@ describe('MenuComponent', () => {
   let component: MenuComponent;
   let fixture: ComponentFixture<MenuComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [MockModule],
-      declarations: [MenuComponent]
-    }).compileComponents();
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [MockModule],
+        declarations: [MenuComponent]
+      }).compileComponents();
 
-    AuthenticationService.setAccessToken(
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaXJzdG5hbWUiOiJMb2ljIiwibWFpbCI6ImxvaWMuZ3JlZmZpZXJfZXh0QG1pY2hlbGluLmNvbSIsInVzZXJfbmFtZSI6ImZ4MzA2MzIiLCJzY29wZSI6WyJyZWFkIiwid3JpdGUiXSwiZXhwIjoxNjAxNjUzMjQzLCJhdXRob3JpdGllcyI6WyJST0xFX0FETUlOIl0sImp0aSI6IjgxNWY4M2VmLWYxMDktNDQ4My1hZGYzLTRhNDBkNzBlMzc5YSIsImNsaWVudF9pZCI6InN1cmljYXRlQW5ndWxhciIsImxhc3RuYW1lIjoiR3JlZmZpZXIifQ.B6C4CckHoOoDZi83dPJaxJZ7-SPaIwT7FNUgwGiKLm0'
-    );
+      AuthenticationService.setAccessToken(
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmaXJzdG5hbWUiOiJMb2ljIiwibWFpbCI6ImxvaWMuZ3JlZmZpZXJfZXh0QG1pY2hlbGluLmNvbSIsInVzZXJfbmFtZSI6ImZ4MzA2MzIiLCJzY29wZSI6WyJyZWFkIiwid3JpdGUiXSwiZXhwIjoxNjAxNjUzMjQzLCJhdXRob3JpdGllcyI6WyJST0xFX0FETUlOIl0sImp0aSI6IjgxNWY4M2VmLWYxMDktNDQ4My1hZGYzLTRhNDBkNzBlMzc5YSIsImNsaWVudF9pZCI6InN1cmljYXRlQW5ndWxhciIsImxhc3RuYW1lIjoiR3JlZmZpZXIifQ.B6C4CckHoOoDZi83dPJaxJZ7-SPaIwT7FNUgwGiKLm0'
+      );
 
-    fixture = TestBed.createComponent(MenuComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  }));
+      fixture = TestBed.createComponent(MenuComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();
