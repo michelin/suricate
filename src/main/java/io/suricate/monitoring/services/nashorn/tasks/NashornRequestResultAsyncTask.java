@@ -141,7 +141,7 @@ public class NashornRequestResultAsyncTask implements Callable<Void>{
                 return null;
             });
         } catch (CancellationException cancellationException) {
-            LOGGER.debug("The Nashorn request ({}) has been canceled for the widget instance {}", scheduledNashornRequestTask, nashornRequest.getProjectWidgetId(), cancellationException);
+            LOGGER.debug("The Nashorn request has been canceled for the widget instance {}", nashornRequest.getProjectWidgetId(), cancellationException);
         } catch (Exception exception) {
             LOGGER.error("An error has occurred in the Nashorn request result task for the widget instance {}. The Nashorn request execution will be canceled", nashornRequest.getProjectWidgetId(), exception);
 

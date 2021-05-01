@@ -20,7 +20,7 @@ module.exports = function(config) {
       subdir: '.',
       reporters: [{ type: 'html' }, { type: 'text-summary' }]
     },
-    reporters: ['progress', 'coverage'],
+    reporters: ['progress', 'kjhtml'],
     port: 9876,
     colors: true,
     logLevel: config.LOG_INFO,
@@ -29,7 +29,7 @@ module.exports = function(config) {
     customLaunchers: {
       ChromeHeadlessNoSandbox: {
         base: 'ChromeHeadless',
-        flags: ['--headless', '--disable-gpu', '--no-sandbox']
+        flags: ['--headless', '--disable-gpu', '--no-sandbox', '--js-flags=--max-old-space-size=8192']
       }
     },
     captureTimeout: 600000,
