@@ -11,7 +11,7 @@ server:
 ### Spring ###
 spring:
   profiles:
-    active: h2
+    active: postgresql
   datasource:
     continueOnError: true
     type: com.zaxxer.hikari.HikariDataSource
@@ -34,6 +34,7 @@ spring:
           default:
             directory_provider: filesystem
             indexBase: /tmp/suricate-io/suricate/lucene/indexes/
+    open-in-view: true
   mustache:
     check-template-location: false
   cache:
@@ -74,7 +75,8 @@ management:
 
 ### Logging ###
 logging:
-  file: /tmp/suricate-io/suricate/suricate.log
+  file:
+    name: /tmp/suricate-io/suricate/suricate.log
   level:
     io.suricate.monitoring: DEBUG
     net.sf.jmimemagic.MagicParser: 'off'
@@ -140,9 +142,9 @@ application:
     groupName: suricate-api
     protocols: 'http,https'
     defaultIncludePattern: /api/.*
-    contactName: Suricate-io
-    contactUrl: 'https://github.com/suricate-io/suricate'
-    contactEmail: null
+    contactName: 'Michelin'
+    contactUrl: 'https://github.com/michelin/suricate'
+    contactEmail: 'loic.greffier_ext@michelin.com'
 
 ### Proxy ###
 proxy:

@@ -28,8 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Category entity in database
- * (Retrieve from the widget repo)
+ * Category entity
+ *
  */
 @Entity
 @Indexed
@@ -76,5 +76,5 @@ public class Category extends AbstractAuditingEntity<Long> {
      * The associated categories for this configuration
      */
     @OneToMany(mappedBy = "category", cascade = CascadeType.REMOVE)
-    private List<CategoryParameter> configurations = new ArrayList<>();
+    private List<CategoryParameter> categoryParameters;
 }

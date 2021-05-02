@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.services.mapper;
 
-import io.suricate.monitoring.model.dto.api.widget.CategoryResponseDto;
+import io.suricate.monitoring.model.dto.api.category.CategoryResponseDto;
 import io.suricate.monitoring.model.entities.Category;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -25,22 +25,21 @@ import org.mapstruct.Named;
 /**
  * Interface that manage the generation DTO/Model objects for Category class
  */
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring",
+        uses = {
+            CategoryParamMapper.class
+        }
+)
 public interface CategoryMapper {
 
-    /* ************************* TO DTO ********************************************** */
-
-    /* ******************************************************* */
-    /*                  Simple Mapping                         */
-    /* ******************************************************* */
-
     /**
-     * Tranform a Category into a CategoryResponseDto
+     * Map a category into a DTO
      *
-     * @param category The category to transform
-     * @return The related category DTO
+     * @param category The category to map
+     * @return The category as DTO
      */
-    @Named("toCategoryDtoDefault")
-    @Mapping(target = "assetToken", expression = "java( category.getImage() != null ? io.suricate.monitoring.utils.IdUtils.encrypt(category.getImage().getId()) : null )")
-    CategoryResponseDto toCategoryDtoDefault(Category category);
+    @Named("toCategoryDTO")
+    @Mapping(target = "assetToken", expression = "java(category.getImage() != null ? io.suricate.monitoring.utils.IdUtils.encrypt(category.getImage().getId()) : null )")
+    @Mapping(target = "categoryParameters", source = "category.categoryParameters", qualifiedByName = "toCategoryParametersDTOs")
+    CategoryResponseDto toCategoryDTO(Category category);
 }

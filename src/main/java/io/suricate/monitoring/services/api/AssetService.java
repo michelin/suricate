@@ -21,6 +21,8 @@ import io.suricate.monitoring.repositories.AssetRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 /**
  * Manage the assets
  */
@@ -48,8 +50,8 @@ public class AssetService {
      * @param id The asset id
      * @return The related asset
      */
-    public Asset findOne(final Long id) {
-        return assetRepository.getOne(id);
+    public Optional<Asset> getAssetById(final Long id) {
+        return assetRepository.findById(id);
     }
 
     /**

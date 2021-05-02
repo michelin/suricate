@@ -30,7 +30,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * Interface that manage the generation DTO/Model objects for project class
+ * Manage the generation DTO/Model objects for project class
  */
 @Component
 @Mapper(
@@ -46,54 +46,37 @@ public abstract class ProjectMapper {
     @Autowired
     protected LibraryService libraryService;
 
-    /* ************************* TO DTO ********************************************** */
-
-    /* ******************************************************* */
-    /*                  Simple Mapping                         */
-    /* ******************************************************* */
-
     /**
-     * Transform a project into a ProjectResponseDto
+     * Map a project into a DTO
      *
-     * @param project The project to transform
-     * @return The related project DTO
+     * @param project The project to map
+     * @return The project as DTO
      */
-    @Named("toProjectDtoDefault")
+    @Named("toProjectDTO")
     @Mapping(target = "gridProperties.maxColumn", source = "project.maxColumn")
     @Mapping(target = "gridProperties.widgetHeight", source = "project.widgetHeight")
     @Mapping(target = "gridProperties.cssStyle", source = "project.cssStyle")
     @Mapping(target = "screenshotToken", expression = "java( project.getScreenshot() != null ? io.suricate.monitoring.utils.IdUtils.encrypt(project.getScreenshot().getId()) : null )")
     @Mapping(target = "librariesToken", expression = "java(libraryService.getLibrariesToken(project.getWidgets()))")
-    @Mapping(target = "image", source = "project.screenshot", qualifiedByName = "toAssetDtoDefault")
-    public abstract ProjectResponseDto toProjectDtoDefault(Project project);
-
-    /* ******************************************************* */
-    /*                    List Mapping                         */
-    /* ******************************************************* */
+    @Mapping(target = "image", source = "project.screenshot", qualifiedByName = "toAssetDTO")
+    public abstract ProjectResponseDto toProjectDTO(Project project);
 
     /**
-     * Transform a list of projects into a list of projectDtos
+     * Map a list of projects into a list of DTOs
      *
-     * @param projects The list of project to tranform
-     * @return The related list of dto object
+     * @param projects The list of project to map
+     * @return The list of projects as DTOs
      */
-    @Named("toProjectDtosDefault")
-    @IterableMapping(qualifiedByName = "toProjectDtoDefault")
-    public abstract List<ProjectResponseDto> toProjectDtosDefault(List<Project> projects);
-
-
-    /* ************************* TO MODEL **************************************** */
-
-    /* ******************************************************* */
-    /*                  Simple Mapping                         */
-    /* ******************************************************* */
+    @Named("toProjectsDTOs")
+    @IterableMapping(qualifiedByName = "toProjectDTO")
+    public abstract List<ProjectResponseDto> toProjectsDTOs(List<Project> projects);
 
     /**
-     * Transform a projectRequestDto into a project when we want to add a new dashboard
+     * Map a project DTO into a project entity
      *
-     * @param projectRequestDto The project to transform
-     * @return The related project domain object
+     * @param projectRequestDto The project DTO to map
+     * @return The project as entity
      */
-    @Named("toNewProject")
-    public abstract Project toNewProject(ProjectRequestDto projectRequestDto);
+    @Named("toProjectEntity")
+    public abstract Project toProjectEntity(ProjectRequestDto projectRequestDto);
 }

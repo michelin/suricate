@@ -31,7 +31,6 @@ import { AbstractHttpService } from '../abstract-http/abstract-http.service';
 export class HttpSettingService {
   /**
    * Global endpoint for settings
-   * @type {string}
    */
   private static readonly settingsApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/settings`;
 
@@ -44,26 +43,10 @@ export class HttpSettingService {
 
   /**
    * Get the list of settings
-   *
-   * @param type Filter the result by type
    */
-  public getAll(type?: SettingsTypeEnum): Observable<Setting[]> {
-    let url = `${HttpSettingService.settingsApiEndpoint}`;
-    if (type) {
-      url = url.concat(`?type=${type.toLowerCase()}`);
-    }
+  public getAll(): Observable<Setting[]> {
+    const url = `${HttpSettingService.settingsApiEndpoint}`;
 
     return this.httpClient.get<Setting[]>(url);
-  }
-
-  /**
-   * Get a setting by id
-   *
-   * @param settingId The setting id to get
-   */
-  public getOneById(settingId: number): Observable<Setting> {
-    const url = `${HttpSettingService.settingsApiEndpoint}/${settingId}`;
-
-    return this.httpClient.get<Setting>(url);
   }
 }

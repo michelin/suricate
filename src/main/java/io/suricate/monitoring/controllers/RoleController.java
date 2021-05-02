@@ -97,7 +97,7 @@ public class RoleController {
                                           @RequestParam(value = "search", required = false) String search,
                                           Pageable pageable) {
         Page<Role> rolesPaged = roleService.getRoles(search, pageable);
-        return rolesPaged.map(roleMapper::toRoleDtoDefault);
+        return rolesPaged.map(roleMapper::toRoleDTO);
     }
 
     /**
@@ -124,7 +124,7 @@ public class RoleController {
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(roleMapper.toRoleDtoDefault(roleOptional.get()));
+            .body(roleMapper.toRoleDTO(roleOptional.get()));
     }
 
     /**
@@ -151,6 +151,6 @@ public class RoleController {
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(userMapper.toUserDtosDefault(roleOptional.get().getUsers()));
+            .body(userMapper.toUsersDTOs(roleOptional.get().getUsers()));
     }
 }

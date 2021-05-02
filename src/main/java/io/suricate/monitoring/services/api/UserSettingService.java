@@ -25,7 +25,7 @@ import io.suricate.monitoring.utils.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -111,12 +111,22 @@ public class UserSettingService {
     /**
      * Get a user setting
      *
-     * @param userName   The user Name
-     * @param settingId The setting id
-     * @return The user setting as optional
+     * @param userName The username
+     * @param settingId The setting ID
+     * @return The user setting
      */
     public Optional<UserSetting> getUserSetting(final String userName, final Long settingId) {
-        return userSettingRepository.findByUser_UsernameAndSetting_Id(userName, settingId);
+        return userSettingRepository.findByUserUsernameAndSettingId(userName, settingId);
+    }
+
+    /**
+     * Get user settings
+     *
+     * @param username The username
+     * @return The user settings
+     */
+    public Optional<List<UserSetting>> getUserSettingsByUsername(final String username) {
+        return userSettingRepository.findAllByUserUsernameIgnoreCase(username);
     }
 
     /**

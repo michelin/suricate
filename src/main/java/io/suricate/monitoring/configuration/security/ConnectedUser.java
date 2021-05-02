@@ -35,19 +35,21 @@ import java.util.Collections;
 @Setter
 @EqualsAndHashCode(callSuper = true)
 public class ConnectedUser extends User {
-
     /**
      * The user id
      */
     private Long id;
+
     /**
      * The user firstname
      */
     private String firstname;
+
     /**
      * The lastname of the user
      */
     private String lastname;
+
     /**
      * The mail of the user
      */

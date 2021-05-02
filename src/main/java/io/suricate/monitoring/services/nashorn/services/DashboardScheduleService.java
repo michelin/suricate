@@ -37,7 +37,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 
 @Service
@@ -172,7 +172,7 @@ public class DashboardScheduleService {
     private void sendWidgetUpdateNotification(Long projectWidgetId, Long projectId) {
         UpdateEvent event = new UpdateEvent(UpdateType.WIDGET);
         ProjectWidget projectWidget = projectWidgetService.getOne(projectWidgetId).orElse(null);
-        event.setContent(projectWidgetMapper.toProjectWidgetDtoDefault(projectWidget));
+        event.setContent(projectWidgetMapper.toProjectWidgetDTO(projectWidget));
 
         dashboardWebSocketService.sendEventToWidgetInstanceSubscribers(projectService.getTokenByProjectId(projectId), projectWidgetId, event);
     }

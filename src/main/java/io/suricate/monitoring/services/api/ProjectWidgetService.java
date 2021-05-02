@@ -47,7 +47,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -179,14 +179,14 @@ public class ProjectWidgetService {
         widgetInstance = projectWidgetRepository.saveAndFlush(widgetInstance);
 
         UpdateEvent updateEvent = new UpdateEvent(UpdateType.GRID);
-        updateEvent.setContent(projectMapper.toProjectDtoDefault(widgetInstance.getProject()));
+        updateEvent.setContent(projectMapper.toProjectDTO(widgetInstance.getProject()));
         dashboardWebsocketService.sendEventToProjectSubscribers(widgetInstance.getProject().getToken(), updateEvent);
     }
 
     /**
      * Update the position of a widget
      *
-     * @param projectWidgetId The projectwidget id
+     * @param projectWidgetId The projectWidgetId
      * @param startCol        The new start col
      * @param startRow        The new start row
      * @param height          The new Height
@@ -207,8 +207,8 @@ public class ProjectWidgetService {
         for (ProjectWidgetPositionRequestDto projectWidgetPositionRequestDto : positions) {
             updateWidgetPositionByProjectWidgetId(
                 projectWidgetPositionRequestDto.getProjectWidgetId(),
-                projectWidgetPositionRequestDto.getCol(),
-                projectWidgetPositionRequestDto.getRow(),
+                projectWidgetPositionRequestDto.getGridColumn(),
+                projectWidgetPositionRequestDto.getGridRow(),
                 projectWidgetPositionRequestDto.getHeight(),
                 projectWidgetPositionRequestDto.getWidth()
             );
@@ -216,7 +216,7 @@ public class ProjectWidgetService {
         projectWidgetRepository.flush();
         // notify clients
         UpdateEvent updateEvent = new UpdateEvent(UpdateType.POSITION);
-        updateEvent.setContent(projectMapper.toProjectDtoDefault(project));
+        updateEvent.setContent(projectMapper.toProjectDTO(project));
         dashboardWebsocketService.sendEventToProjectSubscribers(project.getToken(), updateEvent);
     }
 
@@ -237,7 +237,7 @@ public class ProjectWidgetService {
 
             // notify client
             UpdateEvent updateEvent = new UpdateEvent(UpdateType.GRID);
-            updateEvent.setContent(projectMapper.toProjectDtoDefault(projectWidgetOptional.get().getProject()));
+            updateEvent.setContent(projectMapper.toProjectDTO(projectWidgetOptional.get().getProject()));
             dashboardWebsocketService.updateGlobalScreensByProjectId(projectWidgetOptional.get().getProject().getId(), updateEvent);
         }
     }
@@ -375,11 +375,11 @@ public class ProjectWidgetService {
     /**
      * Update the state of a widget instance when Nashorn execution ends successfully
      *
-     * @param date        The last execution date
-     * @param log         The log of nashorn execution
-     * @param data        The data returned by nashorn
-     * @param id          The id of the project widget
-     * @param widgetState The widget state
+     * @param executionDate The last execution date
+     * @param executionLog  The log of nashorn execution
+     * @param data          The data returned by nashorn
+     * @param id            The id of the project widget
+     * @param widgetState   The widget state
      */
     public void updateWidgetInstanceAfterSucceededExecution(final Date executionDate, final String executionLog, final String data, final Long projectWidgetId, final WidgetStateEnum widgetState) {
         projectWidgetRepository.updateSuccessExecution(executionDate, executionLog, data, projectWidgetId, widgetState);

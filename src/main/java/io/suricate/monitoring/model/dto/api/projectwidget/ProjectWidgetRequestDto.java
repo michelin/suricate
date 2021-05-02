@@ -41,37 +41,44 @@ public class ProjectWidgetRequestDto extends AbstractDto {
      * The start col number on the grid
      */
     @ApiModelProperty(value = "The start col number on the grid")
-    private int col = 0;
+    private int gridColumn = 0;
+
     /**
      * The start row number on the grid
      */
     @ApiModelProperty(value = "The start row number on the grid")
-    private int row = 0;
+    private int gridRow = 0;
+
     /**
      * The number of row taken on the grid
      */
     @ApiModelProperty(value = "The number of row taken on the grid")
     private int height = 1;
+
     /**
      * The number of col taken on the grid
      */
     @ApiModelProperty(value = "The number of col taken on the grid")
     private int width = 1;
+
     /**
      * The data of the last execution
      */
     @ApiModelProperty(value = "The data of the last execution")
     private String data = "{}";
+
     /**
      * The css style for this instance
      */
     @ApiModelProperty(value = "The css for this instance of widget")
     private String customStyle;
+
     /**
      * Contains the configuration of the widget
      */
     @ApiModelProperty(value = "The configuration of this widget")
     private String backendConfig;
+
     /**
      * The widgetId related to this project widget
      */

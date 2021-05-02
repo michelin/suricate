@@ -25,37 +25,27 @@ import org.mapstruct.Named;
 import java.util.List;
 
 /**
- * Interface that manage the generation DTO/Model objects for Role class
+ * Manage the generation DTO/Model objects for Role class
  */
 @Mapper(componentModel = "spring")
 public interface RoleMapper {
 
-    /* ************************* TO DTO ********************************************** */
-
-    /* ******************************************************* */
-    /*                  Simple Mapping                         */
-    /* ******************************************************* */
+    /**
+     * Map a role into a DTO
+     *
+     * @param role The project to map
+     * @return The role as DTO
+     */
+    @Named("toRoleDTO")
+    RoleResponseDto toRoleDTO(Role role);
 
     /**
-     * Tranform a Role into a RoleResponseDto
+     * Map a list of roles into a list of roles DTO
      *
-     * @param role The project to transform
-     * @return The related role DTO
+     * @param roles The list of roles to map
+     * @return The list of roles as DTOs
      */
-    @Named("toRoleDtoDefault")
-    RoleResponseDto toRoleDtoDefault(Role role);
-
-    /* ******************************************************* */
-    /*                    List Mapping                         */
-    /* ******************************************************* */
-
-    /**
-     * Tranform a list of roles into a list of role dto
-     *
-     * @param roles The list of roles to transform
-     * @return The related roles DTO
-     */
-    @Named("toRoleDtosDefault")
-    @IterableMapping(qualifiedByName = "toRoleDtoDefault")
-    List<RoleResponseDto> toRoleDtosDefault(List<Role> roles);
+    @Named("toRolesDTOs")
+    @IterableMapping(qualifiedByName = "toRoleDTO")
+    List<RoleResponseDto> toRolesDTOs(List<Role> roles);
 }

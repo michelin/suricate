@@ -32,7 +32,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 /**
- * Interface that manage the generation DTO/Model objects for User class
+ * Manage the generation DTO/Model objects for User class
  */
 @Component
 @Mapper(
@@ -49,64 +49,48 @@ public abstract class UserMapper {
     @Autowired
     protected PasswordEncoder passwordEncoder;
 
-    /* ************************* TO DTO ********************************************** */
-
-    /* ******************************************************* */
-    /*                  Simple Mapping                         */
-    /* ******************************************************* */
-
     /**
-     * Tranform a User into a UserResponseDto
+     * Map a user into a DTO
      *
-     * @param user The user to transform
-     * @return The related user DTO
+     * @param user The user to map
+     * @return The user as DTO
      */
-    @Named("toUserDtoDefault")
+    @Named("toUserDTO")
     @Mapping(target = "fullname", expression = "java(String.format(\"%s %s\", user.getFirstname(), user.getLastname()))")
-    @Mapping(target = "roles", qualifiedByName = "toRoleDtoDefault")
-    public abstract UserResponseDto toUserDtoDefault(User user);
-
-    /* ******************************************************* */
-    /*                    List Mapping                         */
-    /* ******************************************************* */
+    @Mapping(target = "roles", qualifiedByName = "toRoleDTO")
+    public abstract UserResponseDto toUserDTO(User user);
 
     /**
-     * Tranform a list of Users into a list of UserResponseDto
+     * Map a list of users into a list of users as DTOs
      *
-     * @param users The list of user to transform
-     * @return The related users DTO
+     * @param users The list of user to map
+     * @return The users as DTO
      */
-    @Named("toUserDtosDefault")
-    @IterableMapping(qualifiedByName = "toUserDtoDefault")
-    public abstract List<UserResponseDto> toUserDtosDefault(List<User> users);
-
-    /* ************************* TO MODEL **************************************** */
-
-    /* ******************************************************* */
-    /*                  Simple Mapping                         */
-    /* ******************************************************* */
+    @Named("toUsersDTOs")
+    @IterableMapping(qualifiedByName = "toUserDTO")
+    public abstract List<UserResponseDto> toUsersDTOs(List<User> users);
 
     /**
-     * Function used to map a LDAP user to a user in Database
+     * Map a connected user to user entity
      *
-     * @param connectedUser The LDAP user
-     * @return The User in database
+     * @param connectedUser The connected user to map
+     * @return The user entity
      */
-    @Named("fromLdapUserToUser")
+    @Named("connectedUserToUserEntity")
     @Mapping(target = "authenticationMethod", expression = "java(AuthenticationMethod.LDAP)")
     @Mapping(target = "email", source = "connectedUser.mail")
-    public abstract User fromLdapUserToUser(final ConnectedUser connectedUser);
+    public abstract User connectedUserToUserEntity(final ConnectedUser connectedUser);
 
     /**
-     * Tranform a UserRequestDto into a User for creation
+     * Map a user DTO into a user as entity
      *
-     * @param userRequestDto       The userRequestDto to transform
+     * @param userRequestDto       The userRequestDto to map
      * @param authenticationMethod The authentication method of the user
-     * @return The related user
+     * @return The user entity
      */
-    @Named("toNewUser")
+    @Named("toUserEntity")
     @Mapping(target = "roles", ignore = true)
     @Mapping(target = "authenticationMethod", source = "authenticationMethod")
     @Mapping(target = "password", expression = "java( passwordEncoder.encode(userRequestDto.getPassword()) )")
-    public abstract User toNewUser(UserRequestDto userRequestDto, AuthenticationMethod authenticationMethod);
+    public abstract User toUserEntity(UserRequestDto userRequestDto, AuthenticationMethod authenticationMethod);
 }

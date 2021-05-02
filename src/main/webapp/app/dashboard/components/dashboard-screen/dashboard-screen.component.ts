@@ -280,8 +280,8 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
 
     this.projectWidgets.forEach((projectWidget: ProjectWidget) => {
       gridStackItemsConfig.push({
-        col: projectWidget.widgetPosition.col,
-        row: projectWidget.widgetPosition.row,
+        col: projectWidget.widgetPosition.gridColumn,
+        row: projectWidget.widgetPosition.gridRow,
         sizey: projectWidget.widgetPosition.height,
         sizex: projectWidget.widgetPosition.width,
         payload: projectWidget
@@ -388,8 +388,8 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
       this.gridStackItems.forEach(gridStackItem => {
         projectWidgetPositionRequests.push({
           projectWidgetId: (gridStackItem.payload as ProjectWidget).id,
-          col: gridStackItem.col,
-          row: gridStackItem.row,
+          gridColumn: gridStackItem.col,
+          gridRow: gridStackItem.row,
           height: gridStackItem.sizey,
           width: gridStackItem.sizex
         });

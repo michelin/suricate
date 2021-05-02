@@ -24,41 +24,28 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 /**
- * Interface that manage the generation DTO/Model objects for Widget class
+ * Manage the generation DTO/Model objects for Widget class
  */
 @Mapper(componentModel = "spring")
 public interface RepositoryMapper {
 
-    /* ************************* TO DTO ********************************************** */
-
-    /* ******************************************************* */
-    /*                  Simple Mapping                         */
-    /* ******************************************************* */
-
     /**
-     * Tranform a Repository into a RepositoryResponseDto
+     * Map a repository into a DTO
      *
-     * @param repository The repository to transform
-     * @return The related repository DTO
+     * @param repository The repository to map
+     * @return The repository as DTO
      */
-    @Named("toRepositoryDtoDefault")
-    RepositoryResponseDto toRepositoryDtoDefault(Repository repository);
-
-    /* ************************* TO MODEL **************************************** */
-
-    /* ******************************************************* */
-    /*                  Simple Mapping                         */
-    /* ******************************************************* */
+    @Named("toRepositoryDTO")
+    RepositoryResponseDto toRepositoryDTO(Repository repository);
 
     /**
-     * Create a repository with a dto without widgets
+     * Map a repository DTO as entity
      *
      * @param repositoryId         The repository id
-     * @param repositoryRequestDto The repository dto to transform
-     * @return The repository
+     * @param repositoryRequestDto The repository DTO to map
+     * @return The repository as entity
      */
-    @Named("toRepositoryDefaultModel")
-    @Mapping(target = "id", source = "repositoryId")
+    @Named("toRepositoryEntity")
     @Mapping(target = "widgets", ignore = true)
-    Repository toRepositoryDefaultModel(Long repositoryId, RepositoryRequestDto repositoryRequestDto);
+    Repository toRepositoryEntity(Long id, RepositoryRequestDto repositoryRequestDto);
 }

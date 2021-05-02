@@ -53,16 +53,16 @@ public class ProjectWidget extends AbstractAuditingEntity<Long> {
     private String data;
 
     /**
-     * The starting row
+     * Row position in the grid
      */
     @Column
-    private int row;
+    private int gridRow;
 
     /**
-     * The starting column
+     * Column position in the grid
      */
     @Column
-    private int col;
+    private int gridColumn;
 
     /**
      * The number of rows taken by the widget

@@ -27,6 +27,7 @@ import { CommunicationDialogConfiguration } from './shared/models/frontend/dialo
 import { CommunicationDialogComponent } from './shared/components/communication-dialog/communication-dialog.component';
 import { AuthenticationService } from './shared/services/frontend/authentication/authentication.service';
 import { from, Subject } from 'rxjs';
+import {UserSetting} from "./shared/models/backend/setting/user-setting";
 
 /**
  * Main component init the application
@@ -71,11 +72,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.subscribeToCommunicationDialog();
     this.subscribeToThemeChanging();
 
-    if (AuthenticationService.isLoggedIn()) {
-      this.settingsService.initUserSettings(AuthenticationService.getConnectedUser());
-    } else {
-      this.settingsService.initDefaultSettings();
-    }
+    this.settingsService.initDefaultSettings();
   }
 
   /**
@@ -91,12 +88,12 @@ export class AppComponent implements OnInit, OnDestroy {
    */
   private subscribeToThemeChanging(): void {
     this.settingsService
-      .getThemeChangingMessages()
+      .getCurrentThemeValue()
       .pipe(takeUntil(this.unsubscribe))
-      .subscribe(themeValue => {
+      .subscribe((theme: string) => {
         this.overlayContainer.getContainerElement().classList.remove(this.appHtmlClass);
-        this.overlayContainer.getContainerElement().classList.add(themeValue);
-        this.appHtmlClass = themeValue;
+        this.overlayContainer.getContainerElement().classList.add(theme);
+        this.appHtmlClass = theme;
       });
   }
 

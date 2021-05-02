@@ -65,7 +65,7 @@ public class User extends AbstractEntity<Long> {
     private AuthenticationMethod authenticationMethod;
 
     /**
-     * The fistname of the user
+     * The first name of the user
      */
     @Column
     private String firstname;
@@ -90,7 +90,7 @@ public class User extends AbstractEntity<Long> {
     private List<Role> roles = new ArrayList<>();
 
     /**
-     * The projects of the user (as creator or guest)
+     * The projects of the user
      */
     @ManyToMany(mappedBy = "users")
     private List<Project> projects = new ArrayList<>();

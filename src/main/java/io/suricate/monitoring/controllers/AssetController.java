@@ -36,6 +36,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.util.Optional;
+
 /**
  * Asset controller
  */
@@ -75,22 +77,22 @@ public class AssetController {
     public ResponseEntity<byte[]> getAsset(@ApiIgnore WebRequest webRequest,
                                            @ApiParam(name = "token", value = "The asset Token", required = true)
                                            @PathVariable("token") String token) {
-        Asset asset = assetService.findOne(IdUtils.decrypt(token));
+        Optional<Asset> asset = assetService.getAssetById(IdUtils.decrypt(token));
 
-        if (asset == null) {
+        if (!asset.isPresent()) {
             throw new ObjectNotFoundException(Asset.class, token);
-        } else {
-            if (webRequest.checkNotModified(asset.getLastModifiedDate().getTime())) {
-                return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
-            }
+        }
+
+        if (webRequest.checkNotModified(asset.get().getLastModifiedDate().getTime())) {
+            return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
         }
 
         return ResponseEntity
             .ok()
-            .contentType(MediaType.parseMediaType(asset.getContentType()))
-            .contentLength(asset.getSize())
-            .lastModified(asset.getLastModifiedDate().getTime())
+            .contentType(MediaType.parseMediaType(asset.get().getContentType()))
+            .contentLength(asset.get().getSize())
+            .lastModified(asset.get().getLastModifiedDate().getTime())
             .cacheControl(CacheControl.noCache())
-            .body(asset.getContent());
+            .body(asset.get().getContent());
     }
 }

@@ -67,6 +67,11 @@ public class CategoryParameter extends AbstractAuditingEntity<String> {
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private Category category;
 
+    /**
+     * Get the ID of this entity
+     *
+     * @return The key
+     */
     @Override
     public String getId() {
         return key;

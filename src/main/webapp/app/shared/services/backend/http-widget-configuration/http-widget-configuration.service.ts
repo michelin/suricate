@@ -27,6 +27,7 @@ import { AbstractHttpService } from '../abstract-http/abstract-http.service';
 import { HttpFilter } from '../../../models/backend/http-filter';
 import { HttpFilterService } from '../http-filter/http-filter.service';
 import { Page } from '../../../models/backend/page';
+import {CategoryParameter} from "../../../models/backend/category/category-parameter";
 
 /**
  * Configuration services manage http calls
@@ -49,26 +50,25 @@ export class HttpWidgetConfigurationService extends AbstractHttpService<WidgetCo
   }
 
   /**
-   * Get the full list of configuration
+   * Get all parameters of all categories
    *
-   * @returns {Observable<WidgetConfiguration[]>} The configuration as observable
+   * @param filter The filter
    */
-  public getAll(filter?: HttpFilter): Observable<Page<WidgetConfiguration>> {
+  public getAll(filter?: HttpFilter): Observable<Page<CategoryParameter>> {
     const url = `${HttpWidgetConfigurationService.configurationsApiEndpoint}`;
 
-    return this.httpClient.get<Page<WidgetConfiguration>>(HttpFilterService.getFilteredUrl(url, filter));
+    return this.httpClient.get<Page<CategoryParameter>>(HttpFilterService.getFilteredUrl(url, filter));
   }
 
   /**
-   * Get a single configuration by key
+   * Get a category parameter by key
    *
-   * @param {string} configurationKey The key to find
-   * @returns {Observable<WidgetConfiguration>} The configuration as observable
+   * @param categoryParameterKey The category parameter key
    */
-  public getById(configurationKey: string): Observable<WidgetConfiguration> {
-    const url = `${HttpWidgetConfigurationService.configurationsApiEndpoint}/${configurationKey}`;
+  public getById(categoryParameterKey: string): Observable<CategoryParameter> {
+    const url = `${HttpWidgetConfigurationService.configurationsApiEndpoint}/${categoryParameterKey}`;
 
-    return this.httpClient.get<WidgetConfiguration>(url);
+    return this.httpClient.get<CategoryParameter>(url);
   }
 
   /**

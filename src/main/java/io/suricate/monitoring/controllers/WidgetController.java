@@ -87,8 +87,7 @@ public class WidgetController {
     public Page<WidgetResponseDto> getWidgets(@ApiParam(name = "search", value = "Search keyword")
                                               @RequestParam(value = "search", required = false) String search,
                                               Pageable pageable) {
-        Page<Widget> widgetsPaged = widgetService.getAll(search, pageable);
-        return widgetsPaged.map(widgetMapper::toWidgetDtoDefault);
+        return widgetService.getAll(search, pageable).map(widgetMapper::toWidgetDTO);
     }
 
     /**
@@ -108,6 +107,7 @@ public class WidgetController {
     public ResponseEntity<WidgetResponseDto> getOneById(@ApiParam(name = "widgetId", value = "The widget id", required = true)
                                                         @PathVariable("widgetId") Long widgetId) {
         Widget widget = widgetService.findOne(widgetId);
+
         if (widget == null) {
             throw new ObjectNotFoundException(Widget.class, widgetId);
         }
@@ -115,7 +115,7 @@ public class WidgetController {
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(widgetMapper.toWidgetDtoDefault(widget));
+            .body(widgetMapper.toWidgetDTO(widget));
     }
 
     /**
@@ -139,6 +139,7 @@ public class WidgetController {
                                              @ApiParam(name = "widgetRequestDto", value = "The widget with modifications", required = true)
                                              @RequestBody WidgetRequestDto widgetRequestDto) {
         Optional<Widget> widgetOptional = widgetService.updateWidget(widgetId, widgetRequestDto);
+
         if (!widgetOptional.isPresent()) {
             throw new ObjectNotFoundException(Widget.class, widgetId);
         }

@@ -31,7 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -97,7 +97,7 @@ public class NashornService {
      * @return The related Nashorn request
      */
     private NashornRequest createNashornRequestByProjectWidget(final ProjectWidget projectWidget) {
-        String properties = getProjectWidgetConfigurationsWithGlobalOne(projectWidget, projectWidget.getWidget().getCategory().getConfigurations());
+        String properties = getProjectWidgetConfigurationsWithGlobalOne(projectWidget, projectWidget.getWidget().getCategory().getCategoryParameters());
         String script = projectWidget.getWidget().getBackendJs();
         String previousData = projectWidget.getData();
         Long projectId = projectWidget.getProject().getId();

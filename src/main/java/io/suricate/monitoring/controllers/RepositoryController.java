@@ -39,7 +39,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -111,7 +111,7 @@ public class RepositoryController {
                                               @RequestParam(value = "search", required = false) String search,
                                               Pageable pageable) {
         Page<Repository> repositoriesPaged = repositoryService.getAll(search, pageable);
-        return repositoriesPaged.map(repositoryMapper::toRepositoryDtoDefault);
+        return repositoriesPaged.map(repositoryMapper::toRepositoryDTO);
     }
 
     /**
@@ -130,7 +130,7 @@ public class RepositoryController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<RepositoryResponseDto> createOne(@ApiParam(name = "repositoryResponseDto", value = "The repository to create", required = true)
                                                            @RequestBody RepositoryRequestDto repositoryRequestDto) {
-        Repository repository = repositoryMapper.toRepositoryDefaultModel(null, repositoryRequestDto);
+        Repository repository = repositoryMapper.toRepositoryEntity(null, repositoryRequestDto);
         repositoryService.addOrUpdateRepository(repository);
 
         if (repository.isEnabled()) {
@@ -146,7 +146,7 @@ public class RepositoryController {
         return ResponseEntity
             .created(resourceLocation)
             .contentType(MediaType.APPLICATION_JSON)
-            .body(repositoryMapper.toRepositoryDtoDefault(repository));
+            .body(repositoryMapper.toRepositoryDTO(repository));
     }
 
     /**
@@ -175,7 +175,7 @@ public class RepositoryController {
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(repositoryMapper.toRepositoryDtoDefault(optionalRepository.get()));
+            .body(repositoryMapper.toRepositoryDTO(optionalRepository.get()));
     }
 
     /**
@@ -200,7 +200,7 @@ public class RepositoryController {
             throw new ObjectNotFoundException(Repository.class, repositoryId);
         }
 
-        Repository repository = repositoryMapper.toRepositoryDefaultModel(repositoryId, repositoryRequestDto);
+        Repository repository = repositoryMapper.toRepositoryEntity(repositoryId, repositoryRequestDto);
         this.repositoryService.addOrUpdateRepository(repository);
 
         if (repository.isEnabled()) {
@@ -236,6 +236,6 @@ public class RepositoryController {
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(widgetMapper.toWidgetDtosDefault(optionalRepository.get().getWidgets()));
+            .body(widgetMapper.toWidgetsDTOs(optionalRepository.get().getWidgets()));
     }
 }

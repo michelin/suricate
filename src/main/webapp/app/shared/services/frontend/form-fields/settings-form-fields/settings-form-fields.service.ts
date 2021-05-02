@@ -27,6 +27,7 @@ import { FormOption } from '../../../../models/frontend/form/form-option';
 import { AllowedSettingValue } from '../../../../models/backend/setting/allowed-setting-value';
 import { IconEnum } from '../../../../enums/icon.enum';
 import { Validators } from '@angular/forms';
+import {SettingsService} from "../../../../../core/services/settings.service";
 
 /**
  * Service used to build the form fields related to the settings
@@ -38,37 +39,27 @@ export class SettingsFormFieldsService {
    *
    * @param httpSettingService Service used to manage http calls for settings
    * @param httpUserService Service used to manage http calls for users
+   * @param settingService Service used to manage the user settings
    */
-  constructor(private readonly httpSettingService: HttpSettingService, private readonly httpUserService: HttpUserService) {}
+  constructor(private readonly httpSettingService: HttpSettingService,
+              private readonly httpUserService: HttpUserService,
+              private readonly settingService: SettingsService) {}
 
   /**
    * Get the list of fields for the settings
    */
-  public generateFormFields(): Observable<FormField[]> {
-    return this.httpUserService.getUserSettings(AuthenticationService.getConnectedUser().username).pipe(
-      flatMap((userSettings: UserSetting[]) => {
-        return from(userSettings).pipe(
-          flatMap((userSetting: UserSetting) => {
-            return forkJoin({
-              userSetting: of(userSetting),
-              setting: this.httpSettingService.getOneById(userSetting.settingId)
-            });
-          }),
-          map((userSettingForkJoin: { userSetting: UserSetting; setting: Setting }) => {
-            return {
-              key: userSettingForkJoin.setting.type,
-              label: userSettingForkJoin.setting.description,
-              iconPrefix: IconEnum[userSettingForkJoin.setting.type],
-              type: userSettingForkJoin.setting.dataType,
-              value: userSettingForkJoin.userSetting.settingValue.value,
-              validators: [Validators.required],
-              options: () => this.generateOptions(userSettingForkJoin.setting)
-            };
-          }),
-          toArray()
-        );
-      })
-    );
+  public generateSettingsFormFields(userSettings: UserSetting[]): Observable<FormField[]> {
+    return from(userSettings).pipe(map((userSetting: UserSetting) => {
+                return {
+                    key: userSetting.setting.type,
+                    label: userSetting.setting.description,
+                    iconPrefix: IconEnum[userSetting.setting.type],
+                    type: userSetting.setting.dataType,
+                    value: userSetting.settingValue.value,
+                    validators: [Validators.required],
+                    options: () => this.generateOptions(userSetting.setting)
+                }
+            }), toArray());
   }
 
   private generateOptions(setting: Setting): Observable<FormOption[]> {

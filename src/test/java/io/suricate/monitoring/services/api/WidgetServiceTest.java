@@ -134,11 +134,12 @@ public class WidgetServiceTest {
         assertThat(assetRepository.count()).isEqualTo(1);
         assertThat(repositoryRepository.count()).isEqualTo(1);
 
-        Widget currentWidget = widgetRepository.findByTechnicalName("widget1");
-        assertThat(currentWidget).isNotNull();
-        assertThat(currentWidget.getImage()).isNotNull();
-        assertThat(currentWidget.getWidgetAvailability()).isEqualTo(WidgetAvailabilityEnum.ACTIVATED);
-        assertThat(currentWidget.getImage().getSize()).isEqualTo(10);
+        Optional<Widget> currentWidget = widgetRepository.findByTechnicalName("widget1");
+        assertThat(currentWidget.isPresent()).isTrue();
+        assertThat(currentWidget.get()).isNotNull();
+        assertThat(currentWidget.get().getImage()).isNotNull();
+        assertThat(currentWidget.get().getWidgetAvailability()).isEqualTo(WidgetAvailabilityEnum.ACTIVATED);
+        assertThat(currentWidget.get().getImage().getSize()).isEqualTo(10);
 
         // Update image
         Asset asset1 = new Asset();
@@ -162,10 +163,11 @@ public class WidgetServiceTest {
         assertThat(repositoryRepository.count()).isEqualTo(1);
 
         currentWidget = widgetRepository.findByTechnicalName("widget1");
-        assertThat(currentWidget).isNotNull();
-        assertThat(currentWidget.getWidgetAvailability()).isEqualTo(WidgetAvailabilityEnum.ACTIVATED);
-        assertThat(currentWidget.getImage()).isNotNull();
-        assertThat(currentWidget.getImage().getSize()).isEqualTo(1);
+        assertThat(currentWidget.isPresent()).isTrue();
+        assertThat(currentWidget.get()).isNotNull();
+        assertThat(currentWidget.get().getWidgetAvailability()).isEqualTo(WidgetAvailabilityEnum.ACTIVATED);
+        assertThat(currentWidget.get().getImage()).isNotNull();
+        assertThat(currentWidget.get().getImage().getSize()).isEqualTo(1);
     }
 
     @Test
@@ -211,33 +213,35 @@ public class WidgetServiceTest {
         assertThat(widgetRepository.count()).isEqualTo(2);
         assertThat(repositoryRepository.count()).isEqualTo(1);
 
-        Widget currentWidget = widgetRepository.findByTechnicalName("widget1");
-        assertThat(currentWidget).isNotNull();
-        assertThat(currentWidget.getBackendJs()).isEqualTo("bakendjs");
-        assertThat(EntityUtils.<Long>getProxiedId(currentWidget.getCategory())).isEqualTo(category.getId());
-        assertThat(currentWidget.getCssContent()).isEqualTo("cssContent");
-        assertThat(currentWidget.getDelay()).isEqualTo(10L);
-        assertThat(currentWidget.getDescription()).isEqualTo("Description");
-        assertThat(currentWidget.getHtmlContent()).isEqualTo("HtmlContent");
-        assertThat(currentWidget.getTechnicalName()).isEqualTo("widget1");
-        assertThat(currentWidget.getName()).isEqualTo("Widget 1");
-        assertThat(currentWidget.getWidgetAvailability()).isEqualTo(WidgetAvailabilityEnum.ACTIVATED);
+        Optional<Widget> currentWidget = widgetRepository.findByTechnicalName("widget1");
+        assertThat(currentWidget.isPresent()).isTrue();
+        assertThat(currentWidget.get()).isNotNull();
+        assertThat(currentWidget.get().getBackendJs()).isEqualTo("bakendjs");
+        assertThat(EntityUtils.<Long>getProxiedId(currentWidget.get().getCategory())).isEqualTo(category.getId());
+        assertThat(currentWidget.get().getCssContent()).isEqualTo("cssContent");
+        assertThat(currentWidget.get().getDelay()).isEqualTo(10L);
+        assertThat(currentWidget.get().getDescription()).isEqualTo("Description");
+        assertThat(currentWidget.get().getHtmlContent()).isEqualTo("HtmlContent");
+        assertThat(currentWidget.get().getTechnicalName()).isEqualTo("widget1");
+        assertThat(currentWidget.get().getName()).isEqualTo("Widget 1");
+        assertThat(currentWidget.get().getWidgetAvailability()).isEqualTo(WidgetAvailabilityEnum.ACTIVATED);
 
         // Change state of widget 1
-        currentWidget.setWidgetAvailability(WidgetAvailabilityEnum.DISABLED);
-        widgetRepository.save(currentWidget);
+        currentWidget.get().setWidgetAvailability(WidgetAvailabilityEnum.DISABLED);
+        widgetRepository.save(currentWidget.get());
 
         // Check widget 2
         currentWidget = widgetRepository.findByTechnicalName("widget2");
-        assertThat(currentWidget).isNotNull();
-        assertThat(currentWidget.getBackendJs()).isEqualTo("bakendjs2");
-        assertThat(EntityUtils.<Long>getProxiedId(currentWidget.getCategory())).isEqualTo(category.getId());
-        assertThat(currentWidget.getCssContent()).isEqualTo("cssContent2");
-        assertThat(currentWidget.getDelay()).isEqualTo(20L);
-        assertThat(currentWidget.getDescription()).isEqualTo("Description2");
-        assertThat(currentWidget.getHtmlContent()).isEqualTo("HtmlContent2");
-        assertThat(currentWidget.getTechnicalName()).isEqualTo("widget2");
-        assertThat(currentWidget.getName()).isEqualTo("Widget 2");
+        assertThat(currentWidget.isPresent()).isTrue();
+        assertThat(currentWidget.get()).isNotNull();
+        assertThat(currentWidget.get().getBackendJs()).isEqualTo("bakendjs2");
+        assertThat(EntityUtils.<Long>getProxiedId(currentWidget.get().getCategory())).isEqualTo(category.getId());
+        assertThat(currentWidget.get().getCssContent()).isEqualTo("cssContent2");
+        assertThat(currentWidget.get().getDelay()).isEqualTo(20L);
+        assertThat(currentWidget.get().getDescription()).isEqualTo("Description2");
+        assertThat(currentWidget.get().getHtmlContent()).isEqualTo("HtmlContent2");
+        assertThat(currentWidget.get().getTechnicalName()).isEqualTo("widget2");
+        assertThat(currentWidget.get().getName()).isEqualTo("Widget 2");
 
         // Modify widget 1
         widget.setId(null);
@@ -257,16 +261,17 @@ public class WidgetServiceTest {
         assertThat(repositoryRepository.count()).isEqualTo(1);
 
         currentWidget = widgetRepository.findByTechnicalName("widget1");
-        assertThat(currentWidget).isNotNull();
-        assertThat(currentWidget.getWidgetAvailability()).isEqualTo(WidgetAvailabilityEnum.DISABLED);
-        assertThat(currentWidget.getBackendJs()).isEqualTo("bakendjsModif");
-        assertThat(EntityUtils.<Long>getProxiedId(currentWidget.getCategory())).isEqualTo(category.getId());
-        assertThat(currentWidget.getCssContent()).isEqualTo("cssContentModif");
-        assertThat(currentWidget.getDelay()).isEqualTo(30L);
-        assertThat(currentWidget.getDescription()).isEqualTo("DescriptionModif");
-        assertThat(currentWidget.getHtmlContent()).isEqualTo("HtmlContentModif");
-        assertThat(currentWidget.getTechnicalName()).isEqualTo("widget1");
-        assertThat(currentWidget.getName()).isEqualTo("Widget Modif");
+        assertThat(currentWidget.isPresent()).isTrue();
+        assertThat(currentWidget.get()).isNotNull();
+        assertThat(currentWidget.get().getWidgetAvailability()).isEqualTo(WidgetAvailabilityEnum.DISABLED);
+        assertThat(currentWidget.get().getBackendJs()).isEqualTo("bakendjsModif");
+        assertThat(EntityUtils.<Long>getProxiedId(currentWidget.get().getCategory())).isEqualTo(category.getId());
+        assertThat(currentWidget.get().getCssContent()).isEqualTo("cssContentModif");
+        assertThat(currentWidget.get().getDelay()).isEqualTo(30L);
+        assertThat(currentWidget.get().getDescription()).isEqualTo("DescriptionModif");
+        assertThat(currentWidget.get().getHtmlContent()).isEqualTo("HtmlContentModif");
+        assertThat(currentWidget.get().getTechnicalName()).isEqualTo("widget1");
+        assertThat(currentWidget.get().getName()).isEqualTo("Widget Modif");
     }
 
     @Test
@@ -323,11 +328,12 @@ public class WidgetServiceTest {
         assertThat(libraryRepository.count()).isEqualTo(1);
         assertThat(repositoryRepository.count()).isEqualTo(1);
 
-        Widget currentWidget = widgetRepository.findByTechnicalName("widget1");
-        assertThat(currentWidget).isNotNull();
-        assertThat(currentWidget.getImage()).isNotNull();
-        assertThat(currentWidget.getImage().getSize()).isEqualTo(10);
-        assertThat(currentWidget.getLibraries()).isNotNull();
-        assertThat(currentWidget.getLibraries().get(0).getTechnicalName()).isEqualTo("lib1");
+        Optional<Widget> currentWidget = widgetRepository.findByTechnicalName("widget1");
+        assertThat(currentWidget.isPresent()).isTrue();
+        assertThat(currentWidget.get()).isNotNull();
+        assertThat(currentWidget.get().getImage()).isNotNull();
+        assertThat(currentWidget.get().getImage().getSize()).isEqualTo(10);
+        assertThat(currentWidget.get().getLibraries()).isNotNull();
+        assertThat(currentWidget.get().getLibraries().get(0).getTechnicalName()).isEqualTo("lib1");
     }
 }

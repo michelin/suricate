@@ -17,20 +17,37 @@
 package io.suricate.monitoring.repositories;
 
 import io.suricate.monitoring.model.entities.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.lang.Nullable;
 
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
+import javax.persistence.NamedEntityGraphs;
 import java.util.Optional;
 
 /**
  * Repository used for request Users in database
  */
-public interface UserRepository extends CrudRepository<User, Long>, JpaSpecificationExecutor<User> {
+public interface UserRepository extends CrudRepository<User, Long> {
 
 	/**
-	 * Find a user by the username without taking case into account
+	 * Find all paginated users
+	 *
+	 * @param specification The specification to apply
+	 * @param pageable The pageable to apply
+	 * @return The paginated users
+	 */
+	Page<User> findAll(Specification<User> specification, Pageable pageable);
+
+	/**
+	 * Find a user by the username ignoring case
 	 *
 	 * @param username The username
 	 * @return The user as optional
@@ -44,5 +61,4 @@ public interface UserRepository extends CrudRepository<User, Long>, JpaSpecifica
 	 */
 	@Query("SELECT id FROM User WHERE username = :username")
     Long getIdByUsername(@Param("username") String username);
-
 }

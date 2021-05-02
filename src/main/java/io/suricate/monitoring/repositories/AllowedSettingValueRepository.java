@@ -17,7 +17,11 @@
 package io.suricate.monitoring.repositories;
 
 import io.suricate.monitoring.model.entities.AllowedSettingValue;
+import io.suricate.monitoring.model.entities.Setting;
 import org.springframework.data.repository.CrudRepository;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * AllowedSettingValue repository

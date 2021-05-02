@@ -21,6 +21,8 @@ package io.suricate.monitoring.model.entities;
 import io.suricate.monitoring.model.entities.generic.AbstractAuditingEntity;
 import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
 import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.Type;
 import org.hibernate.search.annotations.*;
 
@@ -29,8 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Widget entity in database
- * (Retrieve from the widget repo)
+ * Widget entity
  */
 @Entity
 @Indexed
@@ -54,7 +55,6 @@ public class Widget extends AbstractAuditingEntity<Long> {
     @Column(nullable = false)
     @SortableField
     @Field
-    @Boost(3)
     private String name;
 
     /**
@@ -122,16 +122,16 @@ public class Widget extends AbstractAuditingEntity<Long> {
     private List<ProjectWidget> widgetInstances = new ArrayList<>();
 
     /**
-     * The related JS librairie used for displaying it on the clients
+     * The related JS libraries used for displaying it on the clients
      */
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "widget_library", joinColumns = {@JoinColumn(name = "widget_id")}, inverseJoinColumns = {@JoinColumn(name = "library_id")})
     private List<Library> libraries = new ArrayList<>();
 
     /**
      * The category of this widget
      */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @IndexedEmbedded(depth = 1)
     private Category category;
 

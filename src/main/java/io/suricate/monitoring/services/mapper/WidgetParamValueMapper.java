@@ -23,39 +23,30 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Named;
 
 import java.util.List;
+import java.util.Set;
 
 /**
- * Interface that manage the generation DTO/Model objects for widgetParamValue class
+ * Manage the generation DTO/Model objects for widgetParamValue class
  */
 @Mapper(componentModel = "spring")
 public interface WidgetParamValueMapper {
 
-    /* ************************* TO DTO ********************************************** */
-
-    /* ******************************************************* */
-    /*                  Simple Mapping                         */
-    /* ******************************************************* */
+    /**
+     * Map a widget parameter value into a widget parameter value DTO
+     *
+     * @param widgetParamValue The widget parameter value to map
+     * @return The widget parameter value as DTO
+     */
+    @Named("toWidgetParameterValueDTO")
+    WidgetParamValueResponseDto toWidgetParameterValueDTO(WidgetParamValue widgetParamValue);
 
     /**
-     * Tranform a widgetParamValue into a widgetParamValueDto
+     * Map a list of widget parameter values into a list of widget parameter values DTOs
      *
-     * @param widgetParamValue The widgetParamValue to transform
-     * @return The related widgetParamValue DTO
+     * @param widgetParamValues The list of widget parameter value to map
+     * @return The widget parameter values DTOs
      */
-    @Named("toWidgetParamValueDtoDefault")
-    WidgetParamValueResponseDto toWidgetParamValueDtoDefault(WidgetParamValue widgetParamValue);
-
-    /* ******************************************************* */
-    /*                    List Mapping                         */
-    /* ******************************************************* */
-
-    /**
-     * Tranform a list of widgetParamValues into a list of widgetParamValueDto
-     *
-     * @param widgetParamValues The list of widgetParamValues to transform
-     * @return The related DTOs
-     */
-    @Named("toWidgetParamValueDtosDefault")
-    @IterableMapping(qualifiedByName = "toWidgetParamValueDtoDefault")
-    List<WidgetParamValueResponseDto> toWidgetParamValueDtosDefault(List<WidgetParamValue> widgetParamValues);
+    @Named("toWidgetParameterValuesDTOs")
+    @IterableMapping(qualifiedByName = "toWidgetParameterValueDTO")
+    List<WidgetParamValueResponseDto> toWidgetParameterValuesDTOs(List<WidgetParamValue> widgetParamValues);
 }

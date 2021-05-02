@@ -20,8 +20,8 @@
  * The project widget position
  */
 export interface ProjectWidgetPosition {
-  col: number;
-  row: number;
+  gridColumn: number;
+  gridRow: number;
   width: number;
   height: number;
 }

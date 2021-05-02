@@ -87,7 +87,7 @@ public class Project extends AbstractAuditingEntity<Long> {
      * The list of widgets related to it
      */
     @OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE)
-    @OrderBy("row ASC, col ASC")
+    @OrderBy("gridRow ASC, gridColumn ASC")
     private List<ProjectWidget> widgets = new ArrayList<>();
 
     /**

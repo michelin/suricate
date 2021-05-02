@@ -52,8 +52,8 @@ public interface ProjectWidgetRepository extends JpaRepository<ProjectWidget, Lo
      * @return State of the update
      */
     @Modifying
-    @Query("UPDATE ProjectWidget SET row = :row, " +
-        "col = :col, " +
+    @Query("UPDATE ProjectWidget SET gridRow = :row, " +
+        "gridColumn = :col, " +
         "width = :width, " +
         "height = :height " +
         "WHERE id = :id")

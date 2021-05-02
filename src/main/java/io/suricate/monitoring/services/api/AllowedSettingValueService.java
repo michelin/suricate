@@ -17,10 +17,12 @@
 package io.suricate.monitoring.services.api;
 
 import io.suricate.monitoring.model.entities.AllowedSettingValue;
+import io.suricate.monitoring.model.entities.Setting;
 import io.suricate.monitoring.repositories.AllowedSettingValueRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 /**

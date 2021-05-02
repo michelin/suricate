@@ -102,7 +102,7 @@ public class ProjectWidgetController {
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(projectWidgetMapper.toProjectWidgetDtoDefault(projectWidgetOptional.get()));
+            .body(projectWidgetMapper.toProjectWidgetDTO(projectWidgetOptional.get()));
     }
 
     /**

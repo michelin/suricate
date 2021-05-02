@@ -20,13 +20,14 @@ package io.suricate.monitoring.controllers;
 
 import io.suricate.monitoring.configuration.swagger.ApiPageable;
 import io.suricate.monitoring.model.dto.api.ApplicationPropertiesDto;
+import io.suricate.monitoring.model.dto.api.category.CategoryParameterResponseDto;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.widgetconfiguration.WidgetConfigurationRequestDto;
 import io.suricate.monitoring.model.dto.api.widgetconfiguration.WidgetConfigurationResponseDto;
 import io.suricate.monitoring.model.entities.CategoryParameter;
 import io.suricate.monitoring.services.CacheService;
 import io.suricate.monitoring.services.api.CategoryParametersService;
-import io.suricate.monitoring.services.mapper.WidgetConfigurationMapper;
+import io.suricate.monitoring.services.mapper.CategoryParamMapper;
 import io.suricate.monitoring.services.properties.ApplicationPropertiesService;
 import io.suricate.monitoring.utils.exceptions.ObjectNotFoundException;
 import io.swagger.annotations.*;
@@ -59,9 +60,9 @@ public class CategoryParametersController {
     private final CategoryParametersService categoryParametersService;
 
     /**
-     * The configuration mapper for Domain/Dto tranformation
+     * The category parameters mapper
      */
-    private final WidgetConfigurationMapper widgetConfigurationMapper;
+    private final CategoryParamMapper categoryParamMapper;
 
     /**
      * The cache service
@@ -71,26 +72,28 @@ public class CategoryParametersController {
     /**
      * Constructor
      *
-     * @param widgetParametersService Inject the configuration service
-     * @param widgetConfigurationMapper  The configuration mapper
+     * @param applicationPropertiesService The application properties service
+     * @param categoryParametersService The category parameters services
+     * @param categoryParamMapper The category parameters mapper
+     * @param cacheService The cache service
      */
     @Autowired
     public CategoryParametersController(final ApplicationPropertiesService applicationPropertiesService,
                                         final CategoryParametersService categoryParametersService,
-                                        final WidgetConfigurationMapper widgetConfigurationMapper,
+                                        final CategoryParamMapper categoryParamMapper,
                                         final CacheService cacheService) {
         this.applicationPropertiesService = applicationPropertiesService;
         this.categoryParametersService = categoryParametersService;
-        this.widgetConfigurationMapper = widgetConfigurationMapper;
+        this.categoryParamMapper = categoryParamMapper;
         this.cacheService = cacheService;
     }
 
     /**
-     * Get the full list of configurations
+     * Get all parameters of all categories
      *
-     * @return The list of configurations
+     * @return The list of parameters of all categories
      */
-    @ApiOperation(value = "Get the full list of configurations", response = WidgetConfigurationResponseDto.class, nickname = "getAllConfigs")
+    @ApiOperation(value = "Get all parameters of all categories", response = WidgetConfigurationResponseDto.class, nickname = "getAllConfigs")
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Ok", response = WidgetConfigurationResponseDto.class, responseContainer = "List"),
         @ApiResponse(code = 204, message = "No Content"),
@@ -100,15 +103,17 @@ public class CategoryParametersController {
     @ApiPageable
     @GetMapping(value = "/v1/configurations")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public Page<WidgetConfigurationResponseDto> getAll(@ApiParam(name = "search", value = "Search keyword")
+    public Page<CategoryParameterResponseDto> getAll(@ApiParam(name = "search", value = "Search keyword")
                                                        @RequestParam(value = "search", required = false) String search,
-                                                       Pageable pageable) {
-        Page<CategoryParameter> widgetConfigurationsPaged = categoryParametersService.getAll(search, pageable);
-        return widgetConfigurationsPaged.map(widgetConfigurationMapper::toConfigurationDtoDefault);
+                                                     Pageable pageable) {
+        return categoryParametersService.getAll(search, pageable)
+                .map(categoryParamMapper::toCategoryParameterDTO);
     }
 
     /**
      * Get a configuration by the key (Id)
+     *
+     * TODO cette méthode retournait un autre type, faire l'update côté Front
      *
      * @param key The key to find
      * @return The related configuration
@@ -122,7 +127,7 @@ public class CategoryParametersController {
     })
     @GetMapping(value = "/v1/configurations/{key}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<WidgetConfigurationResponseDto> getOneByKey(@ApiParam(name = "key", value = "The configuration key", required = true)
+    public ResponseEntity<CategoryParameterResponseDto> getOneByKey(@ApiParam(name = "key", value = "The configuration key", required = true)
                                                                       @PathVariable("key") final String key) {
         Optional<CategoryParameter> configurationOptional = categoryParametersService.getOneByKey(key);
 
@@ -133,7 +138,7 @@ public class CategoryParametersController {
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(widgetConfigurationMapper.toConfigurationDtoDefault(configurationOptional.get()));
+            .body(categoryParamMapper.toCategoryParameterDTO(configurationOptional.get()));
     }
 
     /**

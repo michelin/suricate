@@ -31,8 +31,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -139,7 +139,7 @@ public class UserService {
         }
 
         // Create user
-        User user = userMapper.fromLdapUserToUser(connectedUser);
+        User user = userMapper.connectedUserToUserEntity(connectedUser);
 
         UserRoleEnum roleEnumToFind;
         if (userRepository.count() > 0) {
@@ -164,14 +164,14 @@ public class UserService {
     }
 
     /**
-     * Update the user informations when ldap connection is set
+     * Update the user information when ldap connection is set
      *
      * @param user          The user to update
-     * @param connectedUser The LDAP informations
+     * @param connectedUser The LDAP information
      * @return The user updated
      */
     public Optional<User> updateUserLdapInformations(final User user, final ConnectedUser connectedUser) {
-        User userUpdated = userMapper.fromLdapUserToUser(connectedUser);
+        User userUpdated = userMapper.connectedUserToUserEntity(connectedUser);
         userUpdated.setRoles(user.getRoles());
         userUpdated.setProjects(user.getProjects());
         userUpdated.setUserSettings(user.getUserSettings());
@@ -192,11 +192,12 @@ public class UserService {
     }
 
     /**
-     * Get a user by username
+     * Get a user by username ignoring case
      *
      * @param username The username to find
      * @return The user as optional
      */
+    @Transactional
     public Optional<User> getOneByUsername(String username) {
         return userRepository.findByUsernameIgnoreCase(username);
     }
@@ -212,12 +213,13 @@ public class UserService {
     }
 
     /**
-     * Method used to get the list of every users
+     * Get all paginated users
      *
-     * @param search   The string to search
-     * @param pageable The configuration of the page
-     * @return List of users
+     * @param specification The specification to apply
+     * @param pageable The pageable to apply
+     * @return The paginated users
      */
+    @Transactional
     public Page<User> getAll(String search, Pageable pageable) {
         return userRepository.findAll(new UserSearchSpecification(search), pageable);
     }

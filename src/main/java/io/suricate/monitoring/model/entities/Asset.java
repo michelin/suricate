@@ -61,7 +61,11 @@ public class Asset extends AbstractAuditingEntity<Long> {
     @Column
     private long size;
 
-
+    /**
+     * Set the content and the size of the asset
+     *
+     * @param content The content to set
+     */
     public void setContent(byte[] content) {
         this.content = content;
         this.size = content.length;

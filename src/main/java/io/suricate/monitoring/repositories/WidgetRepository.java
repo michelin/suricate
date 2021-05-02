@@ -16,16 +16,31 @@
 
 package io.suricate.monitoring.repositories;
 
+import io.suricate.monitoring.model.entities.User;
 import io.suricate.monitoring.model.entities.Widget;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Repository used for request Widget repository in database
  */
-public interface WidgetRepository extends JpaRepository<Widget, Long>, JpaSpecificationExecutor<Widget> {
+public interface WidgetRepository extends JpaRepository<Widget, Long> {
+
+    /**
+     * Find all paginated widgets
+     *
+     * @param specification The specification to apply
+     * @param pageable The pageable to apply
+     * @return The paginated widgets
+     */
+    Page<Widget> findAll(Specification<Widget> specification, Pageable pageable);
 
     /**
      * Find a widget by technical name
@@ -33,7 +48,7 @@ public interface WidgetRepository extends JpaRepository<Widget, Long>, JpaSpecif
      * @param technicalName The technical name
      * @return The related widget
      */
-    Widget findByTechnicalName(String technicalName);
+    Optional<Widget> findByTechnicalName(String technicalName);
 
     /**
      * Find every widgets by category id
@@ -41,6 +56,5 @@ public interface WidgetRepository extends JpaRepository<Widget, Long>, JpaSpecif
      * @param categoryId The category id
      * @return The list of related widgets ordered by name
      */
-    List<Widget> findAllByCategory_IdOrderByNameAsc(final Long categoryId);
-
+    List<Widget> findAllByCategoryIdOrderByNameAsc(final Long categoryId);
 }

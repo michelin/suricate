@@ -72,7 +72,7 @@ public class Setting {
     private SettingType type;
 
     /**
-     * Hold the possible values (if we have a select setting for example)
+     * Hold the possible values
      */
     @OneToMany(mappedBy = "setting")
     private List<AllowedSettingValue> allowedSettingValues = new ArrayList<>();

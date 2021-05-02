@@ -18,6 +18,8 @@ package io.suricate.monitoring.repositories;
 
 import io.suricate.monitoring.model.entities.Setting;
 import io.suricate.monitoring.model.enums.SettingType;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
 
@@ -30,17 +32,25 @@ import java.util.Optional;
 public interface SettingRepository extends CrudRepository<Setting, Long>, JpaSpecificationExecutor<Setting> {
 
     /**
-     * Find every settings by description
+     * Find setting by id
+     *
+     * @param id The setting id
+     * @return The setting
+     */
+    Optional<Setting> findById(final Long id);
+
+    /**
+     * Find setting by type
+     *
+     * @param settingType The setting type
+     * @return The setting
+     */
+    Optional<Setting> findByType(final SettingType settingType);
+
+    /**
+     * Find settings by description
      *
      * @return The list of the settings
      */
     Optional<List<Setting>> findAllByOrderByDescription();
-
-    /**
-     * Find by setting type
-     *
-     * @param settingType The setting type to find
-     * @return The related setting
-     */
-    Optional<Setting> findByType(final SettingType settingType);
 }
