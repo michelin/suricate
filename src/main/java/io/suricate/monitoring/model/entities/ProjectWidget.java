@@ -33,8 +33,6 @@ import java.util.Date;
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-@ToString
 public class ProjectWidget extends AbstractAuditingEntity<Long> {
 
     /**

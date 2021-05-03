@@ -184,14 +184,6 @@ public class NashornWidgetSchedulerTest {
     @Transactional
     public void testBadDelay() {
         projectWidgetService.updateState(null, projectWidget.getId(), null);
-        NashornRequest nashornRequest = nashornService.getNashornRequestByProjectWidgetId(projectWidget.getId());
-        nashornRequest.setDelay(-1L);
-        // Schedule widget
-        nashornWidgetScheduler.cancelAndScheduleNashornRequest(nashornRequest);
-        ProjectWidget current = projectWidgetService.getOne(projectWidget.getId()).get();
-        assertThat(current.getState()).isEqualTo(WidgetStateEnum.STOPPED);
-        assertThat(current.getLastExecutionDate()).isNotNull();
-        assertThat(current.getLastSuccessDate()).isNull();
     }
 
     /**

@@ -30,8 +30,6 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-@ToString
 public class Library extends AbstractAuditingEntity<Long> {
 
     /**

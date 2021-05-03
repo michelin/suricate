@@ -28,14 +28,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Constains every setting to display
+ * Setting entity
  */
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-@ToString
 public class Setting {
     /**
      * The setting id

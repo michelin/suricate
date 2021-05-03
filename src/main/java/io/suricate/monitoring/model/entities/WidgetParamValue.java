@@ -30,8 +30,6 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-@ToString
 public class WidgetParamValue extends AbstractAuditingEntity<Long> {
 
     /**

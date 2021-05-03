@@ -36,8 +36,6 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-@ToString
 public class Category extends AbstractAuditingEntity<Long> {
 
     /**
@@ -76,5 +74,5 @@ public class Category extends AbstractAuditingEntity<Long> {
      * The associated categories for this configuration
      */
     @OneToMany(mappedBy = "category", cascade = CascadeType.REMOVE)
-    private List<CategoryParameter> categoryParameters;
+    private List<CategoryParameter> configurations;
 }

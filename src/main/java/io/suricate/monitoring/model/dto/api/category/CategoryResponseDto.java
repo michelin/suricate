@@ -59,9 +59,4 @@ public class CategoryResponseDto extends AbstractDto {
     @ApiModelProperty(value = "Asset token")
     private String assetToken;
 
-    /**
-     * The category parameters
-     */
-    @ApiModelProperty(value = "Category parameters")
-    private List<CategoryParameterResponseDto> categoryParameters = new ArrayList<>();
 }

@@ -44,6 +44,7 @@ public interface UserRepository extends CrudRepository<User, Long> {
 	 * @param pageable The pageable to apply
 	 * @return The paginated users
 	 */
+	@EntityGraph(attributePaths = "roles")
 	Page<User> findAll(Specification<User> specification, Pageable pageable);
 
 	/**

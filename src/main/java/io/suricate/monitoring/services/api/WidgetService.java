@@ -249,14 +249,23 @@ public class WidgetService {
      * @param mapLibrary The libraries
      * @param repository The git repository
      */
-    @Transactional
     public void addOrUpdateWidgets(Category category, List<Widget> widgets, Map<String, Library> mapLibrary, final Repository repository) {
         if (category == null || widgets == null) {
             return;
         }
 
         for (Widget widget : widgets) {
+            LOGGER.info("Processing widget {}", widget.getTechnicalName());
+
             Optional<Widget> currentWidget = widgetRepository.findByTechnicalName(widget.getTechnicalName());
+
+            LOGGER.info("Retrieved widget = {}", currentWidget.isPresent());
+
+            if (currentWidget.isPresent()) {
+                LOGGER.info("Widget present {}", currentWidget.get());
+            } else {
+                LOGGER.info("Widget non present");
+            }
 
             if (widget.getLibraries() != null && mapLibrary != null) {
                 widget.getLibraries()

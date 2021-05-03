@@ -34,8 +34,6 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-@ToString
 public class User extends AbstractEntity<Long> {
 
     /**

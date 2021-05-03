@@ -28,14 +28,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The role entity in database
+ * Role entity
  */
 @Entity(name = "Role")
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-@ToString
 public class Role extends AbstractEntity<Long> {
 
     /**

@@ -97,7 +97,7 @@ public class NashornService {
      * @return The related Nashorn request
      */
     private NashornRequest createNashornRequestByProjectWidget(final ProjectWidget projectWidget) {
-        String properties = getProjectWidgetConfigurationsWithGlobalOne(projectWidget, projectWidget.getWidget().getCategory().getCategoryParameters());
+        String properties = getProjectWidgetConfigurationsWithGlobalOne(projectWidget, projectWidget.getWidget().getCategory().getConfigurations());
         String script = projectWidget.getWidget().getBackendJs();
         String previousData = projectWidget.getData();
         Long projectId = projectWidget.getProject().getId();

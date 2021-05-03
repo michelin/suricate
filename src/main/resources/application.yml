@@ -11,7 +11,7 @@ server:
 ### Spring ###
 spring:
   profiles:
-    active: postgresql
+    active: h2
   datasource:
     continueOnError: true
     type: com.zaxxer.hikari.HikariDataSource
@@ -30,11 +30,12 @@ spring:
       use-new-id-generator-mappings: false
     properties:
       hibernate:
+        format_sql: true
         search:
           default:
             directory_provider: filesystem
             indexBase: /tmp/suricate-io/suricate/lucene/indexes/
-    open-in-view: true
+    open-in-view: false
   mustache:
     check-template-location: false
   cache:

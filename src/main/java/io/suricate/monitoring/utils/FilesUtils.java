@@ -43,13 +43,13 @@ public final class FilesUtils {
      *
      * @param rootFolder the root folder used to find folder
      * @return the list of folder
-     * @throws IOException exeception with file
+     * @throws IOException exception with file
      */
     public static List<File> getFolders(File rootFolder) throws IOException {
         if (rootFolder != null) {
             try (Stream<Path> list = Files.list(rootFolder.toPath())) {
-                return list.filter((Path path) -> path.toFile().isDirectory())
-                    .map(Path::toFile)
+                return list.map(Path::toFile)
+                    .filter(File::isDirectory)
                     .sorted()
                     .collect(Collectors.toList());
 
@@ -68,8 +68,8 @@ public final class FilesUtils {
     public static List<File> getFiles(File folder) throws IOException {
         if (folder != null) {
             try (Stream<Path> list = Files.list(folder.toPath())) {
-                return list.filter((Path path) -> path.toFile().isFile())
-                    .map(Path::toFile)
+                return list.map(Path::toFile)
+                    .filter(File::isFile)
                     .sorted()
                     .collect(Collectors.toList());
             }

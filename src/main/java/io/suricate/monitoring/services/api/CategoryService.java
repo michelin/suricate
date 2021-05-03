@@ -28,7 +28,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import org.springframework.transaction.annotation.Transactional;
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -119,10 +119,10 @@ public class CategoryService {
 
         // Save the configurations
         List<CategoryParameter> categoryOldConfigurations = existingCategory != null ?
-                new ArrayList<>(existingCategory.getCategoryParameters()) : new ArrayList<>();
+                new ArrayList<>(existingCategory.getConfigurations()) : new ArrayList<>();
 
-        List<CategoryParameter> categoryNewConfigurations = category.getCategoryParameters();
-        category.setCategoryParameters(new ArrayList<>());
+        List<CategoryParameter> categoryNewConfigurations = category.getConfigurations();
+        category.setConfigurations(new ArrayList<>());
 
         // Create/Update category
         categoryRepository.save(category);

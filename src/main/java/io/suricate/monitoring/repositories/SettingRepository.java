@@ -17,11 +17,10 @@
 package io.suricate.monitoring.repositories;
 
 import io.suricate.monitoring.model.entities.Setting;
-import io.suricate.monitoring.model.enums.SettingType;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +28,7 @@ import java.util.Optional;
 /**
  * Repository used for request Settings in database
  */
+@Repository
 public interface SettingRepository extends CrudRepository<Setting, Long>, JpaSpecificationExecutor<Setting> {
 
     /**
@@ -40,17 +40,10 @@ public interface SettingRepository extends CrudRepository<Setting, Long>, JpaSpe
     Optional<Setting> findById(final Long id);
 
     /**
-     * Find setting by type
-     *
-     * @param settingType The setting type
-     * @return The setting
-     */
-    Optional<Setting> findByType(final SettingType settingType);
-
-    /**
      * Find settings by description
      *
      * @return The list of the settings
      */
+    @EntityGraph(attributePaths = "allowedSettingValues")
     Optional<List<Setting>> findAllByOrderByDescription();
 }

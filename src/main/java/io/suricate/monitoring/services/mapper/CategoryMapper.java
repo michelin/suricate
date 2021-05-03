@@ -40,6 +40,5 @@ public interface CategoryMapper {
      */
     @Named("toCategoryDTO")
     @Mapping(target = "assetToken", expression = "java(category.getImage() != null ? io.suricate.monitoring.utils.IdUtils.encrypt(category.getImage().getId()) : null )")
-    @Mapping(target = "categoryParameters", source = "category.categoryParameters", qualifiedByName = "toCategoryParametersDTOs")
     CategoryResponseDto toCategoryDTO(Category category);
 }

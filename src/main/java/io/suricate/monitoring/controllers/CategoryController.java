@@ -114,7 +114,7 @@ public class CategoryController {
         Page<Category> categoriesPaged = categoryService.getAll(search, pageable);
 
         // Do not return the password typed parameters so the user cannot see them, even from the console
-        categoriesPaged.forEach(category -> category.getCategoryParameters()
+        categoriesPaged.forEach(category -> category.getConfigurations()
                 .removeIf(categoryParameter -> categoryParameter.getDataType().equals(DataTypeEnum.PASSWORD)));
 
         return categoriesPaged.map(categoryMapper::toCategoryDTO);

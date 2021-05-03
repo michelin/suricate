@@ -126,9 +126,8 @@ public class UserController {
     public Page<UserResponseDto> getAll(@ApiParam(name = "search", value = "Search keyword")
                                         @RequestParam(value = "search", required = false) String search,
                                         Pageable pageable) {
-        Page<User> usersPaged = userService.getAll(search, pageable);
-
-        return usersPaged.map(userMapper::toUserDTO);
+        return userService.getAll(search, pageable)
+                .map(userMapper::toUserDTO);
     }
 
     /**

@@ -1,11 +1,7 @@
 package io.suricate.monitoring.services.api;
 
-import io.suricate.monitoring.model.entities.Asset;
-import io.suricate.monitoring.model.entities.Library;
-import io.suricate.monitoring.model.entities.ProjectWidget;
-import io.suricate.monitoring.model.entities.Category;
-import io.suricate.monitoring.model.entities.Repository;
-import io.suricate.monitoring.model.entities.Widget;
+import io.suricate.monitoring.model.entities.*;
+import io.suricate.monitoring.model.enums.DataTypeEnum;
 import io.suricate.monitoring.model.enums.RepositoryTypeEnum;
 import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
 import io.suricate.monitoring.model.enums.WidgetStateEnum;
@@ -26,44 +22,163 @@ import java.util.stream.Collectors;
 
 import static com.google.common.truth.Truth.assertThat;
 
+/**
+ * Widget service test class
+ */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class WidgetServiceTest {
 
+    /**
+     * Mocked css content
+     */
+    private static final String CSS_CONTENT = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC2xv8BcPMnUbTx/LEAAAAASUVORK5CYII=) no-repeat left bottom;background-size: contain;opacity: 0.2;height: 25%;width: 25%;position: absolute;left: 5%;bottom: 5%;}.widget.githubOpenedIssues .issues-label {color: #1B1F23;font-size: 40px;}";
+
+    /**
+     * Mocked backend JS content
+     */
+    private static final String BACKEND_JS = "/** Copyright 2012-2018 the original author or authors.** Licensed under the Apache License, Version 2.0 (the \"License\");* you may not use this file except in compliance with the License.* You may obtain a copy of the License at**      http://www.apache.org/licenses/LICENSE-2.0** Unless required by applicable law or agreed to in writing, software* distributed under the License is distributed on an \"AS IS\" BASIS,* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.* See the License for the specific language governing permissions and* limitations under the License.*/function run() {var data = {};var perPage = 100;var issues = [];var page = 1;var response = JSON.parse(Packages.get(\"https://api.github.com/repos/\" + SURI_GITHUB_ORG + \"/\" + SURI_GITHUB_PROJECT + \"/issues?page=\" + page + \"&per_page=\" + perPage + \"&state=\" + SURI_ISSUES_STATE,\"Authorization\", \"token \" + WIDGET_CONFIG_GITHUB_TOKEN));issues = issues.concat(response);while (response && response.length > 0 && response.length === perPage) {page++;response = JSON.parse(Packages.get(\"https://api.github.com/repos/\" + SURI_GITHUB_ORG + \"/\" + SURI_GITHUB_PROJECT + \"/issues?page=\" + page + \"&per_page=\" + perPage + \"&state=\" + SURI_ISSUES_STATE,\"Authorization\", \"token \" + WIDGET_CONFIG_GITHUB_TOKEN));issues = issues.concat(response);}// The response contains the issues and the pull requests. Here, we only keep the real issuesissues = issues.filter(function(issue) {if (!issue.pull_request) {return issue;}});data.numberOfIssues = issues.length;if (SURI_PREVIOUS) {if (JSON.parse(SURI_PREVIOUS).numberOfIssues) {data.evolution = ((data.numberOfIssues - JSON.parse(SURI_PREVIOUS).numberOfIssues) * 100 / JSON.parse(SURI_PREVIOUS).numberOfIssues).toFixed(1);} else {data.evolution = (0).toFixed(1);}data.arrow = data.evolution == 0 ? '' : (data.evolution > 0 ? \"up\" : \"down\");}if (SURI_ISSUES_STATE != 'all') {data.issuesState = SURI_ISSUES_STATE;}return JSON.stringify(data);}";
+
+    /**
+     * Mocked HTML content
+     */
+    private static final String HTML_CONTENT = "<div class=\"grid-stack-item-content-inner\"><h1 class=\"title\">{{SURI_GITHUB_PROJECT}}</h1><h2 class=\"value\">{{numberOfIssues}}</h2><h2 class=\"issues-label\">{{#issuesState}} {{issuesState}} {{/issuesState}} issues</h2>{{#evolution}}<p class=\"change-rate\"><i class=\"fa fa-arrow-{{arrow}}\"></i><span>{{evolution}}% since the last execution</span></p>{{/evolution}}</div><div class=\"github\"></div>";
+
+    /**
+     * Project widget repository
+     */
     @Autowired
     ProjectWidgetRepository projectWidgetRepository;
 
+    /**
+     * Widget repository
+     */
     @Autowired
     WidgetRepository widgetRepository;
 
+    /**
+     * Category repository
+     */
     @Autowired
     CategoryRepository categoryRepository;
 
+    /**
+     * Asset repository
+     */
     @Autowired
     AssetRepository assetRepository;
 
+    /**
+     * Widget service
+     */
     @Autowired
     WidgetService widgetService;
 
+    /**
+     * Category service
+     */
     @Autowired
     CategoryService categoryService;
 
+    /**
+     * Project widget service
+     */
     @Autowired
     ProjectWidgetService projectWidgetService;
 
+    /**
+     * Library service
+     */
     @Autowired
     LibraryService libraryService;
 
+    /**
+     * Library repository
+     */
     @Autowired
     LibraryRepository libraryRepository;
 
+    /**
+     * Repository service
+     */
     @Autowired
     RepositoryService repositoryService;
 
+    /**
+     * Repository repository
+     */
     @Autowired
     RepositoryRepository repositoryRepository;
+
+    @Test
+    public void myTest() {
+        Repository repository = new Repository();
+        repository.setName("MyRepository");
+        repository.setBranch("master");
+        repository.setEnabled(true);
+        repository.setLogin("Login");
+        repository.setPassword("Password");
+        repository.setType(RepositoryTypeEnum.REMOTE);
+        repository.setUrl("https://myRepository.com");
+
+        Asset asset = new Asset();
+        asset.setContent(new byte[]{0x12});
+        asset.setSize(10);
+
+        WidgetParam countIssuesParam1 = new WidgetParam();
+        countIssuesParam1.setName("SURI_GITHUB_ORG");
+        countIssuesParam1.setDescription("GitHub organization");
+        countIssuesParam1.setType(DataTypeEnum.TEXT);
+        countIssuesParam1.setRequired(true);
+
+        WidgetParam countIssuesParam2 = new WidgetParam();
+        countIssuesParam1.setName("SURI_GITHUB_PROJECT");
+        countIssuesParam1.setDescription("GitHub project");
+        countIssuesParam1.setType(DataTypeEnum.TEXT);
+        countIssuesParam1.setRequired(true);
+
+        Widget countIssues = new Widget();
+        countIssues.setName("Number of issues");
+        countIssues.setDescription("Display the number of issues of a GitHub project");
+        countIssues.setTechnicalName("githubCountIssues");
+        countIssues.setDelay(600L);
+        countIssues.setCssContent(CSS_CONTENT);
+        countIssues.setBackendJs(BACKEND_JS);
+        countIssues.setHtmlContent(HTML_CONTENT);
+        countIssues.setWidgetParams(Arrays.asList(countIssuesParam1, countIssuesParam2));
+
+        CategoryParameter gitHubConfiguration = new CategoryParameter();
+        gitHubConfiguration.setKey("WIDGET_CONFIG_GITHUB_TOKEN");
+        gitHubConfiguration.setValue("TEXT");
+
+        Category gitHubCategory = new Category();
+        gitHubCategory.setName("GitHub");
+        gitHubCategory.setTechnicalName("github");
+        gitHubCategory.setImage(asset);
+        gitHubCategory.setCreatedDate(new Date());
+        gitHubCategory.setConfigurations(Collections.singletonList(gitHubConfiguration));
+        gitHubCategory.setWidgets(Collections.singletonList(countIssues));
+
+        CategoryParameter gitLabConfiguration1 = new CategoryParameter();
+        gitLabConfiguration1.setKey("WIDGET_CONFIG_GITLAB_TOKEN");
+        gitLabConfiguration1.setValue("TEXT");
+
+        CategoryParameter gitLabConfiguration2 = new CategoryParameter();
+        gitLabConfiguration2.setKey("WIDGET_CONFIG_GITLAB_URL");
+        gitLabConfiguration2.setValue("TEXT");
+
+        Category gitLabCategory = new Category();
+        gitLabCategory.setName("GitLab");
+        gitLabCategory.setTechnicalName("gitlab");
+        gitLabCategory.setImage(asset);
+        gitHubCategory.setCreatedDate(new Date());
+        gitLabCategory.setConfigurations(Arrays.asList(gitLabConfiguration1, gitLabConfiguration2));
+        gitLabCategory.setWidgets(Collections.singletonList(countIssues));
+
+        widgetService.updateWidgetInDatabase(Arrays.asList(gitHubCategory, gitLabCategory), null, null);
+    }
 
     @Test
     public void updateStateTest() {
@@ -89,7 +204,7 @@ public class WidgetServiceTest {
     }
 
     @Test
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
+    @Transactional
     public void addOrUpdateWidgetTestImage() {
         assertThat(widgetRepository.count()).isEqualTo(0);
 
@@ -98,7 +213,6 @@ public class WidgetServiceTest {
         category.setName("test");
         category.setTechnicalName("test");
         categoryService.addOrUpdateCategory(category);
-
 
         // Create widget list
         Widget widget = new Widget();
@@ -171,6 +285,7 @@ public class WidgetServiceTest {
     }
 
     @Test
+    @Transactional
     public void addOrUpdateWidgetTest() {
         assertThat(widgetRepository.count()).isEqualTo(0);
 
@@ -228,7 +343,7 @@ public class WidgetServiceTest {
 
         // Change state of widget 1
         currentWidget.get().setWidgetAvailability(WidgetAvailabilityEnum.DISABLED);
-        widgetRepository.save(currentWidget.get());
+        //widgetRepository.save(currentWidget.get());
 
         // Check widget 2
         currentWidget = widgetRepository.findByTechnicalName("widget2");
@@ -244,7 +359,7 @@ public class WidgetServiceTest {
         assertThat(currentWidget.get().getName()).isEqualTo("Widget 2");
 
         // Modify widget 1
-        widget.setId(null);
+        //widget.setId(null);
         widget.setBackendJs("bakendjsModif");
         widget.setCssContent("cssContentModif");
         widget.setDelay(30L);
@@ -253,7 +368,7 @@ public class WidgetServiceTest {
         widget.setTechnicalName("widget1");
         widget.setName("Widget Modif");
 
-        widget2.setId(null);
+        //widget2.setId(null);
 
         widgetService.addOrUpdateWidgets(category, Arrays.asList(widget, widget2), null, repository);
         assertThat(categoryRepository.count()).isEqualTo(1);

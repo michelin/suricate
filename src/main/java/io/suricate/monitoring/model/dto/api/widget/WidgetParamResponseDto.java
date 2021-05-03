@@ -66,7 +66,7 @@ public class WidgetParamResponseDto extends AbstractDto {
     private String acceptFileRegex;
 
     /**
-     * An exemple of the usage of this param
+     * An example of the usage of this param
      */
     @ApiModelProperty(value = "An example of the usage of this field")
     private String usageExample;

@@ -129,12 +129,17 @@
             <artifactId>spring-retry</artifactId>
         </dependency>
 
-        <!-- JUnit -->
+        <!-- JUnit 4 with Spring Boot 2.4 -->
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.13.1</version>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
             <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.hamcrest</groupId>
+                    <artifactId>hamcrest-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- Websocket -->

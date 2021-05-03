@@ -16,8 +16,11 @@
 
 package io.suricate.monitoring.utils;
 
+import io.suricate.monitoring.model.entities.generic.AbstractEntity;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.Entity;
 import java.lang.reflect.AccessibleObject;
@@ -29,6 +32,11 @@ import java.util.Collection;
 import java.util.List;
 
 public final class ToStringUtils {
+
+    /**
+     * Logger
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(ToStringUtils.class);
 
     /**
      * Constructor
@@ -80,6 +88,7 @@ public final class ToStringUtils {
                 excludeFieldNames.add(field.getName());
             }
         }
+
         return new ReflectionToStringBuilder(object)
                 .setExcludeFieldNames(excludeFieldNames.toArray(new String[excludeFieldNames.size()]))
                 .toString();

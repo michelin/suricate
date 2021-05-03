@@ -36,6 +36,7 @@ public interface UserSettingRepository extends JpaRepository<UserSetting, Long> 
      * @param username The username
      * @return The user settings
      */
+    @EntityGraph(attributePaths = "setting.allowedSettingValues")
     Optional<List<UserSetting>> findAllByUserUsernameIgnoreCase(String username);
 
     /**
