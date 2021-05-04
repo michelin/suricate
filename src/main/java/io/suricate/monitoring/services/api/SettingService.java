@@ -17,7 +17,6 @@
 package io.suricate.monitoring.services.api;
 
 import io.suricate.monitoring.model.entities.Setting;
-import io.suricate.monitoring.model.enums.SettingType;
 import io.suricate.monitoring.repositories.SettingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,7 +49,7 @@ public class SettingService {
     /**
      * Get setting by id
      *
-     * @param id The setting id
+     * @param settingId The setting id
      * @return The setting
      */
     @Transactional

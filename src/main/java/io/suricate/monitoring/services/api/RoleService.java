@@ -57,7 +57,7 @@ public class RoleService {
     /**
      * Get the full list of roles
      *
-     * @return
+     * @return The roles
      */
     public Page<Role> getRoles(String search, Pageable pageable) {
         return roleRepository.findAll(new RoleSearchSpecification(search), pageable);

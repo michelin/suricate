@@ -17,6 +17,7 @@
 package io.suricate.monitoring.repositories;
 
 import io.suricate.monitoring.model.entities.Setting;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
@@ -37,7 +38,8 @@ public interface SettingRepository extends CrudRepository<Setting, Long>, JpaSpe
      * @param id The setting id
      * @return The setting
      */
-    Optional<Setting> findById(final Long id);
+    @NotNull
+    Optional<Setting> findById(@NotNull final Long id);
 
     /**
      * Find settings by description

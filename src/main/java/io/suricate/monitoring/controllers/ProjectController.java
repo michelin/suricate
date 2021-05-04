@@ -40,7 +40,6 @@ import io.suricate.monitoring.services.mapper.UserMapper;
 import io.suricate.monitoring.services.websocket.DashboardWebSocketService;
 import io.suricate.monitoring.utils.exceptions.ApiException;
 import io.suricate.monitoring.utils.exceptions.InvalidFileException;
-import io.suricate.monitoring.utils.exceptions.NoContentException;
 import io.suricate.monitoring.utils.exceptions.ObjectNotFoundException;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,7 +71,12 @@ import java.util.Optional;
 @RequestMapping("/api")
 @Api(value = "Project Controller", tags = {"Projects"})
 public class ProjectController {
+
+    /**
+     * Constant for users not allowed API exceptions
+     */
     private static final String USER_NOT_ALLOWED = "The user is not allowed to modify this resource";
+
     /**
      * Project service
      */
@@ -287,7 +291,7 @@ public class ProjectController {
                                                         @ApiParam(name = "projectToken", value = "The project token", required = true)
                                                         @PathVariable("projectToken") String projectToken,
                                                         @ApiParam(name = "screenshot", value = "The screenshot to insert", required = true)
-                                                        @RequestParam MultipartFile screenshot) throws IOException {
+                                                        @RequestParam MultipartFile screenshot) {
         Optional<Project> projectOptional = projectService.getOneByToken(projectToken);
         if (!projectOptional.isPresent()) {
             throw new ObjectNotFoundException(Project.class, projectToken);

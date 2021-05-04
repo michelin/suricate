@@ -84,7 +84,7 @@ public class UserDetailsServiceLdapAuthoritiesPopulator implements LdapAuthoriti
             // Call service to add user
             currentUser = userService.initUser(connectedUser);
         } else {
-            currentUser = userService.updateUserLdapInformations(currentUser.get(), connectedUser);
+            currentUser = userService.updateUserLdapInformation(currentUser.get(), connectedUser);
         }
 
         return currentUser.map(user -> user.getRoles().stream()

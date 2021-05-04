@@ -188,7 +188,6 @@ public class ProjectService {
      *
      * @param user    The user to add
      * @param project The project to edit
-     * @return The project with the user
      */
     @Transactional
     public void addUserToProject(User user, Project project) {
@@ -201,7 +200,6 @@ public class ProjectService {
      *
      * @param user    The user to delete
      * @param project The project related
-     * @return The project with user deleted
      */
     public void deleteUserFromProject(User user, Project project) {
         project.getUsers().remove(user);

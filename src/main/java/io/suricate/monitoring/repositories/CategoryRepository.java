@@ -19,10 +19,12 @@ package io.suricate.monitoring.repositories;
 import io.suricate.monitoring.model.entities.Category;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  * Repository used for request categories in database
  */
+@Repository
 public interface CategoryRepository extends CrudRepository<Category, Long>, JpaSpecificationExecutor<Category> {
 
     /**

@@ -24,8 +24,9 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Repository used to manage Répository Data from DB
+ * Repositories repository
  */
+@org.springframework.stereotype.Repository
 public interface RepositoryRepository extends JpaRepository<Repository, Long>, JpaSpecificationExecutor<Repository> {
 
     /**

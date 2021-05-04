@@ -19,13 +19,10 @@
 package io.suricate.monitoring.controllers;
 
 import io.suricate.monitoring.configuration.swagger.ApiPageable;
-import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.category.CategoryResponseDto;
+import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.widget.WidgetResponseDto;
-import io.suricate.monitoring.model.entities.Category;
 import io.suricate.monitoring.model.entities.Widget;
-import io.suricate.monitoring.model.entities.WidgetParam;
-import io.suricate.monitoring.model.enums.DataTypeEnum;
 import io.suricate.monitoring.services.api.CategoryService;
 import io.suricate.monitoring.services.api.WidgetService;
 import io.suricate.monitoring.services.mapper.CategoryMapper;
@@ -38,12 +35,11 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * The widget controller

@@ -18,9 +18,11 @@ package io.suricate.monitoring.repositories;
 
 import io.suricate.monitoring.model.entities.Asset;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  * Repository used to manage Asset data
  */
+@Repository
 public interface AssetRepository extends JpaRepository<Asset, Long> {
 }

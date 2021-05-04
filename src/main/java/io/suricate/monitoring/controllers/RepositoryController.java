@@ -53,22 +53,22 @@ import java.util.Optional;
 public class RepositoryController {
 
     /**
-     * The repository service
+     * Repository service
      */
     private final RepositoryService repositoryService;
 
     /**
-     * The git service
+     * Git service
      */
     private final GitService gitService;
 
     /**
-     * The repository mapper tranform Domain object into DTO
+     * Repository mapper
      */
     private final RepositoryMapper repositoryMapper;
 
     /**
-     * The widget mapper
+     * Widget mapper
      */
     private final WidgetMapper widgetMapper;
 

@@ -21,10 +21,11 @@ package io.suricate.monitoring.repositories;
 
 import io.suricate.monitoring.model.entities.WidgetParam;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 /**
  * Repository used for request widget params in database
  */
+@Repository
 public interface WidgetParamRepository extends CrudRepository<WidgetParam, Long> {
-
 }

@@ -168,7 +168,7 @@ public class UserService {
      * @param connectedUser The LDAP information
      * @return The user updated
      */
-    public Optional<User> updateUserLdapInformations(final User user, final ConnectedUser connectedUser) {
+    public Optional<User> updateUserLdapInformation(final User user, final ConnectedUser connectedUser) {
         User userUpdated = userMapper.connectedUserToUserEntity(connectedUser);
         userUpdated.setRoles(user.getRoles());
         userUpdated.setProjects(user.getProjects());
@@ -213,7 +213,7 @@ public class UserService {
     /**
      * Get all paginated users
      *
-     * @param specification The specification to apply
+     * @param search The specification to apply
      * @param pageable The pageable to apply
      * @return The paginated users
      */

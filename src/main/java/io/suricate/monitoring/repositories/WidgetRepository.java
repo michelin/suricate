@@ -16,15 +16,14 @@
 
 package io.suricate.monitoring.repositories;
 
-import io.suricate.monitoring.model.entities.User;
 import io.suricate.monitoring.model.entities.Widget;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,8 +31,8 @@ import java.util.Optional;
 /**
  * Repository used for request Widget repository in database
  */
+@Repository
 public interface WidgetRepository extends JpaRepository<Widget, Long> {
-
 
     /**
      * Find all paginated widgets
@@ -51,8 +50,9 @@ public interface WidgetRepository extends JpaRepository<Widget, Long> {
      * @param id The id
      * @return The widget
      */
+    @NotNull
     @EntityGraph(attributePaths = {"category.configurations", "widgetParams.possibleValuesMap"})
-    Optional<Widget> findById(Long id);
+    Optional<Widget> findById(@NotNull Long id);
 
     /**
      * Find a widget by technical name

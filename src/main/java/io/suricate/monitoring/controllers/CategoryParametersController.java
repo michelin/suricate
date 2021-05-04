@@ -106,14 +106,11 @@ public class CategoryParametersController {
     public Page<CategoryParameterResponseDto> getAll(@ApiParam(name = "search", value = "Search keyword")
                                                        @RequestParam(value = "search", required = false) String search,
                                                      Pageable pageable) {
-        return categoryParametersService.getAll(search, pageable)
-                .map(categoryParamMapper::toCategoryParameterDTO);
+        return categoryParametersService.getAll(search, pageable).map(categoryParamMapper::toCategoryParameterDTO);
     }
 
     /**
      * Get a configuration by the key (Id)
-     *
-     * TODO cette méthode retournait un autre type, faire l'update côté Front
      *
      * @param key The key to find
      * @return The related configuration

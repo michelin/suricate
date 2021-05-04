@@ -21,20 +21,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.EntityGraph;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
-import org.springframework.lang.Nullable;
+import org.springframework.stereotype.Repository;
 
-import javax.persistence.NamedAttributeNode;
-import javax.persistence.NamedEntityGraph;
-import javax.persistence.NamedEntityGraphs;
 import java.util.Optional;
 
 /**
  * Repository used for request Users in database
  */
+@Repository
 public interface UserRepository extends CrudRepository<User, Long> {
 
 	/**
@@ -56,9 +53,10 @@ public interface UserRepository extends CrudRepository<User, Long> {
 	Optional<User> findByUsernameIgnoreCase(String username);
 
 	/**
-	 * Methos used to get id by username
-	 * @param username the user name to find
-	 * @return the user id
+	 * Get the ID of a user by username
+	 *
+	 * @param username The username
+	 * @return The user ID
 	 */
 	@Query("SELECT id FROM User WHERE username = :username")
     Long getIdByUsername(@Param("username") String username);

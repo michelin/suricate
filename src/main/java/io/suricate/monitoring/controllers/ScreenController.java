@@ -49,7 +49,6 @@ public class ScreenController {
      */
     private final DashboardWebSocketService dashboardWebSocketService;
 
-
     /**
      * Constructor
      *

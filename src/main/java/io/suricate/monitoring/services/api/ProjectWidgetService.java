@@ -106,7 +106,7 @@ public class ProjectWidgetService {
     /**
      * The string encryptor
      */
-    private StringEncryptor stringEncryptor;
+    private final StringEncryptor stringEncryptor;
 
     /**
      * Constructor
@@ -378,7 +378,6 @@ public class ProjectWidgetService {
      * @param executionDate The last execution date
      * @param executionLog  The log of nashorn execution
      * @param data          The data returned by nashorn
-     * @param id            The id of the project widget
      * @param widgetState   The widget state
      */
     public void updateWidgetInstanceAfterSucceededExecution(final Date executionDate, final String executionLog, final String data, final Long projectWidgetId, final WidgetStateEnum widgetState) {
