@@ -224,7 +224,6 @@ public class NashornRequestWidgetExecutionScheduler {
                 new WeakReference<>(scheduledNashornRequestExecutionTask),
                 new WeakReference<>(scheduledNashornRequestResponseTask)
             ));
-
     }
 
     /**
