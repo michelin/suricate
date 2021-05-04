@@ -79,7 +79,7 @@ export class SettingsService {
         this.currentThemeValue = userSettings.find(userSetting => userSetting.setting.type === SettingsTypeEnum.THEME).settingValue.value;
 
         this.translateService.use(
-            userSettings.find(userSetting => userSetting.setting.type === SettingsTypeEnum.LANGUAGE).settingValue.value);
+          userSettings.find(userSetting => userSetting.setting.type === SettingsTypeEnum.LANGUAGE).settingValue.value);
       })
     );
   }
