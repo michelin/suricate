@@ -47,7 +47,6 @@ public class ProjectWidget extends AbstractAuditingEntity<Long> {
      */
     @Column
     @Lob
-    @Type(type = "org.hibernate.type.TextType")
     private String data;
 
     /**
@@ -78,21 +77,18 @@ public class ProjectWidget extends AbstractAuditingEntity<Long> {
      * The css style added by the user
      */
     @Lob
-    @Type(type = "org.hibernate.type.TextType")
     private String customStyle;
 
     /**
      * The configuration of the widget (Result of the widget params)
      */
     @Lob
-    @Type(type = "org.hibernate.type.TextType")
     private String backendConfig;
 
     /**
      * The nashorn execution log
      */
     @Lob
-    @Type(type = "org.hibernate.type.TextType")
     private String log;
 
     /**

@@ -6,7 +6,7 @@ spring:
     driverClassName: org.postgresql.Driver
     url: 'jdbc:postgresql://localhost:5432/postgres?currentSchema=suricate'
     username: postgres
-    password: root
+    password: postgres
   jpa:
     properties:
       hibernate:
@@ -15,4 +15,4 @@ spring:
           use_jdbc_metadata_defaults: false
   flyway:
     locations:
-      - 'classpath:flyway/postgresql'
+      - 'classpath:flyway'

@@ -70,7 +70,6 @@ public class Project extends AbstractAuditingEntity<Long> {
      * The css style of the grid
      */
     @Lob
-    @Type(type = "org.hibernate.type.TextType")
     private String cssStyle;
 
     /**
