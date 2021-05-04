@@ -23,6 +23,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -35,7 +37,7 @@ import java.util.List;
         CategoryMapper.class
     }
 )
-public interface WidgetMapper {
+public abstract class WidgetMapper {
 
     /**
      * Map a widget into a DTO
@@ -45,10 +47,23 @@ public interface WidgetMapper {
      */
     @Named("toWidgetDTO")
     @Mapping(target = "imageToken", expression = "java( widget.getImage() != null ? io.suricate.monitoring.utils.IdUtils.encrypt(widget.getImage().getId()) : null )")
-    @Mapping(target = "category", qualifiedByName = "toCategoryDTO")
+    @Mapping(target = "category", qualifiedByName = "toCategoryWithHiddenValueParametersDTO")
     @Mapping(target = "repositoryId", source = "widget.repository.id")
     @Mapping(target = "params", source = "widget.widgetParams", qualifiedByName = "toWidgetParameterDTO")
-    WidgetResponseDto toWidgetDTO(Widget widget);
+    public abstract WidgetResponseDto toWidgetDTO(Widget widget);
+
+    /**
+     * Map a widget into a DTO
+     *
+     * @param widget The widget to map
+     * @return The widget DTO
+     */
+    @Named("toWidgetWithoutCategoryParametersDTO")
+    @Mapping(target = "imageToken", expression = "java( widget.getImage() != null ? io.suricate.monitoring.utils.IdUtils.encrypt(widget.getImage().getId()) : null )")
+    @Mapping(target = "category", qualifiedByName = "toCategoryWithoutCategoryParametersDTO")
+    @Mapping(target = "repositoryId", source = "widget.repository.id")
+    @Mapping(target = "params", source = "widget.widgetParams", qualifiedByName = "toWidgetParameterDTO")
+    public abstract WidgetResponseDto toWidgetWithoutCategoryParametersDTO(Widget widget);
 
     /**
      * Map a list of widgets into a list of widgets DTOs
@@ -58,5 +73,5 @@ public interface WidgetMapper {
      */
     @Named("toWidgetsDTOs")
     @IterableMapping(qualifiedByName = "toWidgetDTO")
-    List<WidgetResponseDto> toWidgetsDTOs(List<Widget> widgets);
+    public abstract List<WidgetResponseDto> toWidgetsDTOs(Collection<Widget> widgets);
 }

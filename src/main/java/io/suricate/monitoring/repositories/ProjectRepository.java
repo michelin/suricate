@@ -17,6 +17,7 @@
 package io.suricate.monitoring.repositories;
 
 import io.suricate.monitoring.model.entities.Project;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -44,6 +45,7 @@ public interface ProjectRepository extends CrudRepository<Project, Long>, JpaSpe
 	 * @param token The token to find
 	 * @return The project as Optionals
 	 */
+    @EntityGraph(attributePaths = {"screenshot", "widgets", "users"})
 	Optional<Project> findProjectByToken(final String token);
 
 	/**

@@ -33,9 +33,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -116,7 +114,7 @@ public class UserService {
             return Optional.empty();
         }
 
-        user.setRoles(Collections.singletonList(role.get()));
+        user.setRoles(Collections.singleton(role.get()));
         userRepository.save(user);
 
         // Set the default user settings
@@ -292,11 +290,11 @@ public class UserService {
      * @param roleNames The roles to set
      */
     private void updateUserRoles(User user, List<UserRoleEnum> roleNames) {
-        List<Role> rolesToSet = roleNames.stream()
+        Set<Role> rolesToSet = roleNames.stream()
             .map(roleName -> roleService.getRoleByName(roleName.name()).orElse(null))
-            .collect(Collectors.toList());
+            .collect(Collectors.toSet());
 
-        if (rolesToSet != null && !rolesToSet.isEmpty()) {
+        if (!rolesToSet.isEmpty()) {
             user.setRoles(rolesToSet);
         }
     }

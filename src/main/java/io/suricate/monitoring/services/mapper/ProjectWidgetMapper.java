@@ -29,6 +29,7 @@ import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -81,7 +82,7 @@ public abstract class ProjectWidgetMapper {
      */
     @Named("toProjectWidgetsDTOs")
     @IterableMapping(qualifiedByName = "toProjectWidgetDTO")
-    public abstract List<ProjectWidgetResponseDto> toProjectWidgetsDTOs(List<ProjectWidget> projectWidgets);
+    public abstract List<ProjectWidgetResponseDto> toProjectWidgetsDTOs(Collection<ProjectWidget> projectWidgets);
 
     /**
      * Map a project widget DTO into a project widget entity
@@ -95,7 +96,7 @@ public abstract class ProjectWidgetMapper {
     @Mapping(target = "height", source = "projectWidgetRequestDto.height")
     @Mapping(target = "width", source = "projectWidgetRequestDto.width")
     @Mapping(target = "project", expression = "java( projectService.getOneByToken(projectToken).get())")
-    @Mapping(target = "widget", expression = "java( widgetService.findOne(projectWidgetRequestDto.getWidgetId()) )")
+    @Mapping(target = "widget", expression = "java( widgetService.findOne(projectWidgetRequestDto.getWidgetId()).get() )")
     @Mapping(target = "data", source = "projectWidgetRequestDto.data")
     public abstract ProjectWidget toProjectWidgetEntity(ProjectWidgetRequestDto projectWidgetRequestDto, String projectToken);
 }

@@ -63,5 +63,5 @@ public class RepositoryRequestDto extends AbstractDto {
      * If the repository is enable or not
      */
     @ApiModelProperty(value = "True if the repository is enabled for update", required = true)
-    private boolean enabled = true;
+    private boolean enabled;
 }

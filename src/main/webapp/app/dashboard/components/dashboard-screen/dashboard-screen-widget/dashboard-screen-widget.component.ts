@@ -45,6 +45,7 @@ import { Subject } from 'rxjs';
 import { WidgetConfiguration } from '../../../../shared/models/backend/widget-configuration/widget-configuration';
 import { takeUntil } from 'rxjs/operators';
 import { SlideToggleButtonConfiguration } from '../../../../shared/models/frontend/button/slide-toggle/slide-toggle-button-configuration';
+import {CategoryParameter} from "../../../../shared/models/backend/category/category-parameter";
 
 /**
  * Display the grid stack widgets
@@ -240,16 +241,14 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    * Display the form sidenav used to edit a project widget
    */
   public displayEditFormSidenav(): void {
-    this.widgetConfigurationFormFieldsService.getCategorySettings(this.widget.category.id).subscribe(categorySettings => {
-      this.sidenavService.openFormSidenav({
-        title: 'widget.edit',
-        formFields: this.projectWidgetFormStepsService.generateProjectWidgetFormFields(
-          this.widget.params,
-          this.projectWidget.backendConfig
-        ),
-        save: (formData: FormData) => this.saveWidget(formData),
-        slideToggleButtonConfiguration: this.buildSlideToggleButtonConfiguration(categorySettings)
-      });
+    this.sidenavService.openFormSidenav({
+      title: 'widget.edit',
+      formFields: this.projectWidgetFormStepsService.generateProjectWidgetFormFields(
+        this.widget.params,
+        this.projectWidget.backendConfig
+      ),
+      save: (formData: FormData) => this.saveWidget(formData),
+      slideToggleButtonConfiguration: this.buildSlideToggleButtonConfiguration(this.widget.category.categoryParameters)
     });
   }
 
@@ -276,22 +275,22 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   /**
    * Build the configuration to display the slide toggle button for editing the category of the widget
    *
-   * @param categorySettings The settings of the category
+   * @param categoryParameters The settings of the category
    */
-  public buildSlideToggleButtonConfiguration(categorySettings: WidgetConfiguration[]): SlideToggleButtonConfiguration {
+  public buildSlideToggleButtonConfiguration(categoryParameters: CategoryParameter[]): SlideToggleButtonConfiguration {
     return {
-      displaySlideToggleButton: categorySettings.length > 0,
+      displaySlideToggleButton: categoryParameters.length > 0,
       toggleChecked:
-        categorySettings.filter(categorySetting =>
+          categoryParameters.filter(categorySetting =>
           this.projectWidgetFormStepsService.retrieveProjectWidgetValueFromConfig(categorySetting.key, this.projectWidget.backendConfig)
         ).length > 0,
       slideToggleButtonPressed: (event: MatSlideToggleChange, formGroup: FormGroup, formFields: FormField[]) =>
         this.widgetConfigurationFormFieldsService.generateCategorySettingsFormFields(
-          categorySettings,
-          event.checked,
-          formGroup,
-          formFields,
-          this.projectWidget.backendConfig
+            categoryParameters,
+            event.checked,
+            formGroup,
+            formFields,
+            this.projectWidget.backendConfig
         )
     };
   }

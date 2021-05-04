@@ -29,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -68,7 +69,7 @@ public abstract class UserMapper {
      */
     @Named("toUsersDTOs")
     @IterableMapping(qualifiedByName = "toUserDTO")
-    public abstract List<UserResponseDto> toUsersDTOs(List<User> users);
+    public abstract List<UserResponseDto> toUsersDTOs(Collection<User> users);
 
     /**
      * Map a connected user to user entity

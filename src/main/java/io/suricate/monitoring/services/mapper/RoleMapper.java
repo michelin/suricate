@@ -28,7 +28,7 @@ import java.util.List;
  * Manage the generation DTO/Model objects for Role class
  */
 @Mapper(componentModel = "spring")
-public interface RoleMapper {
+public abstract class RoleMapper {
 
     /**
      * Map a role into a DTO
@@ -37,7 +37,7 @@ public interface RoleMapper {
      * @return The role as DTO
      */
     @Named("toRoleDTO")
-    RoleResponseDto toRoleDTO(Role role);
+    public abstract RoleResponseDto toRoleDTO(Role role);
 
     /**
      * Map a list of roles into a list of roles DTO
@@ -47,5 +47,5 @@ public interface RoleMapper {
      */
     @Named("toRolesDTOs")
     @IterableMapping(qualifiedByName = "toRoleDTO")
-    List<RoleResponseDto> toRolesDTOs(List<Role> roles);
+    public abstract List<RoleResponseDto> toRolesDTOs(List<Role> roles);
 }

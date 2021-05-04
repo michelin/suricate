@@ -27,8 +27,7 @@ import org.hibernate.search.annotations.IndexedEmbedded;
 import org.hibernate.search.annotations.SortableField;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Widget entity
@@ -114,14 +113,14 @@ public class Widget extends AbstractAuditingEntity<Long> {
      * The list of instances related to it
      */
     @OneToMany(mappedBy = "widget")
-    private List<ProjectWidget> widgetInstances = new ArrayList<>();
+    private Set<ProjectWidget> widgetInstances = new LinkedHashSet<>();;
 
     /**
      * The related JS libraries used for displaying it on the clients
      */
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "widget_library", joinColumns = {@JoinColumn(name = "widget_id")}, inverseJoinColumns = {@JoinColumn(name = "library_id")})
-    private List<Library> libraries = new ArrayList<>();
+    private Set<Library> libraries = new LinkedHashSet<>();
 
     /**
      * The category of this widget
@@ -150,14 +149,14 @@ public class Widget extends AbstractAuditingEntity<Long> {
      */
     @OneToMany(mappedBy = "widget", cascade = CascadeType.ALL)
     @OrderBy("id ASC")
-    private List<WidgetParam> widgetParams = new ArrayList<>();
+    private Set<WidgetParam> widgetParams = new LinkedHashSet<>();
 
     /**
      * Widget params setter
      *
      * @param widgetParams The list of params to set
      */
-    public void setWidgetParams(List<WidgetParam> widgetParams) {
+    public void setWidgetParams(Collection<WidgetParam> widgetParams) {
         this.addWidgetParams(widgetParams);
     }
 
@@ -166,7 +165,7 @@ public class Widget extends AbstractAuditingEntity<Long> {
      *
      * @param widgetParams The list of widget params
      */
-    public void addWidgetParams(List<WidgetParam> widgetParams) {
+    public void addWidgetParams(Collection<WidgetParam> widgetParams) {
         widgetParams.forEach(this::addWidgetParam);
     }
 

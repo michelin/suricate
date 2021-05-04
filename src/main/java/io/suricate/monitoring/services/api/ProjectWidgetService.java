@@ -154,7 +154,7 @@ public class ProjectWidgetService {
      * @param projectWidgetId The project widget id
      * @return The project widget
      */
-    @Transactional
+    @Transactional(readOnly = true)
     public Optional<ProjectWidget> getOne(final Long projectWidgetId) {
         return projectWidgetRepository.findById(projectWidgetId);
     }

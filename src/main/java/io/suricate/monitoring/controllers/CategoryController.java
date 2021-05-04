@@ -111,13 +111,7 @@ public class CategoryController {
     public Page<CategoryResponseDto> getCategories(@ApiParam(name = "search", value = "Search keyword")
                                                    @RequestParam(value = "search", required = false) String search,
                                                    Pageable pageable) {
-        Page<Category> categoriesPaged = categoryService.getAll(search, pageable);
-
-        // Do not return the password typed parameters so the user cannot see them, even from the console
-        categoriesPaged.forEach(category -> category.getConfigurations()
-                .removeIf(categoryParameter -> categoryParameter.getDataType().equals(DataTypeEnum.PASSWORD)));
-
-        return categoriesPaged.map(categoryMapper::toCategoryDTO);
+        return categoryService.getAll(search, pageable).map(categoryMapper::toCategoryDTO);
     }
 
     /**

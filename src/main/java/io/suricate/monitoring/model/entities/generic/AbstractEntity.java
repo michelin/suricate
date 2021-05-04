@@ -67,7 +67,7 @@ public abstract class AbstractEntity<T> implements Serializable {
 
         AbstractEntity model = (AbstractEntity) o;
 
-        return getId() != null ? getId().equals(model.getId()) : model.getId() == null;
+        return getId() != null && getId().equals(model.getId());
     }
 
     /**

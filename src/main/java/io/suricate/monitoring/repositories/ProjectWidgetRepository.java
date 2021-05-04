@@ -18,18 +18,25 @@ package io.suricate.monitoring.repositories;
 
 import io.suricate.monitoring.model.entities.ProjectWidget;
 import io.suricate.monitoring.model.enums.WidgetStateEnum;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
 
 import java.util.Date;
+import java.util.Optional;
 
 /**
  * Repository used for request Project widget in database
  */
 public interface ProjectWidgetRepository extends JpaRepository<ProjectWidget, Long>, JpaSpecificationExecutor<ProjectWidget> {
+
+    /**
+     * Find a widget instance by id
+     *
+     * @param projectWidgetId The widget instance id
+     * @return The widget instance
+     */
+    @EntityGraph(attributePaths = {"project", "widget.widgetParams"})
+    Optional<ProjectWidget> findById(Long projectWidgetId);
 
     /**
      * Method used to reset the state of every widget instances

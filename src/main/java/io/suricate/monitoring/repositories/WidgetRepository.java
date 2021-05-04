@@ -34,6 +34,7 @@ import java.util.Optional;
  */
 public interface WidgetRepository extends JpaRepository<Widget, Long> {
 
+
     /**
      * Find all paginated widgets
      *
@@ -41,13 +42,23 @@ public interface WidgetRepository extends JpaRepository<Widget, Long> {
      * @param pageable The pageable to apply
      * @return The paginated widgets
      */
+    @EntityGraph(attributePaths = {"category", "widgetParams.possibleValuesMap"})
     Page<Widget> findAll(Specification<Widget> specification, Pageable pageable);
+
+    /**
+     * Find a widget by id
+     *
+     * @param id The id
+     * @return The widget
+     */
+    @EntityGraph(attributePaths = {"category.configurations", "widgetParams.possibleValuesMap"})
+    Optional<Widget> findById(Long id);
 
     /**
      * Find a widget by technical name
      *
      * @param technicalName The technical name
-     * @return The related widget
+     * @return The widget
      */
     Optional<Widget> findByTechnicalName(String technicalName);
 
@@ -57,5 +68,6 @@ public interface WidgetRepository extends JpaRepository<Widget, Long> {
      * @param categoryId The category id
      * @return The list of related widgets ordered by name
      */
+    @EntityGraph(attributePaths = {"category.configurations", "widgetParams.possibleValuesMap"})
     List<Widget> findAllByCategoryIdOrderByNameAsc(final Long categoryId);
 }

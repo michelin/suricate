@@ -32,10 +32,8 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -137,7 +135,7 @@ public class NashornService {
      * @param categoryParameters The global configurations
      * @return Get the full configuration for project widget
      */
-    private String getProjectWidgetConfigurationsWithGlobalOne(final ProjectWidget projectWidget, final List<CategoryParameter> categoryParameters) {
+    private String getProjectWidgetConfigurationsWithGlobalOne(final ProjectWidget projectWidget, final Set<CategoryParameter> categoryParameters) {
         StringBuilder builder = new StringBuilder(Objects.toString(projectWidget.getBackendConfig(), StringUtils.EMPTY));
 
         if (categoryParameters != null && !categoryParameters.isEmpty()) {

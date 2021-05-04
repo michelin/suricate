@@ -1,5 +1,6 @@
 package io.suricate.monitoring.model.dto.api.category;
 
+import io.suricate.monitoring.model.dto.api.AbstractDto;
 import io.suricate.monitoring.model.enums.DataTypeEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -14,7 +15,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value = "CategoryParamResponse", description = "Describe a category parameter")
-public class CategoryParameterResponseDto {
+public class CategoryParameterResponseDto extends AbstractDto {
 
     /**
      * The category parameter key

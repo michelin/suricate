@@ -44,7 +44,7 @@ public class Asset extends AbstractAuditingEntity<Long> {
      */
     @Type(type = "org.hibernate.type.BinaryType")
     @Basic(fetch = FetchType.LAZY)
-    @Column(name = "content", nullable = false)
+    @Column(nullable = false)
     private byte[] content;
 
     /**

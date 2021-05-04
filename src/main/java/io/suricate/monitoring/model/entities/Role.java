@@ -24,8 +24,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Role entity
@@ -63,5 +62,5 @@ public class Role extends AbstractEntity<Long> {
      * The list of user related to it
      */
     @ManyToMany(mappedBy = "roles")
-    private List<User> users = new ArrayList<>();
+    private Set<User> users = new LinkedHashSet<>();
 }

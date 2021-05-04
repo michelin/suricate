@@ -31,9 +31,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public final class WidgetUtils {
 
@@ -87,7 +85,7 @@ public final class WidgetUtils {
      * @param rootFolder the folder to parse
      * @return the list of category to parse
      */
-    public static List<Category> parseWidgetFolder(File rootFolder) {
+    public static List<Category> parseCategoriesFolder(File rootFolder) {
         List<Category> categories = null;
 
         try {
@@ -100,7 +98,7 @@ public final class WidgetUtils {
             categories = new ArrayList<>();
 
             for (File folderCategory : list) {
-                Category category = getCategory(folderCategory);
+                Category category = WidgetUtils.getCategory(folderCategory);
 
                 if (category != null) {
                     categories.add(category);
@@ -148,7 +146,7 @@ public final class WidgetUtils {
         File widgetRootFolder = new File(folderCategory.getPath() + File.separator + "widgets" + File.separator);
 
         if (widgetRootFolder.exists()) {
-            ArrayList<Widget> widgets = new ArrayList<>();
+            Set<Widget> widgets = new LinkedHashSet<>();
             List<File> folders = FilesUtils.getFolders(widgetRootFolder);
 
             for (File widgetFolder : folders) {
@@ -158,6 +156,7 @@ public final class WidgetUtils {
                     widgets.add(widget);
                 }
             }
+
             category.setWidgets(widgets);
         }
 

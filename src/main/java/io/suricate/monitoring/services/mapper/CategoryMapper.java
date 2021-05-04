@@ -23,14 +23,14 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 /**
- * Interface that manage the generation DTO/Model objects for Category class
+ * Manage the generation DTO/Model objects for Category class
  */
 @Mapper(componentModel = "spring",
         uses = {
             CategoryParamMapper.class
         }
 )
-public interface CategoryMapper {
+public abstract class CategoryMapper {
 
     /**
      * Map a category into a DTO
@@ -40,5 +40,28 @@ public interface CategoryMapper {
      */
     @Named("toCategoryDTO")
     @Mapping(target = "assetToken", expression = "java(category.getImage() != null ? io.suricate.monitoring.utils.IdUtils.encrypt(category.getImage().getId()) : null )")
-    CategoryResponseDto toCategoryDTO(Category category);
+    @Mapping(target = "categoryParameters", source = "category.configurations", qualifiedByName = "toCategoryParameterWithoutCategoryDTO")
+    public abstract CategoryResponseDto toCategoryDTO(Category category);
+
+    /**
+     * Map a category into a DTO
+     *
+     * @param category The category to map
+     * @return The category as DTO
+     */
+    @Named("toCategoryWithHiddenValueParametersDTO")
+    @Mapping(target = "assetToken", expression = "java(category.getImage() != null ? io.suricate.monitoring.utils.IdUtils.encrypt(category.getImage().getId()) : null )")
+    @Mapping(target = "categoryParameters", source = "category.configurations", qualifiedByName = "toCategoryParameterWithHiddenValuesDTO")
+    public abstract CategoryResponseDto toCategoryWithHiddenValueParametersDTO(Category category);
+
+    /**
+     * Map a category into a DTO
+     *
+     * @param category The category to map
+     * @return The category as DTO
+     */
+    @Named("toCategoryWithoutCategoryParametersDTO")
+    @Mapping(target = "assetToken", expression = "java(category.getImage() != null ? io.suricate.monitoring.utils.IdUtils.encrypt(category.getImage().getId()) : null )")
+    @Mapping(target = "categoryParameters", ignore = true)
+    public abstract CategoryResponseDto toCategoryWithoutCategoryParametersDTO(Category category);
 }

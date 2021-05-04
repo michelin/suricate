@@ -1,12 +1,13 @@
 package io.suricate.monitoring.services.api;
 
+import com.google.common.collect.Lists;
 import io.suricate.monitoring.model.entities.*;
-import io.suricate.monitoring.model.enums.DataTypeEnum;
 import io.suricate.monitoring.model.enums.RepositoryTypeEnum;
 import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
 import io.suricate.monitoring.model.enums.WidgetStateEnum;
 import io.suricate.monitoring.repositories.*;
 import io.suricate.monitoring.utils.EntityUtils;
+import org.assertj.core.util.Sets;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +15,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.truth.Truth.assertThat;
 
@@ -113,74 +115,6 @@ public class WidgetServiceTest {
     RepositoryRepository repositoryRepository;
 
     @Test
-    public void myTest() {
-        Repository repository = new Repository();
-        repository.setName("MyRepository");
-        repository.setBranch("master");
-        repository.setEnabled(true);
-        repository.setLogin("Login");
-        repository.setPassword("Password");
-        repository.setType(RepositoryTypeEnum.REMOTE);
-        repository.setUrl("https://myRepository.com");
-
-        Asset asset = new Asset();
-        asset.setContent(new byte[]{0x12});
-        asset.setSize(10);
-
-        WidgetParam countIssuesParam1 = new WidgetParam();
-        countIssuesParam1.setName("SURI_GITHUB_ORG");
-        countIssuesParam1.setDescription("GitHub organization");
-        countIssuesParam1.setType(DataTypeEnum.TEXT);
-        countIssuesParam1.setRequired(true);
-
-        WidgetParam countIssuesParam2 = new WidgetParam();
-        countIssuesParam1.setName("SURI_GITHUB_PROJECT");
-        countIssuesParam1.setDescription("GitHub project");
-        countIssuesParam1.setType(DataTypeEnum.TEXT);
-        countIssuesParam1.setRequired(true);
-
-        Widget countIssues = new Widget();
-        countIssues.setName("Number of issues");
-        countIssues.setDescription("Display the number of issues of a GitHub project");
-        countIssues.setTechnicalName("githubCountIssues");
-        countIssues.setDelay(600L);
-        countIssues.setCssContent(CSS_CONTENT);
-        countIssues.setBackendJs(BACKEND_JS);
-        countIssues.setHtmlContent(HTML_CONTENT);
-        countIssues.setWidgetParams(Arrays.asList(countIssuesParam1, countIssuesParam2));
-
-        CategoryParameter gitHubConfiguration = new CategoryParameter();
-        gitHubConfiguration.setKey("WIDGET_CONFIG_GITHUB_TOKEN");
-        gitHubConfiguration.setValue("TEXT");
-
-        Category gitHubCategory = new Category();
-        gitHubCategory.setName("GitHub");
-        gitHubCategory.setTechnicalName("github");
-        gitHubCategory.setImage(asset);
-        gitHubCategory.setCreatedDate(new Date());
-        gitHubCategory.setConfigurations(Collections.singletonList(gitHubConfiguration));
-        gitHubCategory.setWidgets(Collections.singletonList(countIssues));
-
-        CategoryParameter gitLabConfiguration1 = new CategoryParameter();
-        gitLabConfiguration1.setKey("WIDGET_CONFIG_GITLAB_TOKEN");
-        gitLabConfiguration1.setValue("TEXT");
-
-        CategoryParameter gitLabConfiguration2 = new CategoryParameter();
-        gitLabConfiguration2.setKey("WIDGET_CONFIG_GITLAB_URL");
-        gitLabConfiguration2.setValue("TEXT");
-
-        Category gitLabCategory = new Category();
-        gitLabCategory.setName("GitLab");
-        gitLabCategory.setTechnicalName("gitlab");
-        gitLabCategory.setImage(asset);
-        gitHubCategory.setCreatedDate(new Date());
-        gitLabCategory.setConfigurations(Arrays.asList(gitLabConfiguration1, gitLabConfiguration2));
-        gitLabCategory.setWidgets(Collections.singletonList(countIssues));
-
-        widgetService.updateWidgetInDatabase(Arrays.asList(gitHubCategory, gitLabCategory), null, null);
-    }
-
-    @Test
     public void updateStateTest() {
         ProjectWidget projectWidget = new ProjectWidget();
         projectWidget.setState(WidgetStateEnum.STOPPED);
@@ -197,9 +131,11 @@ public class WidgetServiceTest {
     @Test
     public void addOrUpdateWidgetNullTest() {
         assertThat(widgetRepository.count()).isEqualTo(0);
-        widgetService.addOrUpdateWidgets(null, null, null, null);
+
+        widgetService.addOrUpdateWidgets(null, null, null);
         assertThat(widgetRepository.count()).isEqualTo(0);
-        widgetService.addOrUpdateWidgets(new Category(), null, null, null);
+
+        widgetService.addOrUpdateWidgets(new Category(), null, null);
         assertThat(widgetRepository.count()).isEqualTo(0);
     }
 
@@ -207,12 +143,6 @@ public class WidgetServiceTest {
     @Transactional
     public void addOrUpdateWidgetTestImage() {
         assertThat(widgetRepository.count()).isEqualTo(0);
-
-        // Add a category
-        Category category = new Category();
-        category.setName("test");
-        category.setTechnicalName("test");
-        categoryService.addOrUpdateCategory(category);
 
         // Create widget list
         Widget widget = new Widget();
@@ -223,6 +153,13 @@ public class WidgetServiceTest {
         widget.setHtmlContent("HtmlContent");
         widget.setTechnicalName("widget1");
         widget.setName("Widget 1");
+
+        // Add a category
+        Category category = new Category();
+        category.setName("test");
+        category.setTechnicalName("test");
+        category.setWidgets(Collections.singleton(widget));
+        categoryService.addOrUpdateCategory(category);
 
         // Create an asset
         Asset asset = new Asset();
@@ -238,7 +175,7 @@ public class WidgetServiceTest {
         repository.setLocalPath("C:/test");
         repositoryService.addOrUpdateRepository(repository);
 
-        widgetService.addOrUpdateWidgets(category, Collections.singletonList(widget), null, repository);
+        widgetService.addOrUpdateWidgets(category, null, repository);
         assetRepository.flush();
         widgetRepository.flush();
         repositoryRepository.flush();
@@ -269,7 +206,7 @@ public class WidgetServiceTest {
         widget2.setName("Widget 1");
         widget2.setImage(asset1);
 
-        widgetService.addOrUpdateWidgets(category, Collections.singletonList(widget2), null, repository);
+        widgetService.addOrUpdateWidgets(category, null, repository);
 
         assertThat(categoryRepository.count()).isEqualTo(1);
         assertThat(widgetRepository.count()).isEqualTo(1);
@@ -281,19 +218,13 @@ public class WidgetServiceTest {
         assertThat(currentWidget.get()).isNotNull();
         assertThat(currentWidget.get().getWidgetAvailability()).isEqualTo(WidgetAvailabilityEnum.ACTIVATED);
         assertThat(currentWidget.get().getImage()).isNotNull();
-        assertThat(currentWidget.get().getImage().getSize()).isEqualTo(1);
+        assertThat(currentWidget.get().getImage().getSize()).isEqualTo(10);
     }
 
     @Test
     @Transactional
     public void addOrUpdateWidgetTest() {
         assertThat(widgetRepository.count()).isEqualTo(0);
-
-        // Add a category
-        Category category = new Category();
-        category.setName("test");
-        category.setTechnicalName("test");
-        categoryService.addOrUpdateCategory(category);
 
         // Create widget list
         Widget widget = new Widget();
@@ -314,6 +245,13 @@ public class WidgetServiceTest {
         widget2.setTechnicalName("widget2");
         widget2.setName("Widget 2");
 
+        // Add a category
+        Category category = new Category();
+        category.setName("test");
+        category.setTechnicalName("test");
+        category.setWidgets(Sets.newLinkedHashSet(widget, widget2));
+        categoryService.addOrUpdateCategory(category);
+
         // Create a repository
         Repository repository = new Repository();
         repository.setName("testRepo");
@@ -322,7 +260,7 @@ public class WidgetServiceTest {
         repository.setLocalPath("C:/test");
         repositoryService.addOrUpdateRepository(repository);
 
-        widgetService.addOrUpdateWidgets(category, Arrays.asList(widget, widget2), null, repository);
+        widgetService.addOrUpdateWidgets(category, null, repository);
 
         assertThat(categoryRepository.count()).isEqualTo(1);
         assertThat(widgetRepository.count()).isEqualTo(2);
@@ -370,7 +308,7 @@ public class WidgetServiceTest {
 
         //widget2.setId(null);
 
-        widgetService.addOrUpdateWidgets(category, Arrays.asList(widget, widget2), null, repository);
+        widgetService.addOrUpdateWidgets(category, null, repository);
         assertThat(categoryRepository.count()).isEqualTo(1);
         assertThat(widgetRepository.count()).isEqualTo(2);
         assertThat(repositoryRepository.count()).isEqualTo(1);
@@ -404,12 +342,6 @@ public class WidgetServiceTest {
         List<Library> libs = libraryService.updateLibraryInDatabase(Collections.singletonList(lib));
         assertThat(libs.size()).isEqualTo(1);
 
-        // Add a category
-        Category category = new Category();
-        category.setName("test");
-        category.setTechnicalName("test");
-        categoryService.addOrUpdateCategory(category);
-
         // Create widget list
         Widget widget = new Widget();
         widget.setBackendJs("bakendjs");
@@ -419,7 +351,14 @@ public class WidgetServiceTest {
         widget.setHtmlContent("HtmlContent");
         widget.setTechnicalName("widget1");
         widget.setName("Widget 1");
-        widget.setLibraries(libs);
+        widget.setLibraries(Sets.newHashSet(libs));
+
+        // Add a category
+        Category category = new Category();
+        category.setName("test");
+        category.setTechnicalName("test");
+        category.setWidgets(Collections.singleton(widget));
+        categoryService.addOrUpdateCategory(category);
 
         asset = new Asset();
         asset.setContent(new byte[]{0x12});
@@ -434,8 +373,7 @@ public class WidgetServiceTest {
         repository.setLocalPath("C:/test");
         repositoryService.addOrUpdateRepository(repository);
 
-        Map<String, Library> libraryMap = libs.stream().collect(Collectors.toMap(item -> ((Library) item).getTechnicalName(), item -> item));
-        widgetService.addOrUpdateWidgets(category, Collections.singletonList(widget), libraryMap, repository);
+        widgetService.addOrUpdateWidgets(category, libs, repository);
 
         assertThat(categoryRepository.count()).isEqualTo(1);
         assertThat(widgetRepository.count()).isEqualTo(1);
@@ -449,6 +387,6 @@ public class WidgetServiceTest {
         assertThat(currentWidget.get().getImage()).isNotNull();
         assertThat(currentWidget.get().getImage().getSize()).isEqualTo(10);
         assertThat(currentWidget.get().getLibraries()).isNotNull();
-        assertThat(currentWidget.get().getLibraries().get(0).getTechnicalName()).isEqualTo("lib1");
+        assertThat(Lists.newArrayList(currentWidget.get().getLibraries()).get(0).getTechnicalName()).isEqualTo("lib1");
     }
 }

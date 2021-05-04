@@ -23,8 +23,7 @@ import lombok.*;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Describe a repository
@@ -96,5 +95,5 @@ public class Repository {
      * The list of widgets for this repository
      */
     @OneToMany(mappedBy = "repository")
-    private List<Widget> widgets = new ArrayList<>();
+    private Set<Widget> widgets = new LinkedHashSet<>();
 }

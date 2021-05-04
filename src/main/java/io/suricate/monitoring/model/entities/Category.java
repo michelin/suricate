@@ -19,13 +19,15 @@
 package io.suricate.monitoring.model.entities;
 
 import io.suricate.monitoring.model.entities.generic.AbstractAuditingEntity;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * Category entity
@@ -68,11 +70,11 @@ public class Category extends AbstractAuditingEntity<Long> {
      * The list of widgets in this category
      */
     @OneToMany(mappedBy = "category")
-    private List<Widget> widgets;
+    private Set<Widget> widgets = new LinkedHashSet<>();
 
     /**
      * The associated categories for this configuration
      */
     @OneToMany(mappedBy = "category", cascade = CascadeType.REMOVE)
-    private List<CategoryParameter> configurations;
+    private Set<CategoryParameter> configurations = new LinkedHashSet<>();
 }

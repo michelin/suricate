@@ -34,7 +34,7 @@ import java.util.List;
         WidgetParamValueMapper.class
     }
 )
-public interface WidgetParamMapper {
+public abstract class WidgetParamMapper {
 
     /**
      * Map a widget parameter into a widget parameter DTO
@@ -44,7 +44,7 @@ public interface WidgetParamMapper {
      */
     @Named("toWidgetParameterDTO")
     @Mapping(target = "values", source = "widgetParam.possibleValuesMap", qualifiedByName = "toWidgetParameterValuesDTOs")
-    WidgetParamResponseDto toWidgetParameterDTO(WidgetParam widgetParam);
+    public abstract WidgetParamResponseDto toWidgetParameterDTO(WidgetParam widgetParam);
 
     /**
      * Map a list of widget parameters into a list of widget parameters DTOs
@@ -54,5 +54,5 @@ public interface WidgetParamMapper {
      */
     @Named("toWidgetParametersDTO")
     @IterableMapping(qualifiedByName = "toWidgetParameterDTO")
-    List<WidgetParamResponseDto> toWidgetParametersDTO(List<WidgetParam> widgetParams);
+    public abstract List<WidgetParamResponseDto> toWidgetParametersDTO(List<WidgetParam> widgetParams);
 }

@@ -22,6 +22,7 @@ import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -29,7 +30,7 @@ import java.util.Set;
  * Manage the generation DTO/Model objects for AllowedSettingValue class
  */
 @Mapper(componentModel = "spring")
-public interface AllowedSettingValueMapper {
+public abstract class AllowedSettingValueMapper {
 
     /**
      * Map an allowed setting value into a DTO
@@ -38,7 +39,7 @@ public interface AllowedSettingValueMapper {
      * @return The allowed setting value as DTO
      */
     @Named("toAllowedSettingValueDTO")
-    AllowedSettingValueResponseDto toAllowedSettingValueDTO(AllowedSettingValue allowedSettingValue);
+    public abstract AllowedSettingValueResponseDto toAllowedSettingValueDTO(AllowedSettingValue allowedSettingValue);
 
     /**
      * Map a list of allowed setting values into a list of DTO
@@ -48,5 +49,5 @@ public interface AllowedSettingValueMapper {
      */
     @Named("toAllowedSettingValuesDTOs")
     @IterableMapping(qualifiedByName = "toAllowedSettingValueDTO")
-    List<AllowedSettingValueResponseDto> toAllowedSettingValuesDTOs(List<AllowedSettingValue> allowedSettingValues);
+    public abstract List<AllowedSettingValueResponseDto> toAllowedSettingValuesDTOs(Collection<AllowedSettingValue> allowedSettingValues);
 }

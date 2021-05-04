@@ -24,8 +24,7 @@ import lombok.*;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Setting entity
@@ -73,5 +72,5 @@ public class Setting {
      * Hold the possible values
      */
     @OneToMany(mappedBy = "setting")
-    private List<AllowedSettingValue> allowedSettingValues = new ArrayList<>();
+    private Set<AllowedSettingValue> allowedSettingValues = new LinkedHashSet<>();
 }

@@ -99,11 +99,6 @@ export class WizardComponent implements OnInit {
   public currentStep: FormStep;
 
   /**
-   * Widget configuration information for the settings of the category
-   */
-  public categorySettings: WidgetConfiguration[];
-
-  /**
    * Constructor
    *
    * @param injector Angular service used to manage injection of service
@@ -169,10 +164,6 @@ export class WizardComponent implements OnInit {
         .subscribe((formFields: FormField[]) => {
           this.currentStep.fields = formFields;
           this.stepperFormGroup.setControl(this.currentStep.key, this.formService.generateFormGroupForFields(formFields));
-
-          if (this.currentStep.category) {
-            this.getCategorySettings();
-          }
         });
     }
   }
@@ -189,24 +180,13 @@ export class WizardComponent implements OnInit {
   }
 
   /**
-   * Load the information of the settings of a given category
-   */
-  public getCategorySettings(): void {
-    this.widgetConfigurationFormFieldsService
-      .getCategorySettings(this.currentStep.category.id)
-      .subscribe((value: WidgetConfiguration[]) => {
-        this.categorySettings = value;
-      });
-  }
-
-  /**
    * Add the settings of the widget's category to the current widget settings form
    *
    * @param event The values retrieved from the child component event emitter
    */
   public displayCategorySettings(event: MatSlideToggleChange): void {
     this.widgetConfigurationFormFieldsService.generateCategorySettingsFormFields(
-      this.categorySettings,
+      this.currentStep.category.categoryParameters,
       event.checked,
       this.stepperFormGroup.controls[this.currentStep.key] as FormGroup,
       this.currentStep.fields

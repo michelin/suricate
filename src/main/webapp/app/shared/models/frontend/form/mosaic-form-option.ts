@@ -17,6 +17,7 @@
  */
 
 import { ValidatorFn } from '@angular/forms';
+import {CategoryParameter} from "../../backend/category/category-parameter";
 
 /**
  * Describe a the options used by the mosaic input component
@@ -26,14 +27,17 @@ export interface MosaicFormOption {
    * The value related to the entry
    */
   value: string | number;
+
   /**
    * The image url to display
    */
   imageUrl: string;
+
   /**
    * The displayed displayed to the user
    */
   description: string;
+
   /**
    * The list of validators for this field
    */

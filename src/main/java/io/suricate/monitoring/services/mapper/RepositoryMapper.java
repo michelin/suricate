@@ -27,7 +27,7 @@ import org.mapstruct.Named;
  * Manage the generation DTO/Model objects for Widget class
  */
 @Mapper(componentModel = "spring")
-public interface RepositoryMapper {
+public abstract class RepositoryMapper {
 
     /**
      * Map a repository into a DTO
@@ -36,7 +36,7 @@ public interface RepositoryMapper {
      * @return The repository as DTO
      */
     @Named("toRepositoryDTO")
-    RepositoryResponseDto toRepositoryDTO(Repository repository);
+    public abstract RepositoryResponseDto toRepositoryDTO(Repository repository);
 
     /**
      * Map a repository DTO as entity
@@ -47,5 +47,5 @@ public interface RepositoryMapper {
      */
     @Named("toRepositoryEntity")
     @Mapping(target = "widgets", ignore = true)
-    Repository toRepositoryEntity(Long id, RepositoryRequestDto repositoryRequestDto);
+    public abstract Repository toRepositoryEntity(Long id, RepositoryRequestDto repositoryRequestDto);
 }

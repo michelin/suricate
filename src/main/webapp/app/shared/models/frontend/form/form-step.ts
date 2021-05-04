@@ -27,42 +27,52 @@ import { Category } from '../../backend/widget/category';
  * Describe a step of the wizard
  */
 export class FormStep {
+
   /**
    * The key of the step
    */
   key: string;
+
   /**
    * The title of the step
    */
   title: string;
+
   /**
    * The icon that should displayed in the step
    */
   icon: IconEnum;
+
   /**
    * If we want to display an image on the step
    */
   imageLink?: LinkConfiguration;
+
   /**
    * Description of the step
    */
   description?: string;
+
   /**
    * Information of the step
    */
   information?: string;
+
   /**
    * Category of the step
    */
   category?: Category;
+
   /**
    * The form field for the step
    */
   fields?: FormField[];
+
   /**
    * Used to retrieve fields in an async way
    */
   asyncFields?: (formGroup?: FormGroup, step?: FormStep) => Observable<FormField[]>;
+
   /**
    * If the step is optional
    */

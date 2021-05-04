@@ -22,6 +22,7 @@ import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -29,7 +30,7 @@ import java.util.Set;
  * Manage the generation DTO/Model objects for widgetParamValue class
  */
 @Mapper(componentModel = "spring")
-public interface WidgetParamValueMapper {
+public abstract class WidgetParamValueMapper {
 
     /**
      * Map a widget parameter value into a widget parameter value DTO
@@ -38,7 +39,7 @@ public interface WidgetParamValueMapper {
      * @return The widget parameter value as DTO
      */
     @Named("toWidgetParameterValueDTO")
-    WidgetParamValueResponseDto toWidgetParameterValueDTO(WidgetParamValue widgetParamValue);
+    public abstract WidgetParamValueResponseDto toWidgetParameterValueDTO(WidgetParamValue widgetParamValue);
 
     /**
      * Map a list of widget parameter values into a list of widget parameter values DTOs
@@ -48,5 +49,5 @@ public interface WidgetParamValueMapper {
      */
     @Named("toWidgetParameterValuesDTOs")
     @IterableMapping(qualifiedByName = "toWidgetParameterValueDTO")
-    List<WidgetParamValueResponseDto> toWidgetParameterValuesDTOs(List<WidgetParamValue> widgetParamValues);
+    public abstract List<WidgetParamValueResponseDto> toWidgetParameterValuesDTOs(Collection<WidgetParamValue> widgetParamValues);
 }

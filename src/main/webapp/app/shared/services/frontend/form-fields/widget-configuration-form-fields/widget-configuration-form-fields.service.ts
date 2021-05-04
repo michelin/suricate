@@ -24,6 +24,7 @@ import { HttpCategoryService } from '../../../backend/http-category/http-categor
 import { FormService } from '../../form/form.service';
 import { ProjectWidgetFormStepsService } from '../../form-steps/project-widget-form-steps/project-widget-form-steps.service';
 import { Observable } from 'rxjs';
+import {CategoryParameter} from "../../../../models/backend/category/category-parameter";
 
 /**
  * Service used to build the form fields related to a project
@@ -77,13 +78,13 @@ export class WidgetConfigurationFormFieldsService {
   /**
    * Generate an array of form fields for the given widget configuration
    *
-   * @param configurations The widget settings
+   * @param categorySettings The widget settings
    * @param widgetBackendConfig The current widget backend configuration
    */
-  public generateWidgetConfigurationFormFields(configurations?: WidgetConfiguration[], widgetBackendConfig?: string): FormField[] {
+  public generateWidgetConfigurationFormFields(categorySettings?: CategoryParameter[], widgetBackendConfig?: string): FormField[] {
     const formFields: Array<FormField> = [];
 
-    configurations.forEach(configuration => {
+    categorySettings.forEach(configuration => {
       let backendConfigValue = null;
 
       if (widgetBackendConfig) {
@@ -99,6 +100,7 @@ export class WidgetConfigurationFormFieldsService {
         type: configuration.dataType,
         value: backendConfigValue ? backendConfigValue : configuration.value,
         iconPrefix: IconEnum.VALUE,
+        iconSuffix: IconEnum.SHOW_PASSWORD,
         validators: [Validators.required]
       });
     });
@@ -125,7 +127,7 @@ export class WidgetConfigurationFormFieldsService {
    * @param widgetBackendConfig The current widget backend configuration
    */
   public generateCategorySettingsFormFields(
-    categorySettings: WidgetConfiguration[],
+    categorySettings: CategoryParameter[],
     checked: boolean,
     formGroup: FormGroup,
     fields: FormField[],

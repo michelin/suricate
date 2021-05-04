@@ -36,7 +36,6 @@ import { Page } from '../../../models/backend/page';
 export class HttpCategoryService {
   /**
    * Global endpoint for Widgets
-   * @type {string}
    */
   private static readonly categoriesApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/categories`;
 
@@ -50,7 +49,7 @@ export class HttpCategoryService {
   /**
    * Retrieve the full list of categories
    *
-   * @returns {Observable<Category[]>} The categories as observable
+   * @returns The categories as observable
    */
   public getAll(filter?: HttpFilter): Observable<Page<Category>> {
     const url = `${HttpCategoryService.categoriesApiEndpoint}`;
@@ -60,6 +59,7 @@ export class HttpCategoryService {
 
   /**
    * Get the list of configurations for a category
+   *
    * @param categoryId The category id
    */
   public getCategoryConfigurations(categoryId: number): Observable<WidgetConfiguration[]> {

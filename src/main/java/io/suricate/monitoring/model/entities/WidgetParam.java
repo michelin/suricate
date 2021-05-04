@@ -24,8 +24,7 @@ import lombok.*;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Entity representing a param for a widget in database
@@ -91,7 +90,7 @@ public class WidgetParam extends AbstractAuditingEntity<Long> {
      * The list of possible values (if the type is COMBO or MULTIPLE)
      */
     @OneToMany(mappedBy = "widgetParam", cascade = CascadeType.ALL)
-    private List<WidgetParamValue> possibleValuesMap = new ArrayList<>();
+    private Set<WidgetParamValue> possibleValuesMap = new LinkedHashSet<>();
 
     /**
      * The related widget
@@ -105,7 +104,7 @@ public class WidgetParam extends AbstractAuditingEntity<Long> {
      *
      * @param possibleValuesMap The list values to add
      */
-    public void setPossibleValuesMap(List<WidgetParamValue> possibleValuesMap) {
+    public void setPossibleValuesMap(Collection<WidgetParamValue> possibleValuesMap) {
         this.addPossibleValuesMap(possibleValuesMap);
     }
 
@@ -114,7 +113,7 @@ public class WidgetParam extends AbstractAuditingEntity<Long> {
      *
      * @param possibleValuesMap The list values to add
      */
-    public void addPossibleValuesMap(List<WidgetParamValue> possibleValuesMap) {
+    public void addPossibleValuesMap(Collection<WidgetParamValue> possibleValuesMap) {
         possibleValuesMap.forEach(this::addPossibleValueMap);
     }
 

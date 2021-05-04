@@ -35,7 +35,7 @@ import java.util.Set;
         AllowedSettingValueMapper.class
     }
 )
-public interface SettingMapper {
+public abstract class SettingMapper {
 
     /**
      * Map a setting into a DTO
@@ -45,7 +45,7 @@ public interface SettingMapper {
      */
     @Named("toSettingDTO")
     @Mapping(target = "allowedSettingValues", qualifiedByName = "toAllowedSettingValuesDTOs")
-    SettingResponseDto toSettingDTO(Setting setting);
+    public abstract SettingResponseDto toSettingDTO(Setting setting);
 
     /**
      * Map a list of settings into a list of settings DTO
@@ -55,5 +55,5 @@ public interface SettingMapper {
      */
     @Named("toSettingsDTOs")
     @IterableMapping(qualifiedByName = "toSettingDTO")
-    List<SettingResponseDto> toSettingsDTOs(List<Setting> settings);
+    public abstract List<SettingResponseDto> toSettingsDTOs(List<Setting> settings);
 }
