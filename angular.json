@@ -75,9 +75,6 @@
           "configurations": {
             "production": {
               "browserTarget": "suricate-frontend:build:production"
-            },
-            "es5": {
-              "browserTarget": "d4x:build:es5"
             }
           }
         },
