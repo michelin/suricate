@@ -17,7 +17,7 @@
  */
 
 import { AllowedSettingValue } from './allowed-setting-value';
-import {Setting} from "./setting";
+import { Setting } from './setting';
 
 /**
  * Link between a setting and a user

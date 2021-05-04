@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { TitleCasePipe } from '@angular/common';
 import { NgGridItemConfig, NgGridItemEvent } from 'angular2-grid';
@@ -42,10 +42,9 @@ import { GridItemUtils } from '../../../../shared/utils/grid-item.utils';
 import { WebsocketUpdateEvent } from '../../../../shared/models/frontend/websocket/websocket-update-event';
 import { WebsocketUpdateTypeEnum } from '../../../../shared/enums/websocket-update-type.enum';
 import { Subject } from 'rxjs';
-import { WidgetConfiguration } from '../../../../shared/models/backend/widget-configuration/widget-configuration';
 import { takeUntil } from 'rxjs/operators';
 import { SlideToggleButtonConfiguration } from '../../../../shared/models/frontend/button/slide-toggle/slide-toggle-button-configuration';
-import {CategoryParameter} from "../../../../shared/models/backend/category/category-parameter";
+import { CategoryParameter } from '../../../../shared/models/backend/category/category-parameter';
 
 /**
  * Display the grid stack widgets
@@ -243,10 +242,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   public displayEditFormSidenav(): void {
     this.sidenavService.openFormSidenav({
       title: 'widget.edit',
-      formFields: this.projectWidgetFormStepsService.generateProjectWidgetFormFields(
-        this.widget.params,
-        this.projectWidget.backendConfig
-      ),
+      formFields: this.projectWidgetFormStepsService.generateProjectWidgetFormFields(this.widget.params, this.projectWidget.backendConfig),
       save: (formData: FormData) => this.saveWidget(formData),
       slideToggleButtonConfiguration: this.buildSlideToggleButtonConfiguration(this.widget.category.categoryParameters)
     });
@@ -281,16 +277,16 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
     return {
       displaySlideToggleButton: categoryParameters.length > 0,
       toggleChecked:
-          categoryParameters.filter(categorySetting =>
+        categoryParameters.filter(categorySetting =>
           this.projectWidgetFormStepsService.retrieveProjectWidgetValueFromConfig(categorySetting.key, this.projectWidget.backendConfig)
         ).length > 0,
       slideToggleButtonPressed: (event: MatSlideToggleChange, formGroup: FormGroup, formFields: FormField[]) =>
         this.widgetConfigurationFormFieldsService.generateCategorySettingsFormFields(
-            categoryParameters,
-            event.checked,
-            formGroup,
-            formFields,
-            this.projectWidget.backendConfig
+          categoryParameters,
+          event.checked,
+          formGroup,
+          formFields,
+          this.projectWidget.backendConfig
         )
     };
   }

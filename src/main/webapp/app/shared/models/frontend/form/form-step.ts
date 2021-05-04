@@ -27,7 +27,6 @@ import { Category } from '../../backend/widget/category';
  * Describe a step of the wizard
  */
 export class FormStep {
-
   /**
    * The key of the step
    */

@@ -24,7 +24,7 @@ import { HttpCategoryService } from '../../../backend/http-category/http-categor
 import { FormService } from '../../form/form.service';
 import { ProjectWidgetFormStepsService } from '../../form-steps/project-widget-form-steps/project-widget-form-steps.service';
 import { Observable } from 'rxjs';
-import {CategoryParameter} from "../../../../models/backend/category/category-parameter";
+import { CategoryParameter } from '../../../../models/backend/category/category-parameter';
 
 /**
  * Service used to build the form fields related to a project

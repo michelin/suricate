@@ -17,17 +17,16 @@
 import { Injectable } from '@angular/core';
 import { FormField } from '../../../../models/frontend/form/form-field';
 import { Setting } from '../../../../models/backend/setting/setting';
-import { EMPTY, forkJoin, from, Observable, of } from 'rxjs';
+import { EMPTY, from, Observable } from 'rxjs';
 import { HttpSettingService } from '../../../backend/http-setting/http-setting.service';
 import { HttpUserService } from '../../../backend/http-user/http-user.service';
-import { AuthenticationService } from '../../authentication/authentication.service';
 import { UserSetting } from '../../../../models/backend/setting/user-setting';
-import { flatMap, map, toArray } from 'rxjs/operators';
+import { map, toArray } from 'rxjs/operators';
 import { FormOption } from '../../../../models/frontend/form/form-option';
 import { AllowedSettingValue } from '../../../../models/backend/setting/allowed-setting-value';
 import { IconEnum } from '../../../../enums/icon.enum';
 import { Validators } from '@angular/forms';
-import {SettingsService} from "../../../../../core/services/settings.service";
+import { SettingsService } from '../../../../../core/services/settings.service';
 
 /**
  * Service used to build the form fields related to the settings
@@ -41,27 +40,38 @@ export class SettingsFormFieldsService {
    * @param httpUserService Service used to manage http calls for users
    * @param settingService Service used to manage the user settings
    */
-  constructor(private readonly httpSettingService: HttpSettingService,
-              private readonly httpUserService: HttpUserService,
-              private readonly settingService: SettingsService) {}
+  constructor(
+    private readonly httpSettingService: HttpSettingService,
+    private readonly httpUserService: HttpUserService,
+    private readonly settingService: SettingsService
+  ) {}
 
   /**
    * Get the list of fields for the settings
    */
   public generateSettingsFormFields(userSettings: UserSetting[]): Observable<FormField[]> {
-    return from(userSettings).pipe(map((userSetting: UserSetting) => {
-                return {
-                    key: userSetting.setting.type,
-                    label: userSetting.setting.description,
-                    iconPrefix: IconEnum[userSetting.setting.type],
-                    type: userSetting.setting.dataType,
-                    value: userSetting.settingValue.value,
-                    validators: [Validators.required],
-                    options: () => this.generateOptions(userSetting.setting)
-                }
-            }), toArray());
+    return from(userSettings).pipe(
+      map((userSetting: UserSetting) => {
+        return {
+          key: userSetting.setting.type,
+          label: userSetting.setting.description,
+          iconPrefix: IconEnum[userSetting.setting.type],
+          type: userSetting.setting.dataType,
+          value: userSetting.settingValue.value,
+          validators: [Validators.required],
+          options: () => this.generateOptions(userSetting.setting)
+        };
+      }),
+      toArray()
+    );
   }
 
+  /**
+   * Generate the options of the settings
+   *
+   * @param setting The setting
+   * @private A form option
+   */
   private generateOptions(setting: Setting): Observable<FormOption[]> {
     if (setting.allowedSettingValues) {
       return from(setting.allowedSettingValues).pipe(

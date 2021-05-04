@@ -16,16 +16,14 @@
 
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import {flatMap, tap} from 'rxjs/operators';
-
+import { Observable, Subject } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { UserSetting } from '../../shared/models/backend/setting/user-setting';
 import { User } from '../../shared/models/backend/user/user';
 import { HttpUserService } from '../../shared/services/backend/http-user/http-user.service';
 import { SettingsTypeEnum } from '../../shared/enums/settings-type.enum';
 import { HttpSettingService } from '../../shared/services/backend/http-setting/http-setting.service';
-import {UserSettingRequest} from "../../shared/models/backend/setting/user-setting-request";
-import {Setting} from "../../shared/models/backend/setting/setting";
+import { Setting } from '../../shared/models/backend/setting/setting';
 
 /**
  * Manage the app theme
@@ -56,18 +54,18 @@ export class SettingsService {
   initDefaultSettings() {
     this.httpSettingService.getAll().subscribe((settings: Setting[]) => {
       this.currentThemeValue = settings
-          .find(setting => setting.type === SettingsTypeEnum.THEME).allowedSettingValues
-          .find(allowedSettingValue => allowedSettingValue.default).value;
+        .find(setting => setting.type === SettingsTypeEnum.THEME)
+        .allowedSettingValues.find(allowedSettingValue => allowedSettingValue.default).value;
 
       const defaultLanguageCode = settings
-          .find(setting => setting.type === SettingsTypeEnum.LANGUAGE).allowedSettingValues
-          .find(allowedSettingValue => allowedSettingValue.default).value;
+        .find(setting => setting.type === SettingsTypeEnum.LANGUAGE)
+        .allowedSettingValues.find(allowedSettingValue => allowedSettingValue.default).value;
 
       // This language will be used as a fallback when a translation is not found in the current language
       this.translateService.setDefaultLang(defaultLanguageCode);
 
       this.translateService.use(defaultLanguageCode);
-    })
+    });
   }
 
   /**
@@ -76,13 +74,14 @@ export class SettingsService {
    * @param user The user
    */
   initUserSettings(user: User): Observable<UserSetting[]> {
-    return this.httpUserService.getUserSettings(user.username).pipe(tap((userSettings: UserSetting[]) => {
-      this.currentThemeValue = userSettings
-          .find(userSetting => userSetting.setting.type === SettingsTypeEnum.THEME).settingValue.value;
+    return this.httpUserService.getUserSettings(user.username).pipe(
+      tap((userSettings: UserSetting[]) => {
+        this.currentThemeValue = userSettings.find(userSetting => userSetting.setting.type === SettingsTypeEnum.THEME).settingValue.value;
 
-      this.translateService.use(userSettings
-          .find(userSetting => userSetting.setting.type === SettingsTypeEnum.LANGUAGE).settingValue.value);
-    }));
+        this.translateService.use(
+            userSettings.find(userSetting => userSetting.setting.type === SettingsTypeEnum.LANGUAGE).settingValue.value);
+      })
+    );
   }
 
   /**

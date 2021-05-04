@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {Component, Input, OnDestroy, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { ActivatedRoute, Event, NavigationEnd, Router } from '@angular/router';
 import { MatSidenav } from '@angular/material/sidenav';
 
@@ -22,7 +22,6 @@ import { RoutesService } from '../../../shared/services/frontend/route/route.ser
 import { MenuService } from '../../../shared/services/frontend/menu/menu.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import {UserSetting} from "../../../shared/models/backend/setting/user-setting";
 
 /**
  * Hold the sidenav behavior and the main view

@@ -17,7 +17,6 @@
  */
 
 import { ValidatorFn } from '@angular/forms';
-import {CategoryParameter} from "../../backend/category/category-parameter";
 
 /**
  * Describe a the options used by the mosaic input component

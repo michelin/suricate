@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {CategoryParameter} from "../category/category-parameter";
+import { CategoryParameter } from '../category/category-parameter';
 
 /**
  * The category representation
@@ -24,5 +24,5 @@ export interface Category {
   name: string;
   technicalName: string;
   assetToken: string;
-  categoryParameters: CategoryParameter[]
+  categoryParameters: CategoryParameter[];
 }

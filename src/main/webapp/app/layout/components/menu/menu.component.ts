@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {Component, Input, OnInit} from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { AuthenticationService } from '../../../shared/services/frontend/authentication/authentication.service';
 import { Router } from '@angular/router';
 import { MenuService } from '../../../shared/services/frontend/menu/menu.service';
@@ -31,7 +31,7 @@ import { HttpSettingService } from '../../../shared/services/backend/http-settin
 import { UserSettingRequest } from '../../../shared/models/backend/setting/user-setting-request';
 import { AllowedSettingValue } from '../../../shared/models/backend/setting/allowed-setting-value';
 import { SettingsService } from '../../../core/services/settings.service';
-import {UserSetting} from "../../../shared/models/backend/setting/user-setting";
+import { UserSetting } from '../../../shared/models/backend/setting/user-setting';
 
 /**
  * Display the menu on the sidenav
@@ -42,7 +42,6 @@ import {UserSetting} from "../../../shared/models/backend/setting/user-setting";
   styleUrls: ['./menu.component.scss']
 })
 export class MenuComponent implements OnInit {
-
   /**
    * The user connected
    */
@@ -91,10 +90,9 @@ export class MenuComponent implements OnInit {
    * Called when the component is init
    */
   public ngOnInit(): void {
-    this.settingsService.initUserSettings(AuthenticationService.getConnectedUser())
-        .subscribe((userSettings: UserSetting[]) => {
-          this.userSettings = userSettings;
-        });
+    this.settingsService.initUserSettings(AuthenticationService.getConnectedUser()).subscribe((userSettings: UserSetting[]) => {
+      this.userSettings = userSettings;
+    });
   }
 
   /**
@@ -110,14 +108,13 @@ export class MenuComponent implements OnInit {
    * Open the form sidenav used to manage user settings
    */
   public openSettingsFormSidenav(): void {
-    this.settingsFormFieldsService.generateSettingsFormFields(this.userSettings)
-        .subscribe((formFields: FormField[]) => {
-          this.sidenavService.openFormSidenav({
-            title: 'settings',
-            formFields: formFields,
-            save: (formData: FormData) => this.saveSettings(formData)
-          });
-        });
+    this.settingsFormFieldsService.generateSettingsFormFields(this.userSettings).subscribe((formFields: FormField[]) => {
+      this.sidenavService.openFormSidenav({
+        title: 'settings',
+        formFields: formFields,
+        save: (formData: FormData) => this.saveSettings(formData)
+      });
+    });
   }
 
   /**
@@ -127,7 +124,8 @@ export class MenuComponent implements OnInit {
    */
   private saveSettings(formData: FormData): void {
     from(this.userSettings.map(userSetting => userSetting.setting))
-      .pipe(flatMap((setting: Setting) => {
+      .pipe(
+        flatMap((setting: Setting) => {
           const userSettingRequest = new UserSettingRequest();
           if (setting.constrained && setting.allowedSettingValues) {
             const selectedAllowedSetting = setting.allowedSettingValues.find((allowedSettingValue: AllowedSettingValue) => {
@@ -139,16 +137,14 @@ export class MenuComponent implements OnInit {
             userSettingRequest.unconstrainedValue = formData[setting.type];
           }
 
-          return this.httpUserService.updateUserSetting(AuthenticationService.getConnectedUser().username,
-              setting.id, userSettingRequest);
+          return this.httpUserService.updateUserSetting(AuthenticationService.getConnectedUser().username, setting.id, userSettingRequest);
         }),
         toArray()
       )
       .subscribe(() => {
-        this.settingsService.initUserSettings(AuthenticationService.getConnectedUser())
-            .subscribe((userSettings: UserSetting[]) => {
-              this.userSettings = userSettings;
-            });
+        this.settingsService.initUserSettings(AuthenticationService.getConnectedUser()).subscribe((userSettings: UserSetting[]) => {
+          this.userSettings = userSettings;
+        });
       });
   }
 

@@ -108,8 +108,8 @@ export class LoginComponent implements OnInit {
     if (this.loginForm.valid) {
       this.loading = true;
 
-      this.authenticationService.authenticate(this.loginForm.value).subscribe(() =>
-              this.navigateToHomePage(),
+      this.authenticationService.authenticate(this.loginForm.value).subscribe(
+        () => this.navigateToHomePage(),
         () => (this.loading = false)
       );
     }
