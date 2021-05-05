@@ -21,6 +21,7 @@ package io.suricate.monitoring.model.entities;
 import io.suricate.monitoring.model.entities.generic.AbstractAuditingEntity;
 import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
 import lombok.*;
+import org.hibernate.annotations.Type;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Indexed;
 import org.hibernate.search.annotations.IndexedEmbedded;
@@ -71,18 +72,21 @@ public class Widget extends AbstractAuditingEntity<Long> {
      * The html content of the widget
      */
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     private String htmlContent;
 
     /**
      * The css content of the widget
      */
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     private String cssContent;
 
     /**
      * The JS of this widget
      */
     @Lob
+    @Type(type = "org.hibernate.type.TextType")
     private String backendJs;
 
     /**

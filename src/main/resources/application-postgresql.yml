@@ -15,4 +15,4 @@ spring:
           use_jdbc_metadata_defaults: false
   flyway:
     locations:
-      - 'classpath:flyway'
+      - 'classpath:flyway/postgresql'
