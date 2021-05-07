@@ -20,6 +20,7 @@ import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
 import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
 import io.suricate.monitoring.services.nashorn.services.DashboardScheduleService;
 import io.suricate.monitoring.services.nashorn.scheduler.NashornRequestWidgetExecutionScheduler;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,10 +30,7 @@ import org.springframework.retry.policy.SimpleRetryPolicy;
 import org.springframework.retry.support.RetryTemplate;
 import org.springframework.stereotype.Component;
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.CancellationException;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 @Component
 @Scope(value="prototype")
@@ -141,14 +139,31 @@ public class NashornRequestResultAsyncTask implements Callable<Void>{
                 return null;
             });
         } catch (CancellationException cancellationException) {
-            LOGGER.info("The Nashorn request has been canceled for the widget instance {}", nashornRequest.getProjectWidgetId());
+            if (scheduledNashornRequestTask.isCancelled()) {
+                LOGGER.info("The Nashorn request has been canceled for the widget instance {}", nashornRequest.getProjectWidgetId());
+            }
         } catch (Exception exception) {
-            LOGGER.error("An error has occurred in the Nashorn request result task for the widget instance {}. The Nashorn request execution will be canceled", nashornRequest.getProjectWidgetId(), exception);
+            Throwable rootCause = ExceptionUtils.getRootCause(exception);
+
+            String widgetLogs;
+
+            // Handle the case when the Nashorn request exceeds the timeout define by the widget.
+            // Set the widget logs and cancel the widget execution
+            if (rootCause instanceof TimeoutException) {
+                widgetLogs = rootCause
+                            + ": The Nashorn request exceeded the timeout defined by the widget.";
+
+                LOGGER.error("The Nashorn request exceeded the timeout defined by the widget instance {}. The Nashorn request is going to be canceled.", nashornRequest.getProjectWidgetId());
+            } else {
+                widgetLogs = rootCause.toString();
+
+                LOGGER.error("An error has occurred in the Nashorn request result task for the widget instance {}. The Nashorn request is going to be canceled.", nashornRequest.getProjectWidgetId(), exception);
+            }
 
             scheduledNashornRequestTask.cancel(true);
 
             try {
-                dashboardScheduleService.updateWidgetInstanceNoNashornResponse(exception, nashornRequest.getProjectWidgetId(), nashornRequest.getProjectId());
+                dashboardScheduleService.updateWidgetInstanceNoNashornResponse(widgetLogs, nashornRequest.getProjectWidgetId(), nashornRequest.getProjectId());
             } catch (Exception exception1) {
                 LOGGER.error("Cannot update the widget instance {} with no Nashorn response cause of database issue. Rescheduling a new Nashorn request", nashornRequest.getProjectWidgetId(), exception1);
 

@@ -151,13 +151,13 @@ public class DashboardScheduleService {
     /**
      * Update the widget information when there is no Nashorn response due to a failure
      *
-     * @param exception       The exception thrown
+     * @param widgetLogs      The exception message to log
      * @param projectWidgetId The widget instance id
      * @param projectId       The project id
      */
     @Transactional
-    public void updateWidgetInstanceNoNashornResponse(Exception exception, Long projectWidgetId, Long projectId) {
-        projectWidgetService.updateWidgetInstanceAfterFailedExecution(new Date(), ExceptionUtils.getMessage(exception), projectWidgetId, WidgetStateEnum.STOPPED);
+    public void updateWidgetInstanceNoNashornResponse(String widgetLogs, Long projectWidgetId, Long projectId) {
+        projectWidgetService.updateWidgetInstanceAfterFailedExecution(new Date(), widgetLogs, projectWidgetId, WidgetStateEnum.STOPPED);
 
         sendWidgetUpdateNotification(projectWidgetId, projectId);
     }

@@ -361,16 +361,4 @@ public class NashornWidgetExecuteAsyncTaskTest {
         Assert.assertFalse(widgetJob.isFatalError(new Exception("Error on server"), new Exception("Error on server")));
         Assert.assertFalse(widgetJob.isFatalError(new ConnectException("Connection error"), new IllegalArgumentException()));
     }
-
-    @Test
-    public void testPrettiFy() throws Exception {
-        NashornRequest nashornRequest = new NashornRequest();
-        List<WidgetVariableResponse> widgetVariableResponses = new ArrayList<>();
-        NashornRequestWidgetExecutionAsyncTask widgetJob = new NashornRequestWidgetExecutionAsyncTask(nashornRequest, null, widgetVariableResponses);
-        nashornRequest.setAlreadySuccess(false);
-
-        Assert.assertEquals("", widgetJob.prettify("ExecutionException: java.lang.FatalError:"));
-        Assert.assertNull(widgetJob.prettify(null));
-        Assert.assertEquals("qsfs eart: eztrez tezt ztz: tez r", widgetJob.prettify("qsfs eart: eztrez tezt ztz: tez r"));
-    }
 }

@@ -152,7 +152,7 @@ public class NashornRequestWidgetExecutionScheduler {
     public void scheduleNashornRequests(final List<NashornRequest> nashornRequests, boolean startNashornRequestNow) {
         try {
             nashornRequests
-                    .forEach(nashornRequest -> schedule(nashornRequest,
+                    .forEach(nashornRequest -> this.schedule(nashornRequest,
                             startNashornRequestNow));
         } catch (Exception e) {
             LOGGER.error("An error has occurred when scheduling a Nashorn request for a new project subscription", e);
@@ -275,6 +275,7 @@ public class NashornRequestWidgetExecutionScheduler {
 
             if (scheduledFutureTask != null && (!scheduledFutureTask.isDone() || !scheduledFutureTask.isCancelled())) {
                 LOGGER.debug("Canceling the future task for the widget instance {} ({})", projectWidgetId, scheduledFutureTask);
+
                 scheduledFutureTask.cancel(true);
             }
         }
