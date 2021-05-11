@@ -42,8 +42,9 @@ import java.util.Objects;
  */
 @RestControllerAdvice
 public class GlobalDefaultExceptionHandler {
+
     /**
-     * The Logger
+     * Logger
      */
     public static final Logger LOGGER = LoggerFactory.getLogger(GlobalDefaultExceptionHandler.class);
 
