@@ -104,7 +104,7 @@ public class CategoryParametersController {
     @GetMapping(value = "/v1/configurations")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Page<CategoryParameterResponseDto> getAll(@ApiParam(name = "search", value = "Search keyword")
-                                                       @RequestParam(value = "search", required = false) String search,
+                                                     @RequestParam(value = "search", required = false) String search,
                                                      Pageable pageable) {
         return categoryParametersService.getAll(search, pageable).map(categoryParamMapper::toCategoryParameterDTO);
     }
