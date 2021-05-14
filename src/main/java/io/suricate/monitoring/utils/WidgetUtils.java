@@ -78,7 +78,6 @@ public final class WidgetUtils {
         return libraries;
     }
 
-
     /**
      * Method used to parse category folder
      *
