@@ -48,14 +48,17 @@ public enum ApiErrorEnum {
      * The Error Message
      */
     private String message;
+
     /**
      * The HttpStatus ordinal
      */
     private int ordinal;
+
     /**
      * The Error key
      */
     private String key;
+
     /**
      * The related HttpStatus
      */
@@ -78,5 +81,4 @@ public enum ApiErrorEnum {
     public ApiErrorDto toResponse(String message) {
         return new ApiErrorDto(message, this);
     }
-
 }

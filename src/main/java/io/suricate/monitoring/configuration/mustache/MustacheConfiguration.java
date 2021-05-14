@@ -25,7 +25,7 @@ import org.springframework.context.annotation.Configuration;
  * Configuration for mustache template (Used in widget's HTML files)
  */
 @Configuration
-public class TemplateConfiguration {
+public class MustacheConfiguration {
 
     /**
      * Default mustache factory
