@@ -154,7 +154,7 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   public ngOnChanges(changes: SimpleChanges): void {
     if (changes.project) {
       if (!changes.project.previousValue) {
-        // We have to inject this variable in the window scope (because some Widgets use it for init the js)
+        // Inject this variable in the window scope because some widgets use it to init the js
         window['page_loaded'] = true;
       }
 

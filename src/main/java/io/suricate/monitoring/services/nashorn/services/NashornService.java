@@ -43,9 +43,9 @@ import java.util.stream.Collectors;
 public class NashornService {
 
     /**
-     * Class logger
+     * Logger
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger(NashornService.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(NashornService.class);
 
     /**
      * The project widget service
