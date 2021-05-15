@@ -68,6 +68,5 @@ public final class IdUtils {
     /**
      * Private constructor
      */
-    private IdUtils() {
-    }
+    private IdUtils() { }
 }
