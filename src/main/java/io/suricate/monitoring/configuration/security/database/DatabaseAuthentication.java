@@ -55,7 +55,7 @@ public class DatabaseAuthentication {
      * Database configuration
      *
      * @param auth The authentication manager
-     * @throws Exception When errors occured while retrieving users
+     * @throws Exception When errors occurred while retrieving users
      */
     @Autowired
     public void configureDatabase(AuthenticationManagerBuilder auth) throws Exception {
