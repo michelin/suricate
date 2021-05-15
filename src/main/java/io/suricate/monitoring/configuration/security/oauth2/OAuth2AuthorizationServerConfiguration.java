@@ -40,10 +40,12 @@ public class OAuth2AuthorizationServerConfiguration extends AuthorizationServerC
      * Manage authentications
      */
     private final AuthenticationManager authenticationManager;
+
     /**
      * Service that hold tokens (JWT)
      */
     private final TokenStore tokenStore;
+
     /**
      * Service used for decoding tokens
      */

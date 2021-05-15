@@ -41,14 +41,28 @@ import javax.annotation.PostConstruct;
 @Configuration
 @ConditionalOnProperty(name = "application.authentication.provider", havingValue = "ldap")
 public class LdapAuthentication {
-
     /**
      * The user service
      */
     private final UserService userService;
-    private final UserDetailsServiceLdapAuthoritiesPopulator userDetailsServiceLdapAuthoritiesPopulator;
+
+    /**
+     * The LDAP properties
+     */
     private final ApplicationProperties.Ldap ldapProperties;
 
+    /**
+     * The LDAP authorities populator
+     */
+    private final UserDetailsServiceLdapAuthoritiesPopulator userDetailsServiceLdapAuthoritiesPopulator;
+
+    /**
+     * Constructor
+     *
+     * @param userService The user service
+     * @param applicationProperties The application properties
+     * @param userDetailsServiceLdapAuthoritiesPopulator The LDAP authorities populator
+     */
     @Autowired
     public LdapAuthentication(UserService userService, ApplicationProperties applicationProperties, UserDetailsServiceLdapAuthoritiesPopulator userDetailsServiceLdapAuthoritiesPopulator) {
         this.userService = userService;
@@ -57,7 +71,7 @@ public class LdapAuthentication {
     }
 
     /**
-     * Method used to check the ldap configuration before launching the Application
+     * Check the ldap configuration before launching the Application
      */
     @PostConstruct
     private void checkLdapConfiguration() {
@@ -67,10 +81,10 @@ public class LdapAuthentication {
     }
 
     /**
-     * Method used to configure the ldap
+     * Configure the ldap
      *
      * @param auth the authentication manager
-     * @throws Exception
+     * @throws Exception Any triggered exception during the configuration
      */
     @Autowired
     public void configureLdap(AuthenticationManagerBuilder auth) throws Exception {

@@ -35,7 +35,7 @@ public final class IdUtils {
      * @return the decoded id or null
      */
     public static Long decrypt(String token) {
-        StringEncryptor stringEncryptor = (StringEncryptor) SpringContextUtils.getApplicationContext().getBean("noSaltEncrypter");
+        StringEncryptor stringEncryptor = (StringEncryptor) SpringContextUtils.getApplicationContext().getBean("noSaltEncryptor");
         Long id = null;
         try {
             id = Long.parseLong(stringEncryptor.decrypt(token));
@@ -53,7 +53,7 @@ public final class IdUtils {
      * @return the encrypted id
      */
     public static String encrypt(Long id) {
-        StringEncryptor stringEncryptor = (StringEncryptor) SpringContextUtils.getApplicationContext().getBean("noSaltEncrypter");
+        StringEncryptor stringEncryptor = (StringEncryptor) SpringContextUtils.getApplicationContext().getBean("noSaltEncryptor");
         String token = null;
         if (id != null) {
             try {

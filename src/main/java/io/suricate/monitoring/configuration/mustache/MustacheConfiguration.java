@@ -22,7 +22,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Configuration for mustache template (Used in widget's HTML files)
+ * Configuration for mustache template
+ * Used in widget's HTML files
  */
 @Configuration
 public class MustacheConfiguration {

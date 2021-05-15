@@ -45,10 +45,12 @@ public class UserDetailsServiceLdapAuthoritiesPopulator implements LdapAuthoriti
      * The LDAP
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(UserDetailsServiceLdapAuthoritiesPopulator.class);
+
     /**
      * The user service
      */
     private final UserService userService;
+
     /**
      * The application properties (from properties files)
      */

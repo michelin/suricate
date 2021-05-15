@@ -33,6 +33,7 @@ public class DatabaseAuthentication {
      * User details service for database connection type
      */
     private final UserDetailsDatabaseService userDetailsDatabaseService;
+
     /**
      * Password encoder/decoder service
      */
