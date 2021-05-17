@@ -368,6 +368,10 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <!-- Executable from Unix machines (e.g. with systemctl) -->
+                    <executable>true</executable>
+                </configuration>
             </plugin>
 
             <!-- Force cleaning the /target folder. Used to force the deletion of the node.exe -->
