@@ -1,6 +1,6 @@
 {
   "name": "suricate-frontend",
-  "version": "2.3.5",
+  "version": "2.4.0",
   "license": "Apache2",
   "scripts": {
     "prettyformat": "pretty-quick --staged",
