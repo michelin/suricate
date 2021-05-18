@@ -48,7 +48,8 @@ public abstract class CategoryParamMapper {
      */
     @Named("toCategoryParameterWithHiddenValuesDTO")
     @Mapping(target = "category", qualifiedByName = "toCategoryWithoutCategoryParametersDTO")
-    @Mapping(target = "value", expression = "java(org.apache.commons.lang3.StringUtils.EMPTY)")
+    @Mapping(target = "value", expression = "java(" +
+            "categoryParameter.getDataType() == io.suricate.monitoring.model.enums.DataTypeEnum.PASSWORD ? org.apache.commons.lang3.StringUtils.EMPTY : categoryParameter.getValue())")
     public abstract CategoryParameterResponseDto toCategoryParameterWithHiddenValuesDTO(CategoryParameter categoryParameter);
 
     /**
