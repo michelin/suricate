@@ -26,21 +26,15 @@ import org.mapstruct.Named;
  * Interface that manage the generation DTO/Model objects for library class
  */
 @Mapper(componentModel = "spring")
-public interface LibraryMapper {
-
-    /* ************************* TO DTO ********************************************** */
-
-    /* ******************************************************* */
-    /*                  Simple Mapping                         */
-    /* ******************************************************* */
+public abstract class LibraryMapper {
 
     /**
-     * Tranform a library into a libraryDto
+     * Map a library into a DTO
      *
-     * @param library The library to transform
-     * @return The related library DTO
+     * @param library The library to map
+     * @return The library as DTO
      */
-    @Named("toLibraryDtoDefault")
+    @Named("toLibraryDTO")
     @Mapping(target = "assetToken", expression = "java( library.getAsset() != null ? io.suricate.monitoring.utils.IdUtils.encrypt(library.getAsset().getId()) : null )")
-    LibraryResponseDto toLibraryDtoDefault(Library library);
+    public abstract LibraryResponseDto toLibraryDTO(Library library);
 }

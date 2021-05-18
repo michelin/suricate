@@ -3,9 +3,9 @@ package io.suricate.monitoring.services.nashorn.tasks;
 import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
 import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
 import io.suricate.monitoring.model.dto.nashorn.WidgetVariableResponse;
-import io.suricate.monitoring.model.dto.nashorn.error.FatalError;
-import io.suricate.monitoring.model.dto.nashorn.error.RemoteError;
-import io.suricate.monitoring.model.enums.DataType;
+import io.suricate.monitoring.utils.exceptions.nashorn.FatalException;
+import io.suricate.monitoring.utils.exceptions.nashorn.RemoteException;
+import io.suricate.monitoring.model.enums.DataTypeEnum;
 import io.suricate.monitoring.model.enums.NashornErrorTypeEnum;
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
 import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
@@ -281,7 +281,7 @@ public class NashornWidgetExecuteAsyncTaskTest {
         WidgetVariableResponse widgetVariableResponse = new WidgetVariableResponse();
         widgetVariableResponse.setName("SURI_SECRET");
         widgetVariableResponse.setDescription("title");
-        widgetVariableResponse.setType(DataType.PASSWORD);
+        widgetVariableResponse.setType(DataTypeEnum.PASSWORD);
         widgetVariableResponse.setRequired(true);
 
         List<WidgetVariableResponse> widgetVariableResponses = new ArrayList<>();
@@ -320,7 +320,7 @@ public class NashornWidgetExecuteAsyncTaskTest {
         WidgetVariableResponse widgetVariableResponse = new WidgetVariableResponse();
         widgetVariableResponse.setName("SURI_SECRET");
         widgetVariableResponse.setDescription("title");
-        widgetVariableResponse.setType(DataType.PASSWORD);
+        widgetVariableResponse.setType(DataTypeEnum.PASSWORD);
         widgetVariableResponse.setRequired(true);
 
         List<WidgetVariableResponse> widgetVariableResponses = new ArrayList<>();
@@ -348,29 +348,17 @@ public class NashornWidgetExecuteAsyncTaskTest {
 
         Assert.assertTrue(widgetJob.isFatalError(new Exception(""), new Exception("")));
         Assert.assertFalse(widgetJob.isFatalError(new Exception("timeoutException"), new Exception("")));
-        Assert.assertFalse(widgetJob.isFatalError(new Exception("timeoutException"), new FatalError("")));
+        Assert.assertFalse(widgetJob.isFatalError(new Exception("timeoutException"), new FatalException("")));
         Assert.assertFalse(widgetJob.isFatalError(new Exception("timeout:"), new IllegalArgumentException("")));
-        Assert.assertFalse(widgetJob.isFatalError(new Exception("Error on server"), new RemoteError("Error on server")));
+        Assert.assertFalse(widgetJob.isFatalError(new Exception("Error on server"), new RemoteException("Error on server")));
         Assert.assertTrue(widgetJob.isFatalError(new Exception("Error on server"), new Exception("Error on server")));
 
         nashornRequest.setAlreadySuccess(true);
         Assert.assertFalse(widgetJob.isFatalError(new Exception(""), new Exception("")));
         Assert.assertFalse(widgetJob.isFatalError(new Exception("timeoutException"), new Exception("")));
-        Assert.assertFalse(widgetJob.isFatalError(new Exception("timeoutException"), new FatalError("")));
-        Assert.assertFalse(widgetJob.isFatalError(new Exception("Error on server"), new RemoteError("Error on server")));
+        Assert.assertFalse(widgetJob.isFatalError(new Exception("timeoutException"), new FatalException("")));
+        Assert.assertFalse(widgetJob.isFatalError(new Exception("Error on server"), new RemoteException("Error on server")));
         Assert.assertFalse(widgetJob.isFatalError(new Exception("Error on server"), new Exception("Error on server")));
         Assert.assertFalse(widgetJob.isFatalError(new ConnectException("Connection error"), new IllegalArgumentException()));
-    }
-
-    @Test
-    public void testPrettiFy() throws Exception {
-        NashornRequest nashornRequest = new NashornRequest();
-        List<WidgetVariableResponse> widgetVariableResponses = new ArrayList<>();
-        NashornRequestWidgetExecutionAsyncTask widgetJob = new NashornRequestWidgetExecutionAsyncTask(nashornRequest, null, widgetVariableResponses);
-        nashornRequest.setAlreadySuccess(false);
-
-        Assert.assertEquals("", widgetJob.prettify("ExecutionException: java.lang.FatalError:"));
-        Assert.assertNull(widgetJob.prettify(null));
-        Assert.assertEquals("qsfs eart: eztrez tezt ztz: tez r", widgetJob.prettify("qsfs eart: eztrez tezt ztz: tez r"));
     }
 }

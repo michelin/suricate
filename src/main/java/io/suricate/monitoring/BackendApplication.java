@@ -33,7 +33,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 
 /**
- * Main java class
+ * Spring Boot application class
  */
 @SpringBootApplication
 @EnableAsync

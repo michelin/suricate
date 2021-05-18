@@ -16,7 +16,7 @@
  *
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { MosaicComponent } from './mosaic.component';
 import { MockedModelBuilderService } from '../../../../mock/services/mocked-model-builder/mocked-model-builder.service';
@@ -28,20 +28,22 @@ describe('MosaicComponent', () => {
   let component: MosaicComponent;
   let fixture: ComponentFixture<MosaicComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [MockModule],
-      declarations: [MosaicComponent]
-    }).compileComponents();
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [MockModule],
+        declarations: [MosaicComponent]
+      }).compileComponents();
 
-    const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
+      const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
 
-    fixture = TestBed.createComponent(MosaicComponent);
-    component = fixture.componentInstance;
-    component.field = mockedModelBuilderService.buildMockedFormField(DataTypeEnum.MOSAIC);
+      fixture = TestBed.createComponent(MosaicComponent);
+      component = fixture.componentInstance;
+      component.field = mockedModelBuilderService.buildMockedFormField(DataTypeEnum.MOSAIC);
 
-    fixture.detectChanges();
-  }));
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

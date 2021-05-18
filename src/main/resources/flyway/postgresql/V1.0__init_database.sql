@@ -79,13 +79,13 @@ CREATE TABLE project (
 CREATE TABLE project_widget (
     id                  bigserial                       NOT NULL,
     backend_config      text,
-    col                 integer,
+    grid_column         integer,
     custom_style        text,
     data                text,
     height              integer,
     last_execution_date timestamp without time zone,
     log                 text,
-    row                 integer,
+    grid_row            integer,
     width               integer,
     project_id          bigint,
     widget_id           bigint,
@@ -111,7 +111,6 @@ CREATE TABLE repository (
     CONSTRAINT pk_repository_id             PRIMARY KEY (id),
     CONSTRAINT uk_repository_name           UNIQUE (name)
 );
-
 
 CREATE TABLE role (
     id          bigserial           NOT NULL,
@@ -238,7 +237,7 @@ ALTER TABLE project_widget          ADD CONSTRAINT fk_project_widget_widget_id  
 ALTER TABLE project_widget          ADD CONSTRAINT fk_project_widget_project_id             FOREIGN KEY (project_id)                REFERENCES project (id) ;
 ALTER TABLE project                 ADD CONSTRAINT fk_project_screenshot_id                 FOREIGN KEY (screenshot_id)             REFERENCES asset (id) ;
 ALTER TABLE library                 ADD CONSTRAINT fk_library_asset_id                      FOREIGN KEY (asset_id)                  REFERENCES asset (id) ;
-ALTER TABLE category_param          ADD CONSTRAINT fk_category_param_category_id             FOREIGN KEY (category_id)               REFERENCES category (id) ;
+ALTER TABLE category_param          ADD CONSTRAINT fk_category_param_category_id            FOREIGN KEY (category_id)               REFERENCES category (id) ;
 ALTER TABLE category                ADD CONSTRAINT fk_category_image_id                     FOREIGN KEY (image_id)                  REFERENCES asset (id) ;
 ALTER TABLE allowed_setting_value   ADD CONSTRAINT fk_allowed_setting_value_setting_id      FOREIGN KEY (setting_id)                REFERENCES setting (id) ;
 

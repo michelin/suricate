@@ -21,7 +21,7 @@ package io.suricate.monitoring.services.api;
 import io.suricate.monitoring.model.entities.Category;
 import io.suricate.monitoring.model.entities.CategoryParameter;
 import io.suricate.monitoring.model.entities.WidgetParam;
-import io.suricate.monitoring.model.enums.DataType;
+import io.suricate.monitoring.model.enums.DataTypeEnum;
 import io.suricate.monitoring.repositories.CategoryParametersRepository;
 import io.suricate.monitoring.services.specifications.CategoryParametersSearchSpecification;
 import org.jasypt.encryption.StringEncryptor;
@@ -30,9 +30,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Manager the parameters of categories
@@ -99,7 +100,7 @@ public class CategoryParametersService {
      * @param newValue          The new value to set
      */
     public void updateConfiguration(CategoryParameter categoryParameter, final String newValue) {
-        categoryParameter.setValue(categoryParameter.getDataType() == DataType.PASSWORD ?
+        categoryParameter.setValue(categoryParameter.getDataType() == DataTypeEnum.PASSWORD ?
                 stringEncryptor.encrypt(newValue) : newValue);
 
         categoryParametersRepository.save(categoryParameter);
@@ -121,7 +122,7 @@ public class CategoryParametersService {
      * @param category           The related category
      */
     @Transactional
-    public void addOrUpdateCategoryConfiguration(List<CategoryParameter> categoryParameters, Category category) {
+    public void addOrUpdateCategoryConfiguration(Set<CategoryParameter> categoryParameters, Category category) {
         for (CategoryParameter categoryParameter : categoryParameters) {
             Optional<CategoryParameter> currentConfiguration = categoryParametersRepository.findById(categoryParameter.getKey());
             categoryParameter.setCategory(category);

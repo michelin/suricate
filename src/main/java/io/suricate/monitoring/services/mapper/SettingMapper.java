@@ -24,9 +24,10 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 import java.util.List;
+import java.util.Set;
 
 /**
- * Interface that manage the generation DTO/Model objects for Setting class
+ * Manage the generation DTO/Model objects for Setting class
  */
 @Mapper(
     componentModel = "spring",
@@ -34,35 +35,25 @@ import java.util.List;
         AllowedSettingValueMapper.class
     }
 )
-public interface SettingMapper {
-
-    /* ************************* TO DTO ********************************************** */
-
-    /* ******************************************************* */
-    /*                  Simple Mapping                         */
-    /* ******************************************************* */
+public abstract class SettingMapper {
 
     /**
-     * Transform a setting into a SettingResponseDto
+     * Map a setting into a DTO
      *
-     * @param setting The setting to tranform
-     * @return The related DTO
+     * @param setting The setting to map
+     * @return The setting as DTO
      */
-    @Named("toSettingDtoDefault")
-    @Mapping(target = "allowedSettingValues", qualifiedByName = "toAllowedSettingValueDtosDefault")
-    SettingResponseDto toSettingDtoDefault(Setting setting);
-
-    /* ******************************************************* */
-    /*                    List Mapping                         */
-    /* ******************************************************* */
+    @Named("toSettingDTO")
+    @Mapping(target = "allowedSettingValues", qualifiedByName = "toAllowedSettingValuesDTOs")
+    public abstract SettingResponseDto toSettingDTO(Setting setting);
 
     /**
-     * Transform a list of settings into a list of settings dto
+     * Map a list of settings into a list of settings DTO
      *
-     * @param settings The list of settings to transform
-     * @return The related list of dto's
+     * @param settings The list of settings to map
+     * @return The list of settings as DTOs
      */
-    @Named("toSettingDtosDefault")
-    @IterableMapping(qualifiedByName = "toSettingDtoDefault")
-    List<SettingResponseDto> toSettingDtosDefault(List<Setting> settings);
+    @Named("toSettingsDTOs")
+    @IterableMapping(qualifiedByName = "toSettingDTO")
+    public abstract List<SettingResponseDto> toSettingsDTOs(List<Setting> settings);
 }

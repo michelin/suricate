@@ -28,7 +28,7 @@ import io.suricate.monitoring.services.GitService;
 import io.suricate.monitoring.services.api.RepositoryService;
 import io.suricate.monitoring.services.mapper.RepositoryMapper;
 import io.suricate.monitoring.services.mapper.WidgetMapper;
-import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
+import io.suricate.monitoring.utils.exceptions.ObjectNotFoundException;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -39,7 +39,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -53,22 +53,22 @@ import java.util.Optional;
 public class RepositoryController {
 
     /**
-     * The repository service
+     * Repository service
      */
     private final RepositoryService repositoryService;
 
     /**
-     * The git service
+     * Git service
      */
     private final GitService gitService;
 
     /**
-     * The repository mapper tranform Domain object into DTO
+     * Repository mapper
      */
     private final RepositoryMapper repositoryMapper;
 
     /**
-     * The widget mapper
+     * Widget mapper
      */
     private final WidgetMapper widgetMapper;
 
@@ -111,7 +111,7 @@ public class RepositoryController {
                                               @RequestParam(value = "search", required = false) String search,
                                               Pageable pageable) {
         Page<Repository> repositoriesPaged = repositoryService.getAll(search, pageable);
-        return repositoriesPaged.map(repositoryMapper::toRepositoryDtoDefault);
+        return repositoriesPaged.map(repositoryMapper::toRepositoryDTO);
     }
 
     /**
@@ -130,11 +130,11 @@ public class RepositoryController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<RepositoryResponseDto> createOne(@ApiParam(name = "repositoryResponseDto", value = "The repository to create", required = true)
                                                            @RequestBody RepositoryRequestDto repositoryRequestDto) {
-        Repository repository = repositoryMapper.toRepositoryDefaultModel(null, repositoryRequestDto);
+        Repository repository = repositoryMapper.toRepositoryEntity(null, repositoryRequestDto);
         repositoryService.addOrUpdateRepository(repository);
 
         if (repository.isEnabled()) {
-            this.gitService.updateWidgetFromGitRepository(repository);
+            this.gitService.updateWidgetsFromRepository(repository);
         }
 
         URI resourceLocation = ServletUriComponentsBuilder
@@ -146,7 +146,7 @@ public class RepositoryController {
         return ResponseEntity
             .created(resourceLocation)
             .contentType(MediaType.APPLICATION_JSON)
-            .body(repositoryMapper.toRepositoryDtoDefault(repository));
+            .body(repositoryMapper.toRepositoryDTO(repository));
     }
 
     /**
@@ -175,7 +175,7 @@ public class RepositoryController {
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(repositoryMapper.toRepositoryDtoDefault(optionalRepository.get()));
+            .body(repositoryMapper.toRepositoryDTO(optionalRepository.get()));
     }
 
     /**
@@ -200,11 +200,11 @@ public class RepositoryController {
             throw new ObjectNotFoundException(Repository.class, repositoryId);
         }
 
-        Repository repository = repositoryMapper.toRepositoryDefaultModel(repositoryId, repositoryRequestDto);
+        Repository repository = repositoryMapper.toRepositoryEntity(repositoryId, repositoryRequestDto);
         this.repositoryService.addOrUpdateRepository(repository);
 
         if (repository.isEnabled()) {
-            this.gitService.updateWidgetFromGitRepository(repository);
+            this.gitService.updateWidgetsFromRepository(repository);
         }
 
         return ResponseEntity.noContent().build();
@@ -236,6 +236,6 @@ public class RepositoryController {
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(widgetMapper.toWidgetDtosDefault(optionalRepository.get().getWidgets()));
+            .body(widgetMapper.toWidgetsDTOs(optionalRepository.get().getWidgets()));
     }
 }

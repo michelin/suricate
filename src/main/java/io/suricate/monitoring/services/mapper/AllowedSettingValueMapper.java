@@ -22,41 +22,32 @@ import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.Set;
 
 /**
- * Interface that manage the generation DTO/Model objects for AllowedSettingValue class
+ * Manage the generation DTO/Model objects for AllowedSettingValue class
  */
 @Mapper(componentModel = "spring")
-public interface AllowedSettingValueMapper {
-
-    /* ************************* TO DTO ********************************************** */
-
-    /* ******************************************************* */
-    /*                  Simple Mapping                         */
-    /* ******************************************************* */
+public abstract class AllowedSettingValueMapper {
 
     /**
-     * Transform an allowedSettingValue into an AllowedSettingValueResponseDto
+     * Map an allowed setting value into a DTO
      *
-     * @param allowedSettingValue The setting value to transform
-     * @return The related dto
+     * @param allowedSettingValue The allowed setting value to map
+     * @return The allowed setting value as DTO
      */
-    @Named("toAllowedSettingValueDtoDefault")
-    AllowedSettingValueResponseDto toAllowedSettingValueDtoDefault(AllowedSettingValue allowedSettingValue);
-
-    /* ******************************************************* */
-    /*                    List Mapping                         */
-    /* ******************************************************* */
+    @Named("toAllowedSettingValueDTO")
+    public abstract AllowedSettingValueResponseDto toAllowedSettingValueDTO(AllowedSettingValue allowedSettingValue);
 
     /**
-     * Transform a list of AllowedSettingValue into a list of AllowedSettingValueResponseDto
+     * Map a list of allowed setting values into a list of DTO
      *
-     * @param allowedSettingValues The list to transform
-     * @return The related list of dtos
+     * @param allowedSettingValues The list of allowed setting values to map
+     * @return The allowed setting values as DTO
      */
-    @Named("toAllowedSettingValueDtosDefault")
-    @IterableMapping(qualifiedByName = "toAllowedSettingValueDtoDefault")
-    List<AllowedSettingValueResponseDto> toAllowedSettingValueDtosDefault(List<AllowedSettingValue> allowedSettingValues);
-
+    @Named("toAllowedSettingValuesDTOs")
+    @IterableMapping(qualifiedByName = "toAllowedSettingValueDTO")
+    public abstract List<AllowedSettingValueResponseDto> toAllowedSettingValuesDTOs(Collection<AllowedSettingValue> allowedSettingValues);
 }

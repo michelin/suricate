@@ -1,5 +1,6 @@
 package io.suricate.monitoring.utils;
 
+import com.google.common.collect.Lists;
 import io.suricate.monitoring.model.entities.Library;
 import io.suricate.monitoring.model.entities.Category;
 import io.suricate.monitoring.model.entities.Widget;
@@ -14,12 +15,12 @@ public class WidgetUtilsTest {
 
     @Test
     public void testNullFile() throws Exception {
-        assertThat(WidgetUtils.parseWidgetFolder(null)).hasSize(0);
+        assertThat(WidgetUtils.parseCategoriesFolder(null)).hasSize(0);
     }
 
     @Test
     public void testWidgetFolder() throws Exception {
-        List<Category> listCategory = WidgetUtils.parseWidgetFolder(new File(FilesUtilsTest.class.getResource("/widgets/").getFile()));
+        List<Category> listCategory = WidgetUtils.parseCategoriesFolder(new File(FilesUtilsTest.class.getResource("/widgets/").getFile()));
         assertThat(listCategory).isNotNull();
         assertThat(listCategory).hasSize(4);
 
@@ -28,32 +29,33 @@ public class WidgetUtilsTest {
         assertThat(listCategory.get(0).getImage()).isNotNull();
         assertThat(listCategory.get(0).getWidgets()).isNotNull();
         assertThat(listCategory.get(0).getWidgets()).hasSize(3);
-        assertThat(listCategory.get(0).getWidgets().get(0).getImage()).isNotNull();
-        assertThat(listCategory.get(0).getWidgets().get(0).getInfo()).isEqualTo("test");
-        assertThat(listCategory.get(0).getWidgets().get(0).getBackendJs()).isNotEmpty();
-        assertThat(listCategory.get(0).getWidgets().get(0).getHtmlContent()).isNotEmpty();
-        assertThat(listCategory.get(0).getWidgets().get(0).getName()).isEqualTo("Jira count");
-        assertThat(listCategory.get(0).getWidgets().get(0).getDescription()).isEqualTo("Widget user to count the number of jira from the specified JQL query");
-        assertThat(listCategory.get(0).getWidgets().get(0).getTechnicalName()).isEqualTo("jiracount");
-        assertThat(listCategory.get(0).getWidgets().get(0).getDelay()).isEqualTo(500);
-        assertThat(listCategory.get(0).getWidgets().get(2).getName()).isEqualTo("Jira release timeline");
-        assertThat(listCategory.get(0).getWidgets().get(2).getLibraries()).isNotNull();
-        assertThat(listCategory.get(0).getWidgets().get(2).getLibraries().size()).isEqualTo(2);
-        assertThat(listCategory.get(0).getWidgets().get(2).getLibraries().get(0).getTechnicalName()).isEqualTo("d3.js");
+        assertThat(listCategory.get(0).getWidgets().toArray(new Widget[0])[0].getImage()).isNotNull();
+        assertThat(listCategory.get(0).getWidgets().toArray(new Widget[0])[0].getInfo()).isEqualTo("test");
+        assertThat(listCategory.get(0).getWidgets().toArray(new Widget[0])[0].getBackendJs()).isNotEmpty();
+        assertThat(listCategory.get(0).getWidgets().toArray(new Widget[0])[0].getHtmlContent()).isNotEmpty();
+        assertThat(listCategory.get(0).getWidgets().toArray(new Widget[0])[0].getName()).isEqualTo("Jira count");
+        assertThat(listCategory.get(0).getWidgets().toArray(new Widget[0])[0].getDescription()).isEqualTo("Widget user to count the number of jira from the specified JQL query");
+        assertThat(listCategory.get(0).getWidgets().toArray(new Widget[0])[0].getTechnicalName()).isEqualTo("jiracount");
+        assertThat(listCategory.get(0).getWidgets().toArray(new Widget[0])[0].getDelay()).isEqualTo(500);
+
+        assertThat(listCategory.get(0).getWidgets().toArray(new Widget[0])[2].getName()).isEqualTo("Jira release timeline");
+        assertThat(listCategory.get(0).getWidgets().toArray(new Widget[0])[2].getLibraries()).isNotNull();
+        assertThat(listCategory.get(0).getWidgets().toArray(new Widget[0])[2].getLibraries().size()).isEqualTo(2);
+        assertThat(Lists.newArrayList(Lists.newArrayList(listCategory.get(0).getWidgets()).get(2).getLibraries()).get(0).getTechnicalName()).isEqualTo("d3.js");
 
         assertThat(listCategory.get(2).getName()).isEqualTo("Other");
         assertThat(listCategory.get(2).getId()).isNull();
         assertThat(listCategory.get(2).getImage()).isNull();
         assertThat(listCategory.get(2).getWidgets()).isNotNull();
         assertThat(listCategory.get(2).getWidgets()).hasSize(3);
-        assertThat(listCategory.get(2).getWidgets().get(0).getImage()).isNotNull();
-        assertThat(listCategory.get(2).getWidgets().get(0).getBackendJs()).isNull();
-        assertThat(listCategory.get(2).getWidgets().get(0).getInfo()).isNull();
-        assertThat(listCategory.get(2).getWidgets().get(0).getHtmlContent()).isNotEmpty();
-        assertThat(listCategory.get(2).getWidgets().get(0).getName()).isEqualTo("Clock Widget");
-        assertThat(listCategory.get(2).getWidgets().get(0).getDescription()).isEqualTo("Widget used to display current date and time");
-        assertThat(listCategory.get(2).getWidgets().get(0).getTechnicalName()).isEqualTo("clock");
-        assertThat(listCategory.get(2).getWidgets().get(0).getDelay()).isEqualTo(-1);
+        assertThat(listCategory.get(2).getWidgets().toArray(new Widget[0])[0].getImage()).isNotNull();
+        assertThat(listCategory.get(2).getWidgets().toArray(new Widget[0])[0].getBackendJs()).isNull();
+        assertThat(listCategory.get(2).getWidgets().toArray(new Widget[0])[0].getInfo()).isNull();
+        assertThat(listCategory.get(2).getWidgets().toArray(new Widget[0])[0].getHtmlContent()).isNotEmpty();
+        assertThat(listCategory.get(2).getWidgets().toArray(new Widget[0])[0].getName()).isEqualTo("Clock Widget");
+        assertThat(listCategory.get(2).getWidgets().toArray(new Widget[0])[0].getDescription()).isEqualTo("Widget used to display current date and time");
+        assertThat(listCategory.get(2).getWidgets().toArray(new Widget[0])[0].getTechnicalName()).isEqualTo("clock");
+        assertThat(listCategory.get(2).getWidgets().toArray(new Widget[0])[0].getDelay()).isEqualTo(-1);
 
     }
 

@@ -1,5 +1,5 @@
 /*
- *  /*
+ *
  *  * Copyright 2012-2018 the original author or authors.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,19 +16,16 @@
  *
  */
 
-package io.suricate.monitoring.model.enums;
+package io.suricate.monitoring.utils.exceptions.nashorn;
 
-/**
- * Hold the data types for a configuration
- */
-public enum DataType {
-    // Simple data types
-    NUMBER,
-    TEXT,
-    PASSWORD,
-    // Complex data types
-    BOOLEAN,
-    COMBO,
-    MULTIPLE,
-    FILE
+public class RemoteException extends Exception {
+
+    /**
+     * Constructor
+     *
+     * @param message The message of the exception
+     */
+    public RemoteException(String message) {
+        super(message);
+    }
 }

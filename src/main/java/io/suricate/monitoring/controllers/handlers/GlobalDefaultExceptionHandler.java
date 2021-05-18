@@ -20,7 +20,7 @@ package io.suricate.monitoring.controllers.handlers;
 
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
-import io.suricate.monitoring.utils.exception.ApiException;
+import io.suricate.monitoring.utils.exceptions.ApiException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -42,8 +42,9 @@ import java.util.Objects;
  */
 @RestControllerAdvice
 public class GlobalDefaultExceptionHandler {
+
     /**
-     * The Logger
+     * Logger
      */
     public static final Logger LOGGER = LoggerFactory.getLogger(GlobalDefaultExceptionHandler.class);
 

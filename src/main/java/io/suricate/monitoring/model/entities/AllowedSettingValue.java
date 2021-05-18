@@ -18,6 +18,7 @@
 
 package io.suricate.monitoring.model.entities;
 
+import io.suricate.monitoring.model.entities.generic.AbstractAuditingEntity;
 import lombok.*;
 import org.hibernate.annotations.Type;
 
@@ -30,8 +31,6 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-@ToString
 public class AllowedSettingValue {
 
     /**
@@ -56,7 +55,7 @@ public class AllowedSettingValue {
     /**
      * True if this setting is the default setting
      */
-    @Column(name = "is_default", nullable = false)
+    @Column(nullable = false)
     @Type(type = "yes_no")
     private boolean isDefault;
 

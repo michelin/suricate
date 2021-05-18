@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { AuthenticationService } from '../../../shared/services/frontend/authentication/authentication.service';
 import { Router } from '@angular/router';
 import { MenuService } from '../../../shared/services/frontend/menu/menu.service';
@@ -31,6 +31,7 @@ import { HttpSettingService } from '../../../shared/services/backend/http-settin
 import { UserSettingRequest } from '../../../shared/models/backend/setting/user-setting-request';
 import { AllowedSettingValue } from '../../../shared/models/backend/setting/allowed-setting-value';
 import { SettingsService } from '../../../core/services/settings.service';
+import { UserSetting } from '../../../shared/models/backend/setting/user-setting';
 
 /**
  * Display the menu on the sidenav
@@ -43,48 +44,38 @@ import { SettingsService } from '../../../core/services/settings.service';
 export class MenuComponent implements OnInit {
   /**
    * The user connected
-   * @type {User}
-   * @protected
    */
   public readonly connectedUser = AuthenticationService.getConnectedUser();
 
   /**
    * The menu to display
-   * @type {MenuConfiguration}
-   * @protected
    */
   public readonly menu = MenuService.buildMenu();
 
   /**
-   * The list of settings
-   * @type {Setting[]}
-   * @private
+   * User settings
    */
-  private settings: Setting[];
+  private userSettings: UserSetting[];
 
   /**
    * The list of icons
-   * @type {IconEnum}
-   * @protected
    */
   public iconEnum = IconEnum;
 
   /**
    * The list of material icons
-   * @type {MaterialIconRecords}
-   * @protected
    */
   public materialIconRecords = MaterialIconRecords;
 
   /**
    * Constructor
    *
-   * @param {Router} router Angular service used to manage routes
-   * @param {HttpSettingService} httpSettingService Suricate service used to manage settings
-   * @param {HttpUserService} httpUserService Suricate service used to manage user
-   * @param {SidenavService} sidenavService Frontend service used to manage sidenavs
-   * @param {SettingsFormFieldsService} settingsFormFieldsService Frontend service used to build form fields for settings management
-   * @param {SettingsService} settingsService Frontend service used to manage settings
+   * @param router Angular service used to manage routes
+   * @param httpSettingService Suricate service used to manage settings
+   * @param httpUserService Suricate service used to manage user
+   * @param sidenavService Frontend service used to manage sidenavs
+   * @param settingsFormFieldsService Frontend service used to build form fields for settings management
+   * @param settingsService Frontend service used to manage settings
    */
   constructor(
     private readonly router: Router,
@@ -99,8 +90,8 @@ export class MenuComponent implements OnInit {
    * Called when the component is init
    */
   public ngOnInit(): void {
-    this.httpSettingService.getAll().subscribe((settings: Setting[]) => {
-      this.settings = settings;
+    this.settingsService.initUserSettings(AuthenticationService.getConnectedUser()).subscribe((userSettings: UserSetting[]) => {
+      this.userSettings = userSettings;
     });
   }
 
@@ -117,7 +108,7 @@ export class MenuComponent implements OnInit {
    * Open the form sidenav used to manage user settings
    */
   public openSettingsFormSidenav(): void {
-    this.settingsFormFieldsService.generateFormFields().subscribe((formFields: FormField[]) => {
+    this.settingsFormFieldsService.generateSettingsFormFields(this.userSettings).subscribe((formFields: FormField[]) => {
       this.sidenavService.openFormSidenav({
         title: 'settings',
         formFields: formFields,
@@ -127,12 +118,12 @@ export class MenuComponent implements OnInit {
   }
 
   /**
-   * Function used to save the settings form
+   * Save the selected settings
    *
-   * @param formData The data from the form
+   * @param formData The selected settings from the form
    */
   private saveSettings(formData: FormData): void {
-    from(this.settings)
+    from(this.userSettings.map(userSetting => userSetting.setting))
       .pipe(
         flatMap((setting: Setting) => {
           const userSettingRequest = new UserSettingRequest();
@@ -146,12 +137,14 @@ export class MenuComponent implements OnInit {
             userSettingRequest.unconstrainedValue = formData[setting.type];
           }
 
-          return this.httpUserService.updateUserSetting(this.connectedUser.username, setting.id, userSettingRequest);
+          return this.httpUserService.updateUserSetting(AuthenticationService.getConnectedUser().username, setting.id, userSettingRequest);
         }),
         toArray()
       )
       .subscribe(() => {
-        this.settingsService.initUserSettings(this.connectedUser);
+        this.settingsService.initUserSettings(AuthenticationService.getConnectedUser()).subscribe((userSettings: UserSetting[]) => {
+          this.userSettings = userSettings;
+        });
       });
   }
 

@@ -16,7 +16,7 @@
 
 import { Component, HostBinding, OnDestroy, OnInit } from '@angular/core';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { takeUntil, takeWhile } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 
 import { DialogService } from './shared/services/frontend/dialog/dialog.service';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
@@ -25,8 +25,7 @@ import { ConfirmDialogComponent } from './shared/components/confirm-dialog/confi
 import { SettingsService } from './core/services/settings.service';
 import { CommunicationDialogConfiguration } from './shared/models/frontend/dialog/communication-dialog-configuration';
 import { CommunicationDialogComponent } from './shared/components/communication-dialog/communication-dialog.component';
-import { AuthenticationService } from './shared/services/frontend/authentication/authentication.service';
-import { from, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 
 /**
  * Main component init the application
@@ -71,11 +70,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.subscribeToCommunicationDialog();
     this.subscribeToThemeChanging();
 
-    if (AuthenticationService.isLoggedIn()) {
-      this.settingsService.initUserSettings(AuthenticationService.getConnectedUser());
-    } else {
-      this.settingsService.initDefaultSettings();
-    }
+    this.settingsService.initDefaultSettings();
   }
 
   /**
@@ -91,12 +86,12 @@ export class AppComponent implements OnInit, OnDestroy {
    */
   private subscribeToThemeChanging(): void {
     this.settingsService
-      .getThemeChangingMessages()
+      .getCurrentThemeValue()
       .pipe(takeUntil(this.unsubscribe))
-      .subscribe(themeValue => {
+      .subscribe((theme: string) => {
         this.overlayContainer.getContainerElement().classList.remove(this.appHtmlClass);
-        this.overlayContainer.getContainerElement().classList.add(themeValue);
-        this.appHtmlClass = themeValue;
+        this.overlayContainer.getContainerElement().classList.add(theme);
+        this.appHtmlClass = theme;
       });
   }
 

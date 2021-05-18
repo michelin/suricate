@@ -21,8 +21,8 @@
  */
 export interface ProjectWidgetPositionRequest {
   projectWidgetId: number;
-  col: number;
-  row: number;
+  gridColumn: number;
+  gridRow: number;
   width: number;
   height: number;
 }

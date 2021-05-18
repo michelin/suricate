@@ -1,16 +1,13 @@
 package io.suricate.monitoring.services.api;
 
-import io.suricate.monitoring.model.entities.Asset;
-import io.suricate.monitoring.model.entities.Library;
-import io.suricate.monitoring.model.entities.ProjectWidget;
-import io.suricate.monitoring.model.entities.Category;
-import io.suricate.monitoring.model.entities.Repository;
-import io.suricate.monitoring.model.entities.Widget;
+import com.google.common.collect.Lists;
+import io.suricate.monitoring.model.entities.*;
 import io.suricate.monitoring.model.enums.RepositoryTypeEnum;
 import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
-import io.suricate.monitoring.model.enums.WidgetState;
+import io.suricate.monitoring.model.enums.WidgetStateEnum;
 import io.suricate.monitoring.repositories.*;
 import io.suricate.monitoring.utils.EntityUtils;
+import org.assertj.core.util.Sets;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,87 +15,134 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 import static com.google.common.truth.Truth.assertThat;
 
+/**
+ * Widget service test class
+ */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class WidgetServiceTest {
 
+    /**
+     * Mocked css content
+     */
+    private static final String CSS_CONTENT = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAC2xv8BcPMnUbTx/LEAAAAASUVORK5CYII=) no-repeat left bottom;background-size: contain;opacity: 0.2;height: 25%;width: 25%;position: absolute;left: 5%;bottom: 5%;}.widget.githubOpenedIssues .issues-label {color: #1B1F23;font-size: 40px;}";
+
+    /**
+     * Mocked backend JS content
+     */
+    private static final String BACKEND_JS = "/** Copyright 2012-2018 the original author or authors.** Licensed under the Apache License, Version 2.0 (the \"License\");* you may not use this file except in compliance with the License.* You may obtain a copy of the License at**      http://www.apache.org/licenses/LICENSE-2.0** Unless required by applicable law or agreed to in writing, software* distributed under the License is distributed on an \"AS IS\" BASIS,* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.* See the License for the specific language governing permissions and* limitations under the License.*/function run() {var data = {};var perPage = 100;var issues = [];var page = 1;var response = JSON.parse(Packages.get(\"https://api.github.com/repos/\" + SURI_GITHUB_ORG + \"/\" + SURI_GITHUB_PROJECT + \"/issues?page=\" + page + \"&per_page=\" + perPage + \"&state=\" + SURI_ISSUES_STATE,\"Authorization\", \"token \" + WIDGET_CONFIG_GITHUB_TOKEN));issues = issues.concat(response);while (response && response.length > 0 && response.length === perPage) {page++;response = JSON.parse(Packages.get(\"https://api.github.com/repos/\" + SURI_GITHUB_ORG + \"/\" + SURI_GITHUB_PROJECT + \"/issues?page=\" + page + \"&per_page=\" + perPage + \"&state=\" + SURI_ISSUES_STATE,\"Authorization\", \"token \" + WIDGET_CONFIG_GITHUB_TOKEN));issues = issues.concat(response);}// The response contains the issues and the pull requests. Here, we only keep the real issuesissues = issues.filter(function(issue) {if (!issue.pull_request) {return issue;}});data.numberOfIssues = issues.length;if (SURI_PREVIOUS) {if (JSON.parse(SURI_PREVIOUS).numberOfIssues) {data.evolution = ((data.numberOfIssues - JSON.parse(SURI_PREVIOUS).numberOfIssues) * 100 / JSON.parse(SURI_PREVIOUS).numberOfIssues).toFixed(1);} else {data.evolution = (0).toFixed(1);}data.arrow = data.evolution == 0 ? '' : (data.evolution > 0 ? \"up\" : \"down\");}if (SURI_ISSUES_STATE != 'all') {data.issuesState = SURI_ISSUES_STATE;}return JSON.stringify(data);}";
+
+    /**
+     * Mocked HTML content
+     */
+    private static final String HTML_CONTENT = "<div class=\"grid-stack-item-content-inner\"><h1 class=\"title\">{{SURI_GITHUB_PROJECT}}</h1><h2 class=\"value\">{{numberOfIssues}}</h2><h2 class=\"issues-label\">{{#issuesState}} {{issuesState}} {{/issuesState}} issues</h2>{{#evolution}}<p class=\"change-rate\"><i class=\"fa fa-arrow-{{arrow}}\"></i><span>{{evolution}}% since the last execution</span></p>{{/evolution}}</div><div class=\"github\"></div>";
+
+    /**
+     * Project widget repository
+     */
     @Autowired
     ProjectWidgetRepository projectWidgetRepository;
 
+    /**
+     * Widget repository
+     */
     @Autowired
     WidgetRepository widgetRepository;
 
+    /**
+     * Category repository
+     */
     @Autowired
     CategoryRepository categoryRepository;
 
+    /**
+     * Asset repository
+     */
     @Autowired
     AssetRepository assetRepository;
 
+    /**
+     * Widget service
+     */
     @Autowired
     WidgetService widgetService;
 
+    /**
+     * Category service
+     */
     @Autowired
     CategoryService categoryService;
 
+    /**
+     * Project widget service
+     */
     @Autowired
     ProjectWidgetService projectWidgetService;
 
+    /**
+     * Library service
+     */
     @Autowired
     LibraryService libraryService;
 
+    /**
+     * Library repository
+     */
     @Autowired
     LibraryRepository libraryRepository;
 
+    /**
+     * Repository service
+     */
     @Autowired
     RepositoryService repositoryService;
 
+    /**
+     * Repository repository
+     */
     @Autowired
     RepositoryRepository repositoryRepository;
 
     @Test
     public void updateStateTest() {
         ProjectWidget projectWidget = new ProjectWidget();
-        projectWidget.setState(WidgetState.STOPPED);
+        projectWidget.setState(WidgetStateEnum.STOPPED);
         projectWidgetRepository.save(projectWidget);
         assertThat(projectWidgetRepository.count()).isEqualTo(1);
 
         Date date = new Date();
-        projectWidgetService.updateState(WidgetState.RUNNING, projectWidget.getId(), date);
+        projectWidgetService.updateState(WidgetStateEnum.RUNNING, projectWidget.getId(), date);
         ProjectWidget currentPw = projectWidgetRepository.findAll().get(0);
-        assertThat(currentPw.getState()).isEqualTo(WidgetState.RUNNING);
+        assertThat(currentPw.getState()).isEqualTo(WidgetStateEnum.RUNNING);
         assertThat(currentPw.getLastExecutionDate().getTime()).isEqualTo(date.getTime());
     }
 
     @Test
     public void addOrUpdateWidgetNullTest() {
         assertThat(widgetRepository.count()).isEqualTo(0);
-        widgetService.addOrUpdateWidgets(null, null, null, null);
+
+        widgetService.addOrUpdateWidgets(null, null, null);
         assertThat(widgetRepository.count()).isEqualTo(0);
-        widgetService.addOrUpdateWidgets(new Category(), null, null, null);
+
+        widgetService.addOrUpdateWidgets(new Category(), null, null);
         assertThat(widgetRepository.count()).isEqualTo(0);
     }
 
     @Test
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
+    @Transactional
     public void addOrUpdateWidgetTestImage() {
         assertThat(widgetRepository.count()).isEqualTo(0);
-
-        // Add a category
-        Category category = new Category();
-        category.setName("test");
-        category.setTechnicalName("test");
-        categoryService.addOrUpdateCategory(category);
-
 
         // Create widget list
         Widget widget = new Widget();
@@ -109,6 +153,13 @@ public class WidgetServiceTest {
         widget.setHtmlContent("HtmlContent");
         widget.setTechnicalName("widget1");
         widget.setName("Widget 1");
+
+        // Add a category
+        Category category = new Category();
+        category.setName("test");
+        category.setTechnicalName("test");
+        category.setWidgets(Collections.singleton(widget));
+        categoryService.addOrUpdateCategory(category);
 
         // Create an asset
         Asset asset = new Asset();
@@ -124,7 +175,7 @@ public class WidgetServiceTest {
         repository.setLocalPath("C:/test");
         repositoryService.addOrUpdateRepository(repository);
 
-        widgetService.addOrUpdateWidgets(category, Collections.singletonList(widget), null, repository);
+        widgetService.addOrUpdateWidgets(category, null, repository);
         assetRepository.flush();
         widgetRepository.flush();
         repositoryRepository.flush();
@@ -134,11 +185,12 @@ public class WidgetServiceTest {
         assertThat(assetRepository.count()).isEqualTo(1);
         assertThat(repositoryRepository.count()).isEqualTo(1);
 
-        Widget currentWidget = widgetRepository.findByTechnicalName("widget1");
-        assertThat(currentWidget).isNotNull();
-        assertThat(currentWidget.getImage()).isNotNull();
-        assertThat(currentWidget.getWidgetAvailability()).isEqualTo(WidgetAvailabilityEnum.ACTIVATED);
-        assertThat(currentWidget.getImage().getSize()).isEqualTo(10);
+        Optional<Widget> currentWidget = widgetRepository.findByTechnicalName("widget1");
+        assertThat(currentWidget.isPresent()).isTrue();
+        assertThat(currentWidget.get()).isNotNull();
+        assertThat(currentWidget.get().getImage()).isNotNull();
+        assertThat(currentWidget.get().getWidgetAvailability()).isEqualTo(WidgetAvailabilityEnum.ACTIVATED);
+        assertThat(currentWidget.get().getImage().getSize()).isEqualTo(10);
 
         // Update image
         Asset asset1 = new Asset();
@@ -154,7 +206,7 @@ public class WidgetServiceTest {
         widget2.setName("Widget 1");
         widget2.setImage(asset1);
 
-        widgetService.addOrUpdateWidgets(category, Collections.singletonList(widget2), null, repository);
+        widgetService.addOrUpdateWidgets(category, null, repository);
 
         assertThat(categoryRepository.count()).isEqualTo(1);
         assertThat(widgetRepository.count()).isEqualTo(1);
@@ -162,21 +214,17 @@ public class WidgetServiceTest {
         assertThat(repositoryRepository.count()).isEqualTo(1);
 
         currentWidget = widgetRepository.findByTechnicalName("widget1");
-        assertThat(currentWidget).isNotNull();
-        assertThat(currentWidget.getWidgetAvailability()).isEqualTo(WidgetAvailabilityEnum.ACTIVATED);
-        assertThat(currentWidget.getImage()).isNotNull();
-        assertThat(currentWidget.getImage().getSize()).isEqualTo(1);
+        assertThat(currentWidget.isPresent()).isTrue();
+        assertThat(currentWidget.get()).isNotNull();
+        assertThat(currentWidget.get().getWidgetAvailability()).isEqualTo(WidgetAvailabilityEnum.ACTIVATED);
+        assertThat(currentWidget.get().getImage()).isNotNull();
+        assertThat(currentWidget.get().getImage().getSize()).isEqualTo(10);
     }
 
     @Test
+    @Transactional
     public void addOrUpdateWidgetTest() {
         assertThat(widgetRepository.count()).isEqualTo(0);
-
-        // Add a category
-        Category category = new Category();
-        category.setName("test");
-        category.setTechnicalName("test");
-        categoryService.addOrUpdateCategory(category);
 
         // Create widget list
         Widget widget = new Widget();
@@ -197,6 +245,13 @@ public class WidgetServiceTest {
         widget2.setTechnicalName("widget2");
         widget2.setName("Widget 2");
 
+        // Add a category
+        Category category = new Category();
+        category.setName("test");
+        category.setTechnicalName("test");
+        category.setWidgets(Sets.newLinkedHashSet(widget, widget2));
+        categoryService.addOrUpdateCategory(category);
+
         // Create a repository
         Repository repository = new Repository();
         repository.setName("testRepo");
@@ -205,42 +260,44 @@ public class WidgetServiceTest {
         repository.setLocalPath("C:/test");
         repositoryService.addOrUpdateRepository(repository);
 
-        widgetService.addOrUpdateWidgets(category, Arrays.asList(widget, widget2), null, repository);
+        widgetService.addOrUpdateWidgets(category, null, repository);
 
         assertThat(categoryRepository.count()).isEqualTo(1);
         assertThat(widgetRepository.count()).isEqualTo(2);
         assertThat(repositoryRepository.count()).isEqualTo(1);
 
-        Widget currentWidget = widgetRepository.findByTechnicalName("widget1");
-        assertThat(currentWidget).isNotNull();
-        assertThat(currentWidget.getBackendJs()).isEqualTo("bakendjs");
-        assertThat(EntityUtils.<Long>getProxiedId(currentWidget.getCategory())).isEqualTo(category.getId());
-        assertThat(currentWidget.getCssContent()).isEqualTo("cssContent");
-        assertThat(currentWidget.getDelay()).isEqualTo(10L);
-        assertThat(currentWidget.getDescription()).isEqualTo("Description");
-        assertThat(currentWidget.getHtmlContent()).isEqualTo("HtmlContent");
-        assertThat(currentWidget.getTechnicalName()).isEqualTo("widget1");
-        assertThat(currentWidget.getName()).isEqualTo("Widget 1");
-        assertThat(currentWidget.getWidgetAvailability()).isEqualTo(WidgetAvailabilityEnum.ACTIVATED);
+        Optional<Widget> currentWidget = widgetRepository.findByTechnicalName("widget1");
+        assertThat(currentWidget.isPresent()).isTrue();
+        assertThat(currentWidget.get()).isNotNull();
+        assertThat(currentWidget.get().getBackendJs()).isEqualTo("bakendjs");
+        assertThat(EntityUtils.<Long>getProxiedId(currentWidget.get().getCategory())).isEqualTo(category.getId());
+        assertThat(currentWidget.get().getCssContent()).isEqualTo("cssContent");
+        assertThat(currentWidget.get().getDelay()).isEqualTo(10L);
+        assertThat(currentWidget.get().getDescription()).isEqualTo("Description");
+        assertThat(currentWidget.get().getHtmlContent()).isEqualTo("HtmlContent");
+        assertThat(currentWidget.get().getTechnicalName()).isEqualTo("widget1");
+        assertThat(currentWidget.get().getName()).isEqualTo("Widget 1");
+        assertThat(currentWidget.get().getWidgetAvailability()).isEqualTo(WidgetAvailabilityEnum.ACTIVATED);
 
         // Change state of widget 1
-        currentWidget.setWidgetAvailability(WidgetAvailabilityEnum.DISABLED);
-        widgetRepository.save(currentWidget);
+        currentWidget.get().setWidgetAvailability(WidgetAvailabilityEnum.DISABLED);
+        //widgetRepository.save(currentWidget.get());
 
         // Check widget 2
         currentWidget = widgetRepository.findByTechnicalName("widget2");
-        assertThat(currentWidget).isNotNull();
-        assertThat(currentWidget.getBackendJs()).isEqualTo("bakendjs2");
-        assertThat(EntityUtils.<Long>getProxiedId(currentWidget.getCategory())).isEqualTo(category.getId());
-        assertThat(currentWidget.getCssContent()).isEqualTo("cssContent2");
-        assertThat(currentWidget.getDelay()).isEqualTo(20L);
-        assertThat(currentWidget.getDescription()).isEqualTo("Description2");
-        assertThat(currentWidget.getHtmlContent()).isEqualTo("HtmlContent2");
-        assertThat(currentWidget.getTechnicalName()).isEqualTo("widget2");
-        assertThat(currentWidget.getName()).isEqualTo("Widget 2");
+        assertThat(currentWidget.isPresent()).isTrue();
+        assertThat(currentWidget.get()).isNotNull();
+        assertThat(currentWidget.get().getBackendJs()).isEqualTo("bakendjs2");
+        assertThat(EntityUtils.<Long>getProxiedId(currentWidget.get().getCategory())).isEqualTo(category.getId());
+        assertThat(currentWidget.get().getCssContent()).isEqualTo("cssContent2");
+        assertThat(currentWidget.get().getDelay()).isEqualTo(20L);
+        assertThat(currentWidget.get().getDescription()).isEqualTo("Description2");
+        assertThat(currentWidget.get().getHtmlContent()).isEqualTo("HtmlContent2");
+        assertThat(currentWidget.get().getTechnicalName()).isEqualTo("widget2");
+        assertThat(currentWidget.get().getName()).isEqualTo("Widget 2");
 
         // Modify widget 1
-        widget.setId(null);
+        //widget.setId(null);
         widget.setBackendJs("bakendjsModif");
         widget.setCssContent("cssContentModif");
         widget.setDelay(30L);
@@ -249,24 +306,25 @@ public class WidgetServiceTest {
         widget.setTechnicalName("widget1");
         widget.setName("Widget Modif");
 
-        widget2.setId(null);
+        //widget2.setId(null);
 
-        widgetService.addOrUpdateWidgets(category, Arrays.asList(widget, widget2), null, repository);
+        widgetService.addOrUpdateWidgets(category, null, repository);
         assertThat(categoryRepository.count()).isEqualTo(1);
         assertThat(widgetRepository.count()).isEqualTo(2);
         assertThat(repositoryRepository.count()).isEqualTo(1);
 
         currentWidget = widgetRepository.findByTechnicalName("widget1");
-        assertThat(currentWidget).isNotNull();
-        assertThat(currentWidget.getWidgetAvailability()).isEqualTo(WidgetAvailabilityEnum.DISABLED);
-        assertThat(currentWidget.getBackendJs()).isEqualTo("bakendjsModif");
-        assertThat(EntityUtils.<Long>getProxiedId(currentWidget.getCategory())).isEqualTo(category.getId());
-        assertThat(currentWidget.getCssContent()).isEqualTo("cssContentModif");
-        assertThat(currentWidget.getDelay()).isEqualTo(30L);
-        assertThat(currentWidget.getDescription()).isEqualTo("DescriptionModif");
-        assertThat(currentWidget.getHtmlContent()).isEqualTo("HtmlContentModif");
-        assertThat(currentWidget.getTechnicalName()).isEqualTo("widget1");
-        assertThat(currentWidget.getName()).isEqualTo("Widget Modif");
+        assertThat(currentWidget.isPresent()).isTrue();
+        assertThat(currentWidget.get()).isNotNull();
+        assertThat(currentWidget.get().getWidgetAvailability()).isEqualTo(WidgetAvailabilityEnum.DISABLED);
+        assertThat(currentWidget.get().getBackendJs()).isEqualTo("bakendjsModif");
+        assertThat(EntityUtils.<Long>getProxiedId(currentWidget.get().getCategory())).isEqualTo(category.getId());
+        assertThat(currentWidget.get().getCssContent()).isEqualTo("cssContentModif");
+        assertThat(currentWidget.get().getDelay()).isEqualTo(30L);
+        assertThat(currentWidget.get().getDescription()).isEqualTo("DescriptionModif");
+        assertThat(currentWidget.get().getHtmlContent()).isEqualTo("HtmlContentModif");
+        assertThat(currentWidget.get().getTechnicalName()).isEqualTo("widget1");
+        assertThat(currentWidget.get().getName()).isEqualTo("Widget Modif");
     }
 
     @Test
@@ -284,12 +342,6 @@ public class WidgetServiceTest {
         List<Library> libs = libraryService.updateLibraryInDatabase(Collections.singletonList(lib));
         assertThat(libs.size()).isEqualTo(1);
 
-        // Add a category
-        Category category = new Category();
-        category.setName("test");
-        category.setTechnicalName("test");
-        categoryService.addOrUpdateCategory(category);
-
         // Create widget list
         Widget widget = new Widget();
         widget.setBackendJs("bakendjs");
@@ -299,7 +351,14 @@ public class WidgetServiceTest {
         widget.setHtmlContent("HtmlContent");
         widget.setTechnicalName("widget1");
         widget.setName("Widget 1");
-        widget.setLibraries(libs);
+        widget.setLibraries(Sets.newHashSet(libs));
+
+        // Add a category
+        Category category = new Category();
+        category.setName("test");
+        category.setTechnicalName("test");
+        category.setWidgets(Collections.singleton(widget));
+        categoryService.addOrUpdateCategory(category);
 
         asset = new Asset();
         asset.setContent(new byte[]{0x12});
@@ -314,8 +373,7 @@ public class WidgetServiceTest {
         repository.setLocalPath("C:/test");
         repositoryService.addOrUpdateRepository(repository);
 
-        Map<String, Library> libraryMap = libs.stream().collect(Collectors.toMap(item -> ((Library) item).getTechnicalName(), item -> item));
-        widgetService.addOrUpdateWidgets(category, Collections.singletonList(widget), libraryMap, repository);
+        widgetService.addOrUpdateWidgets(category, libs, repository);
 
         assertThat(categoryRepository.count()).isEqualTo(1);
         assertThat(widgetRepository.count()).isEqualTo(1);
@@ -323,11 +381,12 @@ public class WidgetServiceTest {
         assertThat(libraryRepository.count()).isEqualTo(1);
         assertThat(repositoryRepository.count()).isEqualTo(1);
 
-        Widget currentWidget = widgetRepository.findByTechnicalName("widget1");
-        assertThat(currentWidget).isNotNull();
-        assertThat(currentWidget.getImage()).isNotNull();
-        assertThat(currentWidget.getImage().getSize()).isEqualTo(10);
-        assertThat(currentWidget.getLibraries()).isNotNull();
-        assertThat(currentWidget.getLibraries().get(0).getTechnicalName()).isEqualTo("lib1");
+        Optional<Widget> currentWidget = widgetRepository.findByTechnicalName("widget1");
+        assertThat(currentWidget.isPresent()).isTrue();
+        assertThat(currentWidget.get()).isNotNull();
+        assertThat(currentWidget.get().getImage()).isNotNull();
+        assertThat(currentWidget.get().getImage().getSize()).isEqualTo(10);
+        assertThat(currentWidget.get().getLibraries()).isNotNull();
+        assertThat(Lists.newArrayList(currentWidget.get().getLibraries()).get(0).getTechnicalName()).isEqualTo("lib1");
     }
 }

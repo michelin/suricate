@@ -24,7 +24,7 @@ import lombok.*;
 import java.util.Date;
 
 /**
- * Represent the response after Nashorn execution
+ * Response after Nashorn execution
  */
 @Getter
 @Setter

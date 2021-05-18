@@ -108,8 +108,8 @@ export class MockedModelBuilderService {
    */
   public buildMockedProjectWidget(): ProjectWidget {
     const widgetPosition: ProjectWidgetPosition = {
-      col: 1,
-      row: 1,
+      gridColumn: 1,
+      gridRow: 1,
       width: 200,
       height: 200
     };

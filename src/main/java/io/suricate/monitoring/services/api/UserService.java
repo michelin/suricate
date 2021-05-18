@@ -23,7 +23,7 @@ import io.suricate.monitoring.model.enums.UserRoleEnum;
 import io.suricate.monitoring.repositories.UserRepository;
 import io.suricate.monitoring.services.mapper.UserMapper;
 import io.suricate.monitoring.services.specifications.UserSearchSpecification;
-import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
+import io.suricate.monitoring.utils.exceptions.ObjectNotFoundException;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,11 +31,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -116,7 +114,7 @@ public class UserService {
             return Optional.empty();
         }
 
-        user.setRoles(Collections.singletonList(role.get()));
+        user.setRoles(Collections.singleton(role.get()));
         userRepository.save(user);
 
         // Set the default user settings
@@ -139,7 +137,7 @@ public class UserService {
         }
 
         // Create user
-        User user = userMapper.fromLdapUserToUser(connectedUser);
+        User user = userMapper.connectedUserToUserEntity(connectedUser);
 
         UserRoleEnum roleEnumToFind;
         if (userRepository.count() > 0) {
@@ -164,14 +162,14 @@ public class UserService {
     }
 
     /**
-     * Update the user informations when ldap connection is set
+     * Update the user information when ldap connection is set
      *
      * @param user          The user to update
-     * @param connectedUser The LDAP informations
+     * @param connectedUser The LDAP information
      * @return The user updated
      */
-    public Optional<User> updateUserLdapInformations(final User user, final ConnectedUser connectedUser) {
-        User userUpdated = userMapper.fromLdapUserToUser(connectedUser);
+    public Optional<User> updateUserLdapInformation(final User user, final ConnectedUser connectedUser) {
+        User userUpdated = userMapper.connectedUserToUserEntity(connectedUser);
         userUpdated.setRoles(user.getRoles());
         userUpdated.setProjects(user.getProjects());
         userUpdated.setUserSettings(user.getUserSettings());
@@ -192,11 +190,12 @@ public class UserService {
     }
 
     /**
-     * Get a user by username
+     * Get a user by username ignoring case
      *
      * @param username The username to find
      * @return The user as optional
      */
+    @Transactional
     public Optional<User> getOneByUsername(String username) {
         return userRepository.findByUsernameIgnoreCase(username);
     }
@@ -212,12 +211,13 @@ public class UserService {
     }
 
     /**
-     * Method used to get the list of every users
+     * Get all paginated users
      *
-     * @param search   The string to search
-     * @param pageable The configuration of the page
-     * @return List of users
+     * @param search The specification to apply
+     * @param pageable The pageable to apply
+     * @return The paginated users
      */
+    @Transactional
     public Page<User> getAll(String search, Pageable pageable) {
         return userRepository.findAll(new UserSearchSpecification(search), pageable);
     }
@@ -290,11 +290,11 @@ public class UserService {
      * @param roleNames The roles to set
      */
     private void updateUserRoles(User user, List<UserRoleEnum> roleNames) {
-        List<Role> rolesToSet = roleNames.stream()
+        Set<Role> rolesToSet = roleNames.stream()
             .map(roleName -> roleService.getRoleByName(roleName.name()).orElse(null))
-            .collect(Collectors.toList());
+            .collect(Collectors.toSet());
 
-        if (rolesToSet != null && !rolesToSet.isEmpty()) {
+        if (!rolesToSet.isEmpty()) {
             user.setRoles(rolesToSet);
         }
     }

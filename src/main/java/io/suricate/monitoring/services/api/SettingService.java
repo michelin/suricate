@@ -17,10 +17,10 @@
 package io.suricate.monitoring.services.api;
 
 import io.suricate.monitoring.model.entities.Setting;
-import io.suricate.monitoring.model.enums.SettingType;
 import io.suricate.monitoring.repositories.SettingRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -47,31 +47,23 @@ public class SettingService {
     }
 
     /**
-     * Get the full list of settings
-     *
-     * @return The list of settings
-     */
-    public Optional<List<Setting>> getAll() {
-        return this.settingRepository.findAllByOrderByDescription();
-    }
-
-    /**
-     * Get a setting by id
+     * Get setting by id
      *
      * @param settingId The setting id
-     * @return The setting as optional
+     * @return The setting
      */
+    @Transactional
     public Optional<Setting> getOneById(final Long settingId) {
         return this.settingRepository.findById(settingId);
     }
 
     /**
-     * Get a setting by the type
+     * Get settings by description
      *
-     * @param settingType The setting type
-     * @return The setting as optional
+     * @return The list of the settings
      */
-    public Optional<Setting> getOneByType(final SettingType settingType) {
-        return this.settingRepository.findByType(settingType);
+    @Transactional
+    public Optional<List<Setting>> getAll() {
+        return this.settingRepository.findAllByOrderByDescription();
     }
 }

@@ -26,46 +26,36 @@ import org.mapstruct.Named;
 import java.util.List;
 
 /**
- * Interface that manage the generation DTO/Model objects for UserSetting class
+ * Manage the generation DTO/Model objects for UserSetting class
  */
 @Mapper(
     componentModel = "spring",
     uses = {
+        SettingMapper.class,
         AllowedSettingValueMapper.class
     }
 )
-public interface UserSettingMapper {
-
-    /* ************************* TO DTO ********************************************** */
-
-    /* ******************************************************* */
-    /*                  Simple Mapping                         */
-    /* ******************************************************* */
+public abstract class UserSettingMapper {
 
     /**
-     * Transform a user setting into a user setting dto without user
+     * Map a user setting into a user setting DTO
      *
-     * @param userSetting The user setting to transform
-     * @return The related DTO
+     * @param userSetting The user setting to map
+     * @return The user setting DTO
      */
-    @Named("toUserSettingDtoDefault")
+    @Named("toUserSettingDTO")
     @Mapping(target = "userId", source = "userSetting.user.id")
-    @Mapping(target = "settingId", source = "userSetting.setting.id")
-    @Mapping(target = "settingValue", qualifiedByName = "toAllowedSettingValueDtoDefault")
-    UserSettingResponseDto toUserSettingDtoDefault(UserSetting userSetting);
-
-
-    /* ******************************************************* */
-    /*                    List Mapping                         */
-    /* ******************************************************* */
+    @Mapping(target = "setting", qualifiedByName = "toSettingDTO")
+    @Mapping(target = "settingValue", qualifiedByName = "toAllowedSettingValueDTO")
+    public abstract UserSettingResponseDto toUserSettingDTO(UserSetting userSetting);
 
     /**
-     * Transform a list of userSetting into a list of userSettingsDto
+     * Map a list of user settings into a list of user settings DTOs
      *
-     * @param userSettings The user settings to transform
-     * @return The related list of dto's
+     * @param userSettings The list of user settings to map
+     * @return The list of user settings as DTO
      */
-    @Named("toUserSettingDtosDefault")
-    @IterableMapping(qualifiedByName = "toUserSettingDtoDefault")
-    List<UserSettingResponseDto> toUserSettingDtosDefault(List<UserSetting> userSettings);
+    @Named("toUserSettingsDTOs")
+    @IterableMapping(qualifiedByName = "toUserSettingDTO")
+    public abstract List<UserSettingResponseDto> toUserSettingsDTOs(List<UserSetting> userSettings);
 }

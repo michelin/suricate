@@ -18,7 +18,7 @@
             "main": "src/main/webapp/main.ts",
             "tsConfig": "src/main/webapp/tsconfig.app.json",
             "polyfills": "src/main/webapp/polyfills.ts",
-            "assets": ["src/main/webapp/assets", "src/main/webapp/favicon.ico"],
+            "assets": ["src/main/webapp/assets"],
             "stylePreprocessorOptions": {
               "includePaths": [
                 "node_modules/normalize-scss/sass",
@@ -44,7 +44,6 @@
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
-              "extractCss": true,
               "namedChunks": false,
               "aot": true,
               "extractLicenses": true,
@@ -76,9 +75,6 @@
           "configurations": {
             "production": {
               "browserTarget": "suricate-frontend:build:production"
-            },
-            "es5": {
-              "browserTarget": "d4x:build:es5"
             }
           }
         },
@@ -95,7 +91,7 @@
             "karmaConfig": "./karma.conf.js",
             "polyfills": "src/main/webapp/polyfills.ts",
             "tsConfig": "src/main/webapp/tsconfig.spec.json",
-            "assets": ["src/main/webapp/assets", "src/main/webapp/favicon.ico"],
+            "assets": ["src/main/webapp/assets"],
             "stylePreprocessorOptions": {
               "includePaths": [
                 "node_modules/normalize-scss/sass",
@@ -150,6 +146,9 @@
     },
     "@schematics/angular:directive": {
       "prefix": "suricate"
+    },
+    "@schematics/angular:application": {
+      "strict": true
     }
   }
 }

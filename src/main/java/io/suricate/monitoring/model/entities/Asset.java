@@ -30,8 +30,6 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-@ToString
 public class Asset extends AbstractAuditingEntity<Long> {
 
     /**
@@ -46,7 +44,7 @@ public class Asset extends AbstractAuditingEntity<Long> {
      */
     @Type(type = "org.hibernate.type.BinaryType")
     @Basic(fetch = FetchType.LAZY)
-    @Column(name = "content", nullable = false)
+    @Column(nullable = false)
     private byte[] content;
 
     /**
@@ -61,7 +59,11 @@ public class Asset extends AbstractAuditingEntity<Long> {
     @Column
     private long size;
 
-
+    /**
+     * Set the content and the size of the asset
+     *
+     * @param content The content to set
+     */
     public void setContent(byte[] content) {
         this.content = content;
         this.size = content.length;

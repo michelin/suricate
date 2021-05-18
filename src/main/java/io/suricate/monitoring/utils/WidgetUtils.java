@@ -31,26 +31,24 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public final class WidgetUtils {
-
-    /**
-     * Object mapper for jackson
-     */
-    private static ObjectMapper mapper;
-
-    static {
-        mapper = new ObjectMapper(new YAMLFactory());
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    }
 
     /**
      * Class logger
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(WidgetUtils.class);
+
+    /**
+     * Object mapper for jackson
+     */
+    private static final ObjectMapper mapper;
+
+    static {
+        mapper = new ObjectMapper(new YAMLFactory());
+        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    }
 
     /**
      * Method used to parse library folder
@@ -80,14 +78,13 @@ public final class WidgetUtils {
         return libraries;
     }
 
-
     /**
      * Method used to parse category folder
      *
      * @param rootFolder the folder to parse
      * @return the list of category to parse
      */
-    public static List<Category> parseWidgetFolder(File rootFolder) {
+    public static List<Category> parseCategoriesFolder(File rootFolder) {
         List<Category> categories = null;
 
         try {
@@ -100,7 +97,7 @@ public final class WidgetUtils {
             categories = new ArrayList<>();
 
             for (File folderCategory : list) {
-                Category category = getCategory(folderCategory);
+                Category category = WidgetUtils.getCategory(folderCategory);
 
                 if (category != null) {
                     categories.add(category);
@@ -148,7 +145,7 @@ public final class WidgetUtils {
         File widgetRootFolder = new File(folderCategory.getPath() + File.separator + "widgets" + File.separator);
 
         if (widgetRootFolder.exists()) {
-            ArrayList<Widget> widgets = new ArrayList<>();
+            Set<Widget> widgets = new LinkedHashSet<>();
             List<File> folders = FilesUtils.getFolders(widgetRootFolder);
 
             for (File widgetFolder : folders) {
@@ -158,6 +155,7 @@ public final class WidgetUtils {
                     widgets.add(widget);
                 }
             }
+
             category.setWidgets(widgets);
         }
 
@@ -165,19 +163,19 @@ public final class WidgetUtils {
     }
 
     /**
-     * Method used to get widget from Folder
+     * Get widget from a given folder
      *
-     * @param widgetFolder widget folder
-     * @return the Widget bean
-     * @throws IOException
+     * @param folder The folder from which to retrieve the widget
+     * @return The built widget from the folder
+     * @throws IOException Triggered exception during the widget files reading
      */
-    public static Widget getWidget(File widgetFolder) throws IOException {
-        if (widgetFolder == null) {
+    public static Widget getWidget(File folder) throws IOException {
+        if (folder == null) {
             return null;
         }
 
         Widget widget = new Widget();
-        List<File> files = FilesUtils.getFiles(widgetFolder);
+        List<File> files = FilesUtils.getFiles(folder);
 
         if (!files.isEmpty()) {
             for (File file : files) {
@@ -185,51 +183,44 @@ public final class WidgetUtils {
             }
 
             if (widget.getDelay() == null) {
-                LOGGER.error("Widget delay must no be null : {}", widgetFolder.getPath());
+                LOGGER.error("Widget delay must no be null : {}", folder.getPath());
                 return null;
             }
 
             if (widget.getDelay() > 0 && StringUtils.isBlank(widget.getBackendJs())) {
-                LOGGER.error("Widget script must not be empty when delay > 0 : {}", widgetFolder.getPath());
+                LOGGER.error("Widget script must not be empty when delay > 0 : {}", folder.getPath());
                 return null;
             }
 
             if (StringUtils.isAnyBlank(widget.getCssContent(), widget.getDescription(), widget.getHtmlContent(), widget.getTechnicalName(), widget.getName())) {
-                LOGGER.error("Widget is not well formatted : {}", widgetFolder.getPath());
+                LOGGER.error("Widget is not well formatted : {}", folder.getPath());
                 return null;
             }
         }
+
         return widget;
     }
 
     /**
-     * Method used to read and extract all widget content from a file
+     * Read the given file. According to the name of the file,
+     * fill the widget with the information contained in the file
      *
-     * @param widget the widget object
-     * @param file   the widget configuration folder
-     * @throws IOException Exception during file read
+     * @param widget The widget
+     * @param file The file containing information to set to the widget
+     * @throws IOException Exception triggered during file reading
      */
     private static void readWidgetConfig(Widget widget, File file) throws IOException {
         if ("image".equals(FilenameUtils.getBaseName(file.getName()))) {
             widget.setImage(FilesUtils.readAsset(file));
-        }
-        else if ("description".equals(FilenameUtils.getBaseName(file.getName()))) {
+        } else if ("description".equals(FilenameUtils.getBaseName(file.getName()))) {
             mapper.readerForUpdating(widget).readValue(file);
-        }
-
-        else if ("script".equals(FilenameUtils.getBaseName(file.getName()))) {
+        } else if ("script".equals(FilenameUtils.getBaseName(file.getName()))) {
             widget.setBackendJs(StringUtils.trimToNull(FileUtils.readFileToString(file, StandardCharsets.UTF_8)));
-        }
-
-        else if ("style".equals(FilenameUtils.getBaseName(file.getName()))) {
+        } else if ("style".equals(FilenameUtils.getBaseName(file.getName()))) {
             widget.setCssContent(StringUtils.trimToNull(FileUtils.readFileToString(file, StandardCharsets.UTF_8)));
-        }
-
-        else if ("content".equals(FilenameUtils.getBaseName(file.getName()))) {
+        } else if ("content".equals(FilenameUtils.getBaseName(file.getName()))) {
             widget.setHtmlContent(StringUtils.trimToNull(FileUtils.readFileToString(file, StandardCharsets.UTF_8)));
-        }
-
-        else if ("params".equals(FilenameUtils.getBaseName(file.getName()))) {
+        } else if ("params".equals(FilenameUtils.getBaseName(file.getName()))) {
             mapper.readerForUpdating(widget).readValue(file);
         }
     }

@@ -174,7 +174,7 @@ public class DashboardWebSocketService {
      *
      * Used to disconnect a given single screen from a dashboard.
      *
-     * @param project The project
+     * @param projectToken The project
      * @param screenCode The unique screen code
      */
     @Async
@@ -201,7 +201,7 @@ public class DashboardWebSocketService {
      */
     public void sendConnectEventToScreenSubscriber(final Project project, final String screenCode) {
         UpdateEvent updateEvent = new UpdateEvent(UpdateType.CONNECT);
-        updateEvent.setContent(projectMapper.toProjectDtoDefault(project));
+        updateEvent.setContent(projectMapper.toProjectDTO(project));
 
         LOGGER.debug("Sending the event {} to the screen {}", updateEvent.getType(), screenCode);
 

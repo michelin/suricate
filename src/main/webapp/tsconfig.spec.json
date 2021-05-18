@@ -1,8 +1,8 @@
 {
-  "extends": "../../../tsconfig.base.json",
+  "extends": "../../../tsconfig.json",
   "compilerOptions": {
-    "outDir": "../../../out-tsc/spec",
     "baseUrl": "./",
+    "outDir": "../../../out-tsc/spec",
     "types": ["jasmine", "node"]
   },
   "files": ["test.ts", "polyfills.ts"],

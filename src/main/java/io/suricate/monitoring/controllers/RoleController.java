@@ -26,7 +26,7 @@ import io.suricate.monitoring.model.entities.Role;
 import io.suricate.monitoring.services.api.RoleService;
 import io.suricate.monitoring.services.mapper.RoleMapper;
 import io.suricate.monitoring.services.mapper.UserMapper;
-import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
+import io.suricate.monitoring.utils.exceptions.ObjectNotFoundException;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -97,7 +97,7 @@ public class RoleController {
                                           @RequestParam(value = "search", required = false) String search,
                                           Pageable pageable) {
         Page<Role> rolesPaged = roleService.getRoles(search, pageable);
-        return rolesPaged.map(roleMapper::toRoleDtoDefault);
+        return rolesPaged.map(roleMapper::toRoleDTO);
     }
 
     /**
@@ -124,7 +124,7 @@ public class RoleController {
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(roleMapper.toRoleDtoDefault(roleOptional.get()));
+            .body(roleMapper.toRoleDTO(roleOptional.get()));
     }
 
     /**
@@ -151,6 +151,6 @@ public class RoleController {
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(userMapper.toUserDtosDefault(roleOptional.get().getUsers()));
+            .body(userMapper.toUsersDTOs(roleOptional.get().getUsers()));
     }
 }

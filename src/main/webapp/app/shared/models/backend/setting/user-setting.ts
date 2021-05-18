@@ -17,6 +17,7 @@
  */
 
 import { AllowedSettingValue } from './allowed-setting-value';
+import { Setting } from './setting';
 
 /**
  * Link between a setting and a user
@@ -24,7 +25,7 @@ import { AllowedSettingValue } from './allowed-setting-value';
 export interface UserSetting {
   id: number;
   userId: number;
-  settingId: number;
+  setting: Setting;
   settingValue?: AllowedSettingValue;
   unconstrainedValue?: string;
 }

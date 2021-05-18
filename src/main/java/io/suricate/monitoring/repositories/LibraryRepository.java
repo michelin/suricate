@@ -16,33 +16,20 @@
 
 package io.suricate.monitoring.repositories;
 
-import io.suricate.monitoring.model.entities.Asset;
 import io.suricate.monitoring.model.entities.Library;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 /**
  * Repository used for request Libraries in database
  */
+@Repository
 public interface LibraryRepository extends JpaRepository<Library, Long> {
-
-    /**
-     * Method used to update library
-     *
-     * @param technicalName widget technical name
-     * @param content       widget content
-     * @return State
-     */
-    @Modifying
-    @Query("UPDATE Library " +
-        "SET content = :content " +
-        "WHERE technicalName = :technicalName")
-    int updateLibrary(@Param("technicalName") String technicalName, @Param("content") Asset content);
 
     /**
      * Method used to get a list of unique library id from widget ids
@@ -58,11 +45,11 @@ public interface LibraryRepository extends JpaRepository<Library, Long> {
     List<Long> getLibs(@Param("ids") List<Long> widgetIds);
 
     /**
-     * Find a librairie by technical name
+     * Find a library by technical name
      *
-     * @param technicalname The technical name
-     * @return The related library
+     * @param technicalName The technical name
+     * @return The library
      */
-    Library findByTechnicalName(String technicalname);
+    Library findByTechnicalName(String technicalName);
 
 }

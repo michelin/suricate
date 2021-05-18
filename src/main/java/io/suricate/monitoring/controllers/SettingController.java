@@ -24,8 +24,8 @@ import io.suricate.monitoring.model.entities.Setting;
 import io.suricate.monitoring.model.enums.SettingType;
 import io.suricate.monitoring.services.api.SettingService;
 import io.suricate.monitoring.services.mapper.SettingMapper;
-import io.suricate.monitoring.utils.exception.NoContentException;
-import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
+import io.suricate.monitoring.utils.exceptions.NoContentException;
+import io.suricate.monitoring.utils.exceptions.ObjectNotFoundException;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -46,19 +46,19 @@ import java.util.Optional;
 public class SettingController {
 
     /**
-     * The setting service
+     * Settings service
      */
     private final SettingService settingService;
 
     /**
-     * The setting mapper used for the transformation of Model object into a DTO object
+     * Settings mapper
      */
     private final SettingMapper settingMapper;
 
     /**
-     * The constructor
+     * Constructor
      *
-     * @param settingService The setting service to inject
+     * @param settingService The setting service
      * @param settingMapper  The setting mapper
      */
     @Autowired
@@ -79,18 +79,8 @@ public class SettingController {
         @ApiResponse(code = 204, message = "No Content")
     })
     @GetMapping(value = "/v1/settings")
-    public ResponseEntity<List<SettingResponseDto>> getAll(@ApiParam(name = "type", value = "The setting type to get", allowableValues = "template, language")
-                                                           @RequestParam(value = "type", required = false) String type) {
-        Optional<List<Setting>> settingsOptional = Optional.empty();
-
-        if (type != null) {
-            Optional<Setting> settingByType = settingService.getOneByType(SettingType.getSettingTypeByString(type));
-            if (settingByType.isPresent()) {
-                settingsOptional = Optional.of(Collections.singletonList(settingByType.get()));
-            }
-        } else {
-            settingsOptional = settingService.getAll();
-        }
+    public ResponseEntity<List<SettingResponseDto>> getAll() {
+        Optional<List<Setting>> settingsOptional = settingService.getAll();
 
         if (!settingsOptional.isPresent()) {
             throw new NoContentException(Setting.class);
@@ -99,33 +89,6 @@ public class SettingController {
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(settingMapper.toSettingDtosDefault(settingsOptional.get()));
-    }
-
-    /**
-     * Get a setting
-     *
-     * @param settingId The setting id to get
-     * @return The setting
-     */
-    @ApiOperation(value = "Get a setting by id", response = SettingResponseDto.class)
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = SettingResponseDto.class),
-        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
-    })
-    @GetMapping(value = "/v1/settings/{settingId}")
-    @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<SettingResponseDto> getOne(@ApiParam(name = "settingId", value = "The setting id", required = true)
-                                                     @PathVariable("settingId") Long settingId) {
-        Optional<Setting> settingOptional = settingService.getOneById(settingId);
-        if (!settingOptional.isPresent()) {
-            throw new ObjectNotFoundException(Setting.class, settingId);
-        }
-
-        return ResponseEntity
-            .ok()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(settingMapper.toSettingDtoDefault(settingOptional.get()));
+            .body(settingMapper.toSettingsDTOs(settingsOptional.get()));
     }
 }

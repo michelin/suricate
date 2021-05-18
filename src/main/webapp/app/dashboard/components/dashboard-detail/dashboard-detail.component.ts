@@ -198,6 +198,7 @@ export class DashboardDetailComponent implements OnInit {
           color: 'primary',
           variant: 'miniFab',
           tooltip: { message: 'widget.add' },
+          hidden: () => this.isReadOnly,
           callback: () => this.displayProjectWidgetWizard()
         },
         {
@@ -205,6 +206,7 @@ export class DashboardDetailComponent implements OnInit {
           color: 'primary',
           variant: 'miniFab',
           tooltip: { message: 'dashboard.edit' },
+          hidden: () => this.isReadOnly,
           callback: () => this.openDashboardFormSidenav()
         },
         {
@@ -212,6 +214,7 @@ export class DashboardDetailComponent implements OnInit {
           color: 'primary',
           variant: 'miniFab',
           tooltip: { message: 'user.edit' },
+          hidden: () => this.isReadOnly,
           callback: () => this.openUserFormSidenav()
         },
         {
@@ -219,7 +222,7 @@ export class DashboardDetailComponent implements OnInit {
           color: 'primary',
           variant: 'miniFab',
           tooltip: { message: 'screen.refresh' },
-          hidden: () => !this.projectWidgets || this.projectWidgets.length === 0,
+          hidden: () => this.isReadOnly || !this.projectWidgets || this.projectWidgets.length === 0,
           callback: () => this.refreshConnectedScreens()
         },
         {
@@ -235,7 +238,7 @@ export class DashboardDetailComponent implements OnInit {
           color: 'primary',
           variant: 'miniFab',
           tooltip: { message: 'screen.management' },
-          hidden: () => !this.projectWidgets || this.projectWidgets.length === 0,
+          hidden: () => this.isReadOnly || !this.projectWidgets || this.projectWidgets.length === 0,
           callback: () => this.openScreenManagementDialog()
         },
         {
@@ -243,6 +246,7 @@ export class DashboardDetailComponent implements OnInit {
           color: 'warn',
           variant: 'miniFab',
           tooltip: { message: 'dashboard.delete' },
+          hidden: () => this.isReadOnly,
           callback: () => this.deleteDashboard()
         }
       ]

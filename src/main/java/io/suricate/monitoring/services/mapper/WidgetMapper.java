@@ -23,10 +23,12 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
- * Interface that manage the generation DTO/Model objects for Widget class
+ * Manage the generation DTO/Model objects for Widget class
  */
 @Mapper(
     componentModel = "spring",
@@ -35,38 +37,41 @@ import java.util.List;
         CategoryMapper.class
     }
 )
-public interface WidgetMapper {
-
-    /* ************************* TO DTO ********************************************** */
-
-    /* ******************************************************* */
-    /*                  Simple Mapping                         */
-    /* ******************************************************* */
+public abstract class WidgetMapper {
 
     /**
-     * Tranform a Widget into a WidgetResponseDto
+     * Map a widget into a DTO
      *
-     * @param widget The widget to transform
-     * @return The related widget DTO
+     * @param widget The widget to map
+     * @return The widget DTO
      */
-    @Named("toWidgetDtoDefault")
+    @Named("toWidgetDTO")
     @Mapping(target = "imageToken", expression = "java( widget.getImage() != null ? io.suricate.monitoring.utils.IdUtils.encrypt(widget.getImage().getId()) : null )")
-    @Mapping(target = "category", qualifiedByName = "toCategoryDtoDefault")
+    @Mapping(target = "category", qualifiedByName = "toCategoryWithHiddenValueParametersDTO")
     @Mapping(target = "repositoryId", source = "widget.repository.id")
-    @Mapping(target = "params", source = "widget.widgetParams", qualifiedByName = "toWidgetParamDtoDefault")
-    WidgetResponseDto toWidgetDtoDefault(Widget widget);
-
-    /* ******************************************************* */
-    /*                    List Mapping                         */
-    /* ******************************************************* */
+    @Mapping(target = "params", source = "widget.widgetParams", qualifiedByName = "toWidgetParameterDTO")
+    public abstract WidgetResponseDto toWidgetDTO(Widget widget);
 
     /**
-     * Tranform a list of widgets into a list of widgetDto
+     * Map a widget into a DTO
      *
-     * @param widgets The list of widget to transform
-     * @return The related DTOs
+     * @param widget The widget to map
+     * @return The widget DTO
      */
-    @Named("toWidgetDtosDefault")
-    @IterableMapping(qualifiedByName = "toWidgetDtoDefault")
-    List<WidgetResponseDto> toWidgetDtosDefault(List<Widget> widgets);
+    @Named("toWidgetWithoutCategoryParametersDTO")
+    @Mapping(target = "imageToken", expression = "java( widget.getImage() != null ? io.suricate.monitoring.utils.IdUtils.encrypt(widget.getImage().getId()) : null )")
+    @Mapping(target = "category", qualifiedByName = "toCategoryWithoutCategoryParametersDTO")
+    @Mapping(target = "repositoryId", source = "widget.repository.id")
+    @Mapping(target = "params", source = "widget.widgetParams", qualifiedByName = "toWidgetParameterDTO")
+    public abstract WidgetResponseDto toWidgetWithoutCategoryParametersDTO(Widget widget);
+
+    /**
+     * Map a list of widgets into a list of widgets DTOs
+     *
+     * @param widgets The list of widgets to map
+     * @return The list of widgets as DTOs
+     */
+    @Named("toWidgetsDTOs")
+    @IterableMapping(qualifiedByName = "toWidgetDTO")
+    public abstract List<WidgetResponseDto> toWidgetsDTOs(Collection<Widget> widgets);
 }

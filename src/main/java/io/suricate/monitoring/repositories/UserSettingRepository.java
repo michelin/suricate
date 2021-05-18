@@ -17,14 +17,27 @@
 package io.suricate.monitoring.repositories;
 
 import io.suricate.monitoring.model.entities.UserSetting;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
  * Repository used for request UserSettings in database
  */
+@Repository
 public interface UserSettingRepository extends JpaRepository<UserSetting, Long> {
+
+    /**
+     * Get user settings by username
+     *
+     * @param username The username
+     * @return The user settings
+     */
+    @EntityGraph(attributePaths = "setting.allowedSettingValues")
+    Optional<List<UserSetting>> findAllByUserUsernameIgnoreCase(String username);
 
     /**
      * Get a setting by userName and setting Id
@@ -33,5 +46,5 @@ public interface UserSettingRepository extends JpaRepository<UserSetting, Long> 
      * @param settingId The setting Id
      * @return The user setting associated
      */
-    Optional<UserSetting> findByUser_UsernameAndSetting_Id(String userName, Long settingId);
+    Optional<UserSetting> findByUserUsernameAndSettingId(String userName, Long settingId);
 }

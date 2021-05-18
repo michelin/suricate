@@ -3,7 +3,6 @@ package io.suricate.monitoring.services.specifications;
 import io.suricate.monitoring.model.entities.Role;
 import io.suricate.monitoring.model.entities.Role_;
 
-
 /**
  * Class used to filter JPA queries
  */

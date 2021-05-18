@@ -17,7 +17,7 @@
 package io.suricate.monitoring.model.entities;
 
 import io.suricate.monitoring.model.entities.generic.AbstractAuditingEntity;
-import io.suricate.monitoring.model.enums.DataType;
+import io.suricate.monitoring.model.enums.DataTypeEnum;
 import lombok.*;
 
 import javax.persistence.*;
@@ -30,8 +30,6 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-@ToString
 public class CategoryParameter extends AbstractAuditingEntity<String> {
 
     /**
@@ -58,7 +56,7 @@ public class CategoryParameter extends AbstractAuditingEntity<String> {
      */
     @Column(name = "data_type")
     @Enumerated(value = EnumType.STRING)
-    private DataType dataType;
+    private DataTypeEnum dataType;
 
     /**
      * Make a link between category and configurations
@@ -67,6 +65,11 @@ public class CategoryParameter extends AbstractAuditingEntity<String> {
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private Category category;
 
+    /**
+     * Get the ID of this entity
+     *
+     * @return The key
+     */
     @Override
     public String getId() {
         return key;

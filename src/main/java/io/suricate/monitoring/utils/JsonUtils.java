@@ -26,7 +26,7 @@ import java.io.IOException;
 public final class JsonUtils {
 
     /**
-     * Class logger
+     * Logger
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(JsonUtils.class);
 
@@ -52,6 +52,7 @@ public final class JsonUtils {
                 LOGGER.trace(e.getMessage(), e);
             }
         }
+
         return false;
     }
 }

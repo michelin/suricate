@@ -36,21 +36,25 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value = "ApiError", description = "Api error response")
 public class ApiErrorDto extends AbstractDto {
+
     /**
      * The error message to send
      */
     @ApiModelProperty(value = "Error message")
     private String message;
+
     /**
      * The key code
      */
     @ApiModelProperty(value = "Error key")
     private String key;
+
     /**
      * The HttpStatus number
      */
     @ApiModelProperty(value = "HttpStatus number")
     private int status;
+
     /**
      * The datetime of the error
      */
@@ -58,7 +62,11 @@ public class ApiErrorDto extends AbstractDto {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date timestamp;
 
-
+    /**
+     * Constructor
+     *
+     * @param apiErrorEnum The API error enum
+     */
     public ApiErrorDto(ApiErrorEnum apiErrorEnum) {
         this.message = apiErrorEnum.getMessage();
         this.key = apiErrorEnum.getKey();
@@ -66,9 +74,14 @@ public class ApiErrorDto extends AbstractDto {
         this.status = apiErrorEnum.getStatus().value();
     }
 
+    /**
+     * Constructor
+     *
+     * @param message The error message
+     * @param apiError The API error enum
+     */
     public ApiErrorDto(String message, ApiErrorEnum apiError) {
         this(apiError);
         this.message = StringUtils.isBlank(message) ? apiError.getMessage() : message;
     }
-
 }

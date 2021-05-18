@@ -1,4 +1,4 @@
-package io.suricate.monitoring.utils.exception;
+package io.suricate.monitoring.utils.exceptions;
 
 import lombok.Getter;
 

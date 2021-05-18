@@ -18,25 +18,21 @@
 
 package io.suricate.monitoring.model.entities;
 
-import io.suricate.monitoring.model.entities.AllowedSettingValue;
-import io.suricate.monitoring.model.enums.DataType;
+import io.suricate.monitoring.model.enums.DataTypeEnum;
 import io.suricate.monitoring.model.enums.SettingType;
 import lombok.*;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
- * Constains every setting to display
+ * Setting entity
  */
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-@ToString
 public class Setting {
     /**
      * The setting id
@@ -63,7 +59,7 @@ public class Setting {
      */
     @Column(nullable = false, name = "data_type")
     @Enumerated(EnumType.STRING)
-    private DataType dataType;
+    private DataTypeEnum dataType;
 
     /**
      * The setting type
@@ -73,8 +69,8 @@ public class Setting {
     private SettingType type;
 
     /**
-     * Hold the possible values (if we have a select setting for example)
+     * Hold the possible values
      */
     @OneToMany(mappedBy = "setting")
-    private List<AllowedSettingValue> allowedSettingValues = new ArrayList<>();
+    private Set<AllowedSettingValue> allowedSettingValues = new LinkedHashSet<>();
 }

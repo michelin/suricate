@@ -31,7 +31,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.ldap.userdetails.LdapAuthoritiesPopulator;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -45,10 +45,12 @@ public class UserDetailsServiceLdapAuthoritiesPopulator implements LdapAuthoriti
      * The LDAP
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(UserDetailsServiceLdapAuthoritiesPopulator.class);
+
     /**
      * The user service
      */
     private final UserService userService;
+
     /**
      * The application properties (from properties files)
      */
@@ -84,7 +86,7 @@ public class UserDetailsServiceLdapAuthoritiesPopulator implements LdapAuthoriti
             // Call service to add user
             currentUser = userService.initUser(connectedUser);
         } else {
-            currentUser = userService.updateUserLdapInformations(currentUser.get(), connectedUser);
+            currentUser = userService.updateUserLdapInformation(currentUser.get(), connectedUser);
         }
 
         return currentUser.map(user -> user.getRoles().stream()

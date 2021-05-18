@@ -1,8 +1,8 @@
 {
-  "extends": "../../../tsconfig.base.json",
+  "extends": "../../../tsconfig.json",
   "compilerOptions": {
-    "outDir": "../../../out-tsc/app",
     "baseUrl": "./",
+    "outDir": "../../../out-tsc/app",
     "types": []
   },
   "files": ["main.ts", "polyfills.ts"],

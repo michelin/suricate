@@ -43,13 +43,13 @@ public class ProjectWidgetPositionRequestDto extends AbstractDto {
      * The start column of this widget
      */
     @ApiModelProperty(value = "The number of the column where the widget should start to be displayed")
-    private int col;
+    private int gridColumn;
 
     /**
      * The start row of the widget
      */
     @ApiModelProperty(value = "The number of the row where the widget should start to be displayed")
-    private int row;
+    private int gridRow;
 
     /**
      * The number of columns for this widget

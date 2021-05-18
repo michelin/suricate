@@ -17,10 +17,12 @@
 package io.suricate.monitoring.repositories;
 
 import io.suricate.monitoring.model.entities.Project;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +30,7 @@ import java.util.Optional;
 /**
  * Repository used for request Projects in database
  */
+@Repository
 public interface ProjectRepository extends CrudRepository<Project, Long>, JpaSpecificationExecutor<Project> {
 
     /**
@@ -44,6 +47,7 @@ public interface ProjectRepository extends CrudRepository<Project, Long>, JpaSpe
 	 * @param token The token to find
 	 * @return The project as Optionals
 	 */
+    @EntityGraph(attributePaths = {"screenshot", "widgets", "users"})
 	Optional<Project> findProjectByToken(final String token);
 
 	/**

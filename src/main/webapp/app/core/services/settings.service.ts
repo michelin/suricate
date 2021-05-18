@@ -16,14 +16,14 @@
 
 import { Injectable } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
-import { flatMap } from 'rxjs/operators';
-
+import { Observable, Subject } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { UserSetting } from '../../shared/models/backend/setting/user-setting';
 import { User } from '../../shared/models/backend/user/user';
 import { HttpUserService } from '../../shared/services/backend/http-user/http-user.service';
 import { SettingsTypeEnum } from '../../shared/enums/settings-type.enum';
 import { HttpSettingService } from '../../shared/services/backend/http-setting/http-setting.service';
+import { Setting } from '../../shared/models/backend/setting/setting';
 
 /**
  * Manage the app theme
@@ -31,16 +31,16 @@ import { HttpSettingService } from '../../shared/services/backend/http-setting/h
 @Injectable({ providedIn: 'root' })
 export class SettingsService {
   /**
-   * Hold the current theme
+   * Theme of the user
    */
-  private currentThemeSubject = new Subject<string>();
+  private currentThemeValueSubject = new Subject<string>();
 
   /**
    * Constructor
    *
-   * @param {TranslateService} translateService The translate service to inject
-   * @param {HttpSettingService} httpSettingService The http setting service
-   * @param {HttpUserService} httpUserService The http user service to inject
+   * @param translateService The translate service to inject
+   * @param httpSettingService The http setting service
+   * @param httpUserService The http user service to inject
    */
   constructor(
     private translateService: TranslateService,
@@ -48,131 +48,56 @@ export class SettingsService {
     private httpUserService: HttpUserService
   ) {}
 
-  /* ************************************************************************ */
-  /*                Global Part                                                */
-
-  /* ************************************************************************ */
-
   /**
-   * When any user is not connected
+   * Init default settings when any user is connected
    */
   initDefaultSettings() {
-    this.initDefaultThemeSetting();
-    this.initDefaultLanguageSettings();
-  }
+    this.httpSettingService.getAll().subscribe((settings: Setting[]) => {
+      this.currentThemeValue = settings
+        .find(setting => setting.type === SettingsTypeEnum.THEME)
+        .allowedSettingValues.find(allowedSettingValue => allowedSettingValue.default).value;
 
-  /**
-   * Init the user settings at connection
-   * @param {User} user The user use for set the settings
-   */
-  initUserSettings(user: User) {
-    this.initUserThemeSetting(user);
-    this.initLanguageUserSettings(user);
-  }
+      const defaultLanguageCode = settings
+        .find(setting => setting.type === SettingsTypeEnum.LANGUAGE)
+        .allowedSettingValues.find(allowedSettingValue => allowedSettingValue.default).value;
 
-  /* ************************************************************************ */
-  /*                Theme Part                                                */
+      // This language will be used as a fallback when a translation is not found in the current language
+      this.translateService.setDefaultLang(defaultLanguageCode);
 
-  /* ************************************************************************ */
-
-  /**
-   * The current theme as observable
-   *
-   * @returns {Observable<string>}
-   */
-  getThemeChangingMessages(): Observable<string> {
-    return this.currentThemeSubject.asObservable();
-  }
-
-  /**
-   * Set the new theme
-   *
-   * @param {string} themeName
-   */
-  set currentTheme(themeName: string) {
-    this.currentThemeSubject.next(themeName);
-  }
-
-  /**
-   * Get the template user setting
-   *
-   * @param {User} user The user
-   * @returns {Observable<UserSetting>} The user setting as observable
-   */
-  getThemeUserSetting(user: User): Observable<UserSetting> {
-    return this.httpSettingService
-      .getAll(SettingsTypeEnum.THEME)
-      .pipe(flatMap(settings => this.httpUserService.getUserSetting(user.username, settings[0].id)));
-  }
-
-  /**
-   * Init the theme user settings
-   * @param {User} user The user
-   */
-  initUserThemeSetting(user: User) {
-    if (user) {
-      this.getThemeUserSetting(user).subscribe(userSetting => {
-        this.currentTheme = userSetting.settingValue.value;
-      });
-    }
-  }
-
-  /**
-   * Init the default theme settings
-   */
-  initDefaultThemeSetting() {
-    this.httpSettingService.getAll(SettingsTypeEnum.THEME).subscribe(settings => {
-      this.currentTheme = settings[0].allowedSettingValues.find(allowedSettingValue => allowedSettingValue.default).value;
+      this.translateService.use(defaultLanguageCode);
     });
   }
 
-  /* ************************************************************************ */
-  /*                Language Part                                             */
-
-  /* ************************************************************************ */
-
   /**
-   * Init the plugin language settings
+   * Init the user settings
+   *
+   * @param user The user
    */
-  initDefaultLanguageSettings() {
-    this.httpSettingService.getAll(SettingsTypeEnum.LANGUAGE).subscribe(
-      settings => {
-        const defaultLanguageCode = settings[0].allowedSettingValues.find(allowedSettingValue => allowedSettingValue.default).value;
+  initUserSettings(user: User): Observable<UserSetting[]> {
+    return this.httpUserService.getUserSettings(user.username).pipe(
+      tap((userSettings: UserSetting[]) => {
+        this.currentThemeValue = userSettings.find(userSetting => userSetting.setting.type === SettingsTypeEnum.THEME).settingValue.value;
 
-        // this language will be used as a fallback when a translation isn't found in the current language
-        this.translateService.setDefaultLang(defaultLanguageCode);
-        // the lang to use, if the lang isn't available, it will use the current loader to get them
-        this.translateService.use(defaultLanguageCode);
-      },
-      () => {
-        this.translateService.setDefaultLang('en');
-        this.translateService.use('en');
-      }
+        this.translateService.use(
+          userSettings.find(userSetting => userSetting.setting.type === SettingsTypeEnum.LANGUAGE).settingValue.value
+        );
+      })
     );
   }
 
   /**
-   * Init the user settings for the language part
+   * Save the current theme value
    *
-   * @param {User} user The user
+   * @param theme The theme value
    */
-  initLanguageUserSettings(user: User) {
-    if (user) {
-      this.getLanguageUserSetting(user).subscribe(userSetting => {
-        this.translateService.use(userSetting.settingValue.value);
-      });
-    }
+  set currentThemeValue(theme: string) {
+    this.currentThemeValueSubject.next(theme);
   }
 
   /**
-   * Get the template user setting
-   *
-   * @param {User} user The user
-   * @returns {Observable<UserSetting>} The user setting as observable
+   * Current theme value as observable
    */
-  getLanguageUserSetting(user: User): Observable<UserSetting> {
-    return this.httpSettingService
-      .getAll(SettingsTypeEnum.LANGUAGE)
-      .pipe(flatMap(settings => this.httpUserService.getUserSetting(user.username, settings[0].id)));
+  getCurrentThemeValue(): Observable<string> {
+    return this.currentThemeValueSubject.asObservable();
   }
 }

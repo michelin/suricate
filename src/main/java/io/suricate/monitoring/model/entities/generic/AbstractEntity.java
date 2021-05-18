@@ -18,7 +18,10 @@
 
 package io.suricate.monitoring.model.entities.generic;
 
+import io.suricate.monitoring.services.api.WidgetService;
 import io.suricate.monitoring.utils.ToStringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.EntityListeners;
@@ -64,7 +67,7 @@ public abstract class AbstractEntity<T> implements Serializable {
 
         AbstractEntity model = (AbstractEntity) o;
 
-        return getId() != null ? getId().equals(model.getId()) : model.getId() == null;
+        return getId() != null && getId().equals(model.getId());
     }
 
     /**

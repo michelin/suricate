@@ -86,7 +86,7 @@ export class ListComponent<T> implements OnInit, AfterViewInit, OnDestroy {
   /**
    * The configuration of the list component
    */
-  public listConfiguration = new ListConfiguration<unknown>();
+  public listConfiguration = new ListConfiguration<T>();
 
   /**
    * The object list to display

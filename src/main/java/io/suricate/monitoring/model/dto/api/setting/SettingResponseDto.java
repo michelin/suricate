@@ -17,7 +17,7 @@
 package io.suricate.monitoring.model.dto.api.setting;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
-import io.suricate.monitoring.model.enums.DataType;
+import io.suricate.monitoring.model.enums.DataTypeEnum;
 import io.suricate.monitoring.model.enums.SettingType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -58,7 +58,7 @@ public class SettingResponseDto extends AbstractDto {
      * The setting data type
      */
     @ApiModelProperty(value = "The data type for this setting")
-    private DataType dataType;
+    private DataTypeEnum dataType;
 
     /**
      * The setting type

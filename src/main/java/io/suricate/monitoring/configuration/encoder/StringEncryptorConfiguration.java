@@ -25,24 +25,25 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * String encryptor configuration (Mainly used for encrypt and decrypt SECRET informations from widgets)
+ * String encryptor configuration
+ * Mainly used to encrypt and decrypt secret information for widgets
  */
 @Configuration
 @EnableEncryptableProperties
 public class StringEncryptorConfiguration {
 
     /**
-     * String encyptor password
+     * String encryptor password
      */
     @Value("${jasypt.encryptor.password}")
     private String encryptorPassword;
 
     /**
-     * Method used to configure the default string encryptor without salt
+     * Configure the default string encryptor without salt
      *
-     * @return the default encryptor
+     * @return The default encryptor
      */
-    @Bean(name = "noSaltEncrypter")
+    @Bean(name = "noSaltEncryptor")
     public StringEncryptor stringEncryptor() {
         return getPooledPBEStringEncryptor(encryptorPassword, "org.jasypt.salt.ZeroSaltGenerator");
     }
@@ -50,7 +51,7 @@ public class StringEncryptorConfiguration {
     /**
      * Default string encryptor
      *
-     * @return the string encryptor
+     * @return The string encryptor
      */
     @Bean("jasyptStringEncryptor")
     public StringEncryptor defaultStringEncryptor() {
@@ -62,7 +63,7 @@ public class StringEncryptorConfiguration {
      *
      * @param encryptorPassword      encryptor password
      * @param saltGeneratorClassName salt class name
-     * @return the encryptor
+     * @return The encryptor
      */
     private static PooledPBEStringEncryptor getPooledPBEStringEncryptor(String encryptorPassword, String saltGeneratorClassName) {
         PooledPBEStringEncryptor encryptor = new PooledPBEStringEncryptor();

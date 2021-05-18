@@ -154,7 +154,7 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   public ngOnChanges(changes: SimpleChanges): void {
     if (changes.project) {
       if (!changes.project.previousValue) {
-        // We have to inject this variable in the window scope (because some Widgets use it for init the js)
+        // Inject this variable in the window scope because some widgets use it to init the js
         window['page_loaded'] = true;
       }
 
@@ -280,8 +280,8 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
 
     this.projectWidgets.forEach((projectWidget: ProjectWidget) => {
       gridStackItemsConfig.push({
-        col: projectWidget.widgetPosition.col,
-        row: projectWidget.widgetPosition.row,
+        col: projectWidget.widgetPosition.gridColumn,
+        row: projectWidget.widgetPosition.gridRow,
         sizey: projectWidget.widgetPosition.height,
         sizex: projectWidget.widgetPosition.width,
         payload: projectWidget
@@ -388,8 +388,8 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
       this.gridStackItems.forEach(gridStackItem => {
         projectWidgetPositionRequests.push({
           projectWidgetId: (gridStackItem.payload as ProjectWidget).id,
-          col: gridStackItem.col,
-          row: gridStackItem.row,
+          gridColumn: gridStackItem.col,
+          gridRow: gridStackItem.row,
           height: gridStackItem.sizey,
           width: gridStackItem.sizex
         });

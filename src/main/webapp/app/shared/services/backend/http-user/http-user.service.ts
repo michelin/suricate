@@ -112,18 +112,6 @@ export class HttpUserService implements AbstractHttpService<User | UserRequest> 
   }
 
   /**
-   * Get a user setting by user id and setting id
-   *
-   * @param userName The user name
-   * @param settingId The setting id
-   */
-  public getUserSetting(userName: string, settingId: number): Observable<UserSetting> {
-    const url = `${HttpUserService.usersApiEndpoint}/${userName}/settings/${settingId}`;
-
-    return this.httpClient.get<UserSetting>(url);
-  }
-
-  /**
    * Update user settings
    *
    * @param {string} userName The user to update
@@ -134,16 +122,5 @@ export class HttpUserService implements AbstractHttpService<User | UserRequest> 
     const url = `${HttpUserService.usersApiEndpoint}/${userName}/settings/${settingId}`;
 
     return this.httpClient.put<void>(url, userSettingRequest);
-  }
-
-  /**
-   * Get the connected user
-   *
-   * @returns {Observable<User>} The connected user
-   */
-  public getConnectedUser(): Observable<User> {
-    const url = `${HttpUserService.usersApiEndpoint}/current`;
-
-    return this.httpClient.get<User>(url);
   }
 }

@@ -16,7 +16,7 @@
  *
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { FileInputComponent } from './file-input.component';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -33,21 +33,23 @@ describe('FileInputComponent', () => {
   let component: FileInputComponent;
   let fixture: ComponentFixture<FileInputComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [MockModule],
-      declarations: [FileInputComponent]
-    }).compileComponents();
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [MockModule],
+        declarations: [FileInputComponent]
+      }).compileComponents();
 
-    const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
+      const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
 
-    fixture = TestBed.createComponent(FileInputComponent);
-    component = fixture.componentInstance;
-    component.field = mockedModelBuilderService.buildMockedFormField(DataTypeEnum.FILE);
-    component.formGroup = mockedModelBuilderService.buildMockedFormGroup(DataTypeEnum.FILE);
+      fixture = TestBed.createComponent(FileInputComponent);
+      component = fixture.componentInstance;
+      component.field = mockedModelBuilderService.buildMockedFormField(DataTypeEnum.FILE);
+      component.formGroup = mockedModelBuilderService.buildMockedFormGroup(DataTypeEnum.FILE);
 
-    fixture.detectChanges();
-  }));
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

@@ -38,10 +38,9 @@ import io.suricate.monitoring.services.mapper.ProjectMapper;
 import io.suricate.monitoring.services.mapper.ProjectWidgetMapper;
 import io.suricate.monitoring.services.mapper.UserMapper;
 import io.suricate.monitoring.services.websocket.DashboardWebSocketService;
-import io.suricate.monitoring.utils.exception.ApiException;
-import io.suricate.monitoring.utils.exception.InvalidFileException;
-import io.suricate.monitoring.utils.exception.NoContentException;
-import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
+import io.suricate.monitoring.utils.exceptions.ApiException;
+import io.suricate.monitoring.utils.exceptions.InvalidFileException;
+import io.suricate.monitoring.utils.exceptions.ObjectNotFoundException;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -72,7 +71,12 @@ import java.util.Optional;
 @RequestMapping("/api")
 @Api(value = "Project Controller", tags = {"Projects"})
 public class ProjectController {
+
+    /**
+     * Constant for users not allowed API exceptions
+     */
     private static final String USER_NOT_ALLOWED = "The user is not allowed to modify this resource";
+
     /**
      * Project service
      */
@@ -155,7 +159,7 @@ public class ProjectController {
                                            @RequestParam(value = "search", required = false) String search,
                                            Pageable pageable) {
         Page<Project> projectsPaged = projectService.getAll(search, pageable);
-        return projectsPaged.map(projectMapper::toProjectDtoDefault);
+        return projectsPaged.map(projectMapper::toProjectDTO);
     }
 
     /**
@@ -182,7 +186,7 @@ public class ProjectController {
             throw new ObjectNotFoundException(User.class, principal.getName());
         }
 
-        Project project = projectService.createProject(userOptional.get(), projectMapper.toNewProject(projectRequestDto));
+        Project project = projectService.createProject(userOptional.get(), projectMapper.toProjectEntity(projectRequestDto));
 
         URI resourceLocation = ServletUriComponentsBuilder
             .fromCurrentContextPath()
@@ -193,7 +197,7 @@ public class ProjectController {
         return ResponseEntity
             .created(resourceLocation)
             .contentType(MediaType.APPLICATION_JSON)
-            .body(projectMapper.toProjectDtoDefault(project));
+            .body(projectMapper.toProjectDTO(project));
     }
 
     /**
@@ -223,7 +227,7 @@ public class ProjectController {
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(projectMapper.toProjectDtoDefault(projectOptional.get()));
+            .body(projectMapper.toProjectDTO(projectOptional.get()));
     }
 
     /**
@@ -287,7 +291,7 @@ public class ProjectController {
                                                         @ApiParam(name = "projectToken", value = "The project token", required = true)
                                                         @PathVariable("projectToken") String projectToken,
                                                         @ApiParam(name = "screenshot", value = "The screenshot to insert", required = true)
-                                                        @RequestParam MultipartFile screenshot) throws IOException {
+                                                        @RequestParam MultipartFile screenshot) {
         Optional<Project> projectOptional = projectService.getOneByToken(projectToken);
         if (!projectOptional.isPresent()) {
             throw new ObjectNotFoundException(Project.class, projectToken);
@@ -404,7 +408,7 @@ public class ProjectController {
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(projectWidgetMapper.toProjectWidgetDtosDefault(project.getWidgets()));
+            .body(projectWidgetMapper.toProjectWidgetsDTOs(project.getWidgets()));
     }
 
     /**
@@ -440,7 +444,7 @@ public class ProjectController {
             throw new ApiException(ProjectController.USER_NOT_ALLOWED, ApiErrorEnum.NOT_AUTHORIZED);
         }
 
-        ProjectWidget projectWidget = projectWidgetMapper.toNewProjectWidget(projectWidgetRequestDto, projectToken);
+        ProjectWidget projectWidget = projectWidgetMapper.toProjectWidgetEntity(projectWidgetRequestDto, projectToken);
         projectWidgetService.addWidgetInstanceToProject(projectWidget);
 
         URI resourceLocation = ServletUriComponentsBuilder
@@ -452,7 +456,7 @@ public class ProjectController {
         return ResponseEntity
             .created(resourceLocation)
             .contentType(MediaType.APPLICATION_JSON)
-            .body(projectWidgetMapper.toProjectWidgetDtoDefault(projectWidget));
+            .body(projectWidgetMapper.toProjectWidgetDTO(projectWidget));
     }
 
     /**
@@ -479,7 +483,7 @@ public class ProjectController {
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(userMapper.toUserDtosDefault(projectOptional.get().getUsers()));
+            .body(userMapper.toUsersDTOs(projectOptional.get().getUsers()));
     }
 
     /**
@@ -507,6 +511,7 @@ public class ProjectController {
                                                  @RequestBody Map<String, String> usernameMap) {
 
         Optional<Project> projectOptional = projectService.getOneByToken(projectToken);
+
         if (!projectOptional.isPresent()) {
             throw new ObjectNotFoundException(Project.class, projectToken);
         }
@@ -617,14 +622,9 @@ public class ProjectController {
             throw new ObjectNotFoundException(User.class, principal.getName());
         }
 
-        List<Project> projects = projectService.getAllByUser(userOptional.get());
-        if (projects == null || projects.isEmpty()) {
-            throw new NoContentException(Project.class);
-        }
-
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(projectMapper.toProjectDtosDefault(projects));
+            .body(projectMapper.toProjectsDTOs(projectService.getAllByUser(userOptional.get())));
     }
 }

@@ -36,7 +36,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -188,7 +188,6 @@ public class ProjectService {
      *
      * @param user    The user to add
      * @param project The project to edit
-     * @return The project with the user
      */
     @Transactional
     public void addUserToProject(User user, Project project) {
@@ -201,7 +200,6 @@ public class ProjectService {
      *
      * @param user    The user to delete
      * @param project The project related
-     * @return The project with user deleted
      */
     public void deleteUserFromProject(User user, Project project) {
         project.getUsers().remove(user);

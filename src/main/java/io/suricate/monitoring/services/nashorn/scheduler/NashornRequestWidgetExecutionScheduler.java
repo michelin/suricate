@@ -21,13 +21,12 @@ import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
 import io.suricate.monitoring.model.dto.nashorn.WidgetVariableResponse;
 import io.suricate.monitoring.model.entities.Project;
 import io.suricate.monitoring.model.entities.ProjectWidget;
-import io.suricate.monitoring.model.enums.WidgetState;
+import io.suricate.monitoring.model.enums.WidgetStateEnum;
 import io.suricate.monitoring.services.api.ProjectWidgetService;
 import io.suricate.monitoring.services.api.WidgetService;
 import io.suricate.monitoring.services.nashorn.services.NashornService;
 import io.suricate.monitoring.services.nashorn.tasks.NashornRequestResultAsyncTask;
 import io.suricate.monitoring.services.nashorn.tasks.NashornRequestWidgetExecutionAsyncTask;
-import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jasypt.encryption.StringEncryptor;
@@ -39,7 +38,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.lang.ref.WeakReference;
 import java.util.Date;
 import java.util.List;
@@ -153,7 +152,7 @@ public class NashornRequestWidgetExecutionScheduler {
     public void scheduleNashornRequests(final List<NashornRequest> nashornRequests, boolean startNashornRequestNow) {
         try {
             nashornRequests
-                    .forEach(nashornRequest -> schedule(nashornRequest,
+                    .forEach(nashornRequest -> this.schedule(nashornRequest,
                             startNashornRequestNow));
         } catch (Exception e) {
             LOGGER.error("An error has occurred when scheduling a Nashorn request for a new project subscription", e);
@@ -191,13 +190,13 @@ public class NashornRequestWidgetExecutionScheduler {
 
         if (!nashornService.isNashornRequestExecutable(nashornRequest)) {
             LOGGER.debug("The Nashorn request of the widget instance {} is not valid. Stopping the widget", nashornRequest.getProjectWidgetId());
-            projectWidgetServiceInjected.updateState(WidgetState.STOPPED, nashornRequest.getProjectWidgetId(), new Date());
+            projectWidgetServiceInjected.updateState(WidgetStateEnum.STOPPED, nashornRequest.getProjectWidgetId(), new Date());
             return;
         }
 
-        if (WidgetState.STOPPED == nashornRequest.getWidgetState()) {
+        if (WidgetStateEnum.STOPPED == nashornRequest.getWidgetState()) {
             LOGGER.debug("The widget instance {} of the Nashorn request was stopped. Setting the widget instance to running", nashornRequest.getProjectWidgetId());
-            projectWidgetServiceInjected.updateState(WidgetState.RUNNING, nashornRequest.getProjectWidgetId(), new Date());
+            projectWidgetServiceInjected.updateState(WidgetStateEnum.RUNNING, nashornRequest.getProjectWidgetId(), new Date());
         }
 
         ProjectWidget projectWidget = projectWidgetServiceInjected
@@ -225,7 +224,6 @@ public class NashornRequestWidgetExecutionScheduler {
                 new WeakReference<>(scheduledNashornRequestExecutionTask),
                 new WeakReference<>(scheduledNashornRequestResponseTask)
             ));
-
     }
 
     /**
@@ -262,7 +260,7 @@ public class NashornRequestWidgetExecutionScheduler {
             this.cancelScheduledFutureTask(projectWidgetId, pairOfNashornFutureTasks.getRight());
         }
 
-        projectWidgetService.updateState(WidgetState.STOPPED, projectWidgetId);
+        projectWidgetService.updateState(WidgetStateEnum.STOPPED, projectWidgetId);
     }
 
     /**
@@ -277,6 +275,7 @@ public class NashornRequestWidgetExecutionScheduler {
 
             if (scheduledFutureTask != null && (!scheduledFutureTask.isDone() || !scheduledFutureTask.isCancelled())) {
                 LOGGER.debug("Canceling the future task for the widget instance {} ({})", projectWidgetId, scheduledFutureTask);
+
                 scheduledFutureTask.cancel(true);
             }
         }

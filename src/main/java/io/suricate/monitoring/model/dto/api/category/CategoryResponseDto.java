@@ -14,18 +14,24 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.dto.api.widget;
+package io.suricate.monitoring.model.dto.api.category;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
+import io.suricate.monitoring.model.entities.CategoryParameter;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
+
 
 /**
- * Represent a category response used for communication with the clients via webservices
+ * Category response DTO
  */
 @Data
 @NoArgsConstructor
@@ -37,19 +43,28 @@ public class CategoryResponseDto extends AbstractDto {
      */
     @ApiModelProperty(value = "The category id")
     private Long id;
+
     /**
      * The category name
      */
     @ApiModelProperty(value = "Category name")
     private String name;
+
     /**
      * The technical name of the category
      */
     @ApiModelProperty(value = "Category technical name, should be unique in table")
     private String technicalName;
+
     /**
      * The image token related to this category
      */
     @ApiModelProperty(value = "Asset token")
     private String assetToken;
+
+    /**
+     * The category parameters
+     */
+    @ApiModelProperty(value = "Category parameters")
+    private List<CategoryParameterResponseDto> categoryParameters;
 }

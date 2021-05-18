@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { DashboardScreenComponent } from './dashboard-screen.component';
 import { SafeHtmlPipe } from '../../../shared/pipes/safe-html/safe-html.pipe';
@@ -25,20 +25,22 @@ describe('DashboardScreenComponent', () => {
   let component: DashboardScreenComponent;
   let fixture: ComponentFixture<DashboardScreenComponent>;
 
-  beforeEach(async(() => {
-    TestBed.configureTestingModule({
-      imports: [MockModule],
-      declarations: [DashboardScreenComponent, SafeHtmlPipe]
-    }).compileComponents();
+  beforeEach(
+    waitForAsync(() => {
+      TestBed.configureTestingModule({
+        imports: [MockModule],
+        declarations: [DashboardScreenComponent, SafeHtmlPipe]
+      }).compileComponents();
 
-    const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
+      const mockedModelBuilderService = TestBed.inject(MockedModelBuilderService);
 
-    fixture = TestBed.createComponent(DashboardScreenComponent);
-    component = fixture.componentInstance;
-    component.project = mockedModelBuilderService.buildMockedProject();
+      fixture = TestBed.createComponent(DashboardScreenComponent);
+      component = fixture.componentInstance;
+      component.project = mockedModelBuilderService.buildMockedProject();
 
-    fixture.detectChanges();
-  }));
+      fixture.detectChanges();
+    })
+  );
 
   it('should create', () => {
     expect(component).toBeTruthy();

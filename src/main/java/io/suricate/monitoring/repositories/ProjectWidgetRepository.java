@@ -17,19 +17,30 @@
 package io.suricate.monitoring.repositories;
 
 import io.suricate.monitoring.model.entities.ProjectWidget;
-import io.suricate.monitoring.model.enums.WidgetState;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
+import io.suricate.monitoring.model.enums.WidgetStateEnum;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.data.jpa.repository.*;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import java.util.Date;
+import java.util.Optional;
 
 /**
  * Repository used for request Project widget in database
  */
+@Repository
 public interface ProjectWidgetRepository extends JpaRepository<ProjectWidget, Long>, JpaSpecificationExecutor<ProjectWidget> {
+
+    /**
+     * Find a widget instance by id
+     *
+     * @param projectWidgetId The widget instance id
+     * @return The widget instance
+     */
+    @NotNull
+    @EntityGraph(attributePaths = {"project", "widget.widgetParams"})
+    Optional<ProjectWidget> findById(@NotNull Long projectWidgetId);
 
     /**
      * Method used to reset the state of every widget instances
@@ -49,25 +60,23 @@ public interface ProjectWidgetRepository extends JpaRepository<ProjectWidget, Lo
      * @param width  The new number of columns taken by the widget
      * @param height The new number of rows taken by the widget
      * @param id     The project widget id
-     * @return State of the update
      */
     @Modifying
-    @Query("UPDATE ProjectWidget SET row = :row, " +
-        "col = :col, " +
+    @Query("UPDATE ProjectWidget SET gridRow = :row, " +
+        "gridColumn = :col, " +
         "width = :width, " +
         "height = :height " +
         "WHERE id = :id")
-    int updateRowAndColAndWidthAndHeightById(@Param("row") int row, @Param("col") int col, @Param("width") int width, @Param("height") int height, @Param("id") Long id);
+    void updateRowAndColAndWidthAndHeightById(@Param("row") int row, @Param("col") int col, @Param("width") int width, @Param("height") int height, @Param("id") Long id);
 
     /**
      * Update the state of a widget instance when Nashorn execution ends successfully
      *
-     * @param date        The last execution date
+     * @param executionDate The last execution date
      * @param log         The log of nashorn execution
      * @param data        The data returned by nashorn
      * @param id          The id of the project widget
      * @param widgetState The widget state
-     * @return State of the query
      */
     @Modifying
     @Query("UPDATE ProjectWidget " +
@@ -77,11 +86,11 @@ public interface ProjectWidgetRepository extends JpaRepository<ProjectWidget, Lo
         "log = :log, " +
         "data = :data " +
         "WHERE id = :id")
-    int updateSuccessExecution(@Param("lastExecutionDate") Date executionDate,
+    void updateSuccessExecution(@Param("lastExecutionDate") Date executionDate,
                                @Param("log") String log,
                                @Param("data") String data,
                                @Param("id") Long id,
-                               @Param("state") WidgetState widgetState);
+                               @Param("state") WidgetStateEnum widgetState);
 
     /**
      * Update the state of a project widget when nashorn execution ends with errors
@@ -90,7 +99,6 @@ public interface ProjectWidgetRepository extends JpaRepository<ProjectWidget, Lo
      * @param log         The logs of the execution
      * @param id          The project widget id
      * @param widgetState The widget state
-     * @return State of the query
      */
     @Modifying
     @Query("UPDATE ProjectWidget " +
@@ -98,15 +106,13 @@ public interface ProjectWidgetRepository extends JpaRepository<ProjectWidget, Lo
         "state = :state, " +
         "log = :log " +
         "WHERE id = :id")
-    int updateLastExecutionDateAndStateAndLog(@Param("lastExecutionDate") Date date, @Param("log") String log, @Param("id") Long id, @Param("state") WidgetState widgetState);
+    void updateLastExecutionDateAndStateAndLog(@Param("lastExecutionDate") Date date, @Param("log") String log, @Param("id") Long id, @Param("state") WidgetStateEnum widgetState);
 
     /**
      * Method used to delete a widget instance by it's id and the project id
      *
      * @param projectId the project is
      * @param id        the widget instance id
-     * @return the number of deleted rows
      */
-    Long deleteByProjectIdAndId(Long projectId, Long id);
-
+    void deleteByProjectIdAndId(Long projectId, Long id);
 }

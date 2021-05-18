@@ -21,6 +21,7 @@ import io.suricate.monitoring.model.entities.Library;
 import io.suricate.monitoring.model.entities.Category;
 import io.suricate.monitoring.model.entities.Repository;
 import io.suricate.monitoring.model.enums.RepositoryTypeEnum;
+import io.suricate.monitoring.services.api.CategoryService;
 import io.suricate.monitoring.services.api.LibraryService;
 import io.suricate.monitoring.services.api.RepositoryService;
 import io.suricate.monitoring.services.api.WidgetService;
@@ -39,7 +40,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -77,6 +78,11 @@ public class GitService {
     private final WidgetService widgetService;
 
     /**
+     * The widget service
+     */
+    private final CategoryService categoryService;
+
+    /**
      * The library service
      */
     private final LibraryService libraryService;
@@ -92,24 +98,35 @@ public class GitService {
     private final DashboardWebSocketService dashboardWebSocketService;
 
     /**
-     * Contructor using fields
+     * Cache service
+     */
+    private final CacheService cacheService;
+
+    /**
+     * Constructor
      *
-     * @param widgetService             widget service
-     * @param libraryService            library service
-     * @param repositoryService         The repository service
-     * @param dashboardWebSocketService socket service
-     * @param nashornWidgetScheduler    widget executor
-     * @param applicationProperties     The application properties
+     * @param widgetService             Widget service
+     * @param categoryService           Category service
+     * @param libraryService            Library service
+     * @param cacheService              Cache service
+     * @param repositoryService         Repository service
+     * @param dashboardWebSocketService Web socket service
+     * @param nashornWidgetScheduler    Nashorn scheduler
+     * @param applicationProperties     Application properties
      */
     @Autowired
     public GitService(final WidgetService widgetService,
+                      final CategoryService categoryService,
+                      final CacheService cacheService,
                       final LibraryService libraryService,
                       final RepositoryService repositoryService,
                       final DashboardWebSocketService dashboardWebSocketService,
                       final NashornRequestWidgetExecutionScheduler nashornWidgetScheduler,
                       final ApplicationProperties applicationProperties) {
         this.widgetService = widgetService;
+        this.categoryService = categoryService;
         this.libraryService = libraryService;
+        this.cacheService = cacheService;
         this.repositoryService = repositoryService;
         this.dashboardWebSocketService = dashboardWebSocketService;
         this.nashornWidgetScheduler = nashornWidgetScheduler;
@@ -137,18 +154,18 @@ public class GitService {
             return new AsyncResult<>(true);
         }
 
-        return new AsyncResult<>(cloneAndUpdateWidgetRepositories(optionalRepositories.get()));
+        return new AsyncResult<>(readWidgetRepositories(optionalRepositories.get()));
     }
 
     /**
-     * Async method used to update widgets from the one specific git repository
+     * Update widgets contained in the given repository
      *
-     * @param repository The repository to update
+     * @param repository The repository
      * @return True if the update has been done correctly, false otherwise
      */
     @Async
     @Transactional
-    public Future<Boolean> updateWidgetFromGitRepository(Repository repository) {
+    public Future<Boolean> updateWidgetsFromRepository(Repository repository) {
         if (repository == null) {
             LOGGER.debug("The repository can't be null");
             return new AsyncResult<>(false);
@@ -165,7 +182,7 @@ public class GitService {
             return null;
         }
 
-        return new AsyncResult<>(cloneAndUpdateWidgetRepositories(Collections.singletonList(repository)));
+        return new AsyncResult<>(readWidgetRepositories(Collections.singletonList(repository)));
     }
 
     /**
@@ -173,16 +190,18 @@ public class GitService {
      *
      * @return true if the widgets update has been done properly
      */
-    private boolean cloneAndUpdateWidgetRepositories(final List<Repository> repositories) {
+    private boolean readWidgetRepositories(final List<Repository> repositories) {
         try {
             for (Repository repository : repositories) {
                 if (repository.getType() == RepositoryTypeEnum.LOCAL) {
                     LOGGER.info("Loading widgets from the local folder {}", repository.getLocalPath());
 
-                    updateWidgetFromFile(new File(repository.getLocalPath()), true, repository);
+                    this.updateWidgetsFromRepositoryFolder(new File(repository.getLocalPath()), true, repository);
                 } else {
-                    File remoteFolder = cloneRepo(repository.getUrl(), repository.getBranch(), repository.getLogin(), repository.getPassword());
-                    updateWidgetFromFile(remoteFolder, false, repository);
+                    File remoteFolder = this.cloneRemoteRepository(repository.getUrl(), repository.getBranch(),
+                            repository.getLogin(), repository.getPassword());
+
+                    this.updateWidgetsFromRepositoryFolder(remoteFolder, false, repository);
                 }
             }
 
@@ -206,7 +225,7 @@ public class GitService {
      * @param password The password of the git repo
      * @return File object on local repo
      */
-    public File cloneRepo(String url, String branch, String login, String password) throws IOException {
+    public File cloneRemoteRepository(String url, String branch, String login, String password) throws IOException {
         LOGGER.info("Cloning the branch {} of the remote repository {}", branch, url);
 
         File localRepository = File.createTempFile("tmp", Long.toString(System.nanoTime()));
@@ -244,19 +263,30 @@ public class GitService {
      * @param isLocalRepository True if the folder come from local repository, false if it's a remote repo
      * @param repository        The repository
      */
-    private void updateWidgetFromFile(File folder, boolean isLocalRepository, final Repository repository) {
+    private void updateWidgetsFromRepositoryFolder(File folder, boolean isLocalRepository, final Repository repository) {
         if (folder != null) {
             try {
-                // Libraries
-                File libraryFolder = new File(folder.getAbsoluteFile().getAbsolutePath() + File.separator + "libraries" + File.separator);
-                List<Library> libraries = WidgetUtils.parseLibraryFolder(libraryFolder);
-                libraries = libraryService.updateLibraryInDatabase(libraries);
-                Map<String, Library> mapLib = libraries.stream().collect(Collectors.toMap(Library::getTechnicalName, item -> item));
+                List<Library> libraries = WidgetUtils
+                        .parseLibraryFolder(new File(folder.getAbsoluteFile().getAbsolutePath()
+                                + File.separator
+                                + "libraries"
+                                + File.separator));
 
-                // Parse folder
-                File widgetFolder = new File(folder.getAbsoluteFile().getAbsolutePath() + File.separator + "content" + File.separator);
-                List<Category> list = WidgetUtils.parseWidgetFolder(widgetFolder);
-                widgetService.updateWidgetInDatabase(list, mapLib, repository);
+                final List<Library> allLibraries = libraryService.updateLibraryInDatabase(libraries);
+
+                List<Category> categories = WidgetUtils
+                        .parseCategoriesFolder(new File(folder.getAbsoluteFile().getAbsolutePath()
+                                + File.separator
+                                + "content"
+                                + File.separator));
+
+                categories.forEach(category -> {
+                    this.categoryService.addOrUpdateCategory(category);
+
+                    this.widgetService.addOrUpdateWidgets(category, allLibraries, repository);
+                });
+
+                cacheService.clearAllCache();
             } finally {
                 if (!isLocalRepository) {
                     FileUtils.deleteQuietly(folder);

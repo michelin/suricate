@@ -33,6 +33,7 @@ public class DatabaseAuthentication {
      * User details service for database connection type
      */
     private final UserDetailsDatabaseService userDetailsDatabaseService;
+
     /**
      * Password encoder/decoder service
      */
@@ -54,7 +55,7 @@ public class DatabaseAuthentication {
      * Database configuration
      *
      * @param auth The authentication manager
-     * @throws Exception When errors occured while retrieving users
+     * @throws Exception When errors occurred while retrieving users
      */
     @Autowired
     public void configureDatabase(AuthenticationManagerBuilder auth) throws Exception {

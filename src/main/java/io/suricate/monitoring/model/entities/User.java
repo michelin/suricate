@@ -23,8 +23,7 @@ import io.suricate.monitoring.model.enums.AuthenticationMethod;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * The user entity in database
@@ -34,8 +33,6 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-@ToString
 public class User extends AbstractEntity<Long> {
 
     /**
@@ -65,7 +62,7 @@ public class User extends AbstractEntity<Long> {
     private AuthenticationMethod authenticationMethod;
 
     /**
-     * The fistname of the user
+     * The first name of the user
      */
     @Column
     private String firstname;
@@ -87,17 +84,17 @@ public class User extends AbstractEntity<Long> {
      */
     @ManyToMany
     @JoinTable(name = "user_role", joinColumns = {@JoinColumn(name = "user_id")}, inverseJoinColumns = {@JoinColumn(name = "role_id")})
-    private List<Role> roles = new ArrayList<>();
+    private Set<Role> roles = new LinkedHashSet<>();
 
     /**
-     * The projects of the user (as creator or guest)
+     * The projects of the user
      */
     @ManyToMany(mappedBy = "users")
-    private List<Project> projects = new ArrayList<>();
+    private Set<Project> projects = new LinkedHashSet<>();
 
     /**
      * The list of user settings
      */
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-    private List<UserSetting> userSettings = new ArrayList<>();
+    private Set<UserSetting> userSettings = new LinkedHashSet<>();
 }

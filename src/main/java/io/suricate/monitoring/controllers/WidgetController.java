@@ -25,7 +25,7 @@ import io.suricate.monitoring.model.dto.api.widget.WidgetResponseDto;
 import io.suricate.monitoring.model.entities.Widget;
 import io.suricate.monitoring.services.api.WidgetService;
 import io.suricate.monitoring.services.mapper.WidgetMapper;
-import io.suricate.monitoring.utils.exception.ObjectNotFoundException;
+import io.suricate.monitoring.utils.exceptions.ObjectNotFoundException;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -87,8 +87,8 @@ public class WidgetController {
     public Page<WidgetResponseDto> getWidgets(@ApiParam(name = "search", value = "Search keyword")
                                               @RequestParam(value = "search", required = false) String search,
                                               Pageable pageable) {
-        Page<Widget> widgetsPaged = widgetService.getAll(search, pageable);
-        return widgetsPaged.map(widgetMapper::toWidgetDtoDefault);
+        return widgetService.getAll(search, pageable)
+                .map(widgetMapper::toWidgetWithoutCategoryParametersDTO);
     }
 
     /**
@@ -107,15 +107,16 @@ public class WidgetController {
     @PermitAll
     public ResponseEntity<WidgetResponseDto> getOneById(@ApiParam(name = "widgetId", value = "The widget id", required = true)
                                                         @PathVariable("widgetId") Long widgetId) {
-        Widget widget = widgetService.findOne(widgetId);
-        if (widget == null) {
+        Optional<Widget> widget = widgetService.findOne(widgetId);
+
+        if (!widget.isPresent()) {
             throw new ObjectNotFoundException(Widget.class, widgetId);
         }
 
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(widgetMapper.toWidgetDtoDefault(widget));
+            .body(widgetMapper.toWidgetDTO(widget.get()));
     }
 
     /**
@@ -139,6 +140,7 @@ public class WidgetController {
                                              @ApiParam(name = "widgetRequestDto", value = "The widget with modifications", required = true)
                                              @RequestBody WidgetRequestDto widgetRequestDto) {
         Optional<Widget> widgetOptional = widgetService.updateWidget(widgetId, widgetRequestDto);
+
         if (!widgetOptional.isPresent()) {
             throw new ObjectNotFoundException(Widget.class, widgetId);
         }

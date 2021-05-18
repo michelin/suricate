@@ -14,27 +14,25 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.model.dto.nashorn.error;
+package io.suricate.monitoring.configuration.mustache;
 
-public class RemoteError extends Exception {
+import com.github.mustachejava.DefaultMustacheFactory;
+import com.github.mustachejava.MustacheFactory;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-    public RemoteError() {
-        super();
-    }
+/**
+ * Configuration for mustache template
+ * Used in widget's HTML files
+ */
+@Configuration
+public class MustacheConfiguration {
 
-    public RemoteError(String message) {
-        super(message);
-    }
-
-    public RemoteError(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public RemoteError(Throwable cause) {
-        super(cause);
-    }
-
-    protected RemoteError(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
-        super(message, cause, enableSuppression, writableStackTrace);
+    /**
+     * Default mustache factory
+     */
+    @Bean
+    protected MustacheFactory mustacheFactory() {
+        return new DefaultMustacheFactory();
     }
 }

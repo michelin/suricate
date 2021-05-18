@@ -22,7 +22,7 @@ import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
 import io.suricate.monitoring.model.entities.CategoryParameter;
 import io.suricate.monitoring.model.entities.Project;
 import io.suricate.monitoring.model.entities.ProjectWidget;
-import io.suricate.monitoring.model.enums.WidgetState;
+import io.suricate.monitoring.model.enums.WidgetStateEnum;
 import io.suricate.monitoring.services.api.ProjectWidgetService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -31,11 +31,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -45,9 +43,9 @@ import java.util.stream.Collectors;
 public class NashornService {
 
     /**
-     * Class logger
+     * Logger
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger(NashornService.class.getName());
+    private static final Logger LOGGER = LoggerFactory.getLogger(NashornService.class);
 
     /**
      * The project widget service
@@ -104,7 +102,7 @@ public class NashornService {
         Long technicalId = projectWidget.getId();
         Long delay = projectWidget.getWidget().getDelay();
         Long timeout = projectWidget.getWidget().getTimeout();
-        WidgetState state = projectWidget.getState();
+        WidgetStateEnum state = projectWidget.getState();
         Date lastSuccess = projectWidget.getLastSuccessDate();
 
         return new NashornRequest(properties, script, previousData, projectId, technicalId, delay, timeout, state, lastSuccess);
@@ -137,7 +135,7 @@ public class NashornService {
      * @param categoryParameters The global configurations
      * @return Get the full configuration for project widget
      */
-    private String getProjectWidgetConfigurationsWithGlobalOne(final ProjectWidget projectWidget, final List<CategoryParameter> categoryParameters) {
+    private String getProjectWidgetConfigurationsWithGlobalOne(final ProjectWidget projectWidget, final Set<CategoryParameter> categoryParameters) {
         StringBuilder builder = new StringBuilder(Objects.toString(projectWidget.getBackendConfig(), StringUtils.EMPTY));
 
         if (categoryParameters != null && !categoryParameters.isEmpty()) {

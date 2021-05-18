@@ -19,7 +19,7 @@
 package io.suricate.monitoring.model.entities;
 
 import io.suricate.monitoring.model.entities.generic.AbstractAuditingEntity;
-import io.suricate.monitoring.model.enums.WidgetState;
+import io.suricate.monitoring.model.enums.WidgetStateEnum;
 import lombok.*;
 import org.hibernate.annotations.Type;
 
@@ -33,8 +33,6 @@ import java.util.Date;
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-@ToString
 public class ProjectWidget extends AbstractAuditingEntity<Long> {
 
     /**
@@ -53,16 +51,16 @@ public class ProjectWidget extends AbstractAuditingEntity<Long> {
     private String data;
 
     /**
-     * The starting row
+     * Row position in the grid
      */
     @Column
-    private int row;
+    private int gridRow;
 
     /**
-     * The starting column
+     * Column position in the grid
      */
     @Column
-    private int col;
+    private int gridColumn;
 
     /**
      * The number of rows taken by the widget
@@ -110,11 +108,11 @@ public class ProjectWidget extends AbstractAuditingEntity<Long> {
     private Date lastSuccessDate;
     
     /**
-     * The widget state {@link WidgetState}
+     * The widget state {@link WidgetStateEnum}
      */
     @Column
     @Enumerated(EnumType.STRING)
-    private WidgetState state;
+    private WidgetStateEnum state;
 
     /**
      * The related project

@@ -24,8 +24,7 @@ import lombok.*;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Project/dashboard entity
@@ -34,8 +33,6 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-@ToString
 public class Project extends AbstractAuditingEntity<Long> {
 
     /**
@@ -87,13 +84,13 @@ public class Project extends AbstractAuditingEntity<Long> {
      * The list of widgets related to it
      */
     @OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE)
-    @OrderBy("row ASC, col ASC")
-    private List<ProjectWidget> widgets = new ArrayList<>();
+    @OrderBy("gridRow ASC, gridColumn ASC")
+    private Set<ProjectWidget> widgets = new LinkedHashSet<>();
 
     /**
      * The list of users of the project
      */
     @ManyToMany
     @JoinTable(name = "user_project", joinColumns = {@JoinColumn(name = "project_id")}, inverseJoinColumns = {@JoinColumn(name = "user_id")})
-    private List<User> users = new ArrayList<>();
+    private Set<User> users = new LinkedHashSet<>();
 }

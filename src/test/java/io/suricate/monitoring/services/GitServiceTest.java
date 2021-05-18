@@ -19,6 +19,6 @@ public class GitServiceTest {
 
     @Test(expected = MalformedURLException.class)
     public void testMalformedURL() throws Exception {
-        gitService.cloneRepo(null, null, null, null);
+        gitService.cloneRemoteRepository(null, null, null, null);
     }
 }

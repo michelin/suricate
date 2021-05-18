@@ -24,18 +24,15 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
- * The role entity in database
+ * Role entity
  */
 @Entity(name = "Role")
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-@ToString
 public class Role extends AbstractEntity<Long> {
 
     /**
@@ -65,5 +62,5 @@ public class Role extends AbstractEntity<Long> {
      * The list of user related to it
      */
     @ManyToMany(mappedBy = "roles")
-    private List<User> users = new ArrayList<>();
+    private Set<User> users = new LinkedHashSet<>();
 }

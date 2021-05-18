@@ -24,9 +24,10 @@ import io.suricate.monitoring.utils.logging.LogExecutionTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -64,7 +65,7 @@ public class LibraryService {
      * @return The libraries
      */
     @LogExecutionTime
-    public List<String> getLibrariesToken(List<ProjectWidget> widgetInstances) {
+    public List<String> getLibrariesToken(Set<ProjectWidget> widgetInstances) {
         List<Long> widgetList = widgetInstances
                 .stream()
                 .map(projectWidget -> projectWidget.getWidget().getId())

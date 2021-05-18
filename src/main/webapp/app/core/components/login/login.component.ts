@@ -109,10 +109,7 @@ export class LoginComponent implements OnInit {
       this.loading = true;
 
       this.authenticationService.authenticate(this.loginForm.value).subscribe(
-        () => {
-          this.settingsService.initUserSettings(AuthenticationService.getConnectedUser());
-          this.navigateToHomePage();
-        },
+        () => this.navigateToHomePage(),
         () => (this.loading = false)
       );
     }

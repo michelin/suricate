@@ -19,13 +19,12 @@
 package io.suricate.monitoring.model.entities;
 
 import io.suricate.monitoring.model.entities.generic.AbstractAuditingEntity;
-import io.suricate.monitoring.model.enums.DataType;
+import io.suricate.monitoring.model.enums.DataTypeEnum;
 import lombok.*;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Entity representing a param for a widget in database
@@ -34,8 +33,6 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-@ToString
 public class WidgetParam extends AbstractAuditingEntity<Long> {
 
     /**
@@ -64,11 +61,11 @@ public class WidgetParam extends AbstractAuditingEntity<Long> {
     private String defaultValue;
 
     /**
-     * The variable type {@link DataType}
+     * The variable type {@link DataTypeEnum}
      */
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private DataType type;
+    private DataTypeEnum type;
 
     /**
      * The regex used for accept the file uploaded (if the type is FILE)
@@ -93,7 +90,7 @@ public class WidgetParam extends AbstractAuditingEntity<Long> {
      * The list of possible values (if the type is COMBO or MULTIPLE)
      */
     @OneToMany(mappedBy = "widgetParam", cascade = CascadeType.ALL)
-    private List<WidgetParamValue> possibleValuesMap = new ArrayList<>();
+    private Set<WidgetParamValue> possibleValuesMap = new LinkedHashSet<>();
 
     /**
      * The related widget
@@ -107,7 +104,7 @@ public class WidgetParam extends AbstractAuditingEntity<Long> {
      *
      * @param possibleValuesMap The list values to add
      */
-    public void setPossibleValuesMap(List<WidgetParamValue> possibleValuesMap) {
+    public void setPossibleValuesMap(Collection<WidgetParamValue> possibleValuesMap) {
         this.addPossibleValuesMap(possibleValuesMap);
     }
 
@@ -116,7 +113,7 @@ public class WidgetParam extends AbstractAuditingEntity<Long> {
      *
      * @param possibleValuesMap The list values to add
      */
-    public void addPossibleValuesMap(List<WidgetParamValue> possibleValuesMap) {
+    public void addPossibleValuesMap(Collection<WidgetParamValue> possibleValuesMap) {
         possibleValuesMap.forEach(this::addPossibleValueMap);
     }
 

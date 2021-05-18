@@ -20,8 +20,7 @@ import io.suricate.monitoring.model.entities.generic.AbstractAuditingEntity;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Library entity
@@ -30,8 +29,6 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
-@ToString
 public class Library extends AbstractAuditingEntity<Long> {
 
     /**
@@ -57,12 +54,12 @@ public class Library extends AbstractAuditingEntity<Long> {
      * The list of widgets related to it
      */
     @ManyToMany(mappedBy = "libraries")
-    private List<Widget> widgets = new ArrayList<>();
+    private Set<Widget> widgets = new LinkedHashSet<>();
 
     /**
-     * Constructor minimal
+     * Constructor used for mapping from the description.yml of widgets
      *
-     * @param technicalName The technical name
+     * @param technicalName The name of the library
      */
     public Library(String technicalName) {
         this.technicalName = technicalName;

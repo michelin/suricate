@@ -4,9 +4,9 @@
 spring:
   datasource:
     driverClassName: org.postgresql.Driver
-    url: null
-    username: null
-    password: null
+    url: 'jdbc:postgresql://localhost:5432/postgres?currentSchema=suricate'
+    username: postgres
+    password: postgres
   jpa:
     properties:
       hibernate:

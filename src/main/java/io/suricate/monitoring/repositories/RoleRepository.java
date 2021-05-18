@@ -19,12 +19,14 @@ package io.suricate.monitoring.repositories;
 import io.suricate.monitoring.model.entities.Role;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
 /**
  * Repository used for request Roles in database
  */
+@Repository
 public interface RoleRepository extends CrudRepository<Role, Long>, JpaSpecificationExecutor<Role> {
 
     /**

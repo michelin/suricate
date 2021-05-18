@@ -22,11 +22,11 @@
  */
 export interface ProjectWidgetRequest {
   backendConfig?: string;
-  col?: number;
+  gridColumn?: number;
   customStyle?: string;
   data?: string;
   height?: number;
-  row?: number;
+  gridRow?: number;
   width?: number;
   widgetId: number;
 }
