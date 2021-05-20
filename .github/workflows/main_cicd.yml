@@ -38,7 +38,7 @@ jobs:
       - name: Build with NPM
         run: |
           npm install --no-progress
-          npm run build
+          npm run build -- --prod
       - name: Lint with NPM
         run: npm run lint
       - name: Test with NPM
