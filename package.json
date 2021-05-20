@@ -3,16 +3,14 @@
   "version": "2.4.0-next.0",
   "license": "Apache2",
   "scripts": {
-    "prettyformat": "pretty-quick --staged",
-    "ng": "ng",
-    "start": "ng serve -o",
-    "start-compatibility-mode": "ng serve -o --configuration es5",
-    "build-all": "yarn install && ng build --prod",
     "build": "ng build",
-    "test": "ng test",
-    "test-headless-no-sandbox": "ng test --browsers=ChromeHeadlessNoSandbox",
+    "e2e": "ng e2e",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "ng": "ng",
+    "prettyformat": "pretty-quick --staged",
+    "start": "ng serve -o",
+    "test": "ng test",
+    "test-headless-no-sandbox": "ng test --browsers=ChromeHeadlessNoSandbox"
   },
   "private": true,
   "dependencies": {
