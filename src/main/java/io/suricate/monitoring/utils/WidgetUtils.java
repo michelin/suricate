@@ -114,7 +114,7 @@ public final class WidgetUtils {
      *
      * @param folderCategory folder category
      * @return the category bean
-     * @throws IOException
+     * @throws IOException Triggered exception during the files reading
      */
     public static Category getCategory(File folderCategory) throws IOException {
         if (folderCategory == null) {
