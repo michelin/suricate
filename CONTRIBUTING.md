@@ -16,11 +16,11 @@
 
 #### Suggest an improvement
 
-To suggest a new feature on suricate, [open a ticket](https://github.com/suricate-io/suricate/issues/new?template=improvement.md) and fill required information
+To suggest a new feature on suricate, [open a ticket](https://github.com/michelin/suricate/issues/new?template=improvement.md) and fill required information
 
 #### Reporting bugs
 
-- **Ensure the bug was not already reported** by searching on GitHub under [Issues](https://github.com/suricate-io/suricate/issues).
+- **Ensure the bug was not already reported** by searching on GitHub under [Issues](https://github.com/michelin/suricate/issues).
 
 - Perform basic troubleshooting steps:
 
@@ -28,7 +28,7 @@ To suggest a new feature on suricate, [open a ticket](https://github.com/suricat
   - **Try older versions**. If you’re already on the latest release, try rolling back a few minor versions (e.g. if on 1.7, try 1.5 or 1.6) and see if the problem goes away. This will help the devs narrow down when the problem first arose in the commit log.
   - (optionally) Try **switching dependency versions**. If the software in question has dependencies (other libraries, etc) try upgrading/downgrading those as well.
 
-- If you're unable to find an open issue addressing the problem, [open a new one](https://github.com/suricate-io/suricate/issues/new?template=bug.md). Be sure to include a **title and clear description**, as much relevant information as possible, and a **code sample** or an **executable test case** demonstrating the expected behavior that is not occurring.
+- If you're unable to find an open issue addressing the problem, [open a new one](https://github.com/michelin/suricate/issues/new?template=bug.md). Be sure to include a **title and clear description**, as much relevant information as possible, and a **code sample** or an **executable test case** demonstrating the expected behavior that is not occurring.
 
 - If possible, use the relevant bug report templates to create the issue.
 

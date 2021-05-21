@@ -8,9 +8,9 @@
     <name>Suricate Application</name>
 
     <scm>
-        <connection>scm:git:https://github.com/suricate-io/suricate.git</connection>
-        <url>scm:git:https://github.com/suricate-io/suricate.git</url>
-        <developerConnection>scm:git:https://github.com/suricate-io/suricate.git</developerConnection>
+        <connection>scm:git:https://github.com/michelin/suricate.git</connection>
+        <url>scm:git:https://github.com/michelin/suricate.git</url>
+        <developerConnection>scm:git:https://github.com/michelin/suricate.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 
