@@ -7,7 +7,7 @@
 
 This repository contains the source code of the Suricate application.
 
-![Suricate dashboard developer environment](readme/dashboard.png)
+![Suricate dashboard developer environment](src/main/webapp/assets/images/dashboard.png)
 
 ## 📚 Wiki
 
