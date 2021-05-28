@@ -65,6 +65,11 @@ export class DashboardDetailComponent implements OnInit {
   public headerConfiguration: HeaderConfiguration;
 
   /**
+   * The token of the dashboard
+   */
+  public dashboardToken: string;
+
+  /**
    * The project used to display the dashboard
    */
   public project: Project;
@@ -134,14 +139,14 @@ export class DashboardDetailComponent implements OnInit {
    * Called when the component is init
    */
   public ngOnInit(): void {
-    const dashboardToken = this.activatedRoute.snapshot.params['dashboardToken'];
+    this.dashboardToken = this.activatedRoute.snapshot.params['dashboardToken'];
 
     this.websocketService.startConnection();
 
-    this.refreshProject(dashboardToken)
+    this.refreshProject()
       .pipe(
-        flatMap(() => this.isReadOnlyDashboard(dashboardToken)),
-        flatMap(() => this.refreshProjectWidgets(dashboardToken))
+        flatMap(() => this.isReadOnlyDashboard()),
+        flatMap(() => this.refreshProjectWidgets())
       )
       .subscribe(
         () => {
@@ -154,35 +159,31 @@ export class DashboardDetailComponent implements OnInit {
 
   /**
    * Refresh the project
-   *
-   * @param dashboardToken The token used for the refresh
    */
-  private refreshProject(dashboardToken: string): Observable<Project> {
-    return this.httpProjectService.getById(dashboardToken).pipe(tap((project: Project) => (this.project = project)));
+  private refreshProject(): Observable<Project> {
+    return this.httpProjectService.getById(this.dashboardToken).pipe(tap((project: Project) => (this.project = project)));
   }
 
   /**
    * Check if the dashboard should be displayed as readonly
-   *
-   * @param dashboardToken The dashboard token to check
    */
-  private isReadOnlyDashboard(dashboardToken: string): Observable<boolean> {
-    return this.dashboardService.shouldDisplayedReadOnly(dashboardToken).pipe(tap((isReadonly: boolean) => (this.isReadOnly = isReadonly)));
+  private isReadOnlyDashboard(): Observable<boolean> {
+    return this.dashboardService.shouldDisplayedReadOnly(this.dashboardToken).pipe(tap((isReadonly: boolean) => (this.isReadOnly = isReadonly)));
   }
 
   /**
    * Activate the action of refresh project widgets
    */
   public refreshProjectWidgetsAction(): void {
-    this.refreshProjectWidgets(this.project.token).subscribe();
+    this.refreshProjectWidgets().subscribe();
   }
 
   /**
    * Refresh the project widget list
    */
-  private refreshProjectWidgets(dashboardToken: string): Observable<ProjectWidget[]> {
+  private refreshProjectWidgets(): Observable<ProjectWidget[]> {
     return this.httpProjectService
-      .getProjectProjectWidgets(dashboardToken)
+      .getProjectProjectWidgets(this.dashboardToken)
       .pipe(tap((projectWidgets: ProjectWidget[]) => (this.projectWidgets = projectWidgets)));
   }
 
@@ -319,8 +320,14 @@ export class DashboardDetailComponent implements OnInit {
         this.httpProjectService.addOrUpdateProjectScreenshot(this.project.token, file).subscribe();
       }
 
-      this.toastService.sendMessage('Dashboard updated', ToastTypeEnum.SUCCESS);
-      this.refreshConnectedScreens();
+      if (!this.projectWidgets) {
+        this.refreshProject().subscribe(() => {
+          this.initHeaderConfiguration();
+          this.toastService.sendMessage('Dashboard updated', ToastTypeEnum.SUCCESS);
+        });
+      } else {
+        this.refreshConnectedScreens();
+      }
     });
   }
 
@@ -328,9 +335,7 @@ export class DashboardDetailComponent implements OnInit {
    * Refresh every connected dashboards
    */
   private refreshConnectedScreens(): void {
-    this.httpScreenService.refreshEveryConnectedScreensForProject(this.project.token).subscribe(() => {
-      this.toastService.sendMessage('Screens refreshed', ToastTypeEnum.SUCCESS);
-    });
+    this.httpScreenService.refreshEveryConnectedScreensForProject(this.project.token).subscribe();
   }
 
   /**
