@@ -262,12 +262,8 @@ public class ProjectController {
             throw new ApiException(ProjectController.USER_NOT_ALLOWED, ApiErrorEnum.NOT_AUTHORIZED);
         }
 
-        projectService.updateProject(
-            project,
-            projectRequestDto.getName(),
-            projectRequestDto.getWidgetHeight(),
-            projectRequestDto.getMaxColumn(),
-            projectRequestDto.getCssStyle()
+        projectService.updateProject(project, projectRequestDto.getName(), projectRequestDto.getWidgetHeight(),
+            projectRequestDto.getMaxColumn(), projectRequestDto.getGridQuantity(), projectRequestDto.getCssStyle()
         );
 
         return ResponseEntity.noContent().build();

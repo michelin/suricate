@@ -14,36 +14,35 @@
  * limitations under the License.
  */
 
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import * as html2canvas from 'html2canvas';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
 
-import { DashboardService } from '../../services/dashboard/dashboard.service';
-import { Project } from '../../../shared/models/backend/project/project';
-import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
-import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';
-import { FileUtils } from '../../../shared/utils/file.utils';
-import { HeaderConfiguration } from '../../../shared/models/frontend/header/header-configuration';
-import { IconEnum } from '../../../shared/enums/icon.enum';
-import { HttpScreenService } from '../../../shared/services/backend/http-screen/http-screen.service';
-import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
-import { ToastService } from '../../../shared/services/frontend/toast/toast.service';
-import { SidenavService } from '../../../shared/services/frontend/sidenav/sidenav.service';
-import { DialogService } from '../../../shared/services/frontend/dialog/dialog.service';
-import { TranslateService } from '@ngx-translate/core';
-import { ProjectRequest } from '../../../shared/models/backend/project/project-request';
-import { ProjectFormFieldsService } from '../../../shared/services/frontend/form-fields/project-form-fields/project-form-fields.service';
-import { flatMap, switchMap, takeUntil, tap } from 'rxjs/operators';
-import { EMPTY, Observable, of, Subject } from 'rxjs';
-import { DashboardScreenComponent } from '../dashboard-screen/dashboard-screen.component';
-import { MatDialog } from '@angular/material/dialog';
-import { TvManagementDialogComponent } from '../tv-management-dialog/tv-management-dialog.component';
-import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
-import { ValueChangedEvent } from '../../../shared/models/frontend/form/value-changed-event';
-import { FormField } from '../../../shared/models/frontend/form/form-field';
-import { ProjectUsersFormFieldsService } from '../../../shared/services/frontend/form-fields/project-users-form-fields/project-users-form-fields.service';
-import { WebsocketService } from '../../../shared/services/frontend/websocket/websocket.service';
-import { ImageUtils } from '../../../shared/utils/image.utils';
+import {DashboardService} from '../../services/dashboard/dashboard.service';
+import {Project} from '../../../shared/models/backend/project/project';
+import {HttpProjectService} from '../../../shared/services/backend/http-project/http-project.service';
+import {ProjectWidget} from '../../../shared/models/backend/project-widget/project-widget';
+import {FileUtils} from '../../../shared/utils/file.utils';
+import {HeaderConfiguration} from '../../../shared/models/frontend/header/header-configuration';
+import {IconEnum} from '../../../shared/enums/icon.enum';
+import {HttpScreenService} from '../../../shared/services/backend/http-screen/http-screen.service';
+import {ToastTypeEnum} from '../../../shared/enums/toast-type.enum';
+import {ToastService} from '../../../shared/services/frontend/toast/toast.service';
+import {SidenavService} from '../../../shared/services/frontend/sidenav/sidenav.service';
+import {DialogService} from '../../../shared/services/frontend/dialog/dialog.service';
+import {TranslateService} from '@ngx-translate/core';
+import {ProjectRequest} from '../../../shared/models/backend/project/project-request';
+import {ProjectFormFieldsService} from '../../../shared/services/frontend/form-fields/project-form-fields/project-form-fields.service';
+import {flatMap, switchMap, tap} from 'rxjs/operators';
+import {EMPTY, Observable, of} from 'rxjs';
+import {DashboardScreenComponent} from '../dashboard-screen/dashboard-screen.component';
+import {MatDialog} from '@angular/material/dialog';
+import {TvManagementDialogComponent} from '../tv-management-dialog/tv-management-dialog.component';
+import {MaterialIconRecords} from '../../../shared/records/material-icon.record';
+import {ValueChangedEvent} from '../../../shared/models/frontend/form/value-changed-event';
+import {FormField} from '../../../shared/models/frontend/form/form-field';
+import {ProjectUsersFormFieldsService} from '../../../shared/services/frontend/form-fields/project-users-form-fields/project-users-form-fields.service';
+import {WebsocketService} from '../../../shared/services/frontend/websocket/websocket.service';
+import {ImageUtils} from '../../../shared/utils/image.utils';
 
 /**
  * Component used to display a specific dashboard
@@ -63,6 +62,11 @@ export class DashboardDetailComponent implements OnInit {
    * Hold the configuration of the header component
    */
   public headerConfiguration: HeaderConfiguration;
+
+  /**
+   * The token of the dashboard
+   */
+  public dashboardToken: string;
 
   /**
    * The project used to display the dashboard
@@ -134,14 +138,14 @@ export class DashboardDetailComponent implements OnInit {
    * Called when the component is init
    */
   public ngOnInit(): void {
-    const dashboardToken = this.activatedRoute.snapshot.params['dashboardToken'];
+    this.dashboardToken = this.activatedRoute.snapshot.params['dashboardToken'];
 
     this.websocketService.startConnection();
 
-    this.refreshProject(dashboardToken)
+    this.refreshProject()
       .pipe(
-        flatMap(() => this.isReadOnlyDashboard(dashboardToken)),
-        flatMap(() => this.refreshProjectWidgets(dashboardToken))
+        flatMap(() => this.isReadOnlyDashboard()),
+        flatMap(() => this.refreshProjectWidgets())
       )
       .subscribe(
         () => {
@@ -154,35 +158,31 @@ export class DashboardDetailComponent implements OnInit {
 
   /**
    * Refresh the project
-   *
-   * @param dashboardToken The token used for the refresh
    */
-  private refreshProject(dashboardToken: string): Observable<Project> {
-    return this.httpProjectService.getById(dashboardToken).pipe(tap((project: Project) => (this.project = project)));
+  private refreshProject(): Observable<Project> {
+    return this.httpProjectService.getById(this.dashboardToken).pipe(tap((project: Project) => (this.project = project)));
   }
 
   /**
    * Check if the dashboard should be displayed as readonly
-   *
-   * @param dashboardToken The dashboard token to check
    */
-  private isReadOnlyDashboard(dashboardToken: string): Observable<boolean> {
-    return this.dashboardService.shouldDisplayedReadOnly(dashboardToken).pipe(tap((isReadonly: boolean) => (this.isReadOnly = isReadonly)));
+  private isReadOnlyDashboard(): Observable<boolean> {
+    return this.dashboardService.shouldDisplayedReadOnly(this.dashboardToken).pipe(tap((isReadonly: boolean) => (this.isReadOnly = isReadonly)));
   }
 
   /**
    * Activate the action of refresh project widgets
    */
   public refreshProjectWidgetsAction(): void {
-    this.refreshProjectWidgets(this.project.token).subscribe();
+    this.refreshProjectWidgets().subscribe();
   }
 
   /**
    * Refresh the project widget list
    */
-  private refreshProjectWidgets(dashboardToken: string): Observable<ProjectWidget[]> {
+  private refreshProjectWidgets(): Observable<ProjectWidget[]> {
     return this.httpProjectService
-      .getProjectProjectWidgets(dashboardToken)
+      .getProjectProjectWidgets(this.dashboardToken)
       .pipe(tap((projectWidgets: ProjectWidget[]) => (this.projectWidgets = projectWidgets)));
   }
 
@@ -305,6 +305,7 @@ export class DashboardDetailComponent implements OnInit {
    * @param formData The data retrieve from the form sidenav
    */
   private editDashboard(formData: ProjectRequest): void {
+    console.warn(formData);
     formData.cssStyle = `.grid { background-color: ${formData['gridBackgroundColor']}; }`;
 
     this.httpProjectService.update(this.project.token, formData).subscribe(() => {
@@ -319,8 +320,14 @@ export class DashboardDetailComponent implements OnInit {
         this.httpProjectService.addOrUpdateProjectScreenshot(this.project.token, file).subscribe();
       }
 
-      this.toastService.sendMessage('Dashboard updated', ToastTypeEnum.SUCCESS);
-      this.refreshConnectedScreens();
+      if (!this.projectWidgets) {
+        this.refreshProject().subscribe(() => {
+          this.initHeaderConfiguration();
+          this.toastService.sendMessage('Dashboard updated', ToastTypeEnum.SUCCESS);
+        });
+      } else {
+        this.refreshConnectedScreens();
+      }
     });
   }
 
@@ -328,9 +335,7 @@ export class DashboardDetailComponent implements OnInit {
    * Refresh every connected dashboards
    */
   private refreshConnectedScreens(): void {
-    this.httpScreenService.refreshEveryConnectedScreensForProject(this.project.token).subscribe(() => {
-      this.toastService.sendMessage('Screens refreshed', ToastTypeEnum.SUCCESS);
-    });
+    this.httpScreenService.refreshEveryConnectedScreensForProject(this.project.token).subscribe();
   }
 
   /**

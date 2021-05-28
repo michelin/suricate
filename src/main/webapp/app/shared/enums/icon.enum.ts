@@ -32,6 +32,7 @@ export enum IconEnum {
   EMAIL = 'EMAIL',
   ERROR = 'ERROR',
   GENERAL_INFORMATION = 'GENERAL_INFORMATION',
+  GRID = 'GRID',
   HEIGHT = 'HEIGHT',
   HOME = 'HOME',
   INFO = 'INFO',

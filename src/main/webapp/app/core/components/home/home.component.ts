@@ -119,6 +119,7 @@ export class HomeComponent implements OnInit {
    * @param projectRequest The request to send to the backend with the information written on the form
    */
   private addDashboard(projectRequest: ProjectRequest): void {
+
     projectRequest.cssStyle = CssService.buildCssFile([CssService.buildCssGridBackgroundColor(projectRequest['gridBackgroundColor'])]);
 
     this.httpProjectService.create(projectRequest).subscribe((project: Project) => {

@@ -67,6 +67,12 @@ public class Project extends AbstractAuditingEntity<Long> {
     private Integer maxColumn;
 
     /**
+     * The number of column
+     */
+    @Column
+    private Integer gridQuantity;
+
+    /**
      * The css style of the grid
      */
     @Lob

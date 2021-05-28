@@ -44,6 +44,7 @@ import { IconEnum } from '../../../shared/enums/icon.enum';
 import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
 import { LibraryService } from '../../services/library/library.service';
 import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
+import Swipe from 'swipejs';
 
 /**
  * Display the grid stack widgets
@@ -131,6 +132,8 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
    */
   public materialIconRecords = MaterialIconRecords;
 
+  public numberOfGrids = Array.from(Array(3).keys());
+
   /**
    * The constructor
    *
@@ -186,6 +189,19 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
    */
   public ngAfterViewInit(): void {
     this.addExternalJSLibrariesToTheDOM();
+
+    const element = document.getElementById('slider');
+    (window as any).mySwipe = new Swipe(element, {
+      startSlide: 0,
+      auto: 3000,
+      draggable: false,
+      autoRestart: false,
+      continuous: true,
+      disableScroll: true,
+      stopPropagation: true,
+      callback: function(index, element) {},
+      transitionEnd: function(index, element) {}
+    });
   }
 
   /**

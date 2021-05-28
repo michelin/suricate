@@ -157,21 +157,25 @@ public class ProjectService {
      * @param newName      the new name
      * @param widgetHeight The new widget height
      * @param maxColumn    The new max column
+     * @param gridQuantity The number of grids
      */
     @Transactional
-    public void updateProject(Project project,
-                              final String newName,
-                              final int widgetHeight,
-                              final int maxColumn,
-                              final String customCss) {
+    public void updateProject(Project project, final String newName, final int widgetHeight, final int maxColumn,
+                              final int gridQuantity, final String customCss) {
         if (StringUtils.isNotBlank(newName)) {
             project.setName(newName);
         }
+
         if (widgetHeight > 0) {
             project.setWidgetHeight(widgetHeight);
         }
+
         if (maxColumn > 0) {
             project.setMaxColumn(maxColumn);
+        }
+
+        if (gridQuantity > 0) {
+            project.setGridQuantity(gridQuantity);
         }
 
         if (StringUtils.isNotBlank(customCss)) {
@@ -179,6 +183,7 @@ public class ProjectService {
         }
 
         projectRepository.save(project);
+
         // Update grid
         dashboardWebsocketService.sendEventToProjectSubscribers(project.getToken(), new UpdateEvent(UpdateType.GRID));
     }

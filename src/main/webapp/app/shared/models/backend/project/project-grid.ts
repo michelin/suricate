@@ -18,4 +18,5 @@ export interface ProjectGrid {
   maxColumn: number;
   widgetHeight: number;
   cssStyle: string;
+  gridQuantity: number;
 }

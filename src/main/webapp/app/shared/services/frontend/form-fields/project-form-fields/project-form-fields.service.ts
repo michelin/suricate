@@ -42,6 +42,7 @@ export class ProjectFormFieldsService {
    * @param project The project used for an edition
    */
   public static generateProjectFormFields(project?: Project): FormField[] {
+    console.warn(project);
     const backgroundColor =
       project && project.gridProperties.cssStyle
         ? CssService.extractCssValue(project.gridProperties.cssStyle, '.grid', 'background-color')
@@ -70,6 +71,14 @@ export class ProjectFormFieldsService {
         iconPrefix: IconEnum.COLUMN,
         type: DataTypeEnum.NUMBER,
         value: project ? project.gridProperties.maxColumn : 5,
+        validators: [Validators.required, CustomValidator.isDigits, CustomValidator.greaterThan0]
+      },
+      {
+        key: 'gridQuantity',
+        label: 'grid.number',
+        iconPrefix: IconEnum.GRID,
+        type: DataTypeEnum.NUMBER,
+        value: project ? project.gridProperties.gridQuantity : 1,
         validators: [Validators.required, CustomValidator.isDigits, CustomValidator.greaterThan0]
       },
       {
