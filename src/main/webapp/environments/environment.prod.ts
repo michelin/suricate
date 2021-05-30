@@ -18,7 +18,7 @@ export const environment = {
   production: true,
   version: require('../../../../package.json').version,
   environment: 'Production',
-  base_url: '',
+  base_url: 'API_BASE_URL',
 
   // Configuration for WebSockets
   wsHeartbeatIncoming: 0,
