@@ -1,4 +1,4 @@
-name: CI/CD
+name: Continuous Integration
 
 on:
   workflow_dispatch:
@@ -15,31 +15,40 @@ jobs:
     steps:
       - name: Checkout project
         uses: actions/checkout@v2
+        
       - name: Set up JDK 8
         uses: actions/setup-java@v2
         with:
           java-version: '8'
           distribution: 'adopt'
+          
       - name: Build with Maven
         run: mvn -B clean compile
+        
       - name: Test with Maven
         run: mvn -B test
+        
       - name: Check dependencies with Maven
         run: mvn -B -DskipTests -DcentralAnalyzerEnabled=false verify
+        
   Front-End:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout project
         uses: actions/checkout@v2
+        
       - name: Set up NodeJS 12.x
         uses: actions/setup-node@v1
         with:
           node-version: '12.x'
+          
       - name: Build with NPM
         run: |
           npm install --no-progress
-          npm run build
+          npm run build -- --prod
+          
       - name: Lint with NPM
         run: npm run lint
+        
       - name: Test with NPM
         run: npm run test-headless-no-sandbox -- --watch=false --progress=false --code-coverage

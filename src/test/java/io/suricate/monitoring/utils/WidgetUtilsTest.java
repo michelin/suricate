@@ -41,7 +41,7 @@ public class WidgetUtilsTest {
         assertThat(listCategory.get(0).getWidgets().toArray(new Widget[0])[2].getName()).isEqualTo("Jira release timeline");
         assertThat(listCategory.get(0).getWidgets().toArray(new Widget[0])[2].getLibraries()).isNotNull();
         assertThat(listCategory.get(0).getWidgets().toArray(new Widget[0])[2].getLibraries().size()).isEqualTo(2);
-        assertThat(Lists.newArrayList(Lists.newArrayList(listCategory.get(0).getWidgets()).get(2).getLibraries()).get(0).getTechnicalName()).isEqualTo("d3.js");
+        assertThat(Lists.newArrayList(listCategory.get(0).getWidgets().toArray(new Widget[0])[2].getLibraries()).get(0).getTechnicalName()).isEqualTo("d3.js");
 
         assertThat(listCategory.get(2).getName()).isEqualTo("Other");
         assertThat(listCategory.get(2).getId()).isNull();

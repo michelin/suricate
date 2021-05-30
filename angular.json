@@ -63,7 +63,7 @@
                   "maximumWarning": "6kb"
                 }
               ],
-              "tsConfig": "src/tsconfig-es5.app.json"
+              "tsConfig": "src/main/webapp/tsconfig-es5.app.json"
             }
           }
         },

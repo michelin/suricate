@@ -155,7 +155,7 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
     if (changes.project) {
       if (!changes.project.previousValue) {
         // Inject this variable in the window scope because some widgets use it to init the js
-        window['page_loaded'] = true;
+        (window as any).page_loaded = true;
       }
 
       this.project = changes.project.currentValue;
