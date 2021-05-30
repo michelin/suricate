@@ -4,7 +4,7 @@ COPY docker/frontend/replace_api_url.sh /
 
 FROM node:12-alpine AS builder
 WORKDIR /app
-COPY package.json package-lock.json angular.json tsconfig.json ./
+COPY package.json angular.json tsconfig.json ./
 COPY src/main/webapp src/main/webapp
 RUN npm install --no-progress
 RUN npm run build
