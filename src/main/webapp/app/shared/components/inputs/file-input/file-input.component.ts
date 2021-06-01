@@ -89,7 +89,6 @@ export class FileInputComponent extends InputComponent implements OnInit {
    */
   public onFileChange(event: Event): void {
     this.convertFileBase64(event);
-    this.emitValueChange('fileChanged');
   }
 
   /**
@@ -105,11 +104,12 @@ export class FileInputComponent extends InputComponent implements OnInit {
         this.setBase64File(base64Url as string, file.name);
         super.getFormControl().setValue(base64Url);
         super.getFormControl().markAsDirty();
+
+        this.emitValueChange('fileChanged');
       });
     }
 
     super.getFormControl().markAsTouched();
-    this.emitValueChange('fileChanged');
   }
 
   /**

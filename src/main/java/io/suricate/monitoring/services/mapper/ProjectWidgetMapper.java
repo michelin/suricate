@@ -66,6 +66,7 @@ public abstract class ProjectWidgetMapper {
     @Named("toProjectWidgetDTO")
     @Mapping(target = "widgetPosition.gridColumn", source = "projectWidget.gridColumn")
     @Mapping(target = "widgetPosition.gridRow", source = "projectWidget.gridRow")
+    @Mapping(target = "widgetPosition.gridIndex", source = "projectWidget.gridIndex")
     @Mapping(target = "widgetPosition.height", source = "projectWidget.height")
     @Mapping(target = "widgetPosition.width", source = "projectWidget.width")
     @Mapping(target = "instantiateHtml", expression = "java(projectWidgetService.instantiateProjectWidgetHtml(projectWidget))")
@@ -91,12 +92,7 @@ public abstract class ProjectWidgetMapper {
      * @return The project widget as entity
      */
     @Named("toProjectWidgetEntity")
-    @Mapping(target = "gridColumn", source = "projectWidgetRequestDto.gridColumn")
-    @Mapping(target = "gridRow", source = "projectWidgetRequestDto.gridRow")
-    @Mapping(target = "height", source = "projectWidgetRequestDto.height")
-    @Mapping(target = "width", source = "projectWidgetRequestDto.width")
     @Mapping(target = "project", expression = "java( projectService.getOneByToken(projectToken).get())")
     @Mapping(target = "widget", expression = "java( widgetService.findOne(projectWidgetRequestDto.getWidgetId()).get() )")
-    @Mapping(target = "data", source = "projectWidgetRequestDto.data")
     public abstract ProjectWidget toProjectWidgetEntity(ProjectWidgetRequestDto projectWidgetRequestDto, String projectToken);
 }

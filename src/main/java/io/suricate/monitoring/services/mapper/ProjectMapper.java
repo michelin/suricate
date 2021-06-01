@@ -56,6 +56,7 @@ public abstract class ProjectMapper {
     @Mapping(target = "gridProperties.maxColumn", source = "project.maxColumn")
     @Mapping(target = "gridProperties.widgetHeight", source = "project.widgetHeight")
     @Mapping(target = "gridProperties.gridQuantity", source = "project.gridQuantity")
+    @Mapping(target = "gridProperties.gridRotationSpeed", source = "project.gridRotationSpeed")
     @Mapping(target = "gridProperties.cssStyle", source = "project.cssStyle")
     @Mapping(target = "screenshotToken", expression = "java( project.getScreenshot() != null ? io.suricate.monitoring.utils.IdUtils.encrypt(project.getScreenshot().getId()) : null )")
     @Mapping(target = "librariesToken", expression = "java(libraryService.getLibrariesToken(project.getWidgets()))")

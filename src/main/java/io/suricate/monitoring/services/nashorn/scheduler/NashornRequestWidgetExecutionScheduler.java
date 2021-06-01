@@ -24,6 +24,7 @@ import io.suricate.monitoring.model.entities.ProjectWidget;
 import io.suricate.monitoring.model.enums.WidgetStateEnum;
 import io.suricate.monitoring.services.api.ProjectWidgetService;
 import io.suricate.monitoring.services.api.WidgetService;
+import io.suricate.monitoring.services.nashorn.services.DashboardScheduleService;
 import io.suricate.monitoring.services.nashorn.services.NashornService;
 import io.suricate.monitoring.services.nashorn.tasks.NashornRequestResultAsyncTask;
 import io.suricate.monitoring.services.nashorn.tasks.NashornRequestWidgetExecutionAsyncTask;
@@ -186,11 +187,13 @@ public class NashornRequestWidgetExecutionScheduler {
 
         // Get the beans inside schedule
         ProjectWidgetService projectWidgetServiceInjected = applicationContext.getBean(ProjectWidgetService.class);
+        DashboardScheduleService dashboardScheduleService = applicationContext.getBean(DashboardScheduleService.class);
         WidgetService widgetService = applicationContext.getBean(WidgetService.class);
 
         if (!nashornService.isNashornRequestExecutable(nashornRequest)) {
             LOGGER.debug("The Nashorn request of the widget instance {} is not valid. Stopping the widget", nashornRequest.getProjectWidgetId());
             projectWidgetServiceInjected.updateState(WidgetStateEnum.STOPPED, nashornRequest.getProjectWidgetId(), new Date());
+            dashboardScheduleService.sendWidgetUpdateNotification(nashornRequest.getProjectWidgetId(), nashornRequest.getProjectId());
             return;
         }
 

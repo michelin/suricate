@@ -20,11 +20,16 @@ import { Asset } from '../asset/asset';
 /**
  * The project entity
  */
-export interface Project {
+export class Project {
   token: string;
   name: string;
-  gridProperties: ProjectGrid;
+  gridProperties: ProjectGrid = new ProjectGrid();
   screenshotToken: string;
   librariesToken: string[];
-  image: Asset;
+  image: Asset = new Asset();
+
+  /**
+   * Constructor
+   */
+  constructor() {}
 }

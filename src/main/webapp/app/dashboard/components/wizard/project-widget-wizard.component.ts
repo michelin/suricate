@@ -32,27 +32,20 @@ import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
   styleUrls: ['../../../shared/components/wizard/wizard.component.scss']
 })
 export class ProjectWidgetWizardComponent extends WizardComponent implements OnInit {
-  /**
-   * The token of the dashboard
-   */
-  private readonly dashboardToken: string;
 
   /**
    * Constructor
    *
-   * @param {Injector} injector Angular Service used to manage the injection of services
-   * @param {HttpProjectService} httpProjectService Suricate service used to manage http calls for a dashboard
-   * @param {ProjectWidgetFormStepsService} projectWidgetFormStepsService Frontend service used to build steps for project widget object
-   * @param {ToastService} toastService Frontend service used to display message
+   * @param injector Angular Service used to manage the injection of services
+   * @param projectWidgetFormStepsService Frontend service used to build steps for project widget object
+   * @param toastService Frontend service used to display message
    */
   constructor(
     protected injector: Injector,
-    private readonly httpProjectService: HttpProjectService,
     private readonly projectWidgetFormStepsService: ProjectWidgetFormStepsService,
     private readonly toastService: ToastService
   ) {
     super(injector);
-    this.dashboardToken = RoutesService.getParamValueFromActivatedRoute(this.activatedRoute, 'dashboardToken');
     this.initHeaderConfiguration();
   }
 
@@ -90,9 +83,11 @@ export class ProjectWidgetWizardComponent extends WizardComponent implements OnI
     const projectWidgetRequest: ProjectWidgetRequest = {
       widgetId: formData[ProjectWidgetFormStepsService.selectWidgetStepKey][ProjectWidgetFormStepsService.widgetIdFieldKey],
       backendConfig: Object.keys(formData[ProjectWidgetFormStepsService.configureWidgetStepKey])
-        .filter((key: string) => formData[ProjectWidgetFormStepsService.configureWidgetStepKey][key])
+        .filter((key: string) => formData[ProjectWidgetFormStepsService.configureWidgetStepKey][key] != null && formData[ProjectWidgetFormStepsService.configureWidgetStepKey][key].trim() !== '')
+        .filter((key: string) => key !== ProjectWidgetFormStepsService.gridIndexFieldKey)
         .map((key: string) => `${key}=${formData[ProjectWidgetFormStepsService.configureWidgetStepKey][key]}`)
-        .join('\n')
+        .join('\n'),
+      gridIndex: formData[ProjectWidgetFormStepsService.configureWidgetStepKey][ProjectWidgetFormStepsService.gridIndexFieldKey]
     };
 
     this.httpProjectService.addProjectWidgetToProject(this.dashboardToken, projectWidgetRequest).subscribe(() => {
@@ -102,7 +97,7 @@ export class ProjectWidgetWizardComponent extends WizardComponent implements OnI
   }
 
   /**
-   * Function used to redirect to the dashbaord
+   * Function used to redirect to the dashboard
    */
   private redirectToDashboard(): void {
     this.router.navigate(['/dashboards', this.dashboardToken]);

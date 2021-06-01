@@ -16,14 +16,10 @@
  *
  */
 
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
 
-import { SlideToggleComponent } from './slide-toggle.component';
-import { TranslateLoader, TranslateModule, TranslatePipe } from '@ngx-translate/core';
-import { HttpClient } from '@angular/common/http';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { MockModule } from '../../../../mock/mock.module';
+import {SlideToggleComponent} from './slide-toggle.component';
+import {MockModule} from '../../../../mock/mock.module';
 
 describe('SlideToggleComponent', () => {
   let component: SlideToggleComponent;

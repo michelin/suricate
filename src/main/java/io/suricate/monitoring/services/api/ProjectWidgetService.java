@@ -340,10 +340,14 @@ public class ProjectWidgetService {
      * @param projectWidget The widget instance
      * @param customStyle   The new CSS style
      * @param backendConfig The new configuration
+     * @param gridIndex The grid index of the widget instance
      */
     @Transactional
-    public void updateProjectWidget(ProjectWidget projectWidget, final String customStyle, final String backendConfig) {
+    public void updateProjectWidget(ProjectWidget projectWidget, final String customStyle, final String backendConfig,
+                                    final int gridIndex) {
         ctx.getBean(NashornRequestWidgetExecutionScheduler.class).cancelWidgetExecution(projectWidget.getId());
+
+        projectWidget.setGridIndex(gridIndex);
 
         if (customStyle != null) {
             projectWidget.setCustomStyle(customStyle);

@@ -4,14 +4,6 @@
   <span> {{ screenCode }}</span>
 </div>
 
-<div id="slider" class="swipe">
-  <div class="swipe-wrap">
-    <div *ngFor="let index of numberOfGrids">
-      <p>{{ index }}</p>
-    </div>
-  </div>
-</div>
-
 <!-- Grid project -->
 <div
   *ngIf="gridOptions"
@@ -25,6 +17,7 @@
 
   <suricate-dashboard-screen-widget
     *ngFor="let gridStackItem of gridStackItems"
+    [gridQuantity]="project.gridProperties.gridQuantity"
     [projectWidget]="gridStackItem.payload"
     [gridStackItem]="gridStackItem"
     [projectToken]="project.token"
@@ -32,3 +25,4 @@
   >
   </suricate-dashboard-screen-widget>
 </div>
+

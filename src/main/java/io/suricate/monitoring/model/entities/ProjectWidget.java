@@ -63,6 +63,12 @@ public class ProjectWidget extends AbstractAuditingEntity<Long> {
     private int gridColumn;
 
     /**
+     * Index of the grid the widget instance belongs
+     */
+    @Column
+    private int gridIndex;
+
+    /**
      * The number of rows taken by the widget
      */
     @Column

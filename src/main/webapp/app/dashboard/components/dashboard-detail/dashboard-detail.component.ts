@@ -33,7 +33,7 @@ import {TranslateService} from '@ngx-translate/core';
 import {ProjectRequest} from '../../../shared/models/backend/project/project-request';
 import {ProjectFormFieldsService} from '../../../shared/services/frontend/form-fields/project-form-fields/project-form-fields.service';
 import {flatMap, switchMap, tap} from 'rxjs/operators';
-import {EMPTY, Observable, of} from 'rxjs';
+import {EMPTY, interval, Observable, of} from 'rxjs';
 import {DashboardScreenComponent} from '../dashboard-screen/dashboard-screen.component';
 import {MatDialog} from '@angular/material/dialog';
 import {TvManagementDialogComponent} from '../tv-management-dialog/tv-management-dialog.component';
@@ -182,7 +182,7 @@ export class DashboardDetailComponent implements OnInit {
    */
   private refreshProjectWidgets(): Observable<ProjectWidget[]> {
     return this.httpProjectService
-      .getProjectProjectWidgets(this.dashboardToken)
+      .getWidgetInstancesByProjectToken(this.dashboardToken)
       .pipe(tap((projectWidgets: ProjectWidget[]) => (this.projectWidgets = projectWidgets)));
   }
 
@@ -305,7 +305,6 @@ export class DashboardDetailComponent implements OnInit {
    * @param formData The data retrieve from the form sidenav
    */
   private editDashboard(formData: ProjectRequest): void {
-    console.warn(formData);
     formData.cssStyle = `.grid { background-color: ${formData['gridBackgroundColor']}; }`;
 
     this.httpProjectService.update(this.project.token, formData).subscribe(() => {

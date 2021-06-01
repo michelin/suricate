@@ -22,6 +22,7 @@
 export interface ProjectWidgetPosition {
   gridColumn: number;
   gridRow: number;
+  gridIndex: number;
   width: number;
   height: number;
 }

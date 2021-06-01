@@ -17,10 +17,15 @@
 /**
  * The asset representation
  */
-export interface Asset {
+export class Asset {
   id: string;
   content: string;
   contentType: string;
   size: number;
   lastUpdateDate: Date;
+
+  /**
+   * Constructor
+   */
+  constructor() {}
 }

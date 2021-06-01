@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component, ElementRef, Input, OnDestroy, OnInit } from '@angular/core';
+import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { TitleCasePipe } from '@angular/common';
 import { NgGridItemConfig, NgGridItemEvent } from 'angular2-grid';
@@ -78,6 +78,12 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    */
   @Input()
   public projectToken: string;
+
+  /**
+   * The number of grid of the dashboard
+   */
+  @Input()
+  public gridQuantity: number;
 
   /**
    * Subject used to unsubscribe all the subscriptions when the component is destroyed
@@ -146,7 +152,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
     private readonly toastService: ToastService,
     private readonly widgetConfigurationFormFieldsService: WidgetConfigurationFormFieldsService,
     private readonly libraryService: LibraryService
-  ) {}
+  ) { }
 
   /**
    * Called when the component is init
@@ -242,7 +248,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   public displayEditFormSidenav(): void {
     this.sidenavService.openFormSidenav({
       title: 'widget.edit',
-      formFields: this.projectWidgetFormStepsService.generateProjectWidgetFormFields(this.widget.params, this.projectWidget.backendConfig),
+      formFields: this.projectWidgetFormStepsService.generateWidgetParametersFormFields(this.gridQuantity, this.widget.params, this.projectWidget.backendConfig, this.projectWidget.widgetPosition.gridIndex),
       save: (formData: FormData) => this.saveWidget(formData),
       slideToggleButtonConfiguration: this.buildSlideToggleButtonConfiguration(this.widget.category.categoryParameters)
     });
@@ -259,8 +265,10 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
       customStyle: this.projectWidget.customStyle,
       backendConfig: Object.keys(formData)
         .filter((key: string) => formData[key] != null && `${formData[key]}`.trim() !== '')
+        .filter((key: string) => key !== ProjectWidgetFormStepsService.gridIndexFieldKey)
         .map((key: string) => `${key}=${formData[key]}`)
-        .join('\n')
+        .join('\n'),
+      gridIndex: formData[ProjectWidgetFormStepsService.gridIndexFieldKey]
     };
 
     this.httpProjectWidgetService.updateOneById(this.projectWidget.id, projectWidgetRequest).subscribe(() => {

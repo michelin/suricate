@@ -324,7 +324,7 @@ public class DashboardWebSocketService {
      * @param payload   the payload content
      */
     public void updateGlobalScreensByProjectId(Long projectId, UpdateEvent payload) {
-        sendEventToProjectSubscribers(projectService.getTokenByProjectId(projectId), payload);
+        this.sendEventToProjectSubscribers(projectService.getTokenByProjectId(projectId), payload);
     }
 
     /**
@@ -333,7 +333,7 @@ public class DashboardWebSocketService {
      * @param projectToken the specified project token
      */
     public void displayScreenCodeForProject(String projectToken) {
-        sendEventToProjectSubscribers(projectToken, new UpdateEvent(UpdateType.DISPLAY_NUMBER));
+        this.sendEventToProjectSubscribers(projectToken, new UpdateEvent(UpdateType.DISPLAY_NUMBER));
     }
 
     /**
@@ -343,7 +343,7 @@ public class DashboardWebSocketService {
      * @param screenCode   The screen code
      */
     public void disconnectClient(final String projectToken, final int screenCode) {
-        sendEventToScreenProjectSubscriber(projectToken, screenCode, new UpdateEvent(UpdateType.DISCONNECT));
+        this.sendEventToScreenProjectSubscriber(projectToken, screenCode, new UpdateEvent(UpdateType.DISCONNECT));
     }
 
     /**

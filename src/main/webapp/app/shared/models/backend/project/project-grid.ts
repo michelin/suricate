@@ -14,9 +14,15 @@
  * limitations under the License.
  */
 
-export interface ProjectGrid {
+export class ProjectGrid {
   maxColumn: number;
   widgetHeight: number;
   cssStyle: string;
   gridQuantity: number;
+  gridRotationSpeed: number;
+
+  /**
+   * Constructor
+   */
+  constructor() {}
 }

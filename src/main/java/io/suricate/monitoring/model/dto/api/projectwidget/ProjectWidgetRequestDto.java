@@ -50,6 +50,12 @@ public class ProjectWidgetRequestDto extends AbstractDto {
     private int gridRow = 0;
 
     /**
+     * Index of the grid the widget instance belongs
+     */
+    @ApiModelProperty(value = "Index of the grid the widget instance belongs")
+    private int gridIndex;
+
+    /**
      * The number of row taken on the grid
      */
     @ApiModelProperty(value = "The number of row taken on the grid")

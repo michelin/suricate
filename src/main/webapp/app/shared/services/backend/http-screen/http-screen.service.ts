@@ -26,22 +26,21 @@ import { AbstractHttpService } from '../abstract-http/abstract-http.service';
 export class HttpScreenService {
   /**
    * Global endpoint for screens
-   * @type {string}
    */
   private static readonly screensApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/screens`;
 
   /**
    * The constructor
    *
-   * @param {HttpClient} httpClient The http client service
+   * @param httpClient The http client service
    */
   constructor(private readonly httpClient: HttpClient) {}
 
   /**
    * Send the notification for connect a new tv to this dashboard
    *
-   * @param {string} projectToken The project token to connect
-   * @param {number} screenCode The tv screen code
+   * @param projectToken The project token to connect
+   * @param screenCode The tv screen code
    */
   public connectProjectToScreen(projectToken: string, screenCode: number): Observable<void> {
     const url = `${HttpScreenService.screensApiEndpoint}/${projectToken}/connect?screenCode=${screenCode}`;
@@ -52,8 +51,8 @@ export class HttpScreenService {
   /**
    * Send the notification to disconnect a tv for this dashboard
    *
-   * @param {string} projectToken The project token
-   * @param {number} screenCode The screen to disconnect
+   * @param projectToken The project token
+   * @param screenCode The screen to disconnect
    */
   public disconnectScreen(projectToken: string, screenCode: number): Observable<void> {
     const url = `${HttpScreenService.screensApiEndpoint}/${projectToken}/disconnect?screenCode=${screenCode}`;
@@ -74,7 +73,8 @@ export class HttpScreenService {
 
   /**
    * Display the screen code on every connected screens
-   * @param {string} projectToken The project token
+   *
+   * @param projectToken The project token
    */
   public displayScreenCodeEveryConnectedScreensForProject(projectToken: string): Observable<void> {
     const url = `${HttpScreenService.screensApiEndpoint}/${projectToken}/showscreencode`;

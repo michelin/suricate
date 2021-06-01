@@ -263,7 +263,8 @@ public class ProjectController {
         }
 
         projectService.updateProject(project, projectRequestDto.getName(), projectRequestDto.getWidgetHeight(),
-            projectRequestDto.getMaxColumn(), projectRequestDto.getGridQuantity(), projectRequestDto.getCssStyle()
+            projectRequestDto.getMaxColumn(), projectRequestDto.getGridQuantity(), projectRequestDto.getGridRotationSpeed(),
+            projectRequestDto.getCssStyle()
         );
 
         return ResponseEntity.noContent().build();

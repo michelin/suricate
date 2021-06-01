@@ -169,7 +169,7 @@ public class DashboardScheduleService {
      * @param projectWidgetId The project widget ID
      * @param projectId       The project ID
      */
-    private void sendWidgetUpdateNotification(Long projectWidgetId, Long projectId) {
+    public void sendWidgetUpdateNotification(Long projectWidgetId, Long projectId) {
         UpdateEvent event = new UpdateEvent(UpdateType.WIDGET);
         ProjectWidget projectWidget = projectWidgetService.getOne(projectWidgetId).orElse(null);
         event.setContent(projectWidgetMapper.toProjectWidgetDTO(projectWidget));

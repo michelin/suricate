@@ -27,24 +27,25 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
-import { NgGridConfig, NgGridItemConfig } from 'angular2-grid';
+import {takeUntil} from 'rxjs/operators';
+import {interval, Subject} from 'rxjs';
+import {NgGridConfig, NgGridItemConfig} from 'angular2-grid';
 import * as Stomp from '@stomp/stompjs';
-import { Project } from '../../../shared/models/backend/project/project';
-import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';
-import { WebsocketService } from '../../../shared/services/frontend/websocket/websocket.service';
-import { HttpAssetService } from '../../../shared/services/backend/http-asset/http-asset.service';
-import { WebsocketUpdateEvent } from '../../../shared/models/frontend/websocket/websocket-update-event';
-import { WebsocketUpdateTypeEnum } from '../../../shared/enums/websocket-update-type.enum';
-import { DashboardService } from '../../services/dashboard/dashboard.service';
-import { ProjectWidgetPositionRequest } from '../../../shared/models/backend/project-widget/project-widget-position-request';
-import { GridItemUtils } from '../../../shared/utils/grid-item.utils';
-import { IconEnum } from '../../../shared/enums/icon.enum';
-import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
-import { LibraryService } from '../../services/library/library.service';
-import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
-import Swipe from 'swipejs';
+import {Project} from '../../../shared/models/backend/project/project';
+import {ProjectWidget} from '../../../shared/models/backend/project-widget/project-widget';
+import {WebsocketService} from '../../../shared/services/frontend/websocket/websocket.service';
+import {HttpAssetService} from '../../../shared/services/backend/http-asset/http-asset.service';
+import {WebsocketUpdateEvent} from '../../../shared/models/frontend/websocket/websocket-update-event';
+import {WebsocketUpdateTypeEnum} from '../../../shared/enums/websocket-update-type.enum';
+import {DashboardService} from '../../services/dashboard/dashboard.service';
+import {ProjectWidgetPositionRequest} from '../../../shared/models/backend/project-widget/project-widget-position-request';
+import {GridItemUtils} from '../../../shared/utils/grid-item.utils';
+import {IconEnum} from '../../../shared/enums/icon.enum';
+import {MaterialIconRecords} from '../../../shared/records/material-icon.record';
+import {LibraryService} from '../../services/library/library.service';
+import {HttpProjectService} from '../../../shared/services/backend/http-project/http-project.service';
+import {Observable} from "rxjs/internal/Observable";
+import {HttpScreenService} from "../../../shared/services/backend/http-screen/http-screen.service";
 
 /**
  * Display the grid stack widgets
@@ -108,7 +109,12 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   public gridOptions: NgGridConfig = {};
 
   /**
-   * Grid state when widgets were first loaded
+   * The grid index used to display widget in the case of dashboards rotation
+   */
+  public currentGridIndex: number = 0;
+
+  /**
+   * Contains the widget instances as grid items
    */
   protected startGridStackItems: NgGridItemConfig[] = [];
 
@@ -131,8 +137,6 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
    * The list of material icons
    */
   public materialIconRecords = MaterialIconRecords;
-
-  public numberOfGrids = Array.from(Array(3).keys());
 
   /**
    * The constructor
@@ -162,7 +166,12 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
       }
 
       this.project = changes.project.currentValue;
+
       this.initGridStackOptions();
+
+      if (this.project.gridProperties.gridQuantity > 1) {
+        this.startDashboardRotation();
+      }
 
       if (changes.project.previousValue) {
         if (changes.project.previousValue.token !== changes.project.currentValue.token) {
@@ -189,19 +198,6 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
    */
   public ngAfterViewInit(): void {
     this.addExternalJSLibrariesToTheDOM();
-
-    const element = document.getElementById('slider');
-    (window as any).mySwipe = new Swipe(element, {
-      startSlide: 0,
-      auto: 3000,
-      draggable: false,
-      autoRestart: false,
-      continuous: true,
-      disableScroll: true,
-      stopPropagation: true,
-      callback: function(index, element) {},
-      transitionEnd: function(index, element) {}
-    });
   }
 
   /**
@@ -245,8 +241,7 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   }
 
   /**********************************************************************************************************/
-  /*                      GRID STACK MANAGEMENT                                                             */
-
+  /*                                         GRID MANAGEMENT                                                */
   /**********************************************************************************************************/
 
   /**
@@ -274,7 +269,28 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   }
 
   /**
-   * Create the list of gridStackItems used to display widgets on the grid
+   * Initialize the rotation of a dashboard
+   */
+  private startDashboardRotation(): void {
+    console.warn("Start rotation");
+
+    interval(this.project.gridProperties.gridRotationSpeed * 60000)
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe(() => {
+        console.warn(new Date());
+
+        this.currentGridIndex++;
+
+        if (this.currentGridIndex === this.project.gridProperties.gridQuantity) {
+          this.currentGridIndex = 0;
+        }
+        
+        this.initGridStackItems()
+    });
+  }
+
+  /**
+   * Create the list of grid items used to display widgets on the grid
    */
   private initGridStackItems(): void {
     this.gridStackItems = [];
@@ -291,25 +307,25 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
    *
    * @param projectWidgets The project widgets
    */
-  private getGridStackItemsFromProjectWidgets(projectWidgets: ProjectWidget[]): NgGridItemConfig[] {
+  private getGridStackItemsFromProjectWidgets(projectWidgets: ProjectWidget[], ): NgGridItemConfig[] {
     const gridStackItemsConfig: NgGridItemConfig[] = [];
 
-    this.projectWidgets.forEach((projectWidget: ProjectWidget) => {
-      gridStackItemsConfig.push({
-        col: projectWidget.widgetPosition.gridColumn,
-        row: projectWidget.widgetPosition.gridRow,
-        sizey: projectWidget.widgetPosition.height,
-        sizex: projectWidget.widgetPosition.width,
-        payload: projectWidget
-      });
+    this.projectWidgets.filter(projectWidget => projectWidget.widgetPosition.gridIndex === this.currentGridIndex)
+      .forEach((projectWidget: ProjectWidget) => {
+        gridStackItemsConfig.push({
+          col: projectWidget.widgetPosition.gridColumn,
+          row: projectWidget.widgetPosition.gridRow,
+          sizey: projectWidget.widgetPosition.height,
+          sizex: projectWidget.widgetPosition.width,
+          payload: projectWidget
+        });
     });
 
     return gridStackItemsConfig;
   }
 
   /**********************************************************************************************************/
-  /*                      WEBSOCKET MANAGEMENT                                                              */
-
+  /*                                      WEBSOCKET MANAGEMENT                                              */
   /**********************************************************************************************************/
 
   /**
@@ -357,8 +373,9 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
         const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 
         switch (updateEvent.type) {
-          case WebsocketUpdateTypeEnum.RELOAD:
-            location.reload();
+          case WebsocketUpdateTypeEnum.DISCONNECT:
+            this.disconnectFromWebsocket();
+            this.disconnectEvent.emit();
             break;
           case WebsocketUpdateTypeEnum.DISPLAY_NUMBER:
             this.displayScreenCode();
@@ -366,9 +383,8 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
           case WebsocketUpdateTypeEnum.POSITION:
             this.refreshProjectWidget.emit();
             break;
-          case WebsocketUpdateTypeEnum.DISCONNECT:
-            this.disconnectFromWebsocket();
-            this.disconnectEvent.emit();
+          case WebsocketUpdateTypeEnum.RELOAD:
+            location.reload();
             break;
           default:
             this.refreshProjectWidget.emit();

@@ -70,7 +70,7 @@ export class FormStep {
   /**
    * Used to retrieve fields in an async way
    */
-  asyncFields?: (formGroup?: FormGroup, step?: FormStep) => Observable<FormField[]>;
+  asyncFields?: (gridQuantity: number, formGroup?: FormGroup, step?: FormStep) => Observable<FormField[]>;
 
   /**
    * If the step is optional

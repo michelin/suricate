@@ -134,7 +134,7 @@ public class ScreenController {
      *
      * @param projectToken The project token
      */
-    @ApiOperation(value = "Send the notification to for the project screens to display their screen code")
+    @ApiOperation(value = "Send the notification to the project screens to display their screen code")
     @ApiResponses(value = {
         @ApiResponse(code = 204, message = "Screen code displayed"),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),

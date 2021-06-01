@@ -31,6 +31,11 @@ import { IconEnum } from '../../../shared/enums/icon.enum';
 import { CssService } from '../../../shared/services/frontend/css/css.service';
 import { FileUtils } from '../../../shared/utils/file.utils';
 import { ImageUtils } from '../../../shared/utils/image.utils';
+import {ValueChangedEvent} from "../../../shared/models/frontend/form/value-changed-event";
+import {EMPTY, Observable, of} from "rxjs";
+import {RepositoryFormFieldsService} from "../../../shared/services/frontend/form-fields/repository-form-fields/repository-form-fields.service";
+import {FormField} from "../../../shared/models/frontend/form/form-field";
+import {Repository} from "../../../shared/models/backend/repository/repository";
 
 /**
  * Manage the home page
@@ -45,7 +50,7 @@ export class HomeComponent implements OnInit {
    * Configuration of the header
    */
   public headerConfiguration: HeaderConfiguration;
-
+  
   /**
    * The list of dashboards
    */
@@ -119,7 +124,6 @@ export class HomeComponent implements OnInit {
    * @param projectRequest The request to send to the backend with the information written on the form
    */
   private addDashboard(projectRequest: ProjectRequest): void {
-
     projectRequest.cssStyle = CssService.buildCssFile([CssService.buildCssGridBackgroundColor(projectRequest['gridBackgroundColor'])]);
 
     this.httpProjectService.create(projectRequest).subscribe((project: Project) => {

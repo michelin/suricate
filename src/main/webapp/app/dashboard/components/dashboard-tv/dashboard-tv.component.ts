@@ -174,7 +174,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    */
   private refreshProjectWidgets(dashboardToken: string): Observable<ProjectWidget[]> {
     return this.httpProjectService
-      .getProjectProjectWidgets(dashboardToken)
+      .getWidgetInstancesByProjectToken(dashboardToken)
       .pipe(tap((projectWidgets: ProjectWidget[]) => (this.projectWidgets = projectWidgets)));
   }
 

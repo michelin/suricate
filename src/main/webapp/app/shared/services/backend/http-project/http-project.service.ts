@@ -139,11 +139,11 @@ export class HttpProjectService implements AbstractHttpService<Project | Project
   }
 
   /**
-   * Get the list of project widgets for a project
+   * Get the list of widget instances for a project
    *
    * @param projectToken The project token
    */
-  public getProjectProjectWidgets(projectToken: string): Observable<ProjectWidget[]> {
+  public getWidgetInstancesByProjectToken(projectToken: string): Observable<ProjectWidget[]> {
     const url = `${HttpProjectService.projectsApiEndpoint}/${projectToken}/projectWidgets`;
 
     return this.httpClient.get<ProjectWidget[]>(url);

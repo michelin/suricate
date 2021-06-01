@@ -37,7 +37,7 @@ export class RepositoriesComponent extends ListComponent<Repository> {
   /**
    * Reflect the state of the repository in the form sidenav
    */
-  private repositoryFormSidenav: Repository;
+  private repositoryBeingEdited: Repository;
 
   /**
    * Constructor
@@ -122,7 +122,7 @@ export class RepositoriesComponent extends ListComponent<Repository> {
    * @param saveCallback The function to call when save button is clicked
    */
   private openFormSidenav(event: Event, repository: Repository, saveCallback: (repositoryRequest: RepositoryRequest) => void): void {
-    this.repositoryFormSidenav = repository ? Object.assign({}, repository) : new Repository();
+    this.repositoryBeingEdited = repository ? Object.assign({}, repository) : new Repository();
 
     this.sidenavService.openFormSidenav({
       title: repository ? 'repository.edit' : 'repository.add',
@@ -138,10 +138,10 @@ export class RepositoriesComponent extends ListComponent<Repository> {
    * @param valueChangedEvent Represent the changes on a form field
    */
   private onValueChanged(valueChangedEvent: ValueChangedEvent): Observable<FormField[]> {
-    this.repositoryFormSidenav[valueChangedEvent.fieldKey] = valueChangedEvent.value;
+    this.repositoryBeingEdited[valueChangedEvent.fieldKey] = valueChangedEvent.value;
 
     if (valueChangedEvent.fieldKey === 'type') {
-      return of(RepositoryFormFieldsService.generateFormFields(this.repositoryFormSidenav));
+      return of(RepositoryFormFieldsService.generateFormFields(this.repositoryBeingEdited));
     }
 
     return EMPTY;
@@ -153,7 +153,7 @@ export class RepositoriesComponent extends ListComponent<Repository> {
    * @param repositoryRequest The new repository with the modification made on the form
    */
   private updateRepository(repositoryRequest: RepositoryRequest): void {
-    this.httpRepositoryService.update(this.repositoryFormSidenav.id, repositoryRequest).subscribe(() => {
+    this.httpRepositoryService.update(this.repositoryBeingEdited.id, repositoryRequest).subscribe(() => {
       super.refreshList();
     });
   }

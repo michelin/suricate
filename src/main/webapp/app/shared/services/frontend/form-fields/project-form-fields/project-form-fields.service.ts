@@ -25,12 +25,49 @@ import { CustomValidator } from '../../../../validators/custom-validator';
 import { HttpAssetService } from '../../../backend/http-asset/http-asset.service';
 import { FileUtils } from '../../../../utils/file.utils';
 import { ImageUtils } from '../../../../utils/image.utils';
+import {ValueChangedEvent} from "../../../../models/frontend/form/value-changed-event";
+import {EMPTY, Observable, of} from "rxjs";
 
 /**
  * Service used to build the form fields related to a project
  */
 @Injectable({ providedIn: 'root' })
 export class ProjectFormFieldsService {
+  /**
+   * Key of the form field for project name
+   */
+  public static readonly projectNameFormFieldKey = 'name';
+
+  /**
+   * Key of the form field for project widget height
+   */
+  public static readonly projectWidgetHeightFormFieldKey = 'widgetHeight';
+
+  /**
+   * Key of the form field for project max column
+   */
+  public static readonly projectMaxColumnFormFieldKey = 'maxColumn';
+
+  /**
+   * Key of the form field for project grid quantity
+   */
+  public static readonly projectGridQuantityFormFieldKey = 'gridQuantity';
+
+  /**
+   * Key of the form field for project grid rotation speed
+   */
+  public static readonly projectGridRotationSpeedFormFieldKey = 'gridRotationSpeed';
+
+  /**
+   * Key of the form field for project image
+   */
+  public static readonly projectImageFormFieldKey = 'image';
+
+  /**
+   * Key of the form field for project image
+   */
+  public static readonly projectGridBackgroundColorFormFieldKey = 'gridBackgroundColor';
+
   /**
    * Constructor
    */
@@ -42,58 +79,67 @@ export class ProjectFormFieldsService {
    * @param project The project used for an edition
    */
   public static generateProjectFormFields(project?: Project): FormField[] {
-    console.warn(project);
     const backgroundColor =
       project && project.gridProperties.cssStyle
         ? CssService.extractCssValue(project.gridProperties.cssStyle, '.grid', 'background-color')
         : '#87878700';
 
-    return [
+    const dashboardFormFields: FormField[] = [
       {
-        key: 'name',
+        key: ProjectFormFieldsService.projectNameFormFieldKey,
         label: 'name',
         iconPrefix: IconEnum.NAME,
         type: DataTypeEnum.TEXT,
-        value: project ? project.name : null,
+        value: project?.name ? project.name : null,
         validators: [Validators.required]
       },
       {
-        key: 'widgetHeight',
+        key: ProjectFormFieldsService.projectWidgetHeightFormFieldKey,
         label: 'widget.height.px',
         iconPrefix: IconEnum.HEIGHT,
         type: DataTypeEnum.NUMBER,
-        value: project ? project.gridProperties.widgetHeight : 360,
+        value: project?.gridProperties.widgetHeight ? project.gridProperties.widgetHeight : 360,
         validators: [Validators.required, CustomValidator.isDigits, CustomValidator.greaterThan0]
       },
       {
-        key: 'maxColumn',
+        key: ProjectFormFieldsService.projectMaxColumnFormFieldKey,
         label: 'column.number',
         iconPrefix: IconEnum.COLUMN,
         type: DataTypeEnum.NUMBER,
-        value: project ? project.gridProperties.maxColumn : 5,
+        value: project?.gridProperties.maxColumn ? project.gridProperties.maxColumn : 5,
         validators: [Validators.required, CustomValidator.isDigits, CustomValidator.greaterThan0]
       },
       {
-        key: 'gridQuantity',
+        key: ProjectFormFieldsService.projectGridQuantityFormFieldKey,
         label: 'grid.number',
         iconPrefix: IconEnum.GRID,
         type: DataTypeEnum.NUMBER,
-        value: project ? project.gridProperties.gridQuantity : 1,
+        value: project?.gridProperties.gridQuantity ? project.gridProperties.gridQuantity : 1,
         validators: [Validators.required, CustomValidator.isDigits, CustomValidator.greaterThan0]
       },
       {
-        key: 'image',
+        key: ProjectFormFieldsService.projectGridRotationSpeedFormFieldKey,
+        label: 'dashboard.grid.rotation.speed',
+        iconPrefix: IconEnum.GRID_ROTATION_SPEED,
+        type: DataTypeEnum.NUMBER,
+        value: project?.gridProperties.gridRotationSpeed ? project.gridProperties.gridRotationSpeed : 5,
+        validators: [Validators.required, CustomValidator.isDigits, CustomValidator.greaterThan0]
+      },
+      {
+        key: ProjectFormFieldsService.projectImageFormFieldKey,
         label: 'dashboard.upload.logo',
         type: DataTypeEnum.FILE,
         value: project?.image ? `data:${project.image.contentType};base64,${project.image.content}` : undefined,
         validators: [CustomValidator.fileHasFormat()]
       },
       {
-        key: 'gridBackgroundColor',
+        key: ProjectFormFieldsService.projectGridBackgroundColorFormFieldKey,
         label: 'background.color',
         type: DataTypeEnum.COLOR_PICKER,
         value: backgroundColor
       }
     ];
+
+    return dashboardFormFields;
   }
 }

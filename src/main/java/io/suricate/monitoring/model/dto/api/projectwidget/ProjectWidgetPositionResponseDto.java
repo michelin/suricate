@@ -46,6 +46,12 @@ public class ProjectWidgetPositionResponseDto extends AbstractDto {
     private int gridRow;
 
     /**
+     * Index of the grid the widget instance belongs
+     */
+    @ApiModelProperty(value = "Index of the grid the widget instance belongs")
+    private int gridIndex;
+
+    /**
      * The number of columns for this widget
      */
     @ApiModelProperty(value = "The number of columns taken by this widget")
