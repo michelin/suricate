@@ -14,11 +14,8 @@ services:
       - suricate
     restart: unless-stopped
 
-  suricate-backend:
-    image: suricate/backend
-    build:
-      context: .
-      dockerfile: docker/backend/Dockerfile
+  suricate:
+    image: suricate/suricate
     environment:
       SPRING_PROFILES_ACTIVE: postgresql
       SPRING_DATASOURCE_URL: 'jdbc:postgresql://postgres:5432/postgres?currentSchema=suricate'
@@ -30,19 +27,6 @@ services:
       - 8080:8080
     depends_on:
       - postgres
-    restart: unless-stopped
-
-  suricate-frontend:
-    image: suricate/frontend
-    build:
-      context: .
-      dockerfile: docker/frontend/Dockerfile
-    environment:
-      API_BASE_URL: http://localhost:8080
-    ports:
-      - '4200:80'
-    depends_on:
-      - suricate-backend
     restart: unless-stopped
 
 networks:
