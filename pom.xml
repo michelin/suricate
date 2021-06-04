@@ -364,9 +364,14 @@
     <build>
         <finalName>${project.artifactId}</finalName>
         <plugins>
+            <!-- Fat jar configuration -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <!-- Executable from Unix machines (e.g. with systemctl) -->
+                    <executable>true</executable>
+                </configuration>
             </plugin>
 
             <!-- Force cleaning the /target folder. Used to force the deletion of the node.exe -->
@@ -480,6 +485,20 @@
                     </dependency>
                 </dependencies>
             </plugin>
+
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <from>
+                        <image>adoptopenjdk:8-jre-hotspot</image>
+                    </from>
+                    <to>
+                        <image>hocine.jfrog.io/default-docker-local/suricate</image>
+                    </to>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
@@ -539,7 +558,7 @@
                         <executions>
                             <execution>
                                 <id>copy Front-End to Back-End</id>
-                                <phase>process-resources</phase>
+                                <phase>package</phase>
                                 <goals>
                                     <goal>copy-resources</goal>
                                 </goals>
