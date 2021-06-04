@@ -37,6 +37,7 @@ export const MaterialIconRecords: Record<IconEnum, string> = {
   [IconEnum.GRID]: 'view_carousel',
   [IconEnum.GRID_ROTATION_SPEED]: 'trending_up',
   [IconEnum.HEIGHT]: 'height',
+  [IconEnum.HELP]: 'help',
   [IconEnum.HIDE_PASSWORD]: 'visibility_off',
   [IconEnum.HOME]: 'home',
   [IconEnum.INFO]: 'format_italic',

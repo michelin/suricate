@@ -157,12 +157,10 @@ public class ProjectService {
      * @param newName      the new name
      * @param widgetHeight The new widget height
      * @param maxColumn    The new max column
-     * @param gridQuantity The number of grids
-     * @param gridRotationSpeed The grid rotation speed in minutes
      */
     @Transactional
     public void updateProject(Project project, final String newName, final int widgetHeight, final int maxColumn,
-                              final int gridQuantity, final int gridRotationSpeed, final String customCss) {
+                              final String customCss) {
         if (StringUtils.isNotBlank(newName)) {
             project.setName(newName);
         }
@@ -175,16 +173,8 @@ public class ProjectService {
             project.setMaxColumn(maxColumn);
         }
 
-        if (gridQuantity > 0) {
-            project.setGridQuantity(gridQuantity);
-        }
-
         if (StringUtils.isNotBlank(customCss)) {
             project.setCssStyle(customCss);
-        }
-
-        if (gridRotationSpeed > 0) {
-            project.setGridRotationSpeed(gridRotationSpeed);
         }
 
         projectRepository.save(project);

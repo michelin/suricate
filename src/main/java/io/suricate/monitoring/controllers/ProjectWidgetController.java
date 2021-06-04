@@ -135,8 +135,8 @@ public class ProjectWidgetController {
             throw new ApiException("The user is not allowed to modify this resource", ApiErrorEnum.NOT_AUTHORIZED);
         }
 
-        projectWidgetService.updateProjectWidget(projectWidgetOptional.get(), projectWidgetRequestDto.getCustomStyle(), projectWidgetRequestDto.getBackendConfig(),
-                projectWidgetRequestDto.getGridIndex());
+        projectWidgetService.updateProjectWidget(projectWidgetOptional.get(), projectWidgetRequestDto.getCustomStyle(),
+                projectWidgetRequestDto.getBackendConfig());
 
         return ResponseEntity.noContent().build();
     }

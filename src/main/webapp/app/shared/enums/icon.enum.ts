@@ -35,6 +35,7 @@ export enum IconEnum {
   GRID = 'GRID',
   GRID_ROTATION_SPEED = 'GRID_ROTATION_SPEED',
   HEIGHT = 'HEIGHT',
+  HELP = 'HELP',
   HOME = 'HOME',
   INFO = 'INFO',
   KEY = 'KEY',

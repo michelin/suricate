@@ -284,7 +284,7 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
         if (this.currentGridIndex === this.project.gridProperties.gridQuantity) {
           this.currentGridIndex = 0;
         }
-        
+
         this.initGridStackItems()
     });
   }

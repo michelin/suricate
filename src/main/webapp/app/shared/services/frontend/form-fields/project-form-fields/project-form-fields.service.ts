@@ -27,6 +27,7 @@ import { FileUtils } from '../../../../utils/file.utils';
 import { ImageUtils } from '../../../../utils/image.utils';
 import {ValueChangedEvent} from "../../../../models/frontend/form/value-changed-event";
 import {EMPTY, Observable, of} from "rxjs";
+import {TranslateService} from "@ngx-translate/core";
 
 /**
  * Service used to build the form fields related to a project
@@ -71,26 +72,27 @@ export class ProjectFormFieldsService {
   /**
    * Constructor
    */
-  constructor() {}
+  constructor(private translateService: TranslateService) { }
 
   /**
    * Get the list of steps for a dashboard
    *
    * @param project The project used for an edition
    */
-  public static generateProjectFormFields(project?: Project): FormField[] {
+  public generateProjectFormFields(project?: Project): FormField[] {
     const backgroundColor =
       project && project.gridProperties.cssStyle
         ? CssService.extractCssValue(project.gridProperties.cssStyle, '.grid', 'background-color')
         : '#87878700';
 
-    const dashboardFormFields: FormField[] = [
+    return [
       {
         key: ProjectFormFieldsService.projectNameFormFieldKey,
-        label: 'name',
+        label: 'Title',
         iconPrefix: IconEnum.NAME,
         type: DataTypeEnum.TEXT,
         value: project?.name ? project.name : null,
+        placeholder: this.translateService.instant('dashboard.title.form.field.placeholder'),
         validators: [Validators.required]
       },
       {
@@ -119,11 +121,13 @@ export class ProjectFormFieldsService {
       },
       {
         key: ProjectFormFieldsService.projectGridRotationSpeedFormFieldKey,
-        label: 'dashboard.grid.rotation.speed',
+        label: 'dashboard.rotation.speed',
         iconPrefix: IconEnum.GRID_ROTATION_SPEED,
-        type: DataTypeEnum.NUMBER,
-        value: project?.gridProperties.gridRotationSpeed ? project.gridProperties.gridRotationSpeed : 5,
-        validators: [Validators.required, CustomValidator.isDigits, CustomValidator.greaterThan0]
+        iconSuffix: IconEnum.HELP,
+        iconSuffixTooltipMessage: this.translateService.instant('dashboard.rotation.speed.form.field.tooltip'),
+        type: DataTypeEnum.TEXT,
+        value: project?.gridProperties.gridRotationSpeed ? project.gridProperties.gridRotationSpeed : null,
+        placeholder: this.translateService.instant('dashboard.rotation.speed.form.field.placeholder')
       },
       {
         key: ProjectFormFieldsService.projectImageFormFieldKey,
@@ -139,7 +143,5 @@ export class ProjectFormFieldsService {
         value: backgroundColor
       }
     ];
-
-    return dashboardFormFields;
   }
 }

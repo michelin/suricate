@@ -63,12 +63,6 @@ public class ProjectWidget extends AbstractAuditingEntity<Long> {
     private int gridColumn;
 
     /**
-     * Index of the grid the widget instance belongs
-     */
-    @Column
-    private int gridIndex;
-
-    /**
      * The number of rows taken by the widget
      */
     @Column
@@ -133,4 +127,11 @@ public class ProjectWidget extends AbstractAuditingEntity<Long> {
     @ManyToOne
     @PrimaryKeyJoinColumn(name = "widgetId", referencedColumnName = "ID")
     private Widget widget;
+
+    /**
+     * The related widget
+     */
+    @ManyToOne
+    @PrimaryKeyJoinColumn(name = "widgetId", referencedColumnName = "ID")
+    private RotatingScreen rotatingScreen;
 }

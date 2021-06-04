@@ -67,8 +67,6 @@ CREATE TABLE project (
     name                character varying           NOT NULL,
     token               character varying           NOT NULL,
     widget_height       integer,
-    grid_quantity       integer,
-    grid_rotation_speed integer,
     css_style           text,
     screenshot_id       bigint,
     created_by          character varying(255)      DEFAULT 'APPLICATION'::character varying NOT NULL,
@@ -83,7 +81,6 @@ CREATE TABLE project_widget (
     backend_config      text,
     grid_column         integer,
     grid_row            integer,
-    grid_index          integer,
     custom_style        text,
     data                text,
     height              integer,
@@ -92,6 +89,7 @@ CREATE TABLE project_widget (
     width               integer,
     project_id          bigint,
     widget_id           bigint,
+    rotating_screen_id  bigint,
     last_success_date   timestamp without time zone,
     state               character varying,
     created_by          character varying(255)          DEFAULT 'APPLICATION'::character varying NOT NULL,
@@ -121,6 +119,13 @@ CREATE TABLE role (
     name        character varying   NOT NULL,
     CONSTRAINT pk_role_id           PRIMARY KEY (id),
     CONSTRAINT uk_role_name         UNIQUE (name)
+);
+
+CREATE TABLE rotating_screen (
+    id                  bigserial       NOT NULL,
+    rotation_speed      integer,
+    project_id          bigint,
+    CONSTRAINT pk_rotating_screen_id    PRIMARY KEY (id)
 );
 
 CREATE TABLE setting (
@@ -208,7 +213,6 @@ CREATE TABLE widget_param (
     CONSTRAINT pk_widget_param_id                   PRIMARY KEY (id)
 );
 
-
 CREATE TABLE widget_param_value (
     id                  bigserial                   NOT NULL,
     js_key              character varying(255)      NOT NULL,
@@ -236,8 +240,10 @@ ALTER TABLE user_role               ADD CONSTRAINT fk_user_role_user_id         
 ALTER TABLE user_role               ADD CONSTRAINT fk_user_role_role_id                     FOREIGN KEY (role_id)                   REFERENCES role (id) ;
 ALTER TABLE user_project            ADD CONSTRAINT fk_user_project_user_id                  FOREIGN KEY (user_id)                   REFERENCES users (id) ;
 ALTER TABLE user_project            ADD CONSTRAINT fk_user_project_project_id               FOREIGN KEY (project_id)                REFERENCES project (id) ;
+ALTER TABLE rotating_screen         ADD CONSTRAINT fk_rotating_screen_project_id            FOREIGN KEY (project_id)                REFERENCES project (id) ;
 ALTER TABLE project_widget          ADD CONSTRAINT fk_project_widget_widget_id              FOREIGN KEY (widget_id)                 REFERENCES widget (id) ;
 ALTER TABLE project_widget          ADD CONSTRAINT fk_project_widget_project_id             FOREIGN KEY (project_id)                REFERENCES project (id) ;
+ALTER TABLE project_widget          ADD CONSTRAINT fk_project_widget_rotating_screen_id     FOREIGN KEY (rotating_screen_id)        REFERENCES rotating_screen (id) ;
 ALTER TABLE project                 ADD CONSTRAINT fk_project_screenshot_id                 FOREIGN KEY (screenshot_id)             REFERENCES asset (id) ;
 ALTER TABLE library                 ADD CONSTRAINT fk_library_asset_id                      FOREIGN KEY (asset_id)                  REFERENCES asset (id) ;
 ALTER TABLE category_param          ADD CONSTRAINT fk_category_param_category_id            FOREIGN KEY (category_id)               REFERENCES category (id) ;

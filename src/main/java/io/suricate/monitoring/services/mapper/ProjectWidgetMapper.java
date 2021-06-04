@@ -66,7 +66,6 @@ public abstract class ProjectWidgetMapper {
     @Named("toProjectWidgetDTO")
     @Mapping(target = "widgetPosition.gridColumn", source = "projectWidget.gridColumn")
     @Mapping(target = "widgetPosition.gridRow", source = "projectWidget.gridRow")
-    @Mapping(target = "widgetPosition.gridIndex", source = "projectWidget.gridIndex")
     @Mapping(target = "widgetPosition.height", source = "projectWidget.height")
     @Mapping(target = "widgetPosition.width", source = "projectWidget.width")
     @Mapping(target = "instantiateHtml", expression = "java(projectWidgetService.instantiateProjectWidgetHtml(projectWidget))")

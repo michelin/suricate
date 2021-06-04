@@ -118,6 +118,7 @@ export class DashboardDetailComponent implements OnInit {
    * @param toastService Frontend service used to manage toast message
    * @param dialogService Frontend service used to manage dialog
    * @param websocketService Frontend service used to manage websockets
+   * @param projectFormFieldsService Frontend service used to build project form fields
    */
   constructor(
     private readonly router: Router,
@@ -131,7 +132,8 @@ export class DashboardDetailComponent implements OnInit {
     private readonly sidenavService: SidenavService,
     private readonly toastService: ToastService,
     private readonly dialogService: DialogService,
-    private readonly websocketService: WebsocketService
+    private readonly websocketService: WebsocketService,
+    private readonly projectFormFieldsService: ProjectFormFieldsService,
   ) {}
 
   /**
@@ -293,7 +295,7 @@ export class DashboardDetailComponent implements OnInit {
   private openDashboardFormSidenav(): void {
     this.sidenavService.openFormSidenav({
       title: 'dashboard.edit',
-      formFields: ProjectFormFieldsService.generateProjectFormFields(this.project),
+      formFields: this.projectFormFieldsService.generateProjectFormFields(this.project),
       belongingComponent: this.dashboardScreen,
       save: (formData: ProjectRequest) => this.editDashboard(formData)
     });

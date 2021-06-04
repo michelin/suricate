@@ -14,26 +14,25 @@
  * limitations under the License.
  */
 
-import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import {Component, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
 
-import { Project } from '../../../shared/models/backend/project/project';
-import { HttpAssetService } from '../../../shared/services/backend/http-asset/http-asset.service';
-import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
-import { HeaderConfiguration } from '../../../shared/models/frontend/header/header-configuration';
-import { SidenavService } from '../../../shared/services/frontend/sidenav/sidenav.service';
-import { ProjectFormFieldsService } from '../../../shared/services/frontend/form-fields/project-form-fields/project-form-fields.service';
-import { ProjectRequest } from '../../../shared/models/backend/project/project-request';
-import { ToastService } from '../../../shared/services/frontend/toast/toast.service';
-import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
-import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
-import { IconEnum } from '../../../shared/enums/icon.enum';
-import { CssService } from '../../../shared/services/frontend/css/css.service';
-import { FileUtils } from '../../../shared/utils/file.utils';
-import { ImageUtils } from '../../../shared/utils/image.utils';
+import {Project} from '../../../shared/models/backend/project/project';
+import {HttpAssetService} from '../../../shared/services/backend/http-asset/http-asset.service';
+import {HttpProjectService} from '../../../shared/services/backend/http-project/http-project.service';
+import {HeaderConfiguration} from '../../../shared/models/frontend/header/header-configuration';
+import {SidenavService} from '../../../shared/services/frontend/sidenav/sidenav.service';
+import {ProjectFormFieldsService} from '../../../shared/services/frontend/form-fields/project-form-fields/project-form-fields.service';
+import {ProjectRequest} from '../../../shared/models/backend/project/project-request';
+import {ToastService} from '../../../shared/services/frontend/toast/toast.service';
+import {ToastTypeEnum} from '../../../shared/enums/toast-type.enum';
+import {MaterialIconRecords} from '../../../shared/records/material-icon.record';
+import {IconEnum} from '../../../shared/enums/icon.enum';
+import {CssService} from '../../../shared/services/frontend/css/css.service';
+import {FileUtils} from '../../../shared/utils/file.utils';
+import {ImageUtils} from '../../../shared/utils/image.utils';
 import {ValueChangedEvent} from "../../../shared/models/frontend/form/value-changed-event";
-import {EMPTY, Observable, of} from "rxjs";
-import {RepositoryFormFieldsService} from "../../../shared/services/frontend/form-fields/repository-form-fields/repository-form-fields.service";
+import {Observable} from "rxjs";
 import {FormField} from "../../../shared/models/frontend/form/form-field";
 import {Repository} from "../../../shared/models/backend/repository/repository";
 
@@ -55,7 +54,7 @@ export class HomeComponent implements OnInit {
    * The list of dashboards
    */
   public dashboards: Project[];
-
+    
   /**
    * The list of icons
    */
@@ -78,12 +77,14 @@ export class HomeComponent implements OnInit {
    * @param httpProjectService Suricate service used to manage http calls on projects
    * @param sidenavService Frontend service used to manage sidenav's
    * @param toastService Frontend service used to display toast messages
+   * @param projectFormFieldsService Frontend service used to build project form fields
    */
   constructor(
     private readonly router: Router,
     private readonly httpProjectService: HttpProjectService,
     private readonly sidenavService: SidenavService,
-    private readonly toastService: ToastService
+    private readonly toastService: ToastService,
+    private readonly projectFormFieldsService : ProjectFormFieldsService
   ) {
     this.initHeaderConfiguration();
   }
@@ -113,9 +114,15 @@ export class HomeComponent implements OnInit {
   public openDashboardFormSidenav(): void {
     this.sidenavService.openFormSidenav({
       title: 'dashboard.add',
-      formFields: ProjectFormFieldsService.generateProjectFormFields(),
-      save: (formData: ProjectRequest) => this.addDashboard(formData)
+      formFields: this.projectFormFieldsService.generateProjectFormFields(),
+      save: (formData: ProjectRequest) => this.addDashboard(formData),
+      onValueChanged: (valueChangedEvent: ValueChangedEvent) => this.onDashboardValueChanged(valueChangedEvent)
     });
+  }
+
+  public onDashboardValueChanged(valueChangedEvent: ValueChangedEvent): Observable<FormField[]> {
+    console.warn("toto");
+    return null;
   }
 
   /**

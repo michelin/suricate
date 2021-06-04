@@ -67,18 +67,6 @@ public class Project extends AbstractAuditingEntity<Long> {
     private Integer maxColumn;
 
     /**
-     * The quantity of grids
-     */
-    @Column
-    private Integer gridQuantity;
-
-    /**
-     * The rotation speed (in minutes) of grids
-     */
-    @Column
-    private Integer gridRotationSpeed;
-
-    /**
      * The css style of the grid
      */
     @Lob

@@ -147,7 +147,7 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
 
     this.sidenavService.openFormSidenav({
       title: project ? 'dashboard.edit' : 'dashboard.add',
-      formFields: ProjectFormFieldsService.generateProjectFormFields(project),
+      formFields: this.projectFormFieldsService.generateProjectFormFields(project),
       save: (projectRequest: ProjectRequest) => saveCallback(projectRequest)
     });
   }
