@@ -35,6 +35,7 @@ export const MaterialIconRecords: Record<IconEnum, string> = {
   [IconEnum.ERROR]: 'error',
   [IconEnum.GENERAL_INFORMATION]: 'menu_book',
   [IconEnum.HEIGHT]: 'height',
+  [IconEnum.HELP]: 'help',
   [IconEnum.HOME]: 'home',
   [IconEnum.INFO]: 'format_italic',
   [IconEnum.KEY]: 'vpn_key',

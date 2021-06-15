@@ -33,6 +33,7 @@ export enum IconEnum {
   ERROR = 'ERROR',
   GENERAL_INFORMATION = 'GENERAL_INFORMATION',
   HEIGHT = 'HEIGHT',
+  HELP = 'HELP',
   HOME = 'HOME',
   INFO = 'INFO',
   KEY = 'KEY',

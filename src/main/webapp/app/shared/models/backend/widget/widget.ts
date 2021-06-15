@@ -16,7 +16,7 @@
 
 import { WidgetAvailabilityEnum } from '../../../enums/widget-availability.enum';
 import { WidgetParam } from './widget-param';
-import { Category } from './category';
+import { Category } from '../category/category';
 
 /**
  * The widget entity

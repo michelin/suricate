@@ -71,6 +71,13 @@ public class WidgetParamResponseDto extends AbstractDto {
     @ApiModelProperty(value = "An example of the usage of this field")
     private String usageExample;
 
+
+    /**
+     * The usage tooltip of the parameter
+     */
+    @ApiModelProperty(value = "The usage tooltip of the parameter")
+    private String usageTooltip;
+
     /**
      * If the param is required True by default
      */

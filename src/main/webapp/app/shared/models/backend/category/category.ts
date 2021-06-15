@@ -1,5 +1,5 @@
 /*
- *  /*
+ *
  *  * Copyright 2012-2018 the original author or authors.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -15,34 +15,16 @@
  *  * limitations under the License.
  *
  */
-@import 'src/main/webapp/sass/dashboard-themes';
 
-.input-wrapper {
-  & {
-    height: max-content;
-    width: 100%;
-  }
+import { CategoryParameter } from '../category-parameters/category-parameter';
 
-  & > * {
-    width: 100%;
-  }
-
-  .mat-form-field {
-    min-height: 73px;
-  }
-
-  .input-error {
-    top: -20px;
-    margin-bottom: -10px;
-    position: relative;
-    box-sizing: border-box;
-    width: 100%;
-    overflow: hidden;
-    font-size: 75%;
-    color: mat-color(map-get($theme, warn));
-  }
-}
-
-::ng-deep .icon-prefix-tooltip {
-  font-size: 12px;
+/**
+ * The category representation
+ */
+export interface Category {
+  id: number;
+  name: string;
+  technicalName: string;
+  assetToken: string;
+  categoryParameters: CategoryParameter[];
 }

@@ -18,13 +18,11 @@ import { Injectable } from '@angular/core';
 import { FormField } from '../../../../models/frontend/form/form-field';
 import { DataTypeEnum } from '../../../../enums/data-type.enum';
 import { FormGroup, Validators } from '@angular/forms';
-import { WidgetConfiguration } from '../../../../models/backend/widget-configuration/widget-configuration';
 import { IconEnum } from '../../../../enums/icon.enum';
 import { HttpCategoryService } from '../../../backend/http-category/http-category.service';
 import { FormService } from '../../form/form.service';
 import { ProjectWidgetFormStepsService } from '../../form-steps/project-widget-form-steps/project-widget-form-steps.service';
-import { Observable } from 'rxjs';
-import { CategoryParameter } from '../../../../models/backend/category/category-parameter';
+import { CategoryParameter } from '../../../../models/backend/category-parameters/category-parameter';
 
 /**
  * Service used to build the form fields related to a project
@@ -33,6 +31,10 @@ import { CategoryParameter } from '../../../../models/backend/category/category-
 export class WidgetConfigurationFormFieldsService {
   /**
    * Constructor
+   *
+   * @param categoryService The category service
+   * @param formService The form service
+   * @param projectWidgetFormStepsService The project widget form step service
    */
   constructor(
     private readonly categoryService: HttpCategoryService,
@@ -45,7 +47,7 @@ export class WidgetConfigurationFormFieldsService {
    *
    * @param configuration The project used for an edition
    */
-  public generateFormFields(configuration?: WidgetConfiguration): FormField[] {
+  public generateFormFields(configuration?: CategoryParameter): FormField[] {
     return [
       {
         key: 'key',
@@ -76,12 +78,12 @@ export class WidgetConfigurationFormFieldsService {
   }
 
   /**
-   * Generate an array of form fields for the given widget configuration
+   * Generate an array of form fields for the given category parameters
    *
    * @param categorySettings The widget settings
    * @param widgetBackendConfig The current widget backend configuration
    */
-  public generateWidgetConfigurationFormFields(categorySettings?: CategoryParameter[], widgetBackendConfig?: string): FormField[] {
+  public generateCategoryParametersFormFields(categorySettings: CategoryParameter[], widgetBackendConfig: string): FormField[] {
     const formFields: Array<FormField> = [];
 
     categorySettings.forEach(configuration => {
@@ -96,7 +98,7 @@ export class WidgetConfigurationFormFieldsService {
 
       formFields.push({
         key: configuration.key,
-        label: configuration.key,
+        label: configuration.description,
         type: configuration.dataType,
         value: backendConfigValue ? backendConfigValue : configuration.value,
         iconPrefix: IconEnum.VALUE,
@@ -109,16 +111,7 @@ export class WidgetConfigurationFormFieldsService {
   }
 
   /**
-   * Load the information of the settings of a given category
-   *
-   * @param categoryId The given category id from which to load the settings
-   */
-  public getCategorySettings(categoryId: number): Observable<WidgetConfiguration[]> {
-    return this.categoryService.getCategoryConfigurations(categoryId);
-  }
-
-  /**
-   * Add or remove widget's category fields & controls to the given form. The fields generated owns the default values defined by the category.
+   * Add or remove widget's category fields & controls to the given form.
    *
    * @param categorySettings The information about the settings of the category
    * @param checked If yes, add the fields & controls to the given form, otherwise, remove them. Matches to the slide toggle button activation.
@@ -126,14 +119,14 @@ export class WidgetConfigurationFormFieldsService {
    * @param fields A field array to which new fields will be added
    * @param widgetBackendConfig The current widget backend configuration
    */
-  public generateCategorySettingsFormFields(
+  public addOrRemoveCategoryParametersFormFields(
     categorySettings: CategoryParameter[],
     checked: boolean,
     formGroup: FormGroup,
     fields: FormField[],
     widgetBackendConfig?: string
   ): void {
-    const categorySettingsFormFields = this.generateWidgetConfigurationFormFields(categorySettings, widgetBackendConfig);
+    const categorySettingsFormFields = this.generateCategoryParametersFormFields(categorySettings, widgetBackendConfig);
 
     if (checked) {
       fields.push(...categorySettingsFormFields);

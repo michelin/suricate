@@ -18,10 +18,10 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { EMPTY, Observable } from 'rxjs';
 
-import { Category } from '../../../models/backend/category/category';
-import { Widget } from '../../../models/backend/widget/widget';
+import { ApplicationProperties } from '../../../models/backend/application-properties';
+import { WidgetConfigurationRequest } from '../../../models/backend/widget-configuration/widget-configuration-request';
 import { AbstractHttpService } from '../abstract-http/abstract-http.service';
 import { HttpFilter } from '../../../models/backend/http-filter';
 import { HttpFilterService } from '../http-filter/http-filter.service';
@@ -29,42 +29,30 @@ import { Page } from '../../../models/backend/page';
 import { CategoryParameter } from '../../../models/backend/category-parameters/category-parameter';
 
 /**
- * Manage the widget Http calls
+ * Configuration services manage http calls
  */
-
 @Injectable({ providedIn: 'root' })
-export class HttpCategoryService {
+export class HttpConfigurationService {
   /**
-   * Global endpoint for Widgets
+   * Global configurations endpoint
    */
-  private static readonly categoriesApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/categories`;
+  private static readonly configurationsApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/configurations`;
 
   /**
    * Constructor
    *
-   * @param httpClient the http client to inject
+   * @param httpClient The http client service
    */
   constructor(private readonly httpClient: HttpClient) {}
 
   /**
-   * Retrieve the full list of categories
+   * Get the server configuration for authentication provider
    *
-   * @returns The categories as observable
+   * @return {Observable<ApplicationProperties>} Configuration for Authentication Provider
    */
-  public getAll(filter?: HttpFilter): Observable<Page<Category>> {
-    const url = `${HttpCategoryService.categoriesApiEndpoint}`;
+  public getAuthenticationProvider(): Observable<ApplicationProperties> {
+    const url = `${HttpConfigurationService.configurationsApiEndpoint}/authentication-provider`;
 
-    return this.httpClient.get<Page<Category>>(HttpFilterService.getFilteredUrl(url, filter));
-  }
-
-  /**
-   * Get the full list of widgets for a category
-   *
-   * @param categoryId The category id
-   */
-  public getCategoryWidgets(categoryId: number): Observable<Widget[]> {
-    const url = `${HttpCategoryService.categoriesApiEndpoint}/${categoryId}/widgets`;
-
-    return this.httpClient.get<Widget[]>(url);
+    return this.httpClient.get<ApplicationProperties>(url);
   }
 }

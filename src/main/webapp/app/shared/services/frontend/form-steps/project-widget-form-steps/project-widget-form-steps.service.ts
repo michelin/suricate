@@ -22,7 +22,7 @@ import { IconEnum } from '../../../../enums/icon.enum';
 import { HttpCategoryService } from '../../../backend/http-category/http-category.service';
 import { map, switchMap, tap, toArray } from 'rxjs/operators';
 import { MosaicFormOption } from '../../../../models/frontend/form/mosaic-form-option';
-import { Category } from '../../../../models/backend/widget/category';
+import { Category } from '../../../../models/backend/category/category';
 import { HttpAssetService } from '../../../backend/http-asset/http-asset.service';
 import { FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { Widget } from '../../../../models/backend/widget/widget';
@@ -151,6 +151,8 @@ export class ProjectWidgetFormStepsService {
         label: widgetParam.description,
         placeholder: widgetParam.usageExample,
         value: configValue ? configValue : widgetParam.defaultValue,
+        iconPrefix: widgetParam.usageTooltip ? IconEnum.HELP : undefined,
+        iconPrefixTooltip: widgetParam.usageTooltip ? widgetParam.usageTooltip : undefined,
         iconSuffix: widgetParam.type === DataTypeEnum.PASSWORD ? IconEnum.SHOW_PASSWORD : undefined,
         options: () => ProjectWidgetFormStepsService.getFormOptionsForWidgetParam(widgetParam),
         validators: this.getValidatorsForWidgetParam(widgetParam)

@@ -182,7 +182,7 @@ public class GitService {
             return null;
         }
 
-        return new AsyncResult<>(readWidgetRepositories(Collections.singletonList(repository)));
+        return new AsyncResult<>(this.readWidgetRepositories(Collections.singletonList(repository)));
     }
 
     /**
