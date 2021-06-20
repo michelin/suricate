@@ -16,6 +16,8 @@
 
 package io.suricate.monitoring.services.nashorn.script;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.suricate.monitoring.utils.exceptions.nashorn.FatalException;
 import io.suricate.monitoring.utils.exceptions.nashorn.RemoteException;
 import io.suricate.monitoring.utils.exceptions.nashorn.RequestException;
@@ -27,6 +29,8 @@ import org.springframework.http.HttpStatus;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.TimeoutException;
 
@@ -38,6 +42,11 @@ public final class NashornWidgetScript {
     private static OkHttpClient client = OkHttpClientUtils.getUnsafeOkHttpClient();
 
     /**
+     * Object Mapper for Serializing and Deserializing JSON
+     */
+    private static final ObjectMapper mapper = new ObjectMapper();
+
+    /**
      * private constructor
      */
     private NashornWidgetScript() { }
@@ -46,8 +55,7 @@ public final class NashornWidgetScript {
      * Create and submit a HTTP request according to the given parameters
      *
      * @param url The URL of the endpoint to call
-     * @param headerName The name of the header to add
-     * @param headerValue The value to set to the added header
+     * @param headers Headers as HashMap
      * @param headerToReturn The name of the header to return
      * @param body The body of the request. Can be null in case of GET HTTP request
      * @param mediaType The requested media type
@@ -56,12 +64,13 @@ public final class NashornWidgetScript {
      * @throws RemoteException
      * @throws RequestException
      */
-    private static String executeRequest(String url, String headerName, String headerValue, String headerToReturn, String body, String mediaType)
+    private static String executeRequest(String url, Map<String, String> headers, String headerToReturn, String body, String mediaType)
             throws IOException, RemoteException, RequestException {
         Request.Builder builder = new Request.Builder().url(url);
 
-        if (StringUtils.isNotBlank(headerName)) {
-            builder.addHeader(headerName, headerValue);
+        if (headers != null) {
+            // Add headers
+            headers.forEach(builder::addHeader);
         }
 
         if (StringUtils.isNotBlank(body)) {
@@ -69,7 +78,7 @@ public final class NashornWidgetScript {
         }
 
         Request request = builder.build();
-        String returnedValue = null;
+        String returnedValue;
 
         try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful()) {
@@ -104,7 +113,23 @@ public final class NashornWidgetScript {
      * @throws RequestException
      */
     public static String get(String url) throws RemoteException, IOException, RequestException {
-        return NashornWidgetScript.executeRequest(url, null, null, null, null, "application/json");
+        return NashornWidgetScript.executeRequest(url, new HashMap<>(), null, null, "application/json");
+    }
+
+    /**
+     * Perform a GET HTTP call with headers
+     * This method is directly called by the widgets
+     *
+     * @param url The URL of the endpoint to call
+     * @param headersAsJson Headers as json string
+     * @return The response body of the request
+     * @throws RemoteException
+     * @throws IOException
+     * @throws RequestException
+     */
+    public static String get(String url, String headersAsJson) throws RemoteException, IOException, RequestException {
+        Map<String, String> headers = mapper.readValue(headersAsJson, new TypeReference<Map<String, String>>() {});
+        return NashornWidgetScript.executeRequest(url, headers, null, null, "application/json");
     }
 
     /**
@@ -123,7 +148,13 @@ public final class NashornWidgetScript {
      * @throws RequestException
      */
     public static String get(String url, String headerName, String headerValue) throws RemoteException, IOException, RequestException {
-        return NashornWidgetScript.executeRequest(url, headerName, headerValue, null, null, "application/json");
+        HashMap<String, String> headers = new HashMap<>();
+        headers.put(headerName, headerValue);
+        return NashornWidgetScript.executeRequest(url, headers, null, null, "application/json");
+    }
+
+    public static String get(String url, HashMap<String, String> headers, String body, String mediaType) throws RemoteException, IOException, RequestException {
+        return NashornWidgetScript.executeRequest(url, headers, null, null, "application/json");
     }
 
     /**
@@ -145,7 +176,9 @@ public final class NashornWidgetScript {
      * @throws RequestException
      */
     public static String get(String url, String headerName, String headerValue, String headerToReturn) throws RemoteException, IOException, RequestException {
-        return NashornWidgetScript.executeRequest(url, headerName, headerValue, headerToReturn, null, "application/json");
+        HashMap<String, String> headers = new HashMap<>();
+        headers.put(headerName, headerValue);
+        return NashornWidgetScript.executeRequest(url, headers, headerToReturn, null, "application/json");
     }
 
     /**
@@ -160,7 +193,24 @@ public final class NashornWidgetScript {
      * @throws RequestException
      */
     public static String post(String url, String body) throws RemoteException, IOException, RequestException {
-        return NashornWidgetScript.executeRequest(url, null, null, null, StringUtils.isBlank(body) ? "{}" : body, "application/json");
+        return NashornWidgetScript.executeRequest(url, new HashMap<>(), null, StringUtils.isBlank(body) ? "{}" : body, "application/json");
+    }
+
+    /**
+     * Perform a POST HTTP call with headers
+     * This method is directly called by the widgets
+     *
+     * @param url The URL of the endpoint to call
+     * @param body The body of the POST request
+     * @param headersAsJson Headers as json string
+     * @return The response body of the request
+     * @throws RemoteException
+     * @throws IOException
+     * @throws RequestException
+     */
+    public static String post(String url, String body, String headersAsJson) throws RemoteException, IOException, RequestException {
+        Map<String, String> headers = mapper.readValue(headersAsJson, new TypeReference<Map<String, String>>() {});
+        return NashornWidgetScript.executeRequest(url, headers, null, StringUtils.isBlank(body) ? "{}" : body, "application/json");
     }
 
     /**
@@ -180,7 +230,9 @@ public final class NashornWidgetScript {
      * @throws RequestException
      */
     public static String post(String url, String body, String headerName, String headerValue) throws RemoteException, IOException, RequestException {
-        return NashornWidgetScript.executeRequest(url, headerName, headerValue, null, StringUtils.isBlank(body) ? "{}" : body, "application/json");
+        HashMap<String, String> headers = new HashMap<>();
+        headers.put(headerName, headerValue);
+        return NashornWidgetScript.executeRequest(url, headers, null, StringUtils.isBlank(body) ? "{}" : body, "application/json");
     }
 
     /**
@@ -203,7 +255,9 @@ public final class NashornWidgetScript {
      * @throws RequestException
      */
     public static String post(String url, String body, String headerName, String headerValue, String mediaType) throws RemoteException, IOException, RequestException {
-        return NashornWidgetScript.executeRequest(url, headerName, headerValue, null, StringUtils.isBlank(body) ? "{}" : body, mediaType);
+        HashMap<String, String> headers = new HashMap<>();
+        headers.put(headerName, headerValue);
+        return NashornWidgetScript.executeRequest(url, headers, null, StringUtils.isBlank(body) ? "{}" : body, mediaType);
     }
 
     /**
