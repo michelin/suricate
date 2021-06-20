@@ -169,10 +169,6 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
 
       this.initGridStackOptions();
 
-      if (this.project.gridProperties.gridQuantity > 1) {
-        this.startDashboardRotation();
-      }
-
       if (changes.project.previousValue) {
         if (changes.project.previousValue.token !== changes.project.currentValue.token) {
           this.resetWebsocketSubscriptions();
@@ -266,27 +262,6 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
         resizable: true
       };
     }
-  }
-
-  /**
-   * Initialize the rotation of a dashboard
-   */
-  private startDashboardRotation(): void {
-    console.warn("Start rotation");
-
-    interval(this.project.gridProperties.gridRotationSpeed * 60000)
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe(() => {
-        console.warn(new Date());
-
-        this.currentGridIndex++;
-
-        if (this.currentGridIndex === this.project.gridProperties.gridQuantity) {
-          this.currentGridIndex = 0;
-        }
-
-        this.initGridStackItems()
-    });
   }
 
   /**

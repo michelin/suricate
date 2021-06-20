@@ -18,8 +18,6 @@ export class ProjectGrid {
   maxColumn: number;
   widgetHeight: number;
   cssStyle: string;
-  gridQuantity: number;
-  gridRotationSpeed: number;
 
   /**
    * Constructor

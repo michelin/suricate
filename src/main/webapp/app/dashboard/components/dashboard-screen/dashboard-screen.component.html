@@ -17,7 +17,6 @@
 
   <suricate-dashboard-screen-widget
     *ngFor="let gridStackItem of gridStackItems"
-    [gridQuantity]="project.gridProperties.gridQuantity"
     [projectWidget]="gridStackItem.payload"
     [gridStackItem]="gridStackItem"
     [projectToken]="project.token"

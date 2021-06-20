@@ -90,7 +90,6 @@ CREATE TABLE project_widget (
     width               integer,
     project_id          bigint,
     widget_id           bigint,
-    rotating_screen_id  bigint,
     last_success_date   timestamp without time zone,
     state               character varying,
     created_by          character varying(255)          DEFAULT 'APPLICATION'::character varying NOT NULL,
@@ -261,7 +260,6 @@ ALTER TABLE rotation_project        ADD CONSTRAINT fk_rotation_project_rotation_
 ALTER TABLE rotation_project        ADD CONSTRAINT fk_rotation_project_project_id           FOREIGN KEY (project_id)                REFERENCES project (id) ;
 ALTER TABLE project_widget          ADD CONSTRAINT fk_project_widget_widget_id              FOREIGN KEY (widget_id)                 REFERENCES widget (id) ;
 ALTER TABLE project_widget          ADD CONSTRAINT fk_project_widget_project_id             FOREIGN KEY (project_id)                REFERENCES project (id) ;
-ALTER TABLE project_widget          ADD CONSTRAINT fk_project_widget_rotating_screen_id     FOREIGN KEY (rotating_screen_id)        REFERENCES rotating_screen (id) ;
 ALTER TABLE project                 ADD CONSTRAINT fk_project_screenshot_id                 FOREIGN KEY (screenshot_id)             REFERENCES asset (id) ;
 ALTER TABLE library                 ADD CONSTRAINT fk_library_asset_id                      FOREIGN KEY (asset_id)                  REFERENCES asset (id) ;
 ALTER TABLE category_param          ADD CONSTRAINT fk_category_param_category_id            FOREIGN KEY (category_id)               REFERENCES category (id) ;

@@ -134,7 +134,7 @@ export class ProjectWidgetFormStepsService {
         key: ProjectWidgetFormStepsService.configureWidgetStepKey,
         title: 'widget.configuration',
         icon: IconEnum.WIDGET_CONFIGURATION,
-        asyncFields: (gridQuantity: number, formGroup: FormGroup, step: FormStep) => this.getWidgetConfigurationFields(gridQuantity, formGroup, step)
+        asyncFields: (formGroup: FormGroup, step: FormStep) => this.getWidgetConfigurationFields(formGroup, step)
       }
     ]);
   }
@@ -144,10 +144,9 @@ export class ProjectWidgetFormStepsService {
    *
    * @param widgetParams The params of the widget
    * @param widgetConfig The configuration already set
-   * @param gridQuantity The grid quantity of the dashboard
    * @param gridIndex The grid index of the widget
    */
-  public generateWidgetParametersFormFields(gridQuantity: number, widgetParams: WidgetParam[], widgetConfig?: string, gridIndex?: number): FormField[] {
+  public generateWidgetParametersFormFields(widgetParams: WidgetParam[], widgetConfig?: string, gridIndex?: number): FormField[] {
     const formFields = [];
 
     widgetParams.forEach((widgetParam: WidgetParam) => {
@@ -179,17 +178,6 @@ export class ProjectWidgetFormStepsService {
 
       formFields.push(formField);
     });
-
-    if (gridQuantity > 1) {
-      formFields.push({
-        key: ProjectWidgetFormStepsService.gridIndexFieldKey,
-        type: DataTypeEnum.COMBO,
-        label: `${this.translateService.instant('widget.field.grid.number')}`,
-        value: gridIndex ? String(gridIndex) : '0',
-        options: () => ProjectWidgetFormStepsService.getFormOptionsForGridIndex(gridQuantity),
-        validators: [Validators.required]
-      });
-    }
 
     return formFields;
   }
@@ -245,9 +233,8 @@ export class ProjectWidgetFormStepsService {
    *
    * @param formGroup The form group of the selected widget
    * @param step the current step
-   * @param gridQuantity The grid quantity of the dashboard
    */
-  private getWidgetConfigurationFields(gridQuantity: number, formGroup: FormGroup, step: FormStep): Observable<FormField[]> {
+  private getWidgetConfigurationFields(formGroup: FormGroup, step: FormStep): Observable<FormField[]> {
     const widgetId = formGroup.root.value['widgetStep']['widgetId'];
 
     if (widgetId || widgetId === 0) {
@@ -259,7 +246,7 @@ export class ProjectWidgetFormStepsService {
           step.imageLink = { link: HttpAssetService.getContentUrl(widget.imageToken) };
         }),
         map((widget: Widget) => {
-          return this.generateWidgetParametersFormFields(gridQuantity, widget.params);
+          return this.generateWidgetParametersFormFields(widget.params);
         })
       );
     }
@@ -304,23 +291,5 @@ export class ProjectWidgetFormStepsService {
     }
 
     return null;
-  }
-
-  /**
-   * Generation of the form options for the grid index selection
-   *
-   * @param gridQuantity The grid quantity used to determine the options
-   */
-  private static getFormOptionsForGridIndex(gridQuantity: number): Observable<FormOption[]> {
-    let formOptions: FormOption[] = [];
-
-    Array.from(Array(gridQuantity).keys()).forEach(index => {
-      formOptions.push({
-        label: String(index + 1),
-        value: String(index)
-      });
-    })
-
-    return of(formOptions);
   }
 }

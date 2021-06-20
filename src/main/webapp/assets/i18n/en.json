@@ -108,7 +108,6 @@
   "widget.edit": "Edit widget",
   "widget.edit.success": "Widget updated successfully",
   "widget.execution.error": "Widget execution error",
-  "widget.field.grid.number": "Grid number",
   "widget.height.px": "Widget height (in px)",
   "widget.list": "Widgets",
   "widget.list.import": "Import widgets",

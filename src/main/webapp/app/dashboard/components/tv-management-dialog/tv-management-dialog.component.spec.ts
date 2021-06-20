@@ -57,7 +57,6 @@ describe('TvManagementDialogComponent', () => {
     const gridProperties: ProjectGrid = {
       maxColumn: 5,
       widgetHeight: 300,
-      gridQuantity: 1,
       cssStyle: ''
     };
 

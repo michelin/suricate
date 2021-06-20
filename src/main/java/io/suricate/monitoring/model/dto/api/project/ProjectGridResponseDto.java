@@ -29,18 +29,6 @@ public class ProjectGridResponseDto extends AbstractDto {
     private Integer widgetHeight;
 
     /**
-     * The number of grids of the project
-     */
-    @ApiModelProperty(value = "The number of grids of the project")
-    private Integer gridQuantity;
-
-    /**
-     * The rotation speed (in minutes) of grids
-     */
-    @ApiModelProperty(value = "The rotation speed (in minutes) of grids")
-    private Integer gridRotationSpeed;
-
-    /**
      * The global css for the dashboard
      */
     @ApiModelProperty(value = "The css style of the dashboard grid")

@@ -14,24 +14,22 @@
  * limitations under the License.
  */
 
-import { Component, Injector, OnInit, ViewChild } from '@angular/core';
-import { HeaderConfiguration } from '../../models/frontend/header/header-configuration';
-import { FormGroup } from '@angular/forms';
-import { WizardConfiguration } from '../../models/frontend/wizard/wizard-configuration';
-import { FormService } from '../../services/frontend/form/form.service';
-import { FormStep } from '../../models/frontend/form/form-step';
-import { MaterialIconRecords } from '../../records/material-icon.record';
-import { MatStepper } from '@angular/material/stepper';
-import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
-import { ActivatedRoute, Router } from '@angular/router';
-import { StepperSelectionEvent } from '@angular/cdk/stepper';
-import { ValueChangedEvent } from '../../models/frontend/form/value-changed-event';
-import { FormField } from '../../models/frontend/form/form-field';
-import { WidgetConfigurationFormFieldsService } from '../../services/frontend/form-fields/widget-configuration-form-fields/widget-configuration-form-fields.service';
-import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-import { ProjectWidgetFormStepsService } from '../../services/frontend/form-steps/project-widget-form-steps/project-widget-form-steps.service';
-import { WidgetConfiguration } from '../../models/backend/widget-configuration/widget-configuration';
-import { Subject } from 'rxjs';
+import {Component, Injector, OnInit, ViewChild} from '@angular/core';
+import {HeaderConfiguration} from '../../models/frontend/header/header-configuration';
+import {FormGroup} from '@angular/forms';
+import {WizardConfiguration} from '../../models/frontend/wizard/wizard-configuration';
+import {FormService} from '../../services/frontend/form/form.service';
+import {FormStep} from '../../models/frontend/form/form-step';
+import {MaterialIconRecords} from '../../records/material-icon.record';
+import {MatStepper} from '@angular/material/stepper';
+import {ButtonConfiguration} from '../../models/frontend/button/button-configuration';
+import {ActivatedRoute, Router} from '@angular/router';
+import {StepperSelectionEvent} from '@angular/cdk/stepper';
+import {ValueChangedEvent} from '../../models/frontend/form/value-changed-event';
+import {FormField} from '../../models/frontend/form/form-field';
+import {WidgetConfigurationFormFieldsService} from '../../services/frontend/form-fields/widget-configuration-form-fields/widget-configuration-form-fields.service';
+import {MatSlideToggleChange} from '@angular/material/slide-toggle';
+import {ProjectWidgetFormStepsService} from '../../services/frontend/form-steps/project-widget-form-steps/project-widget-form-steps.service';
 import {RoutesService} from "../../services/frontend/route/route.service";
 import {HttpProjectService} from "../../services/backend/http-project/http-project.service";
 import {Project} from "../../models/backend/project/project";
@@ -175,7 +173,7 @@ export class WizardComponent implements OnInit {
     if (this.currentStep && this.currentStep.asyncFields) {
       this.httpProjectService.getById(this.dashboardToken).subscribe((project: Project) => {
         this.currentStep
-          .asyncFields(project.gridProperties.gridQuantity, (stepperSelectionEvent.selectedStep.stepControl as unknown) as FormGroup, this.currentStep)
+          .asyncFields((stepperSelectionEvent.selectedStep.stepControl as unknown) as FormGroup, this.currentStep)
           .subscribe((formFields: FormField[]) => {
             this.currentStep.fields = formFields;
             this.stepperFormGroup.setControl(this.currentStep.key, this.formService.generateFormGroupForFields(formFields));

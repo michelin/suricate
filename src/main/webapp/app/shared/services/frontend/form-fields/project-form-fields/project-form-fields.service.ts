@@ -50,16 +50,6 @@ export class ProjectFormFieldsService {
   public static readonly projectMaxColumnFormFieldKey = 'maxColumn';
 
   /**
-   * Key of the form field for project grid quantity
-   */
-  public static readonly projectGridQuantityFormFieldKey = 'gridQuantity';
-
-  /**
-   * Key of the form field for project grid rotation speed
-   */
-  public static readonly projectGridRotationSpeedFormFieldKey = 'gridRotationSpeed';
-
-  /**
    * Key of the form field for project image
    */
   public static readonly projectImageFormFieldKey = 'image';
@@ -110,24 +100,6 @@ export class ProjectFormFieldsService {
         type: DataTypeEnum.NUMBER,
         value: project?.gridProperties.maxColumn ? project.gridProperties.maxColumn : 5,
         validators: [Validators.required, CustomValidator.isDigits, CustomValidator.greaterThan0]
-      },
-      {
-        key: ProjectFormFieldsService.projectGridQuantityFormFieldKey,
-        label: 'grid.number',
-        iconPrefix: IconEnum.GRID,
-        type: DataTypeEnum.NUMBER,
-        value: project?.gridProperties.gridQuantity ? project.gridProperties.gridQuantity : 1,
-        validators: [Validators.required, CustomValidator.isDigits, CustomValidator.greaterThan0]
-      },
-      {
-        key: ProjectFormFieldsService.projectGridRotationSpeedFormFieldKey,
-        label: 'dashboard.rotation.speed',
-        iconPrefix: IconEnum.GRID_ROTATION_SPEED,
-        iconSuffix: IconEnum.HELP,
-        iconSuffixTooltipMessage: this.translateService.instant('dashboard.rotation.speed.form.field.tooltip'),
-        type: DataTypeEnum.TEXT,
-        value: project?.gridProperties.gridRotationSpeed ? project.gridProperties.gridRotationSpeed : null,
-        placeholder: this.translateService.instant('dashboard.rotation.speed.form.field.placeholder')
       },
       {
         key: ProjectFormFieldsService.projectImageFormFieldKey,

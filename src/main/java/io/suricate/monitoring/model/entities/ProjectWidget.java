@@ -126,11 +126,4 @@ public class ProjectWidget extends AbstractAuditingEntity<Long> {
     @ManyToOne
     @PrimaryKeyJoinColumn(name = "widgetId", referencedColumnName = "ID")
     private Widget widget;
-
-    /**
-     * The related widget
-     */
-    @ManyToOne
-    @PrimaryKeyJoinColumn(name = "widgetId", referencedColumnName = "ID")
-    private RotatingScreen rotatingScreen;
 }

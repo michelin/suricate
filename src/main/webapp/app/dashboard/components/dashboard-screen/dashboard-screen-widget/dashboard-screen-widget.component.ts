@@ -80,12 +80,6 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   public projectToken: string;
 
   /**
-   * The number of grid of the dashboard
-   */
-  @Input()
-  public gridQuantity: number;
-
-  /**
    * Subject used to unsubscribe all the subscriptions when the component is destroyed
    */
   private unsubscribe: Subject<void> = new Subject<void>();
@@ -248,7 +242,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   public displayEditFormSidenav(): void {
     this.sidenavService.openFormSidenav({
       title: 'widget.edit',
-      formFields: this.projectWidgetFormStepsService.generateWidgetParametersFormFields(this.gridQuantity, this.widget.params, this.projectWidget.backendConfig, this.projectWidget.widgetPosition.gridIndex),
+      formFields: this.projectWidgetFormStepsService.generateWidgetParametersFormFields(this.widget.params, this.projectWidget.backendConfig, this.projectWidget.widgetPosition.gridIndex),
       save: (formData: FormData) => this.saveWidget(formData),
       slideToggleButtonConfiguration: this.buildSlideToggleButtonConfiguration(this.widget.category.categoryParameters)
     });

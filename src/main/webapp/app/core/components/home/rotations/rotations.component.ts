@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {RotationFormFieldsService} from "../../../../shared/services/frontend/form-fields/rotation-form-fields/rotation-form-fields.service";
 import {MaterialIconRecords} from "../../../../shared/records/material-icon.record";
 import {IconEnum} from "../../../../shared/enums/icon.enum";
@@ -82,8 +82,6 @@ export class RotationsComponent implements OnInit {
    */
   ngOnInit(): void {
     this.initHeaderConfiguration();
-
-    // TODO : Delete rotation / Edit rotation
 
     this.httpRotationService.getAllForCurrentUser().subscribe((rotations: Rotation[]) => {
       this.isLoading = false;

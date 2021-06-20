@@ -1,4 +1,4 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ProjectFormFieldsService} from "../../../../shared/services/frontend/form-fields/project-form-fields/project-form-fields.service";
 import {ProjectRequest} from "../../../../shared/models/backend/project/project-request";
 import {CssService} from "../../../../shared/services/frontend/css/css.service";
@@ -13,7 +13,6 @@ import {Router} from "@angular/router";
 import {ToastService} from "../../../../shared/services/frontend/toast/toast.service";
 import {MaterialIconRecords} from "../../../../shared/records/material-icon.record";
 import {IconEnum} from "../../../../shared/enums/icon.enum";
-import {ButtonConfiguration} from "../../../../shared/models/frontend/button/button-configuration";
 import {HeaderConfiguration} from "../../../../shared/models/frontend/header/header-configuration";
 
 @Component({
@@ -52,12 +51,14 @@ export class DashboardsComponent implements OnInit {
    *
    * @param router The router
    * @param httpProjectService The HTTP project service
+   * @param projectFormFieldsService The project form fields service
    * @param sidenavService The sidenav service
    * @param toastService The toast service
    */
   constructor(
     private readonly router: Router,
     private readonly httpProjectService: HttpProjectService,
+    private readonly projectFormFieldsService: ProjectFormFieldsService,
     private readonly sidenavService: SidenavService,
     private readonly toastService: ToastService
   ) { }
@@ -105,7 +106,7 @@ export class DashboardsComponent implements OnInit {
   public openDashboardFormSidenav(): void {
     this.sidenavService.openFormSidenav({
       title: 'dashboard.create',
-      formFields: ProjectFormFieldsService.generateProjectFormFields(),
+      formFields: this.projectFormFieldsService.generateProjectFormFields(),
       save: (formData: ProjectRequest) => this.saveDashboard(formData)
     });
   }
