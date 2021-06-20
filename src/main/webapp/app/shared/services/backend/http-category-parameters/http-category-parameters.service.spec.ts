@@ -18,19 +18,19 @@
 
 import { inject, TestBed } from '@angular/core/testing';
 
-import { HttpWidgetConfigurationService } from './http-widget-configuration.service';
+import { HttpCategoryParametersService } from './http-category-parameters.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MockModule } from '../../../../mock/mock.module';
 
-describe('HttpWidgetConfigurationService', () => {
+describe('HttpCategoryParametersService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [MockModule],
-      providers: [HttpWidgetConfigurationService]
+      providers: [HttpCategoryParametersService]
     });
   });
 
-  it('should create', inject([HttpWidgetConfigurationService], (service: HttpWidgetConfigurationService) => {
+  it('should create', inject([HttpCategoryParametersService], (service: HttpCategoryParametersService) => {
     expect(service).toBeTruthy();
   }));
 });

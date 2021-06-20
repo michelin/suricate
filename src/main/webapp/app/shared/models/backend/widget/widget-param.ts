@@ -27,6 +27,7 @@ export interface WidgetParam {
   type: DataTypeEnum;
   acceptFileRegex?: string;
   usageExample?: string;
+  usageTooltip?: string;
   required: boolean;
   values?: WidgetParamValue[];
 }

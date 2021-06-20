@@ -46,6 +46,12 @@ public class CategoryParameter extends AbstractAuditingEntity<String> {
     private String value;
 
     /**
+     * The description
+     */
+    @Column
+    private String description;
+
+    /**
      * export
      */
     @Column(name = "config_export")
@@ -54,7 +60,7 @@ public class CategoryParameter extends AbstractAuditingEntity<String> {
     /**
      * The data type of the configuration
      */
-    @Column(name = "data_type")
+    @Column
     @Enumerated(value = EnumType.STRING)
     private DataTypeEnum dataType;
 

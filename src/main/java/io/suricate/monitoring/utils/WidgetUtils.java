@@ -149,7 +149,7 @@ public final class WidgetUtils {
             List<File> folders = FilesUtils.getFolders(widgetRootFolder);
 
             for (File widgetFolder : folders) {
-                Widget widget = getWidget(widgetFolder);
+                Widget widget = WidgetUtils.getWidget(widgetFolder);
 
                 if (widget != null) {
                     widgets.add(widget);
@@ -179,7 +179,7 @@ public final class WidgetUtils {
 
         if (!files.isEmpty()) {
             for (File file : files) {
-                readWidgetConfig(widget, file);
+                WidgetUtils.readWidgetConfig(widget, file);
             }
 
             if (widget.getDelay() == null) {

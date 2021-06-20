@@ -38,6 +38,7 @@ CREATE TABLE category (
 CREATE TABLE category_param (
     config_key          character varying           NOT NULL,
     config_export       boolean,
+    description         character varying(255)      NOT NULL,
     config_value        character varying(1000),
     category_id         bigint,
     data_type           character varying(255),
@@ -203,6 +204,7 @@ CREATE TABLE widget_param (
     required            character(1)                NOT NULL,
     type                character varying(255)      NOT NULL,
     usage_example       character varying(255),
+    usage_tooltip       character varying(1000),
     widget_id           bigint,
     default_value       character varying(255),
     accept_file_regex   character varying(255),

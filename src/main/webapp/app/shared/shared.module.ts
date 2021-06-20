@@ -32,9 +32,7 @@ import { FileInputComponent } from './components/inputs/file-input/file-input.co
 import { InputComponent } from './components/inputs/input/input.component';
 import { MaterialCDKModule } from './modules/material-cdk.module';
 import { MaterialModule } from './modules/material.module';
-import { PasswordPipe } from './pipes/password/password.pipe';
 import { SafeHtmlPipe } from './pipes/safe-html/safe-html.pipe';
-import { SafeUrlPipe } from './pipes/safe-url/safe-url.pipe';
 
 import { ToastComponent } from './components/toast/toast.component';
 import { TokenInterceptor } from './interceptors/token.interceptor';
@@ -75,10 +73,8 @@ import { WidgetHtmlDirective } from './directives/widget-html.directive';
     FileInputComponent,
     InputComponent,
     CheckboxComponent,
-    PasswordPipe,
     WidgetHtmlDirective,
     SafeHtmlPipe,
-    SafeUrlPipe,
     ToastComponent,
     ListComponent,
     SpinnerComponent,
@@ -107,12 +103,10 @@ import { WidgetHtmlDirective } from './directives/widget-html.directive';
     MaterialCDKModule,
     MaterialModule,
     NgGridModule,
-    PasswordPipe,
     ReactiveFormsModule,
     RouterModule,
     WidgetHtmlDirective,
     SafeHtmlPipe,
-    SafeUrlPipe,
     ToastComponent,
     TranslateModule,
     SpinnerComponent,

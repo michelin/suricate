@@ -102,6 +102,6 @@
   "widget.select": "Select a widget",
   "widget.description.title": "Description",
   "widget.information.title": "Usage information",
-  "widget.parameters.category.override.title": "Override the category settings",
+  "widget.parameters.category.override.title": "Override the category parameters",
   "yes": "Yes"
 }

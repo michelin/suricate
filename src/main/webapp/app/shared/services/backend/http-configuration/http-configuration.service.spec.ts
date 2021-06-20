@@ -16,15 +16,21 @@
  *
  */
 
-import { Category } from '../widget/category';
-import { DataTypeEnum } from '../../../enums/data-type.enum';
+import { inject, TestBed } from '@angular/core/testing';
 
-/**
- * The configuration entity
- */
-export class WidgetConfiguration {
-  key: string;
-  value: string;
-  dataType: DataTypeEnum;
-  category: Category;
-}
+import { HttpConfigurationService } from './http-configuration.service';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { MockModule } from '../../../../mock/mock.module';
+
+describe('HttpConfigurationService', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [MockModule],
+      providers: [HttpConfigurationService]
+    });
+  });
+
+  it('should create', inject([HttpConfigurationService], (service: HttpConfigurationService) => {
+    expect(service).toBeTruthy();
+  }));
+});

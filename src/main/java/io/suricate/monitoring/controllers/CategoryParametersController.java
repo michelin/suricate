@@ -46,13 +46,8 @@ import java.util.Optional;
  */
 @RestController
 @RequestMapping("/api")
-@Api(value = "Widget Configuration Controller", tags = {"Widget Configurations"})
+@Api(value = "Category Parameters Controller", tags = {"Category Parameters"})
 public class CategoryParametersController {
-
-    /**
-     * The configuration Service
-     */
-    private final ApplicationPropertiesService applicationPropertiesService;
 
     /**
      * The category parameters service
@@ -72,17 +67,14 @@ public class CategoryParametersController {
     /**
      * Constructor
      *
-     * @param applicationPropertiesService The application properties service
      * @param categoryParametersService The category parameters services
      * @param categoryParamMapper The category parameters mapper
      * @param cacheService The cache service
      */
     @Autowired
-    public CategoryParametersController(final ApplicationPropertiesService applicationPropertiesService,
-                                        final CategoryParametersService categoryParametersService,
+    public CategoryParametersController(final CategoryParametersService categoryParametersService,
                                         final CategoryParamMapper categoryParamMapper,
                                         final CacheService cacheService) {
-        this.applicationPropertiesService = applicationPropertiesService;
         this.categoryParametersService = categoryParametersService;
         this.categoryParamMapper = categoryParamMapper;
         this.cacheService = cacheService;
@@ -101,7 +93,7 @@ public class CategoryParametersController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
     @ApiPageable
-    @GetMapping(value = "/v1/configurations")
+    @GetMapping(value = "/v1/category-parameters")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Page<CategoryParameterResponseDto> getAll(@ApiParam(name = "search", value = "Search keyword")
                                                      @RequestParam(value = "search", required = false) String search,
@@ -122,7 +114,7 @@ public class CategoryParametersController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Configuration not found", response = ApiErrorDto.class)
     })
-    @GetMapping(value = "/v1/configurations/{key}")
+    @GetMapping(value = "/v1/category-parameters/{key}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<CategoryParameterResponseDto> getOneByKey(@ApiParam(name = "key", value = "The configuration key", required = true)
                                                                       @PathVariable("key") final String key) {
@@ -152,7 +144,7 @@ public class CategoryParametersController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Configuration not found", response = ApiErrorDto.class)
     })
-    @PutMapping(value = "/v1/configurations/{key}")
+    @PutMapping(value = "/v1/category-parameters/{key}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Void> updateOneByKey(@ApiParam(name = "key", value = "The configuration key", required = true)
                                                @PathVariable("key") final String key,
@@ -183,7 +175,7 @@ public class CategoryParametersController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Configuration not found", response = ApiErrorDto.class)
     })
-    @DeleteMapping(value = "/v1/configurations/{key}")
+    @DeleteMapping(value = "/v1/category-parameters/{key}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Void> deleteOneByKey(@ApiParam(name = "key", value = "The configuration key", required = true)
                                                @PathVariable("key") final String key) {
@@ -196,20 +188,5 @@ public class CategoryParametersController {
         categoryParametersService.deleteOneByKey(key);
 
         return ResponseEntity.noContent().build();
-    }
-
-    /**
-     * Return the value needed for the frontend on the server configuration
-     */
-    @ApiOperation(value = "Get the server configuration for authentication provider (DB, LDAP...)", response = ApplicationPropertiesDto.class)
-    @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = ApplicationPropertiesDto.class)
-    })
-    @GetMapping(value = "/v1/configurations/authentication-provider")
-    public ResponseEntity<ApplicationPropertiesDto> getAuthenticationProvider() {
-        return ResponseEntity
-            .ok()
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(applicationPropertiesService.getAuthenticationProvider());
     }
 }

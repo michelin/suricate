@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
+
 /**
  * Represent a category parameters response used for communication with the clients via webservices
  */
@@ -28,6 +30,12 @@ public class CategoryParameterResponseDto extends AbstractDto {
      */
     @ApiModelProperty(value = "The category parameter value")
     private String value;
+
+    /**
+     * The description
+     */
+    @ApiModelProperty(value = "The description")
+    private String description;
 
     /**
      * Export value

@@ -18,9 +18,9 @@ import { Component, Injector } from '@angular/core';
 import { ListComponent } from '../../../shared/components/list/list.component';
 import { IconEnum } from '../../../shared/enums/icon.enum';
 import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
-import { HttpWidgetConfigurationService } from '../../../shared/services/backend/http-widget-configuration/http-widget-configuration.service';
-import { WidgetConfiguration } from '../../../shared/models/backend/widget-configuration/widget-configuration';
+import { HttpCategoryParametersService } from '../../../shared/services/backend/http-category-parameters/http-category-parameters.service';
 import { WidgetConfigurationFormFieldsService } from '../../../shared/services/frontend/form-fields/widget-configuration-form-fields/widget-configuration-form-fields.service';
+import { CategoryParameter } from '../../../shared/models/backend/category-parameters/category-parameter';
 
 /**
  * Component used to display the list of widgets
@@ -29,11 +29,11 @@ import { WidgetConfigurationFormFieldsService } from '../../../shared/services/f
   templateUrl: '../../../shared/components/list/list.component.html',
   styleUrls: ['../../../shared/components/list/list.component.scss']
 })
-export class WidgetConfigurationsComponent extends ListComponent<WidgetConfiguration> {
+export class WidgetConfigurationsComponent extends ListComponent<CategoryParameter> {
   /**
    * The item selected on the list
    */
-  private configurationSelected: WidgetConfiguration;
+  private configurationSelected: CategoryParameter;
 
   /**
    * Constructor
@@ -43,7 +43,7 @@ export class WidgetConfigurationsComponent extends ListComponent<WidgetConfigura
    * @param injector Angular Service used to manage the injection of services
    */
   constructor(
-    private readonly httpConfigurationsService: HttpWidgetConfigurationService,
+    private readonly httpConfigurationsService: HttpCategoryParametersService,
     private readonly widgetConfigurationFormFieldsService: WidgetConfigurationFormFieldsService,
     protected injector: Injector
   ) {
@@ -57,21 +57,21 @@ export class WidgetConfigurationsComponent extends ListComponent<WidgetConfigura
   /**
    * {@inheritDoc}
    */
-  protected getFirstLabel(configuration: WidgetConfiguration): string {
-    return configuration.key;
+  protected getFirstLabel(configuration: CategoryParameter): string {
+    return configuration.description;
   }
 
   /**
    * {@inheritDoc}
    */
-  protected getSecondLabel(configuration: WidgetConfiguration): string {
+  protected getSecondLabel(configuration: CategoryParameter): string {
     return configuration.value;
   }
 
   /**
    * {@inheritDoc}
    */
-  protected getThirdLabel(configuration: WidgetConfiguration): string {
+  protected getThirdLabel(configuration: CategoryParameter): string {
     return configuration.category.name;
   }
 
@@ -93,13 +93,13 @@ export class WidgetConfigurationsComponent extends ListComponent<WidgetConfigura
         {
           icon: IconEnum.EDIT,
           color: 'primary',
-          callback: (event: Event, configuration: WidgetConfiguration) =>
+          callback: (event: Event, configuration: CategoryParameter) =>
             this.openFormSidenav(event, configuration, this.updateConfiguration.bind(this))
         },
         {
           icon: IconEnum.DELETE,
           color: 'warn',
-          callback: (event: Event, configuration: WidgetConfiguration) => this.deleteConfiguration(event, configuration)
+          callback: (event: Event, configuration: CategoryParameter) => this.deleteConfiguration(event, configuration)
         }
       ]
     };
@@ -109,7 +109,7 @@ export class WidgetConfigurationsComponent extends ListComponent<WidgetConfigura
    * Init filter for list component
    */
   private initFilter(): void {
-    this.httpFilter.sort = ['key,asc'];
+    this.httpFilter.sort = ['category.name,description,asc'];
   }
 
   /**
@@ -119,17 +119,13 @@ export class WidgetConfigurationsComponent extends ListComponent<WidgetConfigura
    * @param configuration The repository clicked on the list
    * @param saveCallback The function to call when save button is clicked
    */
-  private openFormSidenav(
-    event: Event,
-    configuration: WidgetConfiguration,
-    saveCallback: (configuration: WidgetConfiguration) => void
-  ): void {
-    this.configurationSelected = configuration ? Object.assign({}, configuration) : new WidgetConfiguration();
+  private openFormSidenav(event: Event, configuration: CategoryParameter, saveCallback: (configuration: CategoryParameter) => void): void {
+    this.configurationSelected = configuration ? Object.assign({}, configuration) : new CategoryParameter();
 
     this.sidenavService.openFormSidenav({
       title: 'configuration.edit',
       formFields: this.widgetConfigurationFormFieldsService.generateFormFields(configuration),
-      save: (configurationRequest: WidgetConfiguration) => saveCallback(configurationRequest)
+      save: (configurationRequest: CategoryParameter) => saveCallback(configurationRequest)
     });
   }
 
@@ -139,7 +135,7 @@ export class WidgetConfigurationsComponent extends ListComponent<WidgetConfigura
    * @param event The click event
    * @param configuration The project to delete
    */
-  private deleteConfiguration(event: Event, configuration: WidgetConfiguration): void {
+  private deleteConfiguration(event: Event, configuration: CategoryParameter): void {
     this.dialogService.confirm({
       title: 'configuration.delete',
       message: `${this.translateService.instant('delete.confirm')} ${configuration.key.toUpperCase()} ?`,
@@ -157,7 +153,7 @@ export class WidgetConfigurationsComponent extends ListComponent<WidgetConfigura
    *
    * @param configuration The configuration to update
    */
-  private updateConfiguration(configuration: WidgetConfiguration): void {
+  private updateConfiguration(configuration: CategoryParameter): void {
     this.httpConfigurationsService.update(configuration.key, configuration).subscribe(() => {
       this.refreshList();
       this.toastService.sendMessage('configuration.update.success', ToastTypeEnum.SUCCESS);

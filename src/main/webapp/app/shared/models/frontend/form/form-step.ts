@@ -21,7 +21,7 @@ import { IconEnum } from '../../../enums/icon.enum';
 import { Observable } from 'rxjs';
 import { FormGroup } from '@angular/forms';
 import { LinkConfiguration } from '../link/link-configuration';
-import { Category } from '../../backend/widget/category';
+import { Category } from '../../backend/category/category';
 
 /**
  * Describe a step of the wizard

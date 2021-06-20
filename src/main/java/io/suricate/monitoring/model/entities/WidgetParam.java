@@ -80,6 +80,12 @@ public class WidgetParam extends AbstractAuditingEntity<Long> {
     private String usageExample;
 
     /**
+     * The usage tooltip
+     */
+    @Column
+    private String usageTooltip;
+
+    /**
      * If this param is required or not
      */
     @Column(nullable = false)

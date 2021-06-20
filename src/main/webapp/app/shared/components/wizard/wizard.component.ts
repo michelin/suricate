@@ -14,20 +14,19 @@
  * limitations under the License.
  */
 
-import { Component, ElementRef, Injector, Input, OnChanges, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, Injector, OnInit, ViewChild } from '@angular/core';
 import { HeaderConfiguration } from '../../models/frontend/header/header-configuration';
 import { FormGroup } from '@angular/forms';
 import { WizardConfiguration } from '../../models/frontend/wizard/wizard-configuration';
 import { FormService } from '../../services/frontend/form/form.service';
 import { FormStep } from '../../models/frontend/form/form-step';
 import { MaterialIconRecords } from '../../records/material-icon.record';
-import { MatStep, MatStepper } from '@angular/material/stepper';
+import { MatStepper } from '@angular/material/stepper';
 import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { ValueChangedEvent } from '../../models/frontend/form/value-changed-event';
 import { FormField } from '../../models/frontend/form/form-field';
-import { takeUntil, takeWhile } from 'rxjs/operators';
 import { WidgetConfigurationFormFieldsService } from '../../services/frontend/form-fields/widget-configuration-form-fields/widget-configuration-form-fields.service';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { ProjectWidgetFormStepsService } from '../../services/frontend/form-steps/project-widget-form-steps/project-widget-form-steps.service';
@@ -202,7 +201,7 @@ export class WizardComponent implements OnInit {
    * @param event The values retrieved from the child component event emitter
    */
   public displayCategorySettings(event: MatSlideToggleChange): void {
-    this.widgetConfigurationFormFieldsService.generateCategorySettingsFormFields(
+    this.widgetConfigurationFormFieldsService.addOrRemoveCategoryParametersFormFields(
       this.currentStep.category.categoryParameters,
       event.checked,
       this.stepperFormGroup.controls[this.currentStep.key] as FormGroup,

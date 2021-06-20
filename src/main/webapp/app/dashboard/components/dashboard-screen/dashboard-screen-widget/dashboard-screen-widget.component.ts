@@ -44,7 +44,7 @@ import { WebsocketUpdateTypeEnum } from '../../../../shared/enums/websocket-upda
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { SlideToggleButtonConfiguration } from '../../../../shared/models/frontend/button/slide-toggle/slide-toggle-button-configuration';
-import { CategoryParameter } from '../../../../shared/models/backend/category/category-parameter';
+import { CategoryParameter } from '../../../../shared/models/backend/category-parameters/category-parameter';
 
 /**
  * Display the grid stack widgets
@@ -289,7 +289,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
           this.projectWidgetFormStepsService.retrieveProjectWidgetValueFromConfig(categorySetting.key, this.projectWidget.backendConfig)
         ).length > 0,
       slideToggleButtonPressed: (event: MatSlideToggleChange, formGroup: FormGroup, formFields: FormField[]) =>
-        this.widgetConfigurationFormFieldsService.generateCategorySettingsFormFields(
+        this.widgetConfigurationFormFieldsService.addOrRemoveCategoryParametersFormFields(
           categoryParameters,
           event.checked,
           formGroup,

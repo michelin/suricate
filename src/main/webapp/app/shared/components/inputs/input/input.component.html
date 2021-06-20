@@ -9,7 +9,15 @@
     [ngClass]="{ 'mat-form-field-readonly': field.readOnly }"
   >
     <!-- Mat Icon prefix -->
-    <mat-icon *ngIf="field.iconPrefix" class="prefix" matPrefix color="primary">
+    <mat-icon
+      *ngIf="field.iconPrefix"
+      class="prefix"
+      matPrefix
+      color="primary"
+      [matTooltip]="field.iconPrefixTooltip"
+      matTooltipPosition="above"
+      matTooltipClass="icon-prefix-tooltip"
+    >
       {{ materialIconRecords[field.iconPrefix] }}
     </mat-icon>
 

@@ -47,6 +47,13 @@ public class RepositoryService {
         this.repositoryRepository = repositoryRepository;
     }
 
+    /**
+     * Get all repositories
+     *
+     * @param search The search string
+     * @param pageable The pageable object
+     * @return The paginated list of repositories
+     */
     public Page<Repository> getAll(String search, Pageable pageable) {
         return repositoryRepository.findAll(new RepositorySearchSpecification(search), pageable);
     }

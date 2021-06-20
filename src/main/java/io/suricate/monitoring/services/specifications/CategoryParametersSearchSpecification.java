@@ -14,6 +14,6 @@ public class CategoryParametersSearchSpecification extends AbstractSearchSpecifi
      * @param search The string to search
      */
     public CategoryParametersSearchSpecification(final String search) {
-        super(search, CategoryParameter_.key);
+        super(search, CategoryParameter_.description);
     }
 }

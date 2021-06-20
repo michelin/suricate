@@ -69,7 +69,12 @@ export class FormField {
   iconPrefix?: IconEnum;
 
   /**
-   * The mat-icon nam that should be used as suffix
+   * The tooltip to display above the icon suffix
+   */
+  iconPrefixTooltip?: string;
+
+  /**
+   * The mat-icon name that should be used as suffix
    */
   iconSuffix?: IconEnum;
 
