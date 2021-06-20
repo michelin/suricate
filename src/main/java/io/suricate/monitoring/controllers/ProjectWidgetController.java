@@ -46,7 +46,6 @@ import java.util.Optional;
 @RequestMapping("/api")
 @Api(value = "Project Widget Controller", tags = {"Project Widgets"})
 public class ProjectWidgetController {
-
     /**
      * The project widget service
      */

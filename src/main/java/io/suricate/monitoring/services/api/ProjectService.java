@@ -94,19 +94,20 @@ public class ProjectService {
      * @param pageable The page configurations
      * @return The list paginated
      */
+    @Transactional(readOnly = true)
     public Page<Project> getAll(String search, Pageable pageable) {
         return projectRepository.findAll(new ProjectSearchSpecification(search), pageable);
     }
 
     /**
-     * Retrieve all the project for a user
+     * Get all projects by user
      *
      * @param user The user
-     * @return The project list associated to the user
+     * @return A list of projects
      */
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Project> getAllByUser(User user) {
-        return projectRepository.findByUsers_IdOrderByName(user.getId());
+        return projectRepository.findByUsersIdOrderByName(user.getId());
     }
 
     /**
@@ -116,7 +117,7 @@ public class ProjectService {
      * @return The project associated
      */
     @LogExecutionTime
-    @Transactional
+    @Transactional(readOnly = true)
     public Optional<Project> getOneById(Long id) {
         return projectRepository.findById(id);
     }
@@ -127,7 +128,7 @@ public class ProjectService {
      * @param token The token to find
      * @return The project
      */
-    @Transactional
+    @Transactional(readOnly = true)
     public Optional<Project> getOneByToken(final String token) {
         return projectRepository.findProjectByToken(token);
     }

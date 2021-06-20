@@ -34,7 +34,6 @@ import java.util.*;
 @Setter
 @NoArgsConstructor
 public class Role extends AbstractEntity<Long> {
-
     /**
      * The id
      */

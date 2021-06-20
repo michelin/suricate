@@ -24,6 +24,7 @@ import { Repository } from '../../../../models/backend/repository/repository';
 import { FormOption } from '../../../../models/frontend/form/form-option';
 import { TitleCasePipe } from '@angular/common';
 import { IconEnum } from '../../../../enums/icon.enum';
+import {TranslateService} from "@ngx-translate/core";
 
 /**
  * Service used to build the form fields related to a repository
@@ -41,15 +42,15 @@ export class RepositoryFormFieldsService {
   /**
    * The constructor
    */
-  constructor() {}
+  constructor(private readonly translateService: TranslateService) {}
 
   /**
    * Generate the form fields for a repository
    *
    * @param repository The repository used to init the form fields
    */
-  public static generateFormFields(repository?: Repository): FormField[] {
-    let formFields = RepositoryFormFieldsService.getGeneralFormFields(repository);
+  public generateFormFields(repository?: Repository): FormField[] {
+    let formFields = this.getGeneralFormFields(repository);
 
     if (repository && repository.type) {
       formFields = [...formFields, ...RepositoryFormFieldsService.repositoryTypeFormFieldsRecords[repository.type](repository)];
@@ -63,7 +64,7 @@ export class RepositoryFormFieldsService {
    *
    * @param repository The repository
    */
-  private static getGeneralFormFields(repository: Repository): FormField[] {
+  private getGeneralFormFields(repository: Repository): FormField[] {
     return [
       {
         key: 'enabled',
@@ -73,7 +74,7 @@ export class RepositoryFormFieldsService {
       },
       {
         key: 'name',
-        label: 'name',
+        label: this.translateService.instant('repository.name.form.field'),
         iconPrefix: IconEnum.NAME,
         type: DataTypeEnum.TEXT,
         value: repository ? repository.name : null,
@@ -81,11 +82,11 @@ export class RepositoryFormFieldsService {
       },
       {
         key: 'type',
-        label: 'type',
+        label: this.translateService.instant('repository.type.form.field'),
         iconPrefix: IconEnum.REPOSITORY_TYPE,
         type: DataTypeEnum.COMBO,
         options: () => RepositoryFormFieldsService.getRepositoryTypeOptions(),
-        value: repository ? repository.type : null,
+        value: repository ? repository?.type : null,
         validators: [Validators.required]
       }
     ];

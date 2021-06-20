@@ -63,14 +63,4 @@ public abstract class CategoryParamMapper {
     @Mapping(target = "value", expression = "java(" +
             "categoryParameter.getDataType() == io.suricate.monitoring.model.enums.DataTypeEnum.PASSWORD ? stringEncryptor.decrypt(categoryParameter.getValue()) : categoryParameter.getValue())")
     public abstract CategoryParameterResponseDto toCategoryParameterWithoutCategoryDTO(CategoryParameter categoryParameter);
-
-    /**
-     * Map a list of category parameters into a list of DTO
-     *
-     * @param categoryParameters The category parameters to map
-     * @return The category parameters as DTO
-     */
-    @Named("toCategoryParametersDTOs")
-    @IterableMapping(qualifiedByName = "toCategoryParameterDTO")
-    public abstract List<CategoryParameterResponseDto> toCategoryParametersDTOs(List<CategoryParameter> categoryParameters);
 }

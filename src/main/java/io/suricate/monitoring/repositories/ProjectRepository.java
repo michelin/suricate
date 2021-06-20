@@ -39,7 +39,7 @@ public interface ProjectRepository extends CrudRepository<Project, Long>, JpaSpe
      * @param id The user id
      * @return List of related projects ordered by name
      */
-    List<Project> findByUsers_IdOrderByName(Long id);
+    List<Project> findByUsersIdOrderByName(Long id);
 
     /**
 	 * Find a project by token

@@ -47,12 +47,34 @@ export class MenuService {
   public static buildMenu(): MenuConfiguration {
     const menuConfiguration = new MenuConfiguration();
 
+    menuConfiguration.categories.push(MenuService.buildHomeMenu());
+
     if (AuthenticationService.isAdmin()) {
       menuConfiguration.categories.push(MenuService.buildAdminMenu());
     }
+
     menuConfiguration.categories.push(MenuService.buildWidgetMenu());
 
     return menuConfiguration;
+  }
+
+  /**
+   * Build the home menu
+   */
+  private static buildHomeMenu(): MenuCategoryConfiguration {
+    return {
+      label: 'home.menu.title',
+      items: [
+        {
+          label: 'home.menu.dashboards.title',
+          linkConfiguration: { link: ['/home', 'dashboards'] }
+        },
+        {
+          label: 'home.menu.rotations.title',
+          linkConfiguration: { link: ['/home', 'rotations'] }
+        }
+      ]
+    };
   }
 
   /**
@@ -63,16 +85,20 @@ export class MenuService {
       label: 'admin',
       items: [
         {
-          label: 'user.list',
-          linkConfiguration: { link: ['/admin', 'users'] }
+          label: 'configuration.list',
+          linkConfiguration: { link: ['/admin', 'configurations'] }
+        },
+        {
+          label: 'dashboard.list',
+          linkConfiguration: { link: ['/admin', 'dashboards'] }
         },
         {
           label: 'repository.list',
           linkConfiguration: { link: ['/admin', 'repositories'] }
         },
         {
-          label: 'dashboard.list',
-          linkConfiguration: { link: ['dashboards'] }
+          label: 'user.list',
+          linkConfiguration: { link: ['/admin', 'users'] }
         }
       ]
     };
@@ -82,19 +108,9 @@ export class MenuService {
    * Build the widget menu
    */
   private static buildWidgetMenu(): MenuCategoryConfiguration {
-    const widgetMenuItems = [];
-
-    if (AuthenticationService.isAdmin()) {
-      widgetMenuItems.push({
-        label: 'configuration.list',
-        linkConfiguration: { link: ['/widgets', 'configurations'] }
-      });
-    }
-
     return {
       label: 'widget.list',
       items: [
-        ...widgetMenuItems,
         {
           label: 'catalog',
           linkConfiguration: { link: ['/widgets', 'catalog'] }

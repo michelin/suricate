@@ -24,4 +24,5 @@ export interface ProjectRequest {
   gridQuantity: number;
   cssStyle: string;
   image: string;
+  gridBackgroundColor: string;
 }

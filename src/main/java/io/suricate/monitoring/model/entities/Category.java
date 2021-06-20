@@ -39,7 +39,6 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 public class Category extends AbstractAuditingEntity<Long> {
-
     /**
      * The category id
      */

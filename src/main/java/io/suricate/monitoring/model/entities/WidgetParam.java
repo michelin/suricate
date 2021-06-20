@@ -34,7 +34,6 @@ import java.util.*;
 @Setter
 @NoArgsConstructor
 public class WidgetParam extends AbstractAuditingEntity<Long> {
-
     /**
      * The widget param id
      */

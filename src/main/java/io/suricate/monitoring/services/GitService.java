@@ -142,7 +142,8 @@ public class GitService {
     @Async
     @Transactional
     public Future<Boolean> updateWidgetFromEnabledGitRepositories() {
-        LOGGER.info("Update widgets from Git repo");
+        LOGGER.info("Update widgets from Git repository");
+
         if (!applicationProperties.widgets.updateEnable) {
             LOGGER.info("Widget update disabled");
             return null;
@@ -171,7 +172,7 @@ public class GitService {
             return new AsyncResult<>(false);
         }
 
-        LOGGER.info("Update widgets from Git repo {}", repository.getName());
+        LOGGER.info("Update widgets from Git repository {}", repository.getName());
         if (!applicationProperties.widgets.updateEnable) {
             LOGGER.info("Widget update disabled");
             return null;

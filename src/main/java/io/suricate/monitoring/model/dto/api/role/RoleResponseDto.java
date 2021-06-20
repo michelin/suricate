@@ -32,17 +32,18 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value = "RoleResponse", description = "Describe a role")
 public class RoleResponseDto extends AbstractDto {
-
     /**
      * The role id
      */
     @ApiModelProperty(value = "The id")
     private Long id;
+
     /**
      * The role name
      */
     @ApiModelProperty(value = "The Role name")
     private UserRoleEnum name;
+
     /**
      * The role description
      */

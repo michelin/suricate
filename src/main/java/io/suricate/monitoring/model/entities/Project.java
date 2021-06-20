@@ -34,7 +34,6 @@ import java.util.*;
 @Setter
 @NoArgsConstructor
 public class Project extends AbstractAuditingEntity<Long> {
-
     /**
      * The project id
      */
@@ -81,11 +80,17 @@ public class Project extends AbstractAuditingEntity<Long> {
     private Asset screenshot;
 
     /**
-     * The list of widgets related to it
+     * The list of related widgets
      */
     @OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE)
     @OrderBy("gridRow ASC, gridColumn ASC")
     private Set<ProjectWidget> widgets = new LinkedHashSet<>();
+
+    /**
+     * The list of related rotations
+     */
+    @OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE)
+    private Set<RotationProject> rotationProjects = new LinkedHashSet<>();
 
     /**
      * The list of users of the project

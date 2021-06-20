@@ -208,9 +208,9 @@ export class HttpProjectService implements AbstractHttpService<Project | Project
   }
 
   /**
-   * Get every dashboards for the current user
+   * Get all dashboards of current user
    *
-   * @returns {Observable<Project[]>} The list as observable
+   * @returns The dashboards of the current user
    */
   public getAllForCurrentUser(): Observable<Project[]> {
     const url = `${HttpProjectService.projectsApiEndpoint}/currentUser`;

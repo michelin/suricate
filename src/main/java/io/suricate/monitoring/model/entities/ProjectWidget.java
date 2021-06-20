@@ -27,14 +27,13 @@ import javax.persistence.*;
 import java.util.Date;
 
 /**
- * Project_widget entity
+ * ProjectWidget entity
  */
-@Entity(name = "ProjectWidget")
+@Entity
 @Getter
 @Setter
 @NoArgsConstructor
 public class ProjectWidget extends AbstractAuditingEntity<Long> {
-
     /**
      * The project widget id
      */

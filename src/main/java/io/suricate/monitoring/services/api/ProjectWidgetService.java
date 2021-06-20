@@ -62,7 +62,6 @@ import java.util.stream.Collectors;
  */
 @Service
 public class ProjectWidgetService {
-
     /**
      * Class logger
      */

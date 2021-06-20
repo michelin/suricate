@@ -18,7 +18,7 @@
  */
 
 /**
- * The project widget entity
+ * The project widget request
  */
 export interface ProjectWidgetRequest {
   backendConfig?: string;

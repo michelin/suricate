@@ -31,10 +31,16 @@ export interface FormSidenavConfiguration {
    * The title of the sidenav
    */
   title: string;
+
   /**
    * The fields of the form to display
    */
   formFields: FormField[];
+
+  /**
+   * Display a message when there is no field to display
+   */
+  noFieldsMessage?: string;
 
   /**
    * The function to call when the form should be sent

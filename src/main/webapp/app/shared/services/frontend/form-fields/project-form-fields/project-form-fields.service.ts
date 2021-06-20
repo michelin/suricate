@@ -75,7 +75,7 @@ export class ProjectFormFieldsService {
   constructor(private translateService: TranslateService) { }
 
   /**
-   * Get the list of steps for a dashboard
+   * Get the list of form fields for a dashboard
    *
    * @param project The project used for an edition
    */

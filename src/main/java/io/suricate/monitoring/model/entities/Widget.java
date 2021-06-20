@@ -39,7 +39,6 @@ import java.util.*;
 @Setter
 @NoArgsConstructor
 public class Widget extends AbstractAuditingEntity<Long> {
-
     /**
      * The widget id
      */

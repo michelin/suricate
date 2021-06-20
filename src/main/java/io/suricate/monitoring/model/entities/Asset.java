@@ -31,7 +31,6 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 public class Asset extends AbstractAuditingEntity<Long> {
-
     /**
      * The id
      */

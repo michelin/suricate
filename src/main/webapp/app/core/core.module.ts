@@ -14,18 +14,19 @@
  * limitations under the License.
  */
 
-import { NgModule } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import {NgModule} from '@angular/core';
+import {RouterModule} from '@angular/router';
 
-import { SharedModule } from '../shared/shared.module';
-import { LoginComponent } from './components/login/login.component';
-import { RegisterComponent } from './components/register/register.component';
-import { LayoutModule } from '../layout/layout.module';
-import { coreRoutes } from './core.route';
-import { HomeComponent } from './components/home/home.component';
+import {SharedModule} from '../shared/shared.module';
+import {LoginComponent} from './components/login/login.component';
+import {RegisterComponent} from './components/register/register.component';
+import {LayoutModule} from '../layout/layout.module';
+import {coreRoutes} from './core.route';
+import {DashboardsComponent} from './components/home/dashboards/dashboards.component';
+import {RotationsComponent} from './components/home/rotations/rotations.component';
 
 @NgModule({
   imports: [RouterModule.forChild(coreRoutes), LayoutModule, SharedModule],
-  declarations: [HomeComponent, LoginComponent, RegisterComponent]
+  declarations: [LoginComponent, RegisterComponent, DashboardsComponent, RotationsComponent]
 })
 export class CoreModule {}

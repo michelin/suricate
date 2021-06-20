@@ -71,11 +71,10 @@ import java.util.Optional;
 @RequestMapping("/api")
 @Api(value = "Project Controller", tags = {"Projects"})
 public class ProjectController {
-
     /**
      * Constant for users not allowed API exceptions
      */
-    private static final String USER_NOT_ALLOWED = "The user is not allowed to modify this resource";
+    private static final String USER_NOT_ALLOWED = "The user is not allowed to modify this project";
 
     /**
      * Project service
@@ -215,7 +214,6 @@ public class ProjectController {
     })
     @GetMapping(value = "/v1/projects/{projectToken}")
     @PermitAll
-    @Transactional
     public ResponseEntity<ProjectResponseDto> getOneByToken(@ApiParam(name = "projectToken", value = "The project token", required = true)
                                                             @PathVariable("projectToken") String projectToken) {
         Optional<Project> projectOptional = projectService.getOneByToken(projectToken);

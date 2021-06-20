@@ -31,7 +31,6 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 public class CategoryParameter extends AbstractAuditingEntity<String> {
-
     /**
      * The key of the configuration (used in JS Files)
      */

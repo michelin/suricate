@@ -31,7 +31,6 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value = "ProjectRequest", description = "Create or update a project")
 public class ProjectRequestDto extends AbstractDto {
-
     /**
      * The project name
      */
@@ -49,18 +48,6 @@ public class ProjectRequestDto extends AbstractDto {
      */
     @ApiModelProperty(value = "The height in pixel of the widget")
     private Integer widgetHeight;
-
-    /**
-     * The number of grids of the project
-     */
-    @ApiModelProperty(value = "The number of grids of the project")
-    private Integer gridQuantity;
-
-    /**
-     * The rotation speed (in minutes) of grids
-     */
-    @ApiModelProperty(value = "The rotation speed (in minutes) of grids")
-    private Integer gridRotationSpeed;
 
     /**
      * The global css for the dashboard

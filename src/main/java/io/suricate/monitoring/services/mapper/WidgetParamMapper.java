@@ -45,14 +45,4 @@ public abstract class WidgetParamMapper {
     @Named("toWidgetParameterDTO")
     @Mapping(target = "values", source = "widgetParam.possibleValuesMap", qualifiedByName = "toWidgetParameterValuesDTOs")
     public abstract WidgetParamResponseDto toWidgetParameterDTO(WidgetParam widgetParam);
-
-    /**
-     * Map a list of widget parameters into a list of widget parameters DTOs
-     *
-     * @param widgetParams The list of widget parameters to map
-     * @return The list of widget parameters as DTOs
-     */
-    @Named("toWidgetParametersDTO")
-    @IterableMapping(qualifiedByName = "toWidgetParameterDTO")
-    public abstract List<WidgetParamResponseDto> toWidgetParametersDTO(List<WidgetParam> widgetParams);
 }

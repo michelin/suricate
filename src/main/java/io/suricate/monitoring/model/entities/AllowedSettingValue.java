@@ -32,7 +32,6 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 public class AllowedSettingValue {
-
     /**
      * The setting id
      */

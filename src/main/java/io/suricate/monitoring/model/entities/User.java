@@ -34,7 +34,6 @@ import java.util.*;
 @Setter
 @NoArgsConstructor
 public class User extends AbstractEntity<Long> {
-
     /**
      * The user id
      */

@@ -14,18 +14,24 @@
  * limitations under the License.
  */
 
-import { Routes } from '@angular/router';
+import {Routes} from '@angular/router';
 
-import { RegisterComponent } from './components/register/register.component';
-import { LoginComponent } from './components/login/login.component';
-import { AuthGuard } from '../shared/guards/auth/auth.guard';
-import { HomeComponent } from './components/home/home.component';
+import {RegisterComponent} from './components/register/register.component';
+import {LoginComponent} from './components/login/login.component';
+import {AuthGuard} from '../shared/guards/auth/auth.guard';
+import {DashboardsComponent} from "./components/home/dashboards/dashboards.component";
+import {RotationsComponent} from "./components/home/rotations/rotations.component";
 
 export const coreRoutes: Routes = [
   {
-    path: 'home',
-    component: HomeComponent,
-    canActivate: [AuthGuard]
+    path: 'home/dashboards',
+    canActivate: [AuthGuard],
+    component: DashboardsComponent,
+  },
+  {
+    path: 'home/rotations',
+    canActivate: [AuthGuard],
+    component: RotationsComponent,
   },
   {
     path: 'login',

@@ -30,7 +30,6 @@ import java.util.*;
 @Setter
 @NoArgsConstructor
 public class Library extends AbstractAuditingEntity<Long> {
-
     /**
      * The id
      */

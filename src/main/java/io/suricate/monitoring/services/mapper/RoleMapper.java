@@ -38,14 +38,4 @@ public abstract class RoleMapper {
      */
     @Named("toRoleDTO")
     public abstract RoleResponseDto toRoleDTO(Role role);
-
-    /**
-     * Map a list of roles into a list of roles DTO
-     *
-     * @param roles The list of roles to map
-     * @return The list of roles as DTOs
-     */
-    @Named("toRolesDTOs")
-    @IterableMapping(qualifiedByName = "toRoleDTO")
-    public abstract List<RoleResponseDto> toRolesDTOs(List<Role> roles);
 }

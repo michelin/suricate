@@ -20,15 +20,11 @@ import { DashboardTvComponent } from './components/dashboard-tv/dashboard-tv.com
 import { AuthGuard } from '../shared/guards/auth/auth.guard';
 import { AdminGuard } from '../shared/guards/admin/admin.guard';
 import { DashboardDetailComponent } from './components/dashboard-detail/dashboard-detail.component';
-import { DashboardsComponent } from './components-list/dashboards/dashboards.component';
+import { DashboardsComponent } from '../admin/dashboards/dashboards.component';
 import { ProjectWidgetWizardComponent } from './components/wizard/project-widget-wizard.component';
+import {RotationDetailComponent} from "./components/rotation-detail/rotation-detail.component";
 
 export const DashboardRoutes: Routes = [
-  {
-    path: 'dashboards',
-    component: DashboardsComponent,
-    canActivate: [AuthGuard, AdminGuard]
-  },
   {
     path: 'tv',
     component: DashboardTvComponent
@@ -36,6 +32,11 @@ export const DashboardRoutes: Routes = [
   {
     path: 'dashboards/:dashboardToken',
     component: DashboardDetailComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'rotations/:rotationId',
+    component: RotationDetailComponent,
     canActivate: [AuthGuard]
   },
   {

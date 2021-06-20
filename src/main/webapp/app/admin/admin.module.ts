@@ -19,12 +19,14 @@ import { RouterModule } from '@angular/router';
 import { LayoutModule } from '../layout/layout.module';
 import { SharedModule } from '../shared/shared.module';
 import { adminRoutes } from './admin.route';
-import { UsersComponent } from './components-list/users/users.component';
-import { RepositoriesComponent } from './components-list/repositories/repositories.component';
+import { UsersComponent } from './users/users.component';
+import { RepositoriesComponent } from './repositories/repositories.component';
+import {DashboardsComponent} from "./dashboards/dashboards.component";
+import {ConfigurationsComponent} from "./configurations/configurations.component";
 
 @NgModule({
   imports: [RouterModule.forChild(adminRoutes), LayoutModule, SharedModule],
-  declarations: [UsersComponent, RepositoriesComponent],
+  declarations: [UsersComponent, RepositoriesComponent, DashboardsComponent, ConfigurationsComponent],
   exports: [RouterModule]
 })
 export class AdminModule {}

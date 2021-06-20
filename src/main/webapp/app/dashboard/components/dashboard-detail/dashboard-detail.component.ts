@@ -154,7 +154,10 @@ export class DashboardDetailComponent implements OnInit {
           this.isDashboardLoading = false;
           this.initHeaderConfiguration();
         },
-        () => (this.isDashboardLoading = false)
+        () => {
+          this.isDashboardLoading = false;
+          this.router.navigate(['/home/dashboards']);
+        }
       );
   }
 
@@ -309,7 +312,7 @@ export class DashboardDetailComponent implements OnInit {
    * @param formData The data retrieve from the form sidenav
    */
   private editDashboard(formData: ProjectRequest): void {
-    formData.cssStyle = `.grid { background-color: ${formData['gridBackgroundColor']}; }`;
+    formData.cssStyle = `.grid { background-color: ${formData.gridBackgroundColor}; }`;
 
     this.httpProjectService.update(this.project.token, formData).subscribe(() => {
       if (formData.image) {
@@ -372,7 +375,7 @@ export class DashboardDetailComponent implements OnInit {
       accept: () => {
         this.httpProjectService.delete(this.project.token).subscribe(() => {
           this.toastService.sendMessage('Project deleted successfully', ToastTypeEnum.SUCCESS);
-          this.router.navigate(['/home']);
+          this.router.navigate(['/home/dashboards']);
         });
       }
     });
@@ -382,7 +385,7 @@ export class DashboardDetailComponent implements OnInit {
    * Handle the disconnection of a dashboard
    */
   public handlingDashboardDisconnect(): void {
-    this.router.navigate(['/home']);
+    this.router.navigate(['/home/dashboards']);
   }
 
   /**

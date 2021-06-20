@@ -234,7 +234,7 @@ export class WizardComponent implements OnInit {
    * By default we redirect to home on close event (you can override this on child component)
    */
   protected closeWizard(): void {
-    this.router.navigate(['/home']);
+    this.router.navigate(['/home/dashboards']);
   }
 
   /**

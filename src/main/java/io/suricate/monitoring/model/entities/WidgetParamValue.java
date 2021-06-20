@@ -31,7 +31,6 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 public class WidgetParamValue extends AbstractAuditingEntity<Long> {
-
     /**
      * The id
      */

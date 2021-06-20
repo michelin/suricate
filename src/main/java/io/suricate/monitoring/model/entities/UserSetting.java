@@ -30,7 +30,6 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 public class UserSetting {
-
     /**
      * The user setting id
      */

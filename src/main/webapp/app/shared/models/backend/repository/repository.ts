@@ -19,7 +19,7 @@
 import { RepositoryTypeEnum } from '../../../enums/repository-type.enum';
 
 /**
- * Hold the repository information
+ * Repository class
  */
 export class Repository {
   /**
