@@ -1,0 +1,35 @@
+<suricate-pages-header [configuration]="headerConfiguration"></suricate-pages-header>
+
+<section class="container" fxLayout="column">
+    <suricate-spinner *ngIf="isLoading"> </suricate-spinner>
+
+    <mat-grid-list cols="4" gutterSize="17px" rowHeight="250px">
+        <mat-grid-tile (click)="openRotationFormSidenav()" class="mat-elevation-z3">
+            <div class="grid-tile-content-wrapper">
+                <div class="grid-tile-body">
+                    <mat-icon color="primary"> {{ materialIconRecords[iconEnum.ADD] }} </mat-icon>
+                </div>
+
+                <div class="grid-tile-footer">
+                    {{ 'rotation.create' | translate }}
+                </div>
+            </div>
+        </mat-grid-tile>
+
+        <mat-grid-tile *ngFor="let rotation of rotations" class="mat-elevation-z3">
+            <div class="grid-tile-content-wrapper">
+                <a [routerLink]="['/rotations', rotation.id]">
+                    <div class="grid-tile-body">
+                        <mat-icon color="primary">
+                            {{ materialIconRecords[iconEnum.DASHBOARD_ROTATION] }}
+                        </mat-icon>
+                    </div>
+
+                    <div class="grid-tile-footer">
+                        {{ rotation.name }}
+                    </div>
+                </a>
+            </div>
+        </mat-grid-tile>
+    </mat-grid-list>
+</section>
