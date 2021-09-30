@@ -191,9 +191,8 @@ public class NashornRequestWidgetExecutionScheduler {
         WidgetService widgetService = applicationContext.getBean(WidgetService.class);
 
         if (!nashornService.isNashornRequestExecutable(nashornRequest)) {
-            LOGGER.debug("The Nashorn request of the widget instance {} is not valid. Stopping the widget", nashornRequest.getProjectWidgetId());
             projectWidgetServiceInjected.updateState(WidgetStateEnum.STOPPED, nashornRequest.getProjectWidgetId(), new Date());
-            dashboardScheduleService.sendWidgetUpdateNotification(nashornRequest.getProjectWidgetId(), nashornRequest.getProjectId());
+            // dashboardScheduleService.sendWidgetUpdateNotification(nashornRequest.getProjectWidgetId(), nashornRequest.getProjectId());
             return;
         }
 

@@ -98,7 +98,7 @@ public class CategoryParametersController {
     public Page<CategoryParameterResponseDto> getAll(@ApiParam(name = "search", value = "Search keyword")
                                                      @RequestParam(value = "search", required = false) String search,
                                                      Pageable pageable) {
-        return categoryParametersService.getAll(search, pageable).map(categoryParamMapper::toCategoryParameterDTO);
+        return this.categoryParametersService.getAll(search, pageable).map(categoryParamMapper::toCategoryParameterDTO);
     }
 
     /**
@@ -118,7 +118,7 @@ public class CategoryParametersController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<CategoryParameterResponseDto> getOneByKey(@ApiParam(name = "key", value = "The configuration key", required = true)
                                                                       @PathVariable("key") final String key) {
-        Optional<CategoryParameter> configurationOptional = categoryParametersService.getOneByKey(key);
+        Optional<CategoryParameter> configurationOptional = this.categoryParametersService.getOneByKey(key);
 
         if (!configurationOptional.isPresent()) {
             throw new ObjectNotFoundException(CategoryParameter.class, key);
@@ -127,7 +127,7 @@ public class CategoryParametersController {
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(categoryParamMapper.toCategoryParameterDTO(configurationOptional.get()));
+            .body(this.categoryParamMapper.toCategoryParameterDTO(configurationOptional.get()));
     }
 
     /**
@@ -150,14 +150,14 @@ public class CategoryParametersController {
                                                @PathVariable("key") final String key,
                                                @ApiParam(name = "configurationResponseDto", value = "The configuration updated", required = true)
                                                @RequestBody final WidgetConfigurationRequestDto widgetConfigurationRequestDto) {
-        Optional<CategoryParameter> configurationOptional = categoryParametersService.getOneByKey(key);
+        Optional<CategoryParameter> configurationOptional = this.categoryParametersService.getOneByKey(key);
 
         if (!configurationOptional.isPresent()) {
             throw new ObjectNotFoundException(CategoryParameter.class, key);
         }
 
-        categoryParametersService.updateConfiguration(configurationOptional.get(), widgetConfigurationRequestDto.getValue());
-        cacheService.clearCache("configuration");
+        this.categoryParametersService.updateConfiguration(configurationOptional.get(), widgetConfigurationRequestDto.getValue());
+        this.cacheService.clearCache("configuration");
 
         return ResponseEntity.noContent().build();
     }
@@ -179,13 +179,13 @@ public class CategoryParametersController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Void> deleteOneByKey(@ApiParam(name = "key", value = "The configuration key", required = true)
                                                @PathVariable("key") final String key) {
-        Optional<CategoryParameter> configurationOptional = categoryParametersService.getOneByKey(key);
+        Optional<CategoryParameter> configurationOptional = this.categoryParametersService.getOneByKey(key);
 
         if (!configurationOptional.isPresent()) {
             throw new ObjectNotFoundException(CategoryParameter.class, key);
         }
 
-        categoryParametersService.deleteOneByKey(key);
+        this.categoryParametersService.deleteOneByKey(key);
 
         return ResponseEntity.noContent().build();
     }

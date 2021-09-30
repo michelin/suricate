@@ -1,13 +1,11 @@
 package io.suricate.monitoring.controllers;
 
-import com.google.common.collect.Sets;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.rotation.RotationRequestDto;
 import io.suricate.monitoring.model.dto.api.rotation.RotationResponseDto;
 import io.suricate.monitoring.model.entities.Rotation;
 import io.suricate.monitoring.model.entities.User;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
-import io.suricate.monitoring.services.api.RotationProjectService;
 import io.suricate.monitoring.services.api.RotationService;
 import io.suricate.monitoring.services.api.UserService;
 import io.suricate.monitoring.services.mapper.RotationMapper;
@@ -45,11 +43,6 @@ public class RotationController {
     private final RotationService rotationService;
 
     /**
-     * Rotation project service
-     */
-    private final RotationProjectService rotationProjectService;
-
-    /**
      * User service
      */
     private final UserService userService;
@@ -63,26 +56,23 @@ public class RotationController {
      * Constructor
      *
      * @param rotationService The rotation service
-     * @param rotationProjectService The rotation project service
      * @param rotationMapper The rotation mapper
      * @param userService The user service
      */
     @Autowired
     public RotationController(final RotationService rotationService,
-                              final RotationProjectService rotationProjectService,
                               final RotationMapper rotationMapper,
                               final UserService userService) {
         this.rotationService = rotationService;
-        this.rotationProjectService = rotationProjectService;
         this.rotationMapper = rotationMapper;
         this.userService = userService;
     }
 
     /**
-     * Get a rotation by id
+     * Get a rotation by token
      *
      * @param authentication The connected user
-     * @param id The id of the rotation
+     * @param rotationToken  The rotation token
      * @return The rotation
      */
     @ApiOperation(value = "Retrieve the rotation information by id", response = RotationResponseDto.class, nickname = "getRotationById")
@@ -92,15 +82,15 @@ public class RotationController {
             @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
             @ApiResponse(code = 404, message = "Rotation not found", response = ApiErrorDto.class)
     })
-    @GetMapping(value = "/v1/rotations/{id}")
+    @GetMapping(value = "/v1/rotations/{rotationToken}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<RotationResponseDto> getRotationById(@ApiIgnore OAuth2Authentication authentication,
-                                                               @ApiParam(name = "id", value = "The rotation id", required = true)
-                                                               @PathVariable("id") Long id) {
-        Optional<Rotation> rotationOptional = this.rotationService.getOneById(id);
+    public ResponseEntity<RotationResponseDto> getRotationByToken(@ApiIgnore OAuth2Authentication authentication,
+                                                                  @ApiParam(name = "rotationToken", value = "The rotation token", required = true)
+                                                                  @PathVariable("rotationToken") String rotationToken) {
+        Optional<Rotation> rotationOptional = this.rotationService.getOneByToken(rotationToken);
 
         if (!rotationOptional.isPresent()) {
-            throw new ObjectNotFoundException(Rotation.class, id);
+            throw new ObjectNotFoundException(Rotation.class, rotationToken);
         }
 
         if (!this.rotationService.isConnectedUserCanAccessToRotation(rotationOptional.get(), authentication.getUserAuthentication())) {
@@ -131,11 +121,6 @@ public class RotationController {
     public ResponseEntity<RotationResponseDto> create(@ApiParam(name = "rotationRequestDto", value = "The rotation information", required = true)
                        @RequestBody RotationRequestDto rotationRequestDto) {
         Rotation rotationCreated = this.rotationService.create(this.rotationMapper.toRotationEntity(rotationRequestDto));
-
-        rotationCreated.getRotationProjects().forEach(rotationProject -> rotationProject.setRotation(rotationCreated));
-
-        rotationCreated.setRotationProjects(
-            Sets.newLinkedHashSet(this.rotationProjectService.createAll(rotationCreated.getRotationProjects())));
 
         return ResponseEntity
                 .ok()
@@ -171,5 +156,76 @@ public class RotationController {
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(this.rotationMapper.toRotationsDTOs(this.rotationService.getAllByUser(userOptional.get())));
+    }
+
+    /**
+     * Delete a rotation
+     *
+     * @param authentication The connected user
+     * @param rotationToken  The rotation token
+     * @return A void response entity
+     */
+    @ApiOperation(value = "Delete a rotation by the token")
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "Rotation deleted"),
+            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
+            @ApiResponse(code = 404, message = "Rotation not found", response = ApiErrorDto.class)
+    })
+    @DeleteMapping(value = "/v1/rotations/{rotationToken}")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<Void> deleteOneByToken(@ApiIgnore OAuth2Authentication authentication,
+                                                 @ApiParam(name = "rotationToken", value = "The rotation token", required = true)
+                                                 @PathVariable("rotationToken") String rotationToken) {
+        Optional<Rotation> rotationOptional = this.rotationService.getOneByToken(rotationToken);
+
+        if (!rotationOptional.isPresent()) {
+            throw new ObjectNotFoundException(Rotation.class, rotationToken);
+        }
+
+        if (!this.rotationService.isConnectedUserCanAccessToRotation(rotationOptional.get(), authentication.getUserAuthentication())) {
+            throw new ApiException(RotationController.USER_NOT_ALLOWED, ApiErrorEnum.NOT_AUTHORIZED);
+        }
+
+        this.rotationService.deleteRotation(rotationOptional.get());
+
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * Update an existing rotation
+     *
+     * @param authentication     The connected user
+     * @param rotationToken      The rotation token
+     * @param rotationRequestDto The information to update
+     * @return A void response entity
+     */
+    @ApiOperation(value = "Update an existing rotation by the id")
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "Rotation updated"),
+            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
+            @ApiResponse(code = 404, message = "Rotation not found", response = ApiErrorDto.class)
+    })
+    @PutMapping(value = "/v1/rotations/{rotationToken}")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<Void> updateRotation(@ApiIgnore OAuth2Authentication authentication,
+                                               @ApiParam(name = "rotationToken", value = "The rotation token", required = true)
+                                               @PathVariable("rotationToken") String rotationToken,
+                                               @ApiParam(name = "rotationRequestDto", value = "The rotation information", required = true)
+                                               @RequestBody RotationRequestDto rotationRequestDto) {
+        Optional<Rotation> rotationOptional = this.rotationService.getOneByToken(rotationToken);
+
+        if (!rotationOptional.isPresent()) {
+            throw new ObjectNotFoundException(Rotation.class, rotationToken);
+        }
+
+        if (!this.rotationService.isConnectedUserCanAccessToRotation(rotationOptional.get(), authentication.getUserAuthentication())) {
+            throw new ApiException(RotationController.USER_NOT_ALLOWED, ApiErrorEnum.NOT_AUTHORIZED);
+        }
+
+        this.rotationService.updateRotation(rotationOptional.get(), rotationRequestDto);
+
+        return ResponseEntity.noContent().build();
     }
 }

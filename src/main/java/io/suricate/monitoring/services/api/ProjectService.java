@@ -47,9 +47,8 @@ import java.util.UUID;
  */
 @Service
 public class ProjectService {
-
     /**
-     * String encryptor (mainly used for SECRET widget params)
+     * String encryptor
      */
     private final StringEncryptor stringEncryptor;
 
@@ -230,16 +229,15 @@ public class ProjectService {
     }
 
     /**
-     * Method used to delete a project with his ID
+     * Method used to delete a project with its ID
      *
-     * @param project the project to delete
+     * @param project The project to delete
      */
     @Transactional
     public void deleteProject(Project project) {
-        // notify clients
-        dashboardWebsocketService.sendEventToProjectSubscribers(project.getToken(), new UpdateEvent(UpdateType.DISCONNECT));
-        // delete project
-        projectRepository.delete(project);
+        this.dashboardWebsocketService.sendEventToProjectSubscribers(project.getToken(), new UpdateEvent(UpdateType.DISCONNECT));
+
+        this.projectRepository.delete(project);
     }
 
     /**
@@ -256,11 +254,11 @@ public class ProjectService {
 
         if (project.getScreenshot() != null) {
             screenshotAsset.setId(project.getScreenshot().getId());
-            assetService.save(screenshotAsset);
+            this.assetService.save(screenshotAsset);
         } else {
-            assetService.save(screenshotAsset);
+            this.assetService.save(screenshotAsset);
             project.setScreenshot(screenshotAsset);
-            projectRepository.save(project);
+            this.projectRepository.save(project);
         }
     }
 }

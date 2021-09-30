@@ -68,6 +68,6 @@ public class ConfigurationController {
         return ResponseEntity
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(applicationPropertiesService.getAuthenticationProvider());
+                .body(this.applicationPropertiesService.getAuthenticationProvider());
     }
 }

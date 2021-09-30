@@ -123,8 +123,8 @@ export class DashboardsComponent implements OnInit {
       if (formData.image) {
         const contentType: string = ImageUtils.getContentTypeFromBase64URL(formData.image);
         const blob: Blob = FileUtils.base64ToBlob(
-            ImageUtils.getDataFromBase64URL(formData.image),
-            ImageUtils.getContentTypeFromBase64URL(formData.image)
+          ImageUtils.getDataFromBase64URL(formData.image),
+          ImageUtils.getContentTypeFromBase64URL(formData.image)
         );
         const file: File = FileUtils.convertBlobToFile(blob, `${project.token}.${contentType.split('/')[1]}`, new Date());
 

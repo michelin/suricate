@@ -35,7 +35,7 @@ export const DashboardRoutes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'rotations/:rotationId',
+    path: 'rotations/:rotationToken',
     component: RotationDetailComponent,
     canActivate: [AuthGuard]
   },

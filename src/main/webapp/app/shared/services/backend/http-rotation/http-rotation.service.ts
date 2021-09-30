@@ -60,13 +60,13 @@ export class HttpRotationService {
   }
 
   /**
-   * Get a rotation by id
+   * Get a rotation by token
    *
-   * @param id The rotation id
+   * @param token The rotation token
    * @returns The rotation as observable
    */
-  public getById(id: number): Observable<Rotation> {
-    const url = `${HttpRotationService.rotationsApiEndpoint}/${id}`;
+  public getByToken(token: string): Observable<Rotation> {
+    const url = `${HttpRotationService.rotationsApiEndpoint}/${token}`;
 
     return this.httpClient.get<Rotation>(url);
   }
@@ -80,5 +80,28 @@ export class HttpRotationService {
     const url = `${HttpRotationService.rotationsApiEndpoint}`;
 
     return this.httpClient.post<Rotation>(url, rotation);
+  }
+
+  /**
+   * Delete a rotation
+   *
+   * @param token The rotation token
+   */
+  public delete(token: string): Observable<void> {
+    const url = `${HttpRotationService.rotationsApiEndpoint}/${token}`;
+
+    return this.httpClient.delete<void>(url);
+  }
+
+  /**
+   * Update rotation
+   *
+   * @param token The token of the rotation to update
+   * @param rotation The rotation to update
+   */
+  public update(token: string, rotation: RotationRequest): Observable<void> {
+    const url = `${HttpRotationService.rotationsApiEndpoint}/${token}`;
+
+    return this.httpClient.put<void>(url, rotation);
   }
 }

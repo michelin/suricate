@@ -2,8 +2,10 @@ package io.suricate.monitoring.services.mapper;
 
 import io.suricate.monitoring.model.dto.api.rotationproject.RotationProjectRequestDto;
 import io.suricate.monitoring.model.dto.api.rotationproject.RotationProjectResponseDto;
+import io.suricate.monitoring.model.entities.Rotation;
 import io.suricate.monitoring.model.entities.RotationProject;
 import io.suricate.monitoring.services.api.ProjectService;
+import io.suricate.monitoring.services.api.RotationService;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -11,6 +13,7 @@ import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 

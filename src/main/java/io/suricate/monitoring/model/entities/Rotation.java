@@ -31,8 +31,14 @@ public class Rotation extends AbstractAuditingEntity<Long> {
     private String name;
 
     /**
+     * The rotation token
+     */
+    @Column(nullable = false)
+    private String token;
+
+    /**
      * The list of related rotations
      */
-    @OneToMany(mappedBy = "rotation", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "rotation", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<RotationProject> rotationProjects = new LinkedHashSet<>();
 }

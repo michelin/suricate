@@ -18,7 +18,7 @@
 
         <mat-grid-tile *ngFor="let rotation of rotations" class="mat-elevation-z3">
             <div class="grid-tile-content-wrapper">
-                <a [routerLink]="['/rotations', rotation.id]">
+                <a [routerLink]="['/rotations', rotation.token]">
                     <div class="grid-tile-body">
                         <mat-icon color="primary">
                             {{ materialIconRecords[iconEnum.DASHBOARD_ROTATION] }}

@@ -20,10 +20,7 @@ import io.suricate.monitoring.model.dto.api.project.ProjectRequestDto;
 import io.suricate.monitoring.model.dto.api.project.ProjectResponseDto;
 import io.suricate.monitoring.model.entities.Project;
 import io.suricate.monitoring.services.api.LibraryService;
-import org.mapstruct.IterableMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Named;
+import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

@@ -97,11 +97,11 @@ export class RotationsComponent implements OnInit {
       title: 'rotation.list.my',
       actions: [
         {
-          icon: IconEnum.DASHBOARD_ROTATION,
+          icon: IconEnum.DASHBOARD,
           variant: 'miniFab',
           color: 'primary',
           callback: () => this.displayMyDashboards(),
-          tooltip: { message: 'rotation.list.my' }
+          tooltip: { message: 'dashboard.list.my' }
         }
       ]
     };
@@ -191,7 +191,7 @@ export class RotationsComponent implements OnInit {
 
     this.httpRotationService.create(rotationRequest).subscribe((createdRotation: Rotation) => {
       this.toastService.sendMessage('rotation.add.success', ToastTypeEnum.SUCCESS);
-      this.router.navigate(['/rotations', createdRotation.id]);
+      this.router.navigate(['/rotations', createdRotation.token]);
     });
   }
 }

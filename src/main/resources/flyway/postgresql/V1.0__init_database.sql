@@ -124,6 +124,7 @@ CREATE TABLE role (
 CREATE TABLE rotation (
     id                  bigserial                       NOT NULL,
     name                character varying               NOT NULL,
+    token               character varying               NOT NULL,
     created_by          character varying(255)          DEFAULT 'APPLICATION'::character varying NOT NULL,
     created_date        timestamp without time zone     DEFAULT now() NOT NULL,
     last_modified_by    character varying(255)          DEFAULT 'APPLICATION'::character varying,

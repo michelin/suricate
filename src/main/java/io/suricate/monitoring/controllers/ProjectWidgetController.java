@@ -45,7 +45,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/api")
 @Api(value = "Project Widget Controller", tags = {"Project Widgets"})
-public class ProjectWidgetController {
+public class  ProjectWidgetController {
     /**
      * The project widget service
      */
@@ -93,7 +93,7 @@ public class ProjectWidgetController {
     @PermitAll
     public ResponseEntity<ProjectWidgetResponseDto> getProjectWidgetFromProject(@ApiParam(name = "projectWidgetId", value = "The project widget id", required = true)
                                                                                 @PathVariable("projectWidgetId") Long projectWidgetId) {
-        Optional<ProjectWidget> projectWidgetOptional = projectWidgetService.getOne(projectWidgetId);
+        Optional<ProjectWidget> projectWidgetOptional = this.projectWidgetService.getOne(projectWidgetId);
         if (!projectWidgetOptional.isPresent()) {
             throw new ObjectNotFoundException(ProjectWidget.class, projectWidgetId);
         }
@@ -101,7 +101,7 @@ public class ProjectWidgetController {
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(projectWidgetMapper.toProjectWidgetDTO(projectWidgetOptional.get()));
+            .body(this.projectWidgetMapper.toProjectWidgetDTO(projectWidgetOptional.get()));
     }
 
     /**
@@ -125,16 +125,16 @@ public class ProjectWidgetController {
                                                              @PathVariable("projectWidgetId") Long projectWidgetId,
                                                              @ApiParam(name = "projectWidgetResponseDto", value = "The project widget informations to update", required = true)
                                                              @RequestBody ProjectWidgetRequestDto projectWidgetRequestDto) {
-        Optional<ProjectWidget> projectWidgetOptional = projectWidgetService.getOne(projectWidgetId);
+        Optional<ProjectWidget> projectWidgetOptional = this.projectWidgetService.getOne(projectWidgetId);
         if (!projectWidgetOptional.isPresent()) {
             throw new ObjectNotFoundException(ProjectWidget.class, projectWidgetId);
         }
 
-        if (!projectService.isConnectedUserCanAccessToProject(projectWidgetOptional.get().getProject(), authentication.getUserAuthentication())) {
+        if (!this.projectService.isConnectedUserCanAccessToProject(projectWidgetOptional.get().getProject(), authentication.getUserAuthentication())) {
             throw new ApiException("The user is not allowed to modify this resource", ApiErrorEnum.NOT_AUTHORIZED);
         }
 
-        projectWidgetService.updateProjectWidget(projectWidgetOptional.get(), projectWidgetRequestDto.getCustomStyle(),
+        this.projectWidgetService.updateProjectWidget(projectWidgetOptional.get(), projectWidgetRequestDto.getCustomStyle(),
                 projectWidgetRequestDto.getBackendConfig());
 
         return ResponseEntity.noContent().build();

@@ -33,16 +33,16 @@ import {TranslateService} from '@ngx-translate/core';
 import {ProjectRequest} from '../../../shared/models/backend/project/project-request';
 import {ProjectFormFieldsService} from '../../../shared/services/frontend/form-fields/project-form-fields/project-form-fields.service';
 import {flatMap, switchMap, tap} from 'rxjs/operators';
-import {EMPTY, interval, Observable, of} from 'rxjs';
+import {EMPTY, Observable, of} from 'rxjs';
 import {DashboardScreenComponent} from '../dashboard-screen/dashboard-screen.component';
 import {MatDialog} from '@angular/material/dialog';
-import {TvManagementDialogComponent} from '../tv-management-dialog/tv-management-dialog.component';
 import {MaterialIconRecords} from '../../../shared/records/material-icon.record';
 import {ValueChangedEvent} from '../../../shared/models/frontend/form/value-changed-event';
 import {FormField} from '../../../shared/models/frontend/form/form-field';
 import {ProjectUsersFormFieldsService} from '../../../shared/services/frontend/form-fields/project-users-form-fields/project-users-form-fields.service';
 import {WebsocketService} from '../../../shared/services/frontend/websocket/websocket.service';
 import {ImageUtils} from '../../../shared/utils/image.utils';
+import {DashboardTvManagementDialogComponent} from "../tv-management-dialog/dashboard-tv-management-dialog/dashboard-tv-management-dialog.component";
 
 /**
  * Component used to display a specific dashboard
@@ -329,7 +329,7 @@ export class DashboardDetailComponent implements OnInit {
       if (!this.projectWidgets) {
         this.refreshProject().subscribe(() => {
           this.initHeaderConfiguration();
-          this.toastService.sendMessage('Dashboard updated', ToastTypeEnum.SUCCESS);
+          this.toastService.sendMessage('dashboard.update.success', ToastTypeEnum.SUCCESS);
         });
       } else {
         this.refreshConnectedScreens();
@@ -356,7 +356,7 @@ export class DashboardDetailComponent implements OnInit {
    * Open the dialog used to manage screens
    */
   private openScreenManagementDialog(): void {
-    this.matDialog.open(TvManagementDialogComponent, {
+    this.matDialog.open(DashboardTvManagementDialogComponent, {
       role: 'dialog',
       width: '700px',
       maxHeight: '80%',
@@ -374,7 +374,7 @@ export class DashboardDetailComponent implements OnInit {
       message: `${this.translateService.instant('delete.confirm')} ${this.project.name.toUpperCase()} ?`,
       accept: () => {
         this.httpProjectService.delete(this.project.token).subscribe(() => {
-          this.toastService.sendMessage('Project deleted successfully', ToastTypeEnum.SUCCESS);
+          this.toastService.sendMessage('dashboard.delete.success', ToastTypeEnum.SUCCESS);
           this.router.navigate(['/home/dashboards']);
         });
       }

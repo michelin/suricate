@@ -104,17 +104,4 @@ public class NashornRequest extends AbstractDto {
         this.timeout = timeout;
         this.alreadySuccess = lastSuccess != null;
     }
-
-    /**
-     * Validate the Nashorn request
-     *
-     * @return true if the data is valid, false otherwise
-     */
-    public boolean isValid() {
-        return projectId != null
-                && projectWidgetId != null
-                && JsonUtils.isValid(previousData)
-                && StringUtils.isNotEmpty(script)
-                && delay != null;
-    }
 }

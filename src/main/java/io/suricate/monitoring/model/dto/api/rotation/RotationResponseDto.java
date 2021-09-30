@@ -33,6 +33,12 @@ public class RotationResponseDto extends AbstractDto {
     private String name;
 
     /**
+     * The rotation token
+     */
+    @ApiModelProperty(value = "The rotation token")
+    private String token;
+
+    /**
      * The list of related rotation projects
      */
     @ApiModelProperty(value = "The list of related rotation project", dataType = "java.util.List")

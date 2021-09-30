@@ -20,12 +20,11 @@ public interface RotationRepository extends CrudRepository<Rotation, Long>, JpaS
     List<Rotation> findDistinctByRotationProjectsProjectUsersId(Long id);
 
     /**
-     * Find a rotation by ID
+     * Find a rotation by token
      *
-     * @param id The rotation ID
+     * @param token The token
      * @return The rotation
      */
-    @NotNull
-    @EntityGraph(attributePaths = {"rotationProjects.project.screenshot", "rotationProjects.project.widgets"})
-    Optional<Rotation> findById(@NotNull Long id);
+    @EntityGraph(attributePaths = {"rotationProjects.project.screenshot", "rotationProjects.project.widgets", "rotationProjects.project.users"})
+    Optional<Rotation> findByToken(final String token);
 }

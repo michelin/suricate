@@ -195,7 +195,7 @@ public class UserService {
      * @param username The username to find
      * @return The user as optional
      */
-    @Transactional
+    @Transactional(readOnly = true)
     public Optional<User> getOneByUsername(String username) {
         return userRepository.findByUsernameIgnoreCase(username);
     }
