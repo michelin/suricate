@@ -116,7 +116,7 @@ public class NashornService {
      * @return True is it is ok, false otherwise
      */
     public boolean isNashornRequestExecutable(final NashornRequest nashornRequest) {
-        if (StringUtils.isNotEmpty(nashornRequest.getScript())) {
+        if (!StringUtils.isNotEmpty(nashornRequest.getScript())) {
             LOGGER.debug("The widget instance {} has no script. Stopping Nashorn request execution",
                     nashornRequest.getProjectWidgetId());
             return false;

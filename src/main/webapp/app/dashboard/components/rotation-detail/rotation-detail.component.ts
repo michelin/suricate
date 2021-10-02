@@ -21,6 +21,7 @@ import {FormField} from "../../../shared/models/frontend/form/form-field";
 import {RotationProject} from "../../../shared/models/backend/rotation-project/rotation-project";
 import {MatDialog} from "@angular/material/dialog";
 import {DashboardTvManagementDialogComponent} from "../tv-management-dialog/dashboard-tv-management-dialog/dashboard-tv-management-dialog.component";
+import {RotationTvManagementDialogComponent} from "../tv-management-dialog/rotation-tv-management-dialog/rotation-tv-management-dialog.component";
 
 @Component({
   selector: 'suricate-rotation-detail',
@@ -252,11 +253,12 @@ export class RotationDetailComponent implements OnInit {
    * Open the dialog used to manage screens
    */
   private openScreenManagementDialog(): void {
-    this.matDialog.open(DashboardTvManagementDialogComponent, {
+    this.matDialog.open(RotationTvManagementDialogComponent, {
       role: 'dialog',
       width: '700px',
       maxHeight: '80%',
-      autoFocus: false
+      autoFocus: false,
+      data: { rotation: this.rotation }
     });
   }
 }

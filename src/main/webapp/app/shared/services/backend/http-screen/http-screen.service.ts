@@ -49,6 +49,18 @@ export class HttpScreenService {
   }
 
   /**
+   * Send the notification for connect a new tv to this rotation
+   *
+   * @param rotationToken The rotation token to connect
+   * @param screenCode The tv screen code
+   */
+  public connectRotationToScreen(rotationToken: string, screenCode: number): Observable<void> {
+    const url = `${HttpScreenService.screensApiEndpoint}/rotation/${rotationToken}/connect?screenCode=${screenCode}`;
+
+    return this.httpClient.get<void>(url);
+  }
+
+  /**
    * Send the notification to disconnect a tv for this dashboard
    *
    * @param projectToken The project token

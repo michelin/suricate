@@ -42,7 +42,7 @@ import {Rotation} from "../../../shared/models/backend/rotation/rotation";
   template: '',
   styleUrls: ['./tv-management-dialog.component.scss']
 })
-export class TvManagementDialogComponent implements OnInit {
+export abstract class TvManagementDialogComponent implements OnInit {
   /**
    * Service used to help on the form creation
    */
@@ -93,7 +93,7 @@ export class TvManagementDialogComponent implements OnInit {
    *
    * @param injector The injector
    */
-  constructor(protected readonly injector: Injector) {
+  protected constructor(protected readonly injector: Injector) {
     this.formService = injector.get(FormService);
     this.httpScreenService = injector.get(HttpScreenService);
 
@@ -184,10 +184,10 @@ export class TvManagementDialogComponent implements OnInit {
   /**
    * Register a screen
    */
-  registerScreen(): void { }
+  abstract registerScreen(): void;
 
   /**
    * Retrieve the websocket connections
    */
-  getConnectedWebsocketClient(): void { }
+  abstract getConnectedWebsocketClient(): void;
 }

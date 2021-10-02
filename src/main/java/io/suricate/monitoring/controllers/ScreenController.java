@@ -18,10 +18,15 @@
 
 package io.suricate.monitoring.controllers;
 
+import com.google.common.collect.Lists;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.entities.Project;
+import io.suricate.monitoring.model.entities.Rotation;
+import io.suricate.monitoring.model.entities.RotationProject;
 import io.suricate.monitoring.services.api.ProjectService;
+import io.suricate.monitoring.services.api.RotationService;
 import io.suricate.monitoring.services.websocket.DashboardWebSocketService;
+import io.suricate.monitoring.services.websocket.RotationWebSocketService;
 import io.suricate.monitoring.utils.exceptions.ObjectNotFoundException;
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +34,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Iterator;
 import java.util.Optional;
 
 /**
@@ -38,11 +44,15 @@ import java.util.Optional;
 @RequestMapping("/api")
 @Api(value = "Screen actions controller", tags = {"Screens"})
 public class ScreenController {
-
     /**
      * The project service
      */
     private final ProjectService projectService;
+
+    /**
+     * The rotation service
+     */
+    private final RotationService rotationService;
 
     /**
      * The dashboard websocket service
@@ -50,19 +60,29 @@ public class ScreenController {
     private final DashboardWebSocketService dashboardWebSocketService;
 
     /**
+     * The rotation websocket service
+     */
+    private final RotationWebSocketService rotationWebSocketService;
+
+    /**
      * Constructor
      *
      * @param projectService            The project service to inject
+     * @param rotationService           The rotation service to inject
      * @param dashboardWebSocketService The dashboard websocket to inject
      */
     public ScreenController(final ProjectService projectService,
-                            final DashboardWebSocketService dashboardWebSocketService) {
+                            final RotationService rotationService,
+                            final DashboardWebSocketService dashboardWebSocketService,
+                            final RotationWebSocketService rotationWebSocketService) {
         this.projectService = projectService;
+        this.rotationService = rotationService;
         this.dashboardWebSocketService = dashboardWebSocketService;
+        this.rotationWebSocketService = rotationWebSocketService;
     }
 
     /**
-     * connect a new Screen for a dashboard by screen code
+     * Connect a new screen for a dashboard by screen code
      *
      * @param projectToken The project id we want to display
      * @param screenCode   The screen code to enroll
@@ -76,17 +96,16 @@ public class ScreenController {
     })
     @GetMapping(value = "/v1/screens/{projectToken}/connect")
     @PreAuthorize("hasRole('ROLE_USER')")
-    @Transactional
     public ResponseEntity<Void> connectProjectToScreen(@ApiParam(name = "projectToken", value = "The project token", required = true)
                                                        @PathVariable("projectToken") String projectToken,
                                                        @ApiParam(name = "screenCode", value = "The screen code", required = true)
                                                        @RequestParam("screenCode") String screenCode) {
-        Optional<Project> projectOptional = projectService.getOneByToken(projectToken);
+        Optional<Project> projectOptional = this.projectService.getOneByToken(projectToken);
         if (!projectOptional.isPresent()) {
             throw new ObjectNotFoundException(Project.class, projectOptional);
         }
 
-        this.dashboardWebSocketService.sendConnectEventToScreenSubscriber(projectOptional.get(), screenCode);
+        this.dashboardWebSocketService.sendConnectProjectEventToScreenSubscriber(projectOptional.get(), screenCode);
         return ResponseEntity.noContent().build();
     }
 
@@ -101,12 +120,11 @@ public class ScreenController {
     })
     @GetMapping(value = "/v1/screens/{projectToken}/disconnect")
     @PreAuthorize("hasRole('ROLE_USER')")
-    @Transactional
     public ResponseEntity<Void> disconnectProjectToTv(@ApiParam(name = "projectToken", value = "The project token", required = true)
                                                       @PathVariable("projectToken") String projectToken,
                                                       @ApiParam(name = "screenCode", value = "The screen code", required = true)
                                                       @RequestParam("screenCode") String screenCode) {
-        this.dashboardWebSocketService.disconnectClient(projectToken, Integer.parseInt(screenCode));
+        this.dashboardWebSocketService.disconnectClient(projectToken, screenCode);
         return ResponseEntity.noContent().build();
     }
 
@@ -145,6 +163,36 @@ public class ScreenController {
     public ResponseEntity<Void> displayScreenCodeEveryConnectedScreensForProject(@ApiParam(name = "projectToken", value = "The project token", required = true)
                                                                                  @PathVariable("projectToken") String projectToken) {
         this.dashboardWebSocketService.displayScreenCodeForProject(projectToken);
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * Connect a new screen to a rotation by screen code
+     *
+     * @param rotationToken The rotation token of the rotation we want to display
+     * @param screenCode    The screen code to enroll
+     */
+    @ApiOperation(value = "Send the notification to connected a new screen")
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "Screen connected"),
+            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
+            @ApiResponse(code = 404, message = "Rotation not found", response = ApiErrorDto.class)
+    })
+    @GetMapping(value = "/v1/screens/rotation/{rotationToken}/connect")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<Void> connectRotationToScreen(@ApiParam(name = "rotationToken", value = "The rotation token", required = true)
+                                                        @PathVariable("rotationToken") String rotationToken,
+                                                        @ApiParam(name = "screenCode", value = "The screen code", required = true)
+                                                        @RequestParam("screenCode") String screenCode) {
+        Optional<Rotation> rotationOptional = this.rotationService.getOneByToken(rotationToken);
+        if (!rotationOptional.isPresent()) {
+            throw new ObjectNotFoundException(Project.class, rotationToken);
+        }
+
+        this.rotationWebSocketService
+                .sendConnectRotationEventToScreenSubscriber(rotationOptional.get(), screenCode);
+
         return ResponseEntity.noContent().build();
     }
 }

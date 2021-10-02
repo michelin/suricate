@@ -170,9 +170,12 @@ public class DashboardScheduleService {
      * @param projectId       The project ID
      */
     public void sendWidgetUpdateNotification(Long projectWidgetId, Long projectId) {
-        UpdateEvent event = new UpdateEvent(UpdateType.WIDGET);
         ProjectWidget projectWidget = projectWidgetService.getOne(projectWidgetId).orElse(null);
-        event.setContent(projectWidgetMapper.toProjectWidgetDTO(projectWidget));
+
+        UpdateEvent event = UpdateEvent.builder()
+                .type(UpdateType.WIDGET)
+                .content(this.projectWidgetMapper.toProjectWidgetDTO(projectWidget))
+                .build();
 
         dashboardWebSocketService.sendEventToWidgetInstanceSubscribers(projectService.getTokenByProjectId(projectId), projectWidgetId, event);
     }
@@ -184,7 +187,6 @@ public class DashboardScheduleService {
      *
      * @param projectWidgetId The widget instance ID
      */
-    @Transactional
     public void scheduleWidget(final Long projectWidgetId) {
         NashornRequest nashornRequest = nashornService.getNashornRequestByProjectWidgetId(projectWidgetId);
         applicationContext.getBean(NashornRequestWidgetExecutionScheduler.class).cancelAndScheduleNashornRequest(nashornRequest);

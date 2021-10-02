@@ -3,6 +3,7 @@ package io.suricate.monitoring.services.api;
 import com.google.common.collect.Sets;
 import io.suricate.monitoring.model.dto.api.rotation.RotationRequestDto;
 import io.suricate.monitoring.model.dto.api.rotationproject.RotationProjectRequestDto;
+import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
 import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
 import io.suricate.monitoring.model.entities.Project;
 import io.suricate.monitoring.model.entities.Rotation;
@@ -12,6 +13,8 @@ import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.repositories.RotationRepository;
 import io.suricate.monitoring.services.mapper.RotationMapper;
 import io.suricate.monitoring.services.mapper.RotationProjectMapper;
+import io.suricate.monitoring.services.nashorn.tasks.NashornRequestWidgetExecutionAsyncTask;
+import io.suricate.monitoring.services.rotation.RotationExecutionScheduler;
 import io.suricate.monitoring.utils.SecurityUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jasypt.encryption.StringEncryptor;
@@ -21,6 +24,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -48,6 +54,8 @@ public class RotationService {
      */
     private final StringEncryptor stringEncryptor;
 
+    private final RotationExecutionScheduler rotationExecutionScheduler;
+
     /**
      * Constructor
      *
@@ -59,11 +67,13 @@ public class RotationService {
     public RotationService(@Qualifier("jasyptStringEncryptor") final StringEncryptor stringEncryptor,
                            RotationRepository rotationRepository,
                            ProjectService projectService,
-                           RotationProjectMapper rotationProjectMapper) {
+                           RotationProjectMapper rotationProjectMapper,
+                           RotationExecutionScheduler rotationExecutionScheduler) {
         this.stringEncryptor = stringEncryptor;
         this.rotationRepository = rotationRepository;
         this.projectService = projectService;
         this.rotationProjectMapper = rotationProjectMapper;
+        this.rotationExecutionScheduler = rotationExecutionScheduler;
     }
 
     /**
@@ -188,5 +198,18 @@ public class RotationService {
         }
 
         return false;
+    }
+
+    /**
+     * Schedule a rotation of projects
+     *
+     * @param rotation The rotation to schedule
+     * @param current The current project of the rotation
+     * @param iterator An iterator pointing on the next projects to rotate
+     * @param screenCode The screen code where to push the next project
+     */
+    public void scheduleRotation(Rotation rotation, RotationProject current, Iterator<RotationProject> iterator,
+                                 String screenCode) {
+        this.rotationExecutionScheduler.scheduleRotation(rotation, current, iterator, screenCode);
     }
 }

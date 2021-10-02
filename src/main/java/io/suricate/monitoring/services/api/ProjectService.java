@@ -180,7 +180,7 @@ public class ProjectService {
         projectRepository.save(project);
 
         // Update grid
-        dashboardWebsocketService.sendEventToProjectSubscribers(project.getToken(), new UpdateEvent(UpdateType.GRID));
+        dashboardWebsocketService.sendEventToProjectSubscribers(project.getToken(), UpdateEvent.builder().type(UpdateType.GRID).build());
     }
 
     /**
@@ -235,7 +235,7 @@ public class ProjectService {
      */
     @Transactional
     public void deleteProject(Project project) {
-        this.dashboardWebsocketService.sendEventToProjectSubscribers(project.getToken(), new UpdateEvent(UpdateType.DISCONNECT));
+        this.dashboardWebsocketService.sendEventToProjectSubscribers(project.getToken(), UpdateEvent.builder().type(UpdateType.DISCONNECT).build());
 
         this.projectRepository.delete(project);
     }

@@ -187,12 +187,10 @@ public class NashornRequestWidgetExecutionScheduler {
 
         // Get the beans inside schedule
         ProjectWidgetService projectWidgetServiceInjected = applicationContext.getBean(ProjectWidgetService.class);
-        DashboardScheduleService dashboardScheduleService = applicationContext.getBean(DashboardScheduleService.class);
         WidgetService widgetService = applicationContext.getBean(WidgetService.class);
 
         if (!nashornService.isNashornRequestExecutable(nashornRequest)) {
             projectWidgetServiceInjected.updateState(WidgetStateEnum.STOPPED, nashornRequest.getProjectWidgetId(), new Date());
-            // dashboardScheduleService.sendWidgetUpdateNotification(nashornRequest.getProjectWidgetId(), nashornRequest.getProjectId());
             return;
         }
 
@@ -225,7 +223,7 @@ public class NashornRequestWidgetExecutionScheduler {
         nashornTasksByProjectWidgetId.put(nashornRequest.getProjectWidgetId(), ImmutablePair.of(
                 new WeakReference<>(scheduledNashornRequestExecutionTask),
                 new WeakReference<>(scheduledNashornRequestResponseTask)
-            ));
+        ));
     }
 
     /**
@@ -234,8 +232,8 @@ public class NashornRequestWidgetExecutionScheduler {
      * @param nashornRequest The new Nashorn request to schedule
      */
     public void cancelAndScheduleNashornRequest(NashornRequest nashornRequest) {
-        cancelWidgetExecution(nashornRequest.getProjectWidgetId());
-        schedule(nashornRequest, true);
+        this.cancelWidgetExecution(nashornRequest.getProjectWidgetId());
+        this.schedule(nashornRequest, true);
     }
 
     /**
@@ -276,7 +274,7 @@ public class NashornRequestWidgetExecutionScheduler {
             ScheduledFuture<?> scheduledFutureTask = scheduledFutureTaskReference.get();
 
             if (scheduledFutureTask != null && (!scheduledFutureTask.isDone() || !scheduledFutureTask.isCancelled())) {
-                LOGGER.debug("Canceling the future task for the widget instance {} ({})", projectWidgetId, scheduledFutureTask);
+                LOGGER.debug("Canceling the future Nashorn execution task for the widget instance {}", projectWidgetId);
 
                 scheduledFutureTask.cancel(true);
             }

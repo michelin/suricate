@@ -28,7 +28,7 @@ import {
   ViewChild
 } from '@angular/core';
 import {takeUntil} from 'rxjs/operators';
-import {interval, Subject} from 'rxjs';
+import {Subject} from 'rxjs';
 import {NgGridConfig, NgGridItemConfig} from 'angular2-grid';
 import * as Stomp from '@stomp/stompjs';
 import {Project} from '../../../shared/models/backend/project/project';
@@ -44,8 +44,7 @@ import {IconEnum} from '../../../shared/enums/icon.enum';
 import {MaterialIconRecords} from '../../../shared/records/material-icon.record';
 import {LibraryService} from '../../services/library/library.service';
 import {HttpProjectService} from '../../../shared/services/backend/http-project/http-project.service';
-import {Observable} from "rxjs/internal/Observable";
-import {HttpScreenService} from "../../../shared/services/backend/http-screen/http-screen.service";
+import {Rotation} from "../../../shared/models/backend/rotation/rotation";
 
 /**
  * Display the grid stack widgets
@@ -61,6 +60,12 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
    */
   @ViewChild('externalJsLibraries')
   public externalJsLibrariesSpan: ElementRef<HTMLSpanElement>;
+
+  /**
+   * The rotation to display
+   */
+  @Input()
+  public rotation: Rotation;
 
   /**
    * The project to display
@@ -93,15 +98,26 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   public disconnectEvent = new EventEmitter<void>();
 
   /**
-   * Use to tell to the parent component that he should refresh the project widgets
+   * Use to tell to the parent component that it should refresh the project widgets
    */
   @Output()
   public refreshProjectWidget = new EventEmitter<void>();
 
   /**
-   * Subject used to unsubscribe all the subscriptions when the component is destroyed
+   * Use to tell to the parent component that it should display the next project of the rotation
    */
-  private unsubscribe: Subject<void> = new Subject<void>();
+  @Output()
+  public performRotation = new EventEmitter<void>();
+
+  /**
+   * Subject used to unsubscribe all the subscriptions to rotation web sockets
+   */
+  private unsubscribeRotationWebSocket: Subject<void> = new Subject<void>();
+
+  /**
+   * Subject used to unsubscribe all the subscriptions to project web sockets
+   */
+  private unsubscribeProjectWebSocket: Subject<void> = new Subject<void>();
 
   /**
    * The options for the plugin angular2-grid
@@ -157,8 +173,21 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
 
   /**
    * Each time a value change, this function will be called
+   *
+   * If a project is received, init web sockets for the project. If
+   * the project changes, then resets web sockets and reopens them
+   * with the new project token
+   *
+   * Additionally, if a project is received in case of a rotation, then
+   * open specific web sockets to start the rotation and receive the rotation
+   * events
    */
   public ngOnChanges(changes: SimpleChanges): void {
+    // First time receiving a rotation
+    if (changes.rotation && changes.rotation.currentValue && !changes.rotation.previousValue) {
+      this.initRotationWebsockets()
+    }
+
     if (changes.project) {
       if (!changes.project.previousValue) {
         // Inject this variable in the window scope because some widgets use it to init the js
@@ -171,10 +200,10 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
 
       if (changes.project.previousValue) {
         if (changes.project.previousValue.token !== changes.project.currentValue.token) {
-          this.resetWebsocketSubscriptions();
+          this.resetProjectWebsockets();
         }
       } else {
-        this.initWebsocketSubscriptions();
+        this.initProjectWebsockets();
       }
     }
 
@@ -200,7 +229,7 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
    * When the component is destroyed (new page)
    */
   public ngOnDestroy(): void {
-    this.disconnectFromWebsocket();
+    this.disconnectFromWebsockets();
   }
 
   /**
@@ -304,52 +333,79 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   /**********************************************************************************************************/
 
   /**
-   * Init the websocket subscriptions
+   * Init web sockets for project events
    */
-  private initWebsocketSubscriptions(): void {
+  private initProjectWebsockets(): void {
+    console.warn("Init WS for project ", this.project.name);
+    this.unsubscribeProjectWebSocket = new Subject<void>();
     this.websocketProjectEventSubscription();
-    this.websocketScreenEventSubscription();
+    this.websocketProjectScreenEventSubscription();
   }
 
   /**
-   * Reset the websocket subscription
+   * Init web sockets for rotation events
    */
-  private resetWebsocketSubscriptions(): void {
-    this.unsubscribeToWebsocket();
-    this.initWebsocketSubscriptions();
+  private initRotationWebsockets(): void {
+    // this.websocketRotationEventSubscription();
+    this.unsubscribeRotationWebSocket = new Subject<void>();
+    this.websocketScreenRotationEventSubscription();
+  }
+
+  /**
+   * Reset the project web sockets subscriptions
+   */
+  private resetProjectWebsockets(): void {
+    console.warn("Reset websocket project subscriptions for projects", this.project.name)
+    this.unsubscribeProjectWebsockets();
+    this.initProjectWebsockets();
   }
 
   /**
    * Disconnect from web sockets
    */
-  private disconnectFromWebsocket(): void {
-    this.unsubscribeToWebsocket();
+  private disconnectFromWebsockets(): void {
+    this.unsubscribeProjectWebsockets();
+    this.unsubscribeRotationWebsockets();
     this.websocketService.disconnect();
   }
 
   /**
-   * Unsubscribe to every current websocket connections
+   * Unsubscribe to every current project websockets connections
    */
-  private unsubscribeToWebsocket(): void {
-    this.unsubscribe.next();
-    this.unsubscribe.complete();
+  private unsubscribeProjectWebsockets(): void {
+    console.warn("Unsub websocket project subscriptions")
+
+    this.unsubscribeProjectWebSocket.next();
+    this.unsubscribeProjectWebSocket.complete();
+  }
+
+  /**
+   * Unsubscribe to every current rotation websockets connections
+   */
+  private unsubscribeRotationWebsockets(): void {
+    console.warn("Unsub websocket rotation subscriptions")
+
+    this.unsubscribeRotationWebSocket.next();
+    this.unsubscribeRotationWebSocket.complete();
   }
 
   /**
    * Create a websocket subscription for the current project
    */
   private websocketProjectEventSubscription(): void {
+    console.warn("Init websocket subscriptions for project")
+
     const projectSubscriptionUrl = `/user/${this.project.token}/queue/live`;
 
     this.websocketService
       .watch(projectSubscriptionUrl)
-      .pipe(takeUntil(this.unsubscribe))
+      .pipe(takeUntil(this.unsubscribeProjectWebSocket))
       .subscribe((stompMessage: Stomp.Message) => {
         const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 
         switch (updateEvent.type) {
           case WebsocketUpdateTypeEnum.DISCONNECT:
-            this.disconnectFromWebsocket();
+            this.disconnectFromWebsockets();
             this.disconnectEvent.emit();
             break;
           case WebsocketUpdateTypeEnum.DISPLAY_NUMBER:
@@ -370,20 +426,71 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   /**
    * Create a websocket subscription for the current screen
    */
-  private websocketScreenEventSubscription(): void {
+  private websocketProjectScreenEventSubscription(): void {
+    console.warn("Init websocket subscriptions for project screen")
+
     const screenSubscriptionUrl = `/user/${this.project.token}-${this.screenCode}/queue/unique`;
 
     this.websocketService
-      .watch(screenSubscriptionUrl)
-      .pipe(takeUntil(this.unsubscribe))
-      .subscribe((stompMessage: Stomp.Message) => {
-        const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
+        .watch(screenSubscriptionUrl)
+        .pipe(takeUntil(this.unsubscribeProjectWebSocket))
+        .subscribe((stompMessage: Stomp.Message) => {
+          const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 
-        if (updateEvent.type === WebsocketUpdateTypeEnum.DISCONNECT) {
-          this.disconnectFromWebsocket();
-          this.disconnectEvent.emit();
-        }
-      });
+          if (updateEvent.type === WebsocketUpdateTypeEnum.DISCONNECT) {
+            this.disconnectFromWebsockets();
+            this.disconnectEvent.emit();
+          }
+        });
+  }
+
+  /**
+   * Create a websocket subscription for the current rotation
+   */
+  /* private websocketRotationEventSubscription(): void {
+    console.warn("Init websocket subscriptions for rotation")
+
+    const rotationSubscriptionUrl = `/user/${this.rotation.token}/rotation/queue/live`;
+
+    this.websocketService
+        .watch(rotationSubscriptionUrl)
+        .pipe(takeUntil(this.unsubscribeRotationWebSocket))
+        .subscribe((stompMessage: Stomp.Message) => {
+          const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
+
+          switch (updateEvent.type) {
+            case WebsocketUpdateTypeEnum.ROTATE:
+              this.performRotation.emit();
+              break;
+            default:
+              this.refreshProjectWidget.emit();
+          }
+        });
+  } */
+
+  /**
+   * Create a websocket subscription for the current screen
+   */
+  private websocketScreenRotationEventSubscription(): void {
+    console.warn("Init websocket subscriptions for rotation screen")
+
+    const rotationByScreenURL = `/user/${this.rotation.token}-${this.screenCode}/queue/unique`;
+
+    this.websocketService
+        .watch(rotationByScreenURL)
+        .pipe(takeUntil(this.unsubscribeRotationWebSocket))
+        .subscribe((stompMessage: Stomp.Message) => {
+          const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
+
+          switch (updateEvent.type) {
+            case WebsocketUpdateTypeEnum.ROTATE:
+              console.warn("Rotation asked, removing project", this.project.name);
+              this.performRotation.emit();
+              break;
+            default:
+              this.refreshProjectWidget.emit();
+          }
+        });
   }
 
   /**

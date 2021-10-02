@@ -26,19 +26,20 @@ import java.util.Date;
 /**
  * WebSocket update event
  */
+@Builder
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class UpdateEvent extends AbstractDto {
-
     /**
      * The update date
      */
-    private Date date;
+    private Date date = new Date();
 
     /**
-     * The update type {@link UpdateType}
+     * The update type
      */
     private UpdateType type;
 
@@ -46,14 +47,4 @@ public class UpdateEvent extends AbstractDto {
      * The content to send
      */
     private Serializable content;
-
-    /**
-     * Constructor
-     *
-     * @param type The update type
-     */
-    public UpdateEvent(UpdateType type) {
-        this.type = type;
-        this.date = new Date();
-    }
 }

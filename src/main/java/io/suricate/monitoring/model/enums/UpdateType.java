@@ -24,7 +24,10 @@ public enum UpdateType {
     WIDGET,
     POSITION,
     DISCONNECT,
-    CONNECT,
+    CONNECT_SINGLE_DASHBOARD,
+    CONNECT_ROTATION,
     DISPLAY_NUMBER,
-    RELOAD
+    RELOAD,
+    // Rotation event
+    ROTATE
 }

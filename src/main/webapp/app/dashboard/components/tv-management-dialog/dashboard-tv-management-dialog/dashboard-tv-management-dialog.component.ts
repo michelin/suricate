@@ -17,8 +17,8 @@ export class DashboardTvManagementDialogComponent extends TvManagementDialogComp
   /**
    * Constructor
    *
-   * @param data The mat dialog data
-   * @param injector The injector
+   * @param data               The mat dialog data
+   * @param injector           The injector
    * @param httpProjectService The HTTP project service
    */
   constructor(@Inject(MAT_DIALOG_DATA) private readonly data: { project: Project },

@@ -16,8 +16,18 @@
 
 package io.suricate.monitoring.configuration.websocket;
 
+import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
 import io.suricate.monitoring.model.dto.websocket.WebsocketClient;
+import io.suricate.monitoring.model.entities.Project;
+import io.suricate.monitoring.model.entities.Rotation;
+import io.suricate.monitoring.model.entities.RotationProject;
+import io.suricate.monitoring.model.enums.UpdateType;
+import io.suricate.monitoring.services.api.ProjectService;
+import io.suricate.monitoring.services.api.RotationService;
+import io.suricate.monitoring.services.rotation.RotationExecutionScheduler;
 import io.suricate.monitoring.services.websocket.DashboardWebSocketService;
+import io.suricate.monitoring.services.websocket.RotationWebSocketService;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +37,8 @@ import org.springframework.web.socket.messaging.SessionDisconnectEvent;
 import org.springframework.web.socket.messaging.SessionSubscribeEvent;
 import org.springframework.web.socket.messaging.SessionUnsubscribeEvent;
 
+import java.util.Iterator;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,9 +54,9 @@ public class WebSocketEventEndpointsConfiguration {
     private static final Logger LOGGER = LoggerFactory.getLogger(WebSocketEventEndpointsConfiguration.class);
 
     /**
-     * Regex group for project token
+     * Regex group for project or rotation token
      */
-    private static final int PROJECT_TOKEN_REGEX_GROUP = 1;
+    private static final int PROJECT_OR_ROTATION_TOKEN_REGEX_GROUP = 1;
 
     /**
      * Regex group for screen code
@@ -57,19 +69,49 @@ public class WebSocketEventEndpointsConfiguration {
     private final DashboardWebSocketService dashboardWebSocketService;
 
     /**
+     * The rotation websocket service
+     */
+    private final RotationWebSocketService rotationWebSocketService;
+
+    /**
+     * The project service
+     */
+    private final ProjectService projectService;
+
+    /**
+     * The rotation service
+     */
+    private final RotationService rotationService;
+
+    /**
+     * The rotation execution scheduler
+     */
+    private final RotationExecutionScheduler rotationExecutionScheduler;
+
+    /**
      * Constructor
      *
-     * @param dashboardWebSocketService The dashboard websocket service
+     * @param dashboardWebSocketService  The dashboard websocket service
+     * @param rotationExecutionScheduler The rotation execution scheduler
      */
-    public WebSocketEventEndpointsConfiguration(final DashboardWebSocketService dashboardWebSocketService) {
+    public WebSocketEventEndpointsConfiguration(final DashboardWebSocketService dashboardWebSocketService,
+                                                final RotationWebSocketService rotationWebSocketService,
+                                                final ProjectService projectService,
+                                                final RotationService rotationService,
+                                                final RotationExecutionScheduler rotationExecutionScheduler) {
         this.dashboardWebSocketService = dashboardWebSocketService;
+        this.rotationWebSocketService = rotationWebSocketService;
+        this.rotationExecutionScheduler = rotationExecutionScheduler;
+        this.projectService = projectService;
+        this.rotationService = rotationService;
     }
 
     /**
-     * Entry point when a client subscribes to a dashboard.
-     * The server opens a unique web socket on /user/dashboard_token/queue/unique.
-     * When a client subscribes to a dashboard, then an event is sent to the socket.
-     * The client is added to the project through a dynamic map.
+     * Entry point when a client subscribes to a socket. Intercept all the subscribe events
+     *
+     * Filter a subscribe event that matches the path /user/project_or_rotation_token-screen_code/queue/unique
+     *
+     * Determine which token is given : project or rotation token
      *
      * @param event The subscription event
      */
@@ -83,18 +125,44 @@ public class WebSocketEventEndpointsConfiguration {
             Matcher matcher = pattern.matcher(simpDestination);
 
             if (matcher.find()) {
-                WebsocketClient websocketClient = new WebsocketClient(
-                    matcher.group(PROJECT_TOKEN_REGEX_GROUP),
-                    stompHeaderAccessor.getSessionId(),
-                    stompHeaderAccessor.getSubscriptionId(),
-                    matcher.group(SCREEN_CODE_REGEX_GROUP)
-                );
+                Optional<Project> project = this.projectService.getOneByToken(matcher.group(PROJECT_OR_ROTATION_TOKEN_REGEX_GROUP));
 
-                LOGGER.debug("A new client (web socket session ID: {}, screen code ID: {}) is trying to subscribe to the project {}", websocketClient.getSessionId(), websocketClient.getScreenCode(),
-                        websocketClient.getProjectToken());
+                // Project token is given
+                if (project.isPresent()) {
+                    WebsocketClient websocketClient = WebsocketClient.builder()
+                            .projectToken(matcher.group(PROJECT_OR_ROTATION_TOKEN_REGEX_GROUP))
+                            .sessionId(stompHeaderAccessor.getSessionId())
+                            .subscriptionId(stompHeaderAccessor.getSubscriptionId())
+                            .screenCode(matcher.group(SCREEN_CODE_REGEX_GROUP))
+                            .build();
 
-                dashboardWebSocketService.addClientToProject(websocketClient.getProjectToken(), websocketClient);
-                dashboardWebSocketService.addSessionClient(websocketClient.getSessionId(), websocketClient);
+                    LOGGER.debug("A new client (session ID: {}, sub ID: {}, screen code: {}) subscribes to the project {}",
+                            websocketClient.getSessionId(), websocketClient.getSubscriptionId(), websocketClient.getScreenCode(), websocketClient.getProjectToken());
+
+                    this.dashboardWebSocketService.addClientToProject(websocketClient.getProjectToken(), websocketClient);
+                    this.dashboardWebSocketService.addSessionClient(websocketClient.getSessionId(), websocketClient);
+                }
+                // Rotation token is given
+                else {
+                    Optional<Rotation> rotation = this.rotationService.getOneByToken(matcher.group(PROJECT_OR_ROTATION_TOKEN_REGEX_GROUP));
+
+                    if (rotation.isPresent()) {
+                        WebsocketClient websocketClient = WebsocketClient.builder()
+                                .rotationToken(matcher.group(PROJECT_OR_ROTATION_TOKEN_REGEX_GROUP))
+                                .sessionId(stompHeaderAccessor.getSessionId())
+                                .subscriptionId(stompHeaderAccessor.getSubscriptionId())
+                                .screenCode(matcher.group(SCREEN_CODE_REGEX_GROUP))
+                                .build();
+
+                        LOGGER.debug("A new client (session ID: {}, sub ID: {}, screen code: {}) subscribes to the rotation {}",
+                                websocketClient.getSessionId(), websocketClient.getSubscriptionId(), websocketClient.getScreenCode(), websocketClient.getRotationToken());
+
+                        Iterator<RotationProject> iterator = rotation.get().getRotationProjects().iterator();
+                        RotationProject current = iterator.next();
+
+                        this.rotationService.scheduleRotation(rotation.get(), current, iterator, websocketClient.getScreenCode());
+                    }
+                }
             }
         }
     }
@@ -108,11 +176,13 @@ public class WebSocketEventEndpointsConfiguration {
     @EventListener
     public void onSessionUnsubscribe(SessionUnsubscribeEvent event) {
         StompHeaderAccessor stompHeaderAccessor = StompHeaderAccessor.wrap(event.getMessage());
-        WebsocketClient websocketClient = dashboardWebSocketService.removeSessionClientByWebsocketSessionIdAndSubscriptionId(stompHeaderAccessor.getSessionId(), stompHeaderAccessor.getSubscriptionId());
+        WebsocketClient websocketClient = this.dashboardWebSocketService
+                .removeSessionClientByWebsocketSessionIdAndSubscriptionId(stompHeaderAccessor.getSessionId(), stompHeaderAccessor.getSubscriptionId());
 
         if (websocketClient != null) {
             LOGGER.debug("Unsubscribe client {} with id {} for project {}", websocketClient.getSessionId(), websocketClient.getScreenCode(), websocketClient.getProjectToken());
-            dashboardWebSocketService.removeProjectClient(websocketClient.getProjectToken(), websocketClient);
+            this.dashboardWebSocketService.removeProjectClient(websocketClient.getProjectToken(), websocketClient);
+            //this.rotationExecutionScheduler.cancelRotationExecutionTask(websocketClient.getScreenCode());
         }
     }
 
@@ -125,11 +195,13 @@ public class WebSocketEventEndpointsConfiguration {
     @EventListener
     public void onSessionDisconnect(SessionDisconnectEvent event) {
         StompHeaderAccessor stompHeaderAccessor = StompHeaderAccessor.wrap(event.getMessage());
-        WebsocketClient websocketClient = dashboardWebSocketService.removeSessionClientByWebsocketSessionId(stompHeaderAccessor.getSessionId());
+        WebsocketClient websocketClient = dashboardWebSocketService
+                .removeSessionClientByWebsocketSessionId(stompHeaderAccessor.getSessionId());
 
         if (websocketClient != null) {
             LOGGER.debug("Disconnect client {} with id {} for project {}", websocketClient.getSessionId(), websocketClient.getScreenCode(), websocketClient.getProjectToken());
-            dashboardWebSocketService.removeProjectClient(websocketClient.getProjectToken(), websocketClient);
+            this.dashboardWebSocketService.removeProjectClient(websocketClient.getProjectToken(), websocketClient);
+            this.rotationExecutionScheduler.cancelRotationExecutionTask(websocketClient.getScreenCode());
         }
     }
 }

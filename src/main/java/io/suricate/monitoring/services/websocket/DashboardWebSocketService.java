@@ -26,8 +26,8 @@ import io.suricate.monitoring.model.entities.Project;
 import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.services.api.ProjectService;
 import io.suricate.monitoring.services.mapper.ProjectMapper;
-import io.suricate.monitoring.services.nashorn.services.NashornService;
 import io.suricate.monitoring.services.nashorn.scheduler.NashornRequestWidgetExecutionScheduler;
+import io.suricate.monitoring.services.nashorn.services.NashornService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +45,6 @@ import java.util.*;
 @Lazy(false)
 @Service
 public class DashboardWebSocketService {
-
     /**
      * Class logger
      */
@@ -106,6 +105,32 @@ public class DashboardWebSocketService {
         this.projectMapper = projectMapper;
         this.nashornService = nashornService;
         this.nashornWidgetScheduler = nashornWidgetScheduler;
+    }
+
+    /**
+     * Send a connect project event through the associated websocket to the unique subscriber.
+     * The path of the websocket contains a screen code so it is unique for each
+     * screen (so each subscriber).
+     *
+     * Used to connect a screen to a dashboard just after the subscriber waits on the screen code
+     * waiting screen.
+     *
+     * @param project The project
+     * @param screenCode The unique screen code
+     */
+    public void sendConnectProjectEventToScreenSubscriber(final Project project, final String screenCode) {
+        UpdateEvent updateEvent = UpdateEvent.builder()
+                .type(UpdateType.CONNECT_SINGLE_DASHBOARD)
+                .content(this.projectMapper.toProjectDTO(project))
+                .build();
+
+        LOGGER.debug("Sending the event {} to the screen {}", updateEvent.getType(), screenCode);
+
+        simpMessagingTemplate.convertAndSendToUser(
+                screenCode,
+                "/queue/connect",
+                updateEvent
+        );
     }
 
     /**
@@ -178,37 +203,13 @@ public class DashboardWebSocketService {
      * @param screenCode The unique screen code
      */
     @Async
-    public void sendEventToScreenProjectSubscriber(String projectToken, int screenCode, UpdateEvent payload) {
+    public void sendEventToScreenProjectSubscriber(String projectToken, String screenCode, UpdateEvent payload) {
         LOGGER.debug("Sending the event {} to the project {} of the screen {}", payload.getType(), projectToken, screenCode);
 
         simpMessagingTemplate.convertAndSendToUser(
                 projectToken.trim() + "-" + screenCode,
                 "/queue/unique",
                 payload
-        );
-    }
-
-    /**
-     * Send a connect event through the associated websocket to the unique subscriber.
-     * The path of the websocket contains a screen code so it is unique for each
-     * screen (so each subscriber).
-     *
-     * Used to connect a screen to a dashboard just after the subscriber waits on the screen code
-     * waiting screen.
-     *
-     * @param project The project
-     * @param screenCode The unique screen code
-     */
-    public void sendConnectEventToScreenSubscriber(final Project project, final String screenCode) {
-        UpdateEvent updateEvent = new UpdateEvent(UpdateType.CONNECT);
-        updateEvent.setContent(projectMapper.toProjectDTO(project));
-
-        LOGGER.debug("Sending the event {} to the screen {}", updateEvent.getType(), screenCode);
-
-        simpMessagingTemplate.convertAndSendToUser(
-                screenCode,
-                "/queue/connect",
-                updateEvent
         );
     }
 
@@ -293,6 +294,9 @@ public class DashboardWebSocketService {
     public WebsocketClient removeSessionClientByWebsocketSessionIdAndSubscriptionId(final String websocketSessionId, final String websocketSubscriptionId) {
         WebsocketClient websocketClient = null;
 
+        LOGGER.debug("Trying to remove client with session ID {} and sub ID {}",
+                websocketSessionId, websocketSubscriptionId);
+
         if (sessionClient.containsKey(websocketSessionId) &&
             sessionClient.get(websocketSessionId).getSubscriptionId().equals(websocketSubscriptionId)) {
             websocketClient = sessionClient.remove(websocketSessionId);
@@ -333,7 +337,7 @@ public class DashboardWebSocketService {
      * @param projectToken the specified project token
      */
     public void displayScreenCodeForProject(String projectToken) {
-        this.sendEventToProjectSubscribers(projectToken, new UpdateEvent(UpdateType.DISPLAY_NUMBER));
+        this.sendEventToProjectSubscribers(projectToken, UpdateEvent.builder().type(UpdateType.DISPLAY_NUMBER).build());
     }
 
     /**
@@ -342,8 +346,8 @@ public class DashboardWebSocketService {
      * @param projectToken The project token
      * @param screenCode   The screen code
      */
-    public void disconnectClient(final String projectToken, final int screenCode) {
-        this.sendEventToScreenProjectSubscriber(projectToken, screenCode, new UpdateEvent(UpdateType.DISCONNECT));
+    public void disconnectClient(final String projectToken, final String screenCode) {
+        this.sendEventToScreenProjectSubscriber(projectToken, screenCode, UpdateEvent.builder().type(UpdateType.DISCONNECT).build());
     }
 
     /**
@@ -351,7 +355,7 @@ public class DashboardWebSocketService {
      */
     public void reloadAllConnectedClientsToAllProjects() {
         clientsByProjectToken.forEach((key, value) ->
-                sendEventToProjectSubscribers(key, new UpdateEvent(UpdateType.RELOAD)));
+                sendEventToProjectSubscribers(key, UpdateEvent.builder().type(UpdateType.RELOAD).build()));
     }
 
     /**
@@ -360,6 +364,6 @@ public class DashboardWebSocketService {
      * @param projectToken The project token
      */
     public void reloadAllConnectedClientsToAProject(final String projectToken) {
-        sendEventToProjectSubscribers(projectToken, new UpdateEvent(UpdateType.RELOAD));
+        sendEventToProjectSubscribers(projectToken, UpdateEvent.builder().type(UpdateType.RELOAD).build());
     }
 }
