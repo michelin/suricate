@@ -159,16 +159,7 @@ export abstract class TvManagementDialogComponent implements OnInit {
     });
   }
 
-  /**
-   * Display the screen code on every connected screens
-   *
-   * @param projectToken The project token
-   */
-  public displayScreenCode(projectToken: string): void {
-    if (projectToken) {
-      this.httpScreenService.displayScreenCodeEveryConnectedScreensForProject(projectToken).subscribe();
-    }
-  }
+
 
   /**
    * Check if the stepper form is valid before saving the data
@@ -190,4 +181,9 @@ export abstract class TvManagementDialogComponent implements OnInit {
    * Retrieve the websocket connections
    */
   abstract getConnectedWebsocketClient(): void;
+
+  /**
+   * Display screen code
+   */
+  abstract displayScreenCode(): void
 }

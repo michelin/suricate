@@ -48,7 +48,7 @@ public interface ProjectRepository extends CrudRepository<Project, Long>, JpaSpe
 	 * @param token The token to find
 	 * @return The project as Optionals
 	 */
-    @EntityGraph(attributePaths = {"screenshot", "widgets", "users"})
+    @EntityGraph(attributePaths = {"screenshot", "widgets.widget.category.configurations", "users"})
 	Optional<Project> findProjectByToken(final String token);
 
 	/**

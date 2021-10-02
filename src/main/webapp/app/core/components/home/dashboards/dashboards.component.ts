@@ -80,24 +80,8 @@ export class DashboardsComponent implements OnInit {
    */
   private initHeaderConfiguration(): void {
     this.headerConfiguration = {
-      title: 'dashboard.list.my',
-      actions: [
-        {
-          icon: IconEnum.DASHBOARD_ROTATION,
-          variant: 'miniFab',
-          color: 'primary',
-          callback: () => this.displayMyRotations(),
-          tooltip: { message: 'rotation.list.my' }
-        }
-      ]
+      title: 'dashboard.list.my'
     };
-  }
-
-  /**
-   * Display the rotations of the users
-   */
-  private displayMyRotations(): void {
-    this.router.navigate(['/home/rotations'])
   }
 
   /**

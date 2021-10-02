@@ -3,12 +3,16 @@ package io.suricate.monitoring.controllers;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.rotation.RotationRequestDto;
 import io.suricate.monitoring.model.dto.api.rotation.RotationResponseDto;
+import io.suricate.monitoring.model.dto.websocket.WebsocketClient;
+import io.suricate.monitoring.model.entities.Project;
 import io.suricate.monitoring.model.entities.Rotation;
 import io.suricate.monitoring.model.entities.User;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.services.api.RotationService;
 import io.suricate.monitoring.services.api.UserService;
 import io.suricate.monitoring.services.mapper.RotationMapper;
+import io.suricate.monitoring.services.websocket.DashboardWebSocketService;
+import io.suricate.monitoring.services.websocket.RotationWebSocketService;
 import io.suricate.monitoring.utils.exceptions.ApiException;
 import io.suricate.monitoring.utils.exceptions.ObjectNotFoundException;
 import io.swagger.annotations.*;
@@ -38,6 +42,11 @@ public class RotationController {
     private static final String USER_NOT_ALLOWED = "The user is not allowed to access this rotation";
 
     /**
+     * The rotation websocket service
+     */
+    private final RotationWebSocketService rotationWebSocketService;
+
+    /**
      * Rotation service
      */
     private final RotationService rotationService;
@@ -58,14 +67,17 @@ public class RotationController {
      * @param rotationService The rotation service
      * @param rotationMapper The rotation mapper
      * @param userService The user service
+     * @param userService The rotation web socket service
      */
     @Autowired
     public RotationController(final RotationService rotationService,
                               final RotationMapper rotationMapper,
+                              final RotationWebSocketService rotationWebSocketService,
                               final UserService userService) {
         this.rotationService = rotationService;
         this.rotationMapper = rotationMapper;
         this.userService = userService;
+        this.rotationWebSocketService = rotationWebSocketService;
     }
 
     /**
@@ -227,5 +239,32 @@ public class RotationController {
         this.rotationService.updateRotation(rotationOptional.get(), rotationRequestDto);
 
         return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * Get the list of websocket clients connected to the rotation
+     *
+     * @param rotationToken The rotation token
+     */
+    @ApiOperation(value = "Retrieve connected websocket clients for a rotation", response = WebsocketClient.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok", response = WebsocketClient.class, responseContainer = "List"),
+            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
+    })
+    @GetMapping(value = "/v1/rotations/{rotationToken}/websocket/clients")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @Transactional
+    public ResponseEntity<List<WebsocketClient>> getRotationWebsocketClients(@ApiParam(name = "rotationToken", value = "The rotation token", required = true)
+                                                                             @PathVariable("rotationToken") String rotationToken) {
+        Optional<Rotation> rotationOptional = this.rotationService.getOneByToken(rotationToken);
+        if (!rotationOptional.isPresent()) {
+            throw new ObjectNotFoundException(Rotation.class, rotationToken);
+        }
+
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(this.rotationWebSocketService.getWebsocketClientsByRotationToken(rotationToken));
     }
 }

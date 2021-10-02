@@ -94,26 +94,9 @@ export class RotationsComponent implements OnInit {
    */
   private initHeaderConfiguration(): void {
     this.headerConfiguration = {
-      title: 'rotation.list.my',
-      actions: [
-        {
-          icon: IconEnum.DASHBOARD,
-          variant: 'miniFab',
-          color: 'primary',
-          callback: () => this.displayMyDashboards(),
-          tooltip: { message: 'dashboard.list.my' }
-        }
-      ]
+      title: 'rotation.list.my'
     };
   }
-
-  /**
-   * Display the dashboards of the users
-   */
-  private displayMyDashboards(): void {
-    this.router.navigate(['/home/dashboards'])
-  }
-
 
   /**
    * Display the side nav bar used to create a rotation

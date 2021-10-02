@@ -89,7 +89,7 @@ public class RotationExecutionAsyncTask implements Callable<Void>  {
         RotationProject next = iterator.next();
 
         this.rotationWebSocketService
-                .sendEventToRotationSubscribers(rotation.getToken(), this.screenCode, UpdateEvent.builder()
+                .sendEventToScreenRotationSubscriber(rotation.getToken(), this.screenCode, UpdateEvent.builder()
                         .type(UpdateType.ROTATE)
                         .build());
 

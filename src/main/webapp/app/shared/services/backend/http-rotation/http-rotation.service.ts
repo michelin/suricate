@@ -104,4 +104,14 @@ export class HttpRotationService {
 
     return this.httpClient.put<void>(url, rotation);
   }
+
+  /**
+   * Get the list of clients connected by websocket to a rotation
+   *
+   * @param token The rotation token
+   */
+  public getRotationWebsocketClients(token: string): Observable<WebsocketClient[]> {
+    const url = `${HttpRotationService.rotationsApiEndpoint}/${token}/websocket/clients`;
+    return this.httpClient.get<WebsocketClient[]>(url);
+  }
 }

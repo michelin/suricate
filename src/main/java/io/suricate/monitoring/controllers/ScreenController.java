@@ -195,4 +195,28 @@ public class ScreenController {
 
         return ResponseEntity.noContent().build();
     }
+
+    /**
+     * Display the screen code on every connected rotation
+     *
+     * @param rotationToken The rotation token
+     */
+    @ApiOperation(value = "Send the notification to the rotation screens to display their screen code")
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "Screen code displayed"),
+            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
+    })
+    @GetMapping(value = "/v1/screens/rotation/{rotationToken}/showscreencode")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<Void> displayScreenCodeEveryConnectedScreensForRotation(@ApiParam(name = "rotationToken", value = "The rotation token", required = true)
+                                                                                 @PathVariable("rotationToken") String rotationToken) {
+        Optional<Rotation> rotationOptional = this.rotationService.getOneByToken(rotationToken);
+        if (!rotationOptional.isPresent()) {
+            throw new ObjectNotFoundException(Project.class, rotationToken);
+        }
+
+        this.dashboardWebSocketService.displayScreenCodeForProject(rotationToken);
+        return ResponseEntity.noContent().build();
+    }
 }

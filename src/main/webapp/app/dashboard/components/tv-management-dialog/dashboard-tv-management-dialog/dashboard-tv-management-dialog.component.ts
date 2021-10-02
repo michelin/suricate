@@ -38,7 +38,7 @@ export class DashboardTvManagementDialogComponent extends TvManagementDialogComp
   }
 
   /**
-   * Retrieve the websocket connections
+   * Retrieve the websocket connections to a dashboard
    */
   public getConnectedWebsocketClient(): void {
     this.httpProjectService.getProjectWebsocketClients(this.project.token).subscribe(websocketClients => {
@@ -57,6 +57,15 @@ export class DashboardTvManagementDialogComponent extends TvManagementDialogComp
         this.registerScreenCodeFormField.reset();
         setTimeout(() => this.getConnectedWebsocketClient(), 2000);
       });
+    }
+  }
+
+  /**
+   * Display the screen code on every connected screens
+   */
+  public displayScreenCode(): void {
+    if (this.project.token) {
+      this.httpScreenService.displayScreenCodeEveryConnectedScreensForProject(this.project.token).subscribe();
     }
   }
 }

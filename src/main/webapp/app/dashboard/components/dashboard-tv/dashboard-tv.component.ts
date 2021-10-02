@@ -160,7 +160,6 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
 
         // Received when synchronizing to a rotation
         if (updateEvent.type === WebsocketUpdateTypeEnum.CONNECT_ROTATION) {
-          console.warn("Receive connect rotation")
           const rotation: Rotation = updateEvent.content;
           if (rotation) {
             this.router.navigate(['/tv'], { queryParams: { rotation: rotation.token } });

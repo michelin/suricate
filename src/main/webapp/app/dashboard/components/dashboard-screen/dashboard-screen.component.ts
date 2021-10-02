@@ -336,7 +336,6 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
    * Init web sockets for project events
    */
   private initProjectWebsockets(): void {
-    console.warn("Init WS for project ", this.project.name);
     this.unsubscribeProjectWebSocket = new Subject<void>();
     this.websocketProjectEventSubscription();
     this.websocketProjectScreenEventSubscription();
@@ -346,8 +345,8 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
    * Init web sockets for rotation events
    */
   private initRotationWebsockets(): void {
-    // this.websocketRotationEventSubscription();
     this.unsubscribeRotationWebSocket = new Subject<void>();
+    this.websocketRotationEventSubscription();
     this.websocketScreenRotationEventSubscription();
   }
 
@@ -355,7 +354,6 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
    * Reset the project web sockets subscriptions
    */
   private resetProjectWebsockets(): void {
-    console.warn("Reset websocket project subscriptions for projects", this.project.name)
     this.unsubscribeProjectWebsockets();
     this.initProjectWebsockets();
   }
@@ -373,8 +371,6 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
    * Unsubscribe to every current project websockets connections
    */
   private unsubscribeProjectWebsockets(): void {
-    console.warn("Unsub websocket project subscriptions")
-
     this.unsubscribeProjectWebSocket.next();
     this.unsubscribeProjectWebSocket.complete();
   }
@@ -383,8 +379,6 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
    * Unsubscribe to every current rotation websockets connections
    */
   private unsubscribeRotationWebsockets(): void {
-    console.warn("Unsub websocket rotation subscriptions")
-
     this.unsubscribeRotationWebSocket.next();
     this.unsubscribeRotationWebSocket.complete();
   }
@@ -393,8 +387,6 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
    * Create a websocket subscription for the current project
    */
   private websocketProjectEventSubscription(): void {
-    console.warn("Init websocket subscriptions for project")
-
     const projectSubscriptionUrl = `/user/${this.project.token}/queue/live`;
 
     this.websocketService
@@ -427,8 +419,6 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
    * Create a websocket subscription for the current screen
    */
   private websocketProjectScreenEventSubscription(): void {
-    console.warn("Init websocket subscriptions for project screen")
-
     const screenSubscriptionUrl = `/user/${this.project.token}-${this.screenCode}/queue/unique`;
 
     this.websocketService
@@ -447,10 +437,10 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   /**
    * Create a websocket subscription for the current rotation
    */
-  /* private websocketRotationEventSubscription(): void {
+  private websocketRotationEventSubscription(): void {
     console.warn("Init websocket subscriptions for rotation")
 
-    const rotationSubscriptionUrl = `/user/${this.rotation.token}/rotation/queue/live`;
+    const rotationSubscriptionUrl = `/user/${this.rotation.token}/queue/live`;
 
     this.websocketService
         .watch(rotationSubscriptionUrl)
@@ -459,21 +449,19 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
           const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 
           switch (updateEvent.type) {
-            case WebsocketUpdateTypeEnum.ROTATE:
-              this.performRotation.emit();
+            case WebsocketUpdateTypeEnum.DISPLAY_NUMBER:
+              this.displayScreenCode();
               break;
             default:
               this.refreshProjectWidget.emit();
           }
         });
-  } */
+  }
 
   /**
    * Create a websocket subscription for the current screen
    */
   private websocketScreenRotationEventSubscription(): void {
-    console.warn("Init websocket subscriptions for rotation screen")
-
     const rotationByScreenURL = `/user/${this.rotation.token}-${this.screenCode}/queue/unique`;
 
     this.websocketService
@@ -484,7 +472,6 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
 
           switch (updateEvent.type) {
             case WebsocketUpdateTypeEnum.ROTATE:
-              console.warn("Rotation asked, removing project", this.project.name);
               this.performRotation.emit();
               break;
             default:
