@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,9 +46,11 @@ export class RepositoriesComponent extends ListComponent<Repository> {
    * @param repositoryFormFieldsService The repository form fields service
    * @param injector The injector
    */
-  constructor(private readonly httpRepositoryService: HttpRepositoryService,
-              private readonly repositoryFormFieldsService: RepositoryFormFieldsService,
-              protected injector: Injector) {
+  constructor(
+    private readonly httpRepositoryService: HttpRepositoryService,
+    private readonly repositoryFormFieldsService: RepositoryFormFieldsService,
+    protected injector: Injector
+  ) {
     super(httpRepositoryService, injector);
 
     this.initHeaderConfiguration();

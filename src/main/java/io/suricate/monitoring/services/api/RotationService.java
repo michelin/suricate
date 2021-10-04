@@ -5,6 +5,7 @@ import io.suricate.monitoring.model.dto.api.rotation.RotationRequestDto;
 import io.suricate.monitoring.model.dto.api.rotationproject.RotationProjectRequestDto;
 import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
 import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
+import io.suricate.monitoring.model.dto.websocket.WebsocketClient;
 import io.suricate.monitoring.model.entities.Project;
 import io.suricate.monitoring.model.entities.Rotation;
 import io.suricate.monitoring.model.entities.RotationProject;
@@ -15,6 +16,7 @@ import io.suricate.monitoring.services.mapper.RotationMapper;
 import io.suricate.monitoring.services.mapper.RotationProjectMapper;
 import io.suricate.monitoring.services.nashorn.tasks.NashornRequestWidgetExecutionAsyncTask;
 import io.suricate.monitoring.services.rotation.RotationExecutionScheduler;
+import io.suricate.monitoring.services.websocket.RotationWebSocketService;
 import io.suricate.monitoring.utils.SecurityUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jasypt.encryption.StringEncryptor;
@@ -54,26 +56,37 @@ public class RotationService {
      */
     private final StringEncryptor stringEncryptor;
 
+    /**
+     * Rotation scheduler
+     */
     private final RotationExecutionScheduler rotationExecutionScheduler;
+
+    /**
+     * Rotation web socket service
+     */
+    private final RotationWebSocketService rotationWebSocketService;
 
     /**
      * Constructor
      *
-     * @param stringEncryptor The string encryptor to inject
-     * @param rotationRepository The rotation repository
-     * @param projectService The project service
-     * @param rotationProjectMapper The rotation project mapper
+     * @param stringEncryptor           The string encryptor to inject
+     * @param rotationRepository        The rotation repository
+     * @param projectService            The project service
+     * @param rotationProjectMapper     The rotation project mapper
+     * @param rotationWebSocketService  The rotation project mapper
      */
     public RotationService(@Qualifier("jasyptStringEncryptor") final StringEncryptor stringEncryptor,
                            RotationRepository rotationRepository,
                            ProjectService projectService,
                            RotationProjectMapper rotationProjectMapper,
+                           RotationWebSocketService rotationWebSocketService,
                            RotationExecutionScheduler rotationExecutionScheduler) {
         this.stringEncryptor = stringEncryptor;
         this.rotationRepository = rotationRepository;
         this.projectService = projectService;
         this.rotationProjectMapper = rotationProjectMapper;
         this.rotationExecutionScheduler = rotationExecutionScheduler;
+        this.rotationWebSocketService = rotationWebSocketService;
     }
 
     /**
@@ -90,11 +103,14 @@ public class RotationService {
     /**
      * Create a new rotation
      *
+     * @param user     The user how create the project
      * @param rotation The rotation to create
      * @return The created rotation
      */
     @Transactional
-    public Rotation create(Rotation rotation) {
+    public Rotation create(User user, Rotation rotation) {
+        rotation.getUsers().add(user);
+
         if (StringUtils.isBlank(rotation.getToken())) {
             rotation.setToken(stringEncryptor.encrypt(UUID.randomUUID().toString()));
         }
@@ -115,7 +131,7 @@ public class RotationService {
      */
     @Transactional(readOnly = true)
     public List<Rotation> getAllByUser(User user) {
-        return this.rotationRepository.findDistinctByRotationProjectsProjectUsersId(user.getId());
+        return this.rotationRepository.findByUsersIdOrderByName(user.getId());
     }
 
     /**
@@ -174,42 +190,48 @@ public class RotationService {
                 .collect(Collectors.toList()));
 
         this.rotationRepository.save(rotation);
+
+        List<WebsocketClient> clients = this.rotationWebSocketService.getWebsocketClientsByRotationToken(rotation.getToken());
+
+        if (!clients.isEmpty()) {
+            clients.forEach(client ->
+                    this.rotationExecutionScheduler.restartRotationForScreen(rotation, client.getScreenCode()));
+        }
+    }
+
+    /**
+     * Delete a user from a rotation
+     *
+     * @param user     The user to delete
+     * @param rotation The rotation related
+     */
+    @Transactional
+    public void deleteUserFromRotation(User user, Rotation rotation) {
+        rotation.getUsers().remove(user);
+        this.rotationRepository.save(rotation);
+    }
+
+    /**
+     * Add a user to a rotation
+     *
+     * @param user     The user to add
+     * @param rotation The rotation to edit
+     */
+    @Transactional
+    public void addUserToRotation(User user, Rotation rotation) {
+        rotation.getUsers().add(user);
+        this.rotationRepository.save(rotation);
     }
 
     /**
      * Check if the connected user can access to this rotation
-     *
-     * If the user can access to one dashboard of the rotation, then he can
-     * access to the rotation
      *
      * @param rotation       The rotation
      * @param authentication The connected user
      * @return True if he can, false otherwise
      */
     public boolean isConnectedUserCanAccessToRotation(final Rotation rotation, final Authentication authentication) {
-        if (SecurityUtils.isAdmin(authentication)) {
-            return true;
-        }
-
-        for (RotationProject rotationProject : rotation.getRotationProjects()) {
-            if (this.projectService.isConnectedUserCanAccessToProject(rotationProject.getProject(), authentication)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * Schedule a rotation of projects
-     *
-     * @param rotation The rotation to schedule
-     * @param current The current project of the rotation
-     * @param iterator An iterator pointing on the next projects to rotate
-     * @param screenCode The screen code where to push the next project
-     */
-    public void scheduleRotation(Rotation rotation, RotationProject current, Iterator<RotationProject> iterator,
-                                 String screenCode) {
-        this.rotationExecutionScheduler.scheduleRotation(rotation, current, iterator, screenCode);
+        return SecurityUtils.isAdmin(authentication)
+                || rotation.getUsers().stream().anyMatch(currentUser -> currentUser.getUsername().equalsIgnoreCase(authentication.getName()));
     }
 }

@@ -87,7 +87,7 @@ public class RotationExecutionScheduler {
      */
     public void scheduleRotation(Rotation rotation, RotationProject current, Iterator<RotationProject> iterator, String screenCode) {
         RotationExecutionAsyncTask rotationExecutionAsyncTask = this.applicationContext
-                .getBean(RotationExecutionAsyncTask.class, this, rotation, iterator, screenCode);
+                .getBean(RotationExecutionAsyncTask.class, this, rotation, current, iterator, screenCode);
 
         LOGGER.debug("Scheduling next rotation in {} seconds of rotation {} for screen {}",
                 current.getRotationSpeed(), rotation.getId(), screenCode);
@@ -104,7 +104,7 @@ public class RotationExecutionScheduler {
      *
      * @param screenCode The screen code
      */
-    public void cancelRotationExecutionTask(String screenCode) {
+    public void cancelRotationForScreen(String screenCode) {
         if (!this.isScreenInRotation(screenCode)) {
             return;
         }
@@ -120,6 +120,22 @@ public class RotationExecutionScheduler {
                 this.rotationTasksByScreenCode.remove(screenCode);
             }
         }
+    }
+
+    /**
+     * Restart a rotation from scratch for a screen
+     *
+     * @param rotation The rotation to restart
+     * @param screenCode The screen
+     */
+    public void restartRotationForScreen(Rotation rotation, String screenCode) {
+        this.cancelRotationForScreen(screenCode);
+
+        Iterator<RotationProject> iterator = rotation.getRotationProjects().iterator();
+        RotationProject current = iterator.next();
+
+        this.scheduleRotation(rotation, current, rotation.getRotationProjects().iterator(),
+                screenCode);
     }
 
     /**

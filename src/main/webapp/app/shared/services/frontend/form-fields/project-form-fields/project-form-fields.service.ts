@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,9 +25,9 @@ import { CustomValidator } from '../../../../validators/custom-validator';
 import { HttpAssetService } from '../../../backend/http-asset/http-asset.service';
 import { FileUtils } from '../../../../utils/file.utils';
 import { ImageUtils } from '../../../../utils/image.utils';
-import {ValueChangedEvent} from "../../../../models/frontend/form/value-changed-event";
-import {EMPTY, Observable, of} from "rxjs";
-import {TranslateService} from "@ngx-translate/core";
+import { ValueChangedEvent } from '../../../../models/frontend/form/value-changed-event';
+import { EMPTY, Observable, of } from 'rxjs';
+import { TranslateService } from '@ngx-translate/core';
 
 /**
  * Service used to build the form fields related to a project
@@ -62,7 +62,7 @@ export class ProjectFormFieldsService {
   /**
    * Constructor
    */
-  constructor(private translateService: TranslateService) { }
+  constructor(private translateService: TranslateService) {}
 
   /**
    * Get the list of form fields for a dashboard

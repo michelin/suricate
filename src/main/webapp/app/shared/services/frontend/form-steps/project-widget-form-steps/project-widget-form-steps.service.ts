@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,7 +34,7 @@ import { WidgetParamValue } from '../../../../models/backend/widget/widget-param
 import { HttpFilterService } from '../../../backend/http-filter/http-filter.service';
 import { Page } from '../../../../models/backend/page';
 import { CustomValidator } from '../../../../validators/custom-validator';
-import {TranslateService} from "@ngx-translate/core";
+import { TranslateService } from '@ngx-translate/core';
 
 /**
  * Service used to build the steps related to a project widget
@@ -73,9 +73,11 @@ export class ProjectWidgetFormStepsService {
    * @param httpWidgetService HTTP widget service
    * @param translateService Translate service
    */
-  constructor(private readonly httpCategoryService: HttpCategoryService,
-              private readonly httpWidgetService: HttpWidgetService,
-              private readonly translateService: TranslateService) {}
+  constructor(
+    private readonly httpCategoryService: HttpCategoryService,
+    private readonly httpWidgetService: HttpWidgetService,
+    private readonly translateService: TranslateService
+  ) {}
 
   /**
    * Generation of the form options for widget params

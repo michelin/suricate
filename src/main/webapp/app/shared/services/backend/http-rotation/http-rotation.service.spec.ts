@@ -1,6 +1,6 @@
 /*
  *  /*
- *  * Copyright 2012-2018 the original author or authors.
+ *  * Copyright 2012-2021 the original author or authors.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -16,10 +16,10 @@
  *
  */
 
-import {inject, TestBed} from '@angular/core/testing';
+import { inject, TestBed } from '@angular/core/testing';
 
-import {HttpRotationService} from './http-rotation.service';
-import {MockModule} from '../../../../mock/mock.module';
+import { HttpRotationService } from './http-rotation.service';
+import { MockModule } from '../../../../mock/mock.module';
 
 describe('HttpRotationService', () => {
   beforeEach(() => {

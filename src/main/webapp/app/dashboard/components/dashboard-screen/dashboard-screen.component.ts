@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,24 +27,24 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import {takeUntil} from 'rxjs/operators';
-import {Subject} from 'rxjs';
-import {NgGridConfig, NgGridItemConfig} from 'angular2-grid';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { NgGridConfig, NgGridItemConfig } from 'angular2-grid';
 import * as Stomp from '@stomp/stompjs';
-import {Project} from '../../../shared/models/backend/project/project';
-import {ProjectWidget} from '../../../shared/models/backend/project-widget/project-widget';
-import {WebsocketService} from '../../../shared/services/frontend/websocket/websocket.service';
-import {HttpAssetService} from '../../../shared/services/backend/http-asset/http-asset.service';
-import {WebsocketUpdateEvent} from '../../../shared/models/frontend/websocket/websocket-update-event';
-import {WebsocketUpdateTypeEnum} from '../../../shared/enums/websocket-update-type.enum';
-import {DashboardService} from '../../services/dashboard/dashboard.service';
-import {ProjectWidgetPositionRequest} from '../../../shared/models/backend/project-widget/project-widget-position-request';
-import {GridItemUtils} from '../../../shared/utils/grid-item.utils';
-import {IconEnum} from '../../../shared/enums/icon.enum';
-import {MaterialIconRecords} from '../../../shared/records/material-icon.record';
-import {LibraryService} from '../../services/library/library.service';
-import {HttpProjectService} from '../../../shared/services/backend/http-project/http-project.service';
-import {Rotation} from "../../../shared/models/backend/rotation/rotation";
+import { Project } from '../../../shared/models/backend/project/project';
+import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';
+import { WebsocketService } from '../../../shared/services/frontend/websocket/websocket.service';
+import { HttpAssetService } from '../../../shared/services/backend/http-asset/http-asset.service';
+import { WebsocketUpdateEvent } from '../../../shared/models/frontend/websocket/websocket-update-event';
+import { WebsocketUpdateTypeEnum } from '../../../shared/enums/websocket-update-type.enum';
+import { DashboardService } from '../../services/dashboard/dashboard.service';
+import { ProjectWidgetPositionRequest } from '../../../shared/models/backend/project-widget/project-widget-position-request';
+import { GridItemUtils } from '../../../shared/utils/grid-item.utils';
+import { IconEnum } from '../../../shared/enums/icon.enum';
+import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
+import { LibraryService } from '../../services/library/library.service';
+import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
+import { Rotation } from '../../../shared/models/backend/rotation/rotation';
 
 /**
  * Display the grid stack widgets
@@ -107,7 +107,7 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
    * Use to tell to the parent component that it should display the next project of the rotation
    */
   @Output()
-  public performRotation = new EventEmitter<void>();
+  public performRotation = new EventEmitter<Project>();
 
   /**
    * Subject used to unsubscribe all the subscriptions to rotation web sockets
@@ -185,7 +185,7 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   public ngOnChanges(changes: SimpleChanges): void {
     // First time receiving a rotation
     if (changes.rotation && changes.rotation.currentValue && !changes.rotation.previousValue) {
-      this.initRotationWebsockets()
+      this.initRotationWebsockets();
     }
 
     if (changes.project) {
@@ -311,10 +311,11 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
    *
    * @param projectWidgets The project widgets
    */
-  private getGridStackItemsFromProjectWidgets(projectWidgets: ProjectWidget[], ): NgGridItemConfig[] {
+  private getGridStackItemsFromProjectWidgets(projectWidgets: ProjectWidget[]): NgGridItemConfig[] {
     const gridStackItemsConfig: NgGridItemConfig[] = [];
 
-    this.projectWidgets.filter(projectWidget => projectWidget.widgetPosition.gridIndex === this.currentGridIndex)
+    this.projectWidgets
+      .filter(projectWidget => projectWidget.widgetPosition.gridIndex === this.currentGridIndex)
       .forEach((projectWidget: ProjectWidget) => {
         gridStackItemsConfig.push({
           col: projectWidget.widgetPosition.gridColumn,
@@ -323,7 +324,7 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
           sizex: projectWidget.widgetPosition.width,
           payload: projectWidget
         });
-    });
+      });
 
     return gridStackItemsConfig;
   }
@@ -422,40 +423,40 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
     const screenSubscriptionUrl = `/user/${this.project.token}-${this.screenCode}/queue/unique`;
 
     this.websocketService
-        .watch(screenSubscriptionUrl)
-        .pipe(takeUntil(this.unsubscribeProjectWebSocket))
-        .subscribe((stompMessage: Stomp.Message) => {
-          const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
+      .watch(screenSubscriptionUrl)
+      .pipe(takeUntil(this.unsubscribeProjectWebSocket))
+      .subscribe((stompMessage: Stomp.Message) => {
+        const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 
-          if (updateEvent.type === WebsocketUpdateTypeEnum.DISCONNECT) {
-            this.disconnectFromWebsockets();
-            this.disconnectEvent.emit();
-          }
-        });
+        if (updateEvent.type === WebsocketUpdateTypeEnum.DISCONNECT) {
+          this.disconnectFromWebsockets();
+          this.disconnectEvent.emit();
+        }
+      });
   }
 
   /**
    * Create a websocket subscription for the current rotation
    */
   private websocketRotationEventSubscription(): void {
-    console.warn("Init websocket subscriptions for rotation")
+    console.warn('Init websocket subscriptions for rotation');
 
     const rotationSubscriptionUrl = `/user/${this.rotation.token}/queue/live`;
 
     this.websocketService
-        .watch(rotationSubscriptionUrl)
-        .pipe(takeUntil(this.unsubscribeRotationWebSocket))
-        .subscribe((stompMessage: Stomp.Message) => {
-          const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
+      .watch(rotationSubscriptionUrl)
+      .pipe(takeUntil(this.unsubscribeRotationWebSocket))
+      .subscribe((stompMessage: Stomp.Message) => {
+        const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 
-          switch (updateEvent.type) {
-            case WebsocketUpdateTypeEnum.DISPLAY_NUMBER:
-              this.displayScreenCode();
-              break;
-            default:
-              this.refreshProjectWidget.emit();
-          }
-        });
+        switch (updateEvent.type) {
+          case WebsocketUpdateTypeEnum.DISPLAY_NUMBER:
+            this.displayScreenCode();
+            break;
+          default:
+            this.refreshProjectWidget.emit();
+        }
+      });
   }
 
   /**
@@ -465,19 +466,19 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
     const rotationByScreenURL = `/user/${this.rotation.token}-${this.screenCode}/queue/unique`;
 
     this.websocketService
-        .watch(rotationByScreenURL)
-        .pipe(takeUntil(this.unsubscribeRotationWebSocket))
-        .subscribe((stompMessage: Stomp.Message) => {
-          const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
+      .watch(rotationByScreenURL)
+      .pipe(takeUntil(this.unsubscribeRotationWebSocket))
+      .subscribe((stompMessage: Stomp.Message) => {
+        const event: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 
-          switch (updateEvent.type) {
-            case WebsocketUpdateTypeEnum.ROTATE:
-              this.performRotation.emit();
-              break;
-            default:
-              this.refreshProjectWidget.emit();
-          }
-        });
+        switch (event.type) {
+          case WebsocketUpdateTypeEnum.ROTATE:
+            this.performRotation.emit(event.content);
+            break;
+          default:
+            this.refreshProjectWidget.emit();
+        }
+      });
   }
 
   /**

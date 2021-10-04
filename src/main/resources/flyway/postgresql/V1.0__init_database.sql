@@ -163,6 +163,11 @@ CREATE TABLE user_role (
     role_id     bigint NOT NULL
 );
 
+CREATE TABLE user_rotation (
+    rotation_id  bigint NOT NULL,
+    user_id      bigint NOT NULL
+);
+
 CREATE TABLE user_setting (
     id                          bigserial                   NOT NULL,
     unconstrained_value         character varying(255),
@@ -257,6 +262,8 @@ ALTER TABLE user_role               ADD CONSTRAINT fk_user_role_user_id         
 ALTER TABLE user_role               ADD CONSTRAINT fk_user_role_role_id                     FOREIGN KEY (role_id)                   REFERENCES role (id) ;
 ALTER TABLE user_project            ADD CONSTRAINT fk_user_project_user_id                  FOREIGN KEY (user_id)                   REFERENCES users (id) ;
 ALTER TABLE user_project            ADD CONSTRAINT fk_user_project_project_id               FOREIGN KEY (project_id)                REFERENCES project (id) ;
+ALTER TABLE user_rotation           ADD CONSTRAINT fk_user_rotation_user_id                 FOREIGN KEY (user_id)                   REFERENCES users (id) ;
+ALTER TABLE user_rotation           ADD CONSTRAINT fk_user_rotation_rotation_id             FOREIGN KEY (rotation_id)               REFERENCES rotation (id) ;
 ALTER TABLE rotation_project        ADD CONSTRAINT fk_rotation_project_rotation_id          FOREIGN KEY (rotation_id)               REFERENCES rotation (id) ;
 ALTER TABLE rotation_project        ADD CONSTRAINT fk_rotation_project_project_id           FOREIGN KEY (project_id)                REFERENCES project (id) ;
 ALTER TABLE project_widget          ADD CONSTRAINT fk_project_widget_widget_id              FOREIGN KEY (widget_id)                 REFERENCES widget (id) ;

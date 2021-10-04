@@ -41,4 +41,11 @@ public class Rotation extends AbstractAuditingEntity<Long> {
      */
     @OneToMany(mappedBy = "rotation", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<RotationProject> rotationProjects = new LinkedHashSet<>();
+
+    /**
+     * The list of users of the rotation
+     */
+    @ManyToMany
+    @JoinTable(name = "user_rotation", joinColumns = {@JoinColumn(name = "rotation_id")}, inverseJoinColumns = {@JoinColumn(name = "user_id")})
+    private Set<User> users = new LinkedHashSet<>();
 }

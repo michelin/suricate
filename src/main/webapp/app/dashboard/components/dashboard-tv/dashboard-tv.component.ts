@@ -1,6 +1,6 @@
 /*
  *  /*
- *  * Copyright 2012-2018 the original author or authors.
+ *  * Copyright 2012-2021 the original author or authors.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -16,20 +16,20 @@
  *
  */
 
-import {Component, OnDestroy, OnInit, ViewEncapsulation} from '@angular/core';
-import {flatMap, takeUntil, tap} from 'rxjs/operators';
-import {Observable, Subject} from 'rxjs';
-import {ActivatedRoute, Params, Router} from '@angular/router';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { flatMap, takeUntil, tap } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import * as Stomp from '@stomp/stompjs';
-import {Project} from '../../../shared/models/backend/project/project';
-import {WebsocketUpdateEvent} from '../../../shared/models/frontend/websocket/websocket-update-event';
-import {WebsocketUpdateTypeEnum} from '../../../shared/enums/websocket-update-type.enum';
-import {HttpProjectService} from '../../../shared/services/backend/http-project/http-project.service';
-import {WebsocketService} from '../../../shared/services/frontend/websocket/websocket.service';
-import {ProjectWidget} from '../../../shared/models/backend/project-widget/project-widget';
-import {DashboardService} from '../../services/dashboard/dashboard.service';
-import {HttpRotationService} from "../../../shared/services/backend/http-rotation/http-rotation.service";
-import {Rotation} from "../../../shared/models/backend/rotation/rotation";
+import { Project } from '../../../shared/models/backend/project/project';
+import { WebsocketUpdateEvent } from '../../../shared/models/frontend/websocket/websocket-update-event';
+import { WebsocketUpdateTypeEnum } from '../../../shared/enums/websocket-update-type.enum';
+import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
+import { WebsocketService } from '../../../shared/services/frontend/websocket/websocket.service';
+import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';
+import { DashboardService } from '../../services/dashboard/dashboard.service';
+import { HttpRotationService } from '../../../shared/services/backend/http-rotation/http-rotation.service';
+import { Rotation } from '../../../shared/models/backend/rotation/rotation';
 
 /**
  * Dashboard TV Management
@@ -191,11 +191,10 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
     if (this.rotationToken) {
       this.isDashboardLoading = true;
 
-      this.refreshRotation(this.rotationToken)
-        .subscribe((rotation: Rotation) => {
-          this.projectToken = rotation.rotationProjects[this.rotationIndex].project.token;
-          this.initComponentWithProject();
-        });
+      this.refreshRotation(this.rotationToken).subscribe((rotation: Rotation) => {
+        this.projectToken = rotation.rotationProjects[this.rotationIndex].project.token;
+        this.initComponentWithProject();
+      });
     }
   }
 
@@ -237,12 +236,13 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
 
   /**
    * Perform the rotation by displaying the next project of the rotation
+   *
+   * @param project The new project of the rotation
    */
-  public performRotation(): void {
+  public performRotation(project: Project): void {
     this.isDashboardLoading = true;
 
-    this.rotationIndex = this.rotationIndex === this.rotation.rotationProjects.length - 1 ? 0 : this.rotationIndex + 1;
-    this.projectToken = this.rotation.rotationProjects[this.rotationIndex].project.token;
+    this.projectToken = project.token;
     this.initComponentWithProject();
   }
 

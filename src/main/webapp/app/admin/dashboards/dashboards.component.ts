@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import { ProjectRequest } from '../../shared/models/backend/project/project-requ
 import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
 import { FormField } from '../../shared/models/frontend/form/form-field';
 import { ProjectFormFieldsService } from '../../shared/services/frontend/form-fields/project-form-fields/project-form-fields.service';
-import { ProjectUsersFormFieldsService } from '../../shared/services/frontend/form-fields/project-users-form-fields/project-users-form-fields.service';
+import { ProjectRotationUsersFormFieldsService } from '../../shared/services/frontend/form-fields/project-rotation-users-form-fields/project-rotation-users-form-fields.service';
 import { ValueChangedEvent } from '../../shared/models/frontend/form/value-changed-event';
 import { EMPTY, Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -53,7 +53,7 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
   constructor(
     private readonly httpProjectService: HttpProjectService,
     private readonly projectFormFieldsService: ProjectFormFieldsService,
-    private readonly projectUsersFormFieldsService: ProjectUsersFormFieldsService,
+    private readonly projectUsersFormFieldsService: ProjectRotationUsersFormFieldsService,
     protected injector: Injector
   ) {
     super(httpProjectService, injector);

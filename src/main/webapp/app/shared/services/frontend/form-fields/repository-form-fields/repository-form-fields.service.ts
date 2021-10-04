@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ import { Repository } from '../../../../models/backend/repository/repository';
 import { FormOption } from '../../../../models/frontend/form/form-option';
 import { TitleCasePipe } from '@angular/common';
 import { IconEnum } from '../../../../enums/icon.enum';
-import {TranslateService} from "@ngx-translate/core";
+import { TranslateService } from '@ngx-translate/core';
 
 /**
  * Service used to build the form fields related to a repository

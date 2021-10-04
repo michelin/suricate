@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,7 +32,6 @@ import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
   styleUrls: ['../../../shared/components/wizard/wizard.component.scss']
 })
 export class ProjectWidgetWizardComponent extends WizardComponent implements OnInit {
-
   /**
    * Constructor
    *
@@ -83,7 +82,11 @@ export class ProjectWidgetWizardComponent extends WizardComponent implements OnI
     const projectWidgetRequest: ProjectWidgetRequest = {
       widgetId: formData[ProjectWidgetFormStepsService.selectWidgetStepKey][ProjectWidgetFormStepsService.widgetIdFieldKey],
       backendConfig: Object.keys(formData[ProjectWidgetFormStepsService.configureWidgetStepKey])
-        .filter((key: string) => formData[ProjectWidgetFormStepsService.configureWidgetStepKey][key] != null && formData[ProjectWidgetFormStepsService.configureWidgetStepKey][key].trim() !== '')
+        .filter(
+          (key: string) =>
+            formData[ProjectWidgetFormStepsService.configureWidgetStepKey][key] != null &&
+            formData[ProjectWidgetFormStepsService.configureWidgetStepKey][key].trim() !== ''
+        )
         .filter((key: string) => key !== ProjectWidgetFormStepsService.gridIndexFieldKey)
         .map((key: string) => `${key}=${formData[ProjectWidgetFormStepsService.configureWidgetStepKey][key]}`)
         .join('\n'),

@@ -166,7 +166,8 @@ public class RotationWebSocketService {
         Iterator<RotationProject> iterator = rotation.getRotationProjects().iterator();
         RotationProject current = iterator.next();
 
-        this.rotationService.scheduleRotation(rotation, current, iterator, websocketClient.getScreenCode());
+        this.rotationExecutionScheduler.scheduleRotation(rotation, current, rotation.getRotationProjects().iterator(),
+                websocketClient.getScreenCode());
     }
 
     /**
@@ -191,7 +192,7 @@ public class RotationWebSocketService {
         this.websocketClientByRotationToken.remove(websocketClient.getRotationToken(), websocketClient);
 
         this.rotationExecutionScheduler.
-                cancelRotationExecutionTask(websocketClient.getScreenCode());
+                cancelRotationForScreen(websocketClient.getScreenCode());
     }
 
     /**

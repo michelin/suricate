@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {Component, Inject, Injector, OnDestroy, OnInit} from '@angular/core';
+import { Component, Inject, Injector, OnDestroy, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup } from '@angular/forms';
 
@@ -33,7 +33,7 @@ import { MaterialIconRecords } from '../../../shared/records/material-icon.recor
 import { CustomValidator } from '../../../shared/validators/custom-validator';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import {Rotation} from "../../../shared/models/backend/rotation/rotation";
+import { Rotation } from '../../../shared/models/backend/rotation/rotation';
 
 /**
  * Component that manage the popup for Dashboard TV Management
@@ -51,7 +51,7 @@ export abstract class TvManagementDialogComponent implements OnInit {
   /**
    * HTTP screen service
    */
-  protected readonly httpScreenService: HttpScreenService
+  protected readonly httpScreenService: HttpScreenService;
 
   /**
    * The configuration of the share button
@@ -159,8 +159,6 @@ export abstract class TvManagementDialogComponent implements OnInit {
     });
   }
 
-
-
   /**
    * Check if the stepper form is valid before saving the data
    */
@@ -185,5 +183,5 @@ export abstract class TvManagementDialogComponent implements OnInit {
   /**
    * Display screen code
    */
-  abstract displayScreenCode(): void
+  abstract displayScreenCode(): void;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,17 @@
  * limitations under the License.
  */
 
-import {Injectable} from '@angular/core';
-import {Project} from '../../../../models/backend/project/project';
-import {DataTypeEnum} from '../../../../enums/data-type.enum';
-import {Validators} from '@angular/forms';
-import {FormField} from '../../../../models/frontend/form/form-field';
-import {IconEnum} from '../../../../enums/icon.enum';
-import {EMPTY, Observable, of} from "rxjs";
-import {FormOption} from "../../../../models/frontend/form/form-option";
-import {TitleCasePipe} from "@angular/common";
-import {TranslateService} from "@ngx-translate/core";
-import {Rotation} from "../../../../models/backend/rotation/rotation";
+import { Injectable } from '@angular/core';
+import { Project } from '../../../../models/backend/project/project';
+import { DataTypeEnum } from '../../../../enums/data-type.enum';
+import { Validators } from '@angular/forms';
+import { FormField } from '../../../../models/frontend/form/form-field';
+import { IconEnum } from '../../../../enums/icon.enum';
+import { EMPTY, Observable, of } from 'rxjs';
+import { FormOption } from '../../../../models/frontend/form/form-option';
+import { TitleCasePipe } from '@angular/common';
+import { TranslateService } from '@ngx-translate/core';
+import { Rotation } from '../../../../models/backend/rotation/rotation';
 
 /**
  * Service used to build the form fields related to a rotation
@@ -88,8 +88,8 @@ export class RotationFormFieldsService {
           type: DataTypeEnum.NUMBER,
           value: rotationProject.rotationSpeed,
           validators: [Validators.required]
-        })
-      })
+        });
+      });
     }
 
     return fields;

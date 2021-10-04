@@ -1,6 +1,6 @@
 /*
  *
- *  * Copyright 2012-2018 the original author or authors.
+ *  * Copyright 2012-2021 the original author or authors.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -234,7 +234,7 @@ public class ProjectController {
      *
      * @param authentication    The connected user
      * @param projectToken      The project token to update
-     * @param projectRequestDto The informations to update
+     * @param projectRequestDto The information to update
      * @return The project updated
      */
     @ApiOperation(value = "Update an existing project by the project token")
@@ -543,7 +543,7 @@ public class ProjectController {
     })
     @DeleteMapping(value = "/v1/projects/{projectToken}/users/{userId}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Void> deleteUserToProject(@ApiIgnore OAuth2Authentication authentication,
+    public ResponseEntity<Void> deleteUserFromProject(@ApiIgnore OAuth2Authentication authentication,
                                                     @ApiParam(name = "projectToken", value = "The project token", required = true)
                                                     @PathVariable("projectToken") String projectToken,
                                                     @ApiParam(name = "userId", value = "The user id", required = true)

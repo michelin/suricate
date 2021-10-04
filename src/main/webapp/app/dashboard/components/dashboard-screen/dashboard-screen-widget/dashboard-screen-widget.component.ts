@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { TitleCasePipe } from '@angular/common';
 import { NgGridItemConfig, NgGridItemEvent } from 'angular2-grid';
@@ -146,7 +146,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
     private readonly toastService: ToastService,
     private readonly widgetConfigurationFormFieldsService: WidgetConfigurationFormFieldsService,
     private readonly libraryService: LibraryService
-  ) { }
+  ) {}
 
   /**
    * Called when the component is init
@@ -242,7 +242,11 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   public displayEditFormSidenav(): void {
     this.sidenavService.openFormSidenav({
       title: 'widget.edit',
-      formFields: this.projectWidgetFormStepsService.generateWidgetParametersFormFields(this.widget.params, this.projectWidget.backendConfig, this.projectWidget.widgetPosition.gridIndex),
+      formFields: this.projectWidgetFormStepsService.generateWidgetParametersFormFields(
+        this.widget.params,
+        this.projectWidget.backendConfig,
+        this.projectWidget.widgetPosition.gridIndex
+      ),
       save: (formData: FormData) => this.saveWidget(formData),
       slideToggleButtonConfiguration: this.buildSlideToggleButtonConfiguration(this.widget.category.categoryParameters)
     });

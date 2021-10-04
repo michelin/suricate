@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-import {Component, Injector} from '@angular/core';
-import {ListComponent} from '../../shared/components/list/list.component';
-import {IconEnum} from '../../shared/enums/icon.enum';
-import {ToastTypeEnum} from '../../shared/enums/toast-type.enum';
-import {WidgetConfigurationFormFieldsService} from '../../shared/services/frontend/form-fields/widget-configuration-form-fields/widget-configuration-form-fields.service';
-import {HttpCategoryParametersService} from "../../shared/services/backend/http-category-parameters/http-category-parameters.service";
-import {CategoryParameter} from "../../shared/models/backend/category-parameters/category-parameter";
+import { Component, Injector } from '@angular/core';
+import { ListComponent } from '../../shared/components/list/list.component';
+import { IconEnum } from '../../shared/enums/icon.enum';
+import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
+import { WidgetConfigurationFormFieldsService } from '../../shared/services/frontend/form-fields/widget-configuration-form-fields/widget-configuration-form-fields.service';
+import { HttpCategoryParametersService } from '../../shared/services/backend/http-category-parameters/http-category-parameters.service';
+import { CategoryParameter } from '../../shared/models/backend/category-parameters/category-parameter';
 
 /**
  * Component used to display the list of widgets
@@ -119,11 +119,7 @@ export class ConfigurationsComponent extends ListComponent<CategoryParameter> {
    * @param configuration The repository clicked on the list
    * @param saveCallback The function to call when save button is clicked
    */
-  private openFormSidenav(
-    event: Event,
-    configuration: CategoryParameter,
-    saveCallback: (configuration: CategoryParameter) => void
-  ): void {
+  private openFormSidenav(event: Event, configuration: CategoryParameter, saveCallback: (configuration: CategoryParameter) => void): void {
     this.configurationSelected = configuration ? Object.assign({}, configuration) : new CategoryParameter();
 
     this.sidenavService.openFormSidenav({

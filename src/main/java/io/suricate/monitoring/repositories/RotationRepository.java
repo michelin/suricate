@@ -17,7 +17,7 @@ public interface RotationRepository extends CrudRepository<Rotation, Long>, JpaS
      * @param id The user id
      * @return List of related rotation ordered by name
      */
-    List<Rotation> findDistinctByRotationProjectsProjectUsersId(Long id);
+    List<Rotation> findByUsersIdOrderByName(Long id);
 
     /**
      * Find a rotation by token
@@ -25,6 +25,9 @@ public interface RotationRepository extends CrudRepository<Rotation, Long>, JpaS
      * @param token The token
      * @return The rotation
      */
-    @EntityGraph(attributePaths = {"rotationProjects.project.screenshot", "rotationProjects.project.widgets", "rotationProjects.project.users"})
+    @EntityGraph(attributePaths = {"rotationProjects.project.screenshot",
+                                   "rotationProjects.project.widgets",
+                                   "rotationProjects.project.users",
+                                   "users"})
     Optional<Rotation> findByToken(final String token);
 }

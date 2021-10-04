@@ -1,27 +1,45 @@
-import {Component, OnInit} from '@angular/core';
-import {ActivatedRoute, Router} from "@angular/router";
-import {HttpRotationService} from "../../../shared/services/backend/http-rotation/http-rotation.service";
-import {Rotation} from "../../../shared/models/backend/rotation/rotation";
-import {HeaderConfiguration} from "../../../shared/models/frontend/header/header-configuration";
-import {IconEnum} from "../../../shared/enums/icon.enum";
-import {HttpAssetService} from "../../../shared/services/backend/http-asset/http-asset.service";
-import {MaterialIconRecords} from "../../../shared/records/material-icon.record";
-import {ToastTypeEnum} from "../../../shared/enums/toast-type.enum";
-import {DialogService} from "../../../shared/services/frontend/dialog/dialog.service";
-import {TranslateService} from "@ngx-translate/core";
-import {ToastService} from "../../../shared/services/frontend/toast/toast.service";
-import {SidenavService} from "../../../shared/services/frontend/sidenav/sidenav.service";
-import {RotationFormFieldsService} from "../../../shared/services/frontend/form-fields/rotation-form-fields/rotation-form-fields.service";
-import {Project} from "../../../shared/models/backend/project/project";
-import {HttpProjectService} from "../../../shared/services/backend/http-project/http-project.service";
-import {ValueChangedEvent} from "../../../shared/models/frontend/form/value-changed-event";
-import {RotationRequest} from "../../../shared/models/backend/rotation/rotation-request";
-import {EMPTY, Observable, of} from "rxjs";
-import {FormField} from "../../../shared/models/frontend/form/form-field";
-import {RotationProject} from "../../../shared/models/backend/rotation-project/rotation-project";
-import {MatDialog} from "@angular/material/dialog";
-import {DashboardTvManagementDialogComponent} from "../tv-management-dialog/dashboard-tv-management-dialog/dashboard-tv-management-dialog.component";
-import {RotationTvManagementDialogComponent} from "../tv-management-dialog/rotation-tv-management-dialog/rotation-tv-management-dialog.component";
+/*
+ * Copyright 2012-2021 the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { HttpRotationService } from '../../../shared/services/backend/http-rotation/http-rotation.service';
+import { Rotation } from '../../../shared/models/backend/rotation/rotation';
+import { HeaderConfiguration } from '../../../shared/models/frontend/header/header-configuration';
+import { IconEnum } from '../../../shared/enums/icon.enum';
+import { HttpAssetService } from '../../../shared/services/backend/http-asset/http-asset.service';
+import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
+import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
+import { DialogService } from '../../../shared/services/frontend/dialog/dialog.service';
+import { TranslateService } from '@ngx-translate/core';
+import { ToastService } from '../../../shared/services/frontend/toast/toast.service';
+import { SidenavService } from '../../../shared/services/frontend/sidenav/sidenav.service';
+import { RotationFormFieldsService } from '../../../shared/services/frontend/form-fields/rotation-form-fields/rotation-form-fields.service';
+import { Project } from '../../../shared/models/backend/project/project';
+import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
+import { ValueChangedEvent } from '../../../shared/models/frontend/form/value-changed-event';
+import { RotationRequest } from '../../../shared/models/backend/rotation/rotation-request';
+import { EMPTY, Observable, of } from 'rxjs';
+import { FormField } from '../../../shared/models/frontend/form/form-field';
+import { RotationProject } from '../../../shared/models/backend/rotation-project/rotation-project';
+import { MatDialog } from '@angular/material/dialog';
+import { DashboardTvManagementDialogComponent } from '../tv-management-dialog/dashboard-tv-management-dialog/dashboard-tv-management-dialog.component';
+import { RotationTvManagementDialogComponent } from '../tv-management-dialog/rotation-tv-management-dialog/rotation-tv-management-dialog.component';
+import { ProjectRotationUsersFormFieldsService } from '../../../shared/services/frontend/form-fields/project-rotation-users-form-fields/project-rotation-users-form-fields.service';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'suricate-rotation-detail',
@@ -77,7 +95,7 @@ export class RotationDetailComponent implements OnInit {
    * @param toastService The toast service
    * @param sidenavService The sidenav service
    * @param rotationFormFieldsService The rotation form fields service
-   *
+   * @param rotationUsersFormFieldsService The rotation users form field service
    */
   constructor(
     private readonly router: Router,
@@ -90,14 +108,15 @@ export class RotationDetailComponent implements OnInit {
     private readonly toastService: ToastService,
     private readonly sidenavService: SidenavService,
     private readonly rotationFormFieldsService: RotationFormFieldsService,
-  ) { }
+    private readonly rotationUsersFormFieldsService: ProjectRotationUsersFormFieldsService
+  ) {}
 
   /**
    * Init method
    */
   ngOnInit(): void {
-    this.httpRotationService.getByToken(this.activatedRoute.snapshot.params['rotationToken'])
-      .subscribe((rotation: Rotation) => {
+    this.httpRotationService.getByToken(this.activatedRoute.snapshot.params['rotationToken']).subscribe(
+      (rotation: Rotation) => {
         this.isRotationLoading = false;
         this.rotation = rotation;
         this.initHeaderConfiguration();
@@ -105,8 +124,8 @@ export class RotationDetailComponent implements OnInit {
       () => {
         this.isRotationLoading = false;
         this.router.navigate(['/home/dashboards']);
-        }
-      );
+      }
+    );
   }
 
   /**
@@ -122,6 +141,13 @@ export class RotationDetailComponent implements OnInit {
           variant: 'miniFab',
           tooltip: { message: 'rotation.edit' },
           callback: () => this.openRotationFormSidenav()
+        },
+        {
+          icon: IconEnum.USERS,
+          color: 'primary',
+          variant: 'miniFab',
+          tooltip: { message: 'user.edit' },
+          callback: () => this.openUserFormSidenav()
         },
         {
           icon: IconEnum.TV_LIVE,
@@ -177,7 +203,7 @@ export class RotationDetailComponent implements OnInit {
         projectToken: projectToken,
         rotationSpeed: formData[`${RotationFormFieldsService.rotationSpeedFormFieldKey}-${projectToken}`]
       });
-    })
+    });
 
     this.httpRotationService.update(this.rotation.token, rotationRequest).subscribe(() => {
       this.toastService.sendMessage('rotation.update.success', ToastTypeEnum.SUCCESS);
@@ -214,9 +240,9 @@ export class RotationDetailComponent implements OnInit {
     }
 
     if (valueChangedEvent.fieldKey.startsWith(RotationFormFieldsService.rotationSpeedFormFieldKey)) {
-      this.rotationInEdition.rotationProjects
-          .find(rotationProject => rotationProject.project.token === valueChangedEvent.fieldKey.substr(valueChangedEvent.fieldKey.indexOf('-') + 1))
-          .rotationSpeed = valueChangedEvent.value;
+      this.rotationInEdition.rotationProjects.find(
+        rotationProject => rotationProject.project.token === valueChangedEvent.fieldKey.substr(valueChangedEvent.fieldKey.indexOf('-') + 1)
+      ).rotationSpeed = valueChangedEvent.value;
     } else {
       this.rotationInEdition[valueChangedEvent.fieldKey] = valueChangedEvent.value;
     }
@@ -238,6 +264,33 @@ export class RotationDetailComponent implements OnInit {
         });
       }
     });
+  }
+
+  /**
+   * Open the user form sidenav
+   */
+  private openUserFormSidenav(): void {
+    this.sidenavService.openFormSidenav({
+      title: 'user.add',
+      formFields: this.rotationUsersFormFieldsService.generateRotationUsersFormFields(this.rotation.token),
+      hideSaveAction: true,
+      onValueChanged: (valueChangedEvent: ValueChangedEvent) => this.onValueChanged(valueChangedEvent)
+    });
+  }
+
+  /**
+   * Add the selected user to dashboard when values change
+   *
+   * @param valueChangedEvent The value changed event
+   */
+  private onValueChanged(valueChangedEvent: ValueChangedEvent): Observable<FormField[]> {
+    if (valueChangedEvent.type === 'optionSelected' && valueChangedEvent.fieldKey === 'usernameAutocomplete') {
+      return this.httpRotationService
+        .addUserToRotation(this.rotation.token, valueChangedEvent.value)
+        .pipe(switchMap(() => of(this.rotationUsersFormFieldsService.generateRotationUsersFormFields(this.rotation.token))));
+    }
+
+    return EMPTY;
   }
 
   /**

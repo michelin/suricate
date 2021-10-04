@@ -3,6 +3,7 @@ package io.suricate.monitoring.controllers;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.rotation.RotationRequestDto;
 import io.suricate.monitoring.model.dto.api.rotation.RotationResponseDto;
+import io.suricate.monitoring.model.dto.api.user.UserResponseDto;
 import io.suricate.monitoring.model.dto.websocket.WebsocketClient;
 import io.suricate.monitoring.model.entities.Project;
 import io.suricate.monitoring.model.entities.Rotation;
@@ -11,6 +12,7 @@ import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.services.api.RotationService;
 import io.suricate.monitoring.services.api.UserService;
 import io.suricate.monitoring.services.mapper.RotationMapper;
+import io.suricate.monitoring.services.mapper.UserMapper;
 import io.suricate.monitoring.services.websocket.DashboardWebSocketService;
 import io.suricate.monitoring.services.websocket.RotationWebSocketService;
 import io.suricate.monitoring.utils.exceptions.ApiException;
@@ -27,6 +29,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -62,20 +65,28 @@ public class RotationController {
     private final RotationMapper rotationMapper;
 
     /**
+     * The user mapper
+     */
+    private final UserMapper userMapper;
+
+    /**
      * Constructor
      *
      * @param rotationService The rotation service
      * @param rotationMapper The rotation mapper
+     * @param UserMapper The user mapper
      * @param userService The user service
-     * @param userService The rotation web socket service
+     * @param rotationWebSocketService The rotation web socket service
      */
     @Autowired
     public RotationController(final RotationService rotationService,
                               final RotationMapper rotationMapper,
+                              final UserMapper userMapper,
                               final RotationWebSocketService rotationWebSocketService,
                               final UserService userService) {
         this.rotationService = rotationService;
         this.rotationMapper = rotationMapper;
+        this.userMapper = userMapper;
         this.userService = userService;
         this.rotationWebSocketService = rotationWebSocketService;
     }
@@ -130,9 +141,16 @@ public class RotationController {
     })
     @PostMapping(value = "/v1/rotations")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<RotationResponseDto> create(@ApiParam(name = "rotationRequestDto", value = "The rotation information", required = true)
-                       @RequestBody RotationRequestDto rotationRequestDto) {
-        Rotation rotationCreated = this.rotationService.create(this.rotationMapper.toRotationEntity(rotationRequestDto));
+    public ResponseEntity<RotationResponseDto> create(@ApiIgnore Principal principal,
+                                                      @ApiParam(name = "rotationRequestDto", value = "The rotation information", required = true)
+                                                      @RequestBody RotationRequestDto rotationRequestDto) {
+        Optional<User> userOptional = this.userService.getOneByUsername(principal.getName());
+        if (!userOptional.isPresent()) {
+            throw new ObjectNotFoundException(User.class, principal.getName());
+        }
+
+        Rotation rotationCreated = this.rotationService.create(userOptional.get(),
+                this.rotationMapper.toRotationEntity(rotationRequestDto));
 
         return ResponseEntity
                 .ok()
@@ -266,5 +284,116 @@ public class RotationController {
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(this.rotationWebSocketService.getWebsocketClientsByRotationToken(rotationToken));
+    }
+
+    /**
+     * Get the list of users associated to a rotation
+     *
+     * @param rotationToken The rotation token
+     */
+    @ApiOperation(value = "Retrieve rotation users", response = UserResponseDto.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok", response = UserResponseDto.class, responseContainer = "List"),
+            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
+    })
+    @GetMapping(value = "/v1/rotations/{rotationToken}/users")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    @Transactional
+    public ResponseEntity<List<UserResponseDto>> getRotationUsers(@ApiParam(name = "rotationToken", value = "The rotation token", required = true)
+                                                                  @PathVariable("rotationToken") String rotationToken) {
+        Optional<Rotation> rotationOptional = this.rotationService.getOneByToken(rotationToken);
+        if (!rotationOptional.isPresent()) {
+            throw new ObjectNotFoundException(Rotation.class, rotationToken);
+        }
+
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(this.userMapper.toUsersDTOs(rotationOptional.get().getUsers()));
+    }
+
+    /**
+     * Add a user to a rotation
+     *
+     * @param authentication The connected user
+     * @param rotationToken  Token of the rotation
+     * @param usernameMap    Username of the user to add
+     * @return An empty HTTP response
+     */
+    @ApiOperation(value = "Add a user to a rotation")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok"),
+            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
+            @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class),
+            @ApiResponse(code = 404, message = "User not found", response = ApiErrorDto.class)
+    })
+    @PostMapping(value = "/v1/rotations/{rotationToken}/users")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<Void> addUserToRotation(@ApiIgnore OAuth2Authentication authentication,
+                                                 @ApiParam(name = "rotationToken", value = "The rotation token", required = true)
+                                                 @PathVariable("rotationToken") String rotationToken,
+                                                 @ApiParam(name = "usernameMap", value = "A map with the username", required = true)
+                                                 @RequestBody Map<String, String> usernameMap) {
+
+        Optional<Rotation> rotationOptional = this.rotationService.getOneByToken(rotationToken);
+
+        if (!rotationOptional.isPresent()) {
+            throw new ObjectNotFoundException(Rotation.class, rotationToken);
+        }
+
+        if (!this.rotationService.isConnectedUserCanAccessToRotation(rotationOptional.get(), authentication.getUserAuthentication())) {
+            throw new ApiException(RotationController.USER_NOT_ALLOWED, ApiErrorEnum.NOT_AUTHORIZED);
+        }
+
+        Optional<User> userOptional = this.userService.getOneByUsername(usernameMap.get("username"));
+        if (!userOptional.isPresent()) {
+            throw new ObjectNotFoundException(User.class, usernameMap.get("username"));
+        }
+
+        this.rotationService.addUserToRotation(userOptional.get(), rotationOptional.get());
+        return ResponseEntity.ok().build();
+    }
+
+    /**
+     * Delete a user from a rotation
+     *
+     * @param authentication The connected user
+     * @param rotationToken  The rotation token
+     * @param userId         The user id to delete
+     * @return Empty HTTP response
+     */
+    @ApiOperation(value = "Delete a user from a rotation")
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "User removed from rotation"),
+            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
+            @ApiResponse(code = 404, message = "Rotation not found", response = ApiErrorDto.class),
+            @ApiResponse(code = 404, message = "User not found", response = ApiErrorDto.class)
+    })
+    @DeleteMapping(value = "/v1/rotations/{rotationToken}/users/{userId}")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<Void> deleteUserFromRotation(@ApiIgnore OAuth2Authentication authentication,
+                                                    @ApiParam(name = "rotationToken", value = "The rotation token", required = true)
+                                                    @PathVariable("rotationToken") String rotationToken,
+                                                    @ApiParam(name = "userId", value = "The user id", required = true)
+                                                    @PathVariable("userId") Long userId) {
+        Optional<Rotation> rotationOptional = this.rotationService.getOneByToken(rotationToken);
+        if (!rotationOptional.isPresent()) {
+            throw new ObjectNotFoundException(Rotation.class, rotationOptional);
+        }
+
+        if (!this.rotationService.isConnectedUserCanAccessToRotation(rotationOptional.get(), authentication.getUserAuthentication())) {
+            throw new ApiException(RotationController.USER_NOT_ALLOWED, ApiErrorEnum.NOT_AUTHORIZED);
+        }
+
+        Optional<User> userOptional = this.userService.getOne(userId);
+        if (!userOptional.isPresent()) {
+            throw new ObjectNotFoundException(User.class, userId);
+        }
+
+        this.rotationService.deleteUserFromRotation(userOptional.get(), rotationOptional.get());
+        return ResponseEntity.noContent().build();
     }
 }

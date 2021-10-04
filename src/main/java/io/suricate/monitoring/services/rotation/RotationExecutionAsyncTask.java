@@ -4,6 +4,7 @@ import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
 import io.suricate.monitoring.model.entities.Rotation;
 import io.suricate.monitoring.model.entities.RotationProject;
 import io.suricate.monitoring.model.enums.UpdateType;
+import io.suricate.monitoring.services.mapper.ProjectMapper;
 import io.suricate.monitoring.services.nashorn.services.DashboardScheduleService;
 import io.suricate.monitoring.services.websocket.DashboardWebSocketService;
 import io.suricate.monitoring.services.websocket.RotationWebSocketService;
@@ -32,6 +33,12 @@ public class RotationExecutionAsyncTask implements Callable<Void>  {
     private RotationWebSocketService rotationWebSocketService;
 
     /**
+     * The project mapper
+     */
+    @Autowired
+    private ProjectMapper projectMapper;
+
+    /**
      * Screen code of the screen where to push the next project rotation
      */
     private final String screenCode;
@@ -47,6 +54,11 @@ public class RotationExecutionAsyncTask implements Callable<Void>  {
     private Iterator<RotationProject> iterator;
 
     /**
+     * The current project in the rotation
+     */
+    private RotationProject current;
+
+    /**
      * The rotation scheduler, used to schedule the next rotation
      */
     private final RotationExecutionScheduler rotationExecutionScheduler;
@@ -56,14 +68,16 @@ public class RotationExecutionAsyncTask implements Callable<Void>  {
      *
      * @param rotationExecutionScheduler The rotation scheduler
      * @param rotation The rotation
+     * @param current The current project in the rotation
      * @param iterator An iterator pointing on the rotation
      * @param screenCode Screen code of the screen where to push the next project rotation
      */
     public RotationExecutionAsyncTask(RotationExecutionScheduler rotationExecutionScheduler, Rotation rotation,
-                                      Iterator<RotationProject> iterator, String screenCode) {
+                                      RotationProject current, Iterator<RotationProject> iterator, String screenCode) {
         this.rotationExecutionScheduler = rotationExecutionScheduler;
         this.rotation = rotation;
         this.iterator = iterator;
+        this.current = current;
         this.screenCode = screenCode;
     }
 
@@ -91,6 +105,7 @@ public class RotationExecutionAsyncTask implements Callable<Void>  {
         this.rotationWebSocketService
                 .sendEventToScreenRotationSubscriber(rotation.getToken(), this.screenCode, UpdateEvent.builder()
                         .type(UpdateType.ROTATE)
+                        .content(this.projectMapper.toProjectDTO(this.current.getProject()))
                         .build());
 
         this.rotationExecutionScheduler.scheduleRotation(rotation, next, iterator, screenCode);

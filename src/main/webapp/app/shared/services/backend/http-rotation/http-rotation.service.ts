@@ -1,6 +1,6 @@
 /*
  *  /*
- *  * Copyright 2012-2018 the original author or authors.
+ *  * Copyright 2012-2021 the original author or authors.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -31,8 +31,8 @@ import { AbstractHttpService } from '../abstract-http/abstract-http.service';
 import { HttpFilter } from '../../../models/backend/http-filter';
 import { HttpFilterService } from '../http-filter/http-filter.service';
 import { Page } from '../../../models/backend/page';
-import {Rotation} from "../../../models/backend/rotation/rotation";
-import {RotationRequest} from "../../../models/backend/rotation/rotation-request";
+import { Rotation } from '../../../models/backend/rotation/rotation';
+import { RotationRequest } from '../../../models/backend/rotation/rotation-request';
 
 @Injectable({ providedIn: 'root' })
 export class HttpRotationService {
@@ -113,5 +113,41 @@ export class HttpRotationService {
   public getRotationWebsocketClients(token: string): Observable<WebsocketClient[]> {
     const url = `${HttpRotationService.rotationsApiEndpoint}/${token}/websocket/clients`;
     return this.httpClient.get<WebsocketClient[]>(url);
+  }
+
+  /**
+   * Get the list of users for a rotation
+   *
+   * @param token The rotation token
+   */
+  public getRotationUsers(token: string): Observable<User[]> {
+    const url = `${HttpRotationService.rotationsApiEndpoint}/${token}/users`;
+
+    return this.httpClient.get<User[]>(url);
+  }
+
+  /**
+   * Add a user to a rotation
+   *
+   * @param token The rotation token
+   * @param username The username to add
+   * @returns An empty response
+   */
+  public addUserToRotation(token: string, username: string): Observable<void> {
+    const url = `${HttpRotationService.rotationsApiEndpoint}/${token}/users`;
+
+    return this.httpClient.post<void>(url, { username: username });
+  }
+
+  /**
+   * Delete a user from a rotation
+   *
+   * @param token The rotation token
+   * @param userId The user ID
+   */
+  public deleteUserFromRotation(token: string, userId: number): Observable<void> {
+    const url = `${HttpRotationService.rotationsApiEndpoint}/${token}/users/${userId}`;
+
+    return this.httpClient.delete<void>(url);
   }
 }

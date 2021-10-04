@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,35 +14,35 @@
  * limitations under the License.
  */
 
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import {DashboardService} from '../../services/dashboard/dashboard.service';
-import {Project} from '../../../shared/models/backend/project/project';
-import {HttpProjectService} from '../../../shared/services/backend/http-project/http-project.service';
-import {ProjectWidget} from '../../../shared/models/backend/project-widget/project-widget';
-import {FileUtils} from '../../../shared/utils/file.utils';
-import {HeaderConfiguration} from '../../../shared/models/frontend/header/header-configuration';
-import {IconEnum} from '../../../shared/enums/icon.enum';
-import {HttpScreenService} from '../../../shared/services/backend/http-screen/http-screen.service';
-import {ToastTypeEnum} from '../../../shared/enums/toast-type.enum';
-import {ToastService} from '../../../shared/services/frontend/toast/toast.service';
-import {SidenavService} from '../../../shared/services/frontend/sidenav/sidenav.service';
-import {DialogService} from '../../../shared/services/frontend/dialog/dialog.service';
-import {TranslateService} from '@ngx-translate/core';
-import {ProjectRequest} from '../../../shared/models/backend/project/project-request';
-import {ProjectFormFieldsService} from '../../../shared/services/frontend/form-fields/project-form-fields/project-form-fields.service';
-import {flatMap, switchMap, tap} from 'rxjs/operators';
-import {EMPTY, Observable, of} from 'rxjs';
-import {DashboardScreenComponent} from '../dashboard-screen/dashboard-screen.component';
-import {MatDialog} from '@angular/material/dialog';
-import {MaterialIconRecords} from '../../../shared/records/material-icon.record';
-import {ValueChangedEvent} from '../../../shared/models/frontend/form/value-changed-event';
-import {FormField} from '../../../shared/models/frontend/form/form-field';
-import {ProjectUsersFormFieldsService} from '../../../shared/services/frontend/form-fields/project-users-form-fields/project-users-form-fields.service';
-import {WebsocketService} from '../../../shared/services/frontend/websocket/websocket.service';
-import {ImageUtils} from '../../../shared/utils/image.utils';
-import {DashboardTvManagementDialogComponent} from "../tv-management-dialog/dashboard-tv-management-dialog/dashboard-tv-management-dialog.component";
+import { DashboardService } from '../../services/dashboard/dashboard.service';
+import { Project } from '../../../shared/models/backend/project/project';
+import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
+import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';
+import { FileUtils } from '../../../shared/utils/file.utils';
+import { HeaderConfiguration } from '../../../shared/models/frontend/header/header-configuration';
+import { IconEnum } from '../../../shared/enums/icon.enum';
+import { HttpScreenService } from '../../../shared/services/backend/http-screen/http-screen.service';
+import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
+import { ToastService } from '../../../shared/services/frontend/toast/toast.service';
+import { SidenavService } from '../../../shared/services/frontend/sidenav/sidenav.service';
+import { DialogService } from '../../../shared/services/frontend/dialog/dialog.service';
+import { TranslateService } from '@ngx-translate/core';
+import { ProjectRequest } from '../../../shared/models/backend/project/project-request';
+import { ProjectFormFieldsService } from '../../../shared/services/frontend/form-fields/project-form-fields/project-form-fields.service';
+import { flatMap, switchMap, tap } from 'rxjs/operators';
+import { EMPTY, Observable, of } from 'rxjs';
+import { DashboardScreenComponent } from '../dashboard-screen/dashboard-screen.component';
+import { MatDialog } from '@angular/material/dialog';
+import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
+import { ValueChangedEvent } from '../../../shared/models/frontend/form/value-changed-event';
+import { FormField } from '../../../shared/models/frontend/form/form-field';
+import { ProjectRotationUsersFormFieldsService } from '../../../shared/services/frontend/form-fields/project-rotation-users-form-fields/project-rotation-users-form-fields.service';
+import { WebsocketService } from '../../../shared/services/frontend/websocket/websocket.service';
+import { ImageUtils } from '../../../shared/utils/image.utils';
+import { DashboardTvManagementDialogComponent } from '../tv-management-dialog/dashboard-tv-management-dialog/dashboard-tv-management-dialog.component';
 
 /**
  * Component used to display a specific dashboard
@@ -127,13 +127,13 @@ export class DashboardDetailComponent implements OnInit {
     private readonly translateService: TranslateService,
     private readonly httpProjectService: HttpProjectService,
     private readonly httpScreenService: HttpScreenService,
-    private readonly projectUsersFormFieldsService: ProjectUsersFormFieldsService,
+    private readonly projectUsersFormFieldsService: ProjectRotationUsersFormFieldsService,
     private readonly dashboardService: DashboardService,
     private readonly sidenavService: SidenavService,
     private readonly toastService: ToastService,
     private readonly dialogService: DialogService,
     private readonly websocketService: WebsocketService,
-    private readonly projectFormFieldsService: ProjectFormFieldsService,
+    private readonly projectFormFieldsService: ProjectFormFieldsService
   ) {}
 
   /**

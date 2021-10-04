@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,22 +27,25 @@ import { User } from '../../../../models/backend/user/user';
 import { IconEnum } from '../../../../enums/icon.enum';
 import { HttpFilterService } from '../../../backend/http-filter/http-filter.service';
 import { Page } from '../../../../models/backend/page';
+import { HttpRotationService } from '../../../backend/http-rotation/http-rotation.service';
 
 /**
  * Service used to build the form fields related to project users
  */
 @Injectable({ providedIn: 'root' })
-export class ProjectUsersFormFieldsService {
+export class ProjectRotationUsersFormFieldsService {
   /**
    * Constructor
    *
    * @param translateService Ngx translate service used to manage the translations
-   * @param httpProjectService Suricate service used to manage project
-   * @param httpUserService Suricate service used to manage http calls for user
+   * @param httpProjectService Service used to manage the projects
+   * @param httpRotationService Service used to manage the rotations
+   * @param httpUserService Service used to manage http calls for user
    */
   constructor(
     private readonly translateService: TranslateService,
     private readonly httpProjectService: HttpProjectService,
+    private readonly httpRotationService: HttpRotationService,
     private readonly httpUserService: HttpUserService
   ) {}
 
@@ -70,6 +73,60 @@ export class ProjectUsersFormFieldsService {
         deleteRow: {
           attribute: 'id',
           callback: (userId: number) => this.httpProjectService.deleteUserFromProject(projectToken, userId)
+        },
+        fields: [
+          {
+            key: 'id',
+            label: 'id',
+            type: DataTypeEnum.HIDDEN
+          },
+          {
+            key: 'username',
+            label: 'username',
+            type: DataTypeEnum.TEXT,
+            readOnly: true
+          },
+          {
+            key: 'firstname',
+            label: 'firstname',
+            type: DataTypeEnum.TEXT,
+            readOnly: true
+          },
+          {
+            key: 'lastname',
+            label: 'lastname',
+            type: DataTypeEnum.TEXT,
+            readOnly: true
+          }
+        ]
+      }
+    ];
+  }
+
+  /**
+   * Generate the configuration between a rotation and the associated users.
+   * Generate the autocomplete window information.
+   * Get the associated users and generate the fields information.
+   *
+   * @param rotationToken The rotation token used to retrieve the users
+   */
+  public generateRotationUsersFormFields(rotationToken: string): FormField[] {
+    return [
+      {
+        key: 'usernameAutocomplete',
+        label: 'username',
+        iconPrefix: IconEnum.USER_ADD,
+        type: DataTypeEnum.TEXT,
+        options: (usernameFilter: string) => this.getUsersAutocomplete(usernameFilter)
+      },
+      {
+        key: 'users',
+        label: 'user.list',
+        type: DataTypeEnum.FIELDS,
+        values: this.httpRotationService.getRotationUsers(rotationToken),
+        deleteRow: {
+          attribute: 'id',
+          callback: (userId: number) => this.httpRotationService.deleteUserFromRotation(rotationToken, userId)
         },
         fields: [
           {
