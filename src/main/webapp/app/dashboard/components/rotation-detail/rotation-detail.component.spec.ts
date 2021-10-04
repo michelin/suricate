@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { RotationDetailComponent } from './rotation-detail.component';
-import {MockModule} from "../../../mock/mock.module";
+import { MockModule } from '../../../mock/mock.module';
 
 describe('RotationDetailComponent', () => {
   let component: RotationDetailComponent;
@@ -10,9 +10,8 @@ describe('RotationDetailComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [MockModule],
-      declarations: [ RotationDetailComponent ]
-    })
-    .compileComponents();
+      declarations: [RotationDetailComponent]
+    }).compileComponents();
   });
 
   beforeEach(() => {

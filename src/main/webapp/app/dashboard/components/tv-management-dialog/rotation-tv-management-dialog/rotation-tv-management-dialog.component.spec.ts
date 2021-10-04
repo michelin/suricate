@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { RotationTvManagementDialogComponent } from './rotation-tv-management-dialog.component';
 
 describe('RotationTvManagementDialogComponent', () => {
@@ -8,9 +7,8 @@ describe('RotationTvManagementDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ RotationTvManagementDialogComponent ]
-    })
-    .compileComponents();
+      declarations: [RotationTvManagementDialogComponent]
+    }).compileComponents();
   });
 
   beforeEach(() => {

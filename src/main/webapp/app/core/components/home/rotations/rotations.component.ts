@@ -1,21 +1,21 @@
-import {Component, OnInit} from '@angular/core';
-import {RotationFormFieldsService} from "../../../../shared/services/frontend/form-fields/rotation-form-fields/rotation-form-fields.service";
-import {MaterialIconRecords} from "../../../../shared/records/material-icon.record";
-import {IconEnum} from "../../../../shared/enums/icon.enum";
-import {SidenavService} from "../../../../shared/services/frontend/sidenav/sidenav.service";
-import {Project} from "../../../../shared/models/backend/project/project";
-import {ValueChangedEvent} from "../../../../shared/models/frontend/form/value-changed-event";
-import {EMPTY, Observable, of} from "rxjs";
-import {FormField} from "../../../../shared/models/frontend/form/form-field";
-import {Rotation} from "../../../../shared/models/backend/rotation/rotation";
-import {RotationProject} from "../../../../shared/models/backend/rotation-project/rotation-project";
-import {HttpRotationService} from "../../../../shared/services/backend/http-rotation/http-rotation.service";
-import {ToastTypeEnum} from "../../../../shared/enums/toast-type.enum";
-import {ToastService} from "../../../../shared/services/frontend/toast/toast.service";
-import {RotationRequest} from "../../../../shared/models/backend/rotation/rotation-request";
-import {Router} from "@angular/router";
-import {HeaderConfiguration} from "../../../../shared/models/frontend/header/header-configuration";
-import {HttpProjectService} from "../../../../shared/services/backend/http-project/http-project.service";
+import { Component, OnInit } from '@angular/core';
+import { RotationFormFieldsService } from '../../../../shared/services/frontend/form-fields/rotation-form-fields/rotation-form-fields.service';
+import { MaterialIconRecords } from '../../../../shared/records/material-icon.record';
+import { IconEnum } from '../../../../shared/enums/icon.enum';
+import { SidenavService } from '../../../../shared/services/frontend/sidenav/sidenav.service';
+import { Project } from '../../../../shared/models/backend/project/project';
+import { ValueChangedEvent } from '../../../../shared/models/frontend/form/value-changed-event';
+import { EMPTY, Observable, of } from 'rxjs';
+import { FormField } from '../../../../shared/models/frontend/form/form-field';
+import { Rotation } from '../../../../shared/models/backend/rotation/rotation';
+import { RotationProject } from '../../../../shared/models/backend/rotation-project/rotation-project';
+import { HttpRotationService } from '../../../../shared/services/backend/http-rotation/http-rotation.service';
+import { ToastTypeEnum } from '../../../../shared/enums/toast-type.enum';
+import { ToastService } from '../../../../shared/services/frontend/toast/toast.service';
+import { RotationRequest } from '../../../../shared/models/backend/rotation/rotation-request';
+import { Router } from '@angular/router';
+import { HeaderConfiguration } from '../../../../shared/models/frontend/header/header-configuration';
+import { HttpProjectService } from '../../../../shared/services/backend/http-project/http-project.service';
 
 @Component({
   selector: 'suricate-my-rotations',
@@ -69,13 +69,13 @@ export class RotationsComponent implements OnInit {
    * @param toastService The toast service
    */
   constructor(
-      private readonly router: Router,
-      private readonly sidenavService: SidenavService,
-      private readonly rotationFormFieldsService: RotationFormFieldsService,
-      private readonly httpRotationService: HttpRotationService,
-      private readonly httpProjectService: HttpProjectService,
-      private readonly toastService: ToastService
-  ) { }
+    private readonly router: Router,
+    private readonly sidenavService: SidenavService,
+    private readonly rotationFormFieldsService: RotationFormFieldsService,
+    private readonly httpRotationService: HttpRotationService,
+    private readonly httpProjectService: HttpProjectService,
+    private readonly toastService: ToastService
+  ) {}
 
   /**
    * Init method
@@ -144,9 +144,9 @@ export class RotationsComponent implements OnInit {
     }
 
     if (valueChangedEvent.fieldKey.startsWith(RotationFormFieldsService.rotationSpeedFormFieldKey)) {
-      this.rotationBeingBuilt.rotationProjects
-          .find(rotationProject => rotationProject.project.token === valueChangedEvent.fieldKey.substr(valueChangedEvent.fieldKey.indexOf('-') + 1))
-          .rotationSpeed = valueChangedEvent.value;
+      this.rotationBeingBuilt.rotationProjects.find(
+        rotationProject => rotationProject.project.token === valueChangedEvent.fieldKey.substr(valueChangedEvent.fieldKey.indexOf('-') + 1)
+      ).rotationSpeed = valueChangedEvent.value;
     } else {
       this.rotationBeingBuilt[valueChangedEvent.fieldKey] = valueChangedEvent.value;
     }
@@ -170,7 +170,7 @@ export class RotationsComponent implements OnInit {
         projectToken: projectToken,
         rotationSpeed: formData[`${RotationFormFieldsService.rotationSpeedFormFieldKey}-${projectToken}`]
       });
-    })
+    });
 
     this.httpRotationService.create(rotationRequest).subscribe((createdRotation: Rotation) => {
       this.toastService.sendMessage('rotation.add.success', ToastTypeEnum.SUCCESS);

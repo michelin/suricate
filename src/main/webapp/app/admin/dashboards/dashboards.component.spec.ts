@@ -15,13 +15,7 @@
  */
 
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
 import { DashboardsComponent } from './dashboards.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { TranslateLoader, TranslateModule, TranslateService } from '@ngx-translate/core';
-import { HttpClient } from '@angular/common/http';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MockModule } from '../../mock/mock.module';
 
 describe('DashboardsComponent', () => {

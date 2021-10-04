@@ -127,7 +127,7 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   /**
    * The grid index used to display widget in the case of dashboards rotation
    */
-  public currentGridIndex: number = 0;
+  public currentGridIndex = 0;
 
   /**
    * Contains the widget instances as grid items

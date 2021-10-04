@@ -1,9 +1,8 @@
-import {Component, Inject, Injector, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA} from "@angular/material/dialog";
-import {Project} from "../../../../shared/models/backend/project/project";
-import {Rotation} from "../../../../shared/models/backend/rotation/rotation";
-import {TvManagementDialogComponent} from "../tv-management-dialog.component";
-import {HttpRotationService} from "../../../../shared/services/backend/http-rotation/http-rotation.service";
+import { Component, Inject, Injector, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Rotation } from '../../../../shared/models/backend/rotation/rotation';
+import { TvManagementDialogComponent } from '../tv-management-dialog.component';
+import { HttpRotationService } from '../../../../shared/services/backend/http-rotation/http-rotation.service';
 
 @Component({
   templateUrl: '../tv-management-dialog.component.html',
@@ -22,9 +21,11 @@ export class RotationTvManagementDialogComponent extends TvManagementDialogCompo
    * @param injector            The injector
    * @param httpRotationService The HTTP rotation service
    */
-  constructor(@Inject(MAT_DIALOG_DATA) private readonly data: { rotation: Rotation },
-              protected injector: Injector,
-              private readonly httpRotationService: HttpRotationService) {
+  constructor(
+    @Inject(MAT_DIALOG_DATA) private readonly data: { rotation: Rotation },
+    protected injector: Injector,
+    private readonly httpRotationService: HttpRotationService
+  ) {
     super(injector);
   }
 

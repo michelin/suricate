@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { DashboardTvManagementDialogComponent } from './dashboard-tv-management-dialog.component';
 
 describe('DashboardTvManagementDialogComponent', () => {
@@ -8,9 +7,8 @@ describe('DashboardTvManagementDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ DashboardTvManagementDialogComponent ]
-    })
-    .compileComponents();
+      declarations: [DashboardTvManagementDialogComponent]
+    }).compileComponents();
   });
 
   beforeEach(() => {

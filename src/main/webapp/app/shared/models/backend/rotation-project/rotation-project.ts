@@ -1,22 +1,21 @@
+import { Project } from '../project/project';
+
 /**
  * Rotation class
  */
-import {Project} from "../project/project";
-import {Rotation} from "../rotation/rotation";
-
 export class RotationProject {
-    /**
-     * Project
-     */
-    project: Project;
+  /**
+   * Project
+   */
+  project: Project;
 
-    /**
-     * Rotation speed
-     */
-    rotationSpeed: number;
+  /**
+   * Rotation speed
+   */
+  rotationSpeed: number;
 
-    /**
-     * Constructor
-     */
-    constructor() {}
+  /**
+   * Constructor
+   */
+  constructor() {}
 }

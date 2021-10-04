@@ -52,6 +52,23 @@ export class RotationFormFieldsService {
   constructor(private readonly translateService: TranslateService) {}
 
   /**
+   * Get the project as options
+   */
+  private static getProjectsAsOptions(projects: Project[]): Observable<FormOption[]> {
+    const titleCasePipe = new TitleCasePipe();
+    const projectOptions: FormOption[] = [];
+
+    projects.forEach(project => {
+      projectOptions.push({
+        label: titleCasePipe.transform(project.name),
+        value: project.token
+      });
+    });
+
+    return of(projectOptions);
+  }
+
+  /**
    * Get the list of form fields for a rotation
    */
   public generateRotationFormFields(projects: Project[], rotation?: Rotation): FormField[] {
@@ -93,22 +110,5 @@ export class RotationFormFieldsService {
     }
 
     return fields;
-  }
-
-  /**
-   * Get the project as options
-   */
-  private static getProjectsAsOptions(projects: Project[]): Observable<FormOption[]> {
-    const titleCasePipe = new TitleCasePipe();
-    const projectOptions: FormOption[] = [];
-
-    projects.forEach(project => {
-      projectOptions.push({
-        label: titleCasePipe.transform(project.name),
-        value: project.token
-      });
-    });
-
-    return of(projectOptions);
   }
 }

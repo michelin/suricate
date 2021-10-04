@@ -1,8 +1,8 @@
-import {Component, Inject, Injector, OnInit} from '@angular/core';
-import {TvManagementDialogComponent} from "../tv-management-dialog.component";
-import {MAT_DIALOG_DATA} from "@angular/material/dialog";
-import {Project} from "../../../../shared/models/backend/project/project";
-import {HttpProjectService} from "../../../../shared/services/backend/http-project/http-project.service";
+import { Component, Inject, Injector, OnInit } from '@angular/core';
+import { TvManagementDialogComponent } from '../tv-management-dialog.component';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Project } from '../../../../shared/models/backend/project/project';
+import { HttpProjectService } from '../../../../shared/services/backend/http-project/http-project.service';
 
 @Component({
   templateUrl: '../tv-management-dialog.component.html',
@@ -21,9 +21,11 @@ export class DashboardTvManagementDialogComponent extends TvManagementDialogComp
    * @param injector           The injector
    * @param httpProjectService The HTTP project service
    */
-  constructor(@Inject(MAT_DIALOG_DATA) private readonly data: { project: Project },
-              protected injector: Injector,
-              private readonly httpProjectService: HttpProjectService) {
+  constructor(
+    @Inject(MAT_DIALOG_DATA) private readonly data: { project: Project },
+    protected injector: Injector,
+    private readonly httpProjectService: HttpProjectService
+  ) {
     super(injector);
   }
 
