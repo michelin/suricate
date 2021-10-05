@@ -297,15 +297,6 @@ public class DashboardWebSocketService {
     }
 
     /**
-     * Force dashboard to display client Id
-     *
-     * @param projectToken the specified project token
-     */
-    public void displayScreenCodeForProject(String projectToken) {
-        this.sendEventToProjectSubscribers(projectToken, UpdateEvent.builder().type(UpdateType.DISPLAY_NUMBER).build());
-    }
-
-    /**
      * Disconnect screen from project
      *
      * @param projectToken The project token

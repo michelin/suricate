@@ -18,7 +18,7 @@
 
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { flatMap, takeUntil, tap } from 'rxjs/operators';
-import { Observable, Subject } from 'rxjs';
+import {Observable, Subject, timer} from 'rxjs';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import * as Stomp from '@stomp/stompjs';
 import { Project } from '../../../shared/models/backend/project/project';
@@ -77,14 +77,14 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   public project: Project;
 
   /**
-   * Current rotation index
-   */
-  public rotationIndex = 0;
-
-  /**
    * The rotation
    */
   public rotation: Rotation;
+
+  /**
+   * The timeout at the end of which, the rotation rotates
+   */
+  public rotationTimeout: NodeJS.Timeout;
 
   /**
    * The constructor
@@ -191,11 +191,34 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
     if (this.rotationToken) {
       this.isDashboardLoading = true;
 
-      this.refreshRotation(this.rotationToken).subscribe((rotation: Rotation) => {
-        this.projectToken = rotation.rotationProjects[this.rotationIndex].project.token;
+      this.refreshRotation(this.rotationToken).subscribe(() => {
+        this.projectToken = this.rotation.rotationProjects[0].project.token;
         this.initComponentWithProject();
+
+        this.rotate(1);
       });
     }
+  }
+
+  /**
+   * Start the rotation of the dashboards
+   *
+   * In X seconds, increments the rotation and display the next dashboard
+   *
+   * @param rotationIndex The index of the current project to display in the rotation
+   */
+  private rotate(rotationIndex: number): void {
+    this.rotationTimeout = setTimeout(() => {
+      this.projectToken = this.rotation.rotationProjects[rotationIndex].project.token;
+      this.initComponentWithProject();
+
+      rotationIndex = rotationIndex === this.rotation.rotationProjects.length - 1 ? 0 : rotationIndex + 1;
+      this.rotate(rotationIndex);
+    }, this.rotation.rotationProjects[rotationIndex].rotationSpeed * 1000)
+  }
+
+  private restartRotation(): void {
+    clearTimeout(this.rotationTimeout);
   }
 
   /**
@@ -232,18 +255,6 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
     return this.httpProjectService
       .getWidgetInstancesByProjectToken(dashboardToken)
       .pipe(tap((projectWidgets: ProjectWidget[]) => (this.projectWidgets = projectWidgets)));
-  }
-
-  /**
-   * Perform the rotation by displaying the next project of the rotation
-   *
-   * @param project The new project of the rotation
-   */
-  public performRotation(project: Project): void {
-    this.isDashboardLoading = true;
-
-    this.projectToken = project.token;
-    this.initComponentWithProject();
   }
 
   /**

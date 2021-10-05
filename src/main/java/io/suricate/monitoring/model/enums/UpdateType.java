@@ -25,9 +25,9 @@ public enum UpdateType {
     POSITION,
     DISCONNECT,
     CONNECT_SINGLE_DASHBOARD,
-    CONNECT_ROTATION,
     DISPLAY_NUMBER,
     RELOAD,
     // Rotation event
-    ROTATE
+    CONNECT_ROTATION,
+    RESTART_ROTATION
 }

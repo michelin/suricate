@@ -20,9 +20,11 @@ package io.suricate.monitoring.controllers;
 
 import com.google.common.collect.Lists;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
+import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
 import io.suricate.monitoring.model.entities.Project;
 import io.suricate.monitoring.model.entities.Rotation;
 import io.suricate.monitoring.model.entities.RotationProject;
+import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.services.api.ProjectService;
 import io.suricate.monitoring.services.api.RotationService;
 import io.suricate.monitoring.services.websocket.DashboardWebSocketService;
@@ -162,8 +164,19 @@ public class ScreenController {
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Void> displayScreenCodeEveryConnectedScreensForProject(@ApiParam(name = "projectToken", value = "The project token", required = true)
                                                                                  @PathVariable("projectToken") String projectToken) {
-        this.dashboardWebSocketService.displayScreenCodeForProject(projectToken);
-        return ResponseEntity.noContent().build();
+        Optional<Project> projectOptional = this.projectService.getOneByToken(projectToken);
+        if (!projectOptional.isPresent()) {
+            throw new ObjectNotFoundException(Project.class, projectOptional);
+        }
+
+        this.dashboardWebSocketService
+                .sendEventToProjectSubscribers(projectToken, UpdateEvent.builder()
+                        .type(UpdateType.DISPLAY_NUMBER)
+                        .build());
+
+        return ResponseEntity
+                .noContent()
+                .build();
     }
 
     /**
@@ -216,7 +229,13 @@ public class ScreenController {
             throw new ObjectNotFoundException(Project.class, rotationToken);
         }
 
-        this.dashboardWebSocketService.displayScreenCodeForProject(rotationToken);
-        return ResponseEntity.noContent().build();
+        this.rotationWebSocketService.sendEventToRotationSubscribers(rotationToken,
+                UpdateEvent.builder()
+                        .type(UpdateType.DISPLAY_NUMBER)
+                        .build());
+
+        return ResponseEntity
+                .noContent()
+                .build();
     }
 }

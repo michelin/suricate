@@ -3,20 +3,11 @@ package io.suricate.monitoring.services.websocket;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
-import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
 import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
 import io.suricate.monitoring.model.dto.websocket.WebsocketClient;
-import io.suricate.monitoring.model.entities.Project;
 import io.suricate.monitoring.model.entities.Rotation;
-import io.suricate.monitoring.model.entities.RotationProject;
 import io.suricate.monitoring.model.enums.UpdateType;
-import io.suricate.monitoring.services.api.ProjectService;
-import io.suricate.monitoring.services.api.RotationService;
-import io.suricate.monitoring.services.mapper.ProjectMapper;
 import io.suricate.monitoring.services.mapper.RotationMapper;
-import io.suricate.monitoring.services.nashorn.scheduler.NashornRequestWidgetExecutionScheduler;
-import io.suricate.monitoring.services.nashorn.services.NashornService;
-import io.suricate.monitoring.services.rotation.RotationExecutionScheduler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
@@ -25,7 +16,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,19 +36,9 @@ public class RotationWebSocketService {
     private final SimpMessagingTemplate simpMessagingTemplate;
 
     /**
-     * The rotation service
-     */
-    private final RotationService rotationService;
-
-    /**
      * The rotation mapper
      */
     private final RotationMapper rotationMapper;
-
-    /**
-     * The rotation execution scheduler
-     */
-    private final RotationExecutionScheduler rotationExecutionScheduler;
 
     /**
      * Save all websocket clients by rotation token.
@@ -71,18 +51,12 @@ public class RotationWebSocketService {
      * Constructor
      *
      * @param simpMessagingTemplate The stomp websocket message template
-     * @param rotationService The rotation service
      * @param rotationMapper The rotation mapper
-     * @param rotationExecutionScheduler The rotation execution scheduler
      */
     public RotationWebSocketService(final SimpMessagingTemplate simpMessagingTemplate,
-                                    final RotationService rotationService,
-                                    final RotationMapper rotationMapper,
-                                    final RotationExecutionScheduler rotationExecutionScheduler) {
+                                    final RotationMapper rotationMapper) {
         this.simpMessagingTemplate = simpMessagingTemplate;
         this.rotationMapper = rotationMapper;
-        this.rotationService = rotationService;
-        this.rotationExecutionScheduler = rotationExecutionScheduler;
     }
 
     /**
@@ -113,7 +87,7 @@ public class RotationWebSocketService {
      * @param screenCode The screen code used to identify the screen
      * @param payload The event to send to the screen
      */
-    @Async
+    /* @Async
     public void sendEventToScreenRotationSubscriber(String rotationToken, String screenCode, UpdateEvent payload) {
         LOGGER.debug("Sending the event {} to the rotation {}", payload.getType(), rotationToken);
 
@@ -122,7 +96,7 @@ public class RotationWebSocketService {
                 "queue/unique",
                 payload
         );
-    }
+    } */
 
     /**
      * Send an event through the associated websocket to all subscribers.
@@ -162,12 +136,15 @@ public class RotationWebSocketService {
      */
     public void addClientToRotation(final Rotation rotation, final WebsocketClient websocketClient) {
         this.websocketClientByRotationToken.put(rotation.getToken(), websocketClient);
+    }
 
-        Iterator<RotationProject> iterator = rotation.getRotationProjects().iterator();
-        RotationProject current = iterator.next();
-
-        this.rotationExecutionScheduler.scheduleRotation(rotation, current, rotation.getRotationProjects().iterator(),
-                websocketClient.getScreenCode());
+    /**
+     * Remove a given websocket from the rotation/connection map
+     *
+     * @param websocketClient The websocket to remove
+     */
+    public void removeClientFromRotation(WebsocketClient websocketClient) {
+        this.websocketClientByRotationToken.remove(websocketClient.getRotationToken(), websocketClient);
     }
 
     /**
@@ -181,27 +158,6 @@ public class RotationWebSocketService {
                 .stream()
                 .filter(websocketClient -> websocketClient.getSessionId().equals(sessionId))
                 .findFirst();
-    }
-
-    /**
-     * Remove a given websocket from the rotation/connection map
-     *
-     * @param websocketClient The websocket to remove
-     */
-    public void removeClientFromRotation(WebsocketClient websocketClient) {
-        this.websocketClientByRotationToken.remove(websocketClient.getRotationToken(), websocketClient);
-
-        this.rotationExecutionScheduler.
-                cancelRotationForScreen(websocketClient.getScreenCode());
-    }
-
-    /**
-     * Force dashboard to display client Id
-     *
-     * @param projectToken the specified project token
-     */
-    public void displayScreenCodeForProject(String projectToken) {
-        this.sendEventToRotationSubscribers(projectToken, UpdateEvent.builder().type(UpdateType.DISPLAY_NUMBER).build());
     }
 
     /**

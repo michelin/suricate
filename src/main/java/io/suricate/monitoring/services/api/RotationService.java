@@ -1,21 +1,15 @@
 package io.suricate.monitoring.services.api;
 
-import com.google.common.collect.Sets;
 import io.suricate.monitoring.model.dto.api.rotation.RotationRequestDto;
 import io.suricate.monitoring.model.dto.api.rotationproject.RotationProjectRequestDto;
-import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
 import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
 import io.suricate.monitoring.model.dto.websocket.WebsocketClient;
-import io.suricate.monitoring.model.entities.Project;
 import io.suricate.monitoring.model.entities.Rotation;
 import io.suricate.monitoring.model.entities.RotationProject;
 import io.suricate.monitoring.model.entities.User;
 import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.repositories.RotationRepository;
-import io.suricate.monitoring.services.mapper.RotationMapper;
 import io.suricate.monitoring.services.mapper.RotationProjectMapper;
-import io.suricate.monitoring.services.nashorn.tasks.NashornRequestWidgetExecutionAsyncTask;
-import io.suricate.monitoring.services.rotation.RotationExecutionScheduler;
 import io.suricate.monitoring.services.websocket.RotationWebSocketService;
 import io.suricate.monitoring.utils.SecurityUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -25,10 +19,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -36,11 +29,6 @@ import java.util.stream.Collectors;
  */
 @Service
 public class RotationService {
-    /**
-     * Project service
-     */
-    private final ProjectService projectService;
-
     /**
      * Rotation repository
      */
@@ -55,11 +43,6 @@ public class RotationService {
      * String encryptor
      */
     private final StringEncryptor stringEncryptor;
-
-    /**
-     * Rotation scheduler
-     */
-    private final RotationExecutionScheduler rotationExecutionScheduler;
 
     /**
      * Rotation web socket service
@@ -77,15 +60,11 @@ public class RotationService {
      */
     public RotationService(@Qualifier("jasyptStringEncryptor") final StringEncryptor stringEncryptor,
                            RotationRepository rotationRepository,
-                           ProjectService projectService,
                            RotationProjectMapper rotationProjectMapper,
-                           RotationWebSocketService rotationWebSocketService,
-                           RotationExecutionScheduler rotationExecutionScheduler) {
+                           RotationWebSocketService rotationWebSocketService) {
         this.stringEncryptor = stringEncryptor;
         this.rotationRepository = rotationRepository;
-        this.projectService = projectService;
         this.rotationProjectMapper = rotationProjectMapper;
-        this.rotationExecutionScheduler = rotationExecutionScheduler;
         this.rotationWebSocketService = rotationWebSocketService;
     }
 
@@ -191,12 +170,10 @@ public class RotationService {
 
         this.rotationRepository.save(rotation);
 
-        List<WebsocketClient> clients = this.rotationWebSocketService.getWebsocketClientsByRotationToken(rotation.getToken());
-
-        if (!clients.isEmpty()) {
-            clients.forEach(client ->
-                    this.rotationExecutionScheduler.restartRotationForScreen(rotation, client.getScreenCode()));
-        }
+        this.rotationWebSocketService.sendEventToRotationSubscribers(rotation.getToken(),
+                UpdateEvent.builder()
+                        .type(UpdateType.RESTART_ROTATION)
+                        .build());
     }
 
     /**

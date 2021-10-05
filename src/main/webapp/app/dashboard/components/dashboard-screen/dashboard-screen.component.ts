@@ -104,10 +104,10 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   public refreshProjectWidget = new EventEmitter<void>();
 
   /**
-   * Use to tell to the parent component that it should display the next project of the rotation
+   * Tell the parent component to restart the rotation
    */
   @Output()
-  public performRotation = new EventEmitter<Project>();
+  public restartRotation = new EventEmitter<void>();
 
   /**
    * Subject used to unsubscribe all the subscriptions to rotation web sockets
@@ -439,8 +439,6 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
    * Create a websocket subscription for the current rotation
    */
   private websocketRotationEventSubscription(): void {
-    console.warn('Init websocket subscriptions for rotation');
-
     const rotationSubscriptionUrl = `/user/${this.rotation.token}/queue/live`;
 
     this.websocketService
@@ -453,8 +451,10 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
           case WebsocketUpdateTypeEnum.DISPLAY_NUMBER:
             this.displayScreenCode();
             break;
+          case WebsocketUpdateTypeEnum.RESTART_ROTATION:
+            this.restartRotation.emit();
+            break;
           default:
-            this.refreshProjectWidget.emit();
         }
       });
   }
@@ -472,9 +472,6 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
         const event: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 
         switch (event.type) {
-          case WebsocketUpdateTypeEnum.ROTATE:
-            this.performRotation.emit(event.content);
-            break;
           default:
             this.refreshProjectWidget.emit();
         }
