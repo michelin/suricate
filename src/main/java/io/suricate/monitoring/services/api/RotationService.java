@@ -172,7 +172,7 @@ public class RotationService {
 
         this.rotationWebSocketService.sendEventToRotationSubscribers(rotation.getToken(),
                 UpdateEvent.builder()
-                        .type(UpdateType.RESTART_ROTATION)
+                        .type(UpdateType.RELOAD)
                         .build());
     }
 

@@ -134,6 +134,8 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    */
   public ngOnDestroy(): void {
     this.disconnectTV();
+
+    clearTimeout(this.rotationTimeout);
   }
 
   /**
@@ -195,13 +197,15 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
         this.projectToken = this.rotation.rotationProjects[0].project.token;
         this.initComponentWithProject();
 
-        this.rotate(1);
+        if (this.rotation.rotationProjects.length > 1) {
+          this.rotate(0);
+        }
       });
     }
   }
 
   /**
-   * Start the rotation of the dashboards
+   * Run the rotation of the dashboards
    *
    * In X seconds, increments the rotation and display the next dashboard
    *
@@ -209,16 +213,13 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    */
   private rotate(rotationIndex: number): void {
     this.rotationTimeout = setTimeout(() => {
+      rotationIndex = rotationIndex === this.rotation.rotationProjects.length - 1 ? 0 : rotationIndex + 1;
+
       this.projectToken = this.rotation.rotationProjects[rotationIndex].project.token;
       this.initComponentWithProject();
 
-      rotationIndex = rotationIndex === this.rotation.rotationProjects.length - 1 ? 0 : rotationIndex + 1;
       this.rotate(rotationIndex);
     }, this.rotation.rotationProjects[rotationIndex].rotationSpeed * 1000)
-  }
-
-  private restartRotation(): void {
-    clearTimeout(this.rotationTimeout);
   }
 
   /**
@@ -269,15 +270,9 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * Disconnect TV from stompJS
    */
   private disconnectTV(): void {
-    this.unsubscribeToConnectionEvent();
-    this.websocketService.disconnect();
-  }
-
-  /**
-   * Used to unsubscribe to the websocket
-   */
-  private unsubscribeToConnectionEvent(): void {
     this.unsubscribe.next();
     this.unsubscribe.complete();
+
+    this.websocketService.disconnect();
   }
 }

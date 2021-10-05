@@ -103,11 +103,6 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   @Output()
   public refreshProjectWidget = new EventEmitter<void>();
 
-  /**
-   * Tell the parent component to restart the rotation
-   */
-  @Output()
-  public restartRotation = new EventEmitter<void>();
 
   /**
    * Subject used to unsubscribe all the subscriptions to rotation web sockets
@@ -451,8 +446,8 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
           case WebsocketUpdateTypeEnum.DISPLAY_NUMBER:
             this.displayScreenCode();
             break;
-          case WebsocketUpdateTypeEnum.RESTART_ROTATION:
-            this.restartRotation.emit();
+          case WebsocketUpdateTypeEnum.RELOAD:
+            location.reload();
             break;
           default:
         }
