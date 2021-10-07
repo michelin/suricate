@@ -103,7 +103,6 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   @Output()
   public refreshProjectWidget = new EventEmitter<void>();
 
-
   /**
    * Subject used to unsubscribe all the subscriptions to rotation web sockets
    */

@@ -70,6 +70,16 @@ export class RotationsComponent extends ListComponent<Rotation | RotationRequest
   }
 
   /**
+   * Function used to not propagate the event
+   *
+   * @param event The event to stop
+   */
+  private static stopEventPropagation(event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+  }
+
+  /**
    * Function used to configure the header of the list component
    */
   private initHeaderConfiguration(): void {
@@ -269,15 +279,5 @@ export class RotationsComponent extends ListComponent<Rotation | RotationRequest
    */
   private initFilter(): void {
     this.httpFilter.sort = ['name,asc'];
-  }
-
-  /**
-   * Function used to not propagate the event
-   *
-   * @param event The event to stop
-   */
-  private static stopEventPropagation(event: Event): void {
-    event.preventDefault();
-    event.stopPropagation();
   }
 }

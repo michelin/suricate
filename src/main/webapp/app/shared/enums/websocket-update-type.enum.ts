@@ -29,5 +29,5 @@ export enum WebsocketUpdateTypeEnum {
   CONNECT_ROTATION = 'CONNECT_ROTATION',
   // Shared events
   DISPLAY_NUMBER = 'DISPLAY_NUMBER',
-  RELOAD = 'RELOAD',
+  RELOAD = 'RELOAD'
 }
