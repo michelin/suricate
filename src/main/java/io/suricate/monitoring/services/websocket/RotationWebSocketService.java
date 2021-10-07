@@ -169,4 +169,18 @@ public class RotationWebSocketService {
     public List<WebsocketClient> getWebsocketClientsByRotationToken(final String rotationToken) {
         return new ArrayList<>(this.websocketClientByRotationToken.get(rotationToken));
     }
+
+    /**
+     * Method that force the reload of every connected clients for a project
+     *
+     * @param projectToken The project token
+     */
+    public void reloadAllConnectedClientsToARotation(final String rotationToken) {
+        if (!this.getWebsocketClientsByRotationToken(rotationToken).isEmpty()) {
+            this.sendEventToRotationSubscribers(rotationToken,
+                    UpdateEvent.builder()
+                            .type(UpdateType.RELOAD)
+                            .build());
+        }
+    }
 }

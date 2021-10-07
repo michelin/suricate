@@ -326,6 +326,7 @@ export class DashboardDetailComponent implements OnInit {
         this.httpProjectService.addOrUpdateProjectScreenshot(this.project.token, file).subscribe();
       }
 
+      // If there is no widget anymore, no need to refresh the current screen, only refresh the connected screens
       if (!this.projectWidgets) {
         this.refreshProject().subscribe(() => {
           this.initHeaderConfiguration();
@@ -348,7 +349,7 @@ export class DashboardDetailComponent implements OnInit {
    * Open a new tab with the TV view
    */
   private redirectToTvView(): void {
-    const url = this.router.createUrlTree(['/tv'], { queryParams: { token: this.project.token } });
+    const url = this.router.createUrlTree(['/tv'], { queryParams: { dashboard: this.project.token } });
     window.open(url.toString(), '_blank');
   }
 

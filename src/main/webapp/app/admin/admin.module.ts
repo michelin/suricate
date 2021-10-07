@@ -23,10 +23,11 @@ import { UsersComponent } from './users/users.component';
 import { RepositoriesComponent } from './repositories/repositories.component';
 import { DashboardsComponent } from './dashboards/dashboards.component';
 import { ConfigurationsComponent } from './configurations/configurations.component';
+import { RotationsComponent } from './rotations/rotations.component';
 
 @NgModule({
   imports: [RouterModule.forChild(adminRoutes), LayoutModule, SharedModule],
-  declarations: [UsersComponent, RepositoriesComponent, DashboardsComponent, ConfigurationsComponent],
+  declarations: [UsersComponent, RepositoriesComponent, DashboardsComponent, ConfigurationsComponent, RotationsComponent],
   exports: [RouterModule]
 })
 export class AdminModule {}

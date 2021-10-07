@@ -22,11 +22,17 @@ import { UsersComponent } from './users/users.component';
 import { RepositoriesComponent } from './repositories/repositories.component';
 import { DashboardsComponent } from './dashboards/dashboards.component';
 import { ConfigurationsComponent } from './configurations/configurations.component';
+import { RotationsComponent } from './rotations/rotations.component';
 
 export const adminRoutes: Routes = [
   {
     path: 'admin/dashboards',
     component: DashboardsComponent,
+    canActivate: [AuthGuard, AdminGuard]
+  },
+  {
+    path: 'admin/rotations',
+    component: RotationsComponent,
     canActivate: [AuthGuard, AdminGuard]
   },
   {

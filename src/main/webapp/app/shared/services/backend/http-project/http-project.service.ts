@@ -36,7 +36,7 @@ import { Page } from '../../../models/backend/page';
 export class HttpProjectService implements AbstractHttpService<Project | ProjectRequest> {
   /**
    * Global endpoint for projects
-   * @type {string}
+   * @type
    */
   private static readonly projectsApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/projects`;
 
@@ -48,9 +48,9 @@ export class HttpProjectService implements AbstractHttpService<Project | Project
   constructor(private readonly httpClient: HttpClient) {}
 
   /**
-   * Get every dashboards and update the list
+   * Get all the projects
    *
-   * @returns {Observable<Project[]>} The list as observable
+   * @param filter The research/pagination filter
    */
   public getAll(filter?: HttpFilter): Observable<Page<Project>> {
     const url = `${HttpProjectService.projectsApiEndpoint}`;
@@ -59,10 +59,9 @@ export class HttpProjectService implements AbstractHttpService<Project | Project
   }
 
   /**
-   * Get a dashboard by id
+   * Get a project by token
    *
-   * @param {string} projectToken The dashboard token
-   * @returns {Observable<Project>} The dashboard as observable
+   * @param projectToken The project token
    */
   public getById(projectToken: string): Observable<Project> {
     const url = `${HttpProjectService.projectsApiEndpoint}/${projectToken}`;

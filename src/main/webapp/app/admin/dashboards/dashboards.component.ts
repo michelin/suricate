@@ -29,26 +29,23 @@ import { EMPTY, Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { CssService } from '../../shared/services/frontend/css/css.service';
 
-/**
- * Component used to display the list of Dashboards
- */
 @Component({
   templateUrl: '../../shared/components/list/list.component.html',
   styleUrls: ['../../shared/components/list/list.component.scss']
 })
 export class DashboardsComponent extends ListComponent<Project | ProjectRequest> {
   /**
-   * Project selected in the list for modification
+   * Project selected in the list for modifications
    */
   private projectSelected: Project;
 
   /**
    * Constructor
    *
-   * @param httpProjectService Suricate service used to manage the http calls for a project
-   * @param projectFormFieldsService Frontend service used to build form fields for a project
-   * @param projectUsersFormFieldsService Frontend service used to build form fields for a project users
-   * @param injector Angular Service used to manage the injection of services
+   * @param httpProjectService Manage the http calls for a project
+   * @param projectFormFieldsService Build form fields for a project
+   * @param projectUsersFormFieldsService Build form fields for rotation users
+   * @param injector Manage the injection of services
    */
   constructor(
     private readonly httpProjectService: HttpProjectService,
@@ -161,6 +158,7 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
     projectRequest.cssStyle = CssService.buildCssFile([CssService.buildCssGridBackgroundColor(projectRequest.gridBackgroundColor)]);
 
     this.httpProjectService.update(this.projectSelected.token, projectRequest).subscribe(() => {
+      this.toastService.sendMessage('dashboard.update.success', ToastTypeEnum.SUCCESS);
       this.refreshList();
     });
   }
@@ -204,6 +202,11 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
     });
   }
 
+  /**
+   * On value changed callback, called when selecting a user to add to a dashboard
+   *
+   * @param valueChangedEvent The event
+   */
   private onValueChanged(valueChangedEvent: ValueChangedEvent): Observable<FormField[]> {
     if (valueChangedEvent.type === 'optionSelected' && valueChangedEvent.fieldKey === 'usernameAutocomplete') {
       return this.httpProjectService

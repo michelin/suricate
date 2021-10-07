@@ -238,4 +238,25 @@ public class ScreenController {
                 .noContent()
                 .build();
     }
+
+    /**
+     * Refresh every screen for a rotation token
+     *
+     * @param rotationToken The rotation token used for the refresh
+     */
+    @ApiOperation(value = "Refresh every connected client for this rotation")
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "Screens refresh"),
+            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
+    })
+    @GetMapping(value = "/v1/screens/rotation/{rotationToken}/refresh")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<Void> refreshEveryConnectedScreensForRotation(@ApiParam(name = "rotationToken", value = "The rotation token", required = true)
+                                                                       @PathVariable("rotationToken") String rotationToken) {
+        this.rotationWebSocketService.reloadAllConnectedClientsToARotation(rotationToken);
+
+        return ResponseEntity.noContent().build();
+    }
+
 }

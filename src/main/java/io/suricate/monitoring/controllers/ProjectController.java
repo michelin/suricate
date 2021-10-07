@@ -153,7 +153,6 @@ public class ProjectController {
     @ApiPageable
     @GetMapping("/v1/projects")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @Transactional
     public Page<ProjectResponseDto> getAll(@ApiParam(name = "search", value = "Search keyword")
                                            @RequestParam(value = "search", required = false) String search,
                                            Pageable pageable) {
@@ -387,7 +386,6 @@ public class ProjectController {
     })
     @GetMapping(value = "/v1/projects/{projectToken}/projectWidgets")
     @PermitAll
-    @Transactional
     public ResponseEntity<List<ProjectWidgetResponseDto>> getProjectWidgetsForProject(@ApiParam(name = "projectToken", value = "The project token", required = true)
                                                                                       @PathVariable("projectToken") String projectToken) {
         Optional<Project> projectOptional = this.projectService.getOneByToken(projectToken);
@@ -423,7 +421,6 @@ public class ProjectController {
     })
     @PostMapping(value = "/v1/projects/{projectToken}/projectWidgets")
     @PreAuthorize("hasRole('ROLE_USER')")
-    @Transactional
     public ResponseEntity<ProjectWidgetResponseDto> addProjectWidgetToProject(@ApiIgnore OAuth2Authentication authentication,
                                                                               @ApiParam(name = "projectToken", value = "The project token", required = true)
                                                                               @PathVariable("projectToken") String projectToken,
@@ -467,7 +464,6 @@ public class ProjectController {
     })
     @GetMapping(value = "/v1/projects/{projectToken}/users")
     @PreAuthorize("hasRole('ROLE_USER')")
-    @Transactional
     public ResponseEntity<List<UserResponseDto>> getProjectUsers(@ApiParam(name = "projectToken", value = "The project token", required = true)
                                                                  @PathVariable("projectToken") String projectToken) {
         Optional<Project> projectOptional = this.projectService.getOneByToken(projectToken);
@@ -580,7 +576,6 @@ public class ProjectController {
     })
     @GetMapping(value = "/v1/projects/{projectToken}/websocket/clients")
     @PreAuthorize("hasRole('ROLE_USER')")
-    @Transactional
     public ResponseEntity<List<WebsocketClient>> getProjectWebsocketClients(@ApiParam(name = "projectToken", value = "The project token", required = true)
                                                                             @PathVariable("projectToken") String projectToken) {
         Optional<Project> projectOptional = this.projectService.getOneByToken(projectToken);

@@ -17,6 +17,11 @@
 package io.suricate.monitoring.repositories;
 
 import io.suricate.monitoring.model.entities.Project;
+import io.suricate.monitoring.model.entities.Rotation;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -32,7 +37,18 @@ import java.util.Optional;
  */
 @Repository
 public interface ProjectRepository extends CrudRepository<Project, Long>, JpaSpecificationExecutor<Project> {
-    /**
+	/**
+	 * Find all paginated projects
+	 *
+	 * @param specification The specification to apply
+	 * @param pageable The pageable to apply
+	 * @return The paginated projects
+	 */
+	@NotNull
+	@EntityGraph(attributePaths = {"widgets"})
+	Page<Project> findAll(Specification<Project> specification, @NotNull Pageable pageable);
+
+	/**
      * Find projects by user id
      *
      * @param id The user id
@@ -47,7 +63,10 @@ public interface ProjectRepository extends CrudRepository<Project, Long>, JpaSpe
 	 * @param token The token to find
 	 * @return The project as Optionals
 	 */
-    @EntityGraph(attributePaths = {"screenshot", "widgets.widget.category.configurations", "users"})
+    @EntityGraph(attributePaths = {"screenshot",
+								   "widgets.widget.category.configurations",
+								   "widgets.widget.widgetParams",
+								   "users.roles"})
 	Optional<Project> findProjectByToken(final String token);
 
 	/**

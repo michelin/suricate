@@ -18,7 +18,7 @@
 
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { flatMap, takeUntil, tap } from 'rxjs/operators';
-import {Observable, Subject, timer} from 'rxjs';
+import { Observable, Subject, timer } from 'rxjs';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import * as Stomp from '@stomp/stompjs';
 import { Project } from '../../../shared/models/backend/project/project';
@@ -219,7 +219,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
       this.initComponentWithProject();
 
       this.rotate(rotationIndex);
-    }, this.rotation.rotationProjects[rotationIndex].rotationSpeed * 1000)
+    }, this.rotation.rotationProjects[rotationIndex].rotationSpeed * 1000);
   }
 
   /**
@@ -237,7 +237,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * @param rotationToken The token used for the refresh
    */
   private refreshRotation(rotationToken: string): Observable<Rotation> {
-    return this.httpRotationService.getByToken(rotationToken).pipe(tap((rotation: Rotation) => (this.rotation = rotation)));
+    return this.httpRotationService.getById(rotationToken).pipe(tap((rotation: Rotation) => (this.rotation = rotation)));
   }
 
   /**

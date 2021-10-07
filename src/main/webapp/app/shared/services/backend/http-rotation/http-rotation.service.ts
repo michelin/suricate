@@ -35,7 +35,7 @@ import { Rotation } from '../../../models/backend/rotation/rotation';
 import { RotationRequest } from '../../../models/backend/rotation/rotation-request';
 
 @Injectable({ providedIn: 'root' })
-export class HttpRotationService {
+export class HttpRotationService implements AbstractHttpService<Rotation | RotationRequest> {
   /**
    * Global endpoint for projects
    */
@@ -49,6 +49,28 @@ export class HttpRotationService {
   constructor(private readonly httpClient: HttpClient) {}
 
   /**
+   * Get all the rotations
+   *
+   * @param filter The research/pagination filter
+   */
+  public getAll(filter?: HttpFilter): Observable<Page<Rotation>> {
+    const url = `${HttpRotationService.rotationsApiEndpoint}`;
+
+    return this.httpClient.get<Page<Rotation>>(HttpFilterService.getFilteredUrl(url, filter));
+  }
+
+  /**
+   * Get a rotation by token
+   *
+   * @param token The rotation token
+   */
+  public getById(token: string): Observable<Rotation> {
+    const url = `${HttpRotationService.rotationsApiEndpoint}/${token}`;
+
+    return this.httpClient.get<Rotation>(url);
+  }
+
+  /**
    * Get all rotations of current user
    *
    * @returns The rotations of the current user
@@ -57,18 +79,6 @@ export class HttpRotationService {
     const url = `${HttpRotationService.rotationsApiEndpoint}/currentUser`;
 
     return this.httpClient.get<Rotation[]>(url);
-  }
-
-  /**
-   * Get a rotation by token
-   *
-   * @param token The rotation token
-   * @returns The rotation as observable
-   */
-  public getByToken(token: string): Observable<Rotation> {
-    const url = `${HttpRotationService.rotationsApiEndpoint}/${token}`;
-
-    return this.httpClient.get<Rotation>(url);
   }
 
   /**

@@ -4,17 +4,22 @@ import io.suricate.monitoring.model.dto.api.rotation.RotationRequestDto;
 import io.suricate.monitoring.model.dto.api.rotationproject.RotationProjectRequestDto;
 import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
 import io.suricate.monitoring.model.dto.websocket.WebsocketClient;
+import io.suricate.monitoring.model.entities.Project;
 import io.suricate.monitoring.model.entities.Rotation;
 import io.suricate.monitoring.model.entities.RotationProject;
 import io.suricate.monitoring.model.entities.User;
 import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.repositories.RotationRepository;
 import io.suricate.monitoring.services.mapper.RotationProjectMapper;
+import io.suricate.monitoring.services.specifications.ProjectSearchSpecification;
+import io.suricate.monitoring.services.specifications.RotationSearchSpecification;
 import io.suricate.monitoring.services.websocket.RotationWebSocketService;
 import io.suricate.monitoring.utils.SecurityUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jasypt.encryption.StringEncryptor;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -66,6 +71,18 @@ public class RotationService {
         this.rotationRepository = rotationRepository;
         this.rotationProjectMapper = rotationProjectMapper;
         this.rotationWebSocketService = rotationWebSocketService;
+    }
+
+    /**
+     * Get the list of rotations
+     *
+     * @param search   The search string
+     * @param pageable The page configurations
+     * @return The list paginated
+     */
+    @Transactional(readOnly = true)
+    public Page<Rotation> getAll(String search, Pageable pageable) {
+        return this.rotationRepository.findAll(new RotationSearchSpecification(search), pageable);
     }
 
     /**
@@ -170,10 +187,7 @@ public class RotationService {
 
         this.rotationRepository.save(rotation);
 
-        this.rotationWebSocketService.sendEventToRotationSubscribers(rotation.getToken(),
-                UpdateEvent.builder()
-                        .type(UpdateType.RELOAD)
-                        .build());
+        this.rotationWebSocketService.reloadAllConnectedClientsToARotation(rotation.getToken());
     }
 
     /**

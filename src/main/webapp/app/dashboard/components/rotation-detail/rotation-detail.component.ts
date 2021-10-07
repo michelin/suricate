@@ -36,10 +36,10 @@ import { EMPTY, Observable, of } from 'rxjs';
 import { FormField } from '../../../shared/models/frontend/form/form-field';
 import { RotationProject } from '../../../shared/models/backend/rotation-project/rotation-project';
 import { MatDialog } from '@angular/material/dialog';
-import { DashboardTvManagementDialogComponent } from '../tv-management-dialog/dashboard-tv-management-dialog/dashboard-tv-management-dialog.component';
 import { RotationTvManagementDialogComponent } from '../tv-management-dialog/rotation-tv-management-dialog/rotation-tv-management-dialog.component';
 import { ProjectRotationUsersFormFieldsService } from '../../../shared/services/frontend/form-fields/project-rotation-users-form-fields/project-rotation-users-form-fields.service';
 import { switchMap } from 'rxjs/operators';
+import { HttpScreenService } from '../../../shared/services/backend/http-screen/http-screen.service';
 
 @Component({
   selector: 'suricate-rotation-detail',
@@ -90,6 +90,7 @@ export class RotationDetailComponent implements OnInit {
    * @param activatedRoute The activated route
    * @param httpRotationService The HTTP rotation service
    * @param httpProjectService The HTTP project service
+   * @param httpScreenService The HTTP screen service
    * @param dialogService The dialog service
    * @param translateService The translate service
    * @param toastService The toast service
@@ -103,6 +104,7 @@ export class RotationDetailComponent implements OnInit {
     private readonly activatedRoute: ActivatedRoute,
     private readonly httpRotationService: HttpRotationService,
     private readonly httpProjectService: HttpProjectService,
+    private readonly httpScreenService: HttpScreenService,
     private readonly dialogService: DialogService,
     private readonly translateService: TranslateService,
     private readonly toastService: ToastService,
@@ -115,7 +117,7 @@ export class RotationDetailComponent implements OnInit {
    * Init method
    */
   ngOnInit(): void {
-    this.httpRotationService.getByToken(this.activatedRoute.snapshot.params['rotationToken']).subscribe(
+    this.httpRotationService.getById(this.activatedRoute.snapshot.params['rotationToken']).subscribe(
       (rotation: Rotation) => {
         this.isRotationLoading = false;
         this.rotation = rotation;
@@ -150,6 +152,20 @@ export class RotationDetailComponent implements OnInit {
           callback: () => this.openUserFormSidenav()
         },
         {
+          icon: IconEnum.REFRESH,
+          color: 'primary',
+          variant: 'miniFab',
+          tooltip: { message: 'screen.refresh' },
+          callback: () => this.refreshConnectedScreens()
+        },
+        {
+          icon: IconEnum.TV,
+          color: 'primary',
+          variant: 'miniFab',
+          tooltip: { message: 'tv.view' },
+          callback: () => this.redirectToTvView()
+        },
+        {
           icon: IconEnum.TV_LIVE,
           color: 'primary',
           variant: 'miniFab',
@@ -175,7 +191,8 @@ export class RotationDetailComponent implements OnInit {
     this.httpProjectService.getAllForCurrentUser().subscribe((dashboards: Project[]) => {
       this.projects = dashboards;
 
-      // Make a copy of the rotation for the edition
+      // Make a copy of the rotation for the edition, so the modifications are not applied
+      // on the displayed rotation in the background
       this.rotationInEdition = JSON.parse(JSON.stringify(this.rotation));
 
       this.sidenavService.openFormSidenav({
@@ -218,7 +235,7 @@ export class RotationDetailComponent implements OnInit {
    *
    * @param valueChangedEvent The value changed event
    */
-  onRotationSidenavValueChanged(valueChangedEvent: ValueChangedEvent): Observable<FormField[]> {
+  public onRotationSidenavValueChanged(valueChangedEvent: ValueChangedEvent): Observable<FormField[]> {
     if (valueChangedEvent.fieldKey === RotationFormFieldsService.projectsFormFieldKey) {
       // Add project
       valueChangedEvent.value.forEach(projectToken => {
@@ -291,6 +308,21 @@ export class RotationDetailComponent implements OnInit {
     }
 
     return EMPTY;
+  }
+
+  /**
+   * Refresh every connected screens that render the current rotation
+   */
+  private refreshConnectedScreens(): void {
+    this.httpScreenService.refreshEveryConnectedScreensForRotation(this.rotation.token).subscribe();
+  }
+
+  /**
+   * Open a new tab with the TV view
+   */
+  private redirectToTvView(): void {
+    const url = this.router.createUrlTree(['/tv'], { queryParams: { rotation: this.rotation.token } });
+    window.open(url.toString(), '_blank');
   }
 
   /**

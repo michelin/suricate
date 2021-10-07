@@ -98,15 +98,4 @@ export class HttpRepositoryService implements AbstractHttpService<Repository | R
   public delete(id: number): Observable<void> {
     return EMPTY;
   }
-
-  /**
-   * Get the list of widgets for a repository
-   *
-   * @param repositoryId The repository ID
-   */
-  public getRepositoryWidgets(repositoryId: number): Observable<Widget[]> {
-    const url = `${HttpRepositoryService.repositoriesApiEndpoint}/${repositoryId}/widgets`;
-
-    return this.httpClient.get<Widget[]>(url);
-  }
 }

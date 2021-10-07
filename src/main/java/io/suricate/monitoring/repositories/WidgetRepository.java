@@ -33,7 +33,6 @@ import java.util.Optional;
  */
 @Repository
 public interface WidgetRepository extends JpaRepository<Widget, Long> {
-
     /**
      * Find all paginated widgets
      *

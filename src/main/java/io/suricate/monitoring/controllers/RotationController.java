@@ -1,6 +1,8 @@
 package io.suricate.monitoring.controllers;
 
+import io.suricate.monitoring.configuration.swagger.ApiPageable;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
+import io.suricate.monitoring.model.dto.api.project.ProjectResponseDto;
 import io.suricate.monitoring.model.dto.api.rotation.RotationRequestDto;
 import io.suricate.monitoring.model.dto.api.rotation.RotationResponseDto;
 import io.suricate.monitoring.model.dto.api.user.UserResponseDto;
@@ -19,6 +21,8 @@ import io.suricate.monitoring.utils.exceptions.ApiException;
 import io.suricate.monitoring.utils.exceptions.ObjectNotFoundException;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -74,7 +78,7 @@ public class RotationController {
      *
      * @param rotationService The rotation service
      * @param rotationMapper The rotation mapper
-     * @param UserMapper The user mapper
+     * @param userMapper The user mapper
      * @param userService The user service
      * @param rotationWebSocketService The rotation web socket service
      */
@@ -89,6 +93,28 @@ public class RotationController {
         this.userMapper = userMapper;
         this.userService = userService;
         this.rotationWebSocketService = rotationWebSocketService;
+    }
+
+    /**
+     * Get every rotation in database
+     *
+     * @return The whole list of rotations
+     */
+    @ApiOperation(value = "Get the full list of rotations", response = RotationResponseDto.class, nickname = "getAllRotations")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok", response = RotationResponseDto.class, responseContainer = "List"),
+            @ApiResponse(code = 204, message = "No Content"),
+            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
+    })
+    @ApiPageable
+    @GetMapping("/v1/rotations")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public Page<RotationResponseDto> getAll(@ApiParam(name = "search", value = "Search keyword")
+                                           @RequestParam(value = "search", required = false) String search,
+                                           Pageable pageable) {
+        return this.rotationService.getAll(search, pageable)
+                .map(this.rotationMapper::toRotationDTO);
     }
 
     /**
@@ -174,7 +200,6 @@ public class RotationController {
     })
     @GetMapping(value = "/v1/rotations/currentUser")
     @PreAuthorize("hasRole('ROLE_USER')")
-    @Transactional
     public ResponseEntity<List<RotationResponseDto>> getAllForCurrentUser(@ApiIgnore Principal principal) {
         Optional<User> userOptional = userService.getOneByUsername(principal.getName());
 
@@ -272,7 +297,6 @@ public class RotationController {
     })
     @GetMapping(value = "/v1/rotations/{rotationToken}/websocket/clients")
     @PreAuthorize("hasRole('ROLE_USER')")
-    @Transactional
     public ResponseEntity<List<WebsocketClient>> getRotationWebsocketClients(@ApiParam(name = "rotationToken", value = "The rotation token", required = true)
                                                                              @PathVariable("rotationToken") String rotationToken) {
         Optional<Rotation> rotationOptional = this.rotationService.getOneByToken(rotationToken);
@@ -299,7 +323,6 @@ public class RotationController {
     })
     @GetMapping(value = "/v1/rotations/{rotationToken}/users")
     @PreAuthorize("hasRole('ROLE_USER')")
-    @Transactional
     public ResponseEntity<List<UserResponseDto>> getRotationUsers(@ApiParam(name = "rotationToken", value = "The rotation token", required = true)
                                                                   @PathVariable("rotationToken") String rotationToken) {
         Optional<Rotation> rotationOptional = this.rotationService.getOneByToken(rotationToken);

@@ -28,7 +28,6 @@ import io.suricate.monitoring.services.api.ProjectService;
 import io.suricate.monitoring.services.mapper.ProjectMapper;
 import io.suricate.monitoring.services.nashorn.scheduler.NashornRequestWidgetExecutionScheduler;
 import io.suricate.monitoring.services.nashorn.services.NashornService;
-import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +37,6 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -311,7 +309,7 @@ public class DashboardWebSocketService {
      */
     public void reloadAllConnectedClientsToAllProjects() {
         websocketClientByProjectToken.forEach((key, value) ->
-                sendEventToProjectSubscribers(key, UpdateEvent.builder().type(UpdateType.RELOAD).build()));
+                reloadAllConnectedClientsToAProject(key));
     }
 
     /**
@@ -320,6 +318,6 @@ public class DashboardWebSocketService {
      * @param projectToken The project token
      */
     public void reloadAllConnectedClientsToAProject(final String projectToken) {
-        sendEventToProjectSubscribers(projectToken, UpdateEvent.builder().type(UpdateType.RELOAD).build());
+        this.sendEventToProjectSubscribers(projectToken, UpdateEvent.builder().type(UpdateType.RELOAD).build());
     }
 }

@@ -68,7 +68,7 @@ export class HttpScreenService {
   /**
    * Refresh every screens for a project token
    *
-   * @param {string} projectToken The project token to refresh
+   * @param projectToken The project token to refresh
    */
   public refreshEveryConnectedScreensForProject(projectToken: string): Observable<void> {
     const url = `${HttpScreenService.screensApiEndpoint}/${projectToken}/refresh`;
@@ -106,6 +106,17 @@ export class HttpScreenService {
    */
   public displayScreenCodeEveryConnectedScreensForRotation(rotationToken: string): Observable<void> {
     const url = `${HttpScreenService.screensRotationApiEndpoint}/${rotationToken}/showscreencode`;
+
+    return this.httpClient.get<void>(url);
+  }
+
+  /**
+   * Refresh every screens for a rotation
+   *
+   * @param rotationToken The rotation token to refresh
+   */
+  public refreshEveryConnectedScreensForRotation(rotationToken: string): Observable<void> {
+    const url = `${HttpScreenService.screensRotationApiEndpoint}/${rotationToken}/refresh`;
 
     return this.httpClient.get<void>(url);
   }

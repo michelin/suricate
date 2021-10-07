@@ -97,6 +97,10 @@ export class MenuService {
           linkConfiguration: { link: ['/admin', 'repositories'] }
         },
         {
+          label: 'rotation.list',
+          linkConfiguration: { link: ['/admin', 'rotations'] }
+        },
+        {
           label: 'user.list',
           linkConfiguration: { link: ['/admin', 'users'] }
         }
