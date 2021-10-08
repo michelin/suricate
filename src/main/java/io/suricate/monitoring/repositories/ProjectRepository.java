@@ -54,7 +54,7 @@ public interface ProjectRepository extends CrudRepository<Project, Long>, JpaSpe
      * @param id The user id
      * @return List of related projects ordered by name
      */
-	@EntityGraph(attributePaths = {"widgets"})
+	@EntityGraph(attributePaths = {"widgets", "screenshot"})
     List<Project> findByUsersIdOrderByName(Long id);
 
     /**

@@ -39,7 +39,7 @@ public interface ProjectWidgetRepository extends JpaRepository<ProjectWidget, Lo
      * @return The widget instance
      */
     @NotNull
-    @EntityGraph(attributePaths = {"project.users", "widget.widgetParams"})
+    @EntityGraph(attributePaths = {"project.users.roles", "widget.widgetParams.possibleValuesMap"})
     Optional<ProjectWidget> findById(@NotNull Long projectWidgetId);
 
     /**
