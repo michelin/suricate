@@ -30,9 +30,6 @@ import { MockModule } from '../../../mock/mock.module';
 import { AbstractHttpService } from '../../../shared/services/backend/abstract-http/abstract-http.service';
 
 describe('TvManagementDialogComponent', () => {
-  let component: TvManagementDialogComponent;
-  let fixture: ComponentFixture<TvManagementDialogComponent>;
-
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
