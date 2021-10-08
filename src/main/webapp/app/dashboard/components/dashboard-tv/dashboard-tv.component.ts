@@ -134,8 +134,6 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    */
   public ngOnDestroy(): void {
     this.disconnectTV();
-
-    clearTimeout(this.rotationTimeout);
   }
 
   /**
@@ -223,6 +221,15 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Stop the rotation by deleting the rotation timeout
+   */
+  private stopRotate(): void {
+    if (this.rotationTimeout) {
+      clearTimeout(this.rotationTimeout);
+    }
+  }
+
+  /**
    * Refresh the project
    *
    * @param dashboardToken The token used for the refresh
@@ -262,6 +269,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * Handle the disconnection of a dashboard
    */
   public handlingDashboardDisconnect(): void {
+    this.stopRotate();
     this.router.navigate(['/tv']);
     setTimeout(() => this.listenForConnection(), 500);
   }
@@ -272,6 +280,8 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   private disconnectTV(): void {
     this.unsubscribe.next();
     this.unsubscribe.complete();
+
+    this.stopRotate();
 
     this.websocketService.disconnect();
   }

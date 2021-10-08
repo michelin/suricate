@@ -149,17 +149,6 @@ export abstract class TvManagementDialogComponent implements OnInit {
   }
 
   /**
-   * Disconnect a screen
-   *
-   * @param websocketClient The websocket to disconnect
-   */
-  private disconnectScreen(websocketClient: WebsocketClient): void {
-    this.httpScreenService.disconnectScreen(websocketClient.projectToken, +websocketClient.screenCode).subscribe(() => {
-      setTimeout(() => this.getConnectedWebsocketClient(), 2000);
-    });
-  }
-
-  /**
    * Check if the stepper form is valid before saving the data
    */
   protected validateFormBeforeSave(): void {
@@ -184,4 +173,11 @@ export abstract class TvManagementDialogComponent implements OnInit {
    * Display screen code
    */
   abstract displayScreenCode(): void;
+
+  /**
+   * Disconnect a screen
+   *
+   * @param websocketClient The websocket to disconnect
+   */
+  abstract disconnectScreen(websocketClient: WebsocketClient): void;
 }

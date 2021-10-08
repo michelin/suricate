@@ -101,7 +101,7 @@ export class RotationsComponent extends ListComponent<Rotation | RotationRequest
         {
           icon: IconEnum.EDIT,
           color: 'primary',
-          callback: (event: Event, rotation: Rotation) => this.openFormSidenav(event, rotation, this.editRotation.bind(this))
+          callback: (event: Event, rotation: Rotation) => this.openFormSidenav(event, rotation)
         },
         {
           icon: IconEnum.DELETE,
@@ -171,9 +171,8 @@ export class RotationsComponent extends ListComponent<Rotation | RotationRequest
    *
    * @param event The click event
    * @param rotation The project clicked on the list
-   * @param saveCallback The function to call when save button is clicked
    */
-  private openFormSidenav(event: Event, rotation: Rotation, saveCallback: (formData: FormData) => void): void {
+  private openFormSidenav(event: Event, rotation: Rotation): void {
     RotationsComponent.stopEventPropagation(event);
     this.rotationSelected = rotation;
 
@@ -183,7 +182,7 @@ export class RotationsComponent extends ListComponent<Rotation | RotationRequest
       this.sidenavService.openFormSidenav({
         title: rotation ? 'rotation.edit' : 'rotation.create',
         formFields: this.rotationFormFieldsService.generateRotationFormFields(dashboards, rotation),
-        save: (formData: FormData) => saveCallback(formData),
+        save: (formData: FormData) => this.editRotation(formData),
         onValueChanged: (valueChangedEvent: ValueChangedEvent) => this.onRotationSidenavValueChanged(rotation, valueChangedEvent)
       });
     });

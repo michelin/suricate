@@ -113,7 +113,7 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
         {
           icon: IconEnum.EDIT,
           color: 'primary',
-          callback: (event: Event, project: Project) => this.openFormSidenav(event, project, this.editProject.bind(this))
+          callback: (event: Event, project: Project) => this.openFormSidenav(event, project)
         },
         {
           icon: IconEnum.DELETE,
@@ -136,16 +136,15 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
    *
    * @param event The click event
    * @param project The project clicked on the list
-   * @param saveCallback The function to call when save button is clicked
    */
-  private openFormSidenav(event: Event, project: Project, saveCallback: (projectRequest: ProjectRequest) => void): void {
+  private openFormSidenav(event: Event, project: Project): void {
     DashboardsComponent.stopEventPropagation(event);
     this.projectSelected = project;
 
     this.sidenavService.openFormSidenav({
       title: project ? 'dashboard.edit' : 'dashboard.create',
       formFields: this.projectFormFieldsService.generateProjectFormFields(project),
-      save: (projectRequest: ProjectRequest) => saveCallback(projectRequest)
+      save: (projectRequest: ProjectRequest) => this.editProject(projectRequest)
     });
   }
 

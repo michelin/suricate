@@ -21,6 +21,7 @@
  */
 export interface WebsocketClient {
   projectToken: string;
+  rotationToken: string;
   sessionId: string;
   screenCode: string;
 }

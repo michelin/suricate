@@ -87,7 +87,7 @@ public class RotationWebSocketService {
      * @param screenCode The screen code used to identify the screen
      * @param payload The event to send to the screen
      */
-    /* @Async
+    @Async
     public void sendEventToScreenRotationSubscriber(String rotationToken, String screenCode, UpdateEvent payload) {
         LOGGER.debug("Sending the event {} to the rotation {}", payload.getType(), rotationToken);
 
@@ -96,7 +96,7 @@ public class RotationWebSocketService {
                 "queue/unique",
                 payload
         );
-    } */
+    }
 
     /**
      * Send an event through the associated websocket to all subscribers.
@@ -182,5 +182,30 @@ public class RotationWebSocketService {
                             .type(UpdateType.RELOAD)
                             .build());
         }
+    }
+
+    /**
+     * Disconnect all screens from rotation
+     *
+     * @param rotationToken The rotation token
+     */
+    public void disconnectAllClientsFromRotation(final String rotationToken) {
+        if (!this.getWebsocketClientsByRotationToken(rotationToken).isEmpty()) {
+            this.sendEventToRotationSubscribers(rotationToken,
+                    UpdateEvent.builder()
+                            .type(UpdateType.DISCONNECT)
+                            .build());
+        }
+    }
+
+    /**
+     * Disconnect screen from rotation
+     *
+     * @param rotationToken The rotation token
+     * @param screenCode    The screen code
+     */
+    public void disconnectClientFromRotation(final String rotationToken, final String screenCode) {
+        this.sendEventToScreenRotationSubscriber(rotationToken, screenCode,
+                UpdateEvent.builder().type(UpdateType.DISCONNECT).build());
     }
 }

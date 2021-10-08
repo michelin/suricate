@@ -3,6 +3,7 @@ import { TvManagementDialogComponent } from '../tv-management-dialog.component';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Project } from '../../../../shared/models/backend/project/project';
 import { HttpProjectService } from '../../../../shared/services/backend/http-project/http-project.service';
+import { WebsocketClient } from '../../../../shared/models/backend/websocket-client';
 
 @Component({
   templateUrl: '../tv-management-dialog.component.html',
@@ -69,5 +70,16 @@ export class DashboardTvManagementDialogComponent extends TvManagementDialogComp
     if (this.project.token) {
       this.httpScreenService.displayScreenCodeEveryConnectedScreensForProject(this.project.token).subscribe();
     }
+  }
+
+  /**
+   * Disconnect a screen
+   *
+   * @param websocketClient The websocket to disconnect
+   */
+  public disconnectScreen(websocketClient: WebsocketClient): void {
+    this.httpScreenService.disconnectScreenFromProject(websocketClient.projectToken, +websocketClient.screenCode).subscribe(() => {
+      setTimeout(() => this.getConnectedWebsocketClient(), 2000);
+    });
   }
 }

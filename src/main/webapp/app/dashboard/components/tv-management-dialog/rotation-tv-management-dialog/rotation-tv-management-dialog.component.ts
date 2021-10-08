@@ -3,6 +3,7 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Rotation } from '../../../../shared/models/backend/rotation/rotation';
 import { TvManagementDialogComponent } from '../tv-management-dialog.component';
 import { HttpRotationService } from '../../../../shared/services/backend/http-rotation/http-rotation.service';
+import { WebsocketClient } from '../../../../shared/models/backend/websocket-client';
 
 @Component({
   templateUrl: '../tv-management-dialog.component.html',
@@ -69,5 +70,16 @@ export class RotationTvManagementDialogComponent extends TvManagementDialogCompo
     if (this.rotation.token) {
       this.httpScreenService.displayScreenCodeEveryConnectedScreensForRotation(this.rotation.token).subscribe();
     }
+  }
+
+  /**
+   * Disconnect a screen
+   *
+   * @param websocketClient The websocket to disconnect
+   */
+  public disconnectScreen(websocketClient: WebsocketClient): void {
+    this.httpScreenService.disconnectScreenFromRotation(websocketClient.rotationToken, +websocketClient.screenCode).subscribe(() => {
+      setTimeout(() => this.getConnectedWebsocketClient(), 2000);
+    });
   }
 }

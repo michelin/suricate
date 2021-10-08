@@ -112,7 +112,7 @@ public class ScreenController {
     }
 
     /**
-     * Disconnect a client
+     * Disconnect a client from a project
      */
     @ApiOperation(value = "Send the notification to disconnect a new screen")
     @ApiResponses(value = {
@@ -122,11 +122,12 @@ public class ScreenController {
     })
     @GetMapping(value = "/v1/screens/{projectToken}/disconnect")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Void> disconnectProjectToTv(@ApiParam(name = "projectToken", value = "The project token", required = true)
+    public ResponseEntity<Void> disconnectProjectFromScreen(@ApiParam(name = "projectToken", value = "The project token", required = true)
                                                       @PathVariable("projectToken") String projectToken,
                                                       @ApiParam(name = "screenCode", value = "The screen code", required = true)
                                                       @RequestParam("screenCode") String screenCode) {
         this.dashboardWebSocketService.disconnectClient(projectToken, screenCode);
+
         return ResponseEntity.noContent().build();
     }
 
@@ -259,4 +260,23 @@ public class ScreenController {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Disconnect a client from a rotation
+     */
+    @ApiOperation(value = "Send the notification to disconnect a new screen")
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "Screen disconnected"),
+            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
+    })
+    @GetMapping(value = "/v1/screens/rotation/{rotationToken}/disconnect")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<Void> disconnectRotationFromScreen(@ApiParam(name = "rotationToken", value = "The rotation token", required = true)
+                                                              @PathVariable("rotationToken") String rotationToken,
+                                                              @ApiParam(name = "screenCode", value = "The screen code", required = true)
+                                                              @RequestParam("screenCode") String screenCode) {
+        this.rotationWebSocketService.disconnectClientFromRotation(rotationToken, screenCode);
+
+        return ResponseEntity.noContent().build();
+    }
 }

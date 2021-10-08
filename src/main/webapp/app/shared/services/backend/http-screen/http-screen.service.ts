@@ -59,7 +59,7 @@ export class HttpScreenService {
    * @param projectToken The project token
    * @param screenCode The screen to disconnect
    */
-  public disconnectScreen(projectToken: string, screenCode: number): Observable<void> {
+  public disconnectScreenFromProject(projectToken: string, screenCode: number): Observable<void> {
     const url = `${HttpScreenService.screensApiEndpoint}/${projectToken}/disconnect?screenCode=${screenCode}`;
 
     return this.httpClient.get<void>(url);
@@ -95,6 +95,18 @@ export class HttpScreenService {
    */
   public connectRotationToScreen(rotationToken: string, screenCode: number): Observable<void> {
     const url = `${HttpScreenService.screensRotationApiEndpoint}/${rotationToken}/connect?screenCode=${screenCode}`;
+
+    return this.httpClient.get<void>(url);
+  }
+
+  /**
+   * Send the notification to disconnect a tv for this rotation
+   *
+   * @param rotationToken The rotation token
+   * @param screenCode The screen to disconnect
+   */
+  public disconnectScreenFromRotation(rotationToken: string, screenCode: number): Observable<void> {
+    const url = `${HttpScreenService.screensRotationApiEndpoint}/${rotationToken}/disconnect?screenCode=${screenCode}`;
 
     return this.httpClient.get<void>(url);
   }

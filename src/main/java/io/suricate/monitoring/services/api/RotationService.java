@@ -59,7 +59,6 @@ public class RotationService {
      *
      * @param stringEncryptor           The string encryptor to inject
      * @param rotationRepository        The rotation repository
-     * @param projectService            The project service
      * @param rotationProjectMapper     The rotation project mapper
      * @param rotationWebSocketService  The rotation project mapper
      */
@@ -137,6 +136,8 @@ public class RotationService {
      */
     @Transactional
     public void deleteRotation(Rotation rotation) {
+        this.rotationWebSocketService.disconnectAllClientsFromRotation(rotation.getToken());
+
         this.rotationRepository.delete(rotation);
     }
 

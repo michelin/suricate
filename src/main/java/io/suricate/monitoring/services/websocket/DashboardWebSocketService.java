@@ -308,7 +308,7 @@ public class DashboardWebSocketService {
      * Reload all the connected clients to all the projects
      */
     public void reloadAllConnectedClientsToAllProjects() {
-        websocketClientByProjectToken.forEach((key, value) ->
+        this.websocketClientByProjectToken.forEach((key, value) ->
                 reloadAllConnectedClientsToAProject(key));
     }
 
@@ -318,6 +318,8 @@ public class DashboardWebSocketService {
      * @param projectToken The project token
      */
     public void reloadAllConnectedClientsToAProject(final String projectToken) {
-        this.sendEventToProjectSubscribers(projectToken, UpdateEvent.builder().type(UpdateType.RELOAD).build());
+        if (!this.websocketClientByProjectToken.get(projectToken).isEmpty()) {
+            this.sendEventToProjectSubscribers(projectToken, UpdateEvent.builder().type(UpdateType.RELOAD).build());
+        }
     }
 }

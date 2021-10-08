@@ -442,6 +442,10 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
         const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 
         switch (updateEvent.type) {
+          case WebsocketUpdateTypeEnum.DISCONNECT:
+            this.disconnectFromWebsockets();
+            this.disconnectEvent.emit();
+            break;
           case WebsocketUpdateTypeEnum.DISPLAY_NUMBER:
             this.displayScreenCode();
             break;
@@ -465,9 +469,9 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
       .subscribe((stompMessage: Stomp.Message) => {
         const event: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 
-        switch (event.type) {
-          default:
-            this.refreshProjectWidget.emit();
+        if (event.type === WebsocketUpdateTypeEnum.DISCONNECT) {
+          this.disconnectFromWebsockets();
+          this.disconnectEvent.emit();
         }
       });
   }
