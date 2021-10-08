@@ -1,5 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RotationTvManagementDialogComponent } from './rotation-tv-management-dialog.component';
+import { MockModule } from '../../../../mock/mock.module';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Project } from '../../../../shared/models/backend/project/project';
+import { ProjectGrid } from '../../../../shared/models/backend/project/project-grid';
+import { Rotation } from '../../../../shared/models/backend/rotation/rotation';
 
 describe('RotationTvManagementDialogComponent', () => {
   let component: RotationTvManagementDialogComponent;
@@ -7,7 +12,9 @@ describe('RotationTvManagementDialogComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [RotationTvManagementDialogComponent]
+      imports: [MockModule],
+      declarations: [RotationTvManagementDialogComponent],
+      providers: [{ provide: MAT_DIALOG_DATA, useValue: { rotation: buildMockedRotation() } }]
     }).compileComponents();
   });
 
@@ -20,4 +27,37 @@ describe('RotationTvManagementDialogComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  /**
+   * Build a mocked rotation object for the unit tests
+   */
+  function buildMockedRotation(): Rotation {
+    return {
+      name: 'Rotation 1',
+      token: 'Token',
+      rotationProjects: [
+        {
+          rotationSpeed: 10,
+          project: {
+            gridProperties: {
+              maxColumn: 5,
+              widgetHeight: 300,
+              cssStyle: ''
+            },
+            librariesToken: ['Token1', 'Token2'],
+            name: 'ProjectName',
+            screenshotToken: 'ScreenToken',
+            image: {
+              content: 'content',
+              contentType: 'image/png',
+              id: 'id',
+              lastUpdateDate: new Date(),
+              size: 10
+            },
+            token: 'Token'
+          }
+        }
+      ]
+    };
+  }
 });

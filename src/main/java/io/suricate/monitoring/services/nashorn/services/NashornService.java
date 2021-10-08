@@ -122,7 +122,7 @@ public class NashornService {
             return false;
         }
 
-        if (JsonUtils.isValid(nashornRequest.getPreviousData())) {
+        if (!JsonUtils.isValid(nashornRequest.getPreviousData())) {
             LOGGER.debug("The widget instance {} has bad formed previous data. Stopping Nashorn request execution",
                     nashornRequest.getProjectWidgetId());
             return false;

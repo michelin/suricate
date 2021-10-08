@@ -244,8 +244,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
       title: 'widget.edit',
       formFields: this.projectWidgetFormStepsService.generateWidgetParametersFormFields(
         this.widget.params,
-        this.projectWidget.backendConfig,
-        this.projectWidget.widgetPosition.gridIndex
+        this.projectWidget.backendConfig
       ),
       save: (formData: FormData) => this.saveWidget(formData),
       slideToggleButtonConfiguration: this.buildSlideToggleButtonConfiguration(this.widget.category.categoryParameters)
@@ -263,10 +262,8 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
       customStyle: this.projectWidget.customStyle,
       backendConfig: Object.keys(formData)
         .filter((key: string) => formData[key] != null && `${formData[key]}`.trim() !== '')
-        .filter((key: string) => key !== ProjectWidgetFormStepsService.gridIndexFieldKey)
         .map((key: string) => `${key}=${formData[key]}`)
-        .join('\n'),
-      gridIndex: formData[ProjectWidgetFormStepsService.gridIndexFieldKey]
+        .join('\n')
     };
 
     this.httpProjectWidgetService.updateOneById(this.projectWidget.id, projectWidgetRequest).subscribe(() => {

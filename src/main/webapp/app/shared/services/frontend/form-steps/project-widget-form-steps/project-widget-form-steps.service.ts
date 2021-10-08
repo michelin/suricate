@@ -62,11 +62,6 @@ export class ProjectWidgetFormStepsService {
   public static readonly widgetIdFieldKey = 'widgetId';
 
   /**
-   * Key used to store the grid index of the widget instance
-   */
-  public static readonly gridIndexFieldKey = 'gridIndex';
-
-  /**
    * Constructor
    *
    * @param httpCategoryService HTTP category service
@@ -146,9 +141,8 @@ export class ProjectWidgetFormStepsService {
    *
    * @param widgetParams The params of the widget
    * @param widgetConfig The configuration already set
-   * @param gridIndex The grid index of the widget
    */
-  public generateWidgetParametersFormFields(widgetParams: WidgetParam[], widgetConfig?: string, gridIndex?: number): FormField[] {
+  public generateWidgetParametersFormFields(widgetParams: WidgetParam[], widgetConfig?: string): FormField[] {
     const formFields = [];
 
     widgetParams.forEach((widgetParam: WidgetParam) => {

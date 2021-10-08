@@ -27,7 +27,6 @@ export interface ProjectWidgetRequest {
   data?: string;
   height?: number;
   gridRow?: number;
-  gridIndex: number;
   width?: number;
   widgetId: number;
 }

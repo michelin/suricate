@@ -119,11 +119,6 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   public gridOptions: NgGridConfig = {};
 
   /**
-   * The grid index used to display widget in the case of dashboards rotation
-   */
-  public currentGridIndex = 0;
-
-  /**
    * Contains the widget instances as grid items
    */
   protected startGridStackItems: NgGridItemConfig[] = [];
@@ -308,17 +303,15 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   private getGridStackItemsFromProjectWidgets(projectWidgets: ProjectWidget[]): NgGridItemConfig[] {
     const gridStackItemsConfig: NgGridItemConfig[] = [];
 
-    this.projectWidgets
-      .filter(projectWidget => projectWidget.widgetPosition.gridIndex === this.currentGridIndex)
-      .forEach((projectWidget: ProjectWidget) => {
-        gridStackItemsConfig.push({
-          col: projectWidget.widgetPosition.gridColumn,
-          row: projectWidget.widgetPosition.gridRow,
-          sizey: projectWidget.widgetPosition.height,
-          sizex: projectWidget.widgetPosition.width,
-          payload: projectWidget
-        });
+    this.projectWidgets.forEach((projectWidget: ProjectWidget) => {
+      gridStackItemsConfig.push({
+        col: projectWidget.widgetPosition.gridColumn,
+        row: projectWidget.widgetPosition.gridRow,
+        sizey: projectWidget.widgetPosition.height,
+        sizex: projectWidget.widgetPosition.width,
+        payload: projectWidget
       });
+    });
 
     return gridStackItemsConfig;
   }

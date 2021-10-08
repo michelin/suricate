@@ -87,10 +87,8 @@ export class ProjectWidgetWizardComponent extends WizardComponent implements OnI
             formData[ProjectWidgetFormStepsService.configureWidgetStepKey][key] != null &&
             formData[ProjectWidgetFormStepsService.configureWidgetStepKey][key].trim() !== ''
         )
-        .filter((key: string) => key !== ProjectWidgetFormStepsService.gridIndexFieldKey)
         .map((key: string) => `${key}=${formData[ProjectWidgetFormStepsService.configureWidgetStepKey][key]}`)
-        .join('\n'),
-      gridIndex: formData[ProjectWidgetFormStepsService.configureWidgetStepKey][ProjectWidgetFormStepsService.gridIndexFieldKey]
+        .join('\n')
     };
 
     this.httpProjectService.addProjectWidgetToProject(this.dashboardToken, projectWidgetRequest).subscribe(() => {
