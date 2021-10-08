@@ -1,5 +1,7 @@
 # Suricate [![Open Source Love](https://badges.frapsoft.com/os/v3/open-source-150x25.png?v=103)](https://github.com/ellerbrock/open-source-badges/)
 
+[![GitHub release](https://img.shields.io/github/v/release/michelin/suricate)](https://github.com/michelin/suricate/releases)
+[![GitHub commits since latest release (by SemVer)](https://img.shields.io/github/commits-since/michelin/suricate/latest)](https://github.com/michelin/suricate/commits/dev)
 [![Continuous Integration](https://github.com/michelin/suricate/actions/workflows/continuous_integration.yml/badge.svg)](https://github.com/michelin/suricate/actions/workflows/continuous_integration.yml)
 [![GitHub issues](https://img.shields.io/github/issues/michelin/suricate.svg)](https://github.com/michelin/suricate/issues/)
 [![GitHub PR](https://img.shields.io/github/issues-pr/michelin/suricate.svg)](https://github.com/michelin/suricate/pulls/)
