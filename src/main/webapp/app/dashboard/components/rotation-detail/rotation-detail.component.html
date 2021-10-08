@@ -1,0 +1,26 @@
+<ng-container *ngIf="!isRotationLoading">
+    <suricate-pages-header [configuration]="headerConfiguration"></suricate-pages-header>
+
+    <mat-grid-list cols="4" gutterSize="17px" rowHeight="250px">
+        <mat-grid-tile *ngFor="let rotationProject of rotation.rotationProjects" class="mat-elevation-z3">
+            <div class="grid-tile-content-wrapper">
+                <a [routerLink]="['/dashboards', rotationProject.project.token]">
+                    <div class="grid-tile-body">
+                        <img *ngIf="rotationProject.project.screenshotToken" [src]="getContentUrl(rotationProject.project.screenshotToken)" alt="Dashboard screenshot" />
+                        <mat-icon *ngIf="!rotationProject.project.screenshotToken" color="primary">
+                            {{ materialIconRecords[iconEnum.DASHBOARD] }}
+                        </mat-icon>
+                    </div>
+
+                    <div class="grid-tile-footer">
+                        {{ rotationProject.project.name }}
+                    </div>
+                </a>
+            </div>
+        </mat-grid-tile>
+    </mat-grid-list>
+</ng-container>
+
+<div *ngIf="isRotationLoading" class="container without-header" fxLayout="column" fxLayoutAlign="center center">
+    <suricate-spinner></suricate-spinner>
+</div>

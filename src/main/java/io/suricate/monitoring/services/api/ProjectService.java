@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -47,9 +47,8 @@ import java.util.UUID;
  */
 @Service
 public class ProjectService {
-
     /**
-     * String encryptor (mainly used for SECRET widget params)
+     * String encryptor
      */
     private final StringEncryptor stringEncryptor;
 
@@ -94,19 +93,20 @@ public class ProjectService {
      * @param pageable The page configurations
      * @return The list paginated
      */
+    @Transactional(readOnly = true)
     public Page<Project> getAll(String search, Pageable pageable) {
-        return projectRepository.findAll(new ProjectSearchSpecification(search), pageable);
+        return this.projectRepository.findAll(new ProjectSearchSpecification(search), pageable);
     }
 
     /**
-     * Retrieve all the project for a user
+     * Get all projects by user
      *
      * @param user The user
-     * @return The project list associated to the user
+     * @return A list of projects
      */
-    @Transactional
+    @Transactional(readOnly = true)
     public List<Project> getAllByUser(User user) {
-        return projectRepository.findByUsers_IdOrderByName(user.getId());
+        return projectRepository.findByUsersIdOrderByName(user.getId());
     }
 
     /**
@@ -116,7 +116,7 @@ public class ProjectService {
      * @return The project associated
      */
     @LogExecutionTime
-    @Transactional
+    @Transactional(readOnly = true)
     public Optional<Project> getOneById(Long id) {
         return projectRepository.findById(id);
     }
@@ -127,7 +127,7 @@ public class ProjectService {
      * @param token The token to find
      * @return The project
      */
-    @Transactional
+    @Transactional(readOnly = true)
     public Optional<Project> getOneByToken(final String token) {
         return projectRepository.findProjectByToken(token);
     }
@@ -159,17 +159,16 @@ public class ProjectService {
      * @param maxColumn    The new max column
      */
     @Transactional
-    public void updateProject(Project project,
-                              final String newName,
-                              final int widgetHeight,
-                              final int maxColumn,
+    public void updateProject(Project project, final String newName, final int widgetHeight, final int maxColumn,
                               final String customCss) {
         if (StringUtils.isNotBlank(newName)) {
             project.setName(newName);
         }
+
         if (widgetHeight > 0) {
             project.setWidgetHeight(widgetHeight);
         }
+
         if (maxColumn > 0) {
             project.setMaxColumn(maxColumn);
         }
@@ -179,8 +178,9 @@ public class ProjectService {
         }
 
         projectRepository.save(project);
+
         // Update grid
-        dashboardWebsocketService.sendEventToProjectSubscribers(project.getToken(), new UpdateEvent(UpdateType.GRID));
+        dashboardWebsocketService.sendEventToProjectSubscribers(project.getToken(), UpdateEvent.builder().type(UpdateType.GRID).build());
     }
 
     /**
@@ -229,16 +229,15 @@ public class ProjectService {
     }
 
     /**
-     * Method used to delete a project with his ID
+     * Method used to delete a project with its ID
      *
-     * @param project the project to delete
+     * @param project The project to delete
      */
     @Transactional
     public void deleteProject(Project project) {
-        // notify clients
-        dashboardWebsocketService.sendEventToProjectSubscribers(project.getToken(), new UpdateEvent(UpdateType.DISCONNECT));
-        // delete project
-        projectRepository.delete(project);
+        this.dashboardWebsocketService.sendEventToProjectSubscribers(project.getToken(), UpdateEvent.builder().type(UpdateType.DISCONNECT).build());
+
+        this.projectRepository.delete(project);
     }
 
     /**
@@ -255,11 +254,11 @@ public class ProjectService {
 
         if (project.getScreenshot() != null) {
             screenshotAsset.setId(project.getScreenshot().getId());
-            assetService.save(screenshotAsset);
+            this.assetService.save(screenshotAsset);
         } else {
-            assetService.save(screenshotAsset);
+            this.assetService.save(screenshotAsset);
             project.setScreenshot(screenshotAsset);
-            projectRepository.save(project);
+            this.projectRepository.save(project);
         }
     }
 }

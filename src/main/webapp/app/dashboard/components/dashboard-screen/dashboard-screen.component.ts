@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,6 +44,7 @@ import { IconEnum } from '../../../shared/enums/icon.enum';
 import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
 import { LibraryService } from '../../services/library/library.service';
 import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
+import { Rotation } from '../../../shared/models/backend/rotation/rotation';
 
 /**
  * Display the grid stack widgets
@@ -59,6 +60,12 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
    */
   @ViewChild('externalJsLibraries')
   public externalJsLibrariesSpan: ElementRef<HTMLSpanElement>;
+
+  /**
+   * The rotation to display
+   */
+  @Input()
+  public rotation: Rotation;
 
   /**
    * The project to display
@@ -91,15 +98,20 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   public disconnectEvent = new EventEmitter<void>();
 
   /**
-   * Use to tell to the parent component that he should refresh the project widgets
+   * Use to tell to the parent component that it should refresh the project widgets
    */
   @Output()
   public refreshProjectWidget = new EventEmitter<void>();
 
   /**
-   * Subject used to unsubscribe all the subscriptions when the component is destroyed
+   * Subject used to unsubscribe all the subscriptions to rotation web sockets
    */
-  private unsubscribe: Subject<void> = new Subject<void>();
+  private unsubscribeRotationWebSocket: Subject<void> = new Subject<void>();
+
+  /**
+   * Subject used to unsubscribe all the subscriptions to project web sockets
+   */
+  private unsubscribeProjectWebSocket: Subject<void> = new Subject<void>();
 
   /**
    * The options for the plugin angular2-grid
@@ -107,7 +119,7 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   public gridOptions: NgGridConfig = {};
 
   /**
-   * Grid state when widgets were first loaded
+   * Contains the widget instances as grid items
    */
   protected startGridStackItems: NgGridItemConfig[] = [];
 
@@ -150,8 +162,21 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
 
   /**
    * Each time a value change, this function will be called
+   *
+   * If a project is received, init web sockets for the project. If
+   * the project changes, then resets web sockets and reopens them
+   * with the new project token
+   *
+   * Additionally, if a project is received in case of a rotation, then
+   * open specific web sockets to start the rotation and receive the rotation
+   * events
    */
   public ngOnChanges(changes: SimpleChanges): void {
+    // First time receiving a rotation
+    if (changes.rotation && changes.rotation.currentValue && !changes.rotation.previousValue) {
+      this.initRotationWebsockets();
+    }
+
     if (changes.project) {
       if (!changes.project.previousValue) {
         // Inject this variable in the window scope because some widgets use it to init the js
@@ -159,14 +184,15 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
       }
 
       this.project = changes.project.currentValue;
+
       this.initGridStackOptions();
 
       if (changes.project.previousValue) {
         if (changes.project.previousValue.token !== changes.project.currentValue.token) {
-          this.resetWebsocketSubscriptions();
+          this.resetProjectWebsockets();
         }
       } else {
-        this.initWebsocketSubscriptions();
+        this.initProjectWebsockets();
       }
     }
 
@@ -192,7 +218,7 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
    * When the component is destroyed (new page)
    */
   public ngOnDestroy(): void {
-    this.disconnectFromWebsocket();
+    this.disconnectFromWebsockets();
   }
 
   /**
@@ -229,8 +255,7 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   }
 
   /**********************************************************************************************************/
-  /*                      GRID STACK MANAGEMENT                                                             */
-
+  /*                                         GRID MANAGEMENT                                                */
   /**********************************************************************************************************/
 
   /**
@@ -258,7 +283,7 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   }
 
   /**
-   * Create the list of gridStackItems used to display widgets on the grid
+   * Create the list of grid items used to display widgets on the grid
    */
   private initGridStackItems(): void {
     this.gridStackItems = [];
@@ -292,40 +317,58 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   }
 
   /**********************************************************************************************************/
-  /*                      WEBSOCKET MANAGEMENT                                                              */
-
+  /*                                      WEBSOCKET MANAGEMENT                                              */
   /**********************************************************************************************************/
 
   /**
-   * Init the websocket subscriptions
+   * Init web sockets for project events
    */
-  private initWebsocketSubscriptions(): void {
+  private initProjectWebsockets(): void {
+    this.unsubscribeProjectWebSocket = new Subject<void>();
     this.websocketProjectEventSubscription();
-    this.websocketScreenEventSubscription();
+    this.websocketProjectScreenEventSubscription();
   }
 
   /**
-   * Reset the websocket subscription
+   * Init web sockets for rotation events
    */
-  private resetWebsocketSubscriptions(): void {
-    this.unsubscribeToWebsocket();
-    this.initWebsocketSubscriptions();
+  private initRotationWebsockets(): void {
+    this.unsubscribeRotationWebSocket = new Subject<void>();
+    this.websocketRotationEventSubscription();
+    this.websocketScreenRotationEventSubscription();
+  }
+
+  /**
+   * Reset the project web sockets subscriptions
+   */
+  private resetProjectWebsockets(): void {
+    this.unsubscribeProjectWebsockets();
+    this.initProjectWebsockets();
   }
 
   /**
    * Disconnect from web sockets
    */
-  private disconnectFromWebsocket(): void {
-    this.unsubscribeToWebsocket();
+  private disconnectFromWebsockets(): void {
+    this.unsubscribeProjectWebsockets();
+    this.unsubscribeRotationWebsockets();
     this.websocketService.disconnect();
   }
 
   /**
-   * Unsubscribe to every current websocket connections
+   * Unsubscribe to every current project websockets connections
    */
-  private unsubscribeToWebsocket(): void {
-    this.unsubscribe.next();
-    this.unsubscribe.complete();
+  private unsubscribeProjectWebsockets(): void {
+    this.unsubscribeProjectWebSocket.next();
+    this.unsubscribeProjectWebSocket.complete();
+  }
+
+  /**
+   * Unsubscribe to every current rotation websockets connections
+   */
+  private unsubscribeRotationWebsockets(): void {
+    this.unsubscribeRotationWebSocket.next();
+    this.unsubscribeRotationWebSocket.complete();
   }
 
   /**
@@ -336,13 +379,14 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
 
     this.websocketService
       .watch(projectSubscriptionUrl)
-      .pipe(takeUntil(this.unsubscribe))
+      .pipe(takeUntil(this.unsubscribeProjectWebSocket))
       .subscribe((stompMessage: Stomp.Message) => {
         const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 
         switch (updateEvent.type) {
-          case WebsocketUpdateTypeEnum.RELOAD:
-            location.reload();
+          case WebsocketUpdateTypeEnum.DISCONNECT:
+            this.disconnectFromWebsockets();
+            this.disconnectEvent.emit();
             break;
           case WebsocketUpdateTypeEnum.DISPLAY_NUMBER:
             this.displayScreenCode();
@@ -350,9 +394,8 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
           case WebsocketUpdateTypeEnum.POSITION:
             this.refreshProjectWidget.emit();
             break;
-          case WebsocketUpdateTypeEnum.DISCONNECT:
-            this.disconnectFromWebsocket();
-            this.disconnectEvent.emit();
+          case WebsocketUpdateTypeEnum.RELOAD:
+            location.reload();
             break;
           default:
             this.refreshProjectWidget.emit();
@@ -363,17 +406,64 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   /**
    * Create a websocket subscription for the current screen
    */
-  private websocketScreenEventSubscription(): void {
+  private websocketProjectScreenEventSubscription(): void {
     const screenSubscriptionUrl = `/user/${this.project.token}-${this.screenCode}/queue/unique`;
 
     this.websocketService
       .watch(screenSubscriptionUrl)
-      .pipe(takeUntil(this.unsubscribe))
+      .pipe(takeUntil(this.unsubscribeProjectWebSocket))
       .subscribe((stompMessage: Stomp.Message) => {
         const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 
         if (updateEvent.type === WebsocketUpdateTypeEnum.DISCONNECT) {
-          this.disconnectFromWebsocket();
+          this.disconnectFromWebsockets();
+          this.disconnectEvent.emit();
+        }
+      });
+  }
+
+  /**
+   * Create a websocket subscription for the current rotation
+   */
+  private websocketRotationEventSubscription(): void {
+    const rotationSubscriptionUrl = `/user/${this.rotation.token}/queue/live`;
+
+    this.websocketService
+      .watch(rotationSubscriptionUrl)
+      .pipe(takeUntil(this.unsubscribeRotationWebSocket))
+      .subscribe((stompMessage: Stomp.Message) => {
+        const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
+
+        switch (updateEvent.type) {
+          case WebsocketUpdateTypeEnum.DISCONNECT:
+            this.disconnectFromWebsockets();
+            this.disconnectEvent.emit();
+            break;
+          case WebsocketUpdateTypeEnum.DISPLAY_NUMBER:
+            this.displayScreenCode();
+            break;
+          case WebsocketUpdateTypeEnum.RELOAD:
+            location.reload();
+            break;
+          default:
+        }
+      });
+  }
+
+  /**
+   * Create a websocket subscription for the current screen
+   */
+  private websocketScreenRotationEventSubscription(): void {
+    const rotationByScreenURL = `/user/${this.rotation.token}-${this.screenCode}/queue/unique`;
+
+    this.websocketService
+      .watch(rotationByScreenURL)
+      .pipe(takeUntil(this.unsubscribeRotationWebSocket))
+      .subscribe((stompMessage: Stomp.Message) => {
+        const event: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
+
+        if (event.type === WebsocketUpdateTypeEnum.DISCONNECT) {
+          this.disconnectFromWebsockets();
           this.disconnectEvent.emit();
         }
       });

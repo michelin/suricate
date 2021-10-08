@@ -1,6 +1,6 @@
 /*
  *
- *  * Copyright 2012-2018 the original author or authors.
+ *  * Copyright 2012-2021 the original author or authors.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -169,10 +169,13 @@ public class DashboardScheduleService {
      * @param projectWidgetId The project widget ID
      * @param projectId       The project ID
      */
-    private void sendWidgetUpdateNotification(Long projectWidgetId, Long projectId) {
-        UpdateEvent event = new UpdateEvent(UpdateType.WIDGET);
+    public void sendWidgetUpdateNotification(Long projectWidgetId, Long projectId) {
         ProjectWidget projectWidget = projectWidgetService.getOne(projectWidgetId).orElse(null);
-        event.setContent(projectWidgetMapper.toProjectWidgetDTO(projectWidget));
+
+        UpdateEvent event = UpdateEvent.builder()
+                .type(UpdateType.WIDGET)
+                .content(this.projectWidgetMapper.toProjectWidgetDTO(projectWidget))
+                .build();
 
         dashboardWebSocketService.sendEventToWidgetInstanceSubscribers(projectService.getTokenByProjectId(projectId), projectWidgetId, event);
     }
@@ -184,7 +187,6 @@ public class DashboardScheduleService {
      *
      * @param projectWidgetId The widget instance ID
      */
-    @Transactional
     public void scheduleWidget(final Long projectWidgetId) {
         NashornRequest nashornRequest = nashornService.getNashornRequestByProjectWidgetId(projectWidgetId);
         applicationContext.getBean(NashornRequestWidgetExecutionScheduler.class).cancelAndScheduleNashornRequest(nashornRequest);

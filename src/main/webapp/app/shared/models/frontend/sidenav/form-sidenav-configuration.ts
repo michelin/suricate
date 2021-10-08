@@ -1,6 +1,6 @@
 /*
  *  /*
- *  * Copyright 2012-2018 the original author or authors.
+ *  * Copyright 2012-2021 the original author or authors.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -31,10 +31,16 @@ export interface FormSidenavConfiguration {
    * The title of the sidenav
    */
   title: string;
+
   /**
    * The fields of the form to display
    */
   formFields: FormField[];
+
+  /**
+   * Display a message when there is no field to display
+   */
+  noFieldsMessage?: string;
 
   /**
    * The function to call when the form should be sent

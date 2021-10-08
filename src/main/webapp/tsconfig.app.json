@@ -3,7 +3,8 @@
   "compilerOptions": {
     "baseUrl": "./",
     "outDir": "../../../out-tsc/app",
-    "types": []
+    "types": [],
+    "allowSyntheticDefaultImports": true
   },
   "files": ["main.ts", "polyfills.ts"],
   "include": ["src/main/webapp/**/*.d.ts"]

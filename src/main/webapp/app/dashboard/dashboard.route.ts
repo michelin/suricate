@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,15 +20,11 @@ import { DashboardTvComponent } from './components/dashboard-tv/dashboard-tv.com
 import { AuthGuard } from '../shared/guards/auth/auth.guard';
 import { AdminGuard } from '../shared/guards/admin/admin.guard';
 import { DashboardDetailComponent } from './components/dashboard-detail/dashboard-detail.component';
-import { DashboardsComponent } from './components-list/dashboards/dashboards.component';
+import { DashboardsComponent } from '../admin/dashboards/dashboards.component';
 import { ProjectWidgetWizardComponent } from './components/wizard/project-widget-wizard.component';
+import { RotationDetailComponent } from './components/rotation-detail/rotation-detail.component';
 
 export const DashboardRoutes: Routes = [
-  {
-    path: 'dashboards',
-    component: DashboardsComponent,
-    canActivate: [AuthGuard, AdminGuard]
-  },
   {
     path: 'tv',
     component: DashboardTvComponent
@@ -36,6 +32,11 @@ export const DashboardRoutes: Routes = [
   {
     path: 'dashboards/:dashboardToken',
     component: DashboardDetailComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'rotations/:rotationToken',
+    component: RotationDetailComponent,
     canActivate: [AuthGuard]
   },
   {

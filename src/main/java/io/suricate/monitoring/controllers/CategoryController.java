@@ -1,6 +1,6 @@
 /*
  *
- *  * Copyright 2012-2018 the original author or authors.
+ *  * Copyright 2012-2021 the original author or authors.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -107,7 +107,7 @@ public class CategoryController {
     public Page<CategoryResponseDto> getCategories(@ApiParam(name = "search", value = "Search keyword")
                                                    @RequestParam(value = "search", required = false) String search,
                                                    Pageable pageable) {
-        return categoryService.getAll(search, pageable).map(categoryMapper::toCategoryDTO);
+        return this.categoryService.getAll(search, pageable).map(categoryMapper::toCategoryDTO);
     }
 
     /**
@@ -128,7 +128,7 @@ public class CategoryController {
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<List<WidgetResponseDto>> getWidgetByCategory(@ApiParam(name = "categoryId", value = "The category id", required = true)
                                                                        @PathVariable("categoryId") Long categoryId) {
-        Optional<List<Widget>> widgetsOptional = widgetService.getWidgetsByCategory(categoryId);
+        Optional<List<Widget>> widgetsOptional = this.widgetService.getWidgetsByCategory(categoryId);
 
         if (!widgetsOptional.isPresent()) {
             throw new NoContentException(Widget.class);
@@ -137,6 +137,6 @@ public class CategoryController {
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(widgetMapper.toWidgetsDTOs(widgetsOptional.get()));
+            .body(this.widgetMapper.toWidgetsDTOs(widgetsOptional.get()));
     }
 }

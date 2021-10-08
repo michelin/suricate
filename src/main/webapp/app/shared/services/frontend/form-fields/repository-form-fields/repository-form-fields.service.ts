@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import { Repository } from '../../../../models/backend/repository/repository';
 import { FormOption } from '../../../../models/frontend/form/form-option';
 import { TitleCasePipe } from '@angular/common';
 import { IconEnum } from '../../../../enums/icon.enum';
+import { TranslateService } from '@ngx-translate/core';
 
 /**
  * Service used to build the form fields related to a repository
@@ -41,55 +42,7 @@ export class RepositoryFormFieldsService {
   /**
    * The constructor
    */
-  constructor() {}
-
-  /**
-   * Generate the form fields for a repository
-   *
-   * @param repository The repository used to init the form fields
-   */
-  public static generateFormFields(repository?: Repository): FormField[] {
-    let formFields = RepositoryFormFieldsService.getGeneralFormFields(repository);
-
-    if (repository && repository.type) {
-      formFields = [...formFields, ...RepositoryFormFieldsService.repositoryTypeFormFieldsRecords[repository.type](repository)];
-    }
-
-    return formFields;
-  }
-
-  /**
-   * Get the general information of a repository
-   *
-   * @param repository The repository
-   */
-  private static getGeneralFormFields(repository: Repository): FormField[] {
-    return [
-      {
-        key: 'enabled',
-        label: 'repository.enable',
-        type: DataTypeEnum.BOOLEAN,
-        value: repository ? repository.enabled : false
-      },
-      {
-        key: 'name',
-        label: 'name',
-        iconPrefix: IconEnum.NAME,
-        type: DataTypeEnum.TEXT,
-        value: repository ? repository.name : null,
-        validators: [Validators.required]
-      },
-      {
-        key: 'type',
-        label: 'type',
-        iconPrefix: IconEnum.REPOSITORY_TYPE,
-        type: DataTypeEnum.COMBO,
-        options: () => RepositoryFormFieldsService.getRepositoryTypeOptions(),
-        value: repository ? repository.type : null,
-        validators: [Validators.required]
-      }
-    ];
-  }
+  constructor(private readonly translateService: TranslateService) {}
 
   /**
    * Get the form fields related to the local type
@@ -167,5 +120,53 @@ export class RepositoryFormFieldsService {
     });
 
     return of(typeOptions);
+  }
+
+  /**
+   * Generate the form fields for a repository
+   *
+   * @param repository The repository used to init the form fields
+   */
+  public generateFormFields(repository?: Repository): FormField[] {
+    let formFields = this.getGeneralFormFields(repository);
+
+    if (repository && repository.type) {
+      formFields = [...formFields, ...RepositoryFormFieldsService.repositoryTypeFormFieldsRecords[repository.type](repository)];
+    }
+
+    return formFields;
+  }
+
+  /**
+   * Get the general information of a repository
+   *
+   * @param repository The repository
+   */
+  private getGeneralFormFields(repository: Repository): FormField[] {
+    return [
+      {
+        key: 'enabled',
+        label: 'repository.enable',
+        type: DataTypeEnum.BOOLEAN,
+        value: repository ? repository.enabled : false
+      },
+      {
+        key: 'name',
+        label: this.translateService.instant('repository.name.form.field'),
+        iconPrefix: IconEnum.NAME,
+        type: DataTypeEnum.TEXT,
+        value: repository ? repository.name : null,
+        validators: [Validators.required]
+      },
+      {
+        key: 'type',
+        label: this.translateService.instant('repository.type.form.field'),
+        iconPrefix: IconEnum.REPOSITORY_TYPE,
+        type: DataTypeEnum.COMBO,
+        options: () => RepositoryFormFieldsService.getRepositoryTypeOptions(),
+        value: repository ? repository?.type : null,
+        validators: [Validators.required]
+      }
+    ];
   }
 }

@@ -1,6 +1,6 @@
 /*
  *  /*
- *  * Copyright 2012-2018 the original author or authors.
+ *  * Copyright 2012-2021 the original author or authors.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
 
 import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { flatMap, takeUntil, tap } from 'rxjs/operators';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, timer } from 'rxjs';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import * as Stomp from '@stomp/stompjs';
 import { Project } from '../../../shared/models/backend/project/project';
@@ -28,6 +28,8 @@ import { HttpProjectService } from '../../../shared/services/backend/http-projec
 import { WebsocketService } from '../../../shared/services/frontend/websocket/websocket.service';
 import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';
 import { DashboardService } from '../../services/dashboard/dashboard.service';
+import { HttpRotationService } from '../../../shared/services/backend/http-rotation/http-rotation.service';
+import { Rotation } from '../../../shared/models/backend/rotation/rotation';
 
 /**
  * Dashboard TV Management
@@ -50,6 +52,11 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   public projectToken: string;
 
   /**
+   * The rotation token in the url
+   */
+  public rotationToken: string;
+
+  /**
    * The list of project widgets related to the project token
    */
   public projectWidgets: ProjectWidget[];
@@ -70,17 +77,29 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   public project: Project;
 
   /**
+   * The rotation
+   */
+  public rotation: Rotation;
+
+  /**
+   * The timeout at the end of which, the rotation rotates
+   */
+  public rotationTimeout: NodeJS.Timeout;
+
+  /**
    * The constructor
    *
-   * @param router Angular service used to manage app's route
-   * @param activatedRoute Angular service used to manage the route activated by the component
-   * @param httpProjectService Suricate service used to manage http calls for a project
-   * @param websocketService Frontend service used to manage websocket
+   * @param router              Service used to manage app's route
+   * @param activatedRoute      Service used to manage the route activated by the component
+   * @param httpProjectService  Service used to manage http calls for a project
+   * @param httpRotationService Service used to manage http calls for a rotation
+   * @param websocketService    Service used to manage websocket
    */
   constructor(
     private readonly router: Router,
     private readonly activatedRoute: ActivatedRoute,
     private readonly httpProjectService: HttpProjectService,
+    private readonly httpRotationService: HttpRotationService,
     private readonly websocketService: WebsocketService
   ) {}
 
@@ -96,12 +115,16 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
     this.listenForConnection();
 
     this.activatedRoute.queryParams.pipe(takeUntil(this.unsubscribe)).subscribe((queryParams: Params) => {
-      if (queryParams['token']) {
-        this.projectToken = queryParams['token'];
-        this.initComponent();
+      if (queryParams['dashboard']) {
+        this.projectToken = queryParams['dashboard'];
+        this.initComponentWithProject();
+      } else if (queryParams['rotation']) {
+        this.rotationToken = queryParams['rotation'];
+        this.initComponentWithRotation();
       } else {
         this.projectToken = null;
         this.projectWidgets = null;
+        this.rotationToken = null;
       }
     });
   }
@@ -127,19 +150,28 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
       .subscribe((stompMessage: Stomp.Message) => {
         const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 
-        if (updateEvent.type === WebsocketUpdateTypeEnum.CONNECT) {
+        // Received when synchronizing to a single dashboard
+        if (updateEvent.type === WebsocketUpdateTypeEnum.CONNECT_SINGLE_DASHBOARD) {
           const project: Project = updateEvent.content;
           if (project) {
-            this.router.navigate(['/tv'], { queryParams: { token: project.token } });
+            this.router.navigate(['/tv'], { queryParams: { dashboard: project.token } });
+          }
+        }
+
+        // Received when synchronizing to a rotation
+        if (updateEvent.type === WebsocketUpdateTypeEnum.CONNECT_ROTATION) {
+          const rotation: Rotation = updateEvent.content;
+          if (rotation) {
+            this.router.navigate(['/tv'], { queryParams: { rotation: rotation.token } });
           }
         }
       });
   }
 
   /**
-   * Initialise the component
+   * Initialise the component from the given project token
    */
-  private initComponent(): void {
+  private initComponentWithProject(): void {
     if (this.projectToken) {
       this.isDashboardLoading = true;
 
@@ -153,6 +185,51 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Initialise the component from the given rotation token
+   */
+  private initComponentWithRotation(): void {
+    if (this.rotationToken) {
+      this.isDashboardLoading = true;
+
+      this.refreshRotation(this.rotationToken).subscribe(() => {
+        this.projectToken = this.rotation.rotationProjects[0].project.token;
+        this.initComponentWithProject();
+
+        if (this.rotation.rotationProjects.length > 1) {
+          this.rotate(0);
+        }
+      });
+    }
+  }
+
+  /**
+   * Run the rotation of the dashboards
+   *
+   * In X seconds, increments the rotation and display the next dashboard
+   *
+   * @param rotationIndex The index of the current project to display in the rotation
+   */
+  private rotate(rotationIndex: number): void {
+    this.rotationTimeout = setTimeout(() => {
+      rotationIndex = rotationIndex === this.rotation.rotationProjects.length - 1 ? 0 : rotationIndex + 1;
+
+      this.projectToken = this.rotation.rotationProjects[rotationIndex].project.token;
+      this.initComponentWithProject();
+
+      this.rotate(rotationIndex);
+    }, this.rotation.rotationProjects[rotationIndex].rotationSpeed * 1000);
+  }
+
+  /**
+   * Stop the rotation by deleting the rotation timeout
+   */
+  private stopRotate(): void {
+    if (this.rotationTimeout) {
+      clearTimeout(this.rotationTimeout);
+    }
+  }
+
+  /**
    * Refresh the project
    *
    * @param dashboardToken The token used for the refresh
@@ -162,11 +239,21 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Refresh the rotation
+   *
+   * @param rotationToken The token used for the refresh
+   */
+  private refreshRotation(rotationToken: string): Observable<Rotation> {
+    return this.httpRotationService.getById(rotationToken).pipe(tap((rotation: Rotation) => (this.rotation = rotation)));
+  }
+
+  /**
    * Activate the action of refresh project widgets
    */
   public refreshProjectWidgetsAction(): void {
     this.refreshProjectWidgets(this.project.token).subscribe();
   }
+
   /**
    * Refresh the project widget list
    *
@@ -174,7 +261,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    */
   private refreshProjectWidgets(dashboardToken: string): Observable<ProjectWidget[]> {
     return this.httpProjectService
-      .getProjectProjectWidgets(dashboardToken)
+      .getWidgetInstancesByProjectToken(dashboardToken)
       .pipe(tap((projectWidgets: ProjectWidget[]) => (this.projectWidgets = projectWidgets)));
   }
 
@@ -182,6 +269,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * Handle the disconnection of a dashboard
    */
   public handlingDashboardDisconnect(): void {
+    this.stopRotate();
     this.router.navigate(['/tv']);
     setTimeout(() => this.listenForConnection(), 500);
   }
@@ -190,15 +278,11 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * Disconnect TV from stompJS
    */
   private disconnectTV(): void {
-    this.unsubscribeToConnectionEvent();
-    this.websocketService.disconnect();
-  }
-
-  /**
-   * Used to unsubscribe to the websocket
-   */
-  private unsubscribeToConnectionEvent(): void {
     this.unsubscribe.next();
     this.unsubscribe.complete();
+
+    this.stopRotate();
+
+    this.websocketService.disconnect();
   }
 }

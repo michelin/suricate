@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import * as html2canvas from 'html2canvas';
 
 import { DashboardService } from '../../services/dashboard/dashboard.service';
 import { Project } from '../../../shared/models/backend/project/project';
@@ -33,17 +32,17 @@ import { DialogService } from '../../../shared/services/frontend/dialog/dialog.s
 import { TranslateService } from '@ngx-translate/core';
 import { ProjectRequest } from '../../../shared/models/backend/project/project-request';
 import { ProjectFormFieldsService } from '../../../shared/services/frontend/form-fields/project-form-fields/project-form-fields.service';
-import { flatMap, switchMap, takeUntil, tap } from 'rxjs/operators';
-import { EMPTY, Observable, of, Subject } from 'rxjs';
+import { flatMap, switchMap, tap } from 'rxjs/operators';
+import { EMPTY, Observable, of } from 'rxjs';
 import { DashboardScreenComponent } from '../dashboard-screen/dashboard-screen.component';
 import { MatDialog } from '@angular/material/dialog';
-import { TvManagementDialogComponent } from '../tv-management-dialog/tv-management-dialog.component';
 import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
 import { ValueChangedEvent } from '../../../shared/models/frontend/form/value-changed-event';
 import { FormField } from '../../../shared/models/frontend/form/form-field';
-import { ProjectUsersFormFieldsService } from '../../../shared/services/frontend/form-fields/project-users-form-fields/project-users-form-fields.service';
+import { ProjectRotationUsersFormFieldsService } from '../../../shared/services/frontend/form-fields/project-rotation-users-form-fields/project-rotation-users-form-fields.service';
 import { WebsocketService } from '../../../shared/services/frontend/websocket/websocket.service';
 import { ImageUtils } from '../../../shared/utils/image.utils';
+import { DashboardTvManagementDialogComponent } from '../tv-management-dialog/dashboard-tv-management-dialog/dashboard-tv-management-dialog.component';
 
 /**
  * Component used to display a specific dashboard
@@ -119,6 +118,7 @@ export class DashboardDetailComponent implements OnInit {
    * @param toastService Frontend service used to manage toast message
    * @param dialogService Frontend service used to manage dialog
    * @param websocketService Frontend service used to manage websockets
+   * @param projectFormFieldsService Frontend service used to build project form fields
    */
   constructor(
     private readonly router: Router,
@@ -127,12 +127,13 @@ export class DashboardDetailComponent implements OnInit {
     private readonly translateService: TranslateService,
     private readonly httpProjectService: HttpProjectService,
     private readonly httpScreenService: HttpScreenService,
-    private readonly projectUsersFormFieldsService: ProjectUsersFormFieldsService,
+    private readonly projectUsersFormFieldsService: ProjectRotationUsersFormFieldsService,
     private readonly dashboardService: DashboardService,
     private readonly sidenavService: SidenavService,
     private readonly toastService: ToastService,
     private readonly dialogService: DialogService,
-    private readonly websocketService: WebsocketService
+    private readonly websocketService: WebsocketService,
+    private readonly projectFormFieldsService: ProjectFormFieldsService
   ) {}
 
   /**
@@ -153,7 +154,10 @@ export class DashboardDetailComponent implements OnInit {
           this.isDashboardLoading = false;
           this.initHeaderConfiguration();
         },
-        () => (this.isDashboardLoading = false)
+        () => {
+          this.isDashboardLoading = false;
+          this.router.navigate(['/home/dashboards']);
+        }
       );
   }
 
@@ -185,7 +189,7 @@ export class DashboardDetailComponent implements OnInit {
    */
   private refreshProjectWidgets(): Observable<ProjectWidget[]> {
     return this.httpProjectService
-      .getProjectProjectWidgets(this.dashboardToken)
+      .getWidgetInstancesByProjectToken(this.dashboardToken)
       .pipe(tap((projectWidgets: ProjectWidget[]) => (this.projectWidgets = projectWidgets)));
   }
 
@@ -296,7 +300,7 @@ export class DashboardDetailComponent implements OnInit {
   private openDashboardFormSidenav(): void {
     this.sidenavService.openFormSidenav({
       title: 'dashboard.edit',
-      formFields: ProjectFormFieldsService.generateProjectFormFields(this.project),
+      formFields: this.projectFormFieldsService.generateProjectFormFields(this.project),
       belongingComponent: this.dashboardScreen,
       save: (formData: ProjectRequest) => this.editDashboard(formData)
     });
@@ -308,7 +312,7 @@ export class DashboardDetailComponent implements OnInit {
    * @param formData The data retrieve from the form sidenav
    */
   private editDashboard(formData: ProjectRequest): void {
-    formData.cssStyle = `.grid { background-color: ${formData['gridBackgroundColor']}; }`;
+    formData.cssStyle = `.grid { background-color: ${formData.gridBackgroundColor}; }`;
 
     this.httpProjectService.update(this.project.token, formData).subscribe(() => {
       if (formData.image) {
@@ -322,10 +326,11 @@ export class DashboardDetailComponent implements OnInit {
         this.httpProjectService.addOrUpdateProjectScreenshot(this.project.token, file).subscribe();
       }
 
+      // If there is no widget anymore, no need to refresh the current screen, only refresh the connected screens
       if (!this.projectWidgets) {
         this.refreshProject().subscribe(() => {
           this.initHeaderConfiguration();
-          this.toastService.sendMessage('Dashboard updated', ToastTypeEnum.SUCCESS);
+          this.toastService.sendMessage('dashboard.update.success', ToastTypeEnum.SUCCESS);
         });
       } else {
         this.refreshConnectedScreens();
@@ -344,7 +349,7 @@ export class DashboardDetailComponent implements OnInit {
    * Open a new tab with the TV view
    */
   private redirectToTvView(): void {
-    const url = this.router.createUrlTree(['/tv'], { queryParams: { token: this.project.token } });
+    const url = this.router.createUrlTree(['/tv'], { queryParams: { dashboard: this.project.token } });
     window.open(url.toString(), '_blank');
   }
 
@@ -352,7 +357,7 @@ export class DashboardDetailComponent implements OnInit {
    * Open the dialog used to manage screens
    */
   private openScreenManagementDialog(): void {
-    this.matDialog.open(TvManagementDialogComponent, {
+    this.matDialog.open(DashboardTvManagementDialogComponent, {
       role: 'dialog',
       width: '700px',
       maxHeight: '80%',
@@ -370,8 +375,8 @@ export class DashboardDetailComponent implements OnInit {
       message: `${this.translateService.instant('delete.confirm')} ${this.project.name.toUpperCase()} ?`,
       accept: () => {
         this.httpProjectService.delete(this.project.token).subscribe(() => {
-          this.toastService.sendMessage('Project deleted successfully', ToastTypeEnum.SUCCESS);
-          this.router.navigate(['/home']);
+          this.toastService.sendMessage('dashboard.delete.success', ToastTypeEnum.SUCCESS);
+          this.router.navigate(['/home/dashboards']);
         });
       }
     });
@@ -381,7 +386,7 @@ export class DashboardDetailComponent implements OnInit {
    * Handle the disconnection of a dashboard
    */
   public handlingDashboardDisconnect(): void {
-    this.router.navigate(['/home']);
+    this.router.navigate(['/home/dashboards']);
   }
 
   /**

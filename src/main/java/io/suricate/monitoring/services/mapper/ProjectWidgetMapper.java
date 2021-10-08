@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -91,12 +91,7 @@ public abstract class ProjectWidgetMapper {
      * @return The project widget as entity
      */
     @Named("toProjectWidgetEntity")
-    @Mapping(target = "gridColumn", source = "projectWidgetRequestDto.gridColumn")
-    @Mapping(target = "gridRow", source = "projectWidgetRequestDto.gridRow")
-    @Mapping(target = "height", source = "projectWidgetRequestDto.height")
-    @Mapping(target = "width", source = "projectWidgetRequestDto.width")
     @Mapping(target = "project", expression = "java( projectService.getOneByToken(projectToken).get())")
     @Mapping(target = "widget", expression = "java( widgetService.findOne(projectWidgetRequestDto.getWidgetId()).get() )")
-    @Mapping(target = "data", source = "projectWidgetRequestDto.data")
     public abstract ProjectWidget toProjectWidgetEntity(ProjectWidgetRequestDto projectWidgetRequestDto, String projectToken);
 }

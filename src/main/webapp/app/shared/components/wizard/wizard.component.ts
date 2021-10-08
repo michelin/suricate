@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,6 +30,9 @@ import { FormField } from '../../models/frontend/form/form-field';
 import { WidgetConfigurationFormFieldsService } from '../../services/frontend/form-fields/widget-configuration-form-fields/widget-configuration-form-fields.service';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { ProjectWidgetFormStepsService } from '../../services/frontend/form-steps/project-widget-form-steps/project-widget-form-steps.service';
+import { RoutesService } from '../../services/frontend/route/route.service';
+import { HttpProjectService } from '../../services/backend/http-project/http-project.service';
+import { Project } from '../../models/backend/project/project';
 
 /**
  * Generic component used to display wizards
@@ -51,6 +54,11 @@ export class WizardComponent implements OnInit {
   private readonly formService: FormService;
 
   /**
+   * The http project service
+   */
+  public readonly httpProjectService: HttpProjectService;
+
+  /**
    * Frontend service used to help on the widget configuration form fields creation
    */
   private readonly widgetConfigurationFormFieldsService: WidgetConfigurationFormFieldsService;
@@ -64,6 +72,11 @@ export class WizardComponent implements OnInit {
    * Angular service used to manage application routes
    */
   protected readonly router: Router;
+
+  /**
+   * The token of the dashboard
+   */
+  public readonly dashboardToken: string;
 
   /**
    * The configuration of the header
@@ -105,6 +118,8 @@ export class WizardComponent implements OnInit {
     this.widgetConfigurationFormFieldsService = injector.get(WidgetConfigurationFormFieldsService);
     this.activatedRoute = injector.get(ActivatedRoute);
     this.router = injector.get(Router);
+    this.httpProjectService = injector.get(HttpProjectService);
+    this.dashboardToken = RoutesService.getParamValueFromActivatedRoute(this.activatedRoute, 'dashboardToken');
   }
 
   /**
@@ -156,12 +171,14 @@ export class WizardComponent implements OnInit {
     this.currentStep = this.wizardConfiguration.steps[stepperSelectionEvent.selectedIndex];
 
     if (this.currentStep && this.currentStep.asyncFields) {
-      this.currentStep
-        .asyncFields((stepperSelectionEvent.selectedStep.stepControl as unknown) as FormGroup, this.currentStep)
-        .subscribe((formFields: FormField[]) => {
-          this.currentStep.fields = formFields;
-          this.stepperFormGroup.setControl(this.currentStep.key, this.formService.generateFormGroupForFields(formFields));
-        });
+      this.httpProjectService.getById(this.dashboardToken).subscribe((project: Project) => {
+        this.currentStep
+          .asyncFields((stepperSelectionEvent.selectedStep.stepControl as unknown) as FormGroup, this.currentStep)
+          .subscribe((formFields: FormField[]) => {
+            this.currentStep.fields = formFields;
+            this.stepperFormGroup.setControl(this.currentStep.key, this.formService.generateFormGroupForFields(formFields));
+          });
+      });
     }
   }
 
@@ -215,7 +232,7 @@ export class WizardComponent implements OnInit {
    * By default we redirect to home on close event (you can override this on child component)
    */
   protected closeWizard(): void {
-    this.router.navigate(['/home']);
+    this.router.navigate(['/home/dashboards']);
   }
 
   /**

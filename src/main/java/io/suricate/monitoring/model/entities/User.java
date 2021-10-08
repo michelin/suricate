@@ -1,6 +1,6 @@
 /*
  *
- *  * Copyright 2012-2018 the original author or authors.
+ *  * Copyright 2012-2021 the original author or authors.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -34,7 +34,6 @@ import java.util.*;
 @Setter
 @NoArgsConstructor
 public class User extends AbstractEntity<Long> {
-
     /**
      * The user id
      */
@@ -91,6 +90,12 @@ public class User extends AbstractEntity<Long> {
      */
     @ManyToMany(mappedBy = "users")
     private Set<Project> projects = new LinkedHashSet<>();
+
+    /**
+     * The rotations of the user
+     */
+    @ManyToMany(mappedBy = "users")
+    private Set<Rotation> rotations = new LinkedHashSet<>();
 
     /**
      * The list of user settings

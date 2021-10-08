@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ import io.suricate.monitoring.model.entities.ProjectWidget;
 import io.suricate.monitoring.model.enums.WidgetStateEnum;
 import io.suricate.monitoring.services.api.ProjectWidgetService;
 import io.suricate.monitoring.services.api.WidgetService;
+import io.suricate.monitoring.services.nashorn.services.DashboardScheduleService;
 import io.suricate.monitoring.services.nashorn.services.NashornService;
 import io.suricate.monitoring.services.nashorn.tasks.NashornRequestResultAsyncTask;
 import io.suricate.monitoring.services.nashorn.tasks.NashornRequestWidgetExecutionAsyncTask;
@@ -189,7 +190,6 @@ public class NashornRequestWidgetExecutionScheduler {
         WidgetService widgetService = applicationContext.getBean(WidgetService.class);
 
         if (!nashornService.isNashornRequestExecutable(nashornRequest)) {
-            LOGGER.debug("The Nashorn request of the widget instance {} is not valid. Stopping the widget", nashornRequest.getProjectWidgetId());
             projectWidgetServiceInjected.updateState(WidgetStateEnum.STOPPED, nashornRequest.getProjectWidgetId(), new Date());
             return;
         }
@@ -223,7 +223,7 @@ public class NashornRequestWidgetExecutionScheduler {
         nashornTasksByProjectWidgetId.put(nashornRequest.getProjectWidgetId(), ImmutablePair.of(
                 new WeakReference<>(scheduledNashornRequestExecutionTask),
                 new WeakReference<>(scheduledNashornRequestResponseTask)
-            ));
+        ));
     }
 
     /**
@@ -232,8 +232,8 @@ public class NashornRequestWidgetExecutionScheduler {
      * @param nashornRequest The new Nashorn request to schedule
      */
     public void cancelAndScheduleNashornRequest(NashornRequest nashornRequest) {
-        cancelWidgetExecution(nashornRequest.getProjectWidgetId());
-        schedule(nashornRequest, true);
+        this.cancelWidgetExecution(nashornRequest.getProjectWidgetId());
+        this.schedule(nashornRequest, true);
     }
 
     /**
@@ -274,7 +274,7 @@ public class NashornRequestWidgetExecutionScheduler {
             ScheduledFuture<?> scheduledFutureTask = scheduledFutureTaskReference.get();
 
             if (scheduledFutureTask != null && (!scheduledFutureTask.isDone() || !scheduledFutureTask.isCancelled())) {
-                LOGGER.debug("Canceling the future task for the widget instance {} ({})", projectWidgetId, scheduledFutureTask);
+                LOGGER.debug("Canceling the future Nashorn execution task for the widget instance {}", projectWidgetId);
 
                 scheduledFutureTask.cancel(true);
             }

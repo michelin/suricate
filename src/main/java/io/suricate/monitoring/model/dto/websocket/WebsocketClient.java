@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,19 +24,26 @@ import lombok.*;
 /**
  * Representation of websocket client
  */
+@Builder
 @Getter
 @Setter
+@AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @ToString
 @ApiModel(value = "WebsocketClient", description = "Define a connected screen to websocket")
 public class WebsocketClient extends AbstractDto {
-
     /**
      * The project token subscribed by the client
      */
     @ApiModelProperty(value = "The connected project token")
     private String projectToken;
+
+    /**
+     * The rotation token subscribed by the client
+     */
+    @ApiModelProperty(value = "The connected project token")
+    private String rotationToken;
 
     /**
      * The websocket session id
@@ -45,7 +52,7 @@ public class WebsocketClient extends AbstractDto {
     private String sessionId;
 
     /**
-     * The websoscket subscription ID related to the session ID
+     * The websocket subscription ID related to the session ID
      */
     @ApiModelProperty(value = "The subscription id related to unique screen WS subscription")
     private String subscriptionId;
@@ -55,19 +62,4 @@ public class WebsocketClient extends AbstractDto {
      */
     @ApiModelProperty(value = "Screen reference")
     private String screenCode;
-
-    /**
-     * Default constructor using fields
-     *
-     * @param projectToken   the project token
-     * @param sessionId      the session id
-     * @param subscriptionId The subscription Id
-     * @param screenCode     The screenCode
-     */
-    public WebsocketClient(String projectToken, String sessionId, String subscriptionId, String screenCode) {
-        this.projectToken = projectToken;
-        this.sessionId = sessionId;
-        this.subscriptionId = subscriptionId;
-        this.screenCode = screenCode;
-    }
 }

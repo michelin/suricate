@@ -116,9 +116,14 @@ public class NashornWidgetSchedulerTest {
     public void before() throws IOException {
         this.nashornWidgetScheduler.init();
 
-        this.scheduleNashornRequestExecutionThread = (ScheduledThreadPoolExecutor) ReflectionTestUtils.getField(nashornWidgetScheduler, "scheduleNashornRequestExecutionThread");
-        this.scheduleNashornRequestResponseThread = (ScheduledThreadPoolExecutor) ReflectionTestUtils.getField(nashornWidgetScheduler, "scheduleNashornRequestResponseThread");
-        this.nashornTasksByProjectWidgetId = (Map<Long, Pair<WeakReference<ScheduledFuture<NashornResponse>>, WeakReference<ScheduledFuture<Void>>>>) ReflectionTestUtils.getField(nashornWidgetScheduler, "nashornTasksByProjectWidgetId");
+        this.scheduleNashornRequestExecutionThread = (ScheduledThreadPoolExecutor) ReflectionTestUtils
+                .getField(nashornWidgetScheduler, "scheduleNashornRequestExecutionThread");
+
+        this.scheduleNashornRequestResponseThread = (ScheduledThreadPoolExecutor) ReflectionTestUtils
+                .getField(nashornWidgetScheduler, "scheduleNashornRequestResponseThread");
+
+        this.nashornTasksByProjectWidgetId = (Map<Long, Pair<WeakReference<ScheduledFuture<NashornResponse>>, WeakReference<ScheduledFuture<Void>>>>) ReflectionTestUtils
+                .getField(nashornWidgetScheduler, "nashornTasksByProjectWidgetId");
 
         this.initDatabase();
     }
@@ -133,7 +138,6 @@ public class NashornWidgetSchedulerTest {
         // Schedule widget
         NashornRequest nashornRequest = nashornService.getNashornRequestByProjectWidgetId(projectWidget.getId());
         nashornWidgetScheduler.cancelAndScheduleNashornRequest(nashornRequest);
-        // TODO : Check behavior randomly switch from 1 to 2
         assertThat(scheduleNashornRequestResponseThread.getTaskCount()).isGreaterThan(0L);
 
         // Get running task

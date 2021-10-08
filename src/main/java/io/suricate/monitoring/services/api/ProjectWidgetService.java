@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,7 +62,6 @@ import java.util.stream.Collectors;
  */
 @Service
 public class ProjectWidgetService {
-
     /**
      * Class logger
      */
@@ -178,8 +177,11 @@ public class ProjectWidgetService {
 
         widgetInstance = projectWidgetRepository.saveAndFlush(widgetInstance);
 
-        UpdateEvent updateEvent = new UpdateEvent(UpdateType.GRID);
-        updateEvent.setContent(projectMapper.toProjectDTO(widgetInstance.getProject()));
+        UpdateEvent updateEvent = UpdateEvent.builder()
+                .type(UpdateType.GRID)
+                .content(this.projectMapper.toProjectDTO(widgetInstance.getProject()))
+                .build();
+
         dashboardWebsocketService.sendEventToProjectSubscribers(widgetInstance.getProject().getToken(), updateEvent);
     }
 
@@ -214,9 +216,13 @@ public class ProjectWidgetService {
             );
         }
         projectWidgetRepository.flush();
+
         // notify clients
-        UpdateEvent updateEvent = new UpdateEvent(UpdateType.POSITION);
-        updateEvent.setContent(projectMapper.toProjectDTO(project));
+        UpdateEvent updateEvent = UpdateEvent.builder()
+                .type(UpdateType.POSITION)
+                .content(projectMapper.toProjectDTO(project))
+                .build();
+
         dashboardWebsocketService.sendEventToProjectSubscribers(project.getToken(), updateEvent);
     }
 
@@ -236,8 +242,11 @@ public class ProjectWidgetService {
             projectWidgetRepository.flush();
 
             // notify client
-            UpdateEvent updateEvent = new UpdateEvent(UpdateType.GRID);
-            updateEvent.setContent(projectMapper.toProjectDTO(projectWidgetOptional.get().getProject()));
+            UpdateEvent updateEvent = UpdateEvent.builder()
+                    .type(UpdateType.GRID)
+                    .content(projectMapper.toProjectDTO(projectWidgetOptional.get().getProject()))
+                    .build();
+
             dashboardWebsocketService.updateGlobalScreensByProjectId(projectWidgetOptional.get().getProject().getId(), updateEvent);
         }
     }

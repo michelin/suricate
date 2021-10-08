@@ -1,6 +1,6 @@
 /*
  *  /*
- *  * Copyright 2012-2018 the original author or authors.
+ *  * Copyright 2012-2021 the original author or authors.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -27,11 +27,15 @@ export enum IconEnum {
   CLOSE = 'CLOSE',
   COLUMN = 'COLUMN',
   DASHBOARD = 'DASHBOARD',
+  DASHBOARD_ROTATION = 'DASHBOARD_ROTATION',
+  DASHBOARD_ROTATION_SPEED = 'DASHBOARD_ROTATION_SPEED',
   DELETE = 'DELETE',
   EDIT = 'EDIT',
   EMAIL = 'EMAIL',
   ERROR = 'ERROR',
   GENERAL_INFORMATION = 'GENERAL_INFORMATION',
+  GRID = 'GRID',
+  GRID_ROTATION_SPEED = 'GRID_ROTATION_SPEED',
   HEIGHT = 'HEIGHT',
   HELP = 'HELP',
   HOME = 'HOME',

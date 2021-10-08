@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,6 +18,8 @@ package io.suricate.monitoring.services.api;
 
 import io.suricate.monitoring.model.entities.Asset;
 import io.suricate.monitoring.repositories.AssetRepository;
+import io.suricate.monitoring.utils.IdUtils;
+import io.suricate.monitoring.utils.exceptions.ObjectNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,11 +49,17 @@ public class AssetService {
     /**
      * Find an asset by ID
      *
-     * @param id The asset id
+     * @param token the asset token used to identify the asset
      * @return The related asset
      */
-    public Optional<Asset> getAssetById(final Long id) {
-        return assetRepository.findById(id);
+    public Asset getAssetById(final String token) {
+        Optional<Asset> assetOptional = assetRepository.findById(IdUtils.decrypt(token));
+
+        if (!assetOptional.isPresent()) {
+            throw new ObjectNotFoundException(Asset.class, token);
+        }
+
+        return assetOptional.get();
     }
 
     /**

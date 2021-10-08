@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,14 +38,4 @@ public abstract class RoleMapper {
      */
     @Named("toRoleDTO")
     public abstract RoleResponseDto toRoleDTO(Role role);
-
-    /**
-     * Map a list of roles into a list of roles DTO
-     *
-     * @param roles The list of roles to map
-     * @return The list of roles as DTOs
-     */
-    @Named("toRolesDTOs")
-    @IterableMapping(qualifiedByName = "toRoleDTO")
-    public abstract List<RoleResponseDto> toRolesDTOs(List<Role> roles);
 }

@@ -1,6 +1,6 @@
 /*
  *  /*
- *  * Copyright 2012-2018 the original author or authors.
+ *  * Copyright 2012-2021 the original author or authors.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -89,7 +89,6 @@ export class FileInputComponent extends InputComponent implements OnInit {
    */
   public onFileChange(event: Event): void {
     this.convertFileBase64(event);
-    this.emitValueChange('fileChanged');
   }
 
   /**
@@ -105,11 +104,12 @@ export class FileInputComponent extends InputComponent implements OnInit {
         this.setBase64File(base64Url as string, file.name);
         super.getFormControl().setValue(base64Url);
         super.getFormControl().markAsDirty();
+
+        this.emitValueChange('fileChanged');
       });
     }
 
     super.getFormControl().markAsTouched();
-    this.emitValueChange('fileChanged');
   }
 
   /**

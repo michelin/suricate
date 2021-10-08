@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { TvManagementDialogComponent } from './tv-management-dialog.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -27,52 +27,19 @@ import { ProjectGrid } from '../../../shared/models/backend/project/project-grid
 import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { MockModule } from '../../../mock/mock.module';
+import { AbstractHttpService } from '../../../shared/services/backend/abstract-http/abstract-http.service';
 
 describe('TvManagementDialogComponent', () => {
-  let component: TvManagementDialogComponent;
-  let fixture: ComponentFixture<TvManagementDialogComponent>;
-
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
         imports: [MockModule],
-        declarations: [TvManagementDialogComponent],
-        providers: [{ provide: MAT_DIALOG_DATA, useValue: { project: buildMockedProject() } }]
+        declarations: [TvManagementDialogComponent]
       }).compileComponents();
-
-      fixture = TestBed.createComponent(TvManagementDialogComponent);
-      component = fixture.componentInstance;
-      fixture.detectChanges();
     })
   );
 
-  it('should create', () => {
+  it('should create', inject([AbstractHttpService], (component: TvManagementDialogComponent) => {
     expect(component).toBeTruthy();
-  });
-
-  /**
-   * Build a mocked project object for the unit tests
-   */
-  function buildMockedProject(): Project {
-    const gridProperties: ProjectGrid = {
-      maxColumn: 5,
-      widgetHeight: 300,
-      cssStyle: ''
-    };
-
-    return {
-      gridProperties: gridProperties,
-      librariesToken: ['Token1', 'Token2'],
-      name: 'ProjectName',
-      screenshotToken: 'ScreenToken',
-      image: {
-        content: 'content',
-        contentType: 'image/png',
-        id: 'id',
-        lastUpdateDate: new Date(),
-        size: 10
-      },
-      token: 'Token'
-    };
-  }
+  }));
 });

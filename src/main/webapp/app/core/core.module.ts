@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,10 +22,11 @@ import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { LayoutModule } from '../layout/layout.module';
 import { coreRoutes } from './core.route';
-import { HomeComponent } from './components/home/home.component';
+import { DashboardsComponent } from './components/home/dashboards/dashboards.component';
+import { RotationsComponent } from './components/home/rotations/rotations.component';
 
 @NgModule({
   imports: [RouterModule.forChild(coreRoutes), LayoutModule, SharedModule],
-  declarations: [HomeComponent, LoginComponent, RegisterComponent]
+  declarations: [LoginComponent, RegisterComponent, DashboardsComponent, RotationsComponent]
 })
 export class CoreModule {}

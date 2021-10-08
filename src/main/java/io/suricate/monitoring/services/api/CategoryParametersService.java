@@ -1,6 +1,6 @@
 /*
  *
- *  * Copyright 2012-2018 the original author or authors.
+ *  * Copyright 2012-2021 the original author or authors.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -40,7 +40,6 @@ import java.util.Set;
  */
 @Service
 public class CategoryParametersService {
-
     /**
      * The category repository
      */
@@ -69,7 +68,7 @@ public class CategoryParametersService {
      * @param categoryId The category ID
      * @return The list of parameters
      */
-    @Transactional
+    @Transactional(readOnly = true)
     public Optional<List<CategoryParameter>> getParametersByCategoryId(Long categoryId) {
         return categoryParametersRepository.findCategoryParametersByCategoryId(categoryId);
     }
@@ -79,6 +78,7 @@ public class CategoryParametersService {
      *
      * @return The list of category parameters
      */
+    @Transactional(readOnly = true)
     public Page<CategoryParameter> getAll(String search, Pageable pageable) {
         return categoryParametersRepository.findAll(new CategoryParametersSearchSpecification(search), pageable);
     }
@@ -89,6 +89,7 @@ public class CategoryParametersService {
      * @param key The key
      * @return The category parameter as optional
      */
+    @Transactional(readOnly = true)
     public Optional<CategoryParameter> getOneByKey(final String key) {
         return categoryParametersRepository.findById(key);
     }
@@ -99,6 +100,7 @@ public class CategoryParametersService {
      * @param categoryParameter The category parameter to update
      * @param newValue          The new value to set
      */
+    @Transactional
     public void updateConfiguration(CategoryParameter categoryParameter, final String newValue) {
         categoryParameter.setValue(categoryParameter.getDataType() == DataTypeEnum.PASSWORD ?
                 stringEncryptor.encrypt(newValue) : newValue);

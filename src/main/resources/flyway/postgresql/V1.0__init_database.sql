@@ -81,12 +81,12 @@ CREATE TABLE project_widget (
     id                  bigserial                       NOT NULL,
     backend_config      text,
     grid_column         integer,
+    grid_row            integer,
     custom_style        text,
     data                text,
     height              integer,
     last_execution_date timestamp without time zone,
     log                 text,
-    grid_row            integer,
     width               integer,
     project_id          bigint,
     widget_id           bigint,
@@ -121,6 +121,29 @@ CREATE TABLE role (
     CONSTRAINT uk_role_name         UNIQUE (name)
 );
 
+CREATE TABLE rotation (
+    id                  bigserial                       NOT NULL,
+    name                character varying               NOT NULL,
+    token               character varying               NOT NULL,
+    created_by          character varying(255)          DEFAULT 'APPLICATION'::character varying NOT NULL,
+    created_date        timestamp without time zone     DEFAULT now() NOT NULL,
+    last_modified_by    character varying(255)          DEFAULT 'APPLICATION'::character varying,
+    last_modified_date  timestamp without time zone     DEFAULT now(),
+    CONSTRAINT pk_rotation_id PRIMARY KEY (id)
+);
+
+CREATE TABLE rotation_project (
+    id                  bigserial   NOT NULL,
+    rotation_speed      integer,
+    rotation_id         bigint,
+    project_id          bigint,
+    created_by          character varying(255)          DEFAULT 'APPLICATION'::character varying NOT NULL,
+    created_date        timestamp without time zone     DEFAULT now() NOT NULL,
+    last_modified_by    character varying(255)          DEFAULT 'APPLICATION'::character varying,
+    last_modified_date  timestamp without time zone     DEFAULT now(),
+    CONSTRAINT pk_rotation_project_id   PRIMARY KEY (id)
+);
+
 CREATE TABLE setting (
     id              bigserial               NOT NULL,
     constrained     character(1)            NOT NULL,
@@ -138,6 +161,11 @@ CREATE TABLE user_project (
 CREATE TABLE user_role (
     user_id     bigint NOT NULL,
     role_id     bigint NOT NULL
+);
+
+CREATE TABLE user_rotation (
+    rotation_id  bigint NOT NULL,
+    user_id      bigint NOT NULL
 );
 
 CREATE TABLE user_setting (
@@ -207,7 +235,6 @@ CREATE TABLE widget_param (
     CONSTRAINT pk_widget_param_id                   PRIMARY KEY (id)
 );
 
-
 CREATE TABLE widget_param_value (
     id                  bigserial                   NOT NULL,
     js_key              character varying(255)      NOT NULL,
@@ -235,6 +262,10 @@ ALTER TABLE user_role               ADD CONSTRAINT fk_user_role_user_id         
 ALTER TABLE user_role               ADD CONSTRAINT fk_user_role_role_id                     FOREIGN KEY (role_id)                   REFERENCES role (id) ;
 ALTER TABLE user_project            ADD CONSTRAINT fk_user_project_user_id                  FOREIGN KEY (user_id)                   REFERENCES users (id) ;
 ALTER TABLE user_project            ADD CONSTRAINT fk_user_project_project_id               FOREIGN KEY (project_id)                REFERENCES project (id) ;
+ALTER TABLE user_rotation           ADD CONSTRAINT fk_user_rotation_user_id                 FOREIGN KEY (user_id)                   REFERENCES users (id) ;
+ALTER TABLE user_rotation           ADD CONSTRAINT fk_user_rotation_rotation_id             FOREIGN KEY (rotation_id)               REFERENCES rotation (id) ;
+ALTER TABLE rotation_project        ADD CONSTRAINT fk_rotation_project_rotation_id          FOREIGN KEY (rotation_id)               REFERENCES rotation (id) ;
+ALTER TABLE rotation_project        ADD CONSTRAINT fk_rotation_project_project_id           FOREIGN KEY (project_id)                REFERENCES project (id) ;
 ALTER TABLE project_widget          ADD CONSTRAINT fk_project_widget_widget_id              FOREIGN KEY (widget_id)                 REFERENCES widget (id) ;
 ALTER TABLE project_widget          ADD CONSTRAINT fk_project_widget_project_id             FOREIGN KEY (project_id)                REFERENCES project (id) ;
 ALTER TABLE project                 ADD CONSTRAINT fk_project_screenshot_id                 FOREIGN KEY (screenshot_id)             REFERENCES asset (id) ;

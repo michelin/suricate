@@ -1,6 +1,6 @@
 /*
  *
- *  * Copyright 2012-2018 the original author or authors.
+ *  * Copyright 2012-2021 the original author or authors.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -34,7 +34,6 @@ import java.util.*;
 @Setter
 @NoArgsConstructor
 public class Project extends AbstractAuditingEntity<Long> {
-
     /**
      * The project id
      */
@@ -81,11 +80,17 @@ public class Project extends AbstractAuditingEntity<Long> {
     private Asset screenshot;
 
     /**
-     * The list of widgets related to it
+     * The list of related widgets
      */
     @OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE)
     @OrderBy("gridRow ASC, gridColumn ASC")
     private Set<ProjectWidget> widgets = new LinkedHashSet<>();
+
+    /**
+     * The list of related rotations
+     */
+    @OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE)
+    private Set<RotationProject> rotationProjects = new LinkedHashSet<>();
 
     /**
      * The list of users of the project

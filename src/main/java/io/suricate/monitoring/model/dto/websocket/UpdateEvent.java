@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,16 +26,20 @@ import java.util.Date;
 /**
  * WebSocket update event
  */
-@Getter @Setter @NoArgsConstructor @EqualsAndHashCode(callSuper = false) @ToString
+@Builder
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = false)
 public class UpdateEvent extends AbstractDto {
-
     /**
      * The update date
      */
-    private Date date;
+    private Date date = new Date();
 
     /**
-     * The update type {@link UpdateType}
+     * The update type
      */
     private UpdateType type;
 
@@ -43,13 +47,4 @@ public class UpdateEvent extends AbstractDto {
      * The content to send
      */
     private Serializable content;
-
-    /**
-     * Default constructor
-     * @param type the update type
-     */
-    public UpdateEvent(UpdateType type) {
-        this.type = type;
-        date = new Date();
-    }
 }

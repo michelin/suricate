@@ -1,6 +1,6 @@
 /*
  *  /*
- *  * Copyright 2012-2018 the original author or authors.
+ *  * Copyright 2012-2021 the original author or authors.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -29,13 +29,18 @@ export const MaterialIconRecords: Record<IconEnum, string> = {
   [IconEnum.CLOSE]: 'close',
   [IconEnum.COLUMN]: 'view_column',
   [IconEnum.DASHBOARD]: 'dashboard',
+  [IconEnum.DASHBOARD_ROTATION]: 'crop_rotate',
+  [IconEnum.DASHBOARD_ROTATION_SPEED]: 'speed',
   [IconEnum.DELETE]: 'delete_forever',
   [IconEnum.EDIT]: 'edit',
   [IconEnum.EMAIL]: 'email',
   [IconEnum.ERROR]: 'error',
   [IconEnum.GENERAL_INFORMATION]: 'menu_book',
+  [IconEnum.GRID]: 'view_carousel',
+  [IconEnum.GRID_ROTATION_SPEED]: 'trending_up',
   [IconEnum.HEIGHT]: 'height',
   [IconEnum.HELP]: 'help',
+  [IconEnum.HIDE_PASSWORD]: 'visibility_off',
   [IconEnum.HOME]: 'home',
   [IconEnum.INFO]: 'format_italic',
   [IconEnum.KEY]: 'vpn_key',
@@ -43,14 +48,13 @@ export const MaterialIconRecords: Record<IconEnum, string> = {
   [IconEnum.LOGOUT]: 'exit_to_app',
   [IconEnum.NAME]: 'short_text',
   [IconEnum.PASSWORD]: 'lock',
-  [IconEnum.SHOW_PASSWORD]: 'visibility',
-  [IconEnum.HIDE_PASSWORD]: 'visibility_off',
   [IconEnum.REFRESH]: 'refresh',
   [IconEnum.REPOSITORY_TYPE]: 'cloud_queue',
   [IconEnum.SAVE]: 'done',
   [IconEnum.SEARCH]: 'search',
   [IconEnum.SETTINGS]: 'settings',
   [IconEnum.SHARE_SCREEN]: 'screen_share',
+  [IconEnum.SHOW_PASSWORD]: 'visibility',
   [IconEnum.STOP_SHARE_SCREEN]: 'stop_screen_share',
   [IconEnum.SUCCESS]: 'done',
   [IconEnum.TEXT]: 'notes',

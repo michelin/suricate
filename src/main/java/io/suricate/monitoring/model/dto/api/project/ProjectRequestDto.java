@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,22 +31,24 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value = "ProjectRequest", description = "Create or update a project")
 public class ProjectRequestDto extends AbstractDto {
-
     /**
      * The project name
      */
     @ApiModelProperty(value = "The project name", required = true)
     private String name;
+
     /**
      * Number of column in the dashboard
      */
     @ApiModelProperty(value = "The number of columns in the dashboard")
     private Integer maxColumn;
+
     /**
      * The height for widgets contained
      */
     @ApiModelProperty(value = "The height in pixel of the widget")
     private Integer widgetHeight;
+
     /**
      * The global css for the dashboard
      */
