@@ -85,7 +85,7 @@ export class ProjectWidgetWizardComponent extends WizardComponent implements OnI
         .filter(
           (key: string) =>
             formData[ProjectWidgetFormStepsService.configureWidgetStepKey][key] != null &&
-            formData[ProjectWidgetFormStepsService.configureWidgetStepKey][key].trim() !== ''
+            String(formData[ProjectWidgetFormStepsService.configureWidgetStepKey][key]).trim() !== ''
         )
         .map((key: string) => `${key}=${formData[ProjectWidgetFormStepsService.configureWidgetStepKey][key]}`)
         .join('\n')
