@@ -46,21 +46,21 @@ export class CatalogComponent extends ListComponent<Widget | WidgetRequest> {
   /**
    * {@inheritDoc}
    */
-  protected getFirstLabel(widget: Widget): string {
+  public getFirstLabel(widget: Widget): string {
     return widget.name;
   }
 
   /**
    * {@inheritDoc}
    */
-  protected getSecondLabel(widget: Widget): string {
+  public getSecondLabel(widget: Widget): string {
     return widget.description;
   }
 
   /**
    * {@inheritDoc}
    */
-  protected getThirdLabel(widget: Widget): string {
+  public getThirdLabel(widget: Widget): string {
     return widget.category.name;
   }
 

@@ -181,71 +181,18 @@ export class RotationsComponent extends ListComponent<Rotation | RotationRequest
 
       this.sidenavService.openFormSidenav({
         title: rotation ? 'rotation.edit' : 'rotation.create',
-        formFields: this.rotationFormFieldsService.generateRotationFormFields(dashboards, rotation),
-        save: (formData: FormData) => this.editRotation(formData),
-        onValueChanged: (valueChangedEvent: ValueChangedEvent) => this.onRotationSidenavValueChanged(rotation, valueChangedEvent)
+        formFields: this.rotationFormFieldsService.generateRotationFormFields(rotation),
+        save: (rotationRequest: RotationRequest) => this.editRotation(rotationRequest)
       });
     });
   }
 
   /**
-   * On rotation sidenav value changed, register the new value in a
-   * rotation object and regenerate the form fields according to the
-   * new values
+   * Edit a rotation
    *
-   * @param valueChangedEvent The value changed event
+   * @param rotationRequest The data retrieved from the form
    */
-  public onRotationSidenavValueChanged(rotation: Rotation, valueChangedEvent: ValueChangedEvent): Observable<FormField[]> {
-    if (valueChangedEvent.fieldKey === RotationFormFieldsService.projectsFormFieldKey) {
-      // Add project
-      valueChangedEvent.value.forEach(projectToken => {
-        if (!rotation.rotationProjects.find(rotationProject => rotationProject.project.token === projectToken)) {
-          const rotationProject: RotationProject = new RotationProject();
-          rotationProject.project = this.projects.find(project => project.token === projectToken);
-          rotation.rotationProjects.push(rotationProject);
-        }
-      });
-
-      // Remove project
-      rotation.rotationProjects.forEach(rotationProject => {
-        if (!valueChangedEvent.value.includes(rotationProject.project.token)) {
-          rotation.rotationProjects.splice(rotation.rotationProjects.indexOf(rotationProject), 1);
-        }
-      });
-
-      return of(this.rotationFormFieldsService.generateRotationFormFields(this.projects, rotation));
-    }
-
-    if (valueChangedEvent.fieldKey.startsWith(RotationFormFieldsService.rotationSpeedFormFieldKey)) {
-      rotation.rotationProjects.find(
-        rotationProject => rotationProject.project.token === valueChangedEvent.fieldKey.substr(valueChangedEvent.fieldKey.indexOf('-') + 1)
-      ).rotationSpeed = valueChangedEvent.value;
-    } else {
-      rotation[valueChangedEvent.fieldKey] = valueChangedEvent.value;
-    }
-
-    return EMPTY;
-  }
-
-  /**
-   * Update the rotation
-   *
-   * @param formData
-   * @private
-   */
-  private editRotation(formData: FormData): void {
-    const rotationRequest: RotationRequest = {
-      name: formData[RotationFormFieldsService.rotationNameFormFieldKey],
-      rotationProjectRequests: []
-    };
-
-    formData[RotationFormFieldsService.projectsFormFieldKey].forEach(projectToken => {
-      rotationRequest.rotationProjectRequests.push({
-        projectToken: projectToken,
-        rotationSpeed: formData[`${RotationFormFieldsService.rotationSpeedFormFieldKey}-${projectToken}`]
-      });
-    });
-
+  private editRotation(rotationRequest: RotationRequest): void {
     this.httpRotationService.update(this.rotationSelected.token, rotationRequest).subscribe(() => {
       this.toastService.sendMessage('rotation.update.success', ToastTypeEnum.SUCCESS);
       this.refreshList();

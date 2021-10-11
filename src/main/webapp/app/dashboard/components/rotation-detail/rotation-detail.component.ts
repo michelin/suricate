@@ -63,11 +63,6 @@ export class RotationDetailComponent implements OnInit {
   public rotation: Rotation;
 
   /**
-   * Rotation object used during edition
-   */
-  public rotationInEdition: Rotation = new Rotation();
-
-  /**
    * Used to know if the rotation is loading
    */
   public isRotationLoading = true;
@@ -185,86 +180,37 @@ export class RotationDetailComponent implements OnInit {
   }
 
   /**
+   * Redirect to the wizard used to add a new project to the rotation
+   */
+  public displayRotationCreation(): void {
+    this.router.navigate(['/rotations', this.rotation.token, 'create']);
+  }
+
+  /**
    * Open the form sidenav used to edit the rotation
    */
   private openRotationFormSidenav(): void {
     this.httpProjectService.getAllForCurrentUser().subscribe((dashboards: Project[]) => {
       this.projects = dashboards;
 
-      // Make a copy of the rotation for the edition, so the modifications are not applied
-      // on the displayed rotation in the background
-      this.rotationInEdition = JSON.parse(JSON.stringify(this.rotation));
-
       this.sidenavService.openFormSidenav({
         title: 'rotation.edit',
-        formFields: this.rotationFormFieldsService.generateRotationFormFields(dashboards, this.rotationInEdition),
-        save: (formData: FormData) => this.editRotation(formData),
-        onValueChanged: (valueChangedEvent: ValueChangedEvent) => this.onRotationSidenavValueChanged(valueChangedEvent)
+        formFields: this.rotationFormFieldsService.generateRotationFormFields(this.rotation),
+        save: (rotationRequest: RotationRequest) => this.editRotation(rotationRequest)
       });
     });
   }
 
   /**
-   * Save a new rotation
+   * Edit a rotation
    *
-   * @param formData The data retrieved from the form
+   * @param rotationRequest The data retrieved from the form
    */
-  private editRotation(formData: FormData): void {
-    const rotationRequest: RotationRequest = {
-      name: formData[RotationFormFieldsService.rotationNameFormFieldKey],
-      rotationProjectRequests: []
-    };
-
-    formData[RotationFormFieldsService.projectsFormFieldKey].forEach(projectToken => {
-      rotationRequest.rotationProjectRequests.push({
-        projectToken: projectToken,
-        rotationSpeed: formData[`${RotationFormFieldsService.rotationSpeedFormFieldKey}-${projectToken}`]
-      });
-    });
-
+  private editRotation(rotationRequest: RotationRequest): void {
     this.httpRotationService.update(this.rotation.token, rotationRequest).subscribe(() => {
       this.toastService.sendMessage('rotation.update.success', ToastTypeEnum.SUCCESS);
       location.reload();
     });
-  }
-
-  /**
-   * On rotation sidenav value changed, register the new value in a
-   * rotation object and regenerate the form fields according to the
-   * new values
-   *
-   * @param valueChangedEvent The value changed event
-   */
-  public onRotationSidenavValueChanged(valueChangedEvent: ValueChangedEvent): Observable<FormField[]> {
-    if (valueChangedEvent.fieldKey === RotationFormFieldsService.projectsFormFieldKey) {
-      // Add project
-      valueChangedEvent.value.forEach(projectToken => {
-        if (!this.rotationInEdition.rotationProjects.find(rotationProject => rotationProject.project.token === projectToken)) {
-          const rotationProject: RotationProject = new RotationProject();
-          rotationProject.project = this.projects.find(project => project.token === projectToken);
-          this.rotationInEdition.rotationProjects.push(rotationProject);
-        }
-      });
-
-      // Remove project
-      this.rotationInEdition.rotationProjects.forEach(rotationProject => {
-        if (!valueChangedEvent.value.includes(rotationProject.project.token)) {
-          this.rotationInEdition.rotationProjects.splice(this.rotationInEdition.rotationProjects.indexOf(rotationProject), 1);
-        }
-      });
-
-      return of(this.rotationFormFieldsService.generateRotationFormFields(this.projects, this.rotationInEdition));
-    }
-
-    if (valueChangedEvent.fieldKey.startsWith(RotationFormFieldsService.rotationSpeedFormFieldKey)) {
-      this.rotationInEdition.rotationProjects.find(
-        rotationProject => rotationProject.project.token === valueChangedEvent.fieldKey.substr(valueChangedEvent.fieldKey.indexOf('-') + 1)
-      ).rotationSpeed = valueChangedEvent.value;
-    } else {
-      this.rotationInEdition[valueChangedEvent.fieldKey] = valueChangedEvent.value;
-    }
-
-    return EMPTY;
   }
 
   /**

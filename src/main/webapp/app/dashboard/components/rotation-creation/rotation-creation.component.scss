@@ -1,4 +1,4 @@
-/*
+/*!
  *  /*
  *  * Copyright 2012-2021 the original author or authors.
  *  *
@@ -16,24 +16,18 @@
  *
  */
 
-import { Injectable } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+.mat-grid-tile {
+  cursor: pointer;
 
-/**
- * Service used to manage global routes
- */
-@Injectable({ providedIn: 'root' })
-export class RoutesService {
-  /**
-   * Get the deeper activated route from the current route
-   *
-   * @param activatedRoute The activated route given
-   */
-  public static getDeeperActivatedRoute(activatedRoute: ActivatedRoute): ActivatedRoute {
-    if (activatedRoute.firstChild) {
-      return this.getDeeperActivatedRoute(activatedRoute.firstChild);
-    }
+  &:hover {
+    box-shadow: 0 4px 5px -2px rgba(0, 0, 0, 0.2), 0 7px 10px 1px rgba(0, 0, 0, 0.14), 0 2px 16px 1px rgba(0, 0, 0, 0.12);
+  }
 
-    return activatedRoute;
+  .grid-tile-body {
+    max-height: 200px;
+  }
+
+  &.option-selected {
+    box-shadow: 0 4px 5px -2px rgba(46, 97, 126, 0.39), 0 7px 10px 1px rgba(46, 97, 126, 0.36), 0 2px 16px 1px rgba(46, 97, 126, 0.67);
   }
 }

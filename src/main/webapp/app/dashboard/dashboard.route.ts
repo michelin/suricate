@@ -21,8 +21,9 @@ import { AuthGuard } from '../shared/guards/auth/auth.guard';
 import { AdminGuard } from '../shared/guards/admin/admin.guard';
 import { DashboardDetailComponent } from './components/dashboard-detail/dashboard-detail.component';
 import { DashboardsComponent } from '../admin/dashboards/dashboards.component';
-import { ProjectWidgetWizardComponent } from './components/wizard/project-widget-wizard.component';
+import { AddWidgetToProjectWizardComponent } from './components/wizard/add-widget-to-project-wizard/add-widget-to-project-wizard.component';
 import { RotationDetailComponent } from './components/rotation-detail/rotation-detail.component';
+import {RotationCreationComponent} from "./components/rotation-creation/rotation-creation.component";
 
 export const DashboardRoutes: Routes = [
   {
@@ -41,7 +42,12 @@ export const DashboardRoutes: Routes = [
   },
   {
     path: 'dashboards/:dashboardToken/widgets/create',
-    component: ProjectWidgetWizardComponent,
+    component: AddWidgetToProjectWizardComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'rotations/:rotationToken/create',
+    component: RotationCreationComponent,
     canActivate: [AuthGuard]
   }
 ];

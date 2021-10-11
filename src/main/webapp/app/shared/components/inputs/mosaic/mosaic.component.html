@@ -6,12 +6,15 @@
   <mat-grid-tile
     *ngFor="let mosaicOption of mosaicOptions"
     class="mat-elevation-z3"
-    [ngClass]="{ 'option-selected': optionSelected?.value === mosaicOption.value }"
+    [ngClass]="{'option-selected': optionSelected?.value === mosaicOption.value}"
     (click)="selectOption(mosaicOption)"
   >
     <div class="grid-tile-content-wrapper">
       <div class="grid-tile-body">
-        <img [src]="mosaicOption.imageUrl" alt="Mosaic entry image" />
+        <img *ngIf="mosaicOption.imageUrl" [src]="mosaicOption.imageUrl" alt="Mosaic entry image" />
+        <mat-icon *ngIf="!mosaicOption.imageUrl" color="primary">
+          {{ materialIconRecords[mosaicOption.icon] }}
+        </mat-icon>
       </div>
 
       <div class="grid-tile-footer">

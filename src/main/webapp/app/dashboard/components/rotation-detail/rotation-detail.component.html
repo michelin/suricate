@@ -18,6 +18,19 @@
                 </a>
             </div>
         </mat-grid-tile>
+
+        <!-- Display the add card, if no rotation project inside the rotation -->
+        <mat-grid-tile *ngIf="rotation?.rotationProjects.length === 0" class="mat-elevation-z3" (click)="displayRotationCreation()">
+            <div class="grid-tile-content-wrapper">
+                <div class="grid-tile-body">
+                    <mat-icon color="primary"> {{ materialIconRecords[iconEnum.ADD] }} </mat-icon>
+                </div>
+
+                <div class="grid-tile-footer">
+                    {{ 'rotation.add' | translate }}
+                </div>
+            </div>
+        </mat-grid-tile>
     </mat-grid-list>
 </ng-container>
 

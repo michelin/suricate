@@ -24,10 +24,4 @@ public class RotationRequestDto extends AbstractDto {
      */
     @ApiModelProperty(value = "The rotation name")
     private String name;
-
-    /**
-     * List of projects to rotate
-     */
-    @ApiModelProperty(value = "The list of projects to rotate", dataType = "java.util.List")
-    private List<RotationProjectRequestDto> rotationProjectRequests = new ArrayList<>();
 }

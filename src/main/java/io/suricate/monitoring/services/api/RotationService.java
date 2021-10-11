@@ -110,12 +110,7 @@ public class RotationService {
             rotation.setToken(stringEncryptor.encrypt(UUID.randomUUID().toString()));
         }
 
-        Rotation createdRotation = this.rotationRepository.save(rotation);
-
-        createdRotation.getRotationProjects().forEach(rotationProject ->
-                rotationProject.setRotation(createdRotation));
-
-        return createdRotation;
+        return this.rotationRepository.save(rotation);
     }
 
     /**
@@ -152,43 +147,10 @@ public class RotationService {
         if (StringUtils.isNotBlank(rotationRequestDto.getName())) {
             rotation.setName(rotationRequestDto.getName());
         }
-        
-        // Remove rotation projects
-        List<String> projectTokens = rotationRequestDto.getRotationProjectRequests()
-                .stream()
-                .map(RotationProjectRequestDto::getProjectToken)
-                .collect(Collectors.toList());
-
-        rotation.getRotationProjects()
-                .removeIf(rotationProject -> !projectTokens
-                    .contains(rotationProject.getProject().getToken()));
-
-        // Update rotation projects
-        rotation.getRotationProjects()
-                .forEach(rotationProject -> rotationRequestDto.getRotationProjectRequests()
-                        .stream()
-                        .filter(rotationProjectRequestDto -> rotationProject.getProject().getToken().equals(rotationProjectRequestDto.getProjectToken()))
-                        .findFirst()
-                        .ifPresent(newRotationProjectDto -> rotationProject.setRotationSpeed(newRotationProjectDto.getRotationSpeed())));
-
-        // Create new rotation projects
-        rotationRequestDto.getRotationProjectRequests()
-                .removeIf(rotationProjectRequestDto -> rotation.getRotationProjects()
-                        .stream()
-                        .anyMatch(rotationProject -> rotationProject.getProject().getToken().equals(rotationProjectRequestDto.getProjectToken())));
-
-        rotation.getRotationProjects().addAll(rotationRequestDto.getRotationProjectRequests()
-                .stream()
-                .map(rotationProjectRequestDto -> {
-                    RotationProject rotationProject = this.rotationProjectMapper.toRotationProjectEntity(rotationProjectRequestDto);
-                    rotationProject.setRotation(rotation);
-                    return rotationProject;
-                })
-                .collect(Collectors.toList()));
 
         this.rotationRepository.save(rotation);
 
-        this.rotationWebSocketService.reloadAllConnectedClientsToARotation(rotation.getToken());
+        // TODO: move this: this.rotationWebSocketService.reloadAllConnectedClientsToARotation(rotation.getToken());
     }
 
     /**

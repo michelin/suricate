@@ -76,7 +76,7 @@ export class WizardComponent implements OnInit {
   /**
    * The token of the dashboard
    */
-  public readonly dashboardToken: string;
+  public dashboardToken: string;
 
   /**
    * The configuration of the header
@@ -119,13 +119,14 @@ export class WizardComponent implements OnInit {
     this.activatedRoute = injector.get(ActivatedRoute);
     this.router = injector.get(Router);
     this.httpProjectService = injector.get(HttpProjectService);
-    this.dashboardToken = RoutesService.getParamValueFromActivatedRoute(this.activatedRoute, 'dashboardToken');
   }
 
   /**
    * Called when the component is init
    */
   public ngOnInit(): void {
+    this.dashboardToken = this.activatedRoute.snapshot.params['dashboardToken'];
+
     this.initWizardButtons();
     this.stepperFormGroup = this.formService.generateFormGroupForSteps(this.wizardConfiguration.steps);
     this.currentStep = this.wizardConfiguration.steps[0];
