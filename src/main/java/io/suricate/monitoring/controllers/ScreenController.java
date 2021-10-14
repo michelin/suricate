@@ -27,6 +27,7 @@ import io.suricate.monitoring.model.entities.RotationProject;
 import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.services.api.ProjectService;
 import io.suricate.monitoring.services.api.RotationService;
+import io.suricate.monitoring.services.mapper.RotationMapper;
 import io.suricate.monitoring.services.websocket.DashboardWebSocketService;
 import io.suricate.monitoring.services.websocket.RotationWebSocketService;
 import io.suricate.monitoring.utils.exceptions.ObjectNotFoundException;
@@ -67,20 +68,30 @@ public class ScreenController {
     private final RotationWebSocketService rotationWebSocketService;
 
     /**
+     * The rotation mapper
+     */
+    private final RotationMapper rotationMapper;
+
+    /**
      * Constructor
      *
      * @param projectService            The project service to inject
      * @param rotationService           The rotation service to inject
+     * @param rotationMapper            The rotation mapper to inject
+     * @param rotationService           The rotation service to inject
      * @param dashboardWebSocketService The dashboard websocket to inject
+     * @param rotationWebSocketService  The rotation websocket to inject
      */
     public ScreenController(final ProjectService projectService,
                             final RotationService rotationService,
+                            final RotationMapper rotationMapper,
                             final DashboardWebSocketService dashboardWebSocketService,
                             final RotationWebSocketService rotationWebSocketService) {
         this.projectService = projectService;
         this.rotationService = rotationService;
         this.dashboardWebSocketService = dashboardWebSocketService;
         this.rotationWebSocketService = rotationWebSocketService;
+        this.rotationMapper = rotationMapper;
     }
 
     /**
@@ -205,7 +216,8 @@ public class ScreenController {
         }
 
         this.rotationWebSocketService
-                .sendConnectRotationEventToScreenSubscriber(rotationOptional.get(), screenCode);
+                .sendConnectRotationEventToScreenSubscriber(this.rotationMapper.toRotationDTO(rotationOptional.get()),
+                        screenCode);
 
         return ResponseEntity.noContent().build();
     }

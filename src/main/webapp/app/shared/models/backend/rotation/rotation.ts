@@ -15,11 +15,6 @@ export class Rotation {
   token: string;
 
   /**
-   * The list of projects rotating
-   */
-  rotationProjects: RotationProject[] = [];
-
-  /**
    * Constructor
    */
   constructor() {}

@@ -50,6 +50,7 @@ import { MosaicComponent } from './components/inputs/mosaic/mosaic.component';
 import { PaginatorComponent } from './components/paginator/paginator.component';
 import { SlideToggleComponent } from './components/inputs/slide-toggle/slide-toggle.component';
 import { WidgetHtmlDirective } from './directives/widget-html.directive';
+import { MatBadgeModule } from '@angular/material/badge';
 
 @NgModule({
   imports: [
@@ -116,7 +117,8 @@ import { WidgetHtmlDirective } from './directives/widget-html.directive';
     WizardComponent,
     ColorPickerComponent,
     PaginatorComponent,
-    SlideToggleComponent
+    SlideToggleComponent,
+    MatBadgeModule
   ],
   entryComponents: [CommunicationDialogComponent, ConfirmDialogComponent],
   providers: [

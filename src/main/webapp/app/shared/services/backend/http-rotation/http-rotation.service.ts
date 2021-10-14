@@ -33,6 +33,8 @@ import { HttpFilterService } from '../http-filter/http-filter.service';
 import { Page } from '../../../models/backend/page';
 import { Rotation } from '../../../models/backend/rotation/rotation';
 import { RotationRequest } from '../../../models/backend/rotation/rotation-request';
+import { RotationProjectRequest } from '../../../models/backend/rotation-project/rotation-project-request';
+import { RotationProject } from '../../../models/backend/rotation-project/rotation-project';
 
 @Injectable({ providedIn: 'root' })
 export class HttpRotationService implements AbstractHttpService<Rotation | RotationRequest> {
@@ -113,6 +115,29 @@ export class HttpRotationService implements AbstractHttpService<Rotation | Rotat
     const url = `${HttpRotationService.rotationsApiEndpoint}/${token}`;
 
     return this.httpClient.put<void>(url, rotation);
+  }
+
+  /**
+   * Get the list of rotation projects for a rotation
+   *
+   * @param rotationToken The rotation token
+   */
+  public getProjectRotationsByRotationToken(rotationToken: string): Observable<RotationProject[]> {
+    const url = `${HttpRotationService.rotationsApiEndpoint}/${rotationToken}/rotationProjects`;
+
+    return this.httpClient.get<RotationProject[]>(url);
+  }
+
+  /**
+   * Add a projects to the rotation
+   *
+   * @param token The rotation token
+   * @param rotationProjectRequests The rotation project requests
+   */
+  public addProjectsToRotation(token: string, rotationProjectRequests: RotationProjectRequest[]): Observable<RotationProject> {
+    const url = `${HttpRotationService.rotationsApiEndpoint}/${token}/projects`;
+
+    return this.httpClient.post<RotationProject>(url, rotationProjectRequests);
   }
 
   /**

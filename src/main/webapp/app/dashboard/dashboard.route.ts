@@ -23,7 +23,7 @@ import { DashboardDetailComponent } from './components/dashboard-detail/dashboar
 import { DashboardsComponent } from '../admin/dashboards/dashboards.component';
 import { AddWidgetToProjectWizardComponent } from './components/wizard/add-widget-to-project-wizard/add-widget-to-project-wizard.component';
 import { RotationDetailComponent } from './components/rotation-detail/rotation-detail.component';
-import {RotationCreationComponent} from "./components/rotation-creation/rotation-creation.component";
+import { RotationDashboardsSelectionComponent } from './components/rotation-dashboards-selection/rotation-dashboards-selection.component';
 
 export const DashboardRoutes: Routes = [
   {
@@ -46,8 +46,8 @@ export const DashboardRoutes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'rotations/:rotationToken/create',
-    component: RotationCreationComponent,
+    path: 'rotations/:rotationToken/select',
+    component: RotationDashboardsSelectionComponent,
     canActivate: [AuthGuard]
   }
 ];

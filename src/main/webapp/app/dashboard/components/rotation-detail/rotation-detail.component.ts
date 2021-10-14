@@ -38,8 +38,9 @@ import { RotationProject } from '../../../shared/models/backend/rotation-project
 import { MatDialog } from '@angular/material/dialog';
 import { RotationTvManagementDialogComponent } from '../tv-management-dialog/rotation-tv-management-dialog/rotation-tv-management-dialog.component';
 import { ProjectRotationUsersFormFieldsService } from '../../../shared/services/frontend/form-fields/project-rotation-users-form-fields/project-rotation-users-form-fields.service';
-import { switchMap } from 'rxjs/operators';
+import { flatMap, map, switchMap, tap } from 'rxjs/operators';
 import { HttpScreenService } from '../../../shared/services/backend/http-screen/http-screen.service';
+import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';
 
 @Component({
   selector: 'suricate-rotation-detail',
@@ -58,9 +59,19 @@ export class RotationDetailComponent implements OnInit {
   public headerConfiguration: HeaderConfiguration;
 
   /**
+   * The token of the rotation
+   */
+  public rotationToken: string;
+
+  /**
    * The rotation to display
    */
   public rotation: Rotation;
+
+  /**
+   * The list of project rotations
+   */
+  public rotationProjects: RotationProject[];
 
   /**
    * Used to know if the rotation is loading
@@ -112,17 +123,20 @@ export class RotationDetailComponent implements OnInit {
    * Init method
    */
   ngOnInit(): void {
-    this.httpRotationService.getById(this.activatedRoute.snapshot.params['rotationToken']).subscribe(
-      (rotation: Rotation) => {
-        this.isRotationLoading = false;
-        this.rotation = rotation;
-        this.initHeaderConfiguration();
-      },
-      () => {
-        this.isRotationLoading = false;
-        this.router.navigate(['/home/dashboards']);
-      }
-    );
+    this.rotationToken = this.activatedRoute.snapshot.params['rotationToken'];
+
+    this.refreshRotation()
+      .pipe(flatMap(() => this.refreshProjectRotations()))
+      .subscribe(
+        () => {
+          this.isRotationLoading = false;
+          this.initHeaderConfiguration();
+        },
+        () => {
+          this.isRotationLoading = false;
+          this.router.navigate(['/home/rotations']);
+        }
+      );
   }
 
   /**
@@ -132,6 +146,14 @@ export class RotationDetailComponent implements OnInit {
     this.headerConfiguration = {
       title: this.rotation.name,
       actions: [
+        {
+          icon: IconEnum.DASHBOARD_ROTATION,
+          color: 'primary',
+          variant: 'miniFab',
+          tooltip: { message: 'rotation.update.dashboards' },
+          hidden: () => !this.rotationProjects,
+          callback: () => this.displayRotationCreation()
+        },
         {
           icon: IconEnum.EDIT,
           color: 'primary',
@@ -165,7 +187,7 @@ export class RotationDetailComponent implements OnInit {
           color: 'primary',
           variant: 'miniFab',
           tooltip: { message: 'screen.management' },
-          hidden: () => !this.rotation || this.rotation.rotationProjects.length === 0,
+          hidden: () => !this.rotation || !this.rotationProjects,
           callback: () => this.openScreenManagementDialog()
         },
         {
@@ -180,10 +202,26 @@ export class RotationDetailComponent implements OnInit {
   }
 
   /**
+   * Refresh the rotation
+   */
+  private refreshRotation(): Observable<Rotation> {
+    return this.httpRotationService.getById(this.rotationToken).pipe(tap((rotation: Rotation) => (this.rotation = rotation)));
+  }
+
+  /**
+   * Refresh the list of project rotations
+   */
+  private refreshProjectRotations(): Observable<RotationProject[]> {
+    return this.httpRotationService
+      .getProjectRotationsByRotationToken(this.rotationToken)
+      .pipe(tap((rotationProjects: RotationProject[]) => (this.rotationProjects = rotationProjects)));
+  }
+
+  /**
    * Redirect to the wizard used to add a new project to the rotation
    */
   public displayRotationCreation(): void {
-    this.router.navigate(['/rotations', this.rotation.token, 'create']);
+    this.router.navigate(['/rotations', this.rotation.token, 'select']);
   }
 
   /**

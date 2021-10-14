@@ -3,6 +3,7 @@ package io.suricate.monitoring.services.websocket;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
+import io.suricate.monitoring.model.dto.api.rotation.RotationResponseDto;
 import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
 import io.suricate.monitoring.model.dto.websocket.WebsocketClient;
 import io.suricate.monitoring.model.entities.Rotation;
@@ -36,11 +37,6 @@ public class RotationWebSocketService {
     private final SimpMessagingTemplate simpMessagingTemplate;
 
     /**
-     * The rotation mapper
-     */
-    private final RotationMapper rotationMapper;
-
-    /**
      * Save all websocket clients by rotation token.
      *
      * Represents all the connected screens to a rotation
@@ -51,12 +47,9 @@ public class RotationWebSocketService {
      * Constructor
      *
      * @param simpMessagingTemplate The stomp websocket message template
-     * @param rotationMapper The rotation mapper
      */
-    public RotationWebSocketService(final SimpMessagingTemplate simpMessagingTemplate,
-                                    final RotationMapper rotationMapper) {
+    public RotationWebSocketService(final SimpMessagingTemplate simpMessagingTemplate) {
         this.simpMessagingTemplate = simpMessagingTemplate;
-        this.rotationMapper = rotationMapper;
     }
 
     /**
@@ -65,10 +58,10 @@ public class RotationWebSocketService {
      * @param rotation The rotation to send
      * @param screenCode The screen waiting for something
      */
-    public void sendConnectRotationEventToScreenSubscriber(final Rotation rotation, final String screenCode) {
+    public void sendConnectRotationEventToScreenSubscriber(final RotationResponseDto rotation, final String screenCode) {
         UpdateEvent updateEvent = UpdateEvent.builder()
                 .type(UpdateType.CONNECT_ROTATION)
-                .content(this.rotationMapper.toRotationDTO(rotation))
+                .content(rotation)
                 .build();
 
         LOGGER.debug("Sending the event {} to the screen {}", updateEvent.getType(), screenCode);

@@ -16,12 +16,6 @@ import lombok.NoArgsConstructor;
 @ApiModel(value = "RotationProjectResponse", description = "Describe a rotation project response DTO")
 public class RotationProjectResponseDto {
     /**
-     * The rotation project id
-     */
-    @ApiModelProperty(value = "The rotation project id")
-    private Long id;
-
-    /**
      * The rotation speed of the project
      */
     @ApiModelProperty(value = "The rotation speed of the project")

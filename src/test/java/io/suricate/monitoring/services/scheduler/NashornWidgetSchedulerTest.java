@@ -166,7 +166,6 @@ public class NashornWidgetSchedulerTest {
         nashornWidgetScheduler.init();
         scheduleNashornRequestExecutionThread = (ScheduledThreadPoolExecutor) ReflectionTestUtils.getField(nashornWidgetScheduler, "scheduleNashornRequestExecutionThread");
         scheduleNashornRequestResponseThread = (ScheduledThreadPoolExecutor) ReflectionTestUtils.getField(nashornWidgetScheduler, "scheduleNashornRequestResponseThread");
-        // TODO : Check behavior randomly switch from 1 to 2
     }
 
     @Test

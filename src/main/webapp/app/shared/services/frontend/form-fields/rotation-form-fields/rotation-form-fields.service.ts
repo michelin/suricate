@@ -25,7 +25,8 @@ import { FormOption } from '../../../../models/frontend/form/form-option';
 import { TitleCasePipe } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 import { Rotation } from '../../../../models/backend/rotation/rotation';
-import {RotationProjectRequest} from "../../../../models/backend/rotation-project/rotation-project-request";
+import { RotationProjectRequest } from '../../../../models/backend/rotation-project/rotation-project-request';
+import { CustomValidator } from '../../../../validators/custom-validator';
 
 /**
  * Service used to build the form fields related to a rotation
@@ -87,7 +88,8 @@ export class RotationFormFieldsService {
         label: this.translateService.instant('rotation.dashboards.rotation.speed.form.field'),
         iconPrefix: IconEnum.DASHBOARD_ROTATION_SPEED,
         type: DataTypeEnum.NUMBER,
-        value: rotationProjectRequest ? rotationProjectRequest.rotationSpeed : null
+        value: rotationProjectRequest ? rotationProjectRequest.rotationSpeed : null,
+        validators: [CustomValidator.greaterThan0IfDefined]
       }
     ];
   }

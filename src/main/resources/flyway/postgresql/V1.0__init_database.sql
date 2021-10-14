@@ -141,7 +141,8 @@ CREATE TABLE rotation_project (
     created_date        timestamp without time zone     DEFAULT now() NOT NULL,
     last_modified_by    character varying(255)          DEFAULT 'APPLICATION'::character varying,
     last_modified_date  timestamp without time zone     DEFAULT now(),
-    CONSTRAINT pk_rotation_project_id   PRIMARY KEY (id)
+    CONSTRAINT pk_rotation_project_id                       PRIMARY KEY (id),
+    CONSTRAINT uk_rotation_project_rotation_id_project_id   UNIQUE (rotation_id, project_id)
 );
 
 CREATE TABLE setting (

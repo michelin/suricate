@@ -26,8 +26,10 @@
   .grid-tile-body {
     max-height: 200px;
   }
+}
 
-  &.option-selected {
-    box-shadow: 0 4px 5px -2px rgba(46, 97, 126, 0.39), 0 7px 10px 1px rgba(46, 97, 126, 0.36), 0 2px 16px 1px rgba(46, 97, 126, 0.67);
-  }
+.rotation-creation-nav-buttons {
+  padding-left: 24px;
+  margin-block-end: 40px;
+  margin-block-start: 30px;
 }

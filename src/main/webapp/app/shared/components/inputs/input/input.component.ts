@@ -158,6 +158,10 @@ export class InputComponent implements OnInit {
     if (this.getFormControl()['errors']?.gt0) {
       return 'field.error.gt0';
     }
+
+    if (this.getFormControl()['errors']?.gt0IfDefined) {
+      return 'field.error.gt0';
+    }
   }
 
   /**

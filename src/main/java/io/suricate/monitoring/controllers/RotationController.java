@@ -3,17 +3,21 @@ package io.suricate.monitoring.controllers;
 import io.suricate.monitoring.configuration.swagger.ApiPageable;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.project.ProjectResponseDto;
+import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetRequestDto;
+import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetResponseDto;
 import io.suricate.monitoring.model.dto.api.rotation.RotationRequestDto;
 import io.suricate.monitoring.model.dto.api.rotation.RotationResponseDto;
+import io.suricate.monitoring.model.dto.api.rotationproject.RotationProjectRequestDto;
+import io.suricate.monitoring.model.dto.api.rotationproject.RotationProjectResponseDto;
 import io.suricate.monitoring.model.dto.api.user.UserResponseDto;
 import io.suricate.monitoring.model.dto.websocket.WebsocketClient;
-import io.suricate.monitoring.model.entities.Project;
-import io.suricate.monitoring.model.entities.Rotation;
-import io.suricate.monitoring.model.entities.User;
+import io.suricate.monitoring.model.entities.*;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
+import io.suricate.monitoring.services.api.RotationProjectService;
 import io.suricate.monitoring.services.api.RotationService;
 import io.suricate.monitoring.services.api.UserService;
 import io.suricate.monitoring.services.mapper.RotationMapper;
+import io.suricate.monitoring.services.mapper.RotationProjectMapper;
 import io.suricate.monitoring.services.mapper.UserMapper;
 import io.suricate.monitoring.services.websocket.DashboardWebSocketService;
 import io.suricate.monitoring.services.websocket.RotationWebSocketService;
@@ -29,12 +33,16 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.annotation.security.PermitAll;
+import java.net.URI;
 import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Rotation controller
@@ -59,6 +67,11 @@ public class RotationController {
     private final RotationService rotationService;
 
     /**
+     * Rotation project service
+     */
+    private final RotationProjectService rotationProjectService;
+
+    /**
      * User service
      */
     private final UserService userService;
@@ -74,22 +87,32 @@ public class RotationController {
     private final UserMapper userMapper;
 
     /**
+     * The rotation project mapper
+     */
+    private final RotationProjectMapper rotationProjectMapper;
+
+    /**
      * Constructor
      *
      * @param rotationService The rotation service
+     * @param rotationProjectService The rotation project service
      * @param rotationMapper The rotation mapper
+     * @param rotationProjectMapper The rotation project mapper
      * @param userMapper The user mapper
      * @param userService The user service
      * @param rotationWebSocketService The rotation web socket service
      */
-    @Autowired
     public RotationController(final RotationService rotationService,
+                              final RotationProjectService rotationProjectService,
                               final RotationMapper rotationMapper,
+                              final RotationProjectMapper rotationProjectMapper,
                               final UserMapper userMapper,
                               final RotationWebSocketService rotationWebSocketService,
                               final UserService userService) {
         this.rotationService = rotationService;
+        this.rotationProjectService = rotationProjectService;
         this.rotationMapper = rotationMapper;
+        this.rotationProjectMapper = rotationProjectMapper;
         this.userMapper = userMapper;
         this.userService = userService;
         this.rotationWebSocketService = rotationWebSocketService;
@@ -282,6 +305,85 @@ public class RotationController {
         this.rotationService.updateRotation(rotationOptional.get(), rotationRequestDto);
 
         return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * Get the list of rotation projects for a rotation
+     */
+    @ApiOperation(value = "Get the full list of rotation projects for a rotation", response = RotationProjectResponseDto.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok", response = RotationProjectResponseDto.class, responseContainer = "List"),
+            @ApiResponse(code = 204, message = "No Content"),
+            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
+    })
+    @GetMapping(value = "/v1/rotations/{rotationToken}/rotationProjects")
+    @PermitAll
+    public ResponseEntity<List<RotationProjectResponseDto>> getRotationProjectsForRotation(@ApiParam(name = "rotationToken", value = "The rotation token", required = true)
+                                                                                           @PathVariable("rotationToken") String rotationToken) {
+        Optional<Rotation> rotationOptional = this.rotationService.getOneByToken(rotationToken);
+
+        if (!rotationOptional.isPresent()) {
+            throw new ObjectNotFoundException(Rotation.class, rotationToken);
+        }
+
+        Rotation rotation = rotationOptional.get();
+        if (rotation.getRotationProjects().isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
+        // TODO: Gérer la suppression/ajout de doublons
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(this.rotationProjectMapper.toRotationProjectDTOs(rotation.getRotationProjects()));
+    }
+
+    /**
+     * Add projects into the rotation
+     *
+     * @param authentication             The connected user
+     * @param rotationToken              The rotation token
+     * @param rotationProjectRequestDtos The list of projects to add
+     * @return The list of added projects
+     */
+    @ApiOperation(value = "Add new projects to a rotation", response = ProjectWidgetResponseDto.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok", response = RotationProjectRequestDto.class),
+            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
+            @ApiResponse(code = 404, message = "Rotation not found", response = ApiErrorDto.class)
+    })
+    @PostMapping(value = "/v1/rotations/{rotationToken}/projects")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<List<RotationProjectResponseDto>> addProjectsToRotation(@ApiIgnore OAuth2Authentication authentication,
+                                                                                  @ApiParam(name = "rotationToken", value = "The rotation token", required = true)
+                                                                                  @PathVariable("rotationToken") String rotationToken,
+                                                                                  @ApiParam(name = "rotationProjectRequestDtos", value = "The list of rotation projects", required = true)
+                                                                                  @RequestBody List<RotationProjectRequestDto> rotationProjectRequestDtos) {
+        Optional<Rotation> rotationOptional = this.rotationService.getOneByToken(rotationToken);
+
+        if (!rotationOptional.isPresent()) {
+            throw new ObjectNotFoundException(Rotation.class, rotationToken);
+        }
+
+        if (!this.rotationService.isConnectedUserCanAccessToRotation(rotationOptional.get(), authentication.getUserAuthentication())) {
+            throw new ApiException(RotationController.USER_NOT_ALLOWED, ApiErrorEnum.NOT_AUTHORIZED);
+        }
+
+        List<RotationProject> rotationProjects = rotationProjectRequestDtos
+                .stream()
+                .map(rotationProjectRequestDto -> this.rotationProjectMapper
+                        .toRotationProjectEntity(rotationProjectRequestDto, rotationToken))
+                .collect(Collectors.toList());
+
+        this.rotationProjectService
+                .addProjectsToRotation(rotationProjects);
+
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(this.rotationProjectMapper.toRotationProjectDTOs(rotationProjects));
     }
 
     /**

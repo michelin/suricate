@@ -28,7 +28,7 @@ import { AddWidgetToProjectWizardComponent } from './components/wizard/add-widge
 import { RotationDetailComponent } from './components/rotation-detail/rotation-detail.component';
 import { DashboardTvManagementDialogComponent } from './components/tv-management-dialog/dashboard-tv-management-dialog/dashboard-tv-management-dialog.component';
 import { RotationTvManagementDialogComponent } from './components/tv-management-dialog/rotation-tv-management-dialog/rotation-tv-management-dialog.component';
-import { RotationCreationComponent } from './components/rotation-creation/rotation-creation.component';
+import { RotationDashboardsSelectionComponent } from './components/rotation-dashboards-selection/rotation-dashboards-selection.component';
 
 @NgModule({
   imports: [RouterModule.forChild(DashboardRoutes), LayoutModule, SharedModule],
@@ -41,7 +41,7 @@ import { RotationCreationComponent } from './components/rotation-creation/rotati
     RotationDetailComponent,
     DashboardTvManagementDialogComponent,
     RotationTvManagementDialogComponent,
-    RotationCreationComponent
+    RotationDashboardsSelectionComponent
   ],
   entryComponents: [],
   exports: [RouterModule]

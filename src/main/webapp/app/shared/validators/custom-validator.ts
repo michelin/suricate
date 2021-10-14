@@ -56,6 +56,17 @@ export class CustomValidator {
   }
 
   /**
+   * Custom validator that checks if an input data is gt than 0 if it's defined
+   *
+   * If the value is undefined, do not throw an error
+   *
+   * @param control The field control
+   */
+  public static greaterThan0IfDefined(control: AbstractControl) {
+    return control.value == null || control.value > 0 ? null : { gt0IfDefined: true };
+  }
+
+  /**
    * Custom validator that checks if an input file has the expected format
    *
    * @param control The field control

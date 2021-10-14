@@ -23,7 +23,7 @@ public interface RotationRepository extends CrudRepository<Rotation, Long>, JpaS
      * @return The paginated rotations
      */
     @NotNull
-    @EntityGraph(attributePaths = {"rotationProjects.project.widgets"})
+    @EntityGraph(attributePaths = {"rotationProjects.project.widgets", "rotationProjects.project.screenshot"})
     Page<Rotation> findAll(Specification<Rotation> specification, @NotNull Pageable pageable);
 
     /**
@@ -32,7 +32,7 @@ public interface RotationRepository extends CrudRepository<Rotation, Long>, JpaS
      * @param id The user id
      * @return List of related rotation ordered by name
      */
-    @EntityGraph(attributePaths = {"rotationProjects.project.widgets"})
+    @EntityGraph(attributePaths = {"rotationProjects.project.widgets", "rotationProjects.project.screenshot"})
     List<Rotation> findByUsersIdOrderByName(Long id);
 
     /**
