@@ -17,7 +17,7 @@
  */
 
 import { ValidatorFn } from '@angular/forms';
-import {IconEnum} from "../../../enums/icon.enum";
+import { IconEnum } from '../../../enums/icon.enum';
 
 /**
  * Describe a the options used by the mosaic input component
