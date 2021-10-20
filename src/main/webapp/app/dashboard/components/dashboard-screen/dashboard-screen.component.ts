@@ -264,6 +264,7 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
    */
   private initGridStackOptions(): void {
     this.gridOptions = {
+      max_cols: this.project.gridProperties.maxColumn,
       visible_cols: this.project.gridProperties.maxColumn,
       min_cols: 1,
       row_height: this.project.gridProperties.widgetHeight,

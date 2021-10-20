@@ -45,6 +45,7 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { SlideToggleButtonConfiguration } from '../../../../shared/models/frontend/button/slide-toggle/slide-toggle-button-configuration';
 import { CategoryParameter } from '../../../../shared/models/backend/category-parameters/category-parameter';
+import { ProjectGrid } from '../../../../shared/models/backend/project/project-grid';
 
 /**
  * Display the grid stack widgets
@@ -202,6 +203,8 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   /**
    * Register the new position of the element
    *
+   * Keep track of the position to prevent the click when moving it
+   *
    * @param gridItemEvent The grid item event
    */
   public registerNewPosition(gridItemEvent: NgGridItemEvent): void {
@@ -255,6 +258,8 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    * @param formData The form data
    */
   public saveWidget(formData: FormData) {
+    this.loading = true;
+
     const projectWidgetRequest: ProjectWidgetRequest = {
       widgetId: this.projectWidget.widgetId,
       customStyle: this.projectWidget.customStyle,
@@ -264,9 +269,13 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
         .join('\n')
     };
 
-    this.httpProjectWidgetService.updateOneById(this.projectWidget.id, projectWidgetRequest).subscribe(() => {
-      this.toastService.sendMessage('widget.edit.success', ToastTypeEnum.SUCCESS);
-    });
+    this.httpProjectWidgetService
+      .updateOneById(this.projectWidget.id, projectWidgetRequest)
+      .subscribe((updatedProjectWidget: ProjectWidget) => {
+        this.loading = false;
+        this.projectWidget = updatedProjectWidget;
+        this.toastService.sendMessage('widget.edit.success', ToastTypeEnum.SUCCESS);
+      });
   }
 
   /**
