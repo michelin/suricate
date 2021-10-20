@@ -69,7 +69,6 @@
   "rotation.create": "Créer une rotation",
   "rotation.create.dashboard.options": "Options du dashboard",
   "rotation.create.dashboard.added": "Dashboard ajouté avec succès",
-  "rotation.create.dashboard.no.selection": "Aucun dashboard sélectionné",
   "rotation.dashboards.rotation.speed.form.field": "Vitesse de rotation (en secondes)",
   "rotation.delete": "Supprimer la rotation",
   "rotation.edit": "Editer la rotation",

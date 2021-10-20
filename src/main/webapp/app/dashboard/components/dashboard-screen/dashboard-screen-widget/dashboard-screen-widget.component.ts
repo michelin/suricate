@@ -194,10 +194,8 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    * Refresh this project widget
    */
   private refreshProjectWidget(): void {
-    this.loading = true;
     this.httpProjectWidgetService.getOneById(this.projectWidget.id).subscribe(projectWidget => {
       this.projectWidget = projectWidget;
-      this.loading = false;
     });
   }
 

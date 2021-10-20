@@ -156,16 +156,12 @@ export class RotationDashboardsSelectionComponent implements OnInit {
    * Check if the stepper form is valid before saving the data
    */
   protected validateFormBeforeSave(): void {
-    if (this.projectsToAddToRotation.length > 0) {
-      this.httpRotationService
-        .addProjectsToRotation(this.activatedRoute.snapshot.params['rotationToken'], this.projectsToAddToRotation)
-        .subscribe(() => {
-          this.toastService.sendMessage('rotation.create.dashboard.added', ToastTypeEnum.SUCCESS);
-          this.router.navigate(['/rotations/', this.activatedRoute.snapshot.params['rotationToken']]);
-        });
-    } else {
-      this.toastService.sendMessage('rotation.create.dashboard.no.selection', ToastTypeEnum.DANGER);
-    }
+    this.httpRotationService
+      .addProjectsToRotation(this.activatedRoute.snapshot.params['rotationToken'], this.projectsToAddToRotation)
+      .subscribe(() => {
+        this.toastService.sendMessage('rotation.create.dashboard.added', ToastTypeEnum.SUCCESS);
+        this.router.navigate(['/rotations/', this.activatedRoute.snapshot.params['rotationToken']]);
+      });
   }
 
   /**

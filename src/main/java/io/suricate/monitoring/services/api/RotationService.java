@@ -45,7 +45,7 @@ public class RotationService {
      *
      * @param stringEncryptor           The string encryptor to inject
      * @param rotationRepository        The rotation repository
-     * @param rotationWebSocketService  The rotation project mapper
+     * @param rotationWebSocketService  The rotation web socket service
      */
     public RotationService(@Qualifier("jasyptStringEncryptor") final StringEncryptor stringEncryptor,
                            RotationRepository rotationRepository,
@@ -132,8 +132,6 @@ public class RotationService {
         }
 
         this.rotationRepository.save(rotation);
-
-        // TODO: move this: this.rotationWebSocketService.reloadAllConnectedClientsToARotation(rotation.getToken());
     }
 
     /**

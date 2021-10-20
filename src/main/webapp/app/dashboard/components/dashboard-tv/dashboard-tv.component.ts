@@ -123,7 +123,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
     this.activatedRoute.queryParams.pipe(takeUntil(this.unsubscribe)).subscribe((queryParams: Params) => {
       if (queryParams['dashboard']) {
         this.projectToken = queryParams['dashboard'];
-        this.initComponentWithProject();
+        this.initComponentWithProject().subscribe();
       } else if (queryParams['rotation']) {
         this.rotationToken = queryParams['rotation'];
         this.initComponentWithRotation();
@@ -177,15 +177,17 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   /**
    * Initialise the component from the given project token
    */
-  private initComponentWithProject(): void {
+  private initComponentWithProject(): Observable<ProjectWidget[]> {
     if (this.projectToken) {
       this.isDashboardLoading = true;
 
-      this.refreshProject(this.projectToken)
+      return this.refreshProject(this.projectToken)
         .pipe(flatMap(() => this.refreshProjectWidgets(this.projectToken)))
-        .subscribe(
-          () => (this.isDashboardLoading = false),
-          () => (this.isDashboardLoading = false)
+        .pipe(
+          tap(
+            () => (this.isDashboardLoading = false),
+            () => (this.isDashboardLoading = false)
+          )
         );
     }
   }
@@ -201,11 +203,12 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
         .pipe(flatMap(() => this.refreshProjectRotations()))
         .subscribe(() => {
           this.projectToken = this.rotationProjects[0].project.token;
-          this.initComponentWithProject();
 
-          if (this.rotationProjects.length > 1) {
-            this.rotate(0);
-          }
+          this.initComponentWithProject().subscribe(() => {
+            if (this.rotationProjects.length > 1) {
+              this.rotate(0);
+            }
+          });
         });
     }
   }
@@ -231,9 +234,9 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
       rotationIndex = rotationIndex === this.rotationProjects.length - 1 ? 0 : rotationIndex + 1;
 
       this.projectToken = this.rotationProjects[rotationIndex].project.token;
-      this.initComponentWithProject();
-
-      this.rotate(rotationIndex);
+      this.initComponentWithProject().subscribe(() => {
+        this.rotate(rotationIndex);
+      });
     }, this.rotationProjects[rotationIndex].rotationSpeed * 1000);
   }
 

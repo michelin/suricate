@@ -332,7 +332,6 @@ public class RotationController {
             return ResponseEntity.noContent().build();
         }
 
-        // TODO: Gérer la suppression/ajout de doublons
         return ResponseEntity
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
@@ -378,7 +377,7 @@ public class RotationController {
                 .collect(Collectors.toList());
 
         this.rotationProjectService
-                .addProjectsToRotation(rotationProjects);
+                .addProjectsToRotation(rotationOptional.get(), rotationProjects);
 
         return ResponseEntity
                 .ok()
