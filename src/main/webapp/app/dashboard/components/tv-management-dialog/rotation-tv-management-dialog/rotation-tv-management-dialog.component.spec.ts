@@ -34,30 +34,7 @@ describe('RotationTvManagementDialogComponent', () => {
   function buildMockedRotation(): Rotation {
     return {
       name: 'Rotation 1',
-      token: 'Token',
-      rotationProjects: [
-        {
-          rotationSpeed: 10,
-          project: {
-            gridProperties: {
-              maxColumn: 5,
-              widgetHeight: 300,
-              cssStyle: ''
-            },
-            librariesToken: ['Token1', 'Token2'],
-            name: 'ProjectName',
-            screenshotToken: 'ScreenToken',
-            image: {
-              content: 'content',
-              contentType: 'image/png',
-              id: 'id',
-              lastUpdateDate: new Date(),
-              size: 10
-            },
-            token: 'Token'
-          }
-        }
-      ]
+      token: 'Token'
     };
   }
 });
