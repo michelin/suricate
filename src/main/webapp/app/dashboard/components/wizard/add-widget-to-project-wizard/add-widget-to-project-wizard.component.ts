@@ -82,7 +82,7 @@ export class AddWidgetToProjectWizardComponent extends WizardComponent implement
         .filter(
           (key: string) =>
             formData[ProjectWidgetFormStepsService.configureWidgetStepKey][key] != null &&
-            formData[ProjectWidgetFormStepsService.configureWidgetStepKey][key].trim() !== ''
+            String(formData[ProjectWidgetFormStepsService.configureWidgetStepKey][key]).trim() !== ''
         )
         .map((key: string) => `${key}=${formData[ProjectWidgetFormStepsService.configureWidgetStepKey][key]}`)
         .join('\n')
