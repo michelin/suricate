@@ -1,17 +1,9 @@
 package io.suricate.monitoring.services.api;
 
 import io.suricate.monitoring.model.dto.api.rotation.RotationRequestDto;
-import io.suricate.monitoring.model.dto.api.rotationproject.RotationProjectRequestDto;
-import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
-import io.suricate.monitoring.model.dto.websocket.WebsocketClient;
-import io.suricate.monitoring.model.entities.Project;
 import io.suricate.monitoring.model.entities.Rotation;
-import io.suricate.monitoring.model.entities.RotationProject;
 import io.suricate.monitoring.model.entities.User;
-import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.repositories.RotationRepository;
-import io.suricate.monitoring.services.mapper.RotationProjectMapper;
-import io.suricate.monitoring.services.specifications.ProjectSearchSpecification;
 import io.suricate.monitoring.services.specifications.RotationSearchSpecification;
 import io.suricate.monitoring.services.websocket.RotationWebSocketService;
 import io.suricate.monitoring.utils.SecurityUtils;
@@ -27,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * Rotation service
@@ -38,11 +29,6 @@ public class RotationService {
      * Rotation repository
      */
     private final RotationRepository rotationRepository;
-
-    /**
-     * The rotation project mapper
-     */
-    private final RotationProjectMapper rotationProjectMapper;
 
     /**
      * String encryptor
@@ -59,16 +45,13 @@ public class RotationService {
      *
      * @param stringEncryptor           The string encryptor to inject
      * @param rotationRepository        The rotation repository
-     * @param rotationProjectMapper     The rotation project mapper
-     * @param rotationWebSocketService  The rotation project mapper
+     * @param rotationWebSocketService  The rotation web socket service
      */
     public RotationService(@Qualifier("jasyptStringEncryptor") final StringEncryptor stringEncryptor,
                            RotationRepository rotationRepository,
-                           RotationProjectMapper rotationProjectMapper,
                            RotationWebSocketService rotationWebSocketService) {
         this.stringEncryptor = stringEncryptor;
         this.rotationRepository = rotationRepository;
-        this.rotationProjectMapper = rotationProjectMapper;
         this.rotationWebSocketService = rotationWebSocketService;
     }
 
@@ -110,12 +93,7 @@ public class RotationService {
             rotation.setToken(stringEncryptor.encrypt(UUID.randomUUID().toString()));
         }
 
-        Rotation createdRotation = this.rotationRepository.save(rotation);
-
-        createdRotation.getRotationProjects().forEach(rotationProject ->
-                rotationProject.setRotation(createdRotation));
-
-        return createdRotation;
+        return this.rotationRepository.save(rotation);
     }
 
     /**
@@ -152,43 +130,8 @@ public class RotationService {
         if (StringUtils.isNotBlank(rotationRequestDto.getName())) {
             rotation.setName(rotationRequestDto.getName());
         }
-        
-        // Remove rotation projects
-        List<String> projectTokens = rotationRequestDto.getRotationProjectRequests()
-                .stream()
-                .map(RotationProjectRequestDto::getProjectToken)
-                .collect(Collectors.toList());
-
-        rotation.getRotationProjects()
-                .removeIf(rotationProject -> !projectTokens
-                    .contains(rotationProject.getProject().getToken()));
-
-        // Update rotation projects
-        rotation.getRotationProjects()
-                .forEach(rotationProject -> rotationRequestDto.getRotationProjectRequests()
-                        .stream()
-                        .filter(rotationProjectRequestDto -> rotationProject.getProject().getToken().equals(rotationProjectRequestDto.getProjectToken()))
-                        .findFirst()
-                        .ifPresent(newRotationProjectDto -> rotationProject.setRotationSpeed(newRotationProjectDto.getRotationSpeed())));
-
-        // Create new rotation projects
-        rotationRequestDto.getRotationProjectRequests()
-                .removeIf(rotationProjectRequestDto -> rotation.getRotationProjects()
-                        .stream()
-                        .anyMatch(rotationProject -> rotationProject.getProject().getToken().equals(rotationProjectRequestDto.getProjectToken())));
-
-        rotation.getRotationProjects().addAll(rotationRequestDto.getRotationProjectRequests()
-                .stream()
-                .map(rotationProjectRequestDto -> {
-                    RotationProject rotationProject = this.rotationProjectMapper.toRotationProjectEntity(rotationProjectRequestDto);
-                    rotationProject.setRotation(rotation);
-                    return rotationProject;
-                })
-                .collect(Collectors.toList()));
 
         this.rotationRepository.save(rotation);
-
-        this.rotationWebSocketService.reloadAllConnectedClientsToARotation(rotation.getToken());
     }
 
     /**

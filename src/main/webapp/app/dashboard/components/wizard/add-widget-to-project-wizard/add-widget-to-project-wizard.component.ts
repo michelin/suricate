@@ -15,23 +15,20 @@
  */
 
 import { Component, Injector, OnInit } from '@angular/core';
-import { WizardComponent } from '../../../shared/components/wizard/wizard.component';
-import { ProjectWidgetFormStepsService } from '../../../shared/services/frontend/form-steps/project-widget-form-steps/project-widget-form-steps.service';
-import { FormStep } from '../../../shared/models/frontend/form/form-step';
-import { RoutesService } from '../../../shared/services/frontend/route/route.service';
-import { ProjectWidgetRequest } from '../../../shared/models/backend/project-widget/project-widget-request';
-import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
-import { ToastService } from '../../../shared/services/frontend/toast/toast.service';
-import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
+import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
+import { ProjectWidgetFormStepsService } from '../../../../shared/services/frontend/form-steps/project-widget-form-steps/project-widget-form-steps.service';
+import { FormStep } from '../../../../shared/models/frontend/form/form-step';
+import { RoutesService } from '../../../../shared/services/frontend/route/route.service';
+import { ProjectWidgetRequest } from '../../../../shared/models/backend/project-widget/project-widget-request';
+import { HttpProjectService } from '../../../../shared/services/backend/http-project/http-project.service';
+import { ToastService } from '../../../../shared/services/frontend/toast/toast.service';
+import { ToastTypeEnum } from '../../../../shared/enums/toast-type.enum';
 
-/**
- * Component used to display the list of widgets
- */
 @Component({
-  templateUrl: '../../../shared/components/wizard/wizard.component.html',
-  styleUrls: ['../../../shared/components/wizard/wizard.component.scss']
+  templateUrl: '../../../../shared/components/wizard/wizard.component.html',
+  styleUrls: ['../../../../shared/components/wizard/wizard.component.scss']
 })
-export class ProjectWidgetWizardComponent extends WizardComponent implements OnInit {
+export class AddWidgetToProjectWizardComponent extends WizardComponent implements OnInit {
   /**
    * Constructor
    *
@@ -60,7 +57,7 @@ export class ProjectWidgetWizardComponent extends WizardComponent implements OnI
   }
 
   /**
-   * Function used to configure the header of the list component
+   * Function used to configure the header of this wizard component
    */
   private initHeaderConfiguration(): void {
     this.headerConfiguration = {

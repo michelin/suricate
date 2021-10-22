@@ -12,7 +12,6 @@ import lombok.*;
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value = "RotationProjectRequest", description = "Hold the project information of a rotation")
 public class RotationProjectRequestDto {
-
     /**
      * The project token
      */

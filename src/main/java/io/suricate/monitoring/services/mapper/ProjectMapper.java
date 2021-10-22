@@ -59,6 +59,18 @@ public abstract class ProjectMapper {
     public abstract ProjectResponseDto toProjectDTO(Project project);
 
     /**
+     * Map a project into a DTO without assets
+     *
+     * @param project The project to map
+     * @return The project as DTO
+     */
+    @Named("toProjectNoAssetDTO")
+    @Mapping(target = "gridProperties.maxColumn", source = "project.maxColumn")
+    @Mapping(target = "gridProperties.widgetHeight", source = "project.widgetHeight")
+    @Mapping(target = "gridProperties.cssStyle", source = "project.cssStyle")
+    public abstract ProjectResponseDto toProjectNoAssetDTO(Project project);
+
+    /**
      * Map a list of projects into a list of DTOs
      *
      * @param projects The list of project to map

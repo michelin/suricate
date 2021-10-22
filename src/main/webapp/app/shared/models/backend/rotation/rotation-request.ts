@@ -8,9 +8,4 @@ export interface RotationRequest {
    * The rotation name
    */
   name: string;
-
-  /**
-   * List of rotation project requests
-   */
-  rotationProjectRequests?: RotationProjectRequest[];
 }

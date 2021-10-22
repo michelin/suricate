@@ -20,6 +20,7 @@
  * Hold the different icons of the application
  */
 export enum IconEnum {
+  ACCESS_TIME = 'ACCESS_TIME',
   ADD = 'ADD',
   ARROW_DOWN = 'ARROW_DOWN',
   BRANCH = 'BRANCH',
@@ -35,7 +36,6 @@ export enum IconEnum {
   ERROR = 'ERROR',
   GENERAL_INFORMATION = 'GENERAL_INFORMATION',
   GRID = 'GRID',
-  GRID_ROTATION_SPEED = 'GRID_ROTATION_SPEED',
   HEIGHT = 'HEIGHT',
   HELP = 'HELP',
   HOME = 'HOME',

@@ -25,6 +25,8 @@ import { FormOption } from '../../../../models/frontend/form/form-option';
 import { TitleCasePipe } from '@angular/common';
 import { TranslateService } from '@ngx-translate/core';
 import { Rotation } from '../../../../models/backend/rotation/rotation';
+import { RotationProjectRequest } from '../../../../models/backend/rotation-project/rotation-project-request';
+import { CustomValidator } from '../../../../validators/custom-validator';
 
 /**
  * Service used to build the form fields related to a rotation
@@ -37,9 +39,9 @@ export class RotationFormFieldsService {
   public static readonly rotationNameFormFieldKey = 'name';
 
   /**
-   * Key for the projects form field
+   * Key for the project token form field
    */
-  public static readonly projectsFormFieldKey = 'projects';
+  public static readonly projectTokenFormFieldKey = 'projectToken';
 
   /**
    * Key for the projects form field
@@ -52,31 +54,10 @@ export class RotationFormFieldsService {
   constructor(private readonly translateService: TranslateService) {}
 
   /**
-   * Get the project as options
+   * Get the list of form fields for a rotation creation
    */
-  private static getProjectsAsOptions(projects: Project[]): Observable<FormOption[]> {
-    const titleCasePipe = new TitleCasePipe();
-    const projectOptions: FormOption[] = [];
-
-    projects.forEach(project => {
-      projectOptions.push({
-        label: titleCasePipe.transform(project.name),
-        value: project.token
-      });
-    });
-
-    return of(projectOptions);
-  }
-
-  /**
-   * Get the list of form fields for a rotation
-   */
-  public generateRotationFormFields(projects: Project[], rotation?: Rotation): FormField[] {
-    if (projects.length === 0) {
-      return [];
-    }
-
-    const fields: FormField[] = [
+  public generateRotationFormFields(rotation?: Rotation): FormField[] {
+    return [
       {
         key: RotationFormFieldsService.rotationNameFormFieldKey,
         label: this.translateService.instant('rotation.name.form.field'),
@@ -84,31 +65,32 @@ export class RotationFormFieldsService {
         type: DataTypeEnum.TEXT,
         value: rotation ? rotation.name : null,
         validators: [Validators.required]
-      },
-      {
-        key: RotationFormFieldsService.projectsFormFieldKey,
-        label: this.translateService.instant('rotation.dashboards.form.field'),
-        iconPrefix: IconEnum.DASHBOARD,
-        type: DataTypeEnum.MULTIPLE,
-        options: () => RotationFormFieldsService.getProjectsAsOptions(projects),
-        value: rotation?.rotationProjects.map(rotationProject => rotationProject.project.token),
-        validators: [Validators.required]
       }
     ];
+  }
 
-    if (rotation) {
-      rotation.rotationProjects.forEach(rotationProject => {
-        fields.push({
-          key: `${RotationFormFieldsService.rotationSpeedFormFieldKey}-${rotationProject.project.token}`,
-          label: `${this.translateService.instant('rotation.dashboards.rotation.speed.form.field')} ${rotationProject.project.name}`,
-          iconPrefix: IconEnum.DASHBOARD_ROTATION_SPEED,
-          type: DataTypeEnum.NUMBER,
-          value: rotationProject.rotationSpeed,
-          validators: [Validators.required]
-        });
-      });
-    }
-
-    return fields;
+  /**
+   * Get the list of form fields when a dashboard is selected during rotation creation
+   *
+   * @param project The project selected
+   * @param rotationProjectRequest The rotation project request, if the project already has been selected
+   */
+  public generateDashboardOptionsFormFields(project: Project, rotationProjectRequest?: RotationProjectRequest): FormField[] {
+    return [
+      {
+        key: RotationFormFieldsService.projectTokenFormFieldKey,
+        type: DataTypeEnum.HIDDEN,
+        value: project.token,
+        validators: [Validators.required]
+      },
+      {
+        key: RotationFormFieldsService.rotationSpeedFormFieldKey,
+        label: this.translateService.instant('rotation.dashboards.rotation.speed.form.field'),
+        iconPrefix: IconEnum.DASHBOARD_ROTATION_SPEED,
+        type: DataTypeEnum.NUMBER,
+        value: rotationProjectRequest ? rotationProjectRequest.rotationSpeed : null,
+        validators: [CustomValidator.greaterThan0IfDefined]
+      }
+    ];
   }
 }

@@ -34,6 +34,12 @@ public abstract class RotationProjectMapper {
     protected ProjectService projectService;
 
     /**
+     * The rotation service
+     */
+    @Autowired
+    protected RotationService rotationService;
+
+    /**
      * Map a rotation project into a DTO
      *
      * @param rotationProject The rotation project to map
@@ -44,12 +50,23 @@ public abstract class RotationProjectMapper {
     public abstract RotationProjectResponseDto toRotationProjectDTO(RotationProject rotationProject);
 
     /**
+     * Map a list of rotation project into a list of DTOs
+     *
+     * @param rotationProjects The list of rotation project to map
+     * @return The list of rotation project as DTOs
+     */
+    @Named("toRotationProjectDTOs")
+    @IterableMapping(qualifiedByName = "toRotationProjectDTO")
+    public abstract List<RotationProjectResponseDto> toRotationProjectDTOs(Collection<RotationProject> rotationProjects);
+
+    /**
      * Map a rotation project DTO into a rotation project entity
      *
      * @param rotationProjectRequestDto The rotation project DTO to map
      * @return The rotation project as entity
      */
     @Named("toRotationProjectEntity")
+    @Mapping(target = "rotation", expression = "java(rotationService.getOneByToken(rotationToken).get())")
     @Mapping(target = "project", expression = "java(projectService.getOneByToken(rotationProjectRequestDto.getProjectToken()).get())")
-    public abstract RotationProject toRotationProjectEntity(RotationProjectRequestDto rotationProjectRequestDto);
+    public abstract RotationProject toRotationProjectEntity(RotationProjectRequestDto rotationProjectRequestDto, String rotationToken);
 }

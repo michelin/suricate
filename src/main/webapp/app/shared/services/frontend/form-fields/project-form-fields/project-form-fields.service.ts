@@ -87,7 +87,7 @@ export class ProjectFormFieldsService {
       },
       {
         key: ProjectFormFieldsService.projectWidgetHeightFormFieldKey,
-        label: 'widget.height.px',
+        label: 'row.height.px',
         iconPrefix: IconEnum.HEIGHT,
         type: DataTypeEnum.NUMBER,
         value: project?.gridProperties.widgetHeight ? project.gridProperties.widgetHeight : 360,

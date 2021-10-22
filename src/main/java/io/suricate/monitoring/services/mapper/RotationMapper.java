@@ -32,7 +32,6 @@ public abstract class RotationMapper {
      * @return The rotation as DTO
      */
     @Named("toRotationDTO")
-    @Mapping(target = "rotationProjects", source = "rotation.rotationProjects", qualifiedByName = "toRotationProjectDTO")
     public abstract RotationResponseDto toRotationDTO(Rotation rotation);
 
     /**
@@ -52,6 +51,5 @@ public abstract class RotationMapper {
      * @return The rotation as entity
      */
     @Named("toRotationEntity")
-    @Mapping(target = "rotationProjects", source = "rotationRequestDto.rotationProjectRequests", qualifiedByName = "toRotationProjectEntity")
     public abstract Rotation toRotationEntity(RotationRequestDto rotationRequestDto);
 }

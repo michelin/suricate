@@ -120,7 +120,7 @@ public class  ProjectWidgetController {
     })
     @PutMapping(value = "/v1/projectWidgets/{projectWidgetId}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Void> editProjectWidgetFromProject(@ApiIgnore OAuth2Authentication authentication,
+    public ResponseEntity<ProjectWidgetResponseDto> editProjectWidgetFromProject(@ApiIgnore OAuth2Authentication authentication,
                                                              @ApiParam(name = "projectWidgetId", value = "The project widget id", required = true)
                                                              @PathVariable("projectWidgetId") Long projectWidgetId,
                                                              @ApiParam(name = "projectWidgetResponseDto", value = "The project widget informations to update", required = true)
@@ -137,7 +137,10 @@ public class  ProjectWidgetController {
         this.projectWidgetService.updateProjectWidget(projectWidgetOptional.get(), projectWidgetRequestDto.getCustomStyle(),
                 projectWidgetRequestDto.getBackendConfig());
 
-        return ResponseEntity.noContent().build();
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(this.projectWidgetMapper.toProjectWidgetDTO(projectWidgetOptional.get()));
     }
 
     /**

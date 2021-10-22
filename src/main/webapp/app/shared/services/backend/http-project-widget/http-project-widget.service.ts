@@ -58,9 +58,9 @@ export class HttpProjectWidgetService {
    * @param projectWidgetId The project widget id
    * @param projectWidgetRequest The new project widget
    */
-  public updateOneById(projectWidgetId: number, projectWidgetRequest: ProjectWidgetRequest): Observable<void> {
+  public updateOneById(projectWidgetId: number, projectWidgetRequest: ProjectWidgetRequest): Observable<ProjectWidget> {
     const url = `${HttpProjectWidgetService.projectWidgetsApiEndpoint}/${projectWidgetId}`;
-    return this.httpClient.put<void>(url, projectWidgetRequest);
+    return this.httpClient.put<ProjectWidget>(url, projectWidgetRequest);
   }
 
   /**

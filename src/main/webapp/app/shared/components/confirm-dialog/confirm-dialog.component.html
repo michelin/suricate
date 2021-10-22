@@ -6,11 +6,11 @@
   </mat-dialog-content>
 
   <mat-dialog-actions>
-    <button mat-button color="primary" [mat-dialog-close]="false">
+    <button mat-button mat-stroked-button color="primary" [mat-dialog-close]="false">
       {{ 'no' | translate }}
     </button>
 
-    <button mat-button color="warn" (click)="accepted()">
+    <button mat-button mat-stroked-button color="warn" (click)="accepted()">
       {{ 'yes' | translate }}
     </button>
   </mat-dialog-actions>

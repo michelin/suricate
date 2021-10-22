@@ -54,11 +54,6 @@ export class RotationsComponent implements OnInit {
   public rotations: Rotation[];
 
   /**
-   * The rotation being built
-   */
-  private rotationBeingBuilt: Rotation = new Rotation();
-
-  /**
    * Constructor
    *
    * @param router The router service
@@ -101,77 +96,20 @@ export class RotationsComponent implements OnInit {
   /**
    * Display the side nav bar used to create a rotation
    */
-  public openRotationFormSidenav(): void {
-    this.httpProjectService.getAllForCurrentUser().subscribe((dashboards: Project[]) => {
-      this.projects = dashboards;
-
-      this.sidenavService.openFormSidenav({
-        title: 'rotation.create',
-        formFields: this.rotationFormFieldsService.generateRotationFormFields(dashboards),
-        noFieldsMessage: 'rotation.create.no.form.fields',
-        save: (formData: FormData) => this.saveRotation(formData),
-        onValueChanged: (valueChangedEvent: ValueChangedEvent) => this.onRotationSidenavValueChanged(valueChangedEvent)
-      });
+  public openRotationCreationFormSidenav(): void {
+    this.sidenavService.openFormSidenav({
+      title: 'rotation.create',
+      formFields: this.rotationFormFieldsService.generateRotationFormFields(),
+      save: (rotationRequest: RotationRequest) => this.saveRotation(rotationRequest)
     });
-  }
-
-  /**
-   * On rotation sidenav value changed, register the new value in a
-   * rotation object and regenerate the form fields according to the
-   * new values
-   *
-   * @param valueChangedEvent The value changed event
-   */
-  onRotationSidenavValueChanged(valueChangedEvent: ValueChangedEvent): Observable<FormField[]> {
-    if (valueChangedEvent.fieldKey === RotationFormFieldsService.projectsFormFieldKey) {
-      // Add project
-      valueChangedEvent.value.forEach(projectToken => {
-        if (!this.rotationBeingBuilt.rotationProjects.find(rotationProject => rotationProject.project.token === projectToken)) {
-          const rotationProject: RotationProject = new RotationProject();
-          rotationProject.project = this.projects.find(project => project.token === projectToken);
-          this.rotationBeingBuilt.rotationProjects.push(rotationProject);
-        }
-      });
-
-      // Remove project
-      this.rotationBeingBuilt.rotationProjects.forEach(rotationProject => {
-        if (!valueChangedEvent.value.includes(rotationProject.project.token)) {
-          this.rotationBeingBuilt.rotationProjects.splice(this.rotationBeingBuilt.rotationProjects.indexOf(rotationProject), 1);
-        }
-      });
-
-      return of(this.rotationFormFieldsService.generateRotationFormFields(this.projects, this.rotationBeingBuilt));
-    }
-
-    if (valueChangedEvent.fieldKey.startsWith(RotationFormFieldsService.rotationSpeedFormFieldKey)) {
-      this.rotationBeingBuilt.rotationProjects.find(
-        rotationProject => rotationProject.project.token === valueChangedEvent.fieldKey.substr(valueChangedEvent.fieldKey.indexOf('-') + 1)
-      ).rotationSpeed = valueChangedEvent.value;
-    } else {
-      this.rotationBeingBuilt[valueChangedEvent.fieldKey] = valueChangedEvent.value;
-    }
-
-    return EMPTY;
   }
 
   /**
    * Save a new rotation
    *
-   * @param formData The data retrieved from the form
+   * @param rotationRequest The rotation request
    */
-  private saveRotation(formData: FormData): void {
-    const rotationRequest: RotationRequest = {
-      name: formData[RotationFormFieldsService.rotationNameFormFieldKey],
-      rotationProjectRequests: []
-    };
-
-    formData[RotationFormFieldsService.projectsFormFieldKey].forEach(projectToken => {
-      rotationRequest.rotationProjectRequests.push({
-        projectToken: projectToken,
-        rotationSpeed: formData[`${RotationFormFieldsService.rotationSpeedFormFieldKey}-${projectToken}`]
-      });
-    });
-
+  private saveRotation(rotationRequest: RotationRequest): void {
     this.httpRotationService.create(rotationRequest).subscribe((createdRotation: Rotation) => {
       this.toastService.sendMessage('rotation.add.success', ToastTypeEnum.SUCCESS);
       this.router.navigate(['/rotations', createdRotation.token]);

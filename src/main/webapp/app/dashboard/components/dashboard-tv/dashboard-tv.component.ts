@@ -30,6 +30,7 @@ import { ProjectWidget } from '../../../shared/models/backend/project-widget/pro
 import { DashboardService } from '../../services/dashboard/dashboard.service';
 import { HttpRotationService } from '../../../shared/services/backend/http-rotation/http-rotation.service';
 import { Rotation } from '../../../shared/models/backend/rotation/rotation';
+import { RotationProject } from '../../../shared/models/backend/rotation-project/rotation-project';
 
 /**
  * Dashboard TV Management
@@ -47,14 +48,19 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   private unsubscribe: Subject<void> = new Subject<void>();
 
   /**
+   * The rotation token in the url
+   */
+  public rotationToken: string;
+
+  /**
    * The project token in the url
    */
   public projectToken: string;
 
   /**
-   * The rotation token in the url
+   * The list of project rotations
    */
-  public rotationToken: string;
+  public rotationProjects: RotationProject[];
 
   /**
    * The list of project widgets related to the project token
@@ -117,7 +123,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
     this.activatedRoute.queryParams.pipe(takeUntil(this.unsubscribe)).subscribe((queryParams: Params) => {
       if (queryParams['dashboard']) {
         this.projectToken = queryParams['dashboard'];
-        this.initComponentWithProject();
+        this.initComponentWithProject().subscribe();
       } else if (queryParams['rotation']) {
         this.rotationToken = queryParams['rotation'];
         this.initComponentWithRotation();
@@ -171,15 +177,17 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   /**
    * Initialise the component from the given project token
    */
-  private initComponentWithProject(): void {
+  private initComponentWithProject(): Observable<ProjectWidget[]> {
     if (this.projectToken) {
       this.isDashboardLoading = true;
 
-      this.refreshProject(this.projectToken)
+      return this.refreshProject(this.projectToken)
         .pipe(flatMap(() => this.refreshProjectWidgets(this.projectToken)))
-        .subscribe(
-          () => (this.isDashboardLoading = false),
-          () => (this.isDashboardLoading = false)
+        .pipe(
+          tap(
+            () => (this.isDashboardLoading = false),
+            () => (this.isDashboardLoading = false)
+          )
         );
     }
   }
@@ -191,15 +199,27 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
     if (this.rotationToken) {
       this.isDashboardLoading = true;
 
-      this.refreshRotation(this.rotationToken).subscribe(() => {
-        this.projectToken = this.rotation.rotationProjects[0].project.token;
-        this.initComponentWithProject();
+      this.refreshRotation()
+        .pipe(flatMap(() => this.refreshProjectRotations()))
+        .subscribe(() => {
+          this.projectToken = this.rotationProjects[0].project.token;
 
-        if (this.rotation.rotationProjects.length > 1) {
-          this.rotate(0);
-        }
-      });
+          this.initComponentWithProject().subscribe(() => {
+            if (this.rotationProjects.length > 1) {
+              this.rotate(0);
+            }
+          });
+        });
     }
+  }
+
+  /**
+   * Refresh the list of project rotations
+   */
+  private refreshProjectRotations(): Observable<RotationProject[]> {
+    return this.httpRotationService
+      .getProjectRotationsByRotationToken(this.rotationToken)
+      .pipe(tap((rotationProjects: RotationProject[]) => (this.rotationProjects = rotationProjects)));
   }
 
   /**
@@ -211,13 +231,13 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    */
   private rotate(rotationIndex: number): void {
     this.rotationTimeout = setTimeout(() => {
-      rotationIndex = rotationIndex === this.rotation.rotationProjects.length - 1 ? 0 : rotationIndex + 1;
+      rotationIndex = rotationIndex === this.rotationProjects.length - 1 ? 0 : rotationIndex + 1;
 
-      this.projectToken = this.rotation.rotationProjects[rotationIndex].project.token;
-      this.initComponentWithProject();
-
-      this.rotate(rotationIndex);
-    }, this.rotation.rotationProjects[rotationIndex].rotationSpeed * 1000);
+      this.projectToken = this.rotationProjects[rotationIndex].project.token;
+      this.initComponentWithProject().subscribe(() => {
+        this.rotate(rotationIndex);
+      });
+    }, this.rotationProjects[rotationIndex].rotationSpeed * 1000);
   }
 
   /**
@@ -240,11 +260,9 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
 
   /**
    * Refresh the rotation
-   *
-   * @param rotationToken The token used for the refresh
    */
-  private refreshRotation(rotationToken: string): Observable<Rotation> {
-    return this.httpRotationService.getById(rotationToken).pipe(tap((rotation: Rotation) => (this.rotation = rotation)));
+  private refreshRotation(): Observable<Rotation> {
+    return this.httpRotationService.getById(this.rotationToken).pipe(tap((rotation: Rotation) => (this.rotation = rotation)));
   }
 
   /**

@@ -22,6 +22,7 @@ import { IconEnum } from '../enums/icon.enum';
  * Records used to store related material icons from https://material.io/resources/icons
  */
 export const MaterialIconRecords: Record<IconEnum, string> = {
+  [IconEnum.ACCESS_TIME]: 'access_time',
   [IconEnum.ADD]: 'add',
   [IconEnum.ARROW_DOWN]: 'keyboard_arrow_right',
   [IconEnum.BRANCH]: 'merge_type',
@@ -37,7 +38,6 @@ export const MaterialIconRecords: Record<IconEnum, string> = {
   [IconEnum.ERROR]: 'error',
   [IconEnum.GENERAL_INFORMATION]: 'menu_book',
   [IconEnum.GRID]: 'view_carousel',
-  [IconEnum.GRID_ROTATION_SPEED]: 'trending_up',
   [IconEnum.HEIGHT]: 'height',
   [IconEnum.HELP]: 'help',
   [IconEnum.HIDE_PASSWORD]: 'visibility_off',

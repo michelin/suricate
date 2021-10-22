@@ -14,6 +14,7 @@ import javax.persistence.*;
 @Getter
 @Setter
 @NoArgsConstructor
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"rotation_id", "project_id"}))
 public class RotationProject extends AbstractAuditingEntity<Long> {
     /**
      * The rotation project id
@@ -32,13 +33,13 @@ public class RotationProject extends AbstractAuditingEntity<Long> {
      * Rotation
      */
     @ManyToOne
-    @PrimaryKeyJoinColumn(name = "rotationId", referencedColumnName = "ID")
+    @PrimaryKeyJoinColumn(name = "rotation_id", referencedColumnName = "ID")
     private Rotation rotation;
 
     /**
      * Project
      */
     @ManyToOne
-    @PrimaryKeyJoinColumn(name = "projectId", referencedColumnName = "ID")
+    @PrimaryKeyJoinColumn(name = "project_id", referencedColumnName = "ID")
     private Project project;
 }

@@ -157,7 +157,7 @@ public class ProjectController {
                                            @RequestParam(value = "search", required = false) String search,
                                            Pageable pageable) {
         return this.projectService.getAll(search, pageable)
-                .map(this.projectMapper::toProjectDTO);
+                .map(this.projectMapper::toProjectNoAssetDTO);
     }
 
     /**

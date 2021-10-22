@@ -190,6 +190,7 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
       if (changes.project.previousValue) {
         if (changes.project.previousValue.token !== changes.project.currentValue.token) {
           this.resetProjectWebsockets();
+          this.addExternalJSLibrariesToTheDOM();
         }
       } else {
         this.initProjectWebsockets();
@@ -226,7 +227,7 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
    * and a callback which notify subscribers when the library is loaded.
    */
   public addExternalJSLibrariesToTheDOM() {
-    this.libraryService.numberOfExternalLibrariesToLoad = this.project.librariesToken.length;
+    this.libraryService.init(this.project.librariesToken.length);
 
     if (this.project.librariesToken.length > 0) {
       this.project.librariesToken.forEach(token => {
@@ -263,6 +264,7 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
    */
   private initGridStackOptions(): void {
     this.gridOptions = {
+      max_cols: this.project.gridProperties.maxColumn,
       visible_cols: this.project.gridProperties.maxColumn,
       min_cols: 1,
       row_height: this.project.gridProperties.widgetHeight,
