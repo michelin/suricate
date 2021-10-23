@@ -18,6 +18,7 @@ import { ButtonTypeEnum } from '../../../enums/button-type.enum';
 import { IconEnum } from '../../../enums/icon.enum';
 import { ThemePalette } from '@angular/material/core';
 import { TooltipConfiguration } from '../tooltip/tooltip-configuration';
+import {Observable} from "rxjs/internal/Observable";
 
 /**
  * Model of Button
@@ -28,7 +29,7 @@ export class ButtonConfiguration<T> {
   color: ThemePalette;
   callback?: (event: Event, object?: T) => void;
   disabled?: (object?: T) => boolean;
-  hidden?: () => boolean;
+  hidden?: (object?: T) => boolean;
   type?: ButtonTypeEnum;
   variant?: 'stroked' | 'miniFab';
   tooltip?: TooltipConfiguration;

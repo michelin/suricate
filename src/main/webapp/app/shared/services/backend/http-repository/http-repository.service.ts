@@ -91,6 +91,17 @@ export class HttpRepositoryService implements AbstractHttpService<Repository | R
   }
 
   /**
+   * Reload a repository
+   *
+   * @param repositoryId The repository id
+   */
+  public reload(repositoryId: number): Observable<void> {
+    const url = `${HttpRepositoryService.repositoriesApiEndpoint}/${repositoryId}/reload`;
+
+    return this.httpClient.put<void>(url, null);
+  }
+
+  /**
    * Delete a repository
    *
    * @param id The repository id to delete

@@ -107,16 +107,19 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
       buttons: [
         {
           icon: IconEnum.USERS,
+          tooltip: { message: 'user.edit' },
           color: 'primary',
           callback: (event: Event, project: Project) => this.openUserFormSidenav(event, project)
         },
         {
           icon: IconEnum.EDIT,
+          tooltip: { message: 'dashboard.edit' },
           color: 'primary',
           callback: (event: Event, project: Project) => this.openFormSidenav(event, project)
         },
         {
           icon: IconEnum.DELETE,
+          tooltip: { message: 'dashboard.delete' },
           color: 'warn',
           callback: (event: Event, project: Project) => this.deleteProject(event, project)
         }

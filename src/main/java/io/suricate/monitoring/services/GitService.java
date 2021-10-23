@@ -191,7 +191,8 @@ public class GitService {
      *
      * @return true if the widgets update has been done properly
      */
-    private boolean readWidgetRepositories(final List<Repository> repositories) {
+    @Transactional
+    public boolean readWidgetRepositories(final List<Repository> repositories) {
         try {
             for (Repository repository : repositories) {
                 if (repository.getType() == RepositoryTypeEnum.LOCAL) {

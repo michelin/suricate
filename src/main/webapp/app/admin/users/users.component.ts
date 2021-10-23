@@ -79,11 +79,13 @@ export class UsersComponent extends ListComponent<User> implements OnInit {
       buttons: [
         {
           icon: IconEnum.EDIT,
+          tooltip: { message: 'user.edit' },
           color: 'primary',
           callback: (event: Event, user: User) => this.openFormSidenav(event, user, this.editUser.bind(this))
         },
         {
           icon: IconEnum.DELETE,
+          tooltip: { message: 'user.delete' },
           color: 'warn',
           callback: (event: Event, user: User) => this.deleteUser(event, user)
         }

@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
 import { MaterialIconRecords } from '../../records/material-icon.record';
 import { ButtonTypeEnum } from '../../enums/button-type.enum';
@@ -32,29 +32,23 @@ import { ButtonTypeEnum } from '../../enums/button-type.enum';
 export class ButtonsComponent<T> {
   /**
    * The list of buttons to display
-   * @type {ButtonConfiguration[]}
-   * @public
    */
   @Input()
   public configurations: ButtonConfiguration<T>[];
+
   /**
    * Object to raised with the click event
-   * @public
    */
   @Input()
   public object: T;
 
   /**
    * The different type of buttons
-   * @type {ButtonTypeEnum}
-   * @protected
    */
   public buttonTypeEnum = ButtonTypeEnum;
 
   /**
    * Records that store the icons code for an enum
-   * @type {MaterialIconRecords}
-   * @protected
    */
   public materialIconRecords = MaterialIconRecords;
 
@@ -67,8 +61,9 @@ export class ButtonsComponent<T> {
    * Used to know if the button should be hidden
    *
    * @param configuration The button configuration related to this button
+   * @param object The object related to this button
    */
-  public shouldDisplayButton(configuration: ButtonConfiguration<T>): boolean {
-    return !configuration.hidden || !configuration.hidden();
+  public shouldDisplayButton(configuration: ButtonConfiguration<T>, object: T): boolean {
+    return !configuration.hidden || !configuration.hidden(object);
   }
 }

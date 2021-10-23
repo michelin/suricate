@@ -41,6 +41,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import org.springframework.transaction.annotation.Transactional;
 import java.net.URI;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,7 +52,6 @@ import java.util.Optional;
 @RequestMapping(value = "/api")
 @Api(value = "Repository Controller", tags = {"Repositories"})
 public class RepositoryController {
-
     /**
      * Repository service
      */
@@ -180,8 +180,6 @@ public class RepositoryController {
 
     /**
      * Update a repository by id
-     *
-     * @return The repository updated
      */
     @ApiOperation(value = "Update an existing repository by id, and load it automatically if enable is selected")
     @ApiResponses(value = {
@@ -205,6 +203,33 @@ public class RepositoryController {
 
         if (repository.isEnabled()) {
             this.gitService.updateWidgetsFromRepository(repository);
+        }
+
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * Reload a repository by id
+     */
+    @ApiOperation(value = "Reload an existing repository by id")
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "Repository reloaded"),
+            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
+            @ApiResponse(code = 404, message = "Repository not found", response = ApiErrorDto.class)
+    })
+    @PutMapping(value = "/v1/repositories/{repositoryId}/reload")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<Void> reload(@ApiParam(name = "repositoryId", value = "The repository id", required = true)
+                                       @PathVariable Long repositoryId) {
+        Optional<Repository> optionalRepository = this.repositoryService.getOneById(repositoryId);
+        if (!optionalRepository.isPresent()) {
+            throw new ObjectNotFoundException(Repository.class, repositoryId);
+        }
+
+        Repository repository = optionalRepository.get();
+        if (repository.isEnabled()) {
+            this.gitService.readWidgetRepositories(Collections.singletonList(repository));
         }
 
         return ResponseEntity.noContent().build();

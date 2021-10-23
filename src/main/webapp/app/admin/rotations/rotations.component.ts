@@ -95,16 +95,19 @@ export class RotationsComponent extends ListComponent<Rotation | RotationRequest
       buttons: [
         {
           icon: IconEnum.USERS,
+          tooltip: { message: 'user.edit' },
           color: 'primary',
           callback: (event: Event, rotation: Rotation) => this.openUserFormSidenav(event, rotation)
         },
         {
           icon: IconEnum.EDIT,
+          tooltip: { message: 'rotation.edit' },
           color: 'primary',
           callback: (event: Event, rotation: Rotation) => this.openFormSidenav(event, rotation)
         },
         {
           icon: IconEnum.DELETE,
+          tooltip: { message: 'rotation.delete' },
           color: 'warn',
           callback: (event: Event, rotation: Rotation) => this.deleteProject(event, rotation)
         }

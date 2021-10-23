@@ -24,7 +24,9 @@ import { ValueChangedEvent } from '../../shared/models/frontend/form/value-chang
 import { RepositoryFormFieldsService } from '../../shared/services/frontend/form-fields/repository-form-fields/repository-form-fields.service';
 import { RepositoryRequest } from '../../shared/models/backend/repository/repository-request';
 import { RepositoryTypeEnum } from '../../shared/enums/repository-type.enum';
-import { EMPTY, Observable, of } from 'rxjs';
+import {BehaviorSubject, EMPTY, merge, Observable, of, Subject} from 'rxjs';
+import {ToastTypeEnum} from "../../shared/enums/toast-type.enum";
+import {map} from "rxjs/operators";
 
 /**
  * Component used to display the list of git repositories
@@ -52,7 +54,7 @@ export class RepositoriesComponent extends ListComponent<Repository> {
     protected injector: Injector
   ) {
     super(httpRepositoryService, injector);
-
+    
     this.initHeaderConfiguration();
     this.initListConfiguration();
     this.initFilter();
@@ -104,7 +106,15 @@ export class RepositoriesComponent extends ListComponent<Repository> {
     this.listConfiguration = {
       buttons: [
         {
+          icon: IconEnum.SYNCHRONIZE,
+          tooltip: { message: 'repository.synchronize' },
+          color: 'primary',
+          callback: (event: Event, repository: Repository) => this.reloadRepository(repository),
+          hidden: (repository: Repository) => repository && !repository.enabled
+        },
+        {
           icon: IconEnum.EDIT,
+          tooltip: { message: 'repository.edit' },
           color: 'primary',
           callback: (event: Event, repository: Repository) => this.openFormSidenav(event, repository, this.updateRepository.bind(this))
         }
@@ -153,12 +163,25 @@ export class RepositoriesComponent extends ListComponent<Repository> {
   }
 
   /**
-   * Function used to update a repository
+   * Update a repository
    *
    * @param repositoryRequest The new repository with the modification made on the form
    */
   private updateRepository(repositoryRequest: RepositoryRequest): void {
     this.httpRepositoryService.update(this.repository.id, repositoryRequest).subscribe(() => {
+      this.toastService.sendMessage('repository.update.success', ToastTypeEnum.SUCCESS);
+      super.refreshList();
+    });
+  }
+
+  /**
+   * Reload a repository
+   *
+   * @param repository The repository to reload
+   */
+  private reloadRepository(repository: Repository): void {
+    this.httpRepositoryService.reload(repository.id).subscribe(() => {
+      this.toastService.sendMessage('repository.synchronize.success', ToastTypeEnum.SUCCESS);
       super.refreshList();
     });
   }
