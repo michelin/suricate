@@ -39,6 +39,11 @@ export class RotationFormFieldsService {
   public static readonly rotationNameFormFieldKey = 'name';
 
   /**
+   * Key for the progress bar form field
+   */
+  public static readonly rotationProgressBarFormFieldKey = 'progressBar';
+
+  /**
    * Key for the project token form field
    */
   public static readonly projectTokenFormFieldKey = 'projectToken';
@@ -57,6 +62,7 @@ export class RotationFormFieldsService {
    * Get the list of form fields for a rotation creation
    */
   public generateRotationFormFields(rotation?: Rotation): FormField[] {
+    console.warn(rotation);
     return [
       {
         key: RotationFormFieldsService.rotationNameFormFieldKey,
@@ -65,6 +71,13 @@ export class RotationFormFieldsService {
         type: DataTypeEnum.TEXT,
         value: rotation ? rotation.name : null,
         validators: [Validators.required]
+      },
+      {
+        key: RotationFormFieldsService.rotationProgressBarFormFieldKey,
+        label: this.translateService.instant('rotation.progress.bar.form.field'),
+        iconPrefix: IconEnum.PROGRESS_BAR,
+        type: DataTypeEnum.BOOLEAN,
+        value: rotation ? rotation.progressBar : false
       }
     ];
   }

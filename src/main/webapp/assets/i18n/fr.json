@@ -75,6 +75,7 @@
   "rotation.list": "Rotations",
   "rotation.list.my": "Mes rotations",
   "rotation.name.form.field": "Titre",
+  "rotation.progress.bar.form.field": "Afficher la barre de progression",
   "rotation.update.dashboards": "Mettre à jour",
   "rotation.update.success": "Rotation mise à jour avec succès",
   "row.height.px": "Hauteur des lignes (en px)",

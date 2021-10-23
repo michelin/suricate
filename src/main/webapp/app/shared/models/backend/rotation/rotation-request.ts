@@ -8,4 +8,9 @@ export interface RotationRequest {
    * The rotation name
    */
   name: string;
+
+  /**
+   * Does the progress bar should be displayed
+   */
+  progressBar: boolean;
 }

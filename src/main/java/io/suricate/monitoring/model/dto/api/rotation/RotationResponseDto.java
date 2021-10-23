@@ -33,6 +33,12 @@ public class RotationResponseDto extends AbstractDto {
     private String name;
 
     /**
+     * Does the progress bar should be displayed
+     */
+    @ApiModelProperty(value = "Does the progress bar should be displayed")
+    private boolean progressBar;
+
+    /**
      * The rotation token
      */
     @ApiModelProperty(value = "The rotation token")

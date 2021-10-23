@@ -131,7 +131,17 @@ public class RotationService {
             rotation.setName(rotationRequestDto.getName());
         }
 
+        boolean reloadRequired = false;
+        if (rotation.isProgressBar() != rotationRequestDto.isProgressBar()) {
+            rotation.setProgressBar(rotationRequestDto.isProgressBar());
+            reloadRequired = true;
+        }
+
         this.rotationRepository.save(rotation);
+
+        if (reloadRequired) {
+            this.rotationWebSocketService.reloadAllConnectedClientsToARotation(rotation.getToken());
+        }
     }
 
     /**

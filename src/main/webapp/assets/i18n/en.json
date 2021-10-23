@@ -76,6 +76,7 @@
   "rotation.list": "Rotations",
   "rotation.list.my": "My rotations",
   "rotation.name.form.field": "Title",
+  "rotation.progress.bar.form.field": "Show progress bar on rotations",
   "rotation.update.dashboards": "Update rotation dashboards",
   "rotation.update.success": "Rotation updated",
   "row.height.px": "Row height (in px)",

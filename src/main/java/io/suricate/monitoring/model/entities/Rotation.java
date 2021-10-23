@@ -4,6 +4,7 @@ import io.suricate.monitoring.model.entities.generic.AbstractAuditingEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.LinkedHashSet;
@@ -29,6 +30,13 @@ public class Rotation extends AbstractAuditingEntity<Long> {
      */
     @Column(nullable = false)
     private String name;
+
+    /**
+     * Does the progress bar should be displayed
+     */
+    @Column(nullable = false)
+    @Type(type = "yes_no")
+    private boolean progressBar;
 
     /**
      * The rotation token
