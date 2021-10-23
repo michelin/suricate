@@ -1,5 +1,5 @@
-import {Component, Input, OnInit} from '@angular/core';
-import {ThemePalette} from "@angular/material/core";
+import { Component, Input } from '@angular/core';
+import { ThemePalette } from '@angular/material/core';
 
 @Component({
   selector: 'suricate-progress-bar',
@@ -22,5 +22,5 @@ export class ProgressBarComponent {
   /**
    * Constructor
    */
-  constructor() { }
+  constructor() {}
 }

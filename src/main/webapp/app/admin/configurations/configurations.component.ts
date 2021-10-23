@@ -95,7 +95,7 @@ export class ConfigurationsComponent extends ListComponent<CategoryParameter> {
           tooltip: { message: 'configuration.edit' },
           color: 'primary',
           callback: (event: Event, configuration: CategoryParameter) =>
-          this.openFormSidenav(event, configuration, this.updateConfiguration.bind(this))
+            this.openFormSidenav(event, configuration, this.updateConfiguration.bind(this))
         },
         {
           icon: IconEnum.DELETE,

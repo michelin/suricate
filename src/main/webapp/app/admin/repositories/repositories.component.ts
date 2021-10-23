@@ -24,9 +24,9 @@ import { ValueChangedEvent } from '../../shared/models/frontend/form/value-chang
 import { RepositoryFormFieldsService } from '../../shared/services/frontend/form-fields/repository-form-fields/repository-form-fields.service';
 import { RepositoryRequest } from '../../shared/models/backend/repository/repository-request';
 import { RepositoryTypeEnum } from '../../shared/enums/repository-type.enum';
-import {BehaviorSubject, EMPTY, merge, Observable, of, Subject} from 'rxjs';
-import {ToastTypeEnum} from "../../shared/enums/toast-type.enum";
-import {map} from "rxjs/operators";
+import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
+import { Observable } from 'rxjs/internal/Observable';
+import { EMPTY, of } from 'rxjs';
 
 /**
  * Component used to display the list of git repositories
@@ -54,7 +54,6 @@ export class RepositoriesComponent extends ListComponent<Repository> {
     protected injector: Injector
   ) {
     super(httpRepositoryService, injector);
-    
     this.initHeaderConfiguration();
     this.initListConfiguration();
     this.initFilter();

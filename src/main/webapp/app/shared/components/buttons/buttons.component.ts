@@ -16,7 +16,7 @@
  *
  */
 
-import {Component, Input, OnInit} from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
 import { MaterialIconRecords } from '../../records/material-icon.record';
 import { ButtonTypeEnum } from '../../enums/button-type.enum';

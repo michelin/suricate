@@ -18,7 +18,6 @@ import { ButtonTypeEnum } from '../../../enums/button-type.enum';
 import { IconEnum } from '../../../enums/icon.enum';
 import { ThemePalette } from '@angular/material/core';
 import { TooltipConfiguration } from '../tooltip/tooltip-configuration';
-import {Observable} from "rxjs/internal/Observable";
 
 /**
  * Model of Button
