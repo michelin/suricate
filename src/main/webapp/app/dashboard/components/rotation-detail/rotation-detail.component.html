@@ -4,7 +4,7 @@
   <mat-grid-list cols="4" gutterSize="17px" rowHeight="250px">
     <mat-grid-tile *ngFor="let rotationProject of rotationProjects" class="mat-elevation-z3">
       <div class="grid-tile-content-wrapper">
-        <a [routerLink]="['/dashboards', rotationProject.projectToken]">
+        <a [routerLink]="['/dashboards', rotationProject.project.token]">
           <div class="grid-tile-body">
             <img
               *ngIf="rotationProject.project.screenshotToken"

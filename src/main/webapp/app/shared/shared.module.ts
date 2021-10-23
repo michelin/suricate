@@ -51,6 +51,8 @@ import { PaginatorComponent } from './components/paginator/paginator.component';
 import { SlideToggleComponent } from './components/inputs/slide-toggle/slide-toggle.component';
 import { WidgetHtmlDirective } from './directives/widget-html.directive';
 import { MatBadgeModule } from '@angular/material/badge';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { ProgressBarComponent } from './components/progress-bar/progress-bar.component';
 
 @NgModule({
   imports: [
@@ -86,7 +88,8 @@ import { MatBadgeModule } from '@angular/material/badge';
     FieldsComponent,
     MosaicComponent,
     PaginatorComponent,
-    SlideToggleComponent
+    SlideToggleComponent,
+    ProgressBarComponent
   ],
   exports: [
     BrowserAnimationsModule,
@@ -118,7 +121,9 @@ import { MatBadgeModule } from '@angular/material/badge';
     ColorPickerComponent,
     PaginatorComponent,
     SlideToggleComponent,
-    MatBadgeModule
+    MatBadgeModule,
+    MatProgressBarModule,
+    ProgressBarComponent
   ],
   entryComponents: [CommunicationDialogComponent, ConfirmDialogComponent],
   providers: [

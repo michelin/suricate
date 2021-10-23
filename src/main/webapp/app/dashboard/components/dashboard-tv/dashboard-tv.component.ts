@@ -88,9 +88,25 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   public rotation: Rotation;
 
   /**
-   * The timeout at the end of which, the rotation rotates
+   * Count the seconds a dashboard is currently displayed in the rotation.
+   */
+  public rotationTimer = 0;
+
+  /**
+   * The percentage of time a dashboard is currently displayed in the rotation.
+   * Used by the progress bar.
+   */
+  public rotationTimerPercent = 0;
+
+  /**
+   * The timeout at the end of which, the rotation is performed
    */
   public rotationTimeout: NodeJS.Timeout;
+
+  /**
+   * The rotation timer interval result
+   */
+  public rotationTimerTimeout: NodeJS.Timeout;
 
   /**
    * The constructor
@@ -205,8 +221,10 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
           this.projectToken = this.rotationProjects[0].project.token;
 
           this.initComponentWithProject().subscribe(() => {
+            this.startRotationTimerForRotation(0);
+
             if (this.rotationProjects.length > 1) {
-              this.rotate(0);
+              this.prepareRotation(0);
             }
           });
         });
@@ -224,18 +242,19 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
 
   /**
    * Run the rotation of the dashboards
-   *
    * In X seconds, increments the rotation and display the next dashboard
    *
    * @param rotationIndex The index of the current project to display in the rotation
    */
-  private rotate(rotationIndex: number): void {
+  private prepareRotation(rotationIndex: number): void {
     this.rotationTimeout = setTimeout(() => {
       rotationIndex = rotationIndex === this.rotationProjects.length - 1 ? 0 : rotationIndex + 1;
 
       this.projectToken = this.rotationProjects[rotationIndex].project.token;
       this.initComponentWithProject().subscribe(() => {
-        this.rotate(rotationIndex);
+        this.startRotationTimerForRotation(rotationIndex);
+
+        this.prepareRotation(rotationIndex);
       });
     }, this.rotationProjects[rotationIndex].rotationSpeed * 1000);
   }
@@ -247,6 +266,35 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
     if (this.rotationTimeout) {
       clearTimeout(this.rotationTimeout);
     }
+  }
+
+  /**
+   * Stop the rotation timer
+   */
+  private stopRotationTimer(): void {
+    if (this.rotationTimerTimeout) {
+      clearInterval(this.rotationTimerTimeout);
+    }
+  }
+
+  /**
+   * Start the rotation timer
+   * Follow the time during a dashboard is displayed before being rotated
+   * Used to display the progress bar on rotations
+   *
+   * @param rotationIndex The index of the current project to display in the rotation
+   */
+  private startRotationTimerForRotation(rotationIndex: number): void {
+    this.stopRotationTimer();
+    // Start the timer and the progress bar from 100%
+    this.rotationTimer = this.rotationProjects[rotationIndex].rotationSpeed * 1000;
+    this.rotationTimerPercent = 100;
+
+    // Each 150ms, update the progress bar
+    this.rotationTimerTimeout = setInterval(() => {
+      this.rotationTimer -= 150;
+      this.rotationTimerPercent = this.rotationTimer * 100 / (this.rotationProjects[rotationIndex].rotationSpeed * 1000);
+    },150)
   }
 
   /**
@@ -287,6 +335,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * Handle the disconnection of a dashboard
    */
   public handlingDashboardDisconnect(): void {
+    this.stopRotationTimer();
     this.stopRotate();
     this.router.navigate(['/tv']);
     setTimeout(() => this.listenForConnection(), 500);
@@ -299,6 +348,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
     this.unsubscribe.next();
     this.unsubscribe.complete();
 
+    this.stopRotationTimer();
     this.stopRotate();
 
     this.websocketService.disconnect();

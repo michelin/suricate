@@ -28,4 +28,6 @@
       (disconnectEvent)="handlingDashboardDisconnect()"
     ></suricate-dashboard-screen>
   </ng-template>
+
+  <suricate-progress-bar *ngIf="rotation && projectWidgets" class="rotation-progress-bar" [value]="rotationTimerPercent"></suricate-progress-bar>
 </div>
