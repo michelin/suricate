@@ -2,8 +2,8 @@
 
 <section class="container" fxLayout="column">
   <div class="search-div" fxLayout="row">
-    <mat-icon> {{ materialIconRecords[iconEnum.SEARCH] }} </mat-icon>
-    <input #inputSearch fxFlex="100%" placeholder="Search ..." type="text" />
+    <suricate-input [field]="searchBarConfig" [formGroup]="formGroup" (input)="researchChangedEvent($event)" fxFlex="100%">
+    </suricate-input>
   </div>
 
   <div class="list-wrapper" fxLayout="column">

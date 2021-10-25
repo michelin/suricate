@@ -93,6 +93,7 @@
   "screen.refresh.success": "Les écrans ont été rafraîchis",
   "screen.subscribe": "Connecter",
   "screen.unsubscribe": "Déconnecter l'écran",
+  "search.bar": "Rechercher",
   "server.unavailable": "Serveur indisponible",
   "server.unavailable.explanation": "Le serveur ne répond pas, veuillez contacter un administrateur",
   "settings": "Paramètres",
