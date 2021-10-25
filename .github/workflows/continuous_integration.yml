@@ -26,7 +26,10 @@ jobs:
         run: mvn -B test
 
       - name: Check dependencies with Maven
-        run: mvn -B -DskipTests -DcentralAnalyzerEnabled=false verify
+        run: mvn -B -DskipTests -DcentralAnalyzerEnabled=false verify sonar:sonar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   Front-End:
     runs-on: ubuntu-latest
