@@ -15,3 +15,11 @@
  *  * limitations under the License.
  *
  */
+
+:host {
+  max-width: 1200px;
+
+  .mat-progress-bar {
+    height: 12px;
+  }
+}

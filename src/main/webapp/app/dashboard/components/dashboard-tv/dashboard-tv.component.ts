@@ -286,15 +286,15 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    */
   private startRotationTimerForRotation(rotationIndex: number): void {
     this.stopRotationTimer();
-    // Start the timer and the progress bar from 100%
-    this.rotationTimer = this.rotationProjects[rotationIndex].rotationSpeed * 1000;
-    this.rotationTimerPercent = 100;
+    this.rotationTimer = 0;
+    this.rotationTimerPercent = 0;
 
-    // Each 150ms, update the progress bar
+    const intervalRefreshMs = 150;
+    // Each Xms, update the progress bar
     this.rotationTimerTimeout = setInterval(() => {
-      this.rotationTimer -= 150;
+      this.rotationTimer += intervalRefreshMs;
       this.rotationTimerPercent = (this.rotationTimer * 100) / (this.rotationProjects[rotationIndex].rotationSpeed * 1000);
-    }, 150);
+    }, intervalRefreshMs);
   }
 
   /**
