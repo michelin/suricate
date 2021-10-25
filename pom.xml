@@ -31,8 +31,10 @@
         <apacheds.version>2.0.0.AM26</apacheds.version>
         <!-- Encoding -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <!-- Classes folder for Sonar -->
-        <sonar.java.binaries>${project.build.directory}/classes</sonar.java.binaries>
+        <!-- Sonar -->
+        <sonar.organization>michelin</sonar.organization>
+        <sonar.projectKey>suricate</sonar.projectKey>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
 
     <dependencies>
