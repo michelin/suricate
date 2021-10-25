@@ -183,12 +183,6 @@ public class NashornWidgetSchedulerTest {
         assertThat(current.getLastSuccessDate()).isNull();
     }
 
-    @Test
-    @Transactional
-    public void testBadDelay() {
-        projectWidgetService.updateState(null, projectWidget.getId(), null);
-    }
-
     /**
      * Init a mocked database for the unit tests
      */
