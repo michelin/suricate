@@ -7,6 +7,12 @@
 [![GitHub PR](https://img.shields.io/github/issues-pr/michelin/suricate.svg)](https://github.com/michelin/suricate/pulls/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
+[![SonarCloud Bugs](https://sonarcloud.io/api/project_badges/measure?project=michelin_suricate&metric=bugs)](https://sonarcloud.io/component_measures/metric/reliability_rating/list?id=michelin_suricate)
+[![SonarCloud Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=michelin_suricate&metric=vulnerabilities)](https://sonarcloud.io/component_measures/metric/reliability_rating/list?id=michelin_suricate)
+[![SonarCloud Code Smells](https://sonarcloud.io/api/project_badges/measure?project=michelin_suricate&metric=code_smells)](https://sonarcloud.io/component_measures/metric/reliability_rating/list?id=michelin_suricate)
+[![SonarCloud Coverage](https://sonarcloud.io/api/project_badges/measure?project=michelin_suricate&metric=coverage)](https://sonarcloud.io/component_measures/metric/coverage/list?id=michelin_suricate)
+[![SonarCloud Duplicate Lines](https://sonarcloud.io/api/project_badges/measure?project=michelin_suricate&metric=duplicated_lines_density)](https://sonarcloud.io/component_measures/metric/coverage/list?id=michelin_suricate)
+
 This repository contains the source code of the Suricate application.
 
 ![Suricate dashboard developer environment](src/main/webapp/assets/images/dashboard.png)
