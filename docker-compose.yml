@@ -1,0 +1,37 @@
+version: '3.7'
+services:
+  postgres:
+    image: postgres
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      PGDATA: /data/postgres
+    volumes:
+      - postgres:/data/postgres
+    ports:
+      - '5432:5432'
+    networks:
+      - suricate
+    restart: unless-stopped
+
+  suricate:
+    image: docker.hub.com/michelin/suricate:${SURICATE_VERSION:-latest}
+    environment:
+      SPRING_PROFILES_ACTIVE: postgresql
+      SPRING_DATASOURCE_URL: 'jdbc:postgresql://postgres:5432/postgres?currentSchema=suricate'
+      SPRING_DATASOURCE_USERNANE: ${POSTGRES_USER:-postgres}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_USER:-changeme}
+    networks:
+      - suricate
+    ports:
+      - 8080:8080
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+networks:
+  suricate:
+    driver: bridge
+
+volumes:
+  postgres:

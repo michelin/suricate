@@ -485,6 +485,20 @@
                     </dependency>
                 </dependencies>
             </plugin>
+
+            <plugin>
+                <groupId>com.google.cloud.tools</groupId>
+                <artifactId>jib-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <configuration>
+                    <from>
+                        <image>adoptopenjdk:8-jre-hotspot</image>
+                    </from>
+                    <to>
+                        <image>docker.hub.com/michelin/${project.artifactId}:${project.version}</image>
+                    </to>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
@@ -544,7 +558,7 @@
                         <executions>
                             <execution>
                                 <id>copy Front-End to Back-End</id>
-                                <phase>process-resources</phase>
+                                <phase>package</phase>
                                 <goals>
                                     <goal>copy-resources</goal>
                                 </goals>
