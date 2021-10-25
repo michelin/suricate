@@ -3,7 +3,7 @@
 
     <groupId>io.suricate</groupId>
     <artifactId>suricate</artifactId>
-    <version>2.4.1-SNAPSHOT</version>
+    <version>2.5.0-SNAPSHOT</version>
     <packaging>${packaging.type}</packaging>
     <name>Suricate Application</name>
 
@@ -496,6 +496,10 @@
                     </from>
                     <to>
                         <image>docker.hub.com/michelin/${project.artifactId}:${project.version}</image>
+                        <tags>
+                            <tag>latest</tag>
+                            <tag>${project.version}</tag>
+                        </tags>
                     </to>
                 </configuration>
             </plugin>
