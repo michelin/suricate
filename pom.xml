@@ -33,7 +33,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!-- Sonar -->
         <sonar.organization>michelin</sonar.organization>
-        <sonar.projectKey>suricate</sonar.projectKey>
+        <sonar.projectKey>michelin_suricate</sonar.projectKey>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
     </properties>
 
