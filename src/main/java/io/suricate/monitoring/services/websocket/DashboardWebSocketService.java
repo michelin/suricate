@@ -122,7 +122,7 @@ public class DashboardWebSocketService {
                 .content(this.projectMapper.toProjectDTO(project))
                 .build();
 
-        LOGGER.debug("Sending the event {} to the screen {}", updateEvent.getType(), screenCode);
+        LOGGER.debug("Sending the event {} to the screen {}", updateEvent.getType(), screenCode.replaceAll("[\n\r\t]", "_"));
 
         simpMessagingTemplate.convertAndSendToUser(
                 screenCode,

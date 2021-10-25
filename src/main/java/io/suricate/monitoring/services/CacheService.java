@@ -43,23 +43,21 @@ public class CacheService {
     }
 
     /**
-     * Method used to clear all cache
+     * Clear all caches
      */
-    public void clearAllCache(){
-        // Clear cache
-        for (String name : cacheManager.getCacheNames()) {
-            cacheManager.getCache(name).clear();
-        }
-        LOGGER.debug("Cache cleared");
+    public void clearAllCache() {
+        cacheManager.getCacheNames()
+                .forEach(this::clearCache);
     }
 
     /**
      * Method used to clear cache by cache name
+     *
      * @param cacheName the cache name to clear
      */
-    public void clearCache(String cacheName){
+    public void clearCache(String cacheName) {
         Cache cache = cacheManager.getCache(cacheName);
-        if (cache != null){
+        if (cache != null) {
             cache.clear();
             LOGGER.debug("Cache {} cleared", cacheName);
         }

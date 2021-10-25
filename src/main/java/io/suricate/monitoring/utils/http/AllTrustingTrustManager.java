@@ -19,7 +19,6 @@
 package io.suricate.monitoring.utils.http;
 
 import javax.net.ssl.X509TrustManager;
-import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
 public class AllTrustingTrustManager implements X509TrustManager {

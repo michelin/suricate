@@ -8,7 +8,6 @@ import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
 import io.suricate.monitoring.model.dto.websocket.WebsocketClient;
 import io.suricate.monitoring.model.entities.Rotation;
 import io.suricate.monitoring.model.enums.UpdateType;
-import io.suricate.monitoring.services.mapper.RotationMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
@@ -64,7 +63,7 @@ public class RotationWebSocketService {
                 .content(rotation)
                 .build();
 
-        LOGGER.debug("Sending the event {} to the screen {}", updateEvent.getType(), screenCode);
+        LOGGER.debug("Sending the event {} to the screen {}", updateEvent.getType(), screenCode.replaceAll("[\n\r\t]", "_"));
 
         simpMessagingTemplate.convertAndSendToUser(
                 screenCode,
