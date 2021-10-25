@@ -138,9 +138,14 @@ public class NashornRequestResultAsyncTask implements Callable<Void>{
 
                 return null;
             });
+        } catch (InterruptedException ie) {
+            LOGGER.error("Interrupted exception caught. Re-interrupting the thread for the widget instance {}",
+                    nashornRequest.getProjectWidgetId());
+
+            Thread.currentThread().interrupt();
         } catch (CancellationException cancellationException) {
             if (scheduledNashornRequestTask.isCancelled()) {
-                LOGGER.info("The Nashorn request has been canceled for the widget instance {}", nashornRequest.getProjectWidgetId());
+                LOGGER.debug("The Nashorn request has been canceled for the widget instance {}", nashornRequest.getProjectWidgetId());
             }
         } catch (Exception exception) {
             Throwable rootCause = ExceptionUtils.getRootCause(exception);

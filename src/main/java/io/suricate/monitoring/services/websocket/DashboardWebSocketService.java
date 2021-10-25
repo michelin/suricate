@@ -202,7 +202,8 @@ public class DashboardWebSocketService {
      */
     @Async
     public void sendEventToScreenProjectSubscriber(String projectToken, String screenCode, UpdateEvent payload) {
-        LOGGER.debug("Sending the event {} to the project {} of the screen {}", payload.getType(), projectToken, screenCode);
+        LOGGER.debug("Sending the event {} to the project {} of the screen {}", payload.getType(), projectToken,
+                screenCode.replaceAll("[\n\r\t]", "_"));
 
         simpMessagingTemplate.convertAndSendToUser(
                 projectToken.trim() + "-" + screenCode,
