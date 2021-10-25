@@ -34,7 +34,8 @@ describe('RotationTvManagementDialogComponent', () => {
   function buildMockedRotation(): Rotation {
     return {
       name: 'Rotation 1',
-      token: 'Token'
+      token: 'Token',
+      progressBar: false
     };
   }
 });
