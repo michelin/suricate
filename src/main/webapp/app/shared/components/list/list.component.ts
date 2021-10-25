@@ -16,10 +16,9 @@
  *
  */
 
-import { AfterViewInit, Component, ElementRef, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Injector, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-
 import { ListConfiguration } from '../../models/frontend/list/list-configuration';
 import { AbstractHttpService } from '../../services/backend/abstract-http/abstract-http.service';
 import { HeaderConfiguration } from '../../models/frontend/header/header-configuration';
@@ -31,13 +30,12 @@ import { HttpFilterService } from '../../services/backend/http-filter/http-filte
 import { PageEvent } from '@angular/material/paginator';
 import { MaterialIconRecords } from '../../records/material-icon.record';
 import { IconEnum } from '../../enums/icon.enum';
-import { fromEvent, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map, takeUntil, takeWhile } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { DataTypeEnum } from '../../enums/data-type.enum';
-import { FormGroup, Validators } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import { FormField } from '../../models/frontend/form/form-field';
 import { FormService } from '../../services/frontend/form/form.service';
-import { InputComponent } from '../inputs/input/input.component';
 
 /**
  * Generic component used to display and manage lists
