@@ -155,18 +155,13 @@ public class RotationController {
             @ApiResponse(code = 404, message = "Rotation not found", response = ApiErrorDto.class)
     })
     @GetMapping(value = "/v1/rotations/{rotationToken}")
-    @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<RotationResponseDto> getRotationByToken(@ApiIgnore OAuth2Authentication authentication,
-                                                                  @ApiParam(name = "rotationToken", value = "The rotation token", required = true)
+    @PermitAll
+    public ResponseEntity<RotationResponseDto> getRotationByToken(@ApiParam(name = "rotationToken", value = "The rotation token", required = true)
                                                                   @PathVariable("rotationToken") String rotationToken) {
         Optional<Rotation> rotationOptional = this.rotationService.getOneByToken(rotationToken);
 
         if (!rotationOptional.isPresent()) {
             throw new ObjectNotFoundException(Rotation.class, rotationToken);
-        }
-
-        if (!this.rotationService.isConnectedUserCanAccessToRotation(rotationOptional.get(), authentication.getUserAuthentication())) {
-            throw new ApiException(RotationController.USER_NOT_ALLOWED, ApiErrorEnum.NOT_AUTHORIZED);
         }
 
         return ResponseEntity
