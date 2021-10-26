@@ -316,7 +316,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   /**
    * Activate the action of refresh project widgets
    */
-  public refreshProjectWidgetsAction(): void {
+  public refreshAllProjectWidgets(): void {
     this.refreshProjectWidgets(this.project.token).subscribe();
   }
 

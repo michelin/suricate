@@ -180,7 +180,7 @@ public class ProjectService {
         projectRepository.save(project);
 
         // Update grid
-        dashboardWebsocketService.sendEventToProjectSubscribers(project.getToken(), UpdateEvent.builder().type(UpdateType.GRID).build());
+        dashboardWebsocketService.sendEventToProjectSubscribers(project.getToken(), UpdateEvent.builder().type(UpdateType.REFRESH_DASHBOARD).build());
     }
 
     /**

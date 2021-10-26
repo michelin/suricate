@@ -173,7 +173,7 @@ public class DashboardScheduleService {
         ProjectWidget projectWidget = projectWidgetService.getOne(projectWidgetId).orElse(null);
 
         UpdateEvent event = UpdateEvent.builder()
-                .type(UpdateType.WIDGET)
+                .type(UpdateType.REFRESH_WIDGET)
                 .content(this.projectWidgetMapper.toProjectWidgetDTO(projectWidget))
                 .build();
 

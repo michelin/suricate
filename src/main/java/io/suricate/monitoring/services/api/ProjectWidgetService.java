@@ -160,12 +160,7 @@ public class ProjectWidgetService {
 
     /**
      * Add a new widget instance to a project
-     *
-     * Encrypt the secret configuration of the widget instance
-     *
-     * Save it
-     *
-     * Send an event to the subscribers to update the dashboards
+     * Encrypt the secret configuration of the widget instance then save it
      *
      * @param widgetInstance The widget instance
      */
@@ -175,14 +170,7 @@ public class ProjectWidgetService {
             encryptSecretParamsIfNeeded(widgetInstance.getWidget(), widgetInstance.getBackendConfig())
         );
 
-        widgetInstance = projectWidgetRepository.saveAndFlush(widgetInstance);
-
-        UpdateEvent updateEvent = UpdateEvent.builder()
-                .type(UpdateType.GRID)
-                .content(this.projectMapper.toProjectDTO(widgetInstance.getProject()))
-                .build();
-
-        dashboardWebsocketService.sendEventToProjectSubscribers(widgetInstance.getProject().getToken(), updateEvent);
+        projectWidgetRepository.saveAndFlush(widgetInstance);
     }
 
     /**
@@ -219,7 +207,7 @@ public class ProjectWidgetService {
 
         // notify clients
         UpdateEvent updateEvent = UpdateEvent.builder()
-                .type(UpdateType.POSITION)
+                .type(UpdateType.REFRESH_DASHBOARD)
                 .content(projectMapper.toProjectDTO(project))
                 .build();
 
@@ -243,7 +231,7 @@ public class ProjectWidgetService {
 
             // notify client
             UpdateEvent updateEvent = UpdateEvent.builder()
-                    .type(UpdateType.GRID)
+                    .type(UpdateType.REFRESH_DASHBOARD)
                     .content(projectMapper.toProjectDTO(projectWidgetOptional.get().getProject()))
                     .build();
 

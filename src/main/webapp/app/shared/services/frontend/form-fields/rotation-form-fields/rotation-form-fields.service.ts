@@ -62,7 +62,6 @@ export class RotationFormFieldsService {
    * Get the list of form fields for a rotation creation
    */
   public generateRotationFormFields(rotation?: Rotation): FormField[] {
-    console.warn(rotation);
     return [
       {
         key: RotationFormFieldsService.rotationNameFormFieldKey,

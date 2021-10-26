@@ -180,7 +180,7 @@ export class DashboardDetailComponent implements OnInit {
   /**
    * Activate the action of refresh project widgets
    */
-  public refreshProjectWidgetsAction(): void {
+  public refreshAllProjectWidgets(): void {
     this.refreshProjectWidgets().subscribe();
   }
 

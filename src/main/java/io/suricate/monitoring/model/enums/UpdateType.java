@@ -20,14 +20,14 @@ package io.suricate.monitoring.model.enums;
  * Update type (Websocket)
  */
 public enum UpdateType {
-    GRID,
-    WIDGET,
-    POSITION,
-    DISCONNECT,
+    // Dashboard events
+    REFRESH_DASHBOARD,
+    REFRESH_WIDGET,
     CONNECT_SINGLE_DASHBOARD,
     // Rotation events
     CONNECT_ROTATION,
     // Shared events
     RELOAD,
-    DISPLAY_NUMBER
+    DISPLAY_NUMBER,
+    DISCONNECT
 }

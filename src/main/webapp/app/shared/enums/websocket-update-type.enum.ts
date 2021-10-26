@@ -20,14 +20,14 @@
  * The list of possible update events
  */
 export enum WebsocketUpdateTypeEnum {
-  GRID = 'GRID',
-  WIDGET = 'WIDGET',
-  POSITION = 'POSITION',
-  DISCONNECT = 'DISCONNECT',
+  // Dashboard events
+  REFRESH_DASHBOARD = 'REFRESH_DASHBOARD',
+  REFRESH_WIDGET = 'REFRESH_WIDGET',
   CONNECT_SINGLE_DASHBOARD = 'CONNECT_SINGLE_DASHBOARD',
   // Rotation events
   CONNECT_ROTATION = 'CONNECT_ROTATION',
   // Shared events
   DISPLAY_NUMBER = 'DISPLAY_NUMBER',
-  RELOAD = 'RELOAD'
+  RELOAD = 'RELOAD',
+  DISCONNECT = 'DISCONNECT',
 }

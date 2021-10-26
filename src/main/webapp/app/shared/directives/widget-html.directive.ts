@@ -1,10 +1,17 @@
-import { Directive, ElementRef, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import {Directive, ElementRef, Input, OnChanges, OnInit, SimpleChanges} from '@angular/core';
+import {ProjectWidget} from "../models/backend/project-widget/project-widget";
 
 /**
  * Directive for Widget's JS scripts
  */
 @Directive({ selector: '[widgetHtmlDirective]' })
-export class WidgetHtmlDirective implements OnInit {
+export class WidgetHtmlDirective implements OnChanges {
+  /**
+   * The rendered project widget
+   */
+  @Input()
+  public projectWidget: ProjectWidget;
+
   /**
    * Constructor
    *
@@ -13,10 +20,15 @@ export class WidgetHtmlDirective implements OnInit {
   constructor(private readonly elementRef: ElementRef) {}
 
   /**
-   * Init method
+   * On changes
+   *
+   * @param changes The change event
    */
-  ngOnInit(): void {
-    this.reloadJSScripts();
+  ngOnChanges(changes: SimpleChanges): void {
+    // When the widget changes, reapply the JS scripts
+    if (changes.projectWidget) {
+      this.reapplyJSScripts();
+    }
   }
 
   /**
@@ -24,10 +36,10 @@ export class WidgetHtmlDirective implements OnInit {
    * It executes the scripts again and render the widget properly.
    * This is called once the HTML of the widget is fully loaded.
    */
-  private reloadJSScripts() {
+  private reapplyJSScripts() {
     const scripts: HTMLScriptElement[] = (<HTMLScriptElement[]>(
       Array.from(this.elementRef.nativeElement.getElementsByTagName('script'))
-    )).filter(currentScript => currentScript.src || currentScript.innerHTML);
+    )).filter(currentScript => currentScript.innerHTML);
 
     Array.from(Array(scripts.length).keys()).forEach((index: number) => {
       const script = scripts[index];

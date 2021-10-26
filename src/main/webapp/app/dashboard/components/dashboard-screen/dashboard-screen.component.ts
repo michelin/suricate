@@ -101,7 +101,7 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
    * Use to tell to the parent component that it should refresh the project widgets
    */
   @Output()
-  public refreshProjectWidget = new EventEmitter<void>();
+  public refreshAllProjectWidgets = new EventEmitter<void>();
 
   /**
    * Subject used to unsubscribe all the subscriptions to rotation web sockets
@@ -393,14 +393,14 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
           case WebsocketUpdateTypeEnum.DISPLAY_NUMBER:
             this.displayScreenCode();
             break;
-          case WebsocketUpdateTypeEnum.POSITION:
-            this.refreshProjectWidget.emit();
+          case WebsocketUpdateTypeEnum.REFRESH_DASHBOARD:
+            this.refreshAllProjectWidgets.emit();
             break;
           case WebsocketUpdateTypeEnum.RELOAD:
             location.reload();
             break;
           default:
-            this.refreshProjectWidget.emit();
+            this.refreshAllProjectWidgets.emit();
         }
       });
   }

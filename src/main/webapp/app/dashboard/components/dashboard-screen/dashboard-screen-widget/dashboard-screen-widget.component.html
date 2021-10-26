@@ -21,7 +21,7 @@
     <!--                 WIDGET HTML                   -->
     <!--------------------------------------------------->
     <div class="grid-stack-item-content">
-      <div class="widget-html-content" widgetHtmlDirective [innerHTML]="projectWidget.instantiateHtml | safeHtml"></div>
+      <div class="widget-html-content" widgetHtmlDirective [projectWidget]="projectWidget" [innerHTML]="projectWidget.instantiateHtml | safeHtml"></div>
     </div>
 
     <!--------------------------------------------------->
