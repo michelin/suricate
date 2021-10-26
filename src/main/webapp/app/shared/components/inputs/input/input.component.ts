@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { AbstractControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { animate, style, transition, trigger } from '@angular/animations';
 
@@ -35,6 +35,7 @@ import { DashboardScreenComponent } from '../../../../dashboard/components/dashb
   selector: 'suricate-input',
   templateUrl: './input.component.html',
   styleUrls: ['./input.component.scss'],
+  encapsulation: ViewEncapsulation.None,
   animations: [
     trigger('animationError', [
       transition(':enter', [
