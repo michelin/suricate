@@ -29,5 +29,5 @@ export enum WebsocketUpdateTypeEnum {
   // Shared events
   DISPLAY_NUMBER = 'DISPLAY_NUMBER',
   RELOAD = 'RELOAD',
-  DISCONNECT = 'DISCONNECT',
+  DISCONNECT = 'DISCONNECT'
 }
