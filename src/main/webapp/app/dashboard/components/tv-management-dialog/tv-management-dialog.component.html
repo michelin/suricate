@@ -8,9 +8,14 @@
     <h2 class="little title">{{ 'screen.enroll' | translate }}</h2>
     <mat-divider></mat-divider>
 
-    <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="25px" class="input-wrapper">
-      <suricate-input *ngFor="let field of formFields" fxFlex [formGroup]="registerScreenCodeFormField" [field]="field"></suricate-input>
-      <suricate-buttons class="share-button" [configurations]="shareButtonsConfiguration"></suricate-buttons>
+    <div fxLayout="row" fxLayoutGap="25px" class="input-wrapper">
+      <suricate-input
+        *ngFor="let field of formFields"
+        fxFlex="100%"
+        [formGroup]="registerScreenCodeFormField"
+        [field]="field"
+      ></suricate-input>
+      <suricate-buttons fxFlex [configurations]="shareButtonsConfiguration"></suricate-buttons>
     </div>
   </form>
 
