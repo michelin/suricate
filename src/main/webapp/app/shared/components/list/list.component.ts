@@ -36,6 +36,7 @@ import { DataTypeEnum } from '../../enums/data-type.enum';
 import { FormGroup } from '@angular/forms';
 import { FormField } from '../../models/frontend/form/form-field';
 import { FormService } from '../../services/frontend/form/form.service';
+import { ValueChangedEvent } from '../../models/frontend/form/value-changed-event';
 
 /**
  * Generic component used to display and manage lists
@@ -297,7 +298,7 @@ export class ListComponent<T> implements OnInit, OnDestroy {
   /**
    * Emit a new event when a new value is typed in the search bar
    */
-  public researchChangedEvent(event: Event) {
-    this.researchChanged.next((event.target as HTMLInputElement).value);
+  public researchChangedEvent(event: ValueChangedEvent) {
+    this.researchChanged.next(event.value);
   }
 }

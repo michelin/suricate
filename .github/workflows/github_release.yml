@@ -3,31 +3,31 @@ name: GitHub Release
 on:
   push:
     tags:
-      - "v*.*.*" 
-      
+      - 'v*.*.*'
+
 jobs:
   GitHub-Release:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout project
         uses: actions/checkout@v2
-          
+
       - name: Set up JDK 8
         uses: actions/setup-java@v2
         with:
           java-version: '8'
           distribution: 'adopt'
-          
-      - name: Package application
+
+      - name: Package application & Deploy Docker
         id: package-application
         run: |
-          mvn -B -DskipTests package -P production
+          mvn -B -DskipTests package -P production jib:build -Djib.to.auth.username=$DOCKER_USER -Djib.to.auth.password=$DOCKER_TOKEN
           echo ::set-output name=tag::${GITHUB_REF##*/}
-        
+
       - name: Create release
         uses: ncipollo/release-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          bodyFile: "CHANGELOG.md"
-          artifacts: "target/suricate.jar"
+          bodyFile: 'CHANGELOG.md'
+          artifacts: 'target/suricate.jar'
           name: Release ${{ steps.package-application.outputs.tag }}

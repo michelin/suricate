@@ -2,7 +2,7 @@
 
 <section class="container" fxLayout="column">
   <div class="search-div" fxLayout="row">
-    <suricate-input [field]="searchBarConfig" [formGroup]="formGroup" (input)="researchChangedEvent($event)" fxFlex="100%">
+    <suricate-input [field]="searchBarConfig" [formGroup]="formGroup" (valueChangeEvent)="researchChangedEvent($event)" fxFlex="100%">
     </suricate-input>
   </div>
 

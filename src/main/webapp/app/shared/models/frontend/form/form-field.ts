@@ -79,11 +79,6 @@ export class FormField {
   iconSuffix?: IconEnum;
 
   /**
-   * A message to display on a tooltip above the icon suffix
-   */
-  iconSuffixTooltipMessage?: string;
-
-  /**
    * Hint to display to the user
    */
   hint?: string;
