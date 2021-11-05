@@ -18,9 +18,7 @@ import { Component, Injector, OnInit } from '@angular/core';
 import { WizardComponent } from '../../../../shared/components/wizard/wizard.component';
 import { ProjectWidgetFormStepsService } from '../../../../shared/services/frontend/form-steps/project-widget-form-steps/project-widget-form-steps.service';
 import { FormStep } from '../../../../shared/models/frontend/form/form-step';
-import { RoutesService } from '../../../../shared/services/frontend/route/route.service';
 import { ProjectWidgetRequest } from '../../../../shared/models/backend/project-widget/project-widget-request';
-import { HttpProjectService } from '../../../../shared/services/backend/http-project/http-project.service';
 import { ToastService } from '../../../../shared/services/frontend/toast/toast.service';
 import { ToastTypeEnum } from '../../../../shared/enums/toast-type.enum';
 

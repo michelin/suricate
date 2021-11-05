@@ -30,9 +30,7 @@ import { FormField } from '../../models/frontend/form/form-field';
 import { WidgetConfigurationFormFieldsService } from '../../services/frontend/form-fields/widget-configuration-form-fields/widget-configuration-form-fields.service';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { ProjectWidgetFormStepsService } from '../../services/frontend/form-steps/project-widget-form-steps/project-widget-form-steps.service';
-import { RoutesService } from '../../services/frontend/route/route.service';
 import { HttpProjectService } from '../../services/backend/http-project/http-project.service';
-import { Project } from '../../models/backend/project/project';
 
 /**
  * Generic component used to display wizards
@@ -169,17 +167,20 @@ export class WizardComponent implements OnInit {
    * @param stepperSelectionEvent The step change event
    */
   public onStepChanged(stepperSelectionEvent: StepperSelectionEvent): void {
+    // When backing to previous step, mark current step as not interacted to avoid input error issues
+    if (stepperSelectionEvent.previouslySelectedIndex > stepperSelectionEvent.selectedIndex) {
+      stepperSelectionEvent.previouslySelectedStep.interacted = false;
+    }
+
     this.currentStep = this.wizardConfiguration.steps[stepperSelectionEvent.selectedIndex];
 
     if (this.currentStep && this.currentStep.asyncFields) {
-      this.httpProjectService.getById(this.dashboardToken).subscribe((project: Project) => {
-        this.currentStep
-          .asyncFields((stepperSelectionEvent.selectedStep.stepControl as unknown) as FormGroup, this.currentStep)
-          .subscribe((formFields: FormField[]) => {
-            this.currentStep.fields = formFields;
-            this.stepperFormGroup.setControl(this.currentStep.key, this.formService.generateFormGroupForFields(formFields));
-          });
-      });
+      this.currentStep
+        .asyncFields((stepperSelectionEvent.selectedStep.stepControl as unknown) as FormGroup, this.currentStep)
+        .subscribe((formFields: FormField[]) => {
+          this.currentStep.fields = formFields;
+          this.stepperFormGroup.setControl(this.currentStep.key, this.formService.generateFormGroupForFields(formFields));
+        });
     }
   }
 
