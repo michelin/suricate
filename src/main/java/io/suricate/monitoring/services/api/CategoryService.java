@@ -74,8 +74,8 @@ public class CategoryService {
      *
      * @return The list of categories
      */
-    @Transactional
     @Cacheable("widget-categories")
+    @Transactional(readOnly = true)
     public Page<Category> getAll(String search, Pageable pageable) {
         return categoryRepository.findAll(new CategorySearchSpecification(search), pageable);
     }

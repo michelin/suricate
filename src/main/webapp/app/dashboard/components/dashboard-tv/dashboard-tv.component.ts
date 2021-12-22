@@ -48,16 +48,6 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   private unsubscribe: Subject<void> = new Subject<void>();
 
   /**
-   * The rotation token in the url
-   */
-  public rotationToken: string;
-
-  /**
-   * The project token in the url
-   */
-  public projectToken: string;
-
-  /**
    * The list of project rotations
    */
   public rotationProjects: RotationProject[];
@@ -87,26 +77,9 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    */
   public rotation: Rotation;
 
-  /**
-   * Count the seconds a dashboard is currently displayed in the rotation.
-   */
-  public rotationTimer = 0;
-
-  /**
-   * The percentage of time a dashboard is currently displayed in the rotation.
-   * Used by the progress bar.
-   */
-  public rotationTimerPercent = 0;
-
-  /**
-   * The timeout at the end of which, the rotation is performed
-   */
-  public rotationTimeout: NodeJS.Timeout;
-
-  /**
-   * The rotation timer interval result
-   */
-  public rotationTimerTimeout: NodeJS.Timeout;
+  public timer;
+  public timerPercentage;
+  public timerTimeout: NodeJS.Timeout;
 
   /**
    * The constructor
@@ -138,15 +111,11 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
 
     this.activatedRoute.queryParams.pipe(takeUntil(this.unsubscribe)).subscribe((queryParams: Params) => {
       if (queryParams['dashboard']) {
-        this.projectToken = queryParams['dashboard'];
-        this.initComponentWithProject().subscribe();
+        this.initComponentWithProject(queryParams['dashboard']);
       } else if (queryParams['rotation']) {
-        this.rotationToken = queryParams['rotation'];
-        this.initComponentWithRotation();
+        this.initComponentWithRotation(queryParams['rotation']);
       } else {
-        this.projectToken = null;
-        this.projectWidgets = null;
-        this.rotationToken = null;
+        this.rotation = this.project = this.projectWidgets = null;
       }
     });
   }
@@ -193,108 +162,26 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   /**
    * Initialise the component from the given project token
    */
-  private initComponentWithProject(): Observable<ProjectWidget[]> {
-    if (this.projectToken) {
-      this.isDashboardLoading = true;
+  public initComponentWithProject(projectToken: string): void {
+    this.isDashboardLoading = true;
 
-      return this.refreshProject(this.projectToken)
-        .pipe(flatMap(() => this.refreshProjectWidgets(this.projectToken)))
-        .pipe(
-          tap(
-            () => (this.isDashboardLoading = false),
-            () => (this.isDashboardLoading = false)
-          )
-        );
-    }
+    this.refreshProject(projectToken)
+      .pipe(flatMap(() => this.refreshProjectWidgets(projectToken)))
+      .subscribe(
+        () => (this.isDashboardLoading = false),
+        () => (this.isDashboardLoading = false)
+      );
   }
 
   /**
    * Initialise the component from the given rotation token
    */
-  private initComponentWithRotation(): void {
-    if (this.rotationToken) {
-      this.isDashboardLoading = true;
-
-      this.refreshRotation()
-        .pipe(flatMap(() => this.refreshProjectRotations()))
-        .subscribe(() => {
-          this.projectToken = this.rotationProjects[0].project.token;
-
-          this.initComponentWithProject().subscribe(() => {
-            this.startRotationTimerForRotation(0);
-
-            if (this.rotationProjects.length > 1) {
-              this.prepareRotation(0);
-            }
-          });
-        });
-    }
-  }
-
-  /**
-   * Refresh the list of project rotations
-   */
-  private refreshProjectRotations(): Observable<RotationProject[]> {
-    return this.httpRotationService
-      .getProjectRotationsByRotationToken(this.rotationToken)
-      .pipe(tap((rotationProjects: RotationProject[]) => (this.rotationProjects = rotationProjects)));
-  }
-
-  /**
-   * Run the rotation of the dashboards
-   * In X seconds, increments the rotation and display the next dashboard
-   *
-   * @param rotationIndex The index of the current project to display in the rotation
-   */
-  private prepareRotation(rotationIndex: number): void {
-    this.rotationTimeout = setTimeout(() => {
-      rotationIndex = rotationIndex === this.rotationProjects.length - 1 ? 0 : rotationIndex + 1;
-
-      this.projectToken = this.rotationProjects[rotationIndex].project.token;
-      this.initComponentWithProject().subscribe(() => {
-        this.startRotationTimerForRotation(rotationIndex);
-
-        this.prepareRotation(rotationIndex);
-      });
-    }, this.rotationProjects[rotationIndex].rotationSpeed * 1000);
-  }
-
-  /**
-   * Stop the rotation by deleting the rotation timeout
-   */
-  private stopRotate(): void {
-    if (this.rotationTimeout) {
-      clearTimeout(this.rotationTimeout);
-    }
-  }
-
-  /**
-   * Stop the rotation timer
-   */
-  private stopRotationTimer(): void {
-    if (this.rotationTimerTimeout) {
-      clearInterval(this.rotationTimerTimeout);
-    }
-  }
-
-  /**
-   * Start the rotation timer
-   * Follow the time during a dashboard is displayed before being rotated
-   * Used to display the progress bar on rotations
-   *
-   * @param rotationIndex The index of the current project to display in the rotation
-   */
-  private startRotationTimerForRotation(rotationIndex: number): void {
-    this.stopRotationTimer();
-    this.rotationTimer = 0;
-    this.rotationTimerPercent = 0;
-
-    const intervalRefreshMs = 150;
-    // Each Xms, update the progress bar
-    this.rotationTimerTimeout = setInterval(() => {
-      this.rotationTimer += intervalRefreshMs;
-      this.rotationTimerPercent = (this.rotationTimer * 100) / (this.rotationProjects[rotationIndex].rotationSpeed * 1000);
-    }, intervalRefreshMs);
+  private initComponentWithRotation(rotationToken: string): void {
+    this.isDashboardLoading = true;
+    this.refreshRotation(rotationToken).subscribe(
+      () => (this.isDashboardLoading = false),
+      () => (this.isDashboardLoading = false)
+    );
   }
 
   /**
@@ -309,8 +196,8 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   /**
    * Refresh the rotation
    */
-  private refreshRotation(): Observable<Rotation> {
-    return this.httpRotationService.getById(this.rotationToken).pipe(tap((rotation: Rotation) => (this.rotation = rotation)));
+  private refreshRotation(rotationToken: string): Observable<Rotation> {
+    return this.httpRotationService.getById(rotationToken).pipe(tap((rotation: Rotation) => (this.rotation = rotation)));
   }
 
   /**
@@ -336,9 +223,35 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    */
   public handlingDashboardDisconnect(): void {
     this.stopRotationTimer();
-    this.stopRotate();
     this.router.navigate(['/tv']);
     setTimeout(() => this.listenForConnection(), 500);
+  }
+
+  /**
+   * Perform the rotation from the event received by the child component
+   * through the web socket
+   *
+   * @param event The websocket event containing the next project to display
+   */
+  public performRotation(event: WebsocketUpdateEvent): void {
+    this.stopRotationTimer();
+    this.initComponentWithProject((event.content as Project).token);
+
+    this.timerPercentage = 100;
+    const timeBeforeNextRotation = (this.timer = (new Date(event.date).getTime() - new Date().getTime()) / 1000);
+    this.timerTimeout = setInterval(() => {
+      --this.timer;
+      this.timerPercentage = (this.timer * 100) / timeBeforeNextRotation;
+    }, 1000);
+  }
+
+  /**
+   * Stop the rotation timer
+   */
+  private stopRotationTimer(): void {
+    if (this.timerTimeout) {
+      clearInterval(this.timerTimeout);
+    }
   }
 
   /**
@@ -349,7 +262,6 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
     this.unsubscribe.complete();
 
     this.stopRotationTimer();
-    this.stopRotate();
 
     this.websocketService.disconnect();
   }

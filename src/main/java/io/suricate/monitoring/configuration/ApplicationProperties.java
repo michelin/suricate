@@ -32,10 +32,10 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
 /**
- * Hold the custom properties from "properties.yml" files
+ * Hold the custom properties from properties.yml files
  */
 @Configuration
-@PropertySource("classpath:application.yml")
+@PropertySource("classpath:application.properties")
 @ConfigurationProperties(prefix = "application", ignoreUnknownFields = false)
 @Getter
 @Setter

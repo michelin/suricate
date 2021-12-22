@@ -19,7 +19,6 @@
 package io.suricate.monitoring.controllers;
 
 import io.suricate.monitoring.configuration.swagger.ApiPageable;
-import io.suricate.monitoring.model.dto.api.ApplicationPropertiesDto;
 import io.suricate.monitoring.model.dto.api.category.CategoryParameterResponseDto;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.widgetconfiguration.WidgetConfigurationRequestDto;
@@ -27,8 +26,7 @@ import io.suricate.monitoring.model.dto.api.widgetconfiguration.WidgetConfigurat
 import io.suricate.monitoring.model.entities.CategoryParameter;
 import io.suricate.monitoring.services.CacheService;
 import io.suricate.monitoring.services.api.CategoryParametersService;
-import io.suricate.monitoring.services.mapper.CategoryParamMapper;
-import io.suricate.monitoring.services.properties.ApplicationPropertiesService;
+import io.suricate.monitoring.services.mapper.CategoryMapper;
 import io.suricate.monitoring.utils.exceptions.ObjectNotFoundException;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +55,7 @@ public class CategoryParametersController {
     /**
      * The category parameters mapper
      */
-    private final CategoryParamMapper categoryParamMapper;
+    private final CategoryMapper categoryMapper;
 
     /**
      * The cache service
@@ -68,15 +66,15 @@ public class CategoryParametersController {
      * Constructor
      *
      * @param categoryParametersService The category parameters services
-     * @param categoryParamMapper The category parameters mapper
+     * @param categoryMapper The category mapper
      * @param cacheService The cache service
      */
     @Autowired
     public CategoryParametersController(final CategoryParametersService categoryParametersService,
-                                        final CategoryParamMapper categoryParamMapper,
+                                        final CategoryMapper categoryMapper,
                                         final CacheService cacheService) {
         this.categoryParametersService = categoryParametersService;
-        this.categoryParamMapper = categoryParamMapper;
+        this.categoryMapper = categoryMapper;
         this.cacheService = cacheService;
     }
 
@@ -98,7 +96,7 @@ public class CategoryParametersController {
     public Page<CategoryParameterResponseDto> getAll(@ApiParam(name = "search", value = "Search keyword")
                                                      @RequestParam(value = "search", required = false) String search,
                                                      Pageable pageable) {
-        return this.categoryParametersService.getAll(search, pageable).map(categoryParamMapper::toCategoryParameterDTO);
+        return categoryParametersService.getAll(search, pageable).map(categoryMapper::toCategoryParameterDTO);
     }
 
     /**
@@ -118,7 +116,7 @@ public class CategoryParametersController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<CategoryParameterResponseDto> getOneByKey(@ApiParam(name = "key", value = "The configuration key", required = true)
                                                                       @PathVariable("key") final String key) {
-        Optional<CategoryParameter> configurationOptional = this.categoryParametersService.getOneByKey(key);
+        Optional<CategoryParameter> configurationOptional = categoryParametersService.getOneByKey(key);
 
         if (!configurationOptional.isPresent()) {
             throw new ObjectNotFoundException(CategoryParameter.class, key);
@@ -127,7 +125,7 @@ public class CategoryParametersController {
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(this.categoryParamMapper.toCategoryParameterDTO(configurationOptional.get()));
+            .body(categoryMapper.toCategoryParameterDTO(configurationOptional.get()));
     }
 
     /**

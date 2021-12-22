@@ -51,12 +51,12 @@ public class NashornWidgetSchedulerTest {
     /**
      * Thread scheduler scheduling the asynchronous task which will execute a Nashorn request
      */
-    private ScheduledThreadPoolExecutor scheduleNashornRequestExecutionThread;
+    private ScheduledThreadPoolExecutor nashornRequestExecutor;
 
     /**
      * Thread scheduler scheduling the asynchronous task which will wait for the Nashorn response
      */
-    private ScheduledThreadPoolExecutor scheduleNashornRequestResponseThread;
+    private ScheduledThreadPoolExecutor nashornRequestResponseExecutor;
 
     /**
      * For each widget instance, this map stores both Nashorn tasks : the task which will execute the widget
@@ -116,11 +116,11 @@ public class NashornWidgetSchedulerTest {
     public void before() throws IOException {
         this.nashornWidgetScheduler.init();
 
-        this.scheduleNashornRequestExecutionThread = (ScheduledThreadPoolExecutor) ReflectionTestUtils
-                .getField(nashornWidgetScheduler, "scheduleNashornRequestExecutionThread");
+        this.nashornRequestExecutor = (ScheduledThreadPoolExecutor) ReflectionTestUtils
+                .getField(nashornWidgetScheduler, "nashornRequestExecutor");
 
-        this.scheduleNashornRequestResponseThread = (ScheduledThreadPoolExecutor) ReflectionTestUtils
-                .getField(nashornWidgetScheduler, "scheduleNashornRequestResponseThread");
+        this.nashornRequestResponseExecutor = (ScheduledThreadPoolExecutor) ReflectionTestUtils
+                .getField(nashornWidgetScheduler, "nashornRequestResponseExecutor");
 
         this.nashornTasksByProjectWidgetId = (Map<Long, Pair<WeakReference<ScheduledFuture<NashornResponse>>, WeakReference<ScheduledFuture<Void>>>>) ReflectionTestUtils
                 .getField(nashornWidgetScheduler, "nashornTasksByProjectWidgetId");
@@ -131,14 +131,14 @@ public class NashornWidgetSchedulerTest {
     @Test
     @Transactional
     public void testCancelAndSchedule() throws InterruptedException {
-        assertThat(scheduleNashornRequestExecutionThread.getTaskCount()).isEqualTo(0);
-        assertThat(scheduleNashornRequestResponseThread.getTaskCount()).isEqualTo(0);
+        assertThat(nashornRequestExecutor.getTaskCount()).isEqualTo(0);
+        assertThat(nashornRequestResponseExecutor.getTaskCount()).isEqualTo(0);
         assertThat(widgetRepository.count()).isEqualTo(1);
 
         // Schedule widget
         NashornRequest nashornRequest = nashornService.getNashornRequestByProjectWidgetId(projectWidget.getId());
         nashornWidgetScheduler.cancelAndScheduleNashornRequest(nashornRequest);
-        assertThat(scheduleNashornRequestResponseThread.getTaskCount()).isGreaterThan(0L);
+        assertThat(nashornRequestResponseExecutor.getTaskCount()).isGreaterThan(0L);
 
         // Get running task
         WeakReference<ScheduledFuture<NashornResponse>> response = nashornTasksByProjectWidgetId.get(projectWidget.getId()).getKey();
@@ -156,7 +156,7 @@ public class NashornWidgetSchedulerTest {
         assertThat(newFuture).isNotEqualTo(future);
         Thread.sleep(2100);
         // Wait completion
-        while (scheduleNashornRequestResponseThread.getActiveCount() != 0) {
+        while (nashornRequestResponseExecutor.getActiveCount() != 0) {
         }
 
         Assert.assertNotNull(newFuture);
@@ -164,8 +164,8 @@ public class NashornWidgetSchedulerTest {
 
         // reinit
         nashornWidgetScheduler.init();
-        scheduleNashornRequestExecutionThread = (ScheduledThreadPoolExecutor) ReflectionTestUtils.getField(nashornWidgetScheduler, "scheduleNashornRequestExecutionThread");
-        scheduleNashornRequestResponseThread = (ScheduledThreadPoolExecutor) ReflectionTestUtils.getField(nashornWidgetScheduler, "scheduleNashornRequestResponseThread");
+        nashornRequestExecutor = (ScheduledThreadPoolExecutor) ReflectionTestUtils.getField(nashornWidgetScheduler, "nashornRequestExecutor");
+        nashornRequestResponseExecutor = (ScheduledThreadPoolExecutor) ReflectionTestUtils.getField(nashornWidgetScheduler, "nashornRequestResponseExecutor");
     }
 
     @Test

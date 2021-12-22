@@ -27,8 +27,8 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
+import { takeUntil, tap } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
 import { NgGridConfig, NgGridItemConfig } from 'angular2-grid';
 import * as Stomp from '@stomp/stompjs';
 import { Project } from '../../../shared/models/backend/project/project';
@@ -104,6 +104,12 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   public refreshAllProjectWidgets = new EventEmitter<void>();
 
   /**
+   * Use to tell to the parent component that it should rotate to the given project
+   */
+  @Output()
+  public rotationProjectEvent = new EventEmitter<WebsocketUpdateEvent>();
+
+  /**
    * Subject used to unsubscribe all the subscriptions to rotation web sockets
    */
   private unsubscribeRotationWebSocket: Subject<void> = new Subject<void>();
@@ -161,49 +167,49 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   ) {}
 
   /**
-   * Each time a value change, this function will be called
+   * On changes method
    *
-   * If a project is received, init web sockets for the project. If
-   * the project changes, then resets web sockets and reopens them
-   * with the new project token
-   *
-   * Additionally, if a project is received in case of a rotation, then
-   * open specific web sockets to start the rotation and receive the rotation
-   * events
+   * @param changes The change event
    */
   public ngOnChanges(changes: SimpleChanges): void {
-    // First time receiving a rotation
-    if (changes.rotation && changes.rotation.currentValue && !changes.rotation.previousValue) {
-      this.initRotationWebsockets();
+    // Rotation received
+    if (changes.rotation) {
+      if (changes.rotation.currentValue && !changes.rotation.previousValue) {
+        this.initRotationWebsockets();
+      }
     }
 
+    // Project received (from a rotation or not)
     if (changes.project) {
       if (!changes.project.previousValue) {
         // Inject this variable in the window scope because some widgets use it to init the js
         (window as any).page_loaded = true;
       }
 
-      this.project = changes.project.currentValue;
+      if (changes.project.currentValue) {
+        this.initGridStackOptions();
 
-      this.initGridStackOptions();
-
-      if (changes.project.previousValue) {
-        if (changes.project.previousValue.token !== changes.project.currentValue.token) {
-          this.resetProjectWebsockets();
+        // Do not add libs in the DOM at first view init
+        // Let the after view init method handle the first initialization
+        if (!changes.project.firstChange) {
           this.addExternalJSLibrariesToTheDOM();
         }
-      } else {
-        this.initProjectWebsockets();
+
+        if (!changes.project.previousValue) {
+          this.initProjectWebsockets();
+        } else {
+          if (changes.project.previousValue.token !== changes.project.currentValue.token) {
+            this.resetProjectWebsockets();
+          }
+        }
       }
     }
 
     if (changes.readOnly) {
-      this.readOnly = changes.readOnly.currentValue;
       this.initGridStackOptions();
     }
 
     if (changes.projectWidgets) {
-      this.projectWidgets = changes.projectWidgets.currentValue;
       this.initGridStackItems();
     }
   }
@@ -227,23 +233,25 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
    * and a callback which notify subscribers when the library is loaded.
    */
   public addExternalJSLibrariesToTheDOM() {
-    this.libraryService.init(this.project.librariesToken.length);
+    if (this.project) {
+      this.libraryService.init(this.project.librariesToken.length);
 
-    if (this.project.librariesToken.length > 0) {
-      this.project.librariesToken.forEach(token => {
-        const script: HTMLScriptElement = document.createElement('script');
-        script.type = 'text/javascript';
-        script.src = HttpAssetService.getContentUrl(token);
-        script.onload = () => this.libraryService.markScriptAsLoaded(token);
-        script.async = false;
+      if (this.project.librariesToken.length > 0) {
+        this.project.librariesToken.forEach(token => {
+          const script: HTMLScriptElement = document.createElement('script');
+          script.type = 'text/javascript';
+          script.src = HttpAssetService.getContentUrl(token);
+          script.onload = () => this.libraryService.markScriptAsLoaded(token);
+          script.async = false;
 
-        this.renderer.appendChild(this.externalJsLibrariesSpan.nativeElement, script);
-      });
-    }
+          this.renderer.appendChild(this.externalJsLibrariesSpan.nativeElement, script);
+        });
+      }
 
-    // No library to load
-    else {
-      this.libraryService.emitAreJSScriptsLoaded(true);
+      // No library to load
+      else {
+        this.libraryService.emitAreJSScriptsLoaded(true);
+      }
     }
   }
 
@@ -263,24 +271,26 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
    * Init the options for Grid Stack plugin
    */
   private initGridStackOptions(): void {
-    this.gridOptions = {
-      max_cols: this.project.gridProperties.maxColumn,
-      visible_cols: this.project.gridProperties.maxColumn,
-      min_cols: 1,
-      row_height: this.project.gridProperties.widgetHeight,
-      min_rows: 1,
-      margins: [4],
-      auto_resize: true,
-      draggable: false,
-      resizable: false
-    };
-
-    if (!this.readOnly) {
+    if (this.project) {
       this.gridOptions = {
-        ...this.gridOptions,
-        draggable: true,
-        resizable: true
+        max_cols: this.project.gridProperties.maxColumn,
+        visible_cols: this.project.gridProperties.maxColumn,
+        min_cols: 1,
+        row_height: this.project.gridProperties.widgetHeight,
+        min_rows: 1,
+        margins: [4],
+        auto_resize: true,
+        draggable: false,
+        resizable: false
       };
+
+      if (!this.readOnly) {
+        this.gridOptions = {
+          ...this.gridOptions,
+          draggable: true,
+          resizable: true
+        };
+      }
     }
   }
 
@@ -463,6 +473,10 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
       .pipe(takeUntil(this.unsubscribeRotationWebSocket))
       .subscribe((stompMessage: Stomp.Message) => {
         const event: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
+
+        if (event.type === WebsocketUpdateTypeEnum.ROTATE) {
+          this.rotationProjectEvent.emit(event);
+        }
 
         if (event.type === WebsocketUpdateTypeEnum.DISCONNECT) {
           this.disconnectFromWebsockets();

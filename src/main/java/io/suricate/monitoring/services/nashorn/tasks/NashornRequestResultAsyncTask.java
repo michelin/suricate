@@ -70,17 +70,17 @@ public class NashornRequestResultAsyncTask implements Callable<Void>{
     /**
      * The scheduled asynchronous task which will execute the Nashorn request executing the widget
      */
-    private ScheduledFuture<NashornResponse> scheduledNashornRequestTask;
+    private final ScheduledFuture<NashornResponse> scheduledNashornRequestTask;
 
     /**
      * The Nashorn request itself
      */
-    private NashornRequest nashornRequest;
+    private final NashornRequest nashornRequest;
 
     /**
      * The Nashorn requests scheduler
      */
-    private NashornRequestWidgetExecutionScheduler scheduler;
+    private final NashornRequestWidgetExecutionScheduler scheduler;
 
     /**
      * Retry template which will perform some retries on the widget update

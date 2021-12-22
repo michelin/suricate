@@ -103,11 +103,10 @@ public class CategoryController {
     @ApiPageable
     @GetMapping(value = "/v1/categories")
     @PreAuthorize("hasRole('ROLE_USER')")
-    @Transactional
     public Page<CategoryResponseDto> getCategories(@ApiParam(name = "search", value = "Search keyword")
                                                    @RequestParam(value = "search", required = false) String search,
                                                    Pageable pageable) {
-        return this.categoryService.getAll(search, pageable).map(categoryMapper::toCategoryDTO);
+        return this.categoryService.getAll(search, pageable).map(categoryMapper::toCategoryWithoutParametersDTO);
     }
 
     /**

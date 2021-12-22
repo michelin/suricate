@@ -7,7 +7,9 @@ import lombok.Setter;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -48,7 +50,7 @@ public class Rotation extends AbstractAuditingEntity<Long> {
      * The list of related rotations
      */
     @OneToMany(mappedBy = "rotation", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<RotationProject> rotationProjects = new LinkedHashSet<>();
+    private List<RotationProject> rotationProjects = new ArrayList<>();
 
     /**
      * The list of users of the rotation

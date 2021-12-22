@@ -38,9 +38,9 @@ import { RotationProject } from '../../../shared/models/backend/rotation-project
 import { MatDialog } from '@angular/material/dialog';
 import { RotationTvManagementDialogComponent } from '../tv-management-dialog/rotation-tv-management-dialog/rotation-tv-management-dialog.component';
 import { ProjectRotationUsersFormFieldsService } from '../../../shared/services/frontend/form-fields/project-rotation-users-form-fields/project-rotation-users-form-fields.service';
-import { flatMap, map, switchMap, tap } from 'rxjs/operators';
+import { flatMap, switchMap, tap } from 'rxjs/operators';
 import { HttpScreenService } from '../../../shared/services/backend/http-screen/http-screen.service';
-import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';
+import { RotationService } from '../../services/rotation/rotation.service';
 
 @Component({
   selector: 'suricate-rotation-detail',
@@ -89,6 +89,11 @@ export class RotationDetailComponent implements OnInit {
   public iconEnum = IconEnum;
 
   /**
+   * True if the rotation should be displayed readonly, false otherwise
+   */
+  public isReadOnly = true;
+
+  /**
    * Constructor
    *
    * @param router The router
@@ -109,6 +114,7 @@ export class RotationDetailComponent implements OnInit {
     private readonly matDialog: MatDialog,
     private readonly activatedRoute: ActivatedRoute,
     private readonly httpRotationService: HttpRotationService,
+    private readonly rotationService: RotationService,
     private readonly httpProjectService: HttpProjectService,
     private readonly httpScreenService: HttpScreenService,
     private readonly dialogService: DialogService,
@@ -126,7 +132,10 @@ export class RotationDetailComponent implements OnInit {
     this.rotationToken = this.activatedRoute.snapshot.params['rotationToken'];
 
     this.refreshRotation()
-      .pipe(flatMap(() => this.refreshProjectRotations()))
+      .pipe(
+        flatMap(() => this.isReadOnlyDashboard()),
+        flatMap(() => this.refreshProjectRotations())
+      )
       .subscribe(
         () => {
           this.isRotationLoading = false;
@@ -151,7 +160,7 @@ export class RotationDetailComponent implements OnInit {
           color: 'primary',
           variant: 'miniFab',
           tooltip: { message: 'rotation.update.dashboards' },
-          hidden: () => !this.rotationProjects,
+          hidden: () => this.isReadOnly || !this.rotationProjects,
           callback: () => this.displayRotationCreation()
         },
         {
@@ -159,6 +168,7 @@ export class RotationDetailComponent implements OnInit {
           color: 'primary',
           variant: 'miniFab',
           tooltip: { message: 'rotation.edit' },
+          hidden: () => this.isReadOnly,
           callback: () => this.openRotationFormSidenav()
         },
         {
@@ -166,6 +176,7 @@ export class RotationDetailComponent implements OnInit {
           color: 'primary',
           variant: 'miniFab',
           tooltip: { message: 'user.edit' },
+          hidden: () => this.isReadOnly,
           callback: () => this.openUserFormSidenav()
         },
         {
@@ -173,6 +184,7 @@ export class RotationDetailComponent implements OnInit {
           color: 'primary',
           variant: 'miniFab',
           tooltip: { message: 'screen.refresh' },
+          hidden: () => this.isReadOnly || !this.rotation || !this.rotationProjects,
           callback: () => this.refreshConnectedScreens()
         },
         {
@@ -180,6 +192,7 @@ export class RotationDetailComponent implements OnInit {
           color: 'primary',
           variant: 'miniFab',
           tooltip: { message: 'tv.view' },
+          hidden: () => !this.rotation || !this.rotationProjects,
           callback: () => this.redirectToTvView()
         },
         {
@@ -187,7 +200,7 @@ export class RotationDetailComponent implements OnInit {
           color: 'primary',
           variant: 'miniFab',
           tooltip: { message: 'screen.management' },
-          hidden: () => !this.rotation || !this.rotationProjects,
+          hidden: () => this.isReadOnly || !this.rotation || !this.rotationProjects,
           callback: () => this.openScreenManagementDialog()
         },
         {
@@ -195,6 +208,7 @@ export class RotationDetailComponent implements OnInit {
           color: 'warn',
           variant: 'miniFab',
           tooltip: { message: 'rotation.delete' },
+          hidden: () => this.isReadOnly,
           callback: () => this.deleteDashboard()
         }
       ]
@@ -206,6 +220,15 @@ export class RotationDetailComponent implements OnInit {
    */
   private refreshRotation(): Observable<Rotation> {
     return this.httpRotationService.getById(this.rotationToken).pipe(tap((rotation: Rotation) => (this.rotation = rotation)));
+  }
+
+  /**
+   * Check if the dashboard should be displayed as readonly
+   */
+  private isReadOnlyDashboard(): Observable<boolean> {
+    return this.rotationService
+      .shouldDisplayedReadOnly(this.rotationToken)
+      .pipe(tap((isReadonly: boolean) => (this.isReadOnly = isReadonly)));
   }
 
   /**

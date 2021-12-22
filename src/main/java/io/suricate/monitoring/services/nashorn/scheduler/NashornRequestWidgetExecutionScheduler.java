@@ -24,7 +24,6 @@ import io.suricate.monitoring.model.entities.ProjectWidget;
 import io.suricate.monitoring.model.enums.WidgetStateEnum;
 import io.suricate.monitoring.services.api.ProjectWidgetService;
 import io.suricate.monitoring.services.api.WidgetService;
-import io.suricate.monitoring.services.nashorn.services.DashboardScheduleService;
 import io.suricate.monitoring.services.nashorn.services.NashornService;
 import io.suricate.monitoring.services.nashorn.tasks.NashornRequestResultAsyncTask;
 import io.suricate.monitoring.services.nashorn.tasks.NashornRequestWidgetExecutionAsyncTask;
@@ -38,8 +37,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-
 import org.springframework.transaction.annotation.Transactional;
+
 import java.lang.ref.WeakReference;
 import java.util.Date;
 import java.util.List;
@@ -66,38 +65,38 @@ public class NashornRequestWidgetExecutionScheduler {
     /**
      * The Spring boot application context
      */
-    private ApplicationContext applicationContext;
+    private final ApplicationContext applicationContext;
 
     /**
      * Thread scheduler scheduling the asynchronous task which will execute a Nashorn request
      */
-    private ScheduledThreadPoolExecutor scheduleNashornRequestExecutionThread;
+    private ScheduledThreadPoolExecutor nashornRequestExecutor;
 
     /**
      * Thread scheduler scheduling the asynchronous task which will wait for the Nashorn response
      */
-    private ScheduledThreadPoolExecutor scheduleNashornRequestResponseThread;
+    private ScheduledThreadPoolExecutor nashornRequestResponseExecutor;
 
     /**
      * For each widget instance, this map stores both Nashorn tasks : the task which will execute the widget
      * and the task which will wait for the response
      */
-    private Map<Long, Pair<WeakReference<ScheduledFuture<NashornResponse>>, WeakReference<ScheduledFuture<Void>>>> nashornTasksByProjectWidgetId = new ConcurrentHashMap<>();
+    private final Map<Long, Pair<WeakReference<ScheduledFuture<NashornResponse>>, WeakReference<ScheduledFuture<Void>>>> nashornTasksByProjectWidgetId = new ConcurrentHashMap<>();
 
     /**
      * The project widget service
      */
-    private ProjectWidgetService projectWidgetService;
+    private final ProjectWidgetService projectWidgetService;
 
     /**
      * The nashorn service
      */
-    private NashornService nashornService;
+    private final NashornService nashornService;
 
     /**
      * The string encryptor used to encrypt/decrypt the encrypted/decrypted secret properties
      */
-    private StringEncryptor stringEncryptor;
+    private final StringEncryptor stringEncryptor;
 
     /**
      * Constructor
@@ -125,19 +124,19 @@ public class NashornRequestWidgetExecutionScheduler {
     public void init() {
         LOGGER.debug("Initializing the Nashorn scheduler");
 
-        if (scheduleNashornRequestExecutionThread != null) {
-            scheduleNashornRequestExecutionThread.shutdownNow();
+        if (nashornRequestExecutor != null) {
+            nashornRequestExecutor.shutdownNow();
         }
 
-        scheduleNashornRequestExecutionThread = (ScheduledThreadPoolExecutor) Executors.newScheduledThreadPool(EXECUTOR_POOL_SIZE);
-        scheduleNashornRequestExecutionThread.setRemoveOnCancelPolicy(true);
+        nashornRequestExecutor = (ScheduledThreadPoolExecutor) Executors.newScheduledThreadPool(EXECUTOR_POOL_SIZE);
+        nashornRequestExecutor.setRemoveOnCancelPolicy(true);
 
-        if (scheduleNashornRequestResponseThread != null) {
-            scheduleNashornRequestResponseThread.shutdownNow();
+        if (nashornRequestResponseExecutor != null) {
+            nashornRequestResponseExecutor.shutdownNow();
         }
 
-        scheduleNashornRequestResponseThread = (ScheduledThreadPoolExecutor) Executors.newScheduledThreadPool(EXECUTOR_POOL_SIZE);
-        scheduleNashornRequestResponseThread.setRemoveOnCancelPolicy(true);
+        nashornRequestResponseExecutor = (ScheduledThreadPoolExecutor) Executors.newScheduledThreadPool(EXECUTOR_POOL_SIZE);
+        nashornRequestResponseExecutor.setRemoveOnCancelPolicy(true);
 
         nashornTasksByProjectWidgetId.clear();
 
@@ -179,7 +178,7 @@ public class NashornRequestWidgetExecutionScheduler {
      * @param startNashornRequestNow Should the Nashorn request starts now or from the widget configured delay
      */
     public void schedule(final NashornRequest nashornRequest, final boolean startNashornRequestNow) {
-        if (nashornRequest == null || scheduleNashornRequestExecutionThread == null || scheduleNashornRequestResponseThread == null) {
+        if (nashornRequest == null || nashornRequestExecutor == null || nashornRequestResponseExecutor == null) {
             return;
         }
 
@@ -209,7 +208,7 @@ public class NashornRequestWidgetExecutionScheduler {
 
         LOGGER.debug("The Nashorn request of the widget instance {} will start in {} second(s)", nashornRequest.getProjectWidgetId(), nashornRequestExecutionDelay);
 
-        ScheduledFuture<NashornResponse> scheduledNashornRequestExecutionTask = scheduleNashornRequestExecutionThread
+        ScheduledFuture<NashornResponse> scheduledNashornRequestExecutionTask = nashornRequestExecutor
                 .schedule(new NashornRequestWidgetExecutionAsyncTask(nashornRequest, stringEncryptor, widgetParameters),
                         nashornRequestExecutionDelay,
                         TimeUnit.SECONDS);
@@ -217,7 +216,7 @@ public class NashornRequestWidgetExecutionScheduler {
         NashornRequestResultAsyncTask nashornRequestResultAsyncTask = applicationContext
                 .getBean(NashornRequestResultAsyncTask.class, scheduledNashornRequestExecutionTask, nashornRequest, this);
 
-        ScheduledFuture<Void> scheduledNashornRequestResponseTask = scheduleNashornRequestResponseThread
+        ScheduledFuture<Void> scheduledNashornRequestResponseTask = nashornRequestResponseExecutor
                 .schedule(nashornRequestResultAsyncTask, nashornRequestExecutionDelay, TimeUnit.SECONDS);
 
         nashornTasksByProjectWidgetId.put(nashornRequest.getProjectWidgetId(), ImmutablePair.of(

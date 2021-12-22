@@ -4,10 +4,16 @@ import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 import io.suricate.monitoring.model.dto.api.rotation.RotationResponseDto;
+import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
 import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
 import io.suricate.monitoring.model.dto.websocket.WebsocketClient;
 import io.suricate.monitoring.model.entities.Rotation;
+import io.suricate.monitoring.model.entities.RotationProject;
 import io.suricate.monitoring.model.enums.UpdateType;
+import io.suricate.monitoring.services.api.RotationService;
+import io.suricate.monitoring.services.mapper.ProjectMapper;
+import io.suricate.monitoring.services.tasks.RotationAsyncTask;
+import org.apache.commons.lang3.tuple.Pair;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Lazy;
@@ -15,9 +21,10 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.lang.ref.WeakReference;
+import java.time.Instant;
+import java.util.*;
+import java.util.concurrent.*;
 
 /**
  * Manage the rotation messaging through websockets
@@ -29,6 +36,11 @@ public class RotationWebSocketService {
      * Class logger
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(RotationWebSocketService.class);
+
+    /**
+     * The number of executor
+     */
+    private static final int EXECUTOR_POOL_SIZE = 60;
 
     /**
      * The stomp websocket message template
@@ -43,12 +55,31 @@ public class RotationWebSocketService {
     private final Multimap<String, WebsocketClient> websocketClientByRotationToken = Multimaps.synchronizedListMultimap(ArrayListMultimap.create());
 
     /**
+     * Store the rotation tasks by screen code
+     */
+    private final Map<String, WeakReference<ScheduledFuture<Void>>> rotationTasksByScreenCode = new ConcurrentHashMap<>();
+
+    /**
+     * Rotation executor
+     */
+    private final ScheduledThreadPoolExecutor rotationExecutor;
+
+    /**
+     * The project mapper
+     */
+    private final ProjectMapper projectMapper;
+
+    /**
      * Constructor
      *
      * @param simpMessagingTemplate The stomp websocket message template
      */
-    public RotationWebSocketService(final SimpMessagingTemplate simpMessagingTemplate) {
+    public RotationWebSocketService(final SimpMessagingTemplate simpMessagingTemplate,
+                                    final ProjectMapper projectMapper) {
         this.simpMessagingTemplate = simpMessagingTemplate;
+        this.projectMapper = projectMapper;
+        this.rotationExecutor = (ScheduledThreadPoolExecutor) Executors.newScheduledThreadPool(EXECUTOR_POOL_SIZE);
+        this.rotationExecutor.setRemoveOnCancelPolicy(true);
     }
 
     /**
@@ -127,7 +158,38 @@ public class RotationWebSocketService {
      * @param websocketClient The related websocket client
      */
     public void addClientToRotation(final Rotation rotation, final WebsocketClient websocketClient) {
-        this.websocketClientByRotationToken.put(rotation.getToken(), websocketClient);
+        websocketClientByRotationToken.put(rotation.getToken(), websocketClient);
+
+        scheduleRotation(rotation, 0, websocketClient.getScreenCode());
+    }
+
+    /**
+     * Start the rotation
+     *
+     * @param rotation The rotation
+     * @param currentIndex The current index of the dashboard to display
+     * @param screenCode The screen code
+     */
+    public void scheduleRotation(Rotation rotation, Integer currentIndex, String screenCode) {
+        RotationProject rotationProject = rotation.getRotationProjects().get(currentIndex);
+
+        LOGGER.debug("Rotating to dashboard {} for screen {}", rotationProject.getProject().getId(), screenCode);
+
+        sendEventToScreenRotationSubscriber(rotation.getToken(), screenCode,
+                UpdateEvent.builder()
+                        .type(UpdateType.ROTATE)
+                        .content(projectMapper.toProjectDTO(rotationProject.getProject()))
+                        // Send the date of the next rotation
+                        .date(Date.from(Instant.now().plusSeconds(rotationProject.getRotationSpeed())))
+                        .build());
+
+        LOGGER.debug("Scheduling a new rotation task for screen {} in {}s", screenCode, rotationProject.getRotationSpeed());
+
+        RotationAsyncTask rotationAsyncTask = new RotationAsyncTask(rotation, currentIndex, screenCode, this);
+
+        ScheduledFuture<Void> scheduledRotationAsyncTask = rotationExecutor.schedule(rotationAsyncTask, rotationProject.getRotationSpeed(), TimeUnit.SECONDS);
+
+        rotationTasksByScreenCode.put(screenCode, new WeakReference<>(scheduledRotationAsyncTask));
     }
 
     /**
@@ -136,7 +198,23 @@ public class RotationWebSocketService {
      * @param websocketClient The websocket to remove
      */
     public void removeClientFromRotation(WebsocketClient websocketClient) {
-        this.websocketClientByRotationToken.remove(websocketClient.getRotationToken(), websocketClient);
+        websocketClientByRotationToken.remove(websocketClient.getRotationToken(), websocketClient);
+
+        cancelRotationExecution(websocketClient.getScreenCode());
+    }
+
+    private void cancelRotationExecution(String screenCode) {
+        WeakReference<ScheduledFuture<Void>> rotationScheduledTask = rotationTasksByScreenCode.get(screenCode);
+
+        if (rotationScheduledTask != null) {
+            ScheduledFuture<Void> scheduledFutureRotationTask = rotationScheduledTask.get();
+
+            if (scheduledFutureRotationTask != null && (!scheduledFutureRotationTask.isDone() || !scheduledFutureRotationTask.isCancelled())) {
+                LOGGER.debug("Cancelling the future rotation execution for screen {} ", screenCode);
+
+                scheduledFutureRotationTask.cancel(true);
+            }
+        }
     }
 
     /**
@@ -146,7 +224,7 @@ public class RotationWebSocketService {
      * @return The websocket
      */
     public Optional<WebsocketClient> getWebsocketClientsBySessionId(final String sessionId) {
-        return this.websocketClientByRotationToken.values()
+        return websocketClientByRotationToken.values()
                 .stream()
                 .filter(websocketClient -> websocketClient.getSessionId().equals(sessionId))
                 .findFirst();
@@ -165,7 +243,7 @@ public class RotationWebSocketService {
     /**
      * Method that force the reload of every connected clients for a project
      *
-     * @param projectToken The project token
+     * @param rotationToken The rotation token
      */
     public void reloadAllConnectedClientsToARotation(final String rotationToken) {
         if (!this.getWebsocketClientsByRotationToken(rotationToken).isEmpty()) {

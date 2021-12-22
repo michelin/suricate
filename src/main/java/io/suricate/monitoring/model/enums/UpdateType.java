@@ -26,6 +26,7 @@ public enum UpdateType {
     CONNECT_SINGLE_DASHBOARD,
     // Rotation events
     CONNECT_ROTATION,
+    ROTATE,
     // Shared events
     RELOAD,
     DISPLAY_NUMBER,

@@ -12,7 +12,7 @@
   (onResizeStop)="updateProjectWidgetsPosition()"
   (onDragStop)="updateProjectWidgetsPosition()"
 >
-  <span [innerHTML]="'<style>' + project.gridProperties.cssStyle + '</style>' | safeHtml"></span>
+  <span [innerHTML]="'<style>' + project?.gridProperties.cssStyle + '</style>' | safeHtml"></span>
   <span #externalJsLibraries></span>
 
   <suricate-dashboard-screen-widget

@@ -19,9 +19,6 @@
 package io.suricate.monitoring.controllers;
 
 import io.suricate.monitoring.model.dto.api.ApplicationPropertiesDto;
-import io.suricate.monitoring.services.CacheService;
-import io.suricate.monitoring.services.api.CategoryParametersService;
-import io.suricate.monitoring.services.mapper.CategoryParamMapper;
 import io.suricate.monitoring.services.properties.ApplicationPropertiesService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

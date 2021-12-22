@@ -26,6 +26,7 @@ export enum WebsocketUpdateTypeEnum {
   CONNECT_SINGLE_DASHBOARD = 'CONNECT_SINGLE_DASHBOARD',
   // Rotation events
   CONNECT_ROTATION = 'CONNECT_ROTATION',
+  ROTATE = 'ROTATE',
   // Shared events
   DISPLAY_NUMBER = 'DISPLAY_NUMBER',
   RELOAD = 'RELOAD',

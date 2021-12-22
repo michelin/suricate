@@ -60,7 +60,7 @@ public abstract class WidgetMapper {
      */
     @Named("toWidgetWithoutCategoryParametersDTO")
     @Mapping(target = "imageToken", expression = "java( widget.getImage() != null ? io.suricate.monitoring.utils.IdUtils.encrypt(widget.getImage().getId()) : null )")
-    @Mapping(target = "category", qualifiedByName = "toCategoryWithoutCategoryParametersDTO")
+    @Mapping(target = "category", qualifiedByName = "toCategoryWithoutParametersDTO")
     @Mapping(target = "repositoryId", source = "widget.repository.id")
     @Mapping(target = "params", source = "widget.widgetParams", qualifiedByName = "toWidgetParameterDTO")
     public abstract WidgetResponseDto toWidgetWithoutCategoryParametersDTO(Widget widget);

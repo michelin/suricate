@@ -168,6 +168,4 @@ public class SwaggerConfiguration {
         authorizationScopes[0] = authorizationScope;
         return Collections.singletonList(new SecurityReference("Bearer", authorizationScopes));
     }
-
-
 }
