@@ -1,16 +1,17 @@
-import { TestBed } from '@angular/core/testing';
+import { inject, TestBed } from '@angular/core/testing';
 
 import { RotationService } from './rotation.service';
+import { MockModule } from '../../../mock/mock.module';
 
 describe('RotationService', () => {
-  let service: RotationService;
-
   beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(RotationService);
+    TestBed.configureTestingModule({
+      imports: [MockModule],
+      providers: [RotationService]
+    });
   });
 
-  it('should be created', () => {
+  it('should create', inject([RotationService], (service: RotationService) => {
     expect(service).toBeTruthy();
-  });
+  }));
 });
