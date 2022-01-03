@@ -171,7 +171,7 @@ public class RotationWebSocketService {
      * @param screenCode The screen code
      */
     public void scheduleRotation(Rotation rotation, Integer currentIndex, String screenCode) {
-        RotationProject rotationProject = rotation.getRotationProjects().get(currentIndex);
+        RotationProject rotationProject = new ArrayList<>(rotation.getRotationProjects()).get(currentIndex);
 
         LOGGER.debug("Rotating to dashboard {} for screen {}", rotationProject.getProject().getId(), screenCode);
 

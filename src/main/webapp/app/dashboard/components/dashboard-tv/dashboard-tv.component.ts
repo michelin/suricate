@@ -111,7 +111,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
 
     this.activatedRoute.queryParams.pipe(takeUntil(this.unsubscribe)).subscribe((queryParams: Params) => {
       if (queryParams['dashboard']) {
-        this.initComponentWithProject(queryParams['dashboard']);
+        this.initComponentWithProject(queryParams['dashboard']).subscribe();
       } else if (queryParams['rotation']) {
         this.initComponentWithRotation(queryParams['rotation']);
       } else {
@@ -162,14 +162,16 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   /**
    * Initialise the component from the given project token
    */
-  public initComponentWithProject(projectToken: string): void {
+  public initComponentWithProject(projectToken: string): Observable<ProjectWidget[]> {
     this.isDashboardLoading = true;
 
-    this.refreshProject(projectToken)
+    return this.refreshProject(projectToken)
       .pipe(flatMap(() => this.refreshProjectWidgets(projectToken)))
-      .subscribe(
-        () => (this.isDashboardLoading = false),
-        () => (this.isDashboardLoading = false)
+      .pipe(
+        tap(
+          () => (this.isDashboardLoading = false),
+          () => (this.isDashboardLoading = false)
+        )
       );
   }
 
@@ -235,14 +237,15 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    */
   public performRotation(event: WebsocketUpdateEvent): void {
     this.stopRotationTimer();
-    this.initComponentWithProject((event.content as Project).token);
-
     this.timerPercentage = 100;
-    const timeBeforeNextRotation = (this.timer = (new Date(event.date).getTime() - new Date().getTime()) / 1000);
-    this.timerTimeout = setInterval(() => {
-      --this.timer;
-      this.timerPercentage = (this.timer * 100) / timeBeforeNextRotation;
-    }, 1000);
+
+    this.initComponentWithProject((event.content as Project).token).subscribe(() => {
+      const timeBeforeNextRotation = (this.timer = (new Date(event.date).getTime() - new Date().getTime()) / 1000);
+      this.timerTimeout = setInterval(() => {
+        --this.timer;
+        this.timerPercentage = (this.timer * 100) / timeBeforeNextRotation;
+      }, 1000);
+    });
   }
 
   /**

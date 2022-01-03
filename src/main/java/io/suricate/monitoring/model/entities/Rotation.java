@@ -50,7 +50,7 @@ public class Rotation extends AbstractAuditingEntity<Long> {
      * The list of related rotations
      */
     @OneToMany(mappedBy = "rotation", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<RotationProject> rotationProjects = new ArrayList<>();
+    private Set<RotationProject> rotationProjects = new LinkedHashSet<>();
 
     /**
      * The list of users of the rotation
