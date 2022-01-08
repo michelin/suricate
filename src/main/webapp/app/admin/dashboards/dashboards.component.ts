@@ -23,7 +23,7 @@ import { ProjectRequest } from '../../shared/models/backend/project/project-requ
 import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
 import { FormField } from '../../shared/models/frontend/form/form-field';
 import { ProjectFormFieldsService } from '../../shared/services/frontend/form-fields/project-form-fields/project-form-fields.service';
-import { ProjectRotationUsersFormFieldsService } from '../../shared/services/frontend/form-fields/project-rotation-users-form-fields/project-rotation-users-form-fields.service';
+import { ProjectUsersFormFieldsService } from '../../shared/services/frontend/form-fields/project-users-form-fields/project-users-form-fields.service';
 import { ValueChangedEvent } from '../../shared/models/frontend/form/value-changed-event';
 import { EMPTY, Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -44,13 +44,13 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
    *
    * @param httpProjectService Manage the http calls for a project
    * @param projectFormFieldsService Build form fields for a project
-   * @param projectUsersFormFieldsService Build form fields for rotation users
+   * @param projectUsersFormFieldsService Build form fields for projects users
    * @param injector Manage the injection of services
    */
   constructor(
     private readonly httpProjectService: HttpProjectService,
     private readonly projectFormFieldsService: ProjectFormFieldsService,
-    private readonly projectUsersFormFieldsService: ProjectRotationUsersFormFieldsService,
+    private readonly projectUsersFormFieldsService: ProjectUsersFormFieldsService,
     protected injector: Injector
   ) {
     super(httpProjectService, injector);

@@ -28,9 +28,11 @@ import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetResponseD
 import io.suricate.monitoring.model.dto.api.user.UserResponseDto;
 import io.suricate.monitoring.model.dto.websocket.WebsocketClient;
 import io.suricate.monitoring.model.entities.Project;
+import io.suricate.monitoring.model.entities.ProjectGrid;
 import io.suricate.monitoring.model.entities.ProjectWidget;
 import io.suricate.monitoring.model.entities.User;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
+import io.suricate.monitoring.services.api.ProjectGridService;
 import io.suricate.monitoring.services.api.ProjectService;
 import io.suricate.monitoring.services.api.ProjectWidgetService;
 import io.suricate.monitoring.services.api.UserService;
@@ -60,9 +62,11 @@ import javax.annotation.security.PermitAll;
 import java.io.IOException;
 import java.net.URI;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Project controller
@@ -80,6 +84,11 @@ public class ProjectController {
      * Project service
      */
     private final ProjectService projectService;
+
+    /**
+     * Project grid service
+     */
+    private final ProjectGridService projectGridService;
 
     /**
      * The project widget service
@@ -114,15 +123,17 @@ public class ProjectController {
     /**
      * Constructor for dependency injection
      *
-     * @param projectService            The project service to inject
+     * @param projectService            The project service
+     * @param projectGridService        The project grid service
      * @param projectWidgetService      The project widget service
-     * @param userService               The user service to inject
+     * @param userService               The user service
      * @param projectMapper             The project mapper
      * @param projectWidgetMapper       The project widget mapper
      * @param dashboardWebSocketService The dashboard websocket service
      */
     @Autowired
     public ProjectController(final ProjectService projectService,
+                             final ProjectGridService projectGridService,
                              @Lazy final ProjectWidgetService projectWidgetService,
                              final UserService userService,
                              final ProjectMapper projectMapper,
@@ -130,6 +141,7 @@ public class ProjectController {
                              final UserMapper userMapper,
                              final DashboardWebSocketService dashboardWebSocketService) {
         this.projectService = projectService;
+        this.projectGridService = projectGridService;
         this.projectWidgetService = projectWidgetService;
         this.userService = userService;
         this.projectMapper = projectMapper;
@@ -186,6 +198,15 @@ public class ProjectController {
 
         Project project = this.projectService.createProject(userOptional.get(),
                 this.projectMapper.toProjectEntity(projectRequestDto));
+
+        List<ProjectGrid> projectGrids = new ArrayList<>();
+        for (int i = 0; i < projectRequestDto.getGridNumber(); i++) {
+            ProjectGrid newProjectGrid = new ProjectGrid();
+            newProjectGrid.setTime(30);
+            newProjectGrid.setProject(project);
+            projectGrids.add(newProjectGrid);
+        }
+        project.getGrids().addAll(projectGridService.createProjectGrid(projectGrids));
 
         URI resourceLocation = ServletUriComponentsBuilder
             .fromCurrentContextPath()
@@ -261,7 +282,7 @@ public class ProjectController {
         }
 
         this.projectService.updateProject(project, projectRequestDto.getName(), projectRequestDto.getWidgetHeight(),
-            projectRequestDto.getMaxColumn(), projectRequestDto.getCssStyle());
+            projectRequestDto.getMaxColumn(), projectRequestDto.getGridNumber(), projectRequestDto.getCssStyle());
 
         return ResponseEntity.noContent().build();
     }
@@ -320,7 +341,7 @@ public class ProjectController {
     })
     @DeleteMapping(value = "/v1/projects/{projectToken}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Void> deleteOneById(@ApiIgnore OAuth2Authentication authentication,
+    public ResponseEntity<Void> deleteProjectById(@ApiIgnore OAuth2Authentication authentication,
                                               @ApiParam(name = "projectToken", value = "The project token", required = true)
                                               @PathVariable("projectToken") String projectToken) {
         Optional<Project> projectOptional = this.projectService.getOneByToken(projectToken);
@@ -334,6 +355,48 @@ public class ProjectController {
         }
 
         this.projectService.deleteProject(projectOptional.get());
+
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * Delete a given grid of a project
+     *
+     * @param authentication The connected user
+     * @param projectToken   The project token to delete
+     * @param gridId         The grid id
+     * @return A void response entity
+     */
+    @ApiOperation(value = "Delete a grid by the grid id")
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "Project deleted"),
+            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
+            @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class)
+    })
+    @DeleteMapping(value = "/v1/projects/{projectToken}/{gridId}")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<Void> deleteGridById(@ApiIgnore OAuth2Authentication authentication,
+                                               @ApiParam(name = "projectToken", value = "The project token", required = true)
+                                               @PathVariable("projectToken") String projectToken,
+                                               @ApiParam(name = "gridId", value = "The grid id", required = true)
+                                               @PathVariable("gridId") Long gridId) {
+        Optional<Project> projectOptional = this.projectService.getOneByToken(projectToken);
+
+        if (!projectOptional.isPresent()) {
+            throw new ObjectNotFoundException(Project.class, projectToken);
+        }
+
+        Project project = projectOptional.get();
+        if (project.getGrids().stream().noneMatch(grid -> grid.getId().equals(gridId))) {
+            throw new ObjectNotFoundException(ProjectGrid.class, gridId);
+        }
+
+        if (!this.projectService.isConnectedUserCanAccessToProject(project, authentication.getUserAuthentication())) {
+            throw new ApiException(ProjectController.USER_NOT_ALLOWED, ApiErrorEnum.NOT_AUTHORIZED);
+        }
+
+        this.projectGridService.deleteByProjectIdAndId(project.getId(), gridId);
 
         return ResponseEntity.noContent().build();
     }
@@ -405,6 +468,46 @@ public class ProjectController {
     }
 
     /**
+     * Get the list of project widgets for a specific project grid
+     */
+    @ApiOperation(value = "Get the full list of project widgets for a specific project grid", response = ProjectWidgetResponseDto.class, nickname = "getProjectWidgetsForProjectAndGrid")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok", response = ProjectWidgetResponseDto.class, responseContainer = "List"),
+            @ApiResponse(code = 204, message = "No Content"),
+            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
+    })
+    @GetMapping(value = "/v1/projects/{projectToken}/{gridId}/projectWidgets")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<List<ProjectWidgetResponseDto>> getProjectWidgetsForProjectAndGrid(@ApiIgnore OAuth2Authentication authentication,
+                                                                                             @ApiParam(name = "projectToken", value = "The project token", required = true)
+                                                                                             @PathVariable("projectToken") String projectToken,
+                                                                                             @ApiParam(name = "gridId", value = "The grid id", required = true)
+                                                                                             @PathVariable("gridId") Long gridId) {
+        Optional<Project> projectOptional = this.projectService.getOneByToken(projectToken);
+        if (!projectOptional.isPresent()) {
+            throw new ObjectNotFoundException(Project.class, projectToken);
+        }
+
+        Project project = projectOptional.get();
+        if (project.getGrids().stream().noneMatch(grid -> grid.getId().equals(gridId))) {
+            throw new ObjectNotFoundException(ProjectGrid.class, gridId);
+        }
+
+        if (!this.projectService.isConnectedUserCanAccessToProject(project, authentication)) {
+            throw new ApiException(ProjectController.USER_NOT_ALLOWED, ApiErrorEnum.NOT_AUTHORIZED);
+        }
+
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(this.projectWidgetMapper.toProjectWidgetsDTOs(project.getWidgets()
+                        .stream()
+                        .filter(widget -> widget.getProjectGrid().getId().equals(gridId))
+                        .collect(Collectors.toList())));
+    }
+
+    /**
      * Add widget into the dashboard
      *
      * @param authentication          The connected user
@@ -419,11 +522,13 @@ public class ProjectController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
         @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class)
     })
-    @PostMapping(value = "/v1/projects/{projectToken}/projectWidgets")
+    @PostMapping(value = "/v1/projects/{projectToken}/{gridId}/projectWidgets")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ProjectWidgetResponseDto> addProjectWidgetToProject(@ApiIgnore OAuth2Authentication authentication,
                                                                               @ApiParam(name = "projectToken", value = "The project token", required = true)
                                                                               @PathVariable("projectToken") String projectToken,
+                                                                              @ApiParam(name = "gridId", value = "The grid id", required = true)
+                                                                              @PathVariable("gridId") Long gridId,
                                                                               @ApiParam(name = "projectWidgetDto", value = "The project widget info's", required = true)
                                                                               @RequestBody ProjectWidgetRequestDto projectWidgetRequestDto) {
         Optional<Project> projectOptional = this.projectService.getOneByToken(projectToken);
@@ -432,11 +537,15 @@ public class ProjectController {
         }
 
         Project project = projectOptional.get();
+        if (project.getGrids().stream().noneMatch(grid -> grid.getId().equals(gridId))) {
+            throw new ObjectNotFoundException(ProjectGrid.class, gridId);
+        }
+
         if (!this.projectService.isConnectedUserCanAccessToProject(project, authentication)) {
             throw new ApiException(ProjectController.USER_NOT_ALLOWED, ApiErrorEnum.NOT_AUTHORIZED);
         }
 
-        ProjectWidget projectWidget = this.projectWidgetMapper.toProjectWidgetEntity(projectWidgetRequestDto, projectToken);
+        ProjectWidget projectWidget = this.projectWidgetMapper.toProjectWidgetEntity(projectWidgetRequestDto, projectToken, gridId);
         this.projectWidgetService.addWidgetInstanceToProject(projectWidget);
 
         URI resourceLocation = ServletUriComponentsBuilder

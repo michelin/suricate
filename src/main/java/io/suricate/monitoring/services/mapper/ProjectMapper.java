@@ -33,7 +33,8 @@ import java.util.List;
 @Mapper(
         componentModel = "spring",
         uses = {
-                AssetMapper.class
+            AssetMapper.class,
+            ProjectGridMapper.class
         })
 public abstract class ProjectMapper {
 
@@ -56,6 +57,7 @@ public abstract class ProjectMapper {
     @Mapping(target = "screenshotToken", expression = "java( project.getScreenshot() != null ? io.suricate.monitoring.utils.IdUtils.encrypt(project.getScreenshot().getId()) : null )")
     @Mapping(target = "librariesToken", expression = "java(libraryService.getLibrariesToken(project.getWidgets()))")
     @Mapping(target = "image", source = "project.screenshot", qualifiedByName = "toAssetDTO")
+    @Mapping(target = "grids", qualifiedByName = "toProjectGridDTO")
     public abstract ProjectResponseDto toProjectDTO(Project project);
 
     /**

@@ -92,12 +92,6 @@ public class User extends AbstractEntity<Long> {
     private Set<Project> projects = new LinkedHashSet<>();
 
     /**
-     * The rotations of the user
-     */
-    @ManyToMany(mappedBy = "users")
-    private Set<Rotation> rotations = new LinkedHashSet<>();
-
-    /**
      * The list of user settings
      */
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)

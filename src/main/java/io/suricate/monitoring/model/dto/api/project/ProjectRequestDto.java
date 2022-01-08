@@ -50,6 +50,12 @@ public class ProjectRequestDto extends AbstractDto {
     private Integer widgetHeight;
 
     /**
+     * The number of grids
+     */
+    @ApiModelProperty(value = "The number of grids")
+    private Integer gridNumber;
+
+    /**
      * The global css for the dashboard
      */
     @ApiModelProperty(value = "The css style of the dashboard grid")

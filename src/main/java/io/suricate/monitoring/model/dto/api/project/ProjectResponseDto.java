@@ -18,6 +18,7 @@ package io.suricate.monitoring.model.dto.api.project;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
 import io.suricate.monitoring.model.dto.api.asset.AssetResponseDto;
+import io.suricate.monitoring.model.dto.api.projectgrid.ProjectGridResponseDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -52,7 +53,7 @@ public class ProjectResponseDto extends AbstractDto {
      * The grid properties for a dashboard
      */
     @ApiModelProperty(value = "The properties of the dashboard grid")
-    private ProjectGridResponseDto gridProperties;
+    private GridPropertiesResponseDto gridProperties;
 
     /**
      * A representation by an image of the dashboard
@@ -67,8 +68,14 @@ public class ProjectResponseDto extends AbstractDto {
     private AssetResponseDto image;
 
     /**
-     * The libraries related
+     * The libraries
      */
     @ApiModelProperty(value = "The list of the related JS libraries used for the execution of the widgets", dataType = "java.util.List")
     private List<String> librariesToken = new ArrayList<>();
+
+    /**
+     * The grids
+     */
+    @ApiModelProperty(value = "The grids", dataType = "java.util.List")
+    private List<ProjectGridResponseDto> grids = new ArrayList<>();
 }

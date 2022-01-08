@@ -25,10 +25,7 @@ import { LayoutModule } from '../layout/layout.module';
 import { DashboardRoutes } from './dashboard.route';
 import { DashboardScreenWidgetComponent } from './components/dashboard-screen/dashboard-screen-widget/dashboard-screen-widget.component';
 import { AddWidgetToProjectWizardComponent } from './components/wizard/add-widget-to-project-wizard/add-widget-to-project-wizard.component';
-import { RotationDetailComponent } from './components/rotation-detail/rotation-detail.component';
-import { DashboardTvManagementDialogComponent } from './components/tv-management-dialog/dashboard-tv-management-dialog/dashboard-tv-management-dialog.component';
-import { RotationTvManagementDialogComponent } from './components/tv-management-dialog/rotation-tv-management-dialog/rotation-tv-management-dialog.component';
-import { RotationDashboardsSelectionComponent } from './components/rotation-dashboards-selection/rotation-dashboards-selection.component';
+import { TvManagementDialogComponent } from './components/tv-management-dialog/tv-management-dialog.component';
 
 @NgModule({
   imports: [RouterModule.forChild(DashboardRoutes), LayoutModule, SharedModule],
@@ -38,10 +35,7 @@ import { RotationDashboardsSelectionComponent } from './components/rotation-dash
     DashboardScreenWidgetComponent,
     DashboardTvComponent,
     AddWidgetToProjectWizardComponent,
-    RotationDetailComponent,
-    DashboardTvManagementDialogComponent,
-    RotationTvManagementDialogComponent,
-    RotationDashboardsSelectionComponent
+    TvManagementDialogComponent
   ],
   entryComponents: [],
   exports: [RouterModule]

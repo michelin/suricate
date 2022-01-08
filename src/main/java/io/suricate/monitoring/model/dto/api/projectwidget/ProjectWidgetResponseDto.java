@@ -20,6 +20,7 @@
 package io.suricate.monitoring.model.dto.api.projectwidget;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
+import io.suricate.monitoring.model.dto.api.projectgrid.ProjectGridResponseDto;
 import io.suricate.monitoring.model.enums.WidgetStateEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -111,4 +112,10 @@ public class ProjectWidgetResponseDto extends AbstractDto {
      */
     @ApiModelProperty(value = "The related widget id")
     private Long widgetId;
+
+    /**
+     * The project grid id
+     */
+    @ApiModelProperty(value = "The project grid id")
+    private Long gridId;
 }

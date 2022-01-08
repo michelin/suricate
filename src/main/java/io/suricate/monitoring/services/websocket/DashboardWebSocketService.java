@@ -118,7 +118,7 @@ public class DashboardWebSocketService {
      */
     public void sendConnectProjectEventToScreenSubscriber(final Project project, final String screenCode) {
         UpdateEvent updateEvent = UpdateEvent.builder()
-                .type(UpdateType.CONNECT_SINGLE_DASHBOARD)
+                .type(UpdateType.CONNECT_DASHBOARD)
                 .content(this.projectMapper.toProjectDTO(project))
                 .build();
 

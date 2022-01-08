@@ -36,7 +36,7 @@ import { Page } from '../../../models/backend/page';
 export class HttpProjectService implements AbstractHttpService<Project | ProjectRequest> {
   /**
    * Global endpoint for projects
-   * @type
+
    */
   private static readonly projectsApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/projects`;
 
@@ -95,10 +95,22 @@ export class HttpProjectService implements AbstractHttpService<Project | Project
   /**
    * Delete a project
    *
-   * @param {string} projectToken
+   * @param projectToken The project token
    */
   public delete(projectToken: string): Observable<void> {
     const url = `${HttpProjectService.projectsApiEndpoint}/${projectToken}`;
+
+    return this.httpClient.delete<void>(url);
+  }
+
+  /**
+   * Delete a given grid of a project
+   *
+   * @param projectToken The project token
+   * @param gridId The grid id
+   */
+  public deleteGrid(projectToken: string, gridId: number): Observable<void> {
+    const url = `${HttpProjectService.projectsApiEndpoint}/${projectToken}/${gridId}`;
 
     return this.httpClient.delete<void>(url);
   }
@@ -149,13 +161,26 @@ export class HttpProjectService implements AbstractHttpService<Project | Project
   }
 
   /**
+   * Get the list of widget instances for a project
+   *
+   * @param projectToken The project token
+   * @param gridId The grid id
+   */
+  public getWidgetInstancesByProjectTokenAndGridId(projectToken: string, gridId: number): Observable<ProjectWidget[]> {
+    const url = `${HttpProjectService.projectsApiEndpoint}/${projectToken}/${gridId}/projectWidgets`;
+
+    return this.httpClient.get<ProjectWidget[]>(url);
+  }
+
+  /**
    * Add a new widget to the project
    *
    * @param projectToken The project token
+   * @param gridId The grid id
    * @param projectWidgetRequest The project widget to add
    */
-  public addProjectWidgetToProject(projectToken: string, projectWidgetRequest: ProjectWidgetRequest): Observable<ProjectWidget> {
-    const url = `${HttpProjectService.projectsApiEndpoint}/${projectToken}/projectWidgets`;
+  public addProjectWidgetToProject(projectToken: string, gridId: number, projectWidgetRequest: ProjectWidgetRequest): Observable<ProjectWidget> {
+    const url = `${HttpProjectService.projectsApiEndpoint}/${projectToken}/${gridId}/projectWidgets`;
 
     return this.httpClient.post<ProjectWidget>(url, projectWidgetRequest);
   }

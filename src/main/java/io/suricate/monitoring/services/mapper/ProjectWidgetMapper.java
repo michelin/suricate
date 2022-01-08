@@ -19,6 +19,7 @@ package io.suricate.monitoring.services.mapper;
 import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetRequestDto;
 import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetResponseDto;
 import io.suricate.monitoring.model.entities.ProjectWidget;
+import io.suricate.monitoring.services.api.ProjectGridService;
 import io.suricate.monitoring.services.api.ProjectService;
 import io.suricate.monitoring.services.api.ProjectWidgetService;
 import io.suricate.monitoring.services.api.WidgetService;
@@ -52,6 +53,12 @@ public abstract class ProjectWidgetMapper {
     protected ProjectService projectService;
 
     /**
+     * The project service
+     */
+    @Autowired
+    protected ProjectGridService projectGridService;
+
+    /**
      * The widget service
      */
     @Autowired
@@ -72,6 +79,7 @@ public abstract class ProjectWidgetMapper {
     @Mapping(target = "backendConfig", expression = "java(projectWidgetService.decryptSecretParamsIfNeeded(projectWidget.getWidget(), projectWidget.getBackendConfig()))")
     @Mapping(target = "projectToken", source = "projectWidget.project.token")
     @Mapping(target = "widgetId", source = "projectWidget.widget.id")
+    @Mapping(target = "gridId", source = "projectWidget.projectGrid.id")
     public abstract ProjectWidgetResponseDto toProjectWidgetDTO(ProjectWidget projectWidget);
 
     /**
@@ -92,6 +100,7 @@ public abstract class ProjectWidgetMapper {
      */
     @Named("toProjectWidgetEntity")
     @Mapping(target = "project", expression = "java( projectService.getOneByToken(projectToken).get())")
+    @Mapping(target = "projectGrid", expression = "java( projectGridService.getOneById(gridId).get())")
     @Mapping(target = "widget", expression = "java( widgetService.findOne(projectWidgetRequestDto.getWidgetId()).get() )")
-    public abstract ProjectWidget toProjectWidgetEntity(ProjectWidgetRequestDto projectWidgetRequestDto, String projectToken);
+    public abstract ProjectWidget toProjectWidgetEntity(ProjectWidgetRequestDto projectWidgetRequestDto, String projectToken, Long gridId);
 }

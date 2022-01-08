@@ -18,7 +18,7 @@
 
         <mat-grid-tile *ngFor="let project of projects" class="mat-elevation-z3">
             <div class="grid-tile-content-wrapper">
-                <a [routerLink]="['/dashboards', project.token]">
+                <a [routerLink]="['/dashboards', project.token, project.grids[0].id]">
                     <div class="grid-tile-body">
                         <img *ngIf="project.screenshotToken" [src]="getContentUrl(project.screenshotToken)" alt="Dashboard screenshot" />
                         <mat-icon *ngIf="!project.screenshotToken" color="primary">

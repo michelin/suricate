@@ -114,6 +114,13 @@ public class ProjectWidget extends AbstractAuditingEntity<Long> {
     private WidgetStateEnum state;
 
     /**
+     * The related project grid, if exists
+     */
+    @ManyToOne
+    @PrimaryKeyJoinColumn(name = "projectGridId", referencedColumnName = "ID")
+    private ProjectGrid projectGrid;
+
+    /**
      * The related project
      */
     @ManyToOne

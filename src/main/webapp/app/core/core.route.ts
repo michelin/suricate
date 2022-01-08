@@ -19,19 +19,13 @@ import { Routes } from '@angular/router';
 import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from './components/login/login.component';
 import { AuthGuard } from '../shared/guards/auth/auth.guard';
-import { DashboardsComponent } from './components/home/dashboards/dashboards.component';
-import { RotationsComponent } from './components/home/rotations/rotations.component';
+import { HomeComponent } from './components/home/home.component';
 
 export const coreRoutes: Routes = [
   {
-    path: 'home/dashboards',
+    path: 'home',
     canActivate: [AuthGuard],
-    component: DashboardsComponent
-  },
-  {
-    path: 'home/rotations',
-    canActivate: [AuthGuard],
-    component: RotationsComponent
+    component: HomeComponent
   },
   {
     path: 'login',

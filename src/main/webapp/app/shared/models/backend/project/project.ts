@@ -14,8 +14,9 @@
  * limitations under the License.
  */
 
-import { ProjectGrid } from './project-grid';
 import { Asset } from '../asset/asset';
+import { GridProperties } from './grid-properties';
+import { ProjectGrid } from './project-grid';
 
 /**
  * The project entity
@@ -23,10 +24,11 @@ import { Asset } from '../asset/asset';
 export class Project {
   token: string;
   name: string;
-  gridProperties: ProjectGrid = new ProjectGrid();
+  gridProperties: GridProperties = new GridProperties();
   screenshotToken: string;
   librariesToken: string[];
   image: Asset = new Asset();
+  grids: ProjectGrid[];
 
   /**
    * Constructor

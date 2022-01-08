@@ -23,6 +23,7 @@
 @import '~sass/components/material/mat-stepper-theme';
 @import '~sass/components/material/mat-form-field-theme';
 @import '~sass/components/material/mat-grid-list-theme';
+@import '~sass/components/material/carousel-theme';
 
 /**
  * Mixin that inject every custom components (used in theme definitions)
@@ -36,4 +37,5 @@
   @include custom-mat-stepper-theme($theme);
   @include custom-mat-grid-list-theme($theme);
   @include custom-mat-form-field-theme($theme);
+  @include custom-carousel-theme($theme);
 }

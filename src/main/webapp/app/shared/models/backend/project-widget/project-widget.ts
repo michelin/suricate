@@ -37,4 +37,5 @@ export interface ProjectWidget {
   state: WidgetStateEnum;
   projectToken: string;
   widgetId: number;
+  gridId: number;
 }

@@ -14,18 +14,9 @@
  * limitations under the License.
  */
 
-import { ComponentFixture, inject, TestBed, waitForAsync } from '@angular/core/testing';
+import { inject, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { TvManagementDialogComponent } from './tv-management-dialog.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { TranslateLoader, TranslateModule, TranslatePipe } from '@ngx-translate/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Project } from '../../../shared/models/backend/project/project';
-import { ProjectGrid } from '../../../shared/models/backend/project/project-grid';
-import { HttpClient } from '@angular/common/http';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { MockModule } from '../../../mock/mock.module';
 import { AbstractHttpService } from '../../../shared/services/backend/abstract-http/abstract-http.service';
 

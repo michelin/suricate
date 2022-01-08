@@ -47,8 +47,6 @@ export class MenuService {
   public static buildMenu(): MenuConfiguration {
     const menuConfiguration = new MenuConfiguration();
 
-    menuConfiguration.categories.push(MenuService.buildHomeMenu());
-
     if (AuthenticationService.isAdmin()) {
       menuConfiguration.categories.push(MenuService.buildAdminMenu());
     }
@@ -56,25 +54,6 @@ export class MenuService {
     menuConfiguration.categories.push(MenuService.buildWidgetMenu());
 
     return menuConfiguration;
-  }
-
-  /**
-   * Build the home menu
-   */
-  private static buildHomeMenu(): MenuCategoryConfiguration {
-    return {
-      label: 'home.menu.title',
-      items: [
-        {
-          label: 'home.menu.dashboards.title',
-          linkConfiguration: { link: ['/home', 'dashboards'] }
-        },
-        {
-          label: 'home.menu.rotations.title',
-          linkConfiguration: { link: ['/home', 'rotations'] }
-        }
-      ]
-    };
   }
 
   /**
@@ -95,10 +74,6 @@ export class MenuService {
         {
           label: 'repository.list',
           linkConfiguration: { link: ['/admin', 'repositories'] }
-        },
-        {
-          label: 'rotation.list',
-          linkConfiguration: { link: ['/admin', 'rotations'] }
         },
         {
           label: 'user.list',

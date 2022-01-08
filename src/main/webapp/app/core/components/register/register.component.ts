@@ -163,6 +163,6 @@ export class RegisterComponent implements OnInit {
    * Redirect to the home page
    */
   private navigateToHomePage(): void {
-    this.router.navigate(['/home/dashboards']);
+    this.router.navigate(['/home']);
   }
 }

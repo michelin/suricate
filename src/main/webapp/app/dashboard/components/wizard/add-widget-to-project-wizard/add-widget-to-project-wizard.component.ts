@@ -86,7 +86,7 @@ export class AddWidgetToProjectWizardComponent extends WizardComponent implement
         .join('\n')
     };
 
-    this.httpProjectService.addProjectWidgetToProject(this.dashboardToken, projectWidgetRequest).subscribe(() => {
+    this.httpProjectService.addProjectWidgetToProject(this.dashboardToken, this.gridId, projectWidgetRequest).subscribe(() => {
       this.toastService.sendMessage('widget.add.success', ToastTypeEnum.SUCCESS);
       this.redirectToDashboard();
     });
@@ -96,6 +96,6 @@ export class AddWidgetToProjectWizardComponent extends WizardComponent implement
    * Function used to redirect to the dashboard
    */
   private redirectToDashboard(): void {
-    this.router.navigate(['/dashboards', this.dashboardToken]);
+    this.router.navigate(['/dashboards', this.dashboardToken, this.gridId]);
   }
 }

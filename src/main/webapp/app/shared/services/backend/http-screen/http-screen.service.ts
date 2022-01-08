@@ -30,11 +30,6 @@ export class HttpScreenService {
   private static readonly screensApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/screens`;
 
   /**
-   * Global endpoint for screens linked with rotation
-   */
-  private static readonly screensRotationApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/screens/rotation`;
-
-  /**
    * The constructor
    *
    * @param httpClient The http client service
@@ -83,52 +78,6 @@ export class HttpScreenService {
    */
   public displayScreenCodeEveryConnectedScreensForProject(projectToken: string): Observable<void> {
     const url = `${HttpScreenService.screensApiEndpoint}/${projectToken}/showscreencode`;
-
-    return this.httpClient.get<void>(url);
-  }
-
-  /**
-   * Send the notification for connect a new tv to this rotation
-   *
-   * @param rotationToken The rotation token to connect
-   * @param screenCode The tv screen code
-   */
-  public connectRotationToScreen(rotationToken: string, screenCode: number): Observable<void> {
-    const url = `${HttpScreenService.screensRotationApiEndpoint}/${rotationToken}/connect?screenCode=${screenCode}`;
-
-    return this.httpClient.get<void>(url);
-  }
-
-  /**
-   * Send the notification to disconnect a tv for this rotation
-   *
-   * @param rotationToken The rotation token
-   * @param screenCode The screen to disconnect
-   */
-  public disconnectScreenFromRotation(rotationToken: string, screenCode: number): Observable<void> {
-    const url = `${HttpScreenService.screensRotationApiEndpoint}/${rotationToken}/disconnect?screenCode=${screenCode}`;
-
-    return this.httpClient.get<void>(url);
-  }
-
-  /**
-   * Display the screen code on every connected screens for a rotation
-   *
-   * @param rotationToken A dashboard or rotation token
-   */
-  public displayScreenCodeEveryConnectedScreensForRotation(rotationToken: string): Observable<void> {
-    const url = `${HttpScreenService.screensRotationApiEndpoint}/${rotationToken}/showscreencode`;
-
-    return this.httpClient.get<void>(url);
-  }
-
-  /**
-   * Refresh every screens for a rotation
-   *
-   * @param rotationToken The rotation token to refresh
-   */
-  public refreshEveryConnectedScreensForRotation(rotationToken: string): Observable<void> {
-    const url = `${HttpScreenService.screensRotationApiEndpoint}/${rotationToken}/refresh`;
 
     return this.httpClient.get<void>(url);
   }

@@ -17,11 +17,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { AddWidgetToProjectWizardComponent } from './add-widget-to-project-wizard.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { Project } from '../../../../shared/models/backend/project/project';
-import { ProjectGrid } from '../../../../shared/models/backend/project/project-grid';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MockModule } from '../../../../mock/mock.module';
 
 describe('ProjectWidgetWizardComponent', () => {

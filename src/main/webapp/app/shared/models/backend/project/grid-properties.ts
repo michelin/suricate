@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
-/**
- * The project request
- */
-export interface ProjectRequest {
-  name: string;
+export class GridProperties {
   maxColumn: number;
   widgetHeight: number;
-  gridNumber: number;
   cssStyle: string;
-  image: string;
-  gridBackgroundColor: string;
+
+  /**
+   * Constructor
+   */
+  constructor() {}
 }
