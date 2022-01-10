@@ -112,7 +112,11 @@ export class ProjectFormFieldsService {
         iconPrefix: IconEnum.GRID,
         type: DataTypeEnum.NUMBER,
         value: project?.gridProperties.maxColumn ? project.grids.length : 1,
-        validators: [Validators.required, CustomValidator.isDigits, project ? Validators.min(project.grids.length) : CustomValidator.greaterThan0]
+        validators: [
+          Validators.required,
+          CustomValidator.isDigits,
+          project ? Validators.min(project.grids.length) : CustomValidator.greaterThan0
+        ]
       },
       {
         key: ProjectFormFieldsService.projectImageFormFieldKey,

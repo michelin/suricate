@@ -179,7 +179,11 @@ export class HttpProjectService implements AbstractHttpService<Project | Project
    * @param gridId The grid id
    * @param projectWidgetRequest The project widget to add
    */
-  public addProjectWidgetToProject(projectToken: string, gridId: number, projectWidgetRequest: ProjectWidgetRequest): Observable<ProjectWidget> {
+  public addProjectWidgetToProject(
+    projectToken: string,
+    gridId: number,
+    projectWidgetRequest: ProjectWidgetRequest
+  ): Observable<ProjectWidget> {
     const url = `${HttpProjectService.projectsApiEndpoint}/${projectToken}/${gridId}/projectWidgets`;
 
     return this.httpClient.post<ProjectWidget>(url, projectWidgetRequest);

@@ -16,7 +16,7 @@
  *
  */
 
-import {Component, EventEmitter, Injector, Input, OnInit, Output, ViewEncapsulation} from '@angular/core';
+import { Component, EventEmitter, Injector, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { AbstractControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { animate, style, transition, trigger } from '@angular/animations';
 
@@ -27,7 +27,7 @@ import { FormField } from '../../../models/frontend/form/form-field';
 import { IconEnum } from '../../../enums/icon.enum';
 import { MaterialIconRecords } from '../../../records/material-icon.record';
 import { DashboardScreenComponent } from '../../../../dashboard/components/dashboard-screen/dashboard-screen.component';
-import {TranslateService} from "@ngx-translate/core";
+import { TranslateService } from '@ngx-translate/core';
 
 /**
  * Manage the instantiation of different form inputs
@@ -74,7 +74,7 @@ export class InputComponent implements OnInit {
   /**
    * Translate service
    */
-  protected translateService: TranslateService
+  protected translateService: TranslateService;
 
   /**
    * The data type enum

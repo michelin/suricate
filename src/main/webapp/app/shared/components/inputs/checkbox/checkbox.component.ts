@@ -16,7 +16,7 @@
  *
  */
 
-import {Component, Injector} from '@angular/core';
+import { Component, Injector } from '@angular/core';
 import { InputComponent } from '../input/input.component';
 
 /**

@@ -16,7 +16,7 @@
  *
  */
 
-import {Component, Injector, OnInit} from '@angular/core';
+import { Component, Injector, OnInit } from '@angular/core';
 import { InputComponent } from '../input/input.component';
 import { MosaicFormOption } from '../../../models/frontend/form/mosaic-form-option';
 

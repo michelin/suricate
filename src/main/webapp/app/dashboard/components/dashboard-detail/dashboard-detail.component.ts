@@ -221,7 +221,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    * @param gridId The id of the grid to display
    */
   public changeGrid(gridId: number): void {
-    if (this.gridId != gridId) {
+    if (this.gridId !== gridId) {
       this.router.navigate(['/dashboards', this.dashboardToken, gridId]);
     }
   }
@@ -286,7 +286,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
           color: 'warn',
           variant: 'miniFab',
           tooltip: { message: 'dashboard.delete.grid' },
-          hidden: () => this.isReadOnly || this.project.grids.length == 1,
+          hidden: () => this.isReadOnly || this.project.grids.length === 1,
           callback: () => this.deleteCurrentGrid()
         },
         {
