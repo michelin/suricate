@@ -77,6 +77,11 @@ export class WizardComponent implements OnInit {
   public dashboardToken: string;
 
   /**
+   * The id of the dashboard grid
+   */
+  public gridId: number;
+
+  /**
    * The configuration of the header
    */
   public headerConfiguration = new HeaderConfiguration();
@@ -124,6 +129,7 @@ export class WizardComponent implements OnInit {
    */
   public ngOnInit(): void {
     this.dashboardToken = this.activatedRoute.snapshot.params['dashboardToken'];
+    this.gridId = this.activatedRoute.snapshot.params['gridId'];
 
     this.initWizardButtons();
     this.stepperFormGroup = this.formService.generateFormGroupForSteps(this.wizardConfiguration.steps);
@@ -234,7 +240,7 @@ export class WizardComponent implements OnInit {
    * By default we redirect to home on close event (you can override this on child component)
    */
   protected closeWizard(): void {
-    this.router.navigate(['/home/dashboards']);
+    this.router.navigate(['/home']);
   }
 
   /**

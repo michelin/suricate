@@ -18,12 +18,8 @@ import { Routes } from '@angular/router';
 
 import { DashboardTvComponent } from './components/dashboard-tv/dashboard-tv.component';
 import { AuthGuard } from '../shared/guards/auth/auth.guard';
-import { AdminGuard } from '../shared/guards/admin/admin.guard';
 import { DashboardDetailComponent } from './components/dashboard-detail/dashboard-detail.component';
-import { DashboardsComponent } from '../admin/dashboards/dashboards.component';
 import { AddWidgetToProjectWizardComponent } from './components/wizard/add-widget-to-project-wizard/add-widget-to-project-wizard.component';
-import { RotationDetailComponent } from './components/rotation-detail/rotation-detail.component';
-import { RotationDashboardsSelectionComponent } from './components/rotation-dashboards-selection/rotation-dashboards-selection.component';
 
 export const DashboardRoutes: Routes = [
   {
@@ -31,23 +27,13 @@ export const DashboardRoutes: Routes = [
     component: DashboardTvComponent
   },
   {
-    path: 'dashboards/:dashboardToken',
+    path: 'dashboards/:dashboardToken/:gridId',
     component: DashboardDetailComponent,
     canActivate: [AuthGuard]
   },
   {
-    path: 'rotations/:rotationToken',
-    component: RotationDetailComponent,
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'dashboards/:dashboardToken/widgets/create',
+    path: 'dashboards/:dashboardToken/:gridId/widgets/create',
     component: AddWidgetToProjectWizardComponent,
-    canActivate: [AuthGuard]
-  },
-  {
-    path: 'rotations/:rotationToken/select',
-    component: RotationDashboardsSelectionComponent,
     canActivate: [AuthGuard]
   }
 ];

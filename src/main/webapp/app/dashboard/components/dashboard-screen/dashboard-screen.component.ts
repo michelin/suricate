@@ -27,9 +27,9 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import { takeUntil, tap } from 'rxjs/operators';
-import { Observable, Subject } from 'rxjs';
-import { NgGridConfig, NgGridItemConfig } from 'angular2-grid';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { NgGridConfig, NgGridItem, NgGridItemConfig } from 'angular2-grid';
 import * as Stomp from '@stomp/stompjs';
 import { Project } from '../../../shared/models/backend/project/project';
 import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';
@@ -44,7 +44,6 @@ import { IconEnum } from '../../../shared/enums/icon.enum';
 import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
 import { LibraryService } from '../../services/library/library.service';
 import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
-import { Rotation } from '../../../shared/models/backend/rotation/rotation';
 
 /**
  * Display the grid stack widgets
@@ -60,12 +59,6 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
    */
   @ViewChild('externalJsLibraries')
   public externalJsLibrariesSpan: ElementRef<HTMLSpanElement>;
-
-  /**
-   * The rotation to display
-   */
-  @Input()
-  public rotation: Rotation;
 
   /**
    * The project to display
@@ -104,17 +97,6 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   public refreshAllProjectWidgets = new EventEmitter<void>();
 
   /**
-   * Use to tell to the parent component that it should rotate to the given project
-   */
-  @Output()
-  public rotationProjectEvent = new EventEmitter<WebsocketUpdateEvent>();
-
-  /**
-   * Subject used to unsubscribe all the subscriptions to rotation web sockets
-   */
-  private unsubscribeRotationWebSocket: Subject<void> = new Subject<void>();
-
-  /**
    * Subject used to unsubscribe all the subscriptions to project web sockets
    */
   private unsubscribeProjectWebSocket: Subject<void> = new Subject<void>();
@@ -125,14 +107,14 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   public gridOptions: NgGridConfig = {};
 
   /**
-   * Contains the widget instances as grid items
+   * All the grids of the dashboard
    */
-  protected startGridStackItems: NgGridItemConfig[] = [];
+  public currentGrid: NgGridItemConfig[] = [];
 
   /**
-   * The grid items description
+   * All the initial grids of the dashboard, before any modification
    */
-  public gridStackItems: NgGridItemConfig[] = [];
+  public startGrid: NgGridItemConfig[] = [];
 
   /**
    * Tell if we should display the screen code
@@ -172,14 +154,6 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
    * @param changes The change event
    */
   public ngOnChanges(changes: SimpleChanges): void {
-    // Rotation received
-    if (changes.rotation) {
-      if (changes.rotation.currentValue && !changes.rotation.previousValue) {
-        this.initRotationWebsockets();
-      }
-    }
-
-    // Project received (from a rotation or not)
     if (changes.project) {
       if (!changes.project.previousValue) {
         // Inject this variable in the window scope because some widgets use it to init the js
@@ -210,7 +184,7 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
     }
 
     if (changes.projectWidgets) {
-      this.initGridStackItems();
+      this.initGridItems();
     }
   }
 
@@ -274,14 +248,14 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
     if (this.project) {
       this.gridOptions = {
         max_cols: this.project.gridProperties.maxColumn,
-        visible_cols: this.project.gridProperties.maxColumn,
         min_cols: 1,
         row_height: this.project.gridProperties.widgetHeight,
         min_rows: 1,
         margins: [4],
         auto_resize: true,
         draggable: false,
-        resizable: false
+        resizable: false,
+        prefer_new: true
       };
 
       if (!this.readOnly) {
@@ -295,24 +269,23 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   }
 
   /**
-   * Create the list of grid items used to display widgets on the grid
+   * Create the list of grid items used to display widgets on the grids
    */
-  private initGridStackItems(): void {
-    this.gridStackItems = [];
+  private initGridItems(): void {
+    this.startGrid = [];
 
     if (this.projectWidgets) {
-      this.startGridStackItems = this.getGridStackItemsFromProjectWidgets(this.projectWidgets);
+      this.startGrid = this.getGridItemsFromProjectWidgets();
+
       // Make a copy with a new reference
-      this.gridStackItems = JSON.parse(JSON.stringify(this.startGridStackItems));
+      this.currentGrid = JSON.parse(JSON.stringify(this.startGrid));
     }
   }
 
   /**
    * Get the list of GridItemConfigs from project widget
-   *
-   * @param projectWidgets The project widgets
    */
-  private getGridStackItemsFromProjectWidgets(projectWidgets: ProjectWidget[]): NgGridItemConfig[] {
+  private getGridItemsFromProjectWidgets(): NgGridItemConfig[] {
     const gridStackItemsConfig: NgGridItemConfig[] = [];
 
     this.projectWidgets.forEach((projectWidget: ProjectWidget) => {
@@ -342,15 +315,6 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   }
 
   /**
-   * Init web sockets for rotation events
-   */
-  private initRotationWebsockets(): void {
-    this.unsubscribeRotationWebSocket = new Subject<void>();
-    this.websocketRotationEventSubscription();
-    this.websocketScreenRotationEventSubscription();
-  }
-
-  /**
    * Reset the project web sockets subscriptions
    */
   private resetProjectWebsockets(): void {
@@ -363,8 +327,6 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
    */
   private disconnectFromWebsockets(): void {
     this.unsubscribeProjectWebsockets();
-    this.unsubscribeRotationWebsockets();
-    this.websocketService.disconnect();
   }
 
   /**
@@ -373,14 +335,6 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   private unsubscribeProjectWebsockets(): void {
     this.unsubscribeProjectWebSocket.next();
     this.unsubscribeProjectWebSocket.complete();
-  }
-
-  /**
-   * Unsubscribe to every current rotation websockets connections
-   */
-  private unsubscribeRotationWebsockets(): void {
-    this.unsubscribeRotationWebSocket.next();
-    this.unsubscribeRotationWebSocket.complete();
   }
 
   /**
@@ -435,63 +389,12 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   }
 
   /**
-   * Create a websocket subscription for the current rotation
-   */
-  private websocketRotationEventSubscription(): void {
-    const rotationSubscriptionUrl = `/user/${this.rotation.token}/queue/live`;
-
-    this.websocketService
-      .watch(rotationSubscriptionUrl)
-      .pipe(takeUntil(this.unsubscribeRotationWebSocket))
-      .subscribe((stompMessage: Stomp.Message) => {
-        const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
-
-        switch (updateEvent.type) {
-          case WebsocketUpdateTypeEnum.DISCONNECT:
-            this.disconnectFromWebsockets();
-            this.disconnectEvent.emit();
-            break;
-          case WebsocketUpdateTypeEnum.DISPLAY_NUMBER:
-            this.displayScreenCode();
-            break;
-          case WebsocketUpdateTypeEnum.RELOAD:
-            location.reload();
-            break;
-          default:
-        }
-      });
-  }
-
-  /**
-   * Create a websocket subscription for the current screen
-   */
-  private websocketScreenRotationEventSubscription(): void {
-    const rotationByScreenURL = `/user/${this.rotation.token}-${this.screenCode}/queue/unique`;
-
-    this.websocketService
-      .watch(rotationByScreenURL)
-      .pipe(takeUntil(this.unsubscribeRotationWebSocket))
-      .subscribe((stompMessage: Stomp.Message) => {
-        const event: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
-
-        if (event.type === WebsocketUpdateTypeEnum.ROTATE) {
-          this.rotationProjectEvent.emit(event);
-        }
-
-        if (event.type === WebsocketUpdateTypeEnum.DISCONNECT) {
-          this.disconnectFromWebsockets();
-          this.disconnectEvent.emit();
-        }
-      });
-  }
-
-  /**
    * Update the project widget position
    */
   public updateProjectWidgetsPosition(): void {
     if (this.isGridItemsHasMoved()) {
       const projectWidgetPositionRequests: ProjectWidgetPositionRequest[] = [];
-      this.gridStackItems.forEach(gridStackItem => {
+      this.currentGrid.forEach(gridStackItem => {
         projectWidgetPositionRequests.push({
           projectWidgetId: (gridStackItem.payload as ProjectWidget).id,
           gridColumn: gridStackItem.col,
@@ -511,8 +414,8 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   private isGridItemsHasMoved(): boolean {
     let itemHaveBeenMoved = false;
 
-    this.startGridStackItems.forEach(startGridItem => {
-      const gridItemFound = this.gridStackItems.find(currentGridItem => {
+    this.startGrid.forEach(startGridItem => {
+      const gridItemFound = this.currentGrid.find(currentGridItem => {
         return (currentGridItem.payload as ProjectWidget).id === (startGridItem.payload as ProjectWidget).id;
       });
 

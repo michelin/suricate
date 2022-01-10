@@ -50,6 +50,11 @@ export class ProjectFormFieldsService {
   public static readonly projectMaxColumnFormFieldKey = 'maxColumn';
 
   /**
+   * Key of the form field for project grid number
+   */
+  public static readonly projectGridNumberFormFieldKey = 'gridNumber';
+
+  /**
    * Key of the form field for project image
    */
   public static readonly projectImageFormFieldKey = 'image';
@@ -100,6 +105,18 @@ export class ProjectFormFieldsService {
         type: DataTypeEnum.NUMBER,
         value: project?.gridProperties.maxColumn ? project.gridProperties.maxColumn : 5,
         validators: [Validators.required, CustomValidator.isDigits, CustomValidator.greaterThan0]
+      },
+      {
+        key: ProjectFormFieldsService.projectGridNumberFormFieldKey,
+        label: 'grid.number',
+        iconPrefix: IconEnum.GRID,
+        type: DataTypeEnum.NUMBER,
+        value: project?.gridProperties.maxColumn ? project.grids.length : 1,
+        validators: [
+          Validators.required,
+          CustomValidator.isDigits,
+          project ? Validators.min(project.grids.length) : CustomValidator.greaterThan0
+        ]
       },
       {
         key: ProjectFormFieldsService.projectImageFormFieldKey,

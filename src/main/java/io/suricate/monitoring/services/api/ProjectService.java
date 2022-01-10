@@ -19,6 +19,7 @@ package io.suricate.monitoring.services.api;
 import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
 import io.suricate.monitoring.model.entities.Asset;
 import io.suricate.monitoring.model.entities.Project;
+import io.suricate.monitoring.model.entities.ProjectGrid;
 import io.suricate.monitoring.model.entities.User;
 import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.repositories.ProjectRepository;
@@ -38,6 +39,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -68,22 +70,30 @@ public class ProjectService {
     private final AssetService assetService;
 
     /**
+     * Project grid service
+     */
+    private final ProjectGridService projectGridService;
+
+    /**
      * Constructor
      *
      * @param stringEncryptor           The string encryptor to inject
      * @param projectRepository         The project repository to inject
      * @param dashboardWebSocketService The dashboard web socket service to inject
      * @param assetService              The asset service
+     * @param projectGridService        The project grid service
      */
     @Autowired
     public ProjectService(@Qualifier("jasyptStringEncryptor") final StringEncryptor stringEncryptor,
                           final ProjectRepository projectRepository,
                           final DashboardWebSocketService dashboardWebSocketService,
-                          final AssetService assetService) {
+                          final AssetService assetService,
+                          final ProjectGridService projectGridService) {
         this.stringEncryptor = stringEncryptor;
         this.projectRepository = projectRepository;
         this.dashboardWebsocketService = dashboardWebSocketService;
         this.assetService = assetService;
+        this.projectGridService = projectGridService;
     }
 
     /**
@@ -157,10 +167,12 @@ public class ProjectService {
      * @param newName      the new name
      * @param widgetHeight The new widget height
      * @param maxColumn    The new max column
+     * @param gridNumber   The number grid
+     * @param customCSS    The custom CSS style
      */
     @Transactional
     public void updateProject(Project project, final String newName, final int widgetHeight, final int maxColumn,
-                              final String customCss) {
+                              final Integer gridNumber, final String customCSS) {
         if (StringUtils.isNotBlank(newName)) {
             project.setName(newName);
         }
@@ -173,8 +185,19 @@ public class ProjectService {
             project.setMaxColumn(maxColumn);
         }
 
-        if (StringUtils.isNotBlank(customCss)) {
-            project.setCssStyle(customCss);
+        if (gridNumber > 0 && gridNumber > project.getGrids().size()) {
+            List<ProjectGrid> projectGrids = new ArrayList<>();
+            for (int i = 0; i < gridNumber - project.getGrids().size(); i++) {
+                ProjectGrid newProjectGrid = new ProjectGrid();
+                newProjectGrid.setTime(30);
+                newProjectGrid.setProject(project);
+                projectGrids.add(newProjectGrid);
+            }
+            projectGridService.createProjectGrid(projectGrids);
+        }
+
+        if (StringUtils.isNotBlank(customCSS)) {
+            project.setCssStyle(customCSS);
         }
 
         projectRepository.save(project);

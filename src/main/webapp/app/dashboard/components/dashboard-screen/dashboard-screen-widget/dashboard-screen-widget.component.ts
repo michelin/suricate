@@ -45,7 +45,6 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { SlideToggleButtonConfiguration } from '../../../../shared/models/frontend/button/slide-toggle/slide-toggle-button-configuration';
 import { CategoryParameter } from '../../../../shared/models/backend/category-parameters/category-parameter';
-import { ProjectGrid } from '../../../../shared/models/backend/project/project-grid';
 
 /**
  * Display the grid stack widgets

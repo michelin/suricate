@@ -17,7 +17,6 @@
 package io.suricate.monitoring.repositories;
 
 import io.suricate.monitoring.model.entities.Project;
-import io.suricate.monitoring.model.entities.Rotation;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -54,7 +53,7 @@ public interface ProjectRepository extends CrudRepository<Project, Long>, JpaSpe
      * @param id The user id
      * @return List of related projects ordered by name
      */
-	@EntityGraph(attributePaths = {"widgets", "screenshot"})
+	@EntityGraph(attributePaths = {"widgets", "screenshot", "grids"})
     List<Project> findByUsersIdOrderByName(Long id);
 
     /**
@@ -66,6 +65,7 @@ public interface ProjectRepository extends CrudRepository<Project, Long>, JpaSpe
     @EntityGraph(attributePaths = {"screenshot",
 								   "widgets.widget.category.configurations",
 								   "widgets.widget.widgetParams",
+								   "grids",
 								   "users.roles"})
 	Optional<Project> findProjectByToken(final String token);
 

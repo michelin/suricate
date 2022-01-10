@@ -29,5 +29,5 @@ export const environment = {
   wsHeartbeatIncoming: 0,
   wsHeartbeatOutgoing: 20000,
   wsReconnectDelay: 5000,
-  wsDebug: true
+  wsDebug: false
 };

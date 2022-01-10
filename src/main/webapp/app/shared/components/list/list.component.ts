@@ -140,7 +140,7 @@ export class ListComponent<T> implements OnInit, OnDestroy {
    * Constructor
    *
    * @param childService The child http service
-   * @param injector Angular Service used to manage the injection of services
+   * @param injector Manage services injection
    */
   constructor(private readonly childService: AbstractHttpService<T>, protected injector: Injector) {
     this.dialogService = injector.get(DialogService);

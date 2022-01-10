@@ -1,20 +1,24 @@
 <ng-container *ngIf="!isDashboardLoading && project">
   <suricate-pages-header [configuration]="headerConfiguration"></suricate-pages-header>
 
+  <ol *ngIf="project.grids.length > 1" class="carousel-indicators">
+    <li *ngFor="let grid of project.grids" (click)="changeGrid(grid.id)" [ngClass]="{ 'indicator-selected': grid.id == gridId }"></li>
+  </ol>
+
   <!-- Dashboard screen -->
   <suricate-dashboard-screen
     #dashboardScreen
-    *ngIf="projectWidgets?.length > 0"
+    *ngIf="widgets?.length > 0"
     [project]="project"
-    [projectWidgets]="projectWidgets"
+    [projectWidgets]="widgets"
     [screenCode]="screenCode"
     [readOnly]="isReadOnly"
     (refreshAllProjectWidgets)="refreshAllProjectWidgets()"
     (disconnectEvent)="handlingDashboardDisconnect()"
   ></suricate-dashboard-screen>
 
-  <!-- Display the add card, if no widget inside the project -->
-  <mat-grid-list *ngIf="!projectWidgets || projectWidgets.length === 0" cols="4" rowHeight="250px" gutterSize="17px">
+  <!-- Display the add card, if no widget inside the current grid -->
+  <mat-grid-list *ngIf="!widgets || widgets.length === 0" cols="4" rowHeight="250px" gutterSize="17px">
     <mat-grid-tile class="mat-elevation-z3" (click)="displayProjectWidgetWizard()">
       <div class="grid-tile-content-wrapper">
         <div class="grid-tile-body">

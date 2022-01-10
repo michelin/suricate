@@ -31,28 +31,13 @@ import { ButtonTypeEnum } from '../../../shared/enums/button-type.enum';
 import { IconEnum } from '../../../shared/enums/icon.enum';
 import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
 import { CustomValidator } from '../../../shared/validators/custom-validator';
-import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
-import { Rotation } from '../../../shared/models/backend/rotation/rotation';
 
-/**
- * Component that manage the popup for Dashboard TV Management
- */
 @Component({
-  template: '',
+  selector: 'suricate-tv-management-dialog',
+  templateUrl: './tv-management-dialog.component.html',
   styleUrls: ['./tv-management-dialog.component.scss']
 })
-export abstract class TvManagementDialogComponent implements OnInit {
-  /**
-   * Service used to help on the form creation
-   */
-  private readonly formService: FormService;
-
-  /**
-   * HTTP screen service
-   */
-  protected readonly httpScreenService: HttpScreenService;
-
+export class TvManagementDialogComponent implements OnInit {
   /**
    * The configuration of the share button
    */
@@ -74,6 +59,11 @@ export abstract class TvManagementDialogComponent implements OnInit {
   public formFields: FormField[];
 
   /**
+   * The current project
+   */
+  public project: Project;
+
+  /**
    * The list of clients connected by websocket
    */
   public websocketClients: WebsocketClient[];
@@ -91,12 +81,17 @@ export abstract class TvManagementDialogComponent implements OnInit {
   /**
    * Constructor
    *
-   * @param injector The injector
+   * @param data Angular service used to inject data in the modal
+   * @param httpProjectService Suricate service used to manage HTTP calls for project
+   * @param httpScreenService Suricate service used to manage HTTP calls for screens
+   * @param formService Frontend service used to help on form creation
    */
-  protected constructor(protected readonly injector: Injector) {
-    this.formService = injector.get(FormService);
-    this.httpScreenService = injector.get(HttpScreenService);
-
+  constructor(
+    @Inject(MAT_DIALOG_DATA) private readonly data: { project: Project },
+    private readonly httpProjectService: HttpProjectService,
+    private readonly httpScreenService: HttpScreenService,
+    private readonly formService: FormService
+  ) {
     this.initButtonsConfiguration();
   }
 
@@ -104,6 +99,8 @@ export abstract class TvManagementDialogComponent implements OnInit {
    * When the component is initialized
    */
   public ngOnInit(): void {
+    this.project = this.data.project;
+    this.getConnectedWebsocketClient();
     this.generateFormFields();
 
     this.registerScreenCodeFormField = this.formService.generateFormGroupForFields(this.formFields);
@@ -149,6 +146,49 @@ export abstract class TvManagementDialogComponent implements OnInit {
   }
 
   /**
+   * Retrieve the websocket connections to a dashboard
+   */
+  public getConnectedWebsocketClient(): void {
+    this.httpProjectService.getProjectWebsocketClients(this.project.token).subscribe(websocketClients => {
+      this.websocketClients = websocketClients;
+    });
+  }
+
+  /**
+   * Register a screen
+   */
+  public registerScreen(): void {
+    if (this.registerScreenCodeFormField.valid) {
+      const screenCode: string = this.registerScreenCodeFormField.get('screenCode').value;
+
+      this.httpScreenService.connectProjectToScreen(this.project.token, +screenCode).subscribe(() => {
+        this.registerScreenCodeFormField.reset();
+        setTimeout(() => this.getConnectedWebsocketClient(), 2000);
+      });
+    }
+  }
+
+  /**
+   * Display the screen code on every connected screens
+   */
+  public displayScreenCode(): void {
+    if (this.project.token) {
+      this.httpScreenService.displayScreenCodeEveryConnectedScreensForProject(this.project.token).subscribe();
+    }
+  }
+
+  /**
+   * Disconnect a screen
+   *
+   * @param websocketClient The websocket to disconnect
+   */
+  public disconnectScreen(websocketClient: WebsocketClient): void {
+    this.httpScreenService.disconnectScreenFromProject(websocketClient.projectToken, +websocketClient.screenCode).subscribe(() => {
+      setTimeout(() => this.getConnectedWebsocketClient(), 2000);
+    });
+  }
+
+  /**
    * Check if the stepper form is valid before saving the data
    */
   protected validateFormBeforeSave(): void {
@@ -158,26 +198,4 @@ export abstract class TvManagementDialogComponent implements OnInit {
       this.registerScreen();
     }
   }
-
-  /**
-   * Register a screen
-   */
-  abstract registerScreen(): void;
-
-  /**
-   * Retrieve the websocket connections
-   */
-  abstract getConnectedWebsocketClient(): void;
-
-  /**
-   * Display screen code
-   */
-  abstract displayScreenCode(): void;
-
-  /**
-   * Disconnect a screen
-   *
-   * @param websocketClient The websocket to disconnect
-   */
-  abstract disconnectScreen(websocketClient: WebsocketClient): void;
 }

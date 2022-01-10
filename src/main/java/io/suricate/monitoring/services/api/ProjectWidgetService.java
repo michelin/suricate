@@ -171,6 +171,12 @@ public class ProjectWidgetService {
         );
 
         projectWidgetRepository.saveAndFlush(widgetInstance);
+
+        UpdateEvent updateEvent = UpdateEvent.builder()
+                .type(UpdateType.REFRESH_DASHBOARD)
+                .build();
+
+        dashboardWebsocketService.sendEventToProjectSubscribers(widgetInstance.getProject().getToken(), updateEvent);
     }
 
     /**
@@ -208,7 +214,6 @@ public class ProjectWidgetService {
         // notify clients
         UpdateEvent updateEvent = UpdateEvent.builder()
                 .type(UpdateType.REFRESH_DASHBOARD)
-                .content(projectMapper.toProjectDTO(project))
                 .build();
 
         dashboardWebsocketService.sendEventToProjectSubscribers(project.getToken(), updateEvent);
@@ -232,10 +237,9 @@ public class ProjectWidgetService {
             // notify client
             UpdateEvent updateEvent = UpdateEvent.builder()
                     .type(UpdateType.REFRESH_DASHBOARD)
-                    .content(projectMapper.toProjectDTO(projectWidgetOptional.get().getProject()))
                     .build();
 
-            dashboardWebsocketService.updateGlobalScreensByProjectId(projectWidgetOptional.get().getProject().getId(), updateEvent);
+            dashboardWebsocketService.sendEventToProjectSubscribers(projectWidgetOptional.get().getProject().getToken(), updateEvent);
         }
     }
 

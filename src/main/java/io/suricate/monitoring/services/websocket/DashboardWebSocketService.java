@@ -118,7 +118,7 @@ public class DashboardWebSocketService {
      */
     public void sendConnectProjectEventToScreenSubscriber(final Project project, final String screenCode) {
         UpdateEvent updateEvent = UpdateEvent.builder()
-                .type(UpdateType.CONNECT_SINGLE_DASHBOARD)
+                .type(UpdateType.CONNECT_DASHBOARD)
                 .content(this.projectMapper.toProjectDTO(project))
                 .build();
 
@@ -283,16 +283,6 @@ public class DashboardWebSocketService {
             this.projectService.getOneByToken(websocketClient.getProjectToken())
                     .ifPresent(this.nashornWidgetScheduler::cancelWidgetsExecutionByProject);
         }
-    }
-
-    /**
-     * Method used for updates by project id every screens connected to this project
-     *
-     * @param projectId the project id
-     * @param payload   the payload content
-     */
-    public void updateGlobalScreensByProjectId(Long projectId, UpdateEvent payload) {
-        this.sendEventToProjectSubscribers(projectService.getTokenByProjectId(projectId), payload);
     }
 
     /**

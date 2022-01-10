@@ -16,9 +16,9 @@
   <span #externalJsLibraries></span>
 
   <suricate-dashboard-screen-widget
-    *ngFor="let gridStackItem of gridStackItems"
-    [projectWidget]="gridStackItem.payload"
-    [gridStackItem]="gridStackItem"
+    *ngFor="let gridItem of currentGrid"
+    [projectWidget]="gridItem.payload"
+    [gridStackItem]="gridItem"
     [projectToken]="project.token"
     [readOnly]="readOnly"
   >

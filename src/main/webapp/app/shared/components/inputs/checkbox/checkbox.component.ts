@@ -16,7 +16,7 @@
  *
  */
 
-import { Component } from '@angular/core';
+import { Component, Injector } from '@angular/core';
 import { InputComponent } from '../input/input.component';
 
 /**
@@ -28,8 +28,13 @@ import { InputComponent } from '../input/input.component';
   styleUrls: ['./checkbox.component.scss']
 })
 export class CheckboxComponent extends InputComponent {
-  constructor() {
-    super();
+  /**
+   * Constructor
+   *
+   * @param injector Manage services injection
+   */
+  constructor(protected injector: Injector) {
+    super(injector);
   }
 
   /**

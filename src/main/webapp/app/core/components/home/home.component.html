@@ -4,29 +4,30 @@
   <suricate-spinner *ngIf="isLoading"> </suricate-spinner>
 
   <mat-grid-list cols="4" gutterSize="17px" rowHeight="250px">
-    <mat-grid-tile (click)="openRotationCreationFormSidenav()" class="mat-elevation-z3">
+    <mat-grid-tile (click)="openDashboardFormSidenav()" class="mat-elevation-z3">
       <div class="grid-tile-content-wrapper">
         <div class="grid-tile-body">
           <mat-icon color="primary"> {{ materialIconRecords[iconEnum.ADD] }} </mat-icon>
         </div>
 
         <div class="grid-tile-footer">
-          {{ 'rotation.create' | translate }}
+          {{ 'dashboard.create' | translate }}
         </div>
       </div>
     </mat-grid-tile>
 
-    <mat-grid-tile *ngFor="let rotation of rotations" class="mat-elevation-z3">
+    <mat-grid-tile *ngFor="let project of projects" class="mat-elevation-z3">
       <div class="grid-tile-content-wrapper">
-        <a [routerLink]="['/rotations', rotation.token]">
+        <a [routerLink]="['/dashboards', project.token, project.grids[0].id]">
           <div class="grid-tile-body">
-            <mat-icon color="primary">
-              {{ materialIconRecords[iconEnum.DASHBOARD_ROTATION] }}
+            <img *ngIf="project.screenshotToken" [src]="getContentUrl(project.screenshotToken)" alt="Dashboard screenshot" />
+            <mat-icon *ngIf="!project.screenshotToken" color="primary">
+              {{ materialIconRecords[iconEnum.DASHBOARD] }}
             </mat-icon>
           </div>
 
           <div class="grid-tile-footer">
-            {{ rotation.name }}
+            {{ project.name }}
           </div>
         </a>
       </div>

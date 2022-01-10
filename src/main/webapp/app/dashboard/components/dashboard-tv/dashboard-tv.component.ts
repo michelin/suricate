@@ -16,9 +16,9 @@
  *
  */
 
-import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { flatMap, takeUntil, tap } from 'rxjs/operators';
-import { Observable, Subject, timer } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import * as Stomp from '@stomp/stompjs';
 import { Project } from '../../../shared/models/backend/project/project';
@@ -28,9 +28,7 @@ import { HttpProjectService } from '../../../shared/services/backend/http-projec
 import { WebsocketService } from '../../../shared/services/frontend/websocket/websocket.service';
 import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';
 import { DashboardService } from '../../services/dashboard/dashboard.service';
-import { HttpRotationService } from '../../../shared/services/backend/http-rotation/http-rotation.service';
-import { Rotation } from '../../../shared/models/backend/rotation/rotation';
-import { RotationProject } from '../../../shared/models/backend/rotation-project/rotation-project';
+import { DashboardScreenComponent } from '../dashboard-screen/dashboard-screen.component';
 
 /**
  * Dashboard TV Management
@@ -48,14 +46,14 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   private unsubscribe: Subject<void> = new Subject<void>();
 
   /**
-   * The list of project rotations
+   * All project widgets, split by grid
    */
-  public rotationProjects: RotationProject[];
+  public projectWidgetsByGrid = new Map<number, ProjectWidget[]>();
 
   /**
-   * The list of project widgets related to the project token
+   * The rotation index
    */
-  public projectWidgets: ProjectWidget[];
+  public rotationIndex = 0;
 
   /**
    * The screen code to display
@@ -73,28 +71,17 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   public project: Project;
 
   /**
-   * The rotation
-   */
-  public rotation: Rotation;
-
-  public timer;
-  public timerPercentage;
-  public timerTimeout: NodeJS.Timeout;
-
-  /**
    * The constructor
    *
    * @param router              Service used to manage app's route
    * @param activatedRoute      Service used to manage the route activated by the component
    * @param httpProjectService  Service used to manage http calls for a project
-   * @param httpRotationService Service used to manage http calls for a rotation
    * @param websocketService    Service used to manage websocket
    */
   constructor(
     private readonly router: Router,
     private readonly activatedRoute: ActivatedRoute,
     private readonly httpProjectService: HttpProjectService,
-    private readonly httpRotationService: HttpRotationService,
     private readonly websocketService: WebsocketService
   ) {}
 
@@ -110,12 +97,10 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
     this.listenForConnection();
 
     this.activatedRoute.queryParams.pipe(takeUntil(this.unsubscribe)).subscribe((queryParams: Params) => {
-      if (queryParams['dashboard']) {
-        this.initComponentWithProject(queryParams['dashboard']).subscribe();
-      } else if (queryParams['rotation']) {
-        this.initComponentWithRotation(queryParams['rotation']);
+      if (queryParams['token']) {
+        this.initComponentWithProject(queryParams['token']).subscribe();
       } else {
-        this.rotation = this.project = this.projectWidgets = null;
+        this.project = null;
       }
     });
   }
@@ -142,18 +127,10 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
         const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 
         // Received when synchronizing to a single dashboard
-        if (updateEvent.type === WebsocketUpdateTypeEnum.CONNECT_SINGLE_DASHBOARD) {
+        if (updateEvent.type === WebsocketUpdateTypeEnum.CONNECT_DASHBOARD) {
           const project: Project = updateEvent.content;
           if (project) {
-            this.router.navigate(['/tv'], { queryParams: { dashboard: project.token } });
-          }
-        }
-
-        // Received when synchronizing to a rotation
-        if (updateEvent.type === WebsocketUpdateTypeEnum.CONNECT_ROTATION) {
-          const rotation: Rotation = updateEvent.content;
-          if (rotation) {
-            this.router.navigate(['/tv'], { queryParams: { rotation: rotation.token } });
+            this.router.navigate(['/tv'], { queryParams: { token: project.token } });
           }
         }
       });
@@ -176,30 +153,12 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Initialise the component from the given rotation token
-   */
-  private initComponentWithRotation(rotationToken: string): void {
-    this.isDashboardLoading = true;
-    this.refreshRotation(rotationToken).subscribe(
-      () => (this.isDashboardLoading = false),
-      () => (this.isDashboardLoading = false)
-    );
-  }
-
-  /**
    * Refresh the project
    *
    * @param dashboardToken The token used for the refresh
    */
   private refreshProject(dashboardToken: string): Observable<Project> {
     return this.httpProjectService.getById(dashboardToken).pipe(tap((project: Project) => (this.project = project)));
-  }
-
-  /**
-   * Refresh the rotation
-   */
-  private refreshRotation(rotationToken: string): Observable<Rotation> {
-    return this.httpRotationService.getById(rotationToken).pipe(tap((rotation: Rotation) => (this.rotation = rotation)));
   }
 
   /**
@@ -215,46 +174,35 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * @param dashboardToken The token used for the refresh
    */
   private refreshProjectWidgets(dashboardToken: string): Observable<ProjectWidget[]> {
-    return this.httpProjectService
-      .getWidgetInstancesByProjectToken(dashboardToken)
-      .pipe(tap((projectWidgets: ProjectWidget[]) => (this.projectWidgets = projectWidgets)));
+    return this.httpProjectService.getWidgetInstancesByProjectToken(dashboardToken).pipe(
+      tap((projectWidgets: ProjectWidget[]) => {
+        this.project.grids.forEach(projectGrid => {
+          this.projectWidgetsByGrid.set(
+            projectGrid.id,
+            projectWidgets.filter(projectWidget => projectWidget.gridId === projectGrid.id)
+          );
+        });
+
+        this.scheduleRotation();
+      })
+    );
+  }
+
+  /**
+   * Schedule the next rotation of dashboards
+   */
+  private scheduleRotation(): void {
+    setInterval(() => {
+      this.rotationIndex = this.rotationIndex === this.project.grids.length - 1 ? 0 : this.rotationIndex + 1;
+    }, 5000);
   }
 
   /**
    * Handle the disconnection of a dashboard
    */
   public handlingDashboardDisconnect(): void {
-    this.stopRotationTimer();
     this.router.navigate(['/tv']);
     setTimeout(() => this.listenForConnection(), 500);
-  }
-
-  /**
-   * Perform the rotation from the event received by the child component
-   * through the web socket
-   *
-   * @param event The websocket event containing the next project to display
-   */
-  public performRotation(event: WebsocketUpdateEvent): void {
-    this.stopRotationTimer();
-    this.timerPercentage = 100;
-
-    this.initComponentWithProject((event.content as Project).token).subscribe(() => {
-      const timeBeforeNextRotation = (this.timer = (new Date(event.date).getTime() - new Date().getTime()) / 1000);
-      this.timerTimeout = setInterval(() => {
-        --this.timer;
-        this.timerPercentage = (this.timer * 100) / timeBeforeNextRotation;
-      }, 1000);
-    });
-  }
-
-  /**
-   * Stop the rotation timer
-   */
-  private stopRotationTimer(): void {
-    if (this.timerTimeout) {
-      clearInterval(this.timerTimeout);
-    }
   }
 
   /**
@@ -263,8 +211,6 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   private disconnectTV(): void {
     this.unsubscribe.next();
     this.unsubscribe.complete();
-
-    this.stopRotationTimer();
 
     this.websocketService.disconnect();
   }

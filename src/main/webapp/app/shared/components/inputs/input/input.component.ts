@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, EventEmitter, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { AbstractControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { animate, style, transition, trigger } from '@angular/animations';
 
@@ -27,6 +27,7 @@ import { FormField } from '../../../models/frontend/form/form-field';
 import { IconEnum } from '../../../enums/icon.enum';
 import { MaterialIconRecords } from '../../../records/material-icon.record';
 import { DashboardScreenComponent } from '../../../../dashboard/components/dashboard-screen/dashboard-screen.component';
+import { TranslateService } from '@ngx-translate/core';
 
 /**
  * Manage the instantiation of different form inputs
@@ -71,6 +72,11 @@ export class InputComponent implements OnInit {
   public valueChangeEvent = new EventEmitter<ValueChangedEvent>();
 
   /**
+   * Translate service
+   */
+  protected translateService: TranslateService;
+
+  /**
    * The data type enum
    */
   public dataType = DataTypeEnum;
@@ -97,8 +103,12 @@ export class InputComponent implements OnInit {
 
   /**
    * Constructor
+   *
+   * @param injector Manage services injection
    */
-  constructor() {}
+  constructor(protected injector: Injector) {
+    this.translateService = injector.get(TranslateService);
+  }
 
   /**
    * Called when the component is init
@@ -140,6 +150,10 @@ export class InputComponent implements OnInit {
       return 'field.error.length';
     }
 
+    if (this.getFormControl()['errors']?.min) {
+      return `${this.translateService.instant('field.error.min')} ${this.getFormControl()['errors'].min.min}`;
+    }
+
     if (this.getFormControl()['errors']?.email) {
       return 'field.error.email.format';
     }
@@ -157,10 +171,6 @@ export class InputComponent implements OnInit {
     }
 
     if (this.getFormControl()['errors']?.gt0) {
-      return 'field.error.gt0';
-    }
-
-    if (this.getFormControl()['errors']?.gt0IfDefined) {
       return 'field.error.gt0';
     }
   }

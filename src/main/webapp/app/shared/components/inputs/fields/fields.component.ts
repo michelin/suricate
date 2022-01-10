@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Injector, Input } from '@angular/core';
 import { InputComponent } from '../input/input.component';
 import { FormArray, FormGroup } from '@angular/forms';
 import { FormField } from '../../../models/frontend/form/form-field';
@@ -41,9 +41,11 @@ export class FieldsComponent extends InputComponent {
 
   /**
    * Constructor
+   *
+   * @param injector Manage services injection
    */
-  constructor() {
-    super();
+  constructor(protected injector: Injector) {
+    super(injector);
   }
 
   /**

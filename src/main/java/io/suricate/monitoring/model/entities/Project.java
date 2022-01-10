@@ -26,9 +26,6 @@ import org.hibernate.annotations.Type;
 import javax.persistence.*;
 import java.util.*;
 
-/**
- * Project/dashboard entity
- */
 @Entity
 @Getter
 @Setter
@@ -87,10 +84,11 @@ public class Project extends AbstractAuditingEntity<Long> {
     private Set<ProjectWidget> widgets = new LinkedHashSet<>();
 
     /**
-     * The list of related rotations
+     * The list of related grids
      */
     @OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE)
-    private Set<RotationProject> rotationProjects = new LinkedHashSet<>();
+    @OrderBy("id ASC")
+    private Set<ProjectGrid> grids = new LinkedHashSet<>();
 
     /**
      * The list of users of the project

@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, Injector, OnInit } from '@angular/core';
 import { InputComponent } from '../input/input.component';
 import { MosaicFormOption } from '../../../models/frontend/form/mosaic-form-option';
 
@@ -41,11 +41,12 @@ export class MosaicComponent extends InputComponent implements OnInit {
 
   /**
    * Constructor
+   *
+   * @param injector Manage services injection
    */
-  constructor() {
-    super();
+  constructor(protected injector: Injector) {
+    super(injector);
   }
-
   /**
    * Called when the component is init
    */

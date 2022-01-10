@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 
 import { DashboardService } from '../../services/dashboard/dashboard.service';
 import { Project } from '../../../shared/models/backend/project/project';
@@ -32,17 +32,17 @@ import { DialogService } from '../../../shared/services/frontend/dialog/dialog.s
 import { TranslateService } from '@ngx-translate/core';
 import { ProjectRequest } from '../../../shared/models/backend/project/project-request';
 import { ProjectFormFieldsService } from '../../../shared/services/frontend/form-fields/project-form-fields/project-form-fields.service';
-import { flatMap, switchMap, tap } from 'rxjs/operators';
-import { EMPTY, Observable, of } from 'rxjs';
+import { flatMap, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { EMPTY, Observable, of, Subject } from 'rxjs';
 import { DashboardScreenComponent } from '../dashboard-screen/dashboard-screen.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
 import { ValueChangedEvent } from '../../../shared/models/frontend/form/value-changed-event';
 import { FormField } from '../../../shared/models/frontend/form/form-field';
-import { ProjectRotationUsersFormFieldsService } from '../../../shared/services/frontend/form-fields/project-rotation-users-form-fields/project-rotation-users-form-fields.service';
+import { ProjectUsersFormFieldsService } from '../../../shared/services/frontend/form-fields/project-users-form-fields/project-users-form-fields.service';
 import { WebsocketService } from '../../../shared/services/frontend/websocket/websocket.service';
 import { ImageUtils } from '../../../shared/utils/image.utils';
-import { DashboardTvManagementDialogComponent } from '../tv-management-dialog/dashboard-tv-management-dialog/dashboard-tv-management-dialog.component';
+import { TvManagementDialogComponent } from '../tv-management-dialog/tv-management-dialog.component';
 
 /**
  * Component used to display a specific dashboard
@@ -52,7 +52,12 @@ import { DashboardTvManagementDialogComponent } from '../tv-management-dialog/da
   templateUrl: './dashboard-detail.component.html',
   styleUrls: ['./dashboard-detail.component.scss']
 })
-export class DashboardDetailComponent implements OnInit {
+export class DashboardDetailComponent implements OnInit, OnDestroy {
+  /**
+   * Subject used to unsubscribe all the subscriptions when the component is destroyed
+   */
+  private unsubscribe: Subject<void> = new Subject<void>();
+
   /**
    * The dashboard html (as HTML Element)
    */
@@ -69,14 +74,19 @@ export class DashboardDetailComponent implements OnInit {
   public dashboardToken: string;
 
   /**
+   * The id of the grid
+   */
+  public gridId: number;
+
+  /**
    * The project used to display the dashboard
    */
   public project: Project;
 
   /**
-   * The list of widget instance of this project
+   * The widgets of the loaded grid
    */
-  public projectWidgets: ProjectWidget[];
+  public widgets: ProjectWidget[];
 
   /**
    * True if the dashboard should be displayed readonly, false otherwise
@@ -127,7 +137,7 @@ export class DashboardDetailComponent implements OnInit {
     private readonly translateService: TranslateService,
     private readonly httpProjectService: HttpProjectService,
     private readonly httpScreenService: HttpScreenService,
-    private readonly projectUsersFormFieldsService: ProjectRotationUsersFormFieldsService,
+    private readonly projectUsersFormFieldsService: ProjectUsersFormFieldsService,
     private readonly dashboardService: DashboardService,
     private readonly sidenavService: SidenavService,
     private readonly toastService: ToastService,
@@ -144,21 +154,33 @@ export class DashboardDetailComponent implements OnInit {
 
     this.websocketService.startConnection();
 
-    this.refreshProject()
-      .pipe(
-        flatMap(() => this.isReadOnlyDashboard()),
-        flatMap(() => this.refreshProjectWidgets())
-      )
-      .subscribe(
-        () => {
-          this.isDashboardLoading = false;
-          this.initHeaderConfiguration();
-        },
-        () => {
-          this.isDashboardLoading = false;
-          this.router.navigate(['/home/dashboards']);
-        }
-      );
+    // When gridId parameter changes
+    this.activatedRoute.params.pipe(takeUntil(this.unsubscribe)).subscribe(() => {
+      this.gridId = this.activatedRoute.snapshot.params['gridId'];
+
+      this.refreshProject()
+        .pipe(
+          flatMap(() => this.isReadOnlyDashboard()),
+          flatMap(() => this.refreshProjectWidgets())
+        )
+        .subscribe(
+          () => {
+            this.isDashboardLoading = false;
+            this.initHeaderConfiguration();
+          },
+          () => {
+            this.isDashboardLoading = false;
+            this.router.navigate(['/home']);
+          }
+        );
+    });
+  }
+
+  /**
+   * On destroy
+   */
+  ngOnDestroy(): void {
+    this.websocketService.disconnect();
   }
 
   /**
@@ -189,8 +211,19 @@ export class DashboardDetailComponent implements OnInit {
    */
   private refreshProjectWidgets(): Observable<ProjectWidget[]> {
     return this.httpProjectService
-      .getWidgetInstancesByProjectToken(this.dashboardToken)
-      .pipe(tap((projectWidgets: ProjectWidget[]) => (this.projectWidgets = projectWidgets)));
+      .getWidgetInstancesByProjectTokenAndGridId(this.dashboardToken, this.gridId)
+      .pipe(tap((projectWidgets: ProjectWidget[]) => (this.widgets = projectWidgets)));
+  }
+
+  /**
+   * When manually triggered, rotate to the required dashboard
+   *
+   * @param gridId The id of the grid to display
+   */
+  public changeGrid(gridId: number): void {
+    if (this.gridId !== gridId) {
+      this.router.navigate(['/dashboards', this.dashboardToken, gridId]);
+    }
   }
 
   /**
@@ -229,7 +262,7 @@ export class DashboardDetailComponent implements OnInit {
           color: 'primary',
           variant: 'miniFab',
           tooltip: { message: 'screen.refresh' },
-          hidden: () => this.isReadOnly || !this.projectWidgets || this.projectWidgets.length === 0,
+          hidden: () => this.isReadOnly || !this.widgets || this.widgets.length === 0,
           callback: () => this.refreshConnectedScreens()
         },
         {
@@ -237,7 +270,7 @@ export class DashboardDetailComponent implements OnInit {
           color: 'primary',
           variant: 'miniFab',
           tooltip: { message: 'tv.view' },
-          hidden: () => !this.projectWidgets || this.projectWidgets.length === 0,
+          hidden: () => !this.widgets || this.widgets.length === 0,
           callback: () => this.redirectToTvView()
         },
         {
@@ -245,11 +278,19 @@ export class DashboardDetailComponent implements OnInit {
           color: 'primary',
           variant: 'miniFab',
           tooltip: { message: 'screen.management' },
-          hidden: () => this.isReadOnly || !this.projectWidgets || this.projectWidgets.length === 0,
+          hidden: () => this.isReadOnly || !this.widgets || this.widgets.length === 0,
           callback: () => this.openScreenManagementDialog()
         },
         {
           icon: IconEnum.DELETE,
+          color: 'warn',
+          variant: 'miniFab',
+          tooltip: { message: 'dashboard.delete.grid' },
+          hidden: () => this.isReadOnly || this.project.grids.length === 1,
+          callback: () => this.deleteCurrentGrid()
+        },
+        {
+          icon: IconEnum.DELETE_FOREVER,
           color: 'warn',
           variant: 'miniFab',
           tooltip: { message: 'dashboard.delete' },
@@ -264,7 +305,7 @@ export class DashboardDetailComponent implements OnInit {
    * Redirect to the wizard used to add a new widget
    */
   public displayProjectWidgetWizard(): void {
-    this.router.navigate(['/dashboards', this.project.token, 'widgets', 'create']);
+    this.router.navigate(['/dashboards', this.project.token, this.gridId, 'widgets', 'create']);
   }
 
   /**
@@ -326,15 +367,17 @@ export class DashboardDetailComponent implements OnInit {
         this.httpProjectService.addOrUpdateProjectScreenshot(this.project.token, file).subscribe();
       }
 
+      this.toastService.sendMessage('dashboard.update.success', ToastTypeEnum.SUCCESS);
+      this.refreshConnectedScreens();
       // If there is no widget anymore, no need to refresh the current screen, only refresh the connected screens
-      if (!this.projectWidgets) {
+      /*if (this.widgets.length === 0) {
         this.refreshProject().subscribe(() => {
           this.initHeaderConfiguration();
           this.toastService.sendMessage('dashboard.update.success', ToastTypeEnum.SUCCESS);
         });
       } else {
         this.refreshConnectedScreens();
-      }
+      }*/
     });
   }
 
@@ -349,7 +392,7 @@ export class DashboardDetailComponent implements OnInit {
    * Open a new tab with the TV view
    */
   private redirectToTvView(): void {
-    const url = this.router.createUrlTree(['/tv'], { queryParams: { dashboard: this.project.token } });
+    const url = this.router.createUrlTree(['/tv'], { queryParams: { token: this.project.token } });
     window.open(url.toString(), '_blank');
   }
 
@@ -357,12 +400,28 @@ export class DashboardDetailComponent implements OnInit {
    * Open the dialog used to manage screens
    */
   private openScreenManagementDialog(): void {
-    this.matDialog.open(DashboardTvManagementDialogComponent, {
+    this.matDialog.open(TvManagementDialogComponent, {
       role: 'dialog',
       width: '700px',
       maxHeight: '80%',
       autoFocus: false,
       data: { project: this.project }
+    });
+  }
+
+  /**
+   * Delete the current grid dashboard
+   */
+  private deleteCurrentGrid(): void {
+    this.dialogService.confirm({
+      title: 'dashboard.delete.grid',
+      message: this.translateService.instant('delete.grid.confirm'),
+      accept: () => {
+        this.httpProjectService.deleteGrid(this.project.token, this.gridId).subscribe(() => {
+          this.toastService.sendMessage('dashboard.grid.delete.success', ToastTypeEnum.SUCCESS);
+          this.router.navigate(['/dashboards', this.dashboardToken, this.project.grids[0].id]);
+        });
+      }
     });
   }
 
@@ -376,7 +435,7 @@ export class DashboardDetailComponent implements OnInit {
       accept: () => {
         this.httpProjectService.delete(this.project.token).subscribe(() => {
           this.toastService.sendMessage('dashboard.delete.success', ToastTypeEnum.SUCCESS);
-          this.router.navigate(['/home/dashboards']);
+          this.router.navigate(['/home']);
         });
       }
     });
@@ -386,7 +445,7 @@ export class DashboardDetailComponent implements OnInit {
    * Handle the disconnection of a dashboard
    */
   public handlingDashboardDisconnect(): void {
-    this.router.navigate(['/home/dashboards']);
+    this.router.navigate(['/home']);
   }
 
   /**

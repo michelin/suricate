@@ -40,12 +40,6 @@ public class WebsocketClient extends AbstractDto {
     private String projectToken;
 
     /**
-     * The rotation token subscribed by the client
-     */
-    @ApiModelProperty(value = "The connected project token")
-    private String rotationToken;
-
-    /**
      * The websocket session id
      */
     @ApiModelProperty(value = "The websocket session id")
