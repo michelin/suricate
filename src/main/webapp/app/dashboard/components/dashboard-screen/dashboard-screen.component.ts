@@ -28,7 +28,7 @@ import {
   ViewChild
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
-import {  Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { NgGridConfig, NgGridItem, NgGridItemConfig } from 'angular2-grid';
 import * as Stomp from '@stomp/stompjs';
 import { Project } from '../../../shared/models/backend/project/project';
@@ -154,7 +154,6 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
    * @param changes The change event
    */
   public ngOnChanges(changes: SimpleChanges): void {
-    console.warn("inited");
     if (changes.project) {
       if (!changes.project.previousValue) {
         // Inject this variable in the window scope because some widgets use it to init the js
@@ -200,7 +199,6 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
    * When the component is destroyed (new page)
    */
   public ngOnDestroy(): void {
-    console.warn("destroyed");
     this.disconnectFromWebsockets();
   }
 
@@ -290,16 +288,15 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   private getGridItemsFromProjectWidgets(): NgGridItemConfig[] {
     const gridStackItemsConfig: NgGridItemConfig[] = [];
 
-    this.projectWidgets
-      .forEach((projectWidget: ProjectWidget) => {
-        gridStackItemsConfig.push({
-          col: projectWidget.widgetPosition.gridColumn,
-          row: projectWidget.widgetPosition.gridRow,
-          sizey: projectWidget.widgetPosition.height,
-          sizex: projectWidget.widgetPosition.width,
-          payload: projectWidget
-        });
+    this.projectWidgets.forEach((projectWidget: ProjectWidget) => {
+      gridStackItemsConfig.push({
+        col: projectWidget.widgetPosition.gridColumn,
+        row: projectWidget.widgetPosition.gridRow,
+        sizey: projectWidget.widgetPosition.height,
+        sizex: projectWidget.widgetPosition.width,
+        payload: projectWidget
       });
+    });
 
     return gridStackItemsConfig;
   }

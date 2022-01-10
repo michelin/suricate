@@ -286,16 +286,6 @@ public class DashboardWebSocketService {
     }
 
     /**
-     * Method used for updates by project id every screens connected to this project
-     *
-     * @param projectId the project id
-     * @param payload   the payload content
-     */
-    public void updateGlobalScreensByProjectId(Long projectId, UpdateEvent payload) {
-        this.sendEventToProjectSubscribers(projectService.getTokenByProjectId(projectId), payload);
-    }
-
-    /**
      * Disconnect screen from project
      *
      * @param projectToken The project token

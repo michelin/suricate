@@ -16,7 +16,7 @@
  *
  */
 
-import {Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation} from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { flatMap, takeUntil, tap } from 'rxjs/operators';
 import { Observable, Subject } from 'rxjs';
 import { ActivatedRoute, Params, Router } from '@angular/router';
@@ -28,7 +28,7 @@ import { HttpProjectService } from '../../../shared/services/backend/http-projec
 import { WebsocketService } from '../../../shared/services/frontend/websocket/websocket.service';
 import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';
 import { DashboardService } from '../../services/dashboard/dashboard.service';
-import {DashboardScreenComponent} from "../dashboard-screen/dashboard-screen.component";
+import { DashboardScreenComponent } from '../dashboard-screen/dashboard-screen.component';
 
 /**
  * Dashboard TV Management
@@ -48,19 +48,12 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   /**
    * All project widgets, split by grid
    */
-  private projectWidgetsByGrid = new Map<number, ProjectWidget[]>();
+  public projectWidgetsByGrid = new Map<number, ProjectWidget[]>();
 
   /**
-   * The rotation index. Follow the IDs of the grids map
+   * The rotation index
    */
-  private rotationIndex = 0;
-
-  public destroy = false;
-
-  /**
-   * The list of project widgets related to the project token
-   */
-  public projectWidgets: ProjectWidget[];
+  public rotationIndex = 0;
 
   /**
    * The screen code to display
@@ -76,8 +69,6 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * The project
    */
   public project: Project;
-
-  @ViewChild(DashboardScreenComponent, {static: false}) childRef: DashboardScreenComponent;
 
   /**
    * The constructor
@@ -109,7 +100,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
       if (queryParams['token']) {
         this.initComponentWithProject(queryParams['token']).subscribe();
       } else {
-        this.project = this.projectWidgets = null;
+        this.project = null;
       }
     });
   }
@@ -183,16 +174,18 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * @param dashboardToken The token used for the refresh
    */
   private refreshProjectWidgets(dashboardToken: string): Observable<ProjectWidget[]> {
-    return this.httpProjectService
-      .getWidgetInstancesByProjectToken(dashboardToken)
-      .pipe(tap((projectWidgets: ProjectWidget[]) => {
-        this.project.grids.forEach((projectGrid, index) => {
-          this.projectWidgetsByGrid.set(index, projectWidgets.filter(projectWidget => projectWidget.gridId === projectGrid.id));
+    return this.httpProjectService.getWidgetInstancesByProjectToken(dashboardToken).pipe(
+      tap((projectWidgets: ProjectWidget[]) => {
+        this.project.grids.forEach(projectGrid => {
+          this.projectWidgetsByGrid.set(
+            projectGrid.id,
+            projectWidgets.filter(projectWidget => projectWidget.gridId === projectGrid.id)
+          );
         });
 
-        this.projectWidgets = this.projectWidgetsByGrid.get(this.rotationIndex);
         this.scheduleRotation();
-      }));
+      })
+    );
   }
 
   /**
@@ -200,16 +193,8 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    */
   private scheduleRotation(): void {
     setInterval(() => {
-      this.childRef.ngOnDestroy();
-      this.rotationIndex = this.rotationIndex == this.project.grids.length - 1 ? 0 : this.rotationIndex + 1;
-      this.projectWidgets = this.projectWidgetsByGrid.get(this.rotationIndex);
-    }, 5000)
-  }
-
-  rotate(): void {
-    //this.destroy = false;
-    //this.rotationIndex = this.rotationIndex == this.project.grids.length - 1 ? 0 : this.rotationIndex + 1;
-    //this.projectWidgets = this.projectWidgetsByGrid.get(this.rotationIndex);
+      this.rotationIndex = this.rotationIndex === this.project.grids.length - 1 ? 0 : this.rotationIndex + 1;
+    }, 5000);
   }
 
   /**

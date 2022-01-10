@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import {Component, ElementRef, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute, Params, Router} from '@angular/router';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 
 import { DashboardService } from '../../services/dashboard/dashboard.service';
 import { Project } from '../../../shared/models/backend/project/project';
@@ -32,8 +32,8 @@ import { DialogService } from '../../../shared/services/frontend/dialog/dialog.s
 import { TranslateService } from '@ngx-translate/core';
 import { ProjectRequest } from '../../../shared/models/backend/project/project-request';
 import { ProjectFormFieldsService } from '../../../shared/services/frontend/form-fields/project-form-fields/project-form-fields.service';
-import {flatMap, switchMap, takeUntil, tap} from 'rxjs/operators';
-import {EMPTY, Observable, of, Subject} from 'rxjs';
+import { flatMap, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { EMPTY, Observable, of, Subject } from 'rxjs';
 import { DashboardScreenComponent } from '../dashboard-screen/dashboard-screen.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
@@ -211,8 +211,8 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    */
   private refreshProjectWidgets(): Observable<ProjectWidget[]> {
     return this.httpProjectService
-        .getWidgetInstancesByProjectTokenAndGridId(this.dashboardToken, this.gridId)
-        .pipe(tap((projectWidgets: ProjectWidget[]) => (this.widgets = projectWidgets)));
+      .getWidgetInstancesByProjectTokenAndGridId(this.dashboardToken, this.gridId)
+      .pipe(tap((projectWidgets: ProjectWidget[]) => (this.widgets = projectWidgets)));
   }
 
   /**
@@ -222,7 +222,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    */
   public changeGrid(gridId: number): void {
     if (this.gridId != gridId) {
-      this.router.navigate(['/dashboards', this.dashboardToken, gridId])
+      this.router.navigate(['/dashboards', this.dashboardToken, gridId]);
     }
   }
 
@@ -367,15 +367,17 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
         this.httpProjectService.addOrUpdateProjectScreenshot(this.project.token, file).subscribe();
       }
 
+      this.toastService.sendMessage('dashboard.update.success', ToastTypeEnum.SUCCESS);
+      this.refreshConnectedScreens();
       // If there is no widget anymore, no need to refresh the current screen, only refresh the connected screens
-      if (!this.widgets) {
+      /*if (this.widgets.length === 0) {
         this.refreshProject().subscribe(() => {
           this.initHeaderConfiguration();
           this.toastService.sendMessage('dashboard.update.success', ToastTypeEnum.SUCCESS);
         });
       } else {
         this.refreshConnectedScreens();
-      }
+      }*/
     });
   }
 
@@ -417,7 +419,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
       accept: () => {
         this.httpProjectService.deleteGrid(this.project.token, this.gridId).subscribe(() => {
           this.toastService.sendMessage('dashboard.grid.delete.success', ToastTypeEnum.SUCCESS);
-          this.router.navigate(['/dashboards', this.dashboardToken, this.project.grids[0].id])
+          this.router.navigate(['/dashboards', this.dashboardToken, this.project.grids[0].id]);
         });
       }
     });

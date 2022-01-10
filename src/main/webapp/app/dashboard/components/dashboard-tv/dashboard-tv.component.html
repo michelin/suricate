@@ -1,6 +1,6 @@
 <div class="tv-wrapper">
   <div
-    *ngIf="!project || !projectWidgets; else dashboardScreen"
+    *ngIf="!project || !projectWidgetsByGrid; else dashboardScreen"
     class="container without-header"
     fxLayout="column"
     fxLayoutAlign="center center"
@@ -19,8 +19,10 @@
 
   <ng-template #dashboardScreen>
     <suricate-dashboard-screen
+      *ngFor="let entry of projectWidgetsByGrid | keyvalue"
+      [fxHide]="entry.key !== project.grids[rotationIndex].id"
       [project]="project"
-      [projectWidgets]="projectWidgets"
+      [projectWidgets]="entry.value"
       [screenCode]="screenCode"
       [readOnly]="true"
       (refreshAllProjectWidgets)="refreshAllProjectWidgets()"
