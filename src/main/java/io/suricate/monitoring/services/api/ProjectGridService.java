@@ -1,20 +1,16 @@
 package io.suricate.monitoring.services.api;
 
-import io.suricate.monitoring.model.entities.Project;
+import io.suricate.monitoring.model.dto.api.projectgrid.ProjectGridRequestDto;
 import io.suricate.monitoring.model.entities.ProjectGrid;
-import io.suricate.monitoring.model.entities.User;
 import io.suricate.monitoring.repositories.ProjectGridRepository;
-import io.suricate.monitoring.repositories.ProjectRepository;
-import io.suricate.monitoring.services.websocket.DashboardWebSocketService;
-import io.suricate.monitoring.utils.logging.LogExecutionTime;
-import org.apache.commons.lang3.StringUtils;
-import org.jasypt.encryption.StringEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ProjectGridService {
@@ -50,10 +46,30 @@ public class ProjectGridService {
      * @param projectGrids The list of project grids
      */
     @Transactional
-    public Collection<ProjectGrid> createProjectGrid(List<ProjectGrid> projectGrids) {
+    public Collection<ProjectGrid> createAll(List<ProjectGrid> projectGrids) {
         List<ProjectGrid> createdProjectGrids = new ArrayList<>();
         projectGridRepository.saveAll(projectGrids).forEach(createdProjectGrids::add);
         return createdProjectGrids;
+    }
+
+    /**
+     * Persist a given list of project grids
+     *
+     * @param projectGrids The list of project grids
+     * @param projectRequestDtos The list of project grids as DTO
+     */
+    @Transactional
+    public void updateAll(Collection<ProjectGrid> projectGrids, List<ProjectGridRequestDto> projectRequestDtos) {
+        projectGrids.forEach(projectGrid -> {
+            Optional<ProjectGridRequestDto> projectGridDto = projectRequestDtos
+                    .stream()
+                    .filter(dto -> dto.getId().equals(projectGrid.getId()))
+                    .findFirst();
+
+            projectGridDto.ifPresent(projectGridRequestDto -> projectGrid.setTime(projectGridRequestDto.getTime()));
+        });
+
+        projectGridRepository.saveAll(projectGrids);
     }
 
     /**

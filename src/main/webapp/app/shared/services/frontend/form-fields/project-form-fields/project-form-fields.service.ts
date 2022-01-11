@@ -65,6 +65,11 @@ export class ProjectFormFieldsService {
   public static readonly projectGridBackgroundColorFormFieldKey = 'gridBackgroundColor';
 
   /**
+   * Key of the form field for grids
+   */
+  public static readonly gridFormFieldKey = 'grid';
+
+  /**
    * Constructor
    */
   constructor(private translateService: TranslateService) {}
@@ -83,7 +88,7 @@ export class ProjectFormFieldsService {
     return [
       {
         key: ProjectFormFieldsService.projectNameFormFieldKey,
-        label: 'Title',
+        label: 'dashboard.title.form.field',
         iconPrefix: IconEnum.NAME,
         type: DataTypeEnum.TEXT,
         value: project?.name ? project.name : null,
@@ -132,5 +137,28 @@ export class ProjectFormFieldsService {
         value: backgroundColor
       }
     ];
+  }
+
+  /**
+   * Get the list of form fields for the grids management
+   *
+   * @param project The project used for an edition
+   */
+  public generateGridsManagementFormFields(project: Project): FormField[] {
+    const formFields: FormField[] = [];
+
+    project.grids.forEach((grid, index) => {
+      formFields.push({
+        key: `${ProjectFormFieldsService.gridFormFieldKey}-${index}`,
+        label: `${this.translateService.instant('dashboard.grid.management.rotation.speed.form.field')} ${index}`,
+        iconPrefix: IconEnum.SPEED,
+        type: DataTypeEnum.TEXT,
+        value: grid.time,
+        placeholder: this.translateService.instant('dashboard.grid.management.rotation.speed.form.field.placeholder'),
+        validators: [Validators.required, CustomValidator.isDigits, CustomValidator.greaterThan0]
+      });
+    });
+
+    return formFields;
   }
 }

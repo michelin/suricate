@@ -36,7 +36,6 @@ import { Page } from '../../../models/backend/page';
 export class HttpProjectService implements AbstractHttpService<Project | ProjectRequest> {
   /**
    * Global endpoint for projects
-
    */
   private static readonly projectsApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/projects`;
 
@@ -147,46 +146,6 @@ export class HttpProjectService implements AbstractHttpService<Project | Project
     const url = `${HttpProjectService.projectsApiEndpoint}/${projectToken}/projectWidgetPositions`;
 
     return this.httpClient.put<void>(url, projectWidgetPositionRequests);
-  }
-
-  /**
-   * Get the list of widget instances for a project
-   *
-   * @param projectToken The project token
-   */
-  public getWidgetInstancesByProjectToken(projectToken: string): Observable<ProjectWidget[]> {
-    const url = `${HttpProjectService.projectsApiEndpoint}/${projectToken}/projectWidgets`;
-
-    return this.httpClient.get<ProjectWidget[]>(url);
-  }
-
-  /**
-   * Get the list of widget instances for a project
-   *
-   * @param projectToken The project token
-   * @param gridId The grid id
-   */
-  public getWidgetInstancesByProjectTokenAndGridId(projectToken: string, gridId: number): Observable<ProjectWidget[]> {
-    const url = `${HttpProjectService.projectsApiEndpoint}/${projectToken}/${gridId}/projectWidgets`;
-
-    return this.httpClient.get<ProjectWidget[]>(url);
-  }
-
-  /**
-   * Add a new widget to the project
-   *
-   * @param projectToken The project token
-   * @param gridId The grid id
-   * @param projectWidgetRequest The project widget to add
-   */
-  public addProjectWidgetToProject(
-    projectToken: string,
-    gridId: number,
-    projectWidgetRequest: ProjectWidgetRequest
-  ): Observable<ProjectWidget> {
-    const url = `${HttpProjectService.projectsApiEndpoint}/${projectToken}/${gridId}/projectWidgets`;
-
-    return this.httpClient.post<ProjectWidget>(url, projectWidgetRequest);
   }
 
   /**

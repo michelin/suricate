@@ -31,6 +31,7 @@ import { WidgetConfigurationFormFieldsService } from '../../services/frontend/fo
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { ProjectWidgetFormStepsService } from '../../services/frontend/form-steps/project-widget-form-steps/project-widget-form-steps.service';
 import { HttpProjectService } from '../../services/backend/http-project/http-project.service';
+import { HttpProjectWidgetService } from '../../services/backend/http-project-widget/http-project-widget.service';
 
 /**
  * Generic component used to display wizards
@@ -52,9 +53,9 @@ export class WizardComponent implements OnInit {
   private readonly formService: FormService;
 
   /**
-   * The http project service
+   * The HTTP project widgets service
    */
-  public readonly httpProjectService: HttpProjectService;
+  public readonly httpProjectWidgetsService: HttpProjectWidgetService;
 
   /**
    * Frontend service used to help on the widget configuration form fields creation
@@ -121,7 +122,7 @@ export class WizardComponent implements OnInit {
     this.widgetConfigurationFormFieldsService = injector.get(WidgetConfigurationFormFieldsService);
     this.activatedRoute = injector.get(ActivatedRoute);
     this.router = injector.get(Router);
-    this.httpProjectService = injector.get(HttpProjectService);
+    this.httpProjectWidgetsService = injector.get(HttpProjectWidgetService);
   }
 
   /**

@@ -23,6 +23,7 @@ import io.suricate.monitoring.model.entities.ProjectGrid;
 import io.suricate.monitoring.model.entities.User;
 import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.repositories.ProjectRepository;
+import io.suricate.monitoring.services.mapper.ProjectGridMapper;
 import io.suricate.monitoring.services.specifications.ProjectSearchSpecification;
 import io.suricate.monitoring.services.websocket.DashboardWebSocketService;
 import io.suricate.monitoring.utils.SecurityUtils;
@@ -43,6 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.IntStream;
 
 /**
  * Manage the projects
@@ -75,6 +77,11 @@ public class ProjectService {
     private final ProjectGridService projectGridService;
 
     /**
+     * Project grid mapper
+     */
+    private final ProjectGridMapper projectGridMapper;
+
+    /**
      * Constructor
      *
      * @param stringEncryptor           The string encryptor to inject
@@ -82,18 +89,21 @@ public class ProjectService {
      * @param dashboardWebSocketService The dashboard web socket service to inject
      * @param assetService              The asset service
      * @param projectGridService        The project grid service
+     * @param projectGridMapper         The project grid mapper
      */
     @Autowired
     public ProjectService(@Qualifier("jasyptStringEncryptor") final StringEncryptor stringEncryptor,
                           final ProjectRepository projectRepository,
                           final DashboardWebSocketService dashboardWebSocketService,
                           final AssetService assetService,
-                          final ProjectGridService projectGridService) {
+                          final ProjectGridService projectGridService,
+                          final ProjectGridMapper projectGridMapper) {
         this.stringEncryptor = stringEncryptor;
         this.projectRepository = projectRepository;
         this.dashboardWebsocketService = dashboardWebSocketService;
         this.assetService = assetService;
         this.projectGridService = projectGridService;
+        this.projectGridMapper = projectGridMapper;
     }
 
     /**
@@ -187,13 +197,9 @@ public class ProjectService {
 
         if (gridNumber > 0 && gridNumber > project.getGrids().size()) {
             List<ProjectGrid> projectGrids = new ArrayList<>();
-            for (int i = 0; i < gridNumber - project.getGrids().size(); i++) {
-                ProjectGrid newProjectGrid = new ProjectGrid();
-                newProjectGrid.setTime(30);
-                newProjectGrid.setProject(project);
-                projectGrids.add(newProjectGrid);
-            }
-            projectGridService.createProjectGrid(projectGrids);
+            IntStream.of(gridNumber - project.getGrids().size()).forEach(x ->
+                    projectGrids.add(projectGridMapper.toProjectGridEntity(project)));
+            projectGridService.createAll(projectGrids);
         }
 
         if (StringUtils.isNotBlank(customCSS)) {

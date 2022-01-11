@@ -55,6 +55,7 @@ export const MaterialIconRecords: Record<IconEnum, string> = {
   [IconEnum.SETTINGS]: 'settings',
   [IconEnum.SHARE_SCREEN]: 'screen_share',
   [IconEnum.SHOW_PASSWORD]: 'visibility',
+  [IconEnum.SPEED]: 'speed',
   [IconEnum.STOP_SHARE_SCREEN]: 'stop_screen_share',
   [IconEnum.SUCCESS]: 'done',
   [IconEnum.SYNCHRONIZE]: 'sync',

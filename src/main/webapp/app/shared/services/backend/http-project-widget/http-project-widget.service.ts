@@ -53,6 +53,46 @@ export class HttpProjectWidgetService {
   }
 
   /**
+   * Get the list of widget instances for a project
+   *
+   * @param projectToken The project token
+   */
+  public getAllByProjectToken(projectToken: string): Observable<ProjectWidget[]> {
+    const url = `${HttpProjectWidgetService.projectWidgetsApiEndpoint}/${projectToken}/projectWidgets`;
+
+    return this.httpClient.get<ProjectWidget[]>(url);
+  }
+
+  /**
+   * Get the list of widget instances for a project and a grid
+   *
+   * @param projectToken The project token
+   * @param gridId The grid id
+   */
+  public getAllByProjectTokenAndGridId(projectToken: string, gridId: number): Observable<ProjectWidget[]> {
+    const url = `${HttpProjectWidgetService.projectWidgetsApiEndpoint}/${projectToken}/${gridId}/projectWidgets`;
+
+    return this.httpClient.get<ProjectWidget[]>(url);
+  }
+
+  /**
+   * Add a new widget to the project
+   *
+   * @param projectToken The project token
+   * @param gridId The grid id
+   * @param projectWidgetRequest The project widget to add
+   */
+  public addProjectWidgetToProject(
+    projectToken: string,
+    gridId: number,
+    projectWidgetRequest: ProjectWidgetRequest
+  ): Observable<ProjectWidget> {
+    const url = `${HttpProjectWidgetService.projectWidgetsApiEndpoint}/${projectToken}/${gridId}/projectWidgets`;
+
+    return this.httpClient.post<ProjectWidget>(url, projectWidgetRequest);
+  }
+
+  /**
    * Update a project widget by id
    *
    * @param projectWidgetId The project widget id

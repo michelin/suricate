@@ -85,6 +85,13 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   public screenCode: number;
 
   /**
+   * Tell if the websockets need to be opened.
+   * E.g.: In case of grids rotation, do not open websockets for each grid
+   */
+  @Input()
+  public openWebsockets = true;
+
+  /**
    * Event for handling the disconnection
    */
   @Output()
@@ -254,8 +261,7 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
         margins: [4],
         auto_resize: true,
         draggable: false,
-        resizable: false,
-        prefer_new: true
+        resizable: false
       };
 
       if (!this.readOnly) {
@@ -309,17 +315,21 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
    * Init web sockets for project events
    */
   private initProjectWebsockets(): void {
-    this.unsubscribeProjectWebSocket = new Subject<void>();
-    this.websocketProjectEventSubscription();
-    this.websocketProjectScreenEventSubscription();
+    if (this.openWebsockets) {
+      this.unsubscribeProjectWebSocket = new Subject<void>();
+      this.websocketProjectEventSubscription();
+      this.websocketProjectScreenEventSubscription();
+    }
   }
 
   /**
    * Reset the project web sockets subscriptions
    */
   private resetProjectWebsockets(): void {
-    this.unsubscribeProjectWebsockets();
-    this.initProjectWebsockets();
+    if (this.openWebsockets) {
+      this.unsubscribeProjectWebsockets();
+      this.initProjectWebsockets();
+    }
   }
 
   /**

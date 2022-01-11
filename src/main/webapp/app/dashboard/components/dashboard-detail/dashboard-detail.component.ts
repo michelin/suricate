@@ -43,6 +43,8 @@ import { ProjectUsersFormFieldsService } from '../../../shared/services/frontend
 import { WebsocketService } from '../../../shared/services/frontend/websocket/websocket.service';
 import { ImageUtils } from '../../../shared/utils/image.utils';
 import { TvManagementDialogComponent } from '../tv-management-dialog/tv-management-dialog.component';
+import { HttpProjectGridService } from '../../../shared/services/backend/http-project-grid/http-project-grid.service';
+import { HttpProjectWidgetService } from '../../../shared/services/backend/http-project-widget/http-project-widget.service';
 
 /**
  * Component used to display a specific dashboard
@@ -121,6 +123,8 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    * @param matDialog Angular material service used to manage dialog
    * @param translateService NgxTranslate service used to manage translations
    * @param httpProjectService Suricate service used to manage http calls for project
+   * @param httpProjectWidgetsService Suricate service used to manage http calls for project
+   * @param httpProjectGridsService The HTTP project grids service
    * @param httpScreenService Suricate service used to manage http calls for screen service
    * @param projectUsersFormFieldsService Frontend service used to generate form fields for projectUsers
    * @param dashboardService Frontend service used to manage dashboards
@@ -136,6 +140,8 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
     private readonly matDialog: MatDialog,
     private readonly translateService: TranslateService,
     private readonly httpProjectService: HttpProjectService,
+    private readonly httpProjectWidgetsService: HttpProjectWidgetService,
+    private readonly httpProjectGridsService: HttpProjectGridService,
     private readonly httpScreenService: HttpScreenService,
     private readonly projectUsersFormFieldsService: ProjectUsersFormFieldsService,
     private readonly dashboardService: DashboardService,
@@ -210,8 +216,8 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    * Refresh the project widget list
    */
   private refreshProjectWidgets(): Observable<ProjectWidget[]> {
-    return this.httpProjectService
-      .getWidgetInstancesByProjectTokenAndGridId(this.dashboardToken, this.gridId)
+    return this.httpProjectWidgetsService
+      .getAllByProjectTokenAndGridId(this.dashboardToken, this.gridId)
       .pipe(tap((projectWidgets: ProjectWidget[]) => (this.widgets = projectWidgets)));
   }
 
@@ -248,6 +254,14 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
           tooltip: { message: 'dashboard.edit' },
           hidden: () => this.isReadOnly,
           callback: () => this.openDashboardFormSidenav()
+        },
+        {
+          icon: IconEnum.GRID,
+          color: 'primary',
+          variant: 'miniFab',
+          tooltip: { message: 'dashboard.grid.management' },
+          hidden: () => this.isReadOnly || this.project.grids.length === 1,
+          callback: () => this.openGridsManagementSidenav()
         },
         {
           icon: IconEnum.USERS,
@@ -348,7 +362,18 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Execute the action edit the dashboard when the sidenav as been saved
+   * Open the grids management sidenav used to edit the grids
+   */
+  private openGridsManagementSidenav(): void {
+    this.sidenavService.openFormSidenav({
+      title: 'dashboard.grid.management',
+      formFields: this.projectFormFieldsService.generateGridsManagementFormFields(this.project),
+      save: (formData: ProjectRequest) => this.editGrids(formData)
+    });
+  }
+
+  /**
+   * Execute the action edit the dashboard when the sidenav has been saved
    *
    * @param formData The data retrieve from the form sidenav
    */
@@ -369,15 +394,24 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
 
       this.toastService.sendMessage('dashboard.update.success', ToastTypeEnum.SUCCESS);
       this.refreshConnectedScreens();
-      // If there is no widget anymore, no need to refresh the current screen, only refresh the connected screens
-      /*if (this.widgets.length === 0) {
-        this.refreshProject().subscribe(() => {
-          this.initHeaderConfiguration();
-          this.toastService.sendMessage('dashboard.update.success', ToastTypeEnum.SUCCESS);
-        });
-      } else {
-        this.refreshConnectedScreens();
-      }*/
+    });
+  }
+
+  /**
+   * Execute the action edit the grids when the sidenav has been saved
+   *
+   * @param formData The data retrieve from the form sidenav
+   */
+  private editGrids(formData: any): void {
+    const formDataArray = Object.keys(formData).map(key => formData[key]);
+
+    this.project.grids.forEach((grid, index) => {
+      grid.time = formDataArray[index];
+    });
+
+    this.httpProjectGridsService.updateAll(this.project.token, this.project.grids).subscribe(() => {
+      this.toastService.sendMessage('dashboard.update.success', ToastTypeEnum.SUCCESS);
+      this.refreshConnectedScreens();
     });
   }
 
@@ -417,7 +451,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
       title: 'dashboard.delete.grid',
       message: this.translateService.instant('delete.grid.confirm'),
       accept: () => {
-        this.httpProjectService.deleteGrid(this.project.token, this.gridId).subscribe(() => {
+        this.httpProjectGridsService.delete(this.project.token, this.gridId).subscribe(() => {
           this.toastService.sendMessage('dashboard.grid.delete.success', ToastTypeEnum.SUCCESS);
           this.router.navigate(['/dashboards', this.dashboardToken, this.project.grids[0].id]);
         });

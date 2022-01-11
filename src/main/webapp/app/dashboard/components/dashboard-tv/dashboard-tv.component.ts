@@ -29,6 +29,7 @@ import { WebsocketService } from '../../../shared/services/frontend/websocket/we
 import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';
 import { DashboardService } from '../../services/dashboard/dashboard.service';
 import { DashboardScreenComponent } from '../dashboard-screen/dashboard-screen.component';
+import { HttpProjectWidgetService } from '../../../shared/services/backend/http-project-widget/http-project-widget.service';
 
 /**
  * Dashboard TV Management
@@ -71,17 +72,24 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   public project: Project;
 
   /**
+   * The returned object of the setInterval rotation
+   */
+  private intervalRotationTimer;
+
+  /**
    * The constructor
    *
    * @param router              Service used to manage app's route
    * @param activatedRoute      Service used to manage the route activated by the component
    * @param httpProjectService  Service used to manage http calls for a project
+   * @param httpProjectWidgetsService  The HTTP project widgets service
    * @param websocketService    Service used to manage websocket
    */
   constructor(
     private readonly router: Router,
     private readonly activatedRoute: ActivatedRoute,
     private readonly httpProjectService: HttpProjectService,
+    private readonly httpProjectWidgetsService: HttpProjectWidgetService,
     private readonly websocketService: WebsocketService
   ) {}
 
@@ -109,6 +117,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * When the component is destroyed
    */
   public ngOnDestroy(): void {
+    clearInterval(this.intervalRotationTimer);
     this.disconnectTV();
   }
 
@@ -174,7 +183,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * @param dashboardToken The token used for the refresh
    */
   private refreshProjectWidgets(dashboardToken: string): Observable<ProjectWidget[]> {
-    return this.httpProjectService.getWidgetInstancesByProjectToken(dashboardToken).pipe(
+    return this.httpProjectWidgetsService.getAllByProjectToken(dashboardToken).pipe(
       tap((projectWidgets: ProjectWidget[]) => {
         this.project.grids.forEach(projectGrid => {
           this.projectWidgetsByGrid.set(
@@ -192,9 +201,11 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * Schedule the next rotation of dashboards
    */
   private scheduleRotation(): void {
-    setInterval(() => {
+    clearInterval(this.intervalRotationTimer);
+
+    this.intervalRotationTimer = setInterval(() => {
       this.rotationIndex = this.rotationIndex === this.project.grids.length - 1 ? 0 : this.rotationIndex + 1;
-    }, 5000);
+    }, this.project.grids[this.rotationIndex].time * 1000);
   }
 
   /**

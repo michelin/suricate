@@ -86,7 +86,7 @@ export class AddWidgetToProjectWizardComponent extends WizardComponent implement
         .join('\n')
     };
 
-    this.httpProjectService.addProjectWidgetToProject(this.dashboardToken, this.gridId, projectWidgetRequest).subscribe(() => {
+    this.httpProjectWidgetsService.addProjectWidgetToProject(this.dashboardToken, this.gridId, projectWidgetRequest).subscribe(() => {
       this.toastService.sendMessage('widget.add.success', ToastTypeEnum.SUCCESS);
       this.redirectToDashboard();
     });
