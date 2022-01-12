@@ -92,7 +92,7 @@ public class OAuth2ResourceServerConfiguration extends ResourceServerConfigurerA
                 .antMatchers("/api/*/users/register").permitAll()
                 .antMatchers("/api/*/configurations/authentication-provider").permitAll()
                 .antMatchers("/api/*/projects/{projectToken}").permitAll()
-                .antMatchers("/api/*/projects/{projectToken}/projectWidgets").permitAll()
+                .antMatchers("/api/*/projectWidgets/{projectToken}/projectWidgets").permitAll()
                 .antMatchers("/api/*/projectWidgets/{projectWidgetId}").permitAll()
                 .antMatchers("/api/*/widgets/{widgetId}").permitAll()
                 .antMatchers("/api/*/settings").permitAll()
