@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ActionsDialogComponent } from './actions-dialog.component';
 import { MockModule } from '../../../mock/mock.module';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ActionsDialogConfiguration } from '../../models/frontend/dialog/actions-dialog-configuration';
 
 describe('ActionsDialogComponent', () => {
@@ -13,7 +13,10 @@ describe('ActionsDialogComponent', () => {
     await TestBed.configureTestingModule({
       imports: [MockModule],
       declarations: [ActionsDialogComponent],
-      providers: [{ provide: MAT_DIALOG_DATA, useValue: { data: buildActionsDialogConfiguration() } }]
+      providers: [
+        { provide: MatDialogRef, useValue: {} },
+        { provide: MAT_DIALOG_DATA, useValue: { data: buildActionsDialogConfiguration() } }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(ActionsDialogComponent);
