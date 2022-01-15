@@ -52,6 +52,7 @@ export class MockedModelBuilderService {
         size: 10
       },
       token: 'Token',
+      displayProgressBar: false,
       grids: [grid]
     };
   }

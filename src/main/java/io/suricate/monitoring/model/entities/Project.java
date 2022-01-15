@@ -70,6 +70,13 @@ public class Project extends AbstractAuditingEntity<Long> {
     private String cssStyle;
 
     /**
+     * If the progress bar should be displayed in case of rotations
+     */
+    @Column(nullable = false)
+    @Type(type = "yes_no")
+    private boolean displayProgressBar;
+
+    /**
      * The screenshot of the dashboard
      */
     @OneToOne(cascade = CascadeType.REMOVE)

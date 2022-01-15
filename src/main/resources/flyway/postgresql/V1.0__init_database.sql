@@ -63,17 +63,18 @@ CREATE TABLE library (
 );
 
 CREATE TABLE project (
-    id                  bigserial                   NOT NULL,
-    max_column          integer,
-    name                character varying           NOT NULL,
-    token               character varying           NOT NULL,
-    widget_height       integer,
-    css_style           text,
-    screenshot_id       bigint,
-    created_by          character varying(255)      DEFAULT 'APPLICATION'::character varying NOT NULL,
-    created_date        timestamp without time zone DEFAULT now() NOT NULL,
-    last_modified_by    character varying(255)      DEFAULT 'APPLICATION'::character varying,
-    last_modified_date  timestamp without time zone DEFAULT now(),
+    id                   bigserial                   NOT NULL,
+    max_column           integer,
+    name                 character varying           NOT NULL,
+    token                character varying           NOT NULL,
+    widget_height        integer,
+    css_style            text,
+    display_progress_bar character(1)            NOT NULL,
+    screenshot_id        bigint,
+    created_by           character varying(255)      DEFAULT 'APPLICATION'::character varying NOT NULL,
+    created_date         timestamp without time zone DEFAULT now() NOT NULL,
+    last_modified_by     character varying(255)      DEFAULT 'APPLICATION'::character varying,
+    last_modified_date   timestamp without time zone DEFAULT now(),
     CONSTRAINT pk_project_id                        PRIMARY KEY (id)
 );
 

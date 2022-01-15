@@ -22,6 +22,7 @@ import { AbstractHttpService } from '../abstract-http/abstract-http.service';
 import { HttpClient } from '@angular/common/http';
 import { ProjectGrid } from '../../../models/backend/project-grid/project-grid';
 import { ProjectGridRequest } from '../../../models/backend/project-grid/project-grid-request';
+import {GridRequest} from "../../../models/backend/project-grid/grid-request";
 
 @Injectable({ providedIn: 'root' })
 export class HttpProjectGridService {
@@ -41,24 +42,24 @@ export class HttpProjectGridService {
    * Create a new project grid
    *
    * @param projectToken The project token
-   * @param projectGridRequest The project grid
+   * @param gridRequest The grid
    */
-  public create(projectToken: string, projectGridRequest: ProjectGridRequest): Observable<ProjectGrid> {
+  public create(projectToken: string, gridRequest: GridRequest): Observable<ProjectGrid> {
     const url = `${HttpProjectGridService.projectGridsApiEndpoint}/${projectToken}`;
 
-    return this.httpClient.post<ProjectGrid>(url, projectGridRequest);
+    return this.httpClient.post<ProjectGrid>(url, gridRequest);
   }
 
   /**
    * Update all given grids of a project
    *
    * @param projectToken The project token
-   * @param grids The project grids to update
+   * @param projectGridRequest The project grids request
    */
-  public updateAll(projectToken: string, grids: ProjectGrid[]): Observable<void> {
+  public updateAll(projectToken: string, projectGridRequest: ProjectGridRequest): Observable<void> {
     const url = `${HttpProjectGridService.projectGridsApiEndpoint}/${projectToken}`;
 
-    return this.httpClient.put<void>(url, grids);
+    return this.httpClient.put<void>(url, projectGridRequest);
   }
 
   /**

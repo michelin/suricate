@@ -47,6 +47,7 @@ import { HttpProjectGridService } from '../../../shared/services/backend/http-pr
 import { HttpProjectWidgetService } from '../../../shared/services/backend/http-project-widget/http-project-widget.service';
 import { ProjectGridRequest } from '../../../shared/models/backend/project-grid/project-grid-request';
 import { ProjectGrid } from '../../../shared/models/backend/project-grid/project-grid';
+import {GridRequest} from "../../../shared/models/backend/project-grid/grid-request";
 
 /**
  * Component used to display a specific dashboard
@@ -227,8 +228,6 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
       tap((projectWidgets: ProjectWidget[]) => {
         this.allWidgets = projectWidgets;
 
-        console.warn(this.allWidgets);
-
         if (this.gridId && this.allWidgets) {
           this.currentWidgets = this.allWidgets.filter(widget => widget.gridId === this.gridId);
         }
@@ -384,7 +383,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
     this.sidenavService.openFormSidenav({
       title: 'grid.add',
       formFields: this.projectFormFieldsService.generateAddGridFormField(),
-      save: (formData: ProjectGridRequest) => this.addNewGrid(formData)
+      save: (formData: GridRequest) => this.addNewGrid(formData)
     });
   }
 
@@ -394,8 +393,8 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
   private openGridsManagementSidenav(): void {
     this.sidenavService.openFormSidenav({
       title: 'dashboard.grid.management',
-      formFields: this.projectFormFieldsService.generateGridsManagementFormFields(this.project.grids),
-      save: (formData: ProjectRequest) => this.editGrids(formData)
+      formFields: this.projectFormFieldsService.generateGridsManagementFormFields(this.project),
+      save: (formData: ProjectGridRequest) => this.editGrids(formData)
     });
   }
 
@@ -429,7 +428,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    *
    * @param formData The data retrieved from the side nav
    */
-  private addNewGrid(formData: ProjectGridRequest): void {
+  private addNewGrid(formData: GridRequest): void {
     this.httpProjectGridsService.create(this.project.token, formData).subscribe((createdProjectGrid: ProjectGrid) => {
       this.router.navigate(['/dashboards', this.dashboardToken, createdProjectGrid.id]);
     });
@@ -440,14 +439,18 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    *
    * @param formData The data retrieve from the form sidenav
    */
-  private editGrids(formData: any): void {
-    const formDataArray = Object.keys(formData).map(key => formData[key]);
+  private editGrids(formData: ProjectGridRequest): void {
+    const newTimes = Object.keys(formData).filter(key => key.includes(ProjectFormFieldsService.timeFormFieldKey)).map(key => formData[key]);
 
+    formData.grids = [];
     this.project.grids.forEach((grid, index) => {
-      grid.time = formDataArray[index];
+      formData.grids.push({
+        id: grid.id,
+        time: newTimes[index]
+      });
     });
 
-    this.httpProjectGridsService.updateAll(this.project.token, this.project.grids).subscribe(() => {
+    this.httpProjectGridsService.updateAll(this.project.token, formData).subscribe(() => {
       this.toastService.sendMessage('dashboard.update.success', ToastTypeEnum.SUCCESS);
       this.refreshConnectedScreens();
     });

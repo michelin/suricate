@@ -29,6 +29,7 @@ export class Project {
   librariesToken: string[];
   image: Asset = new Asset();
   grids: ProjectGrid[];
+  displayProgressBar: boolean;
 
   /**
    * Constructor

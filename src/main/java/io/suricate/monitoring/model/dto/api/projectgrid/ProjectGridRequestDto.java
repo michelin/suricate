@@ -25,20 +25,38 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value = "ProjectGridRequestDto", description = "Create or update a project grid")
 public class ProjectGridRequestDto extends AbstractDto {
     /**
-     * The project grid id
+     * In case of rotations, should the progress bar be displayed for the project
      */
-    @ApiModelProperty(value = "The project grid id")
-    private Long id;
+    @ApiModelProperty(value = "In case of rotations, should the progress bar be displayed for the project")
+    private boolean displayProgressBar;
 
     /**
-     * The time
+     * The list of grids
      */
-    @ApiModelProperty(value = "The time")
-    private Integer time;
+    @ApiModelProperty(value = "The list of grids")
+    List<GridRequestDto> grids;
+
+    @Data
+    public static class GridRequestDto {
+        /**
+         * The project grid id
+         */
+        @ApiModelProperty(value = "The project grid id")
+        private Long id;
+
+        /**
+         * The time
+         */
+        @ApiModelProperty(value = "The time")
+        private Integer time;
+    }
+
 }

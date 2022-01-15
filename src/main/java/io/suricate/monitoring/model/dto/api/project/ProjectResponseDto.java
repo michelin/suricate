@@ -62,6 +62,12 @@ public class ProjectResponseDto extends AbstractDto {
     private String screenshotToken;
 
     /**
+     * In case of rotations, should the progress bar be displayed for the project
+     */
+    @ApiModelProperty(value = "In case of rotations, should the progress bar be displayed for the project")
+    private boolean displayProgressBar;
+
+    /**
      * Image of the dashboard
      */
     @ApiModelProperty(value = "Image of the dashboard")

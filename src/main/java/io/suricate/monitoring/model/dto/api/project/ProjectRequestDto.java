@@ -17,11 +17,14 @@
 package io.suricate.monitoring.model.dto.api.project;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
+import io.suricate.monitoring.model.dto.api.projectgrid.ProjectGridRequestDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 /**
  * Project object used to create a new project

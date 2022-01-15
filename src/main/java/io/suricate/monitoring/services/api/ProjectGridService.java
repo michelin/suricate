@@ -6,6 +6,7 @@ import io.suricate.monitoring.model.entities.Project;
 import io.suricate.monitoring.model.entities.ProjectGrid;
 import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.repositories.ProjectGridRepository;
+import io.suricate.monitoring.repositories.ProjectRepository;
 import io.suricate.monitoring.services.nashorn.scheduler.NashornRequestWidgetExecutionScheduler;
 import io.suricate.monitoring.services.websocket.DashboardWebSocketService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,19 +34,27 @@ public class ProjectGridService {
     /**
      * Project repository
      */
+    private final ProjectRepository projectRepository;
+
+    /**
+     * Project repository
+     */
     private final ProjectGridRepository projectGridRepository;
 
     /**
      * Constructor
      *
      * @param projectGridRepository The project grid repository to inject
+     * @param projectRepository The project repository to inject
      * @param dashboardWebSocketService The dashboard websocket service
      * @param ctx The application context
      */
     @Autowired
     public ProjectGridService(final ProjectGridRepository projectGridRepository,
+                              final ProjectRepository projectRepository,
                               final DashboardWebSocketService dashboardWebSocketService,
                               final ApplicationContext ctx) {
+        this.projectRepository = projectRepository;
         this.projectGridRepository = projectGridRepository;
         this.dashboardWebsocketService = dashboardWebSocketService;
         this.ctx = ctx;
@@ -75,21 +84,25 @@ public class ProjectGridService {
     /**
      * Persist a given list of project grids
      *
-     * @param projectGrids The list of project grids
-     * @param projectRequestDtos The list of project grids as DTO
+     * @param project The project to update
+     * @param projectGridRequestDto The new data as DTO
      */
     @Transactional
-    public void updateAll(Collection<ProjectGrid> projectGrids, List<ProjectGridRequestDto> projectRequestDtos) {
-        projectGrids.forEach(projectGrid -> {
-            Optional<ProjectGridRequestDto> projectGridDto = projectRequestDtos
+    public void updateAll(Project project, ProjectGridRequestDto projectGridRequestDto) {
+        project.setDisplayProgressBar(projectGridRequestDto.isDisplayProgressBar());
+
+        projectRepository.save(project);
+
+        project.getGrids().forEach(projectGrid -> {
+            Optional<ProjectGridRequestDto.GridRequestDto> gridRequestDtoOptional = projectGridRequestDto.getGrids()
                     .stream()
                     .filter(dto -> dto.getId().equals(projectGrid.getId()))
                     .findFirst();
 
-            projectGridDto.ifPresent(projectGridRequestDto -> projectGrid.setTime(projectGridRequestDto.getTime()));
+            gridRequestDtoOptional.ifPresent(gridRequestDto -> projectGrid.setTime(gridRequestDto.getTime()));
         });
 
-        projectGridRepository.saveAll(projectGrids);
+        projectGridRepository.saveAll(project.getGrids());
     }
 
     /**

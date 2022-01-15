@@ -1,3 +1,6 @@
+import { GridRequest } from './grid-request';
+
 export class ProjectGridRequest {
-  time: number;
+  displayProgressBar: boolean;
+  grids: GridRequest[];
 }

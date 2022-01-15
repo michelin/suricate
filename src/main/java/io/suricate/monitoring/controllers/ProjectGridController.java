@@ -92,8 +92,8 @@ public class ProjectGridController {
     /**
      * Add a new grid to a project
      *
-     * @param principal         The connected user
-     * @param projectGridRequestDto The project grid to add
+     * @param authentication The authentication entity
+     * @param gridRequestDto The grid to add
      * @return The saved grid
      */
     @ApiOperation(value = "Create a new grid", response = ProjectResponseDto.class)
@@ -109,7 +109,7 @@ public class ProjectGridController {
                                                          @ApiParam(name = "projectToken", value = "The project token", required = true)
                                                          @PathVariable("projectToken") String projectToken,
                                                          @ApiParam(name = "projectGridRequestDto", value = "The project grid information", required = true)
-                                                         @RequestBody ProjectGridRequestDto projectGridRequestDto) {
+                                                         @RequestBody ProjectGridRequestDto.GridRequestDto gridRequestDto) {
         Optional<Project> projectOptional = projectService.getOneByToken(projectToken);
         if (!projectOptional.isPresent()) {
             throw new ObjectNotFoundException(Project.class, projectToken);
@@ -120,7 +120,7 @@ public class ProjectGridController {
             throw new ApiException(USER_NOT_ALLOWED_PROJECT, ApiErrorEnum.NOT_AUTHORIZED);
         }
 
-        ProjectGrid projectGrid = projectGridService.create(projectGridMapper.toProjectGridEntity(projectGridRequestDto, project));
+        ProjectGrid projectGrid = projectGridService.create(projectGridMapper.toProjectGridEntity(gridRequestDto, project));
 
         return ResponseEntity
                 .ok()
@@ -149,7 +149,7 @@ public class ProjectGridController {
                                               @ApiParam(name = "projectToken", value = "The project token", required = true)
                                               @PathVariable("projectToken") String projectToken,
                                               @ApiParam(name = "projectResponseDto", value = "The project information", required = true)
-                                              @RequestBody List<ProjectGridRequestDto> projectRequestDtos) {
+                                              @RequestBody ProjectGridRequestDto projectRequestDto) {
         Optional<Project> projectOptional = projectService.getOneByToken(projectToken);
         if (!projectOptional.isPresent()) {
             throw new ObjectNotFoundException(Project.class, projectToken);
@@ -160,15 +160,15 @@ public class ProjectGridController {
             throw new ApiException(USER_NOT_ALLOWED_PROJECT, ApiErrorEnum.NOT_AUTHORIZED);
         }
 
-        List<Long> gridIds = projectRequestDtos
+        List<Long> gridIds = projectRequestDto.getGrids()
                 .stream()
-                .map(ProjectGridRequestDto::getId)
+                .map(ProjectGridRequestDto.GridRequestDto::getId)
                 .collect(Collectors.toList());
         if (project.getGrids().stream().noneMatch(grid -> gridIds.contains(grid.getId()))) {
             throw new ApiException(USER_NOT_ALLOWED_GRID, ApiErrorEnum.NOT_AUTHORIZED);
         }
 
-        projectGridService.updateAll(project.getGrids(), projectRequestDtos);
+        projectGridService.updateAll(project, projectRequestDto);
 
         return ResponseEntity.noContent().build();
     }

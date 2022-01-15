@@ -74,7 +74,14 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   /**
    * The returned object of the setInterval rotation
    */
-  private intervalRotationTimer;
+  private rotationInterval;
+
+  /**
+   * Time in percent for progress bar
+   */
+  public timer = 0;
+  public timerPercentage = 100;
+  public timerInterval;
 
   /**
    * The constructor
@@ -199,12 +206,43 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Start the timer
+   */
+  private startTimer(): void {
+    this.resetTimer();
+
+    const intervalRefreshMs = 100;
+    this.timerInterval = setInterval(() => {
+      this.timer -= intervalRefreshMs;
+      this.timerPercentage = (this.timer * 100) / (this.project.grids[this.rotationIndex].time * 1000);
+      console.warn(this.timerPercentage);
+    }, intervalRefreshMs);
+  }
+
+  /**
+   * Stop the timer
+   */
+  private resetTimer(): void {
+    clearInterval(this.timerInterval);
+    this.timer = this.project.grids[this.rotationIndex].time * 1000;
+    this.timerPercentage = 100;
+  }
+
+  /**
    * Schedule the next rotation of dashboards
    */
   private scheduleRotation(): void {
     if (this.project.grids.length > 1) {
-      this.intervalRotationTimer = setInterval(() => {
+      if (this.project.displayProgressBar) {
+        this.startTimer();
+      }
+
+      this.rotationInterval = setInterval(() => {
         this.rotationIndex = this.rotationIndex === this.project.grids.length - 1 ? 0 : this.rotationIndex + 1;
+
+        if (this.project.displayProgressBar) {
+          this.startTimer();
+        }
       }, this.project.grids[this.rotationIndex].time * 1000);
     }
   }
@@ -215,7 +253,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   private resetRotation(): void {
     this.rotationIndex = 0;
     this.projectWidgetsByGrid.clear();
-    clearInterval(this.intervalRotationTimer);
+    clearInterval(this.rotationInterval);
   }
 
   /**
@@ -233,7 +271,8 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
     this.unsubscribe.next();
     this.unsubscribe.complete();
 
-    clearInterval(this.intervalRotationTimer);
+    clearInterval(this.timerInterval);
+    clearInterval(this.rotationInterval);
 
     this.websocketService.disconnect();
   }

@@ -43,5 +43,5 @@ public abstract class ProjectGridMapper {
     @Named("toProjectGridEntity")
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "project", source = "project")
-    public abstract ProjectGrid toProjectGridEntity(ProjectGridRequestDto projectGridRequestDto, Project project);
+    public abstract ProjectGrid toProjectGridEntity(ProjectGridRequestDto.GridRequestDto projectGridRequestDto, Project project);
 }

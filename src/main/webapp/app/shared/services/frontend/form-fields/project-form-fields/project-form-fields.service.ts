@@ -56,9 +56,14 @@ export class ProjectFormFieldsService {
   public static readonly projectGridBackgroundColorFormFieldKey = 'gridBackgroundColor';
 
   /**
-   * Key of the form field for grids
+   * Key of the time form field for grids
    */
-  public static readonly gridFormFieldKey = 'time';
+  public static readonly timeFormFieldKey = 'time';
+
+  /**
+   * Key of the form field for grids progress bar
+   */
+  public static readonly progressBarFormFieldKey = 'displayProgressBar';
 
   /**
    * Constructor
@@ -124,7 +129,7 @@ export class ProjectFormFieldsService {
   public generateAddGridFormField(): FormField[] {
     return [
       {
-        key: `${ProjectFormFieldsService.gridFormFieldKey}`,
+        key: `${ProjectFormFieldsService.timeFormFieldKey}`,
         label: `${this.translateService.instant('dashboard.grid.addition.rotation.speed.form.field')}`,
         iconPrefix: IconEnum.SPEED,
         type: DataTypeEnum.TEXT,
@@ -139,12 +144,20 @@ export class ProjectFormFieldsService {
    *
    * @param project The project used for an edition
    */
-  public generateGridsManagementFormFields(grids: ProjectGrid[]): FormField[] {
+  public generateGridsManagementFormFields(project: Project): FormField[] {
     const formFields: FormField[] = [];
 
-    grids.forEach((grid, index) => {
+    formFields.push({
+      key: ProjectFormFieldsService.progressBarFormFieldKey,
+      label: 'dashboard.grid.management.progress.bar.form.field',
+      iconPrefix: IconEnum.PROGRESS_BAR,
+      type: DataTypeEnum.BOOLEAN,
+      value: project.displayProgressBar,
+    });
+
+    project.grids.forEach((grid, index) => {
       formFields.push({
-        key: `${ProjectFormFieldsService.gridFormFieldKey}-${index}`,
+        key: `${ProjectFormFieldsService.timeFormFieldKey}-${index}`,
         label: `${this.translateService.instant('dashboard.grid.management.rotation.speed.form.field')} ${index}`,
         iconPrefix: IconEnum.SPEED,
         type: DataTypeEnum.TEXT,
