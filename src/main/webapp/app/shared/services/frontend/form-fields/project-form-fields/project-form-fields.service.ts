@@ -152,7 +152,7 @@ export class ProjectFormFieldsService {
       label: 'dashboard.grid.management.progress.bar.form.field',
       iconPrefix: IconEnum.PROGRESS_BAR,
       type: DataTypeEnum.BOOLEAN,
-      value: project.displayProgressBar,
+      value: project.displayProgressBar
     });
 
     project.grids.forEach((grid, index) => {

@@ -47,7 +47,7 @@ import { HttpProjectGridService } from '../../../shared/services/backend/http-pr
 import { HttpProjectWidgetService } from '../../../shared/services/backend/http-project-widget/http-project-widget.service';
 import { ProjectGridRequest } from '../../../shared/models/backend/project-grid/project-grid-request';
 import { ProjectGrid } from '../../../shared/models/backend/project-grid/project-grid';
-import {GridRequest} from "../../../shared/models/backend/project-grid/grid-request";
+import { GridRequest } from '../../../shared/models/backend/project-grid/grid-request';
 
 /**
  * Component used to display a specific dashboard
@@ -440,7 +440,9 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    * @param formData The data retrieve from the form sidenav
    */
   private editGrids(formData: ProjectGridRequest): void {
-    const newTimes = Object.keys(formData).filter(key => key.includes(ProjectFormFieldsService.timeFormFieldKey)).map(key => formData[key]);
+    const newTimes = Object.keys(formData)
+      .filter(key => key.includes(ProjectFormFieldsService.timeFormFieldKey))
+      .map(key => formData[key]);
 
     formData.grids = [];
     this.project.grids.forEach((grid, index) => {

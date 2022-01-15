@@ -30,9 +30,13 @@ jobs:
           npm --no-git-tag-version version ${{ github.event.inputs.release_version }} 
           git config --global user.email "loic.greffier_ext@michelin.com"
           git config --global user.name "GitHub CI/CD"
+          git config --global user.signingkey $GPG_PRIVATE_KEY
+          git config --global commit.gpgsign true
           git add package.json
           git commit -m "Update Front-End with new release version ${{ github.event.inputs.release_version }}"
           git push
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
 
       - name: Release Back-End
         run: |

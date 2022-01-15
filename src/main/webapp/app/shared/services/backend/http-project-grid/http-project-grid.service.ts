@@ -22,7 +22,7 @@ import { AbstractHttpService } from '../abstract-http/abstract-http.service';
 import { HttpClient } from '@angular/common/http';
 import { ProjectGrid } from '../../../models/backend/project-grid/project-grid';
 import { ProjectGridRequest } from '../../../models/backend/project-grid/project-grid-request';
-import {GridRequest} from "../../../models/backend/project-grid/grid-request";
+import { GridRequest } from '../../../models/backend/project-grid/grid-request';
 
 @Injectable({ providedIn: 'root' })
 export class HttpProjectGridService {
