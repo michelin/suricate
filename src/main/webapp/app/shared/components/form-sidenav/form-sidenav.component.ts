@@ -19,7 +19,7 @@ import { FormService } from '../../services/frontend/form/form.service';
 import { SidenavService } from '../../services/frontend/sidenav/sidenav.service';
 import { FormSidenavConfiguration } from '../../models/frontend/sidenav/form-sidenav-configuration';
 import { FormGroup } from '@angular/forms';
-import { takeUntil, takeWhile } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
 import { IconEnum } from '../../enums/icon.enum';
 import { ValueChangedEvent } from '../../models/frontend/form/value-changed-event';

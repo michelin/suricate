@@ -90,8 +90,7 @@ export class RepositoryFormFieldsService {
         label: 'login',
         iconPrefix: IconEnum.USERNAME,
         type: DataTypeEnum.TEXT,
-        value: repository ? repository.login : null,
-        validators: [Validators.required]
+        value: repository ? repository.login : null
       },
       {
         key: 'password',
@@ -99,8 +98,7 @@ export class RepositoryFormFieldsService {
         iconPrefix: IconEnum.PASSWORD,
         iconSuffix: IconEnum.SHOW_PASSWORD,
         type: DataTypeEnum.PASSWORD,
-        value: repository ? repository.password : null,
-        validators: [Validators.required]
+        value: repository ? repository.password : null
       }
     ];
   }

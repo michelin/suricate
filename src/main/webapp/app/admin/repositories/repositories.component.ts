@@ -167,6 +167,14 @@ export class RepositoriesComponent extends ListComponent<Repository> {
    * @param repositoryRequest The new repository with the modification made on the form
    */
   private updateRepository(repositoryRequest: RepositoryRequest): void {
+    if (repositoryRequest.login.trim().length === 0) {
+      repositoryRequest.login = null;
+    }
+
+    if (repositoryRequest.password.trim().length === 0) {
+      repositoryRequest.password = null;
+    }
+
     this.httpRepositoryService.update(this.repository.id, repositoryRequest).subscribe(() => {
       this.toastService.sendMessage('repository.update.success', ToastTypeEnum.SUCCESS);
       super.refreshList();
@@ -191,6 +199,14 @@ export class RepositoriesComponent extends ListComponent<Repository> {
    * @param repositoryRequest The new repository to add with the modification made on the form
    */
   private addRepository(repositoryRequest: RepositoryRequest): void {
+    if (repositoryRequest.login.trim().length === 0) {
+      repositoryRequest.login = null;
+    }
+
+    if (repositoryRequest.password.trim().length === 0) {
+      repositoryRequest.password = null;
+    }
+
     this.httpRepositoryService.create(repositoryRequest).subscribe(() => {
       this.refreshList();
     });
