@@ -41,10 +41,12 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.annotation.security.PermitAll;
 import java.net.URI;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import static io.suricate.monitoring.utils.exceptions.constants.ErrorMessage.USER_NOT_ALLOWED_GRID;
 import static io.suricate.monitoring.utils.exceptions.constants.ErrorMessage.USER_NOT_ALLOWED_PROJECT;
 
 /**
@@ -125,21 +127,22 @@ public class  ProjectWidgetController {
     @GetMapping(value = "/v1/projectWidgets/{projectToken}/projectWidgets")
     @PermitAll
     public ResponseEntity<List<ProjectWidgetResponseDto>> getByProject(@ApiParam(name = "projectToken", value = "The project token", required = true)
-                                                                                      @PathVariable("projectToken") String projectToken) {
+                                                                       @PathVariable("projectToken") String projectToken) {
         Optional<Project> projectOptional = this.projectService.getOneByToken(projectToken);
         if (!projectOptional.isPresent()) {
             return ResponseEntity.notFound().build();
         }
 
         Project project = projectOptional.get();
-        if (project.getWidgets().isEmpty()) {
+        List<ProjectWidget> allWidgets = project.getGrids().stream().map(ProjectGrid::getWidgets).flatMap(Collection::stream).collect(Collectors.toList());
+        if (project.getGrids().isEmpty() || allWidgets.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
 
         return ResponseEntity
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(this.projectWidgetMapper.toProjectWidgetsDTOs(project.getWidgets()));
+                .body(this.projectWidgetMapper.toProjectWidgetsDTOs(allWidgets));
     }
 
     /**
@@ -168,8 +171,8 @@ public class  ProjectWidgetController {
             throw new ObjectNotFoundException(ProjectWidget.class, projectWidgetId);
         }
 
-        if (!this.projectService.isConnectedUserCanAccessToProject(projectWidgetOptional.get().getProject(), authentication.getUserAuthentication())) {
-            throw new ApiException("The user is not allowed to modify this resource", ApiErrorEnum.NOT_AUTHORIZED);
+        if (!this.projectService.isConnectedUserCanAccessToProject(projectWidgetOptional.get().getProjectGrid().getProject(), authentication.getUserAuthentication())) {
+            throw new ApiException(USER_NOT_ALLOWED_PROJECT, ApiErrorEnum.NOT_AUTHORIZED);
         }
 
         this.projectWidgetService.updateProjectWidget(projectWidgetOptional.get(), projectWidgetRequestDto.getCustomStyle(),
@@ -212,14 +215,14 @@ public class  ProjectWidgetController {
 
         Project project = projectOptional.get();
         if (project.getGrids().stream().noneMatch(grid -> grid.getId().equals(gridId))) {
-            throw new ObjectNotFoundException(ProjectGrid.class, gridId);
+            throw new ApiException(USER_NOT_ALLOWED_GRID, ApiErrorEnum.NOT_AUTHORIZED);
         }
 
         if (!this.projectService.isConnectedUserCanAccessToProject(project, authentication)) {
             throw new ApiException(USER_NOT_ALLOWED_PROJECT, ApiErrorEnum.NOT_AUTHORIZED);
         }
 
-        ProjectWidget projectWidget = this.projectWidgetMapper.toProjectWidgetEntity(projectWidgetRequestDto, projectToken, gridId);
+        ProjectWidget projectWidget = this.projectWidgetMapper.toProjectWidgetEntity(projectWidgetRequestDto, gridId);
         this.projectWidgetService.addWidgetInstanceToProject(projectWidget);
 
         URI resourceLocation = ServletUriComponentsBuilder
@@ -258,8 +261,8 @@ public class  ProjectWidgetController {
             throw new ObjectNotFoundException(ProjectWidget.class, projectWidgetId);
         }
 
-        if (!projectService.isConnectedUserCanAccessToProject(projectWidgetOptional.get().getProject(), authentication.getUserAuthentication())) {
-            throw new ApiException("The user is not allowed to modify this resource", ApiErrorEnum.NOT_AUTHORIZED);
+        if (!projectService.isConnectedUserCanAccessToProject(projectWidgetOptional.get().getProjectGrid().getProject(), authentication.getUserAuthentication())) {
+            throw new ApiException(USER_NOT_ALLOWED_PROJECT, ApiErrorEnum.NOT_AUTHORIZED);
         }
 
         projectWidgetService.removeWidgetFromDashboard(projectWidgetId);

@@ -24,7 +24,9 @@ import org.mapstruct.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Manage the generation DTO/Model objects for project class
@@ -35,6 +37,10 @@ import java.util.List;
         uses = {
             AssetMapper.class,
             ProjectGridMapper.class
+        },
+        imports = {
+            Collection.class,
+            Collectors.class
         })
 public abstract class ProjectMapper {
 
@@ -55,10 +61,26 @@ public abstract class ProjectMapper {
     @Mapping(target = "gridProperties.widgetHeight", source = "project.widgetHeight")
     @Mapping(target = "gridProperties.cssStyle", source = "project.cssStyle")
     @Mapping(target = "screenshotToken", expression = "java( project.getScreenshot() != null ? io.suricate.monitoring.utils.IdUtils.encrypt(project.getScreenshot().getId()) : null )")
-    @Mapping(target = "librariesToken", expression = "java(libraryService.getLibrariesToken(project.getWidgets()))")
+    @Mapping(target = "librariesToken", expression = "java(libraryService.getLibrariesToken(project.getGrids().stream().map(ProjectGrid::getWidgets).flatMap(Collection::stream).collect(Collectors.toSet())))")
     @Mapping(target = "image", source = "project.screenshot", qualifiedByName = "toAssetDTO")
     @Mapping(target = "grids", qualifiedByName = "toProjectGridDTO")
     public abstract ProjectResponseDto toProjectDTO(Project project);
+
+    /**
+     * Map a project into a DTO
+     * Ignore the libraries to not load all widgets
+     *
+     * @param project The project to map
+     * @return The project as DTO
+     */
+    @Named("toProjectDTONoWidgets")
+    @Mapping(target = "gridProperties.maxColumn", source = "project.maxColumn")
+    @Mapping(target = "gridProperties.widgetHeight", source = "project.widgetHeight")
+    @Mapping(target = "gridProperties.cssStyle", source = "project.cssStyle")
+    @Mapping(target = "screenshotToken", expression = "java( project.getScreenshot() != null ? io.suricate.monitoring.utils.IdUtils.encrypt(project.getScreenshot().getId()) : null )")
+    @Mapping(target = "image", source = "project.screenshot", qualifiedByName = "toAssetDTO")
+    @Mapping(target = "grids", qualifiedByName = "toProjectGridDTO")
+    public abstract ProjectResponseDto toProjectDTONoWidgets(Project project);
 
     /**
      * Map a project into a DTO without assets
@@ -70,7 +92,8 @@ public abstract class ProjectMapper {
     @Mapping(target = "gridProperties.maxColumn", source = "project.maxColumn")
     @Mapping(target = "gridProperties.widgetHeight", source = "project.widgetHeight")
     @Mapping(target = "gridProperties.cssStyle", source = "project.cssStyle")
-    public abstract ProjectResponseDto toProjectNoAssetDTO(Project project);
+    @Mapping(target = "grids", qualifiedByName = "toProjectGridDTO")
+    public abstract ProjectResponseDto toProjectDTONoAsset(Project project);
 
     /**
      * Map a list of projects into a list of DTOs
@@ -79,7 +102,7 @@ public abstract class ProjectMapper {
      * @return The list of projects as DTOs
      */
     @Named("toProjectsDTOs")
-    @IterableMapping(qualifiedByName = "toProjectDTO")
+    @IterableMapping(qualifiedByName = "toProjectDTONoWidgets")
     public abstract List<ProjectResponseDto> toProjectsDTOs(List<Project> projects);
 
     /**

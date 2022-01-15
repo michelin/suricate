@@ -44,7 +44,7 @@ public interface ProjectRepository extends CrudRepository<Project, Long>, JpaSpe
 	 * @return The paginated projects
 	 */
 	@NotNull
-	@EntityGraph(attributePaths = {"widgets", "grids"})
+	@EntityGraph(attributePaths = {"grids"})
 	Page<Project> findAll(Specification<Project> specification, @NotNull Pageable pageable);
 
 	/**
@@ -53,7 +53,7 @@ public interface ProjectRepository extends CrudRepository<Project, Long>, JpaSpe
      * @param id The user id
      * @return List of related projects ordered by name
      */
-	@EntityGraph(attributePaths = {"widgets", "screenshot", "grids"})
+	@EntityGraph(attributePaths = {"screenshot", "grids"})
     List<Project> findByUsersIdOrderByName(Long id);
 
     /**
@@ -63,9 +63,8 @@ public interface ProjectRepository extends CrudRepository<Project, Long>, JpaSpe
 	 * @return The project as Optionals
 	 */
     @EntityGraph(attributePaths = {"screenshot",
-								   "widgets.widget.category.configurations",
-								   "widgets.widget.widgetParams",
-								   "grids",
+								   "grids.widgets.widget.category.configurations",
+								   "grids.widgets.widget.widgetParams",
 								   "users.roles"})
 	Optional<Project> findProjectByToken(final String token);
 

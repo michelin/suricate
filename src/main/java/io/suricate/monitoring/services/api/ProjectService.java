@@ -72,38 +72,22 @@ public class ProjectService {
     private final AssetService assetService;
 
     /**
-     * Project grid service
-     */
-    private final ProjectGridService projectGridService;
-
-    /**
-     * Project grid mapper
-     */
-    private final ProjectGridMapper projectGridMapper;
-
-    /**
      * Constructor
      *
      * @param stringEncryptor           The string encryptor to inject
      * @param projectRepository         The project repository to inject
      * @param dashboardWebSocketService The dashboard web socket service to inject
      * @param assetService              The asset service
-     * @param projectGridService        The project grid service
-     * @param projectGridMapper         The project grid mapper
      */
     @Autowired
     public ProjectService(@Qualifier("jasyptStringEncryptor") final StringEncryptor stringEncryptor,
                           final ProjectRepository projectRepository,
                           final DashboardWebSocketService dashboardWebSocketService,
-                          final AssetService assetService,
-                          final ProjectGridService projectGridService,
-                          final ProjectGridMapper projectGridMapper) {
+                          final AssetService assetService) {
         this.stringEncryptor = stringEncryptor;
         this.projectRepository = projectRepository;
         this.dashboardWebsocketService = dashboardWebSocketService;
         this.assetService = assetService;
-        this.projectGridService = projectGridService;
-        this.projectGridMapper = projectGridMapper;
     }
 
     /**

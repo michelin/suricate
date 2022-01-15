@@ -2,10 +2,7 @@ package io.suricate.monitoring.services.scheduler;
 
 import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
 import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
-import io.suricate.monitoring.model.entities.Project;
-import io.suricate.monitoring.model.entities.ProjectWidget;
-import io.suricate.monitoring.model.entities.Category;
-import io.suricate.monitoring.model.entities.Widget;
+import io.suricate.monitoring.model.entities.*;
 import io.suricate.monitoring.model.enums.WidgetStateEnum;
 import io.suricate.monitoring.repositories.*;
 import io.suricate.monitoring.services.api.ProjectWidgetService;
@@ -87,6 +84,12 @@ public class NashornWidgetSchedulerTest {
      */
     @Autowired
     ProjectRepository projectRepository;
+
+    /**
+     * The project grid repository
+     */
+    @Autowired
+    ProjectGridRepository projectGridRepository;
 
     /**
      * The category repository
@@ -192,6 +195,11 @@ public class NashornWidgetSchedulerTest {
         project.setToken("999999");
         projectRepository.save(project);
 
+        ProjectGrid projectGrid = new ProjectGrid();
+        projectGrid.setProject(project);
+        projectGrid.setTime(10);
+        projectGridRepository.save(projectGrid);
+
         Category category = new Category();
         category.setName("Test");
         category.setTechnicalName("Test");
@@ -204,7 +212,7 @@ public class NashornWidgetSchedulerTest {
         // Add widget Instance
         projectWidget = new ProjectWidget();
         projectWidget.setState(WidgetStateEnum.STOPPED);
-        projectWidget.setProject(project);
+        projectWidget.setProjectGrid(projectGrid);
         projectWidget.setWidget(widget);
         projectWidget.setData("{}");
         projectWidgetRepository.save(projectWidget);

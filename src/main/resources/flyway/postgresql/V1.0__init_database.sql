@@ -99,7 +99,6 @@ CREATE TABLE project_widget (
     last_execution_date timestamp without time zone,
     log                 text,
     width               integer,
-    project_id          bigint,
     project_grid_id     bigint,
     widget_id           bigint,
     last_success_date   timestamp without time zone,
@@ -248,7 +247,6 @@ ALTER TABLE user_project            ADD CONSTRAINT fk_user_project_user_id      
 ALTER TABLE user_project            ADD CONSTRAINT fk_user_project_project_id               FOREIGN KEY (project_id)                REFERENCES project (id) ;
 ALTER TABLE project_grid            ADD CONSTRAINT fk_project_grid_project_id               FOREIGN KEY (project_id)                REFERENCES project (id) ;
 ALTER TABLE project_widget          ADD CONSTRAINT fk_project_widget_widget_id              FOREIGN KEY (widget_id)                 REFERENCES widget (id) ;
-ALTER TABLE project_widget          ADD CONSTRAINT fk_project_widget_project_id             FOREIGN KEY (project_id)                REFERENCES project (id) ;
 ALTER TABLE project_widget          ADD CONSTRAINT fk_project_widget_project_grid_id        FOREIGN KEY (project_grid_id)           REFERENCES project_grid (id) ;
 ALTER TABLE project                 ADD CONSTRAINT fk_project_screenshot_id                 FOREIGN KEY (screenshot_id)             REFERENCES asset (id) ;
 ALTER TABLE library                 ADD CONSTRAINT fk_library_asset_id                      FOREIGN KEY (asset_id)                  REFERENCES asset (id) ;

@@ -41,10 +41,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.ref.WeakReference;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 @Service
 public class NashornRequestWidgetExecutionScheduler {
@@ -242,8 +244,11 @@ public class NashornRequestWidgetExecutionScheduler {
      * @param project The project
      */
     public void cancelWidgetsExecutionByProject(final Project project) {
-        project
-            .getWidgets()
+        project.getGrids()
+            .stream()
+            .map(ProjectGrid::getWidgets)
+            .flatMap(Collection::stream)
+            .collect(Collectors.toList())
             .forEach(projectWidget -> cancelWidgetExecution(projectWidget.getId()));
     }
 

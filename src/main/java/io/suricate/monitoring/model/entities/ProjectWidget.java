@@ -121,13 +121,6 @@ public class ProjectWidget extends AbstractAuditingEntity<Long> {
     private ProjectGrid projectGrid;
 
     /**
-     * The related project
-     */
-    @ManyToOne
-    @PrimaryKeyJoinColumn(name = "projectId", referencedColumnName = "ID")
-    private Project project;
-
-    /**
      * The related widget
      */
     @ManyToOne
