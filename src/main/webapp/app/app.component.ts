@@ -108,7 +108,7 @@ export class AppComponent implements OnInit, OnDestroy {
       .subscribe((confirmationConfiguration: ConfirmationDialogConfiguration) => {
         const dialogConfig: MatDialogConfig = {
           role: 'dialog',
-          width: '500px',
+          width: '600px',
           height: '200px',
           data: confirmationConfiguration
         };

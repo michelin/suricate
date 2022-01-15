@@ -21,6 +21,7 @@ package io.suricate.monitoring.services.nashorn.services;
 import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
 import io.suricate.monitoring.model.entities.CategoryParameter;
 import io.suricate.monitoring.model.entities.Project;
+import io.suricate.monitoring.model.entities.ProjectGrid;
 import io.suricate.monitoring.model.entities.ProjectWidget;
 import io.suricate.monitoring.model.enums.WidgetStateEnum;
 import io.suricate.monitoring.services.api.ProjectWidgetService;
@@ -71,9 +72,10 @@ public class NashornService {
      */
     @Transactional
     public List<NashornRequest> getNashornRequestsByProject(final Project project) {
-        return project
-            .getWidgets()
+        return project.getGrids()
             .stream()
+            .map(ProjectGrid::getWidgets)
+            .flatMap(Collection::stream)
             .map(this::createNashornRequestByProjectWidget)
             .collect(Collectors.toList());
     }
@@ -99,7 +101,7 @@ public class NashornService {
         String properties = getProjectWidgetConfigurationsWithGlobalOne(projectWidget, projectWidget.getWidget().getCategory().getConfigurations());
         String script = projectWidget.getWidget().getBackendJs();
         String previousData = projectWidget.getData();
-        Long projectId = projectWidget.getProject().getId();
+        Long projectId = projectWidget.getProjectGrid().getProject().getId();
         Long technicalId = projectWidget.getId();
         Long delay = projectWidget.getWidget().getDelay();
         Long timeout = projectWidget.getWidget().getTimeout();

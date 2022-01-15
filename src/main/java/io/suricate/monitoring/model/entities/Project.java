@@ -77,13 +77,6 @@ public class Project extends AbstractAuditingEntity<Long> {
     private Asset screenshot;
 
     /**
-     * The list of related widgets
-     */
-    @OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE)
-    @OrderBy("gridRow ASC, gridColumn ASC")
-    private Set<ProjectWidget> widgets = new LinkedHashSet<>();
-
-    /**
      * The list of related grids
      */
     @OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE)

@@ -168,7 +168,7 @@ public class ProjectWidgetService {
                 .type(UpdateType.REFRESH_DASHBOARD)
                 .build();
 
-        dashboardWebsocketService.sendEventToProjectSubscribers(widgetInstance.getProject().getToken(), updateEvent);
+        dashboardWebsocketService.sendEventToProjectSubscribers(widgetInstance.getProjectGrid().getProject().getToken(), updateEvent);
     }
 
     /**
@@ -223,7 +223,7 @@ public class ProjectWidgetService {
         if (projectWidgetOptional.isPresent()) {
             ctx.getBean(NashornRequestWidgetExecutionScheduler.class).cancelWidgetExecution(projectWidgetId);
 
-            projectWidgetRepository.deleteByProjectIdAndId(projectWidgetOptional.get().getProject().getId(), projectWidgetId);
+            projectWidgetRepository.deleteById(projectWidgetId);
             projectWidgetRepository.flush();
 
             // notify client
@@ -231,7 +231,7 @@ public class ProjectWidgetService {
                     .type(UpdateType.REFRESH_DASHBOARD)
                     .build();
 
-            dashboardWebsocketService.sendEventToProjectSubscribers(projectWidgetOptional.get().getProject().getToken(), updateEvent);
+            dashboardWebsocketService.sendEventToProjectSubscribers(projectWidgetOptional.get().getProjectGrid().getProject().getToken(), updateEvent);
         }
     }
 

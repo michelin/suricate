@@ -227,6 +227,8 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
       tap((projectWidgets: ProjectWidget[]) => {
         this.allWidgets = projectWidgets;
 
+        console.warn(this.allWidgets);
+
         if (this.gridId && this.allWidgets) {
           this.currentWidgets = this.allWidgets.filter(widget => widget.gridId === this.gridId);
         }

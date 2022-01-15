@@ -161,8 +161,7 @@ public class ProjectController {
     public Page<ProjectResponseDto> getAll(@ApiParam(name = "search", value = "Search keyword")
                                            @RequestParam(value = "search", required = false) String search,
                                            Pageable pageable) {
-        return this.projectService.getAll(search, pageable)
-                .map(this.projectMapper::toProjectNoAssetDTO);
+        return this.projectService.getAll(search, pageable).map(this.projectMapper::toProjectDTONoAsset);
     }
 
     /**
