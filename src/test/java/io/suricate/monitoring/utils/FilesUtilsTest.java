@@ -7,7 +7,8 @@ import org.junit.Test;
 import java.io.File;
 import java.util.List;
 
-import static com.google.common.truth.Truth.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class FilesUtilsTest {
 
@@ -19,7 +20,7 @@ public class FilesUtilsTest {
 
     @Test
     public void testFilesUtilsError() throws Exception {
-        assertThat(FilesUtils.getFolders(null)).hasSize(0);
+        assertEquals(0, FilesUtils.getFolders(null).size());
     }
 
     @Test
@@ -31,23 +32,23 @@ public class FilesUtilsTest {
     }
 
     @Test
-    public void testgetFileError() throws Exception {
-        assertThat(FilesUtils.getFiles(null)).hasSize(0);
+    public void testGetFileError() throws Exception {
+        assertEquals(0, FilesUtils.getFiles(null).size());
     }
 
     @Test
     public void testReadAsset() throws Exception {
-        Asset asset = FilesUtils.readAsset(new File(FilesUtilsTest.class.getResource("/Libraries/d3.min.js").getFile()));
-        assertThat(asset).isNotNull();
-        assertThat(asset.getContentType()).isEqualTo("application/javascript");
-        assertThat(asset.getSize()).isEqualTo(3);
+        Asset asset = FilesUtils.readAsset(new File(FilesUtilsTest.class.getResource("/libraries/d3.min.js").getFile()));
+        assertNotNull(asset);
+        assertEquals("application/javascript", asset.getContentType());
+        assertEquals(3, asset.getSize());
     }
 
     @Test
     public void testReadImageAsset() throws Exception {
         Asset asset = FilesUtils.readAsset(new File(FilesUtilsTest.class.getResource("/widgets/jira/icon.jpeg").getFile()));
-        assertThat(asset).isNotNull();
-        assertThat(asset.getContentType()).isEqualTo("image/jpeg");
-        assertThat(asset.getSize()).isEqualTo(39201);
+        assertNotNull(asset);
+        assertEquals("image/jpeg", asset.getContentType());
+        assertEquals(39201, asset.getSize());
     }
 }

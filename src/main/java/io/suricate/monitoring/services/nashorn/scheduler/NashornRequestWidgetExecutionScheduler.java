@@ -20,6 +20,7 @@ import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
 import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
 import io.suricate.monitoring.model.dto.nashorn.WidgetVariableResponse;
 import io.suricate.monitoring.model.entities.Project;
+import io.suricate.monitoring.model.entities.ProjectGrid;
 import io.suricate.monitoring.model.entities.ProjectWidget;
 import io.suricate.monitoring.model.enums.WidgetStateEnum;
 import io.suricate.monitoring.services.api.ProjectWidgetService;
@@ -244,6 +245,17 @@ public class NashornRequestWidgetExecutionScheduler {
         project
             .getWidgets()
             .forEach(projectWidget -> cancelWidgetExecution(projectWidget.getId()));
+    }
+
+    /**
+     * Cancel all the widgets executions from a given project grid
+     *
+     * @param projectGrid The project grid
+     */
+    public void cancelWidgetsExecutionByGrid(final ProjectGrid projectGrid) {
+        projectGrid
+                .getWidgets()
+                .forEach(projectWidget -> cancelWidgetExecution(projectWidget.getId()));
     }
 
     /**

@@ -20,22 +20,31 @@ package io.suricate.monitoring.controllers;
 
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.project.ProjectRequestDto;
+import io.suricate.monitoring.model.dto.api.project.ProjectResponseDto;
 import io.suricate.monitoring.model.dto.api.projectgrid.ProjectGridRequestDto;
+import io.suricate.monitoring.model.dto.api.projectgrid.ProjectGridResponseDto;
 import io.suricate.monitoring.model.entities.Project;
 import io.suricate.monitoring.model.entities.ProjectGrid;
+import io.suricate.monitoring.model.entities.User;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.services.api.ProjectGridService;
 import io.suricate.monitoring.services.api.ProjectService;
+import io.suricate.monitoring.services.api.UserService;
+import io.suricate.monitoring.services.mapper.ProjectGridMapper;
 import io.suricate.monitoring.utils.exceptions.ApiException;
 import io.suricate.monitoring.utils.exceptions.ObjectNotFoundException;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.net.URI;
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -60,16 +69,63 @@ public class ProjectGridController {
     private final ProjectGridService projectGridService;
 
     /**
+     * The mapper that transform domain/dto objects
+     */
+    private final ProjectGridMapper projectGridMapper;
+
+    /**
      * Constructor for dependency injection
      *
+     * @param projectGridMapper The project grid mapper
      * @param projectService The project service
      * @param projectGridService The project grid service
      */
     @Autowired
     public ProjectGridController(final ProjectService projectService,
+                                 final ProjectGridMapper projectGridMapper,
                                  final ProjectGridService projectGridService) {
+        this.projectGridMapper = projectGridMapper;
         this.projectService = projectService;
         this.projectGridService = projectGridService;
+    }
+
+    /**
+     * Add a new grid to a project
+     *
+     * @param principal         The connected user
+     * @param projectGridRequestDto The project grid to add
+     * @return The saved grid
+     */
+    @ApiOperation(value = "Create a new grid", response = ProjectResponseDto.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok", response = ProjectResponseDto.class),
+            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
+            @ApiResponse(code = 404, message = "Current user not found", response = ApiErrorDto.class)
+    })
+    @PostMapping(value = "/v1/projectGrids/{projectToken}")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<ProjectGridResponseDto> create(@ApiIgnore OAuth2Authentication authentication,
+                                                         @ApiParam(name = "projectToken", value = "The project token", required = true)
+                                                         @PathVariable("projectToken") String projectToken,
+                                                         @ApiParam(name = "projectGridRequestDto", value = "The project grid information", required = true)
+                                                         @RequestBody ProjectGridRequestDto projectGridRequestDto) {
+        Optional<Project> projectOptional = projectService.getOneByToken(projectToken);
+        if (!projectOptional.isPresent()) {
+            throw new ObjectNotFoundException(Project.class, projectToken);
+        }
+
+        Project project = projectOptional.get();
+        if (!this.projectService.isConnectedUserCanAccessToProject(project, authentication.getUserAuthentication())) {
+            throw new ApiException(USER_NOT_ALLOWED_PROJECT, ApiErrorEnum.NOT_AUTHORIZED);
+        }
+
+        ProjectGrid projectGrid = projectGridService.create(projectGridMapper.toProjectGridEntity(projectGridRequestDto, project));
+
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(projectGridMapper.toProjectGridDTO(projectGrid));
     }
 
     /**
@@ -154,7 +210,7 @@ public class ProjectGridController {
             throw new ApiException(USER_NOT_ALLOWED_GRID, ApiErrorEnum.NOT_AUTHORIZED);
         }
 
-        projectGridService.deleteByProjectIdAndId(project.getId(), gridId);
+        projectGridService.deleteByProjectIdAndId(project, gridId);
 
         return ResponseEntity.noContent().build();
     }

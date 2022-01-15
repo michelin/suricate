@@ -37,7 +37,7 @@
     justify-content: center;
 
     li {
-      background-color: mat-color($primary, 900);
+      background-color: mat-color($primary, 200);
       cursor: pointer;
       width: 30px;
       height: 3px;
@@ -46,7 +46,7 @@
     }
 
     .indicator-selected {
-      background-color: mat-color($primary, 200);
+      background-color: mat-color($primary, 900);
     }
   }
 }

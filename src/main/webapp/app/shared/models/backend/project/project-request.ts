@@ -21,7 +21,6 @@ export interface ProjectRequest {
   name: string;
   maxColumn: number;
   widgetHeight: number;
-  gridNumber: number;
   cssStyle: string;
   image: string;
   gridBackgroundColor: string;

@@ -27,6 +27,11 @@ export const DashboardRoutes: Routes = [
     component: DashboardTvComponent
   },
   {
+    path: 'dashboards/:dashboardToken',
+    component: DashboardDetailComponent,
+    canActivate: [AuthGuard]
+  },
+  {
     path: 'dashboards/:dashboardToken/:gridId',
     component: DashboardDetailComponent,
     canActivate: [AuthGuard]

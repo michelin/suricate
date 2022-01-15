@@ -44,9 +44,6 @@ public class SuricateWebMvcConfigurer implements WebMvcConfigurer {
         registry.addResourceHandler("swagger-ui.html")
             .addResourceLocations("classpath:/META-INF/resources/");
 
-        registry.addResourceHandler("/webjars/**")
-            .addResourceLocations("classpath:/META-INF/resources/webjars/");
-
         registry.addResourceHandler("/**/*")
             .addResourceLocations("classpath:/public/")
             .resourceChain(true)

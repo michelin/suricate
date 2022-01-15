@@ -192,10 +192,7 @@ public class ProjectController {
         Project project = this.projectService.createProject(userOptional.get(),
                 this.projectMapper.toProjectEntity(projectRequestDto));
 
-        List<ProjectGrid> projectGrids = new ArrayList<>();
-        IntStream.of(projectRequestDto.getGridNumber()).forEach(x ->
-                projectGrids.add(projectGridMapper.toProjectGridEntity(project)));
-        project.getGrids().addAll(projectGridService.createAll(projectGrids));
+        project.getGrids().add(projectGridService.create(projectGridMapper.toProjectGridEntity(project)));
 
         URI resourceLocation = ServletUriComponentsBuilder
             .fromCurrentContextPath()
@@ -271,7 +268,7 @@ public class ProjectController {
         }
 
         this.projectService.updateProject(project, projectRequestDto.getName(), projectRequestDto.getWidgetHeight(),
-            projectRequestDto.getMaxColumn(), projectRequestDto.getGridNumber(), projectRequestDto.getCssStyle());
+            projectRequestDto.getMaxColumn(), projectRequestDto.getCssStyle());
 
         return ResponseEntity.noContent().build();
     }

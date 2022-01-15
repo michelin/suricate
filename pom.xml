@@ -76,16 +76,6 @@
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-aop</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-configuration-processor</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
@@ -114,7 +104,7 @@
             <artifactId>spring-retry</artifactId>
         </dependency>
 
-        <!-- JUnit 4 with Spring Boot 2.4 -->
+        <!-- JUnit 4 with Spring Boot >=2.4 -->
         <dependency>
             <groupId>org.junit.vintage</groupId>
             <artifactId>junit-vintage-engine</artifactId>
@@ -125,25 +115,6 @@
                     <artifactId>hamcrest-core</artifactId>
                 </exclusion>
             </exclusions>
-        </dependency>
-
-        <!-- Websocket -->
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>webjars-locator</artifactId>
-            <version>0.40</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>sockjs-client</artifactId>
-            <version>1.1.2</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.webjars</groupId>
-            <artifactId>stomp-websocket</artifactId>
-            <version>2.3.3-1</version>
         </dependency>
 
         <!-- Apache DS -->
@@ -180,7 +151,7 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-search-orm</artifactId>
-            <version>5.11.8.Final</version>
+            <version>5.11.10.Final</version>
         </dependency>
 
         <!-- PostgreSQL -->
@@ -207,21 +178,14 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>1.18.20</version>
+            <version>1.18.22</version>
         </dependency>
 
         <!-- Google -->
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>30.1.1-jre</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.google.truth</groupId>
-            <artifactId>truth</artifactId>
-            <version>1.1.2</version>
-            <scope>test</scope>
+            <version>31.0.1-jre</version>
         </dependency>
 
         <!-- Swagger -->
@@ -330,13 +294,6 @@
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-yaml</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>org.glassfish.web</groupId>
-            <artifactId>el-impl</artifactId>
-            <version>2.2</version>
-            <scope>provided</scope>
         </dependency>
     </dependencies>
 

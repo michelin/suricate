@@ -64,18 +64,6 @@ export class HttpProjectWidgetService {
   }
 
   /**
-   * Get the list of widget instances for a project and a grid
-   *
-   * @param projectToken The project token
-   * @param gridId The grid id
-   */
-  public getAllByProjectTokenAndGridId(projectToken: string, gridId: number): Observable<ProjectWidget[]> {
-    const url = `${HttpProjectWidgetService.projectWidgetsApiEndpoint}/${projectToken}/${gridId}/projectWidgets`;
-
-    return this.httpClient.get<ProjectWidget[]>(url);
-  }
-
-  /**
    * Add a new widget to the project
    *
    * @param projectToken The project token

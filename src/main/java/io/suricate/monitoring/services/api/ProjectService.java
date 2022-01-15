@@ -182,7 +182,7 @@ public class ProjectService {
      */
     @Transactional
     public void updateProject(Project project, final String newName, final int widgetHeight, final int maxColumn,
-                              final Integer gridNumber, final String customCSS) {
+                              final String customCSS) {
         if (StringUtils.isNotBlank(newName)) {
             project.setName(newName);
         }
@@ -193,13 +193,6 @@ public class ProjectService {
 
         if (maxColumn > 0) {
             project.setMaxColumn(maxColumn);
-        }
-
-        if (gridNumber > 0 && gridNumber > project.getGrids().size()) {
-            List<ProjectGrid> projectGrids = new ArrayList<>();
-            IntStream.of(gridNumber - project.getGrids().size()).forEach(x ->
-                    projectGrids.add(projectGridMapper.toProjectGridEntity(project)));
-            projectGridService.createAll(projectGrids);
         }
 
         if (StringUtils.isNotBlank(customCSS)) {

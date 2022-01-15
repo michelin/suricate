@@ -231,7 +231,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
 
     this.dialogService.confirm({
       title: 'widget.delete',
-      message: `${this.translateService.instant('delete.confirm')} ${titleCasePipe.transform(this.widget.name)} widget ?`,
+      message: `${this.translateService.instant('widget.delete.confirm')} ${titleCasePipe.transform(this.widget.name)} widget ?`,
       accept: () => this.httpProjectWidgetService.deleteOneById(this.projectWidget.id).subscribe()
     });
   }

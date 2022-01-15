@@ -88,7 +88,7 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
    * {@inheritDoc}
    */
   public redirectToBean(project: Project): void {
-    this.router.navigate(['/dashboards', project.token]);
+    this.router.navigate(['/dashboards', project.token, project.grids[0].id]);
   }
 
   /**
@@ -176,7 +176,7 @@ export class DashboardsComponent extends ListComponent<Project | ProjectRequest>
 
     this.dialogService.confirm({
       title: 'dashboard.delete',
-      message: `${this.translateService.instant('delete.confirm')} ${project.name.toUpperCase()} ?`,
+      message: `${this.translateService.instant('dashboard.delete.confirm')} ${project.name.toUpperCase()} ?`,
       accept: () => {
         this.httpProjectService.delete(project.token).subscribe(() => {
           this.toastService.sendMessage('dashboard.delete.success', ToastTypeEnum.SUCCESS);

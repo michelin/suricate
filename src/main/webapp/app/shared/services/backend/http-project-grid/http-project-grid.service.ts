@@ -20,7 +20,8 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AbstractHttpService } from '../abstract-http/abstract-http.service';
 import { HttpClient } from '@angular/common/http';
-import { ProjectGrid } from '../../../models/backend/project/project-grid';
+import { ProjectGrid } from '../../../models/backend/project-grid/project-grid';
+import { ProjectGridRequest } from '../../../models/backend/project-grid/project-grid-request';
 
 @Injectable({ providedIn: 'root' })
 export class HttpProjectGridService {
@@ -35,6 +36,18 @@ export class HttpProjectGridService {
    * @param httpClient the http client to inject
    */
   constructor(private readonly httpClient: HttpClient) {}
+
+  /**
+   * Create a new project grid
+   *
+   * @param projectToken The project token
+   * @param projectGridRequest The project grid
+   */
+  public create(projectToken: string, projectGridRequest: ProjectGridRequest): Observable<ProjectGrid> {
+    const url = `${HttpProjectGridService.projectGridsApiEndpoint}/${projectToken}`;
+
+    return this.httpClient.post<ProjectGrid>(url, projectGridRequest);
+  }
 
   /**
    * Update all given grids of a project

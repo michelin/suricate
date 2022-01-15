@@ -21,7 +21,6 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { NgGridModule } from 'angular2-grid';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { CheckboxComponent } from './components/inputs/checkbox/checkbox.component';
@@ -33,7 +32,6 @@ import { InputComponent } from './components/inputs/input/input.component';
 import { MaterialCDKModule } from './modules/material-cdk.module';
 import { MaterialModule } from './modules/material.module';
 import { SafeHtmlPipe } from './pipes/safe-html/safe-html.pipe';
-
 import { ToastComponent } from './components/toast/toast.component';
 import { TokenInterceptor } from './interceptors/token.interceptor';
 import { TranslateModule } from '@ngx-translate/core';
@@ -53,6 +51,7 @@ import { WidgetHtmlDirective } from './directives/widget-html.directive';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ProgressBarComponent } from './components/progress-bar/progress-bar.component';
+import { ActionsDialogComponent } from './components/actions-dialog/actions-dialog.component';
 
 @NgModule({
   imports: [
@@ -89,7 +88,8 @@ import { ProgressBarComponent } from './components/progress-bar/progress-bar.com
     MosaicComponent,
     PaginatorComponent,
     SlideToggleComponent,
-    ProgressBarComponent
+    ProgressBarComponent,
+    ActionsDialogComponent
   ],
   exports: [
     BrowserAnimationsModule,

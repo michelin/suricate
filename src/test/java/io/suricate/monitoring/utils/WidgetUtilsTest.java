@@ -8,116 +8,116 @@ import org.junit.Test;
 
 import java.io.File;
 import java.util.List;
+import java.util.Optional;
 
-import static com.google.common.truth.Truth.assertThat;
+import static org.junit.Assert.*;
 
 public class WidgetUtilsTest {
 
     @Test
     public void testNullFile() throws Exception {
-        assertThat(WidgetUtils.parseCategoriesFolder(null)).hasSize(0);
+        assertEquals(0, WidgetUtils.parseCategoriesFolder(null).size());
     }
 
     @Test
     public void testWidgetFolder() throws Exception {
         List<Category> listCategory = WidgetUtils.parseCategoriesFolder(new File(FilesUtilsTest.class.getResource("/widgets/").getFile()));
-        assertThat(listCategory).isNotNull();
-        assertThat(listCategory).hasSize(4);
+        assertNotNull(listCategory);
+        assertEquals(4, listCategory.size());
 
-        assertThat(listCategory.get(0).getName()).isEqualTo("Jira");
-        assertThat(listCategory.get(0).getId()).isNull();
-        assertThat(listCategory.get(0).getImage()).isNotNull();
-        assertThat(listCategory.get(0).getWidgets()).isNotNull();
-        assertThat(listCategory.get(0).getWidgets()).hasSize(3);
-        assertThat(listCategory.get(0).getWidgets().toArray(new Widget[0])[0].getImage()).isNotNull();
-        assertThat(listCategory.get(0).getWidgets().toArray(new Widget[0])[0].getInfo()).isEqualTo("test");
-        assertThat(listCategory.get(0).getWidgets().toArray(new Widget[0])[0].getBackendJs()).isNotEmpty();
-        assertThat(listCategory.get(0).getWidgets().toArray(new Widget[0])[0].getHtmlContent()).isNotEmpty();
-        assertThat(listCategory.get(0).getWidgets().toArray(new Widget[0])[0].getName()).isEqualTo("Jira count");
-        assertThat(listCategory.get(0).getWidgets().toArray(new Widget[0])[0].getDescription()).isEqualTo("Widget user to count the number of jira from the specified JQL query");
-        assertThat(listCategory.get(0).getWidgets().toArray(new Widget[0])[0].getTechnicalName()).isEqualTo("jiracount");
-        assertThat(listCategory.get(0).getWidgets().toArray(new Widget[0])[0].getDelay()).isEqualTo(500);
+        assertEquals("Jira", listCategory.get(0).getName());
+        assertNull(listCategory.get(0).getId());
+        assertNotNull(listCategory.get(0).getImage());
+        assertNotNull(listCategory.get(0).getWidgets());
+        assertEquals(3, listCategory.get(0).getWidgets().size());
+        assertNotNull(listCategory.get(0).getWidgets().toArray(new Widget[0])[0].getImage());
+        assertEquals("test", listCategory.get(0).getWidgets().toArray(new Widget[0])[0].getInfo());
+        assertFalse(listCategory.get(0).getWidgets().toArray(new Widget[0])[0].getBackendJs().isEmpty());
+        assertFalse(listCategory.get(0).getWidgets().toArray(new Widget[0])[0].getHtmlContent().isEmpty());
+        assertEquals("Jira count", listCategory.get(0).getWidgets().toArray(new Widget[0])[0].getName());
+        assertEquals("Widget user to count the number of jira from the specified JQL query", listCategory.get(0).getWidgets().toArray(new Widget[0])[0].getDescription());
+        assertEquals("jiracount", listCategory.get(0).getWidgets().toArray(new Widget[0])[0].getTechnicalName());
+        assertEquals(new Long(500), listCategory.get(0).getWidgets().toArray(new Widget[0])[0].getDelay());
 
-        assertThat(listCategory.get(0).getWidgets().toArray(new Widget[0])[2].getName()).isEqualTo("Jira release timeline");
-        assertThat(listCategory.get(0).getWidgets().toArray(new Widget[0])[2].getLibraries()).isNotNull();
-        assertThat(listCategory.get(0).getWidgets().toArray(new Widget[0])[2].getLibraries().size()).isEqualTo(2);
-        assertThat(Lists.newArrayList(listCategory.get(0).getWidgets().toArray(new Widget[0])[2].getLibraries()).get(0).getTechnicalName()).isEqualTo("d3.js");
+        assertEquals("Jira release timeline", listCategory.get(0).getWidgets().toArray(new Widget[0])[2].getName());
+        assertNotNull(listCategory.get(0).getWidgets().toArray(new Widget[0])[2].getLibraries());
+        assertEquals(2, listCategory.get(0).getWidgets().toArray(new Widget[0])[2].getLibraries().size());
 
-        assertThat(listCategory.get(2).getName()).isEqualTo("Other");
-        assertThat(listCategory.get(2).getId()).isNull();
-        assertThat(listCategory.get(2).getImage()).isNull();
-        assertThat(listCategory.get(2).getWidgets()).isNotNull();
-        assertThat(listCategory.get(2).getWidgets()).hasSize(3);
-        assertThat(listCategory.get(2).getWidgets().toArray(new Widget[0])[0].getImage()).isNotNull();
-        assertThat(listCategory.get(2).getWidgets().toArray(new Widget[0])[0].getBackendJs()).isNull();
-        assertThat(listCategory.get(2).getWidgets().toArray(new Widget[0])[0].getInfo()).isNull();
-        assertThat(listCategory.get(2).getWidgets().toArray(new Widget[0])[0].getHtmlContent()).isNotEmpty();
-        assertThat(listCategory.get(2).getWidgets().toArray(new Widget[0])[0].getName()).isEqualTo("Clock Widget");
-        assertThat(listCategory.get(2).getWidgets().toArray(new Widget[0])[0].getDescription()).isEqualTo("Widget used to display current date and time");
-        assertThat(listCategory.get(2).getWidgets().toArray(new Widget[0])[0].getTechnicalName()).isEqualTo("clock");
-        assertThat(listCategory.get(2).getWidgets().toArray(new Widget[0])[0].getDelay()).isEqualTo(-1);
+        assertEquals("Other", listCategory.get(2).getName());
+        assertNull(listCategory.get(2).getId());
+        assertNull(listCategory.get(2).getImage());
+        assertNotNull(listCategory.get(2).getWidgets());
+        assertEquals(3, listCategory.get(2).getWidgets().size());
+        assertNotNull(listCategory.get(2).getWidgets().toArray(new Widget[0])[0].getImage());
+        assertNull(listCategory.get(2).getWidgets().toArray(new Widget[0])[0].getBackendJs());
+        assertNull(listCategory.get(2).getWidgets().toArray(new Widget[0])[0].getInfo());
+        assertFalse(listCategory.get(2).getWidgets().toArray(new Widget[0])[0].getHtmlContent().isEmpty());
+        assertEquals("Clock Widget", listCategory.get(2).getWidgets().toArray(new Widget[0])[0].getName());
+        assertEquals("Widget used to display current date and time", listCategory.get(2).getWidgets().toArray(new Widget[0])[0].getDescription());
+        assertEquals("clock", listCategory.get(2).getWidgets().toArray(new Widget[0])[0].getTechnicalName());
+        assertEquals(new Long(-1), listCategory.get(2).getWidgets().toArray(new Widget[0])[0].getDelay());
 
     }
 
     @Test
     public void testCategoryNull() throws Exception {
-        assertThat(WidgetUtils.getCategory(null)).isNull();
+        assertNull(WidgetUtils.getCategory(null));
     }
 
     @Test
     public void testCategoryEmptyFolder() throws Exception {
-        assertThat(WidgetUtils.getCategory(new File(FilesUtilsTest.class.getResource("/widgets/noWidget/").getFile()))).isNull();
+        assertNull(WidgetUtils.getCategory(new File(FilesUtilsTest.class.getResource("/widgets/noWidget/").getFile())));
     }
 
     @Test
     public void testCategory() throws Exception {
         Category category = WidgetUtils.getCategory(new File(FilesUtilsTest.class.getResource("/widgets/jira/").getFile()));
-        assertThat(category).isNotNull();
+        assertNotNull(category);
 
-        assertThat(category.getName()).isEqualTo("Jira");
-        assertThat(category.getId()).isNull();
-        assertThat(category.getImage()).isNotNull();
+        assertEquals("Jira", category.getName());
+        assertNull(category.getId());
+        assertNotNull(category.getImage());
     }
 
     @Test
     public void testWidgetNull() throws Exception {
-        assertThat(WidgetUtils.getWidget(null)).isNull();
+        assertNull(WidgetUtils.getWidget(null));
     }
 
     @Test
     public void testWidgetEmptyFolder() throws Exception {
-        assertThat(WidgetUtils.getWidget(new File(FilesUtilsTest.class.getResource("/widgets/noWidget/").getFile()))).isNull();
+        assertNull(WidgetUtils.getWidget(new File(FilesUtilsTest.class.getResource("/widgets/noWidget/").getFile())));
     }
 
     @Test
     public void testWidget() throws Exception {
         Widget widget = WidgetUtils.getWidget(new File(FilesUtilsTest.class.getResource("/widgets/jira/widgets/jiracount/").getFile()));
-        assertThat(widget).isNotNull();
+        assertNotNull(widget);
 
-        assertThat(widget.getName()).isEqualTo("Jira count");
-        assertThat(widget.getId()).isNull();
-        assertThat(widget.getInfo()).isEqualTo("test");
-        assertThat(widget.getDelay()).isEqualTo(500);
-        assertThat(widget.getDescription()).isEqualTo("Widget user to count the number of jira from the specified JQL query");
-        assertThat(widget.getTechnicalName()).isEqualTo("jiracount");
-        assertThat(widget.getHtmlContent()).isNotEmpty();
-        assertThat(widget.getBackendJs()).isNotEmpty();
-        assertThat(widget.getImage()).isNotNull();
+        assertEquals("Jira count", widget.getName());
+        assertNull(widget.getId());
+        assertEquals("test", widget.getInfo());
+        assertEquals(new Long(500), widget.getDelay());
+        assertEquals("Widget user to count the number of jira from the specified JQL query", widget.getDescription());
+        assertEquals("jiracount", widget.getTechnicalName());
+        assertFalse(widget.getHtmlContent().isEmpty());
+        assertFalse(widget.getBackendJs().isEmpty());
+        assertNotNull(widget.getImage());
     }
 
     @Test
     public void testNullLibrary() throws Exception {
-        assertThat(WidgetUtils.parseLibraryFolder(null)).isNull();
+        assertNull(WidgetUtils.parseLibraryFolder(null));
     }
 
     @Test
     public void testLibrary() throws Exception {
-        List<Library> list = WidgetUtils.parseLibraryFolder(new File(FilesUtilsTest.class.getResource("/Libraries/").getFile()));
-        assertThat(list).isNotNull();
-        assertThat(list.size()).isEqualTo(2);
-        assertThat(list.get(0).getTechnicalName()).isEqualTo("d3.min.js");
-        assertThat(new String(list.get(0).getAsset().getContent())).isEqualTo("d32");
-        assertThat(list.get(1).getTechnicalName()).isEqualTo("test.js");
-        assertThat(new String(list.get(1).getAsset().getContent())).isEqualTo("ok");
+        List<Library> list = WidgetUtils.parseLibraryFolder(new File(FilesUtilsTest.class.getResource("/libraries/").getFile()));
+        assertNotNull(list);
+        assertEquals(2, list.size());
+        assertEquals("d3.min.js", list.get(0).getTechnicalName());
+        assertEquals("d32", new String(list.get(0).getAsset().getContent()));
+        assertEquals("test.js", list.get(1).getTechnicalName());
+        assertEquals("ok", new String(list.get(1).getAsset().getContent()));
     }
 }

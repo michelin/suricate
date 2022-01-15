@@ -22,12 +22,8 @@ import { FormField } from '../../../../models/frontend/form/form-field';
 import { IconEnum } from '../../../../enums/icon.enum';
 import { CssService } from '../../css/css.service';
 import { CustomValidator } from '../../../../validators/custom-validator';
-import { HttpAssetService } from '../../../backend/http-asset/http-asset.service';
-import { FileUtils } from '../../../../utils/file.utils';
-import { ImageUtils } from '../../../../utils/image.utils';
-import { ValueChangedEvent } from '../../../../models/frontend/form/value-changed-event';
-import { EMPTY, Observable, of } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
+import { ProjectGrid } from '../../../../models/backend/project-grid/project-grid';
 
 /**
  * Service used to build the form fields related to a project
@@ -50,11 +46,6 @@ export class ProjectFormFieldsService {
   public static readonly projectMaxColumnFormFieldKey = 'maxColumn';
 
   /**
-   * Key of the form field for project grid number
-   */
-  public static readonly projectGridNumberFormFieldKey = 'gridNumber';
-
-  /**
    * Key of the form field for project image
    */
   public static readonly projectImageFormFieldKey = 'image';
@@ -67,7 +58,7 @@ export class ProjectFormFieldsService {
   /**
    * Key of the form field for grids
    */
-  public static readonly gridFormFieldKey = 'grid';
+  public static readonly gridFormFieldKey = 'time';
 
   /**
    * Constructor
@@ -112,18 +103,6 @@ export class ProjectFormFieldsService {
         validators: [Validators.required, CustomValidator.isDigits, CustomValidator.greaterThan0]
       },
       {
-        key: ProjectFormFieldsService.projectGridNumberFormFieldKey,
-        label: 'grid.number',
-        iconPrefix: IconEnum.GRID,
-        type: DataTypeEnum.NUMBER,
-        value: project?.gridProperties.maxColumn ? project.grids.length : 1,
-        validators: [
-          Validators.required,
-          CustomValidator.isDigits,
-          project ? Validators.min(project.grids.length) : CustomValidator.greaterThan0
-        ]
-      },
-      {
         key: ProjectFormFieldsService.projectImageFormFieldKey,
         label: 'dashboard.upload.logo',
         type: DataTypeEnum.FILE,
@@ -140,14 +119,30 @@ export class ProjectFormFieldsService {
   }
 
   /**
+   * Generate the form field when adding a new grid to the project
+   */
+  public generateAddGridFormField(): FormField[] {
+    return [
+      {
+        key: `${ProjectFormFieldsService.gridFormFieldKey}`,
+        label: `${this.translateService.instant('dashboard.grid.addition.rotation.speed.form.field')}`,
+        iconPrefix: IconEnum.SPEED,
+        type: DataTypeEnum.TEXT,
+        placeholder: this.translateService.instant('dashboard.grid.management.rotation.speed.form.field.placeholder'),
+        validators: [Validators.required, CustomValidator.isDigits, CustomValidator.greaterThan0]
+      }
+    ];
+  }
+
+  /**
    * Get the list of form fields for the grids management
    *
    * @param project The project used for an edition
    */
-  public generateGridsManagementFormFields(project: Project): FormField[] {
+  public generateGridsManagementFormFields(grids: ProjectGrid[]): FormField[] {
     const formFields: FormField[] = [];
 
-    project.grids.forEach((grid, index) => {
+    grids.forEach((grid, index) => {
       formFields.push({
         key: `${ProjectFormFieldsService.gridFormFieldKey}-${index}`,
         label: `${this.translateService.instant('dashboard.grid.management.rotation.speed.form.field')} ${index}`,

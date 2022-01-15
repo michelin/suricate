@@ -159,7 +159,7 @@ export class UsersComponent extends ListComponent<User> implements OnInit {
 
     this.dialogService.confirm({
       title: 'user.delete',
-      message: `${this.translateService.instant('delete.confirm')} ${titleCasePipe.transform(user.username)} ?`,
+      message: `${this.translateService.instant('user.delete.confirm')} ${titleCasePipe.transform(user.username)} ?`,
       accept: () => {
         this.httpUserService.delete(user.id).subscribe(() => {
           this.toastService.sendMessage('user.delete.success', ToastTypeEnum.SUCCESS);

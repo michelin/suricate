@@ -140,7 +140,7 @@ export class ConfigurationsComponent extends ListComponent<CategoryParameter> {
   private deleteConfiguration(event: Event, configuration: CategoryParameter): void {
     this.dialogService.confirm({
       title: 'configuration.delete',
-      message: `${this.translateService.instant('delete.confirm')} ${configuration.key.toUpperCase()} ?`,
+      message: `${this.translateService.instant('configuration.delete.confirm')} ${configuration.key.toUpperCase()} ?`,
       accept: () => {
         this.httpCategoryParametersService.delete(configuration.key).subscribe(() => {
           this.toastService.sendMessage('configuration.delete.success', ToastTypeEnum.SUCCESS);

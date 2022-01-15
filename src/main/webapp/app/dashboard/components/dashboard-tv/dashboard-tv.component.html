@@ -26,7 +26,7 @@
       [screenCode]="screenCode"
       [readOnly]="true"
       [openWebsockets]="i === 0"
-      (refreshAllProjectWidgets)="refreshAllProjectWidgets()"
+      (refreshAllProjectWidgets)="refreshCurrentProjectAndWidgets()"
       (disconnectEvent)="handlingDashboardDisconnect()"
     ></suricate-dashboard-screen>
   </ng-template>

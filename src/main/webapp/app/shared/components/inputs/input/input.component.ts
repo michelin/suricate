@@ -150,10 +150,6 @@ export class InputComponent implements OnInit {
       return 'field.error.length';
     }
 
-    if (this.getFormControl()['errors']?.min) {
-      return `${this.translateService.instant('field.error.min')} ${this.getFormControl()['errors'].min.min}`;
-    }
-
     if (this.getFormControl()['errors']?.email) {
       return 'field.error.email.format';
     }

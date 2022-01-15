@@ -1,0 +1,19 @@
+<div class="dialog-wrapper">
+    <h1 mat-dialog-title>{{ configuration.title | translate }}</h1>
+
+    <mat-dialog-content class="spacer" fxLayout="column" fxLayoutAlign="center">
+        <p>{{ configuration.message | translate }}</p>
+    </mat-dialog-content>
+
+    <mat-dialog-actions class="confirm-buttons">
+        <button mat-button mat-stroked-button color="primary" [mat-dialog-close]="false">
+            {{ 'close' | translate }}
+        </button>
+
+        <button mat-button mat-stroked-button *ngFor="let action of configuration.actions"
+                [color]="action.color"
+                (click)="doAction($event, action)">
+            {{ action.label | translate }}
+        </button>
+    </mat-dialog-actions>
+</div>

@@ -11,7 +11,7 @@ import { ProjectWidget } from '../../../shared/models/backend/project-widget/pro
 import { ProjectWidgetPosition } from '../../../shared/models/backend/project-widget/project-widget-position';
 import { WidgetStateEnum } from '../../../shared/enums/widget-sate.enum';
 import { NgGridItemConfig } from 'angular2-grid';
-import { ProjectGrid } from '../../../shared/models/backend/project/project-grid';
+import { ProjectGrid } from '../../../shared/models/backend/project-grid/project-grid';
 
 @Injectable({
   providedIn: 'root'

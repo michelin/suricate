@@ -26,6 +26,8 @@ import { SettingsService } from './core/services/settings.service';
 import { CommunicationDialogConfiguration } from './shared/models/frontend/dialog/communication-dialog-configuration';
 import { CommunicationDialogComponent } from './shared/components/communication-dialog/communication-dialog.component';
 import { Subject } from 'rxjs';
+import { ActionsDialogConfiguration } from './shared/models/frontend/dialog/actions-dialog-configuration';
+import { ActionsDialogComponent } from './shared/components/actions-dialog/actions-dialog.component';
 
 /**
  * Main component init the application
@@ -68,6 +70,7 @@ export class AppComponent implements OnInit, OnDestroy {
   public ngOnInit(): void {
     this.subscribeToConfirmationDialog();
     this.subscribeToCommunicationDialog();
+    this.subscribeToActionsDialog();
     this.subscribeToThemeChanging();
 
     this.settingsService.initDefaultSettings();
@@ -105,8 +108,8 @@ export class AppComponent implements OnInit, OnDestroy {
       .subscribe((confirmationConfiguration: ConfirmationDialogConfiguration) => {
         const dialogConfig: MatDialogConfig = {
           role: 'dialog',
-          width: '700px',
-          height: '50%',
+          width: '500px',
+          height: '200px',
           data: confirmationConfiguration
         };
 
@@ -130,6 +133,25 @@ export class AppComponent implements OnInit, OnDestroy {
         };
 
         this.matDialog.open(CommunicationDialogComponent, dialogConfig);
+      });
+  }
+
+  /**
+   * Function that display the actions' dialog when using the dialog service
+   */
+  private subscribeToActionsDialog(): void {
+    this.dialogService
+      .listenActionsMessages()
+      .pipe(takeUntil(this.unsubscribe))
+      .subscribe((actionsDialogConfiguration: ActionsDialogConfiguration) => {
+        const dialogConfig: MatDialogConfig = {
+          role: 'dialog',
+          width: '500px',
+          height: '200px',
+          data: actionsDialogConfiguration
+        };
+
+        this.matDialog.open(ActionsDialogComponent, dialogConfig);
       });
   }
 }

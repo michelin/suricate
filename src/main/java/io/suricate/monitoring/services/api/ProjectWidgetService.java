@@ -93,11 +93,6 @@ public class ProjectWidgetService {
     private final MustacheFactory mustacheFactory;
 
     /**
-     * The project mapper used for manage model/dto object
-     */
-    private final ProjectMapper projectMapper;
-
-    /**
      * The application context
      */
     private final ApplicationContext ctx;
@@ -115,7 +110,6 @@ public class ProjectWidgetService {
      * @param dashboardScheduleService  The dashboard scheduler
      * @param widgetService             The widget service
      * @param mustacheFactory           The mustache factory (HTML template)
-     * @param projectMapper             The project mapper
      * @param ctx                       The application context
      * @param stringEncryptor           The string encryptor
      */
@@ -125,7 +119,6 @@ public class ProjectWidgetService {
                                 final DashboardWebSocketService dashboardWebSocketService,
                                 @Lazy final DashboardScheduleService dashboardScheduleService,
                                 final WidgetService widgetService,
-                                final ProjectMapper projectMapper,
                                 final ApplicationContext ctx,
                                 @Qualifier("jasyptStringEncryptor") final StringEncryptor stringEncryptor) {
         this.projectWidgetRepository = projectWidgetRepository;
@@ -133,7 +126,6 @@ public class ProjectWidgetService {
         this.dashboardScheduleService = dashboardScheduleService;
         this.widgetService = widgetService;
         this.mustacheFactory = mustacheFactory;
-        this.projectMapper = projectMapper;
         this.ctx = ctx;
         this.stringEncryptor = stringEncryptor;
     }

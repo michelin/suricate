@@ -44,7 +44,7 @@ public interface ProjectRepository extends CrudRepository<Project, Long>, JpaSpe
 	 * @return The paginated projects
 	 */
 	@NotNull
-	@EntityGraph(attributePaths = {"widgets"})
+	@EntityGraph(attributePaths = {"widgets", "grids"})
 	Page<Project> findAll(Specification<Project> specification, @NotNull Pageable pageable);
 
 	/**

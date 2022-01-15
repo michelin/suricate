@@ -143,46 +143,6 @@ public class  ProjectWidgetController {
     }
 
     /**
-     * Get the list of project widgets for a specific project grid
-     */
-    @ApiOperation(value = "Get the full list of project widgets for a specific project grid", response = ProjectWidgetResponseDto.class, nickname = "getProjectWidgetsForProjectAndGrid")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Ok", response = ProjectWidgetResponseDto.class, responseContainer = "List"),
-            @ApiResponse(code = 204, message = "No Content"),
-            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
-    })
-    @GetMapping(value = "/v1/projectWidgets/{projectToken}/{gridId}/projectWidgets")
-    @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<List<ProjectWidgetResponseDto>> getByProjectAndGrid(@ApiIgnore OAuth2Authentication authentication,
-                                                                                             @ApiParam(name = "projectToken", value = "The project token", required = true)
-                                                                                             @PathVariable("projectToken") String projectToken,
-                                                                                             @ApiParam(name = "gridId", value = "The grid id", required = true)
-                                                                                             @PathVariable("gridId") Long gridId) {
-        Optional<Project> projectOptional = this.projectService.getOneByToken(projectToken);
-        if (!projectOptional.isPresent()) {
-            throw new ObjectNotFoundException(Project.class, projectToken);
-        }
-
-        Project project = projectOptional.get();
-        if (project.getGrids().stream().noneMatch(grid -> grid.getId().equals(gridId))) {
-            throw new ObjectNotFoundException(ProjectGrid.class, gridId);
-        }
-
-        if (!this.projectService.isConnectedUserCanAccessToProject(project, authentication)) {
-            throw new ApiException(USER_NOT_ALLOWED_PROJECT, ApiErrorEnum.NOT_AUTHORIZED);
-        }
-
-        return ResponseEntity
-                .ok()
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(this.projectWidgetMapper.toProjectWidgetsDTOs(project.getWidgets()
-                        .stream()
-                        .filter(widget -> widget.getProjectGrid().getId().equals(gridId))
-                        .collect(Collectors.toList())));
-    }
-
-    /**
      * Edit a project widget for a project
      *
      * @param authentication          The connected user

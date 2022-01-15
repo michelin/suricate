@@ -15,7 +15,7 @@
  */
 
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { DashboardService } from '../../services/dashboard/dashboard.service';
 import { Project } from '../../../shared/models/backend/project/project';
@@ -45,6 +45,8 @@ import { ImageUtils } from '../../../shared/utils/image.utils';
 import { TvManagementDialogComponent } from '../tv-management-dialog/tv-management-dialog.component';
 import { HttpProjectGridService } from '../../../shared/services/backend/http-project-grid/http-project-grid.service';
 import { HttpProjectWidgetService } from '../../../shared/services/backend/http-project-widget/http-project-widget.service';
+import { ProjectGridRequest } from '../../../shared/models/backend/project-grid/project-grid-request';
+import { ProjectGrid } from '../../../shared/models/backend/project-grid/project-grid';
 
 /**
  * Component used to display a specific dashboard
@@ -86,9 +88,14 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
   public project: Project;
 
   /**
-   * The widgets of the loaded grid
+   * All the widgets of the dashboard
    */
-  public widgets: ProjectWidget[];
+  public allWidgets: ProjectWidget[];
+
+  /**
+   * Widgets of the current grid
+   */
+  public currentWidgets: ProjectWidget[];
 
   /**
    * True if the dashboard should be displayed readonly, false otherwise
@@ -162,7 +169,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
 
     // When gridId parameter changes
     this.activatedRoute.params.pipe(takeUntil(this.unsubscribe)).subscribe(() => {
-      this.gridId = this.activatedRoute.snapshot.params['gridId'];
+      this.gridId = +this.activatedRoute.snapshot.params['gridId'];
 
       this.refreshProject()
         .pipe(
@@ -216,9 +223,15 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    * Refresh the project widget list
    */
   private refreshProjectWidgets(): Observable<ProjectWidget[]> {
-    return this.httpProjectWidgetsService
-      .getAllByProjectTokenAndGridId(this.dashboardToken, this.gridId)
-      .pipe(tap((projectWidgets: ProjectWidget[]) => (this.widgets = projectWidgets)));
+    return this.httpProjectWidgetsService.getAllByProjectToken(this.dashboardToken).pipe(
+      tap((projectWidgets: ProjectWidget[]) => {
+        this.allWidgets = projectWidgets;
+
+        if (this.gridId && this.allWidgets) {
+          this.currentWidgets = this.allWidgets.filter(widget => widget.gridId === this.gridId);
+        }
+      })
+    );
   }
 
   /**
@@ -226,10 +239,17 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    *
    * @param gridId The id of the grid to display
    */
-  public changeGrid(gridId: number): void {
+  public redirectToGrid(gridId: number): void {
     if (this.gridId !== gridId) {
       this.router.navigate(['/dashboards', this.dashboardToken, gridId]);
     }
+  }
+
+  /**
+   * Redirect to the add grid page
+   */
+  public redirectToAddGrid(): void {
+    this.router.navigate(['/dashboards', this.dashboardToken]);
   }
 
   /**
@@ -244,7 +264,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
           color: 'primary',
           variant: 'miniFab',
           tooltip: { message: 'widget.add' },
-          hidden: () => this.isReadOnly,
+          hidden: () => this.isReadOnly || !this.gridId,
           callback: () => this.displayProjectWidgetWizard()
         },
         {
@@ -276,7 +296,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
           color: 'primary',
           variant: 'miniFab',
           tooltip: { message: 'screen.refresh' },
-          hidden: () => this.isReadOnly || !this.widgets || this.widgets.length === 0,
+          hidden: () => this.isReadOnly || !this.allWidgets || this.allWidgets.length === 0,
           callback: () => this.refreshConnectedScreens()
         },
         {
@@ -284,7 +304,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
           color: 'primary',
           variant: 'miniFab',
           tooltip: { message: 'tv.view' },
-          hidden: () => !this.widgets || this.widgets.length === 0,
+          hidden: () => !this.allWidgets || this.allWidgets.length === 0,
           callback: () => this.redirectToTvView()
         },
         {
@@ -292,24 +312,18 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
           color: 'primary',
           variant: 'miniFab',
           tooltip: { message: 'screen.management' },
-          hidden: () => this.isReadOnly || !this.widgets || this.widgets.length === 0,
+          hidden: () => this.isReadOnly || !this.allWidgets || this.allWidgets.length === 0,
           callback: () => this.openScreenManagementDialog()
-        },
-        {
-          icon: IconEnum.DELETE,
-          color: 'warn',
-          variant: 'miniFab',
-          tooltip: { message: 'dashboard.delete.grid' },
-          hidden: () => this.isReadOnly || this.project.grids.length === 1,
-          callback: () => this.deleteCurrentGrid()
         },
         {
           icon: IconEnum.DELETE_FOREVER,
           color: 'warn',
           variant: 'miniFab',
-          tooltip: { message: 'dashboard.delete' },
+          tooltip: { message: this.project.grids.length === 1 ? 'dashboard.delete' : 'dashboard.grid.delete' },
           hidden: () => this.isReadOnly,
-          callback: () => this.deleteDashboard()
+          callback: () => {
+            this.project.grids.length === 1 ? this.deleteDashboard() : this.deleteDashboardOrGrid();
+          }
         }
       ]
     };
@@ -362,12 +376,23 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Open the form sidenav used to add a grid
+   */
+  public openAddGridFormSidenav(): void {
+    this.sidenavService.openFormSidenav({
+      title: 'grid.add',
+      formFields: this.projectFormFieldsService.generateAddGridFormField(),
+      save: (formData: ProjectGridRequest) => this.addNewGrid(formData)
+    });
+  }
+
+  /**
    * Open the grids management sidenav used to edit the grids
    */
   private openGridsManagementSidenav(): void {
     this.sidenavService.openFormSidenav({
       title: 'dashboard.grid.management',
-      formFields: this.projectFormFieldsService.generateGridsManagementFormFields(this.project),
+      formFields: this.projectFormFieldsService.generateGridsManagementFormFields(this.project.grids),
       save: (formData: ProjectRequest) => this.editGrids(formData)
     });
   }
@@ -394,6 +419,17 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
 
       this.toastService.sendMessage('dashboard.update.success', ToastTypeEnum.SUCCESS);
       this.refreshConnectedScreens();
+    });
+  }
+
+  /**
+   * Add a new grid to the current project
+   *
+   * @param formData The data retrieved from the side nav
+   */
+  private addNewGrid(formData: ProjectGridRequest): void {
+    this.httpProjectGridsService.create(this.project.token, formData).subscribe((createdProjectGrid: ProjectGrid) => {
+      this.router.navigate(['/dashboards', this.dashboardToken, createdProjectGrid.id]);
     });
   }
 
@@ -443,35 +479,48 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * Delete the current grid dashboard
-   */
-  private deleteCurrentGrid(): void {
-    this.dialogService.confirm({
-      title: 'dashboard.delete.grid',
-      message: this.translateService.instant('delete.grid.confirm'),
-      accept: () => {
-        this.httpProjectGridsService.delete(this.project.token, this.gridId).subscribe(() => {
-          this.toastService.sendMessage('dashboard.grid.delete.success', ToastTypeEnum.SUCCESS);
-          this.router.navigate(['/dashboards', this.dashboardToken, this.project.grids[0].id]);
-        });
-      }
-    });
-  }
-
-  /**
-   * Delete the current dashboard
-   */
   private deleteDashboard(): void {
     this.dialogService.confirm({
       title: 'dashboard.delete',
-      message: `${this.translateService.instant('delete.confirm')} ${this.project.name.toUpperCase()} ?`,
+      message: `${this.translateService.instant('dashboard.delete.confirm')} ${this.project.name.toUpperCase()} ?`,
       accept: () => {
         this.httpProjectService.delete(this.project.token).subscribe(() => {
           this.toastService.sendMessage('dashboard.delete.success', ToastTypeEnum.SUCCESS);
           this.router.navigate(['/home']);
         });
       }
+    });
+  }
+
+  /**
+   * Delete the current dashboard or grid
+   */
+  private deleteDashboardOrGrid(): void {
+    this.dialogService.actions({
+      title: 'dashboard.grid.delete',
+      message: 'dashboard.grid.delete.dialog.message',
+      actions: [
+        {
+          label: 'dashboard.grid.delete.dialog.select.grid',
+          color: 'warn',
+          callback: () => {
+            this.httpProjectGridsService.delete(this.project.token, this.gridId).subscribe(() => {
+              this.toastService.sendMessage('dashboard.grid.delete.success', ToastTypeEnum.SUCCESS);
+              this.router.navigate(['/dashboards', this.dashboardToken, this.project.grids[0].id]);
+            });
+          }
+        },
+        {
+          label: 'dashboard.grid.delete.dialog.select.dashboard',
+          color: 'warn',
+          callback: () => {
+            this.httpProjectService.delete(this.project.token).subscribe(() => {
+              this.toastService.sendMessage('dashboard.delete.success', ToastTypeEnum.SUCCESS);
+              this.router.navigate(['/home']);
+            });
+          }
+        }
+      ]
     });
   }
 

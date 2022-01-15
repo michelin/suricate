@@ -34,7 +34,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
-import static com.google.common.truth.Truth.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -131,19 +131,19 @@ public class NashornWidgetSchedulerTest {
     @Test
     @Transactional
     public void testCancelAndSchedule() throws InterruptedException {
-        assertThat(nashornRequestExecutor.getTaskCount()).isEqualTo(0);
-        assertThat(nashornRequestResponseExecutor.getTaskCount()).isEqualTo(0);
-        assertThat(widgetRepository.count()).isEqualTo(1);
+        assertEquals(0, nashornRequestExecutor.getTaskCount());
+        assertEquals(0, nashornRequestResponseExecutor.getTaskCount());
+        assertEquals(1, widgetRepository.count());
 
         // Schedule widget
         NashornRequest nashornRequest = nashornService.getNashornRequestByProjectWidgetId(projectWidget.getId());
         nashornWidgetScheduler.cancelAndScheduleNashornRequest(nashornRequest);
-        assertThat(nashornRequestResponseExecutor.getTaskCount()).isGreaterThan(0L);
+        assertTrue(nashornRequestResponseExecutor.getTaskCount() > 0L);
 
         // Get running task
         WeakReference<ScheduledFuture<NashornResponse>> response = nashornTasksByProjectWidgetId.get(projectWidget.getId()).getKey();
         ScheduledFuture<NashornResponse> future = response.get();
-        assertThat(future).isNotNull();
+        assertNotNull(future);
 
         // Reschedule widget
         nashornWidgetScheduler.cancelAndScheduleNashornRequest(nashornService.getNashornRequestByProjectWidgetId(projectWidget.getId()));
@@ -151,16 +151,16 @@ public class NashornWidgetSchedulerTest {
         ScheduledFuture<NashornResponse> newFuture = nashornTasksByProjectWidgetId.get(projectWidget.getId()).getKey().get();
 
         // Check task canceled
-        assertThat(future.isCancelled()).isTrue();
+        assertTrue(future.isCancelled());
         // check not the same task
-        assertThat(newFuture).isNotEqualTo(future);
+        assertNotEquals(newFuture, future);
         Thread.sleep(2100);
         // Wait completion
         while (nashornRequestResponseExecutor.getActiveCount() != 0) {
         }
 
         Assert.assertNotNull(newFuture);
-        assertThat(newFuture.isDone()).isTrue();
+        assertTrue(newFuture.isDone());
 
         // reinit
         nashornWidgetScheduler.init();
@@ -178,9 +178,9 @@ public class NashornWidgetSchedulerTest {
         // Schedule widget
         nashornWidgetScheduler.cancelAndScheduleNashornRequest(nashornRequest);
         ProjectWidget current = projectWidgetService.getOne(projectWidget.getId()).get();
-        assertThat(current.getState()).isEqualTo(WidgetStateEnum.STOPPED);
-        assertThat(current.getLastExecutionDate()).isNotNull();
-        assertThat(current.getLastSuccessDate()).isNull();
+        assertEquals(WidgetStateEnum.STOPPED, current.getState());
+        assertNotNull(current.getLastExecutionDate());
+        assertNull(current.getLastSuccessDate());
     }
 
     /**

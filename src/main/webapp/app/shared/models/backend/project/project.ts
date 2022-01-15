@@ -16,7 +16,7 @@
 
 import { Asset } from '../asset/asset';
 import { GridProperties } from './grid-properties';
-import { ProjectGrid } from './project-grid';
+import { ProjectGrid } from '../project-grid/project-grid';
 
 /**
  * The project entity

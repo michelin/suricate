@@ -109,6 +109,7 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
         this.initComponentWithProject(queryParams['token']).subscribe();
       } else {
         this.project = null;
+        this.resetRotation();
       }
     });
   }
@@ -117,7 +118,6 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * When the component is destroyed
    */
   public ngOnDestroy(): void {
-    clearInterval(this.intervalRotationTimer);
     this.disconnectTV();
   }
 
@@ -162,19 +162,20 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Activate the action of refresh current project and widgets
+   */
+  public refreshCurrentProjectAndWidgets(): void {
+    this.resetRotation();
+    this.initComponentWithProject(this.project.token).subscribe();
+  }
+
+  /**
    * Refresh the project
    *
    * @param dashboardToken The token used for the refresh
    */
   private refreshProject(dashboardToken: string): Observable<Project> {
     return this.httpProjectService.getById(dashboardToken).pipe(tap((project: Project) => (this.project = project)));
-  }
-
-  /**
-   * Activate the action of refresh project widgets
-   */
-  public refreshAllProjectWidgets(): void {
-    this.refreshProjectWidgets(this.project.token).subscribe();
   }
 
   /**
@@ -201,11 +202,20 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
    * Schedule the next rotation of dashboards
    */
   private scheduleRotation(): void {
-    clearInterval(this.intervalRotationTimer);
+    if (this.project.grids.length > 1) {
+      this.intervalRotationTimer = setInterval(() => {
+        this.rotationIndex = this.rotationIndex === this.project.grids.length - 1 ? 0 : this.rotationIndex + 1;
+      }, this.project.grids[this.rotationIndex].time * 1000);
+    }
+  }
 
-    this.intervalRotationTimer = setInterval(() => {
-      this.rotationIndex = this.rotationIndex === this.project.grids.length - 1 ? 0 : this.rotationIndex + 1;
-    }, this.project.grids[this.rotationIndex].time * 1000);
+  /**
+   * Reset the current rotation
+   */
+  private resetRotation(): void {
+    this.rotationIndex = 0;
+    this.projectWidgetsByGrid.clear();
+    clearInterval(this.intervalRotationTimer);
   }
 
   /**
@@ -222,6 +232,8 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
   private disconnectTV(): void {
     this.unsubscribe.next();
     this.unsubscribe.complete();
+
+    clearInterval(this.intervalRotationTimer);
 
     this.websocketService.disconnect();
   }
