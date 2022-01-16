@@ -155,10 +155,9 @@ public class NashornRequestResultAsyncTask implements Callable<Void>{
             // Handle the case when the Nashorn request exceeds the timeout define by the widget.
             // Set the widget logs and cancel the widget execution
             if (rootCause instanceof TimeoutException) {
-                widgetLogs = rootCause
-                            + ": The Nashorn request exceeded the timeout defined by the widget.";
+                widgetLogs = "The Nashorn request exceeded the timeout defined by the widget";
 
-                LOGGER.error("The Nashorn request exceeded the timeout defined by the widget instance {}. The Nashorn request is going to be canceled.", nashornRequest.getProjectWidgetId());
+                LOGGER.error("The Nashorn request exceeded the timeout defined by the widget instance {}. The Nashorn request is going to be cancelled.", nashornRequest.getProjectWidgetId());
             } else {
                 widgetLogs = rootCause.toString();
 

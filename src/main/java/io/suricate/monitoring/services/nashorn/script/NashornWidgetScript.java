@@ -69,7 +69,7 @@ public final class NashornWidgetScript {
         }
 
         Request request = builder.build();
-        String returnedValue = null;
+        String returnedValue;
 
         try (Response response = client.newCall(request).execute()) {
             if (response.isSuccessful()) {
@@ -80,12 +80,12 @@ public final class NashornWidgetScript {
                 }
             } else {
                 if (response.code() >= HttpStatus.INTERNAL_SERVER_ERROR.value()) {
-                    throw new RemoteException("Response error: " + response.message() + " code:" + response.code());
+                    throw new RemoteException("A server error occurred during the execution of the request /"
+                            + response.request().method() + " " + response.request().url() + " (code " + response.code() + ").");
                 } else {
-                    throw new RequestException(
-                            response.message() + " - code:" + response.code(),
-                            response.body() != null ? response.body().string() : null
-                    );
+                    throw new RequestException("A request error occurred during the execution of the request /"
+                            + response.request().method() + " " + response.request().url() + " (code " + response.code() + "). Error body details: "
+                            + (response.body() != null ? Objects.requireNonNull(response.body()).string() : "Empty body"));
                 }
             }
         }

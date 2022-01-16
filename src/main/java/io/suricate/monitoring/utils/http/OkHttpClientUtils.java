@@ -76,7 +76,7 @@ public final class OkHttpClientUtils {
             final SSLContext sslContext = SSLContext.getInstance("SSL");
             sslContext.init(null, trustManager, new java.security.SecureRandom());
 
-            // Create an ssl socket factory with our all-trusting manager
+            // Create a ssl socket factory with our all-trusting manager
             final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
 
             HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();

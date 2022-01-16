@@ -118,7 +118,7 @@
   "widget.list": "Widgets",
   "widget.list.import": "Import widgets",
   "widget.list.import.success": "Widgets successfully imported",
-  "widget.log": "Widget log",
+  "widget.log": "Widget logs",
   "widget.parameters.category.override.title": "Override the category parameters",
   "widget.select": "Select a widget",
   "yes": "Yes"

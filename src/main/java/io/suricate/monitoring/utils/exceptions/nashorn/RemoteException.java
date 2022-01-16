@@ -19,7 +19,6 @@
 package io.suricate.monitoring.utils.exceptions.nashorn;
 
 public class RemoteException extends Exception {
-
     /**
      * Constructor
      *
