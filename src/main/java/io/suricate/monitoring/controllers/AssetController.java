@@ -21,8 +21,6 @@ package io.suricate.monitoring.controllers;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.entities.Asset;
 import io.suricate.monitoring.services.api.AssetService;
-import io.suricate.monitoring.utils.IdUtils;
-import io.suricate.monitoring.utils.exceptions.ObjectNotFoundException;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
@@ -35,8 +33,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import springfox.documentation.annotations.ApiIgnore;
-
-import java.util.Optional;
 
 /**
  * Asset controller

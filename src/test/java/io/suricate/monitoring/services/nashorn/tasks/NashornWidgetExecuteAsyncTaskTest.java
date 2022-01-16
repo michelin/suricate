@@ -314,9 +314,6 @@ public class NashornWidgetExecuteAsyncTaskTest {
         config.setStringOutputType("base64");
         encryptor.setConfig(config);
 
-        // Encrypted string
-        String encryptedString = "encrypted string *";
-
         WidgetVariableResponse widgetVariableResponse = new WidgetVariableResponse();
         widgetVariableResponse.setName("SURI_SECRET");
         widgetVariableResponse.setDescription("title");

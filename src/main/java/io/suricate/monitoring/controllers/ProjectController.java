@@ -26,7 +26,6 @@ import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetPositionR
 import io.suricate.monitoring.model.dto.api.user.UserResponseDto;
 import io.suricate.monitoring.model.dto.websocket.WebsocketClient;
 import io.suricate.monitoring.model.entities.Project;
-import io.suricate.monitoring.model.entities.ProjectGrid;
 import io.suricate.monitoring.model.entities.User;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.services.api.ProjectGridService;
@@ -58,11 +57,9 @@ import javax.annotation.security.PermitAll;
 import java.io.IOException;
 import java.net.URI;
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.IntStream;
 
 import static io.suricate.monitoring.utils.exceptions.constants.ErrorMessage.USER_NOT_ALLOWED_PROJECT;
 

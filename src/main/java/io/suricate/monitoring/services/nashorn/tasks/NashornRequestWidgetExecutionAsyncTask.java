@@ -179,7 +179,10 @@ public class NashornRequestWidgetExecutionAsyncTask implements Callable<NashornR
                     nashornResponse.setError(NashornErrorTypeEnum.ERROR);
                 }
 
-                nashornResponse.setLog(ExceptionUtils.getRootCause(exception).getMessage());
+                // If RemoteException/RequestException get custom message, else get root cause
+                String logs = ExceptionUtils.getRootCause(exception).getMessage() != null ? ExceptionUtils.getRootCause(exception).getMessage() :
+                        ExceptionUtils.getRootCause(exception).toString();
+                nashornResponse.setLog(logs);
             }
         } finally {
             nashornResponse.setProjectId(nashornRequest.getProjectId());

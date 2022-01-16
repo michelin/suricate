@@ -18,22 +18,22 @@
 
 package io.suricate.monitoring.controllers;
 
-import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.setting.SettingResponseDto;
 import io.suricate.monitoring.model.entities.Setting;
-import io.suricate.monitoring.model.enums.SettingType;
 import io.suricate.monitoring.services.api.SettingService;
 import io.suricate.monitoring.services.mapper.SettingMapper;
 import io.suricate.monitoring.utils.exceptions.NoContentException;
-import io.suricate.monitoring.utils.exceptions.ObjectNotFoundException;
-import io.swagger.annotations.*;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 

@@ -215,7 +215,6 @@ export class DashboardTvComponent implements OnInit, OnDestroy {
     this.timerInterval = setInterval(() => {
       this.timer -= intervalRefreshMs;
       this.timerPercentage = (this.timer * 100) / (this.project.grids[this.rotationIndex].time * 1000);
-      console.warn(this.timerPercentage);
     }, intervalRefreshMs);
   }
 
