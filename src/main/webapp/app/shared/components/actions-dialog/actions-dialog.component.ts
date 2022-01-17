@@ -2,6 +2,7 @@ import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ActionsDialogConfiguration } from '../../models/frontend/dialog/actions-dialog-configuration';
 import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
+import { IconEnum } from '../../enums/icon.enum';
 
 @Component({
   templateUrl: './actions-dialog.component.html',
@@ -24,13 +25,19 @@ export class ActionsDialogComponent {
     @Inject(MAT_DIALOG_DATA) private readonly data: ActionsDialogConfiguration
   ) {
     this.configuration = data;
+    this.initCloseButtonConfiguration();
   }
 
   /**
-   * Call the function when the user click an action
+   * Init the buttons configurations
    */
-  public doAction(event: Event, action: ButtonConfiguration<unknown>): void {
-    this.confirmationDialogRef.close();
-    action.callback(event);
+  private initCloseButtonConfiguration(): void {
+    const closeButton: ButtonConfiguration<any> = {
+      label: 'close',
+      icon: IconEnum.CLOSE,
+      color: 'primary'
+    };
+
+    this.configuration.actions = [closeButton].concat(this.configuration.actions);
   }
 }

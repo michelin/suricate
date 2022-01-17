@@ -17,6 +17,8 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ConfirmationDialogConfiguration } from '../../models/frontend/dialog/confirmation-dialog-configuration';
+import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
+import { IconEnum } from '../../enums/icon.enum';
 
 /**
  * Confirmation dialog
@@ -32,6 +34,11 @@ export class ConfirmDialogComponent {
   public configuration: ConfirmationDialogConfiguration;
 
   /**
+   * The configuration of the yes/no buttons
+   */
+  public yesNoButtonsConfiguration: ButtonConfiguration<unknown>[];
+
+  /**
    * Constructor
    *
    * @param confirmationDialogRef Reference on the instance of this dialog
@@ -42,13 +49,25 @@ export class ConfirmDialogComponent {
     @Inject(MAT_DIALOG_DATA) private readonly data: ConfirmationDialogConfiguration
   ) {
     this.configuration = data;
+    this.initYesNoButtonsConfiguration();
   }
 
   /**
-   * Call the function when the user accept
+   * Init the buttons configurations
    */
-  public accepted(): void {
-    this.confirmationDialogRef.close();
-    this.configuration.accept();
+  private initYesNoButtonsConfiguration(): void {
+    this.yesNoButtonsConfiguration = [
+      {
+        label: 'no',
+        icon: IconEnum.CLOSE,
+        color: 'primary'
+      },
+      {
+        label: 'yes',
+        icon: IconEnum.SAVE,
+        color: 'warn',
+        callback: () => this.configuration.accept()
+      }
+    ];
   }
 }

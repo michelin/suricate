@@ -49,12 +49,17 @@ export class TvManagementDialogComponent implements OnInit {
   public connectedScreenButtonsConfiguration: ButtonConfiguration<WebsocketClient>[] = [];
 
   /**
+   * The configuration of the generic window buttons
+   */
+  public genericButtonsConfiguration: ButtonConfiguration<WebsocketClient>[] = [];
+
+  /**
    * The register screen form
    */
   public registerScreenCodeFormField: FormGroup;
 
   /**
-   * The description of the form}
+   * The description of the form
    */
   public formFields: FormField[];
 
@@ -127,6 +132,14 @@ export class TvManagementDialogComponent implements OnInit {
         type: ButtonTypeEnum.BUTTON,
         tooltip: { message: 'screen.unsubscribe' },
         callback: (event: Event, websocketClient: WebsocketClient) => this.disconnectScreen(websocketClient)
+      }
+    ];
+
+    this.genericButtonsConfiguration = [
+      {
+        label: 'close',
+        icon: IconEnum.CLOSE,
+        color: 'warn'
       }
     ];
   }

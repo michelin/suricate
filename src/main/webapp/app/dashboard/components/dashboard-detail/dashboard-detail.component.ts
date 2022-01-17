@@ -509,6 +509,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
       actions: [
         {
           label: 'dashboard.grid.delete.dialog.select.grid',
+          icon: IconEnum.GRID,
           color: 'warn',
           callback: () => {
             this.httpProjectGridsService.delete(this.project.token, this.gridId).subscribe(() => {
@@ -519,6 +520,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
         },
         {
           label: 'dashboard.grid.delete.dialog.select.dashboard',
+          icon: IconEnum.DASHBOARD,
           color: 'warn',
           callback: () => {
             this.httpProjectService.delete(this.project.token).subscribe(() => {
