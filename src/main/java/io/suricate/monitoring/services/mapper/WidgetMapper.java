@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,7 +60,7 @@ public abstract class WidgetMapper {
      */
     @Named("toWidgetWithoutCategoryParametersDTO")
     @Mapping(target = "imageToken", expression = "java( widget.getImage() != null ? io.suricate.monitoring.utils.IdUtils.encrypt(widget.getImage().getId()) : null )")
-    @Mapping(target = "category", qualifiedByName = "toCategoryWithoutCategoryParametersDTO")
+    @Mapping(target = "category", qualifiedByName = "toCategoryWithoutParametersDTO")
     @Mapping(target = "repositoryId", source = "widget.repository.id")
     @Mapping(target = "params", source = "widget.widgetParams", qualifiedByName = "toWidgetParameterDTO")
     public abstract WidgetResponseDto toWidgetWithoutCategoryParametersDTO(Widget widget);

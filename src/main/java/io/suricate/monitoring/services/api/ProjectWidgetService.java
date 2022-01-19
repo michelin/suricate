@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -62,7 +62,6 @@ import java.util.stream.Collectors;
  */
 @Service
 public class ProjectWidgetService {
-
     /**
      * Class logger
      */
@@ -94,11 +93,6 @@ public class ProjectWidgetService {
     private final MustacheFactory mustacheFactory;
 
     /**
-     * The project mapper used for manage model/dto object
-     */
-    private final ProjectMapper projectMapper;
-
-    /**
      * The application context
      */
     private final ApplicationContext ctx;
@@ -116,7 +110,6 @@ public class ProjectWidgetService {
      * @param dashboardScheduleService  The dashboard scheduler
      * @param widgetService             The widget service
      * @param mustacheFactory           The mustache factory (HTML template)
-     * @param projectMapper             The project mapper
      * @param ctx                       The application context
      * @param stringEncryptor           The string encryptor
      */
@@ -126,7 +119,6 @@ public class ProjectWidgetService {
                                 final DashboardWebSocketService dashboardWebSocketService,
                                 @Lazy final DashboardScheduleService dashboardScheduleService,
                                 final WidgetService widgetService,
-                                final ProjectMapper projectMapper,
                                 final ApplicationContext ctx,
                                 @Qualifier("jasyptStringEncryptor") final StringEncryptor stringEncryptor) {
         this.projectWidgetRepository = projectWidgetRepository;
@@ -134,7 +126,6 @@ public class ProjectWidgetService {
         this.dashboardScheduleService = dashboardScheduleService;
         this.widgetService = widgetService;
         this.mustacheFactory = mustacheFactory;
-        this.projectMapper = projectMapper;
         this.ctx = ctx;
         this.stringEncryptor = stringEncryptor;
     }
@@ -161,12 +152,7 @@ public class ProjectWidgetService {
 
     /**
      * Add a new widget instance to a project
-     *
-     * Encrypt the secret configuration of the widget instance
-     *
-     * Save it
-     *
-     * Send an event to the subscribers to update the dashboards
+     * Encrypt the secret configuration of the widget instance then save it
      *
      * @param widgetInstance The widget instance
      */
@@ -176,11 +162,13 @@ public class ProjectWidgetService {
             encryptSecretParamsIfNeeded(widgetInstance.getWidget(), widgetInstance.getBackendConfig())
         );
 
-        widgetInstance = projectWidgetRepository.saveAndFlush(widgetInstance);
+        projectWidgetRepository.saveAndFlush(widgetInstance);
 
-        UpdateEvent updateEvent = new UpdateEvent(UpdateType.GRID);
-        updateEvent.setContent(projectMapper.toProjectDTO(widgetInstance.getProject()));
-        dashboardWebsocketService.sendEventToProjectSubscribers(widgetInstance.getProject().getToken(), updateEvent);
+        UpdateEvent updateEvent = UpdateEvent.builder()
+                .type(UpdateType.REFRESH_DASHBOARD)
+                .build();
+
+        dashboardWebsocketService.sendEventToProjectSubscribers(widgetInstance.getProjectGrid().getProject().getToken(), updateEvent);
     }
 
     /**
@@ -214,9 +202,12 @@ public class ProjectWidgetService {
             );
         }
         projectWidgetRepository.flush();
+
         // notify clients
-        UpdateEvent updateEvent = new UpdateEvent(UpdateType.POSITION);
-        updateEvent.setContent(projectMapper.toProjectDTO(project));
+        UpdateEvent updateEvent = UpdateEvent.builder()
+                .type(UpdateType.REFRESH_DASHBOARD)
+                .build();
+
         dashboardWebsocketService.sendEventToProjectSubscribers(project.getToken(), updateEvent);
     }
 
@@ -232,13 +223,15 @@ public class ProjectWidgetService {
         if (projectWidgetOptional.isPresent()) {
             ctx.getBean(NashornRequestWidgetExecutionScheduler.class).cancelWidgetExecution(projectWidgetId);
 
-            projectWidgetRepository.deleteByProjectIdAndId(projectWidgetOptional.get().getProject().getId(), projectWidgetId);
+            projectWidgetRepository.deleteById(projectWidgetId);
             projectWidgetRepository.flush();
 
             // notify client
-            UpdateEvent updateEvent = new UpdateEvent(UpdateType.GRID);
-            updateEvent.setContent(projectMapper.toProjectDTO(projectWidgetOptional.get().getProject()));
-            dashboardWebsocketService.updateGlobalScreensByProjectId(projectWidgetOptional.get().getProject().getId(), updateEvent);
+            UpdateEvent updateEvent = UpdateEvent.builder()
+                    .type(UpdateType.REFRESH_DASHBOARD)
+                    .build();
+
+            dashboardWebsocketService.sendEventToProjectSubscribers(projectWidgetOptional.get().getProjectGrid().getProject().getToken(), updateEvent);
         }
     }
 

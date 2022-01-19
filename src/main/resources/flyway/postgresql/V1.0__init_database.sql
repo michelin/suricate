@@ -38,6 +38,7 @@ CREATE TABLE category (
 CREATE TABLE category_param (
     config_key          character varying           NOT NULL,
     config_export       boolean,
+    description         character varying(255)      NOT NULL,
     config_value        character varying(1000),
     category_id         bigint,
     data_type           character varying(255),
@@ -62,32 +63,44 @@ CREATE TABLE library (
 );
 
 CREATE TABLE project (
+    id                   bigserial                   NOT NULL,
+    max_column           integer,
+    name                 character varying           NOT NULL,
+    token                character varying           NOT NULL,
+    widget_height        integer,
+    css_style            text,
+    display_progress_bar character(1)            NOT NULL,
+    screenshot_id        bigint,
+    created_by           character varying(255)      DEFAULT 'APPLICATION'::character varying NOT NULL,
+    created_date         timestamp without time zone DEFAULT now() NOT NULL,
+    last_modified_by     character varying(255)      DEFAULT 'APPLICATION'::character varying,
+    last_modified_date   timestamp without time zone DEFAULT now(),
+    CONSTRAINT pk_project_id                        PRIMARY KEY (id)
+);
+
+CREATE TABLE project_grid (
     id                  bigserial                   NOT NULL,
-    max_column          integer,
-    name                character varying           NOT NULL,
-    token               character varying           NOT NULL,
-    widget_height       integer,
-    css_style           text,
-    screenshot_id       bigint,
+    time                integer,
+    project_id          bigint,
     created_by          character varying(255)      DEFAULT 'APPLICATION'::character varying NOT NULL,
     created_date        timestamp without time zone DEFAULT now() NOT NULL,
     last_modified_by    character varying(255)      DEFAULT 'APPLICATION'::character varying,
     last_modified_date  timestamp without time zone DEFAULT now(),
-    CONSTRAINT pk_project_id                        PRIMARY KEY (id)
+    CONSTRAINT pk_project_grid_id                   PRIMARY KEY (id)
 );
 
 CREATE TABLE project_widget (
     id                  bigserial                       NOT NULL,
     backend_config      text,
     grid_column         integer,
+    grid_row            integer,
     custom_style        text,
     data                text,
     height              integer,
     last_execution_date timestamp without time zone,
     log                 text,
-    grid_row            integer,
     width               integer,
-    project_id          bigint,
+    project_grid_id     bigint,
     widget_id           bigint,
     last_success_date   timestamp without time zone,
     state               character varying,
@@ -195,6 +208,7 @@ CREATE TABLE widget_param (
     required            character(1)                NOT NULL,
     type                character varying(255)      NOT NULL,
     usage_example       character varying(255),
+    usage_tooltip       character varying(1000),
     widget_id           bigint,
     default_value       character varying(255),
     accept_file_regex   character varying(255),
@@ -204,7 +218,6 @@ CREATE TABLE widget_param (
     last_modified_date  timestamp without time zone DEFAULT now(),
     CONSTRAINT pk_widget_param_id                   PRIMARY KEY (id)
 );
-
 
 CREATE TABLE widget_param_value (
     id                  bigserial                   NOT NULL,
@@ -233,8 +246,9 @@ ALTER TABLE user_role               ADD CONSTRAINT fk_user_role_user_id         
 ALTER TABLE user_role               ADD CONSTRAINT fk_user_role_role_id                     FOREIGN KEY (role_id)                   REFERENCES role (id) ;
 ALTER TABLE user_project            ADD CONSTRAINT fk_user_project_user_id                  FOREIGN KEY (user_id)                   REFERENCES users (id) ;
 ALTER TABLE user_project            ADD CONSTRAINT fk_user_project_project_id               FOREIGN KEY (project_id)                REFERENCES project (id) ;
+ALTER TABLE project_grid            ADD CONSTRAINT fk_project_grid_project_id               FOREIGN KEY (project_id)                REFERENCES project (id) ;
 ALTER TABLE project_widget          ADD CONSTRAINT fk_project_widget_widget_id              FOREIGN KEY (widget_id)                 REFERENCES widget (id) ;
-ALTER TABLE project_widget          ADD CONSTRAINT fk_project_widget_project_id             FOREIGN KEY (project_id)                REFERENCES project (id) ;
+ALTER TABLE project_widget          ADD CONSTRAINT fk_project_widget_project_grid_id        FOREIGN KEY (project_grid_id)           REFERENCES project_grid (id) ;
 ALTER TABLE project                 ADD CONSTRAINT fk_project_screenshot_id                 FOREIGN KEY (screenshot_id)             REFERENCES asset (id) ;
 ALTER TABLE library                 ADD CONSTRAINT fk_library_asset_id                      FOREIGN KEY (asset_id)                  REFERENCES asset (id) ;
 ALTER TABLE category_param          ADD CONSTRAINT fk_category_param_category_id            FOREIGN KEY (category_id)               REFERENCES category (id) ;

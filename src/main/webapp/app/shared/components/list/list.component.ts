@@ -1,6 +1,6 @@
 /*
  *  /*
- *  * Copyright 2012-2018 the original author or authors.
+ *  * Copyright 2012-2021 the original author or authors.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -16,10 +16,9 @@
  *
  */
 
-import { AfterViewInit, Component, ElementRef, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Injector, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-
 import { ListConfiguration } from '../../models/frontend/list/list-configuration';
 import { AbstractHttpService } from '../../services/backend/abstract-http/abstract-http.service';
 import { HeaderConfiguration } from '../../models/frontend/header/header-configuration';
@@ -31,8 +30,13 @@ import { HttpFilterService } from '../../services/backend/http-filter/http-filte
 import { PageEvent } from '@angular/material/paginator';
 import { MaterialIconRecords } from '../../records/material-icon.record';
 import { IconEnum } from '../../enums/icon.enum';
-import { fromEvent, Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, map, takeUntil, takeWhile } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
+import { DataTypeEnum } from '../../enums/data-type.enum';
+import { FormGroup } from '@angular/forms';
+import { FormField } from '../../models/frontend/form/form-field';
+import { FormService } from '../../services/frontend/form/form.service';
+import { ValueChangedEvent } from '../../models/frontend/form/value-changed-event';
 
 /**
  * Generic component used to display and manage lists
@@ -41,17 +45,21 @@ import { debounceTime, distinctUntilChanged, map, takeUntil, takeWhile } from 'r
   template: '',
   styleUrls: ['./list.component.scss']
 })
-export class ListComponent<T> implements OnInit, AfterViewInit, OnDestroy {
+export class ListComponent<T> implements OnInit, OnDestroy {
   /**
-   * Reference on input search
+   * Key for the research field
    */
-  @ViewChild('inputSearch')
-  public inputSearch: ElementRef<HTMLInputElement>;
+  public static readonly researchFormFieldKey = 'research';
 
   /**
    * Subject used to unsubscribe all the subscriptions when the component is destroyed
    */
   protected unsubscribe: Subject<void> = new Subject<void>();
+
+  /**
+   * Subject used to emit the value when the research is modified
+   */
+  private researchChanged: Subject<string> = new Subject<string>();
 
   /**
    * Frontend service used to display dialogs
@@ -72,6 +80,11 @@ export class ListComponent<T> implements OnInit, AfterViewInit, OnDestroy {
    * Frontend service used to display messages
    */
   protected toastService: ToastService;
+
+  /**
+   * The form service
+   */
+  private readonly formService: FormService;
 
   /**
    * Angular service used to manage routes
@@ -114,10 +127,20 @@ export class ListComponent<T> implements OnInit, AfterViewInit, OnDestroy {
   public materialIconRecords = MaterialIconRecords;
 
   /**
+   * Search bar configuration
+   */
+  public searchBarConfig: FormField;
+
+  /**
+   * The form displayed by the sidenav
+   */
+  public formGroup: FormGroup;
+
+  /**
    * Constructor
    *
    * @param childService The child http service
-   * @param injector Angular Service used to manage the injection of services
+   * @param injector Manage services injection
    */
   constructor(private readonly childService: AbstractHttpService<T>, protected injector: Injector) {
     this.dialogService = injector.get(DialogService);
@@ -125,20 +148,15 @@ export class ListComponent<T> implements OnInit, AfterViewInit, OnDestroy {
     this.translateService = injector.get(TranslateService);
     this.toastService = injector.get(ToastService);
     this.router = injector.get(Router);
+    this.formService = injector.get(FormService);
   }
 
   /**
    * Called when the component is init
    */
   public ngOnInit(): void {
+    this.initSearchBarConfig();
     this.refreshList();
-  }
-
-  /**
-   * Called when the view has been init
-   */
-  public ngAfterViewInit(): void {
-    this.subscribeToInputSearchElement();
   }
 
   /**
@@ -147,6 +165,21 @@ export class ListComponent<T> implements OnInit, AfterViewInit, OnDestroy {
   public ngOnDestroy(): void {
     this.unsubscribe.next();
     this.unsubscribe.complete();
+  }
+
+  /**
+   * Init the search bar configuration
+   */
+  private initSearchBarConfig(): void {
+    this.searchBarConfig = {
+      key: ListComponent.researchFormFieldKey,
+      label: this.translateService.instant('search.bar'),
+      iconPrefix: IconEnum.SEARCH,
+      type: DataTypeEnum.TEXT
+    };
+
+    this.formGroup = this.formService.generateFormGroupForFields([this.searchBarConfig]);
+    this.subscribeToInputSearchElement();
   }
 
   /**
@@ -252,19 +285,20 @@ export class ListComponent<T> implements OnInit, AfterViewInit, OnDestroy {
 
   /**
    * Subscribe to input search event
+   * Wait for a few time before triggering the refresh
    */
   private subscribeToInputSearchElement(): void {
-    fromEvent(this.inputSearch.nativeElement, 'keyup')
-      .pipe(
-        takeUntil(this.unsubscribe),
-        debounceTime(500),
-        map((event: Event) => (event.target as HTMLInputElement).value),
-        distinctUntilChanged()
-      )
-      .subscribe((searchValue: string) => {
-        this.httpFilter.page = 0;
-        this.httpFilter.search = searchValue;
-        this.refreshList();
-      });
+    this.researchChanged.pipe(takeUntil(this.unsubscribe), debounceTime(500), distinctUntilChanged()).subscribe((searchValue: string) => {
+      this.httpFilter.page = 0;
+      this.httpFilter.search = searchValue;
+      this.refreshList();
+    });
+  }
+
+  /**
+   * Emit a new event when a new value is typed in the search bar
+   */
+  public researchChangedEvent(event: ValueChangedEvent) {
+    this.researchChanged.next(event.value);
   }
 }

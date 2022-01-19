@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ import { FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import { AuthenticationService } from '../../../shared/services/frontend/authentication/authentication.service';
-import { HttpWidgetConfigurationService } from '../../../shared/services/backend/http-widget-configuration/http-widget-configuration.service';
+import { HttpCategoryParametersService } from '../../../shared/services/backend/http-category-parameters/http-category-parameters.service';
 import { ApplicationProperties } from '../../../shared/models/backend/application-properties';
 import { AuthenticationProviderEnum } from '../../../shared/enums/authentication-provider.enum';
 import { FormService } from '../../../shared/services/frontend/form/form.service';
@@ -28,6 +28,7 @@ import { FormField } from '../../../shared/models/frontend/form/form-field';
 import { LoginFormFieldsService } from '../../../shared/services/frontend/form-fields/login-form-fields/login-form-fields.service';
 import { ButtonTypeEnum } from '../../../shared/enums/button-type.enum';
 import { SettingsService } from '../../services/settings.service';
+import { HttpConfigurationService } from '../../../shared/services/backend/http-configuration/http-configuration.service';
 
 /**
  * Manage the login page
@@ -74,7 +75,7 @@ export class LoginComponent implements OnInit {
    */
   constructor(
     private readonly router: Router,
-    private readonly httpConfigurationService: HttpWidgetConfigurationService,
+    private readonly httpConfigurationService: HttpConfigurationService,
     private readonly authenticationService: AuthenticationService,
     private readonly formService: FormService,
     private readonly settingsService: SettingsService

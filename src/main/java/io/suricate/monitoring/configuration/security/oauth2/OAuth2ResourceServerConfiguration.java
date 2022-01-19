@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -92,7 +92,7 @@ public class OAuth2ResourceServerConfiguration extends ResourceServerConfigurerA
                 .antMatchers("/api/*/users/register").permitAll()
                 .antMatchers("/api/*/configurations/authentication-provider").permitAll()
                 .antMatchers("/api/*/projects/{projectToken}").permitAll()
-                .antMatchers("/api/*/projects/{projectToken}/projectWidgets").permitAll()
+                .antMatchers("/api/*/projectWidgets/{projectToken}/projectWidgets").permitAll()
                 .antMatchers("/api/*/projectWidgets/{projectWidgetId}").permitAll()
                 .antMatchers("/api/*/widgets/{widgetId}").permitAll()
                 .antMatchers("/api/*/settings").permitAll()

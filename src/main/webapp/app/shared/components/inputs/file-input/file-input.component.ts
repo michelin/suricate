@@ -1,6 +1,6 @@
 /*
  *  /*
- *  * Copyright 2012-2018 the original author or authors.
+ *  * Copyright 2012-2021 the original author or authors.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -16,14 +16,11 @@
  *
  */
 
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, Injector, OnInit } from '@angular/core';
 import { InputComponent } from '../input/input.component';
 import { animate, style, transition, trigger } from '@angular/animations';
 import { FileUtils } from '../../../utils/file.utils';
 import * as html2canvas from 'html2canvas';
-import { DashboardScreenComponent } from '../../../../dashboard/components/dashboard-screen/dashboard-screen.component';
-import { HttpProjectService } from '../../../services/backend/http-project/http-project.service';
-import { ImageUtils } from '../../../utils/image.utils';
 
 /**
  * Component that manage the file input
@@ -54,9 +51,11 @@ export class FileInputComponent extends InputComponent implements OnInit {
 
   /**
    * Constructor
+   *
+   * @param injector Manage services injection
    */
-  constructor() {
-    super();
+  constructor(protected injector: Injector) {
+    super(injector);
   }
 
   /**
@@ -89,7 +88,6 @@ export class FileInputComponent extends InputComponent implements OnInit {
    */
   public onFileChange(event: Event): void {
     this.convertFileBase64(event);
-    this.emitValueChange('fileChanged');
   }
 
   /**
@@ -105,11 +103,12 @@ export class FileInputComponent extends InputComponent implements OnInit {
         this.setBase64File(base64Url as string, file.name);
         super.getFormControl().setValue(base64Url);
         super.getFormControl().markAsDirty();
+
+        this.emitValueChange('fileChanged');
       });
     }
 
     super.getFormControl().markAsTouched();
-    this.emitValueChange('fileChanged');
   }
 
   /**

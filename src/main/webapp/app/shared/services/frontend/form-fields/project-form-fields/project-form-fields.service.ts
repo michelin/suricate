@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,9 +22,8 @@ import { FormField } from '../../../../models/frontend/form/form-field';
 import { IconEnum } from '../../../../enums/icon.enum';
 import { CssService } from '../../css/css.service';
 import { CustomValidator } from '../../../../validators/custom-validator';
-import { HttpAssetService } from '../../../backend/http-asset/http-asset.service';
-import { FileUtils } from '../../../../utils/file.utils';
-import { ImageUtils } from '../../../../utils/image.utils';
+import { TranslateService } from '@ngx-translate/core';
+import { ProjectGrid } from '../../../../models/backend/project-grid/project-grid';
 
 /**
  * Service used to build the form fields related to a project
@@ -32,16 +31,51 @@ import { ImageUtils } from '../../../../utils/image.utils';
 @Injectable({ providedIn: 'root' })
 export class ProjectFormFieldsService {
   /**
-   * Constructor
+   * Key of the form field for project name
    */
-  constructor() {}
+  public static readonly projectNameFormFieldKey = 'name';
 
   /**
-   * Get the list of steps for a dashboard
+   * Key of the form field for project widget height
+   */
+  public static readonly projectWidgetHeightFormFieldKey = 'widgetHeight';
+
+  /**
+   * Key of the form field for project max column
+   */
+  public static readonly projectMaxColumnFormFieldKey = 'maxColumn';
+
+  /**
+   * Key of the form field for project image
+   */
+  public static readonly projectImageFormFieldKey = 'image';
+
+  /**
+   * Key of the form field for project image
+   */
+  public static readonly projectGridBackgroundColorFormFieldKey = 'gridBackgroundColor';
+
+  /**
+   * Key of the time form field for grids
+   */
+  public static readonly timeFormFieldKey = 'time';
+
+  /**
+   * Key of the form field for grids progress bar
+   */
+  public static readonly progressBarFormFieldKey = 'displayProgressBar';
+
+  /**
+   * Constructor
+   */
+  constructor(private translateService: TranslateService) {}
+
+  /**
+   * Get the list of form fields for a dashboard
    *
    * @param project The project used for an edition
    */
-  public static generateProjectFormFields(project?: Project): FormField[] {
+  public generateProjectFormFields(project?: Project): FormField[] {
     const backgroundColor =
       project && project.gridProperties.cssStyle
         ? CssService.extractCssValue(project.gridProperties.cssStyle, '.grid', 'background-color')
@@ -49,42 +83,90 @@ export class ProjectFormFieldsService {
 
     return [
       {
-        key: 'name',
-        label: 'name',
+        key: ProjectFormFieldsService.projectNameFormFieldKey,
+        label: 'dashboard.title.form.field',
         iconPrefix: IconEnum.NAME,
         type: DataTypeEnum.TEXT,
-        value: project ? project.name : null,
+        value: project?.name ? project.name : null,
+        placeholder: this.translateService.instant('dashboard.title.form.field.placeholder'),
         validators: [Validators.required]
       },
       {
-        key: 'widgetHeight',
-        label: 'widget.height.px',
+        key: ProjectFormFieldsService.projectWidgetHeightFormFieldKey,
+        label: 'row.height.px',
         iconPrefix: IconEnum.HEIGHT,
         type: DataTypeEnum.NUMBER,
-        value: project ? project.gridProperties.widgetHeight : 360,
+        value: project?.gridProperties.widgetHeight ? project.gridProperties.widgetHeight : 360,
         validators: [Validators.required, CustomValidator.isDigits, CustomValidator.greaterThan0]
       },
       {
-        key: 'maxColumn',
+        key: ProjectFormFieldsService.projectMaxColumnFormFieldKey,
         label: 'column.number',
         iconPrefix: IconEnum.COLUMN,
         type: DataTypeEnum.NUMBER,
-        value: project ? project.gridProperties.maxColumn : 5,
+        value: project?.gridProperties.maxColumn ? project.gridProperties.maxColumn : 5,
         validators: [Validators.required, CustomValidator.isDigits, CustomValidator.greaterThan0]
       },
       {
-        key: 'image',
+        key: ProjectFormFieldsService.projectImageFormFieldKey,
         label: 'dashboard.upload.logo',
         type: DataTypeEnum.FILE,
         value: project?.image ? `data:${project.image.contentType};base64,${project.image.content}` : undefined,
         validators: [CustomValidator.fileHasFormat()]
       },
       {
-        key: 'gridBackgroundColor',
+        key: ProjectFormFieldsService.projectGridBackgroundColorFormFieldKey,
         label: 'background.color',
         type: DataTypeEnum.COLOR_PICKER,
         value: backgroundColor
       }
     ];
+  }
+
+  /**
+   * Generate the form field when adding a new grid to the project
+   */
+  public generateAddGridFormField(): FormField[] {
+    return [
+      {
+        key: `${ProjectFormFieldsService.timeFormFieldKey}`,
+        label: `${this.translateService.instant('dashboard.grid.addition.rotation.speed.form.field')}`,
+        iconPrefix: IconEnum.SPEED,
+        type: DataTypeEnum.TEXT,
+        placeholder: this.translateService.instant('dashboard.grid.management.rotation.speed.form.field.placeholder'),
+        validators: [Validators.required, CustomValidator.isDigits, CustomValidator.greaterThan0]
+      }
+    ];
+  }
+
+  /**
+   * Get the list of form fields for the grids management
+   *
+   * @param project The project used for an edition
+   */
+  public generateGridsManagementFormFields(project: Project): FormField[] {
+    const formFields: FormField[] = [];
+
+    formFields.push({
+      key: ProjectFormFieldsService.progressBarFormFieldKey,
+      label: 'dashboard.grid.management.progress.bar.form.field',
+      iconPrefix: IconEnum.PROGRESS_BAR,
+      type: DataTypeEnum.BOOLEAN,
+      value: project.displayProgressBar
+    });
+
+    project.grids.forEach((grid, index) => {
+      formFields.push({
+        key: `${ProjectFormFieldsService.timeFormFieldKey}-${index}`,
+        label: `${this.translateService.instant('dashboard.grid.management.rotation.speed.form.field')} ${index}`,
+        iconPrefix: IconEnum.SPEED,
+        type: DataTypeEnum.TEXT,
+        value: grid.time,
+        placeholder: this.translateService.instant('dashboard.grid.management.rotation.speed.form.field.placeholder'),
+        validators: [Validators.required, CustomValidator.isDigits, CustomValidator.greaterThan0]
+      });
+    });
+
+    return formFields;
   }
 }

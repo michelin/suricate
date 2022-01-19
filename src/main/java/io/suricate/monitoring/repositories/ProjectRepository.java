@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,10 @@
 package io.suricate.monitoring.repositories;
 
 import io.suricate.monitoring.model.entities.Project;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -32,14 +36,25 @@ import java.util.Optional;
  */
 @Repository
 public interface ProjectRepository extends CrudRepository<Project, Long>, JpaSpecificationExecutor<Project> {
+	/**
+	 * Find all paginated projects
+	 *
+	 * @param specification The specification to apply
+	 * @param pageable The pageable to apply
+	 * @return The paginated projects
+	 */
+	@NotNull
+	@EntityGraph(attributePaths = {"grids"})
+	Page<Project> findAll(Specification<Project> specification, @NotNull Pageable pageable);
 
-    /**
+	/**
      * Find projects by user id
      *
      * @param id The user id
      * @return List of related projects ordered by name
      */
-    List<Project> findByUsers_IdOrderByName(Long id);
+	@EntityGraph(attributePaths = {"screenshot", "grids"})
+    List<Project> findByUsersIdOrderByName(Long id);
 
     /**
 	 * Find a project by token
@@ -47,7 +62,10 @@ public interface ProjectRepository extends CrudRepository<Project, Long>, JpaSpe
 	 * @param token The token to find
 	 * @return The project as Optionals
 	 */
-    @EntityGraph(attributePaths = {"screenshot", "widgets", "users"})
+    @EntityGraph(attributePaths = {"screenshot",
+								   "grids.widgets.widget.category.configurations",
+								   "grids.widgets.widget.widgetParams",
+								   "users.roles"})
 	Optional<Project> findProjectByToken(final String token);
 
 	/**

@@ -1,6 +1,6 @@
 /*
  *  /*
- *  * Copyright 2012-2018 the original author or authors.
+ *  * Copyright 2012-2021 the original author or authors.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -53,14 +53,42 @@ export class HttpProjectWidgetService {
   }
 
   /**
+   * Get the list of widget instances for a project
+   *
+   * @param projectToken The project token
+   */
+  public getAllByProjectToken(projectToken: string): Observable<ProjectWidget[]> {
+    const url = `${HttpProjectWidgetService.projectWidgetsApiEndpoint}/${projectToken}/projectWidgets`;
+
+    return this.httpClient.get<ProjectWidget[]>(url);
+  }
+
+  /**
+   * Add a new widget to the project
+   *
+   * @param projectToken The project token
+   * @param gridId The grid id
+   * @param projectWidgetRequest The project widget to add
+   */
+  public addProjectWidgetToProject(
+    projectToken: string,
+    gridId: number,
+    projectWidgetRequest: ProjectWidgetRequest
+  ): Observable<ProjectWidget> {
+    const url = `${HttpProjectWidgetService.projectWidgetsApiEndpoint}/${projectToken}/${gridId}/projectWidgets`;
+
+    return this.httpClient.post<ProjectWidget>(url, projectWidgetRequest);
+  }
+
+  /**
    * Update a project widget by id
    *
    * @param projectWidgetId The project widget id
    * @param projectWidgetRequest The new project widget
    */
-  public updateOneById(projectWidgetId: number, projectWidgetRequest: ProjectWidgetRequest): Observable<void> {
+  public updateOneById(projectWidgetId: number, projectWidgetRequest: ProjectWidgetRequest): Observable<ProjectWidget> {
     const url = `${HttpProjectWidgetService.projectWidgetsApiEndpoint}/${projectWidgetId}`;
-    return this.httpClient.put<void>(url, projectWidgetRequest);
+    return this.httpClient.put<ProjectWidget>(url, projectWidgetRequest);
   }
 
   /**

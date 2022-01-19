@@ -1,6 +1,6 @@
 /*
  *  /*
- *  * Copyright 2012-2018 the original author or authors.
+ *  * Copyright 2012-2021 the original author or authors.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, Input } from '@angular/core';
+import { Component, Injector, Input } from '@angular/core';
 import { InputComponent } from '../input/input.component';
 import { FormArray, FormGroup } from '@angular/forms';
 import { FormField } from '../../../models/frontend/form/form-field';
@@ -41,9 +41,11 @@ export class FieldsComponent extends InputComponent {
 
   /**
    * Constructor
+   *
+   * @param injector Manage services injection
    */
-  constructor() {
-    super();
+  constructor(protected injector: Injector) {
+    super(injector);
   }
 
   /**

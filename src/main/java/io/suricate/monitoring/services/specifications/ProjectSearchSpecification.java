@@ -22,7 +22,7 @@ public class ProjectSearchSpecification extends AbstractSearchSpecification<Proj
      * @param search The string to search
      */
     public ProjectSearchSpecification(final String search) {
-        super(search, Project_.name);
+        super(search);
     }
 
     /**

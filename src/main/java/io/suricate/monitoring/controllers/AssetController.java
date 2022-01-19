@@ -1,6 +1,6 @@
 /*
  *
- *  * Copyright 2012-2018 the original author or authors.
+ *  * Copyright 2012-2021 the original author or authors.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -21,8 +21,6 @@ package io.suricate.monitoring.controllers;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.entities.Asset;
 import io.suricate.monitoring.services.api.AssetService;
-import io.suricate.monitoring.utils.IdUtils;
-import io.suricate.monitoring.utils.exceptions.ObjectNotFoundException;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
@@ -36,8 +34,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 import springfox.documentation.annotations.ApiIgnore;
 
-import java.util.Optional;
-
 /**
  * Asset controller
  */
@@ -45,7 +41,6 @@ import java.util.Optional;
 @RequestMapping("/api")
 @Api(value = "Asset Controller", tags = {"Assets"})
 public class AssetController {
-
     /**
      * Asset Service
      */
@@ -77,22 +72,18 @@ public class AssetController {
     public ResponseEntity<byte[]> getAsset(@ApiIgnore WebRequest webRequest,
                                            @ApiParam(name = "token", value = "The asset Token", required = true)
                                            @PathVariable("token") String token) {
-        Optional<Asset> asset = assetService.getAssetById(IdUtils.decrypt(token));
+        Asset asset = this.assetService.getAssetById(token);
 
-        if (!asset.isPresent()) {
-            throw new ObjectNotFoundException(Asset.class, token);
-        }
-
-        if (webRequest.checkNotModified(asset.get().getLastModifiedDate().getTime())) {
+        if (webRequest.checkNotModified(asset.getLastModifiedDate().getTime())) {
             return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
         }
 
         return ResponseEntity
             .ok()
-            .contentType(MediaType.parseMediaType(asset.get().getContentType()))
-            .contentLength(asset.get().getSize())
-            .lastModified(asset.get().getLastModifiedDate().getTime())
+            .contentType(MediaType.parseMediaType(asset.getContentType()))
+            .contentLength(asset.getSize())
+            .lastModified(asset.getLastModifiedDate().getTime())
             .cacheControl(CacheControl.noCache())
-            .body(asset.get().getContent());
+            .body(asset.getContent());
     }
 }

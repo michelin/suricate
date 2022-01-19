@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import {
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { NgGridConfig, NgGridItemConfig } from 'angular2-grid';
+import { NgGridConfig, NgGridItem, NgGridItemConfig } from 'angular2-grid';
 import * as Stomp from '@stomp/stompjs';
 import { Project } from '../../../shared/models/backend/project/project';
 import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';
@@ -85,21 +85,28 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   public screenCode: number;
 
   /**
+   * Tell if the websockets need to be opened.
+   * E.g.: In case of grids rotation, do not open websockets for each grid
+   */
+  @Input()
+  public openWebsockets = true;
+
+  /**
    * Event for handling the disconnection
    */
   @Output()
   public disconnectEvent = new EventEmitter<void>();
 
   /**
-   * Use to tell to the parent component that he should refresh the project widgets
+   * Use to tell to the parent component that it should refresh the project widgets
    */
   @Output()
-  public refreshProjectWidget = new EventEmitter<void>();
+  public refreshAllProjectWidgets = new EventEmitter<void>();
 
   /**
-   * Subject used to unsubscribe all the subscriptions when the component is destroyed
+   * Subject used to unsubscribe all the subscriptions to project web sockets
    */
-  private unsubscribe: Subject<void> = new Subject<void>();
+  private unsubscribeProjectWebSocket: Subject<void> = new Subject<void>();
 
   /**
    * The options for the plugin angular2-grid
@@ -107,14 +114,14 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   public gridOptions: NgGridConfig = {};
 
   /**
-   * Grid state when widgets were first loaded
+   * All the grids of the dashboard
    */
-  protected startGridStackItems: NgGridItemConfig[] = [];
+  public currentGrid: NgGridItemConfig[] = [];
 
   /**
-   * The grid items description
+   * All the initial grids of the dashboard, before any modification
    */
-  public gridStackItems: NgGridItemConfig[] = [];
+  public startGrid: NgGridItemConfig[] = [];
 
   /**
    * Tell if we should display the screen code
@@ -149,7 +156,9 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   ) {}
 
   /**
-   * Each time a value change, this function will be called
+   * On changes method
+   *
+   * @param changes The change event
    */
   public ngOnChanges(changes: SimpleChanges): void {
     if (changes.project) {
@@ -158,26 +167,31 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
         (window as any).page_loaded = true;
       }
 
-      this.project = changes.project.currentValue;
-      this.initGridStackOptions();
+      if (changes.project.currentValue) {
+        this.initGridStackOptions();
 
-      if (changes.project.previousValue) {
-        if (changes.project.previousValue.token !== changes.project.currentValue.token) {
-          this.resetWebsocketSubscriptions();
+        // Do not add libs in the DOM at first view init
+        // Let the after view init method handle the first initialization
+        if (!changes.project.firstChange) {
+          this.addExternalJSLibrariesToTheDOM();
         }
-      } else {
-        this.initWebsocketSubscriptions();
+
+        if (!changes.project.previousValue) {
+          this.initProjectWebsockets();
+        } else {
+          if (changes.project.previousValue.token !== changes.project.currentValue.token) {
+            this.resetProjectWebsockets();
+          }
+        }
       }
     }
 
     if (changes.readOnly) {
-      this.readOnly = changes.readOnly.currentValue;
       this.initGridStackOptions();
     }
 
     if (changes.projectWidgets) {
-      this.projectWidgets = changes.projectWidgets.currentValue;
-      this.initGridStackItems();
+      this.initGridItems();
     }
   }
 
@@ -192,7 +206,7 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
    * When the component is destroyed (new page)
    */
   public ngOnDestroy(): void {
-    this.disconnectFromWebsocket();
+    this.disconnectFromWebsockets();
   }
 
   /**
@@ -200,23 +214,25 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
    * and a callback which notify subscribers when the library is loaded.
    */
   public addExternalJSLibrariesToTheDOM() {
-    this.libraryService.numberOfExternalLibrariesToLoad = this.project.librariesToken.length;
+    if (this.project) {
+      this.libraryService.init(this.project.librariesToken.length);
 
-    if (this.project.librariesToken.length > 0) {
-      this.project.librariesToken.forEach(token => {
-        const script: HTMLScriptElement = document.createElement('script');
-        script.type = 'text/javascript';
-        script.src = HttpAssetService.getContentUrl(token);
-        script.onload = () => this.libraryService.markScriptAsLoaded(token);
-        script.async = false;
+      if (this.project.librariesToken.length > 0) {
+        this.project.librariesToken.forEach(token => {
+          const script: HTMLScriptElement = document.createElement('script');
+          script.type = 'text/javascript';
+          script.src = HttpAssetService.getContentUrl(token);
+          script.onload = () => this.libraryService.markScriptAsLoaded(token);
+          script.async = false;
 
-        this.renderer.appendChild(this.externalJsLibrariesSpan.nativeElement, script);
-      });
-    }
+          this.renderer.appendChild(this.externalJsLibrariesSpan.nativeElement, script);
+        });
+      }
 
-    // No library to load
-    else {
-      this.libraryService.emitAreJSScriptsLoaded(true);
+      // No library to load
+      else {
+        this.libraryService.emitAreJSScriptsLoaded(true);
+      }
     }
   }
 
@@ -229,53 +245,53 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   }
 
   /**********************************************************************************************************/
-  /*                      GRID STACK MANAGEMENT                                                             */
-
+  /*                                         GRID MANAGEMENT                                                */
   /**********************************************************************************************************/
 
   /**
    * Init the options for Grid Stack plugin
    */
   private initGridStackOptions(): void {
-    this.gridOptions = {
-      visible_cols: this.project.gridProperties.maxColumn,
-      min_cols: 1,
-      row_height: this.project.gridProperties.widgetHeight,
-      min_rows: 1,
-      margins: [4],
-      auto_resize: true,
-      draggable: false,
-      resizable: false
-    };
-
-    if (!this.readOnly) {
+    if (this.project) {
       this.gridOptions = {
-        ...this.gridOptions,
-        draggable: true,
-        resizable: true
+        max_cols: this.project.gridProperties.maxColumn,
+        min_cols: 1,
+        row_height: this.project.gridProperties.widgetHeight,
+        min_rows: 1,
+        margins: [4],
+        auto_resize: true,
+        draggable: false,
+        resizable: false
       };
+
+      if (!this.readOnly) {
+        this.gridOptions = {
+          ...this.gridOptions,
+          draggable: true,
+          resizable: true
+        };
+      }
     }
   }
 
   /**
-   * Create the list of gridStackItems used to display widgets on the grid
+   * Create the list of grid items used to display widgets on the grids
    */
-  private initGridStackItems(): void {
-    this.gridStackItems = [];
+  private initGridItems(): void {
+    this.startGrid = [];
 
     if (this.projectWidgets) {
-      this.startGridStackItems = this.getGridStackItemsFromProjectWidgets(this.projectWidgets);
+      this.startGrid = this.getGridItemsFromProjectWidgets();
+
       // Make a copy with a new reference
-      this.gridStackItems = JSON.parse(JSON.stringify(this.startGridStackItems));
+      this.currentGrid = JSON.parse(JSON.stringify(this.startGrid));
     }
   }
 
   /**
    * Get the list of GridItemConfigs from project widget
-   *
-   * @param projectWidgets The project widgets
    */
-  private getGridStackItemsFromProjectWidgets(projectWidgets: ProjectWidget[]): NgGridItemConfig[] {
+  private getGridItemsFromProjectWidgets(): NgGridItemConfig[] {
     const gridStackItemsConfig: NgGridItemConfig[] = [];
 
     this.projectWidgets.forEach((projectWidget: ProjectWidget) => {
@@ -292,40 +308,43 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   }
 
   /**********************************************************************************************************/
-  /*                      WEBSOCKET MANAGEMENT                                                              */
-
+  /*                                      WEBSOCKET MANAGEMENT                                              */
   /**********************************************************************************************************/
 
   /**
-   * Init the websocket subscriptions
+   * Init web sockets for project events
    */
-  private initWebsocketSubscriptions(): void {
-    this.websocketProjectEventSubscription();
-    this.websocketScreenEventSubscription();
+  private initProjectWebsockets(): void {
+    if (this.openWebsockets) {
+      this.unsubscribeProjectWebSocket = new Subject<void>();
+      this.websocketProjectEventSubscription();
+      this.websocketProjectScreenEventSubscription();
+    }
   }
 
   /**
-   * Reset the websocket subscription
+   * Reset the project web sockets subscriptions
    */
-  private resetWebsocketSubscriptions(): void {
-    this.unsubscribeToWebsocket();
-    this.initWebsocketSubscriptions();
+  private resetProjectWebsockets(): void {
+    if (this.openWebsockets) {
+      this.unsubscribeProjectWebsockets();
+      this.initProjectWebsockets();
+    }
   }
 
   /**
    * Disconnect from web sockets
    */
-  private disconnectFromWebsocket(): void {
-    this.unsubscribeToWebsocket();
-    this.websocketService.disconnect();
+  private disconnectFromWebsockets(): void {
+    this.unsubscribeProjectWebsockets();
   }
 
   /**
-   * Unsubscribe to every current websocket connections
+   * Unsubscribe to every current project websockets connections
    */
-  private unsubscribeToWebsocket(): void {
-    this.unsubscribe.next();
-    this.unsubscribe.complete();
+  private unsubscribeProjectWebsockets(): void {
+    this.unsubscribeProjectWebSocket.next();
+    this.unsubscribeProjectWebSocket.complete();
   }
 
   /**
@@ -336,26 +355,26 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
 
     this.websocketService
       .watch(projectSubscriptionUrl)
-      .pipe(takeUntil(this.unsubscribe))
+      .pipe(takeUntil(this.unsubscribeProjectWebSocket))
       .subscribe((stompMessage: Stomp.Message) => {
         const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 
         switch (updateEvent.type) {
-          case WebsocketUpdateTypeEnum.RELOAD:
-            location.reload();
+          case WebsocketUpdateTypeEnum.DISCONNECT:
+            this.disconnectFromWebsockets();
+            this.disconnectEvent.emit();
             break;
           case WebsocketUpdateTypeEnum.DISPLAY_NUMBER:
             this.displayScreenCode();
             break;
-          case WebsocketUpdateTypeEnum.POSITION:
-            this.refreshProjectWidget.emit();
+          case WebsocketUpdateTypeEnum.REFRESH_DASHBOARD:
+            this.refreshAllProjectWidgets.emit();
             break;
-          case WebsocketUpdateTypeEnum.DISCONNECT:
-            this.disconnectFromWebsocket();
-            this.disconnectEvent.emit();
+          case WebsocketUpdateTypeEnum.RELOAD:
+            location.reload();
             break;
           default:
-            this.refreshProjectWidget.emit();
+            this.refreshAllProjectWidgets.emit();
         }
       });
   }
@@ -363,17 +382,17 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   /**
    * Create a websocket subscription for the current screen
    */
-  private websocketScreenEventSubscription(): void {
+  private websocketProjectScreenEventSubscription(): void {
     const screenSubscriptionUrl = `/user/${this.project.token}-${this.screenCode}/queue/unique`;
 
     this.websocketService
       .watch(screenSubscriptionUrl)
-      .pipe(takeUntil(this.unsubscribe))
+      .pipe(takeUntil(this.unsubscribeProjectWebSocket))
       .subscribe((stompMessage: Stomp.Message) => {
         const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 
         if (updateEvent.type === WebsocketUpdateTypeEnum.DISCONNECT) {
-          this.disconnectFromWebsocket();
+          this.disconnectFromWebsockets();
           this.disconnectEvent.emit();
         }
       });
@@ -385,7 +404,7 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   public updateProjectWidgetsPosition(): void {
     if (this.isGridItemsHasMoved()) {
       const projectWidgetPositionRequests: ProjectWidgetPositionRequest[] = [];
-      this.gridStackItems.forEach(gridStackItem => {
+      this.currentGrid.forEach(gridStackItem => {
         projectWidgetPositionRequests.push({
           projectWidgetId: (gridStackItem.payload as ProjectWidget).id,
           gridColumn: gridStackItem.col,
@@ -405,8 +424,8 @@ export class DashboardScreenComponent implements AfterViewInit, OnChanges, OnDes
   private isGridItemsHasMoved(): boolean {
     let itemHaveBeenMoved = false;
 
-    this.startGridStackItems.forEach(startGridItem => {
-      const gridItemFound = this.gridStackItems.find(currentGridItem => {
+    this.startGrid.forEach(startGridItem => {
+      const gridItemFound = this.currentGrid.find(currentGridItem => {
         return (currentGridItem.payload as ProjectWidget).id === (startGridItem.payload as ProjectWidget).id;
       });
 

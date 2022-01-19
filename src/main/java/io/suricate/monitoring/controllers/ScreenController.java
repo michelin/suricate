@@ -1,6 +1,6 @@
 /*
  *
- *  * Copyright 2012-2018 the original author or authors.
+ *  * Copyright 2012-2021 the original author or authors.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -19,14 +19,15 @@
 package io.suricate.monitoring.controllers;
 
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
+import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
 import io.suricate.monitoring.model.entities.Project;
+import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.services.api.ProjectService;
 import io.suricate.monitoring.services.websocket.DashboardWebSocketService;
 import io.suricate.monitoring.utils.exceptions.ObjectNotFoundException;
 import io.swagger.annotations.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
@@ -38,7 +39,6 @@ import java.util.Optional;
 @RequestMapping("/api")
 @Api(value = "Screen actions controller", tags = {"Screens"})
 public class ScreenController {
-
     /**
      * The project service
      */
@@ -62,7 +62,7 @@ public class ScreenController {
     }
 
     /**
-     * connect a new Screen for a dashboard by screen code
+     * Connect a new screen for a dashboard by screen code
      *
      * @param projectToken The project id we want to display
      * @param screenCode   The screen code to enroll
@@ -76,22 +76,21 @@ public class ScreenController {
     })
     @GetMapping(value = "/v1/screens/{projectToken}/connect")
     @PreAuthorize("hasRole('ROLE_USER')")
-    @Transactional
     public ResponseEntity<Void> connectProjectToScreen(@ApiParam(name = "projectToken", value = "The project token", required = true)
                                                        @PathVariable("projectToken") String projectToken,
                                                        @ApiParam(name = "screenCode", value = "The screen code", required = true)
                                                        @RequestParam("screenCode") String screenCode) {
-        Optional<Project> projectOptional = projectService.getOneByToken(projectToken);
+        Optional<Project> projectOptional = this.projectService.getOneByToken(projectToken);
         if (!projectOptional.isPresent()) {
             throw new ObjectNotFoundException(Project.class, projectOptional);
         }
 
-        this.dashboardWebSocketService.sendConnectEventToScreenSubscriber(projectOptional.get(), screenCode);
+        this.dashboardWebSocketService.sendConnectProjectEventToScreenSubscriber(projectOptional.get(), screenCode);
         return ResponseEntity.noContent().build();
     }
 
     /**
-     * Disconnect a client
+     * Disconnect a client from a project
      */
     @ApiOperation(value = "Send the notification to disconnect a new screen")
     @ApiResponses(value = {
@@ -101,12 +100,12 @@ public class ScreenController {
     })
     @GetMapping(value = "/v1/screens/{projectToken}/disconnect")
     @PreAuthorize("hasRole('ROLE_USER')")
-    @Transactional
-    public ResponseEntity<Void> disconnectProjectToTv(@ApiParam(name = "projectToken", value = "The project token", required = true)
+    public ResponseEntity<Void> disconnectProjectFromScreen(@ApiParam(name = "projectToken", value = "The project token", required = true)
                                                       @PathVariable("projectToken") String projectToken,
                                                       @ApiParam(name = "screenCode", value = "The screen code", required = true)
                                                       @RequestParam("screenCode") String screenCode) {
-        this.dashboardWebSocketService.disconnectClient(projectToken, Integer.parseInt(screenCode));
+        this.dashboardWebSocketService.disconnectClient(projectToken, screenCode);
+
         return ResponseEntity.noContent().build();
     }
 
@@ -134,7 +133,7 @@ public class ScreenController {
      *
      * @param projectToken The project token
      */
-    @ApiOperation(value = "Send the notification to for the project screens to display their screen code")
+    @ApiOperation(value = "Send the notification to the project screens to display their screen code")
     @ApiResponses(value = {
         @ApiResponse(code = 204, message = "Screen code displayed"),
         @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
@@ -144,7 +143,18 @@ public class ScreenController {
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Void> displayScreenCodeEveryConnectedScreensForProject(@ApiParam(name = "projectToken", value = "The project token", required = true)
                                                                                  @PathVariable("projectToken") String projectToken) {
-        this.dashboardWebSocketService.displayScreenCodeForProject(projectToken);
-        return ResponseEntity.noContent().build();
+        Optional<Project> projectOptional = this.projectService.getOneByToken(projectToken);
+        if (!projectOptional.isPresent()) {
+            throw new ObjectNotFoundException(Project.class, projectOptional);
+        }
+
+        this.dashboardWebSocketService
+                .sendEventToProjectSubscribers(projectToken, UpdateEvent.builder()
+                        .type(UpdateType.DISPLAY_NUMBER)
+                        .build());
+
+        return ResponseEntity
+                .noContent()
+                .build();
     }
 }

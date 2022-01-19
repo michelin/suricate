@@ -10,7 +10,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static com.google.common.truth.Truth.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ToStringUtilsTest {
 
@@ -30,8 +30,8 @@ public class ToStringUtilsTest {
 
     @Test
     public void testToStringSimpleEntity() throws Exception {
-        assertThat(ToStringUtils.toStringEntity(new SimpleEntity())).contains("[i=0]");
-        assertThat(ToStringUtils.toStringEntity(new SimpleEntity2())).contains("[test=0,test2=ok]");
+        assertTrue(ToStringUtils.toStringEntity(new SimpleEntity()).contains("[i=0]"));
+        assertTrue(ToStringUtils.toStringEntity(new SimpleEntity2()).contains("[test=0,test2=ok]"));
     }
 
     public static class RootEntity {
@@ -50,20 +50,20 @@ public class ToStringUtilsTest {
 
     @Test
     public void testToStringEntity() throws Exception {
-        assertThat(ToStringUtils.toStringEntity(new RootEntity())).contains("[test=0,test2=ok]");
+        assertTrue(ToStringUtils.toStringEntity(new RootEntity()).contains("[test=0,test2=ok]"));
     }
 
     @Test
     public void testHideLogNull() throws Exception {
-        assertThat(ToStringUtils.hideWidgetConfigurationInLogs(null,null)).isNull();
-        assertThat(ToStringUtils.hideWidgetConfigurationInLogs("",null)).isNull();
-        assertThat(ToStringUtils.hideWidgetConfigurationInLogs("test",null)).isEqualTo("test");
-        assertThat(ToStringUtils.hideWidgetConfigurationInLogs(null, Collections.emptyList())).isNull();
+        assertNull(ToStringUtils.hideWidgetConfigurationInLogs(null,null));
+        assertNull(ToStringUtils.hideWidgetConfigurationInLogs("",null));
+        assertEquals("test", ToStringUtils.hideWidgetConfigurationInLogs("test",null));
+        assertNull(ToStringUtils.hideWidgetConfigurationInLogs(null, Collections.emptyList()));
     }
 
     @Test
     public void testHideLog() throws Exception {
-        assertThat(ToStringUtils.hideWidgetConfigurationInLogs("test mypassword ok", Collections.singletonList("mypassword"))).isEqualTo("test ********** ok");
+        assertEquals("test ********** ok", ToStringUtils.hideWidgetConfigurationInLogs("test mypassword ok", Collections.singletonList("mypassword")));
     }
 
 }

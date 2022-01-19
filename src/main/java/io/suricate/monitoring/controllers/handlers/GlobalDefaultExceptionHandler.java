@@ -1,6 +1,6 @@
 /*
  *
- *  * Copyright 2012-2018 the original author or authors.
+ *  * Copyright 2012-2021 the original author or authors.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -42,6 +42,10 @@ import java.util.Objects;
  */
 @RestControllerAdvice
 public class GlobalDefaultExceptionHandler {
+    /**
+     * Log message when an exception is caught by the handler
+     */
+    private static final String LOG_MESSAGE = "An exception has occurred in the API controllers part";
 
     /**
      * Logger
@@ -56,7 +60,7 @@ public class GlobalDefaultExceptionHandler {
      */
     @ExceptionHandler(ApiException.class)
     public ResponseEntity<ApiErrorDto> handleApiException(ApiException exception) {
-        GlobalDefaultExceptionHandler.LOGGER.debug("An exception has occurred in the API controllers part", exception);
+        GlobalDefaultExceptionHandler.LOGGER.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
 
         return ResponseEntity
             .status(exception.getError().getStatus())
@@ -71,7 +75,7 @@ public class GlobalDefaultExceptionHandler {
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiErrorDto> handleRequestException(MethodArgumentNotValidException exception) {
-        GlobalDefaultExceptionHandler.LOGGER.debug("An exception has occurred in the API controllers part", exception);
+        GlobalDefaultExceptionHandler.LOGGER.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
 
         return ResponseEntity
             .status(ApiErrorEnum.BAD_REQUEST.getStatus())
@@ -87,7 +91,7 @@ public class GlobalDefaultExceptionHandler {
      */
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ApiErrorDto> handleAccessDeniedException(AccessDeniedException exception) {
-        GlobalDefaultExceptionHandler.LOGGER.debug("An exception has occurred in the API controllers part", exception);
+        GlobalDefaultExceptionHandler.LOGGER.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
 
         return ResponseEntity
             .status(ApiErrorEnum.FORBIDDEN.getStatus())
@@ -103,7 +107,7 @@ public class GlobalDefaultExceptionHandler {
      */
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<ApiErrorDto> handleRequestException(HttpRequestMethodNotSupportedException exception) {
-        GlobalDefaultExceptionHandler.LOGGER.debug("An exception has occurred in the API controllers part", exception);
+        GlobalDefaultExceptionHandler.LOGGER.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
 
         return ResponseEntity
             .status(ApiErrorEnum.BAD_REQUEST.getStatus())
@@ -118,7 +122,7 @@ public class GlobalDefaultExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiErrorDto> handleException(Exception exception) {
-        GlobalDefaultExceptionHandler.LOGGER.debug("An exception has occurred in the API controllers part", exception);
+        GlobalDefaultExceptionHandler.LOGGER.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
 
         return ResponseEntity
             .status(ApiErrorEnum.INTERNAL_SERVER_ERROR.getStatus())
@@ -134,7 +138,7 @@ public class GlobalDefaultExceptionHandler {
      */
     @ExceptionHandler({ConstraintViolationException.class})
     public ResponseEntity<ApiErrorDto> handleRequestException(ConstraintViolationException exception) {
-        GlobalDefaultExceptionHandler.LOGGER.debug("An exception has occurred in the API controllers part", exception);
+        GlobalDefaultExceptionHandler.LOGGER.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
 
         return ResponseEntity
             .status(ApiErrorEnum.BAD_REQUEST.getStatus())
@@ -150,7 +154,7 @@ public class GlobalDefaultExceptionHandler {
      */
     @ExceptionHandler({DataIntegrityViolationException.class})
     public ResponseEntity<ApiErrorDto> handleRequestException(DataIntegrityViolationException exception) {
-        GlobalDefaultExceptionHandler.LOGGER.debug("An exception has occurred in the API controllers part", exception);
+        GlobalDefaultExceptionHandler.LOGGER.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
 
         return ResponseEntity
             .status(ApiErrorEnum.BAD_REQUEST.getStatus())
@@ -165,7 +169,7 @@ public class GlobalDefaultExceptionHandler {
      */
     @ExceptionHandler(HttpMediaTypeNotAcceptableException.class)
     public ResponseEntity<ApiErrorDto> handleRequestException(HttpMediaTypeNotAcceptableException exception) {
-        GlobalDefaultExceptionHandler.LOGGER.debug("An exception has occurred in the API controllers part", exception);
+        GlobalDefaultExceptionHandler.LOGGER.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
 
         return ResponseEntity
                 .status(ApiErrorEnum.BAD_REQUEST.getStatus())

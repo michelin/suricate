@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,6 +70,13 @@ public class WidgetParamResponseDto extends AbstractDto {
      */
     @ApiModelProperty(value = "An example of the usage of this field")
     private String usageExample;
+
+
+    /**
+     * The usage tooltip of the parameter
+     */
+    @ApiModelProperty(value = "The usage tooltip of the parameter")
+    private String usageTooltip;
 
     /**
      * If the param is required True by default

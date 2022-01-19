@@ -1,6 +1,6 @@
 /*
  *  /*
- *  * Copyright 2012-2018 the original author or authors.
+ *  * Copyright 2012-2021 the original author or authors.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -20,18 +20,13 @@ import { Routes } from '@angular/router';
 
 import { AuthGuard } from '../shared/guards/auth/auth.guard';
 import { AdminGuard } from '../shared/guards/admin/admin.guard';
-import { WidgetsComponent } from './components-list/widgets/widgets.component';
-import { WidgetConfigurationsComponent } from './components-list/widget-configurations/widget-configurations.component';
+import { CatalogComponent } from './catalog/catalog.component';
+import { ConfigurationsComponent } from '../admin/configurations/configurations.component';
 
 export const widgetRoutes: Routes = [
   {
     path: 'widgets/catalog',
-    component: WidgetsComponent,
+    component: CatalogComponent,
     canActivate: [AuthGuard]
-  },
-  {
-    path: 'widgets/configurations',
-    component: WidgetConfigurationsComponent,
-    canActivate: [AuthGuard, AdminGuard]
   }
 ];

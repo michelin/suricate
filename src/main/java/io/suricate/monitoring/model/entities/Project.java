@@ -1,6 +1,6 @@
 /*
  *
- *  * Copyright 2012-2018 the original author or authors.
+ *  * Copyright 2012-2021 the original author or authors.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -26,15 +26,11 @@ import org.hibernate.annotations.Type;
 import javax.persistence.*;
 import java.util.*;
 
-/**
- * Project/dashboard entity
- */
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 public class Project extends AbstractAuditingEntity<Long> {
-
     /**
      * The project id
      */
@@ -74,6 +70,13 @@ public class Project extends AbstractAuditingEntity<Long> {
     private String cssStyle;
 
     /**
+     * If the progress bar should be displayed in case of rotations
+     */
+    @Column(nullable = false)
+    @Type(type = "yes_no")
+    private boolean displayProgressBar;
+
+    /**
      * The screenshot of the dashboard
      */
     @OneToOne(cascade = CascadeType.REMOVE)
@@ -81,11 +84,11 @@ public class Project extends AbstractAuditingEntity<Long> {
     private Asset screenshot;
 
     /**
-     * The list of widgets related to it
+     * The list of related grids
      */
     @OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE)
-    @OrderBy("gridRow ASC, gridColumn ASC")
-    private Set<ProjectWidget> widgets = new LinkedHashSet<>();
+    @OrderBy("id ASC")
+    private Set<ProjectGrid> grids = new LinkedHashSet<>();
 
     /**
      * The list of users of the project

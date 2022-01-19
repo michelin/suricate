@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, Injector, OnDestroy, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup } from '@angular/forms';
 
@@ -31,12 +31,7 @@ import { ButtonTypeEnum } from '../../../shared/enums/button-type.enum';
 import { IconEnum } from '../../../shared/enums/icon.enum';
 import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
 import { CustomValidator } from '../../../shared/validators/custom-validator';
-import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
 
-/**
- * Component that manage the popup for Dashboard TV Management
- */
 @Component({
   selector: 'suricate-tv-management-dialog',
   templateUrl: './tv-management-dialog.component.html',
@@ -54,12 +49,17 @@ export class TvManagementDialogComponent implements OnInit {
   public connectedScreenButtonsConfiguration: ButtonConfiguration<WebsocketClient>[] = [];
 
   /**
+   * The configuration of the generic window buttons
+   */
+  public genericButtonsConfiguration: ButtonConfiguration<WebsocketClient>[] = [];
+
+  /**
    * The register screen form
    */
   public registerScreenCodeFormField: FormGroup;
 
   /**
-   * The description of the form}
+   * The description of the form
    */
   public formFields: FormField[];
 
@@ -134,6 +134,14 @@ export class TvManagementDialogComponent implements OnInit {
         callback: (event: Event, websocketClient: WebsocketClient) => this.disconnectScreen(websocketClient)
       }
     ];
+
+    this.genericButtonsConfiguration = [
+      {
+        label: 'close',
+        icon: IconEnum.CLOSE,
+        color: 'warn'
+      }
+    ];
   }
 
   /**
@@ -151,9 +159,9 @@ export class TvManagementDialogComponent implements OnInit {
   }
 
   /**
-   * Retrieve the websocket connections
+   * Retrieve the websocket connections to a dashboard
    */
-  private getConnectedWebsocketClient(): void {
+  public getConnectedWebsocketClient(): void {
     this.httpProjectService.getProjectWebsocketClients(this.project.token).subscribe(websocketClients => {
       this.websocketClients = websocketClients;
     });
@@ -174,25 +182,23 @@ export class TvManagementDialogComponent implements OnInit {
   }
 
   /**
-   * Disconnect a screen
-   *
-   * @param {WebsocketClient} websocketClient The websocket to disconnect
+   * Display the screen code on every connected screens
    */
-  private disconnectScreen(websocketClient: WebsocketClient): void {
-    this.httpScreenService.disconnectScreen(websocketClient.projectToken, +websocketClient.screenCode).subscribe(() => {
-      setTimeout(() => this.getConnectedWebsocketClient(), 2000);
-    });
+  public displayScreenCode(): void {
+    if (this.project.token) {
+      this.httpScreenService.displayScreenCodeEveryConnectedScreensForProject(this.project.token).subscribe();
+    }
   }
 
   /**
-   * Display the screen code on every connected screens
+   * Disconnect a screen
    *
-   * @param {string} projectToken The project token
+   * @param websocketClient The websocket to disconnect
    */
-  public displayScreenCode(projectToken: string): void {
-    if (projectToken) {
-      this.httpScreenService.displayScreenCodeEveryConnectedScreensForProject(projectToken).subscribe();
-    }
+  public disconnectScreen(websocketClient: WebsocketClient): void {
+    this.httpScreenService.disconnectScreenFromProject(websocketClient.projectToken, +websocketClient.screenCode).subscribe(() => {
+      setTimeout(() => this.getConnectedWebsocketClient(), 2000);
+    });
   }
 
   /**

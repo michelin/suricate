@@ -1,6 +1,6 @@
 /*
  *  /*
- *  * Copyright 2012-2018 the original author or authors.
+ *  * Copyright 2012-2021 the original author or authors.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -36,7 +36,6 @@ import { Page } from '../../../models/backend/page';
 export class HttpProjectService implements AbstractHttpService<Project | ProjectRequest> {
   /**
    * Global endpoint for projects
-   * @type {string}
    */
   private static readonly projectsApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/projects`;
 
@@ -48,9 +47,9 @@ export class HttpProjectService implements AbstractHttpService<Project | Project
   constructor(private readonly httpClient: HttpClient) {}
 
   /**
-   * Get every dashboards and update the list
+   * Get all the projects
    *
-   * @returns {Observable<Project[]>} The list as observable
+   * @param filter The research/pagination filter
    */
   public getAll(filter?: HttpFilter): Observable<Page<Project>> {
     const url = `${HttpProjectService.projectsApiEndpoint}`;
@@ -59,10 +58,9 @@ export class HttpProjectService implements AbstractHttpService<Project | Project
   }
 
   /**
-   * Get a dashboard by id
+   * Get a project by token
    *
-   * @param {string} projectToken The dashboard token
-   * @returns {Observable<Project>} The dashboard as observable
+   * @param projectToken The project token
    */
   public getById(projectToken: string): Observable<Project> {
     const url = `${HttpProjectService.projectsApiEndpoint}/${projectToken}`;
@@ -96,10 +94,22 @@ export class HttpProjectService implements AbstractHttpService<Project | Project
   /**
    * Delete a project
    *
-   * @param {string} projectToken
+   * @param projectToken The project token
    */
   public delete(projectToken: string): Observable<void> {
     const url = `${HttpProjectService.projectsApiEndpoint}/${projectToken}`;
+
+    return this.httpClient.delete<void>(url);
+  }
+
+  /**
+   * Delete a given grid of a project
+   *
+   * @param projectToken The project token
+   * @param gridId The grid id
+   */
+  public deleteGrid(projectToken: string, gridId: number): Observable<void> {
+    const url = `${HttpProjectService.projectsApiEndpoint}/${projectToken}/${gridId}`;
 
     return this.httpClient.delete<void>(url);
   }
@@ -136,29 +146,6 @@ export class HttpProjectService implements AbstractHttpService<Project | Project
     const url = `${HttpProjectService.projectsApiEndpoint}/${projectToken}/projectWidgetPositions`;
 
     return this.httpClient.put<void>(url, projectWidgetPositionRequests);
-  }
-
-  /**
-   * Get the list of project widgets for a project
-   *
-   * @param projectToken The project token
-   */
-  public getProjectProjectWidgets(projectToken: string): Observable<ProjectWidget[]> {
-    const url = `${HttpProjectService.projectsApiEndpoint}/${projectToken}/projectWidgets`;
-
-    return this.httpClient.get<ProjectWidget[]>(url);
-  }
-
-  /**
-   * Add a new widget to the project
-   *
-   * @param projectToken The project token
-   * @param projectWidgetRequest The project widget to add
-   */
-  public addProjectWidgetToProject(projectToken: string, projectWidgetRequest: ProjectWidgetRequest): Observable<ProjectWidget> {
-    const url = `${HttpProjectService.projectsApiEndpoint}/${projectToken}/projectWidgets`;
-
-    return this.httpClient.post<ProjectWidget>(url, projectWidgetRequest);
   }
 
   /**
@@ -208,9 +195,9 @@ export class HttpProjectService implements AbstractHttpService<Project | Project
   }
 
   /**
-   * Get every dashboards for the current user
+   * Get all dashboards of current user
    *
-   * @returns {Observable<Project[]>} The list as observable
+   * @returns The dashboards of the current user
    */
   public getAllForCurrentUser(): Observable<Project[]> {
     const url = `${HttpProjectService.projectsApiEndpoint}/currentUser`;

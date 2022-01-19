@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ButtonsComponent } from './buttons.component';
+import { MockModule } from '../../../mock/mock.module';
 
 describe('ButtonsComponent', () => {
   let component: ButtonsComponent<unknown>;
@@ -24,6 +25,7 @@ describe('ButtonsComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
+        imports: [MockModule],
         declarations: [ButtonsComponent]
       }).compileComponents();
 

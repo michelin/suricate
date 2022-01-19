@@ -1,6 +1,6 @@
 /*
  *  /*
- *  * Copyright 2012-2018 the original author or authors.
+ *  * Copyright 2012-2021 the original author or authors.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Injector, Input, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { AbstractControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { animate, style, transition, trigger } from '@angular/animations';
 
@@ -27,6 +27,7 @@ import { FormField } from '../../../models/frontend/form/form-field';
 import { IconEnum } from '../../../enums/icon.enum';
 import { MaterialIconRecords } from '../../../records/material-icon.record';
 import { DashboardScreenComponent } from '../../../../dashboard/components/dashboard-screen/dashboard-screen.component';
+import { TranslateService } from '@ngx-translate/core';
 
 /**
  * Manage the instantiation of different form inputs
@@ -35,6 +36,7 @@ import { DashboardScreenComponent } from '../../../../dashboard/components/dashb
   selector: 'suricate-input',
   templateUrl: './input.component.html',
   styleUrls: ['./input.component.scss'],
+  encapsulation: ViewEncapsulation.None,
   animations: [
     trigger('animationError', [
       transition(':enter', [
@@ -70,6 +72,11 @@ export class InputComponent implements OnInit {
   public valueChangeEvent = new EventEmitter<ValueChangedEvent>();
 
   /**
+   * Translate service
+   */
+  protected translateService: TranslateService;
+
+  /**
    * The data type enum
    */
   public dataType = DataTypeEnum;
@@ -96,8 +103,12 @@ export class InputComponent implements OnInit {
 
   /**
    * Constructor
+   *
+   * @param injector Manage services injection
    */
-  constructor() {}
+  constructor(protected injector: Injector) {
+    this.translateService = injector.get(TranslateService);
+  }
 
   /**
    * Called when the component is init

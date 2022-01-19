@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@ import { FormService } from '../../services/frontend/form/form.service';
 import { SidenavService } from '../../services/frontend/sidenav/sidenav.service';
 import { FormSidenavConfiguration } from '../../models/frontend/sidenav/form-sidenav-configuration';
 import { FormGroup } from '@angular/forms';
-import { takeUntil, takeWhile } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
 import { IconEnum } from '../../enums/icon.enum';
 import { ValueChangedEvent } from '../../models/frontend/form/value-changed-event';

@@ -6,11 +6,12 @@ import { WizardConfiguration } from '../../../shared/models/frontend/wizard/wiza
 import { FormStep } from '../../../shared/models/frontend/form/form-step';
 import { IconEnum } from '../../../shared/enums/icon.enum';
 import { Project } from '../../../shared/models/backend/project/project';
-import { ProjectGrid } from '../../../shared/models/backend/project/project-grid';
+import { GridProperties } from '../../../shared/models/backend/project/grid-properties';
 import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';
 import { ProjectWidgetPosition } from '../../../shared/models/backend/project-widget/project-widget-position';
 import { WidgetStateEnum } from '../../../shared/enums/widget-sate.enum';
 import { NgGridItemConfig } from 'angular2-grid';
+import { ProjectGrid } from '../../../shared/models/backend/project-grid/project-grid';
 
 @Injectable({
   providedIn: 'root'
@@ -27,10 +28,15 @@ export class MockedModelBuilderService {
    * Build a mocked project object for the unit tests
    */
   public buildMockedProject(): Project {
-    const gridProperties: ProjectGrid = {
+    const gridProperties: GridProperties = {
       maxColumn: 5,
       widgetHeight: 300,
       cssStyle: ''
+    };
+
+    const grid: ProjectGrid = {
+      id: 1,
+      time: 30
     };
 
     return {
@@ -45,7 +51,9 @@ export class MockedModelBuilderService {
         lastUpdateDate: new Date(),
         size: 10
       },
-      token: 'Token'
+      token: 'Token',
+      displayProgressBar: false,
+      grids: [grid]
     };
   }
 
@@ -127,7 +135,8 @@ export class MockedModelBuilderService {
       globalConfigOverridden: true,
       state: WidgetStateEnum.RUNNING,
       projectToken: 'Token',
-      widgetId: 1
+      widgetId: 1,
+      gridId: 1
     };
   }
 

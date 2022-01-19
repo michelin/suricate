@@ -1,6 +1,6 @@
 /*
  *
- *  * Copyright 2012-2018 the original author or authors.
+ *  * Copyright 2012-2021 the original author or authors.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -34,7 +34,6 @@ import java.util.*;
 @Setter
 @NoArgsConstructor
 public class WidgetParam extends AbstractAuditingEntity<Long> {
-
     /**
      * The widget param id
      */
@@ -78,6 +77,12 @@ public class WidgetParam extends AbstractAuditingEntity<Long> {
      */
     @Column
     private String usageExample;
+
+    /**
+     * The usage tooltip
+     */
+    @Column
+    private String usageTooltip;
 
     /**
      * If this param is required or not

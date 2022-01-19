@@ -1,6 +1,6 @@
 /*
  *  /*
- *  * Copyright 2012-2018 the original author or authors.
+ *  * Copyright 2012-2021 the original author or authors.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, Injector, OnInit } from '@angular/core';
 import { InputComponent } from '../input/input.component';
 import { MosaicFormOption } from '../../../models/frontend/form/mosaic-form-option';
 
@@ -41,11 +41,12 @@ export class MosaicComponent extends InputComponent implements OnInit {
 
   /**
    * Constructor
+   *
+   * @param injector Manage services injection
    */
-  constructor() {
-    super();
+  constructor(protected injector: Injector) {
+    super(injector);
   }
-
   /**
    * Called when the component is init
    */

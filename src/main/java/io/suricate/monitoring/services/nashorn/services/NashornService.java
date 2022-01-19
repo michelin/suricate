@@ -1,6 +1,6 @@
 /*
  *
- *  * Copyright 2012-2018 the original author or authors.
+ *  * Copyright 2012-2021 the original author or authors.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -21,9 +21,11 @@ package io.suricate.monitoring.services.nashorn.services;
 import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
 import io.suricate.monitoring.model.entities.CategoryParameter;
 import io.suricate.monitoring.model.entities.Project;
+import io.suricate.monitoring.model.entities.ProjectGrid;
 import io.suricate.monitoring.model.entities.ProjectWidget;
 import io.suricate.monitoring.model.enums.WidgetStateEnum;
 import io.suricate.monitoring.services.api.ProjectWidgetService;
+import io.suricate.monitoring.utils.JsonUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,9 +72,10 @@ public class NashornService {
      */
     @Transactional
     public List<NashornRequest> getNashornRequestsByProject(final Project project) {
-        return project
-            .getWidgets()
+        return project.getGrids()
             .stream()
+            .map(ProjectGrid::getWidgets)
+            .flatMap(Collection::stream)
             .map(this::createNashornRequestByProjectWidget)
             .collect(Collectors.toList());
     }
@@ -98,7 +101,7 @@ public class NashornService {
         String properties = getProjectWidgetConfigurationsWithGlobalOne(projectWidget, projectWidget.getWidget().getCategory().getConfigurations());
         String script = projectWidget.getWidget().getBackendJs();
         String previousData = projectWidget.getData();
-        Long projectId = projectWidget.getProject().getId();
+        Long projectId = projectWidget.getProjectGrid().getProject().getId();
         Long technicalId = projectWidget.getId();
         Long delay = projectWidget.getWidget().getDelay();
         Long timeout = projectWidget.getWidget().getTimeout();
@@ -115,13 +118,21 @@ public class NashornService {
      * @return True is it is ok, false otherwise
      */
     public boolean isNashornRequestExecutable(final NashornRequest nashornRequest) {
-        if (!nashornRequest.isValid()) {
-            LOGGER.debug("The Nashorn request is not valid for the widget instance: {}", nashornRequest.getProjectWidgetId());
+        if (!StringUtils.isNotEmpty(nashornRequest.getScript())) {
+            LOGGER.debug("The widget instance {} has no script. Stopping Nashorn request execution",
+                    nashornRequest.getProjectWidgetId());
             return false;
         }
 
-        if (nashornRequest.getDelay() < 0) {
-            LOGGER.debug("The Nashorn request has a delay < 0 for widget instance: {}", nashornRequest.getProjectWidgetId());
+        if (!JsonUtils.isValid(nashornRequest.getPreviousData())) {
+            LOGGER.debug("The widget instance {} has bad formed previous data. Stopping Nashorn request execution",
+                    nashornRequest.getProjectWidgetId());
+            return false;
+        }
+
+        if (nashornRequest.getDelay() == null || nashornRequest.getDelay() < 0) {
+            LOGGER.debug("The widget instance {} has no delay or delay is < 0. Stopping Nashorn request execution",
+                    nashornRequest.getProjectWidgetId());
             return false;
         }
 

@@ -1,6 +1,6 @@
 /*
  *  /*
- *  * Copyright 2012-2018 the original author or authors.
+ *  * Copyright 2012-2021 the original author or authors.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
  */
 
 import { ValidatorFn } from '@angular/forms';
+import { IconEnum } from '../../../enums/icon.enum';
 
 /**
  * Describe a the options used by the mosaic input component
@@ -31,6 +32,11 @@ export interface MosaicFormOption {
    * The image url to display
    */
   imageUrl: string;
+
+  /**
+   * Icon to display instead of an image
+   */
+  icon?: IconEnum;
 
   /**
    * The displayed displayed to the user

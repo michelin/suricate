@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { NgGridModule } from 'angular2-grid';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
-
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { CheckboxComponent } from './components/inputs/checkbox/checkbox.component';
@@ -32,10 +31,7 @@ import { FileInputComponent } from './components/inputs/file-input/file-input.co
 import { InputComponent } from './components/inputs/input/input.component';
 import { MaterialCDKModule } from './modules/material-cdk.module';
 import { MaterialModule } from './modules/material.module';
-import { PasswordPipe } from './pipes/password/password.pipe';
 import { SafeHtmlPipe } from './pipes/safe-html/safe-html.pipe';
-import { SafeUrlPipe } from './pipes/safe-url/safe-url.pipe';
-
 import { ToastComponent } from './components/toast/toast.component';
 import { TokenInterceptor } from './interceptors/token.interceptor';
 import { TranslateModule } from '@ngx-translate/core';
@@ -52,6 +48,10 @@ import { MosaicComponent } from './components/inputs/mosaic/mosaic.component';
 import { PaginatorComponent } from './components/paginator/paginator.component';
 import { SlideToggleComponent } from './components/inputs/slide-toggle/slide-toggle.component';
 import { WidgetHtmlDirective } from './directives/widget-html.directive';
+import { MatBadgeModule } from '@angular/material/badge';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { ProgressBarComponent } from './components/progress-bar/progress-bar.component';
+import { ActionsDialogComponent } from './components/actions-dialog/actions-dialog.component';
 
 @NgModule({
   imports: [
@@ -75,10 +75,8 @@ import { WidgetHtmlDirective } from './directives/widget-html.directive';
     FileInputComponent,
     InputComponent,
     CheckboxComponent,
-    PasswordPipe,
     WidgetHtmlDirective,
     SafeHtmlPipe,
-    SafeUrlPipe,
     ToastComponent,
     ListComponent,
     SpinnerComponent,
@@ -89,7 +87,9 @@ import { WidgetHtmlDirective } from './directives/widget-html.directive';
     FieldsComponent,
     MosaicComponent,
     PaginatorComponent,
-    SlideToggleComponent
+    SlideToggleComponent,
+    ProgressBarComponent,
+    ActionsDialogComponent
   ],
   exports: [
     BrowserAnimationsModule,
@@ -107,12 +107,10 @@ import { WidgetHtmlDirective } from './directives/widget-html.directive';
     MaterialCDKModule,
     MaterialModule,
     NgGridModule,
-    PasswordPipe,
     ReactiveFormsModule,
     RouterModule,
     WidgetHtmlDirective,
     SafeHtmlPipe,
-    SafeUrlPipe,
     ToastComponent,
     TranslateModule,
     SpinnerComponent,
@@ -122,7 +120,10 @@ import { WidgetHtmlDirective } from './directives/widget-html.directive';
     WizardComponent,
     ColorPickerComponent,
     PaginatorComponent,
-    SlideToggleComponent
+    SlideToggleComponent,
+    MatBadgeModule,
+    MatProgressBarModule,
+    ProgressBarComponent
   ],
   entryComponents: [CommunicationDialogComponent, ConfirmDialogComponent],
   providers: [

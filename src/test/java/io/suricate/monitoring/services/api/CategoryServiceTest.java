@@ -5,6 +5,7 @@ import io.suricate.monitoring.model.entities.Category;
 import io.suricate.monitoring.repositories.AssetRepository;
 import io.suricate.monitoring.repositories.CategoryRepository;
 import org.junit.Test;
+import org.junit.Assert.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -12,14 +13,14 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static com.google.common.truth.Truth.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class CategoryServiceTest {
-
     @Autowired
     CategoryRepository categoryRepository;
 
@@ -31,23 +32,23 @@ public class CategoryServiceTest {
 
     @Test
     public void addOrUpdateCategoryNullTest() {
-        // check empty
-        assertThat(categoryRepository.count()).isEqualTo(0);
-        assertThat(assetRepository.count()).isEqualTo(0);
+        assertEquals(0, categoryRepository.count());
+        assertEquals(0, assetRepository.count());
+
         categoryService.addOrUpdateCategory(null);
-        assertThat(categoryRepository.count()).isEqualTo(0);
-        assertThat(assetRepository.count()).isEqualTo(0);
+
+        assertEquals(0, categoryRepository.count());
+        assertEquals(0, assetRepository.count());
     }
 
     @Test
     public void addOrUpdateCategoryTest() {
-        // check empty
-        assertThat(categoryRepository.count()).isEqualTo(0);
-        assertThat(assetRepository.count()).isEqualTo(0);
+        assertEquals(0, categoryRepository.count());
+        assertEquals(0, assetRepository.count());
 
         Category category = new Category();
         category.setName("Category 1");
-        category.setTechnicalName("categ1");
+        category.setTechnicalName("Technical name 1");
 
         Asset asset = new Asset();
         asset.setContent(new byte[1]);
@@ -57,45 +58,50 @@ public class CategoryServiceTest {
         category.setImage(asset);
 
         categoryService.addOrUpdateCategory(category);
-        assertThat(category.getId()).isNotNull();
-        assertThat(categoryRepository.count()).isEqualTo(1);
-        assertThat(assetRepository.count()).isEqualTo(1);
-        Category category1 = categoryRepository.findByTechnicalName("categ1");
-        assertThat(category1).isNotNull();
-        assertThat(category1.getName()).isEqualTo("Category 1");
-        assertThat(category1.getTechnicalName()).isEqualTo("categ1");
-        assertThat(category1.getImage().getSize()).isEqualTo(10);
 
-        // save the same category
+        assertNotNull(category.getId());
+        assertEquals(1, categoryRepository.count());
+        assertEquals(1, assetRepository.count());
+
+        Category category1 = categoryRepository.findByTechnicalName("Technical name 1");
+        assertNotNull(category1);
+        assertEquals("Category 1", category1.getName());
+        assertEquals("Technical name 1", category1.getTechnicalName());
+        assertEquals(10, category1.getImage().getSize());
+
         category.setId(null);
         asset.setId(null);
         asset.setSize(100);
 
         categoryService.addOrUpdateCategory(category);
-        assertThat(category.getId()).isNotNull();
-        assertThat(categoryRepository.count()).isEqualTo(1);
-        assertThat(assetRepository.count()).isEqualTo(1);
-        category1 = categoryRepository.findByTechnicalName("categ1");
-        assertThat(category1).isNotNull();
-        assertThat(category1.getName()).isEqualTo("Category 1");
-        assertThat(category1.getTechnicalName()).isEqualTo("categ1");
-        assertThat(category1.getImage().getSize()).isEqualTo(100);
 
-        // save an other category
+        assertNotNull(category.getId());
+        assertEquals(1, categoryRepository.count());
+        assertEquals(1, assetRepository.count());
+
+        category1 = categoryRepository.findByTechnicalName("Technical name 1");
+        assertNotNull(category1);
+        assertEquals("Category 1", category1.getName());
+        assertEquals("Technical name 1", category1.getTechnicalName());
+        assertEquals(100, category1.getImage().getSize());
+
         category.setName("Category 2");
-        category.setTechnicalName("categ2");
+        category.setTechnicalName("Technical name 2");
         category.setId(null);
         asset.setId(null);
         asset.setSize(110);
 
         categoryService.addOrUpdateCategory(category);
-        assertThat(category.getId()).isNotNull();
-        assertThat(categoryRepository.count()).isEqualTo(2);
-        assertThat(assetRepository.count()).isEqualTo(2);
-        Category category2 = categoryRepository.findByTechnicalName("categ2");
-        assertThat(category2).isNotNull();
-        assertThat(category2.getName()).isEqualTo("Category 2");
-        assertThat(category2.getTechnicalName()).isEqualTo("categ2");
-        assertThat(category2.getImage().getSize()).isEqualTo(110);
+
+        assertNotNull(category.getId());
+        assertEquals(2, categoryRepository.count());
+        assertEquals(2, assetRepository.count());
+
+        Category category2 = categoryRepository.findByTechnicalName("Technical name 2");
+
+        assertNotNull(category2);
+        assertEquals("Category 2", category2.getName());
+        assertEquals("Technical name 2", category2.getTechnicalName());
+        assertEquals(110, category2.getImage().getSize());
     }
 }

@@ -7,7 +7,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import static com.google.common.truth.Truth.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @RunWith(SpringRunner.class)
 @ActiveProfiles("test")
@@ -16,7 +17,7 @@ public class IdUtilsTest {
 
     @Test
     public void testEncryptNull() throws Exception {
-        assertThat(IdUtils.encrypt(null)).isNull();
+        assertNull(IdUtils.encrypt(null));
     }
 
     @Test(expected = ApiException.class)
@@ -32,7 +33,7 @@ public class IdUtilsTest {
     @Test
     public void testEncryptDecrypt() throws Exception {
         Long id = 12L;
-        assertThat(IdUtils.decrypt(IdUtils.encrypt(id))).isEqualTo(12L);
+        assertEquals(12L, IdUtils.decrypt(IdUtils.encrypt(id)));
     }
 
 }

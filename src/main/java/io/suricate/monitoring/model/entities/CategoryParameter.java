@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,7 +31,6 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 public class CategoryParameter extends AbstractAuditingEntity<String> {
-
     /**
      * The key of the configuration (used in JS Files)
      */
@@ -46,6 +45,12 @@ public class CategoryParameter extends AbstractAuditingEntity<String> {
     private String value;
 
     /**
+     * The description
+     */
+    @Column
+    private String description;
+
+    /**
      * export
      */
     @Column(name = "config_export")
@@ -54,7 +59,7 @@ public class CategoryParameter extends AbstractAuditingEntity<String> {
     /**
      * The data type of the configuration
      */
-    @Column(name = "data_type")
+    @Column
     @Enumerated(value = EnumType.STRING)
     private DataTypeEnum dataType;
 

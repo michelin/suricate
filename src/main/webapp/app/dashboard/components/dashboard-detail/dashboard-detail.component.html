@@ -1,20 +1,25 @@
-<ng-container *ngIf="!isDashboardLoading">
+<ng-container *ngIf="!isDashboardLoading && project">
   <suricate-pages-header [configuration]="headerConfiguration"></suricate-pages-header>
+
+  <ol class="carousel-indicators">
+    <li *ngFor="let grid of project.grids" (click)="redirectToGrid(grid.id)" [ngClass]="{ 'indicator-selected': grid.id == gridId }"></li>
+    <li (click)="redirectToAddGrid()" [ngClass]="{ 'indicator-selected': !gridId }"></li>
+  </ol>
 
   <!-- Dashboard screen -->
   <suricate-dashboard-screen
     #dashboardScreen
-    *ngIf="projectWidgets?.length > 0"
+    *ngIf="currentWidgets?.length > 0"
     [project]="project"
-    [projectWidgets]="projectWidgets"
+    [projectWidgets]="currentWidgets"
     [screenCode]="screenCode"
     [readOnly]="isReadOnly"
-    (refreshProjectWidget)="refreshProjectWidgetsAction()"
+    (refreshAllProjectWidgets)="refreshAllProjectWidgets()"
     (disconnectEvent)="handlingDashboardDisconnect()"
   ></suricate-dashboard-screen>
 
-  <!-- Display the add card, if no widget inside the project -->
-  <mat-grid-list *ngIf="!projectWidgets || projectWidgets.length === 0" cols="4" rowHeight="250px" gutterSize="17px">
+  <!-- Display the add card, if no widget inside the current grid -->
+  <mat-grid-list *ngIf="gridId && (!currentWidgets || currentWidgets.length === 0)" cols="4" rowHeight="250px" gutterSize="17px">
     <mat-grid-tile class="mat-elevation-z3" (click)="displayProjectWidgetWizard()">
       <div class="grid-tile-content-wrapper">
         <div class="grid-tile-body">
@@ -23,6 +28,21 @@
 
         <div class="grid-tile-footer">
           {{ 'widget.add' | translate }}
+        </div>
+      </div>
+    </mat-grid-tile>
+  </mat-grid-list>
+
+  <!-- Display the add grid -->
+  <mat-grid-list *ngIf="!gridId" cols="4" rowHeight="250px" gutterSize="17px">
+    <mat-grid-tile class="mat-elevation-z3" (click)="openAddGridFormSidenav()">
+      <div class="grid-tile-content-wrapper">
+        <div class="grid-tile-body">
+          <mat-icon color="primary"> {{ materialIconRecords[iconEnum.ADD] }} </mat-icon>
+        </div>
+
+        <div class="grid-tile-footer">
+          {{ 'grid.add' | translate }}
         </div>
       </div>
     </mat-grid-tile>

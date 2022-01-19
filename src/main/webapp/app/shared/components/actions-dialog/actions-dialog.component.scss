@@ -1,0 +1,22 @@
+.dialog-wrapper {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  h1 {
+    text-align: center;
+  }
+
+  .spacer {
+    flex-grow: 1;
+    text-align: center;
+  }
+
+  .confirm-buttons {
+    justify-content: center;
+
+    button {
+      margin: 0 10px;
+    }
+  }
+}

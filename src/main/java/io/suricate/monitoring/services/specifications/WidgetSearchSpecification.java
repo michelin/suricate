@@ -21,7 +21,7 @@ public class WidgetSearchSpecification extends AbstractSearchSpecification<Widge
      * @param search The string to search
      */
     public WidgetSearchSpecification(final String search) {
-        super(search, Widget_.name);
+        super(search);
     }
 
     /**

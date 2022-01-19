@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -45,14 +45,4 @@ public abstract class WidgetParamMapper {
     @Named("toWidgetParameterDTO")
     @Mapping(target = "values", source = "widgetParam.possibleValuesMap", qualifiedByName = "toWidgetParameterValuesDTOs")
     public abstract WidgetParamResponseDto toWidgetParameterDTO(WidgetParam widgetParam);
-
-    /**
-     * Map a list of widget parameters into a list of widget parameters DTOs
-     *
-     * @param widgetParams The list of widget parameters to map
-     * @return The list of widget parameters as DTOs
-     */
-    @Named("toWidgetParametersDTO")
-    @IterableMapping(qualifiedByName = "toWidgetParameterDTO")
-    public abstract List<WidgetParamResponseDto> toWidgetParametersDTO(List<WidgetParam> widgetParams);
 }

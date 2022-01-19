@@ -5,9 +5,6 @@ on:
   push:
     branches:
       - '**'
-  pull_request:
-    branches:
-      - '**'
 
 jobs:
   Back-End:
@@ -15,7 +12,9 @@ jobs:
     steps:
       - name: Checkout project
         uses: actions/checkout@v2
-
+        with:
+          fetch-depth: 0
+          
       - name: Set up JDK 8
         uses: actions/setup-java@v2
         with:
@@ -28,8 +27,17 @@ jobs:
       - name: Test with Maven
         run: mvn -B test
 
+      - name: Set up JDK 11 for Sonar
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+          
       - name: Check dependencies with Maven
-        run: mvn -B -DskipTests -DcentralAnalyzerEnabled=false verify
+        run: mvn -B -DskipTests -DcentralAnalyzerEnabled=false verify sonar:sonar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
   Front-End:
     runs-on: ubuntu-latest

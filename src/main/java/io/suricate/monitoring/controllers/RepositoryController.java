@@ -1,6 +1,6 @@
 /*
  *
- *  * Copyright 2012-2018 the original author or authors.
+ *  * Copyright 2012-2021 the original author or authors.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -41,6 +41,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import org.springframework.transaction.annotation.Transactional;
 import java.net.URI;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,7 +52,6 @@ import java.util.Optional;
 @RequestMapping(value = "/api")
 @Api(value = "Repository Controller", tags = {"Repositories"})
 public class RepositoryController {
-
     /**
      * Repository service
      */
@@ -110,8 +110,8 @@ public class RepositoryController {
     public Page<RepositoryResponseDto> getAll(@ApiParam(name = "search", value = "Search keyword")
                                               @RequestParam(value = "search", required = false) String search,
                                               Pageable pageable) {
-        Page<Repository> repositoriesPaged = repositoryService.getAll(search, pageable);
-        return repositoriesPaged.map(repositoryMapper::toRepositoryDTO);
+        Page<Repository> repositoriesPaged = this.repositoryService.getAll(search, pageable);
+        return repositoriesPaged.map(this.repositoryMapper::toRepositoryDTO);
     }
 
     /**
@@ -130,8 +130,8 @@ public class RepositoryController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<RepositoryResponseDto> createOne(@ApiParam(name = "repositoryResponseDto", value = "The repository to create", required = true)
                                                            @RequestBody RepositoryRequestDto repositoryRequestDto) {
-        Repository repository = repositoryMapper.toRepositoryEntity(null, repositoryRequestDto);
-        repositoryService.addOrUpdateRepository(repository);
+        Repository repository = this.repositoryMapper.toRepositoryEntity(null, repositoryRequestDto);
+        this.repositoryService.addOrUpdateRepository(repository);
 
         if (repository.isEnabled()) {
             this.gitService.updateWidgetsFromRepository(repository);
@@ -146,7 +146,7 @@ public class RepositoryController {
         return ResponseEntity
             .created(resourceLocation)
             .contentType(MediaType.APPLICATION_JSON)
-            .body(repositoryMapper.toRepositoryDTO(repository));
+            .body(this.repositoryMapper.toRepositoryDTO(repository));
     }
 
     /**
@@ -167,7 +167,7 @@ public class RepositoryController {
     @Transactional
     public ResponseEntity<RepositoryResponseDto> getOneById(@ApiParam(name = "repositoryId", value = "The repository id", required = true)
                                                             @PathVariable Long repositoryId) {
-        Optional<Repository> optionalRepository = repositoryService.getOneById(repositoryId);
+        Optional<Repository> optionalRepository = this.repositoryService.getOneById(repositoryId);
         if (!optionalRepository.isPresent()) {
             throw new ObjectNotFoundException(Repository.class, repositoryId);
         }
@@ -175,13 +175,11 @@ public class RepositoryController {
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(repositoryMapper.toRepositoryDTO(optionalRepository.get()));
+            .body(this.repositoryMapper.toRepositoryDTO(optionalRepository.get()));
     }
 
     /**
      * Update a repository by id
-     *
-     * @return The repository updated
      */
     @ApiOperation(value = "Update an existing repository by id, and load it automatically if enable is selected")
     @ApiResponses(value = {
@@ -196,15 +194,42 @@ public class RepositoryController {
                                               @PathVariable Long repositoryId,
                                               @ApiParam(name = "repositoryResponseDto", value = "The repository with the new info's to update", required = true)
                                               @RequestBody RepositoryRequestDto repositoryRequestDto) {
-        if (!repositoryService.existsById(repositoryId)) {
+        if (!this.repositoryService.existsById(repositoryId)) {
             throw new ObjectNotFoundException(Repository.class, repositoryId);
         }
 
-        Repository repository = repositoryMapper.toRepositoryEntity(repositoryId, repositoryRequestDto);
+        Repository repository = this.repositoryMapper.toRepositoryEntity(repositoryId, repositoryRequestDto);
         this.repositoryService.addOrUpdateRepository(repository);
 
         if (repository.isEnabled()) {
             this.gitService.updateWidgetsFromRepository(repository);
+        }
+
+        return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * Reload a repository by id
+     */
+    @ApiOperation(value = "Reload an existing repository by id")
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "Repository reloaded"),
+            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
+            @ApiResponse(code = 404, message = "Repository not found", response = ApiErrorDto.class)
+    })
+    @PutMapping(value = "/v1/repositories/{repositoryId}/reload")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<Void> reload(@ApiParam(name = "repositoryId", value = "The repository id", required = true)
+                                       @PathVariable Long repositoryId) {
+        Optional<Repository> optionalRepository = this.repositoryService.getOneById(repositoryId);
+        if (!optionalRepository.isPresent()) {
+            throw new ObjectNotFoundException(Repository.class, repositoryId);
+        }
+
+        Repository repository = optionalRepository.get();
+        if (repository.isEnabled()) {
+            this.gitService.readWidgetRepositories(Collections.singletonList(repository));
         }
 
         return ResponseEntity.noContent().build();
@@ -228,7 +253,7 @@ public class RepositoryController {
     @Transactional
     public ResponseEntity<List<WidgetResponseDto>> getRepositoryWidget(@ApiParam(name = "repositoryId", value = "The repository id", required = true)
                                                                        @PathVariable Long repositoryId) {
-        Optional<Repository> optionalRepository = repositoryService.getOneById(repositoryId);
+        Optional<Repository> optionalRepository = this.repositoryService.getOneById(repositoryId);
         if (!optionalRepository.isPresent()) {
             throw new ObjectNotFoundException(Repository.class, repositoryId);
         }
@@ -236,6 +261,6 @@ public class RepositoryController {
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(widgetMapper.toWidgetsDTOs(optionalRepository.get().getWidgets()));
+            .body(this.widgetMapper.toWidgetsDTOs(optionalRepository.get().getWidgets()));
     }
 }

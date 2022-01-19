@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ import { throwError } from 'rxjs';
 import { AuthenticationService } from '../../../shared/services/frontend/authentication/authentication.service';
 import { ToastService } from '../../../shared/services/frontend/toast/toast.service';
 import { ApplicationProperties } from '../../../shared/models/backend/application-properties';
-import { HttpWidgetConfigurationService } from '../../../shared/services/backend/http-widget-configuration/http-widget-configuration.service';
+import { HttpCategoryParametersService } from '../../../shared/services/backend/http-category-parameters/http-category-parameters.service';
 import { Credentials } from '../../../shared/models/backend/user/credentials';
 import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
 import { UserRequest } from '../../../shared/models/backend/user/user-request';
@@ -34,6 +34,7 @@ import { FormField } from '../../../shared/models/frontend/form/form-field';
 import { ButtonConfiguration } from '../../../shared/models/frontend/button/button-configuration';
 import { RegisterFormFieldsService } from '../../../shared/services/frontend/form-fields/register-form-fields/register-form-fields.service';
 import { ButtonTypeEnum } from '../../../shared/enums/button-type.enum';
+import { HttpConfigurationService } from '../../../shared/services/backend/http-configuration/http-configuration.service';
 
 /**
  * Component used to register a new user
@@ -75,7 +76,7 @@ export class RegisterComponent implements OnInit {
    */
   constructor(
     private readonly router: Router,
-    private readonly httpConfigurationService: HttpWidgetConfigurationService,
+    private readonly httpConfigurationService: HttpConfigurationService,
     private readonly authenticationService: AuthenticationService,
     private readonly formService: FormService,
     private readonly toastService: ToastService

@@ -19,7 +19,7 @@
 
 <ng-template #strokedButton let-configuration="configuration">
   <button
-    *ngIf="shouldDisplayButton(configuration)"
+    *ngIf="shouldDisplayButton(configuration, object)"
     mat-stroked-button
     class="button button-single"
     [matTooltip]="configuration.tooltip?.message | translate"
@@ -34,7 +34,7 @@
 
 <ng-template #miniFabButton let-configuration="configuration">
   <button
-    *ngIf="shouldDisplayButton(configuration)"
+    *ngIf="shouldDisplayButton(configuration, object)"
     mat-mini-fab
     class="button button-single"
     [matTooltip]="configuration.tooltip?.message | translate"

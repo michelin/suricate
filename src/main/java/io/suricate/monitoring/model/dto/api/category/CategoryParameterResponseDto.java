@@ -30,6 +30,12 @@ public class CategoryParameterResponseDto extends AbstractDto {
     private String value;
 
     /**
+     * The description
+     */
+    @ApiModelProperty(value = "The description")
+    private String description;
+
+    /**
      * Export value
      */
     @ApiModelProperty(value = "The export value")

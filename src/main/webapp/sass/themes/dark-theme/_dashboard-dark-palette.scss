@@ -1,6 +1,6 @@
 /*!
  *  /*
- *  * Copyright 2012-2018 the original author or authors.
+ *  * Copyright 2012-2021 the original author or authors.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -18,35 +18,35 @@
 @import '~@angular/material/theming';
 
 $suricate-palette-dark-primary: (
-  50: #ecf0f3,
-  100: #d0dae0,
-  200: #b1c2cc,
-  300: #92aab7,
-  400: #7a97a7,
-  500: #638598,
-  600: #5b7d90,
-  700: #517285,
-  800: #47687b,
-  900: #35556a,
+  50 : #f1f4f6,
+  100 : #dde5e9,
+  200 : #c7d3da,
+  300 : #b0c1cb,
+  400 : #9fb4bf,
+  500 : #8ea7b4,
+  600 : #869fad,
+  700 : #7b96a4,
+  800 : #718c9c,
+  900 : #5f7c8c,
   A100: #5d94b4,
   A200: #3a8cad,
   A400: #377895,
   A700: #2e617e,
   contrast: (
-    50: #000000,
-    100: #000000,
-    200: #000000,
-    300: #ffffff,
-    400: #ffffff,
-    500: #ffffff,
-    600: #ffffff,
-    700: #ffffff,
-    800: #ffffff,
-    900: #ffffff,
-    A100: #000000,
-    A200: #000000,
-    A400: #ffffff,
-    A700: #ffffff
+    50 : #000000,
+    100 : #000000,
+    200 : #000000,
+    300 : #000000,
+    400 : #000000,
+    500 : #ffffff,
+    600 : #ffffff,
+    700 : #ffffff,
+    800 : #ffffff,
+    900 : #ffffff,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #000000,
+    A700 : #000000,
   )
 );
 
@@ -84,20 +84,20 @@ $suricate-palette-dark-accent: (
 );
 
 $suricate-palette-dark-warn: (
-  50: #f9e5e7,
-  100: #efbfc2,
-  200: #e5949a,
-  300: #da6971,
-  400: #d24952,
-  500: #ca2934,
-  600: #c5242f,
-  700: #bd1f27,
-  800: #b71921,
-  900: #ab0f15,
-  A100: #ffdadb,
-  A200: #ffa7a9,
-  A400: #ff7477,
-  A700: #ff5a5e,
+  50 : #ffe9e8,
+  100 : #ffc8c5,
+  200 : #ffa39f,
+  300 : #ff7e78,
+  400 : #ff635b,
+  500 : #ff473e,
+  600 : #ff4038,
+  700 : #ff3730,
+  800 : #ff2f28,
+  900 : #ff201b,
+  A100 : #ffffff,
+  A200 : #ffffff,
+  A400 : #ffcdcc,
+  A700 : #ffb4b3,
   contrast: (
     50: #000000,
     100: #000000,

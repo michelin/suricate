@@ -1,6 +1,6 @@
 /*
  *  /*
- *  * Copyright 2012-2018 the original author or authors.
+ *  * Copyright 2012-2021 the original author or authors.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -20,13 +20,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { Category } from '../../../models/backend/widget/category';
+import { Category } from '../../../models/backend/category/category';
 import { Widget } from '../../../models/backend/widget/widget';
-import { WidgetConfiguration } from '../../../models/backend/widget-configuration/widget-configuration';
 import { AbstractHttpService } from '../abstract-http/abstract-http.service';
 import { HttpFilter } from '../../../models/backend/http-filter';
 import { HttpFilterService } from '../http-filter/http-filter.service';
 import { Page } from '../../../models/backend/page';
+import { CategoryParameter } from '../../../models/backend/category-parameters/category-parameter';
 
 /**
  * Manage the widget Http calls
@@ -55,16 +55,6 @@ export class HttpCategoryService {
     const url = `${HttpCategoryService.categoriesApiEndpoint}`;
 
     return this.httpClient.get<Page<Category>>(HttpFilterService.getFilteredUrl(url, filter));
-  }
-
-  /**
-   * Get the list of configurations for a category
-   *
-   * @param categoryId The category id
-   */
-  public getCategoryConfigurations(categoryId: number): Observable<WidgetConfiguration[]> {
-    const url = `${HttpCategoryService.categoriesApiEndpoint}/${categoryId}/configurations`;
-    return this.httpClient.get<WidgetConfiguration[]>(url);
   }
 
   /**

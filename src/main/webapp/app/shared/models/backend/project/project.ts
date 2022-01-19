@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,25 @@
  * limitations under the License.
  */
 
-import { ProjectGrid } from './project-grid';
 import { Asset } from '../asset/asset';
+import { GridProperties } from './grid-properties';
+import { ProjectGrid } from '../project-grid/project-grid';
 
 /**
  * The project entity
  */
-export interface Project {
+export class Project {
   token: string;
   name: string;
-  gridProperties: ProjectGrid;
+  gridProperties: GridProperties = new GridProperties();
   screenshotToken: string;
   librariesToken: string[];
-  image: Asset;
+  image: Asset = new Asset();
+  grids: ProjectGrid[];
+  displayProgressBar: boolean;
+
+  /**
+   * Constructor
+   */
+  constructor() {}
 }

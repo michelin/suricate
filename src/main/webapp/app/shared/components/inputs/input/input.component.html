@@ -9,7 +9,15 @@
     [ngClass]="{ 'mat-form-field-readonly': field.readOnly }"
   >
     <!-- Mat Icon prefix -->
-    <mat-icon *ngIf="field.iconPrefix" class="prefix" matPrefix color="primary">
+    <mat-icon
+      *ngIf="field.iconPrefix"
+      class="prefix"
+      matPrefix
+      color="primary"
+      [matTooltip]="field.iconPrefixTooltip"
+      matTooltipPosition="above"
+      matTooltipClass="icon-prefix-tooltip"
+    >
       {{ materialIconRecords[field.iconPrefix] }}
     </mat-icon>
 
@@ -54,7 +62,7 @@
     </mat-select>
 
     <!-- Mat Icon suffix -->
-    <mat-icon *ngIf="field.iconSuffix" (click)="suffixActions()" class="suffix" matSuffix color="primary">
+    <mat-icon *ngIf="field.iconSuffix" (click)="suffixActions()" matTooltip="" class="suffix" matSuffix color="primary">
       {{ materialIconRecords[field.iconSuffix] }}
     </mat-icon>
 

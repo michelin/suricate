@@ -1,6 +1,6 @@
 /*
  *  /*
- *  * Copyright 2012-2018 the original author or authors.
+ *  * Copyright 2012-2021 the original author or authors.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -56,9 +56,16 @@ export class CustomValidator {
   }
 
   /**
-   * Custom validator that checks if an input file has the expected format
+   * Custom validator that checks if an input data is gt than 0
    *
    * @param control The field control
+   */
+  public static greaterThanGivenValue(control: AbstractControl) {
+    return control.value > 0 ? null : { gt0: true };
+  }
+
+  /**
+   * Custom validator that checks if an input file has the expected format
    */
   public static fileHasFormat(): ValidatorFn {
     return Validators.pattern(this.fileFormat);

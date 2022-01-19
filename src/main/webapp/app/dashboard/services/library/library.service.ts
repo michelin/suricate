@@ -22,11 +22,19 @@ export class LibraryService {
   public allExternalLibrariesLoaded = new BehaviorSubject<boolean>(false);
 
   /**
+   * Initialize the service
+   */
+  public init(numberOfExternalLibrariesToLoad: number) {
+    this.loadedExternalLibraries = [];
+    this.numberOfExternalLibrariesToLoad = numberOfExternalLibrariesToLoad;
+  }
+
+  /**
    * Emit a new event according to the given value
    *
    * @param value The new value to emit
    */
-  emitAreJSScriptsLoaded(value: boolean) {
+  public emitAreJSScriptsLoaded(value: boolean) {
     this.allExternalLibrariesLoaded.next(value);
   }
 

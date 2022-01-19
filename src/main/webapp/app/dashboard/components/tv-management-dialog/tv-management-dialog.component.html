@@ -8,9 +8,14 @@
     <h2 class="little title">{{ 'screen.enroll' | translate }}</h2>
     <mat-divider></mat-divider>
 
-    <div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="25px" class="input-wrapper">
-      <suricate-input *ngFor="let field of formFields" fxFlex [formGroup]="registerScreenCodeFormField" [field]="field"></suricate-input>
-      <suricate-buttons class="share-button" [configurations]="shareButtonsConfiguration"></suricate-buttons>
+    <div fxLayout="row" fxLayoutGap="25px" class="input-wrapper">
+      <suricate-input
+        *ngFor="let field of formFields"
+        fxFlex="100%"
+        [formGroup]="registerScreenCodeFormField"
+        [field]="field"
+      ></suricate-input>
+      <suricate-buttons fxFlex [configurations]="shareButtonsConfiguration"></suricate-buttons>
     </div>
   </form>
 
@@ -35,7 +40,7 @@
 
   <!-- Show screen code -->
   <div id="display-code-link">
-    <a fxLayout="col wrap" fxLayoutAlign="start center" (click)="displayScreenCode(project.token)">
+    <a fxLayout="col wrap" fxLayoutAlign="start center" (click)="displayScreenCode()">
       <mat-icon> {{ materialIconRecords[iconEnum.ARROW_DOWN] }} </mat-icon>
       <span> {{ 'screen.display.code' | translate }} </span>
     </a>
@@ -43,5 +48,5 @@
 </mat-dialog-content>
 
 <mat-dialog-actions>
-  <button mat-button mat-dialog-close mat-stroked-button color="warn" class="button button-single">{{ 'close' | translate }}</button>
+  <suricate-buttons [configurations]="genericButtonsConfiguration" [mat-dialog-close]="false"></suricate-buttons>
 </mat-dialog-actions>

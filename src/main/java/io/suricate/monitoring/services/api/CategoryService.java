@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -74,8 +74,8 @@ public class CategoryService {
      *
      * @return The list of categories
      */
-    @Transactional
     @Cacheable("widget-categories")
+    @Transactional(readOnly = true)
     public Page<Category> getAll(String search, Pageable pageable) {
         return categoryRepository.findAll(new CategorySearchSpecification(search), pageable);
     }

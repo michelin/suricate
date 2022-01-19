@@ -17,14 +17,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 
-import static com.google.common.truth.Truth.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class LibraryServiceTest {
-
     @Autowired
     LibraryService libraryService;
 
@@ -36,70 +36,62 @@ public class LibraryServiceTest {
 
     @Test
     public void testUpdateLibraryNull() throws IOException {
-        // check empty
-        assertThat(libraryRepository.count()).isEqualTo(0);
-        assertThat(assetRepository.count()).isEqualTo(0);
-
-        assertThat(libraryService.updateLibraryInDatabase(null)).hasSize(0);
-        // check empty
-        assertThat(libraryRepository.count()).isEqualTo(0);
-        assertThat(assetRepository.count()).isEqualTo(0);
+        assertEquals(0, libraryRepository.count());
+        assertEquals(0 ,assetRepository.count());
+        assertEquals(0, libraryService.updateLibraryInDatabase(null).size());
+        assertEquals(0, libraryRepository.count());
+        assertEquals(0, assetRepository.count());
     }
 
     @Test
     public void testUpdateLibrary() throws IOException {
-        // check empty
-        assertThat(libraryRepository.count()).isEqualTo(0);
-        assertThat(assetRepository.count()).isEqualTo(0);
+        assertEquals(0, libraryRepository.count());
+        assertEquals(0 ,assetRepository.count());
 
-        // Create test library
-        Library lib = new Library();
-        lib.setTechnicalName("test");
+        Library library = new Library();
+        library.setTechnicalName("Technical name");
 
         Asset asset = new Asset();
         asset.setContentType("text/plain");
-        asset.setContent(FileUtils.readFileToByteArray(new File(LibraryServiceTest.class.getResource("/Libraries/d3.min.js").getFile())));
-        lib.setAsset(asset);
-        // First update
-        libraryService.updateLibraryInDatabase(Collections.singletonList(lib));
+        asset.setContent(FileUtils.readFileToByteArray(new File(LibraryServiceTest.class.getResource("/libraries/d3.min.js").getFile())));
+        library.setAsset(asset);
 
-        assertThat(libraryRepository.count()).isEqualTo(1);
-        Library library = libraryRepository.findByTechnicalName("test");
-        assertThat(library.getAsset()).isNotNull();
-        assertThat(library.getAsset().getSize()).isEqualTo(3);
-        assertThat(assetRepository.count()).isEqualTo(1);
+        libraryService.updateLibraryInDatabase(Collections.singletonList(library));
 
-        // Update asset size
-        lib = new Library();
-        lib.setTechnicalName("test");
+        assertEquals(1, libraryRepository.count());
+
+        Library libraryByTechnicalName = libraryRepository.findByTechnicalName("Technical name");
+        assertNotNull(libraryByTechnicalName.getAsset());
+        assertEquals(3, libraryByTechnicalName.getAsset().getSize());
+        assertEquals(1, assetRepository.count());
 
         asset = new Asset();
         asset.setContentType("text/plain");
-        asset.setContent(FileUtils.readFileToByteArray(new File(LibraryServiceTest.class.getResource("/Libraries/d3.min.js").getFile())));
+        asset.setContent(FileUtils.readFileToByteArray(new File(LibraryServiceTest.class.getResource("/libraries/d3.min.js").getFile())));
         asset.setSize(10);
-        lib.setAsset(asset);
-
+        library.setAsset(asset);
 
         // Update same library
-        libraryService.updateLibraryInDatabase(Collections.singletonList(lib));
-        assertThat(libraryRepository.count()).isEqualTo(1);
-        library = libraryRepository.findByTechnicalName("test");
-        assertThat(library.getAsset()).isNotNull();
-        assertThat(library.getAsset().getSize()).isEqualTo(10);
-        assertThat(assetRepository.count()).isEqualTo(1);
+        libraryService.updateLibraryInDatabase(Collections.singletonList(library));
+        assertEquals(1, libraryRepository.count());
 
-        // Add new lib
-        lib = new Library();
-        lib.setTechnicalName("test3");
+        library = libraryRepository.findByTechnicalName("Technical name");
+
+        assertNotNull(library.getAsset());
+        assertEquals(10, library.getAsset().getSize());
+        assertEquals(1, assetRepository.count());
+
+        library = new Library();
+        library.setTechnicalName("Technical name 2");
 
         asset = new Asset();
         asset.setContentType("text/plain");
-        asset.setContent(FileUtils.readFileToByteArray(new File(LibraryServiceTest.class.getResource("/Libraries/d3.min.js").getFile())));
+        asset.setContent(FileUtils.readFileToByteArray(new File(LibraryServiceTest.class.getResource("/libraries/d3.min.js").getFile())));
         asset.setSize(10);
-        lib.setAsset(asset);
+        library.setAsset(asset);
 
-        libraryService.updateLibraryInDatabase(Collections.singletonList(lib));
-        assertThat(libraryRepository.count()).isEqualTo(2);
-        assertThat(assetRepository.count()).isEqualTo(2);
+        libraryService.updateLibraryInDatabase(Collections.singletonList(library));
+        assertEquals(2, libraryRepository.count());
+        assertEquals(2, assetRepository.count());
     }
 }

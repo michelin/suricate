@@ -1,6 +1,6 @@
 /*
  *
- *  * Copyright 2012-2018 the original author or authors.
+ *  * Copyright 2012-2021 the original author or authors.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -27,14 +27,13 @@ import javax.persistence.*;
 import java.util.Date;
 
 /**
- * Project_widget entity
+ * ProjectWidget entity
  */
-@Entity(name = "ProjectWidget")
+@Entity
 @Getter
 @Setter
 @NoArgsConstructor
 public class ProjectWidget extends AbstractAuditingEntity<Long> {
-
     /**
      * The project widget id
      */
@@ -115,11 +114,11 @@ public class ProjectWidget extends AbstractAuditingEntity<Long> {
     private WidgetStateEnum state;
 
     /**
-     * The related project
+     * The related project grid, if exists
      */
     @ManyToOne
-    @PrimaryKeyJoinColumn(name = "projectId", referencedColumnName = "ID")
-    private Project project;
+    @PrimaryKeyJoinColumn(name = "projectGridId", referencedColumnName = "ID")
+    private ProjectGrid projectGrid;
 
     /**
      * The related widget

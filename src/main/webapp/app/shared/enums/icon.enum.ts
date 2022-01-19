@@ -1,6 +1,6 @@
 /*
  *  /*
- *  * Copyright 2012-2018 the original author or authors.
+ *  * Copyright 2012-2021 the original author or authors.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@
  * Hold the different icons of the application
  */
 export enum IconEnum {
+  ACCESS_TIME = 'ACCESS_TIME',
   ADD = 'ADD',
   ARROW_DOWN = 'ARROW_DOWN',
   BRANCH = 'BRANCH',
@@ -28,11 +29,15 @@ export enum IconEnum {
   COLUMN = 'COLUMN',
   DASHBOARD = 'DASHBOARD',
   DELETE = 'DELETE',
+  DELETE_FOREVER = 'DELETE_FOREVER',
   EDIT = 'EDIT',
   EMAIL = 'EMAIL',
   ERROR = 'ERROR',
   GENERAL_INFORMATION = 'GENERAL_INFORMATION',
+  GRID = 'GRID',
   HEIGHT = 'HEIGHT',
+  HELP = 'HELP',
+  HIDE_PASSWORD = 'HIDE_PASSWORD',
   HOME = 'HOME',
   INFO = 'INFO',
   KEY = 'KEY',
@@ -40,16 +45,18 @@ export enum IconEnum {
   LOGOUT = 'LOGOUT',
   NAME = 'NAME',
   PASSWORD = 'PASSWORD',
-  SHOW_PASSWORD = 'SHOW_PASSWORD',
-  HIDE_PASSWORD = 'HIDE_PASSWORD',
+  PROGRESS_BAR = 'PROGRESS_BAR',
   REFRESH = 'REFRESH',
   REPOSITORY_TYPE = 'REPOSITORY_TYPE',
   SAVE = 'SAVE',
   SEARCH = 'SEARCH',
   SETTINGS = 'SETTINGS',
   SHARE_SCREEN = 'SHARE_SCREEN',
+  SHOW_PASSWORD = 'SHOW_PASSWORD',
+  SPEED = 'SPEED',
   STOP_SHARE_SCREEN = 'STOP_SHARE_SCREEN',
   SUCCESS = 'SUCCESS',
+  SYNCHRONIZE = 'SYNCHRONIZE',
   TEXT = 'TEXT',
   THEME = 'THEME',
   TV = 'TV',

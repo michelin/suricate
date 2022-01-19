@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,17 +32,18 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value = "RoleResponse", description = "Describe a role")
 public class RoleResponseDto extends AbstractDto {
-
     /**
      * The role id
      */
     @ApiModelProperty(value = "The id")
     private Long id;
+
     /**
      * The role name
      */
     @ApiModelProperty(value = "The Role name")
     private UserRoleEnum name;
+
     /**
      * The role description
      */

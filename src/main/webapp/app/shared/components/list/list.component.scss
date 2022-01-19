@@ -1,6 +1,6 @@
 /*!
  *  /*
- *  * Copyright 2012-2018 the original author or authors.
+ *  * Copyright 2012-2021 the original author or authors.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -17,31 +17,6 @@
  */
 
 .container {
-  .search-div {
-    border: 1px solid rgba(0, 0, 0, 0.12);
-    margin-bottom: 15px;
-
-    .mat-icon {
-      display: flex;
-      border-right: inherit;
-      height: 40px;
-      width: 40px;
-      align-items: center;
-      justify-content: center;
-    }
-
-    input {
-      border: none;
-      background: transparent;
-      padding-left: 15px;
-      font-size: 1em;
-
-      &:focus {
-        outline: none;
-      }
-    }
-  }
-
   .list-wrapper {
     height: 100%;
 

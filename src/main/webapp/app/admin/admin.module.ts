@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,12 +19,14 @@ import { RouterModule } from '@angular/router';
 import { LayoutModule } from '../layout/layout.module';
 import { SharedModule } from '../shared/shared.module';
 import { adminRoutes } from './admin.route';
-import { UsersComponent } from './components-list/users/users.component';
-import { RepositoriesComponent } from './components-list/repositories/repositories.component';
+import { UsersComponent } from './users/users.component';
+import { RepositoriesComponent } from './repositories/repositories.component';
+import { DashboardsComponent } from './dashboards/dashboards.component';
+import { ConfigurationsComponent } from './configurations/configurations.component';
 
 @NgModule({
   imports: [RouterModule.forChild(adminRoutes), LayoutModule, SharedModule],
-  declarations: [UsersComponent, RepositoriesComponent],
+  declarations: [UsersComponent, RepositoriesComponent, DashboardsComponent, ConfigurationsComponent],
   exports: [RouterModule]
 })
 export class AdminModule {}

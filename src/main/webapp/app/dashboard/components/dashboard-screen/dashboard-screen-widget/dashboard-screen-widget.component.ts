@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,7 +44,7 @@ import { WebsocketUpdateTypeEnum } from '../../../../shared/enums/websocket-upda
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { SlideToggleButtonConfiguration } from '../../../../shared/models/frontend/button/slide-toggle/slide-toggle-button-configuration';
-import { CategoryParameter } from '../../../../shared/models/backend/category/category-parameter';
+import { CategoryParameter } from '../../../../shared/models/backend/category-parameters/category-parameter';
 
 /**
  * Display the grid stack widgets
@@ -184,7 +184,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
       .subscribe((stompMessage: Stomp.Message) => {
         const updateEvent: WebsocketUpdateEvent = JSON.parse(stompMessage.body);
 
-        if (updateEvent.type === WebsocketUpdateTypeEnum.WIDGET) {
+        if (updateEvent.type === WebsocketUpdateTypeEnum.REFRESH_WIDGET) {
           this.refreshProjectWidget();
         }
       });
@@ -194,15 +194,15 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    * Refresh this project widget
    */
   private refreshProjectWidget(): void {
-    this.loading = true;
     this.httpProjectWidgetService.getOneById(this.projectWidget.id).subscribe(projectWidget => {
       this.projectWidget = projectWidget;
-      this.loading = false;
     });
   }
 
   /**
    * Register the new position of the element
+   *
+   * Keep track of the position to prevent the click when moving it
    *
    * @param gridItemEvent The grid item event
    */
@@ -231,7 +231,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
 
     this.dialogService.confirm({
       title: 'widget.delete',
-      message: `${this.translateService.instant('delete.confirm')} ${titleCasePipe.transform(this.widget.name)} widget ?`,
+      message: `${this.translateService.instant('widget.delete.confirm')} ${titleCasePipe.transform(this.widget.name)} widget ?`,
       accept: () => this.httpProjectWidgetService.deleteOneById(this.projectWidget.id).subscribe()
     });
   }
@@ -242,7 +242,10 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
   public displayEditFormSidenav(): void {
     this.sidenavService.openFormSidenav({
       title: 'widget.edit',
-      formFields: this.projectWidgetFormStepsService.generateProjectWidgetFormFields(this.widget.params, this.projectWidget.backendConfig),
+      formFields: this.projectWidgetFormStepsService.generateWidgetParametersFormFields(
+        this.widget.params,
+        this.projectWidget.backendConfig
+      ),
       save: (formData: FormData) => this.saveWidget(formData),
       slideToggleButtonConfiguration: this.buildSlideToggleButtonConfiguration(this.widget.category.categoryParameters)
     });
@@ -254,6 +257,8 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
    * @param formData The form data
    */
   public saveWidget(formData: FormData) {
+    this.loading = true;
+
     const projectWidgetRequest: ProjectWidgetRequest = {
       widgetId: this.projectWidget.widgetId,
       customStyle: this.projectWidget.customStyle,
@@ -263,9 +268,13 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
         .join('\n')
     };
 
-    this.httpProjectWidgetService.updateOneById(this.projectWidget.id, projectWidgetRequest).subscribe(() => {
-      this.toastService.sendMessage('widget.edit.success', ToastTypeEnum.SUCCESS);
-    });
+    this.httpProjectWidgetService
+      .updateOneById(this.projectWidget.id, projectWidgetRequest)
+      .subscribe((updatedProjectWidget: ProjectWidget) => {
+        this.loading = false;
+        this.projectWidget = updatedProjectWidget;
+        this.toastService.sendMessage('widget.edit.success', ToastTypeEnum.SUCCESS);
+      });
   }
 
   /**
@@ -281,7 +290,7 @@ export class DashboardScreenWidgetComponent implements OnInit, OnDestroy {
           this.projectWidgetFormStepsService.retrieveProjectWidgetValueFromConfig(categorySetting.key, this.projectWidget.backendConfig)
         ).length > 0,
       slideToggleButtonPressed: (event: MatSlideToggleChange, formGroup: FormGroup, formFields: FormField[]) =>
-        this.widgetConfigurationFormFieldsService.generateCategorySettingsFormFields(
+        this.widgetConfigurationFormFieldsService.addOrRemoveCategoryParametersFormFields(
           categoryParameters,
           event.checked,
           formGroup,

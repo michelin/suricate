@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,7 @@ import { DashboardTvComponent } from './components/dashboard-tv/dashboard-tv.com
 import { LayoutModule } from '../layout/layout.module';
 import { DashboardRoutes } from './dashboard.route';
 import { DashboardScreenWidgetComponent } from './components/dashboard-screen/dashboard-screen-widget/dashboard-screen-widget.component';
-import { DashboardsComponent } from './components-list/dashboards/dashboards.component';
-import { ProjectWidgetWizardComponent } from './components/wizard/project-widget-wizard.component';
+import { AddWidgetToProjectWizardComponent } from './components/wizard/add-widget-to-project-wizard/add-widget-to-project-wizard.component';
 import { TvManagementDialogComponent } from './components/tv-management-dialog/tv-management-dialog.component';
 
 @NgModule({
@@ -35,11 +34,10 @@ import { TvManagementDialogComponent } from './components/tv-management-dialog/t
     DashboardScreenComponent,
     DashboardScreenWidgetComponent,
     DashboardTvComponent,
-    DashboardsComponent,
-    ProjectWidgetWizardComponent,
+    AddWidgetToProjectWizardComponent,
     TvManagementDialogComponent
   ],
-  entryComponents: [TvManagementDialogComponent],
+  entryComponents: [],
   exports: [RouterModule]
 })
 export class DashboardModule {}

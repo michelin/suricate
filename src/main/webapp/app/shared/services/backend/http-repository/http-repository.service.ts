@@ -1,6 +1,6 @@
 /*
  *  /*
- *  * Copyright 2012-2018 the original author or authors.
+ *  * Copyright 2012-2021 the original author or authors.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -91,22 +91,22 @@ export class HttpRepositoryService implements AbstractHttpService<Repository | R
   }
 
   /**
+   * Reload a repository
+   *
+   * @param repositoryId The repository id
+   */
+  public reload(repositoryId: number): Observable<void> {
+    const url = `${HttpRepositoryService.repositoriesApiEndpoint}/${repositoryId}/reload`;
+
+    return this.httpClient.put<void>(url, null);
+  }
+
+  /**
    * Delete a repository
    *
    * @param id The repository id to delete
    */
   public delete(id: number): Observable<void> {
     return EMPTY;
-  }
-
-  /**
-   * Get the list of widgets for a repository
-   *
-   * @param repositoryId The repository ID
-   */
-  public getRepositoryWidgets(repositoryId: number): Observable<Widget[]> {
-    const url = `${HttpRepositoryService.repositoriesApiEndpoint}/${repositoryId}/widgets`;
-
-    return this.httpClient.get<Widget[]>(url);
   }
 }

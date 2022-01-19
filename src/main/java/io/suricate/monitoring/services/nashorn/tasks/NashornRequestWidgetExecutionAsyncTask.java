@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -159,7 +159,7 @@ public class NashornRequestWidgetExecutionAsyncTask implements Callable<NashornR
                     LOGGER.debug("The JSON response obtained after the execution of the Nashorn request of the widget instance {} is invalid", nashornRequest.getProjectWidgetId());
                     LOGGER.debug("The JSON response is: {}", json);
 
-                    nashornResponse.setLog(ToStringUtils.hideWidgetConfigurationInLogs(sw.toString() + "\nThe JSON response is not valid - " + json, widgetProperties.values()));
+                    nashornResponse.setLog(ToStringUtils.hideWidgetConfigurationInLogs(sw + "\nThe JSON response is not valid - " + json, widgetProperties.values()));
                     nashornResponse.setError(nashornRequest.isAlreadySuccess() ? NashornErrorTypeEnum.ERROR : NashornErrorTypeEnum.FATAL);
                 }
             }
@@ -179,7 +179,10 @@ public class NashornRequestWidgetExecutionAsyncTask implements Callable<NashornR
                     nashornResponse.setError(NashornErrorTypeEnum.ERROR);
                 }
 
-                nashornResponse.setLog(ExceptionUtils.getRootCauseMessage(exception));
+                // If RemoteException/RequestException get custom message, else get root cause
+                String logs = ExceptionUtils.getRootCause(exception).getMessage() != null ? ExceptionUtils.getRootCause(exception).getMessage() :
+                        ExceptionUtils.getRootCause(exception).toString();
+                nashornResponse.setLog(logs);
             }
         } finally {
             nashornResponse.setProjectId(nashornRequest.getProjectId());

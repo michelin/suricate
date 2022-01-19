@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ import { IconEnum } from '../../../../enums/icon.enum';
 import { HttpCategoryService } from '../../../backend/http-category/http-category.service';
 import { map, switchMap, tap, toArray } from 'rxjs/operators';
 import { MosaicFormOption } from '../../../../models/frontend/form/mosaic-form-option';
-import { Category } from '../../../../models/backend/widget/category';
+import { Category } from '../../../../models/backend/category/category';
 import { HttpAssetService } from '../../../backend/http-asset/http-asset.service';
 import { FormGroup, ValidatorFn, Validators } from '@angular/forms';
 import { Widget } from '../../../../models/backend/widget/widget';
@@ -34,6 +34,7 @@ import { WidgetParamValue } from '../../../../models/backend/widget/widget-param
 import { HttpFilterService } from '../../../backend/http-filter/http-filter.service';
 import { Page } from '../../../../models/backend/page';
 import { CustomValidator } from '../../../../validators/custom-validator';
+import { TranslateService } from '@ngx-translate/core';
 
 /**
  * Service used to build the steps related to a project widget
@@ -63,10 +64,15 @@ export class ProjectWidgetFormStepsService {
   /**
    * Constructor
    *
-   * @param httpCategoryService Suricate service used to manage HTTP calls
-   * @param httpWidgetService Suricate service used to manage http calls for widget
+   * @param httpCategoryService HTTP category service
+   * @param httpWidgetService HTTP widget service
+   * @param translateService Translate service
    */
-  constructor(private readonly httpCategoryService: HttpCategoryService, private readonly httpWidgetService: HttpWidgetService) {}
+  constructor(
+    private readonly httpCategoryService: HttpCategoryService,
+    private readonly httpWidgetService: HttpWidgetService,
+    private readonly translateService: TranslateService
+  ) {}
 
   /**
    * Generation of the form options for widget params
@@ -131,12 +137,12 @@ export class ProjectWidgetFormStepsService {
   }
 
   /**
-   * Generate the form fields for a project widget when editing it
+   * Generate the form fields for a widget instance when creating or editing it
    *
    * @param widgetParams The params of the widget
    * @param widgetConfig The configuration already set
    */
-  public generateProjectWidgetFormFields(widgetParams: WidgetParam[], widgetConfig?: string): FormField[] {
+  public generateWidgetParametersFormFields(widgetParams: WidgetParam[], widgetConfig?: string): FormField[] {
     const formFields = [];
 
     widgetParams.forEach((widgetParam: WidgetParam) => {
@@ -151,6 +157,8 @@ export class ProjectWidgetFormStepsService {
         label: widgetParam.description,
         placeholder: widgetParam.usageExample,
         value: configValue ? configValue : widgetParam.defaultValue,
+        iconPrefix: widgetParam.usageTooltip ? IconEnum.HELP : undefined,
+        iconPrefixTooltip: widgetParam.usageTooltip ? widgetParam.usageTooltip : undefined,
         iconSuffix: widgetParam.type === DataTypeEnum.PASSWORD ? IconEnum.SHOW_PASSWORD : undefined,
         options: () => ProjectWidgetFormStepsService.getFormOptionsForWidgetParam(widgetParam),
         validators: this.getValidatorsForWidgetParam(widgetParam)
@@ -234,7 +242,7 @@ export class ProjectWidgetFormStepsService {
           step.imageLink = { link: HttpAssetService.getContentUrl(widget.imageToken) };
         }),
         map((widget: Widget) => {
-          return this.generateProjectWidgetFormFields(widget.params);
+          return this.generateWidgetParametersFormFields(widget.params);
         })
       );
     }

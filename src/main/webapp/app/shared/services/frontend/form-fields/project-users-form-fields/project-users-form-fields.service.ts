@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -37,8 +37,8 @@ export class ProjectUsersFormFieldsService {
    * Constructor
    *
    * @param translateService Ngx translate service used to manage the translations
-   * @param httpProjectService Suricate service used to manage project
-   * @param httpUserService Suricate service used to manage http calls for user
+   * @param httpProjectService Service used to manage the projects
+   * @param httpUserService Service used to manage http calls for user
    */
   constructor(
     private readonly translateService: TranslateService,

@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,17 +70,17 @@ public class NashornRequestResultAsyncTask implements Callable<Void>{
     /**
      * The scheduled asynchronous task which will execute the Nashorn request executing the widget
      */
-    private ScheduledFuture<NashornResponse> scheduledNashornRequestTask;
+    private final ScheduledFuture<NashornResponse> scheduledNashornRequestTask;
 
     /**
      * The Nashorn request itself
      */
-    private NashornRequest nashornRequest;
+    private final NashornRequest nashornRequest;
 
     /**
      * The Nashorn requests scheduler
      */
-    private NashornRequestWidgetExecutionScheduler scheduler;
+    private final NashornRequestWidgetExecutionScheduler scheduler;
 
     /**
      * Retry template which will perform some retries on the widget update
@@ -138,9 +138,14 @@ public class NashornRequestResultAsyncTask implements Callable<Void>{
 
                 return null;
             });
+        } catch (InterruptedException ie) {
+            LOGGER.error("Interrupted exception caught. Re-interrupting the thread for the widget instance {}",
+                    nashornRequest.getProjectWidgetId());
+
+            Thread.currentThread().interrupt();
         } catch (CancellationException cancellationException) {
             if (scheduledNashornRequestTask.isCancelled()) {
-                LOGGER.info("The Nashorn request has been canceled for the widget instance {}", nashornRequest.getProjectWidgetId());
+                LOGGER.debug("The Nashorn request has been canceled for the widget instance {}", nashornRequest.getProjectWidgetId());
             }
         } catch (Exception exception) {
             Throwable rootCause = ExceptionUtils.getRootCause(exception);
@@ -150,10 +155,9 @@ public class NashornRequestResultAsyncTask implements Callable<Void>{
             // Handle the case when the Nashorn request exceeds the timeout define by the widget.
             // Set the widget logs and cancel the widget execution
             if (rootCause instanceof TimeoutException) {
-                widgetLogs = rootCause
-                            + ": The Nashorn request exceeded the timeout defined by the widget.";
+                widgetLogs = "The Nashorn request exceeded the timeout defined by the widget";
 
-                LOGGER.error("The Nashorn request exceeded the timeout defined by the widget instance {}. The Nashorn request is going to be canceled.", nashornRequest.getProjectWidgetId());
+                LOGGER.error("The Nashorn request exceeded the timeout defined by the widget instance {}. The Nashorn request is going to be cancelled.", nashornRequest.getProjectWidgetId());
             } else {
                 widgetLogs = rootCause.toString();
 

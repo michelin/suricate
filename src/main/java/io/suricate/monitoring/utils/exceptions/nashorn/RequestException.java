@@ -1,6 +1,6 @@
 /*
  *
- *  * Copyright 2012-2018 the original author or authors.
+ *  * Copyright 2012-2021 the original author or authors.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -19,30 +19,15 @@
 package io.suricate.monitoring.utils.exceptions.nashorn;
 
 import lombok.Getter;
+import okhttp3.Response;
 
 public class RequestException extends Exception {
-
-    /**
-     * Technical message of the request exception
-     */
-    @Getter
-    private final String technicalData;
-
-    /**
-     * Response body of the request exception
-     */
-    @Getter
-    private final String response;
-
     /**
      * Constructor
      *
-     * @param technicalData The technical data
-     * @param response The response body
+     * @param message The error message
      */
-    public RequestException(String technicalData, String response) {
-        super(technicalData);
-        this.technicalData = technicalData;
-        this.response = response;
+    public RequestException(String message) {
+        super(message);
     }
 }

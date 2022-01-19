@@ -1,6 +1,6 @@
 /*
  *
- *  * Copyright 2012-2018 the original author or authors.
+ *  * Copyright 2012-2021 the original author or authors.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@
 package io.suricate.monitoring.utils.http;
 
 import javax.net.ssl.X509TrustManager;
-import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
 public class AllTrustingTrustManager implements X509TrustManager {

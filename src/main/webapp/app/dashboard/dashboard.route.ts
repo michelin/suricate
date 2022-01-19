@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,17 +18,10 @@ import { Routes } from '@angular/router';
 
 import { DashboardTvComponent } from './components/dashboard-tv/dashboard-tv.component';
 import { AuthGuard } from '../shared/guards/auth/auth.guard';
-import { AdminGuard } from '../shared/guards/admin/admin.guard';
 import { DashboardDetailComponent } from './components/dashboard-detail/dashboard-detail.component';
-import { DashboardsComponent } from './components-list/dashboards/dashboards.component';
-import { ProjectWidgetWizardComponent } from './components/wizard/project-widget-wizard.component';
+import { AddWidgetToProjectWizardComponent } from './components/wizard/add-widget-to-project-wizard/add-widget-to-project-wizard.component';
 
 export const DashboardRoutes: Routes = [
-  {
-    path: 'dashboards',
-    component: DashboardsComponent,
-    canActivate: [AuthGuard, AdminGuard]
-  },
   {
     path: 'tv',
     component: DashboardTvComponent
@@ -39,8 +32,13 @@ export const DashboardRoutes: Routes = [
     canActivate: [AuthGuard]
   },
   {
-    path: 'dashboards/:dashboardToken/widgets/create',
-    component: ProjectWidgetWizardComponent,
+    path: 'dashboards/:dashboardToken/:gridId',
+    component: DashboardDetailComponent,
+    canActivate: [AuthGuard]
+  },
+  {
+    path: 'dashboards/:dashboardToken/:gridId/widgets/create',
+    component: AddWidgetToProjectWizardComponent,
     canActivate: [AuthGuard]
   }
 ];

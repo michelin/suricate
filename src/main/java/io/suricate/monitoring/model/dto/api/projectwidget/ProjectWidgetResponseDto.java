@@ -1,6 +1,6 @@
 /*
  *  /*
- *  * Copyright 2012-2018 the original author or authors.
+ *  * Copyright 2012-2021 the original author or authors.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@
 package io.suricate.monitoring.model.dto.api.projectwidget;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
+import io.suricate.monitoring.model.dto.api.projectgrid.ProjectGridResponseDto;
 import io.suricate.monitoring.model.enums.WidgetStateEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -111,4 +112,10 @@ public class ProjectWidgetResponseDto extends AbstractDto {
      */
     @ApiModelProperty(value = "The related widget id")
     private Long widgetId;
+
+    /**
+     * The project grid id
+     */
+    @ApiModelProperty(value = "The project grid id")
+    private Long gridId;
 }

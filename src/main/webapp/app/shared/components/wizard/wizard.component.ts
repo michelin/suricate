@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,25 +14,24 @@
  * limitations under the License.
  */
 
-import { Component, ElementRef, Injector, Input, OnChanges, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, Injector, OnInit, ViewChild } from '@angular/core';
 import { HeaderConfiguration } from '../../models/frontend/header/header-configuration';
 import { FormGroup } from '@angular/forms';
 import { WizardConfiguration } from '../../models/frontend/wizard/wizard-configuration';
 import { FormService } from '../../services/frontend/form/form.service';
 import { FormStep } from '../../models/frontend/form/form-step';
 import { MaterialIconRecords } from '../../records/material-icon.record';
-import { MatStep, MatStepper } from '@angular/material/stepper';
+import { MatStepper } from '@angular/material/stepper';
 import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
 import { ActivatedRoute, Router } from '@angular/router';
 import { StepperSelectionEvent } from '@angular/cdk/stepper';
 import { ValueChangedEvent } from '../../models/frontend/form/value-changed-event';
 import { FormField } from '../../models/frontend/form/form-field';
-import { takeUntil, takeWhile } from 'rxjs/operators';
 import { WidgetConfigurationFormFieldsService } from '../../services/frontend/form-fields/widget-configuration-form-fields/widget-configuration-form-fields.service';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { ProjectWidgetFormStepsService } from '../../services/frontend/form-steps/project-widget-form-steps/project-widget-form-steps.service';
-import { WidgetConfiguration } from '../../models/backend/widget-configuration/widget-configuration';
-import { Subject } from 'rxjs';
+import { HttpProjectService } from '../../services/backend/http-project/http-project.service';
+import { HttpProjectWidgetService } from '../../services/backend/http-project-widget/http-project-widget.service';
 
 /**
  * Generic component used to display wizards
@@ -54,6 +53,11 @@ export class WizardComponent implements OnInit {
   private readonly formService: FormService;
 
   /**
+   * The HTTP project widgets service
+   */
+  public readonly httpProjectWidgetsService: HttpProjectWidgetService;
+
+  /**
    * Frontend service used to help on the widget configuration form fields creation
    */
   private readonly widgetConfigurationFormFieldsService: WidgetConfigurationFormFieldsService;
@@ -67,6 +71,16 @@ export class WizardComponent implements OnInit {
    * Angular service used to manage application routes
    */
   protected readonly router: Router;
+
+  /**
+   * The token of the dashboard
+   */
+  public dashboardToken: string;
+
+  /**
+   * The id of the dashboard grid
+   */
+  public gridId: number;
 
   /**
    * The configuration of the header
@@ -108,12 +122,16 @@ export class WizardComponent implements OnInit {
     this.widgetConfigurationFormFieldsService = injector.get(WidgetConfigurationFormFieldsService);
     this.activatedRoute = injector.get(ActivatedRoute);
     this.router = injector.get(Router);
+    this.httpProjectWidgetsService = injector.get(HttpProjectWidgetService);
   }
 
   /**
    * Called when the component is init
    */
   public ngOnInit(): void {
+    this.dashboardToken = this.activatedRoute.snapshot.params['dashboardToken'];
+    this.gridId = this.activatedRoute.snapshot.params['gridId'];
+
     this.initWizardButtons();
     this.stepperFormGroup = this.formService.generateFormGroupForSteps(this.wizardConfiguration.steps);
     this.currentStep = this.wizardConfiguration.steps[0];
@@ -156,6 +174,11 @@ export class WizardComponent implements OnInit {
    * @param stepperSelectionEvent The step change event
    */
   public onStepChanged(stepperSelectionEvent: StepperSelectionEvent): void {
+    // When backing to previous step, mark current step as not interacted to avoid input error issues
+    if (stepperSelectionEvent.previouslySelectedIndex > stepperSelectionEvent.selectedIndex) {
+      stepperSelectionEvent.previouslySelectedStep.interacted = false;
+    }
+
     this.currentStep = this.wizardConfiguration.steps[stepperSelectionEvent.selectedIndex];
 
     if (this.currentStep && this.currentStep.asyncFields) {
@@ -185,7 +208,7 @@ export class WizardComponent implements OnInit {
    * @param event The values retrieved from the child component event emitter
    */
   public displayCategorySettings(event: MatSlideToggleChange): void {
-    this.widgetConfigurationFormFieldsService.generateCategorySettingsFormFields(
+    this.widgetConfigurationFormFieldsService.addOrRemoveCategoryParametersFormFields(
       this.currentStep.category.categoryParameters,
       event.checked,
       this.stepperFormGroup.controls[this.currentStep.key] as FormGroup,

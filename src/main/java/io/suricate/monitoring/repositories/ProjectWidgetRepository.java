@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ public interface ProjectWidgetRepository extends JpaRepository<ProjectWidget, Lo
      * @return The widget instance
      */
     @NotNull
-    @EntityGraph(attributePaths = {"project.users", "widget.widgetParams"})
+    @EntityGraph(attributePaths = {"projectGrid.project.users.roles", "widget.widgetParams.possibleValuesMap"})
     Optional<ProjectWidget> findById(@NotNull Long projectWidgetId);
 
     /**
@@ -107,12 +107,4 @@ public interface ProjectWidgetRepository extends JpaRepository<ProjectWidget, Lo
         "log = :log " +
         "WHERE id = :id")
     void updateLastExecutionDateAndStateAndLog(@Param("lastExecutionDate") Date date, @Param("log") String log, @Param("id") Long id, @Param("state") WidgetStateEnum widgetState);
-
-    /**
-     * Method used to delete a widget instance by it's id and the project id
-     *
-     * @param projectId the project is
-     * @param id        the widget instance id
-     */
-    void deleteByProjectIdAndId(Long projectId, Long id);
 }

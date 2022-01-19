@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2018 the original author or authors.
+ * Copyright 2012-2021 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,6 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { CommunicationDialogComponent } from './communication-dialog.component';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CommunicationDialogConfiguration } from '../../models/frontend/dialog/communication-dialog-configuration';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { HttpClient } from '@angular/common/http';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MockModule } from '../../../mock/mock.module';
 
 describe('CommunicationDialogComponent', () => {
@@ -34,7 +30,7 @@ describe('CommunicationDialogComponent', () => {
       TestBed.configureTestingModule({
         imports: [MockModule],
         declarations: [CommunicationDialogComponent],
-        providers: [{ provide: MAT_DIALOG_DATA, useValue: { data: buildCommunicationDialogConfiguration() } }]
+        providers: [{ provide: MAT_DIALOG_DATA, useValue: buildCommunicationDialogConfiguration() }]
       }).compileComponents();
 
       fixture = TestBed.createComponent(CommunicationDialogComponent);
