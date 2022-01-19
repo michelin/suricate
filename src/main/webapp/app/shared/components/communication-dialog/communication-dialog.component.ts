@@ -29,8 +29,6 @@ import { CommunicationDialogConfiguration } from '../../models/frontend/dialog/c
 export class CommunicationDialogComponent implements OnInit {
   /**
    * The configuration of the confirmation dialog
-   * @type {CommunicationDialogConfiguration}
-   * @protected
    */
   public configuration: CommunicationDialogConfiguration;
 

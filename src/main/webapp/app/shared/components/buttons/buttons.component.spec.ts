@@ -16,6 +16,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ButtonsComponent } from './buttons.component';
+import { MockModule } from '../../../mock/mock.module';
 
 describe('ButtonsComponent', () => {
   let component: ButtonsComponent<unknown>;
@@ -24,6 +25,7 @@ describe('ButtonsComponent', () => {
   beforeEach(
     waitForAsync(() => {
       TestBed.configureTestingModule({
+        imports: [MockModule],
         declarations: [ButtonsComponent]
       }).compileComponents();
 

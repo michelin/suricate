@@ -36,7 +36,7 @@ describe('ConfirmDialogComponent', () => {
         declarations: [ConfirmDialogComponent],
         providers: [
           { provide: MatDialogRef, useValue: {} },
-          { provide: MAT_DIALOG_DATA, useValue: { data: buildCommunicationDialogConfiguration() } }
+          { provide: MAT_DIALOG_DATA, useValue: buildCommunicationDialogConfiguration() }
         ]
       }).compileComponents();
 
