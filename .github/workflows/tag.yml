@@ -38,7 +38,7 @@ jobs:
           git config --global user.email "loic.greffier_ext@michelin.com"
           git config --global user.name "GitHub CI/CD"
           git add package.json
-          git commit -m "Update Front-End with new release version ${{ github.event.inputs.release_version }}"
+          git commit -S -m "Update Front-End with new release version ${{ github.event.inputs.release_version }}"
           git push
 
       - name: Release Back-End
