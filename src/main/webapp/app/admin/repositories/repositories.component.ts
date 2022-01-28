@@ -187,7 +187,9 @@ export class RepositoriesComponent extends ListComponent<Repository> {
    * @param repository The repository to reload
    */
   private reloadRepository(repository: Repository): void {
+    this.disableAllButtons = true;
     this.httpRepositoryService.reload(repository.id).subscribe(() => {
+      this.disableAllButtons = false;
       this.toastService.sendMessage('repository.synchronize.success', ToastTypeEnum.SUCCESS);
       super.refreshList();
     });
