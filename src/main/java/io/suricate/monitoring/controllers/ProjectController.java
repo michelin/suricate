@@ -18,8 +18,11 @@
 
 package io.suricate.monitoring.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.suricate.monitoring.configuration.swagger.ApiPageable;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
+import io.suricate.monitoring.model.dto.api.project.ImportProjectRequestDto;
 import io.suricate.monitoring.model.dto.api.project.ProjectRequestDto;
 import io.suricate.monitoring.model.dto.api.project.ProjectResponseDto;
 import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetPositionRequestDto;
@@ -44,6 +47,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -57,9 +61,11 @@ import javax.annotation.security.PermitAll;
 import java.io.IOException;
 import java.net.URI;
 import java.security.Principal;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static io.suricate.monitoring.utils.exceptions.constants.ErrorMessage.USER_NOT_ALLOWED_PROJECT;
 
@@ -117,7 +123,7 @@ public class ProjectController {
      * @param projectGridService        The project grid service
      * @param userService               The user service
      * @param projectMapper             The project mapper
-     * @param projectMapper             The project grid mapper
+     * @param projectGridMapper         The project grid mapper
      * @param userMapper                The user mapper
      * @param dashboardWebSocketService The dashboard websocket service
      */
@@ -158,7 +164,7 @@ public class ProjectController {
     public Page<ProjectResponseDto> getAll(@ApiParam(name = "search", value = "Search keyword")
                                            @RequestParam(value = "search", required = false) String search,
                                            Pageable pageable) {
-        return this.projectService.getAll(search, pageable).map(this.projectMapper::toProjectDTONoAsset);
+        return projectService.getAll(search, pageable).map(projectMapper::toProjectDTONoAsset);
     }
 
     /**
@@ -180,13 +186,13 @@ public class ProjectController {
     public ResponseEntity<ProjectResponseDto> createProject(@ApiIgnore Principal principal,
                                                             @ApiParam(name = "projectRequestDto", value = "The project information", required = true)
                                                             @RequestBody ProjectRequestDto projectRequestDto) {
-        Optional<User> userOptional = this.userService.getOneByUsername(principal.getName());
+        Optional<User> userOptional = userService.getOneByUsername(principal.getName());
         if (!userOptional.isPresent()) {
             throw new ObjectNotFoundException(User.class, principal.getName());
         }
 
-        Project project = this.projectService.createProject(userOptional.get(),
-                this.projectMapper.toProjectEntity(projectRequestDto));
+        Project project = projectService.createProject(userOptional.get(),
+                projectMapper.toProjectEntity(projectRequestDto));
 
         project.getGrids().add(projectGridService.create(projectGridMapper.toProjectGridEntity(project)));
 
@@ -199,7 +205,7 @@ public class ProjectController {
         return ResponseEntity
             .created(resourceLocation)
             .contentType(MediaType.APPLICATION_JSON)
-            .body(this.projectMapper.toProjectDTO(project));
+            .body(projectMapper.toProjectDTO(project));
     }
 
     /**
@@ -219,7 +225,7 @@ public class ProjectController {
     @PermitAll
     public ResponseEntity<ProjectResponseDto> getOneByToken(@ApiParam(name = "projectToken", value = "The project token", required = true)
                                                             @PathVariable("projectToken") String projectToken) {
-        Optional<Project> projectOptional = this.projectService.getOneByToken(projectToken);
+        Optional<Project> projectOptional = projectService.getOneByToken(projectToken);
 
         if (!projectOptional.isPresent()) {
             throw new ObjectNotFoundException(Project.class, projectToken);
@@ -228,7 +234,7 @@ public class ProjectController {
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(this.projectMapper.toProjectDTO(projectOptional.get()));
+            .body(projectMapper.toProjectDTO(projectOptional.get()));
     }
 
     /**
@@ -253,20 +259,93 @@ public class ProjectController {
                                               @PathVariable("projectToken") String projectToken,
                                               @ApiParam(name = "projectResponseDto", value = "The project information", required = true)
                                               @RequestBody ProjectRequestDto projectRequestDto) {
-        Optional<Project> projectOptional = this.projectService.getOneByToken(projectToken);
+        Optional<Project> projectOptional = projectService.getOneByToken(projectToken);
         if (!projectOptional.isPresent()) {
             throw new ObjectNotFoundException(Project.class, projectToken);
         }
 
         Project project = projectOptional.get();
-        if (!this.projectService.isConnectedUserCanAccessToProject(project, authentication.getUserAuthentication())) {
+        if (!projectService.isConnectedUserCanAccessToProject(project, authentication.getUserAuthentication())) {
             throw new ApiException(USER_NOT_ALLOWED_PROJECT, ApiErrorEnum.NOT_AUTHORIZED);
         }
 
-        this.projectService.updateProject(project, projectRequestDto.getName(), projectRequestDto.getWidgetHeight(),
+        projectService.updateProject(project, projectRequestDto.getName(), projectRequestDto.getWidgetHeight(),
             projectRequestDto.getMaxColumn(), projectRequestDto.getCssStyle());
 
         return ResponseEntity.noContent().build();
+    }
+
+    /**
+     * Export a project by id
+     *
+     * @param projectToken The id of the project
+     * @return The project
+     */
+    @ApiOperation(value = "Export the project information by token", response = ProjectResponseDto.class, nickname = "exportProject")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok", response = String.class),
+            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
+            @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class)
+    })
+    @GetMapping(value = "/v1/projects/{projectToken}/export")
+    @PermitAll
+    public ResponseEntity<ProjectResponseDto> exportProject(@ApiParam(name = "projectToken", value = "The project token", required = true)
+                                                @PathVariable("projectToken") String projectToken) {
+        Optional<Project> projectOptional = projectService.getOneByToken(projectToken);
+
+        if (!projectOptional.isPresent()) {
+            throw new ObjectNotFoundException(Project.class, projectToken);
+        }
+
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(projectMapper.toProjectExportDTO(projectOptional.get()));
+    }
+
+    /**
+     * Import a new project/dashboard for a user
+     *
+     * @param principal         The connected user
+     * @param importProjectRequestDto The project to import
+     * @return The saved project
+     */
+    @ApiOperation(value = "Import a new project for the current user", response = ProjectResponseDto.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok", response = ProjectResponseDto.class),
+            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
+            @ApiResponse(code = 404, message = "Current user not found", response = ApiErrorDto.class)
+    })
+    @PostMapping(value = "/v1/projects/import")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<ProjectResponseDto> importProject(@ApiIgnore Principal principal,
+                                                            @ApiParam(name = "projectRequestDto", value = "The project information", required = true)
+                                                            @RequestBody ImportProjectRequestDto importProjectRequestDto) {
+        Optional<User> userOptional = userService.getOneByUsername(principal.getName());
+        if (!userOptional.isPresent()) {
+            throw new ObjectNotFoundException(User.class, principal.getName());
+        }
+
+        Project project = projectService.createProject(userOptional.get(),
+                projectMapper.importProjectToProjectEntity(importProjectRequestDto));
+
+        projectGridService.createAll(importProjectRequestDto.getGrids()
+                .stream()
+                .map(gridRequestDto -> projectGridMapper.toProjectGridEntity(gridRequestDto, project))
+                .collect(Collectors.toList()));
+
+        URI resourceLocation = ServletUriComponentsBuilder
+                .fromCurrentContextPath()
+                .path("/api/projects/" + project.getToken())
+                .build()
+                .toUri();
+
+        return ResponseEntity
+                .created(resourceLocation)
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(projectMapper.toProjectDTO(project));
     }
 
     /**
@@ -288,18 +367,18 @@ public class ProjectController {
                                                         @PathVariable("projectToken") String projectToken,
                                                         @ApiParam(name = "screenshot", value = "The screenshot to insert", required = true)
                                                         @RequestParam MultipartFile screenshot) {
-        Optional<Project> projectOptional = this.projectService.getOneByToken(projectToken);
+        Optional<Project> projectOptional = projectService.getOneByToken(projectToken);
         if (!projectOptional.isPresent()) {
             throw new ObjectNotFoundException(Project.class, projectToken);
         }
 
         Project project = projectOptional.get();
-        if (!this.projectService.isConnectedUserCanAccessToProject(project, authentication.getUserAuthentication())) {
+        if (!projectService.isConnectedUserCanAccessToProject(project, authentication.getUserAuthentication())) {
             throw new ApiException(USER_NOT_ALLOWED_PROJECT, ApiErrorEnum.NOT_AUTHORIZED);
         }
 
         try {
-            this.projectService.addOrUpdateScreenshot(project, screenshot);
+            projectService.addOrUpdateScreenshot(project, screenshot);
         } catch (IOException e) {
             throw new InvalidFileException(screenshot.getOriginalFilename(), Project.class, project.getId());
         }
@@ -363,17 +442,17 @@ public class ProjectController {
                                                                        @PathVariable("projectToken") String projectToken,
                                                                        @ApiParam(name = "projectWidgetPositionRequestDtos", value = "The list of the new positions", required = true)
                                                                        @RequestBody List<ProjectWidgetPositionRequestDto> projectWidgetPositionRequestDtos) {
-        Optional<Project> projectOptional = this.projectService.getOneByToken(projectToken);
+        Optional<Project> projectOptional = projectService.getOneByToken(projectToken);
         if (!projectOptional.isPresent()) {
             throw new ObjectNotFoundException(Project.class, projectToken);
         }
 
         Project project = projectOptional.get();
-        if (!this.projectService.isConnectedUserCanAccessToProject(project, authentication.getUserAuthentication())) {
+        if (!projectService.isConnectedUserCanAccessToProject(project, authentication.getUserAuthentication())) {
             throw new ApiException(USER_NOT_ALLOWED_PROJECT, ApiErrorEnum.NOT_AUTHORIZED);
         }
 
-        this.projectWidgetService.updateWidgetPositionByProject(projectOptional.get(), projectWidgetPositionRequestDtos);
+        projectWidgetService.updateWidgetPositionByProject(projectOptional.get(), projectWidgetPositionRequestDtos);
         return ResponseEntity.noContent().build();
     }
 
@@ -392,7 +471,7 @@ public class ProjectController {
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<List<UserResponseDto>> getProjectUsers(@ApiParam(name = "projectToken", value = "The project token", required = true)
                                                                  @PathVariable("projectToken") String projectToken) {
-        Optional<Project> projectOptional = this.projectService.getOneByToken(projectToken);
+        Optional<Project> projectOptional = projectService.getOneByToken(projectToken);
         if (!projectOptional.isPresent()) {
             throw new ObjectNotFoundException(Project.class, projectToken);
         }
@@ -400,7 +479,7 @@ public class ProjectController {
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(this.userMapper.toUsersDTOs(projectOptional.get().getUsers()));
+            .body(userMapper.toUsersDTOs(projectOptional.get().getUsers()));
     }
 
     /**
@@ -427,23 +506,23 @@ public class ProjectController {
                                                  @ApiParam(name = "usernameMap", value = "A map with the username", required = true)
                                                  @RequestBody Map<String, String> usernameMap) {
 
-        Optional<Project> projectOptional = this.projectService.getOneByToken(projectToken);
+        Optional<Project> projectOptional = projectService.getOneByToken(projectToken);
 
         if (!projectOptional.isPresent()) {
             throw new ObjectNotFoundException(Project.class, projectToken);
         }
 
         Project project = projectOptional.get();
-        if (!this.projectService.isConnectedUserCanAccessToProject(project, authentication.getUserAuthentication())) {
+        if (!projectService.isConnectedUserCanAccessToProject(project, authentication.getUserAuthentication())) {
             throw new ApiException(USER_NOT_ALLOWED_PROJECT, ApiErrorEnum.NOT_AUTHORIZED);
         }
 
-        Optional<User> userOptional = this.userService.getOneByUsername(usernameMap.get("username"));
+        Optional<User> userOptional = userService.getOneByUsername(usernameMap.get("username"));
         if (!userOptional.isPresent()) {
             throw new ObjectNotFoundException(User.class, usernameMap.get("username"));
         }
 
-        this.projectService.addUserToProject(userOptional.get(), projectOptional.get());
+        projectService.addUserToProject(userOptional.get(), projectOptional.get());
         return ResponseEntity.ok().build();
     }
 
@@ -470,22 +549,22 @@ public class ProjectController {
                                                     @PathVariable("projectToken") String projectToken,
                                                     @ApiParam(name = "userId", value = "The user id", required = true)
                                                     @PathVariable("userId") Long userId) {
-        Optional<Project> projectOptional = this.projectService.getOneByToken(projectToken);
+        Optional<Project> projectOptional = projectService.getOneByToken(projectToken);
         if (!projectOptional.isPresent()) {
             throw new ObjectNotFoundException(Project.class, projectToken);
         }
 
         Project project = projectOptional.get();
-        if (!this.projectService.isConnectedUserCanAccessToProject(project, authentication.getUserAuthentication())) {
+        if (!projectService.isConnectedUserCanAccessToProject(project, authentication.getUserAuthentication())) {
             throw new ApiException(USER_NOT_ALLOWED_PROJECT, ApiErrorEnum.NOT_AUTHORIZED);
         }
 
-        Optional<User> userOptional = this.userService.getOne(userId);
+        Optional<User> userOptional = userService.getOne(userId);
         if (!userOptional.isPresent()) {
             throw new ObjectNotFoundException(User.class, userId);
         }
 
-        this.projectService.deleteUserFromProject(userOptional.get(), projectOptional.get());
+        projectService.deleteUserFromProject(userOptional.get(), projectOptional.get());
         return ResponseEntity.noContent().build();
     }
 
@@ -504,7 +583,7 @@ public class ProjectController {
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<List<WebsocketClient>> getProjectWebsocketClients(@ApiParam(name = "projectToken", value = "The project token", required = true)
                                                                             @PathVariable("projectToken") String projectToken) {
-        Optional<Project> projectOptional = this.projectService.getOneByToken(projectToken);
+        Optional<Project> projectOptional = projectService.getOneByToken(projectToken);
         if (!projectOptional.isPresent()) {
             throw new ObjectNotFoundException(Project.class, projectToken);
         }
@@ -512,7 +591,7 @@ public class ProjectController {
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(this.dashboardWebSocketService.getWebsocketClientsByProjectToken(projectToken));
+            .body(dashboardWebSocketService.getWebsocketClientsByProjectToken(projectToken));
     }
 
     /**
@@ -532,7 +611,7 @@ public class ProjectController {
     @GetMapping(value = "/v1/projects/currentUser")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<List<ProjectResponseDto>> getAllForCurrentUser(@ApiIgnore Principal principal) {
-        Optional<User> userOptional = this.userService.getOneByUsername(principal.getName());
+        Optional<User> userOptional = userService.getOneByUsername(principal.getName());
         if (!userOptional.isPresent()) {
             throw new ObjectNotFoundException(User.class, principal.getName());
         }
@@ -540,6 +619,6 @@ public class ProjectController {
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(this.projectMapper.toProjectsDTOs(this.projectService.getAllByUser(userOptional.get())));
+            .body(projectMapper.toProjectsDTOs(projectService.getAllByUser(userOptional.get())));
     }
 }

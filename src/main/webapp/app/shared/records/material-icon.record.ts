@@ -35,6 +35,8 @@ export const MaterialIconRecords: Record<IconEnum, string> = {
   [IconEnum.EDIT]: 'edit',
   [IconEnum.EMAIL]: 'email',
   [IconEnum.ERROR]: 'error',
+  [IconEnum.FILE_DOWNLOAD]: 'file_download',
+  [IconEnum.FILE_UPLOAD]: 'file_upload',
   [IconEnum.GENERAL_INFORMATION]: 'menu_book',
   [IconEnum.GRID]: 'view_carousel',
   [IconEnum.HEIGHT]: 'height',

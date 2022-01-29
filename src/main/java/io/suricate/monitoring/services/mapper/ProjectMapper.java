@@ -16,6 +16,7 @@
 
 package io.suricate.monitoring.services.mapper;
 
+import io.suricate.monitoring.model.dto.api.project.ImportProjectRequestDto;
 import io.suricate.monitoring.model.dto.api.project.ProjectRequestDto;
 import io.suricate.monitoring.model.dto.api.project.ProjectResponseDto;
 import io.suricate.monitoring.model.entities.Project;
@@ -67,6 +68,20 @@ public abstract class ProjectMapper {
     public abstract ProjectResponseDto toProjectDTO(Project project);
 
     /**
+     * Map a project into a DTO for export
+     *
+     * @param project The project to map
+     * @return The project as DTO
+     */
+    @Named("toProjectExportDTO")
+    @Mapping(target = "gridProperties.maxColumn", source = "project.maxColumn")
+    @Mapping(target = "gridProperties.widgetHeight", source = "project.widgetHeight")
+    @Mapping(target = "gridProperties.cssStyle", source = "project.cssStyle")
+    @Mapping(target = "grids", qualifiedByName = "toProjectGridExportDTO")
+    @Mapping(target = "token", ignore = true)
+    public abstract ProjectResponseDto toProjectExportDTO(Project project);
+
+    /**
      * Map a project into a DTO
      * Ignore the libraries to not load all widgets
      *
@@ -113,4 +128,16 @@ public abstract class ProjectMapper {
      */
     @Named("toProjectEntity")
     public abstract Project toProjectEntity(ProjectRequestDto projectRequestDto);
+
+    /**
+     * Map an import project DTO into a project entity
+     *
+     * @param importProjectRequestDto The import project DTO to map
+     * @return The project as entity
+     */
+    @Named("importProjectToProjectEntity")
+    @Mapping(target = "maxColumn", source = "gridProperties.maxColumn")
+    @Mapping(target = "widgetHeight", source = "gridProperties.widgetHeight")
+    @Mapping(target = "cssStyle", source = "gridProperties.cssStyle")
+    public abstract Project importProjectToProjectEntity(ImportProjectRequestDto importProjectRequestDto);
 }

@@ -31,6 +31,7 @@ import { AbstractHttpService } from '../abstract-http/abstract-http.service';
 import { HttpFilter } from '../../../models/backend/http-filter';
 import { HttpFilterService } from '../http-filter/http-filter.service';
 import { Page } from '../../../models/backend/page';
+import {ImportProjectRequest} from "../../../models/backend/project/import-project-request";
 
 @Injectable({ providedIn: 'root' })
 export class HttpProjectService implements AbstractHttpService<Project | ProjectRequest> {
@@ -102,16 +103,16 @@ export class HttpProjectService implements AbstractHttpService<Project | Project
     return this.httpClient.delete<void>(url);
   }
 
-  /**
-   * Delete a given grid of a project
-   *
-   * @param projectToken The project token
-   * @param gridId The grid id
-   */
-  public deleteGrid(projectToken: string, gridId: number): Observable<void> {
-    const url = `${HttpProjectService.projectsApiEndpoint}/${projectToken}/${gridId}`;
+  public exportDashboard(projectToken: string): Observable<Project> {
+    const url = `${HttpProjectService.projectsApiEndpoint}/${projectToken}/export`;
 
-    return this.httpClient.delete<void>(url);
+    return this.httpClient.get<Project>(url);
+  }
+
+  public importDashboard(importProjectRequest: ImportProjectRequest): Observable<Project> {
+    const url = `${HttpProjectService.projectsApiEndpoint}/import`;
+
+    return this.httpClient.post<Project>(url, importProjectRequest);
   }
 
   /**

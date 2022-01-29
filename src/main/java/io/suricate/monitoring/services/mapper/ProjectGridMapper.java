@@ -22,6 +22,16 @@ public abstract class ProjectGridMapper {
     public abstract ProjectGridResponseDto toProjectGridDTO(ProjectGrid projectGrid);
 
     /**
+     * Map a project grid into a DTO for export
+     *
+     * @param projectGrid The project grid to map
+     * @return The project grid as DTO
+     */
+    @Named("toProjectGridExportDTO")
+    @Mapping(target = "id", ignore = true)
+    public abstract ProjectGridResponseDto toProjectGridExportDTO(ProjectGrid projectGrid);
+
+    /**
      * Map a project grid DTO into a project grid entity
      *
      * @param project The project DTO

@@ -14,6 +14,9 @@ import { ToastService } from '../../../shared/services/frontend/toast/toast.serv
 import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
 import { IconEnum } from '../../../shared/enums/icon.enum';
 import { HeaderConfiguration } from '../../../shared/models/frontend/header/header-configuration';
+import {DataTypeEnum} from "../../../shared/enums/data-type.enum";
+import {ButtonTypeEnum} from "../../../shared/enums/button-type.enum";
+import {ImportProjectRequest} from "../../../shared/models/backend/project/import-project-request";
 
 @Component({
   selector: 'suricate-my-dashboards',
@@ -80,18 +83,39 @@ export class HomeComponent implements OnInit {
    */
   private initHeaderConfiguration(): void {
     this.headerConfiguration = {
-      title: 'dashboard.list.my'
+      title: 'dashboard.list.my',
+      actions: [
+        {
+          icon: IconEnum.FILE_UPLOAD,
+          color: 'primary',
+          variant: 'miniFab',
+          type: ButtonTypeEnum.BUTTON,
+          tooltip: { message: 'dashboard.import' },
+          callback: () => this.openImportDashboardFormSidenav()
+        }
+      ]
     };
   }
 
   /**
    * Display the side nav bar used to create a dashboard
    */
-  public openDashboardFormSidenav(): void {
+  public openCreateDashboardFormSidenav(): void {
     this.sidenavService.openFormSidenav({
       title: 'dashboard.create',
       formFields: this.projectFormFieldsService.generateProjectFormFields(),
       save: (formData: ProjectRequest) => this.saveDashboard(formData)
+    });
+  }
+
+  /**
+   * Display the side nav bar used to import a dashboard
+   */
+  public openImportDashboardFormSidenav(): void {
+    this.sidenavService.openFormSidenav({
+      title: 'dashboard.import',
+      formFields: this.projectFormFieldsService.generateImportProjectFormFields(),
+      save: (formData: ImportProjectRequest) => this.importDashboard(formData)
     });
   }
 
@@ -118,6 +142,16 @@ export class HomeComponent implements OnInit {
       this.toastService.sendMessage('dashboard.add.success', ToastTypeEnum.SUCCESS);
       this.router.navigate(['/dashboards', project.token, project.grids[0].id]);
     });
+  }
+
+  /**
+   * Create a new dashboard
+   *
+   * @param formData The data retrieved from the form
+   */
+  private importDashboard(formData: ImportProjectRequest): void {
+    const importProject: ImportProjectRequest = JSON.parse(atob(ImageUtils.getDataFromBase64URL(formData.importFile)));
+    this.httpProjectService.importDashboard(importProject).subscribe();
   }
 
   /**

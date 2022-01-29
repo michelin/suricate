@@ -84,6 +84,18 @@ public class ProjectGridService {
     /**
      * Persist a given list of project grids
      *
+     * @param projectGrids The grids
+     */
+    @Transactional
+    public List<ProjectGrid> createAll(List<ProjectGrid> projectGrids) {
+        List<ProjectGrid> results = new ArrayList<>();
+        projectGridRepository.saveAll(projectGrids).forEach(results::add);
+        return results;
+    }
+
+    /**
+     * Persist a given list of project grids
+     *
      * @param project The project to update
      * @param projectGridRequestDto The new data as DTO
      */
