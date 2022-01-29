@@ -331,10 +331,10 @@ public class ProjectController {
         Project project = projectService.createProject(userOptional.get(),
                 projectMapper.importProjectToProjectEntity(importProjectRequestDto));
 
-        projectGridService.createAll(importProjectRequestDto.getGrids()
+        project.getGrids().addAll(projectGridService.createAll(importProjectRequestDto.getGrids()
                 .stream()
                 .map(gridRequestDto -> projectGridMapper.toProjectGridEntity(gridRequestDto, project))
-                .collect(Collectors.toList()));
+                .collect(Collectors.toList())));
 
         URI resourceLocation = ServletUriComponentsBuilder
                 .fromCurrentContextPath()

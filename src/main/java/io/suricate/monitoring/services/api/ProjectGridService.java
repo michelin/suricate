@@ -79,6 +79,7 @@ public class ProjectGridService {
     @Transactional
     public ProjectGrid create(ProjectGrid projectGrid) {
         return projectGridRepository.save(projectGrid);
+
     }
 
     /**
@@ -88,9 +89,7 @@ public class ProjectGridService {
      */
     @Transactional
     public List<ProjectGrid> createAll(List<ProjectGrid> projectGrids) {
-        List<ProjectGrid> results = new ArrayList<>();
-        projectGridRepository.saveAll(projectGrids).forEach(results::add);
-        return results;
+        return projectGridRepository.saveAll(projectGrids);
     }
 
     /**

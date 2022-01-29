@@ -77,8 +77,10 @@ public abstract class ProjectMapper {
     @Mapping(target = "gridProperties.maxColumn", source = "project.maxColumn")
     @Mapping(target = "gridProperties.widgetHeight", source = "project.widgetHeight")
     @Mapping(target = "gridProperties.cssStyle", source = "project.cssStyle")
+    @Mapping(target = "image", source = "project.screenshot", qualifiedByName = "toAssetDTO")
     @Mapping(target = "grids", qualifiedByName = "toProjectGridExportDTO")
     @Mapping(target = "token", ignore = true)
+    @Mapping(target = "image.size", ignore = true)
     public abstract ProjectResponseDto toProjectExportDTO(Project project);
 
     /**

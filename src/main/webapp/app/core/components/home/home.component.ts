@@ -151,7 +151,17 @@ export class HomeComponent implements OnInit {
    */
   private importDashboard(formData: ImportProjectRequest): void {
     const importProject: ImportProjectRequest = JSON.parse(atob(ImageUtils.getDataFromBase64URL(formData.importFile)));
-    this.httpProjectService.importDashboard(importProject).subscribe();
+    this.httpProjectService.importDashboard(importProject).subscribe((project: Project) => {
+      if (importProject.image) {
+        const blob: Blob = FileUtils.base64ToBlob(importProject.image.content, importProject.image.contentType);
+        const file: File = FileUtils.convertBlobToFile(blob, `${project.token}.${importProject.image.contentType.split('/')[1]}`, new Date());
+
+        this.httpProjectService.addOrUpdateProjectScreenshot(project.token, file).subscribe();
+      }
+
+      this.toastService.sendMessage('dashboard.add.success', ToastTypeEnum.SUCCESS);
+      this.router.navigate(['/dashboards', project.token, project.grids[0].id]);
+    });
   }
 
   /**
