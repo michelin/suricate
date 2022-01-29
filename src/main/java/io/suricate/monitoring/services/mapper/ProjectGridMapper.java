@@ -10,7 +10,12 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@Mapper(componentModel = "spring")
+@Mapper(
+        componentModel = "spring",
+        uses = {
+                ProjectWidgetMapper.class
+        }
+)
 public abstract class ProjectGridMapper {
     /**
      * Map a project grid into a DTO
@@ -19,6 +24,7 @@ public abstract class ProjectGridMapper {
      * @return The project grid as DTO
      */
     @Named("toProjectGridDTO")
+    @Mapping(target = "widgets", ignore = true)
     public abstract ProjectGridResponseDto toProjectGridDTO(ProjectGrid projectGrid);
 
     /**
@@ -29,6 +35,7 @@ public abstract class ProjectGridMapper {
      */
     @Named("toProjectGridExportDTO")
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "widgets", qualifiedByName = "toProjectWidgetExportDTO")
     public abstract ProjectGridResponseDto toProjectGridExportDTO(ProjectGrid projectGrid);
 
     /**

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {Component, ElementRef, OnDestroy, OnInit, PipeTransform, ViewChild} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { DashboardService } from '../../services/dashboard/dashboard.service';
@@ -48,6 +48,7 @@ import { HttpProjectWidgetService } from '../../../shared/services/backend/http-
 import { ProjectGridRequest } from '../../../shared/models/backend/project-grid/project-grid-request';
 import { ProjectGrid } from '../../../shared/models/backend/project-grid/project-grid';
 import { GridRequest } from '../../../shared/models/backend/project-grid/grid-request';
+import {JsonPipe} from "@angular/common";
 
 /**
  * Component used to display a specific dashboard
@@ -157,7 +158,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
     private readonly toastService: ToastService,
     private readonly dialogService: DialogService,
     private readonly websocketService: WebsocketService,
-    private readonly projectFormFieldsService: ProjectFormFieldsService
+    private readonly projectFormFieldsService: ProjectFormFieldsService,
   ) {}
 
   /**
@@ -363,7 +364,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
   private exportDashboard(): void {
     this.httpProjectService.exportDashboard(this.project.token).subscribe((exportProject: Project) => {
       const element = document.createElement('a');
-      element.setAttribute('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(exportProject)));
+      element.setAttribute('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(exportProject, null, 2)));
       element.setAttribute('download', exportProject.name);
       element.style.display = 'none';
       document.body.appendChild(element);

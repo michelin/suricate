@@ -83,6 +83,26 @@ public abstract class ProjectWidgetMapper {
     public abstract ProjectWidgetResponseDto toProjectWidgetDTO(ProjectWidget projectWidget);
 
     /**
+     * Map a project widget into a DTO for export
+     *
+     * @param projectWidget The project widget to map
+     * @return The project widget as DTO
+     */
+    @Named("toProjectWidgetExportDTO")
+    @Mapping(target = "widgetTechnicalName", source = "projectWidget.widget.technicalName")
+    @Mapping(target = "backendConfig", expression = "java(projectWidgetService.decryptSecretParamsIfNeeded(projectWidget.getWidget(), projectWidget.getBackendConfig()))")
+    @Mapping(target = "widgetPosition.gridColumn", source = "projectWidget.gridColumn")
+    @Mapping(target = "widgetPosition.gridRow", source = "projectWidget.gridRow")
+    @Mapping(target = "widgetPosition.height", source = "projectWidget.height")
+    @Mapping(target = "widgetPosition.width", source = "projectWidget.width")
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "data", ignore = true)
+    @Mapping(target = "lastExecutionDate", ignore = true)
+    @Mapping(target = "lastSuccessDate", ignore = true)
+    @Mapping(target = "state", ignore = true)
+    public abstract ProjectWidgetResponseDto toProjectWidgetExportDTO(ProjectWidget projectWidget);
+
+    /**
      * Map a list of project widgets into a list of DTOs
      *
      * @param projectWidgets The list of project widgets to map
