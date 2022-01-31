@@ -28,10 +28,4 @@ public class ProjectGridResponseDto extends AbstractDto {
      */
     @ApiModelProperty(value = "The time")
     private Integer time;
-
-    /**
-     * The grid widgets
-     */
-    @ApiModelProperty(value = "The grid widgets")
-    private List<ProjectWidgetResponseDto> widgets = new ArrayList<>();
 }

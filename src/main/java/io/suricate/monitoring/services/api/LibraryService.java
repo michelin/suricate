@@ -17,6 +17,8 @@
 package io.suricate.monitoring.services.api;
 
 import io.suricate.monitoring.model.entities.Library;
+import io.suricate.monitoring.model.entities.Project;
+import io.suricate.monitoring.model.entities.ProjectGrid;
 import io.suricate.monitoring.model.entities.ProjectWidget;
 import io.suricate.monitoring.repositories.LibraryRepository;
 import io.suricate.monitoring.utils.IdUtils;
@@ -25,9 +27,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -59,29 +60,42 @@ public class LibraryService {
     }
 
     /**
-     * Get all libraries of the given widgets
+     * Get all libraries of a project
      *
-     * @param widgetInstances The widgets
+     * @param project The project
      * @return The libraries
      */
-    @LogExecutionTime
-    public List<String> getLibrariesToken(Set<ProjectWidget> widgetInstances) {
-        List<Long> widgetList = widgetInstances
+    @Transactional(readOnly = true)
+    public List<Library> getLibrariesByProject(Project project) {
+        List<Long> widgetIds = project.getGrids()
                 .stream()
+                .map(ProjectGrid::getWidgets)
+                .flatMap(Collection::stream)
                 .map(projectWidget -> projectWidget.getWidget().getId())
                 .distinct()
                 .collect(Collectors.toList());
 
-        if (widgetList.isEmpty()) {
+        if (widgetIds.isEmpty()) {
             return Collections.emptyList();
         }
 
-        return libraryRepository.getLibs(widgetList)
+        return libraryRepository.findDistinctByWidgetsIdIn(widgetIds);
+    }
+
+    /**
+     * Get all library tokens of a project
+     *
+     * @param project The project
+     * @return The library tokens
+     */
+    @Transactional(readOnly = true)
+    public List<String> getLibraryTokensByProject(Project project) {
+        return getLibrariesByProject(project)
                 .stream()
+                .map(Library::getId)
                 .map(IdUtils::encrypt)
                 .collect(Collectors.toList());
     }
-
 
     /**
      * Update a list of libraries

@@ -18,26 +18,21 @@
 
 package io.suricate.monitoring.controllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.suricate.monitoring.configuration.swagger.ApiPageable;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
-import io.suricate.monitoring.model.dto.api.project.ImportProjectRequestDto;
+import io.suricate.monitoring.model.dto.api.project.ImportExportProjectDto;
 import io.suricate.monitoring.model.dto.api.project.ProjectRequestDto;
 import io.suricate.monitoring.model.dto.api.project.ProjectResponseDto;
 import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetPositionRequestDto;
 import io.suricate.monitoring.model.dto.api.user.UserResponseDto;
 import io.suricate.monitoring.model.dto.websocket.WebsocketClient;
-import io.suricate.monitoring.model.entities.Project;
-import io.suricate.monitoring.model.entities.User;
+import io.suricate.monitoring.model.entities.*;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.services.api.ProjectGridService;
 import io.suricate.monitoring.services.api.ProjectService;
 import io.suricate.monitoring.services.api.ProjectWidgetService;
 import io.suricate.monitoring.services.api.UserService;
-import io.suricate.monitoring.services.mapper.ProjectGridMapper;
-import io.suricate.monitoring.services.mapper.ProjectMapper;
-import io.suricate.monitoring.services.mapper.UserMapper;
+import io.suricate.monitoring.services.mapper.*;
 import io.suricate.monitoring.services.websocket.DashboardWebSocketService;
 import io.suricate.monitoring.utils.exceptions.ApiException;
 import io.suricate.monitoring.utils.exceptions.InvalidFileException;
@@ -47,7 +42,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -61,7 +55,6 @@ import javax.annotation.security.PermitAll;
 import java.io.IOException;
 import java.net.URI;
 import java.security.Principal;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -97,19 +90,29 @@ public class ProjectController {
     private final UserService userService;
 
     /**
-     * The mapper that transform domain/dto objects
+     * The project mapper
      */
     private final ProjectMapper projectMapper;
 
     /**
-     * The mapper that transform domain/dto objects
+     * The project grid mapper
      */
     private final ProjectGridMapper projectGridMapper;
+
+    /**
+     * The project widget mapper
+     */
+    private final ProjectWidgetMapper projectWidgetMapper;
 
     /**
      * The user mapper
      */
     private final UserMapper userMapper;
+
+    /**
+     * The asset mapper
+     */
+    private final AssetMapper assetMapper;
 
     /**
      * The dashboard websocket service
@@ -124,7 +127,9 @@ public class ProjectController {
      * @param userService               The user service
      * @param projectMapper             The project mapper
      * @param projectGridMapper         The project grid mapper
+     * @param projectWidgetMapper       The project widget mapper
      * @param userMapper                The user mapper
+     * @param assetMapper               The asset mapper
      * @param dashboardWebSocketService The dashboard websocket service
      */
     @Autowired
@@ -134,7 +139,9 @@ public class ProjectController {
                              final UserService userService,
                              final ProjectMapper projectMapper,
                              final ProjectGridMapper projectGridMapper,
+                             final ProjectWidgetMapper projectWidgetMapper,
                              final UserMapper userMapper,
+                             final AssetMapper assetMapper,
                              final DashboardWebSocketService dashboardWebSocketService) {
         this.projectService = projectService;
         this.projectGridService = projectGridService;
@@ -142,7 +149,9 @@ public class ProjectController {
         this.userService = userService;
         this.projectMapper = projectMapper;
         this.projectGridMapper = projectGridMapper;
+        this.projectWidgetMapper = projectWidgetMapper;
         this.userMapper = userMapper;
+        this.assetMapper = assetMapper;
         this.dashboardWebSocketService = dashboardWebSocketService;
     }
 
@@ -290,7 +299,7 @@ public class ProjectController {
     })
     @GetMapping(value = "/v1/projects/{projectToken}/export")
     @PermitAll
-    public ResponseEntity<ProjectResponseDto> exportProject(@ApiParam(name = "projectToken", value = "The project token", required = true)
+    public ResponseEntity<ImportExportProjectDto> exportProject(@ApiParam(name = "projectToken", value = "The project token", required = true)
                                                 @PathVariable("projectToken") String projectToken) {
         Optional<Project> projectOptional = projectService.getOneByToken(projectToken);
 
@@ -301,14 +310,14 @@ public class ProjectController {
         return ResponseEntity
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(projectMapper.toProjectExportDTO(projectOptional.get()));
+                .body(projectMapper.toExportProjectDTO(projectOptional.get()));
     }
 
     /**
      * Import a new project/dashboard for a user
      *
      * @param principal         The connected user
-     * @param importProjectRequestDto The project to import
+     * @param importExportProjectDto The project to import
      * @return The saved project
      */
     @ApiOperation(value = "Import a new project for the current user", response = ProjectResponseDto.class)
@@ -322,19 +331,30 @@ public class ProjectController {
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ProjectResponseDto> importProject(@ApiIgnore Principal principal,
                                                             @ApiParam(name = "projectRequestDto", value = "The project information", required = true)
-                                                            @RequestBody ImportProjectRequestDto importProjectRequestDto) {
+                                                            @RequestBody ImportExportProjectDto importExportProjectDto) {
         Optional<User> userOptional = userService.getOneByUsername(principal.getName());
         if (!userOptional.isPresent()) {
             throw new ObjectNotFoundException(User.class, principal.getName());
         }
 
         Project project = projectService.createProject(userOptional.get(),
-                projectMapper.importProjectToProjectEntity(importProjectRequestDto));
+                projectMapper.toProjectEntity(importExportProjectDto));
 
-        project.getGrids().addAll(projectGridService.createAll(importProjectRequestDto.getGrids()
-                .stream()
-                .map(gridRequestDto -> projectGridMapper.toProjectGridEntity(gridRequestDto, project))
-                .collect(Collectors.toList())));
+        projectService.addOrUpdateScreenshot(project, importExportProjectDto.getImage().getContent(),
+                importExportProjectDto.getImage().getContentType(), importExportProjectDto.getImage().getSize());
+
+        importExportProjectDto.getGrids().forEach(grid -> {
+            ProjectGrid projectGrid = projectGridService.create(projectGridMapper.toProjectGridEntity(grid, project));
+
+            List<ProjectWidget> projectWidgets = grid.getWidgets()
+                    .stream()
+                    .map(widget -> projectWidgetMapper.toProjectWidgetEntity(widget, projectGrid.getId()))
+                    .map(projectWidgetService::create)
+                    .collect(Collectors.toList());
+
+            projectGrid.getWidgets().addAll(projectWidgets);
+            project.getGrids().add(projectGrid);
+        });
 
         URI resourceLocation = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
@@ -378,7 +398,8 @@ public class ProjectController {
         }
 
         try {
-            projectService.addOrUpdateScreenshot(project, screenshot);
+            projectService.addOrUpdateScreenshot(project, screenshot.getBytes(),
+                screenshot.getContentType(), screenshot.getSize());
         } catch (IOException e) {
             throw new InvalidFileException(screenshot.getOriginalFilename(), Project.class, project.getId());
         }

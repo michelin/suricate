@@ -1,5 +1,6 @@
 package io.suricate.monitoring.services.mapper;
 
+import io.suricate.monitoring.model.dto.api.project.ImportExportProjectDto;
 import io.suricate.monitoring.model.dto.api.projectgrid.ProjectGridRequestDto;
 import io.suricate.monitoring.model.dto.api.projectgrid.ProjectGridResponseDto;
 import io.suricate.monitoring.model.entities.Project;
@@ -24,7 +25,6 @@ public abstract class ProjectGridMapper {
      * @return The project grid as DTO
      */
     @Named("toProjectGridDTO")
-    @Mapping(target = "widgets", ignore = true)
     public abstract ProjectGridResponseDto toProjectGridDTO(ProjectGrid projectGrid);
 
     /**
@@ -33,10 +33,9 @@ public abstract class ProjectGridMapper {
      * @param projectGrid The project grid to map
      * @return The project grid as DTO
      */
-    @Named("toProjectGridExportDTO")
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "widgets", qualifiedByName = "toProjectWidgetExportDTO")
-    public abstract ProjectGridResponseDto toProjectGridExportDTO(ProjectGrid projectGrid);
+    @Named("toExportProjectGridDTO")
+    @Mapping(target = "widgets", qualifiedByName = "toExportProjectWidgetDTO")
+    public abstract ImportExportProjectDto.ImportExportProjectGridDto toExportProjectGridDTO(ProjectGrid projectGrid);
 
     /**
      * Map a project grid DTO into a project grid entity
@@ -61,4 +60,16 @@ public abstract class ProjectGridMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "project", source = "project")
     public abstract ProjectGrid toProjectGridEntity(ProjectGridRequestDto.GridRequestDto projectGridRequestDto, Project project);
+
+    /**
+     * Map a project grid DTO into a project grid entity
+     *
+     * @param importProjectGridRequestDto The imported project grid DTO from json file
+     * @param project The project DTO
+     * @return The project grid as entity
+     */
+    @Named("toProjectGridEntity")
+    @Mapping(target = "project", source = "project")
+    @Mapping(target = "widgets", ignore = true)
+    public abstract ProjectGrid toProjectGridEntity(ImportExportProjectDto.ImportExportProjectGridDto importProjectGridRequestDto, Project project);
 }

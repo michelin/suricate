@@ -223,7 +223,7 @@ public class  ProjectWidgetController {
         }
 
         ProjectWidget projectWidget = this.projectWidgetMapper.toProjectWidgetEntity(projectWidgetRequestDto, gridId);
-        this.projectWidgetService.addWidgetInstanceToProject(projectWidget);
+        this.projectWidgetService.createAndRefreshDashboards(projectWidget);
 
         URI resourceLocation = ServletUriComponentsBuilder
                 .fromCurrentContextPath()

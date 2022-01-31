@@ -19,11 +19,10 @@ package io.suricate.monitoring.services.api;
 import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
 import io.suricate.monitoring.model.entities.Asset;
 import io.suricate.monitoring.model.entities.Project;
-import io.suricate.monitoring.model.entities.ProjectGrid;
 import io.suricate.monitoring.model.entities.User;
 import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.repositories.ProjectRepository;
-import io.suricate.monitoring.services.mapper.ProjectGridMapper;
+import io.suricate.monitoring.services.mapper.AssetMapper;
 import io.suricate.monitoring.services.specifications.ProjectSearchSpecification;
 import io.suricate.monitoring.services.websocket.DashboardWebSocketService;
 import io.suricate.monitoring.utils.SecurityUtils;
@@ -36,15 +35,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.IntStream;
 
 /**
  * Manage the projects
@@ -72,22 +69,30 @@ public class ProjectService {
     private final AssetService assetService;
 
     /**
+     * The asset mapper
+     */
+    private final AssetMapper assetMapper;
+
+    /**
      * Constructor
      *
      * @param stringEncryptor           The string encryptor to inject
      * @param projectRepository         The project repository to inject
      * @param dashboardWebSocketService The dashboard web socket service to inject
      * @param assetService              The asset service
+     * @param assetMapper               The asset mapper
      */
     @Autowired
     public ProjectService(@Qualifier("jasyptStringEncryptor") final StringEncryptor stringEncryptor,
                           final ProjectRepository projectRepository,
                           final DashboardWebSocketService dashboardWebSocketService,
-                          final AssetService assetService) {
+                          final AssetService assetService,
+                          final AssetMapper assetMapper) {
         this.stringEncryptor = stringEncryptor;
         this.projectRepository = projectRepository;
         this.dashboardWebsocketService = dashboardWebSocketService;
         this.assetService = assetService;
+        this.assetMapper = assetMapper;
     }
 
     /**
@@ -126,7 +131,7 @@ public class ProjectService {
     }
 
     /**
-     * Get a project by it's token
+     * Get a project by its token
      *
      * @param token The token to find
      * @return The project
@@ -161,7 +166,6 @@ public class ProjectService {
      * @param newName      the new name
      * @param widgetHeight The new widget height
      * @param maxColumn    The new max column
-     * @param gridNumber   The number grid
      * @param customCSS    The custom CSS style
      */
     @Transactional
@@ -249,14 +253,16 @@ public class ProjectService {
     /**
      * Add or update a screenshot for a project
      *
-     * @param project    The project
-     * @param screenshot The screenshot to add
+     * @param project     The project
+     * @param content     The image content
+     * @param contentType The image content type
+     * @param size        The image size
      */
-    public void addOrUpdateScreenshot(Project project, MultipartFile screenshot) throws IOException {
+    public void addOrUpdateScreenshot(Project project, byte[] content, String contentType, long size) {
         Asset screenshotAsset = new Asset();
-        screenshotAsset.setContent(screenshot.getBytes());
-        screenshotAsset.setContentType(screenshot.getContentType());
-        screenshotAsset.setSize(screenshot.getSize());
+        screenshotAsset.setContent(content);
+        screenshotAsset.setContentType(contentType);
+        screenshotAsset.setSize(size);
 
         if (project.getScreenshot() != null) {
             screenshotAsset.setId(project.getScreenshot().getId());

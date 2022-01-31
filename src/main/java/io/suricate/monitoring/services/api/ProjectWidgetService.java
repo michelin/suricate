@@ -23,10 +23,7 @@ import com.github.mustachejava.MustacheException;
 import com.github.mustachejava.MustacheFactory;
 import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetPositionRequestDto;
 import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
-import io.suricate.monitoring.model.entities.Project;
-import io.suricate.monitoring.model.entities.ProjectWidget;
-import io.suricate.monitoring.model.entities.Widget;
-import io.suricate.monitoring.model.entities.WidgetParam;
+import io.suricate.monitoring.model.entities.*;
 import io.suricate.monitoring.model.enums.DataTypeEnum;
 import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.model.enums.WidgetStateEnum;
@@ -151,24 +148,34 @@ public class ProjectWidgetService {
     }
 
     /**
+     * Persist a given project widget
+     * Encrypt the secret configuration of the widget instance before saving it
+     *
+     * @param projectWidget The project widget
+     */
+    @Transactional
+    public ProjectWidget create(ProjectWidget projectWidget) {
+        projectWidget.setBackendConfig(encryptSecretParamsIfNeeded(projectWidget.getWidget(), projectWidget.getBackendConfig()));
+        return projectWidgetRepository.save(projectWidget);
+    }
+
+    /**
      * Add a new widget instance to a project
      * Encrypt the secret configuration of the widget instance then save it
      *
      * @param widgetInstance The widget instance
      */
     @Transactional
-    public void addWidgetInstanceToProject(ProjectWidget widgetInstance) {
-        widgetInstance.setBackendConfig(
-            encryptSecretParamsIfNeeded(widgetInstance.getWidget(), widgetInstance.getBackendConfig())
-        );
+    public void createAndRefreshDashboards(ProjectWidget projectWidget) {
+        projectWidget.setBackendConfig(encryptSecretParamsIfNeeded(projectWidget.getWidget(), projectWidget.getBackendConfig()));
 
-        projectWidgetRepository.saveAndFlush(widgetInstance);
+        projectWidgetRepository.saveAndFlush(projectWidget);
 
         UpdateEvent updateEvent = UpdateEvent.builder()
                 .type(UpdateType.REFRESH_DASHBOARD)
                 .build();
 
-        dashboardWebsocketService.sendEventToProjectSubscribers(widgetInstance.getProjectGrid().getProject().getToken(), updateEvent);
+        dashboardWebsocketService.sendEventToProjectSubscribers(projectWidget.getProjectGrid().getProject().getToken(), updateEvent);
     }
 
     /**

@@ -33,7 +33,7 @@
   "dashboard.grid.management.progress.bar.form.field": "Display progress bar before next rotation",
   "dashboard.grid.management.rotation.speed.form.field": "Rotation speed for grid",
   "dashboard.grid.management.rotation.speed.form.field.placeholder": "60",
-  "dashboard.import": "Import dashboard",
+  "dashboard.import": "Import a dashboard",
   "dashboard.import.file.label": "JSON file",
   "dashboard.list": "Dashboards",
   "dashboard.list.my": "My dashboards",

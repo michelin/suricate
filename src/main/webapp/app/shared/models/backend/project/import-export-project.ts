@@ -1,15 +1,15 @@
 import {GridProperties} from "./grid-properties";
-import {ProjectGrid} from "../project-grid/project-grid";
 import {Asset} from "../asset/asset";
+import {ImportExportProjectGrid} from "../project-grid/import-export-project-grid";
 
 /**
  * Import project form data class
  */
-export class ImportProjectRequest {
+export class ImportExportProject {
     name: string;
     gridProperties: GridProperties
     displayProgressBar: boolean;
-    grids: ProjectGrid[];
+    grids: ImportExportProjectGrid[];
     image: Asset;
     importFile: string;
 

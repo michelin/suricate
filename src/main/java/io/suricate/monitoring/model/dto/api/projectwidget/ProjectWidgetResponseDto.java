@@ -114,12 +114,6 @@ public class ProjectWidgetResponseDto extends AbstractDto {
     private Long widgetId;
 
     /**
-     * The related widget technical name
-     */
-    @ApiModelProperty(value = "The related widget technical name")
-    private String widgetTechnicalName;
-
-    /**
      * The project grid id
      */
     @ApiModelProperty(value = "The project grid id")

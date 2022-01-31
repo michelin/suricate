@@ -49,6 +49,7 @@ import { ProjectGridRequest } from '../../../shared/models/backend/project-grid/
 import { ProjectGrid } from '../../../shared/models/backend/project-grid/project-grid';
 import { GridRequest } from '../../../shared/models/backend/project-grid/grid-request';
 import {JsonPipe} from "@angular/common";
+import {ImportExportProject} from "../../../shared/models/backend/project/import-export-project";
 
 /**
  * Component used to display a specific dashboard
@@ -362,10 +363,10 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
    * Open the user form sidenav
    */
   private exportDashboard(): void {
-    this.httpProjectService.exportDashboard(this.project.token).subscribe((exportProject: Project) => {
+    this.httpProjectService.exportDashboard(this.project.token).subscribe((exportProject: ImportExportProject) => {
       const element = document.createElement('a');
       element.setAttribute('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(exportProject, null, 2)));
-      element.setAttribute('download', exportProject.name);
+      element.setAttribute('download', `dashboard_${exportProject.name}`);
       element.style.display = 'none';
       document.body.appendChild(element);
       element.click();

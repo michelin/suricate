@@ -16,7 +16,7 @@ import { IconEnum } from '../../../shared/enums/icon.enum';
 import { HeaderConfiguration } from '../../../shared/models/frontend/header/header-configuration';
 import {DataTypeEnum} from "../../../shared/enums/data-type.enum";
 import {ButtonTypeEnum} from "../../../shared/enums/button-type.enum";
-import {ImportProjectRequest} from "../../../shared/models/backend/project/import-project-request";
+import {ImportExportProject} from "../../../shared/models/backend/project/import-export-project";
 
 @Component({
   selector: 'suricate-my-dashboards',
@@ -86,6 +86,14 @@ export class HomeComponent implements OnInit {
       title: 'dashboard.list.my',
       actions: [
         {
+          icon: IconEnum.ADD,
+          color: 'primary',
+          variant: 'miniFab',
+          type: ButtonTypeEnum.BUTTON,
+          tooltip: { message: 'dashboard.create' },
+          callback: () => this.openCreateDashboardFormSidenav()
+        },
+        {
           icon: IconEnum.FILE_UPLOAD,
           color: 'primary',
           variant: 'miniFab',
@@ -115,7 +123,7 @@ export class HomeComponent implements OnInit {
     this.sidenavService.openFormSidenav({
       title: 'dashboard.import',
       formFields: this.projectFormFieldsService.generateImportProjectFormFields(),
-      save: (formData: ImportProjectRequest) => this.importDashboard(formData)
+      save: (formData: ImportExportProject) => this.importDashboard(formData)
     });
   }
 
@@ -149,16 +157,9 @@ export class HomeComponent implements OnInit {
    *
    * @param formData The data retrieved from the form
    */
-  private importDashboard(formData: ImportProjectRequest): void {
-    const importProject: ImportProjectRequest = JSON.parse(atob(ImageUtils.getDataFromBase64URL(formData.importFile)));
+  private importDashboard(formData: ImportExportProject): void {
+    const importProject: ImportExportProject = JSON.parse(atob(ImageUtils.getDataFromBase64URL(formData.importFile)));
     this.httpProjectService.importDashboard(importProject).subscribe((project: Project) => {
-      if (importProject.image) {
-        const blob: Blob = FileUtils.base64ToBlob(importProject.image.content, importProject.image.contentType);
-        const file: File = FileUtils.convertBlobToFile(blob, `${project.token}.${importProject.image.contentType.split('/')[1]}`, new Date());
-
-        this.httpProjectService.addOrUpdateProjectScreenshot(project.token, file).subscribe();
-      }
-
       this.toastService.sendMessage('dashboard.add.success', ToastTypeEnum.SUCCESS);
       this.router.navigate(['/dashboards', project.token, project.grids[0].id]);
     });

@@ -19,11 +19,14 @@
 package io.suricate.monitoring.services.mapper;
 
 import io.suricate.monitoring.model.dto.api.asset.AssetResponseDto;
+import io.suricate.monitoring.model.dto.api.project.ProjectRequestDto;
 import io.suricate.monitoring.model.entities.Asset;
+import io.suricate.monitoring.model.entities.Project;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.springframework.stereotype.Component;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Manage the generation DTO/Model objects for asset class
@@ -31,7 +34,6 @@ import org.springframework.stereotype.Component;
 @Component
 @Mapper(componentModel = "spring")
 public abstract class AssetMapper {
-
     /**
      * Map an asset into an asset DTO
      *
@@ -47,7 +49,7 @@ public abstract class AssetMapper {
      * @param asset The asset to map
      * @return The asset as DTO
      */
-    @Named("toAssetExportDTO")
+    @Named("toExportAssetDTO")
     @Mapping(target = "id", ignore = true)
-    public abstract AssetResponseDto toAssetExportDTO(Asset asset);
+    public abstract AssetResponseDto toExportAssetDTO(Asset asset);
 }

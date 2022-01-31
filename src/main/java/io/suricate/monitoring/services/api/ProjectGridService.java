@@ -79,17 +79,6 @@ public class ProjectGridService {
     @Transactional
     public ProjectGrid create(ProjectGrid projectGrid) {
         return projectGridRepository.save(projectGrid);
-
-    }
-
-    /**
-     * Persist a given list of project grids
-     *
-     * @param projectGrids The grids
-     */
-    @Transactional
-    public List<ProjectGrid> createAll(List<ProjectGrid> projectGrids) {
-        return projectGridRepository.saveAll(projectGrids);
     }
 
     /**

@@ -30,19 +30,14 @@ import java.util.List;
  */
 @Repository
 public interface LibraryRepository extends JpaRepository<Library, Long> {
-
     /**
-     * Method used to get a list of unique library id from widget ids
+     * Find all libraries by given widget ids
      *
-     * @param widgetIds list of widget ids
-     * @return the list of library ids
+     * @param widgetIds The widget ids
+     * @return The libraries
      */
     @Cacheable("lib-by-widget-id")
-    @Query("SELECT DISTINCT l.asset.id " +
-        "FROM Widget w " +
-        "JOIN w.libraries l " +
-        "WHERE w.id in (:ids) ")
-    List<Long> getLibs(@Param("ids") List<Long> widgetIds);
+    List<Library> findDistinctByWidgetsIdIn(List<Long> widgetIds);
 
     /**
      * Find a library by technical name
@@ -51,5 +46,4 @@ public interface LibraryRepository extends JpaRepository<Library, Long> {
      * @return The library
      */
     Library findByTechnicalName(String technicalName);
-
 }
