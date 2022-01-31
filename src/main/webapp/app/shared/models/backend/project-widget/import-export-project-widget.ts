@@ -1,7 +1,7 @@
-import {ProjectWidgetPosition} from "./project-widget-position";
+import { ProjectWidgetPosition } from './project-widget-position';
 
 export interface ImportExportProjectWidget {
-    widgetTechnicalName: string;
-    backendConfig: string;
-    widgetPosition: ProjectWidgetPosition;
+  widgetTechnicalName: string;
+  backendConfig: string;
+  widgetPosition: ProjectWidgetPosition;
 }

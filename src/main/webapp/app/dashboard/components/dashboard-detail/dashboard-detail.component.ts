@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import {Component, ElementRef, OnDestroy, OnInit, PipeTransform, ViewChild} from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { DashboardService } from '../../services/dashboard/dashboard.service';
@@ -48,8 +48,7 @@ import { HttpProjectWidgetService } from '../../../shared/services/backend/http-
 import { ProjectGridRequest } from '../../../shared/models/backend/project-grid/project-grid-request';
 import { ProjectGrid } from '../../../shared/models/backend/project-grid/project-grid';
 import { GridRequest } from '../../../shared/models/backend/project-grid/grid-request';
-import {JsonPipe} from "@angular/common";
-import {ImportExportProject} from "../../../shared/models/backend/project/import-export-project";
+import { ImportExportProject } from '../../../shared/models/backend/project/import-export-project';
 
 /**
  * Component used to display a specific dashboard
@@ -159,7 +158,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
     private readonly toastService: ToastService,
     private readonly dialogService: DialogService,
     private readonly websocketService: WebsocketService,
-    private readonly projectFormFieldsService: ProjectFormFieldsService,
+    private readonly projectFormFieldsService: ProjectFormFieldsService
   ) {}
 
   /**
@@ -299,6 +298,7 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
           color: 'primary',
           variant: 'miniFab',
           tooltip: { message: 'dashboard.export' },
+          hidden: () => this.isReadOnly,
           callback: () => this.exportDashboard()
         },
         {
@@ -357,7 +357,6 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
       onValueChanged: (valueChangedEvent: ValueChangedEvent) => this.onValueChanged(valueChangedEvent)
     });
   }
-
 
   /**
    * Open the user form sidenav

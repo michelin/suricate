@@ -14,9 +14,8 @@ import { ToastService } from '../../../shared/services/frontend/toast/toast.serv
 import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
 import { IconEnum } from '../../../shared/enums/icon.enum';
 import { HeaderConfiguration } from '../../../shared/models/frontend/header/header-configuration';
-import {DataTypeEnum} from "../../../shared/enums/data-type.enum";
-import {ButtonTypeEnum} from "../../../shared/enums/button-type.enum";
-import {ImportExportProject} from "../../../shared/models/backend/project/import-export-project";
+import { ButtonTypeEnum } from '../../../shared/enums/button-type.enum';
+import { ImportExportProject } from '../../../shared/models/backend/project/import-export-project';
 
 @Component({
   selector: 'suricate-my-dashboards',

@@ -24,14 +24,13 @@ import { Project } from '../../../models/backend/project/project';
 import { ProjectWidget } from '../../../models/backend/project-widget/project-widget';
 import { ProjectRequest } from '../../../models/backend/project/project-request';
 import { ProjectWidgetPositionRequest } from '../../../models/backend/project-widget/project-widget-position-request';
-import { ProjectWidgetRequest } from '../../../models/backend/project-widget/project-widget-request';
 import { User } from '../../../models/backend/user/user';
 import { WebsocketClient } from '../../../models/backend/websocket-client';
 import { AbstractHttpService } from '../abstract-http/abstract-http.service';
 import { HttpFilter } from '../../../models/backend/http-filter';
 import { HttpFilterService } from '../http-filter/http-filter.service';
 import { Page } from '../../../models/backend/page';
-import {ImportExportProject} from "../../../models/backend/project/import-export-project";
+import { ImportExportProject } from '../../../models/backend/project/import-export-project';
 
 @Injectable({ providedIn: 'root' })
 export class HttpProjectService implements AbstractHttpService<Project | ProjectRequest> {
@@ -103,12 +102,22 @@ export class HttpProjectService implements AbstractHttpService<Project | Project
     return this.httpClient.delete<void>(url);
   }
 
+  /**
+   * Get all the information to export a dashboard
+   *
+   * @param projectToken The project token
+   */
   public exportDashboard(projectToken: string): Observable<ImportExportProject> {
     const url = `${HttpProjectService.projectsApiEndpoint}/${projectToken}/export`;
 
     return this.httpClient.get<ImportExportProject>(url);
   }
 
+  /**
+   * Import a dashboard from the exported json file
+   *
+   * @param importProjectRequest The dashboard to import
+   */
   public importDashboard(importProjectRequest: ImportExportProject): Observable<Project> {
     const url = `${HttpProjectService.projectsApiEndpoint}/import`;
 
