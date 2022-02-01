@@ -340,8 +340,10 @@ public class ProjectController {
         Project project = projectService.createProject(userOptional.get(),
                 projectMapper.toProjectEntity(importExportProjectDto));
 
-        projectService.addOrUpdateScreenshot(project, importExportProjectDto.getImage().getContent(),
-                importExportProjectDto.getImage().getContentType(), importExportProjectDto.getImage().getSize());
+        if (importExportProjectDto.getImage() != null) {
+            projectService.addOrUpdateScreenshot(project, importExportProjectDto.getImage().getContent(),
+                    importExportProjectDto.getImage().getContentType(), importExportProjectDto.getImage().getSize());
+        }
 
         importExportProjectDto.getGrids().forEach(grid -> {
             ProjectGrid projectGrid = projectGridService.create(projectGridMapper.toProjectGridEntity(grid, project));
