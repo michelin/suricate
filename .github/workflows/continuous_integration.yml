@@ -27,6 +27,12 @@ jobs:
       - name: Test with Maven
         run: mvn -B test
 
+      - name: Publish test report
+        if: always()
+        uses: mikepenz/action-junit-report@v2
+        with:
+          report_paths: 'target/surefire-reports/TEST-*.xml'
+        
       - name: Set up JDK 11 for Sonar
         uses: actions/setup-java@v2
         with:
