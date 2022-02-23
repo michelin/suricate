@@ -15,7 +15,7 @@ services:
     restart: unless-stopped
 
   suricate:
-    image: docker.hub.com/michelin/suricate:${SURICATE_VERSION:-latest}
+    image: michelin/suricate
     environment:
       SPRING_PROFILES_ACTIVE: postgresql
       SPRING_DATASOURCE_URL: 'jdbc:postgresql://postgres:5432/postgres?currentSchema=suricate'

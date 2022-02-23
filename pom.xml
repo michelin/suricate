@@ -431,10 +431,10 @@
                         <image>adoptopenjdk:8-jre-hotspot</image>
                     </from>
                     <to>
-                        <image>docker.hub.com/michelin/${project.artifactId}:${project.version}</image>
+                        <image>docker.io/michelin/suricate:${project.version}</image>
                         <tags>
-                            <tag>latest</tag>
                             <tag>${project.version}</tag>
+                            <tag>latest</tag>
                         </tags>
                     </to>
                 </configuration>

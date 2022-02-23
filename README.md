@@ -5,13 +5,13 @@
 [![Continuous Integration](https://github.com/michelin/suricate/actions/workflows/continuous_integration.yml/badge.svg)](https://github.com/michelin/suricate/actions/workflows/continuous_integration.yml)
 [![GitHub issues](https://img.shields.io/github/issues/michelin/suricate.svg)](https://github.com/michelin/suricate/issues/)
 [![GitHub PR](https://img.shields.io/github/issues-pr/michelin/suricate.svg)](https://github.com/michelin/suricate/pulls/)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-
+[![Docker Pulls](https://img.shields.io/docker/pulls/michelin/suricate?label=suricate%20pulls&logo=Docker)](https://hub.docker.com/r/michelin/suricate/tags)
 [![SonarCloud Bugs](https://sonarcloud.io/api/project_badges/measure?project=michelin_suricate&metric=bugs)](https://sonarcloud.io/summary/overall?id=michelin_suricate)
 [![SonarCloud Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=michelin_suricate&metric=vulnerabilities)](https://sonarcloud.io/summary/overall?id=michelin_suricate)
 [![SonarCloud Code Smells](https://sonarcloud.io/api/project_badges/measure?project=michelin_suricate&metric=code_smells)](https://sonarcloud.io/summary/overall?id=michelin_suricate)
 [![SonarCloud Coverage](https://sonarcloud.io/api/project_badges/measure?project=michelin_suricate&metric=coverage)](https://sonarcloud.io/summary/overall?id=michelin_suricate)
 [![SonarCloud Duplicate Lines](https://sonarcloud.io/api/project_badges/measure?project=michelin_suricate&metric=duplicated_lines_density)](https://sonarcloud.io/summary/overall?id=michelin_suricate)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 This repository contains the source code of the Suricate application.
 
