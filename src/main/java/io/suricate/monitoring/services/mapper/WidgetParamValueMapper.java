@@ -16,6 +16,7 @@
 
 package io.suricate.monitoring.services.mapper;
 
+import io.suricate.monitoring.model.dto.api.export.ImportExportWidgetDto;
 import io.suricate.monitoring.model.dto.api.widget.WidgetParamValueResponseDto;
 import io.suricate.monitoring.model.entities.WidgetParamValue;
 import org.mapstruct.IterableMapping;
@@ -31,7 +32,6 @@ import java.util.Set;
  */
 @Mapper(componentModel = "spring")
 public abstract class WidgetParamValueMapper {
-
     /**
      * Map a widget parameter value into a widget parameter value DTO
      *
@@ -40,6 +40,14 @@ public abstract class WidgetParamValueMapper {
      */
     @Named("toWidgetParameterValueDTO")
     public abstract WidgetParamValueResponseDto toWidgetParameterValueDTO(WidgetParamValue widgetParamValue);
+
+    /**
+     * Map a widget parameter value into an import export widget parameter value DTO
+     * @param widgetParamValue The widget parameter value to map
+     * @return The import export widget parameter value as DTO
+     */
+    @Named("toImportExportWidgetParameterValueDTO")
+    public abstract ImportExportWidgetDto.ImportExportWidgetParamDto.ImportExportWidgetParamValueDto toImportExportWidgetParameterValueDTO(WidgetParamValue widgetParamValue);
 
     /**
      * Map a list of widget parameter values into a list of widget parameter values DTOs

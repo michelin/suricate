@@ -16,14 +16,16 @@
 
 package io.suricate.monitoring.services.api;
 
-import io.suricate.monitoring.model.entities.Library;
-import io.suricate.monitoring.model.entities.Project;
-import io.suricate.monitoring.model.entities.ProjectGrid;
-import io.suricate.monitoring.model.entities.ProjectWidget;
+import io.suricate.monitoring.model.entities.*;
 import io.suricate.monitoring.repositories.LibraryRepository;
+import io.suricate.monitoring.services.specifications.CategorySearchSpecification;
+import io.suricate.monitoring.services.specifications.LibrarySearchSpecification;
 import io.suricate.monitoring.utils.IdUtils;
 import io.suricate.monitoring.utils.logging.LogExecutionTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -36,7 +38,6 @@ import java.util.stream.Collectors;
  */
 @Service
 public class LibraryService {
-
     /**
      * The library repository
      */
@@ -58,6 +59,17 @@ public class LibraryService {
         this.libraryRepository = libraryRepository;
         this.assetService = assetService;
     }
+
+    /**
+     * Get all the libraries
+     *
+     * @return The list of libraries
+     */
+    @Transactional(readOnly = true)
+    public Page<Library> getAll(String search, Pageable pageable) {
+        return libraryRepository.findAll(new LibrarySearchSpecification(search), pageable);
+    }
+
 
     /**
      * Get all libraries of a project
@@ -98,13 +110,12 @@ public class LibraryService {
     }
 
     /**
-     * Update a list of libraries
-     *
-     * @param libraries All the libraries to add
-     * @return All the available libraries
+     * Create or update a list of libraries
+     * @param libraries All the libraries to create/update
+     * @return The created/updated libraries
      */
     @Transactional
-    public List<Library> updateLibraryInDatabase(List<Library> libraries) {
+    public List<Library> createUpdateLibraries(List<Library> libraries) {
         if (libraries == null) {
             return Collections.emptyList();
         }
@@ -128,5 +139,4 @@ public class LibraryService {
 
         return libraryRepository.findAll();
     }
-
 }

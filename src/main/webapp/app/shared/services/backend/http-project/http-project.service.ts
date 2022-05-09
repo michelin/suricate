@@ -30,7 +30,6 @@ import { AbstractHttpService } from '../abstract-http/abstract-http.service';
 import { HttpFilter } from '../../../models/backend/http-filter';
 import { HttpFilterService } from '../http-filter/http-filter.service';
 import { Page } from '../../../models/backend/page';
-import { ImportExportProject } from '../../../models/backend/project/import-export-project';
 
 @Injectable({ providedIn: 'root' })
 export class HttpProjectService implements AbstractHttpService<Project | ProjectRequest> {
@@ -71,7 +70,7 @@ export class HttpProjectService implements AbstractHttpService<Project | Project
   /**
    * Add/Update a dashboard and update the subject list
    *
-   * @param {ProjectRequest} projectRequest The project request
+   * @param projectRequest The project request
    */
   public create(projectRequest: ProjectRequest): Observable<Project> {
     const url = `${HttpProjectService.projectsApiEndpoint}`;
@@ -100,28 +99,6 @@ export class HttpProjectService implements AbstractHttpService<Project | Project
     const url = `${HttpProjectService.projectsApiEndpoint}/${projectToken}`;
 
     return this.httpClient.delete<void>(url);
-  }
-
-  /**
-   * Get all the information to export a dashboard
-   *
-   * @param projectToken The project token
-   */
-  public exportDashboard(projectToken: string): Observable<ImportExportProject> {
-    const url = `${HttpProjectService.projectsApiEndpoint}/${projectToken}/export`;
-
-    return this.httpClient.get<ImportExportProject>(url);
-  }
-
-  /**
-   * Import a dashboard from the exported json file
-   *
-   * @param importProjectRequest The dashboard to import
-   */
-  public importDashboard(importProjectRequest: ImportExportProject): Observable<Project> {
-    const url = `${HttpProjectService.projectsApiEndpoint}/import`;
-
-    return this.httpClient.post<Project>(url, importProjectRequest);
   }
 
   /**

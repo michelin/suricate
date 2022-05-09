@@ -1,6 +1,7 @@
 package io.suricate.monitoring.model.dto.api.repository;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
+import io.suricate.monitoring.model.dto.api.widget.WidgetResponseDto;
 import io.suricate.monitoring.model.enums.RepositoryTypeEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -8,15 +9,17 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Describe a repository
  */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "RepositoryResponse", description = "Describe a widget repository")
+@ApiModel(value = "RepositoryResponseDto", description = "Describe a widget repository")
 public class RepositoryResponseDto extends AbstractDto {
-
     /**
      * The repository id
      */
@@ -66,7 +69,7 @@ public class RepositoryResponseDto extends AbstractDto {
     private RepositoryTypeEnum type;
 
     /**
-     * If the repository is enable or not
+     * If the repository is enabled or not
      */
     @ApiModelProperty(value = "True if the repository is enabled for update", required = true)
     private boolean enabled = true;

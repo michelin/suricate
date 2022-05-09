@@ -17,18 +17,38 @@
 package io.suricate.monitoring.repositories;
 
 import io.suricate.monitoring.model.entities.Category;
+import io.suricate.monitoring.model.entities.Widget;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
+
+import java.util.List;
 
 /**
  * Repository used for request categories in database
  */
 @Repository
 public interface CategoryRepository extends CrudRepository<Category, Long>, JpaSpecificationExecutor<Category> {
+    /**
+     * Find all paginated categories
+     *
+     * @param specification The specification to apply
+     * @param pageable The pageable to apply
+     * @return The paginated categories
+     */
+    @NotNull
+    @EntityGraph(attributePaths = {"configurations", "image", "widgets", "widgets.repository", "widgets.image", "widgets.libraries", "widgets.widgetParams", "widgets.widgetParams.possibleValuesMap"})
+    Page<Category> findAll(Specification<Category> specification, @NotNull Pageable pageable);
 
     /**
-     * Find a category by technical name
+     * Find category by technical name
      *
      * @param technicalName The technical name
      * @return The category

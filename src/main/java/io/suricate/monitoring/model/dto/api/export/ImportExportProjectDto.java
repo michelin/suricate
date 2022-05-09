@@ -1,6 +1,8 @@
-package io.suricate.monitoring.model.dto.api.project;
+package io.suricate.monitoring.model.dto.api.export;
 
 import io.suricate.monitoring.model.dto.api.asset.AssetResponseDto;
+import io.suricate.monitoring.model.dto.api.export.ImportExportAssetDto;
+import io.suricate.monitoring.model.dto.api.project.GridPropertiesResponseDto;
 import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetPositionRequestDto;
 import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetPositionResponseDto;
 import io.swagger.annotations.ApiModel;
@@ -36,7 +38,7 @@ public class ImportExportProjectDto {
      * Image of the dashboard
      */
     @ApiModelProperty(value = "Image of the dashboard")
-    private AssetResponseDto image;
+    private ImportExportAssetDto image;
 
     /**
      * The grid properties

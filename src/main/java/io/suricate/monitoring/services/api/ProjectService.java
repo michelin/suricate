@@ -17,9 +17,7 @@
 package io.suricate.monitoring.services.api;
 
 import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
-import io.suricate.monitoring.model.entities.Asset;
-import io.suricate.monitoring.model.entities.Project;
-import io.suricate.monitoring.model.entities.User;
+import io.suricate.monitoring.model.entities.*;
 import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.repositories.ProjectRepository;
 import io.suricate.monitoring.services.mapper.AssetMapper;
@@ -39,6 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -69,9 +68,14 @@ public class ProjectService {
     private final AssetService assetService;
 
     /**
-     * The asset mapper
+     * The project grid service
      */
-    private final AssetMapper assetMapper;
+    private final ProjectGridService projectGridService;
+
+    /**
+     * The project widget service
+     */
+    private final ProjectWidgetService projectWidgetService;
 
     /**
      * Constructor
@@ -80,19 +84,22 @@ public class ProjectService {
      * @param projectRepository         The project repository to inject
      * @param dashboardWebSocketService The dashboard web socket service to inject
      * @param assetService              The asset service
-     * @param assetMapper               The asset mapper
+     * @param projectGridService        The project grid service
+     * @param projectWidgetService      The project widget service
      */
     @Autowired
     public ProjectService(@Qualifier("jasyptStringEncryptor") final StringEncryptor stringEncryptor,
                           final ProjectRepository projectRepository,
                           final DashboardWebSocketService dashboardWebSocketService,
                           final AssetService assetService,
-                          final AssetMapper assetMapper) {
+                          final ProjectGridService projectGridService,
+                          final ProjectWidgetService projectWidgetService) {
         this.stringEncryptor = stringEncryptor;
         this.projectRepository = projectRepository;
         this.dashboardWebsocketService = dashboardWebSocketService;
         this.assetService = assetService;
-        this.assetMapper = assetMapper;
+        this.projectGridService = projectGridService;
+        this.projectWidgetService = projectWidgetService;
     }
 
     /**
@@ -157,6 +164,39 @@ public class ProjectService {
         }
 
         return projectRepository.save(project);
+    }
+
+    /**
+     * Create or update a list of projects
+     * @param projects All the projects to create/update
+     * @return The created/updated projects
+     */
+    @Transactional
+    public List<Project> createUpdateProjects(List<Project> projects) {
+        if (projects == null) {
+            return Collections.emptyList();
+        }
+
+        for (Project project : projects) {
+            if (project.getScreenshot() != null) {
+                assetService.save(project.getScreenshot());
+            }
+
+            Project savedProject = projectRepository.save(project);
+            if (savedProject.getGrids() != null && !savedProject.getGrids().isEmpty()) {
+                savedProject.getGrids().forEach(projectGrid -> {
+                    projectGrid.setProject(savedProject);
+                    ProjectGrid savedProjectGrid = projectGridService.create(projectGrid);
+
+                    savedProjectGrid.getWidgets().forEach(projectWidget -> {
+                        projectWidget.setProjectGrid(savedProjectGrid);
+                        projectWidgetService.create(projectWidget);
+                    });
+                });
+            }
+        }
+
+        return projectRepository.findAll(new ProjectSearchSpecification(StringUtils.EMPTY));
     }
 
     /**

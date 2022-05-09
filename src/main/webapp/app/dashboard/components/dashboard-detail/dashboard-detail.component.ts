@@ -294,14 +294,6 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
           callback: () => this.openUserFormSidenav()
         },
         {
-          icon: IconEnum.FILE_DOWNLOAD,
-          color: 'primary',
-          variant: 'miniFab',
-          tooltip: { message: 'dashboard.export' },
-          hidden: () => this.isReadOnly,
-          callback: () => this.exportDashboard()
-        },
-        {
           icon: IconEnum.REFRESH,
           color: 'primary',
           variant: 'miniFab',
@@ -355,21 +347,6 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
       formFields: this.projectUsersFormFieldsService.generateProjectUsersFormFields(this.project.token),
       hideSaveAction: true,
       onValueChanged: (valueChangedEvent: ValueChangedEvent) => this.onValueChanged(valueChangedEvent)
-    });
-  }
-
-  /**
-   * Open the user form sidenav
-   */
-  private exportDashboard(): void {
-    this.httpProjectService.exportDashboard(this.project.token).subscribe((exportProject: ImportExportProject) => {
-      const element = document.createElement('a');
-      element.setAttribute('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(exportProject, null, 2)));
-      element.setAttribute('download', `dashboard_${exportProject.name}`);
-      element.style.display = 'none';
-      document.body.appendChild(element);
-      element.click();
-      document.body.removeChild(element);
     });
   }
 

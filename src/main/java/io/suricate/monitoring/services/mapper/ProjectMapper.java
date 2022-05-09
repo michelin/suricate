@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.services.mapper;
 
-import io.suricate.monitoring.model.dto.api.project.ImportExportProjectDto;
+import io.suricate.monitoring.model.dto.api.export.ImportExportProjectDto;
 import io.suricate.monitoring.model.dto.api.project.ProjectRequestDto;
 import io.suricate.monitoring.model.dto.api.project.ProjectResponseDto;
 import io.suricate.monitoring.model.entities.Project;
@@ -65,20 +65,6 @@ public abstract class ProjectMapper {
     public abstract ProjectResponseDto toProjectDTO(Project project);
 
     /**
-     * Map a project into a DTO for export
-     *
-     * @param project The project to map
-     * @return The project as DTO
-     */
-    @Named("toExportProjectDTO")
-    @Mapping(target = "gridProperties.maxColumn", source = "project.maxColumn")
-    @Mapping(target = "gridProperties.widgetHeight", source = "project.widgetHeight")
-    @Mapping(target = "gridProperties.cssStyle", source = "project.cssStyle")
-    @Mapping(target = "image", source = "project.screenshot", qualifiedByName = "toExportAssetDTO")
-    @Mapping(target = "grids", qualifiedByName = "toExportProjectGridDTO")
-    public abstract ImportExportProjectDto toExportProjectDTO(Project project);
-
-    /**
      * Map a project into a DTO
      * Ignore the libraries to not load all widgets
      *
@@ -106,6 +92,19 @@ public abstract class ProjectMapper {
     @Mapping(target = "gridProperties.cssStyle", source = "project.cssStyle")
     @Mapping(target = "grids", qualifiedByName = "toProjectGridDTO")
     public abstract ProjectResponseDto toProjectDTONoAsset(Project project);
+
+    /**
+     * Map a project into an import export project DTO
+     * @param project The project to map
+     * @return The project as DTO
+     */
+    @Named("toImportExportProjectDTO")
+    @Mapping(target = "gridProperties.maxColumn", source = "project.maxColumn")
+    @Mapping(target = "gridProperties.widgetHeight", source = "project.widgetHeight")
+    @Mapping(target = "gridProperties.cssStyle", source = "project.cssStyle")
+    @Mapping(target = "image", source = "project.screenshot", qualifiedByName = "toImportExportAssetDTO")
+    @Mapping(target = "grids", qualifiedByName = "toImportExportProjectGridDTO")
+    public abstract ImportExportProjectDto toImportExportProjectDTO(Project project);
 
     /**
      * Map a list of projects into a list of DTOs
@@ -136,6 +135,7 @@ public abstract class ProjectMapper {
     @Mapping(target = "maxColumn", source = "gridProperties.maxColumn")
     @Mapping(target = "widgetHeight", source = "gridProperties.widgetHeight")
     @Mapping(target = "cssStyle", source = "gridProperties.cssStyle")
-    @Mapping(target = "grids", ignore = true)
+    @Mapping(target = "image", qualifiedByName = "toAssetEntity")
+    @Mapping(target = "grids", qualifiedByName = "toProjectGridEntity")
     public abstract Project toProjectEntity(ImportExportProjectDto importProjectRequestDto);
 }

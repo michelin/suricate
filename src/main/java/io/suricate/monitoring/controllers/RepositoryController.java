@@ -111,7 +111,7 @@ public class RepositoryController {
                                               @RequestParam(value = "search", required = false) String search,
                                               Pageable pageable) {
         Page<Repository> repositoriesPaged = this.repositoryService.getAll(search, pageable);
-        return repositoriesPaged.map(this.repositoryMapper::toRepositoryDTO);
+        return repositoriesPaged.map(this.repositoryMapper::toRepositoryDTONoWidgets);
     }
 
     /**
@@ -146,7 +146,7 @@ public class RepositoryController {
         return ResponseEntity
             .created(resourceLocation)
             .contentType(MediaType.APPLICATION_JSON)
-            .body(this.repositoryMapper.toRepositoryDTO(repository));
+            .body(this.repositoryMapper.toRepositoryDTONoWidgets(repository));
     }
 
     /**
@@ -175,7 +175,7 @@ public class RepositoryController {
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(this.repositoryMapper.toRepositoryDTO(optionalRepository.get()));
+            .body(this.repositoryMapper.toRepositoryDTONoWidgets(optionalRepository.get()));
     }
 
     /**

@@ -66,11 +66,6 @@ export class ProjectFormFieldsService {
   public static readonly progressBarFormFieldKey = 'displayProgressBar';
 
   /**
-   * Key of the form field for project import file
-   */
-  public static readonly projectImportFileFormFieldKey = 'importFile';
-
-  /**
    * Constructor
    */
   constructor(private translateService: TranslateService) {}
@@ -124,20 +119,6 @@ export class ProjectFormFieldsService {
         label: 'background.color',
         type: DataTypeEnum.COLOR_PICKER,
         value: backgroundColor
-      }
-    ];
-  }
-
-  /**
-   * Get the list of form fields for a dashboard import
-   */
-  public generateImportProjectFormFields(): FormField[] {
-    return [
-      {
-        key: ProjectFormFieldsService.projectImportFileFormFieldKey,
-        label: 'dashboard.import.file.label',
-        type: DataTypeEnum.FILE,
-        validators: [Validators.required, CustomValidator.fileHasJsonFormat()]
       }
     ];
   }

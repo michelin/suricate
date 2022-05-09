@@ -17,8 +17,10 @@
 package io.suricate.monitoring.repositories;
 
 import io.suricate.monitoring.model.entities.Library;
+import io.suricate.monitoring.model.entities.Setting;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -29,7 +31,7 @@ import java.util.List;
  * Repository used for request Libraries in database
  */
 @Repository
-public interface LibraryRepository extends JpaRepository<Library, Long> {
+public interface LibraryRepository extends JpaRepository<Library, Long>, JpaSpecificationExecutor<Library> {
     /**
      * Find all libraries by given widget ids
      *

@@ -120,7 +120,7 @@ public class ProjectGridController {
         return ResponseEntity
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(projectGridMapper.toProjectGridDTO(projectGrid));
+                .body(projectGridMapper.toProjectGridDTONoWidgets(projectGrid));
     }
 
     /**

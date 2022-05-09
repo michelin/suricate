@@ -22,6 +22,7 @@ import { UsersComponent } from './users/users.component';
 import { RepositoriesComponent } from './repositories/repositories.component';
 import { DashboardsComponent } from './dashboards/dashboards.component';
 import { ConfigurationsComponent } from './configurations/configurations.component';
+import {ExportsComponent} from "./exports/exports.component";
 
 export const adminRoutes: Routes = [
   {
@@ -45,6 +46,11 @@ export const adminRoutes: Routes = [
   {
     path: 'admin/configurations',
     component: ConfigurationsComponent,
+    canActivate: [AuthGuard, AdminGuard]
+  },
+  {
+    path: 'admin/exports',
+    component: ExportsComponent,
     canActivate: [AuthGuard, AdminGuard]
   }
 ];

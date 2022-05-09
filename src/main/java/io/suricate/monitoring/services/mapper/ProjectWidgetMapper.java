@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.services.mapper;
 
-import io.suricate.monitoring.model.dto.api.project.ImportExportProjectDto;
+import io.suricate.monitoring.model.dto.api.export.ImportExportProjectDto;
 import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetRequestDto;
 import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetResponseDto;
 import io.suricate.monitoring.model.entities.ProjectWidget;
@@ -99,14 +99,14 @@ public abstract class ProjectWidgetMapper {
      * @param projectWidget The project widget to map
      * @return The project widget as DTO
      */
-    @Named("toExportProjectWidgetDTO")
+    @Named("toImportExportProjectWidgetDTO")
     @Mapping(target = "widgetTechnicalName", source = "projectWidget.widget.technicalName")
     @Mapping(target = "backendConfig", expression = "java(projectWidgetService.decryptSecretParamsIfNeeded(projectWidget.getWidget(), projectWidget.getBackendConfig()))")
     @Mapping(target = "widgetPosition.gridColumn", source = "projectWidget.gridColumn")
     @Mapping(target = "widgetPosition.gridRow", source = "projectWidget.gridRow")
     @Mapping(target = "widgetPosition.height", source = "projectWidget.height")
     @Mapping(target = "widgetPosition.width", source = "projectWidget.width")
-    public abstract ImportExportProjectDto.ImportExportProjectGridDto.ImportExportProjectWidgetDto toExportProjectWidgetDTO(ProjectWidget projectWidget);
+    public abstract ImportExportProjectDto.ImportExportProjectGridDto.ImportExportProjectWidgetDto toImportExportProjectWidgetDTO(ProjectWidget projectWidget);
 
     /**
      * Map a list of project widgets into a list of DTOs

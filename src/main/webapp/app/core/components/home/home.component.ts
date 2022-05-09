@@ -91,14 +91,6 @@ export class HomeComponent implements OnInit {
           type: ButtonTypeEnum.BUTTON,
           tooltip: { message: 'dashboard.create' },
           callback: () => this.openCreateDashboardFormSidenav()
-        },
-        {
-          icon: IconEnum.FILE_UPLOAD,
-          color: 'primary',
-          variant: 'miniFab',
-          type: ButtonTypeEnum.BUTTON,
-          tooltip: { message: 'dashboard.import' },
-          callback: () => this.openImportDashboardFormSidenav()
         }
       ]
     };
@@ -112,17 +104,6 @@ export class HomeComponent implements OnInit {
       title: 'dashboard.create',
       formFields: this.projectFormFieldsService.generateProjectFormFields(),
       save: (formData: ProjectRequest) => this.saveDashboard(formData)
-    });
-  }
-
-  /**
-   * Display the side nav bar used to import a dashboard
-   */
-  public openImportDashboardFormSidenav(): void {
-    this.sidenavService.openFormSidenav({
-      title: 'dashboard.import',
-      formFields: this.projectFormFieldsService.generateImportProjectFormFields(),
-      save: (formData: ImportExportProject) => this.importDashboard(formData)
     });
   }
 
@@ -146,19 +127,6 @@ export class HomeComponent implements OnInit {
         this.httpProjectService.addOrUpdateProjectScreenshot(project.token, file).subscribe();
       }
 
-      this.toastService.sendMessage('dashboard.add.success', ToastTypeEnum.SUCCESS);
-      this.router.navigate(['/dashboards', project.token, project.grids[0].id]);
-    });
-  }
-
-  /**
-   * Create a new dashboard
-   *
-   * @param formData The data retrieved from the form
-   */
-  private importDashboard(formData: ImportExportProject): void {
-    const importProject: ImportExportProject = JSON.parse(atob(ImageUtils.getDataFromBase64URL(formData.importFile)));
-    this.httpProjectService.importDashboard(importProject).subscribe((project: Project) => {
       this.toastService.sendMessage('dashboard.add.success', ToastTypeEnum.SUCCESS);
       this.router.navigate(['/dashboards', project.token, project.grids[0].id]);
     });

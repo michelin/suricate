@@ -17,6 +17,12 @@
 package io.suricate.monitoring.repositories;
 
 import io.suricate.monitoring.model.entities.Repository;
+import io.suricate.monitoring.model.entities.Widget;
+import org.jetbrains.annotations.NotNull;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
@@ -28,12 +34,18 @@ import java.util.Optional;
  */
 @org.springframework.stereotype.Repository
 public interface RepositoryRepository extends JpaRepository<Repository, Long>, JpaSpecificationExecutor<Repository> {
-
     /**
      * Find All by enabled order by name
      *
-     * @param enabled True if the we want every enabled repository, false otherwise
+     * @param enabled True if we want every enabled repository, false otherwise
      * @return The list of repositories
      */
     Optional<List<Repository>> findAllByEnabledOrderByName(final boolean enabled);
+
+    /**
+     * Find repository by name
+     * @param name The repository name
+     * @return An optional repository
+     */
+    Optional<Repository> findByName(final String name);
 }

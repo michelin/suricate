@@ -72,6 +72,10 @@ export class MenuService {
           linkConfiguration: { link: ['/admin', 'dashboards'] }
         },
         {
+          label: 'export.list',
+          linkConfiguration: { link: ['/admin', 'exports'] }
+        },
+        {
           label: 'repository.list',
           linkConfiguration: { link: ['/admin', 'repositories'] }
         },

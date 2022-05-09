@@ -18,6 +18,8 @@ package io.suricate.monitoring.services.mapper;
 
 import io.suricate.monitoring.model.dto.api.category.CategoryParameterResponseDto;
 import io.suricate.monitoring.model.dto.api.category.CategoryResponseDto;
+import io.suricate.monitoring.model.dto.api.export.ImportExportCategoryDto;
+import io.suricate.monitoring.model.dto.api.export.ImportExportCategoryParameterDto;
 import io.suricate.monitoring.model.entities.Category;
 import io.suricate.monitoring.model.entities.CategoryParameter;
 import org.jasypt.encryption.StringEncryptor;
@@ -30,7 +32,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 /**
  * Manage the generation DTO/Model objects for Category class
  */
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring",
+        uses = {
+                AssetMapper.class,
+                WidgetMapper.class
+        })
 public abstract class CategoryMapper {
     /**
      * String encryptor
@@ -46,20 +52,36 @@ public abstract class CategoryMapper {
      * @return The category as DTO
      */
     @Named("toCategoryWithoutParametersDTO")
-    @Mapping(target = "assetToken", expression = "java(category.getImage() != null ? io.suricate.monitoring.utils.IdUtils.encrypt(category.getImage().getId()) : null )")
+    @Mapping(target = "image", ignore = true)
+    @Mapping(target = "widgets", ignore = true)
     @Mapping(target = "categoryParameters", ignore = true)
+    @Mapping(target = "assetToken", expression = "java(category.getImage() != null ? io.suricate.monitoring.utils.IdUtils.encrypt(category.getImage().getId()) : null )")
     public abstract CategoryResponseDto toCategoryWithoutParametersDTO(Category category);
 
     /**
-     * Map a category into a DTO
+     * Map a category into a DTO. Hide the category parameter values
      *
      * @param category The category to map
      * @return The category as DTO
      */
     @Named("toCategoryWithHiddenValueParametersDTO")
+    @Mapping(target = "image", ignore = true)
+    @Mapping(target = "widgets", ignore = true)
     @Mapping(target = "assetToken", expression = "java(category.getImage() != null ? io.suricate.monitoring.utils.IdUtils.encrypt(category.getImage().getId()) : null )")
     @Mapping(target = "categoryParameters", source = "category.configurations", qualifiedByName = "toCategoryParameterWithHiddenValuesDTO")
     public abstract CategoryResponseDto toCategoryWithHiddenValueParametersDTO(Category category);
+
+    /**
+     * Map a category into an import export category DTO.
+     *
+     * @param category The category to map
+     * @return The import export category as DTO
+     */
+    @Named("toImportExportCategoryDTO")
+    @Mapping(target = "image", source = "category.image", qualifiedByName = "toImportExportAssetDTO")
+    @Mapping(target = "categoryParameters", source = "category.configurations", qualifiedByName = "toImportExportCategoryParameterDTO")
+    @Mapping(target = "widgets", qualifiedByName = "toImportExportWidgetDTO")
+    public abstract ImportExportCategoryDto toImportExportCategoryDTO(Category category);
 
     /**
      * Map a category parameter into a DTO
@@ -74,7 +96,17 @@ public abstract class CategoryMapper {
     public abstract CategoryParameterResponseDto toCategoryParameterDTO(CategoryParameter categoryParameter);
 
     /**
-     * Map a category parameter into a DTO
+     * Map a category parameter into an import export DTO
+     * @param categoryParameter The category parameter to map
+     * @return The import export category parameter as DTO
+     */
+    @Named("toImportExportCategoryParameterDTO")
+    @Mapping(target = "value", expression = "java(" +
+            "categoryParameter.getDataType() == io.suricate.monitoring.model.enums.DataTypeEnum.PASSWORD ? stringEncryptor.decrypt(categoryParameter.getValue()) : categoryParameter.getValue())")
+    public abstract ImportExportCategoryParameterDto toImportExportCategoryParameterDTO(CategoryParameter categoryParameter);
+
+    /**
+     * Map a category parameter into a DTO. Hide the value
      *
      * @param categoryParameter The category parameter to map
      * @return The category parameter as DTO
@@ -84,4 +116,23 @@ public abstract class CategoryMapper {
     @Mapping(target = "value", expression = "java(" +
             "categoryParameter.getDataType() == io.suricate.monitoring.model.enums.DataTypeEnum.PASSWORD ? org.apache.commons.lang3.StringUtils.EMPTY : categoryParameter.getValue())")
     public abstract CategoryParameterResponseDto toCategoryParameterWithHiddenValuesDTO(CategoryParameter categoryParameter);
+
+    /**
+     * Map an import export category DTO as entity
+     * @param importExportCategoryDto The category DTO to map
+     * @return The category as entity
+     */
+    @Named("toCategoryEntity")
+    @Mapping(target = "image", qualifiedByName = "toAssetEntity")
+    @Mapping(target = "configurations", source = "categoryParameters", qualifiedByName = "toCategoryParameterEntity")
+    public abstract Category toCategoryEntity(ImportExportCategoryDto importExportCategoryDto);
+
+    /**
+     * Map an import export category parameter DTO as entity
+     * @param importExportCategoryParameterDto The category parameter DTO to map
+     * @return The category parameter as entity
+     */
+    @Named("toCategoryParameterEntity")
+    public abstract CategoryParameter toCategoryParameterEntity(ImportExportCategoryParameterDto importExportCategoryParameterDto);
 }
+

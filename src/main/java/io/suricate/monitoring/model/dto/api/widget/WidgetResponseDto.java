@@ -1,6 +1,8 @@
 package io.suricate.monitoring.model.dto.api.widget;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.suricate.monitoring.model.dto.api.AbstractDto;
+import io.suricate.monitoring.model.dto.api.asset.AssetResponseDto;
 import io.suricate.monitoring.model.dto.api.category.CategoryResponseDto;
 import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
 import io.swagger.annotations.ApiModel;
@@ -75,6 +77,12 @@ public class WidgetResponseDto extends AbstractDto {
     private String imageToken;
 
     /**
+     * The image
+     */
+    @ApiModelProperty(value = "The image")
+    private AssetResponseDto image;
+
+    /**
      * The category of this widget
      */
     @ApiModelProperty(value = "The category of this widget")
@@ -97,4 +105,10 @@ public class WidgetResponseDto extends AbstractDto {
      */
     @ApiModelProperty(value = "The list of the params for this widget")
     private List<WidgetParamResponseDto> params;
+
+    /**
+     * The library technical names
+     */
+    @ApiModelProperty(value = "The library technical names")
+    private List<String> libraryTechnicalNames;
 }

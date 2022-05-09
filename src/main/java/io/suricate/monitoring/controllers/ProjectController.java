@@ -20,7 +20,6 @@ package io.suricate.monitoring.controllers;
 
 import io.suricate.monitoring.configuration.swagger.ApiPageable;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
-import io.suricate.monitoring.model.dto.api.project.ImportExportProjectDto;
 import io.suricate.monitoring.model.dto.api.project.ProjectRequestDto;
 import io.suricate.monitoring.model.dto.api.project.ProjectResponseDto;
 import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetPositionRequestDto;
@@ -58,7 +57,6 @@ import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static io.suricate.monitoring.utils.exceptions.constants.ErrorMessage.USER_NOT_ALLOWED_PROJECT;
 
@@ -110,11 +108,6 @@ public class ProjectController {
     private final UserMapper userMapper;
 
     /**
-     * The asset mapper
-     */
-    private final AssetMapper assetMapper;
-
-    /**
      * The dashboard websocket service
      */
     private final DashboardWebSocketService dashboardWebSocketService;
@@ -129,7 +122,6 @@ public class ProjectController {
      * @param projectGridMapper         The project grid mapper
      * @param projectWidgetMapper       The project widget mapper
      * @param userMapper                The user mapper
-     * @param assetMapper               The asset mapper
      * @param dashboardWebSocketService The dashboard websocket service
      */
     @Autowired
@@ -141,7 +133,6 @@ public class ProjectController {
                              final ProjectGridMapper projectGridMapper,
                              final ProjectWidgetMapper projectWidgetMapper,
                              final UserMapper userMapper,
-                             final AssetMapper assetMapper,
                              final DashboardWebSocketService dashboardWebSocketService) {
         this.projectService = projectService;
         this.projectGridService = projectGridService;
@@ -151,7 +142,6 @@ public class ProjectController {
         this.projectGridMapper = projectGridMapper;
         this.projectWidgetMapper = projectWidgetMapper;
         this.userMapper = userMapper;
-        this.assetMapper = assetMapper;
         this.dashboardWebSocketService = dashboardWebSocketService;
     }
 
@@ -282,92 +272,6 @@ public class ProjectController {
             projectRequestDto.getMaxColumn(), projectRequestDto.getCssStyle());
 
         return ResponseEntity.noContent().build();
-    }
-
-    /**
-     * Export a project by id
-     *
-     * @param projectToken The id of the project
-     * @return The project
-     */
-    @ApiOperation(value = "Export the project information by token", response = ProjectResponseDto.class, nickname = "exportProject")
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Ok", response = String.class),
-            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
-            @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class)
-    })
-    @GetMapping(value = "/v1/projects/{projectToken}/export")
-    @PermitAll
-    public ResponseEntity<ImportExportProjectDto> exportProject(@ApiParam(name = "projectToken", value = "The project token", required = true)
-                                                @PathVariable("projectToken") String projectToken) {
-        Optional<Project> projectOptional = projectService.getOneByToken(projectToken);
-
-        if (!projectOptional.isPresent()) {
-            throw new ObjectNotFoundException(Project.class, projectToken);
-        }
-
-        return ResponseEntity
-                .ok()
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(projectMapper.toExportProjectDTO(projectOptional.get()));
-    }
-
-    /**
-     * Import a new project/dashboard for a user
-     *
-     * @param principal         The connected user
-     * @param importExportProjectDto The project to import
-     * @return The saved project
-     */
-    @ApiOperation(value = "Import a new project for the current user", response = ProjectResponseDto.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Ok", response = ProjectResponseDto.class),
-            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
-            @ApiResponse(code = 404, message = "Current user not found", response = ApiErrorDto.class)
-    })
-    @PostMapping(value = "/v1/projects/import")
-    @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ProjectResponseDto> importProject(@ApiIgnore Principal principal,
-                                                            @ApiParam(name = "projectRequestDto", value = "The project information", required = true)
-                                                            @RequestBody ImportExportProjectDto importExportProjectDto) {
-        Optional<User> userOptional = userService.getOneByUsername(principal.getName());
-        if (!userOptional.isPresent()) {
-            throw new ObjectNotFoundException(User.class, principal.getName());
-        }
-
-        Project project = projectService.createProject(userOptional.get(),
-                projectMapper.toProjectEntity(importExportProjectDto));
-
-        if (importExportProjectDto.getImage() != null) {
-            projectService.addOrUpdateScreenshot(project, importExportProjectDto.getImage().getContent(),
-                    importExportProjectDto.getImage().getContentType(), importExportProjectDto.getImage().getSize());
-        }
-
-        importExportProjectDto.getGrids().forEach(grid -> {
-            ProjectGrid projectGrid = projectGridService.create(projectGridMapper.toProjectGridEntity(grid, project));
-
-            List<ProjectWidget> projectWidgets = grid.getWidgets()
-                    .stream()
-                    .map(widget -> projectWidgetMapper.toProjectWidgetEntity(widget, projectGrid.getId()))
-                    .map(projectWidgetService::create)
-                    .collect(Collectors.toList());
-
-            projectGrid.getWidgets().addAll(projectWidgets);
-            project.getGrids().add(projectGrid);
-        });
-
-        URI resourceLocation = ServletUriComponentsBuilder
-                .fromCurrentContextPath()
-                .path("/api/projects/" + project.getToken())
-                .build()
-                .toUri();
-
-        return ResponseEntity
-                .created(resourceLocation)
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(projectMapper.toProjectDTO(project));
     }
 
     /**

@@ -7,7 +7,6 @@ import io.suricate.monitoring.model.entities.Role_;
  * Class used to filter JPA queries
  */
 public class RoleSearchSpecification extends AbstractSearchSpecification<Role> {
-
     /**
      * Constructor
      *

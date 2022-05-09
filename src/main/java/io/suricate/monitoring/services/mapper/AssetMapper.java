@@ -19,14 +19,12 @@
 package io.suricate.monitoring.services.mapper;
 
 import io.suricate.monitoring.model.dto.api.asset.AssetResponseDto;
-import io.suricate.monitoring.model.dto.api.project.ProjectRequestDto;
+import io.suricate.monitoring.model.dto.api.export.ImportExportAssetDto;
 import io.suricate.monitoring.model.entities.Asset;
-import io.suricate.monitoring.model.entities.Project;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Manage the generation DTO/Model objects for asset class
@@ -44,12 +42,18 @@ public abstract class AssetMapper {
     public abstract AssetResponseDto toAssetDTO(Asset asset);
 
     /**
-     * Map an asset into an asset DTO for export
-     *
+     * Map an asset into an import export asset DTO
      * @param asset The asset to map
-     * @return The asset as DTO
+     * @return The import export asset as DTO
      */
-    @Named("toExportAssetDTO")
-    @Mapping(target = "id", ignore = true)
-    public abstract AssetResponseDto toExportAssetDTO(Asset asset);
+    @Named("toImportExportAssetDTO")
+    public abstract ImportExportAssetDto toImportExportAssetDTO(Asset asset);
+
+    /**
+     * Map an import export asset DTO as entity
+     * @param importExportAssetDto The asset DTO to map
+     * @return The asset as entity
+     */
+    @Named("toAssetEntity")
+    public abstract Asset toAssetEntity(ImportExportAssetDto importExportAssetDto);
 }

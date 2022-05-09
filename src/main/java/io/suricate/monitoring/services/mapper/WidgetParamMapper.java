@@ -16,14 +16,12 @@
 
 package io.suricate.monitoring.services.mapper;
 
+import io.suricate.monitoring.model.dto.api.export.ImportExportWidgetDto;
 import io.suricate.monitoring.model.dto.api.widget.WidgetParamResponseDto;
 import io.suricate.monitoring.model.entities.WidgetParam;
-import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
-
-import java.util.List;
 
 /**
  * Manage the generation DTO/Model objects for Widget params class
@@ -35,7 +33,6 @@ import java.util.List;
     }
 )
 public abstract class WidgetParamMapper {
-
     /**
      * Map a widget parameter into a widget parameter DTO
      *
@@ -45,4 +42,22 @@ public abstract class WidgetParamMapper {
     @Named("toWidgetParameterDTO")
     @Mapping(target = "values", source = "widgetParam.possibleValuesMap", qualifiedByName = "toWidgetParameterValuesDTOs")
     public abstract WidgetParamResponseDto toWidgetParameterDTO(WidgetParam widgetParam);
+
+    /**
+     * Map a widget parameter into an import export widget parameter DTO
+     * @param widgetParam The widget parameter to map
+     * @return The import export widget parameter as DTO
+     */
+    @Named("toImportExportWidgetParameterDTO")
+    @Mapping(target = "values", source = "widgetParam.possibleValuesMap", qualifiedByName = "toImportExportWidgetParameterValueDTO")
+    public abstract ImportExportWidgetDto.ImportExportWidgetParamDto toImportExportWidgetParameterDTO(WidgetParam widgetParam);
+
+    /**
+     * Map a widget parameter into an entity
+     * @param widgetParamRequestDto The widget parameter to map
+     * @return The widget parameter as entity
+     */
+    /*@Named("toWidgetParameterEntity")
+    @Mapping(target = "possibleValuesMap", source = "widgetParamRequestDto.values", qualifiedByName = "toWidgetParameterValueEntity")
+    public abstract WidgetParam toWidgetParameterEntity(WidgetParamRequestDto widgetParamRequestDto);*/
 }

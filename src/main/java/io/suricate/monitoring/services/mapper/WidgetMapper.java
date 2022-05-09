@@ -16,6 +16,8 @@
 
 package io.suricate.monitoring.services.mapper;
 
+import io.suricate.monitoring.model.dto.api.export.ImportExportWidgetDto;
+import io.suricate.monitoring.model.dto.api.widget.WidgetRequestDto;
 import io.suricate.monitoring.model.dto.api.widget.WidgetResponseDto;
 import io.suricate.monitoring.model.entities.Widget;
 import org.mapstruct.IterableMapping;
@@ -34,7 +36,11 @@ import java.util.List;
     componentModel = "spring",
     uses = {
         WidgetParamMapper.class,
-        CategoryMapper.class
+        CategoryMapper.class,
+        AssetMapper.class
+    },
+    imports = {
+        java.util.stream.Collectors.class
     }
 )
 public abstract class WidgetMapper {
@@ -46,6 +52,8 @@ public abstract class WidgetMapper {
      * @return The widget DTO
      */
     @Named("toWidgetDTO")
+    @Mapping(target = "image", ignore = true)
+    @Mapping(target = "libraryTechnicalNames", ignore = true)
     @Mapping(target = "imageToken", expression = "java( widget.getImage() != null ? io.suricate.monitoring.utils.IdUtils.encrypt(widget.getImage().getId()) : null )")
     @Mapping(target = "category", qualifiedByName = "toCategoryWithHiddenValueParametersDTO")
     @Mapping(target = "repositoryId", source = "widget.repository.id")
@@ -59,11 +67,25 @@ public abstract class WidgetMapper {
      * @return The widget DTO
      */
     @Named("toWidgetWithoutCategoryParametersDTO")
+    @Mapping(target = "image", ignore = true)
+    @Mapping(target = "libraryTechnicalNames", ignore = true)
     @Mapping(target = "imageToken", expression = "java( widget.getImage() != null ? io.suricate.monitoring.utils.IdUtils.encrypt(widget.getImage().getId()) : null )")
     @Mapping(target = "category", qualifiedByName = "toCategoryWithoutParametersDTO")
     @Mapping(target = "repositoryId", source = "widget.repository.id")
     @Mapping(target = "params", source = "widget.widgetParams", qualifiedByName = "toWidgetParameterDTO")
     public abstract WidgetResponseDto toWidgetWithoutCategoryParametersDTO(Widget widget);
+
+    /**
+     * Map a widget into an import export DTO
+     *
+     * @param widget The widget to map
+     * @return The import export widget DTO
+     */
+    @Named("toImportExportWidgetDTO")
+    @Mapping(target = "image", source = "widget.image", qualifiedByName = "toImportExportAssetDTO")
+    @Mapping(target = "libraryTechnicalNames", expression = "java( widget.getLibraries() != null ? widget.getLibraries().stream().map(lib -> lib.getTechnicalName()).collect(Collectors.toList()) : null )")
+    @Mapping(target = "params", source = "widget.widgetParams", qualifiedByName = "toImportExportWidgetParameterDTO")
+    public abstract ImportExportWidgetDto toImportExportWidgetDTO(Widget widget);
 
     /**
      * Map a list of widgets into a list of widgets DTOs
@@ -74,4 +96,15 @@ public abstract class WidgetMapper {
     @Named("toWidgetsDTOs")
     @IterableMapping(qualifiedByName = "toWidgetDTO")
     public abstract List<WidgetResponseDto> toWidgetsDTOs(Collection<Widget> widgets);
+
+    /**
+     * Map a widget into an entity
+     *
+     * @param widgetRequestDto The widget to map
+     * @return The widget entity
+     */
+    /*@Named("toWidgetEntity")
+    @Mapping(target = "image", qualifiedByName = "toAssetEntity")
+    @Mapping(target = "widgetParams", source = "widgetRequestDto.params", qualifiedByName = "toWidgetParameterEntity")
+    public abstract Widget toWidgetEntity(WidgetRequestDto widgetRequestDto);*/
 }

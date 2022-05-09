@@ -274,7 +274,7 @@ public class GitService {
                                 + "libraries"
                                 + File.separator));
 
-                final List<Library> allLibraries = libraryService.updateLibraryInDatabase(libraries);
+                final List<Library> allLibraries = libraryService.createUpdateLibraries(libraries);
 
                 List<Category> categories = WidgetUtils
                         .parseCategoriesFolder(new File(folder.getAbsoluteFile().getAbsolutePath()
