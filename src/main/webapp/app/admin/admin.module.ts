@@ -23,12 +23,10 @@ import { UsersComponent } from './users/users.component';
 import { RepositoriesComponent } from './repositories/repositories.component';
 import { DashboardsComponent } from './dashboards/dashboards.component';
 import { ConfigurationsComponent } from './configurations/configurations.component';
-import {DatePipe} from "@angular/common";
 
 @NgModule({
   imports: [RouterModule.forChild(adminRoutes), LayoutModule, SharedModule],
   declarations: [UsersComponent, RepositoriesComponent, DashboardsComponent, ConfigurationsComponent],
-  exports: [RouterModule],
-  providers: [DatePipe]
+  exports: [RouterModule]
 })
 export class AdminModule {}
