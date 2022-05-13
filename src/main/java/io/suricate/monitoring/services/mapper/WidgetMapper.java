@@ -20,10 +20,14 @@ import io.suricate.monitoring.model.dto.api.export.ImportExportWidgetDto;
 import io.suricate.monitoring.model.dto.api.widget.WidgetRequestDto;
 import io.suricate.monitoring.model.dto.api.widget.WidgetResponseDto;
 import io.suricate.monitoring.model.entities.Widget;
+import io.suricate.monitoring.services.api.LibraryService;
+import io.suricate.monitoring.services.api.ProjectWidgetService;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -40,10 +44,16 @@ import java.util.List;
         AssetMapper.class
     },
     imports = {
-        java.util.stream.Collectors.class
+        java.util.stream.Collectors.class,
+        com.google.common.collect.Sets.class
     }
 )
 public abstract class WidgetMapper {
+    /**
+     * The project widget service
+     */
+    @Autowired
+    protected LibraryService libraryService;
 
     /**
      * Map a widget into a DTO
@@ -98,13 +108,13 @@ public abstract class WidgetMapper {
     public abstract List<WidgetResponseDto> toWidgetsDTOs(Collection<Widget> widgets);
 
     /**
-     * Map a widget into an entity
-     *
-     * @param widgetRequestDto The widget to map
+     * Map an import export widget into an entity
+     * @param importExportWidgetDto The widget to map
      * @return The widget entity
      */
-    /*@Named("toWidgetEntity")
+    @Named("toWidgetEntity")
     @Mapping(target = "image", qualifiedByName = "toAssetEntity")
-    @Mapping(target = "widgetParams", source = "widgetRequestDto.params", qualifiedByName = "toWidgetParameterEntity")
-    public abstract Widget toWidgetEntity(WidgetRequestDto widgetRequestDto);*/
+    @Mapping(target = "libraries", expression = "java( importExportWidgetDto.getLibraryTechnicalNames() != null && !importExportWidgetDto.getLibraryTechnicalNames().isEmpty() ? Sets.newHashSet(libraryService.findByTechnicalNameIn(importExportWidgetDto.getLibraryTechnicalNames())) : null )")
+    @Mapping(target = "widgetParams", source = "importExportWidgetDto.params", qualifiedByName = "toWidgetParameterEntity")
+    public abstract Widget toWidgetEntity(ImportExportWidgetDto importExportWidgetDto);
 }

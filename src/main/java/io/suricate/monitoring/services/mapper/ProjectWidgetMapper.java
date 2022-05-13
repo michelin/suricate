@@ -44,7 +44,6 @@ import java.util.stream.Collectors;
         }
 )
 public abstract class ProjectWidgetMapper {
-
     /**
      * The project widget service
      */
@@ -141,7 +140,6 @@ public abstract class ProjectWidgetMapper {
     @Mapping(target = "gridColumn", source = "projectWidgetRequestDto.widgetPosition.gridColumn")
     @Mapping(target = "width", source = "projectWidgetRequestDto.widgetPosition.width")
     @Mapping(target = "height", source = "projectWidgetRequestDto.widgetPosition.height")
-    @Mapping(target = "projectGrid", expression = "java( projectGridService.getOneById(gridId).get() )")
     @Mapping(target = "widget", expression = "java( widgetService.findOneByTechnicalName(projectWidgetRequestDto.getWidgetTechnicalName()).get() )")
-    public abstract ProjectWidget toProjectWidgetEntity(ImportExportProjectDto.ImportExportProjectGridDto.ImportExportProjectWidgetDto projectWidgetRequestDto, Long gridId);
+    public abstract ProjectWidget toProjectWidgetEntity(ImportExportProjectDto.ImportExportProjectGridDto.ImportExportProjectWidgetDto projectWidgetRequestDto);
 }

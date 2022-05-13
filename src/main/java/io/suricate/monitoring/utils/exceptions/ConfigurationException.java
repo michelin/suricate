@@ -16,7 +16,7 @@ public class ConfigurationException extends RuntimeException {
     /**
      * Constructor
      *
-     * @param message      Error Messaage
+     * @param message      Error Message
      * @param propertyName property name
      */
     public ConfigurationException(String message, String propertyName) {

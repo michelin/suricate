@@ -1,5 +1,6 @@
 package io.suricate.monitoring.model.dto.api.export;
 
+import com.google.common.collect.Sets;
 import io.suricate.monitoring.model.dto.api.AbstractDto;
 import io.suricate.monitoring.model.enums.DataTypeEnum;
 import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
@@ -8,7 +9,9 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Type;
 
+import javax.persistence.Lob;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +42,24 @@ public class ImportExportWidgetDto extends AbstractDto {
     private String technicalName;
 
     /**
+     * The html content of the widget
+     */
+    @ApiModelProperty(value = "The html content of the widget")
+    private String htmlContent;
+
+    /**
+     * The css content of the widget
+     */
+    @ApiModelProperty(value = "The css content of the widget")
+    private String cssContent;
+
+    /**
+     * The JS of this widget
+     */
+    @ApiModelProperty(value = "The JS of this widget")
+    private String backendJs;
+
+    /**
      * Information on the usage of this widget
      */
     @ApiModelProperty(value = "Information on the usage of this widget")
@@ -49,12 +70,6 @@ public class ImportExportWidgetDto extends AbstractDto {
      */
     @ApiModelProperty(value = "Delay between each execution of this widget")
     private Long delay;
-
-    /**
-     * The css of this widget
-     */
-    @ApiModelProperty(value = "The css of this widget")
-    private String cssContent;
 
     /**
      * The timeout of the nashorn execution

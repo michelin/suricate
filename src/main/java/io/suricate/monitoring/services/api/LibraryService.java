@@ -49,8 +49,7 @@ public class LibraryService {
     private final AssetService assetService;
 
     /**
-     * The constructor
-     *
+     * Constructor
      * @param libraryRepository The library repository
      * @param assetService      The asset repository
      */
@@ -62,7 +61,6 @@ public class LibraryService {
 
     /**
      * Get all the libraries
-     *
      * @return The list of libraries
      */
     @Transactional(readOnly = true)
@@ -70,10 +68,18 @@ public class LibraryService {
         return libraryRepository.findAll(new LibrarySearchSpecification(search), pageable);
     }
 
+    /**
+     * Find libraries by technical names
+     * @param technicalNames The technical names
+     * @return The libraries
+     */
+    @Transactional(readOnly = true)
+    public List<Library> findByTechnicalNameIn(List<String> technicalNames) {
+        return libraryRepository.findByTechnicalNameIn(technicalNames);
+    }
 
     /**
      * Get all libraries of a project
-     *
      * @param project The project
      * @return The libraries
      */
@@ -96,7 +102,6 @@ public class LibraryService {
 
     /**
      * Get all library tokens of a project
-     *
      * @param project The project
      * @return The library tokens
      */

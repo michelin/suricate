@@ -60,7 +60,7 @@ export class ExportsComponent extends ListComponent<ImportExport> {
           color: 'primary',
           variant: 'miniFab',
           type: ButtonTypeEnum.BUTTON,
-          tooltip: { message: 'import.tooltip' },
+          tooltip: { message: 'import.data' },
           callback: () => this.openImportDataFormSidenav()
         }
       ]
@@ -71,10 +71,10 @@ export class ExportsComponent extends ListComponent<ImportExport> {
    * Export application data
    */
   private exportData(): void {
-    this.httpImportExportService.create().subscribe((dataExport: ImportExport) => {
+    this.httpImportExportService.exportData().subscribe((dataExport: ImportExport) => {
       const element = document.createElement('a');
       element.setAttribute('href', 'data:application/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(dataExport, null, 2)));
-      element.setAttribute('download', `export_${this.datePipe.transform(new Date(), 'yyyy-MM-dd')}`);
+      element.setAttribute('download', `export_${this.datePipe.transform(new Date(), 'yyyy-MM-dd_HH-mm')}`);
       element.style.display = 'none';
       document.body.appendChild(element);
       element.click();

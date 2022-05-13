@@ -178,14 +178,27 @@ public class ProjectService {
         }
 
         for (Project project : projects) {
+            Optional<Project> projectOptional = projectRepository.findProjectByToken(project.getToken());
+
             if (project.getScreenshot() != null) {
+                if (projectOptional.isPresent() && projectOptional.get().getScreenshot() != null) {
+                    project.getScreenshot().setId(projectOptional.get().getScreenshot().getId());
+                }
+
                 assetService.save(project.getScreenshot());
             }
 
-            Project savedProject = projectRepository.save(project);
-            if (savedProject.getGrids() != null && !savedProject.getGrids().isEmpty()) {
-                savedProject.getGrids().forEach(projectGrid -> {
-                    projectGrid.setProject(savedProject);
+            projectOptional.ifPresent(value -> project.setId(value.getId()));
+
+            projectRepository.save(project);
+
+            if (project.getGrids() != null && !project.getGrids().isEmpty()) {
+                // No unique identifier to update existing grid from imported data so just drop them and recreate them
+                projectGridService.deleteByProjectId(project.getId());
+
+                project.getGrids().forEach(projectGrid -> {
+                    projectGrid.setProject(project);
+
                     ProjectGrid savedProjectGrid = projectGridService.create(projectGrid);
 
                     savedProjectGrid.getWidgets().forEach(projectWidget -> {

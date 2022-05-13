@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Column;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +28,12 @@ public class ImportExportProjectDto {
      */
     @ApiModelProperty(value = "The project name", required = true)
     private String name;
+
+    /**
+     * The project token
+     */
+    @ApiModelProperty(value = "The project token", required = true)
+    private String token;
 
     /**
      * In case of rotations, should the progress bar be displayed for the project

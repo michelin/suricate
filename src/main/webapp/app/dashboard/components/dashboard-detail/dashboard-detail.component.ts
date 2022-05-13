@@ -48,7 +48,6 @@ import { HttpProjectWidgetService } from '../../../shared/services/backend/http-
 import { ProjectGridRequest } from '../../../shared/models/backend/project-grid/project-grid-request';
 import { ProjectGrid } from '../../../shared/models/backend/project-grid/project-grid';
 import { GridRequest } from '../../../shared/models/backend/project-grid/grid-request';
-import { ImportExportProject } from '../../../shared/models/backend/project/import-export-project';
 
 /**
  * Component used to display a specific dashboard

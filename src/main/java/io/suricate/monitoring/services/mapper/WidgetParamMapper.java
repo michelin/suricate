@@ -54,10 +54,10 @@ public abstract class WidgetParamMapper {
 
     /**
      * Map a widget parameter into an entity
-     * @param widgetParamRequestDto The widget parameter to map
+     * @param importExportWidgetParamDto The widget parameter to map
      * @return The widget parameter as entity
      */
-    /*@Named("toWidgetParameterEntity")
-    @Mapping(target = "possibleValuesMap", source = "widgetParamRequestDto.values", qualifiedByName = "toWidgetParameterValueEntity")
-    public abstract WidgetParam toWidgetParameterEntity(WidgetParamRequestDto widgetParamRequestDto);*/
+    @Named("toWidgetParameterEntity")
+    @Mapping(target = "possibleValuesMap", source = "importExportWidgetParamDto.values", qualifiedByName = "toWidgetParameterValueEntity")
+    public abstract WidgetParam toWidgetParameterEntity(ImportExportWidgetDto.ImportExportWidgetParamDto importExportWidgetParamDto);
 }

@@ -15,7 +15,6 @@ import { MaterialIconRecords } from '../../../shared/records/material-icon.recor
 import { IconEnum } from '../../../shared/enums/icon.enum';
 import { HeaderConfiguration } from '../../../shared/models/frontend/header/header-configuration';
 import { ButtonTypeEnum } from '../../../shared/enums/button-type.enum';
-import { ImportExportProject } from '../../../shared/models/backend/project/import-export-project';
 
 @Component({
   selector: 'suricate-my-dashboards',

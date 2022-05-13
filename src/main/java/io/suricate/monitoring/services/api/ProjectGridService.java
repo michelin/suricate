@@ -107,7 +107,6 @@ public class ProjectGridService {
 
     /**
      * Delete a grid by project id and id
-     *
      * @param project The project
      * @param id The grid id
      */
@@ -130,5 +129,15 @@ public class ProjectGridService {
 
             dashboardWebsocketService.sendEventToProjectSubscribers(project.getToken(), updateEvent);
         }
+    }
+
+    /**
+     * Delete grid by project id
+     * @param project The project
+     * @param id The grid id
+     */
+    @Transactional
+    public void deleteByProjectId(Long projectId) {
+        projectGridRepository.deleteByProjectId(projectId);
     }
 }

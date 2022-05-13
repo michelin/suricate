@@ -101,8 +101,6 @@ public abstract class CategoryMapper {
      * @return The import export category parameter as DTO
      */
     @Named("toImportExportCategoryParameterDTO")
-    @Mapping(target = "value", expression = "java(" +
-            "categoryParameter.getDataType() == io.suricate.monitoring.model.enums.DataTypeEnum.PASSWORD ? stringEncryptor.decrypt(categoryParameter.getValue()) : categoryParameter.getValue())")
     public abstract ImportExportCategoryParameterDto toImportExportCategoryParameterDTO(CategoryParameter categoryParameter);
 
     /**
@@ -124,6 +122,7 @@ public abstract class CategoryMapper {
      */
     @Named("toCategoryEntity")
     @Mapping(target = "image", qualifiedByName = "toAssetEntity")
+    @Mapping(target = "widgets", qualifiedByName = "toWidgetEntity")
     @Mapping(target = "configurations", source = "categoryParameters", qualifiedByName = "toCategoryParameterEntity")
     public abstract Category toCategoryEntity(ImportExportCategoryDto importExportCategoryDto);
 

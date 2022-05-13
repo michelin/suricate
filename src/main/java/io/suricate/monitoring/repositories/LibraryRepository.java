@@ -34,7 +34,6 @@ import java.util.List;
 public interface LibraryRepository extends JpaRepository<Library, Long>, JpaSpecificationExecutor<Library> {
     /**
      * Find all libraries by given widget ids
-     *
      * @param widgetIds The widget ids
      * @return The libraries
      */
@@ -43,9 +42,15 @@ public interface LibraryRepository extends JpaRepository<Library, Long>, JpaSpec
 
     /**
      * Find a library by technical name
-     *
      * @param technicalName The technical name
      * @return The library
      */
     Library findByTechnicalName(String technicalName);
+
+    /**
+     * Find libraries by technical names
+     * @param technicalNames The technical names
+     * @return The libraries
+     */
+    List<Library> findByTechnicalNameIn(List<String> technicalNames);
 }

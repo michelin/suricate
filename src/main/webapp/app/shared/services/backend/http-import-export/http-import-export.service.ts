@@ -24,10 +24,10 @@ export class HttpImportExportService implements AbstractHttpService<ImportExport
   /**
    * Create an export of app data
    */
-  public create(): Observable<ImportExport> {
-    const url = `${HttpImportExportService.importExportApiEndpoint}/exports`;
+  public exportData(): Observable<ImportExport> {
+    const url = `${HttpImportExportService.importExportApiEndpoint}/export`;
 
-    return this.httpClient.post<ImportExport>(url, {});
+    return this.httpClient.get<ImportExport>(url, {});
   }
 
   /**
@@ -36,11 +36,14 @@ export class HttpImportExportService implements AbstractHttpService<ImportExport
    * @param importExport The data to import
    */
   public importDashboard(importExport: ImportExport): Observable<void> {
-    const url = `${HttpImportExportService.importExportApiEndpoint}/imports`;
+    const url = `${HttpImportExportService.importExportApiEndpoint}/import`;
 
     return this.httpClient.post<void>(url, importExport);
   }
 
+  public create(): Observable<ImportExport> {
+    return of();
+  }
 
   delete(id: number | string): Observable<void> {
     return undefined;

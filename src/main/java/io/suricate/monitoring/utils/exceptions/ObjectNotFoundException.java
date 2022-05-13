@@ -8,7 +8,6 @@ import java.text.MessageFormat;
  * Exception throw when the requested object is not found
  */
 public class ObjectNotFoundException extends ApiException {
-
     /**
      * Message for Object not found
      */

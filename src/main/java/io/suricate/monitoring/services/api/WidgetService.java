@@ -233,6 +233,7 @@ public class WidgetService {
      * @param libraries The libraries
      * @param repository The git repository
      */
+    @Transactional
     public void addOrUpdateWidgets(Category category, List<Library> libraries, final Repository repository) {
         if (category == null || category.getWidgets() == null) {
             return;

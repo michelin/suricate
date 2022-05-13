@@ -63,6 +63,15 @@ public class RepositoryService {
     }
 
     /**
+     * Count the number of repositories
+     * @return The number of repositories
+     */
+    @Transactional(readOnly = true)
+    public Long count() {
+        return repositoryRepository.count();
+    }
+
+    /**
      * Get the full list of repository by enabled
      *
      * @param enabled Tru if we want every enabled repositories

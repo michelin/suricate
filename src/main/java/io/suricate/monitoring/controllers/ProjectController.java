@@ -83,7 +83,7 @@ public class ProjectController {
     private final ProjectWidgetService projectWidgetService;
 
     /**
-     * User service
+     * The user service
      */
     private final UserService userService;
 
@@ -96,11 +96,6 @@ public class ProjectController {
      * The project grid mapper
      */
     private final ProjectGridMapper projectGridMapper;
-
-    /**
-     * The project widget mapper
-     */
-    private final ProjectWidgetMapper projectWidgetMapper;
 
     /**
      * The user mapper
@@ -120,7 +115,6 @@ public class ProjectController {
      * @param userService               The user service
      * @param projectMapper             The project mapper
      * @param projectGridMapper         The project grid mapper
-     * @param projectWidgetMapper       The project widget mapper
      * @param userMapper                The user mapper
      * @param dashboardWebSocketService The dashboard websocket service
      */
@@ -131,7 +125,6 @@ public class ProjectController {
                              final UserService userService,
                              final ProjectMapper projectMapper,
                              final ProjectGridMapper projectGridMapper,
-                             final ProjectWidgetMapper projectWidgetMapper,
                              final UserMapper userMapper,
                              final DashboardWebSocketService dashboardWebSocketService) {
         this.projectService = projectService;
@@ -140,7 +133,6 @@ public class ProjectController {
         this.userService = userService;
         this.projectMapper = projectMapper;
         this.projectGridMapper = projectGridMapper;
-        this.projectWidgetMapper = projectWidgetMapper;
         this.userMapper = userMapper;
         this.dashboardWebSocketService = dashboardWebSocketService;
     }

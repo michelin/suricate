@@ -5,6 +5,7 @@ import io.suricate.monitoring.model.dto.api.projectgrid.ProjectGridRequestDto;
 import io.suricate.monitoring.model.dto.api.projectgrid.ProjectGridResponseDto;
 import io.suricate.monitoring.model.entities.Project;
 import io.suricate.monitoring.model.entities.ProjectGrid;
+import io.suricate.monitoring.model.entities.ProjectWidget;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -63,7 +64,6 @@ public abstract class ProjectGridMapper {
      * Map a project grid DTO into a project grid entity
      *
      * @param importProjectGridRequestDto The imported project grid DTO from json file
-     * @param project The project DTO
      * @return The project grid as entity
      */
     @Named("toProjectGridEntity")

@@ -135,7 +135,7 @@ public abstract class ProjectMapper {
     @Mapping(target = "maxColumn", source = "gridProperties.maxColumn")
     @Mapping(target = "widgetHeight", source = "gridProperties.widgetHeight")
     @Mapping(target = "cssStyle", source = "gridProperties.cssStyle")
-    @Mapping(target = "image", qualifiedByName = "toAssetEntity")
+    @Mapping(target = "screenshot", source = "image", qualifiedByName = "toAssetEntity")
     @Mapping(target = "grids", qualifiedByName = "toProjectGridEntity")
     public abstract Project toProjectEntity(ImportExportProjectDto importProjectRequestDto);
 }

@@ -1,6 +1,4 @@
 import {GridProperties} from "../project/grid-properties";
-import {Asset} from "../asset/asset";
-import {ProjectGrid} from "../project-grid/project-grid";
 import {ImportExportAsset} from "./import-export-asset";
 import {ImportExportProjectGrid} from "./import-export-project-grid";
 
