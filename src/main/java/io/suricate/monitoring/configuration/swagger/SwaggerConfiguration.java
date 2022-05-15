@@ -17,8 +17,8 @@
 package io.suricate.monitoring.configuration.swagger;
 
 import com.google.common.base.Predicates;
-import io.suricate.monitoring.configuration.ApplicationProperties;
-import io.suricate.monitoring.configuration.security.ConnectedUser;
+import io.suricate.monitoring.properties.ApplicationProperties;
+import io.suricate.monitoring.configuration.security.common.ConnectedUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;

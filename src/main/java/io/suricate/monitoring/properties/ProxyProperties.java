@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.configuration.web;
+package io.suricate.monitoring.properties;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -29,8 +29,7 @@ import org.springframework.context.annotation.Configuration;
 @Setter
 @Configuration
 @ConfigurationProperties(prefix = "proxy")
-public class ProxyConfiguration {
-
+public class ProxyProperties {
     /**
      * Proxy host
      */

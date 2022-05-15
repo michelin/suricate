@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.services.mapper;
 
-import io.suricate.monitoring.configuration.security.ConnectedUser;
+import io.suricate.monitoring.configuration.security.common.ConnectedUser;
 import io.suricate.monitoring.model.dto.api.user.UserRequestDto;
 import io.suricate.monitoring.model.dto.api.user.UserResponseDto;
 import io.suricate.monitoring.model.entities.User;
@@ -78,8 +78,6 @@ public abstract class UserMapper {
      * @return The user entity
      */
     @Named("connectedUserToUserEntity")
-    @Mapping(target = "authenticationMethod", expression = "java(AuthenticationMethod.LDAP)")
-    @Mapping(target = "email", source = "connectedUser.mail")
     public abstract User connectedUserToUserEntity(final ConnectedUser connectedUser);
 
     /**

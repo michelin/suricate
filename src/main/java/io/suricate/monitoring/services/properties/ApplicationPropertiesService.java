@@ -18,7 +18,7 @@
 
 package io.suricate.monitoring.services.properties;
 
-import io.suricate.monitoring.configuration.ApplicationProperties;
+import io.suricate.monitoring.properties.ApplicationProperties;
 import io.suricate.monitoring.model.dto.api.ApplicationPropertiesDto;
 import org.springframework.stereotype.Service;
 

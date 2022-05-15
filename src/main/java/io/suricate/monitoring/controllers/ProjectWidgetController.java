@@ -18,6 +18,7 @@
 
 package io.suricate.monitoring.controllers;
 
+import io.suricate.monitoring.configuration.security.oauth2.ConnectedOAuth2User;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetRequestDto;
 import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetResponseDto;
@@ -34,7 +35,7 @@ import io.swagger.annotations.*;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import springfox.documentation.annotations.ApiIgnore;
@@ -161,17 +162,17 @@ public class  ProjectWidgetController {
     })
     @PutMapping(value = "/v1/projectWidgets/{projectWidgetId}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ProjectWidgetResponseDto> editByProject(@ApiIgnore OAuth2Authentication authentication,
-                                                             @ApiParam(name = "projectWidgetId", value = "The project widget id", required = true)
-                                                             @PathVariable("projectWidgetId") Long projectWidgetId,
-                                                             @ApiParam(name = "projectWidgetResponseDto", value = "The project widget informations to update", required = true)
-                                                             @RequestBody ProjectWidgetRequestDto projectWidgetRequestDto) {
+    public ResponseEntity<ProjectWidgetResponseDto> editByProject(@ApiIgnore @AuthenticationPrincipal ConnectedOAuth2User connectedUser,
+                                                                  @ApiParam(name = "projectWidgetId", value = "The project widget id", required = true)
+                                                                  @PathVariable("projectWidgetId") Long projectWidgetId,
+                                                                  @ApiParam(name = "projectWidgetResponseDto", value = "The project widget informations to update", required = true)
+                                                                  @RequestBody ProjectWidgetRequestDto projectWidgetRequestDto) {
         Optional<ProjectWidget> projectWidgetOptional = this.projectWidgetService.getOne(projectWidgetId);
         if (!projectWidgetOptional.isPresent()) {
             throw new ObjectNotFoundException(ProjectWidget.class, projectWidgetId);
         }
 
-        if (!this.projectService.isConnectedUserCanAccessToProject(projectWidgetOptional.get().getProjectGrid().getProject(), authentication.getUserAuthentication())) {
+        if (!this.projectService.isConnectedUserCanAccessToProject(projectWidgetOptional.get().getProjectGrid().getProject(), connectedUser)) {
             throw new ApiException(USER_NOT_ALLOWED_PROJECT, ApiErrorEnum.NOT_AUTHORIZED);
         }
 
@@ -201,7 +202,7 @@ public class  ProjectWidgetController {
     })
     @PostMapping(value = "/v1/projectWidgets/{projectToken}/{gridId}/projectWidgets")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ProjectWidgetResponseDto> addProjectWidgetToProject(@ApiIgnore OAuth2Authentication authentication,
+    public ResponseEntity<ProjectWidgetResponseDto> addProjectWidgetToProject(@ApiIgnore @AuthenticationPrincipal ConnectedOAuth2User connectedUser,
                                                                               @ApiParam(name = "projectToken", value = "The project token", required = true)
                                                                               @PathVariable("projectToken") String projectToken,
                                                                               @ApiParam(name = "gridId", value = "The grid id", required = true)
@@ -218,7 +219,7 @@ public class  ProjectWidgetController {
             throw new ApiException(USER_NOT_ALLOWED_GRID, ApiErrorEnum.NOT_AUTHORIZED);
         }
 
-        if (!this.projectService.isConnectedUserCanAccessToProject(project, authentication)) {
+        if (!this.projectService.isConnectedUserCanAccessToProject(project, connectedUser)) {
             throw new ApiException(USER_NOT_ALLOWED_PROJECT, ApiErrorEnum.NOT_AUTHORIZED);
         }
 
@@ -252,7 +253,7 @@ public class  ProjectWidgetController {
     })
     @DeleteMapping(value = "/v1/projectWidgets/{projectWidgetId}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Void> deleteById(@ApiIgnore OAuth2Authentication authentication,
+    public ResponseEntity<Void> deleteById(@ApiIgnore @AuthenticationPrincipal ConnectedOAuth2User connectedUser,
                                            @ApiParam(name = "projectWidgetId", value = "The project widget id", required = true)
                                            @PathVariable("projectWidgetId") Long projectWidgetId) {
         Optional<ProjectWidget> projectWidgetOptional = projectWidgetService.getOne(projectWidgetId);
@@ -261,7 +262,7 @@ public class  ProjectWidgetController {
             throw new ObjectNotFoundException(ProjectWidget.class, projectWidgetId);
         }
 
-        if (!projectService.isConnectedUserCanAccessToProject(projectWidgetOptional.get().getProjectGrid().getProject(), authentication.getUserAuthentication())) {
+        if (!projectService.isConnectedUserCanAccessToProject(projectWidgetOptional.get().getProjectGrid().getProject(), connectedUser)) {
             throw new ApiException(USER_NOT_ALLOWED_PROJECT, ApiErrorEnum.NOT_AUTHORIZED);
         }
 

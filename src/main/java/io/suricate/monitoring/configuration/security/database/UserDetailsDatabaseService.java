@@ -16,9 +16,11 @@
 
 package io.suricate.monitoring.configuration.security.database;
 
-import io.suricate.monitoring.configuration.security.ConnectedUser;
+import io.suricate.monitoring.configuration.security.common.ConnectedUser;
 import io.suricate.monitoring.model.entities.User;
 import io.suricate.monitoring.services.api.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.security.core.GrantedAuthority;
@@ -26,7 +28,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -38,21 +39,16 @@ import java.util.stream.Collectors;
 @Service("userDetailsService")
 @ConditionalOnProperty(name = "application.authentication.provider", havingValue = "database")
 public class UserDetailsDatabaseService implements UserDetailsService {
+    /**
+     * The logger
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserDetailsDatabaseService.class);
 
     /**
      * The user service
      */
-    private final UserService userService;
-
-    /**
-     * Constructor
-     *
-     * @param userService The user service
-     */
     @Autowired
-    public UserDetailsDatabaseService(UserService userService) {
-        this.userService = userService;
-    }
+    private UserService userService;
 
     /**
      * Load user from database by username
@@ -62,8 +58,9 @@ public class UserDetailsDatabaseService implements UserDetailsService {
      * @throws UsernameNotFoundException When no user has been found
      */
     @Override
-    @Transactional
     public ConnectedUser loadUserByUsername(String username) {
+        LOGGER.debug("Authenticating user <{}> with database", username);
+
         Optional<User> currentUser = userService.getOneByUsername(username);
 
         if (!currentUser.isPresent()) {
@@ -71,11 +68,12 @@ public class UserDetailsDatabaseService implements UserDetailsService {
         }
 
         Collection<? extends GrantedAuthority> authorities = currentUser
-                .map(user -> user.getRoles().stream()
+                .map(user -> user.getRoles()
+                        .stream()
                         .map(roles -> new SimpleGrantedAuthority(roles.getName()))
                         .collect(Collectors.toList()))
                 .orElseThrow(() -> new UsernameNotFoundException("User " + username + " was not authorized"));
 
-        return new ConnectedUser(currentUser.get(), authorities);
+        return new DatabaseConnectedUser(currentUser.get(), authorities);
     }
 }

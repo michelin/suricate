@@ -16,10 +16,11 @@
 
 package io.suricate.monitoring.configuration.security.ldap;
 
-import io.suricate.monitoring.configuration.ApplicationProperties;
-import io.suricate.monitoring.configuration.security.ConnectedUser;
+import io.suricate.monitoring.properties.ApplicationProperties;
+import io.suricate.monitoring.configuration.security.common.ConnectedUser;
 import io.suricate.monitoring.model.entities.User;
 import io.suricate.monitoring.services.api.UserService;
+import io.suricate.monitoring.services.mapper.UserMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.ldap.userdetails.LdapAuthoritiesPopulator;
 import org.springframework.stereotype.Service;
 
@@ -42,31 +42,21 @@ import java.util.stream.Collectors;
 @ConditionalOnProperty(name = "application.authentication.provider", havingValue = "ldap")
 public class UserDetailsServiceLdapAuthoritiesPopulator implements LdapAuthoritiesPopulator {
     /**
-     * The LDAP
+     * The logger
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(UserDetailsServiceLdapAuthoritiesPopulator.class);
 
     /**
      * The user service
      */
-    private final UserService userService;
+    @Autowired
+    private UserService userService;
 
     /**
-     * The application properties (from properties files)
-     */
-    private final ApplicationProperties applicationProperties;
-
-    /**
-     * Constructor
-     *
-     * @param userService User service
-     * @param applicationProperties Application properties
+     * The application properties
      */
     @Autowired
-    public UserDetailsServiceLdapAuthoritiesPopulator(UserService userService, ApplicationProperties applicationProperties) {
-        this.userService = userService;
-        this.applicationProperties = applicationProperties;
-    }
+    private ApplicationProperties applicationProperties;
 
     /**
      * Get authorities for authenticated user
@@ -77,21 +67,14 @@ public class UserDetailsServiceLdapAuthoritiesPopulator implements LdapAuthoriti
      */
     @Transactional
     public Collection<? extends GrantedAuthority> getGrantedAuthorities(DirContextOperations userData, String username) {
-        LOGGER.debug("Authenticating {}", username);
-        String lowercaseLogin = username.toLowerCase(Locale.ENGLISH);
-        Optional<User> currentUser =  userService.getOneByUsername(lowercaseLogin);
-        ConnectedUser connectedUser = new ConnectedUser(lowercaseLogin, userData, applicationProperties.authentication.ldap);
+        LOGGER.debug("Authenticating user <{}> with LDAP", username);
 
-        if (!currentUser.isPresent()) {
-            // Call service to add user
-            currentUser = userService.initUser(connectedUser);
-        } else {
-            currentUser = userService.updateUserLdapInformation(currentUser.get(), connectedUser);
-        }
+        ConnectedUser connectedUser = new LdapConnectedUser(username.toLowerCase(), userData, applicationProperties.authentication.ldap);
+        User registeredUser = userService.registerUser(connectedUser);
 
-        return currentUser.map(user -> user.getRoles().stream()
-            .map( roles -> new SimpleGrantedAuthority(roles.getName()))
-            .collect(Collectors.toList()))
-            .orElseThrow(() -> new UsernameNotFoundException("User " + lowercaseLogin + " was not authorized"));
+        return registeredUser.getRoles()
+                .stream()
+                .map(role -> new SimpleGrantedAuthority(role.getName()))
+                .collect(Collectors.toList());
     }
 }

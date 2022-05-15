@@ -16,6 +16,7 @@
 
 package io.suricate.monitoring.services.api;
 
+import io.suricate.monitoring.configuration.security.oauth2.ConnectedOAuth2User;
 import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
 import io.suricate.monitoring.model.entities.*;
 import io.suricate.monitoring.model.enums.UpdateType;
@@ -286,9 +287,9 @@ public class ProjectService {
      * @param authentication The connected user
      * @return True if he can, false otherwise
      */
-    public boolean isConnectedUserCanAccessToProject(final Project project, final Authentication authentication) {
-        return SecurityUtils.isAdmin(authentication)
-            || project.getUsers().stream().anyMatch(currentUser -> currentUser.getUsername().equalsIgnoreCase(authentication.getName()));
+    public boolean isConnectedUserCanAccessToProject(final Project project, final ConnectedOAuth2User connectedUser) {
+        return SecurityUtils.isAdmin(connectedUser)
+            || project.getUsers().stream().anyMatch(currentUser -> currentUser.getUsername().equalsIgnoreCase(connectedUser.getName()));
     }
 
     /**

@@ -16,8 +16,8 @@
 
 package io.suricate.monitoring;
 
-import io.suricate.monitoring.configuration.ApplicationProperties;
-import io.suricate.monitoring.configuration.web.ProxyConfiguration;
+import io.suricate.monitoring.properties.ApplicationProperties;
+import io.suricate.monitoring.properties.ProxyProperties;
 import io.suricate.monitoring.services.GitService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +55,7 @@ public class BackendApplication {
     /**
      * Proxy configuration
      */
-    private final ProxyConfiguration proxyConfiguration;
+    private final ProxyProperties proxyConfiguration;
 
     /**
      * The constructor
@@ -64,7 +64,7 @@ public class BackendApplication {
      * @param gitService            git service to inject
      */
     @Autowired
-    public BackendApplication(final ApplicationProperties applicationProperties, final GitService gitService, final ProxyConfiguration proxyConfiguration) {
+    public BackendApplication(final ApplicationProperties applicationProperties, final GitService gitService, final ProxyProperties proxyConfiguration) {
         this.applicationProperties = applicationProperties;
         this.gitService = gitService;
         this.proxyConfiguration = proxyConfiguration;

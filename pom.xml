@@ -76,6 +76,11 @@
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-client</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
@@ -93,9 +98,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.security.oauth.boot</groupId>
-            <artifactId>spring-security-oauth2-autoconfigure</artifactId>
-            <version>2.4.2</version>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.9.1</version>
         </dependency>
 
         <!-- Spring Retry -->
@@ -431,7 +436,7 @@
                         <image>adoptopenjdk:8-jre-hotspot</image>
                     </from>
                     <to>
-                        <image>docker.hub.com/michelin/${project.artifactId}:${project.version}</image>
+                        <image>docker.io/michelin/${project.artifactId}:${project.version}</image>
                         <tags>
                             <tag>latest</tag>
                             <tag>${project.version}</tag>

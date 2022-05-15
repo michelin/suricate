@@ -16,7 +16,8 @@
 
 package io.suricate.monitoring.utils;
 
-import io.suricate.monitoring.configuration.security.ConnectedUser;
+import io.suricate.monitoring.configuration.security.common.ConnectedUser;
+import io.suricate.monitoring.configuration.security.oauth2.ConnectedOAuth2User;
 import io.suricate.monitoring.model.enums.UserRoleEnum;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -50,8 +51,8 @@ public final class SecurityUtils {
      *
      * @return true if the connected user is admin, false otherwise
      */
-    public static boolean isAdmin(final Authentication authentication) {
-        return hasRole(authentication, UserRoleEnum.ROLE_ADMIN.name());
+    public static boolean isAdmin(final ConnectedOAuth2User connectedUser) {
+        return hasRole(connectedUser, UserRoleEnum.ROLE_ADMIN.name());
     }
 
 
@@ -61,15 +62,15 @@ public final class SecurityUtils {
      * @param roles list of roles
      * @return true if the connected user have all roles, false otherwise
      */
-    public static boolean hasRole(Authentication authentication, String... roles) {
+    public static boolean hasRole(ConnectedOAuth2User connectedUser, String... roles) {
         boolean ret = false;
 
-        if (authentication != null) {
+        if (connectedUser != null) {
             List<GrantedAuthority> list = new ArrayList<>();
             for (String role : roles) {
                 list.add(new SimpleGrantedAuthority(role));
             }
-            ret = authentication.getAuthorities().containsAll(list);
+            ret = connectedUser.getAuthorities().containsAll(list);
         }
 
         return ret;

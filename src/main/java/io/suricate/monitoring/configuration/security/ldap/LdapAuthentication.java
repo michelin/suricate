@@ -16,8 +16,8 @@
 
 package io.suricate.monitoring.configuration.security.ldap;
 
-import io.suricate.monitoring.configuration.ApplicationProperties;
-import io.suricate.monitoring.configuration.security.ConnectedUser;
+import io.suricate.monitoring.properties.ApplicationProperties;
+import io.suricate.monitoring.configuration.security.common.ConnectedUser;
 import io.suricate.monitoring.services.api.UserService;
 import io.suricate.monitoring.utils.exceptions.ConfigurationException;
 import org.apache.commons.lang3.StringUtils;
@@ -110,7 +110,7 @@ public class LdapAuthentication {
             @Override
             public UserDetails mapUserFromContext(DirContextOperations ctx, String username, java.util.Collection<? extends GrantedAuthority> authorities) {
                 Long userId = userService.getIdByUsername(username);
-                return new ConnectedUser(username, ctx, authorities, userId, ldapProperties);
+                return new LdapConnectedUser(username, ctx, authorities, userId, ldapProperties);
             }
         };
     }

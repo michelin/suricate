@@ -18,6 +18,7 @@
 
 package io.suricate.monitoring.controllers;
 
+import io.suricate.monitoring.configuration.security.oauth2.ConnectedOAuth2User;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.project.ProjectResponseDto;
 import io.suricate.monitoring.model.dto.api.projectgrid.ProjectGridRequestDto;
@@ -35,7 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
@@ -100,7 +101,7 @@ public class ProjectGridController {
     })
     @PostMapping(value = "/v1/projectGrids/{projectToken}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ProjectGridResponseDto> create(@ApiIgnore OAuth2Authentication authentication,
+    public ResponseEntity<ProjectGridResponseDto> create(@ApiIgnore @AuthenticationPrincipal ConnectedOAuth2User connectedUser,
                                                          @ApiParam(name = "projectToken", value = "The project token", required = true)
                                                          @PathVariable("projectToken") String projectToken,
                                                          @ApiParam(name = "projectGridRequestDto", value = "The project grid information", required = true)
@@ -111,7 +112,7 @@ public class ProjectGridController {
         }
 
         Project project = projectOptional.get();
-        if (!this.projectService.isConnectedUserCanAccessToProject(project, authentication.getUserAuthentication())) {
+        if (!this.projectService.isConnectedUserCanAccessToProject(project, connectedUser)) {
             throw new ApiException(USER_NOT_ALLOWED_PROJECT, ApiErrorEnum.NOT_AUTHORIZED);
         }
 
@@ -140,18 +141,18 @@ public class ProjectGridController {
     })
     @PutMapping(value = "/v1/projectGrids/{projectToken}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Void> updateProjectGrids(@ApiIgnore OAuth2Authentication authentication,
-                                              @ApiParam(name = "projectToken", value = "The project token", required = true)
-                                              @PathVariable("projectToken") String projectToken,
-                                              @ApiParam(name = "projectResponseDto", value = "The project information", required = true)
-                                              @RequestBody ProjectGridRequestDto projectRequestDto) {
+    public ResponseEntity<Void> updateProjectGrids(@ApiIgnore @AuthenticationPrincipal ConnectedOAuth2User connectedUser,
+                                                   @ApiParam(name = "projectToken", value = "The project token", required = true)
+                                                   @PathVariable("projectToken") String projectToken,
+                                                   @ApiParam(name = "projectResponseDto", value = "The project information", required = true)
+                                                   @RequestBody ProjectGridRequestDto projectRequestDto) {
         Optional<Project> projectOptional = projectService.getOneByToken(projectToken);
         if (!projectOptional.isPresent()) {
             throw new ObjectNotFoundException(Project.class, projectToken);
         }
 
         Project project = projectOptional.get();
-        if (!this.projectService.isConnectedUserCanAccessToProject(project, authentication.getUserAuthentication())) {
+        if (!this.projectService.isConnectedUserCanAccessToProject(project, connectedUser)) {
             throw new ApiException(USER_NOT_ALLOWED_PROJECT, ApiErrorEnum.NOT_AUTHORIZED);
         }
 
@@ -185,7 +186,7 @@ public class ProjectGridController {
     })
     @DeleteMapping(value = "/v1/projectGrids/{projectToken}/{gridId}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Void> deleteGridById(@ApiIgnore OAuth2Authentication authentication,
+    public ResponseEntity<Void> deleteGridById(@ApiIgnore @AuthenticationPrincipal ConnectedOAuth2User connectedUser,
                                                @ApiParam(name = "projectToken", value = "The project token", required = true)
                                                @PathVariable("projectToken") String projectToken,
                                                @ApiParam(name = "gridId", value = "The grid id", required = true)
@@ -197,7 +198,7 @@ public class ProjectGridController {
         }
 
         Project project = projectOptional.get();
-        if (!projectService.isConnectedUserCanAccessToProject(project, authentication.getUserAuthentication())) {
+        if (!projectService.isConnectedUserCanAccessToProject(project, connectedUser)) {
             throw new ApiException(USER_NOT_ALLOWED_PROJECT, ApiErrorEnum.NOT_AUTHORIZED);
         }
 

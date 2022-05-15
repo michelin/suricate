@@ -17,7 +17,7 @@
  *
  */
 
-package io.suricate.monitoring.configuration;
+package io.suricate.monitoring.properties;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -34,11 +34,11 @@ import javax.validation.constraints.Pattern;
 /**
  * Hold the custom properties from properties.yml files
  */
+@Getter
+@Setter
 @Configuration
 @PropertySource("classpath:application.properties")
 @ConfigurationProperties(prefix = "application", ignoreUnknownFields = false)
-@Getter
-@Setter
 public class ApplicationProperties {
 
     /**

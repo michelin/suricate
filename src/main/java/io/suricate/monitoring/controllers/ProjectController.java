@@ -18,6 +18,7 @@
 
 package io.suricate.monitoring.controllers;
 
+import io.suricate.monitoring.configuration.security.oauth2.ConnectedOAuth2User;
 import io.suricate.monitoring.configuration.swagger.ApiPageable;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.project.ProjectRequestDto;
@@ -44,7 +45,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -245,7 +246,7 @@ public class ProjectController {
     })
     @PutMapping(value = "/v1/projects/{projectToken}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Void> updateProject(@ApiIgnore OAuth2Authentication authentication,
+    public ResponseEntity<Void> updateProject(@ApiIgnore @AuthenticationPrincipal ConnectedOAuth2User connectedUser,
                                               @ApiParam(name = "projectToken", value = "The project token", required = true)
                                               @PathVariable("projectToken") String projectToken,
                                               @ApiParam(name = "projectResponseDto", value = "The project information", required = true)
@@ -256,7 +257,7 @@ public class ProjectController {
         }
 
         Project project = projectOptional.get();
-        if (!projectService.isConnectedUserCanAccessToProject(project, authentication.getUserAuthentication())) {
+        if (!projectService.isConnectedUserCanAccessToProject(project, connectedUser)) {
             throw new ApiException(USER_NOT_ALLOWED_PROJECT, ApiErrorEnum.NOT_AUTHORIZED);
         }
 
@@ -280,7 +281,7 @@ public class ProjectController {
     })
     @PutMapping(value = "/v1/projects/{projectToken}/screenshot")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Void> updateProjectScreenshot(@ApiIgnore OAuth2Authentication authentication,
+    public ResponseEntity<Void> updateProjectScreenshot(@ApiIgnore @AuthenticationPrincipal ConnectedOAuth2User connectedUser,
                                                         @ApiParam(name = "projectToken", value = "The project token", required = true)
                                                         @PathVariable("projectToken") String projectToken,
                                                         @ApiParam(name = "screenshot", value = "The screenshot to insert", required = true)
@@ -291,7 +292,7 @@ public class ProjectController {
         }
 
         Project project = projectOptional.get();
-        if (!projectService.isConnectedUserCanAccessToProject(project, authentication.getUserAuthentication())) {
+        if (!projectService.isConnectedUserCanAccessToProject(project, connectedUser)) {
             throw new ApiException(USER_NOT_ALLOWED_PROJECT, ApiErrorEnum.NOT_AUTHORIZED);
         }
 
@@ -321,16 +322,16 @@ public class ProjectController {
     })
     @DeleteMapping(value = "/v1/projects/{projectToken}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Void> deleteProjectById(@ApiIgnore OAuth2Authentication authentication,
-                                              @ApiParam(name = "projectToken", value = "The project token", required = true)
-                                              @PathVariable("projectToken") String projectToken) {
+    public ResponseEntity<Void> deleteProjectById(@ApiIgnore @AuthenticationPrincipal ConnectedOAuth2User connectedUser,
+                                                  @ApiParam(name = "projectToken", value = "The project token", required = true)
+                                                  @PathVariable("projectToken") String projectToken) {
         Optional<Project> projectOptional = projectService.getOneByToken(projectToken);
 
         if (!projectOptional.isPresent()) {
             throw new ObjectNotFoundException(Project.class, projectToken);
         }
 
-        if (!projectService.isConnectedUserCanAccessToProject(projectOptional.get(), authentication.getUserAuthentication())) {
+        if (!projectService.isConnectedUserCanAccessToProject(projectOptional.get(), connectedUser)) {
             throw new ApiException(USER_NOT_ALLOWED_PROJECT, ApiErrorEnum.NOT_AUTHORIZED);
         }
 
@@ -356,7 +357,7 @@ public class ProjectController {
     })
     @PutMapping(value = "/v1/projects/{projectToken}/projectWidgetPositions")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Void> updateProjectWidgetsPositionForProject(@ApiIgnore OAuth2Authentication authentication,
+    public ResponseEntity<Void> updateProjectWidgetsPositionForProject(@ApiIgnore @AuthenticationPrincipal ConnectedOAuth2User connectedUser,
                                                                        @ApiParam(name = "projectToken", value = "The project token", required = true)
                                                                        @PathVariable("projectToken") String projectToken,
                                                                        @ApiParam(name = "projectWidgetPositionRequestDtos", value = "The list of the new positions", required = true)
@@ -367,7 +368,7 @@ public class ProjectController {
         }
 
         Project project = projectOptional.get();
-        if (!projectService.isConnectedUserCanAccessToProject(project, authentication.getUserAuthentication())) {
+        if (!projectService.isConnectedUserCanAccessToProject(project, connectedUser)) {
             throw new ApiException(USER_NOT_ALLOWED_PROJECT, ApiErrorEnum.NOT_AUTHORIZED);
         }
 
@@ -419,7 +420,7 @@ public class ProjectController {
     })
     @PostMapping(value = "/v1/projects/{projectToken}/users")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Void> addUserToProject(@ApiIgnore OAuth2Authentication authentication,
+    public ResponseEntity<Void> addUserToProject(@ApiIgnore @AuthenticationPrincipal ConnectedOAuth2User connectedUser,
                                                  @ApiParam(name = "projectToken", value = "The project token", required = true)
                                                  @PathVariable("projectToken") String projectToken,
                                                  @ApiParam(name = "usernameMap", value = "A map with the username", required = true)
@@ -432,7 +433,7 @@ public class ProjectController {
         }
 
         Project project = projectOptional.get();
-        if (!projectService.isConnectedUserCanAccessToProject(project, authentication.getUserAuthentication())) {
+        if (!projectService.isConnectedUserCanAccessToProject(project, connectedUser)) {
             throw new ApiException(USER_NOT_ALLOWED_PROJECT, ApiErrorEnum.NOT_AUTHORIZED);
         }
 
@@ -463,18 +464,18 @@ public class ProjectController {
     })
     @DeleteMapping(value = "/v1/projects/{projectToken}/users/{userId}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Void> deleteUserFromProject(@ApiIgnore OAuth2Authentication authentication,
-                                                    @ApiParam(name = "projectToken", value = "The project token", required = true)
-                                                    @PathVariable("projectToken") String projectToken,
-                                                    @ApiParam(name = "userId", value = "The user id", required = true)
-                                                    @PathVariable("userId") Long userId) {
+    public ResponseEntity<Void> deleteUserFromProject(@ApiIgnore @AuthenticationPrincipal ConnectedOAuth2User connectedUser,
+                                                      @ApiParam(name = "projectToken", value = "The project token", required = true)
+                                                      @PathVariable("projectToken") String projectToken,
+                                                      @ApiParam(name = "userId", value = "The user id", required = true)
+                                                      @PathVariable("userId") Long userId) {
         Optional<Project> projectOptional = projectService.getOneByToken(projectToken);
         if (!projectOptional.isPresent()) {
             throw new ObjectNotFoundException(Project.class, projectToken);
         }
 
         Project project = projectOptional.get();
-        if (!projectService.isConnectedUserCanAccessToProject(project, authentication.getUserAuthentication())) {
+        if (!projectService.isConnectedUserCanAccessToProject(project, connectedUser)) {
             throw new ApiException(USER_NOT_ALLOWED_PROJECT, ApiErrorEnum.NOT_AUTHORIZED);
         }
 

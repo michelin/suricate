@@ -14,11 +14,14 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.configuration.web;
+package io.suricate.monitoring.configuration.security.web;
 
+import io.suricate.monitoring.properties.ApplicationProperties;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
+import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.resource.PathResourceResolver;
@@ -29,11 +32,26 @@ import java.io.IOException;
  * Class used to configure the path for the different resource of the app (index.html of angular, Swagger page, ...)
  */
 @Configuration
-public class SuricateWebMvcConfigurer implements WebMvcConfigurer {
+public class WebConfig implements WebMvcConfigurer {
+    /**
+     * Application properties
+     */
+    @Autowired
+    private ApplicationProperties applicationProperties;
+
+    /**
+     * CORS configuration
+     * @param registry The CORS registry
+     */
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry
+                .addMapping("/api/**")
+                .combine(applicationProperties.cors);
+    }
 
     /**
      * The view resolver
-     *
      * @param registry Store the configurations
      */
     @Override

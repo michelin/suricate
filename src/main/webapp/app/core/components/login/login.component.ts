@@ -57,12 +57,22 @@ export class LoginComponent implements OnInit {
   /**
    * True if the user provider is LDAP
    */
-  protected isLdapServerUserProvider: boolean;
+  public isLdapServerUserProvider: boolean;
 
   /**
    * Define if the spinner should be running or not
    */
   public loading = true;
+
+  /**
+   * OAuth2 authentication with GitHub endpoint
+   */
+  public githubAuthenticationEndpoint: string;
+
+  /**
+   * OAuth2 authentication with GitLab endpoint
+   */
+  public gitlabAuthenticationEndpoint: string;
 
   /**
    * Constructor
@@ -89,6 +99,9 @@ export class LoginComponent implements OnInit {
       this.navigateToHomePage();
       return;
     }
+
+    this.githubAuthenticationEndpoint = AuthenticationService.githubAuthenticationApiEndpoint;
+    this.gitlabAuthenticationEndpoint = AuthenticationService.gitlabAuthenticationApiEndpoint;
 
     this.httpConfigurationService.getAuthenticationProvider().subscribe((applicationProperties: ApplicationProperties) => {
       this.isLdapServerUserProvider = applicationProperties.value.toUpperCase() === AuthenticationProviderEnum.LDAP;
@@ -125,12 +138,6 @@ export class LoginComponent implements OnInit {
         color: 'primary',
         label: 'sign.in',
         type: ButtonTypeEnum.SUBMIT
-      },
-      {
-        color: 'primary',
-        label: 'sign.up',
-        callback: () => this.navigateToRegisterPage(),
-        hidden: () => this.isLdapServerUserProvider
       }
     ];
   }
@@ -150,10 +157,9 @@ export class LoginComponent implements OnInit {
     this.router.navigate(['/home']);
   }
 
-  /**
-   * Redirect to the register page
-   */
-  private navigateToRegisterPage(): void {
-    this.router.navigate(['/register']);
+  public authWithGithub(): void {
+    this.authenticationService.authWithGithub().subscribe(response => {
+      console.warn(response);
+    })
   }
 }

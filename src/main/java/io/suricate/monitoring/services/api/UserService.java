@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.services.api;
 
-import io.suricate.monitoring.configuration.security.ConnectedUser;
+import io.suricate.monitoring.configuration.security.common.ConnectedUser;
 import io.suricate.monitoring.model.entities.Role;
 import io.suricate.monitoring.model.entities.User;
 import io.suricate.monitoring.model.enums.UserRoleEnum;
@@ -41,7 +41,6 @@ import java.util.stream.Collectors;
  */
 @Service
 public class UserService {
-
     /**
      * Class logger
      */
@@ -50,125 +49,76 @@ public class UserService {
     /**
      * The user repository
      */
-    private final UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     /**
      * The user mapper
      */
-    private final UserMapper userMapper;
+    @Autowired
+    private UserMapper userMapper;
 
     /**
      * The role service
      */
-    private final RoleService roleService;
+    @Autowired
+    private RoleService roleService;
 
     /**
      * The project service
      */
-    private final ProjectService projectService;
+    @Autowired
+    private ProjectService projectService;
 
     /**
      * The user setting service
      */
-    private final UserSettingService userSettingService;
-
-    /**
-     * Constructor
-     *
-     * @param userRepository     The user repository
-     * @param userMapper         The user mapper
-     * @param roleService        The role service
-     * @param projectService     The projectService to inject
-     * @param userSettingService The user setting service
-     */
     @Autowired
-    public UserService(final UserRepository userRepository,
-                       final UserMapper userMapper,
-                       final RoleService roleService,
-                       final ProjectService projectService,
-                       final UserSettingService userSettingService) {
-        this.userRepository = userRepository;
-        this.userMapper = userMapper;
-        this.roleService = roleService;
-        this.projectService = projectService;
-        this.userSettingService = userSettingService;
-    }
+    private UserSettingService userSettingService;
 
     /**
-     * Register a new user (DATABASE auth Mode)
-     *
+     * Register a new user in database authentication mode
      * @param user User to register
      * @return The user registered
      */
-    public Optional<User> registerNewUserAccount(User user) {
-        Optional<Role> role;
-
-        if (userRepository.count() > 0L) {
-            role = roleService.getRoleByName(UserRoleEnum.ROLE_USER.name());
-        } else {
-            role = roleService.getRoleByName(UserRoleEnum.ROLE_ADMIN.name());
-        }
-
+    public User create(User user) {
+        UserRoleEnum roleEnum = userRepository.count() > 0 ? UserRoleEnum.ROLE_USER : UserRoleEnum.ROLE_ADMIN;
+        Optional<Role> role = roleService.getRoleByName(roleEnum.name());
         if (!role.isPresent()) {
-            LOGGER.debug("Cannot find Role");
-            return Optional.empty();
+            LOGGER.error("Role {} not available in database", roleEnum);
+            throw new ObjectNotFoundException(Role.class, roleEnum);
         }
 
         user.setRoles(Collections.singleton(role.get()));
         userRepository.save(user);
 
-        // Set the default user settings
         user.getUserSettings().addAll(userSettingService.createDefaultSettingsForUser(user));
 
-        return Optional.of(user);
+        return user;
     }
 
     /**
-     * Init a user (LDAP auth mode)
-     *
-     * @param connectedUser The connected user
-     * @return The user
+     * Register a new user in ldap/oauth2 authentication mode
+     * @param connectedUser The new user to register
      */
-    @Transactional
-    public Optional<User> initUser(ConnectedUser connectedUser) {
+    public User registerUser(ConnectedUser connectedUser) {
+        Optional<User> optionalUser = getOneByUsername(connectedUser.getUsername());
 
-        if (connectedUser == null) {
-            return Optional.empty();
+        if (!optionalUser.isPresent()) {
+            User user = userMapper.connectedUserToUserEntity(connectedUser);
+            return create(user);
         }
 
-        // Create user
-        User user = userMapper.connectedUserToUserEntity(connectedUser);
-
-        UserRoleEnum roleEnumToFind;
-        if (userRepository.count() > 0) {
-            roleEnumToFind = UserRoleEnum.ROLE_USER;
-        } else {
-            roleEnumToFind = UserRoleEnum.ROLE_ADMIN;
-        }
-
-        Optional<Role> role = roleService.getRoleByName(roleEnumToFind.name());
-        if (!role.isPresent()) {
-            LOGGER.error("Role {} not available in database", UserRoleEnum.ROLE_USER);
-            throw new ObjectNotFoundException(Role.class, roleEnumToFind);
-        }
-
-        user.getRoles().add(role.get());
-        userRepository.save(user);  // Save user
-
-        // Set the default user settings
-        user.getUserSettings().addAll(userSettingService.createDefaultSettingsForUser(user));
-
-        return Optional.of(user);
+        return update(optionalUser.get(), connectedUser);
     }
 
     /**
-     * Update the user information when ldap connection is set
-     *
+     * Update the user information
      * @param user          The user to update
-     * @param connectedUser The LDAP information
-     * @return The user updated
+     * @param connectedUser The new user information
+     * @return The updated user
      */
-    public Optional<User> updateUserLdapInformation(final User user, final ConnectedUser connectedUser) {
+    public User update(final User user, final ConnectedUser connectedUser) {
         User userUpdated = userMapper.connectedUserToUserEntity(connectedUser);
         userUpdated.setRoles(user.getRoles());
         userUpdated.setProjects(user.getProjects());
@@ -176,7 +126,7 @@ public class UserService {
         userUpdated.setId(user.getId());
 
         userRepository.save(userUpdated);
-        return Optional.of(userUpdated);
+        return userUpdated;
     }
 
     /**

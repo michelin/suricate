@@ -23,7 +23,7 @@ export const environment = {
   production: false,
   version: require('../../../../package.json').version,
   environment: 'Development',
-  base_url: 'http://localhost:8080',
+  backend_url: 'http://localhost:8080',
 
   // Configuration for WebSockets
   wsHeartbeatIncoming: 0,

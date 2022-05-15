@@ -30,12 +30,26 @@ import { RoleEnum } from '../../../enums/role.enum';
 import { UserRequest } from '../../../models/backend/user/user-request';
 import { AbstractHttpService } from '../../backend/abstract-http/abstract-http.service';
 import { HttpUserService } from '../../backend/http-user/http-user.service';
+import {EnvironmentService} from "../environment/environment.service";
+import {Page} from "../../../models/backend/page";
+import {Project} from "../../../models/backend/project/project";
+import {HttpFilterService} from "../../backend/http-filter/http-filter.service";
 
 /**
  * The authentication service
  */
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
+  /**
+   * OAuth2 authentication with GitHub endpoint
+   */
+  public static readonly githubAuthenticationApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/oauth2/authorization/github`;
+
+  /**
+   * OAuth2 authentication with GitLab endpoint
+   */
+  public static readonly gitlabAuthenticationApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/oauth2/authorization/gitlab`;
+
   /**
    * Global endpoint for Authentication
    */
@@ -68,12 +82,19 @@ export class AuthenticationService {
    */
   constructor(private readonly httpClient: HttpClient) {}
 
+  public authWithGithub(): Observable<any> {
+    const url = `${AuthenticationService.githubAuthenticationApiEndpoint}`;
+
+    return this.httpClient.get<any>(url);
+  }
+
   /**
    * Get the access token store in local storage
    */
   private static getAccessToken(): string {
     return localStorage.getItem(AuthenticationService.localStorageAccessTokenKey);
   }
+
   /**
    * Set a new access token in local storage
    *
@@ -89,6 +110,7 @@ export class AuthenticationService {
   private static removeAccessToken(): void {
     localStorage.removeItem(AuthenticationService.localStorageAccessTokenKey);
   }
+
   /**
    * Function used to decode the access token
    */
@@ -102,6 +124,7 @@ export class AuthenticationService {
   private static getTokenType(): string {
     return localStorage.getItem(AuthenticationService.localStorageTokenTypeKey);
   }
+
   /**
    * Set a new token type in local storage
    *
@@ -110,12 +133,14 @@ export class AuthenticationService {
   private static setTokenType(tokenType: string): void {
     localStorage.setItem(AuthenticationService.localStorageTokenTypeKey, tokenType);
   }
+
   /**
    * Remove the token type from the local storage
    */
   private static removeTokenType(): void {
     localStorage.removeItem(AuthenticationService.localStorageTokenTypeKey);
   }
+
   /**
    * Set a new refresh token in local storage
    *
@@ -145,12 +170,14 @@ export class AuthenticationService {
   public static getFullToken(): string {
     return `${AuthenticationService.getTokenType()} ${AuthenticationService.getAccessToken()}`;
   }
+
   /**
    * Used to know if the connected user is admin or not
    */
   public static isAdmin(): boolean {
     return AuthenticationService.decodeAccessToken().authorities.includes(RoleEnum.ROLE_ADMIN);
   }
+
   /**
    * Used to logout the used
    */
@@ -158,6 +185,7 @@ export class AuthenticationService {
     AuthenticationService.removeAccessToken();
     AuthenticationService.removeTokenType();
   }
+
   /**
    * Return the connected user with information store in the token
    */
@@ -181,8 +209,8 @@ export class AuthenticationService {
   /**
    * Authenticate the user throw OAuth2 Password grant
    *
-   * @param {Credentials} credentials The user credentials
-   * @returns {Observable<AuthenticationResponse>} The response as Observable
+   * @param credentials The user credentials
+   * @returns The response as Observable
    */
   public authenticate(credentials: Credentials): Observable<AuthenticationResponse> {
     let headers = new HttpHeaders();
@@ -213,7 +241,7 @@ export class AuthenticationService {
    * Register a new user
    *
    * @param userRequest The user Request
-   * @returns {Observable<User>} The user registered
+   * @returns The user registered
    */
   public register(userRequest: UserRequest): Observable<User> {
     const url = `${HttpUserService.usersApiEndpoint}/register`;

@@ -9,6 +9,35 @@
     <form *ngIf="!loading" class="login-form" fxLayout="column" fxLayoutAlign="center" [formGroup]="loginForm" (submit)="login()">
       <suricate-input *ngFor="let field of formFields" [formGroup]="loginForm" [field]="field"> </suricate-input>
       <suricate-buttons [configurations]="buttonConfigurations" fxLayout="row" fxLayoutAlign="center center"></suricate-buttons>
+      <p *ngIf="!this.isLdapServerUserProvider">
+        {{ 'no.account.yet' | translate }}
+        <a class="register-link" [routerLink]="['/register']">
+          <span>{{ 'no.account.yet.register.now' | translate }}</span>
+        </a>
+      </p>
     </form>
+
+    <div class="title-container">
+      <div class="line"><mat-divider></mat-divider></div>
+      <div class="text mat-typography primary">{{ 'sign.in.with' | translate }}</div>
+      <div class="line"><mat-divider></mat-divider></div>
+    </div>
+
+    <section class="oauth2-providers">
+      <ul>
+        <li style="background-color: rgb(68, 68, 68)">
+          <a class="identity-provider-link" href="{{ this.githubAuthenticationEndpoint }}">
+            <img src="../../../../../assets/images/github-white.svg">
+            <span>{{ 'github' | translate }}</span>
+          </a>
+        </li>
+        <li style="background-color: rgb(41, 41, 97)">
+          <a class="identity-provider-link" href="{{ this.gitlabAuthenticationEndpoint }}">
+            <img src="../../../../../assets/images/gitlab.svg">
+            <span>{{ 'gitlab' | translate }}</span>
+          </a>
+        </li>
+      </ul>
+    </section>
   </div>
 </div>

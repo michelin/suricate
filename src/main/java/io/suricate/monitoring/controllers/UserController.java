@@ -308,21 +308,17 @@ public class UserController {
     public ResponseEntity<UserResponseDto> register(@ApiParam(name = "userResponseDto", value = "The user information to create", required = true)
                                                     @RequestBody UserRequestDto userRequestDto) {
         User user = userMapper.toUserEntity(userRequestDto, AuthenticationMethod.DATABASE);
-        Optional<User> userSavedOptional = userService.registerNewUserAccount(user);
-
-        if (!userSavedOptional.isPresent()) {
-            throw new ApiException(ApiErrorEnum.INTERNAL_SERVER_ERROR);
-        }
+        User savedUser = userService.create(user);
 
         URI resourceLocation = ServletUriComponentsBuilder
             .fromCurrentContextPath()
-            .path("/api/users/" + userSavedOptional.get().getId())
+            .path("/api/users/" + savedUser.getId())
             .build()
             .toUri();
 
         return ResponseEntity
             .created(resourceLocation)
             .contentType(MediaType.APPLICATION_JSON)
-            .body(userMapper.toUserDTO(userSavedOptional.get()));
+            .body(userMapper.toUserDTO(savedUser));
     }
 }

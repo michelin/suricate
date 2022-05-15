@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.services;
 
-import io.suricate.monitoring.configuration.ApplicationProperties;
+import io.suricate.monitoring.properties.ApplicationProperties;
 import io.suricate.monitoring.model.entities.Library;
 import io.suricate.monitoring.model.entities.Category;
 import io.suricate.monitoring.model.entities.Repository;
@@ -46,10 +46,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.Future;
-import java.util.stream.Collectors;
 
 /**
  * Manage git calls
