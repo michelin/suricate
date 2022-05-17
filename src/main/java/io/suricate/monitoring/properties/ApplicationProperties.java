@@ -30,6 +30,7 @@ import org.springframework.web.cors.CorsConfiguration;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.util.List;
 
 /**
  * Hold the custom properties from properties.yml files
@@ -67,11 +68,6 @@ public class ApplicationProperties {
     public final Swagger swagger = new Swagger();
 
     /**
-     * The OAuth properties
-     */
-    public final OAuth oauth = new OAuth();
-
-    /**
      * Hold the Authentication properties info
      */
     @Getter
@@ -83,9 +79,14 @@ public class ApplicationProperties {
         public final Ldap ldap = new Ldap();
 
         /**
-         * JWT Configuration
+         * JWT configuration
          */
         public final Jwt jwt = new Jwt();
+
+        /**
+         * OAuth2 configuration
+         */
+        public final OAuth2 oAuth2 = new OAuth2();
 
         /**
          * Authentication provider
@@ -316,18 +317,14 @@ public class ApplicationProperties {
     }
 
     /**
-     * Hold the OAuth properties info
+     * Hold the OAuth2 properties
      */
     @Getter
     @Setter
-    public static class OAuth {
+    public static class OAuth2 {
         /**
-         * The client id
+         * List of authorized uris this backend can redirect after successful OAuth2 authentication
          */
-        public String client;
-        /**
-         * The client secret
-         */
-        public String secret;
+        public List<String> authorizedRedirectUris;
     }
 }

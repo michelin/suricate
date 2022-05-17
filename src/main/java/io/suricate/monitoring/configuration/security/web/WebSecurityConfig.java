@@ -17,12 +17,10 @@
 package io.suricate.monitoring.configuration.security.web;
 
 import io.suricate.monitoring.configuration.security.oauth2.*;
-import io.suricate.monitoring.controllers.handlers.ApiAuthenticationFailureHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -31,15 +29,7 @@ import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient;
-import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
-import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCodeGrantRequest;
-import org.springframework.security.oauth2.client.http.OAuth2ErrorResponseErrorHandler;
-import org.springframework.security.oauth2.core.http.converter.OAuth2AccessTokenResponseHttpMessageConverter;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.cors.CorsUtils;
-
-import java.util.Arrays;
 
 /**
  * Global Security configurations
@@ -49,10 +39,16 @@ import java.util.Arrays;
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     /**
-     * Authentication failure manager
+     * The authentication failure entrypoint
      */
     @Autowired
-    private ApiAuthenticationFailureHandler apiAuthenticationFailureHandler;
+    private AuthenticationFailureEntryPoint authenticationFailureEntryPoint;
+
+    /**
+     * The OAuth2 user loader service
+     */
+    @Autowired
+    private OAuth2UserService userService;
 
     @Autowired
     private OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
@@ -61,7 +57,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 
     @Autowired
-    private OAuth2UserService userService;
+    private HttpCookieOAuth2AuthorizationRequestRepository authRequestRepository;
 
     /**
      * Configure the web security of the application
@@ -69,8 +65,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public void configure(WebSecurity webSecurity) {
         webSecurity
-                .ignoring()
-                .antMatchers(HttpMethod.OPTIONS);
+            .ignoring()
+            .antMatchers(HttpMethod.OPTIONS);
     }
 
     /**
@@ -85,9 +81,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
             .csrf().disable()
             .exceptionHandling()
-            //.authenticationEntryPoint(new RestAuthenticationEntryPoint())
-            .authenticationEntryPoint(apiAuthenticationFailureHandler)
-            .accessDeniedHandler(apiAuthenticationFailureHandler)
+            .authenticationEntryPoint(authenticationFailureEntryPoint)
+            .accessDeniedHandler(authenticationFailureEntryPoint)
                 .and()
             .headers()
             .frameOptions().disable()
@@ -110,12 +105,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/api/**").authenticated()
                 .and()
             .oauth2Login()
-                .loginPage("/login")
                 .authorizationEndpoint()
-                    .authorizationRequestRepository(cookieAuthorizationRequestRepository())
+                    .authorizationRequestRepository(authRequestRepository)
                     .baseUri("/api/oauth2/authorization") // Override default "oauth2/authorization/" endpoint by adding "/api"
-                    .and()
-                .redirectionEndpoint()
                     .and()
                 .userInfoEndpoint()
                     .userService(userService)
@@ -145,20 +137,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
     }
-
-    @Bean
-    public HttpCookieOAuth2AuthorizationRequestRepository cookieAuthorizationRequestRepository() {
-        return new HttpCookieOAuth2AuthorizationRequestRepository();
-    }
-
-    /*private OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> authorizationCodeTokenResponseClient() {
-        OAuth2AccessTokenResponseHttpMessageConverter tokenResponseHttpMessageConverter = new OAuth2AccessTokenResponseHttpMessageConverter();
-        tokenResponseHttpMessageConverter.setTokenResponseConverter(new OAuth2AccessTokenResponseConverterWithDefaults());
-        RestTemplate restTemplate = new RestTemplate(Arrays.asList(new FormHttpMessageConverter(), tokenResponseHttpMessageConverter));
-        restTemplate.setErrorHandler(new OAuth2ErrorResponseErrorHandler());
-        DefaultAuthorizationCodeTokenResponseClient tokenResponseClient = new DefaultAuthorizationCodeTokenResponseClient();
-        tokenResponseClient.setRestOperations(restTemplate);
-        return tokenResponseClient;
-    }*/
-
 }

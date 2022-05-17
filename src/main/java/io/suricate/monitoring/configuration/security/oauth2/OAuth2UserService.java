@@ -25,6 +25,12 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
     @Autowired
     private UserService userService;
 
+    /**
+     * Load a user after he has been successfully authenticated with OAuth2 ID providers
+     * @param userRequest The user information
+     * @return An OAuth2 user
+     * @throws OAuth2AuthenticationException Any OAuth2 authentication exception
+     */
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         OAuth2User user = super.loadUser(userRequest);

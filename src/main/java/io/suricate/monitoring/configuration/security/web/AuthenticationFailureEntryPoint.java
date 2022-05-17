@@ -16,7 +16,7 @@
  *
  */
 
-package io.suricate.monitoring.controllers.handlers;
+package io.suricate.monitoring.configuration.security.web;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,35 +36,49 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
-public class ApiAuthenticationFailureHandler implements AuthenticationEntryPoint, AccessDeniedHandler {
+public class AuthenticationFailureEntryPoint implements AuthenticationEntryPoint, AccessDeniedHandler {
+    /**
+     * The logger
+     */
+    private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationFailureEntryPoint.class);
 
     /**
-     * Class LOGGER
+     * Handle authentication exception
+     * @param httpServletRequest The request
+     * @param httpServletResponse The response
+     * @param e The exception
+     * @throws IOException Any IO exception
+     * @throws ServletException Any servlet exception
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger(ApiAuthenticationFailureHandler.class);
-
-
     @Override
     public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
         resolveException(httpServletRequest, httpServletResponse, e);
     }
 
+    /**
+     * Handle access denied exception
+     * @param httpServletRequest The request
+     * @param httpServletResponse The response
+     * @param e The exception
+     * @throws IOException Any IO exception
+     * @throws ServletException Any servlet exception
+     */
     @Override
     public void handle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AccessDeniedException e) throws IOException, ServletException {
         resolveException(httpServletRequest, httpServletResponse, e);
     }
 
     /**
-     * @param httpServletRequest
-     * @param httpServletResponse
-     * @param e
-     * @throws IOException
+     * Process the authentication/access exceptions
+     * @param httpServletRequest The request
+     * @param httpServletResponse The response
+     * @param e The exception
+     * @throws IOException Any IO exception
      */
     private static void resolveException(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, RuntimeException e) throws IOException {
         String path = httpServletRequest.getRequestURI().substring(httpServletRequest.getContextPath().length());
         LOGGER.debug("Authentication error - {}", path, e);
 
-        // Format response
         httpServletResponse.setStatus(ApiErrorEnum.AUTHENTICATION_ERROR.getStatus().value());
         httpServletResponse.setHeader("Content-type", "application/json");
 

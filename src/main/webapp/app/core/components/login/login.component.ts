@@ -67,12 +67,12 @@ export class LoginComponent implements OnInit {
   /**
    * OAuth2 authentication with GitHub endpoint
    */
-  public githubAuthenticationEndpoint: string;
+  public githubAuthenticationEndpoint = AuthenticationService.GITHUB_AUTH_URL;
 
   /**
    * OAuth2 authentication with GitLab endpoint
    */
-  public gitlabAuthenticationEndpoint: string;
+  public gitlabAuthenticationEndpoint = AuthenticationService.GITLAB_AUTH_URL;
 
   /**
    * Constructor
@@ -99,9 +99,6 @@ export class LoginComponent implements OnInit {
       this.navigateToHomePage();
       return;
     }
-
-    this.githubAuthenticationEndpoint = AuthenticationService.githubAuthenticationApiEndpoint;
-    this.gitlabAuthenticationEndpoint = AuthenticationService.gitlabAuthenticationApiEndpoint;
 
     this.httpConfigurationService.getAuthenticationProvider().subscribe((applicationProperties: ApplicationProperties) => {
       this.isLdapServerUserProvider = applicationProperties.value.toUpperCase() === AuthenticationProviderEnum.LDAP;
@@ -155,11 +152,5 @@ export class LoginComponent implements OnInit {
    */
   private navigateToHomePage(): void {
     this.router.navigate(['/home']);
-  }
-
-  public authWithGithub(): void {
-    this.authenticationService.authWithGithub().subscribe(response => {
-      console.warn(response);
-    })
   }
 }

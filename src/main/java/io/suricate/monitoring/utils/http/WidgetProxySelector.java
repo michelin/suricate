@@ -35,9 +35,8 @@ import java.util.stream.Stream;
  * Custom proxy selector
  */
 public class WidgetProxySelector extends ProxySelector {
-
     /**
-     * Class logger
+     * The logger
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(WidgetProxySelector.class);
 

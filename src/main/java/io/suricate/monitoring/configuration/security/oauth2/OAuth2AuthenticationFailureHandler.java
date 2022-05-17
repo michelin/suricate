@@ -1,5 +1,6 @@
 package io.suricate.monitoring.configuration.security.oauth2;
 
+import io.suricate.monitoring.utils.web.CookieUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;

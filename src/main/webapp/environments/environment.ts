@@ -24,6 +24,7 @@ export const environment = {
   version: require('../../../../package.json').version,
   environment: 'Development',
   backend_url: 'http://localhost:8080',
+  oauth2_frontend_redirect_url: 'http://localhost:4200/login',
 
   // Configuration for WebSockets
   wsHeartbeatIncoming: 0,

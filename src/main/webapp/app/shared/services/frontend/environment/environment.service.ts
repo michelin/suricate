@@ -31,6 +31,11 @@ export class EnvironmentService {
   public static readonly backendUrl = `${environment.backend_url}`;
 
   /**
+   * When authenticating with OAuth2, frontend URL the backend has to redirect to
+   */
+  public static readonly OAUTH2_FRONTEND_REDIRECT_URL = `${environment.oauth2_frontend_redirect_url}`
+
+  /**
    * The global app version
    */
   public static readonly appVersion = `${environment.version}`;

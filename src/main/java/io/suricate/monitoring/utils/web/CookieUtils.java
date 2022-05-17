@@ -1,4 +1,4 @@
-package io.suricate.monitoring.configuration.security.oauth2;
+package io.suricate.monitoring.utils.web;
 
 import org.springframework.util.SerializationUtils;
 
@@ -9,6 +9,12 @@ import java.util.Base64;
 import java.util.Optional;
 
 public class CookieUtils {
+    /**
+     * Get cookie by name
+     * @param request The request where the cookie is attached
+     * @param name The name of the cookie
+     * @return The cookie if it exists
+     */
     public static Optional<Cookie> getCookie(HttpServletRequest request, String name) {
         Cookie[] cookies = request.getCookies();
 
@@ -23,6 +29,13 @@ public class CookieUtils {
         return Optional.empty();
     }
 
+    /**
+     * Add an HTTP cookie to the given HTTP response
+     * @param response The HTTP response
+     * @param name The name of the cookie
+     * @param value The value of the cookie
+     * @param maxAge The age of the cookie
+     */
     public static void addCookie(HttpServletResponse response, String name, String value, int maxAge) {
         Cookie cookie = new Cookie(name, value);
         cookie.setPath("/");
@@ -31,6 +44,12 @@ public class CookieUtils {
         response.addCookie(cookie);
     }
 
+    /**
+     * Delete cookie from the response by adding a new empty cookie with no max age
+     * @param request The request that currently contains the cookie
+     * @param response The response of the request, that won't contain the cookie anymore
+     * @param name The name of the cookie to delete
+     */
     public static void deleteCookie(HttpServletRequest request, HttpServletResponse response, String name) {
         Cookie[] cookies = request.getCookies();
         if (cookies != null && cookies.length > 0) {
@@ -45,10 +64,22 @@ public class CookieUtils {
         }
     }
 
+    /**
+     * Serialize a given object to base64
+     * @param object The object to serialize
+     * @return The encoded object as base64
+     */
     public static String serialize(Object object) {
         return Base64.getUrlEncoder().encodeToString(SerializationUtils.serialize(object));
     }
 
+    /**
+     * Deserialize the value of a given cookie into the given class
+     * @param cookie The cookie from which to deserialize the value
+     * @param cls The target class into deserialize
+     * @param <T> The class type
+     * @return The deserialized cookie value
+     */
     public static <T> T deserialize(Cookie cookie, Class<T> cls) {
         return cls.cast(SerializationUtils.deserialize(Base64.getUrlDecoder().decode(cookie.getValue())));
     }

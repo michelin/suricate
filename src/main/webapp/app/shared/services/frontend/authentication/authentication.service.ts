@@ -41,14 +41,19 @@ import {HttpFilterService} from "../../backend/http-filter/http-filter.service";
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
   /**
+   * OAuth2 URL
+   */
+  public static readonly OAUTH2_URL = `${AbstractHttpService.baseApiEndpoint}/oauth2/authorization`;
+
+  /**
    * OAuth2 authentication with GitHub endpoint
    */
-  public static readonly githubAuthenticationApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/oauth2/authorization/github`;
+  public static readonly GITHUB_AUTH_URL = `${AuthenticationService.OAUTH2_URL}/github?redirect_uri=${EnvironmentService.OAUTH2_FRONTEND_REDIRECT_URL}`;
 
   /**
    * OAuth2 authentication with GitLab endpoint
    */
-  public static readonly gitlabAuthenticationApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/oauth2/authorization/gitlab`;
+  public static readonly GITLAB_AUTH_URL = `${AuthenticationService.OAUTH2_URL}/gitlab?redirect_uri=${EnvironmentService.OAUTH2_FRONTEND_REDIRECT_URL}`;
 
   /**
    * Global endpoint for Authentication
@@ -81,12 +86,6 @@ export class AuthenticationService {
    * @param httpClient Angular service used make http calls
    */
   constructor(private readonly httpClient: HttpClient) {}
-
-  public authWithGithub(): Observable<any> {
-    const url = `${AuthenticationService.githubAuthenticationApiEndpoint}`;
-
-    return this.httpClient.get<any>(url);
-  }
 
   /**
    * Get the access token store in local storage
