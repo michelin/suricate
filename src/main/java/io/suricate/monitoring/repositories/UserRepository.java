@@ -33,10 +33,8 @@ import java.util.Optional;
  */
 @Repository
 public interface UserRepository extends CrudRepository<User, Long> {
-
 	/**
 	 * Find all paginated users
-	 *
 	 * @param specification The specification to apply
 	 * @param pageable The pageable to apply
 	 * @return The paginated users
@@ -46,10 +44,10 @@ public interface UserRepository extends CrudRepository<User, Long> {
 
 	/**
 	 * Find a user by the username ignoring case
-	 *
 	 * @param username The username
 	 * @return The user as optional
 	 */
+	@EntityGraph(attributePaths = "roles")
 	Optional<User> findByUsernameIgnoreCase(String username);
 
 	/**

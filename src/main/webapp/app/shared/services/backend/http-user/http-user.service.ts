@@ -48,7 +48,7 @@ export class HttpUserService implements AbstractHttpService<User | UserRequest> 
   /**
    * Get the list of users
    *
-   * @returns {Observable<User[]>} The list of users
+   * @returns The list of users
    */
   public getAll(filter?: HttpFilter): Observable<Page<User>> {
     const url = `${HttpUserService.usersApiEndpoint}`;
@@ -59,8 +59,8 @@ export class HttpUserService implements AbstractHttpService<User | UserRequest> 
   /**
    * Get a user by id
    *
-   * @param {number} userId The user id to find
-   * @returns {Observable<User>} The user found
+   * @param userId The user id to find
+   * @returns The user found
    */
   public getById(userId: number): Observable<User> {
     const url = `${HttpUserService.usersApiEndpoint}/${userId}`;

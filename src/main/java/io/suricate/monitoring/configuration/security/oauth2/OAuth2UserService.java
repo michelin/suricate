@@ -2,10 +2,13 @@ package io.suricate.monitoring.configuration.security.oauth2;
 
 import io.suricate.monitoring.configuration.security.common.ConnectedUser;
 import io.suricate.monitoring.configuration.security.ldap.LdapConnectedUser;
+import io.suricate.monitoring.model.entities.User;
 import io.suricate.monitoring.services.api.UserService;
+import io.suricate.monitoring.utils.exceptions.OAuth2AuthenticationProcessingException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
@@ -43,12 +46,8 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
 
             return new ConnectedOAuth2User(user);
         } catch (Exception e) {
-            e.printStackTrace();
-            // Throwing an instance of AuthenticationException will trigger the
-            // OAuth2AuthenticationFailureHandler
-            //throw new OAuth2AuthenticationProcessingException(ex.getMessage(), ex.getCause());
+            LOGGER.error("An error occurred authenticating user <{}> with {}", user.getAttribute("login"), userRequest.getClientRegistration().getRegistrationId(), e);
+            throw new OAuth2AuthenticationProcessingException(e.getMessage(), e.getCause());
         }
-
-        return user;
     }
 }

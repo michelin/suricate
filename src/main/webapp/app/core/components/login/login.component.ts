@@ -16,7 +16,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 
 import { AuthenticationService } from '../../../shared/services/frontend/authentication/authentication.service';
 import { HttpCategoryParametersService } from '../../../shared/services/backend/http-category-parameters/http-category-parameters.service';
@@ -78,6 +78,7 @@ export class LoginComponent implements OnInit {
    * Constructor
    *
    * @param router Angular service used to manage the application routes
+   * @param route
    * @param httpConfigurationService Suricate service used to manage http calls for configurations
    * @param authenticationService Suricate service used to manage authentications
    * @param formService Front-End service used to manage forms
@@ -85,6 +86,7 @@ export class LoginComponent implements OnInit {
    */
   constructor(
     private readonly router: Router,
+    private route: ActivatedRoute,
     private readonly httpConfigurationService: HttpConfigurationService,
     private readonly authenticationService: AuthenticationService,
     private readonly formService: FormService,
@@ -95,6 +97,11 @@ export class LoginComponent implements OnInit {
    * Called when the component is init
    */
   public ngOnInit(): void {
+    const token: string = this.route.snapshot.queryParamMap.get('token');
+    if (token) {
+      AuthenticationService.setAccessToken(token);
+    }
+
     if (AuthenticationService.isLoggedIn()) {
       this.navigateToHomePage();
       return;

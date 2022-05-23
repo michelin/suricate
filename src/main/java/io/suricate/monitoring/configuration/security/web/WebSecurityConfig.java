@@ -20,16 +20,42 @@ import io.suricate.monitoring.configuration.security.oauth2.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
+import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationManagerResolver;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.jwt.JwtHelper;
+import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient;
+import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
+import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCodeGrantRequest;
+import org.springframework.security.oauth2.client.http.OAuth2ErrorResponseErrorHandler;
+import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
+import org.springframework.security.oauth2.core.http.converter.OAuth2AccessTokenResponseHttpMessageConverter;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtException;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationProvider;
+import org.springframework.security.oauth2.server.resource.authentication.OpaqueTokenAuthenticationProvider;
+import org.springframework.security.oauth2.server.resource.introspection.OpaqueTokenIntrospector;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.cors.CorsUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
+
+import static io.suricate.monitoring.configuration.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
 
 /**
  * Global Security configurations
@@ -45,19 +71,26 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private AuthenticationFailureEntryPoint authenticationFailureEntryPoint;
 
     /**
+     * The authentication request repository
+     * Store the authentication request in an HTTP cookie on the IDP response
+     */
+    @Autowired
+    private HttpCookieOAuth2AuthorizationRequestRepository authRequestRepository;
+
+    /**
      * The OAuth2 user loader service
      */
     @Autowired
     private OAuth2UserService userService;
 
+    /**
+     * The authentication success handler
+     */
     @Autowired
     private OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
 
     @Autowired
     private OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
-
-    @Autowired
-    private HttpCookieOAuth2AuthorizationRequestRepository authRequestRepository;
 
     /**
      * Configure the web security of the application
@@ -81,8 +114,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
             .csrf().disable()
             .exceptionHandling()
-            .authenticationEntryPoint(authenticationFailureEntryPoint)
-            .accessDeniedHandler(authenticationFailureEntryPoint)
+            //.authenticationEntryPoint(authenticationFailureEntryPoint)
+            //.accessDeniedHandler(authenticationFailureEntryPoint)
                 .and()
             .headers()
             .frameOptions().disable()
@@ -101,19 +134,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/api/*/settings").permitAll()
             .antMatchers("/api/*/assets/**").permitAll()
             .antMatchers("/ws/**").permitAll()
-            .antMatchers("/api/oauth2/authorization").permitAll()
+            .antMatchers("/api/oauth2/authorization/**").permitAll()
             .antMatchers("/api/**").authenticated()
                 .and()
             .oauth2Login()
-                .authorizationEndpoint()
-                    .authorizationRequestRepository(authRequestRepository)
-                    .baseUri("/api/oauth2/authorization") // Override default "oauth2/authorization/" endpoint by adding "/api"
-                    .and()
-                .userInfoEndpoint()
-                    .userService(userService)
-                    .and()
-                .successHandler(oAuth2AuthenticationSuccessHandler)
-                .failureHandler(oAuth2AuthenticationFailureHandler);
+            .authorizationEndpoint()
+            // Store auth request in a http cookie on the IDP response
+            .authorizationRequestRepository(authRequestRepository)
+            // Override default "oauth2/authorization/" endpoint by adding "/api"
+            // Endpoint that triggers the OAuth2 auth to given IDP
+            .baseUri("/api/oauth2/authorization")
+                .and()
+            .userInfoEndpoint()
+            .userService(userService)
+                .and()
+            .successHandler(oAuth2AuthenticationSuccessHandler)
+            .failureHandler(oAuth2AuthenticationFailureHandler);
     }
 
     /**
@@ -128,7 +164,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     /**
      * Authentication Manager
-     *
      * @return Default authentication manager
      * @throws Exception Any triggered exception during the authentication process
      */

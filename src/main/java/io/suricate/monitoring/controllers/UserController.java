@@ -130,8 +130,7 @@ public class UserController {
     }
 
     /**
-     * List a specific user
-     *
+     * Get a specific user
      * @param userId The user id to get
      * @return The user
      */
@@ -234,7 +233,6 @@ public class UserController {
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<List<UserSettingResponseDto>> getUserSettings(@ApiParam(name = "userName", value = "The user name", required = true)
                                                                         @PathVariable("username") String username) {
-
         Optional<List<UserSetting>> userSettings = userSettingService.getUserSettingsByUsername(username);
 
         if (!userSettings.isPresent()) {

@@ -171,19 +171,13 @@ public class ApplicationProperties {
          * Token validity in second
          */
         @NotNull
-        public long tokenValidity;
+        public long tokenValidityMs;
 
         /**
-         * Token validity in second remember me
+         * Jwt signing key
          */
         @NotNull
-        public long tokenValidityRememberMe;
-
-        /**
-         * Jwt secret
-         */
-        @NotNull
-        public String secret;
+        public String signingKey;
     }
 
     /**

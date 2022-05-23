@@ -4,12 +4,19 @@ import io.jsonwebtoken.*;
 import io.suricate.monitoring.configuration.security.common.ConnectedUser;
 import io.suricate.monitoring.configuration.security.ldap.UserDetailsServiceLdapAuthoritiesPopulator;
 import io.suricate.monitoring.configuration.security.oauth2.ConnectedOAuth2User;
+import io.suricate.monitoring.model.entities.Role;
+import io.suricate.monitoring.model.entities.User;
+import io.suricate.monitoring.properties.ApplicationProperties;
+import org.apache.commons.collections4.map.HashedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class TokenProvider {
@@ -18,14 +25,32 @@ public class TokenProvider {
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(TokenProvider.class);
 
-    public String createToken(Authentication authentication) {
-        ConnectedOAuth2User userPrincipal = (ConnectedOAuth2User) authentication.getPrincipal();
+    @Autowired
+    private ApplicationProperties applicationProperties;
 
+    /**
+     * Build a JWT token
+     * @param User The user
+     * @return The JWT token
+     */
+    public String createToken(User user) {
         Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + 864000000);
+        Date expiryDate = new Date(now.getTime() + applicationProperties.getAuthentication().getJwt().getTokenValidityMs());
 
-        return Jwts.builder().setSubject(userPrincipal.getName()).setIssuedAt(new Date()).setExpiration(expiryDate)
-                .signWith(SignatureAlgorithm.HS512, "!B7\"8_wreS@Vqh)R").compact();
+        return Jwts.builder()
+                .setSubject(user.getUsername())
+                .setIssuedAt(now)
+                .setExpiration(expiryDate)
+                .claim(Claims.EXPIRATION, expiryDate)
+                .claim(Claims.ISSUED_AT, now)
+                .claim(Claims.ISSUER, "toto")
+                .claim("username", user.getUsername())
+                .claim("firstname", user.getFirstname())
+                .claim("lastname", user.getLastname())
+                .claim("email", user.getEmail())
+                .claim("authorities", user.getRoles().stream().map(Role::getName).collect(Collectors.toList()))
+                .signWith(SignatureAlgorithm.HS512, applicationProperties.getAuthentication().getJwt().getSigningKey())
+                .compact();
     }
 
     public Long getUserIdFromToken(String token) {
