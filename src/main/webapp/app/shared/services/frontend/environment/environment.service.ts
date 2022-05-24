@@ -33,7 +33,7 @@ export class EnvironmentService {
   /**
    * When authenticating with OAuth2, frontend URL the backend has to redirect to
    */
-  public static readonly OAUTH2_FRONTEND_REDIRECT_URL = `${environment.oauth2_frontend_redirect_url}`
+  public static readonly OAUTH2_FRONTEND_REDIRECT_URL = `${environment.oauth2_frontend_redirect_url}`;
 
   /**
    * The global app version

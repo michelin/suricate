@@ -92,22 +92,6 @@ export class AuthenticationService {
   constructor(private readonly httpClient: HttpClient) {}
 
   /**
-   * Get the current connected user
-   */
-  getConnectedUser(): Observable<User> {
-    console.warn('accessing connected user');
-    return this.connectedUser.asObservable().pipe(filter(user => user != undefined));
-  }
-
-  /**
-   * Set the current connected user
-   * @param connectedUser The connected user
-   */
-  setConnectedUser(connectedUser: User): void {
-    this.connectedUser.next(connectedUser);
-  }
-
-  /**
    * Get the access token store in local storage
    */
   private static getAccessToken(): string {
@@ -225,6 +209,21 @@ export class AuthenticationService {
 
     return user;
   }*/
+
+  /**
+   * Get the current connected user
+   */
+  getConnectedUser(): Observable<User> {
+    return this.connectedUser.asObservable().pipe(filter(user => user !== undefined));
+  }
+
+  /**
+   * Set the current connected user
+   * @param connectedUser The connected user
+   */
+  setConnectedUser(connectedUser: User): void {
+    this.connectedUser.next(connectedUser);
+  }
 
   /**
    * Authenticate the user throw OAuth2 Password grant

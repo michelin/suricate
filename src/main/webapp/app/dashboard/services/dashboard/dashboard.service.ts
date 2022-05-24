@@ -60,8 +60,8 @@ export class DashboardService {
     return this.httpProjectService.getProjectUsers(dashboardToken).pipe(
       flatMap(dashboardUsers => {
         return this.authenticationService.getConnectedUser().pipe(
-          map((user: User) => {
-            return !user.admin && !dashboardUsers.some(user => user.username === user.username);
+          map((connectedUser: User) => {
+            return !connectedUser.admin && !dashboardUsers.some(user => user.username === connectedUser.username);
           })
         );
       })
