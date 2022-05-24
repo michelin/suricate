@@ -157,7 +157,7 @@ export class AuthenticationService {
    * Used to know if the user is currently logged in
    */
   public static isLoggedIn(): boolean {
-    return AuthenticationService.getAccessToken() != null && AuthenticationService.getAccessToken() != '';
+    return AuthenticationService.getAccessToken() !== null && AuthenticationService.getAccessToken() != '';
     // !AuthenticationService.isTokenExpired();
   }
 
