@@ -19,6 +19,7 @@ package io.suricate.monitoring.services.api;
 import io.suricate.monitoring.configuration.security.common.ConnectedUser;
 import io.suricate.monitoring.model.entities.Role;
 import io.suricate.monitoring.model.entities.User;
+import io.suricate.monitoring.model.enums.AuthenticationMethod;
 import io.suricate.monitoring.model.enums.UserRoleEnum;
 import io.suricate.monitoring.repositories.UserRepository;
 import io.suricate.monitoring.services.mapper.UserMapper;
@@ -99,27 +100,37 @@ public class UserService {
 
     /**
      * Register a new user in ldap/oauth2 authentication mode
-     * @param connectedUser The new user to register
+     * @param username The username
+     * @param firstname The user firstname
+     * @param lastname The user lastname
+     * @param email The user email
+     * @param authenticationMethod The ID provider used
+     * @return The registered user
      */
-    public User registerUser(ConnectedUser connectedUser) {
-        Optional<User> optionalUser = getOneByUsername(connectedUser.getUsername());
+    @Transactional
+    public User registerUser(String username, String firstname, String lastname, String email, AuthenticationMethod authenticationMethod) {
+        Optional<User> optionalUser = getOneByUsername(username);
 
         if (!optionalUser.isPresent()) {
-            User user = userMapper.connectedUserToUserEntity(connectedUser);
+            User user = userMapper.connectedUserToUserEntity(username, firstname, lastname, email, authenticationMethod);
             return create(user);
         }
 
-        return update(optionalUser.get(), connectedUser);
+        return update(optionalUser.get(), username, firstname, lastname, email, authenticationMethod);
     }
 
     /**
      * Update the user information
-     * @param user          The user to update
-     * @param connectedUser The new user information
+     * @param user                 The user to update
+     * @param username             The user name
+     * @param firstname            The user firstname
+     * @param lastname             The user lastname
+     * @param email                The user email
+     * @param authenticationMethod The ID provider used
      * @return The updated user
      */
-    public User update(final User user, final ConnectedUser connectedUser) {
-        User userUpdated = userMapper.connectedUserToUserEntity(connectedUser);
+    public User update(final User user, String username, String firstname, String lastname, String email, AuthenticationMethod authenticationMethod) {
+        User userUpdated = userMapper.connectedUserToUserEntity(username, firstname, lastname, email, authenticationMethod);
         userUpdated.setRoles(user.getRoles());
         userUpdated.setProjects(user.getProjects());
         userUpdated.setUserSettings(user.getUserSettings());

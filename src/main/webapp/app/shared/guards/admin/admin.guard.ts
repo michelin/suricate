@@ -19,6 +19,9 @@ import { CanActivate, CanActivateChild, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 
 import { AuthenticationService } from '../../services/frontend/authentication/authentication.service';
+import { HttpUserService } from '../../services/backend/http-user/http-user.service';
+import { map } from 'rxjs/operators';
+import { User } from '../../models/backend/user/user';
 
 /**
  * The admin guard
@@ -27,27 +30,30 @@ import { AuthenticationService } from '../../services/frontend/authentication/au
 export class AdminGuard implements CanActivate, CanActivateChild {
   /**
    * The constructor
-   *
-   * @param {Router} router The router
+   * @param router The router
+   * @param authenticationService The authentication user
    */
-  constructor(private readonly router: Router) {}
+  constructor(private readonly router: Router, private readonly authenticationService: AuthenticationService) {}
 
   /**
-   * Activate root routes
-   * @returns {Observable<boolean>}
+   * Can admin routes be activated or not ?
    */
   public canActivate(): Observable<boolean> {
-    if (AuthenticationService.isAdmin()) {
-      return of(true);
-    }
-
-    this.router.navigate(['/home']);
-    return of(false);
+    return this.authenticationService.getConnectedUser().pipe(
+      map((user: User) => {
+        console.warn(user);
+        if (user.admin) {
+          return true;
+        } else {
+          this.router.navigate(['/home']);
+          return false;
+        }
+      })
+    );
   }
 
   /**
-   * For Child routes
-   * @returns {Observable<boolean>}
+   * Can child admin routes be activated or not ?
    */
   public canActivateChild(): Observable<boolean> {
     return this.canActivate();

@@ -34,43 +34,12 @@ import java.util.Collection;
 @EqualsAndHashCode(callSuper = true)
 public class ConnectedUser extends User {
     /**
-     * The ID
-     */
-    protected Long id;
-
-    /**
-     * The firstname
-     */
-    protected String firstname;
-
-    /**
-     * The lastname
-     */
-    protected String lastname;
-
-    /**
-     * The mail
-     */
-    protected String email;
-
-    /**
-     * The authentication method
-     */
-    protected AuthenticationMethod authenticationMethod;
-
-    /**
      * Constructor
      * @param username The username
      * @param password The password
-     * @param enabled Is enabled ?
-     * @param accountNonExpired Is account non expired ?
-     * @param credentialsNonExpired Is credentials non expired ?
-     * @param accountNonLocked Is account non-locked ?
      * @param authorities The authorities
      */
-    public ConnectedUser(String username, String password, boolean enabled,
-                         boolean accountNonExpired, boolean credentialsNonExpired, boolean accountNonLocked,
-                         Collection<? extends GrantedAuthority> authorities) {
-        super(username, password, enabled, accountNonExpired, credentialsNonExpired, accountNonLocked, authorities);
+    public ConnectedUser(String username, String password, Collection<? extends GrantedAuthority> authorities) {
+        super(username, password, true, true, true, true, authorities);
     }
 }

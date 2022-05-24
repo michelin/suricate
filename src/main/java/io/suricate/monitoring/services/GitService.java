@@ -54,7 +54,6 @@ import java.util.concurrent.Future;
  */
 @Service
 public class GitService {
-
     /**
      * Class logger
      */

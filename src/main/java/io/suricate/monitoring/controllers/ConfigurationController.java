@@ -54,7 +54,8 @@ public class ConfigurationController {
     }
 
     /**
-     * Return the value needed for the frontend on the server configuration
+     * Get the authentication provider defined in the backend (database or ldap)
+     * @return The authentication provider
      */
     @ApiOperation(value = "Get the server configuration for authentication provider (DB, LDAP...)", response = ApplicationPropertiesDto.class)
     @ApiResponses(value = {

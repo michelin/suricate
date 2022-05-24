@@ -1,21 +1,15 @@
 package io.suricate.monitoring.configuration.security.jwt;
 
 import io.jsonwebtoken.*;
-import io.suricate.monitoring.configuration.security.common.ConnectedUser;
-import io.suricate.monitoring.configuration.security.ldap.UserDetailsServiceLdapAuthoritiesPopulator;
-import io.suricate.monitoring.configuration.security.oauth2.ConnectedOAuth2User;
 import io.suricate.monitoring.model.entities.Role;
 import io.suricate.monitoring.model.entities.User;
 import io.suricate.monitoring.properties.ApplicationProperties;
-import org.apache.commons.collections4.map.HashedMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service

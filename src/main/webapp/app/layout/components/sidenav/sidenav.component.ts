@@ -22,6 +22,9 @@ import { RoutesService } from '../../../shared/services/frontend/route/route.ser
 import { MenuService } from '../../../shared/services/frontend/menu/menu.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { HttpUserService } from '../../../shared/services/backend/http-user/http-user.service';
+import { User } from '../../../shared/models/backend/user/user';
+import { AuthenticationService } from '../../../shared/services/frontend/authentication/authentication.service';
 
 /**
  * Hold the sidenav behavior and the main view
@@ -45,17 +48,28 @@ export class SidenavComponent implements OnInit, OnDestroy {
   private unsubscribe: Subject<void> = new Subject<void>();
 
   /**
+   * The user connected
+   */
+  public connectedUser: User;
+
+  /**
    * Used to hide or display the menu using activated routes
    */
   public shouldHideMenu = true;
 
   /**
    * Constructor
-   *
    * @param router Angular service used to manage routes
    * @param activatedRoute Angular service used to retrieve the component activated route
+   * @param httpUserService The HTTP user service
+   * @param authenticationService The authentication service
    */
-  constructor(private readonly router: Router, private readonly activatedRoute: ActivatedRoute) {}
+  constructor(
+    private readonly router: Router,
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly httpUserService: HttpUserService,
+    private readonly authenticationService: AuthenticationService
+  ) {}
 
   /**
    * Init method
@@ -82,6 +96,12 @@ export class SidenavComponent implements OnInit, OnDestroy {
         const deeperActivatedRoute = RoutesService.getDeeperActivatedRoute(this.activatedRoute);
 
         this.shouldHideMenu = MenuService.shouldHideMenu(deeperActivatedRoute);
+
+        if (!this.shouldHideMenu) {
+          this.httpUserService.getCurrentUser().subscribe((user: User) => {
+            this.authenticationService.setConnectedUser(user);
+          });
+        }
       }
     });
   }

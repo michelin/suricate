@@ -18,7 +18,7 @@
 
 package io.suricate.monitoring.controllers;
 
-import io.suricate.monitoring.configuration.security.oauth2.ConnectedOAuth2User;
+import io.suricate.monitoring.configuration.security.common.ConnectedUser;
 import io.suricate.monitoring.configuration.swagger.ApiPageable;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.project.ProjectRequestDto;
@@ -109,8 +109,7 @@ public class ProjectController {
     private final DashboardWebSocketService dashboardWebSocketService;
 
     /**
-     * Constructor for dependency injection
-     *
+     * Constructor
      * @param projectService            The project service
      * @param projectGridService        The project grid service
      * @param userService               The user service
@@ -140,7 +139,6 @@ public class ProjectController {
 
     /**
      * Get every project in database
-     *
      * @return The whole list of projects
      */
     @ApiOperation(value = "Get the full list of projects", response = ProjectResponseDto.class, nickname = "getAllProjects")
@@ -161,8 +159,7 @@ public class ProjectController {
 
     /**
      * Add a new project/dashboard for a user
-     *
-     * @param principal         The connected user
+     * @param connectedUser     The connected user
      * @param projectRequestDto The project to add
      * @return The saved project
      */
@@ -175,12 +172,12 @@ public class ProjectController {
     })
     @PostMapping(value = "/v1/projects")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ProjectResponseDto> createProject(@ApiIgnore Principal principal,
+    public ResponseEntity<ProjectResponseDto> createProject(@ApiIgnore @AuthenticationPrincipal ConnectedUser connectedUser,
                                                             @ApiParam(name = "projectRequestDto", value = "The project information", required = true)
                                                             @RequestBody ProjectRequestDto projectRequestDto) {
-        Optional<User> userOptional = userService.getOneByUsername(principal.getName());
+        Optional<User> userOptional = userService.getOneByUsername(connectedUser.getUsername());
         if (!userOptional.isPresent()) {
-            throw new ObjectNotFoundException(User.class, principal.getName());
+            throw new ObjectNotFoundException(User.class, connectedUser.getUsername());
         }
 
         Project project = projectService.createProject(userOptional.get(),
@@ -202,7 +199,6 @@ public class ProjectController {
 
     /**
      * Get a project by id
-     *
      * @param projectToken The id of the project
      * @return The project
      */
@@ -231,8 +227,7 @@ public class ProjectController {
 
     /**
      * Update an existing project
-     *
-     * @param authentication    The connected user
+     * @param connectedUser     The connected user
      * @param projectToken      The project token to update
      * @param projectRequestDto The information to update
      * @return The project updated
@@ -246,7 +241,7 @@ public class ProjectController {
     })
     @PutMapping(value = "/v1/projects/{projectToken}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Void> updateProject(@ApiIgnore @AuthenticationPrincipal ConnectedOAuth2User connectedUser,
+    public ResponseEntity<Void> updateProject(@ApiIgnore @AuthenticationPrincipal ConnectedUser connectedUser,
                                               @ApiParam(name = "projectToken", value = "The project token", required = true)
                                               @PathVariable("projectToken") String projectToken,
                                               @ApiParam(name = "projectResponseDto", value = "The project information", required = true)
@@ -269,7 +264,6 @@ public class ProjectController {
 
     /**
      * Add/Update a project screenshot
-     *
      * @param projectToken The project token to update
      */
     @ApiOperation(value = "Add/Update a project screenshot")
@@ -281,7 +275,7 @@ public class ProjectController {
     })
     @PutMapping(value = "/v1/projects/{projectToken}/screenshot")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Void> updateProjectScreenshot(@ApiIgnore @AuthenticationPrincipal ConnectedOAuth2User connectedUser,
+    public ResponseEntity<Void> updateProjectScreenshot(@ApiIgnore @AuthenticationPrincipal ConnectedUser connectedUser,
                                                         @ApiParam(name = "projectToken", value = "The project token", required = true)
                                                         @PathVariable("projectToken") String projectToken,
                                                         @ApiParam(name = "screenshot", value = "The screenshot to insert", required = true)
@@ -292,7 +286,7 @@ public class ProjectController {
         }
 
         Project project = projectOptional.get();
-        if (!projectService.isConnectedUserCanAccessToProject(project, connectedUser)) {
+        if (!projectService.isConnectedUserCanAccessToProject(project, null)) {
             throw new ApiException(USER_NOT_ALLOWED_PROJECT, ApiErrorEnum.NOT_AUTHORIZED);
         }
 
@@ -308,8 +302,7 @@ public class ProjectController {
 
     /**
      * Delete a project
-     *
-     * @param authentication The connected user
+     * @param connectedUser  The connected user
      * @param projectToken   The project token to delete
      * @return A void response entity
      */
@@ -322,7 +315,7 @@ public class ProjectController {
     })
     @DeleteMapping(value = "/v1/projects/{projectToken}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Void> deleteProjectById(@ApiIgnore @AuthenticationPrincipal ConnectedOAuth2User connectedUser,
+    public ResponseEntity<Void> deleteProjectById(@ApiIgnore @AuthenticationPrincipal ConnectedUser connectedUser,
                                                   @ApiParam(name = "projectToken", value = "The project token", required = true)
                                                   @PathVariable("projectToken") String projectToken) {
         Optional<Project> projectOptional = projectService.getOneByToken(projectToken);
@@ -342,8 +335,7 @@ public class ProjectController {
 
     /**
      * Update the list of widget positions for a project
-     *
-     * @param authentication                   The connected user
+     * @param connectedUser                    The connected user
      * @param projectToken                     The project token to update
      * @param projectWidgetPositionRequestDtos The list of project widget positions
      * @return The project updated
@@ -357,7 +349,7 @@ public class ProjectController {
     })
     @PutMapping(value = "/v1/projects/{projectToken}/projectWidgetPositions")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Void> updateProjectWidgetsPositionForProject(@ApiIgnore @AuthenticationPrincipal ConnectedOAuth2User connectedUser,
+    public ResponseEntity<Void> updateProjectWidgetsPositionForProject(@ApiIgnore @AuthenticationPrincipal ConnectedUser connectedUser,
                                                                        @ApiParam(name = "projectToken", value = "The project token", required = true)
                                                                        @PathVariable("projectToken") String projectToken,
                                                                        @ApiParam(name = "projectWidgetPositionRequestDtos", value = "The list of the new positions", required = true)
@@ -378,7 +370,6 @@ public class ProjectController {
 
     /**
      * Get the list of users associated to a project
-     *
      * @param projectToken Token of the project
      */
     @ApiOperation(value = "Retrieve project users", response = UserResponseDto.class)
@@ -404,8 +395,7 @@ public class ProjectController {
 
     /**
      * Add a user to a project
-     *
-     * @param authentication The connected user
+     * @param connectedUser  The connected user
      * @param projectToken   Token of the project
      * @param usernameMap    Username of the user to add
      * @return The project
@@ -420,7 +410,7 @@ public class ProjectController {
     })
     @PostMapping(value = "/v1/projects/{projectToken}/users")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Void> addUserToProject(@ApiIgnore @AuthenticationPrincipal ConnectedOAuth2User connectedUser,
+    public ResponseEntity<Void> addUserToProject(@ApiIgnore @AuthenticationPrincipal ConnectedUser connectedUser,
                                                  @ApiParam(name = "projectToken", value = "The project token", required = true)
                                                  @PathVariable("projectToken") String projectToken,
                                                  @ApiParam(name = "usernameMap", value = "A map with the username", required = true)
@@ -448,8 +438,7 @@ public class ProjectController {
 
     /**
      * Delete a user from a dashboard
-     *
-     * @param authentication The connected user
+     * @param connectedUser  The connected user
      * @param projectToken   The project/dashboard token
      * @param userId         The user id to delete
      * @return The project
@@ -464,7 +453,7 @@ public class ProjectController {
     })
     @DeleteMapping(value = "/v1/projects/{projectToken}/users/{userId}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Void> deleteUserFromProject(@ApiIgnore @AuthenticationPrincipal ConnectedOAuth2User connectedUser,
+    public ResponseEntity<Void> deleteUserFromProject(@ApiIgnore @AuthenticationPrincipal ConnectedUser connectedUser,
                                                       @ApiParam(name = "projectToken", value = "The project token", required = true)
                                                       @PathVariable("projectToken") String projectToken,
                                                       @ApiParam(name = "userId", value = "The user id", required = true)
@@ -490,7 +479,6 @@ public class ProjectController {
 
     /**
      * Get the list of websocket clients connected to the project
-     *
      * @param projectToken Token of the project
      */
     @ApiOperation(value = "Retrieve connected websocket clients for a project", response = WebsocketClient.class)
@@ -516,7 +504,6 @@ public class ProjectController {
 
     /**
      * Get projects for a user
-     *
      * @param principal The connected user
      * @return The whole list of projects
      */

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.configuration.security.database;
+package io.suricate.monitoring.security.database;
 
 import io.suricate.monitoring.configuration.security.common.ConnectedUser;
 import io.suricate.monitoring.model.entities.User;
@@ -74,6 +74,6 @@ public class UserDetailsDatabaseService implements UserDetailsService {
                         .collect(Collectors.toList()))
                 .orElseThrow(() -> new UsernameNotFoundException("User " + username + " was not authorized"));
 
-        return new DatabaseConnectedUser(currentUser.get(), authorities);
+        return new ConnectedUser(currentUser.get().getUsername(), currentUser.get().getPassword(), authorities);
     }
 }

@@ -14,48 +14,28 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.configuration.security.web;
+package io.suricate.monitoring.configuration.security;
 
-import io.suricate.monitoring.configuration.security.oauth2.*;
+import io.suricate.monitoring.configuration.security.web.AuthenticationFailureEntryPoint;
+import io.suricate.monitoring.security.filter.TokenAuthenticationFilter;
+import io.suricate.monitoring.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
+import io.suricate.monitoring.security.oauth2.OAuth2AuthenticationFailureHandler;
+import io.suricate.monitoring.security.oauth2.OAuth2AuthenticationSuccessHandler;
+import io.suricate.monitoring.security.oauth2.OAuth2UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.converter.FormHttpMessageConverter;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
-import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationManagerResolver;
-import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.jwt.JwtHelper;
-import org.springframework.security.oauth2.client.endpoint.DefaultAuthorizationCodeTokenResponseClient;
-import org.springframework.security.oauth2.client.endpoint.OAuth2AccessTokenResponseClient;
-import org.springframework.security.oauth2.client.endpoint.OAuth2AuthorizationCodeGrantRequest;
-import org.springframework.security.oauth2.client.http.OAuth2ErrorResponseErrorHandler;
-import org.springframework.security.oauth2.core.OAuth2AuthenticatedPrincipal;
-import org.springframework.security.oauth2.core.http.converter.OAuth2AccessTokenResponseHttpMessageConverter;
-import org.springframework.security.oauth2.jwt.Jwt;
-import org.springframework.security.oauth2.jwt.JwtDecoder;
-import org.springframework.security.oauth2.jwt.JwtException;
-import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationProvider;
-import org.springframework.security.oauth2.server.resource.authentication.OpaqueTokenAuthenticationProvider;
-import org.springframework.security.oauth2.server.resource.introspection.OpaqueTokenIntrospector;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsUtils;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
-
-import static io.suricate.monitoring.configuration.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
 
 /**
  * Global Security configurations
@@ -149,11 +129,23 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .userService(userService)
                 .and()
             .successHandler(oAuth2AuthenticationSuccessHandler)
-            .failureHandler(oAuth2AuthenticationFailureHandler);
+            .failureHandler(oAuth2AuthenticationFailureHandler)
+                .and()
+            .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
     /**
-     * Configure the role hierarchy
+     * HTTP filter processing the given token in header
+     * @return The token authentication filter bean
+     */
+    @Bean
+    public TokenAuthenticationFilter tokenAuthenticationFilter() {
+        return new TokenAuthenticationFilter();
+    }
+
+    /**
+     * Define a role hierarchy
+     * @return The role hierarchy bean
      */
     @Bean
     protected RoleHierarchyImpl roleHierarchy() {

@@ -18,8 +18,8 @@
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, ReplaySubject, Subject } from 'rxjs';
+import { filter, tap } from 'rxjs/operators';
 import { Credentials } from '../../../models/backend/user/credentials';
 import { AuthenticationResponse } from '../../../models/backend/authentication/authentication-response';
 import { User } from '../../../models/backend/user/user';
@@ -30,10 +30,10 @@ import { RoleEnum } from '../../../enums/role.enum';
 import { UserRequest } from '../../../models/backend/user/user-request';
 import { AbstractHttpService } from '../../backend/abstract-http/abstract-http.service';
 import { HttpUserService } from '../../backend/http-user/http-user.service';
-import {EnvironmentService} from "../environment/environment.service";
-import {Page} from "../../../models/backend/page";
-import {Project} from "../../../models/backend/project/project";
-import {HttpFilterService} from "../../backend/http-filter/http-filter.service";
+import { EnvironmentService } from '../environment/environment.service';
+import { Page } from '../../../models/backend/page';
+import { Project } from '../../../models/backend/project/project';
+import { HttpFilterService } from '../../backend/http-filter/http-filter.service';
 
 /**
  * The authentication service
@@ -81,11 +81,31 @@ export class AuthenticationService {
   private static readonly localStorageTokenTypeKey = 'suricate_token_type';
 
   /**
+   * Hold the connected user
+   */
+  private connectedUser: BehaviorSubject<User> = new BehaviorSubject<User>(undefined);
+
+  /**
    * Constructor
-   *
    * @param httpClient Angular service used make http calls
    */
   constructor(private readonly httpClient: HttpClient) {}
+
+  /**
+   * Get the current connected user
+   */
+  getConnectedUser(): Observable<User> {
+    console.warn('accessing connected user');
+    return this.connectedUser.asObservable().pipe(filter(user => user != undefined));
+  }
+
+  /**
+   * Set the current connected user
+   * @param connectedUser The connected user
+   */
+  setConnectedUser(connectedUser: User): void {
+    this.connectedUser.next(connectedUser);
+  }
 
   /**
    * Get the access token store in local storage
@@ -113,9 +133,9 @@ export class AuthenticationService {
   /**
    * Function used to decode the access token
    */
-  private static decodeAccessToken(): AccessTokenDecoded {
+  /*private static decodeAccessToken(): AccessTokenDecoded {
     return AuthenticationService.jwtHelperService.decodeToken(AuthenticationService.getAccessToken());
-  }
+  }*/
 
   /**
    * Return the token type stored in local storage
@@ -129,7 +149,7 @@ export class AuthenticationService {
    *
    * @param tokenType The type of token stored
    */
-  private static setTokenType(tokenType: string): void {
+  public static setTokenType(tokenType: string): void {
     localStorage.setItem(AuthenticationService.localStorageTokenTypeKey, tokenType);
   }
 
@@ -145,23 +165,24 @@ export class AuthenticationService {
    *
    * @param refreshToken The refresh token to set
    */
-  private static setRefreshToken(refreshToken: string): void {
+  /*private static setRefreshToken(refreshToken: string): void {
     localStorage.setItem(AuthenticationService.localStorageRefreshTokenKey, refreshToken);
-  }
+  }*/
 
   /**
    * Used to know if the user is currently logged in
    */
   public static isLoggedIn(): boolean {
-    return !AuthenticationService.isTokenExpired();
+    return AuthenticationService.getAccessToken() != null && AuthenticationService.getAccessToken() != '';
+    // !AuthenticationService.isTokenExpired();
   }
 
   /**
    * Used to know if the token is expired or not
    */
-  public static isTokenExpired(): boolean {
+  /*public static isTokenExpired(): boolean {
     return this.jwtHelperService.isTokenExpired(AuthenticationService.getAccessToken());
-  }
+  }*/
 
   /**
    * Return the full token (token type + access token)
@@ -173,9 +194,9 @@ export class AuthenticationService {
   /**
    * Used to know if the connected user is admin or not
    */
-  public static isAdmin(): boolean {
+  /*public static isAdmin(): boolean {
     return AuthenticationService.decodeAccessToken().authorities.includes(RoleEnum.ROLE_ADMIN);
-  }
+  }*/
 
   /**
    * Used to logout the used
@@ -188,7 +209,7 @@ export class AuthenticationService {
   /**
    * Return the connected user with information store in the token
    */
-  public static getConnectedUser(): User {
+  /*public static getConnectedUser(): User {
     const decodedToken = AuthenticationService.decodeAccessToken();
 
     const user = new User();
@@ -203,7 +224,7 @@ export class AuthenticationService {
     });
 
     return user;
-  }
+  }*/
 
   /**
    * Authenticate the user throw OAuth2 Password grant
@@ -230,7 +251,7 @@ export class AuthenticationService {
           if (authenticationResponse && authenticationResponse.access_token) {
             AuthenticationService.setTokenType(authenticationResponse.token_type);
             AuthenticationService.setAccessToken(authenticationResponse.access_token);
-            AuthenticationService.setRefreshToken(authenticationResponse.refresh_token);
+            // AuthenticationService.setRefreshToken(authenticationResponse.refresh_token);
           }
         })
       );

@@ -32,6 +32,8 @@ import { UserSettingRequest } from '../../../shared/models/backend/setting/user-
 import { AllowedSettingValue } from '../../../shared/models/backend/setting/allowed-setting-value';
 import { SettingsService } from '../../../core/services/settings.service';
 import { UserSetting } from '../../../shared/models/backend/setting/user-setting';
+import { User } from '../../../shared/models/backend/user/user';
+import { MenuConfiguration } from '../../../shared/models/frontend/menu/menu-configuration';
 
 /**
  * Display the menu on the sidenav
@@ -45,12 +47,12 @@ export class MenuComponent implements OnInit {
   /**
    * The user connected
    */
-  public readonly connectedUser = AuthenticationService.getConnectedUser();
+  public connectedUser: User;
 
   /**
    * The menu to display
    */
-  public readonly menu = MenuService.buildMenu();
+  public menu: MenuConfiguration;
 
   /**
    * User settings
@@ -76,6 +78,7 @@ export class MenuComponent implements OnInit {
    * @param sidenavService Frontend service used to manage sidenavs
    * @param settingsFormFieldsService Frontend service used to build form fields for settings management
    * @param settingsService Frontend service used to manage settings
+   * @param authenticationService The authentication service
    */
   constructor(
     private readonly router: Router,
@@ -83,15 +86,20 @@ export class MenuComponent implements OnInit {
     private readonly httpUserService: HttpUserService,
     private readonly sidenavService: SidenavService,
     private readonly settingsFormFieldsService: SettingsFormFieldsService,
-    private readonly settingsService: SettingsService
+    private readonly settingsService: SettingsService,
+    private readonly authenticationService: AuthenticationService
   ) {}
 
   /**
    * Called when the component is init
    */
   public ngOnInit(): void {
-    this.settingsService.initUserSettings(AuthenticationService.getConnectedUser()).subscribe((userSettings: UserSetting[]) => {
-      this.userSettings = userSettings;
+    this.authenticationService.getConnectedUser().subscribe((user: User) => {
+      this.connectedUser = user;
+      this.menu = MenuService.buildMenu(this.connectedUser.admin);
+      this.settingsService.initUserSettings(user).subscribe((userSettings: UserSetting[]) => {
+        this.userSettings = userSettings;
+      });
     });
   }
 
@@ -137,12 +145,12 @@ export class MenuComponent implements OnInit {
             userSettingRequest.unconstrainedValue = formData[setting.type];
           }
 
-          return this.httpUserService.updateUserSetting(AuthenticationService.getConnectedUser().username, setting.id, userSettingRequest);
+          return this.httpUserService.updateUserSetting(this.connectedUser.username, setting.id, userSettingRequest);
         }),
         toArray()
       )
       .subscribe(() => {
-        this.settingsService.initUserSettings(AuthenticationService.getConnectedUser()).subscribe((userSettings: UserSetting[]) => {
+        this.settingsService.initUserSettings(this.connectedUser).subscribe((userSettings: UserSetting[]) => {
           this.userSettings = userSettings;
         });
       });

@@ -24,11 +24,14 @@ import io.suricate.monitoring.model.dto.api.user.UserRequestDto;
 import io.suricate.monitoring.model.dto.api.user.UserResponseDto;
 import io.suricate.monitoring.model.dto.api.user.UserSettingRequestDto;
 import io.suricate.monitoring.model.dto.api.user.UserSettingResponseDto;
+import io.suricate.monitoring.model.entities.Role;
 import io.suricate.monitoring.model.entities.Setting;
 import io.suricate.monitoring.model.entities.User;
 import io.suricate.monitoring.model.entities.UserSetting;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.model.enums.AuthenticationMethod;
+import io.suricate.monitoring.model.enums.UserRoleEnum;
+import io.suricate.monitoring.properties.ApplicationProperties;
 import io.suricate.monitoring.services.api.SettingService;
 import io.suricate.monitoring.services.api.UserService;
 import io.suricate.monitoring.services.api.UserSettingService;
@@ -44,6 +47,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -53,6 +57,7 @@ import java.net.URI;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * User controller
@@ -61,7 +66,6 @@ import java.util.Optional;
 @RequestMapping("/api")
 @Api(value = "User Controller", tags = {"Users"})
 public class UserController {
-
     /**
      * The user service
      */
@@ -153,6 +157,30 @@ public class UserController {
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
             .body(userMapper.toUserDTO(userOptional.get()));
+    }
+
+    /**
+     * Get the currently authenticated user
+     * @return The currently authenticated user
+     */
+    @ApiOperation(value = "Get the currently authenticated user", response = UserResponseDto.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok", response = UserResponseDto.class),
+            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
+    })
+    @GetMapping(value = "/v1/users/currentUser")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<UserResponseDto> getCurrentUser(@ApiIgnore Authentication authentication) {
+        Optional<User> userOptional = userService.getOneByUsername(authentication.getName());
+        if (!userOptional.isPresent()) {
+            throw new ObjectNotFoundException(User.class, authentication.getName());
+        }
+
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(userMapper.toUserDTO(userOptional.get()));
     }
 
     /**

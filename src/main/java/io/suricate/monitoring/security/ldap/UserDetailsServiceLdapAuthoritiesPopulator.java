@@ -14,13 +14,12 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.configuration.security.ldap;
+package io.suricate.monitoring.security.ldap;
 
+import io.suricate.monitoring.model.enums.AuthenticationMethod;
 import io.suricate.monitoring.properties.ApplicationProperties;
-import io.suricate.monitoring.configuration.security.common.ConnectedUser;
 import io.suricate.monitoring.model.entities.User;
 import io.suricate.monitoring.services.api.UserService;
-import io.suricate.monitoring.services.mapper.UserMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +30,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.ldap.userdetails.LdapAuthoritiesPopulator;
 import org.springframework.stereotype.Service;
 
-import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -60,17 +58,20 @@ public class UserDetailsServiceLdapAuthoritiesPopulator implements LdapAuthoriti
 
     /**
      * Get authorities for authenticated user
-     *
      * @param userData The user data from LDAP
      * @param username The username of the connected user
      * @return The user authorities
      */
-    @Transactional
+    @Override
     public Collection<? extends GrantedAuthority> getGrantedAuthorities(DirContextOperations userData, String username) {
         LOGGER.debug("Authenticating user <{}> with LDAP", username);
 
-        ConnectedUser connectedUser = new LdapConnectedUser(username.toLowerCase(), userData, applicationProperties.authentication.ldap);
-        User registeredUser = userService.registerUser(connectedUser);
+        String firstname = userData.getStringAttribute(applicationProperties.authentication.ldap.firstNameAttributName);
+        String lastname = userData.getStringAttribute(applicationProperties.authentication.ldap.lastNameAttributName);
+        String email = userData.getStringAttribute(applicationProperties.authentication.ldap.mailAttributName);
+        AuthenticationMethod authenticationMethod = AuthenticationMethod.LDAP;
+
+        User registeredUser = userService.registerUser(username.toLowerCase(), firstname, lastname, email, authenticationMethod);
 
         return registeredUser.getRoles()
                 .stream()

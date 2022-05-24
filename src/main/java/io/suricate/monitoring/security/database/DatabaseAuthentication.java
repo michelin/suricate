@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.configuration.security.database;
+package io.suricate.monitoring.security.database;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -23,7 +23,7 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
- * Database Authentification configurations
+ * Database authentication configurations
  */
 @Configuration
 @ConditionalOnProperty(name = "application.authentication.provider", havingValue = "database")

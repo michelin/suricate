@@ -18,7 +18,7 @@
 
 package io.suricate.monitoring.controllers;
 
-import io.suricate.monitoring.configuration.security.oauth2.ConnectedOAuth2User;
+import io.suricate.monitoring.configuration.security.common.ConnectedUser;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.project.ProjectResponseDto;
 import io.suricate.monitoring.model.dto.api.projectgrid.ProjectGridRequestDto;
@@ -71,7 +71,6 @@ public class ProjectGridController {
 
     /**
      * Constructor for dependency injection
-     *
      * @param projectGridMapper The project grid mapper
      * @param projectService The project service
      * @param projectGridService The project grid service
@@ -87,8 +86,7 @@ public class ProjectGridController {
 
     /**
      * Add a new grid to a project
-     *
-     * @param authentication The authentication entity
+     * @param connectedUser  The authentication entity
      * @param gridRequestDto The grid to add
      * @return The saved grid
      */
@@ -101,7 +99,7 @@ public class ProjectGridController {
     })
     @PostMapping(value = "/v1/projectGrids/{projectToken}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ProjectGridResponseDto> create(@ApiIgnore @AuthenticationPrincipal ConnectedOAuth2User connectedUser,
+    public ResponseEntity<ProjectGridResponseDto> create(@ApiIgnore @AuthenticationPrincipal ConnectedUser connectedUser,
                                                          @ApiParam(name = "projectToken", value = "The project token", required = true)
                                                          @PathVariable("projectToken") String projectToken,
                                                          @ApiParam(name = "projectGridRequestDto", value = "The project grid information", required = true)
@@ -126,10 +124,9 @@ public class ProjectGridController {
 
     /**
      * Update an existing project
-     *
-     * @param authentication    The connected user
-     * @param projectToken      The project token to update
-     * @param projectRequestDtos The project grids information to update
+     * @param connectedUser      The connected user
+     * @param projectToken       The project token to update
+     * @param projectRequestDto  The project grids information to update
      * @return The project updated
      */
     @ApiOperation(value = "Update an existing project by the project token")
@@ -141,7 +138,7 @@ public class ProjectGridController {
     })
     @PutMapping(value = "/v1/projectGrids/{projectToken}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Void> updateProjectGrids(@ApiIgnore @AuthenticationPrincipal ConnectedOAuth2User connectedUser,
+    public ResponseEntity<Void> updateProjectGrids(@ApiIgnore @AuthenticationPrincipal ConnectedUser connectedUser,
                                                    @ApiParam(name = "projectToken", value = "The project token", required = true)
                                                    @PathVariable("projectToken") String projectToken,
                                                    @ApiParam(name = "projectResponseDto", value = "The project information", required = true)
@@ -171,8 +168,7 @@ public class ProjectGridController {
 
     /**
      * Delete a given grid of a project
-     *
-     * @param authentication The connected user
+     * @param connectedUser  The connected user
      * @param projectToken   The project token to delete
      * @param gridId         The grid id
      * @return A void response entity
@@ -186,7 +182,7 @@ public class ProjectGridController {
     })
     @DeleteMapping(value = "/v1/projectGrids/{projectToken}/{gridId}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Void> deleteGridById(@ApiIgnore @AuthenticationPrincipal ConnectedOAuth2User connectedUser,
+    public ResponseEntity<Void> deleteGridById(@ApiIgnore @AuthenticationPrincipal ConnectedUser connectedUser,
                                                @ApiParam(name = "projectToken", value = "The project token", required = true)
                                                @PathVariable("projectToken") String projectToken,
                                                @ApiParam(name = "gridId", value = "The grid id", required = true)

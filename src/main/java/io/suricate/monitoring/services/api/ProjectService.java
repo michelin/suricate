@@ -16,12 +16,11 @@
 
 package io.suricate.monitoring.services.api;
 
-import io.suricate.monitoring.configuration.security.oauth2.ConnectedOAuth2User;
+import io.suricate.monitoring.configuration.security.common.ConnectedUser;
 import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
 import io.suricate.monitoring.model.entities.*;
 import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.repositories.ProjectRepository;
-import io.suricate.monitoring.services.mapper.AssetMapper;
 import io.suricate.monitoring.services.specifications.ProjectSearchSpecification;
 import io.suricate.monitoring.services.websocket.DashboardWebSocketService;
 import io.suricate.monitoring.utils.SecurityUtils;
@@ -32,12 +31,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -287,9 +283,9 @@ public class ProjectService {
      * @param authentication The connected user
      * @return True if he can, false otherwise
      */
-    public boolean isConnectedUserCanAccessToProject(final Project project, final ConnectedOAuth2User connectedUser) {
+    public boolean isConnectedUserCanAccessToProject(final Project project, final ConnectedUser connectedUser) {
         return SecurityUtils.isAdmin(connectedUser)
-            || project.getUsers().stream().anyMatch(currentUser -> currentUser.getUsername().equalsIgnoreCase(connectedUser.getName()));
+            || project.getUsers().stream().anyMatch(currentUser -> currentUser.getUsername().equalsIgnoreCase(connectedUser.getUsername()));
     }
 
     /**

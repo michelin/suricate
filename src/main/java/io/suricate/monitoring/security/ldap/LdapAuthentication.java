@@ -14,10 +14,9 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.configuration.security.ldap;
+package io.suricate.monitoring.security.ldap;
 
 import io.suricate.monitoring.properties.ApplicationProperties;
-import io.suricate.monitoring.configuration.security.common.ConnectedUser;
 import io.suricate.monitoring.services.api.UserService;
 import io.suricate.monitoring.utils.exceptions.ConfigurationException;
 import org.apache.commons.lang3.StringUtils;
@@ -28,6 +27,7 @@ import org.springframework.ldap.core.AuthenticationSource;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.ldap.DefaultSpringSecurityContextSource;
 import org.springframework.security.ldap.userdetails.LdapUserDetailsMapper;
@@ -82,7 +82,6 @@ public class LdapAuthentication {
 
     /**
      * Configure the ldap
-     *
      * @param auth the authentication manager
      * @throws Exception Any triggered exception during the configuration
      */
@@ -102,15 +101,13 @@ public class LdapAuthentication {
 
     /**
      * Method used to store all user Ldap attribute inside the Security context holder
-     *
      * @return the userDetails context
      */
     public UserDetailsContextMapper userDetailsContextMapper() {
         return new LdapUserDetailsMapper() {
             @Override
             public UserDetails mapUserFromContext(DirContextOperations ctx, String username, java.util.Collection<? extends GrantedAuthority> authorities) {
-                Long userId = userService.getIdByUsername(username);
-                return new LdapConnectedUser(username, ctx, authorities, userId, ldapProperties);
+                return new User(username, StringUtils.EMPTY, authorities);
             }
         };
     }

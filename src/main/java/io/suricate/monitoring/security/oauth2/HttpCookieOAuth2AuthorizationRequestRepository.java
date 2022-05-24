@@ -1,4 +1,4 @@
-package io.suricate.monitoring.configuration.security.oauth2;
+package io.suricate.monitoring.security.oauth2;
 
 import com.nimbusds.oauth2.sdk.util.StringUtils;
 import io.suricate.monitoring.utils.web.CookieUtils;
@@ -49,7 +49,7 @@ public class HttpCookieOAuth2AuthorizationRequestRepository implements Authoriza
      * the authentication fails. It works like a CSRF token.
      * The authentication request is saved into a cookie to be stateless (stored in session by default).
      * The "redirect_uri" frontend parameter is also saved in a cookie of the IDP response to be retrieved later
-     * and use to respond to the frontend.
+     * and used to respond to the frontend.
      * @param authorizationRequest The authorization request that will be sent to the IDP
      * @param request The frontend request. Can contain a custom "redirect_uri" parameter to redirect
      * @param response The IDP response. Empty for now, contains only the attached cookies
@@ -72,7 +72,7 @@ public class HttpCookieOAuth2AuthorizationRequestRepository implements Authoriza
     /**
      * Remove the authorization request.
      * Strange behavior here, the method needs to return the authorization request, not delete it because
-     * loadAuthorizationRequest is never invoked. If null is returned here, the authentication fails.
+     * loadAuthorizationRequest is never invoked otherwise.
      * @param request The IDP response. Contains the cookies we set before authenticating
      * @return The authorization request
      */
@@ -81,6 +81,11 @@ public class HttpCookieOAuth2AuthorizationRequestRepository implements Authoriza
         return loadAuthorizationRequest(request);
     }
 
+    /**
+     * Remove authorization cookies from a given request
+     * @param request The request that contains the cookies to remove
+     * @param response The response of the request that won't contain the cookies
+     */
     public void removeAuthorizationRequestCookies(HttpServletRequest request, HttpServletResponse response) {
         CookieUtils.deleteCookie(request, response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME);
         CookieUtils.deleteCookie(request, response, REDIRECT_URI_PARAM_COOKIE_NAME);

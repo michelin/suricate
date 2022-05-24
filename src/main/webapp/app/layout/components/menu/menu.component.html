@@ -1,7 +1,7 @@
 <!-- User Section -->
 <div class="suricate-menu">
   <div id="user-section" class="sidenav-section">
-    <div class="avatar-container">
+    <div *ngIf="connectedUser" class="avatar-container">
       <div class="avatar">
         {{ getInitials() }}
       </div>
@@ -11,7 +11,7 @@
       <mat-expansion-panel class="mat-elevation-z0">
         <mat-expansion-panel-header>
           <mat-panel-title>
-            <div class="nameContainer">
+            <div *ngIf="connectedUser" class="nameContainer">
               <div>{{ connectedUser.firstname }} {{ connectedUser.lastname }}</div>
               <div>({{ connectedUser.username }})</div>
             </div>
@@ -36,7 +36,7 @@
     </mat-accordion>
   </div>
 
-  <div class="sidenav-section-container" fxLayout="column wrap" fxLayoutGap="8px">
+  <div *ngIf="menu" class="sidenav-section-container" fxLayout="column wrap" fxLayoutGap="8px">
     <mat-divider></mat-divider>
 
     <div id="button-section" class="sidenav-section" fxLayout="row wrap" fxLayoutAlign="start center">

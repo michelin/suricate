@@ -17,9 +17,11 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
-import { map } from 'rxjs/operators';
+import { flatMap, map, switchMap } from 'rxjs/operators';
 import { AuthenticationService } from '../../../shared/services/frontend/authentication/authentication.service';
 import { NumberUtils } from '../../../shared/utils/number.utils';
+import { HttpUserService } from '../../../shared/services/backend/http-user/http-user.service';
+import { User } from '../../../shared/models/backend/user/user';
 
 /**
  * The dashboard service
@@ -28,24 +30,20 @@ import { NumberUtils } from '../../../shared/utils/number.utils';
 export class DashboardService {
   /**
    * Define the min bound for the screen code random generation
-   * @type {number}
-   * @private
    */
   private static readonly minScreenCodeBound = 100000;
 
   /**
    * Define the max bound for the screen code random generation
-   * @type {number}
-   * @private
    */
   private static readonly maxScreenCodeBound = 999999;
 
   /**
    * Constructor
-   *
-   * @param {HttpProjectService} httpProjectService Suricate service used to manage http calls for project
+   * @param httpProjectService Service used to manage http calls for project
+   * @param authenticationService The authentication service
    */
-  constructor(private readonly httpProjectService: HttpProjectService) {}
+  constructor(private readonly httpProjectService: HttpProjectService, private readonly authenticationService: AuthenticationService) {}
 
   /**
    * Generate a random screen code
@@ -56,15 +54,15 @@ export class DashboardService {
 
   /**
    * Check if the dashboard should be displayed without rights
-   *
    * @param dashboardToken The dashboard token
    */
   public shouldDisplayedReadOnly(dashboardToken: string): Observable<boolean> {
     return this.httpProjectService.getProjectUsers(dashboardToken).pipe(
-      map(dashboardUsers => {
-        return (
-          !AuthenticationService.isAdmin() &&
-          !dashboardUsers.some(user => user.username === AuthenticationService.getConnectedUser().username)
+      flatMap(dashboardUsers => {
+        return this.authenticationService.getConnectedUser().pipe(
+          map((user: User) => {
+            return !user.admin && !dashboardUsers.some(user => user.username === user.username);
+          })
         );
       })
     );

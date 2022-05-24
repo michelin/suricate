@@ -16,7 +16,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import {ActivatedRoute, Router} from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthenticationService } from '../../../shared/services/frontend/authentication/authentication.service';
 import { HttpCategoryParametersService } from '../../../shared/services/backend/http-category-parameters/http-category-parameters.service';
@@ -29,6 +29,7 @@ import { LoginFormFieldsService } from '../../../shared/services/frontend/form-f
 import { ButtonTypeEnum } from '../../../shared/enums/button-type.enum';
 import { SettingsService } from '../../services/settings.service';
 import { HttpConfigurationService } from '../../../shared/services/backend/http-configuration/http-configuration.service';
+import { User } from '../../../shared/models/backend/user/user';
 
 /**
  * Manage the login page
@@ -76,17 +77,16 @@ export class LoginComponent implements OnInit {
 
   /**
    * Constructor
-   *
-   * @param router Angular service used to manage the application routes
-   * @param route
-   * @param httpConfigurationService Suricate service used to manage http calls for configurations
-   * @param authenticationService Suricate service used to manage authentications
+   * @param router Service used to manage the application routes
+   * @param route Service used to manage the activated route
+   * @param httpConfigurationService Service used to manage http calls for configurations
+   * @param authenticationService Service used to manage authentications
    * @param formService Front-End service used to manage forms
    * @param settingsService Front-End service used to manage the user's settings
    */
   constructor(
     private readonly router: Router,
-    private route: ActivatedRoute,
+    private readonly route: ActivatedRoute,
     private readonly httpConfigurationService: HttpConfigurationService,
     private readonly authenticationService: AuthenticationService,
     private readonly formService: FormService,
@@ -98,8 +98,10 @@ export class LoginComponent implements OnInit {
    */
   public ngOnInit(): void {
     const token: string = this.route.snapshot.queryParamMap.get('token');
+    const tokenType: string = this.route.snapshot.queryParamMap.get('token_type');
     if (token) {
       AuthenticationService.setAccessToken(token);
+      AuthenticationService.setTokenType(tokenType);
     }
 
     if (AuthenticationService.isLoggedIn()) {

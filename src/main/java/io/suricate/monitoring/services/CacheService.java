@@ -25,12 +25,14 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class CacheService {
-
     /**
-     * Class logger
+     * The logger
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(CacheService.class);
 
+    /**
+     * The cache manager
+     */
     private final CacheManager cacheManager;
 
     /**
@@ -46,8 +48,7 @@ public class CacheService {
      * Clear all caches
      */
     public void clearAllCache() {
-        cacheManager.getCacheNames()
-                .forEach(this::clearCache);
+        cacheManager.getCacheNames().forEach(this::clearCache);
     }
 
     /**

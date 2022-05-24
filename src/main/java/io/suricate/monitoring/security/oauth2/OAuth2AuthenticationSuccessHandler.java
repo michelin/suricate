@@ -1,17 +1,11 @@
-package io.suricate.monitoring.configuration.security.oauth2;
+package io.suricate.monitoring.security.oauth2;
 
-import io.suricate.monitoring.configuration.security.jwt.TokenProvider;
-import io.suricate.monitoring.configuration.security.web.AuthenticationFailureEntryPoint;
-import io.suricate.monitoring.model.entities.User;
 import io.suricate.monitoring.properties.ApplicationProperties;
-import io.suricate.monitoring.services.api.UserService;
 import io.suricate.monitoring.utils.web.CookieUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.log.LogMessage;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepository;
@@ -28,7 +22,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Optional;
 
-import static io.suricate.monitoring.configuration.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
+import static io.suricate.monitoring.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
 
 @Component
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
@@ -38,29 +32,38 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private static final Logger LOGGER = LoggerFactory.getLogger(OAuth2AuthenticationSuccessHandler.class);
 
     /**
-     * The user service
+     * The authentication request repository
+     * Store the authentication request in an HTTP cookie on the IDP response
      */
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private TokenProvider tokenProvider;
-
     @Autowired
     private HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 
+    /**
+     * The application properties
+     */
     @Autowired
     private ApplicationProperties applicationProperties;
 
+    /**
+     * Store the OAuth2 authorized client
+     */
     @Autowired
     OAuth2AuthorizedClientRepository oAuth2AuthorizedClientRepository;
 
+    /**
+     * Trigger after OAuth2 authentication has been successful
+     * @param request The request which is the response of the IDP
+     * @param response The response to send to the host that authenticated successfully
+     * @param authentication The authentication data
+     * @throws IOException Any IO Exception
+     * @throws ServletException Any servlet exception
+     */
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
        String targetUrl = determineTargetUrl(request, response, authentication);
 
         if (response.isCommitted()) {
-            logger.debug("Response has already been committed. Unable to redirect to " + targetUrl);
+            LOGGER.debug("Response has already been committed. Unable to redirect to " + targetUrl);
             return;
         }
 
@@ -94,22 +97,20 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
 
-        String username = ((ConnectedOAuth2User) authentication.getPrincipal()).getAttributes().get("login").toString();
-        User user = userService.getOneByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User " + username + " was not authorized"));
-        String token = tokenProvider.createToken(user);
-
         OAuth2AuthenticationToken auth = (OAuth2AuthenticationToken) authentication;
         OAuth2AuthorizedClient authorizedClient = oAuth2AuthorizedClientRepository.loadAuthorizedClient(auth.getAuthorizedClientRegistrationId(), authentication, request);
 
-        LOGGER.debug("Access token {} generated from {}. Going to use self-generated {} JWT token instead.",
-                authorizedClient.getAccessToken().getTokenValue(), authorizedClient.getClientRegistration().getRegistrationId(), token);
-
         return UriComponentsBuilder.fromUriString(targetUrl)
-                .queryParam("token", token)
+                .queryParam("token", authorizedClient.getAccessToken().getTokenValue())
+                .queryParam("token_type", authorizedClient.getAccessToken().getTokenType().getValue())
                 .build().toUriString();
     }
 
+    /**
+     * Remove authorization cookies from the IDP response before transiting it to frontend
+     * @param request The request, which is the response of the IDP, that contains the cookies to remove
+     * @param response The response of the request that won't contain the cookies
+     */
     protected void clearAuthenticationAttributes(HttpServletRequest request, HttpServletResponse response) {
         super.clearAuthenticationAttributes(request);
         httpCookieOAuth2AuthorizationRequestRepository.removeAuthorizationRequestCookies(request, response);

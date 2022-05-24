@@ -22,6 +22,7 @@ package io.suricate.monitoring.model.enums;
 public enum AuthenticationMethod {
     DATABASE,
     LDAP,
-    GITHUB
+    GITHUB,
+    GITLAB
 }
 
