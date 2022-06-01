@@ -25,7 +25,7 @@ export class User {
   firstname: string;
   lastname: string;
   email: string;
-  admin: boolean;
-  authenticationMethod: string;
+  avatarUrl: string;
+  idp: string;
   roles: Role[];
 }

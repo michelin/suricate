@@ -76,6 +76,11 @@
             line-height: 54px;
             text-align: center;
             background: #303030;
+
+            img {
+              width: inherit;
+              height: inherit;
+            }
           }
         }
       }

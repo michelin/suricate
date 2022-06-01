@@ -69,16 +69,6 @@ export class HttpUserService implements AbstractHttpService<User | UserRequest> 
   }
 
   /**
-   * Get the current authenticated user
-   * @returns The user current authenticated user
-   */
-  public getCurrentUser(): Observable<User> {
-    const url = `${HttpUserService.usersApiEndpoint}/currentUser`;
-
-    return this.httpClient.get<User>(url);
-  }
-
-  /**
    * Function used to create a new user
    *
    * @param entity The user to create

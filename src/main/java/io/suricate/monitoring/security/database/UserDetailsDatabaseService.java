@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.security.database;
 
-import io.suricate.monitoring.configuration.security.common.ConnectedUser;
+import io.suricate.monitoring.configuration.web.ConnectedUser;
 import io.suricate.monitoring.model.entities.User;
 import io.suricate.monitoring.services.api.UserService;
 import org.slf4j.Logger;

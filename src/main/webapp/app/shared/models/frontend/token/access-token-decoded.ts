@@ -63,6 +63,16 @@ export interface AccessTokenDecoded {
   email: string;
 
   /**
+   * The avatar URL
+   */
+  avatar_url: string;
+
+  /**
+   * The authentication method
+   */
+  idp: string;
+
+  /**
    * The list of roles of the user
    */
   authorities: RoleEnum[];

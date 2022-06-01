@@ -41,9 +41,8 @@ export class DashboardService {
   /**
    * Constructor
    * @param httpProjectService Service used to manage http calls for project
-   * @param authenticationService The authentication service
    */
-  constructor(private readonly httpProjectService: HttpProjectService, private readonly authenticationService: AuthenticationService) {}
+  constructor(private readonly httpProjectService: HttpProjectService) {}
 
   /**
    * Generate a random screen code
@@ -58,13 +57,12 @@ export class DashboardService {
    */
   public shouldDisplayedReadOnly(dashboardToken: string): Observable<boolean> {
     return this.httpProjectService.getProjectUsers(dashboardToken).pipe(
-      flatMap(dashboardUsers => {
-        return this.authenticationService.getConnectedUser().pipe(
-          map((connectedUser: User) => {
-            return !connectedUser.admin && !dashboardUsers.some(user => user.username === connectedUser.username);
-          })
-        );
-      })
+        map(dashboardUsers => {
+          return (
+              !AuthenticationService.isAdmin() &&
+              !dashboardUsers.some(user => user.username === AuthenticationService.getConnectedUser().username)
+          );
+        })
     );
   }
 }

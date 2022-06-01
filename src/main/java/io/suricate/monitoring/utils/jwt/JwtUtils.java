@@ -1,4 +1,4 @@
-package io.suricate.monitoring.configuration.security.jwt;
+package io.suricate.monitoring.utils.jwt;
 
 import io.jsonwebtoken.*;
 import io.suricate.monitoring.model.entities.Role;
@@ -13,11 +13,11 @@ import java.util.Date;
 import java.util.stream.Collectors;
 
 @Service
-public class TokenProvider {
+public class JwtUtils {
     /**
      * The logger
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger(TokenProvider.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(JwtUtils.class);
 
     @Autowired
     private ApplicationProperties applicationProperties;
@@ -42,20 +42,32 @@ public class TokenProvider {
                 .claim("firstname", user.getFirstname())
                 .claim("lastname", user.getLastname())
                 .claim("email", user.getEmail())
+                .claim("avatar_url", user.getAvatarUrl())
+                .claim("idp", user.getAuthenticationMethod().toString().toLowerCase())
                 .claim("authorities", user.getRoles().stream().map(Role::getName).collect(Collectors.toList()))
                 .signWith(SignatureAlgorithm.HS512, applicationProperties.getAuthentication().getJwt().getSigningKey())
                 .compact();
     }
 
-    public Long getUserIdFromToken(String token) {
-        Claims claims = Jwts.parser().setSigningKey("!B7\"8_wreS@Vqh)R").parseClaimsJws(token).getBody();
+    /**
+     * Extract the username from the given token
+     * @param token The token
+     * @return The username
+     */
+    public String getUsernameFromToken(String token) {
+        Claims claims = Jwts.parser().setSigningKey(applicationProperties.getAuthentication().getJwt().getSigningKey()).parseClaimsJws(token).getBody();
 
-        return Long.parseLong(claims.getSubject());
+        return claims.getSubject();
     }
 
+    /**
+     * Validate a given JWT token
+     * @param authToken The token to validate
+     * @return true if it is valid, false otherwise
+     */
     public boolean validateToken(String authToken) {
         try {
-            Jwts.parser().setSigningKey("!B7\"8_wreS@Vqh)R").parseClaimsJws(authToken);
+            Jwts.parser().setSigningKey(applicationProperties.getAuthentication().getJwt().getSigningKey()).parseClaimsJws(authToken);
             return true;
         } catch (SignatureException ex) {
             LOGGER.error("Invalid JWT signature");

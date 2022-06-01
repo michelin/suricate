@@ -48,11 +48,6 @@ export class SidenavComponent implements OnInit, OnDestroy {
   private unsubscribe: Subject<void> = new Subject<void>();
 
   /**
-   * The user connected
-   */
-  public connectedUser: User;
-
-  /**
    * Used to hide or display the menu using activated routes
    */
   public shouldHideMenu = true;
@@ -96,12 +91,6 @@ export class SidenavComponent implements OnInit, OnDestroy {
         const deeperActivatedRoute = RoutesService.getDeeperActivatedRoute(this.activatedRoute);
 
         this.shouldHideMenu = MenuService.shouldHideMenu(deeperActivatedRoute);
-
-        if (!this.shouldHideMenu) {
-          this.httpUserService.getCurrentUser().subscribe((user: User) => {
-            this.authenticationService.setConnectedUser(user);
-          });
-        }
       }
     });
   }

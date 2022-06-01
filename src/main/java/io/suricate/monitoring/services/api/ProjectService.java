@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.services.api;
 
-import io.suricate.monitoring.configuration.security.common.ConnectedUser;
+import io.suricate.monitoring.configuration.web.ConnectedUser;
 import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
 import io.suricate.monitoring.model.entities.*;
 import io.suricate.monitoring.model.enums.UpdateType;

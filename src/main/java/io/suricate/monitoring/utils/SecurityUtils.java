@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.utils;
 
-import io.suricate.monitoring.configuration.security.common.ConnectedUser;
+import io.suricate.monitoring.configuration.web.ConnectedUser;
 import io.suricate.monitoring.model.enums.UserRoleEnum;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;

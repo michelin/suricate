@@ -160,30 +160,6 @@ public class UserController {
     }
 
     /**
-     * Get the currently authenticated user
-     * @return The currently authenticated user
-     */
-    @ApiOperation(value = "Get the currently authenticated user", response = UserResponseDto.class)
-    @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Ok", response = UserResponseDto.class),
-            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
-    })
-    @GetMapping(value = "/v1/users/currentUser")
-    @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<UserResponseDto> getCurrentUser(@ApiIgnore Authentication authentication) {
-        Optional<User> userOptional = userService.getOneByUsername(authentication.getName());
-        if (!userOptional.isPresent()) {
-            throw new ObjectNotFoundException(User.class, authentication.getName());
-        }
-
-        return ResponseEntity
-                .ok()
-                .contentType(MediaType.APPLICATION_JSON)
-                .body(userMapper.toUserDTO(userOptional.get()));
-    }
-
-    /**
      * Update a user
      *
      * @param userId         The user id

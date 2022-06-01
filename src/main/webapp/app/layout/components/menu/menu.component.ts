@@ -47,12 +47,12 @@ export class MenuComponent implements OnInit {
   /**
    * The user connected
    */
-  public connectedUser: User;
+  public readonly connectedUser = AuthenticationService.getConnectedUser();
 
   /**
    * The menu to display
    */
-  public menu: MenuConfiguration;
+  public readonly menu = MenuService.buildMenu();
 
   /**
    * User settings
@@ -94,12 +94,8 @@ export class MenuComponent implements OnInit {
    * Called when the component is init
    */
   public ngOnInit(): void {
-    this.authenticationService.getConnectedUser().subscribe((user: User) => {
-      this.connectedUser = user;
-      this.menu = MenuService.buildMenu(this.connectedUser.admin);
-      this.settingsService.initUserSettings(user).subscribe((userSettings: UserSetting[]) => {
-        this.userSettings = userSettings;
-      });
+    this.settingsService.initUserSettings(AuthenticationService.getConnectedUser()).subscribe((userSettings: UserSetting[]) => {
+      this.userSettings = userSettings;
     });
   }
 
@@ -145,12 +141,12 @@ export class MenuComponent implements OnInit {
             userSettingRequest.unconstrainedValue = formData[setting.type];
           }
 
-          return this.httpUserService.updateUserSetting(this.connectedUser.username, setting.id, userSettingRequest);
+          return this.httpUserService.updateUserSetting(AuthenticationService.getConnectedUser().username, setting.id, userSettingRequest);
         }),
         toArray()
       )
       .subscribe(() => {
-        this.settingsService.initUserSettings(this.connectedUser).subscribe((userSettings: UserSetting[]) => {
+        this.settingsService.initUserSettings(AuthenticationService.getConnectedUser()).subscribe((userSettings: UserSetting[]) => {
           this.userSettings = userSettings;
         });
       });

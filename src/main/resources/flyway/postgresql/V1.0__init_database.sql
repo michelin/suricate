@@ -168,6 +168,7 @@ CREATE TABLE users (
     lastname    character varying(250),
     email       character varying(250),
     password    character varying(250),
+    avatar_url  character varying(500),
     auth_mode   character varying(20)   DEFAULT 'LDAP'::character varying NOT NULL,
     CONSTRAINT pk_users_id              PRIMARY KEY (id),
     CONSTRAINT uk_user_username         UNIQUE (username)

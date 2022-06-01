@@ -45,10 +45,10 @@ export class MenuService {
    * Build the menu
    * @param admin Is the user admin or not ?
    */
-  public static buildMenu(admin: boolean): MenuConfiguration {
+  public static buildMenu(): MenuConfiguration {
     const menuConfiguration = new MenuConfiguration();
 
-    if (admin) {
+    if (AuthenticationService.isAdmin()) {
       menuConfiguration.categories.push(MenuService.buildAdminMenu());
     }
 

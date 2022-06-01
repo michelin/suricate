@@ -25,3 +25,26 @@
 .sidenav-section-container {
   flex-grow: 1;
 }
+
+.name-container-panel {
+  margin: 0;
+
+  .name-container-div {
+    text-align: center;
+    align-items: center;
+
+    .idp-icon {
+      height: 22px;
+      width: 22px;
+      margin: 0 3px;
+    }
+
+    .names-container {
+      margin: 0 3px;
+
+      .firstname-lastname {
+        font-weight: bold;
+      }
+    }
+  }
+}

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.configuration.security;
+package io.suricate.monitoring.configuration.web;
 
 import io.suricate.monitoring.properties.ApplicationProperties;
 import org.springframework.beans.factory.annotation.Autowired;

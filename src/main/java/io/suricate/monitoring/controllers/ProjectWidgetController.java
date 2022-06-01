@@ -18,7 +18,7 @@
 
 package io.suricate.monitoring.controllers;
 
-import io.suricate.monitoring.configuration.security.common.ConnectedUser;
+import io.suricate.monitoring.configuration.web.ConnectedUser;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetRequestDto;
 import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetResponseDto;

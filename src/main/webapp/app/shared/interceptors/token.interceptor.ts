@@ -45,7 +45,7 @@ export class TokenInterceptor implements HttpInterceptor {
     if (AuthenticationService.isLoggedIn()) {
       request = request.clone({
         setHeaders: {
-          Authorization: AuthenticationService.getFullToken()
+          Authorization: `Bearer ${AuthenticationService.getAccessToken()}`
         }
       });
     }

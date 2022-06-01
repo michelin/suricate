@@ -79,6 +79,12 @@ public class User extends AbstractEntity<Long> {
     private String email;
 
     /**
+     * The avatar URL of the user
+     */
+    @Column
+    private String avatarUrl;
+
+    /**
      * The list of roles
      */
     @ManyToMany

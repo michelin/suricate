@@ -20,6 +20,7 @@ import io.suricate.monitoring.model.enums.AuthenticationMethod;
 import io.suricate.monitoring.properties.ApplicationProperties;
 import io.suricate.monitoring.model.entities.User;
 import io.suricate.monitoring.services.api.UserService;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,7 +72,7 @@ public class UserDetailsServiceLdapAuthoritiesPopulator implements LdapAuthoriti
         String email = userData.getStringAttribute(applicationProperties.authentication.ldap.mailAttributName);
         AuthenticationMethod authenticationMethod = AuthenticationMethod.LDAP;
 
-        User registeredUser = userService.registerUser(username.toLowerCase(), firstname, lastname, email, authenticationMethod);
+        User registeredUser = userService.registerUser(username.toLowerCase(), firstname, lastname, email, StringUtils.EMPTY, authenticationMethod);
 
         return registeredUser.getRoles()
                 .stream()

@@ -16,7 +16,6 @@
 
 package io.suricate.monitoring.services.api;
 
-import io.suricate.monitoring.configuration.security.common.ConnectedUser;
 import io.suricate.monitoring.model.entities.Role;
 import io.suricate.monitoring.model.entities.User;
 import io.suricate.monitoring.model.enums.AuthenticationMethod;
@@ -104,33 +103,36 @@ public class UserService {
      * @param firstname The user firstname
      * @param lastname The user lastname
      * @param email The user email
+     * @param avatarUrl The user avatar URL
      * @param authenticationMethod The ID provider used
      * @return The registered user
      */
     @Transactional
-    public User registerUser(String username, String firstname, String lastname, String email, AuthenticationMethod authenticationMethod) {
+    public User registerUser(String username, String firstname, String lastname, String email, String avatarUrl,
+                             AuthenticationMethod authenticationMethod) {
         Optional<User> optionalUser = getOneByUsername(username);
 
         if (!optionalUser.isPresent()) {
-            User user = userMapper.connectedUserToUserEntity(username, firstname, lastname, email, authenticationMethod);
+            User user = userMapper.connectedUserToUserEntity(username, firstname, lastname, email, avatarUrl, authenticationMethod);
             return create(user);
         }
 
-        return update(optionalUser.get(), username, firstname, lastname, email, authenticationMethod);
+        return update(optionalUser.get(), username, firstname, lastname, email, avatarUrl, authenticationMethod);
     }
 
     /**
      * Update the user information
      * @param user                 The user to update
-     * @param username             The user name
+     * @param username             The username
      * @param firstname            The user firstname
      * @param lastname             The user lastname
      * @param email                The user email
+     * @param avatarUrl            The user avatar url
      * @param authenticationMethod The ID provider used
      * @return The updated user
      */
-    public User update(final User user, String username, String firstname, String lastname, String email, AuthenticationMethod authenticationMethod) {
-        User userUpdated = userMapper.connectedUserToUserEntity(username, firstname, lastname, email, authenticationMethod);
+    public User update(final User user, String username, String firstname, String lastname, String email, String avatarUrl, AuthenticationMethod authenticationMethod) {
+        User userUpdated = userMapper.connectedUserToUserEntity(username, firstname, lastname, email, avatarUrl, authenticationMethod);
         userUpdated.setRoles(user.getRoles());
         userUpdated.setProjects(user.getProjects());
         userUpdated.setUserSettings(user.getUserSettings());

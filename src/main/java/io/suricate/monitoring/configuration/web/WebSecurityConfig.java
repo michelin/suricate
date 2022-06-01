@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.configuration.security;
+package io.suricate.monitoring.configuration.web;
 
-import io.suricate.monitoring.configuration.security.web.AuthenticationFailureEntryPoint;
 import io.suricate.monitoring.security.filter.TokenAuthenticationFilter;
 import io.suricate.monitoring.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
 import io.suricate.monitoring.security.oauth2.OAuth2AuthenticationFailureHandler;
@@ -28,14 +27,20 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationManagerResolver;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationProvider;
+import org.springframework.security.oauth2.server.resource.authentication.OpaqueTokenAuthenticationProvider;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsUtils;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Global Security configurations
@@ -117,21 +122,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/api/oauth2/authorization/**").permitAll()
             .antMatchers("/api/**").authenticated()
                 .and()
+            .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
             .oauth2Login()
-            .authorizationEndpoint()
-            // Store auth request in a http cookie on the IDP response
-            .authorizationRequestRepository(authRequestRepository)
-            // Override default "oauth2/authorization/" endpoint by adding "/api"
-            // Endpoint that triggers the OAuth2 auth to given IDP
-            .baseUri("/api/oauth2/authorization")
+                .authorizationEndpoint()
+                    // Store auth request in a http cookie on the IDP response
+                    .authorizationRequestRepository(authRequestRepository)
+                    // Override default "oauth2/authorization/" endpoint by adding "/api"
+                    // Endpoint that triggers the OAuth2 auth to given IDP
+                    .baseUri("/api/oauth2/authorization")
                 .and()
-            .userInfoEndpoint()
-            .userService(userService)
+                .userInfoEndpoint()
+                    .userService(userService)
                 .and()
-            .successHandler(oAuth2AuthenticationSuccessHandler)
-            .failureHandler(oAuth2AuthenticationFailureHandler)
-                .and()
-            .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+                    .successHandler(oAuth2AuthenticationSuccessHandler)
+                    .failureHandler(oAuth2AuthenticationFailureHandler);
     }
 
     /**

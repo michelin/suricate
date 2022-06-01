@@ -1,7 +1,7 @@
 package io.suricate.monitoring.security.filter;
 
-import io.suricate.monitoring.configuration.security.common.ConnectedUser;
-import io.suricate.monitoring.services.restclient.GitHubRestClientService;
+import io.suricate.monitoring.configuration.web.ConnectedUser;
+import io.suricate.monitoring.utils.jwt.JwtUtils;
 import io.suricate.monitoring.security.oauth2.OAuth2UserService;
 import io.suricate.monitoring.model.entities.User;
 import io.suricate.monitoring.services.api.UserService;
@@ -30,10 +30,10 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     private static final Logger LOGGER = LoggerFactory.getLogger(OAuth2UserService.class);
 
     /**
-     * The GitHub REST client
+     * The token provider
      */
     @Autowired
-    private GitHubRestClientService gitHubRestClient;
+    private JwtUtils tokenProvider;
 
     /**
      * The user service
@@ -52,19 +52,22 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
      */
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        final String token = getTokenFromRequest(request);
+        try {
+            final String token = getTokenFromRequest(request);
 
-        if (StringUtils.hasText(token)) {
-            String username = gitHubRestClient.getUser("Bearer " + token).getLogin();
+            if (StringUtils.hasText(token) && tokenProvider.validateToken(token)) {
+                String username = tokenProvider.getUsernameFromToken(token);
+                User user = userService.getOneByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User " + username + " was not authorized"));
+                ConnectedUser connectedUser = new ConnectedUser(user.getUsername(), "",
+                        user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList()));
 
-            User user = userService.getOneByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User " + username + " was not authorized"));
-            ConnectedUser connectedUser = new ConnectedUser(user.getUsername(), "",
-                    user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList()));
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(connectedUser, null, connectedUser.getAuthorities());
+                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(connectedUser, null, connectedUser.getAuthorities());
-            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
+        } catch (Exception e) {
+            LOGGER.error("Could not set user authentication in security context", e);
         }
 
         filterChain.doFilter(request, response);

@@ -3,6 +3,7 @@ package io.suricate.monitoring.security.oauth2;
 import io.suricate.monitoring.model.enums.AuthenticationMethod;
 import io.suricate.monitoring.services.api.UserService;
 import io.suricate.monitoring.utils.exceptions.OAuth2AuthenticationProcessingException;
+import io.suricate.monitoring.utils.oauth2.OAuth2Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,18 +44,13 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
                     .findAny()
                     .orElseThrow(() -> new OAuth2AuthenticationProcessingException(String.format("ID provider %s is not recognized", userRequest.getClientRegistration().getClientName())));
 
-            String username = null;
-            if (AuthenticationMethod.GITHUB.equals(authenticationMethod)) {
-                username = user.getAttribute("login").toString().toLowerCase();
-            } else if (AuthenticationMethod.GITLAB.equals(authenticationMethod)) {
-                username = user.getAttribute("username").toString().toLowerCase();
-            }
-
+            String username = OAuth2Utils.extractUsername(user, authenticationMethod);
             String firstname = user.getAttribute("name").toString().split(" ")[0];
             String lastname = user.getAttribute("name").toString().split(" ")[1];
             String email = user.getAttribute("email");
+            String avatarUrl = user.getAttribute("avatar_url");
 
-            userService.registerUser(username, firstname, lastname, email, authenticationMethod);
+            userService.registerUser(username, firstname, lastname, email, avatarUrl, authenticationMethod);
 
             LOGGER.debug("Authenticated user <{}> with {}", username, userRequest.getClientRegistration().getRegistrationId());
 

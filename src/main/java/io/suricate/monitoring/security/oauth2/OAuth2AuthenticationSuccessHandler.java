@@ -1,14 +1,22 @@
 package io.suricate.monitoring.security.oauth2;
 
+import io.suricate.monitoring.utils.jwt.JwtUtils;
+import io.suricate.monitoring.model.entities.User;
+import io.suricate.monitoring.model.enums.AuthenticationMethod;
 import io.suricate.monitoring.properties.ApplicationProperties;
+import io.suricate.monitoring.services.api.UserService;
+import io.suricate.monitoring.utils.exceptions.OAuth2AuthenticationProcessingException;
+import io.suricate.monitoring.utils.oauth2.OAuth2Utils;
 import io.suricate.monitoring.utils.web.CookieUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepository;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -20,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Arrays;
 import java.util.Optional;
 
 import static io.suricate.monitoring.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
@@ -48,7 +57,19 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
      * Store the OAuth2 authorized client
      */
     @Autowired
-    OAuth2AuthorizedClientRepository oAuth2AuthorizedClientRepository;
+    private OAuth2AuthorizedClientRepository oAuth2AuthorizedClientRepository;
+
+    /**
+     * The token provider
+     */
+    @Autowired
+    private JwtUtils tokenProvider;
+
+    /**
+     * The user service
+     */
+    @Autowired
+    private UserService userService;
 
     /**
      * Trigger after OAuth2 authentication has been successful
@@ -100,9 +121,18 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         OAuth2AuthenticationToken auth = (OAuth2AuthenticationToken) authentication;
         OAuth2AuthorizedClient authorizedClient = oAuth2AuthorizedClientRepository.loadAuthorizedClient(auth.getAuthorizedClientRegistrationId(), authentication, request);
 
+        AuthenticationMethod authenticationMethod = Arrays.stream(AuthenticationMethod.values())
+                .filter(authMethod -> authorizedClient.getClientRegistration().getClientName().equalsIgnoreCase(authMethod.name()))
+                .findAny()
+                .orElseThrow(() -> new OAuth2AuthenticationProcessingException(String.format("ID provider %s is not recognized", authorizedClient.getClientRegistration().getClientName())));
+
+        String username = OAuth2Utils.extractUsername((OAuth2User) authentication.getPrincipal(), authenticationMethod);
+        User user = userService.getOneByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User " + username + " was not authorized"));
+        String token = tokenProvider.createToken(user);
+
         return UriComponentsBuilder.fromUriString(targetUrl)
-                .queryParam("token", authorizedClient.getAccessToken().getTokenValue())
-                .queryParam("token_type", authorizedClient.getAccessToken().getTokenType().getValue())
+                .queryParam("token", token)
                 .build().toUriString();
     }
 

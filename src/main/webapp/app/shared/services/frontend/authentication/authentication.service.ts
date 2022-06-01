@@ -18,8 +18,8 @@
 
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable, ReplaySubject, Subject } from 'rxjs';
-import { filter, tap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { Credentials } from '../../../models/backend/user/credentials';
 import { AuthenticationResponse } from '../../../models/backend/authentication/authentication-response';
 import { User } from '../../../models/backend/user/user';
@@ -30,10 +30,7 @@ import { RoleEnum } from '../../../enums/role.enum';
 import { UserRequest } from '../../../models/backend/user/user-request';
 import { AbstractHttpService } from '../../backend/abstract-http/abstract-http.service';
 import { HttpUserService } from '../../backend/http-user/http-user.service';
-import { EnvironmentService } from '../environment/environment.service';
-import { Page } from '../../../models/backend/page';
-import { Project } from '../../../models/backend/project/project';
-import { HttpFilterService } from '../../backend/http-filter/http-filter.service';
+import {EnvironmentService} from "../environment/environment.service";
 
 /**
  * The authentication service
@@ -61,29 +58,14 @@ export class AuthenticationService {
   private static readonly authenticationApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/oauth/token`;
 
   /**
+   * The access token local storage key
+   */
+  private static readonly ACCESS_TOKEN_KEY = 'SURICATE_ACCESS_TOKEN';
+
+  /**
    * Auth0 service used to manage JWT with Angular
    */
   private static readonly jwtHelperService = new JwtHelperService();
-
-  /**
-   * The local storage key where the access token is store
-   */
-  private static readonly localStorageAccessTokenKey = 'suricate_access_token';
-
-  /**
-   * The local storage key where the refresh token is store
-   */
-  private static readonly localStorageRefreshTokenKey = 'suricate_refresh_token';
-
-  /**
-   * The local storage key where the token type is store
-   */
-  private static readonly localStorageTokenTypeKey = 'suricate_token_type';
-
-  /**
-   * Hold the connected user
-   */
-  private connectedUser: BehaviorSubject<User> = new BehaviorSubject<User>(undefined);
 
   /**
    * Constructor
@@ -94,106 +76,64 @@ export class AuthenticationService {
   /**
    * Get the access token store in local storage
    */
-  private static getAccessToken(): string {
-    return localStorage.getItem(AuthenticationService.localStorageAccessTokenKey);
+  public static getAccessToken(): string {
+    return localStorage.getItem(AuthenticationService.ACCESS_TOKEN_KEY);
   }
 
   /**
    * Set a new access token in local storage
-   *
    * @param accessToken The access token to set
    */
   public static setAccessToken(accessToken: string): void {
-    localStorage.setItem(AuthenticationService.localStorageAccessTokenKey, accessToken);
+    localStorage.setItem(AuthenticationService.ACCESS_TOKEN_KEY, accessToken);
   }
 
   /**
    * Remove the access token from the local storage
    */
   private static removeAccessToken(): void {
-    localStorage.removeItem(AuthenticationService.localStorageAccessTokenKey);
+    localStorage.removeItem(AuthenticationService.ACCESS_TOKEN_KEY);
   }
 
   /**
    * Function used to decode the access token
    */
-  /*private static decodeAccessToken(): AccessTokenDecoded {
+  private static decodeAccessToken(): AccessTokenDecoded {
     return AuthenticationService.jwtHelperService.decodeToken(AuthenticationService.getAccessToken());
-  }*/
-
-  /**
-   * Return the token type stored in local storage
-   */
-  private static getTokenType(): string {
-    return localStorage.getItem(AuthenticationService.localStorageTokenTypeKey);
   }
-
-  /**
-   * Set a new token type in local storage
-   *
-   * @param tokenType The type of token stored
-   */
-  public static setTokenType(tokenType: string): void {
-    localStorage.setItem(AuthenticationService.localStorageTokenTypeKey, tokenType);
-  }
-
-  /**
-   * Remove the token type from the local storage
-   */
-  private static removeTokenType(): void {
-    localStorage.removeItem(AuthenticationService.localStorageTokenTypeKey);
-  }
-
-  /**
-   * Set a new refresh token in local storage
-   *
-   * @param refreshToken The refresh token to set
-   */
-  /*private static setRefreshToken(refreshToken: string): void {
-    localStorage.setItem(AuthenticationService.localStorageRefreshTokenKey, refreshToken);
-  }*/
 
   /**
    * Used to know if the user is currently logged in
    */
   public static isLoggedIn(): boolean {
-    return AuthenticationService.getAccessToken() !== null && AuthenticationService.getAccessToken() !== '';
-    // !AuthenticationService.isTokenExpired();
+    return !AuthenticationService.isTokenExpired();
   }
 
   /**
    * Used to know if the token is expired or not
    */
-  /*public static isTokenExpired(): boolean {
+  public static isTokenExpired(): boolean {
     return this.jwtHelperService.isTokenExpired(AuthenticationService.getAccessToken());
-  }*/
-
-  /**
-   * Return the full token (token type + access token)
-   */
-  public static getFullToken(): string {
-    return `${AuthenticationService.getTokenType()} ${AuthenticationService.getAccessToken()}`;
   }
 
   /**
    * Used to know if the connected user is admin or not
    */
-  /*public static isAdmin(): boolean {
+  public static isAdmin(): boolean {
     return AuthenticationService.decodeAccessToken().authorities.includes(RoleEnum.ROLE_ADMIN);
-  }*/
+  }
 
   /**
-   * Used to logout the used
+   * Log out the user
    */
   public static logout(): void {
     AuthenticationService.removeAccessToken();
-    AuthenticationService.removeTokenType();
   }
 
   /**
    * Return the connected user with information store in the token
    */
-  /*public static getConnectedUser(): User {
+  public static getConnectedUser(): User {
     const decodedToken = AuthenticationService.decodeAccessToken();
 
     const user = new User();
@@ -201,6 +141,8 @@ export class AuthenticationService {
     user.lastname = decodedToken.lastname;
     user.firstname = decodedToken.firstname;
     user.email = decodedToken.email;
+    user.avatarUrl = decodedToken.avatar_url;
+    user.idp = decodedToken.idp;
     user.roles = decodedToken.authorities.map((roleEnum: RoleEnum) => {
       const role = new Role();
       role.name = roleEnum;
@@ -208,21 +150,6 @@ export class AuthenticationService {
     });
 
     return user;
-  }*/
-
-  /**
-   * Get the current connected user
-   */
-  getConnectedUser(): Observable<User> {
-    return this.connectedUser.asObservable().pipe(filter(user => user !== undefined));
-  }
-
-  /**
-   * Set the current connected user
-   * @param connectedUser The connected user
-   */
-  setConnectedUser(connectedUser: User): void {
-    this.connectedUser.next(connectedUser);
   }
 
   /**
@@ -248,7 +175,7 @@ export class AuthenticationService {
       .pipe(
         tap((authenticationResponse: AuthenticationResponse) => {
           if (authenticationResponse && authenticationResponse.access_token) {
-            AuthenticationService.setTokenType(authenticationResponse.token_type);
+            // AuthenticationService.setTokenType(authenticationResponse.token_type);
             AuthenticationService.setAccessToken(authenticationResponse.access_token);
             // AuthenticationService.setRefreshToken(authenticationResponse.refresh_token);
           }

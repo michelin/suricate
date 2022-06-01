@@ -39,7 +39,7 @@ export class AuthGuard implements CanActivate, CanActivateChild {
    * @returns {Observable<boolean>}
    */
   public canActivate(): Observable<boolean> {
-    if (AuthenticationService.isLoggedIn()) {
+    if (!AuthenticationService.isTokenExpired()) {
       return of(true);
     }
 

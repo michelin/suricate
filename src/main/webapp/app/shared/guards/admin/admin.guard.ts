@@ -31,25 +31,19 @@ export class AdminGuard implements CanActivate, CanActivateChild {
   /**
    * The constructor
    * @param router The router
-   * @param authenticationService The authentication user
    */
-  constructor(private readonly router: Router, private readonly authenticationService: AuthenticationService) {}
+  constructor(private readonly router: Router) {}
 
   /**
    * Can admin routes be activated or not ?
    */
   public canActivate(): Observable<boolean> {
-    return this.authenticationService.getConnectedUser().pipe(
-      map((user: User) => {
-        console.warn(user);
-        if (user.admin) {
-          return true;
-        } else {
-          this.router.navigate(['/home']);
-          return false;
-        }
-      })
-    );
+      if (AuthenticationService.isAdmin()) {
+          return of(true);
+      }
+
+      this.router.navigate(['/home']);
+      return of(false);
   }
 
   /**

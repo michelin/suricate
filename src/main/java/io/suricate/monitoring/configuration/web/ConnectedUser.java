@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.configuration.security.common;
+package io.suricate.monitoring.configuration.web;
 
-import io.suricate.monitoring.model.enums.AuthenticationMethod;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;

@@ -16,7 +16,6 @@
 
 package io.suricate.monitoring.services.mapper;
 
-import io.suricate.monitoring.configuration.security.common.ConnectedUser;
 import io.suricate.monitoring.model.dto.api.user.UserRequestDto;
 import io.suricate.monitoring.model.dto.api.user.UserResponseDto;
 import io.suricate.monitoring.model.entities.User;
@@ -42,11 +41,6 @@ import java.util.stream.Collectors;
     componentModel = "spring",
     uses = {
         RoleMapper.class
-    },
-    imports = {
-        Collection.class,
-        Collectors.class,
-        UserRoleEnum.class
     }
 )
 public abstract class UserMapper {
@@ -63,7 +57,6 @@ public abstract class UserMapper {
      */
     @Named("toUserDTO")
     @Mapping(target = "fullname", expression = "java(String.format(\"%s %s\", user.getFirstname(), user.getLastname()))")
-    @Mapping(target = "admin", expression = "java(user.getRoles().stream().map(Role::getName).collect(Collectors.toList()).contains(UserRoleEnum.ROLE_ADMIN.name()))")
     @Mapping(target = "roles", qualifiedByName = "toRoleDTO")
     public abstract UserResponseDto toUserDTO(User user);
 
@@ -86,7 +79,7 @@ public abstract class UserMapper {
      * @return The user entity
      */
     @Named("connectedUserToUserEntity")
-    public abstract User connectedUserToUserEntity(String username, String firstname, String lastname, String email, AuthenticationMethod authenticationMethod);
+    public abstract User connectedUserToUserEntity(String username, String firstname, String lastname, String email, String avatarUrl, AuthenticationMethod authenticationMethod);
 
     /**
      * Map a user DTO into a user as entity

@@ -98,10 +98,8 @@ export class LoginComponent implements OnInit {
    */
   public ngOnInit(): void {
     const token: string = this.route.snapshot.queryParamMap.get('token');
-    const tokenType: string = this.route.snapshot.queryParamMap.get('token_type');
     if (token) {
       AuthenticationService.setAccessToken(token);
-      AuthenticationService.setTokenType(tokenType);
     }
 
     if (AuthenticationService.isLoggedIn()) {
