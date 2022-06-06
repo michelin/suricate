@@ -1,22 +1,15 @@
 package io.suricate.monitoring.security.oauth2;
 
 import io.suricate.monitoring.utils.jwt.JwtUtils;
-import io.suricate.monitoring.model.entities.User;
-import io.suricate.monitoring.model.enums.AuthenticationMethod;
 import io.suricate.monitoring.properties.ApplicationProperties;
-import io.suricate.monitoring.services.api.UserService;
-import io.suricate.monitoring.utils.exceptions.OAuth2AuthenticationProcessingException;
-import io.suricate.monitoring.utils.oauth2.OAuth2Utils;
 import io.suricate.monitoring.utils.web.CookieUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.client.web.OAuth2AuthorizedClientRepository;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -27,8 +20,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.URI;
-import java.util.Arrays;
 import java.util.Optional;
 
 import static io.suricate.monitoring.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
@@ -48,12 +39,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 
     /**
-     * The application properties
-     */
-    @Autowired
-    private ApplicationProperties applicationProperties;
-
-    /**
      * Store the OAuth2 authorized client
      */
     @Autowired
@@ -64,12 +49,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
      */
     @Autowired
     private JwtUtils tokenProvider;
-
-    /**
-     * The user service
-     */
-    @Autowired
-    private UserService userService;
 
     /**
      * Trigger after OAuth2 authentication has been successful
@@ -112,7 +91,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             LOGGER.debug(String.format("Using url %s from Referer header", request.getHeader("Referer")));
         }
 
-        if (StringUtils.hasLength(redirectUri.get()) && !isAuthorizedRedirectUri(redirectUri.get())) {
+        if (StringUtils.hasLength(redirectUri.get())) {
             throw new RuntimeException(String.format("An error occurred: the redirect URI %s is not authorized", redirectUri));
         }
 
@@ -138,22 +117,5 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     protected void clearAuthenticationAttributes(HttpServletRequest request, HttpServletResponse response) {
         super.clearAuthenticationAttributes(request);
         httpCookieOAuth2AuthorizationRequestRepository.removeAuthorizationRequestCookies(request, response);
-    }
-
-    /**
-     * Check if the given URI to redirect is authorized by the Back-End
-     * @param uri The URI to check
-     * @return true if it is authorized, false otherwise
-     */
-    private boolean isAuthorizedRedirectUri(String uri) {
-        URI clientRedirectUri = URI.create(uri);
-
-        return applicationProperties.getAuthentication().getOAuth2().getAuthorizedRedirectUris()
-            .stream()
-            .anyMatch(authorizedRedirectUri -> {
-                // Only validate host and port. Let the clients use different paths if they want
-                URI authorizedURI = URI.create(authorizedRedirectUri);
-                return authorizedURI.getHost().equalsIgnoreCase(clientRedirectUri.getHost()) && authorizedURI.getPort() == clientRedirectUri.getPort();
-            });
     }
 }

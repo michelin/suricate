@@ -18,7 +18,7 @@ package io.suricate.monitoring.services.api;
 
 import io.suricate.monitoring.model.entities.Role;
 import io.suricate.monitoring.model.entities.User;
-import io.suricate.monitoring.model.enums.AuthenticationMethod;
+import io.suricate.monitoring.model.enums.AuthenticationProvider;
 import io.suricate.monitoring.model.enums.UserRoleEnum;
 import io.suricate.monitoring.repositories.UserRepository;
 import io.suricate.monitoring.services.mapper.UserMapper;
@@ -109,7 +109,7 @@ public class UserService {
      */
     @Transactional
     public User registerUser(String username, String firstname, String lastname, String email, String avatarUrl,
-                             AuthenticationMethod authenticationMethod) {
+                             AuthenticationProvider authenticationMethod) {
         Optional<User> optionalUser = getOneByEmail(email);
 
         if (!optionalUser.isPresent()) {
@@ -136,7 +136,7 @@ public class UserService {
      * @param authenticationMethod The ID provider used
      * @return The updated user
      */
-    public User update(final User user, String username, String firstname, String lastname, String email, String avatarUrl, AuthenticationMethod authenticationMethod) {
+    public User update(final User user, String username, String firstname, String lastname, String email, String avatarUrl, AuthenticationProvider authenticationMethod) {
         User userUpdated = userMapper.connectedUserToUserEntity(username, firstname, lastname, email, avatarUrl, authenticationMethod);
         userUpdated.setRoles(user.getRoles());
         userUpdated.setProjects(user.getProjects());

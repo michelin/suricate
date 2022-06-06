@@ -74,6 +74,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
 
+    /**
+     * The authentication failure handler
+     */
     @Autowired
     private OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 
@@ -112,7 +115,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/h2-console/**").permitAll()
             .antMatchers("/api/*/auth/signin").permitAll()
             .antMatchers("/api/*/users/signup").permitAll()
-            .antMatchers("/api/*/configurations/authentication-provider").permitAll()
+            .antMatchers("/api/*/configurations/authentication-providers").permitAll()
             .antMatchers("/api/*/projects/{projectToken}").permitAll()
             .antMatchers("/api/*/projectWidgets/{projectToken}/projectWidgets").permitAll()
             .antMatchers("/api/*/projectWidgets/{projectWidgetId}").permitAll()

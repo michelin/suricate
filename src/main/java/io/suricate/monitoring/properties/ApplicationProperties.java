@@ -84,16 +84,15 @@ public class ApplicationProperties {
         public final Jwt jwt = new Jwt();
 
         /**
-         * OAuth2 configuration
-         */
-        public final OAuth2 oAuth2 = new OAuth2();
-
-        /**
          * Authentication provider
          */
-        @NotNull
         @Pattern(regexp = "ldap|database")
         public String provider;
+
+        /**
+         * Authentication social providers
+         */
+        public List<String> socialProviders;
     }
 
     /**
@@ -308,17 +307,5 @@ public class ApplicationProperties {
          * The swagger contact email
          */
         public String contactEmail;
-    }
-
-    /**
-     * Hold the OAuth2 properties
-     */
-    @Getter
-    @Setter
-    public static class OAuth2 {
-        /**
-         * List of authorized uris this backend can redirect after successful OAuth2 authentication
-         */
-        public List<String> authorizedRedirectUris;
     }
 }

@@ -1,7 +1,7 @@
 package io.suricate.monitoring.security.oauth2;
 
 import io.suricate.monitoring.model.entities.User;
-import io.suricate.monitoring.model.enums.AuthenticationMethod;
+import io.suricate.monitoring.model.enums.AuthenticationProvider;
 import io.suricate.monitoring.security.LocalUser;
 import io.suricate.monitoring.services.api.UserService;
 import io.suricate.monitoring.utils.exceptions.OAuth2AuthenticationProcessingException;
@@ -41,7 +41,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
         OAuth2User oAuth2User = super.loadUser(userRequest);
 
         try {
-            AuthenticationMethod authenticationMethod = Arrays.stream(AuthenticationMethod.values())
+            AuthenticationProvider authenticationMethod = Arrays.stream(AuthenticationProvider.values())
                     .filter(authMethod -> userRequest.getClientRegistration().getClientName().equalsIgnoreCase(authMethod.name()))
                     .findAny()
                     .orElseThrow(() -> new OAuth2AuthenticationProcessingException(String.format("ID provider %s is not recognized", userRequest.getClientRegistration().getClientName())));

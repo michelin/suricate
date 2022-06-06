@@ -14,7 +14,9 @@
  * limitations under the License.
  */
 
-export enum AuthenticationProviderEnum {
+export enum AuthenticationProvider {
   LDAP = 'LDAP',
-  DATABASE = 'DATABASE'
+  DATABASE = 'DATABASE',
+  GITHUB = 'GITHUB',
+  GITLAB = 'GITLAB'
 }

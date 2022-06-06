@@ -14,22 +14,21 @@
  * limitations under the License.
  */
 
-import { Component, OnInit } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import {Component, OnInit} from '@angular/core';
+import {FormGroup} from '@angular/forms';
+import {ActivatedRoute, Router} from '@angular/router';
 
-import { AuthenticationService } from '../../../shared/services/frontend/authentication/authentication.service';
-import { HttpCategoryParametersService } from '../../../shared/services/backend/http-category-parameters/http-category-parameters.service';
-import { ApplicationProperties } from '../../../shared/models/backend/application-properties';
-import { AuthenticationProviderEnum } from '../../../shared/enums/authentication-provider.enum';
-import { FormService } from '../../../shared/services/frontend/form/form.service';
-import { ButtonConfiguration } from '../../../shared/models/frontend/button/button-configuration';
-import { FormField } from '../../../shared/models/frontend/form/form-field';
-import { LoginFormFieldsService } from '../../../shared/services/frontend/form-fields/login-form-fields/login-form-fields.service';
-import { ButtonTypeEnum } from '../../../shared/enums/button-type.enum';
-import { SettingsService } from '../../services/settings.service';
-import { HttpConfigurationService } from '../../../shared/services/backend/http-configuration/http-configuration.service';
-import { User } from '../../../shared/models/backend/user/user';
+import {AuthenticationService} from '../../../shared/services/frontend/authentication/authentication.service';
+import {AuthenticationProvider} from '../../../shared/enums/authentication-provider.enum';
+import {FormService} from '../../../shared/services/frontend/form/form.service';
+import {ButtonConfiguration} from '../../../shared/models/frontend/button/button-configuration';
+import {FormField} from '../../../shared/models/frontend/form/form-field';
+import {
+  LoginFormFieldsService
+} from '../../../shared/services/frontend/form-fields/login-form-fields/login-form-fields.service';
+import {ButtonTypeEnum} from '../../../shared/enums/button-type.enum';
+import {SettingsService} from '../../services/settings.service';
+import {HttpConfigurationService} from '../../../shared/services/backend/http-configuration/http-configuration.service';
 
 /**
  * Manage the login page
@@ -56,9 +55,9 @@ export class LoginComponent implements OnInit {
   public buttonConfigurations: ButtonConfiguration<unknown>[];
 
   /**
-   * True if the user provider is LDAP
+   * The activated authentication providers
    */
-  public isLdapServerUserProvider: boolean;
+  public authenticationProviders: AuthenticationProvider[];
 
   /**
    * Define if the spinner should be running or not
@@ -107,8 +106,8 @@ export class LoginComponent implements OnInit {
       return;
     }
 
-    this.httpConfigurationService.getAuthenticationProvider().subscribe((applicationProperties: ApplicationProperties) => {
-      this.isLdapServerUserProvider = applicationProperties.value.toUpperCase() === AuthenticationProviderEnum.LDAP;
+    this.httpConfigurationService.getAuthenticationProviders().subscribe((authProviders: AuthenticationProvider[]) => {
+      this.authenticationProviders = authProviders;
     });
 
     this.initButtons();
@@ -159,5 +158,33 @@ export class LoginComponent implements OnInit {
    */
   private navigateToHomePage(): void {
     this.router.navigate(['/home']);
+  }
+
+  /**
+   * Is the database authentication activated or not
+   */
+  public isDatabaseAuthenticationActivated(): boolean {
+    return this.authenticationProviders && this.authenticationProviders.indexOf(AuthenticationProvider.DATABASE) > -1;
+  }
+
+  /**
+   * Is the LDAP authentication activated or not
+   */
+  public isLdapAuthenticationActivated(): boolean {
+    return this.authenticationProviders && this.authenticationProviders.indexOf(AuthenticationProvider.LDAP) > -1;
+  }
+
+  /**
+   * Is the GitLab authentication activated or not
+   */
+  public isGitlabAuthenticationActivated(): boolean {
+    return this.authenticationProviders && this.authenticationProviders.indexOf(AuthenticationProvider.GITLAB) > -1;
+  }
+
+  /**
+   * Is the GitHub authentication activated or not
+   */
+  public isGithubAuthenticationActivated(): boolean {
+    return this.authenticationProviders && this.authenticationProviders.indexOf(AuthenticationProvider.GITHUB) > -1;
   }
 }

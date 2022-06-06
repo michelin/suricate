@@ -19,26 +19,18 @@
 package io.suricate.monitoring.controllers;
 
 import io.suricate.monitoring.configuration.swagger.ApiPageable;
-import io.suricate.monitoring.model.dto.api.auth.JwtAuthenticationResponseDto;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.user.*;
-import io.suricate.monitoring.model.entities.Role;
 import io.suricate.monitoring.model.entities.Setting;
 import io.suricate.monitoring.model.entities.User;
 import io.suricate.monitoring.model.entities.UserSetting;
-import io.suricate.monitoring.model.enums.ApiErrorEnum;
-import io.suricate.monitoring.model.enums.AuthenticationMethod;
-import io.suricate.monitoring.model.enums.UserRoleEnum;
-import io.suricate.monitoring.properties.ApplicationProperties;
-import io.suricate.monitoring.security.LocalUser;
+import io.suricate.monitoring.model.enums.AuthenticationProvider;
 import io.suricate.monitoring.services.api.SettingService;
 import io.suricate.monitoring.services.api.UserService;
 import io.suricate.monitoring.services.api.UserSettingService;
 import io.suricate.monitoring.services.mapper.UserMapper;
 import io.suricate.monitoring.services.mapper.UserSettingMapper;
-import io.suricate.monitoring.utils.exceptions.ApiException;
 import io.suricate.monitoring.utils.exceptions.ObjectNotFoundException;
-import io.suricate.monitoring.utils.jwt.JwtUtils;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -47,10 +39,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -60,7 +48,6 @@ import java.net.URI;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * User controller
@@ -296,7 +283,7 @@ public class UserController {
     @PreAuthorize("isAnonymous()")
     public ResponseEntity<UserResponseDto> signUp(@ApiParam(name = "userResponseDto", value = "The user information to create", required = true)
                                                     @RequestBody UserRequestDto userRequestDto) {
-        User user = userMapper.toUserEntity(userRequestDto, AuthenticationMethod.DATABASE);
+        User user = userMapper.toUserEntity(userRequestDto, AuthenticationProvider.DATABASE);
         User savedUser = userService.create(user);
 
         URI resourceLocation = ServletUriComponentsBuilder

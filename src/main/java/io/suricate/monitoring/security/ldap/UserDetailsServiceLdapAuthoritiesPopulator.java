@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.security.ldap;
 
-import io.suricate.monitoring.model.enums.AuthenticationMethod;
+import io.suricate.monitoring.model.enums.AuthenticationProvider;
 import io.suricate.monitoring.properties.ApplicationProperties;
 import io.suricate.monitoring.model.entities.User;
 import io.suricate.monitoring.services.api.UserService;
@@ -70,7 +70,7 @@ public class UserDetailsServiceLdapAuthoritiesPopulator implements LdapAuthoriti
         String firstname = userData.getStringAttribute(applicationProperties.authentication.ldap.firstNameAttributName);
         String lastname = userData.getStringAttribute(applicationProperties.authentication.ldap.lastNameAttributName);
         String email = userData.getStringAttribute(applicationProperties.authentication.ldap.mailAttributName);
-        AuthenticationMethod authenticationMethod = AuthenticationMethod.LDAP;
+        AuthenticationProvider authenticationMethod = AuthenticationProvider.LDAP;
 
         User registeredUser = userService.registerUser(username.toLowerCase(), firstname, lastname, email, StringUtils.EMPTY, authenticationMethod);
 

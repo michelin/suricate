@@ -17,9 +17,21 @@ import static io.suricate.monitoring.security.oauth2.HttpCookieOAuth2Authorizati
 
 @Component
 public class OAuth2AuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
+    /**
+     * The authentication request repository
+     * Store the authentication request in an HTTP cookie on the IDP response
+     */
     @Autowired
     HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 
+    /**
+     * Trigger after OAuth2 authentication has failed
+     * @param request The request which is the response of the IDP
+     * @param response The response to send to the host that authenticated successfully
+     * @param authentication The authentication data
+     * @throws IOException Any IO Exception
+     * @throws ServletException Any servlet exception
+     */
     @Override
     public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
         String targetUrl = CookieUtils.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME).map(Cookie::getValue).orElse(("/"));

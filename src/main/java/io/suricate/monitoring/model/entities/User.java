@@ -19,7 +19,7 @@
 package io.suricate.monitoring.model.entities;
 
 import io.suricate.monitoring.model.entities.generic.AbstractEntity;
-import io.suricate.monitoring.model.enums.AuthenticationMethod;
+import io.suricate.monitoring.model.enums.AuthenticationProvider;
 import lombok.*;
 
 import javax.persistence.*;
@@ -54,11 +54,11 @@ public class User extends AbstractEntity<Long> {
     private String password;
 
     /**
-     * The authentication method {@link AuthenticationMethod}
+     * The authentication method {@link AuthenticationProvider}
      */
     @Enumerated(value = EnumType.STRING)
     @Column(name = "auth_mode", nullable = false, length = 20)
-    private AuthenticationMethod authenticationMethod;
+    private AuthenticationProvider authenticationMethod;
 
     /**
      * The first name of the user

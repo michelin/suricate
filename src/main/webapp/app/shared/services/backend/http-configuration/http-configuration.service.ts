@@ -16,17 +16,11 @@
  *
  */
 
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { EMPTY, Observable } from 'rxjs';
-
-import { ApplicationProperties } from '../../../models/backend/application-properties';
-import { WidgetConfigurationRequest } from '../../../models/backend/widget-configuration/widget-configuration-request';
-import { AbstractHttpService } from '../abstract-http/abstract-http.service';
-import { HttpFilter } from '../../../models/backend/http-filter';
-import { HttpFilterService } from '../http-filter/http-filter.service';
-import { Page } from '../../../models/backend/page';
-import { CategoryParameter } from '../../../models/backend/category-parameters/category-parameter';
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Observable} from 'rxjs';
+import {AbstractHttpService} from '../abstract-http/abstract-http.service';
+import {AuthenticationProvider} from "../../../enums/authentication-provider.enum";
 
 /**
  * Configuration services manage http calls
@@ -40,19 +34,16 @@ export class HttpConfigurationService {
 
   /**
    * Constructor
-   *
    * @param httpClient The http client service
    */
   constructor(private readonly httpClient: HttpClient) {}
 
   /**
-   * Get the server configuration for authentication provider
-   *
-   * @return {Observable<ApplicationProperties>} Configuration for Authentication Provider
+   * Get the authentication providers authorized by the Back-End
    */
-  public getAuthenticationProvider(): Observable<ApplicationProperties> {
-    const url = `${HttpConfigurationService.configurationsApiEndpoint}/authentication-provider`;
+  public getAuthenticationProviders(): Observable<AuthenticationProvider[]> {
+    const url = `${HttpConfigurationService.configurationsApiEndpoint}/authentication-providers`;
 
-    return this.httpClient.get<ApplicationProperties>(url);
+    return this.httpClient.get<AuthenticationProvider[]>(url);
   }
 }

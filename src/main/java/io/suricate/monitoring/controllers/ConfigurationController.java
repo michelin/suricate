@@ -18,18 +18,24 @@
 
 package io.suricate.monitoring.controllers;
 
-import io.suricate.monitoring.model.dto.api.ApplicationPropertiesDto;
-import io.suricate.monitoring.services.properties.ApplicationPropertiesService;
+import io.suricate.monitoring.model.enums.AuthenticationProvider;
+import io.suricate.monitoring.properties.ApplicationProperties;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import org.apache.commons.lang3.EnumUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Configuration controller
@@ -41,31 +47,36 @@ public class ConfigurationController {
     /**
      * The configuration Service
      */
-    private final ApplicationPropertiesService applicationPropertiesService;
-
-    /**
-     * Constructor
-     *
-     * @param applicationPropertiesService The application properties service
-     */
     @Autowired
-    public ConfigurationController(final ApplicationPropertiesService applicationPropertiesService) {
-        this.applicationPropertiesService = applicationPropertiesService;
-    }
+    private ApplicationProperties applicationProperties;
 
     /**
-     * Get the authentication provider defined in the backend (database or ldap)
+     * Get the authentication providers defined in the backend (database, ldap, social providers, ...)
      * @return The authentication provider
      */
-    @ApiOperation(value = "Get the server configuration for authentication provider (DB, LDAP...)", response = ApplicationPropertiesDto.class)
+    @ApiOperation(value = "Get the server configuration for authentication providers (DB, LDAP, Social providers)", response = AuthenticationProvider.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Ok", response = ApplicationPropertiesDto.class)
+            @ApiResponse(code = 200, message = "Ok", response = AuthenticationProvider.class)
     })
-    @GetMapping(value = "/v1/configurations/authentication-provider")
-    public ResponseEntity<ApplicationPropertiesDto> getAuthenticationProvider() {
+    @GetMapping(value = "/v1/configurations/authentication-providers")
+    public ResponseEntity<List<AuthenticationProvider>> getAuthenticationProviders() {
+        List<AuthenticationProvider> providers = new ArrayList<>();
+
+        if (StringUtils.isNotBlank(applicationProperties.getAuthentication().getProvider())) {
+            providers.add(AuthenticationProvider.valueOf(applicationProperties.getAuthentication().getProvider().toUpperCase()));
+        }
+
+        List<AuthenticationProvider> socialProviders = applicationProperties.getAuthentication().socialProviders
+                .stream()
+                .filter(socialProvider -> EnumUtils.isValidEnum(AuthenticationProvider.class, socialProvider.toUpperCase()))
+                .map(socialProvider -> AuthenticationProvider.valueOf(socialProvider.toUpperCase()))
+                .collect(Collectors.toList());
+
+        providers.addAll(socialProviders);
+
         return ResponseEntity
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(this.applicationPropertiesService.getAuthenticationProvider());
+                .body(providers);
     }
 }

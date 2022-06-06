@@ -2,8 +2,6 @@ package io.suricate.monitoring.utils.jwt;
 
 import io.jsonwebtoken.*;
 import io.suricate.monitoring.model.entities.Role;
-import io.suricate.monitoring.model.entities.User;
-import io.suricate.monitoring.model.enums.AuthenticationMethod;
 import io.suricate.monitoring.properties.ApplicationProperties;
 import io.suricate.monitoring.security.LocalUser;
 import io.suricate.monitoring.utils.oauth2.OAuth2Utils;
@@ -14,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -41,8 +38,6 @@ public class JwtUtils {
         Date expiryDate = new Date(now.getTime() + applicationProperties.getAuthentication().getJwt().getTokenValidityMs());
 
         Map<String, Object> claims = new HashedMap<>();
-        //claims.put(Claims.ISSUED_AT, now);
-        //claims.put(Claims.EXPIRATION, expiryDate);
         claims.put("username", userPrincipal.getUsername());
         claims.put("firstname", userPrincipal.getUser().getFirstname());
         claims.put("lastname", userPrincipal.getUser().getLastname());
@@ -51,7 +46,7 @@ public class JwtUtils {
         claims.put("authorities", userPrincipal.getUser().getRoles().stream().map(Role::getName).collect(Collectors.toList()));
 
         if (OAuth2Utils.isSocialLogin(userPrincipal.getUser().getAuthenticationMethod())) {
-            claims.put("idp", userPrincipal.getUser().getAuthenticationMethod().toString().toLowerCase());
+            claims.put("idp", userPrincipal.getUser().getAuthenticationMethod());
         }
 
         return Jwts.builder()

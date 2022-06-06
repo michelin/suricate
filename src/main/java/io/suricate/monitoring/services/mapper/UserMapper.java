@@ -19,8 +19,7 @@ package io.suricate.monitoring.services.mapper;
 import io.suricate.monitoring.model.dto.api.user.UserRequestDto;
 import io.suricate.monitoring.model.dto.api.user.UserResponseDto;
 import io.suricate.monitoring.model.entities.User;
-import io.suricate.monitoring.model.enums.AuthenticationMethod;
-import io.suricate.monitoring.model.enums.UserRoleEnum;
+import io.suricate.monitoring.model.enums.AuthenticationProvider;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -31,7 +30,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Manage the generation DTO/Model objects for User class
@@ -79,7 +77,7 @@ public abstract class UserMapper {
      * @return The user entity
      */
     @Named("connectedUserToUserEntity")
-    public abstract User connectedUserToUserEntity(String username, String firstname, String lastname, String email, String avatarUrl, AuthenticationMethod authenticationMethod);
+    public abstract User connectedUserToUserEntity(String username, String firstname, String lastname, String email, String avatarUrl, AuthenticationProvider authenticationMethod);
 
     /**
      * Map a user DTO into a user as entity
@@ -91,5 +89,5 @@ public abstract class UserMapper {
     @Mapping(target = "roles", ignore = true)
     @Mapping(target = "authenticationMethod", source = "authenticationMethod")
     @Mapping(target = "password", expression = "java( passwordEncoder.encode(userRequestDto.getPassword()) )")
-    public abstract User toUserEntity(UserRequestDto userRequestDto, AuthenticationMethod authenticationMethod);
+    public abstract User toUserEntity(UserRequestDto userRequestDto, AuthenticationProvider authenticationMethod);
 }
