@@ -18,7 +18,7 @@
 
 package io.suricate.monitoring.controllers;
 
-import io.suricate.monitoring.configuration.web.ConnectedUser;
+import io.suricate.monitoring.security.LocalUser;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetRequestDto;
 import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetResponseDto;
@@ -162,7 +162,7 @@ public class  ProjectWidgetController {
     })
     @PutMapping(value = "/v1/projectWidgets/{projectWidgetId}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ProjectWidgetResponseDto> editByProject(@ApiIgnore @AuthenticationPrincipal ConnectedUser connectedUser,
+    public ResponseEntity<ProjectWidgetResponseDto> editByProject(@ApiIgnore @AuthenticationPrincipal LocalUser connectedUser,
                                                                   @ApiParam(name = "projectWidgetId", value = "The project widget id", required = true)
                                                                   @PathVariable("projectWidgetId") Long projectWidgetId,
                                                                   @ApiParam(name = "projectWidgetResponseDto", value = "The project widget informations to update", required = true)
@@ -202,7 +202,7 @@ public class  ProjectWidgetController {
     })
     @PostMapping(value = "/v1/projectWidgets/{projectToken}/{gridId}/projectWidgets")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ProjectWidgetResponseDto> addProjectWidgetToProject(@ApiIgnore @AuthenticationPrincipal ConnectedUser connectedUser,
+    public ResponseEntity<ProjectWidgetResponseDto> addProjectWidgetToProject(@ApiIgnore @AuthenticationPrincipal LocalUser connectedUser,
                                                                               @ApiParam(name = "projectToken", value = "The project token", required = true)
                                                                               @PathVariable("projectToken") String projectToken,
                                                                               @ApiParam(name = "gridId", value = "The grid id", required = true)
@@ -253,7 +253,7 @@ public class  ProjectWidgetController {
     })
     @DeleteMapping(value = "/v1/projectWidgets/{projectWidgetId}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Void> deleteById(@ApiIgnore @AuthenticationPrincipal ConnectedUser connectedUser,
+    public ResponseEntity<Void> deleteById(@ApiIgnore @AuthenticationPrincipal LocalUser connectedUser,
                                            @ApiParam(name = "projectWidgetId", value = "The project widget id", required = true)
                                            @PathVariable("projectWidgetId") Long projectWidgetId) {
         Optional<ProjectWidget> projectWidgetOptional = projectWidgetService.getOne(projectWidgetId);

@@ -34,13 +34,11 @@ import { HttpFilterService } from '../http-filter/http-filter.service';
 export class HttpUserService implements AbstractHttpService<User | UserRequest> {
   /**
    * Global endpoint for Users
-   * @type {string}
    */
   public static readonly usersApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/users`;
 
   /**
    * Constructor
-   *
    * @param httpClient The http client
    */
   constructor(private readonly httpClient: HttpClient) {}

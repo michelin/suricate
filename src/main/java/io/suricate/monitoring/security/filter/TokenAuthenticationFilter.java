@@ -1,6 +1,6 @@
 package io.suricate.monitoring.security.filter;
 
-import io.suricate.monitoring.configuration.web.ConnectedUser;
+import io.suricate.monitoring.security.LocalUser;
 import io.suricate.monitoring.utils.jwt.JwtUtils;
 import io.suricate.monitoring.security.oauth2.OAuth2UserService;
 import io.suricate.monitoring.model.entities.User;
@@ -21,6 +21,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.stream.Collectors;
 
 public class TokenAuthenticationFilter extends OncePerRequestFilter {
@@ -58,10 +59,9 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
             if (StringUtils.hasText(token) && tokenProvider.validateToken(token)) {
                 String username = tokenProvider.getUsernameFromToken(token);
                 User user = userService.getOneByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User " + username + " was not authorized"));
-                ConnectedUser connectedUser = new ConnectedUser(user.getUsername(), "",
-                        user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList()));
+                LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(connectedUser, null, connectedUser.getAuthorities());
+                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(localUser, null, localUser.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);

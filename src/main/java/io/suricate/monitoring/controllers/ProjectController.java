@@ -18,7 +18,7 @@
 
 package io.suricate.monitoring.controllers;
 
-import io.suricate.monitoring.configuration.web.ConnectedUser;
+import io.suricate.monitoring.security.LocalUser;
 import io.suricate.monitoring.configuration.swagger.ApiPageable;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.project.ProjectRequestDto;
@@ -172,7 +172,7 @@ public class ProjectController {
     })
     @PostMapping(value = "/v1/projects")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ProjectResponseDto> createProject(@ApiIgnore @AuthenticationPrincipal ConnectedUser connectedUser,
+    public ResponseEntity<ProjectResponseDto> createProject(@ApiIgnore @AuthenticationPrincipal LocalUser connectedUser,
                                                             @ApiParam(name = "projectRequestDto", value = "The project information", required = true)
                                                             @RequestBody ProjectRequestDto projectRequestDto) {
         Optional<User> userOptional = userService.getOneByUsername(connectedUser.getUsername());
@@ -241,7 +241,7 @@ public class ProjectController {
     })
     @PutMapping(value = "/v1/projects/{projectToken}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Void> updateProject(@ApiIgnore @AuthenticationPrincipal ConnectedUser connectedUser,
+    public ResponseEntity<Void> updateProject(@ApiIgnore @AuthenticationPrincipal LocalUser connectedUser,
                                               @ApiParam(name = "projectToken", value = "The project token", required = true)
                                               @PathVariable("projectToken") String projectToken,
                                               @ApiParam(name = "projectResponseDto", value = "The project information", required = true)
@@ -275,7 +275,7 @@ public class ProjectController {
     })
     @PutMapping(value = "/v1/projects/{projectToken}/screenshot")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Void> updateProjectScreenshot(@ApiIgnore @AuthenticationPrincipal ConnectedUser connectedUser,
+    public ResponseEntity<Void> updateProjectScreenshot(@ApiIgnore @AuthenticationPrincipal LocalUser connectedUser,
                                                         @ApiParam(name = "projectToken", value = "The project token", required = true)
                                                         @PathVariable("projectToken") String projectToken,
                                                         @ApiParam(name = "screenshot", value = "The screenshot to insert", required = true)
@@ -315,7 +315,7 @@ public class ProjectController {
     })
     @DeleteMapping(value = "/v1/projects/{projectToken}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Void> deleteProjectById(@ApiIgnore @AuthenticationPrincipal ConnectedUser connectedUser,
+    public ResponseEntity<Void> deleteProjectById(@ApiIgnore @AuthenticationPrincipal LocalUser connectedUser,
                                                   @ApiParam(name = "projectToken", value = "The project token", required = true)
                                                   @PathVariable("projectToken") String projectToken) {
         Optional<Project> projectOptional = projectService.getOneByToken(projectToken);
@@ -349,7 +349,7 @@ public class ProjectController {
     })
     @PutMapping(value = "/v1/projects/{projectToken}/projectWidgetPositions")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Void> updateProjectWidgetsPositionForProject(@ApiIgnore @AuthenticationPrincipal ConnectedUser connectedUser,
+    public ResponseEntity<Void> updateProjectWidgetsPositionForProject(@ApiIgnore @AuthenticationPrincipal LocalUser connectedUser,
                                                                        @ApiParam(name = "projectToken", value = "The project token", required = true)
                                                                        @PathVariable("projectToken") String projectToken,
                                                                        @ApiParam(name = "projectWidgetPositionRequestDtos", value = "The list of the new positions", required = true)
@@ -410,7 +410,7 @@ public class ProjectController {
     })
     @PostMapping(value = "/v1/projects/{projectToken}/users")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Void> addUserToProject(@ApiIgnore @AuthenticationPrincipal ConnectedUser connectedUser,
+    public ResponseEntity<Void> addUserToProject(@ApiIgnore @AuthenticationPrincipal LocalUser connectedUser,
                                                  @ApiParam(name = "projectToken", value = "The project token", required = true)
                                                  @PathVariable("projectToken") String projectToken,
                                                  @ApiParam(name = "usernameMap", value = "A map with the username", required = true)
@@ -453,7 +453,7 @@ public class ProjectController {
     })
     @DeleteMapping(value = "/v1/projects/{projectToken}/users/{userId}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Void> deleteUserFromProject(@ApiIgnore @AuthenticationPrincipal ConnectedUser connectedUser,
+    public ResponseEntity<Void> deleteUserFromProject(@ApiIgnore @AuthenticationPrincipal LocalUser connectedUser,
                                                       @ApiParam(name = "projectToken", value = "The project token", required = true)
                                                       @PathVariable("projectToken") String projectToken,
                                                       @ApiParam(name = "userId", value = "The user id", required = true)

@@ -110,9 +110,14 @@ public class UserService {
     @Transactional
     public User registerUser(String username, String firstname, String lastname, String email, String avatarUrl,
                              AuthenticationMethod authenticationMethod) {
-        Optional<User> optionalUser = getOneByUsername(username);
+        Optional<User> optionalUser = getOneByEmail(email);
 
         if (!optionalUser.isPresent()) {
+            int countUsername = 1;
+            while (existsByUsername(username)) {
+                username = username + countUsername;
+            }
+
             User user = userMapper.connectedUserToUserEntity(username, firstname, lastname, email, avatarUrl, authenticationMethod);
             return create(user);
         }
@@ -154,8 +159,7 @@ public class UserService {
 
     /**
      * Get a user by username ignoring case
-     *
-     * @param username The username to find
+     * @param username The username
      * @return The user as optional
      */
     @Transactional(readOnly = true)
@@ -164,13 +168,23 @@ public class UserService {
     }
 
     /**
-     * Get the user id by username
-     *
-     * @param username The username to find
-     * @return The id
+     * Get a user by email ignoring case
+     * @param email The email
+     * @return The user as optional
      */
-    public Long getIdByUsername(String username) {
-        return userRepository.getIdByUsername(username);
+    @Transactional(readOnly = true)
+    public Optional<User> getOneByEmail(String email) {
+        return userRepository.findByEmailIgnoreCase(email);
+    }
+
+    /**
+     * Check if a given username exists
+     * @param username The username
+     * @return true if it is, false otherwise
+     */
+    @Transactional(readOnly = true)
+    boolean existsByUsername(String username) {
+        return userRepository.existsByUsername(username);
     }
 
     /**

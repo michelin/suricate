@@ -24,7 +24,7 @@ import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.widgetconfiguration.WidgetConfigurationRequestDto;
 import io.suricate.monitoring.model.dto.api.widgetconfiguration.WidgetConfigurationResponseDto;
 import io.suricate.monitoring.model.entities.CategoryParameter;
-import io.suricate.monitoring.services.CacheService;
+import io.suricate.monitoring.services.cache.CacheService;
 import io.suricate.monitoring.services.api.CategoryParametersService;
 import io.suricate.monitoring.services.mapper.CategoryMapper;
 import io.suricate.monitoring.utils.exceptions.ObjectNotFoundException;

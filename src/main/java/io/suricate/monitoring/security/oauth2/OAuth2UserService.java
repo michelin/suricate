@@ -1,6 +1,8 @@
 package io.suricate.monitoring.security.oauth2;
 
+import io.suricate.monitoring.model.entities.User;
 import io.suricate.monitoring.model.enums.AuthenticationMethod;
+import io.suricate.monitoring.security.LocalUser;
 import io.suricate.monitoring.services.api.UserService;
 import io.suricate.monitoring.utils.exceptions.OAuth2AuthenticationProcessingException;
 import io.suricate.monitoring.utils.oauth2.OAuth2Utils;
@@ -36,7 +38,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
      */
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        OAuth2User user = super.loadUser(userRequest);
+        OAuth2User oAuth2User = super.loadUser(userRequest);
 
         try {
             AuthenticationMethod authenticationMethod = Arrays.stream(AuthenticationMethod.values())
@@ -44,19 +46,19 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
                     .findAny()
                     .orElseThrow(() -> new OAuth2AuthenticationProcessingException(String.format("ID provider %s is not recognized", userRequest.getClientRegistration().getClientName())));
 
-            String username = OAuth2Utils.extractUsername(user, authenticationMethod);
-            String firstname = user.getAttribute("name").toString().split(" ")[0];
-            String lastname = user.getAttribute("name").toString().split(" ")[1];
-            String email = user.getAttribute("email");
-            String avatarUrl = user.getAttribute("avatar_url");
+            String username = OAuth2Utils.extractUsername(oAuth2User, authenticationMethod);
+            String firstname = oAuth2User.getAttribute("name").toString().split(" ")[0];
+            String lastname = oAuth2User.getAttribute("name").toString().split(" ")[1];
+            String email = oAuth2User.getAttribute("email");
+            String avatarUrl = oAuth2User.getAttribute("avatar_url");
 
-            userService.registerUser(username, firstname, lastname, email, avatarUrl, authenticationMethod);
+            User user = userService.registerUser(username, firstname, lastname, email, avatarUrl, authenticationMethod);
 
             LOGGER.debug("Authenticated user <{}> with {}", username, userRequest.getClientRegistration().getRegistrationId());
 
-            return user;
+            return new LocalUser(user, oAuth2User.getAttributes());
         } catch (Exception e) {
-            LOGGER.error("An error occurred authenticating user <{}> with {}", user.getAttribute("login"), userRequest.getClientRegistration().getRegistrationId(), e);
+            LOGGER.error("An error occurred authenticating user <{}> with {}", oAuth2User.getName(), userRequest.getClientRegistration().getRegistrationId(), e);
             throw new OAuth2AuthenticationProcessingException(e.getMessage(), e.getCause());
         }
     }

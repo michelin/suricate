@@ -51,11 +51,17 @@ public interface UserRepository extends CrudRepository<User, Long> {
 	Optional<User> findByUsernameIgnoreCase(String username);
 
 	/**
-	 * Get the ID of a user by username
-	 *
+	 * Find a user by the email ignoring case
 	 * @param username The username
-	 * @return The user ID
+	 * @return The user as optional
 	 */
-	@Query("SELECT id FROM User WHERE username = :username")
-    Long getIdByUsername(@Param("username") String username);
+	@EntityGraph(attributePaths = "roles")
+	Optional<User> findByEmailIgnoreCase(String email);
+
+	/**
+	 * Check if a given username exists
+	 * @param username The username
+	 * @return true if it is, false otherwise
+	 */
+	boolean existsByUsername(String username);
 }

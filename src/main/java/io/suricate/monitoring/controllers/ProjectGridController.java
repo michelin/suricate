@@ -18,7 +18,7 @@
 
 package io.suricate.monitoring.controllers;
 
-import io.suricate.monitoring.configuration.web.ConnectedUser;
+import io.suricate.monitoring.security.LocalUser;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.project.ProjectResponseDto;
 import io.suricate.monitoring.model.dto.api.projectgrid.ProjectGridRequestDto;
@@ -99,7 +99,7 @@ public class ProjectGridController {
     })
     @PostMapping(value = "/v1/projectGrids/{projectToken}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<ProjectGridResponseDto> create(@ApiIgnore @AuthenticationPrincipal ConnectedUser connectedUser,
+    public ResponseEntity<ProjectGridResponseDto> create(@ApiIgnore @AuthenticationPrincipal LocalUser connectedUser,
                                                          @ApiParam(name = "projectToken", value = "The project token", required = true)
                                                          @PathVariable("projectToken") String projectToken,
                                                          @ApiParam(name = "projectGridRequestDto", value = "The project grid information", required = true)
@@ -138,7 +138,7 @@ public class ProjectGridController {
     })
     @PutMapping(value = "/v1/projectGrids/{projectToken}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Void> updateProjectGrids(@ApiIgnore @AuthenticationPrincipal ConnectedUser connectedUser,
+    public ResponseEntity<Void> updateProjectGrids(@ApiIgnore @AuthenticationPrincipal LocalUser connectedUser,
                                                    @ApiParam(name = "projectToken", value = "The project token", required = true)
                                                    @PathVariable("projectToken") String projectToken,
                                                    @ApiParam(name = "projectResponseDto", value = "The project information", required = true)
@@ -182,7 +182,7 @@ public class ProjectGridController {
     })
     @DeleteMapping(value = "/v1/projectGrids/{projectToken}/{gridId}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Void> deleteGridById(@ApiIgnore @AuthenticationPrincipal ConnectedUser connectedUser,
+    public ResponseEntity<Void> deleteGridById(@ApiIgnore @AuthenticationPrincipal LocalUser connectedUser,
                                                @ApiParam(name = "projectToken", value = "The project token", required = true)
                                                @PathVariable("projectToken") String projectToken,
                                                @ApiParam(name = "gridId", value = "The grid id", required = true)

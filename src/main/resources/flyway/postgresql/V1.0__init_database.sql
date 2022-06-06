@@ -32,7 +32,6 @@ CREATE TABLE category (
     last_modified_date  timestamp without time zone DEFAULT now(),
     CONSTRAINT pk_category_id                       PRIMARY KEY (id),
     CONSTRAINT uk_category_technical_name           UNIQUE (technical_name)
-
 );
 
 CREATE TABLE category_param (
@@ -171,7 +170,8 @@ CREATE TABLE users (
     avatar_url  character varying(500),
     auth_mode   character varying(20)   DEFAULT 'LDAP'::character varying NOT NULL,
     CONSTRAINT pk_users_id              PRIMARY KEY (id),
-    CONSTRAINT uk_user_username         UNIQUE (username)
+    CONSTRAINT uk_user_username         UNIQUE (username),
+    CONSTRAINT uk_user_email            UNIQUE (email)
 );
 
 CREATE TABLE widget (

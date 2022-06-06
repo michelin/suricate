@@ -103,6 +103,7 @@ export class MenuComponent implements OnInit {
    * Get the initials of the connected user
    */
   public getInitials(): string {
+    console.warn(this.connectedUser);
     return this.connectedUser.firstname && this.connectedUser.lastname
       ? `${this.connectedUser.firstname.substring(0, 1)}${this.connectedUser.lastname.substring(0, 1)}`
       : '';

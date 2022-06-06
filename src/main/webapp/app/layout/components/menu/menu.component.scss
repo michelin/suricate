@@ -26,25 +26,33 @@
   flex-grow: 1;
 }
 
-.name-container-panel {
-  margin: 0;
+.mat-expansion-panel-header {
+  padding: 0 5px;
 
-  .name-container-div {
-    text-align: center;
+  .mat-expansion-panel-header-title {
+    margin: 0;
     align-items: center;
+    min-width: 22px;
 
     .idp-icon {
       height: 22px;
       width: 22px;
-      margin: 0 3px;
     }
 
     .names-container {
-      margin: 0 3px;
+      font-size: 12px;
+      text-align: center;
+      margin: auto;
 
       .firstname-lastname {
         font-weight: bold;
       }
     }
+  }
+
+  .mat-expansion-panel-header-description {
+    margin: 0;
+
+
   }
 }

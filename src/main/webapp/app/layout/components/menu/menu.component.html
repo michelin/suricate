@@ -10,15 +10,13 @@
 
     <mat-accordion>
       <mat-expansion-panel class="mat-elevation-z0">
-        <mat-expansion-panel-header class="name-container-panel-header">
-          <mat-panel-title class="name-container-panel">
-            <div class="name-container-div" fxLayout="row">
-              <img *ngIf="connectedUser.idp == 'github'" class="idp-icon" src="../../../../../assets/images/github-white.svg" />
-              <img *ngIf="connectedUser.idp == 'gitlab'" class="idp-icon" src="../../../../../assets/images/gitlab.svg" />
-              <div class="names-container">
-                <div class="firstname-lastname">{{ connectedUser.firstname }} {{ connectedUser.lastname }}</div>
-                <div>{{ connectedUser.username }}</div>
-              </div>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <img *ngIf="connectedUser.idp == 'github'" class="idp-icon" src="../../../../../assets/images/github-white.svg" />
+            <img *ngIf="connectedUser.idp == 'gitlab'" class="idp-icon" src="../../../../../assets/images/gitlab.svg" />
+            <div class="names-container">
+              <div class="firstname-lastname">{{ connectedUser.firstname }} {{ connectedUser.lastname }}</div>
+              <div>{{ connectedUser.username }}</div>
             </div>
           </mat-panel-title>
         </mat-expansion-panel-header>

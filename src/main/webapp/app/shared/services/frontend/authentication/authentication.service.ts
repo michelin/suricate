@@ -55,7 +55,7 @@ export class AuthenticationService {
   /**
    * Global endpoint for Authentication
    */
-  private static readonly authenticationApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/oauth/token`;
+  private static readonly authenticationApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/auth`;
 
   /**
    * The access token local storage key
@@ -159,25 +159,14 @@ export class AuthenticationService {
    * @returns The response as Observable
    */
   public authenticate(credentials: Credentials): Observable<AuthenticationResponse> {
-    let headers = new HttpHeaders();
-    headers = headers.append('Content-Type', 'application/x-www-form-urlencoded');
-    headers = headers.append('Authorization', `Basic ${btoa('suricateAngular:suricateAngularSecret')}`);
-
-    const params = new URLSearchParams();
-    params.append('grant_type', 'password');
-    params.append('username', credentials.username.toLowerCase());
-    params.append('password', credentials.password);
-
-    const url = `${AuthenticationService.authenticationApiEndpoint}`;
+    const url = `${AuthenticationService.authenticationApiEndpoint}/signin`;
 
     return this.httpClient
-      .post<AuthenticationResponse>(url, params.toString(), { headers: headers })
+      .post<AuthenticationResponse>(url, credentials)
       .pipe(
         tap((authenticationResponse: AuthenticationResponse) => {
-          if (authenticationResponse && authenticationResponse.access_token) {
-            // AuthenticationService.setTokenType(authenticationResponse.token_type);
-            AuthenticationService.setAccessToken(authenticationResponse.access_token);
-            // AuthenticationService.setRefreshToken(authenticationResponse.refresh_token);
+          if (authenticationResponse && authenticationResponse.accessToken) {
+            AuthenticationService.setAccessToken(authenticationResponse.accessToken);
           }
         })
       );
@@ -189,8 +178,8 @@ export class AuthenticationService {
    * @param userRequest The user Request
    * @returns The user registered
    */
-  public register(userRequest: UserRequest): Observable<User> {
-    const url = `${HttpUserService.usersApiEndpoint}/register`;
+  public signup(userRequest: UserRequest): Observable<User> {
+    const url = `${HttpUserService.usersApiEndpoint}/signup`;
 
     return this.httpClient.post<User>(url, userRequest);
   }

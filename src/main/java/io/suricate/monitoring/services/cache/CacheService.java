@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.services;
+package io.suricate.monitoring.services.cache;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

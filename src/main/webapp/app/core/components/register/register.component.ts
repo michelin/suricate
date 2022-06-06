@@ -114,7 +114,7 @@ export class RegisterComponent implements OnInit {
       const userRequest: UserRequest = this.registerForm.value;
 
       this.authenticationService
-        .register(userRequest)
+        .signup(userRequest)
         .pipe(
           flatMap(() => {
             const credentials: Credentials = { username: userRequest.username, password: userRequest.password };

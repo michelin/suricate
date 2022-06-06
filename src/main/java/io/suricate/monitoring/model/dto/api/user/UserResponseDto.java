@@ -74,12 +74,6 @@ public class UserResponseDto extends AbstractDto {
     private String email;
 
     /**
-     * Is the user an admin or not
-     */
-    @ApiModelProperty(value = "Is admin ?")
-    private boolean admin;
-
-    /**
      * The authentication method
      */
     @ApiModelProperty(value = "The authentication method for this user")

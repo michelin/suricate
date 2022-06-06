@@ -24,7 +24,7 @@ import io.suricate.monitoring.model.dto.api.repository.RepositoryRequestDto;
 import io.suricate.monitoring.model.dto.api.repository.RepositoryResponseDto;
 import io.suricate.monitoring.model.dto.api.widget.WidgetResponseDto;
 import io.suricate.monitoring.model.entities.Repository;
-import io.suricate.monitoring.services.GitService;
+import io.suricate.monitoring.services.git.GitService;
 import io.suricate.monitoring.services.api.RepositoryService;
 import io.suricate.monitoring.services.mapper.RepositoryMapper;
 import io.suricate.monitoring.services.mapper.WidgetMapper;

@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.utils;
 
-import io.suricate.monitoring.configuration.web.ConnectedUser;
+import io.suricate.monitoring.security.LocalUser;
 import io.suricate.monitoring.model.enums.UserRoleEnum;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -34,12 +34,12 @@ public final class SecurityUtils {
      *
      * @return all data about the connected user
      */
-    public static ConnectedUser getConnectedUser() {
+    public static LocalUser getConnectedUser() {
         SecurityContext context = SecurityContextHolder.getContext();
         if (context != null) {
             Authentication authentication = context.getAuthentication();
-            if (authentication != null && authentication.getPrincipal() instanceof ConnectedUser) {
-                return (ConnectedUser) authentication.getPrincipal();
+            if (authentication != null && authentication.getPrincipal() instanceof LocalUser) {
+                return (LocalUser) authentication.getPrincipal();
             }
         }
         return null;
@@ -50,7 +50,7 @@ public final class SecurityUtils {
      *
      * @return true if the connected user is admin, false otherwise
      */
-    public static boolean isAdmin(final ConnectedUser connectedUser) {
+    public static boolean isAdmin(final LocalUser connectedUser) {
         return hasRole(connectedUser, UserRoleEnum.ROLE_ADMIN.name());
     }
 
@@ -61,7 +61,7 @@ public final class SecurityUtils {
      * @param roles list of roles
      * @return true if the connected user have all roles, false otherwise
      */
-    public static boolean hasRole(ConnectedUser connectedUser, String... roles) {
+    public static boolean hasRole(LocalUser connectedUser, String... roles) {
         boolean ret = false;
 
         if (connectedUser != null) {

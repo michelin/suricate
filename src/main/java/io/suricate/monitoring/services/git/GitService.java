@@ -14,13 +14,14 @@
  * limitations under the License.
  */
 
-package io.suricate.monitoring.services;
+package io.suricate.monitoring.services.git;
 
 import io.suricate.monitoring.properties.ApplicationProperties;
 import io.suricate.monitoring.model.entities.Library;
 import io.suricate.monitoring.model.entities.Category;
 import io.suricate.monitoring.model.entities.Repository;
 import io.suricate.monitoring.model.enums.RepositoryTypeEnum;
+import io.suricate.monitoring.services.cache.CacheService;
 import io.suricate.monitoring.services.api.CategoryService;
 import io.suricate.monitoring.services.api.LibraryService;
 import io.suricate.monitoring.services.api.RepositoryService;

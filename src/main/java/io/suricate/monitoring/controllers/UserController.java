@@ -19,11 +19,9 @@
 package io.suricate.monitoring.controllers;
 
 import io.suricate.monitoring.configuration.swagger.ApiPageable;
+import io.suricate.monitoring.model.dto.api.auth.JwtAuthenticationResponseDto;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
-import io.suricate.monitoring.model.dto.api.user.UserRequestDto;
-import io.suricate.monitoring.model.dto.api.user.UserResponseDto;
-import io.suricate.monitoring.model.dto.api.user.UserSettingRequestDto;
-import io.suricate.monitoring.model.dto.api.user.UserSettingResponseDto;
+import io.suricate.monitoring.model.dto.api.user.*;
 import io.suricate.monitoring.model.entities.Role;
 import io.suricate.monitoring.model.entities.Setting;
 import io.suricate.monitoring.model.entities.User;
@@ -32,6 +30,7 @@ import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.model.enums.AuthenticationMethod;
 import io.suricate.monitoring.model.enums.UserRoleEnum;
 import io.suricate.monitoring.properties.ApplicationProperties;
+import io.suricate.monitoring.security.LocalUser;
 import io.suricate.monitoring.services.api.SettingService;
 import io.suricate.monitoring.services.api.UserService;
 import io.suricate.monitoring.services.api.UserSettingService;
@@ -39,6 +38,7 @@ import io.suricate.monitoring.services.mapper.UserMapper;
 import io.suricate.monitoring.services.mapper.UserSettingMapper;
 import io.suricate.monitoring.utils.exceptions.ApiException;
 import io.suricate.monitoring.utils.exceptions.ObjectNotFoundException;
+import io.suricate.monitoring.utils.jwt.JwtUtils;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -47,7 +47,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -69,47 +72,32 @@ public class UserController {
     /**
      * The user service
      */
-    private final UserService userService;
+    @Autowired
+    private UserService userService;
 
     /**
      * The user setting service
      */
-    private final UserSettingService userSettingService;
+    @Autowired
+    private UserSettingService userSettingService;
 
     /**
      * The setting service
      */
-    private final SettingService settingService;
+    @Autowired
+    private SettingService settingService;
 
     /**
      * The user mapper
      */
-    private final UserMapper userMapper;
+    @Autowired
+    private UserMapper userMapper;
 
     /**
      * The user setting mapper
      */
-    private final UserSettingMapper userSettingMapper;
-
-    /**
-     * Constructor
-     *
-     * @param userService       The user service to inject
-     * @param userMapper        The user mapper to inject
-     * @param userSettingMapper The user setting mapper
-     */
     @Autowired
-    public UserController(final UserService userService,
-                          final UserMapper userMapper,
-                          final SettingService settingService,
-                          final UserSettingService userSettingService,
-                          final UserSettingMapper userSettingMapper) {
-        this.userService = userService;
-        this.userMapper = userMapper;
-        this.settingService = settingService;
-        this.userSettingService = userSettingService;
-        this.userSettingMapper = userSettingMapper;
-    }
+    private UserSettingMapper userSettingMapper;
 
     /**
      * List all user
@@ -296,7 +284,6 @@ public class UserController {
 
     /**
      * Register a new user in the database
-     *
      * @param userRequestDto The user to register
      * @return The user registered
      */
@@ -305,9 +292,9 @@ public class UserController {
         @ApiResponse(code = 200, message = "Ok", response = UserResponseDto.class),
         @ApiResponse(code = 400, message = "Bad request", response = ApiErrorDto.class),
     })
-    @PostMapping(value = "/v1/users/register")
+    @PostMapping(value = "/v1/users/signup")
     @PreAuthorize("isAnonymous()")
-    public ResponseEntity<UserResponseDto> register(@ApiParam(name = "userResponseDto", value = "The user information to create", required = true)
+    public ResponseEntity<UserResponseDto> signUp(@ApiParam(name = "userResponseDto", value = "The user information to create", required = true)
                                                     @RequestBody UserRequestDto userRequestDto) {
         User user = userMapper.toUserEntity(userRequestDto, AuthenticationMethod.DATABASE);
         User savedUser = userService.create(user);

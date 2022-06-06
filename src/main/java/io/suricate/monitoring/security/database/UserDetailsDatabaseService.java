@@ -16,7 +16,7 @@
 
 package io.suricate.monitoring.security.database;
 
-import io.suricate.monitoring.configuration.web.ConnectedUser;
+import io.suricate.monitoring.security.LocalUser;
 import io.suricate.monitoring.model.entities.User;
 import io.suricate.monitoring.services.api.UserService;
 import org.slf4j.Logger;
@@ -30,6 +30,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -58,7 +59,7 @@ public class UserDetailsDatabaseService implements UserDetailsService {
      * @throws UsernameNotFoundException When no user has been found
      */
     @Override
-    public ConnectedUser loadUserByUsername(String username) {
+    public LocalUser loadUserByUsername(String username) {
         LOGGER.debug("Authenticating user <{}> with database", username);
 
         Optional<User> currentUser = userService.getOneByUsername(username);
@@ -67,13 +68,6 @@ public class UserDetailsDatabaseService implements UserDetailsService {
             throw new UsernameNotFoundException("The specified user has not been found");
         }
 
-        Collection<? extends GrantedAuthority> authorities = currentUser
-                .map(user -> user.getRoles()
-                        .stream()
-                        .map(roles -> new SimpleGrantedAuthority(roles.getName()))
-                        .collect(Collectors.toList()))
-                .orElseThrow(() -> new UsernameNotFoundException("User " + username + " was not authorized"));
-
-        return new ConnectedUser(currentUser.get().getUsername(), currentUser.get().getPassword(), authorities);
+        return new LocalUser(currentUser.get(), Collections.emptyMap());
     }
 }
