@@ -34,6 +34,7 @@ import { SettingsService } from '../../../core/services/settings.service';
 import { UserSetting } from '../../../shared/models/backend/setting/user-setting';
 import { User } from '../../../shared/models/backend/user/user';
 import { MenuConfiguration } from '../../../shared/models/frontend/menu/menu-configuration';
+import {AuthenticationProvider} from "../../../shared/enums/authentication-provider.enum";
 
 /**
  * Display the menu on the sidenav
@@ -159,5 +160,19 @@ export class MenuComponent implements OnInit {
   public logout(): void {
     AuthenticationService.logout();
     this.router.navigate(['/login']);
+  }
+
+  /**
+   * Is the connected user logged in with GitHub
+   */
+  public isConnectedWithGithub(): boolean {
+    return this.connectedUser.idp === AuthenticationProvider.GITHUB;
+  }
+
+  /**
+   * Is the connected user logged in with GitLab
+   */
+  public isConnectedWithGitlab(): boolean {
+    return this.connectedUser.idp === AuthenticationProvider.GITLAB;
   }
 }

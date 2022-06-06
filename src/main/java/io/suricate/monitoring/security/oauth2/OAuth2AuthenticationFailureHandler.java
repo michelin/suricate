@@ -28,7 +28,7 @@ public class OAuth2AuthenticationFailureHandler extends SimpleUrlAuthenticationF
      * Trigger after OAuth2 authentication has failed
      * @param request The request which is the response of the IDP
      * @param response The response to send to the host that authenticated successfully
-     * @param authentication The authentication data
+     * @param exception The authentication exception
      * @throws IOException Any IO Exception
      * @throws ServletException Any servlet exception
      */

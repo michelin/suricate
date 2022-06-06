@@ -91,10 +91,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             LOGGER.debug(String.format("Using url %s from Referer header", request.getHeader("Referer")));
         }
 
-        if (StringUtils.hasLength(redirectUri.get())) {
-            throw new RuntimeException(String.format("An error occurred: the redirect URI %s is not authorized", redirectUri));
-        }
-
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
 
         OAuth2AuthenticationToken auth = (OAuth2AuthenticationToken) authentication;

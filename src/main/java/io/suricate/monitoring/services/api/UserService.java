@@ -122,7 +122,7 @@ public class UserService {
             return create(user);
         }
 
-        return update(optionalUser.get(), username, firstname, lastname, email, avatarUrl, authenticationMethod);
+        return update(optionalUser.get(), optionalUser.get().getUsername(), firstname, lastname, email, avatarUrl, authenticationMethod);
     }
 
     /**
