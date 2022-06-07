@@ -23,6 +23,8 @@ import { Injectable } from '@angular/core';
 
 import { ToastService } from '../services/frontend/toast/toast.service';
 import { ToastTypeEnum } from '../enums/toast-type.enum';
+import {AuthenticationService} from "../services/frontend/authentication/authentication.service";
+import {Router} from "@angular/router";
 
 /**
  * Interceptor that manage http errors
@@ -30,36 +32,30 @@ import { ToastTypeEnum } from '../enums/toast-type.enum';
 @Injectable({ providedIn: 'root' })
 export class ErrorInterceptor implements HttpInterceptor {
   /**
-   * Invalid grant error returned by spring oauth2
-   * @type {string}
-   */
-  private static readonly badCredentialError = 'invalid_grant';
-
-  /**
    * Constructor
-   *
-   * @param {ToastService} toastService The toast service
+   * @param router The router
+   * @param toastService The toast service
    */
-  constructor(private readonly toastService: ToastService) {}
+  constructor(private router: Router,
+              private toastService: ToastService) {}
 
   /**
    * Method that intercept the request
-   *
-   * @param {HttpRequest>} request The request
-   * @param {HttpHandler} next The next handler
-   * @return {Observable<HttpEvent>} The http request as event
+   * @param request The request
+   * @param next The next handler
+   * @return The http request as event
    */
   public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
       tap(
-        (event: HttpEvent<any>) => {},
+        () => {},
         (httpError: any) => {
           if (httpError instanceof HttpErrorResponse) {
             switch (httpError.status) {
-              case 400:
-                if (httpError.error.error === ErrorInterceptor.badCredentialError) {
-                  this.toastService.sendMessage('credentials.error', ToastTypeEnum.DANGER);
-                }
+              // Authentication error, token invalid or expired
+              case 401:
+                AuthenticationService.logout();
+                this.router.navigate(['/login']);
                 break;
 
               case 0:

@@ -54,7 +54,7 @@ public class AuthenticationController {
                                                                @RequestBody SignInRequestDto signInRequestDto) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signInRequestDto.getUsername(), signInRequestDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String token = jwtUtils.createToken(authentication);
+        String token = jwtUtils.createToken(authentication, false);
         return ResponseEntity
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)

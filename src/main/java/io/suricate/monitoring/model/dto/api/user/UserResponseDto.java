@@ -30,7 +30,6 @@ import java.util.List;
 /**
  * Represent a user used for communication with the clients via webservices
  */
-
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)

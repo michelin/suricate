@@ -29,9 +29,10 @@ public class JwtUtils {
     /**
      * Build a JWT token
      * @param authentication The authentication information
+     * @param neverExpires Should the token expire or not
      * @return The JWT token
      */
-    public String createToken(Authentication authentication) {
+    public String createToken(Authentication authentication, boolean neverExpires) {
         LocalUser userPrincipal = (LocalUser) authentication.getPrincipal();
 
         Date now = new Date();
@@ -45,6 +46,10 @@ public class JwtUtils {
         claims.put("avatar_url", userPrincipal.getUser().getAvatarUrl());
         claims.put("authorities", userPrincipal.getUser().getRoles().stream().map(Role::getName).collect(Collectors.toList()));
 
+        if (!neverExpires) {
+            claims.put(Claims.EXPIRATION, expiryDate);
+        }
+
         if (OAuth2Utils.isSocialLogin(userPrincipal.getUser().getAuthenticationMethod())) {
             claims.put("idp", userPrincipal.getUser().getAuthenticationMethod());
         }
@@ -52,7 +57,6 @@ public class JwtUtils {
         return Jwts.builder()
                 .setSubject(userPrincipal.getUsername())
                 .setIssuedAt(now)
-                .setExpiration(expiryDate)
                 .addClaims(claims)
                 .signWith(SignatureAlgorithm.HS512, applicationProperties.getAuthentication().getJwt().getSigningKey())
                 .compact();

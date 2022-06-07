@@ -108,7 +108,7 @@ public class ProjectService {
      */
     @Transactional(readOnly = true)
     public Page<Project> getAll(String search, Pageable pageable) {
-        return this.projectRepository.findAll(new ProjectSearchSpecification(search), pageable);
+        return projectRepository.findAll(new ProjectSearchSpecification(search), pageable);
     }
 
     /**

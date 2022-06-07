@@ -23,6 +23,7 @@
 @import '~sass/components/material/mat-stepper-theme';
 @import '~sass/components/material/mat-form-field-theme';
 @import '~sass/components/material/mat-grid-list-theme';
+@import '~sass/components/material/mat-tab-group-theme';
 @import '~sass/components/material/carousel-theme';
 
 /**
@@ -37,5 +38,6 @@
   @include custom-mat-stepper-theme($theme);
   @include custom-mat-grid-list-theme($theme);
   @include custom-mat-form-field-theme($theme);
+  @include custom-mat-tab-group-theme($theme);
   @include custom-carousel-theme($theme);
 }

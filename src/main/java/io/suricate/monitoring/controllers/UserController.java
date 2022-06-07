@@ -20,14 +20,19 @@ package io.suricate.monitoring.controllers;
 
 import io.suricate.monitoring.configuration.swagger.ApiPageable;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
+import io.suricate.monitoring.model.dto.api.token.TokenRequestDto;
+import io.suricate.monitoring.model.dto.api.token.TokenResponseDto;
 import io.suricate.monitoring.model.dto.api.user.*;
 import io.suricate.monitoring.model.entities.Setting;
 import io.suricate.monitoring.model.entities.User;
 import io.suricate.monitoring.model.entities.UserSetting;
 import io.suricate.monitoring.model.enums.AuthenticationProvider;
+import io.suricate.monitoring.security.LocalUser;
+import io.suricate.monitoring.services.api.TokenService;
 import io.suricate.monitoring.services.api.SettingService;
 import io.suricate.monitoring.services.api.UserService;
 import io.suricate.monitoring.services.api.UserSettingService;
+import io.suricate.monitoring.services.mapper.TokenMapper;
 import io.suricate.monitoring.services.mapper.UserMapper;
 import io.suricate.monitoring.services.mapper.UserSettingMapper;
 import io.suricate.monitoring.utils.exceptions.ObjectNotFoundException;
@@ -39,6 +44,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -75,6 +81,12 @@ public class UserController {
     private SettingService settingService;
 
     /**
+     * The token service
+     */
+    @Autowired
+    private TokenService tokenService;
+
+    /**
      * The user mapper
      */
     @Autowired
@@ -85,6 +97,12 @@ public class UserController {
      */
     @Autowired
     private UserSettingMapper userSettingMapper;
+
+    /**
+     * The token mapper
+     */
+    @Autowired
+    private TokenMapper tokenMapper;
 
     /**
      * List all user
@@ -198,8 +216,7 @@ public class UserController {
 
     /**
      * Retrieve the user settings
-     *
-     * @param userName The user name
+     * @param username The username
      */
     @ApiOperation(value = "Retrieve the user settings", response = UserSettingResponseDto.class)
     @ApiResponses(value = {
@@ -228,7 +245,7 @@ public class UserController {
      * Update the user settings for a user
      *
      * @param principal             The connected user
-     * @param userName              The user name used in the url
+     * @param userName              The username used in the url
      * @param userSettingRequestDto The new setting value
      * @return The user updated
      */
@@ -277,12 +294,12 @@ public class UserController {
     @ApiOperation(value = "Register a new user", response = UserResponseDto.class)
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Ok", response = UserResponseDto.class),
-        @ApiResponse(code = 400, message = "Bad request", response = ApiErrorDto.class),
+        @ApiResponse(code = 400, message = "Bad request", response = ApiErrorDto.class)
     })
     @PostMapping(value = "/v1/users/signup")
     @PreAuthorize("isAnonymous()")
     public ResponseEntity<UserResponseDto> signUp(@ApiParam(name = "userResponseDto", value = "The user information to create", required = true)
-                                                    @RequestBody UserRequestDto userRequestDto) {
+                                                  @RequestBody UserRequestDto userRequestDto) {
         User user = userMapper.toUserEntity(userRequestDto, AuthenticationProvider.DATABASE);
         User savedUser = userService.create(user);
 
@@ -296,5 +313,39 @@ public class UserController {
             .created(resourceLocation)
             .contentType(MediaType.APPLICATION_JSON)
             .body(userMapper.toUserDTO(savedUser));
+    }
+
+    /**
+     * Get all user tokens
+     * @param principal The authentication principal containing the authenticated user
+     * @return A list of tokens
+     */
+    @ApiOperation(value = "Get all user tokens", response = List.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok", response = List.class),
+            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class)
+    })
+    @GetMapping(value = "/v1/users/tokens")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public List<TokenResponseDto> getTokens(@ApiIgnore Authentication authentication) {
+        return tokenMapper.toTokensDTOs(tokenService.findAllByUser(((LocalUser) authentication.getPrincipal()).getUser()));
+    }
+
+    /**
+     * Generate a new user token
+     * @param tokenRequestDto The token request
+     */
+    @ApiOperation(value = "Generate a new user token", response = TokenResponseDto.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok", response = TokenResponseDto.class),
+            @ApiResponse(code = 400, message = "Bad request", response = ApiErrorDto.class),
+            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class)
+    })
+    @PostMapping(value = "/v1/users/tokens")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public TokenResponseDto createToken(@ApiIgnore Authentication authentication,
+                                        @ApiParam(name = "tokenRequestDto", value = "The token request", required = true)
+                                        @RequestBody TokenRequestDto tokenRequestDto) {
+        return tokenMapper.toTokenDTO(tokenService.create(tokenRequestDto.getName(), authentication));
     }
 }

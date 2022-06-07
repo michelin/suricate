@@ -1,0 +1,31 @@
+<div *ngIf="createdToken" class="created-token-container">
+    <mat-card (click)="copy()">
+        <mat-card-title fxLayout="row">
+            <div fxLayout="row" fxLayoutGap="10px" fxFlex="89">
+                <mat-icon>done</mat-icon>
+                <div>{{ 'settings.security.token.created.title' | translate : { tokenName: createdToken.name } }}</div>
+            </div>
+            <div fxLayout="row" fxLayoutGap="5px" class="copy-token">
+                <mat-icon>{{ materialIconRecords[iconEnum.COPY] }}</mat-icon>
+                <div>{{ 'copy' | translate }}</div>
+            </div>
+        </mat-card-title>
+    </mat-card>
+</div>
+
+<div *ngIf="formGroup" class="form-container" fxLayout="column" >
+    <h2 class="little">{{ 'settings.security.generate.tokens.title' | translate }}</h2>
+    <div fxLayout="column" fxLayoutAlign="space-between" fxFlex="100">
+        <div fxLayout="column">
+            <suricate-input
+                    *ngFor="let field of formFields"
+                    [formGroup]="formGroup"
+                    [field]="field">
+            </suricate-input>
+        </div>
+
+        <div class="save-security-settings-button">
+            <suricate-buttons [configurations]="[generateTokenButton]"> </suricate-buttons>
+        </div>
+    </div>
+</div>

@@ -16,10 +16,12 @@
 
 import { Injectable } from '@angular/core';
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {Observable, throwError} from 'rxjs';
 
 import { AuthenticationService } from '../services/frontend/authentication/authentication.service';
 import { AbstractHttpService } from '../services/backend/abstract-http/abstract-http.service';
+import {Router} from "@angular/router";
+import {ToastService} from "../services/frontend/toast/toast.service";
 
 /**
  * Used to put the token in the request
@@ -27,11 +29,15 @@ import { AbstractHttpService } from '../services/backend/abstract-http/abstract-
 @Injectable({ providedIn: 'root' })
 export class TokenInterceptor implements HttpInterceptor {
   /**
-   * Method implemented from HttpInterceptor
-   *
-   * @param {HttpRequest} request The request sent
-   * @param {HttpHandler} next The next interceptor
-   * @returns {Observable<HttpEvent>}
+   * Constructor
+   * @param router The router
+   */
+  constructor(private router: Router) {}
+
+  /**
+   * Intercept the HTTP requests and add the token to them
+   * @param request The request sent
+   * @param next The next interceptor
    */
   public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (
@@ -42,12 +48,18 @@ export class TokenInterceptor implements HttpInterceptor {
       return next.handle(request);
     }
 
-    if (AuthenticationService.isLoggedIn()) {
-      request = request.clone({
-        setHeaders: {
-          Authorization: `Bearer ${AuthenticationService.getAccessToken()}`
-        }
-      });
+    try {
+      if (AuthenticationService.isLoggedIn()) {
+        request = request.clone({
+          setHeaders: {
+            Authorization: `Bearer ${AuthenticationService.getAccessToken()}`
+          }
+        });
+      }
+    } catch (error) {
+      // Catch "is logged in" errors. Token probably has been tampered
+      AuthenticationService.logout();
+      this.router.navigate(['/login']);
     }
 
     return next.handle(request);

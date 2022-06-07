@@ -26,6 +26,8 @@ import { AbstractHttpService } from '../abstract-http/abstract-http.service';
 import { Page } from '../../../models/backend/page';
 import { HttpFilter } from '../../../models/backend/http-filter';
 import { HttpFilterService } from '../http-filter/http-filter.service';
+import {TokenRequest} from "../../../models/backend/token/token-request";
+import {Token} from "../../../models/backend/token/token";
 
 /**
  * Manage the http user calls
@@ -120,5 +122,22 @@ export class HttpUserService implements AbstractHttpService<User | UserRequest> 
     const url = `${HttpUserService.usersApiEndpoint}/${userName}/settings/${settingId}`;
 
     return this.httpClient.put<void>(url, userSettingRequest);
+  }
+
+  /**
+   * Get the current user tokens
+   */
+  public getUserTokens(): Observable<Token[]> {
+    const url = `${HttpUserService.usersApiEndpoint}/tokens`;
+    return this.httpClient.get<Token[]>(url);
+  }
+  
+  /**
+   * Create a JWT token for the user
+   * @param tokenRequest The token request
+   */
+  public createToken(tokenRequest: TokenRequest): Observable<Token> {
+    const url = `${HttpUserService.usersApiEndpoint}/tokens`;
+    return this.httpClient.post<Token>(url, tokenRequest);
   }
 }

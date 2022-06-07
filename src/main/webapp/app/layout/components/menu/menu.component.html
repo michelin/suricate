@@ -8,22 +8,26 @@
       </div>
     </div>
 
-    <mat-accordion>
+    <mat-accordion hideToggle="true">
       <mat-expansion-panel class="mat-elevation-z0">
         <mat-expansion-panel-header>
           <mat-panel-title>
-            <img *ngIf="isConnectedWithGithub()" class="idp-icon" src="../../../../../assets/images/github-white.svg" />
-            <img *ngIf="isConnectedWithGitlab()" class="idp-icon" src="../../../../../assets/images/gitlab.svg" />
-            <div class="names-container">
-              <div class="firstname-lastname">{{ connectedUser.firstname }} {{ connectedUser.lastname }}</div>
-              <div>{{ connectedUser.username }}</div>
+            <div fxLayout="row" class="names-idp-container">
+              <div class="names-container">
+                <div class="firstname-lastname">{{ connectedUser.firstname }} {{ connectedUser.lastname }}</div>
+                <div>{{ connectedUser.username }}</div>
+              </div>
+              <div class="idp-icon">
+                <img *ngIf="isConnectedWithGithub()" src="../../../../../assets/images/github-white.svg" />
+                <img *ngIf="isConnectedWithGitlab()" src="../../../../../assets/images/gitlab.svg" />
+              </div>
             </div>
           </mat-panel-title>
         </mat-expansion-panel-header>
 
         <mat-nav-list class="submenu">
           <div>
-            <a mat-list-item (click)="openSettingsFormSidenav()">
+            <a mat-list-item [routerLink]="['/settings']">
               <mat-icon> {{ materialIconRecords[iconEnum.SETTINGS] }} </mat-icon>
               <span> {{ 'settings' | translate }} </span>
             </a>
@@ -43,12 +47,12 @@
     <mat-divider></mat-divider>
 
     <div id="button-section" class="sidenav-section" fxLayout="row wrap" fxLayoutAlign="start center">
-      <a fxFlex="40" routerLinkActive="active" [routerLink]="['/home']" [matTooltip]="'home' | translate">
+      <a fxFlex="50" routerLinkActive="active" [routerLink]="['/home']" [matTooltip]="'home' | translate">
         <div fxFlex="100" class="common-icon-button" fxLayout="row wrap" fxLayoutAlign="center center">
           <mat-icon color="default"> {{ materialIconRecords[iconEnum.HOME] }} </mat-icon>
         </div>
       </a>
-      <a fxFlex="40" routerLinkActive="active" [routerLink]="['/tv']" [matTooltip]="'tv.view' | translate" target="_blank">
+      <a fxFlex="50" routerLinkActive="active" [routerLink]="['/tv']" [matTooltip]="'tv.view' | translate" target="_blank">
         <div fxFlex="100" class="common-icon-button" fxLayout="row wrap" fxLayoutAlign="center center">
           <mat-icon color="default"> {{ materialIconRecords[iconEnum.TV] }} </mat-icon>
         </div>
