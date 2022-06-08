@@ -16,9 +16,11 @@
  *
  */
 
-.created-token-container {
+.settings-container {
   padding: 15px 35px 0 35px;
+}
 
+.created-token-container {
   .mat-card {
     background-color: #8bc34a;
     cursor: pointer;
@@ -37,13 +39,24 @@
 }
 
 .form-container {
-  padding: 15px 35px 35px 35px;
-
   h2 {
     margin: 10px 0;
   }
 
   .save-security-settings-button {
     margin: auto;
+  }
+}
+
+table {
+  width: 100%;
+
+  .mat-cell,
+  .mat-header-cell {
+    font-size: 14px;
+  }
+
+  .mat-column-revoke {
+    width: 90px;
   }
 }

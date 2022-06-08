@@ -24,6 +24,7 @@ import io.suricate.monitoring.model.dto.api.token.TokenRequestDto;
 import io.suricate.monitoring.model.dto.api.token.TokenResponseDto;
 import io.suricate.monitoring.model.dto.api.user.*;
 import io.suricate.monitoring.model.entities.Setting;
+import io.suricate.monitoring.model.entities.Token;
 import io.suricate.monitoring.model.entities.User;
 import io.suricate.monitoring.model.entities.UserSetting;
 import io.suricate.monitoring.model.enums.AuthenticationProvider;
@@ -317,7 +318,7 @@ public class UserController {
 
     /**
      * Get all user tokens
-     * @param principal The authentication principal containing the authenticated user
+     * @param authentication The authentication containing the authenticated user
      * @return A list of tokens
      */
     @ApiOperation(value = "Get all user tokens", response = List.class)
@@ -327,8 +328,11 @@ public class UserController {
     })
     @GetMapping(value = "/v1/users/tokens")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public List<TokenResponseDto> getTokens(@ApiIgnore Authentication authentication) {
-        return tokenMapper.toTokensDTOs(tokenService.findAllByUser(((LocalUser) authentication.getPrincipal()).getUser()));
+    public ResponseEntity<List<TokenResponseDto>> getTokens(@ApiIgnore Authentication authentication) {
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(tokenMapper.toTokensDTOs(tokenService.findAllByUser(((LocalUser) authentication.getPrincipal()).getUser())));
     }
 
     /**
@@ -343,9 +347,37 @@ public class UserController {
     })
     @PostMapping(value = "/v1/users/tokens")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public TokenResponseDto createToken(@ApiIgnore Authentication authentication,
+    public ResponseEntity<TokenResponseDto> createToken(@ApiIgnore Authentication authentication,
                                         @ApiParam(name = "tokenRequestDto", value = "The token request", required = true)
                                         @RequestBody TokenRequestDto tokenRequestDto) {
-        return tokenMapper.toTokenDTO(tokenService.create(tokenRequestDto.getName(), authentication));
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(tokenMapper.toTokenDTO(tokenService.create(tokenRequestDto.getName(), authentication)));
+    }
+
+    /**
+     * Delete a user token
+     */
+    @ApiOperation(value = "Delete a user token", response = TokenResponseDto.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 204, message = "Token deleted"),
+            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+            @ApiResponse(code = 404, message = "Token not found", response = ApiErrorDto.class)
+    })
+    @DeleteMapping(value = "/v1/users/tokens/{tokenName}")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<Void> deleteToken(@ApiIgnore Authentication authentication,
+                                            @ApiParam(name = "tokenName", value = "The token name", required = true)
+                                            @PathVariable("tokenName") String tokenName) {
+        User connectedUser = ((LocalUser) authentication.getPrincipal()).getUser();
+
+        Optional<Token> tokenOptional = tokenService.findByNameAndUser(tokenName, connectedUser);
+        if (!tokenOptional.isPresent()) {
+            throw new ObjectNotFoundException(Token.class, tokenName);
+        }
+
+        tokenService.deleteById(tokenOptional.get().getId());
+        return ResponseEntity.noContent().build();
     }
 }

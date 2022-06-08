@@ -26,8 +26,8 @@ import { AbstractHttpService } from '../abstract-http/abstract-http.service';
 import { Page } from '../../../models/backend/page';
 import { HttpFilter } from '../../../models/backend/http-filter';
 import { HttpFilterService } from '../http-filter/http-filter.service';
-import {TokenRequest} from "../../../models/backend/token/token-request";
-import {Token} from "../../../models/backend/token/token";
+import { TokenRequest } from '../../../models/backend/token/token-request';
+import { Token } from '../../../models/backend/token/token';
 
 /**
  * Manage the http user calls
@@ -131,7 +131,7 @@ export class HttpUserService implements AbstractHttpService<User | UserRequest> 
     const url = `${HttpUserService.usersApiEndpoint}/tokens`;
     return this.httpClient.get<Token[]>(url);
   }
-  
+
   /**
    * Create a JWT token for the user
    * @param tokenRequest The token request
@@ -139,5 +139,14 @@ export class HttpUserService implements AbstractHttpService<User | UserRequest> 
   public createToken(tokenRequest: TokenRequest): Observable<Token> {
     const url = `${HttpUserService.usersApiEndpoint}/tokens`;
     return this.httpClient.post<Token>(url, tokenRequest);
+  }
+
+  /**
+   * Revoke a given token
+   * @param tokenName The token name
+   */
+  public revokeToken(tokenName: string): Observable<void> {
+    const url = `${HttpUserService.usersApiEndpoint}/tokens/${tokenName}`;
+    return this.httpClient.delete<void>(url);
   }
 }

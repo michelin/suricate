@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TokenService {
@@ -32,8 +33,20 @@ public class TokenService {
      * @param user The user
      * @return The user tokens
      */
+    @Transactional(readOnly = true)
     public List<Token> findAllByUser(User user) {
         return tokenRepository.findAllByUser(user);
+    }
+
+    /**
+     * Find a token by given name and user
+     * @param name The token name
+     * @param user The user
+     * @return The token
+     */
+    @Transactional(readOnly = true)
+    public Optional<Token> findByNameAndUser(String name, User user) {
+        return tokenRepository.findByNameAndUser(name, user);
     }
 
     /**
@@ -50,5 +63,13 @@ public class TokenService {
         token.setUser(((LocalUser) authentication.getPrincipal()).getUser());
 
         return tokenRepository.save(token);
+    }
+
+    /**
+     * Delete a token by id
+     * @param id The token id
+     */
+    public void deleteById(Long id) {
+        tokenRepository.deleteById(id);
     }
 }
