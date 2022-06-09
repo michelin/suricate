@@ -37,6 +37,7 @@ import io.suricate.monitoring.services.mapper.TokenMapper;
 import io.suricate.monitoring.services.mapper.UserMapper;
 import io.suricate.monitoring.services.mapper.UserSettingMapper;
 import io.suricate.monitoring.utils.exceptions.ObjectNotFoundException;
+import io.suricate.monitoring.utils.jwt.JwtUtils;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -104,6 +105,12 @@ public class UserController {
      */
     @Autowired
     private TokenMapper tokenMapper;
+
+    /**
+     * The JWT utils
+     */
+    @Autowired
+    private JwtUtils jwtUtils;
 
     /**
      * List all user
@@ -350,10 +357,12 @@ public class UserController {
     public ResponseEntity<TokenResponseDto> createToken(@ApiIgnore Authentication authentication,
                                         @ApiParam(name = "tokenRequestDto", value = "The token request", required = true)
                                         @RequestBody TokenRequestDto tokenRequestDto) {
+        String tokenValue = jwtUtils.createToken(authentication, true);
+
         return ResponseEntity
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(tokenMapper.toTokenDTO(tokenService.create(tokenRequestDto.getName(), authentication)));
+                .body(tokenMapper.toTokenDTO(tokenService.create(tokenRequestDto.getName(), authentication), tokenValue));
     }
 
     /**

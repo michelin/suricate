@@ -29,12 +29,6 @@ public class Token extends AbstractAuditingEntity<Long> {
     private String name;
 
     /**
-     * The token value
-     */
-    @Column(nullable = false)
-    private String value;
-
-    /**
      * The owner
      */
     @ManyToOne

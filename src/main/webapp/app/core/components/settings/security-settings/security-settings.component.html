@@ -1,15 +1,26 @@
 <div *ngIf="createdToken" class="created-token-container settings-container">
-  <mat-card (click)="copy()">
+  <mat-card class="token-created">
     <mat-card-title fxLayout="row">
-      <div fxLayout="row" fxLayoutGap="10px" fxFlex="89">
+      <div fxLayout="row" fxLayoutGap="10px" fxFlex="84">
         <mat-icon>done</mat-icon>
         <div>{{ 'settings.security.token.created.title' | translate: { tokenName: createdToken.name } }}</div>
       </div>
-      <div fxLayout="row" fxLayoutGap="5px" class="copy-token">
-        <mat-icon>{{ materialIconRecords[iconEnum.COPY] }}</mat-icon>
-        <div>{{ 'copy' | translate }}</div>
-      </div>
     </mat-card-title>
+
+    <mat-card-content>
+      <mat-card class="token-value-container">
+        <mat-card-content>
+          {{ createdToken.value }}
+        </mat-card-content>
+      </mat-card>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <button mat-stroked-button class="copy-token-button" (click)="copy()">
+        <mat-icon>{{ materialIconRecords[iconEnum.COPY] }}</mat-icon>
+        {{ 'copy' | translate }}
+      </button>
+    </mat-card-actions>
   </mat-card>
 </div>
 

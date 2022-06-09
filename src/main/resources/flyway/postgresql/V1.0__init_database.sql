@@ -144,7 +144,6 @@ CREATE TABLE setting (
 CREATE TABLE token (
     id                  bigserial               NOT NULL,
     name                character varying(255)  NOT NULL,
-    value               character varying(500)  NOT NULL,
     user_id             bigint,
     created_by          character varying(255)      DEFAULT 'APPLICATION'::character varying NOT NULL,
     created_date        timestamp without time zone DEFAULT now() NOT NULL,

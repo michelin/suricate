@@ -23,12 +23,6 @@ public class TokenService {
     private TokenRepository tokenRepository;
 
     /**
-     * The JWT utils
-     */
-    @Autowired
-    private JwtUtils jwtUtils;
-
-    /**
      * Get all user tokens
      * @param user The user
      * @return The user tokens
@@ -55,11 +49,8 @@ public class TokenService {
      */
     @Transactional
     public Token create(String tokenName, Authentication authentication) {
-        String tokenValue = jwtUtils.createToken(authentication, true);
-
         Token token = new Token();
         token.setName(tokenName);
-        token.setValue(tokenValue);
         token.setUser(((LocalUser) authentication.getPrincipal()).getUser());
 
         return tokenRepository.save(token);

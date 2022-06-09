@@ -15,6 +15,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { TokenRequest } from '../../../../shared/models/backend/token/token-request';
 import { MaterialIconRecords } from '../../../../shared/records/material-icon.record';
 import { DialogService } from '../../../../shared/services/frontend/dialog/dialog.service';
+import { ButtonTypeEnum } from '../../../../shared/enums/button-type.enum';
 
 @Component({
   selector: 'suricate-security-settings',
@@ -51,11 +52,6 @@ export class SecuritySettingsComponent implements OnInit {
    * The generate token button
    */
   public generateTokenButton: ButtonConfiguration<unknown>;
-
-  /**
-   * The copy to clipboard button
-   */
-  public copyTokenButton: ButtonConfiguration<unknown>;
 
   /**
    * The revoke button
@@ -108,13 +104,6 @@ export class SecuritySettingsComponent implements OnInit {
       icon: IconEnum.SAVE,
       color: 'primary',
       callback: () => this.save()
-    };
-
-    this.copyTokenButton = {
-      label: 'copy',
-      icon: IconEnum.COPY,
-      color: 'primary',
-      callback: () => this.copy()
     };
 
     this.revokeButton = {
