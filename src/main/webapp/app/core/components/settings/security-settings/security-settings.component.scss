@@ -51,9 +51,13 @@
 table {
   width: 100%;
 
-  .mat-cell,
+  .mat-cell {
+    font-size: 14px;
+  }
+
   .mat-header-cell {
     font-size: 14px;
+    font-weight: 600;
   }
 
   .mat-column-revoke {

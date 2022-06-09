@@ -12,6 +12,7 @@ import io.suricate.monitoring.utils.exceptions.ObjectNotFoundException;
 import io.suricate.monitoring.utils.exceptions.OperationNotPermittedException;
 import io.swagger.annotations.*;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -32,23 +33,14 @@ public class ImportExportController {
     /**
      * The import/export service
      */
-    private final ImportExportService importExportService;
+    @Autowired
+    private ImportExportService importExportService;
 
     /**
      * The repository service
      */
-    private final RepositoryService repositoryService;
-
-    /**
-     * Constructor
-     * @param importExportService The import/export service
-     * @param repositoryService The repository service
-     */
-    public ImportExportController(ImportExportService importExportService,
-                                  RepositoryService repositoryService) {
-        this.importExportService = importExportService;
-        this.repositoryService = repositoryService;
-    }
+    @Autowired
+    private RepositoryService repositoryService;
 
     /**
      * Export the application data

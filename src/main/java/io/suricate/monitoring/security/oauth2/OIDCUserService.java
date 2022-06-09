@@ -10,16 +10,16 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
+import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
+import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
-import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 
 @Service
-public class OAuth2UserService extends DefaultOAuth2UserService {
+public class OIDCUserService extends OidcUserService {
     /**
      * The logger
      */
@@ -31,15 +31,9 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
     @Autowired
     private UserService userService;
 
-    /**
-     * Load a user after he has been successfully authenticated with OAuth2 ID providers
-     * @param userRequest The user information
-     * @return An OAuth2 user
-     * @throws OAuth2AuthenticationException Any OAuth2 authentication exception
-     */
     @Override
-    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        OAuth2User oAuth2User = super.loadUser(userRequest);
+    public OidcUser loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {
+        OidcUser oidcUser = super.loadUser(userRequest);
 
         try {
             AuthenticationProvider authenticationMethod = Arrays.stream(AuthenticationProvider.values())
@@ -47,27 +41,27 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
                     .findAny()
                     .orElseThrow(() -> new OAuth2AuthenticationProcessingException(String.format("ID provider %s is not recognized", userRequest.getClientRegistration().getRegistrationId())));
 
-            String username = OAuth2Utils.extractUsername(oAuth2User, authenticationMethod);
+            String username = OAuth2Utils.extractUsername(oidcUser, authenticationMethod);
             if (StringUtils.isEmpty(username)) {
                 throw new OAuth2AuthenticationProcessingException(String.format("Username not found from %s", userRequest.getClientRegistration().getRegistrationId()));
             }
 
-            String email = oAuth2User.getAttribute("email");
+            String email = oidcUser.getAttribute("email");
             if (StringUtils.isEmpty(email)) {
                 throw new OAuth2AuthenticationProcessingException(String.format("Email not found from %s", userRequest.getClientRegistration().getRegistrationId()));
             }
 
-            String firstname = oAuth2User.getAttribute("name").toString().split(" ")[0];
-            String lastname = oAuth2User.getAttribute("name").toString().split(" ")[1];
-            String avatarUrl = oAuth2User.getAttribute("avatar_url");
+            String firstname = oidcUser.getAttribute("name").toString().split(" ")[0];
+            String lastname = oidcUser.getAttribute("name").toString().split(" ")[1];
+            String avatarUrl = oidcUser.getAttribute("avatar_url");
 
             User user = userService.registerUser(username, firstname, lastname, email, avatarUrl, authenticationMethod);
 
             LOGGER.debug("Authenticated user <{}> with {}", username, userRequest.getClientRegistration().getRegistrationId());
 
-            return new LocalUser(user, oAuth2User.getAttributes());
+            return new LocalUser(user, oidcUser.getAttributes());
         } catch (Exception e) {
-            LOGGER.error("An error occurred authenticating user <{}> with {} in OAuth2 mode", oAuth2User.getName(), userRequest.getClientRegistration().getRegistrationId(), e);
+            LOGGER.error("An error occurred authenticating user <{}> with {} in OIDC mode", oidcUser.getName(), userRequest.getClientRegistration().getRegistrationId(), e);
             throw new OAuth2AuthenticationProcessingException(e.getMessage(), e.getCause());
         }
     }

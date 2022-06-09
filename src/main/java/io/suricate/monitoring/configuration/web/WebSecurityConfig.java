@@ -17,30 +17,21 @@
 package io.suricate.monitoring.configuration.web;
 
 import io.suricate.monitoring.security.filter.TokenAuthenticationFilter;
-import io.suricate.monitoring.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
-import io.suricate.monitoring.security.oauth2.OAuth2AuthenticationFailureHandler;
-import io.suricate.monitoring.security.oauth2.OAuth2AuthenticationSuccessHandler;
-import io.suricate.monitoring.security.oauth2.OAuth2UserService;
+import io.suricate.monitoring.security.oauth2.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.AuthenticationManagerResolver;
-import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationProvider;
-import org.springframework.security.oauth2.server.resource.authentication.OpaqueTokenAuthenticationProvider;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsUtils;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * Global Security configurations
@@ -67,6 +58,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Autowired
     private OAuth2UserService userService;
+
+    /**
+     * The OAuth2 user loader service
+     */
+    @Autowired
+    private OIDCUserService oidcUserService;
 
     /**
      * The authentication success handler
@@ -137,6 +134,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .userInfoEndpoint()
                     .userService(userService)
+                    .oidcUserService(oidcUserService)
                 .and()
                     .successHandler(oAuth2AuthenticationSuccessHandler)
                     .failureHandler(oAuth2AuthenticationFailureHandler);

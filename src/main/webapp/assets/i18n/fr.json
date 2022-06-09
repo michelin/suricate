@@ -1,5 +1,6 @@
 {
   "admin": "Admin",
+  "authentication.failed.with.providers": "Échec d'authentification",
   "back": "Retour",
   "background.color": "Couleur de fond",
   "branch": "Branche",

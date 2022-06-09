@@ -1,6 +1,7 @@
 package io.suricate.monitoring.utils.oauth2;
 
 import io.suricate.monitoring.model.enums.AuthenticationProvider;
+import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 
 import java.util.Arrays;
@@ -17,9 +18,25 @@ public class OAuth2Utils {
         String username = null;
 
         if (AuthenticationProvider.GITHUB.equals(provider)) {
-            username = user.getAttribute("login").toString().toLowerCase();
+            username = user.getAttribute("login");
         } else if (AuthenticationProvider.GITLAB.equals(provider)) {
-            username = user.getAttribute("username").toString().toLowerCase();
+            username = user.getAttribute("username");
+        }
+
+        return username;
+    }
+
+    /**
+     * From a given OIDC user and an authentication method, extract the username
+     * @param user The OAuth2 user
+     * @param provider The authentication method
+     * @return The username
+     */
+    public static String extractUsername(OidcUser user, AuthenticationProvider provider) {
+        String username = null;
+
+        if (AuthenticationProvider.GITLAB.equals(provider)) {
+            username = user.getAttribute("nickname");
         }
 
         return username;
