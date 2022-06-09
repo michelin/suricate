@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SettingsComponent } from './settings.component';
+import { MockModule } from '../../../mock/mock.module';
 
 describe('SettingsComponent', () => {
   let component: SettingsComponent;
@@ -8,9 +9,9 @@ describe('SettingsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SettingsComponent ]
-    })
-    .compileComponents();
+      imports: [MockModule],
+      declarations: [SettingsComponent]
+    }).compileComponents();
   });
 
   beforeEach(() => {

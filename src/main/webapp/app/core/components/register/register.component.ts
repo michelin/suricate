@@ -14,27 +14,25 @@
  * limitations under the License.
  */
 
-import {Component, OnInit} from '@angular/core';
-import {FormGroup, Validators} from '@angular/forms';
-import {Router} from '@angular/router';
-import {catchError, flatMap} from 'rxjs/operators';
-import {throwError} from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { catchError, flatMap } from 'rxjs/operators';
+import { throwError } from 'rxjs';
 
-import {AuthenticationService} from '../../../shared/services/frontend/authentication/authentication.service';
-import {ToastService} from '../../../shared/services/frontend/toast/toast.service';
-import {Credentials} from '../../../shared/models/backend/user/credentials';
-import {ToastTypeEnum} from '../../../shared/enums/toast-type.enum';
-import {UserRequest} from '../../../shared/models/backend/user/user-request';
-import {AuthenticationProvider} from '../../../shared/enums/authentication-provider.enum';
-import {FormService} from '../../../shared/services/frontend/form/form.service';
-import {CustomValidator} from '../../../shared/validators/custom-validator';
-import {FormField} from '../../../shared/models/frontend/form/form-field';
-import {ButtonConfiguration} from '../../../shared/models/frontend/button/button-configuration';
-import {
-  RegisterFormFieldsService
-} from '../../../shared/services/frontend/form-fields/register-form-fields/register-form-fields.service';
-import {ButtonTypeEnum} from '../../../shared/enums/button-type.enum';
-import {HttpConfigurationService} from '../../../shared/services/backend/http-configuration/http-configuration.service';
+import { AuthenticationService } from '../../../shared/services/frontend/authentication/authentication.service';
+import { ToastService } from '../../../shared/services/frontend/toast/toast.service';
+import { Credentials } from '../../../shared/models/backend/user/credentials';
+import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
+import { UserRequest } from '../../../shared/models/backend/user/user-request';
+import { AuthenticationProvider } from '../../../shared/enums/authentication-provider.enum';
+import { FormService } from '../../../shared/services/frontend/form/form.service';
+import { CustomValidator } from '../../../shared/validators/custom-validator';
+import { FormField } from '../../../shared/models/frontend/form/form-field';
+import { ButtonConfiguration } from '../../../shared/models/frontend/button/button-configuration';
+import { RegisterFormFieldsService } from '../../../shared/services/frontend/form-fields/register-form-fields/register-form-fields.service';
+import { ButtonTypeEnum } from '../../../shared/enums/button-type.enum';
+import { HttpConfigurationService } from '../../../shared/services/backend/http-configuration/http-configuration.service';
 
 /**
  * Component used to register a new user

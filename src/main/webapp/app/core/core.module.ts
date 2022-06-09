@@ -26,7 +26,6 @@ import { HomeComponent } from './components/home/home.component';
 import { SettingsComponent } from './components/settings/settings.component';
 import { UxSettingsComponent } from './components/settings/ux-settings/ux-settings.component';
 import { SecuritySettingsComponent } from './components/settings/security-settings/security-settings.component';
-import {ClipboardModule} from "@angular/cdk/clipboard";
 
 @NgModule({
   imports: [RouterModule.forChild(coreRoutes), LayoutModule, SharedModule],

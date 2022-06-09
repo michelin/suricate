@@ -52,7 +52,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ProgressBarComponent } from './components/progress-bar/progress-bar.component';
 import { ActionsDialogComponent } from './components/actions-dialog/actions-dialog.component';
-import {ClipboardModule} from "@angular/cdk/clipboard";
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 @NgModule({
   imports: [

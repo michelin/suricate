@@ -30,7 +30,7 @@ import { RoleEnum } from '../../../enums/role.enum';
 import { UserRequest } from '../../../models/backend/user/user-request';
 import { AbstractHttpService } from '../../backend/abstract-http/abstract-http.service';
 import { HttpUserService } from '../../backend/http-user/http-user.service';
-import {EnvironmentService} from "../environment/environment.service";
+import { EnvironmentService } from '../environment/environment.service';
 
 /**
  * The authentication service
@@ -161,15 +161,13 @@ export class AuthenticationService {
   public authenticate(credentials: Credentials): Observable<AuthenticationResponse> {
     const url = `${AuthenticationService.authenticationApiEndpoint}/signin`;
 
-    return this.httpClient
-      .post<AuthenticationResponse>(url, credentials)
-      .pipe(
-        tap((authenticationResponse: AuthenticationResponse) => {
-          if (authenticationResponse && authenticationResponse.accessToken) {
-            AuthenticationService.setAccessToken(authenticationResponse.accessToken);
-          }
-        })
-      );
+    return this.httpClient.post<AuthenticationResponse>(url, credentials).pipe(
+      tap((authenticationResponse: AuthenticationResponse) => {
+        if (authenticationResponse && authenticationResponse.accessToken) {
+          AuthenticationService.setAccessToken(authenticationResponse.accessToken);
+        }
+      })
+    );
   }
 
   /**

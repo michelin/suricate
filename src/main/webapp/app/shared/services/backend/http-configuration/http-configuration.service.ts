@@ -16,11 +16,11 @@
  *
  */
 
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {AbstractHttpService} from '../abstract-http/abstract-http.service';
-import {AuthenticationProvider} from "../../../enums/authentication-provider.enum";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { AbstractHttpService } from '../abstract-http/abstract-http.service';
+import { AuthenticationProvider } from '../../../enums/authentication-provider.enum';
 
 /**
  * Configuration services manage http calls

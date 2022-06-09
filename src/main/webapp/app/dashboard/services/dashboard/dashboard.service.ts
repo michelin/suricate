@@ -57,12 +57,12 @@ export class DashboardService {
    */
   public shouldDisplayedReadOnly(dashboardToken: string): Observable<boolean> {
     return this.httpProjectService.getProjectUsers(dashboardToken).pipe(
-        map(dashboardUsers => {
-          return (
-              !AuthenticationService.isAdmin() &&
-              !dashboardUsers.some(user => user.username === AuthenticationService.getConnectedUser().username)
-          );
-        })
+      map(dashboardUsers => {
+        return (
+          !AuthenticationService.isAdmin() &&
+          !dashboardUsers.some(user => user.username === AuthenticationService.getConnectedUser().username)
+        );
+      })
     );
   }
 }

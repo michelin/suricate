@@ -15,5 +15,5 @@
  */
 
 export interface TokenRequest {
-    name: string;
+  name: string;
 }

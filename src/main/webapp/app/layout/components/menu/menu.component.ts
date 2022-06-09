@@ -14,20 +14,15 @@
  * limitations under the License.
  */
 
-import {Component, OnInit} from '@angular/core';
-import {AuthenticationService} from '../../../shared/services/frontend/authentication/authentication.service';
-import {Router} from '@angular/router';
-import {MenuService} from '../../../shared/services/frontend/menu/menu.service';
-import {IconEnum} from '../../../shared/enums/icon.enum';
-import {MaterialIconRecords} from '../../../shared/records/material-icon.record';
-import {SidenavService} from '../../../shared/services/frontend/sidenav/sidenav.service';
-import {
-  SettingsFormFieldsService
-} from '../../../shared/services/frontend/form-fields/settings-form-fields/settings-form-fields.service';
-import {HttpUserService} from '../../../shared/services/backend/http-user/http-user.service';
-import {HttpSettingService} from '../../../shared/services/backend/http-setting/http-setting.service';
-import {SettingsService} from '../../../core/services/settings.service';
-import {AuthenticationProvider} from "../../../shared/enums/authentication-provider.enum";
+import { Component, OnInit } from '@angular/core';
+import { AuthenticationService } from '../../../shared/services/frontend/authentication/authentication.service';
+import { Router } from '@angular/router';
+import { MenuService } from '../../../shared/services/frontend/menu/menu.service';
+import { IconEnum } from '../../../shared/enums/icon.enum';
+import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
+import { HttpSettingService } from '../../../shared/services/backend/http-setting/http-setting.service';
+import { SettingsService } from '../../../core/services/settings.service';
+import { AuthenticationProvider } from '../../../shared/enums/authentication-provider.enum';
 
 /**
  * Display the menu on the sidenav

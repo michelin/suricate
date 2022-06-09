@@ -38,12 +38,12 @@ export class AdminGuard implements CanActivate, CanActivateChild {
    * Can admin routes be activated or not ?
    */
   public canActivate(): Observable<boolean> {
-      if (AuthenticationService.isAdmin()) {
-          return of(true);
-      }
+    if (AuthenticationService.isAdmin()) {
+      return of(true);
+    }
 
-      this.router.navigate(['/home']);
-      return of(false);
+    this.router.navigate(['/home']);
+    return of(false);
   }
 
   /**

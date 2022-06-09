@@ -23,8 +23,8 @@ import { Injectable } from '@angular/core';
 
 import { ToastService } from '../services/frontend/toast/toast.service';
 import { ToastTypeEnum } from '../enums/toast-type.enum';
-import {AuthenticationService} from "../services/frontend/authentication/authentication.service";
-import {Router} from "@angular/router";
+import { AuthenticationService } from '../services/frontend/authentication/authentication.service';
+import { Router } from '@angular/router';
 
 /**
  * Interceptor that manage http errors
@@ -36,8 +36,7 @@ export class ErrorInterceptor implements HttpInterceptor {
    * @param router The router
    * @param toastService The toast service
    */
-  constructor(private router: Router,
-              private toastService: ToastService) {}
+  constructor(private router: Router, private toastService: ToastService) {}
 
   /**
    * Method that intercept the request

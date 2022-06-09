@@ -20,7 +20,7 @@ import { RegisterComponent } from './components/register/register.component';
 import { LoginComponent } from './components/login/login.component';
 import { AuthGuard } from '../shared/guards/auth/auth.guard';
 import { HomeComponent } from './components/home/home.component';
-import {SettingsComponent} from "./components/settings/settings.component";
+import { SettingsComponent } from './components/settings/settings.component';
 
 export const coreRoutes: Routes = [
   {
