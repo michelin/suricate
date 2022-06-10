@@ -44,9 +44,19 @@ public class LocalUser extends User implements OAuth2User, OidcUser {
     private io.suricate.monitoring.model.entities.User user;
 
     /**
-     * The OAuth2 attributes
+     * The OAuth2/OIDC attributes
      */
     private Map<String, Object> attributes;
+
+    /**
+     * The OIDC token
+     */
+    private OidcIdToken idToken;
+
+    /**
+     * The OIDC user info
+     */
+    private OidcUserInfo userInfo;
 
     /**
      * Constructor
@@ -58,6 +68,20 @@ public class LocalUser extends User implements OAuth2User, OidcUser {
                 user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList()));
         this.user = user;
         this.attributes = attributes;
+    }
+
+    /**
+     * Constructor
+     * @param user The user entity
+     * @param attributes The OAuth2 attributes
+     */
+    public LocalUser(io.suricate.monitoring.model.entities.User user, Map<String, Object> attributes, OidcIdToken idToken, OidcUserInfo userInfo) {
+        super(user.getUsername(), user.getPassword() == null ? StringUtils.EMPTY : user.getPassword(), true, true, true, true,
+                user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.getName())).collect(Collectors.toList()));
+        this.user = user;
+        this.attributes = attributes;
+        this.idToken = idToken;
+        this.userInfo = userInfo;
     }
 
     /**
@@ -80,16 +104,16 @@ public class LocalUser extends User implements OAuth2User, OidcUser {
 
     @Override
     public Map<String, Object> getClaims() {
-        return null;
+        return this.attributes;
     }
 
     @Override
     public OidcUserInfo getUserInfo() {
-        return null;
+        return this.userInfo;
     }
 
     @Override
     public OidcIdToken getIdToken() {
-        return null;
+        return this.idToken;
     }
 }

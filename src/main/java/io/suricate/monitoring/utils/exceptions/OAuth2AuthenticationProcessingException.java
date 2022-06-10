@@ -1,6 +1,5 @@
 package io.suricate.monitoring.utils.exceptions;
 
-import lombok.Getter;
 import org.springframework.security.core.AuthenticationException;
 
 /**

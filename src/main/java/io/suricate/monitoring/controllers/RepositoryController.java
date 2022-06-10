@@ -24,12 +24,11 @@ import io.suricate.monitoring.model.dto.api.repository.RepositoryRequestDto;
 import io.suricate.monitoring.model.dto.api.repository.RepositoryResponseDto;
 import io.suricate.monitoring.model.dto.api.widget.WidgetResponseDto;
 import io.suricate.monitoring.model.entities.Repository;
-import io.suricate.monitoring.services.git.GitService;
 import io.suricate.monitoring.services.api.RepositoryService;
+import io.suricate.monitoring.services.git.GitService;
 import io.suricate.monitoring.services.mapper.RepositoryMapper;
 import io.suricate.monitoring.services.mapper.WidgetMapper;
 import io.suricate.monitoring.utils.exceptions.ObjectNotFoundException;
-import io.suricate.monitoring.utils.exceptions.RepositorySyncException;
 import io.swagger.annotations.*;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,14 +37,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import org.springframework.transaction.annotation.Transactional;
-
 import java.io.IOException;
 import java.net.URI;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 

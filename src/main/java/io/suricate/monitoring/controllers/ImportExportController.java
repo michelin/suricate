@@ -118,12 +118,13 @@ public class ImportExportController {
         List<Repository> repositories = importDto.getRepositories()
                 .stream()
                 .map(repositoryMapper::toRepositoryEntity)
-                .peek(repository -> {
-                    // For existing repos, restore the ID
-                    Optional<Repository> repositoryOptional = repositoryService.findByName(repository.getName());
-                    repositoryOptional.ifPresent(value -> repository.setId(value.getId()));
-                })
                 .collect(Collectors.toList());
+
+        // For existing repos, restore the ID
+        repositories.forEach(repository -> {
+            Optional<Repository> repositoryOptional = repositoryService.findByName(repository.getName());
+            repositoryOptional.ifPresent(value -> repository.setId(value.getId()));
+        });
 
         List<Repository> nonExistingEnabledRepositories = repositories
                 .stream()

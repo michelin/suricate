@@ -16,20 +16,19 @@
 
 package io.suricate.monitoring.services.git;
 
-import io.suricate.monitoring.properties.ApplicationProperties;
-import io.suricate.monitoring.model.entities.Library;
 import io.suricate.monitoring.model.entities.Category;
+import io.suricate.monitoring.model.entities.Library;
 import io.suricate.monitoring.model.entities.Repository;
 import io.suricate.monitoring.model.enums.RepositoryTypeEnum;
-import io.suricate.monitoring.services.cache.CacheService;
+import io.suricate.monitoring.properties.ApplicationProperties;
 import io.suricate.monitoring.services.api.CategoryService;
 import io.suricate.monitoring.services.api.LibraryService;
 import io.suricate.monitoring.services.api.RepositoryService;
 import io.suricate.monitoring.services.api.WidgetService;
+import io.suricate.monitoring.services.cache.CacheService;
 import io.suricate.monitoring.services.nashorn.scheduler.NashornRequestWidgetExecutionScheduler;
 import io.suricate.monitoring.services.websocket.DashboardWebSocketService;
 import io.suricate.monitoring.utils.WidgetUtils;
-import io.suricate.monitoring.utils.exceptions.RepositorySyncException;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jgit.api.CloneCommand;
@@ -42,8 +41,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
-
 import org.springframework.transaction.annotation.Transactional;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;

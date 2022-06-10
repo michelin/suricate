@@ -1,6 +1,5 @@
 package io.suricate.monitoring.model.dto.api.widget;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import io.suricate.monitoring.model.dto.api.AbstractDto;
 import io.suricate.monitoring.model.dto.api.asset.AssetResponseDto;
 import io.suricate.monitoring.model.dto.api.category.CategoryResponseDto;

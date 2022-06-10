@@ -16,11 +16,11 @@
 
 package io.suricate.monitoring.services.api;
 
-import io.suricate.monitoring.security.LocalUser;
 import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
 import io.suricate.monitoring.model.entities.*;
 import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.repositories.ProjectRepository;
+import io.suricate.monitoring.security.LocalUser;
 import io.suricate.monitoring.services.specifications.ProjectSearchSpecification;
 import io.suricate.monitoring.services.websocket.DashboardWebSocketService;
 import io.suricate.monitoring.utils.SecurityUtils;
@@ -34,7 +34,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;

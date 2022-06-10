@@ -1,6 +1,5 @@
 package io.suricate.monitoring.configuration.jpa;
 
-import io.suricate.monitoring.security.LocalUser;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.context.SecurityContextHolder;

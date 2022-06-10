@@ -64,7 +64,7 @@ public class OIDCUserService extends OidcUserService {
 
             LOGGER.debug("Authenticated user <{}> with {}", username, userRequest.getClientRegistration().getRegistrationId());
 
-            return new LocalUser(user, oidcUser.getAttributes());
+            return new LocalUser(user, oidcUser.getAttributes(), oidcUser.getIdToken(), oidcUser.getUserInfo());
         } catch (Exception e) {
             LOGGER.error("An error occurred authenticating user <{}> with {} in OIDC mode", oidcUser.getName(), userRequest.getClientRegistration().getRegistrationId(), e);
             throw new OAuth2AuthenticationProcessingException(e.getMessage(), e.getCause());
