@@ -217,8 +217,8 @@ public class DashboardWebSocketService {
      * and a client materialized by its WebsocketClient.
      * Triggered when a new subscription to a dashboard is done.
      *
-     * Initialize a Nashorn request for each widget of the project.
-     * Schedule the Nashorn requests execution.
+     * If no client is connected to the dashboard already,
+     * initialize a Nashorn request for each widget of the project to refresh them.
      *
      * @param project         The connected project
      * @param websocketClient The related websocket client

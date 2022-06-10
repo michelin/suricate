@@ -86,7 +86,7 @@ export class AddWidgetToProjectWizardComponent extends WizardComponent implement
         let row = 1;
         let column = 1;
         if (widgets != null && widgets.length > 0) {
-          const widgetsByGrid = widgets.filter(widget => widget.gridId == this.gridId);
+          const widgetsByGrid = widgets.filter(widget => widget.gridId === this.gridId);
           while (
             widgetsByGrid.filter(widget => widget.widgetPosition.gridRow === row && widget.widgetPosition.gridColumn === column).length > 0
           ) {

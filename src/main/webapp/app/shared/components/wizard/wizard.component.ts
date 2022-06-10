@@ -30,8 +30,6 @@ import { FormField } from '../../models/frontend/form/form-field';
 import { WidgetConfigurationFormFieldsService } from '../../services/frontend/form-fields/widget-configuration-form-fields/widget-configuration-form-fields.service';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { ProjectWidgetFormStepsService } from '../../services/frontend/form-steps/project-widget-form-steps/project-widget-form-steps.service';
-import { HttpProjectService } from '../../services/backend/http-project/http-project.service';
-import { HttpProjectWidgetService } from '../../services/backend/http-project-widget/http-project-widget.service';
 
 /**
  * Generic component used to display wizards
@@ -124,7 +122,7 @@ export class WizardComponent implements OnInit {
    */
   public ngOnInit(): void {
     this.dashboardToken = this.activatedRoute.snapshot.params['dashboardToken'];
-    this.gridId = this.activatedRoute.snapshot.params['gridId'];
+    this.gridId = Number(this.activatedRoute.snapshot.params['gridId']);
 
     this.initWizardButtons();
     this.stepperFormGroup = this.formService.generateFormGroupForSteps(this.wizardConfiguration.steps);
