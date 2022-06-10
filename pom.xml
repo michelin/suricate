@@ -449,8 +449,8 @@
                     <to>
                         <image>docker.io/michelin/${project.artifactId}:${project.version}</image>
                         <tags>
-                            <tag>latest</tag>
                             <tag>${project.version}</tag>
+                            <tag>latest</tag>
                         </tags>
                     </to>
                 </configuration>
