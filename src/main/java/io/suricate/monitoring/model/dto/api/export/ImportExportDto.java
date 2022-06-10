@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,12 +24,6 @@ public class ImportExportDto extends AbstractDto {
      */
     @ApiModelProperty(value = "The repositories", dataType = "java.util.List")
     private List<ImportExportRepositoryDto> repositories = new ArrayList<>();
-
-    /**
-     * The libraries
-     */
-    @ApiModelProperty(value = "The libraries", dataType = "java.util.List")
-    private List<ImportExportLibraryDto> libraries = new ArrayList<>();
 
     /**
      * The projects

@@ -19,22 +19,11 @@ import org.mapstruct.Named;
 public abstract class ProjectGridMapper {
     /**
      * Map a project grid into a DTO
-     *
      * @param projectGrid The project grid to map
      * @return The project grid as DTO
      */
     @Named("toProjectGridDTO")
-    @Mapping(target = "widgets", ignore = true)
-    public abstract ProjectGridResponseDto toProjectGridDTONoWidgets(ProjectGrid projectGrid);
-
-    /**
-     * Map a project grid into an import export project DTO
-     * @param projectGrid The project grid to map
-     * @return The project grid as DTO
-     */
-    @Named("toImportExportProjectGridDTO")
-    @Mapping(target = "widgets", qualifiedByName = "toImportExportProjectWidgetDTO")
-    public abstract ImportExportProjectDto.ImportExportProjectGridDto toImportExportProjectGridDTO(ProjectGrid projectGrid);
+    public abstract ProjectGridResponseDto toProjectGridDTO(ProjectGrid projectGrid);
 
     /**
      * Map a project grid DTO into a project grid entity
@@ -47,6 +36,15 @@ public abstract class ProjectGridMapper {
     @Mapping(target = "time", constant = "60")
     @Mapping(target = "project", source = "project")
     public abstract ProjectGrid toProjectGridEntity(Project project);
+
+    /**
+     * Map a project grid into an import export project DTO
+     * @param projectGrid The project grid to map
+     * @return The project grid as DTO
+     */
+    @Named("toImportExportProjectGridDTO")
+    @Mapping(target = "widgets", qualifiedByName = "toImportExportProjectWidgetDTO")
+    public abstract ImportExportProjectDto.ImportExportProjectGridDto toImportExportProjectGridDTO(ProjectGrid projectGrid);
 
     /**
      * Map a project grid DTO into a project grid entity

@@ -19,6 +19,7 @@ package io.suricate.monitoring.services.api;
 import io.suricate.monitoring.model.entities.Library;
 import io.suricate.monitoring.model.entities.Repository;
 import io.suricate.monitoring.repositories.RepositoryRepository;
+import io.suricate.monitoring.services.git.GitService;
 import io.suricate.monitoring.services.specifications.RepositorySearchSpecification;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -38,17 +39,8 @@ public class RepositoryService {
     /**
      * The repository for repository
      */
-    private final RepositoryRepository repositoryRepository;
-
-    /**
-     * Constructor
-     *
-     * @param repositoryRepository The repository used for manage repository to inject
-     */
     @Autowired
-    public RepositoryService(final RepositoryRepository repositoryRepository) {
-        this.repositoryRepository = repositoryRepository;
-    }
+    private RepositoryRepository repositoryRepository;
 
     /**
      * Get all repositories
@@ -60,15 +52,6 @@ public class RepositoryService {
     @Transactional(readOnly = true)
     public Page<Repository> getAll(String search, Pageable pageable) {
         return repositoryRepository.findAll(new RepositorySearchSpecification(search), pageable);
-    }
-
-    /**
-     * Count the number of repositories
-     * @return The number of repositories
-     */
-    @Transactional(readOnly = true)
-    public Long count() {
-        return repositoryRepository.count();
     }
 
     /**
@@ -95,12 +78,11 @@ public class RepositoryService {
 
     /**
      * Get the repository by name
-     *
-     * @param name The repository name to find
+     * @param name The repository name
      * @return The repository as optional
      */
     @Transactional(readOnly = true)
-    public Optional<Repository> getOneByName(final String name) {
+    public Optional<Repository> findByName(final String name) {
         return repositoryRepository.findByName(name);
     }
 
@@ -116,6 +98,16 @@ public class RepositoryService {
     }
 
     /**
+     * Check if a repository exists by given name
+     * @param name The repository name
+     * @return true if it is, false otherwise
+     */
+    @Transactional(readOnly = true)
+    public boolean existsByName(final String name) {
+        return this.repositoryRepository.existsByName(name);
+    }
+
+    /**
      * Add or update a repository
      * @param repository The repository to process
      */
@@ -125,24 +117,11 @@ public class RepositoryService {
     }
 
     /**
-     * Create or update a list of repositories
-     * @param repositories All the repositories to create/update
-     * @return The created/updated repositories
+     * Add or update a list of repositories
+     * @param repositories All the repositories to add/update
      */
     @Transactional
-    public List<Repository> createUpdateRepositories(List<Repository> repositories) {
-        if (repositories == null) {
-            return Collections.emptyList();
-        }
-
-        for (Repository repository : repositories) {
-            Optional<Repository> repo = repositoryRepository.findByName(repository.getName());
-
-            repo.ifPresent(value -> repository.setId(value.getId()));
-        }
-
+    public void addOrUpdateRepositories(List<Repository> repositories) {
         repositoryRepository.saveAll(repositories);
-
-        return repositoryRepository.findAll();
     }
 }

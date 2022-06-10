@@ -16,21 +16,16 @@
 
 package io.suricate.monitoring.services.mapper;
 
-import io.suricate.monitoring.model.dto.api.export.ImportExportWidgetDto;
-import io.suricate.monitoring.model.dto.api.widget.WidgetRequestDto;
 import io.suricate.monitoring.model.dto.api.widget.WidgetResponseDto;
 import io.suricate.monitoring.model.entities.Widget;
 import io.suricate.monitoring.services.api.LibraryService;
-import io.suricate.monitoring.services.api.ProjectWidgetService;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -86,18 +81,6 @@ public abstract class WidgetMapper {
     public abstract WidgetResponseDto toWidgetWithoutCategoryParametersDTO(Widget widget);
 
     /**
-     * Map a widget into an import export DTO
-     *
-     * @param widget The widget to map
-     * @return The import export widget DTO
-     */
-    @Named("toImportExportWidgetDTO")
-    @Mapping(target = "image", source = "widget.image", qualifiedByName = "toImportExportAssetDTO")
-    @Mapping(target = "libraryTechnicalNames", expression = "java( widget.getLibraries() != null ? widget.getLibraries().stream().map(lib -> lib.getTechnicalName()).collect(Collectors.toList()) : null )")
-    @Mapping(target = "params", source = "widget.widgetParams", qualifiedByName = "toImportExportWidgetParameterDTO")
-    public abstract ImportExportWidgetDto toImportExportWidgetDTO(Widget widget);
-
-    /**
      * Map a list of widgets into a list of widgets DTOs
      *
      * @param widgets The list of widgets to map
@@ -106,15 +89,4 @@ public abstract class WidgetMapper {
     @Named("toWidgetsDTOs")
     @IterableMapping(qualifiedByName = "toWidgetDTO")
     public abstract List<WidgetResponseDto> toWidgetsDTOs(Collection<Widget> widgets);
-
-    /**
-     * Map an import export widget into an entity
-     * @param importExportWidgetDto The widget to map
-     * @return The widget entity
-     */
-    @Named("toWidgetEntity")
-    @Mapping(target = "image", qualifiedByName = "toAssetEntity")
-    @Mapping(target = "libraries", expression = "java( importExportWidgetDto.getLibraryTechnicalNames() != null && !importExportWidgetDto.getLibraryTechnicalNames().isEmpty() ? Sets.newHashSet(libraryService.findByTechnicalNameIn(importExportWidgetDto.getLibraryTechnicalNames())) : null )")
-    @Mapping(target = "widgetParams", source = "importExportWidgetDto.params", qualifiedByName = "toWidgetParameterEntity")
-    public abstract Widget toWidgetEntity(ImportExportWidgetDto importExportWidgetDto);
 }

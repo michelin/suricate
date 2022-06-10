@@ -20,7 +20,6 @@ package io.suricate.monitoring.utils.exceptions.constants;
 
 public class ErrorMessage {
     public static final String USER_NOT_ALLOWED_PROJECT = "The user is not allowed to modify this project";
-    public static final String USER_NOT_ALLOWED_GRID = "The user is not allowed to modify this project grid";
 
     /**
      * Constructor

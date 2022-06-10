@@ -18,7 +18,6 @@
 
 package io.suricate.monitoring.controllers;
 
-import io.suricate.monitoring.security.LocalUser;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.project.ProjectResponseDto;
 import io.suricate.monitoring.model.dto.api.projectgrid.ProjectGridRequestDto;
@@ -26,10 +25,12 @@ import io.suricate.monitoring.model.dto.api.projectgrid.ProjectGridResponseDto;
 import io.suricate.monitoring.model.entities.Project;
 import io.suricate.monitoring.model.entities.ProjectGrid;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
+import io.suricate.monitoring.security.LocalUser;
 import io.suricate.monitoring.services.api.ProjectGridService;
 import io.suricate.monitoring.services.api.ProjectService;
 import io.suricate.monitoring.services.mapper.ProjectGridMapper;
 import io.suricate.monitoring.utils.exceptions.ApiException;
+import io.suricate.monitoring.utils.exceptions.GridNotFoundException;
 import io.suricate.monitoring.utils.exceptions.ObjectNotFoundException;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,11 +41,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-import static io.suricate.monitoring.utils.exceptions.constants.ErrorMessage.USER_NOT_ALLOWED_GRID;
 import static io.suricate.monitoring.utils.exceptions.constants.ErrorMessage.USER_NOT_ALLOWED_PROJECT;
 
 /**
@@ -57,32 +55,20 @@ public class ProjectGridController {
     /**
      * Project service
      */
-    private final ProjectService projectService;
+    @Autowired
+    private ProjectService projectService;
 
     /**
      * Project grid service
      */
-    private final ProjectGridService projectGridService;
+    @Autowired
+    private ProjectGridService projectGridService;
 
     /**
      * The mapper that transform domain/dto objects
      */
-    private final ProjectGridMapper projectGridMapper;
-
-    /**
-     * Constructor for dependency injection
-     * @param projectGridMapper The project grid mapper
-     * @param projectService The project service
-     * @param projectGridService The project grid service
-     */
     @Autowired
-    public ProjectGridController(final ProjectService projectService,
-                                 final ProjectGridMapper projectGridMapper,
-                                 final ProjectGridService projectGridService) {
-        this.projectGridMapper = projectGridMapper;
-        this.projectService = projectService;
-        this.projectGridService = projectGridService;
-    }
+    private ProjectGridMapper projectGridMapper;
 
     /**
      * Add a new grid to a project
@@ -119,7 +105,7 @@ public class ProjectGridController {
         return ResponseEntity
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(projectGridMapper.toProjectGridDTONoWidgets(projectGrid));
+                .body(projectGridMapper.toProjectGridDTO(projectGrid));
     }
 
     /**
@@ -134,7 +120,8 @@ public class ProjectGridController {
             @ApiResponse(code = 204, message = "Project updated"),
             @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
             @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
-            @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class)
+            @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class),
+            @ApiResponse(code = 404, message = "Grid not found for the project", response = ApiErrorDto.class)
     })
     @PutMapping(value = "/v1/projectGrids/{projectToken}")
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -153,13 +140,12 @@ public class ProjectGridController {
             throw new ApiException(USER_NOT_ALLOWED_PROJECT, ApiErrorEnum.NOT_AUTHORIZED);
         }
 
-        List<Long> gridIds = projectRequestDto.getGrids()
-                .stream()
-                .map(ProjectGridRequestDto.GridRequestDto::getId)
-                .collect(Collectors.toList());
-        if (project.getGrids().stream().noneMatch(grid -> gridIds.contains(grid.getId()))) {
-            throw new ApiException(USER_NOT_ALLOWED_GRID, ApiErrorEnum.NOT_AUTHORIZED);
-        }
+        // Check given grids belonging to given project
+        projectRequestDto.getGrids().forEach(givenGrid -> {
+            if (project.getGrids().stream().noneMatch(grid -> grid.getId().equals(givenGrid.getId()))) {
+                throw new GridNotFoundException(givenGrid.getId(), projectToken);
+            }
+        });
 
         projectGridService.updateAll(project, projectRequestDto);
 
@@ -178,7 +164,8 @@ public class ProjectGridController {
             @ApiResponse(code = 204, message = "Project deleted"),
             @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
             @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
-            @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class)
+            @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class),
+            @ApiResponse(code = 404, message = "Grid not found for the project", response = ApiErrorDto.class)
     })
     @DeleteMapping(value = "/v1/projectGrids/{projectToken}/{gridId}")
     @PreAuthorize("hasRole('ROLE_USER')")
@@ -188,7 +175,6 @@ public class ProjectGridController {
                                                @ApiParam(name = "gridId", value = "The grid id", required = true)
                                                @PathVariable("gridId") Long gridId) {
         Optional<Project> projectOptional = projectService.getOneByToken(projectToken);
-
         if (!projectOptional.isPresent()) {
             throw new ObjectNotFoundException(Project.class, projectToken);
         }
@@ -199,7 +185,7 @@ public class ProjectGridController {
         }
 
         if (project.getGrids().stream().noneMatch(grid -> grid.getId().equals(gridId))) {
-            throw new ApiException(USER_NOT_ALLOWED_GRID, ApiErrorEnum.NOT_AUTHORIZED);
+            throw new GridNotFoundException(gridId, projectToken);
         }
 
         projectGridService.deleteByProjectIdAndId(project, gridId);

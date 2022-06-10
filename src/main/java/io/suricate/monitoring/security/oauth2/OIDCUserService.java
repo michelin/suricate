@@ -53,7 +53,7 @@ public class OIDCUserService extends OidcUserService {
 
             String firstname = oidcUser.getAttribute("name").toString().split(" ")[0];
             String lastname = oidcUser.getAttribute("name").toString().split(" ")[1];
-            String avatarUrl = oidcUser.getAttribute("avatar_url");
+            String avatarUrl = oidcUser.getAttribute("picture");
 
             User user = userService.registerUser(username, firstname, lastname, email, avatarUrl, authenticationMethod);
 

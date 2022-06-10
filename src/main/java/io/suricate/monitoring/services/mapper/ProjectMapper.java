@@ -71,14 +71,14 @@ public abstract class ProjectMapper {
      * @param project The project to map
      * @return The project as DTO
      */
-    @Named("toProjectDTONoWidgets")
+    @Named("toProjectDTONoLibrary")
     @Mapping(target = "gridProperties.maxColumn", source = "project.maxColumn")
     @Mapping(target = "gridProperties.widgetHeight", source = "project.widgetHeight")
     @Mapping(target = "gridProperties.cssStyle", source = "project.cssStyle")
     @Mapping(target = "screenshotToken", expression = "java( project.getScreenshot() != null ? io.suricate.monitoring.utils.IdUtils.encrypt(project.getScreenshot().getId()) : null )")
     @Mapping(target = "image", source = "project.screenshot", qualifiedByName = "toAssetDTO")
     @Mapping(target = "grids", qualifiedByName = "toProjectGridDTO")
-    public abstract ProjectResponseDto toProjectDTONoWidgets(Project project);
+    public abstract ProjectResponseDto toProjectDTONoLibrary(Project project);
 
     /**
      * Map a project into a DTO without assets
@@ -94,6 +94,25 @@ public abstract class ProjectMapper {
     public abstract ProjectResponseDto toProjectDTONoAsset(Project project);
 
     /**
+     * Map a list of projects into a list of DTOs
+     *
+     * @param projects The list of project to map
+     * @return The list of projects as DTOs
+     */
+    @Named("toProjectsDTOs")
+    @IterableMapping(qualifiedByName = "toProjectDTONoLibrary")
+    public abstract List<ProjectResponseDto> toProjectsDTOs(List<Project> projects);
+
+    /**
+     * Map a project DTO into a project entity
+     *
+     * @param projectRequestDto The project DTO to map
+     * @return The project as entity
+     */
+    @Named("toProjectEntity")
+    public abstract Project toProjectEntity(ProjectRequestDto projectRequestDto);
+
+    /**
      * Map a project into an import export project DTO
      * @param project The project to map
      * @return The project as DTO
@@ -105,25 +124,6 @@ public abstract class ProjectMapper {
     @Mapping(target = "image", source = "project.screenshot", qualifiedByName = "toImportExportAssetDTO")
     @Mapping(target = "grids", qualifiedByName = "toImportExportProjectGridDTO")
     public abstract ImportExportProjectDto toImportExportProjectDTO(Project project);
-
-    /**
-     * Map a list of projects into a list of DTOs
-     *
-     * @param projects The list of project to map
-     * @return The list of projects as DTOs
-     */
-    @Named("toProjectsDTOs")
-    @IterableMapping(qualifiedByName = "toProjectDTONoWidgets")
-    public abstract List<ProjectResponseDto> toProjectsDTOs(List<Project> projects);
-
-    /**
-     * Map a project DTO into a project entity
-     *
-     * @param projectRequestDto The project DTO to map
-     * @return The project as entity
-     */
-    @Named("toProjectEntity")
-    public abstract Project toProjectEntity(ProjectRequestDto projectRequestDto);
 
     /**
      * Map an import project DTO into a project entity

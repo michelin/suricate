@@ -30,15 +30,6 @@ import org.mapstruct.Named;
 @Mapper(componentModel = "spring")
 public abstract class RepositoryMapper {
     /**
-     * Map a repository into an import export repository DTO
-     *
-     * @param repository The repository to map
-     * @return The import export repository as DTO
-     */
-    @Named("toImportExportRepositoryDTO")
-    public abstract ImportExportRepositoryDto toImportExportRepositoryDTO(Repository repository);
-
-    /**
      * Map a repository into a DTO.
      * Ignore the widgets repository
      *
@@ -57,6 +48,15 @@ public abstract class RepositoryMapper {
      */
     @Named("toRepositoryEntity")
     public abstract Repository toRepositoryEntity(Long id, RepositoryRequestDto repositoryRequestDto);
+
+    /**
+     * Map a repository into an import export repository DTO
+     *
+     * @param repository The repository to map
+     * @return The import export repository as DTO
+     */
+    @Named("toImportExportRepositoryDTO")
+    public abstract ImportExportRepositoryDto toImportExportRepositoryDTO(Repository repository);
 
     /**
      * Map an import export repository DTO as entity

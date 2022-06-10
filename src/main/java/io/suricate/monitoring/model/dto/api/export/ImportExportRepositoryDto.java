@@ -8,8 +8,10 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 /**
  * Export object used to export repository data
@@ -66,10 +68,4 @@ public class ImportExportRepositoryDto extends AbstractDto {
      */
     @ApiModelProperty(value = "True if the repository is enabled for update", required = true)
     private boolean enabled;
-
-    /**
-     * The categories
-     */
-    @ApiModelProperty(value = "The categories", dataType = "java.util.List")
-    private List<ImportExportCategoryDto> categories = new ArrayList<>();
 }

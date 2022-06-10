@@ -47,6 +47,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -325,7 +326,7 @@ public class UserController {
 
     /**
      * Get all user tokens
-     * @param authentication The authentication containing the authenticated user
+     * @param connectedUser The authentication principal as LocalUser
      * @return A list of tokens
      */
     @ApiOperation(value = "Get all user tokens", response = List.class)
@@ -335,11 +336,11 @@ public class UserController {
     })
     @GetMapping(value = "/v1/users/tokens")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<List<TokenResponseDto>> getTokens(@ApiIgnore Authentication authentication) {
+    public ResponseEntity<List<TokenResponseDto>> getTokens(@ApiIgnore @AuthenticationPrincipal LocalUser connectedUser) {
         return ResponseEntity
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(tokenMapper.toTokensDTOs(tokenService.findAllByUser(((LocalUser) authentication.getPrincipal()).getUser())));
+                .body(tokenMapper.toTokensDTOs(tokenService.findAllByUser(connectedUser.getUser())));
     }
 
     /**
@@ -355,8 +356,8 @@ public class UserController {
     @PostMapping(value = "/v1/users/tokens")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<TokenResponseDto> createToken(@ApiIgnore Authentication authentication,
-                                        @ApiParam(name = "tokenRequestDto", value = "The token request", required = true)
-                                        @RequestBody TokenRequestDto tokenRequestDto) {
+                                                        @ApiParam(name = "tokenRequestDto", value = "The token request", required = true)
+                                                        @RequestBody TokenRequestDto tokenRequestDto) {
         String tokenValue = jwtUtils.createToken(authentication, true);
 
         return ResponseEntity
@@ -376,12 +377,10 @@ public class UserController {
     })
     @DeleteMapping(value = "/v1/users/tokens/{tokenName}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Void> deleteToken(@ApiIgnore Authentication authentication,
+    public ResponseEntity<Void> deleteToken(@ApiIgnore @AuthenticationPrincipal LocalUser connectedUser,
                                             @ApiParam(name = "tokenName", value = "The token name", required = true)
                                             @PathVariable("tokenName") String tokenName) {
-        User connectedUser = ((LocalUser) authentication.getPrincipal()).getUser();
-
-        Optional<Token> tokenOptional = tokenService.findByNameAndUser(tokenName, connectedUser);
+        Optional<Token> tokenOptional = tokenService.findByNameAndUser(tokenName, connectedUser.getUser());
         if (!tokenOptional.isPresent()) {
             throw new ObjectNotFoundException(Token.class, tokenName);
         }

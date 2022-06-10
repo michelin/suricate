@@ -1,5 +1,6 @@
 package io.suricate.monitoring.configuration.jpa;
 
+import io.suricate.monitoring.security.LocalUser;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,6 +24,6 @@ public class JPAAuditorAwareImpl implements AuditorAware<String> {
             return Optional.of("APPLICATION");
         }
 
-        return Optional.of(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+        return Optional.of(((LocalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getName());
     }
 }

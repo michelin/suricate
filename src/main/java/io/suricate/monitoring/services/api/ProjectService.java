@@ -146,16 +146,12 @@ public class ProjectService {
     }
 
     /**
-     * Create a new project for a user
-     *
-     * @param user    The user how create the project
+     * Create a new project
      * @param project The project to instantiate
      * @return The project instantiate
      */
     @Transactional
-    public Project createProject(User user, Project project) {
-        project.getUsers().add(user);
-
+    public Project createProject(Project project) {
         if (StringUtils.isBlank(project.getToken())) {
             project.setToken(stringEncryptor.encrypt(UUID.randomUUID().toString()));
         }
@@ -164,16 +160,25 @@ public class ProjectService {
     }
 
     /**
+     * Create a new project for a user
+     * @param user    The user how create the project
+     * @param project The project to instantiate
+     * @return The project instantiate
+     */
+    @Transactional
+    public Project createProjectForUser(User user, Project project) {
+        project.getUsers().add(user);
+        return createProject(project);
+    }
+
+    /**
      * Create or update a list of projects
      * @param projects All the projects to create/update
+     * @param connectedUser The connected user
      * @return The created/updated projects
      */
     @Transactional
-    public List<Project> createUpdateProjects(List<Project> projects) {
-        if (projects == null) {
-            return Collections.emptyList();
-        }
-
+    public List<Project> createUpdateProjects(List<Project> projects, User connectedUser) {
         for (Project project : projects) {
             Optional<Project> projectOptional = projectRepository.findProjectByToken(project.getToken());
 
@@ -185,25 +190,39 @@ public class ProjectService {
                 assetService.save(project.getScreenshot());
             }
 
-            projectOptional.ifPresent(value -> project.setId(value.getId()));
-
-            projectRepository.save(project);
-
-            if (project.getGrids() != null && !project.getGrids().isEmpty()) {
-                // No unique identifier to update existing grid from imported data so just drop them and recreate them
-                projectGridService.deleteByProjectId(project.getId());
-
-                project.getGrids().forEach(projectGrid -> {
-                    projectGrid.setProject(project);
-
-                    ProjectGrid savedProjectGrid = projectGridService.create(projectGrid);
-
-                    savedProjectGrid.getWidgets().forEach(projectWidget -> {
-                        projectWidget.setProjectGrid(savedProjectGrid);
-                        projectWidgetService.create(projectWidget);
-                    });
-                });
+            if (projectOptional.isPresent()) {
+                project.setId(projectOptional.get().getId());
+                project.setUsers(projectOptional.get().getUsers());
+                createProject(project);
+            } else {
+                createProjectForUser(connectedUser, project);
             }
+
+            project.getGrids().forEach(projectGrid -> {
+                Optional<ProjectGrid> projectGridOptional = projectGridService.findByIdAndProjectToken(projectGrid.getId(), project.getToken());
+                if (projectGridOptional.isPresent()) {
+                    projectGrid.setId(projectGridOptional.get().getId());
+                } else {
+                    // Reset id to not steal a grid from a project to another
+                    projectGrid.setId(null);
+                }
+
+                projectGrid.setProject(project);
+                projectGridService.create(projectGrid);
+
+                projectGrid.getWidgets().forEach(projectWidget -> {
+                    Optional<ProjectWidget> projectWidgetOptional = projectWidgetService.findByIdAndProjectGridId(projectWidget.getId(), projectGrid.getId());
+                    if (projectWidgetOptional.isPresent()) {
+                        projectWidget.setId(projectWidgetOptional.get().getId());
+                    } else {
+                        // Reset id to not steal a grid from a project to another
+                        projectWidget.setId(null);
+                    }
+
+                    projectWidget.setProjectGrid(projectGrid);
+                    projectWidgetService.create(projectWidget);
+                });
+            });
         }
 
         return projectRepository.findAll(new ProjectSearchSpecification(StringUtils.EMPTY));
@@ -278,9 +297,8 @@ public class ProjectService {
 
     /**
      * Check if the connected user can access to this project
-     *
      * @param project        The project
-     * @param authentication The connected user
+     * @param connectedUser The connected user
      * @return True if he can, false otherwise
      */
     public boolean isConnectedUserCanAccessToProject(final Project project, final LocalUser connectedUser) {

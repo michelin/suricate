@@ -180,7 +180,7 @@ public class ProjectController {
             throw new ObjectNotFoundException(User.class, connectedUser.getUsername());
         }
 
-        Project project = projectService.createProject(userOptional.get(),
+        Project project = projectService.createProjectForUser(userOptional.get(),
                 projectMapper.toProjectEntity(projectRequestDto));
 
         project.getGrids().add(projectGridService.create(projectGridMapper.toProjectGridEntity(project)));
@@ -286,7 +286,7 @@ public class ProjectController {
         }
 
         Project project = projectOptional.get();
-        if (!projectService.isConnectedUserCanAccessToProject(project, null)) {
+        if (!projectService.isConnectedUserCanAccessToProject(project, connectedUser)) {
             throw new ApiException(USER_NOT_ALLOWED_PROJECT, ApiErrorEnum.NOT_AUTHORIZED);
         }
 
@@ -517,15 +517,10 @@ public class ProjectController {
     })
     @GetMapping(value = "/v1/projects/currentUser")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<List<ProjectResponseDto>> getAllForCurrentUser(@ApiIgnore Principal principal) {
-        Optional<User> userOptional = userService.getOneByUsername(principal.getName());
-        if (!userOptional.isPresent()) {
-            throw new ObjectNotFoundException(User.class, principal.getName());
-        }
-
+    public ResponseEntity<List<ProjectResponseDto>> getAllForCurrentUser(@ApiIgnore @AuthenticationPrincipal LocalUser connectedUser) {
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(projectMapper.toProjectsDTOs(projectService.getAllByUser(userOptional.get())));
+            .body(projectMapper.toProjectsDTOs(projectService.getAllByUser(connectedUser.getUser())));
     }
 }

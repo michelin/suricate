@@ -53,11 +53,6 @@ export class WizardComponent implements OnInit {
   private readonly formService: FormService;
 
   /**
-   * The HTTP project widgets service
-   */
-  public readonly httpProjectWidgetsService: HttpProjectWidgetService;
-
-  /**
    * Frontend service used to help on the widget configuration form fields creation
    */
   private readonly widgetConfigurationFormFieldsService: WidgetConfigurationFormFieldsService;
@@ -122,7 +117,6 @@ export class WizardComponent implements OnInit {
     this.widgetConfigurationFormFieldsService = injector.get(WidgetConfigurationFormFieldsService);
     this.activatedRoute = injector.get(ActivatedRoute);
     this.router = injector.get(Router);
-    this.httpProjectWidgetsService = injector.get(HttpProjectWidgetService);
   }
 
   /**

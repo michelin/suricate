@@ -129,7 +129,6 @@ public class ProjectWidgetService {
 
     /**
      * Get all the project widget in database
-     *
      * @return The list of project widget
      */
     public List<ProjectWidget> getAll() {
@@ -138,13 +137,23 @@ public class ProjectWidgetService {
 
     /**
      * Get the project widget by id
-     *
      * @param projectWidgetId The project widget id
      * @return The project widget
      */
     @Transactional(readOnly = true)
     public Optional<ProjectWidget> getOne(final Long projectWidgetId) {
         return projectWidgetRepository.findById(projectWidgetId);
+    }
+
+    /**
+     * Get the project widget by id
+     * @param id The project widget id
+     * @param gridId The grid id
+     * @return The project widget
+     */
+    @Transactional(readOnly = true)
+    public Optional<ProjectWidget> findByIdAndProjectGridId(final Long id, final Long gridId) {
+        return projectWidgetRepository.findByIdAndProjectGridId(id, gridId);
     }
 
     /**

@@ -30,8 +30,10 @@ import io.suricate.monitoring.services.api.ProjectService;
 import io.suricate.monitoring.services.api.ProjectWidgetService;
 import io.suricate.monitoring.services.mapper.ProjectWidgetMapper;
 import io.suricate.monitoring.utils.exceptions.ApiException;
+import io.suricate.monitoring.utils.exceptions.GridNotFoundException;
 import io.suricate.monitoring.utils.exceptions.ObjectNotFoundException;
 import io.swagger.annotations.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -47,7 +49,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static io.suricate.monitoring.utils.exceptions.constants.ErrorMessage.USER_NOT_ALLOWED_GRID;
 import static io.suricate.monitoring.utils.exceptions.constants.ErrorMessage.USER_NOT_ALLOWED_PROJECT;
 
 /**
@@ -60,32 +61,20 @@ public class  ProjectWidgetController {
     /**
      * The project widget service
      */
-    private final ProjectWidgetService projectWidgetService;
+    @Autowired
+    private ProjectWidgetService projectWidgetService;
 
     /**
      * The model/DTO for project widget
      */
-    private final ProjectWidgetMapper projectWidgetMapper;
+    @Autowired
+    private ProjectWidgetMapper projectWidgetMapper;
 
     /**
      * The project service
      */
-    private final ProjectService projectService;
-
-    /**
-     * Constructor
-     *
-     * @param projectWidgetService The project widget service
-     * @param projectWidgetMapper  The mapper to inject
-     * @param projectService       The project service to inject
-     */
-    public ProjectWidgetController(final ProjectWidgetService projectWidgetService,
-                                   final ProjectWidgetMapper projectWidgetMapper,
-                                   final ProjectService projectService) {
-        this.projectWidgetService = projectWidgetService;
-        this.projectWidgetMapper = projectWidgetMapper;
-        this.projectService = projectService;
-    }
+    @Autowired
+    private ProjectService projectService;
 
     /**
      * Get a project widget
@@ -215,12 +204,12 @@ public class  ProjectWidgetController {
         }
 
         Project project = projectOptional.get();
-        if (project.getGrids().stream().noneMatch(grid -> grid.getId().equals(gridId))) {
-            throw new ApiException(USER_NOT_ALLOWED_GRID, ApiErrorEnum.NOT_AUTHORIZED);
-        }
-
         if (!this.projectService.isConnectedUserCanAccessToProject(project, connectedUser)) {
             throw new ApiException(USER_NOT_ALLOWED_PROJECT, ApiErrorEnum.NOT_AUTHORIZED);
+        }
+
+        if (project.getGrids().stream().noneMatch(grid -> grid.getId().equals(gridId))) {
+            throw new GridNotFoundException(gridId, projectToken);
         }
 
         ProjectWidget projectWidget = this.projectWidgetMapper.toProjectWidgetEntity(projectWidgetRequestDto, gridId);

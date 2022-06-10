@@ -1,10 +1,13 @@
 package io.suricate.monitoring.repositories;
 
+import io.suricate.monitoring.model.entities.Project;
 import io.suricate.monitoring.model.entities.ProjectGrid;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
+
+import java.util.Optional;
 
 @Repository
 public interface ProjectGridRepository extends JpaRepository<ProjectGrid, Long>, JpaSpecificationExecutor<ProjectGrid> {
@@ -16,8 +19,10 @@ public interface ProjectGridRepository extends JpaRepository<ProjectGrid, Long>,
     void deleteByProjectIdAndId(Long projectId, Long id);
 
     /**
-     * Delete grid by the project id
-     * @param projectId the project id
+     * Find a grid by id and project token
+     * @param id The ID
+     * @param token The project token
+     * @return The grid
      */
-    void deleteByProjectId(Long projectId);
+    Optional<ProjectGrid> findByIdAndProjectToken(Long id, String token);
 }

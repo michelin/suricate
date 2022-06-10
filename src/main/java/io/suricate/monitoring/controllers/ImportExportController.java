@@ -2,25 +2,29 @@ package io.suricate.monitoring.controllers;
 
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.export.*;
-import io.suricate.monitoring.model.entities.*;
+import io.suricate.monitoring.model.entities.Project;
+import io.suricate.monitoring.model.entities.Repository;
+import io.suricate.monitoring.security.LocalUser;
 import io.suricate.monitoring.services.api.*;
-import io.suricate.monitoring.services.mapper.CategoryMapper;
-import io.suricate.monitoring.services.mapper.LibraryMapper;
+import io.suricate.monitoring.services.git.GitService;
 import io.suricate.monitoring.services.mapper.ProjectMapper;
 import io.suricate.monitoring.services.mapper.RepositoryMapper;
-import io.suricate.monitoring.utils.exceptions.ObjectNotFoundException;
-import io.suricate.monitoring.utils.exceptions.OperationNotPermittedException;
 import io.swagger.annotations.*;
 import org.apache.commons.lang3.StringUtils;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
 
+import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -31,16 +35,34 @@ import java.util.stream.Collectors;
 @Api(value = "Export Controller", tags = {"Exports"})
 public class ImportExportController {
     /**
-     * The import/export service
-     */
-    @Autowired
-    private ImportExportService importExportService;
-
-    /**
      * The repository service
      */
     @Autowired
     private RepositoryService repositoryService;
+
+    /**
+     * The project service
+     */
+    @Autowired
+    private ProjectService projectService;
+
+    /**
+     * Git service
+     */
+    @Autowired
+    private GitService gitService;
+
+    /**
+     * The repository mapper
+     */
+    @Autowired
+    private RepositoryMapper repositoryMapper;
+
+    /**
+     * The project mapper
+     */
+    @Autowired
+    private ProjectMapper projectMapper;
 
     /**
      * Export the application data
@@ -55,7 +77,19 @@ public class ImportExportController {
     @GetMapping(value = "/v1/export")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<ImportExportDto> exports() {
-        ImportExportDto exportDto = importExportService.getDataToExport();
+        List<ImportExportRepositoryDto> importExportRepositories = repositoryService
+                .getAll(StringUtils.EMPTY, Pageable.unpaged())
+                .map(repositoryMapper::toImportExportRepositoryDTO)
+                .getContent();
+
+        List<ImportExportProjectDto> projects = projectService
+                .getAll(StringUtils.EMPTY, Pageable.unpaged())
+                .map(projectMapper::toImportExportProjectDTO)
+                .getContent();
+
+        ImportExportDto exportDto = new ImportExportDto();
+        exportDto.setRepositories(importExportRepositories);
+        exportDto.setProjects(projects);
 
         return ResponseEntity
                 .ok()
@@ -75,13 +109,36 @@ public class ImportExportController {
     })
     @PostMapping(value = "/v1/import")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Void> imports(@ApiParam(name = "importDto", value = "The data to import", required = true)
-                                             @RequestBody ImportExportDto importDto) {
-        if (repositoryService.count() > 0) {
-            throw new OperationNotPermittedException("This Suricate instance already has data");
+    public ResponseEntity<Void> imports(@ApiIgnore @AuthenticationPrincipal LocalUser connectedUser,
+                                        @ApiParam(name = "importDto", value = "The data to import", required = true)
+                                        @RequestBody ImportExportDto importDto) throws GitAPIException, IOException {
+        // Map repositories into entity
+        List<Repository> repositories = importDto.getRepositories()
+                .stream()
+                .map(repositoryMapper::toRepositoryEntity)
+                .peek(repository -> {
+                    // For existing repos, restore the ID
+                    Optional<Repository> repositoryOptional = repositoryService.findByName(repository.getName());
+                    repositoryOptional.ifPresent(value -> repository.setId(value.getId()));
+                })
+                .collect(Collectors.toList());
+
+        List<Repository> nonExistingEnabledRepositories = repositories
+                .stream()
+                .filter(repository -> repository.getId() == null && repository.isEnabled())
+                .collect(Collectors.toList());
+
+        repositoryService.addOrUpdateRepositories(repositories);
+        for (Repository repository : nonExistingEnabledRepositories) {
+            gitService.updateWidgetsFromRepository(repository);
         }
 
-        importExportService.importData(importDto);
+        List<Project> projects = importDto.getProjects()
+                .stream()
+                .map(projectMapper::toProjectEntity)
+                .collect(Collectors.toList());
+
+        projectService.createUpdateProjects(projects, connectedUser.getUser());
 
         return ResponseEntity
                 .ok()

@@ -1,5 +1,6 @@
 package io.suricate.monitoring.model.dto.api.export;
 
+import io.suricate.monitoring.model.dto.api.AbstractDto;
 import io.suricate.monitoring.model.dto.api.asset.AssetResponseDto;
 import io.suricate.monitoring.model.dto.api.export.ImportExportAssetDto;
 import io.suricate.monitoring.model.dto.api.project.GridPropertiesResponseDto;
@@ -22,18 +23,18 @@ import java.util.List;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value = "ImportProjectRequestDto", description = "Import a project")
-public class ImportExportProjectDto {
-    /**
-     * The project name
-     */
-    @ApiModelProperty(value = "The project name", required = true)
-    private String name;
-
+public class ImportExportProjectDto extends AbstractDto {
     /**
      * The project token
      */
     @ApiModelProperty(value = "The project token", required = true)
     private String token;
+
+    /**
+     * The project name
+     */
+    @ApiModelProperty(value = "The project name", required = true)
+    private String name;
 
     /**
      * In case of rotations, should the progress bar be displayed for the project
@@ -57,10 +58,16 @@ public class ImportExportProjectDto {
      * The list of grids
      */
     @ApiModelProperty(value = "The list of grids")
-    List<ImportExportProjectGridDto> grids;
+    List<ImportExportProjectGridDto> grids = new ArrayList<>();
 
     @Data
     public static class ImportExportProjectGridDto {
+        /**
+         * The ID
+         */
+        @ApiModelProperty(value = "The ID")
+        private Long id;
+
         /**
          * The time
          */
@@ -71,10 +78,16 @@ public class ImportExportProjectDto {
          * The widgets to import
          */
         @ApiModelProperty(value = "The list of grids")
-        List<ImportExportProjectWidgetDto> widgets;
+        List<ImportExportProjectWidgetDto> widgets = new ArrayList<>();
 
         @Data
         public static class ImportExportProjectWidgetDto {
+            /**
+             * The ID
+             */
+            @ApiModelProperty(value = "The ID")
+            private Long id;
+
             /**
              * The related widget technical name
              */

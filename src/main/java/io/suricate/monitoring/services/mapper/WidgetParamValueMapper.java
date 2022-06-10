@@ -16,18 +16,14 @@
 
 package io.suricate.monitoring.services.mapper;
 
-import io.suricate.monitoring.model.dto.api.export.ImportExportWidgetDto;
 import io.suricate.monitoring.model.dto.api.widget.WidgetParamValueResponseDto;
-import io.suricate.monitoring.model.entities.WidgetParam;
 import io.suricate.monitoring.model.entities.WidgetParamValue;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Manage the generation DTO/Model objects for widgetParamValue class
@@ -44,14 +40,6 @@ public abstract class WidgetParamValueMapper {
     public abstract WidgetParamValueResponseDto toWidgetParameterValueDTO(WidgetParamValue widgetParamValue);
 
     /**
-     * Map a widget parameter value into an import export widget parameter value DTO
-     * @param widgetParamValue The widget parameter value to map
-     * @return The import export widget parameter value as DTO
-     */
-    @Named("toImportExportWidgetParameterValueDTO")
-    public abstract ImportExportWidgetDto.ImportExportWidgetParamDto.ImportExportWidgetParamValueDto toImportExportWidgetParameterValueDTO(WidgetParamValue widgetParamValue);
-
-    /**
      * Map a list of widget parameter values into a list of widget parameter values DTOs
      *
      * @param widgetParamValues The list of widget parameter value to map
@@ -60,12 +48,4 @@ public abstract class WidgetParamValueMapper {
     @Named("toWidgetParameterValuesDTOs")
     @IterableMapping(qualifiedByName = "toWidgetParameterValueDTO")
     public abstract List<WidgetParamValueResponseDto> toWidgetParameterValuesDTOs(Collection<WidgetParamValue> widgetParamValues);
-
-    /**
-     * Map an import export widget parameter into an entity
-     * @param importExportWidgetParamValueDto The widget parameter to map
-     * @return The widget parameter as entity
-     */
-    @Named("toWidgetParameterValueEntity")
-    public abstract WidgetParamValue toWidgetParameterValueEntity(ImportExportWidgetDto.ImportExportWidgetParamDto.ImportExportWidgetParamValueDto importExportWidgetParamValueDto);
 }

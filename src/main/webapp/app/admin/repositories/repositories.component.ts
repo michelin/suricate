@@ -27,6 +27,7 @@ import { RepositoryTypeEnum } from '../../shared/enums/repository-type.enum';
 import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
 import { Observable } from 'rxjs/internal/Observable';
 import { EMPTY, of } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
 
 /**
  * Component used to display the list of git repositories
@@ -175,10 +176,20 @@ export class RepositoriesComponent extends ListComponent<Repository> {
       repositoryRequest.password = null;
     }
 
-    this.httpRepositoryService.update(this.repository.id, repositoryRequest).subscribe(() => {
-      this.toastService.sendMessage('repository.update.success', ToastTypeEnum.SUCCESS);
-      super.refreshList();
-    });
+    this.disableAllButtons = true;
+    this.toastService.sendMessage('repository.synchronize.running', ToastTypeEnum.INFO);
+
+    this.httpRepositoryService.update(this.repository.id, repositoryRequest).subscribe(
+      () => {
+        this.disableAllButtons = false;
+        this.toastService.sendMessage('repository.update.success', ToastTypeEnum.SUCCESS);
+        super.refreshList();
+      },
+      () => {
+        this.disableAllButtons = false;
+        this.toastService.sendMessage('repository.synchronize.failure', ToastTypeEnum.DANGER);
+      }
+    );
   }
 
   /**
@@ -188,11 +199,19 @@ export class RepositoriesComponent extends ListComponent<Repository> {
    */
   private reloadRepository(repository: Repository): void {
     this.disableAllButtons = true;
-    this.httpRepositoryService.reload(repository.id).subscribe(() => {
-      this.disableAllButtons = false;
-      this.toastService.sendMessage('repository.synchronize.success', ToastTypeEnum.SUCCESS);
-      super.refreshList();
-    });
+    this.toastService.sendMessage('repository.synchronize.running', ToastTypeEnum.INFO);
+
+    this.httpRepositoryService.reload(repository.id).subscribe(
+      () => {
+        this.disableAllButtons = false;
+        this.toastService.sendMessage('repository.synchronize.success', ToastTypeEnum.SUCCESS);
+        super.refreshList();
+      },
+      () => {
+        this.disableAllButtons = false;
+        this.toastService.sendMessage('repository.synchronize.failure', ToastTypeEnum.DANGER);
+      }
+    );
   }
 
   /**

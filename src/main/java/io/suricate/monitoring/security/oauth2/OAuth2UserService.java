@@ -59,7 +59,7 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
 
             String firstname = oAuth2User.getAttribute("name").toString().split(" ")[0];
             String lastname = oAuth2User.getAttribute("name").toString().split(" ")[1];
-            String avatarUrl = oAuth2User.getAttribute("avatar_url");
+            String avatarUrl = oAuth2User.getAttribute("picture");
 
             User user = userService.registerUser(username, firstname, lastname, email, avatarUrl, authenticationMethod);
 
