@@ -16,23 +16,19 @@
 
 package io.suricate.monitoring.security.database;
 
-import io.suricate.monitoring.security.LocalUser;
 import io.suricate.monitoring.model.entities.User;
+import io.suricate.monitoring.security.LocalUser;
 import io.suricate.monitoring.services.api.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * This service has for role to retrieve users in database when DATABASE Type is selected on properties file

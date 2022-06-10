@@ -61,7 +61,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
        String targetUrl = determineTargetUrl(request, response, authentication);
 
         if (response.isCommitted()) {
-            LOGGER.debug("Response has already been committed. Unable to redirect to " + targetUrl);
+            LOGGER.debug("Response has already been committed. Unable to redirect to {}", targetUrl);
             return;
         }
 
@@ -86,7 +86,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         if (!redirectUri.isPresent()) {
             redirectUri = Optional.of(request.getHeader("Referer"));
-            LOGGER.debug(String.format("Using url %s from Referer header", request.getHeader("Referer")));
+            redirectUri.ifPresent(redirect -> LOGGER.debug("Using url {} from Referer header", request.getHeader("Referer")));
         }
 
         String targetUrl = redirectUri.orElse(getDefaultTargetUrl());

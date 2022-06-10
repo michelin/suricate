@@ -1,10 +1,9 @@
 package io.suricate.monitoring.security.filter;
 
-import io.suricate.monitoring.security.LocalUser;
-import io.suricate.monitoring.utils.jwt.JwtUtils;
-import io.suricate.monitoring.security.oauth2.OAuth2UserService;
 import io.suricate.monitoring.model.entities.User;
+import io.suricate.monitoring.security.LocalUser;
 import io.suricate.monitoring.services.api.UserService;
+import io.suricate.monitoring.utils.jwt.JwtUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,7 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     /**
      * The logger
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger(OAuth2UserService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(TokenAuthenticationFilter.class);
 
     /**
      * The token provider

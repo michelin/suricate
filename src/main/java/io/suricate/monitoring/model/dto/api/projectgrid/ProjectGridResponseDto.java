@@ -1,16 +1,11 @@
 package io.suricate.monitoring.model.dto.api.projectgrid;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import io.suricate.monitoring.model.dto.api.AbstractDto;
-import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetResponseDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @NoArgsConstructor

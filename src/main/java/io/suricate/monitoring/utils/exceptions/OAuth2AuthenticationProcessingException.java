@@ -9,12 +9,6 @@ import org.springframework.security.core.AuthenticationException;
  */
 public class OAuth2AuthenticationProcessingException extends AuthenticationException {
     /**
-     * An error code associated to the exception
-     */
-    @Getter
-    private String errorCode;
-
-    /**
      * Constructor
      * @param msg The message
      * @param cause The cause
@@ -29,15 +23,5 @@ public class OAuth2AuthenticationProcessingException extends AuthenticationExcep
      */
     public OAuth2AuthenticationProcessingException(String msg) {
         super(msg);
-    }
-
-    /**
-     * Constructor
-     * @param msg The message
-     * @param errorCode The error code
-     */
-    public OAuth2AuthenticationProcessingException(String msg, String errorCode) {
-        super(msg);
-        this.errorCode = errorCode;
     }
 }

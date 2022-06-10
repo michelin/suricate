@@ -183,7 +183,7 @@ public class UserService {
      * @return true if it is, false otherwise
      */
     @Transactional(readOnly = true)
-    boolean existsByUsername(String username) {
+    public boolean existsByUsername(String username) {
         return userRepository.existsByUsername(username);
     }
 

@@ -1,10 +1,7 @@
 package io.suricate.monitoring.model.dto.api.export;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
-import io.suricate.monitoring.model.dto.api.asset.AssetResponseDto;
-import io.suricate.monitoring.model.dto.api.export.ImportExportAssetDto;
 import io.suricate.monitoring.model.dto.api.project.GridPropertiesResponseDto;
-import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetPositionRequestDto;
 import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetPositionResponseDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -12,7 +9,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
 import java.util.ArrayList;
 import java.util.List;
 

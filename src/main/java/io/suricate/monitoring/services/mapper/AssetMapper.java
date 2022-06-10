@@ -22,7 +22,6 @@ import io.suricate.monitoring.model.dto.api.asset.AssetResponseDto;
 import io.suricate.monitoring.model.dto.api.export.ImportExportAssetDto;
 import io.suricate.monitoring.model.entities.Asset;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.springframework.stereotype.Component;
 

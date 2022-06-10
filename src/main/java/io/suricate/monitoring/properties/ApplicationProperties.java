@@ -41,7 +41,6 @@ import java.util.List;
 @PropertySource("classpath:application.properties")
 @ConfigurationProperties(prefix = "application", ignoreUnknownFields = false)
 public class ApplicationProperties {
-
     /**
      * Cors properties
      */

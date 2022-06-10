@@ -5,7 +5,6 @@ import io.suricate.monitoring.model.enums.AuthenticationProvider;
 import io.suricate.monitoring.security.LocalUser;
 import io.suricate.monitoring.services.api.UserService;
 import io.suricate.monitoring.utils.exceptions.OAuth2AuthenticationProcessingException;
-import io.suricate.monitoring.utils.oauth2.OAuth2Utils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +22,7 @@ public class OIDCUserService extends OidcUserService {
     /**
      * The logger
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger(OAuth2UserService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(OIDCUserService.class);
 
     /**
      * The user service

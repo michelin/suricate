@@ -16,21 +16,21 @@
 
 package io.suricate.monitoring.services.api;
 
-import io.suricate.monitoring.model.entities.*;
+import io.suricate.monitoring.model.entities.Library;
+import io.suricate.monitoring.model.entities.Project;
+import io.suricate.monitoring.model.entities.ProjectGrid;
 import io.suricate.monitoring.repositories.LibraryRepository;
-import io.suricate.monitoring.services.specifications.CategorySearchSpecification;
 import io.suricate.monitoring.services.specifications.LibrarySearchSpecification;
 import io.suricate.monitoring.utils.IdUtils;
-import io.suricate.monitoring.utils.logging.LogExecutionTime;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
