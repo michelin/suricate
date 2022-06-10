@@ -16,7 +16,9 @@
 
 package io.suricate.monitoring.security.ldap;
 
+import io.suricate.monitoring.model.entities.User;
 import io.suricate.monitoring.properties.ApplicationProperties;
+import io.suricate.monitoring.security.LocalUser;
 import io.suricate.monitoring.services.api.UserService;
 import io.suricate.monitoring.utils.exceptions.ConfigurationException;
 import org.apache.commons.lang3.StringUtils;
@@ -27,13 +29,15 @@ import org.springframework.ldap.core.AuthenticationSource;
 import org.springframework.ldap.core.DirContextOperations;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.ldap.DefaultSpringSecurityContextSource;
 import org.springframework.security.ldap.userdetails.LdapUserDetailsMapper;
 import org.springframework.security.ldap.userdetails.UserDetailsContextMapper;
 
 import javax.annotation.PostConstruct;
+import java.util.Collections;
+import java.util.Optional;
 
 /**
  * The LDAP authentication
@@ -44,38 +48,27 @@ public class LdapAuthentication {
     /**
      * The user service
      */
-    private final UserService userService;
+    @Autowired
+    private UserService userService;
 
     /**
      * The LDAP properties
      */
-    private final ApplicationProperties.Ldap ldapProperties;
+    @Autowired
+    private ApplicationProperties applicationProperties;
 
     /**
      * The LDAP authorities populator
      */
-    private final UserDetailsServiceLdapAuthoritiesPopulator userDetailsServiceLdapAuthoritiesPopulator;
-
-    /**
-     * Constructor
-     *
-     * @param userService The user service
-     * @param applicationProperties The application properties
-     * @param userDetailsServiceLdapAuthoritiesPopulator The LDAP authorities populator
-     */
     @Autowired
-    public LdapAuthentication(UserService userService, ApplicationProperties applicationProperties, UserDetailsServiceLdapAuthoritiesPopulator userDetailsServiceLdapAuthoritiesPopulator) {
-        this.userService = userService;
-        this.userDetailsServiceLdapAuthoritiesPopulator = userDetailsServiceLdapAuthoritiesPopulator;
-        this.ldapProperties = applicationProperties.authentication.ldap;
-    }
+    private UserDetailsServiceLdapAuthoritiesPopulator userDetailsServiceLdapAuthoritiesPopulator;
 
     /**
      * Check the ldap configuration before launching the Application
      */
     @PostConstruct
     private void checkLdapConfiguration() {
-        if (StringUtils.isBlank(ldapProperties.url)) {
+        if (StringUtils.isBlank(applicationProperties.getAuthentication().getLdap().url)) {
             throw new ConfigurationException("The Ldap url is mandatory when the provider is ldap", "application.authentication.ldap.url");
         }
     }
@@ -90,12 +83,12 @@ public class LdapAuthentication {
         auth.ldapAuthentication()
             .userDetailsContextMapper(userDetailsContextMapper())
             .ldapAuthoritiesPopulator(userDetailsServiceLdapAuthoritiesPopulator)
-            .userSearchFilter(ldapProperties.userSearchFilter)
-            .groupRoleAttribute(ldapProperties.groupRoleAttribute)
-            .groupSearchBase(ldapProperties.groupSearchBase)
-            .groupSearchFilter(ldapProperties.groupSearchFilter)
-            .rolePrefix(ldapProperties.rolePrefix)
-            .userSearchBase(ldapProperties.userSearchBase)
+            .userSearchFilter(applicationProperties.getAuthentication().getLdap().userSearchFilter)
+            .groupRoleAttribute(applicationProperties.getAuthentication().getLdap().groupRoleAttribute)
+            .groupSearchBase(applicationProperties.getAuthentication().getLdap().groupSearchBase)
+            .groupSearchFilter(applicationProperties.getAuthentication().getLdap().groupSearchFilter)
+            .rolePrefix(applicationProperties.getAuthentication().getLdap().rolePrefix)
+            .userSearchBase(applicationProperties.getAuthentication().getLdap().userSearchBase)
             .contextSource(contextSource());
     }
 
@@ -107,7 +100,13 @@ public class LdapAuthentication {
         return new LdapUserDetailsMapper() {
             @Override
             public UserDetails mapUserFromContext(DirContextOperations ctx, String username, java.util.Collection<? extends GrantedAuthority> authorities) {
-                return new User(username, StringUtils.EMPTY, authorities);
+                Optional<User> currentUser = userService.getOneByUsername(username);
+
+                if (!currentUser.isPresent()) {
+                    throw new UsernameNotFoundException("The specified user has not been found");
+                }
+
+                return new LocalUser(currentUser.get(), Collections.emptyMap());
             }
         };
     }
@@ -117,22 +116,23 @@ public class LdapAuthentication {
      * @return The default context source configured
      */
     private DefaultSpringSecurityContextSource contextSource() {
-        DefaultSpringSecurityContextSource contextSource = new DefaultSpringSecurityContextSource(ldapProperties.url);
+        DefaultSpringSecurityContextSource contextSource = new DefaultSpringSecurityContextSource(applicationProperties.getAuthentication().getLdap().url);
 
-        if (!StringUtils.isEmpty(ldapProperties.referral)) {
-            contextSource.setReferral(ldapProperties.referral);
+        if (!StringUtils.isEmpty(applicationProperties.getAuthentication().getLdap().referral)) {
+            contextSource.setReferral(applicationProperties.getAuthentication().getLdap().referral);
         }
 
-        if (!StringUtils.isEmpty(ldapProperties.username) && !StringUtils.isEmpty(ldapProperties.password) ) {
+        if (!StringUtils.isEmpty(applicationProperties.getAuthentication().getLdap().username)
+                && !StringUtils.isEmpty(applicationProperties.getAuthentication().getLdap().password) ) {
             contextSource.setAuthenticationSource(new AuthenticationSource() {
                 @Override
                 public String getPrincipal() {
-                    return ldapProperties.username;
+                    return applicationProperties.getAuthentication().getLdap().username;
                 }
 
                 @Override
                 public String getCredentials() {
-                    return ldapProperties.password;
+                    return applicationProperties.getAuthentication().getLdap().password;
                 }
             });
         }

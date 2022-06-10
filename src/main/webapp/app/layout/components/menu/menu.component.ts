@@ -90,6 +90,13 @@ export class MenuComponent implements OnInit {
   }
 
   /**
+   * Is the connected user logged in by idp or not ?
+   */
+  public isConnectedByIdp(): boolean {
+    return this.connectedUser.idp != null;
+  }
+
+  /**
    * Is the connected user logged in with GitHub
    */
   public isConnectedWithGithub(): boolean {

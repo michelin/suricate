@@ -11,19 +11,17 @@ import java.util.Optional;
  * Update auditing column at each request
  */
 public class JPAAuditorAwareImpl implements AuditorAware<String> {
-
     /**
      * Get the current logged in user
-     *
      * @return The auditor username
      */
     @NotNull
     @Override
     public Optional<String> getCurrentAuditor() {
-        if(SecurityContextHolder.getContext().getAuthentication() == null) {
+        if (SecurityContextHolder.getContext().getAuthentication() == null) {
             return Optional.of("APPLICATION");
         }
 
-        return Optional.of(((LocalUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getName());
+        return Optional.of((SecurityContextHolder.getContext().getAuthentication().getName()));
     }
 }

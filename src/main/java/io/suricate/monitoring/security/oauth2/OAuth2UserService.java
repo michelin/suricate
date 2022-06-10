@@ -47,7 +47,13 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
                     .findAny()
                     .orElseThrow(() -> new OAuth2AuthenticationProcessingException(String.format("ID provider %s is not recognized", userRequest.getClientRegistration().getRegistrationId())));
 
-            String username = OAuth2Utils.extractUsername(oAuth2User, authenticationMethod);
+            String username = null;
+            if (oAuth2User.getAttribute("login") != null) {
+                username = oAuth2User.getAttribute("login");
+            } else if (oAuth2User.getAttribute("username") != null ) {
+                username = oAuth2User.getAttribute("username");
+            }
+
             if (StringUtils.isEmpty(username)) {
                 throw new OAuth2AuthenticationProcessingException(String.format("Username not found from %s", userRequest.getClientRegistration().getRegistrationId()));
             }
@@ -59,7 +65,13 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
 
             String firstname = oAuth2User.getAttribute("name").toString().split(" ")[0];
             String lastname = oAuth2User.getAttribute("name").toString().split(" ")[1];
-            String avatarUrl = oAuth2User.getAttribute("picture");
+
+            String avatarUrl = null;
+            if (oAuth2User.getAttribute("avatar_url") != null) {
+                avatarUrl = oAuth2User.getAttribute("avatar_url");
+            } else if (oAuth2User.getAttribute("picture") != null ) {
+                avatarUrl = oAuth2User.getAttribute("picture");
+            }
 
             User user = userService.registerUser(username, firstname, lastname, email, avatarUrl, authenticationMethod);
 

@@ -41,7 +41,7 @@ public class OIDCUserService extends OidcUserService {
                     .findAny()
                     .orElseThrow(() -> new OAuth2AuthenticationProcessingException(String.format("ID provider %s is not recognized", userRequest.getClientRegistration().getRegistrationId())));
 
-            String username = OAuth2Utils.extractUsername(oidcUser, authenticationMethod);
+            String username = oidcUser.getAttribute("nickname");
             if (StringUtils.isEmpty(username)) {
                 throw new OAuth2AuthenticationProcessingException(String.format("Username not found from %s", userRequest.getClientRegistration().getRegistrationId()));
             }
@@ -53,7 +53,13 @@ public class OIDCUserService extends OidcUserService {
 
             String firstname = oidcUser.getAttribute("name").toString().split(" ")[0];
             String lastname = oidcUser.getAttribute("name").toString().split(" ")[1];
-            String avatarUrl = oidcUser.getAttribute("picture");
+
+            String avatarUrl = null;
+            if (oidcUser.getAttribute("avatar_url") != null) {
+                avatarUrl = oidcUser.getAttribute("avatar_url");
+            } else if (oidcUser.getAttribute("picture") != null ) {
+                avatarUrl = oidcUser.getAttribute("picture");
+            }
 
             User user = userService.registerUser(username, firstname, lastname, email, avatarUrl, authenticationMethod);
 

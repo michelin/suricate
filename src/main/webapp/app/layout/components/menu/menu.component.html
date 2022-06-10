@@ -3,7 +3,7 @@
   <div id="user-section" class="sidenav-section">
     <div class="avatar-container">
       <div class="avatar">
-        <img *ngIf="connectedUser.avatarUrl" src="{{connectedUser.avatarUrl}}" />
+        <img *ngIf="connectedUser.avatarUrl" src="{{ connectedUser.avatarUrl }}" />
         <span *ngIf="!connectedUser.avatarUrl">{{ getInitials() }}</span>
       </div>
     </div>
@@ -17,7 +17,7 @@
                 <div class="firstname-lastname">{{ connectedUser.firstname }} {{ connectedUser.lastname }}</div>
                 <div>{{ connectedUser.username }}</div>
               </div>
-              <div class="idp-icon">
+              <div *ngIf="isConnectedByIdp()" class="idp-icon">
                 <img *ngIf="isConnectedWithGithub()" src="../../../../../assets/images/github-white.svg" />
                 <img *ngIf="isConnectedWithGitlab()" src="../../../../../assets/images/gitlab.svg" />
               </div>

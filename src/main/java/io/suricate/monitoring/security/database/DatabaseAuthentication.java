@@ -28,28 +28,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 @ConditionalOnProperty(name = "application.authentication.provider", havingValue = "database")
 public class DatabaseAuthentication {
-
     /**
      * User details service for database connection type
      */
-    private final UserDetailsDatabaseService userDetailsDatabaseService;
+    @Autowired
+    private UserDetailsDatabaseService userDetailsDatabaseService;
 
     /**
      * Password encoder/decoder service
      */
-    private final PasswordEncoder passwordEncoder;
-
-    /**
-     * Constructor
-     *
-     * @param userDetailsDatabaseService User Details service injection
-     * @param passwordEncoder Password encoder injection
-     */
     @Autowired
-    public DatabaseAuthentication(UserDetailsDatabaseService userDetailsDatabaseService, final PasswordEncoder passwordEncoder) {
-        this.userDetailsDatabaseService = userDetailsDatabaseService;
-        this.passwordEncoder = passwordEncoder;
-    }
+    private PasswordEncoder passwordEncoder;
 
     /**
      * Database configuration

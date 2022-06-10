@@ -72,7 +72,7 @@ public class UserDetailsServiceLdapAuthoritiesPopulator implements LdapAuthoriti
         String email = userData.getStringAttribute(applicationProperties.authentication.ldap.mailAttributName);
         AuthenticationProvider authenticationMethod = AuthenticationProvider.LDAP;
 
-        User registeredUser = userService.registerUser(username.toLowerCase(), firstname, lastname, email, StringUtils.EMPTY, authenticationMethod);
+        User registeredUser = userService.registerUser(username, firstname, lastname, email, StringUtils.EMPTY, authenticationMethod);
 
         return registeredUser.getRoles()
                 .stream()
