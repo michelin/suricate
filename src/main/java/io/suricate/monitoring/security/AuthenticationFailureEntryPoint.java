@@ -16,7 +16,7 @@
  *
  */
 
-package io.suricate.monitoring.configuration.web;
+package io.suricate.monitoring.security;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;

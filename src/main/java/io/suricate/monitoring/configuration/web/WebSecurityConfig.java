@@ -16,6 +16,8 @@
 
 package io.suricate.monitoring.configuration.web;
 
+import io.suricate.monitoring.properties.ApplicationProperties;
+import io.suricate.monitoring.security.AuthenticationFailureEntryPoint;
 import io.suricate.monitoring.security.filter.TokenAuthenticationFilter;
 import io.suricate.monitoring.security.oauth2.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,16 +68,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private OIDCUserService oidcUserService;
 
     /**
-     * The authentication success handler
-     */
-    @Autowired
-    private OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
-
-    /**
      * The authentication failure handler
      */
     @Autowired
     private OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
+
+    /**
+     * The application properties
+     */
+    @Autowired
+    private ApplicationProperties applicationProperties;
 
     /**
      * Configure the web security of the application
@@ -136,8 +138,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .userService(userService)
                     .oidcUserService(oidcUserService)
                 .and()
-                    .successHandler(oAuth2AuthenticationSuccessHandler)
+                    .successHandler(oAuth2AuthenticationSuccessHandler())
                     .failureHandler(oAuth2AuthenticationFailureHandler);
+    }
+
+    /**
+     * Handler processing OAuth2 successful authentications
+     * @return The OAuth2 authentication success handler bean
+     */
+    @Bean
+    public OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler() {
+        OAuth2AuthenticationSuccessHandler handler = new OAuth2AuthenticationSuccessHandler();
+        handler.setDefaultTargetUrl(applicationProperties.getAuthentication().getOauth2().getDefaultTargetUrl());
+        return handler;
     }
 
     /**

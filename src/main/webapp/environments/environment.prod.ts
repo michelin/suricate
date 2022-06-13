@@ -19,7 +19,7 @@ export const environment = {
   version: require('../../../../package.json').version,
   environment: 'Production',
   backend_url: '',
-  oauth2_frontend_redirect_url: '/login',
+  oauth2_frontend_redirect_url: '',
 
   // Configuration for WebSockets
   wsHeartbeatIncoming: 0,

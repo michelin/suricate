@@ -83,6 +83,11 @@ public class ApplicationProperties {
         public final Jwt jwt = new Jwt();
 
         /**
+         * OAuth2 configuration
+         */
+        public final OAuth2 oauth2 = new OAuth2();
+
+        /**
          * Authentication provider
          */
         @Pattern(regexp = "ldap|database")
@@ -176,6 +181,18 @@ public class ApplicationProperties {
          */
         @NotNull
         public String signingKey;
+    }
+
+    /**
+     * Hold the OAuth2 properties info
+     */
+    @Getter
+    @Setter
+    public static class OAuth2 {
+        /**
+         * A default redirect URL after being logged in with OAuth2
+         */
+        public String defaultTargetUrl;
     }
 
     /**

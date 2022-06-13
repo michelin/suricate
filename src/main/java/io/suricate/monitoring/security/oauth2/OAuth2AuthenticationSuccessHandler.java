@@ -73,7 +73,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
      * Determine the host to redirect after being successfully authenticated.
      * First, try to get the host from the HTTP cookie attached on the IDP response.
      * If empty, try to get the host from the referer.
-     * If still empty, get a default / host.
+     * If still empty, get a default host.
      * Build a JWT token and add it as a parameter to the response
      * @param request The request which is the response of the IDP
      * @param response The response to send to the host that authenticated successfully
@@ -85,7 +85,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         Optional<String> redirectUri = CookieUtils.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME).map(Cookie::getValue);
 
         if (!redirectUri.isPresent()) {
-            redirectUri = Optional.of(request.getHeader("Referer"));
+            redirectUri = Optional.ofNullable(request.getHeader("Referer"));
             redirectUri.ifPresent(redirect -> LOGGER.debug("Using url {} from Referer header", request.getHeader("Referer")));
         }
 
