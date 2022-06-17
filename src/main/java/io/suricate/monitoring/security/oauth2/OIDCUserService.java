@@ -30,6 +30,12 @@ public class OIDCUserService extends OidcUserService {
     @Autowired
     private UserService userService;
 
+    /**
+     * Load a user after he has been successfully authenticated with OIDC ID providers
+     * @param userRequest The user information
+     * @return An OIDC user
+     * @throws OAuth2AuthenticationException Any OAuth2 authentication exception
+     */
     @Override
     public OidcUser loadUser(OidcUserRequest userRequest) throws OAuth2AuthenticationException {
         OidcUser oidcUser = super.loadUser(userRequest);
