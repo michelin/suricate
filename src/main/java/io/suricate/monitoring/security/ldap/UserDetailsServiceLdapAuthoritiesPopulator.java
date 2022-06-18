@@ -16,9 +16,9 @@
 
 package io.suricate.monitoring.security.ldap;
 
+import io.suricate.monitoring.model.entities.User;
 import io.suricate.monitoring.model.enums.AuthenticationProvider;
 import io.suricate.monitoring.properties.ApplicationProperties;
-import io.suricate.monitoring.model.entities.User;
 import io.suricate.monitoring.services.api.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -31,7 +31,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.ldap.userdetails.LdapAuthoritiesPopulator;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.Collection;
 import java.util.stream.Collectors;
 
 /**

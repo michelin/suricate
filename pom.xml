@@ -21,17 +21,11 @@
     </parent>
 
     <properties>
-        <!-- Default packaging type -->
 	    <packaging.type>jar</packaging.type>
-        <!-- Java version -->
         <java.version>1.8</java.version>
-        <!-- Mapstruct version -->
         <org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
-        <!-- Apache DS version -->
         <apacheds.version>2.0.0.AM26</apacheds.version>
-        <!-- Encoding -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <!-- Sonar -->
         <sonar.organization>michelin</sonar.organization>
         <sonar.projectKey>michelin_suricate</sonar.projectKey>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
@@ -299,6 +293,12 @@
         <dependency>
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-yaml</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk15on</artifactId>
+            <version>1.70</version>
         </dependency>
     </dependencies>
 

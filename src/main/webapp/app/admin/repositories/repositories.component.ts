@@ -27,7 +27,6 @@ import { RepositoryTypeEnum } from '../../shared/enums/repository-type.enum';
 import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
 import { Observable } from 'rxjs/internal/Observable';
 import { EMPTY, of } from 'rxjs';
-import { HttpErrorResponse } from '@angular/common/http';
 
 /**
  * Component used to display the list of git repositories

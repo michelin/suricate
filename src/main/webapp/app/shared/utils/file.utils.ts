@@ -17,7 +17,6 @@
  */
 
 import { Observable } from 'rxjs';
-import { ImageUtils } from './image.utils';
 
 /**
  * Utils class for images

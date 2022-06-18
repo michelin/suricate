@@ -17,11 +17,9 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
-import { flatMap, map, switchMap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { AuthenticationService } from '../../../shared/services/frontend/authentication/authentication.service';
 import { NumberUtils } from '../../../shared/utils/number.utils';
-import { HttpUserService } from '../../../shared/services/backend/http-user/http-user.service';
-import { User } from '../../../shared/models/backend/user/user';
 
 /**
  * The dashboard service

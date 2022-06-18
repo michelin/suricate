@@ -23,7 +23,6 @@ import { IconEnum } from '../../../../enums/icon.enum';
 import { CssService } from '../../css/css.service';
 import { CustomValidator } from '../../../../validators/custom-validator';
 import { TranslateService } from '@ngx-translate/core';
-import { ProjectGrid } from '../../../../models/backend/project-grid/project-grid';
 
 /**
  * Service used to build the form fields related to a project

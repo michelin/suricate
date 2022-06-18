@@ -18,7 +18,6 @@
 
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
-import { FormStep } from '../../../models/frontend/form/form-step';
 
 @Component({
   selector: 'suricate-slide-toggle',

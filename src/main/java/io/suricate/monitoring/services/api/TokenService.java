@@ -4,13 +4,11 @@ import io.suricate.monitoring.model.entities.Token;
 import io.suricate.monitoring.model.entities.User;
 import io.suricate.monitoring.repositories.TokenRepository;
 import io.suricate.monitoring.security.LocalUser;
-import io.suricate.monitoring.utils.jwt.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 

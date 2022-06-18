@@ -16,7 +16,7 @@
  *
  */
 
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -60,7 +60,7 @@ export class AuthenticationService {
   /**
    * The access token local storage key
    */
-  private static readonly ACCESS_TOKEN_KEY = 'SURICATE_ACCESS_TOKEN';
+  private static readonly ACCESS_TOKEN_KEY = 'jwt';
 
   /**
    * Auth0 service used to manage JWT with Angular
@@ -120,7 +120,8 @@ export class AuthenticationService {
    * Used to know if the connected user is admin or not
    */
   public static isAdmin(): boolean {
-    return AuthenticationService.decodeAccessToken().authorities.includes(RoleEnum.ROLE_ADMIN);
+    const token = AuthenticationService.decodeAccessToken();
+    return token.authorities && token.authorities.includes(RoleEnum.ROLE_ADMIN);
   }
 
   /**
@@ -143,11 +144,14 @@ export class AuthenticationService {
     user.email = decodedToken.email;
     user.avatarUrl = decodedToken.avatar_url;
     user.idp = decodedToken.idp;
-    user.roles = decodedToken.authorities.map((roleEnum: RoleEnum) => {
-      const role = new Role();
-      role.name = roleEnum;
-      return role;
-    });
+
+    if (decodedToken.authorities) {
+      user.roles = decodedToken.authorities.map((roleEnum: RoleEnum) => {
+        const role = new Role();
+        role.name = roleEnum;
+        return role;
+      });
+    }
 
     return user;
   }

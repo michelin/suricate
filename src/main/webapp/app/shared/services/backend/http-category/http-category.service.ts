@@ -26,7 +26,6 @@ import { AbstractHttpService } from '../abstract-http/abstract-http.service';
 import { HttpFilter } from '../../../models/backend/http-filter';
 import { HttpFilterService } from '../http-filter/http-filter.service';
 import { Page } from '../../../models/backend/page';
-import { CategoryParameter } from '../../../models/backend/category-parameters/category-parameter';
 
 /**
  * Manage the widget Http calls

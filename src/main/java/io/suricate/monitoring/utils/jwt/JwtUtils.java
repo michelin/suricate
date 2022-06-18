@@ -23,6 +23,9 @@ public class JwtUtils {
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(JwtUtils.class);
 
+    /**
+     * The application properties
+     */
     @Autowired
     private ApplicationProperties applicationProperties;
 
@@ -68,7 +71,9 @@ public class JwtUtils {
      * @return The username
      */
     public String getUsernameFromToken(String token) {
-        Claims claims = Jwts.parser().setSigningKey(applicationProperties.getAuthentication().getJwt().getSigningKey()).parseClaimsJws(token).getBody();
+        Claims claims = Jwts.parser()
+                .setSigningKey(applicationProperties.getAuthentication().getJwt().getSigningKey())
+                .parseClaimsJws(token).getBody();
 
         return claims.getSubject();
     }
@@ -80,18 +85,22 @@ public class JwtUtils {
      */
     public boolean validateToken(String authToken) {
         try {
-            Jwts.parser().setSigningKey(applicationProperties.getAuthentication().getJwt().getSigningKey()).parseClaimsJws(authToken);
+            Jwts.parser()
+                    .setSigningKey(applicationProperties.getAuthentication().getJwt().getSigningKey())
+                    .parseClaimsJws(authToken);
             return true;
-        } catch (SignatureException ex) {
-            LOGGER.error("Invalid JWT signature");
-        } catch (MalformedJwtException ex) {
-            LOGGER.error("Invalid JWT token");
-        } catch (ExpiredJwtException ex) {
-            LOGGER.error("Expired JWT token");
-        } catch (UnsupportedJwtException ex) {
-            LOGGER.error("Unsupported JWT token");
-        } catch (IllegalArgumentException ex) {
-            LOGGER.error("JWT claims string is empty.");
+        } catch (SignatureException e) {
+            LOGGER.error("Invalid JWT signature", e);
+        } catch (MalformedJwtException e) {
+            LOGGER.error("Invalid JWT token", e);
+        } catch (ExpiredJwtException e) {
+            LOGGER.error("Expired JWT token", e);
+        } catch (UnsupportedJwtException e) {
+            LOGGER.error("Unsupported JWT token", e);
+        } catch (IllegalArgumentException e) {
+            LOGGER.error("JWT claims string is empty", e);
+        } catch (Exception e) {
+            LOGGER.error("Error reading public key", e);
         }
         return false;
     }

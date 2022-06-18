@@ -21,7 +21,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { Project } from '../../../models/backend/project/project';
-import { ProjectWidget } from '../../../models/backend/project-widget/project-widget';
 import { ProjectRequest } from '../../../models/backend/project/project-request';
 import { ProjectWidgetPositionRequest } from '../../../models/backend/project-widget/project-widget-position-request';
 import { User } from '../../../models/backend/user/user';

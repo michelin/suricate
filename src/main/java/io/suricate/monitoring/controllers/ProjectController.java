@@ -18,7 +18,6 @@
 
 package io.suricate.monitoring.controllers;
 
-import io.suricate.monitoring.security.LocalUser;
 import io.suricate.monitoring.configuration.swagger.ApiPageable;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.project.ProjectRequestDto;
@@ -26,13 +25,17 @@ import io.suricate.monitoring.model.dto.api.project.ProjectResponseDto;
 import io.suricate.monitoring.model.dto.api.projectwidget.ProjectWidgetPositionRequestDto;
 import io.suricate.monitoring.model.dto.api.user.UserResponseDto;
 import io.suricate.monitoring.model.dto.websocket.WebsocketClient;
-import io.suricate.monitoring.model.entities.*;
+import io.suricate.monitoring.model.entities.Project;
+import io.suricate.monitoring.model.entities.User;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
+import io.suricate.monitoring.security.LocalUser;
 import io.suricate.monitoring.services.api.ProjectGridService;
 import io.suricate.monitoring.services.api.ProjectService;
 import io.suricate.monitoring.services.api.ProjectWidgetService;
 import io.suricate.monitoring.services.api.UserService;
-import io.suricate.monitoring.services.mapper.*;
+import io.suricate.monitoring.services.mapper.ProjectGridMapper;
+import io.suricate.monitoring.services.mapper.ProjectMapper;
+import io.suricate.monitoring.services.mapper.UserMapper;
 import io.suricate.monitoring.services.websocket.DashboardWebSocketService;
 import io.suricate.monitoring.utils.exceptions.ApiException;
 import io.suricate.monitoring.utils.exceptions.InvalidFileException;
@@ -54,7 +57,6 @@ import springfox.documentation.annotations.ApiIgnore;
 import javax.annotation.security.PermitAll;
 import java.io.IOException;
 import java.net.URI;
-import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;

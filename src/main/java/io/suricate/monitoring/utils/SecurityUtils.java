@@ -16,35 +16,15 @@
 
 package io.suricate.monitoring.utils;
 
-import io.suricate.monitoring.security.LocalUser;
 import io.suricate.monitoring.model.enums.UserRoleEnum;
-import org.springframework.security.core.Authentication;
+import io.suricate.monitoring.security.LocalUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public final class SecurityUtils {
-
-    /**
-     * Method used to get the connected User
-     *
-     * @return all data about the connected user
-     */
-    public static LocalUser getConnectedUser() {
-        SecurityContext context = SecurityContextHolder.getContext();
-        if (context != null) {
-            Authentication authentication = context.getAuthentication();
-            if (authentication != null && authentication.getPrincipal() instanceof LocalUser) {
-                return (LocalUser) authentication.getPrincipal();
-            }
-        }
-        return null;
-    }
-
     /**
      * Method used to isValid if the connected user is admin
      *
@@ -53,7 +33,6 @@ public final class SecurityUtils {
     public static boolean isAdmin(final LocalUser connectedUser) {
         return hasRole(connectedUser, UserRoleEnum.ROLE_ADMIN.name());
     }
-
 
     /**
      * Method used to isValid if the connected user as all role in list

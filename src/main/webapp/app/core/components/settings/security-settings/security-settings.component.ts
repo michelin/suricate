@@ -15,7 +15,6 @@ import { TranslateService } from '@ngx-translate/core';
 import { TokenRequest } from '../../../../shared/models/backend/token/token-request';
 import { MaterialIconRecords } from '../../../../shared/records/material-icon.record';
 import { DialogService } from '../../../../shared/services/frontend/dialog/dialog.service';
-import { ButtonTypeEnum } from '../../../../shared/enums/button-type.enum';
 
 @Component({
   selector: 'suricate-security-settings',

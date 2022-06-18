@@ -21,8 +21,6 @@ import { FormStep } from '../../../../shared/models/frontend/form/form-step';
 import { ProjectWidgetRequest } from '../../../../shared/models/backend/project-widget/project-widget-request';
 import { ToastService } from '../../../../shared/services/frontend/toast/toast.service';
 import { ToastTypeEnum } from '../../../../shared/enums/toast-type.enum';
-import { HttpProjectGridService } from '../../../../shared/services/backend/http-project-grid/http-project-grid.service';
-import { ProjectGrid } from '../../../../shared/models/backend/project-grid/project-grid';
 import { HttpProjectWidgetService } from '../../../../shared/services/backend/http-project-widget/http-project-widget.service';
 import { ProjectWidget } from '../../../../shared/models/backend/project-widget/project-widget';
 import { HttpProjectService } from '../../../../shared/services/backend/http-project/http-project.service';

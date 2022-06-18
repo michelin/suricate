@@ -23,7 +23,6 @@ import { MenuService } from '../../../shared/services/frontend/menu/menu.service
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { HttpUserService } from '../../../shared/services/backend/http-user/http-user.service';
-import { User } from '../../../shared/models/backend/user/user';
 import { AuthenticationService } from '../../../shared/services/frontend/authentication/authentication.service';
 
 /**

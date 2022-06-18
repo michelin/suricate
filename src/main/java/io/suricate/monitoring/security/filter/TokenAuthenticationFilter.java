@@ -1,12 +1,14 @@
 package io.suricate.monitoring.security.filter;
 
 import io.suricate.monitoring.model.entities.User;
+import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.security.LocalUser;
 import io.suricate.monitoring.services.api.UserService;
 import io.suricate.monitoring.utils.jwt.JwtUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -15,7 +17,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -45,11 +46,10 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
      * @param request The incoming request
      * @param response The response
      * @param filterChain The filter chain
-     * @throws ServletException Any servlet exception
      * @throws IOException Any IO exception
      */
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException {
         try {
             final String token = getTokenFromRequest(request);
 
@@ -63,11 +63,12 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
+
+            filterChain.doFilter(request, response);
         } catch (Exception e) {
             LOGGER.error("Could not set user authentication in security context", e);
+            response.sendError(HttpStatus.UNAUTHORIZED.value(), ApiErrorEnum.AUTHENTICATION_ERROR.getMessage());
         }
-
-        filterChain.doFilter(request, response);
     }
 
     /**

@@ -24,7 +24,6 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * Manage the generation DTO/Model objects for Setting class

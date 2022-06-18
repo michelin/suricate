@@ -18,9 +18,7 @@ package io.suricate.monitoring.model.dto.nashorn;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
 import io.suricate.monitoring.model.enums.WidgetStateEnum;
-import io.suricate.monitoring.utils.JsonUtils;
 import lombok.*;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
 

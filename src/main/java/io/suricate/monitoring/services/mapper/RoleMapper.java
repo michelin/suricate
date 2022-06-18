@@ -18,11 +18,8 @@ package io.suricate.monitoring.services.mapper;
 
 import io.suricate.monitoring.model.dto.api.role.RoleResponseDto;
 import io.suricate.monitoring.model.entities.Role;
-import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Named;
-
-import java.util.List;
 
 /**
  * Manage the generation DTO/Model objects for Role class

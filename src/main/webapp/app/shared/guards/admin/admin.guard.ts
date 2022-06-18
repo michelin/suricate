@@ -19,9 +19,6 @@ import { CanActivate, CanActivateChild, Router } from '@angular/router';
 import { Observable, of } from 'rxjs';
 
 import { AuthenticationService } from '../../services/frontend/authentication/authentication.service';
-import { HttpUserService } from '../../services/backend/http-user/http-user.service';
-import { map } from 'rxjs/operators';
-import { User } from '../../models/backend/user/user';
 
 /**
  * The admin guard
