@@ -2,15 +2,23 @@
   "categories": [
     {
       "title": "## :rocket: New",
-      "labels": ["feature"]
+      "labels": ["new feature"]
+    },
+    {
+      "title": "## :racehorse: Improvements",
+      "labels": ["enhancement"]
     },
     {
       "title": "## :bug: Bugfixes",
       "labels": ["fix"]
     },
     {
+      "title": "## :memo: Documentation",
+      "labels": ["documentation"]
+    },
+    {
       "title": "## :hammer: Other",
-      "labels": ["refactor", "test", "documentation"]
+      "labels": ["dependencies", "security"]
     }
   ],
   "template": "${{CHANGELOG}}\n\n<details>\n<summary>Uncategorized</summary>\n\n${{UNCATEGORIZED}}\n</details>",
