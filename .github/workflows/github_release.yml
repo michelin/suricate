@@ -21,7 +21,7 @@ jobs:
       - name: Package application & Deploy Docker
         id: package-application
         run: |
-          mvn -B -DskipTests package -P production
+          mvn -B -DskipTests package -P production jib:build -Djib.to.auth.username=$DOCKER_USER -Djib.to.auth.password=$DOCKER_TOKEN
           echo ::set-output name=tag::${GITHUB_REF##*/}
 
       - name: Create release
