@@ -47,17 +47,22 @@ public class OIDCUserService extends OidcUserService {
                     .orElseThrow(() -> new OAuth2AuthenticationProcessingException(String.format("ID provider %s is not recognized", userRequest.getClientRegistration().getRegistrationId())));
 
             String username = oidcUser.getAttribute("nickname");
-            if (StringUtils.isEmpty(username)) {
+            if (StringUtils.isBlank(username)) {
                 throw new OAuth2AuthenticationProcessingException(String.format("Username not found from %s", userRequest.getClientRegistration().getRegistrationId()));
             }
 
             String email = oidcUser.getAttribute("email");
-            if (StringUtils.isEmpty(email)) {
+            if (StringUtils.isBlank(email)) {
                 throw new OAuth2AuthenticationProcessingException(String.format("Email not found from %s", userRequest.getClientRegistration().getRegistrationId()));
             }
 
-            String firstname = oidcUser.getAttribute("name").toString().split(" ")[0];
-            String lastname = oidcUser.getAttribute("name").toString().split(" ")[1];
+            String name = oidcUser.getAttribute("name");
+            String firstname = null;
+            String lastname = null;
+            if (StringUtils.isNotBlank(name)) {
+                firstname = name.split(StringUtils.SPACE)[0];
+                lastname = name.split(StringUtils.SPACE)[1];
+            }
 
             String avatarUrl = null;
             if (oidcUser.getAttribute("avatar_url") != null) {

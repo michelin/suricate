@@ -53,17 +53,22 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
                 username = oAuth2User.getAttribute("username");
             }
 
-            if (StringUtils.isEmpty(username)) {
+            if (StringUtils.isBlank(username)) {
                 throw new OAuth2AuthenticationProcessingException(String.format("Username not found from %s", userRequest.getClientRegistration().getRegistrationId()));
             }
 
             String email = oAuth2User.getAttribute("email");
-            if (StringUtils.isEmpty(email)) {
+            if (StringUtils.isBlank(email)) {
                 throw new OAuth2AuthenticationProcessingException(String.format("Email not found from %s", userRequest.getClientRegistration().getRegistrationId()));
             }
 
-            String firstname = oAuth2User.getAttribute("name").toString().split(" ")[0];
-            String lastname = oAuth2User.getAttribute("name").toString().split(" ")[1];
+            String name = oAuth2User.getAttribute("name");
+            String firstname = null;
+            String lastname = null;
+            if (StringUtils.isNotBlank(name)) {
+                firstname = name.split(StringUtils.SPACE)[0];
+                lastname = name.split(StringUtils.SPACE)[1];
+            }
 
             String avatarUrl = null;
             if (oAuth2User.getAttribute("avatar_url") != null) {
