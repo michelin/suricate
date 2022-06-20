@@ -16,8 +16,8 @@
 
 package io.suricate.monitoring.services.api;
 
-import io.suricate.monitoring.model.entities.CategoryParameter;
 import io.suricate.monitoring.model.entities.Category;
+import io.suricate.monitoring.model.entities.CategoryParameter;
 import io.suricate.monitoring.model.entities.Widget;
 import io.suricate.monitoring.model.entities.WidgetParam;
 import io.suricate.monitoring.repositories.CategoryRepository;
@@ -27,8 +27,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.*;
 import java.util.stream.Collectors;
 

@@ -26,6 +26,8 @@ import { AbstractHttpService } from '../abstract-http/abstract-http.service';
 import { Page } from '../../../models/backend/page';
 import { HttpFilter } from '../../../models/backend/http-filter';
 import { HttpFilterService } from '../http-filter/http-filter.service';
+import { TokenRequest } from '../../../models/backend/token/token-request';
+import { Token } from '../../../models/backend/token/token';
 
 /**
  * Manage the http user calls
@@ -34,13 +36,11 @@ import { HttpFilterService } from '../http-filter/http-filter.service';
 export class HttpUserService implements AbstractHttpService<User | UserRequest> {
   /**
    * Global endpoint for Users
-   * @type {string}
    */
   public static readonly usersApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/users`;
 
   /**
    * Constructor
-   *
    * @param httpClient The http client
    */
   constructor(private readonly httpClient: HttpClient) {}
@@ -48,7 +48,7 @@ export class HttpUserService implements AbstractHttpService<User | UserRequest> 
   /**
    * Get the list of users
    *
-   * @returns {Observable<User[]>} The list of users
+   * @returns The list of users
    */
   public getAll(filter?: HttpFilter): Observable<Page<User>> {
     const url = `${HttpUserService.usersApiEndpoint}`;
@@ -59,8 +59,8 @@ export class HttpUserService implements AbstractHttpService<User | UserRequest> 
   /**
    * Get a user by id
    *
-   * @param {number} userId The user id to find
-   * @returns {Observable<User>} The user found
+   * @param userId The user id to find
+   * @returns The user found
    */
   public getById(userId: number): Observable<User> {
     const url = `${HttpUserService.usersApiEndpoint}/${userId}`;
@@ -122,5 +122,31 @@ export class HttpUserService implements AbstractHttpService<User | UserRequest> 
     const url = `${HttpUserService.usersApiEndpoint}/${userName}/settings/${settingId}`;
 
     return this.httpClient.put<void>(url, userSettingRequest);
+  }
+
+  /**
+   * Get the current user tokens
+   */
+  public getUserTokens(): Observable<Token[]> {
+    const url = `${HttpUserService.usersApiEndpoint}/tokens`;
+    return this.httpClient.get<Token[]>(url);
+  }
+
+  /**
+   * Create a JWT token for the user
+   * @param tokenRequest The token request
+   */
+  public createToken(tokenRequest: TokenRequest): Observable<Token> {
+    const url = `${HttpUserService.usersApiEndpoint}/tokens`;
+    return this.httpClient.post<Token>(url, tokenRequest);
+  }
+
+  /**
+   * Revoke a given token
+   * @param tokenName The token name
+   */
+  public revokeToken(tokenName: string): Observable<void> {
+    const url = `${HttpUserService.usersApiEndpoint}/tokens/${tokenName}`;
+    return this.httpClient.delete<void>(url);
   }
 }

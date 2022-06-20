@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { Component, Inject, Injector, OnDestroy, OnInit } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormGroup } from '@angular/forms';
 
@@ -23,7 +23,6 @@ import { WebsocketClient } from '../../../shared/models/backend/websocket-client
 import { HttpScreenService } from '../../../shared/services/backend/http-screen/http-screen.service';
 import { HttpProjectService } from '../../../shared/services/backend/http-project/http-project.service';
 import { FormService } from '../../../shared/services/frontend/form/form.service';
-import { TranslateService } from '@ngx-translate/core';
 import { DataTypeEnum } from '../../../shared/enums/data-type.enum';
 import { FormField } from '../../../shared/models/frontend/form/form-field';
 import { ButtonConfiguration } from '../../../shared/models/frontend/button/button-configuration';

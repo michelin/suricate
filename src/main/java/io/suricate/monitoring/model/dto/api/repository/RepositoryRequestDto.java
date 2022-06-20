@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "RepositoryRequest", description = "Create/update a repository")
+@ApiModel(value = "RepositoryRequestDto", description = "Create/update a repository")
 public class RepositoryRequestDto extends AbstractDto {
 
     /**
@@ -60,7 +60,7 @@ public class RepositoryRequestDto extends AbstractDto {
     private RepositoryTypeEnum type;
 
     /**
-     * If the repository is enable or not
+     * If the repository is enabled or not
      */
     @ApiModelProperty(value = "True if the repository is enabled for update", required = true)
     private boolean enabled;

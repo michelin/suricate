@@ -5,7 +5,6 @@ import io.suricate.monitoring.model.entities.Category;
 import io.suricate.monitoring.repositories.AssetRepository;
 import io.suricate.monitoring.repositories.CategoryRepository;
 import org.junit.Test;
-import org.junit.Assert.*;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

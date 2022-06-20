@@ -19,8 +19,7 @@ package io.suricate.monitoring.repositories;
 import io.suricate.monitoring.model.entities.Library;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -29,27 +28,26 @@ import java.util.List;
  * Repository used for request Libraries in database
  */
 @Repository
-public interface LibraryRepository extends JpaRepository<Library, Long> {
-
+public interface LibraryRepository extends JpaRepository<Library, Long>, JpaSpecificationExecutor<Library> {
     /**
-     * Method used to get a list of unique library id from widget ids
-     *
-     * @param widgetIds list of widget ids
-     * @return the list of library ids
+     * Find all libraries by given widget ids
+     * @param widgetIds The widget ids
+     * @return The libraries
      */
     @Cacheable("lib-by-widget-id")
-    @Query("SELECT DISTINCT l.asset.id " +
-        "FROM Widget w " +
-        "JOIN w.libraries l " +
-        "WHERE w.id in (:ids) ")
-    List<Long> getLibs(@Param("ids") List<Long> widgetIds);
+    List<Library> findDistinctByWidgetsIdIn(List<Long> widgetIds);
 
     /**
      * Find a library by technical name
-     *
      * @param technicalName The technical name
      * @return The library
      */
     Library findByTechnicalName(String technicalName);
 
+    /**
+     * Find libraries by technical names
+     * @param technicalNames The technical names
+     * @return The libraries
+     */
+    List<Library> findByTechnicalNameIn(List<String> technicalNames);
 }

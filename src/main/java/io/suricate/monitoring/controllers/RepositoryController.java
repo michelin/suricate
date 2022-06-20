@@ -24,24 +24,25 @@ import io.suricate.monitoring.model.dto.api.repository.RepositoryRequestDto;
 import io.suricate.monitoring.model.dto.api.repository.RepositoryResponseDto;
 import io.suricate.monitoring.model.dto.api.widget.WidgetResponseDto;
 import io.suricate.monitoring.model.entities.Repository;
-import io.suricate.monitoring.services.GitService;
 import io.suricate.monitoring.services.api.RepositoryService;
+import io.suricate.monitoring.services.git.GitService;
 import io.suricate.monitoring.services.mapper.RepositoryMapper;
 import io.suricate.monitoring.services.mapper.WidgetMapper;
 import io.suricate.monitoring.utils.exceptions.ObjectNotFoundException;
 import io.swagger.annotations.*;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import org.springframework.transaction.annotation.Transactional;
+import java.io.IOException;
 import java.net.URI;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,45 +56,29 @@ public class RepositoryController {
     /**
      * Repository service
      */
-    private final RepositoryService repositoryService;
+    @Autowired
+    private RepositoryService repositoryService;
 
     /**
      * Git service
      */
-    private final GitService gitService;
+    @Autowired
+    private GitService gitService;
 
     /**
      * Repository mapper
      */
-    private final RepositoryMapper repositoryMapper;
+    @Autowired
+    private RepositoryMapper repositoryMapper;
 
     /**
      * Widget mapper
      */
-    private final WidgetMapper widgetMapper;
-
-    /**
-     * Constructor
-     *
-     * @param repositoryService The repository service to inject
-     * @param gitService        The git service to inject
-     * @param repositoryMapper  The repository mapper to inject
-     * @param widgetMapper      The widget mapper
-     */
     @Autowired
-    public RepositoryController(final RepositoryService repositoryService,
-                                final GitService gitService,
-                                final RepositoryMapper repositoryMapper,
-                                final WidgetMapper widgetMapper) {
-        this.repositoryService = repositoryService;
-        this.gitService = gitService;
-        this.repositoryMapper = repositoryMapper;
-        this.widgetMapper = widgetMapper;
-    }
+    private WidgetMapper widgetMapper;
 
     /**
      * Get the full list of repositories
-     *
      * @return The list of repositories
      */
     @ApiOperation(value = "Get the full list of repositories", response = RepositoryResponseDto.class, nickname = "getAllRepos")
@@ -110,8 +95,9 @@ public class RepositoryController {
     public Page<RepositoryResponseDto> getAll(@ApiParam(name = "search", value = "Search keyword")
                                               @RequestParam(value = "search", required = false) String search,
                                               Pageable pageable) {
-        Page<Repository> repositoriesPaged = this.repositoryService.getAll(search, pageable);
-        return repositoriesPaged.map(this.repositoryMapper::toRepositoryDTO);
+        return repositoryService
+                .getAll(search, pageable)
+                .map(this.repositoryMapper::toRepositoryDTONoWidgets);
     }
 
     /**
@@ -129,12 +115,12 @@ public class RepositoryController {
     @PostMapping(value = "/v1/repositories")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<RepositoryResponseDto> createOne(@ApiParam(name = "repositoryResponseDto", value = "The repository to create", required = true)
-                                                           @RequestBody RepositoryRequestDto repositoryRequestDto) {
+                                                           @RequestBody RepositoryRequestDto repositoryRequestDto) throws GitAPIException, IOException {
         Repository repository = this.repositoryMapper.toRepositoryEntity(null, repositoryRequestDto);
-        this.repositoryService.addOrUpdateRepository(repository);
+        repositoryService.addOrUpdateRepository(repository);
 
         if (repository.isEnabled()) {
-            this.gitService.updateWidgetsFromRepository(repository);
+            gitService.updateWidgetsFromRepository(repository);
         }
 
         URI resourceLocation = ServletUriComponentsBuilder
@@ -146,7 +132,7 @@ public class RepositoryController {
         return ResponseEntity
             .created(resourceLocation)
             .contentType(MediaType.APPLICATION_JSON)
-            .body(this.repositoryMapper.toRepositoryDTO(repository));
+            .body(repositoryMapper.toRepositoryDTONoWidgets(repository));
     }
 
     /**
@@ -175,7 +161,7 @@ public class RepositoryController {
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(this.repositoryMapper.toRepositoryDTO(optionalRepository.get()));
+            .body(this.repositoryMapper.toRepositoryDTONoWidgets(optionalRepository.get()));
     }
 
     /**
@@ -193,7 +179,7 @@ public class RepositoryController {
     public ResponseEntity<Void> updateOneById(@ApiParam(name = "repositoryId", value = "The repository id", required = true)
                                               @PathVariable Long repositoryId,
                                               @ApiParam(name = "repositoryResponseDto", value = "The repository with the new info's to update", required = true)
-                                              @RequestBody RepositoryRequestDto repositoryRequestDto) {
+                                              @RequestBody RepositoryRequestDto repositoryRequestDto) throws GitAPIException, IOException {
         if (!this.repositoryService.existsById(repositoryId)) {
             throw new ObjectNotFoundException(Repository.class, repositoryId);
         }
@@ -202,7 +188,7 @@ public class RepositoryController {
         this.repositoryService.addOrUpdateRepository(repository);
 
         if (repository.isEnabled()) {
-            this.gitService.updateWidgetsFromRepository(repository);
+            gitService.updateWidgetsFromRepository(repository);
         }
 
         return ResponseEntity.noContent().build();
@@ -221,7 +207,7 @@ public class RepositoryController {
     @PutMapping(value = "/v1/repositories/{repositoryId}/reload")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<Void> reload(@ApiParam(name = "repositoryId", value = "The repository id", required = true)
-                                       @PathVariable Long repositoryId) {
+                                       @PathVariable Long repositoryId) throws GitAPIException, IOException {
         Optional<Repository> optionalRepository = this.repositoryService.getOneById(repositoryId);
         if (!optionalRepository.isPresent()) {
             throw new ObjectNotFoundException(Repository.class, repositoryId);
@@ -229,7 +215,7 @@ public class RepositoryController {
 
         Repository repository = optionalRepository.get();
         if (repository.isEnabled()) {
-            this.gitService.readWidgetRepositories(Collections.singletonList(repository));
+            gitService.updateWidgetsFromRepository(repository);
         }
 
         return ResponseEntity.noContent().build();

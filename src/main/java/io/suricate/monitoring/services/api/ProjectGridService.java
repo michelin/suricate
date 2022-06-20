@@ -14,9 +14,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -24,51 +21,46 @@ public class ProjectGridService {
     /**
      * The application context
      */
-    private final ApplicationContext ctx;
+    @Autowired
+    private ApplicationContext ctx;
 
     /**
      * The dashboard websocket service
      */
-    private final DashboardWebSocketService dashboardWebsocketService;
+    @Autowired
+    private DashboardWebSocketService dashboardWebsocketService;
 
     /**
      * Project repository
-     */
-    private final ProjectRepository projectRepository;
-
-    /**
-     * Project repository
-     */
-    private final ProjectGridRepository projectGridRepository;
-
-    /**
-     * Constructor
-     *
-     * @param projectGridRepository The project grid repository to inject
-     * @param projectRepository The project repository to inject
-     * @param dashboardWebSocketService The dashboard websocket service
-     * @param ctx The application context
      */
     @Autowired
-    public ProjectGridService(final ProjectGridRepository projectGridRepository,
-                              final ProjectRepository projectRepository,
-                              final DashboardWebSocketService dashboardWebSocketService,
-                              final ApplicationContext ctx) {
-        this.projectRepository = projectRepository;
-        this.projectGridRepository = projectGridRepository;
-        this.dashboardWebsocketService = dashboardWebSocketService;
-        this.ctx = ctx;
-    }
+    private ProjectRepository projectRepository;
+
+    /**
+     * Project repository
+     */
+    @Autowired
+    private ProjectGridRepository projectGridRepository;
 
     /**
      * Get a project grid by the id
-     *
      * @param id The id of the project grid
      * @return The project grid associated
      */
     @Transactional(readOnly = true)
     public Optional<ProjectGrid> getOneById(Long id) {
         return projectGridRepository.findById(id);
+    }
+
+    /**
+     * Find a grid by id and project token
+     * @param id The ID
+     * @param token The project token
+     * @return The grid
+     */
+    @Transactional(readOnly = true)
+    public Optional<ProjectGrid> findByIdAndProjectToken(Long id, String token) {
+        return projectGridRepository.findByIdAndProjectToken(id, token);
     }
 
     /**
@@ -107,7 +99,6 @@ public class ProjectGridService {
 
     /**
      * Delete a grid by project id and id
-     *
      * @param project The project
      * @param id The grid id
      */

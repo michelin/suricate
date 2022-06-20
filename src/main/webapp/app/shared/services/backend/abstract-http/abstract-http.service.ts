@@ -29,7 +29,7 @@ export abstract class AbstractHttpService<T> {
    * The base API url
    * @type {string}
    */
-  public static readonly baseApiEndpoint = `${EnvironmentService.baseEndpoint}/api`;
+  public static readonly baseApiEndpoint = `${EnvironmentService.backendUrl}/api`;
 
   /**
    * Function used to retrieve the list of Objects

@@ -18,9 +18,6 @@
 
 package io.suricate.monitoring.utils.exceptions.nashorn;
 
-import lombok.Getter;
-import okhttp3.Response;
-
 public class RequestException extends Exception {
     /**
      * Constructor

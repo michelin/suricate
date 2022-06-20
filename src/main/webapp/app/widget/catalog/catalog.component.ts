@@ -16,7 +16,6 @@
 
 import { Component, Injector } from '@angular/core';
 import { ListComponent } from '../../shared/components/list/list.component';
-import { IconEnum } from '../../shared/enums/icon.enum';
 import { Widget } from '../../shared/models/backend/widget/widget';
 import { WidgetRequest } from '../../shared/models/backend/widget/widget-request';
 import { HttpWidgetService } from '../../shared/services/backend/http-widget/http-widget.service';

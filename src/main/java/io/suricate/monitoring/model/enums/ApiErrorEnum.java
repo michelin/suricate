@@ -41,6 +41,7 @@ public enum ApiErrorEnum {
     FILE_ERROR("File cannot be read", "file.cannot.read", HttpStatus.INTERNAL_SERVER_ERROR),
     OBJECT_NOT_FOUND("Object not found", "object.not.found", HttpStatus.NOT_FOUND),
     OBJECT_ALREADY_EXIST("Object already exist", "object.already.exist", HttpStatus.CONFLICT),
+    OPERATION_NOT_PERMITTED("Operation not permitted", "operation.not.permitted", HttpStatus.CONFLICT),
     PRECONDITION_FAILED("Precondition failed for this request", "precondition.failed", HttpStatus.PRECONDITION_FAILED),
     INTERNAL_SERVER_ERROR("Internal Server Error", "internal.server.error", HttpStatus.INTERNAL_SERVER_ERROR);
 

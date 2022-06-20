@@ -42,7 +42,6 @@ import java.util.stream.Collectors;
  */
 @Service
 public class WidgetService {
-
     /**
      * Logger
      */
@@ -96,6 +95,17 @@ public class WidgetService {
     @Transactional(readOnly = true)
     public Optional<Widget> findOne(final Long id) {
         return widgetRepository.findById(id);
+    }
+
+    /**
+     * Find a widget by technical name
+     *
+     * @param technicalName The technical name
+     * @return The widget
+     */
+    @Transactional(readOnly = true)
+    public Optional<Widget> findOneByTechnicalName(final String technicalName) {
+        return widgetRepository.findByTechnicalName(technicalName);
     }
 
     /**
@@ -223,6 +233,7 @@ public class WidgetService {
      * @param libraries The libraries
      * @param repository The git repository
      */
+    @Transactional
     public void addOrUpdateWidgets(Category category, List<Library> libraries, final Repository repository) {
         if (category == null || category.getWidgets() == null) {
             return;

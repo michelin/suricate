@@ -19,10 +19,6 @@
 import { inject, TestBed } from '@angular/core/testing';
 
 import { FormService } from './form.service';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { AuthenticationService } from '../authentication/authentication.service';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { DialogService } from '../dialog/dialog.service';
 import { MockModule } from '../../../../mock/mock.module';
 
 describe('FormService', () => {

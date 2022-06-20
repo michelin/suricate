@@ -21,13 +21,24 @@ jobs:
       - name: Package application & Deploy Docker
         id: package-application
         run: |
-          mvn -B -DskipTests package -P production
+          mvn -B -DskipTests package -P production jib:build -Djib.to.auth.username=$DOCKER_USER -Djib.to.auth.password=$DOCKER_TOKEN
           echo ::set-output name=tag::${GITHUB_REF##*/}
+
+      - name: Generate Release Changelog
+        uses: mikepenz/release-changelog-builder-action@v1
+        id: build_changelog
+        with:
+          configuration: 'changelog-builder.json'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create release
         uses: ncipollo/release-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          bodyFile: 'CHANGELOG.md'
+          body: ${{ steps.build_changelog.outputs.changelog }}
           artifacts: 'target/suricate.jar'
           name: Release ${{ steps.package-application.outputs.tag }}
+          draft: true
+          prerelease: true
+          allowUpdates: true

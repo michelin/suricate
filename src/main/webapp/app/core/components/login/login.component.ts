@@ -16,12 +16,10 @@
 
 import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { AuthenticationService } from '../../../shared/services/frontend/authentication/authentication.service';
-import { HttpCategoryParametersService } from '../../../shared/services/backend/http-category-parameters/http-category-parameters.service';
-import { ApplicationProperties } from '../../../shared/models/backend/application-properties';
-import { AuthenticationProviderEnum } from '../../../shared/enums/authentication-provider.enum';
+import { AuthenticationProvider } from '../../../shared/enums/authentication-provider.enum';
 import { FormService } from '../../../shared/services/frontend/form/form.service';
 import { ButtonConfiguration } from '../../../shared/models/frontend/button/button-configuration';
 import { FormField } from '../../../shared/models/frontend/form/form-field';
@@ -29,6 +27,9 @@ import { LoginFormFieldsService } from '../../../shared/services/frontend/form-f
 import { ButtonTypeEnum } from '../../../shared/enums/button-type.enum';
 import { SettingsService } from '../../services/settings.service';
 import { HttpConfigurationService } from '../../../shared/services/backend/http-configuration/http-configuration.service';
+import { ToastService } from '../../../shared/services/frontend/toast/toast.service';
+import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
+import { TranslateService } from '@ngx-translate/core';
 
 /**
  * Manage the login page
@@ -55,9 +56,9 @@ export class LoginComponent implements OnInit {
   public buttonConfigurations: ButtonConfiguration<unknown>[];
 
   /**
-   * True if the user provider is LDAP
+   * The activated authentication providers
    */
-  protected isLdapServerUserProvider: boolean;
+  public authenticationProviders: AuthenticationProvider[];
 
   /**
    * Define if the spinner should be running or not
@@ -65,33 +66,56 @@ export class LoginComponent implements OnInit {
   public loading = true;
 
   /**
+   * OAuth2 authentication with GitHub endpoint
+   */
+  public githubAuthenticationEndpoint = AuthenticationService.GITHUB_AUTH_URL;
+
+  /**
+   * OAuth2 authentication with GitLab endpoint
+   */
+  public gitlabAuthenticationEndpoint = AuthenticationService.GITLAB_AUTH_URL;
+
+  /**
    * Constructor
-   *
-   * @param router Angular service used to manage the application routes
-   * @param httpConfigurationService Suricate service used to manage http calls for configurations
-   * @param authenticationService Suricate service used to manage authentications
+   * @param router Service used to manage the application routes
+   * @param route Service used to manage the activated route
+   * @param httpConfigurationService Service used to manage http calls for configurations
+   * @param authenticationService Service used to manage authentications
    * @param formService Front-End service used to manage forms
    * @param settingsService Front-End service used to manage the user's settings
+   * @param toastService The toast service
+   * @param translateService The translate service
    */
   constructor(
     private readonly router: Router,
+    private readonly route: ActivatedRoute,
     private readonly httpConfigurationService: HttpConfigurationService,
     private readonly authenticationService: AuthenticationService,
     private readonly formService: FormService,
-    private readonly settingsService: SettingsService
+    private readonly settingsService: SettingsService,
+    private readonly toastService: ToastService,
+    private readonly translateService: TranslateService
   ) {}
 
   /**
-   * Called when the component is init
+   * Init method
    */
   public ngOnInit(): void {
+    const token: string = this.route.snapshot.queryParamMap.get('token');
+    const error: string = this.route.snapshot.queryParamMap.get('error');
+    if (token) {
+      AuthenticationService.setAccessToken(token);
+    } else if (error) {
+      this.toastService.sendMessage('authentication.failed.with.providers', ToastTypeEnum.DANGER, error);
+    }
+
     if (AuthenticationService.isLoggedIn()) {
       this.navigateToHomePage();
       return;
     }
 
-    this.httpConfigurationService.getAuthenticationProvider().subscribe((applicationProperties: ApplicationProperties) => {
-      this.isLdapServerUserProvider = applicationProperties.value.toUpperCase() === AuthenticationProviderEnum.LDAP;
+    this.httpConfigurationService.getAuthenticationProviders().subscribe((authProviders: AuthenticationProvider[]) => {
+      this.authenticationProviders = authProviders;
     });
 
     this.initButtons();
@@ -125,12 +149,6 @@ export class LoginComponent implements OnInit {
         color: 'primary',
         label: 'sign.in',
         type: ButtonTypeEnum.SUBMIT
-      },
-      {
-        color: 'primary',
-        label: 'sign.up',
-        callback: () => this.navigateToRegisterPage(),
-        hidden: () => this.isLdapServerUserProvider
       }
     ];
   }
@@ -151,9 +169,30 @@ export class LoginComponent implements OnInit {
   }
 
   /**
-   * Redirect to the register page
+   * Is the database authentication activated or not
    */
-  private navigateToRegisterPage(): void {
-    this.router.navigate(['/register']);
+  public isDatabaseAuthenticationActivated(): boolean {
+    return this.authenticationProviders && this.authenticationProviders.indexOf(AuthenticationProvider.DATABASE) > -1;
+  }
+
+  /**
+   * Is the LDAP authentication activated or not
+   */
+  public isLdapAuthenticationActivated(): boolean {
+    return this.authenticationProviders && this.authenticationProviders.indexOf(AuthenticationProvider.LDAP) > -1;
+  }
+
+  /**
+   * Is the GitLab authentication activated or not
+   */
+  public isGitlabAuthenticationActivated(): boolean {
+    return this.authenticationProviders && this.authenticationProviders.indexOf(AuthenticationProvider.GITLAB) > -1;
+  }
+
+  /**
+   * Is the GitHub authentication activated or not
+   */
+  public isGithubAuthenticationActivated(): boolean {
+    return this.authenticationProviders && this.authenticationProviders.indexOf(AuthenticationProvider.GITHUB) > -1;
   }
 }

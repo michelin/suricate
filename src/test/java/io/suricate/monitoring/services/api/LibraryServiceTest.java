@@ -38,7 +38,7 @@ public class LibraryServiceTest {
     public void testUpdateLibraryNull() throws IOException {
         assertEquals(0, libraryRepository.count());
         assertEquals(0 ,assetRepository.count());
-        assertEquals(0, libraryService.updateLibraryInDatabase(null).size());
+        assertEquals(0, libraryService.createUpdateLibraries(null).size());
         assertEquals(0, libraryRepository.count());
         assertEquals(0, assetRepository.count());
     }
@@ -56,7 +56,7 @@ public class LibraryServiceTest {
         asset.setContent(FileUtils.readFileToByteArray(new File(LibraryServiceTest.class.getResource("/libraries/d3.min.js").getFile())));
         library.setAsset(asset);
 
-        libraryService.updateLibraryInDatabase(Collections.singletonList(library));
+        libraryService.createUpdateLibraries(Collections.singletonList(library));
 
         assertEquals(1, libraryRepository.count());
 
@@ -72,7 +72,7 @@ public class LibraryServiceTest {
         library.setAsset(asset);
 
         // Update same library
-        libraryService.updateLibraryInDatabase(Collections.singletonList(library));
+        libraryService.createUpdateLibraries(Collections.singletonList(library));
         assertEquals(1, libraryRepository.count());
 
         library = libraryRepository.findByTechnicalName("Technical name");
@@ -90,7 +90,7 @@ public class LibraryServiceTest {
         asset.setSize(10);
         library.setAsset(asset);
 
-        libraryService.updateLibraryInDatabase(Collections.singletonList(library));
+        libraryService.createUpdateLibraries(Collections.singletonList(library));
         assertEquals(2, libraryRepository.count());
         assertEquals(2, assetRepository.count());
     }

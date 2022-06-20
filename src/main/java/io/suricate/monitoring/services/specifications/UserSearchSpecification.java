@@ -1,11 +1,11 @@
 package io.suricate.monitoring.services.specifications;
 
 
-import io.suricate.monitoring.model.entities.*;
+import io.suricate.monitoring.model.entities.User;
+import io.suricate.monitoring.model.entities.User_;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.List;

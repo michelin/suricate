@@ -19,7 +19,6 @@
 import { inject, TestBed } from '@angular/core/testing';
 
 import { HttpWidgetService } from './http-widget.service';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MockModule } from '../../../../mock/mock.module';
 
 describe('HttpWidgetService', () => {

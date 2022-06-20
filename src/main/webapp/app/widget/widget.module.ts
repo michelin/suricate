@@ -23,7 +23,6 @@ import { SharedModule } from '../shared/shared.module';
 import { LayoutModule } from '../layout/layout.module';
 import { widgetRoutes } from './widget.route';
 import { CatalogComponent } from './catalog/catalog.component';
-import { ConfigurationsComponent } from '../admin/configurations/configurations.component';
 
 @NgModule({
   imports: [LayoutModule, SharedModule, RouterModule.forChild(widgetRoutes)],

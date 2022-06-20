@@ -31,16 +31,22 @@ import java.util.Optional;
  */
 @Repository
 public interface ProjectWidgetRepository extends JpaRepository<ProjectWidget, Long>, JpaSpecificationExecutor<ProjectWidget> {
-
     /**
      * Find a widget instance by id
-     *
      * @param projectWidgetId The widget instance id
      * @return The widget instance
      */
     @NotNull
     @EntityGraph(attributePaths = {"projectGrid.project.users.roles", "widget.widgetParams.possibleValuesMap"})
     Optional<ProjectWidget> findById(@NotNull Long projectWidgetId);
+
+    /**
+     * Find a widget instance by id and grid id
+     * @param id The widget instance id
+     * @param gridId The grid id
+     * @return The widget instance
+     */
+    Optional<ProjectWidget> findByIdAndProjectGridId(Long id, Long gridId);
 
     /**
      * Method used to reset the state of every widget instances

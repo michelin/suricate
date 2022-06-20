@@ -17,7 +17,6 @@
  */
 
 import { Observable } from 'rxjs';
-import { ImageUtils } from './image.utils';
 
 /**
  * Utils class for images
@@ -69,7 +68,7 @@ export class FileUtils {
   }
 
   /**
-   * Convert a file into into base 64
+   * Convert a file into base 64
    *
    * @param file The file to convert
    */
@@ -95,18 +94,5 @@ export class FileUtils {
     const regexp = new RegExp(base64ImagePattern);
 
     return regexp.test(base64Url);
-  }
-
-  /**
-   * Used to take screenshots using Html2Canvas elements
-   *
-   * @param htmlCanvasElement The html code of the element to take in screenshot
-   * @param filename The name of the png file
-   */
-  public static takeScreenShot(htmlCanvasElement: HTMLCanvasElement, filename: string): File {
-    const imgUrl = htmlCanvasElement.toDataURL('image/png');
-
-    const blob: Blob = FileUtils.base64ToBlob(ImageUtils.getDataFromBase64URL(imgUrl), ImageUtils.getContentTypeFromBase64URL(imgUrl));
-    return FileUtils.convertBlobToFile(blob, filename, new Date());
   }
 }

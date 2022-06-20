@@ -21,17 +21,11 @@
     </parent>
 
     <properties>
-        <!-- Default packaging type -->
 	    <packaging.type>jar</packaging.type>
-        <!-- Java version -->
         <java.version>1.8</java.version>
-        <!-- Mapstruct version -->
         <org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
-        <!-- Apache DS version -->
         <apacheds.version>2.0.0.AM26</apacheds.version>
-        <!-- Encoding -->
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <!-- Sonar -->
         <sonar.organization>michelin</sonar.organization>
         <sonar.projectKey>michelin_suricate</sonar.projectKey>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
@@ -76,6 +70,11 @@
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-oauth2-client</artifactId>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
@@ -93,9 +92,9 @@
         </dependency>
 
         <dependency>
-            <groupId>org.springframework.security.oauth.boot</groupId>
-            <artifactId>spring-security-oauth2-autoconfigure</artifactId>
-            <version>2.4.2</version>
+            <groupId>io.jsonwebtoken</groupId>
+            <artifactId>jjwt</artifactId>
+            <version>0.9.1</version>
         </dependency>
 
         <!-- Spring Retry -->
@@ -431,7 +430,7 @@
                         <image>adoptopenjdk:8-jre-hotspot</image>
                     </from>
                     <to>
-                        <image>docker.io/michelin/suricate:${project.version}</image>
+                        <image>docker.io/michelin/${project.artifactId}:${project.version}</image>
                         <tags>
                             <tag>${project.version}</tag>
                             <tag>latest</tag>

@@ -16,44 +16,23 @@
 
 package io.suricate.monitoring.utils;
 
-import io.suricate.monitoring.configuration.security.ConnectedUser;
 import io.suricate.monitoring.model.enums.UserRoleEnum;
-import org.springframework.security.core.Authentication;
+import io.suricate.monitoring.security.LocalUser;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public final class SecurityUtils {
-
-    /**
-     * Method used to get the connected User
-     *
-     * @return all data about the connected user
-     */
-    public static ConnectedUser getConnectedUser() {
-        SecurityContext context = SecurityContextHolder.getContext();
-        if (context != null) {
-            Authentication authentication = context.getAuthentication();
-            if (authentication != null && authentication.getPrincipal() instanceof ConnectedUser) {
-                return (ConnectedUser) authentication.getPrincipal();
-            }
-        }
-        return null;
-    }
-
     /**
      * Method used to isValid if the connected user is admin
      *
      * @return true if the connected user is admin, false otherwise
      */
-    public static boolean isAdmin(final Authentication authentication) {
-        return hasRole(authentication, UserRoleEnum.ROLE_ADMIN.name());
+    public static boolean isAdmin(final LocalUser connectedUser) {
+        return hasRole(connectedUser, UserRoleEnum.ROLE_ADMIN.name());
     }
-
 
     /**
      * Method used to isValid if the connected user as all role in list
@@ -61,15 +40,15 @@ public final class SecurityUtils {
      * @param roles list of roles
      * @return true if the connected user have all roles, false otherwise
      */
-    public static boolean hasRole(Authentication authentication, String... roles) {
+    public static boolean hasRole(LocalUser connectedUser, String... roles) {
         boolean ret = false;
 
-        if (authentication != null) {
+        if (connectedUser != null) {
             List<GrantedAuthority> list = new ArrayList<>();
             for (String role : roles) {
                 list.add(new SimpleGrantedAuthority(role));
             }
-            ret = authentication.getAuthorities().containsAll(list);
+            ret = connectedUser.getAuthorities().containsAll(list);
         }
 
         return ret;

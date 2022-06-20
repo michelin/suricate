@@ -28,9 +28,8 @@ import org.springframework.stereotype.Component;
 @Profile("prod")
 @Component
 public class LoggingAspect {
-
     /**
-     * Class logger
+     * The logger
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(LoggingAspect.class);
 

@@ -47,7 +47,6 @@ import java.util.Optional;
 @RequestMapping("/api")
 @Api(value = "Category Controller", tags = {"Categories"})
 public class CategoryController {
-
     /**
      * The category service
      */
@@ -70,7 +69,6 @@ public class CategoryController {
 
     /**
      * Constructor
-     *
      * @param categoryService            The category service to inject
      * @param categoryMapper             The category mapper to inject
      * @param widgetService              The widget service to inject
@@ -89,7 +87,6 @@ public class CategoryController {
 
     /**
      * Get the list of widget categories
-     *
      * @return A list of category
      */
     @ApiOperation(value = "Get the full list of widget categories", response = CategoryResponseDto.class)
@@ -110,7 +107,6 @@ public class CategoryController {
 
     /**
      * Get every widget for a category
-     *
      * @param categoryId The category id
      * @return The list of related widgets
      */

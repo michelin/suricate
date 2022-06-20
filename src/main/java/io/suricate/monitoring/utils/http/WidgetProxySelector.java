@@ -18,7 +18,7 @@
 
 package io.suricate.monitoring.utils.http;
 
-import io.suricate.monitoring.configuration.web.ProxyConfiguration;
+import io.suricate.monitoring.properties.ProxyProperties;
 import io.suricate.monitoring.utils.SpringContextUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -35,9 +35,8 @@ import java.util.stream.Stream;
  * Custom proxy selector
  */
 public class WidgetProxySelector extends ProxySelector {
-
     /**
-     * Class logger
+     * The logger
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(WidgetProxySelector.class);
 
@@ -51,13 +50,13 @@ public class WidgetProxySelector extends ProxySelector {
     @Override
     public List<Proxy> select(URI uri) {
         Proxy proxy = Proxy.NO_PROXY;
-        ProxyConfiguration proxyConfiguration = SpringContextUtils.getApplicationContext().getBean(ProxyConfiguration.class);
+        ProxyProperties proxyProperties = SpringContextUtils.getApplicationContext().getBean(ProxyProperties.class);
 
-        if (StringUtils.isNotBlank(proxyConfiguration.getNoProxyDomains())) {
-            try (Stream<String> stream = Arrays.stream(proxyConfiguration.getNoProxyDomains().split(","))) {
-                if (StringUtils.isNotBlank(proxyConfiguration.getNoProxyDomains()) &&
+        if (StringUtils.isNotBlank(proxyProperties.getNoProxyDomains())) {
+            try (Stream<String> stream = Arrays.stream(proxyProperties.getNoProxyDomains().split(","))) {
+                if (StringUtils.isNotBlank(proxyProperties.getNoProxyDomains()) &&
                     stream.noneMatch(h -> StringUtils.containsIgnoreCase(uri.getHost(), h))) {
-                    proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyConfiguration.getHost(), Integer.parseInt(proxyConfiguration.getPort())));
+                    proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyProperties.getHost(), Integer.parseInt(proxyProperties.getPort())));
                 }
             }
         }

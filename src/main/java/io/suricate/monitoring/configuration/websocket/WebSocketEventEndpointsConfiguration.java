@@ -22,6 +22,7 @@ import io.suricate.monitoring.services.api.ProjectService;
 import io.suricate.monitoring.services.websocket.DashboardWebSocketService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
@@ -56,24 +57,14 @@ public class WebSocketEventEndpointsConfiguration {
     /**
      * The dashboard websocket service
      */
-    private final DashboardWebSocketService dashboardWebSocketService;
+    @Autowired
+    private DashboardWebSocketService dashboardWebSocketService;
 
     /**
      * The project service
      */
-    private final ProjectService projectService;
-
-    /**
-     * Constructor
-     *
-     * @param dashboardWebSocketService The dashboard web socket service
-     * @param projectService            The project service
-     */
-    public WebSocketEventEndpointsConfiguration(final DashboardWebSocketService dashboardWebSocketService,
-                                                final ProjectService projectService) {
-        this.dashboardWebSocketService = dashboardWebSocketService;
-        this.projectService = projectService;
-    }
+    @Autowired
+    private ProjectService projectService;
 
     /**
      * Entry point when a client subscribes to a socket. Intercept all the subscribe events but only keep

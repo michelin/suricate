@@ -17,12 +17,15 @@
 package io.suricate.monitoring.model.dto.api.category;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
+import io.suricate.monitoring.model.dto.api.asset.AssetResponseDto;
+import io.suricate.monitoring.model.dto.api.widget.WidgetResponseDto;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -59,8 +62,20 @@ public class CategoryResponseDto extends AbstractDto {
     private String assetToken;
 
     /**
+     * The image
+     */
+    @ApiModelProperty(value = "The image")
+    private AssetResponseDto image;
+
+    /**
      * The category parameters
      */
     @ApiModelProperty(value = "Category parameters")
     private List<CategoryParameterResponseDto> categoryParameters;
+
+    /**
+     * The widgets
+     */
+    @ApiModelProperty(value = "The widgets", required = true)
+    private List<WidgetResponseDto> widgets = new ArrayList<>();
 }

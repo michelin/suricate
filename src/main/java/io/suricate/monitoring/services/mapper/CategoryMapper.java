@@ -30,7 +30,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 /**
  * Manage the generation DTO/Model objects for Category class
  */
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring",
+        uses = {
+                AssetMapper.class,
+                WidgetMapper.class
+        })
 public abstract class CategoryMapper {
     /**
      * String encryptor
@@ -46,17 +50,21 @@ public abstract class CategoryMapper {
      * @return The category as DTO
      */
     @Named("toCategoryWithoutParametersDTO")
-    @Mapping(target = "assetToken", expression = "java(category.getImage() != null ? io.suricate.monitoring.utils.IdUtils.encrypt(category.getImage().getId()) : null )")
+    @Mapping(target = "image", ignore = true)
+    @Mapping(target = "widgets", ignore = true)
     @Mapping(target = "categoryParameters", ignore = true)
+    @Mapping(target = "assetToken", expression = "java(category.getImage() != null ? io.suricate.monitoring.utils.IdUtils.encrypt(category.getImage().getId()) : null )")
     public abstract CategoryResponseDto toCategoryWithoutParametersDTO(Category category);
 
     /**
-     * Map a category into a DTO
+     * Map a category into a DTO. Hide the category parameter values
      *
      * @param category The category to map
      * @return The category as DTO
      */
     @Named("toCategoryWithHiddenValueParametersDTO")
+    @Mapping(target = "image", ignore = true)
+    @Mapping(target = "widgets", ignore = true)
     @Mapping(target = "assetToken", expression = "java(category.getImage() != null ? io.suricate.monitoring.utils.IdUtils.encrypt(category.getImage().getId()) : null )")
     @Mapping(target = "categoryParameters", source = "category.configurations", qualifiedByName = "toCategoryParameterWithHiddenValuesDTO")
     public abstract CategoryResponseDto toCategoryWithHiddenValueParametersDTO(Category category);
@@ -74,7 +82,7 @@ public abstract class CategoryMapper {
     public abstract CategoryParameterResponseDto toCategoryParameterDTO(CategoryParameter categoryParameter);
 
     /**
-     * Map a category parameter into a DTO
+     * Map a category parameter into a DTO. Hide the value
      *
      * @param categoryParameter The category parameter to map
      * @return The category parameter as DTO
@@ -85,3 +93,4 @@ public abstract class CategoryMapper {
             "categoryParameter.getDataType() == io.suricate.monitoring.model.enums.DataTypeEnum.PASSWORD ? org.apache.commons.lang3.StringUtils.EMPTY : categoryParameter.getValue())")
     public abstract CategoryParameterResponseDto toCategoryParameterWithHiddenValuesDTO(CategoryParameter categoryParameter);
 }
+

@@ -21,6 +21,10 @@ import { FormStep } from '../../../../shared/models/frontend/form/form-step';
 import { ProjectWidgetRequest } from '../../../../shared/models/backend/project-widget/project-widget-request';
 import { ToastService } from '../../../../shared/services/frontend/toast/toast.service';
 import { ToastTypeEnum } from '../../../../shared/enums/toast-type.enum';
+import { HttpProjectWidgetService } from '../../../../shared/services/backend/http-project-widget/http-project-widget.service';
+import { ProjectWidget } from '../../../../shared/models/backend/project-widget/project-widget';
+import { HttpProjectService } from '../../../../shared/services/backend/http-project/http-project.service';
+import { Project } from '../../../../shared/models/backend/project/project';
 
 @Component({
   templateUrl: '../../../../shared/components/wizard/wizard.component.html',
@@ -29,7 +33,6 @@ import { ToastTypeEnum } from '../../../../shared/enums/toast-type.enum';
 export class AddWidgetToProjectWizardComponent extends WizardComponent implements OnInit {
   /**
    * Constructor
-   *
    * @param injector Angular Service used to manage the injection of services
    * @param projectWidgetFormStepsService Frontend service used to build steps for project widget object
    * @param toastService Frontend service used to display message
@@ -37,6 +40,8 @@ export class AddWidgetToProjectWizardComponent extends WizardComponent implement
   constructor(
     protected injector: Injector,
     private readonly projectWidgetFormStepsService: ProjectWidgetFormStepsService,
+    private readonly httpProjectWidgetsService: HttpProjectWidgetService,
+    private readonly httpProjectService: HttpProjectService,
     private readonly toastService: ToastService
   ) {
     super(injector);
@@ -74,21 +79,42 @@ export class AddWidgetToProjectWizardComponent extends WizardComponent implement
    * {@inheritDoc}
    */
   protected saveWizard(formData: FormData): void {
-    const projectWidgetRequest: ProjectWidgetRequest = {
-      widgetId: formData[ProjectWidgetFormStepsService.selectWidgetStepKey][ProjectWidgetFormStepsService.widgetIdFieldKey],
-      backendConfig: Object.keys(formData[ProjectWidgetFormStepsService.configureWidgetStepKey])
-        .filter(
-          (key: string) =>
-            formData[ProjectWidgetFormStepsService.configureWidgetStepKey][key] != null &&
-            String(formData[ProjectWidgetFormStepsService.configureWidgetStepKey][key]).trim() !== ''
-        )
-        .map((key: string) => `${key}=${formData[ProjectWidgetFormStepsService.configureWidgetStepKey][key]}`)
-        .join('\n')
-    };
+    this.httpProjectService.getById(this.dashboardToken).subscribe((project: Project) => {
+      this.httpProjectWidgetsService.getAllByProjectToken(this.dashboardToken).subscribe((widgets: ProjectWidget[]) => {
+        let row = 1;
+        let column = 1;
+        if (widgets != null && widgets.length > 0) {
+          const widgetsByGrid = widgets.filter(widget => widget.gridId === this.gridId);
+          while (
+            widgetsByGrid.filter(widget => widget.widgetPosition.gridRow === row && widget.widgetPosition.gridColumn === column).length > 0
+          ) {
+            column++;
+            if (column > project.gridProperties.maxColumn) {
+              column = 1;
+              row++;
+            }
+          }
+        }
 
-    this.httpProjectWidgetsService.addProjectWidgetToProject(this.dashboardToken, this.gridId, projectWidgetRequest).subscribe(() => {
-      this.toastService.sendMessage('widget.add.success', ToastTypeEnum.SUCCESS);
-      this.redirectToDashboard();
+        const projectWidgetRequest: ProjectWidgetRequest = {
+          widgetId: formData[ProjectWidgetFormStepsService.selectWidgetStepKey][ProjectWidgetFormStepsService.widgetIdFieldKey],
+          backendConfig: Object.keys(formData[ProjectWidgetFormStepsService.configureWidgetStepKey])
+            .filter(
+              (key: string) =>
+                formData[ProjectWidgetFormStepsService.configureWidgetStepKey][key] != null &&
+                String(formData[ProjectWidgetFormStepsService.configureWidgetStepKey][key]).trim() !== ''
+            )
+            .map((key: string) => `${key}=${formData[ProjectWidgetFormStepsService.configureWidgetStepKey][key]}`)
+            .join('\n'),
+          gridColumn: column,
+          gridRow: row
+        };
+
+        this.httpProjectWidgetsService.addProjectWidgetToProject(this.dashboardToken, this.gridId, projectWidgetRequest).subscribe(() => {
+          this.toastService.sendMessage('widget.add.success', ToastTypeEnum.SUCCESS);
+          this.redirectToDashboard();
+        });
+      });
     });
   }
 

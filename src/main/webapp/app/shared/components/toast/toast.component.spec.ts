@@ -19,7 +19,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ToastComponent } from './toast.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MockModule } from '../../../mock/mock.module';
 
 describe('ToastComponent', () => {

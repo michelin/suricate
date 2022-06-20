@@ -17,7 +17,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { SidenavComponent } from './sidenav.component';
-import { RouterTestingModule } from '@angular/router/testing';
 import { MockModule } from '../../../mock/mock.module';
 
 describe('SidenavComponent', () => {

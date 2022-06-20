@@ -17,13 +17,10 @@
 package io.suricate.monitoring.services.api;
 
 import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
-import io.suricate.monitoring.model.entities.Asset;
-import io.suricate.monitoring.model.entities.Project;
-import io.suricate.monitoring.model.entities.ProjectGrid;
-import io.suricate.monitoring.model.entities.User;
+import io.suricate.monitoring.model.entities.*;
 import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.repositories.ProjectRepository;
-import io.suricate.monitoring.services.mapper.ProjectGridMapper;
+import io.suricate.monitoring.security.LocalUser;
 import io.suricate.monitoring.services.specifications.ProjectSearchSpecification;
 import io.suricate.monitoring.services.websocket.DashboardWebSocketService;
 import io.suricate.monitoring.utils.SecurityUtils;
@@ -34,17 +31,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-
 import org.springframework.transaction.annotation.Transactional;
-import java.io.IOException;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.IntStream;
 
 /**
  * Manage the projects
@@ -72,22 +64,38 @@ public class ProjectService {
     private final AssetService assetService;
 
     /**
+     * The project grid service
+     */
+    private final ProjectGridService projectGridService;
+
+    /**
+     * The project widget service
+     */
+    private final ProjectWidgetService projectWidgetService;
+
+    /**
      * Constructor
      *
      * @param stringEncryptor           The string encryptor to inject
      * @param projectRepository         The project repository to inject
      * @param dashboardWebSocketService The dashboard web socket service to inject
      * @param assetService              The asset service
+     * @param projectGridService        The project grid service
+     * @param projectWidgetService      The project widget service
      */
     @Autowired
     public ProjectService(@Qualifier("jasyptStringEncryptor") final StringEncryptor stringEncryptor,
                           final ProjectRepository projectRepository,
                           final DashboardWebSocketService dashboardWebSocketService,
-                          final AssetService assetService) {
+                          final AssetService assetService,
+                          final ProjectGridService projectGridService,
+                          final ProjectWidgetService projectWidgetService) {
         this.stringEncryptor = stringEncryptor;
         this.projectRepository = projectRepository;
         this.dashboardWebsocketService = dashboardWebSocketService;
         this.assetService = assetService;
+        this.projectGridService = projectGridService;
+        this.projectWidgetService = projectWidgetService;
     }
 
     /**
@@ -99,7 +107,7 @@ public class ProjectService {
      */
     @Transactional(readOnly = true)
     public Page<Project> getAll(String search, Pageable pageable) {
-        return this.projectRepository.findAll(new ProjectSearchSpecification(search), pageable);
+        return projectRepository.findAll(new ProjectSearchSpecification(search), pageable);
     }
 
     /**
@@ -126,7 +134,7 @@ public class ProjectService {
     }
 
     /**
-     * Get a project by it's token
+     * Get a project by its token
      *
      * @param token The token to find
      * @return The project
@@ -137,21 +145,86 @@ public class ProjectService {
     }
 
     /**
-     * Create a new project for a user
-     *
-     * @param user    The user how create the project
+     * Create a new project
      * @param project The project to instantiate
      * @return The project instantiate
      */
     @Transactional
-    public Project createProject(User user, Project project) {
-        project.getUsers().add(user);
-
+    public Project createProject(Project project) {
         if (StringUtils.isBlank(project.getToken())) {
             project.setToken(stringEncryptor.encrypt(UUID.randomUUID().toString()));
         }
 
         return projectRepository.save(project);
+    }
+
+    /**
+     * Create a new project for a user
+     * @param user    The user how create the project
+     * @param project The project to instantiate
+     * @return The project instantiate
+     */
+    @Transactional
+    public Project createProjectForUser(User user, Project project) {
+        project.getUsers().add(user);
+        return createProject(project);
+    }
+
+    /**
+     * Create or update a list of projects
+     * @param projects All the projects to create/update
+     * @param connectedUser The connected user
+     * @return The created/updated projects
+     */
+    @Transactional
+    public List<Project> createUpdateProjects(List<Project> projects, User connectedUser) {
+        for (Project project : projects) {
+            Optional<Project> projectOptional = projectRepository.findProjectByToken(project.getToken());
+
+            if (project.getScreenshot() != null) {
+                if (projectOptional.isPresent() && projectOptional.get().getScreenshot() != null) {
+                    project.getScreenshot().setId(projectOptional.get().getScreenshot().getId());
+                }
+
+                assetService.save(project.getScreenshot());
+            }
+
+            if (projectOptional.isPresent()) {
+                project.setId(projectOptional.get().getId());
+                project.setUsers(projectOptional.get().getUsers());
+                createProject(project);
+            } else {
+                createProjectForUser(connectedUser, project);
+            }
+
+            project.getGrids().forEach(projectGrid -> {
+                Optional<ProjectGrid> projectGridOptional = projectGridService.findByIdAndProjectToken(projectGrid.getId(), project.getToken());
+                if (projectGridOptional.isPresent()) {
+                    projectGrid.setId(projectGridOptional.get().getId());
+                } else {
+                    // Reset id to not steal a grid from a project to another
+                    projectGrid.setId(null);
+                }
+
+                projectGrid.setProject(project);
+                projectGridService.create(projectGrid);
+
+                projectGrid.getWidgets().forEach(projectWidget -> {
+                    Optional<ProjectWidget> projectWidgetOptional = projectWidgetService.findByIdAndProjectGridId(projectWidget.getId(), projectGrid.getId());
+                    if (projectWidgetOptional.isPresent()) {
+                        projectWidget.setId(projectWidgetOptional.get().getId());
+                    } else {
+                        // Reset id to not steal a grid from a project to another
+                        projectWidget.setId(null);
+                    }
+
+                    projectWidget.setProjectGrid(projectGrid);
+                    projectWidgetService.create(projectWidget);
+                });
+            });
+        }
+
+        return projectRepository.findAll(new ProjectSearchSpecification(StringUtils.EMPTY));
     }
 
     /**
@@ -161,7 +234,6 @@ public class ProjectService {
      * @param newName      the new name
      * @param widgetHeight The new widget height
      * @param maxColumn    The new max column
-     * @param gridNumber   The number grid
      * @param customCSS    The custom CSS style
      */
     @Transactional
@@ -224,14 +296,13 @@ public class ProjectService {
 
     /**
      * Check if the connected user can access to this project
-     *
      * @param project        The project
-     * @param authentication The connected user
+     * @param connectedUser The connected user
      * @return True if he can, false otherwise
      */
-    public boolean isConnectedUserCanAccessToProject(final Project project, final Authentication authentication) {
-        return SecurityUtils.isAdmin(authentication)
-            || project.getUsers().stream().anyMatch(currentUser -> currentUser.getUsername().equalsIgnoreCase(authentication.getName()));
+    public boolean isConnectedUserCanAccessToProject(final Project project, final LocalUser connectedUser) {
+        return SecurityUtils.isAdmin(connectedUser)
+            || project.getUsers().stream().anyMatch(currentUser -> currentUser.getUsername().equalsIgnoreCase(connectedUser.getUsername()));
     }
 
     /**
@@ -249,14 +320,16 @@ public class ProjectService {
     /**
      * Add or update a screenshot for a project
      *
-     * @param project    The project
-     * @param screenshot The screenshot to add
+     * @param project     The project
+     * @param content     The image content
+     * @param contentType The image content type
+     * @param size        The image size
      */
-    public void addOrUpdateScreenshot(Project project, MultipartFile screenshot) throws IOException {
+    public void addOrUpdateScreenshot(Project project, byte[] content, String contentType, long size) {
         Asset screenshotAsset = new Asset();
-        screenshotAsset.setContent(screenshot.getBytes());
-        screenshotAsset.setContentType(screenshot.getContentType());
-        screenshotAsset.setSize(screenshot.getSize());
+        screenshotAsset.setContent(content);
+        screenshotAsset.setContentType(contentType);
+        screenshotAsset.setSize(size);
 
         if (project.getScreenshot() != null) {
             screenshotAsset.setId(project.getScreenshot().getId());

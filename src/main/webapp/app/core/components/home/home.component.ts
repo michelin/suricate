@@ -14,6 +14,7 @@ import { ToastService } from '../../../shared/services/frontend/toast/toast.serv
 import { MaterialIconRecords } from '../../../shared/records/material-icon.record';
 import { IconEnum } from '../../../shared/enums/icon.enum';
 import { HeaderConfiguration } from '../../../shared/models/frontend/header/header-configuration';
+import { ButtonTypeEnum } from '../../../shared/enums/button-type.enum';
 
 @Component({
   selector: 'suricate-my-dashboards',
@@ -80,14 +81,24 @@ export class HomeComponent implements OnInit {
    */
   private initHeaderConfiguration(): void {
     this.headerConfiguration = {
-      title: 'dashboard.list.my'
+      title: 'dashboard.list.my',
+      actions: [
+        {
+          icon: IconEnum.ADD,
+          color: 'primary',
+          variant: 'miniFab',
+          type: ButtonTypeEnum.BUTTON,
+          tooltip: { message: 'dashboard.create' },
+          callback: () => this.openCreateDashboardFormSidenav()
+        }
+      ]
     };
   }
 
   /**
    * Display the side nav bar used to create a dashboard
    */
-  public openDashboardFormSidenav(): void {
+  public openCreateDashboardFormSidenav(): void {
     this.sidenavService.openFormSidenav({
       title: 'dashboard.create',
       formFields: this.projectFormFieldsService.generateProjectFormFields(),

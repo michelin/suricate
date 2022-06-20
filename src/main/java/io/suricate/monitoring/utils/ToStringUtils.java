@@ -16,7 +16,6 @@
 
 package io.suricate.monitoring.utils;
 
-import io.suricate.monitoring.model.entities.generic.AbstractEntity;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.slf4j.Logger;

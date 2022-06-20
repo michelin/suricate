@@ -1,0 +1,83 @@
+/*!
+ *  /*
+ *  * Copyright 2012-2021 the original author or authors.
+ *  *
+ *  * Licensed under the Apache License, Version 2.0 (the "License");
+ *  * you may not use this file except in compliance with the License.
+ *  * You may obtain a copy of the License at
+ *  *
+ *  *      http://www.apache.org/licenses/LICENSE-2.0
+ *  *
+ *  * Unless required by applicable law or agreed to in writing, software
+ *  * distributed under the License is distributed on an "AS IS" BASIS,
+ *  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *  * See the License for the specific language governing permissions and
+ *  * limitations under the License.
+ *
+ */
+
+.settings-container {
+  padding: 15px 35px 0 35px;
+}
+
+.created-token-container {
+  .token-created {
+    background-color: #8bc34a;
+
+    .mat-card-title {
+      color: #fff;
+      align-items: center;
+      font-size: 20px;
+    }
+
+    .mat-card-actions {
+      text-align: center;
+
+      .copy-token-button {
+        color: #fff;
+        border-color: #fff;
+        margin: 0;
+      }
+    }
+
+    .token-value-container {
+      .mat-card-content {
+        overflow: scroll;
+        white-space: nowrap;
+      }
+
+      ::-webkit-scrollbar {
+        width: 0;
+        height: 0;
+        background: transparent;
+      }
+    }
+  }
+}
+
+.form-container {
+  h2 {
+    margin: 10px 0;
+  }
+
+  .save-security-settings-button {
+    margin: auto;
+  }
+}
+
+table {
+  width: 100%;
+
+  .mat-cell {
+    font-size: 14px;
+  }
+
+  .mat-header-cell {
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .mat-column-revoke {
+    width: 90px;
+  }
+}

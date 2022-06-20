@@ -19,13 +19,7 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ColorPickerComponent } from './color-picker.component';
-import { TranslateLoader, TranslateModule, TranslatePipe } from '@ngx-translate/core';
-import { HttpClient } from '@angular/common/http';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { FormField } from '../../../models/frontend/form/form-field';
 import { DataTypeEnum } from '../../../enums/data-type.enum';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MockedModelBuilderService } from '../../../../mock/services/mocked-model-builder/mocked-model-builder.service';
 import { MockModule } from '../../../../mock/mock.module';
 

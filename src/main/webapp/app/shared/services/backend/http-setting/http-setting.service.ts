@@ -21,7 +21,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { Setting } from '../../../models/backend/setting/setting';
-import { SettingsTypeEnum } from '../../../enums/settings-type.enum';
 import { AbstractHttpService } from '../abstract-http/abstract-http.service';
 
 /**

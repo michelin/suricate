@@ -24,14 +24,12 @@ import org.mapstruct.Named;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Manage the generation DTO/Model objects for widgetParamValue class
  */
 @Mapper(componentModel = "spring")
 public abstract class WidgetParamValueMapper {
-
     /**
      * Map a widget parameter value into a widget parameter value DTO
      *

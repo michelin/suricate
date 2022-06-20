@@ -52,6 +52,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ProgressBarComponent } from './components/progress-bar/progress-bar.component';
 import { ActionsDialogComponent } from './components/actions-dialog/actions-dialog.component';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 
 @NgModule({
   imports: [
@@ -67,7 +68,8 @@ import { ActionsDialogComponent } from './components/actions-dialog/actions-dial
     ReactiveFormsModule,
     RouterModule,
     TranslateModule,
-    ColorPickerModule
+    ColorPickerModule,
+    ClipboardModule
   ],
   declarations: [
     CommunicationDialogComponent,

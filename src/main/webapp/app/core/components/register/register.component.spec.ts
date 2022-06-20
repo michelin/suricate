@@ -17,9 +17,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { RegisterComponent } from './register.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MockModule } from '../../../mock/mock.module';
 
 describe('RegisterComponent', () => {

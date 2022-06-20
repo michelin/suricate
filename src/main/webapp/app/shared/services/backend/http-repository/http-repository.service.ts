@@ -22,7 +22,6 @@ import { Observable } from 'rxjs/internal/Observable';
 
 import { Repository } from '../../../models/backend/repository/repository';
 import { RepositoryRequest } from '../../../models/backend/repository/repository-request';
-import { Widget } from '../../../models/backend/widget/widget';
 import { AbstractHttpService } from '../abstract-http/abstract-http.service';
 import { EMPTY } from 'rxjs';
 import { HttpFilterService } from '../http-filter/http-filter.service';

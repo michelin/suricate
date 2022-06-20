@@ -21,9 +21,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.EntityGraph;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -33,10 +31,8 @@ import java.util.Optional;
  */
 @Repository
 public interface UserRepository extends CrudRepository<User, Long> {
-
 	/**
 	 * Find all paginated users
-	 *
 	 * @param specification The specification to apply
 	 * @param pageable The pageable to apply
 	 * @return The paginated users
@@ -46,18 +42,24 @@ public interface UserRepository extends CrudRepository<User, Long> {
 
 	/**
 	 * Find a user by the username ignoring case
-	 *
 	 * @param username The username
 	 * @return The user as optional
 	 */
+	@EntityGraph(attributePaths = "roles")
 	Optional<User> findByUsernameIgnoreCase(String username);
 
 	/**
-	 * Get the ID of a user by username
-	 *
+	 * Find a user by the email ignoring case
 	 * @param username The username
-	 * @return The user ID
+	 * @return The user as optional
 	 */
-	@Query("SELECT id FROM User WHERE username = :username")
-    Long getIdByUsername(@Param("username") String username);
+	@EntityGraph(attributePaths = "roles")
+	Optional<User> findByEmailIgnoreCase(String email);
+
+	/**
+	 * Check if a given username exists
+	 * @param username The username
+	 * @return true if it is, false otherwise
+	 */
+	boolean existsByUsername(String username);
 }

@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
 import { StompHeaders } from '@stomp/ng2-stompjs/src/stomp-headers';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { RxStompConfig } from '@stomp/rx-stomp/esm5/rx-stomp-config';
-import { RxStompState } from '@stomp/rx-stomp/esm5/rx-stomp-state';
 
 @Injectable({
   providedIn: 'root'

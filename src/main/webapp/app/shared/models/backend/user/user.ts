@@ -25,6 +25,7 @@ export class User {
   firstname: string;
   lastname: string;
   email: string;
-  authenticationMethod: string;
+  avatarUrl: string;
+  idp: string;
   roles: Role[];
 }

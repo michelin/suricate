@@ -18,8 +18,8 @@ package io.suricate.monitoring.services.nashorn.tasks;
 
 import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
 import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
-import io.suricate.monitoring.services.nashorn.services.DashboardScheduleService;
 import io.suricate.monitoring.services.nashorn.scheduler.NashornRequestWidgetExecutionScheduler;
+import io.suricate.monitoring.services.nashorn.services.DashboardScheduleService;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -8,7 +8,6 @@ import java.text.MessageFormat;
  * Throw when the project token cannot be decrypt
  */
 public class ProjectTokenInvalidException extends ApiException {
-
     /**
      * Message for Project Token invalid
      */

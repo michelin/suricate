@@ -17,12 +17,8 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { ConfirmDialogComponent } from './confirm-dialog.component';
-import { MAT_DIALOG_DATA, MatDialog, MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CommunicationDialogConfiguration } from '../../models/frontend/dialog/communication-dialog-configuration';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { HttpClient } from '@angular/common/http';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { MockModule } from '../../../mock/mock.module';
 
 describe('ConfirmDialogComponent', () => {

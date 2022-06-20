@@ -18,12 +18,9 @@ package io.suricate.monitoring.services.mapper;
 
 import io.suricate.monitoring.model.dto.api.widget.WidgetParamResponseDto;
 import io.suricate.monitoring.model.entities.WidgetParam;
-import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
-
-import java.util.List;
 
 /**
  * Manage the generation DTO/Model objects for Widget params class
@@ -35,7 +32,6 @@ import java.util.List;
     }
 )
 public abstract class WidgetParamMapper {
-
     /**
      * Map a widget parameter into a widget parameter DTO
      *

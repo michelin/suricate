@@ -18,8 +18,8 @@
 
 import { animate, group, state, style, transition, trigger } from '@angular/animations';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Observable, Subject } from 'rxjs';
-import { takeUntil, takeWhile } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { ToastService } from '../../services/frontend/toast/toast.service';
 import { ToastMessage } from '../../models/frontend/toast/toast-message';
