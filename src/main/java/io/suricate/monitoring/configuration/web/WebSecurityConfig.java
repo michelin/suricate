@@ -18,7 +18,8 @@ package io.suricate.monitoring.configuration.web;
 
 import io.suricate.monitoring.properties.ApplicationProperties;
 import io.suricate.monitoring.security.AuthenticationFailureEntryPoint;
-import io.suricate.monitoring.security.filter.TokenAuthenticationFilter;
+import io.suricate.monitoring.security.filter.JwtTokenFilter;
+import io.suricate.monitoring.security.filter.PersonalAccessTokenFilter;
 import io.suricate.monitoring.security.oauth2.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -125,7 +126,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/api/oauth2/authorization/**").permitAll()
             .antMatchers("/api/**").authenticated()
                 .and()
-            .addFilterBefore(tokenAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(personalAccessTokenFilter(), UsernamePasswordAuthenticationFilter.class)
             .oauth2Login()
                 .authorizationEndpoint()
                     // Store auth request in a http cookie on the IDP response
@@ -154,12 +156,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     /**
-     * HTTP filter processing the given token in header
+     * HTTP filter processing the given jwt token in header
      * @return The token authentication filter bean
      */
     @Bean
-    public TokenAuthenticationFilter tokenAuthenticationFilter() {
-        return new TokenAuthenticationFilter();
+    public JwtTokenFilter jwtTokenFilter() {
+        return new JwtTokenFilter();
+    }
+
+    /**
+     * HTTP filter processing the given personal access token in header
+     * @return The token authentication filter bean
+     */
+    @Bean
+    public PersonalAccessTokenFilter personalAccessTokenFilter() {
+        return new PersonalAccessTokenFilter();
     }
 
     /**

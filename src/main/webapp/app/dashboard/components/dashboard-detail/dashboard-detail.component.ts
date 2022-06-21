@@ -486,6 +486,9 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Delete a single dashboard
+   */
   private deleteDashboard(): void {
     this.dialogService.confirm({
       title: 'dashboard.delete',

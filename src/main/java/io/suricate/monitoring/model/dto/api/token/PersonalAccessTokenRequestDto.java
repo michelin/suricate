@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "SignInRequest", description = "Sign in request")
-public class TokenRequestDto extends AbstractDto {
+@ApiModel(value = "PersonalAccessTokenRequest", description = "Describe a personal access token request")
+public class PersonalAccessTokenRequestDto extends AbstractDto {
     /**
      * The name
      */

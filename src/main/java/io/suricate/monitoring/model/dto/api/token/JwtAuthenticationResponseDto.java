@@ -1,4 +1,4 @@
-package io.suricate.monitoring.model.dto.api.auth;
+package io.suricate.monitoring.model.dto.api.token;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

@@ -1,10 +1,10 @@
 package io.suricate.monitoring.controllers;
 
-import io.suricate.monitoring.model.dto.api.auth.JwtAuthenticationResponseDto;
+import io.suricate.monitoring.model.dto.api.token.JwtAuthenticationResponseDto;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.user.SignInRequestDto;
 import io.suricate.monitoring.model.dto.api.user.UserResponseDto;
-import io.suricate.monitoring.utils.jwt.JwtUtils;
+import io.suricate.monitoring.services.token.JwtHelperService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -36,7 +36,7 @@ public class AuthenticationController {
      * The token provider
      */
     @Autowired
-    private JwtUtils jwtUtils;
+    private JwtHelperService jwtHelperService;
 
     /**
      * Sign in a user
@@ -54,7 +54,7 @@ public class AuthenticationController {
                                                                @RequestBody SignInRequestDto signInRequestDto) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signInRequestDto.getUsername(), signInRequestDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String token = jwtUtils.createToken(authentication, false);
+        String token = jwtHelperService.createToken(authentication);
         return ResponseEntity
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)

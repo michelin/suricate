@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 
-export interface TokenRequest {
+export interface PersonalAccessTokenRequest {
   name: string;
 }

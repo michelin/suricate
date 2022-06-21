@@ -8,13 +8,13 @@ import lombok.Setter;
 import javax.persistence.*;
 
 /**
- * Token entity
+ * PersonalAccessToken entity
  */
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
-public class Token extends AbstractAuditingEntity<Long> {
+public class PersonalAccessToken extends AbstractAuditingEntity<Long> {
     /**
      * The category id
      */
@@ -27,6 +27,12 @@ public class Token extends AbstractAuditingEntity<Long> {
      */
     @Column(nullable = false, unique = true)
     private String name;
+
+    /**
+     * The checksum of the generated token
+     */
+    @Column(nullable = false, unique = true)
+    private Long checksum;
 
     /**
      * The owner

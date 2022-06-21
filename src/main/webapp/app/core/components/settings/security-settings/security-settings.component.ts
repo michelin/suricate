@@ -6,13 +6,13 @@ import { FormService } from '../../../../shared/services/frontend/form/form.serv
 import { IconEnum } from '../../../../shared/enums/icon.enum';
 import { ButtonConfiguration } from '../../../../shared/models/frontend/button/button-configuration';
 import { HttpUserService } from '../../../../shared/services/backend/http-user/http-user.service';
-import { Token } from '../../../../shared/models/backend/token/token';
+import { PersonalAccessToken } from '../../../../shared/models/backend/personal-access-token/personal-access-token';
 import { Clipboard } from '@angular/cdk/clipboard';
 import { ToastTypeEnum } from '../../../../shared/enums/toast-type.enum';
 import { ToastService } from '../../../../shared/services/frontend/toast/toast.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { TranslateService } from '@ngx-translate/core';
-import { TokenRequest } from '../../../../shared/models/backend/token/token-request';
+import { PersonalAccessTokenRequest } from '../../../../shared/models/backend/personal-access-token/personal-access-token-request';
 import { MaterialIconRecords } from '../../../../shared/records/material-icon.record';
 import { DialogService } from '../../../../shared/services/frontend/dialog/dialog.service';
 
@@ -60,12 +60,12 @@ export class SecuritySettingsComponent implements OnInit {
   /**
    * The created token
    */
-  public createdToken: Token;
+  public createdToken: PersonalAccessToken;
 
   /**
    * The user tokens
    */
-  public tokens: Token[];
+  public tokens: PersonalAccessToken[];
 
   /**
    * Constructor
@@ -108,7 +108,7 @@ export class SecuritySettingsComponent implements OnInit {
     this.revokeButton = {
       label: 'revoke',
       color: 'warn',
-      callback: (event: Event, token: Token) => this.revokeToken(token)
+      callback: (event: Event, token: PersonalAccessToken) => this.revokeToken(token)
     };
   }
 
@@ -130,7 +130,7 @@ export class SecuritySettingsComponent implements OnInit {
    * Reload the user tokens
    */
   private reloadTokens(): void {
-    this.httpUserService.getUserTokens().subscribe((tokens: Token[]) => {
+    this.httpUserService.getUserTokens().subscribe((tokens: PersonalAccessToken[]) => {
       this.tokens = tokens;
     });
   }
@@ -142,9 +142,9 @@ export class SecuritySettingsComponent implements OnInit {
     this.formService.validate(this.formGroup);
 
     if (this.formGroup.valid) {
-      const tokenRequest: TokenRequest = this.formGroup.value;
+      const tokenRequest: PersonalAccessTokenRequest = this.formGroup.value;
       this.httpUserService.createToken(tokenRequest).subscribe(
-        (token: Token) => {
+        (token: PersonalAccessToken) => {
           this.createdToken = token;
           this.reloadTokens();
         },
@@ -174,7 +174,7 @@ export class SecuritySettingsComponent implements OnInit {
   /**
    * Revoke the given token
    */
-  public revokeToken(token: Token): void {
+  public revokeToken(token: PersonalAccessToken): void {
     this.dialogService.confirm({
       title: 'token.delete',
       message: this.translateService.instant('token.delete.confirm', { tokenName: token.name }),

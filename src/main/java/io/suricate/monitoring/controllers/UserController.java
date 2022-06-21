@@ -20,27 +20,27 @@ package io.suricate.monitoring.controllers;
 
 import io.suricate.monitoring.configuration.swagger.ApiPageable;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
-import io.suricate.monitoring.model.dto.api.token.TokenRequestDto;
-import io.suricate.monitoring.model.dto.api.token.TokenResponseDto;
+import io.suricate.monitoring.model.dto.api.token.PersonalAccessTokenResponseDto;
+import io.suricate.monitoring.model.dto.api.token.PersonalAccessTokenRequestDto;
 import io.suricate.monitoring.model.dto.api.user.UserRequestDto;
 import io.suricate.monitoring.model.dto.api.user.UserResponseDto;
 import io.suricate.monitoring.model.dto.api.user.UserSettingRequestDto;
 import io.suricate.monitoring.model.dto.api.user.UserSettingResponseDto;
 import io.suricate.monitoring.model.entities.Setting;
-import io.suricate.monitoring.model.entities.Token;
+import io.suricate.monitoring.model.entities.PersonalAccessToken;
 import io.suricate.monitoring.model.entities.User;
 import io.suricate.monitoring.model.entities.UserSetting;
 import io.suricate.monitoring.model.enums.AuthenticationProvider;
 import io.suricate.monitoring.security.LocalUser;
 import io.suricate.monitoring.services.api.SettingService;
-import io.suricate.monitoring.services.api.TokenService;
+import io.suricate.monitoring.services.api.PersonalAccessTokenService;
 import io.suricate.monitoring.services.api.UserService;
 import io.suricate.monitoring.services.api.UserSettingService;
-import io.suricate.monitoring.services.mapper.TokenMapper;
+import io.suricate.monitoring.services.mapper.PersonalAccessTokenMapper;
 import io.suricate.monitoring.services.mapper.UserMapper;
 import io.suricate.monitoring.services.mapper.UserSettingMapper;
+import io.suricate.monitoring.services.token.PersonalAccessTokenHelperService;
 import io.suricate.monitoring.utils.exceptions.ObjectNotFoundException;
-import io.suricate.monitoring.utils.jwt.JwtUtils;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -57,6 +57,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.net.URI;
+import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
@@ -87,10 +88,16 @@ public class UserController {
     private SettingService settingService;
 
     /**
-     * The token service
+     * The personal access token helper service
      */
     @Autowired
-    private TokenService tokenService;
+    private PersonalAccessTokenHelperService patHelperService;
+
+    /**
+     * The personal access token service
+     */
+    @Autowired
+    private PersonalAccessTokenService patService;
 
     /**
      * The user mapper
@@ -108,13 +115,7 @@ public class UserController {
      * The token mapper
      */
     @Autowired
-    private TokenMapper tokenMapper;
-
-    /**
-     * The JWT utils
-     */
-    @Autowired
-    private JwtUtils jwtUtils;
+    private PersonalAccessTokenMapper personalAccessTokenMapper;
 
     /**
      * List all user
@@ -328,67 +329,68 @@ public class UserController {
     }
 
     /**
-     * Get all user tokens
+     * Get all user personal access tokens
      * @param connectedUser The authentication principal as LocalUser
-     * @return A list of tokens
+     * @return A list of personal access tokens
      */
-    @ApiOperation(value = "Get all user tokens", response = List.class)
+    @ApiOperation(value = "Get all user personal access tokens", response = List.class)
     @ApiResponses(value = {
             @ApiResponse(code = 200, message = "Ok", response = List.class),
             @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class)
     })
-    @GetMapping(value = "/v1/users/tokens")
+    @GetMapping(value = "/v1/users/personal-access-token")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<List<TokenResponseDto>> getTokens(@ApiIgnore @AuthenticationPrincipal LocalUser connectedUser) {
+    public ResponseEntity<List<PersonalAccessTokenResponseDto>> getPersonalAccessTokens(@ApiIgnore @AuthenticationPrincipal LocalUser connectedUser) {
         return ResponseEntity
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(tokenMapper.toTokensDTOs(tokenService.findAllByUser(connectedUser.getUser())));
+                .body(personalAccessTokenMapper.toPersonalAccessTokensDTOs(patService.findAllByUser(connectedUser.getUser())));
     }
 
     /**
      * Generate a new user token
-     * @param tokenRequestDto The token request
+     * @param personalAccessTokenRequestDto The token request
      */
-    @ApiOperation(value = "Generate a new user token", response = TokenResponseDto.class)
+    @ApiOperation(value = "Generate a new user personal access token", response = PersonalAccessTokenResponseDto.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Ok", response = TokenResponseDto.class),
+            @ApiResponse(code = 200, message = "Ok", response = PersonalAccessTokenResponseDto.class),
             @ApiResponse(code = 400, message = "Bad request", response = ApiErrorDto.class),
             @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class)
     })
-    @PostMapping(value = "/v1/users/tokens")
+    @PostMapping(value = "/v1/users/personal-access-token")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<TokenResponseDto> createToken(@ApiIgnore Authentication authentication,
-                                                        @ApiParam(name = "tokenRequestDto", value = "The token request", required = true)
-                                                        @RequestBody TokenRequestDto tokenRequestDto) {
-        String tokenValue = jwtUtils.createToken(authentication, true);
+    public ResponseEntity<PersonalAccessTokenResponseDto> createPersonalAccessToken(@ApiIgnore Authentication authentication,
+                                                                                    @ApiParam(name = "tokenRequestDto", value = "The token request", required = true)
+                                                        @RequestBody PersonalAccessTokenRequestDto personalAccessTokenRequestDto) throws NoSuchAlgorithmException {
+        String personalAccessToken = patHelperService.createPersonalAccessToken();
+        Long checksum = patHelperService.computePersonAccessTokenChecksum(personalAccessToken);
 
         return ResponseEntity
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(tokenMapper.toTokenDTO(tokenService.create(tokenRequestDto.getName(), authentication), tokenValue));
+                .body(personalAccessTokenMapper.toPersonalAccessTokenDTO(patService.create(personalAccessTokenRequestDto.getName(), checksum, authentication), personalAccessToken));
     }
 
     /**
-     * Delete a user token
+     * Delete a user personal access token
      */
-    @ApiOperation(value = "Delete a user token", response = TokenResponseDto.class)
+    @ApiOperation(value = "Delete a user personal access token", response = PersonalAccessTokenResponseDto.class)
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Token deleted"),
+            @ApiResponse(code = 204, message = "Personal access token deleted"),
             @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-            @ApiResponse(code = 404, message = "Token not found", response = ApiErrorDto.class)
+            @ApiResponse(code = 404, message = "Personal access token not found", response = ApiErrorDto.class)
     })
-    @DeleteMapping(value = "/v1/users/tokens/{tokenName}")
+    @DeleteMapping(value = "/v1/users/personal-access-token/{tokenName}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Void> deleteToken(@ApiIgnore @AuthenticationPrincipal LocalUser connectedUser,
+    public ResponseEntity<Void> deletePersonalAccessToken(@ApiIgnore @AuthenticationPrincipal LocalUser connectedUser,
                                             @ApiParam(name = "tokenName", value = "The token name", required = true)
                                             @PathVariable("tokenName") String tokenName) {
-        Optional<Token> tokenOptional = tokenService.findByNameAndUser(tokenName, connectedUser.getUser());
+        Optional<PersonalAccessToken> tokenOptional = patService.findByNameAndUser(tokenName, connectedUser.getUser());
         if (!tokenOptional.isPresent()) {
-            throw new ObjectNotFoundException(Token.class, tokenName);
+            throw new ObjectNotFoundException(PersonalAccessToken.class, tokenName);
         }
 
-        tokenService.deleteById(tokenOptional.get().getId());
+        patService.deleteById(tokenOptional.get().getId());
         return ResponseEntity.noContent().build();
     }
 }

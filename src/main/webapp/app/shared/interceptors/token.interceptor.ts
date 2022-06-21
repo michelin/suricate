@@ -56,7 +56,7 @@ export class TokenInterceptor implements HttpInterceptor {
         });
       }
     } catch (error) {
-      // Catch "is logged in" errors. Token probably has been tampered
+      // Catch "isLoggedIn" errors. Token probably has been tampered
       AuthenticationService.logout();
       this.router.navigate(['/login']);
     }

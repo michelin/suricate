@@ -45,7 +45,7 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
     /**
-     * Class logger
+     * Logger
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
 

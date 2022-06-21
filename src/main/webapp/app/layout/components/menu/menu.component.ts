@@ -93,20 +93,20 @@ export class MenuComponent implements OnInit {
    * Is the connected user logged in by idp or not ?
    */
   public isConnectedByIdp(): boolean {
-    return this.connectedUser.idp != null;
+    return this.isConnectedWithGithub() || this.isConnectedWithGitlab();
   }
 
   /**
    * Is the connected user logged in with GitHub
    */
   public isConnectedWithGithub(): boolean {
-    return this.connectedUser.idp === AuthenticationProvider.GITHUB;
+    return this.connectedUser.mode === AuthenticationProvider.GITHUB;
   }
 
   /**
    * Is the connected user logged in with GitLab
    */
   public isConnectedWithGitlab(): boolean {
-    return this.connectedUser.idp === AuthenticationProvider.GITLAB;
+    return this.connectedUser.mode === AuthenticationProvider.GITLAB;
   }
 }

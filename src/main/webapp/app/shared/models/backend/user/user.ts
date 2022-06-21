@@ -26,6 +26,6 @@ export class User {
   lastname: string;
   email: string;
   avatarUrl: string;
-  idp: string;
+  mode: string;
   roles: Role[];
 }

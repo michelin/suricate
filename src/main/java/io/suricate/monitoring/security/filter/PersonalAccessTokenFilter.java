@@ -1,47 +1,48 @@
 package io.suricate.monitoring.security.filter;
 
-import io.suricate.monitoring.model.entities.User;
+import io.suricate.monitoring.model.entities.PersonalAccessToken;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.security.LocalUser;
-import io.suricate.monitoring.services.api.UserService;
-import io.suricate.monitoring.utils.jwt.JwtUtils;
+import io.suricate.monitoring.services.api.PersonalAccessTokenService;
+import io.suricate.monitoring.services.token.PersonalAccessTokenHelperService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Optional;
 
-public class TokenAuthenticationFilter extends OncePerRequestFilter {
+public class PersonalAccessTokenFilter extends OncePerRequestFilter {
     /**
-     * The logger
+     * Class logger
      */
-    private static final Logger LOGGER = LoggerFactory.getLogger(TokenAuthenticationFilter.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(PersonalAccessTokenFilter.class);
 
     /**
-     * The token provider
-     */
-    @Autowired
-    private JwtUtils tokenProvider;
-
-    /**
-     * The user service
+     * The personal access token helper service
      */
     @Autowired
-    private UserService userService;
+    private PersonalAccessTokenHelperService patHelperService;
 
     /**
-     * When a request arrives to the Back-End, check if it contains a bearer token.
+     * The personal access token service
+     */
+    @Autowired
+    private PersonalAccessTokenService patService;
+
+    /**
+     * When a request arrives to the Back-End, check if it contains a personal access token.
      * If it does, validate it and set authentication to Spring context
      * @param request The incoming request
      * @param response The response
@@ -51,17 +52,17 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws IOException {
         try {
-            final String token = getTokenFromRequest(request);
+            final String token = getPersonalAccessTokenFromRequest(request);
 
-            if (StringUtils.hasText(token) && tokenProvider.validateToken(token)) {
-                String username = tokenProvider.getUsernameFromToken(token);
-                User user = userService.getOneByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User " + username + " is not authorized"));
-                LocalUser localUser = new LocalUser(user, Collections.emptyMap());
+            if (StringUtils.hasText(token) && patHelperService.validateToken(token)) {
+                Optional<PersonalAccessToken> patOptional = patService.findByChecksum(patHelperService.computePersonAccessTokenChecksum(token));
+                if (patOptional.isPresent()) {
+                    LocalUser localUser = new LocalUser(patOptional.get().getUser(), Collections.emptyMap());
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(localUser, null, localUser.getAuthorities());
+                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(localUser, null, localUser.getAuthorities());
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-                SecurityContextHolder.getContext().setAuthentication(authentication);
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                }
             }
 
             filterChain.doFilter(request, response);
@@ -76,11 +77,11 @@ public class TokenAuthenticationFilter extends OncePerRequestFilter {
      * @param request The request
      * @return The token
      */
-    private String getTokenFromRequest(HttpServletRequest request) {
+    private String getPersonalAccessTokenFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
 
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7);
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Token ")) {
+            return bearerToken.substring(6);
         }
 
         return null;

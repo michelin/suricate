@@ -83,6 +83,11 @@ public class ApplicationProperties {
         public final Jwt jwt = new Jwt();
 
         /**
+         * Personal access token configuration
+         */
+        public final PersonalAccessToken pat = new PersonalAccessToken();
+
+        /**
          * OAuth2 configuration
          */
         public final OAuth2 oauth2 = new OAuth2();
@@ -171,16 +176,35 @@ public class ApplicationProperties {
     public static class Jwt {
 
         /**
-         * Token validity in second
+         * JWT validity in second
          */
         @NotNull
         public long tokenValidityMs;
 
         /**
-         * Jwt signing key
+         * JWT signing key
          */
         @NotNull
         public String signingKey;
+    }
+
+    /**
+     * Hold the personal access token properties info
+     */
+    @Getter
+    @Setter
+    public static class PersonalAccessToken {
+        /**
+         * Personal access token prefix
+         */
+        @NotNull
+        public String prefix;
+
+        /**
+         * Personal access token checksum secret
+         */
+        @NotNull
+        public String checksumSecret;
     }
 
     /**

@@ -28,7 +28,6 @@ import java.util.Optional;
  */
 @Service
 public class AllowedSettingValueService {
-
     /**
      * The allowed setting value repository
      */

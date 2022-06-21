@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-export interface Token {
+export interface PersonalAccessToken {
   name: string;
   value: string;
   createdDate: Date;

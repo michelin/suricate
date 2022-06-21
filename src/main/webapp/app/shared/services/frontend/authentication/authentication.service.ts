@@ -138,12 +138,12 @@ export class AuthenticationService {
     const decodedToken = AuthenticationService.decodeAccessToken();
 
     const user = new User();
-    user.username = decodedToken.username;
+    user.username = decodedToken.sub;
     user.lastname = decodedToken.lastname;
     user.firstname = decodedToken.firstname;
     user.email = decodedToken.email;
     user.avatarUrl = decodedToken.avatar_url;
-    user.idp = decodedToken.idp;
+    user.mode = decodedToken.mode;
 
     if (decodedToken.authorities) {
       user.roles = decodedToken.authorities.map((roleEnum: RoleEnum) => {

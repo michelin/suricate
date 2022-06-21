@@ -12,8 +12,8 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "TokenResponse", description = "Describe a token")
-public class TokenResponseDto extends AbstractDto {
+@ApiModel(value = "PersonalAccessTokenResponse", description = "Describe a personal access token response")
+public class PersonalAccessTokenResponseDto extends AbstractDto {
     /**
      * The token name
      */

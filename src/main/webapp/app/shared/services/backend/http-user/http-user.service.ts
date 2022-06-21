@@ -26,8 +26,8 @@ import { AbstractHttpService } from '../abstract-http/abstract-http.service';
 import { Page } from '../../../models/backend/page';
 import { HttpFilter } from '../../../models/backend/http-filter';
 import { HttpFilterService } from '../http-filter/http-filter.service';
-import { TokenRequest } from '../../../models/backend/token/token-request';
-import { Token } from '../../../models/backend/token/token';
+import { PersonalAccessTokenRequest } from '../../../models/backend/personal-access-token/personal-access-token-request';
+import { PersonalAccessToken } from '../../../models/backend/personal-access-token/personal-access-token';
 
 /**
  * Manage the http user calls
@@ -127,18 +127,18 @@ export class HttpUserService implements AbstractHttpService<User | UserRequest> 
   /**
    * Get the current user tokens
    */
-  public getUserTokens(): Observable<Token[]> {
-    const url = `${HttpUserService.usersApiEndpoint}/tokens`;
-    return this.httpClient.get<Token[]>(url);
+  public getUserTokens(): Observable<PersonalAccessToken[]> {
+    const url = `${HttpUserService.usersApiEndpoint}/personal-access-token`;
+    return this.httpClient.get<PersonalAccessToken[]>(url);
   }
 
   /**
    * Create a JWT token for the user
    * @param tokenRequest The token request
    */
-  public createToken(tokenRequest: TokenRequest): Observable<Token> {
-    const url = `${HttpUserService.usersApiEndpoint}/tokens`;
-    return this.httpClient.post<Token>(url, tokenRequest);
+  public createToken(tokenRequest: PersonalAccessTokenRequest): Observable<PersonalAccessToken> {
+    const url = `${HttpUserService.usersApiEndpoint}/personal-access-token`;
+    return this.httpClient.post<PersonalAccessToken>(url, tokenRequest);
   }
 
   /**
@@ -146,7 +146,7 @@ export class HttpUserService implements AbstractHttpService<User | UserRequest> 
    * @param tokenName The token name
    */
   public revokeToken(tokenName: string): Observable<void> {
-    const url = `${HttpUserService.usersApiEndpoint}/tokens/${tokenName}`;
+    const url = `${HttpUserService.usersApiEndpoint}/personal-access-token/${tokenName}`;
     return this.httpClient.delete<void>(url);
   }
 }
