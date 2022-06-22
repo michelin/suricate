@@ -1,6 +1,5 @@
 package io.suricate.monitoring.security.oauth2;
 
-import io.suricate.monitoring.properties.ApplicationProperties;
 import io.suricate.monitoring.services.token.JwtHelperService;
 import io.suricate.monitoring.utils.web.CookieUtils;
 import org.slf4j.Logger;
@@ -48,12 +47,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
      */
     @Autowired
     private JwtHelperService tokenProvider;
-
-    /**
-     * The application properties
-     */
-    @Autowired
-    private ApplicationProperties applicationProperties;
 
     /**
      * Trigger after OAuth2 authentication has been successful
