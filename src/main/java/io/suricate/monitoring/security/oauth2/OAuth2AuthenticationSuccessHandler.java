@@ -1,10 +1,13 @@
 package io.suricate.monitoring.security.oauth2;
 
+import io.suricate.monitoring.properties.ApplicationProperties;
 import io.suricate.monitoring.services.token.JwtHelperService;
 import io.suricate.monitoring.utils.web.CookieUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
@@ -49,6 +52,12 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private JwtHelperService tokenProvider;
 
     /**
+     * The application properties
+     */
+    @Autowired
+    private ApplicationProperties applicationProperties;
+
+    /**
      * Trigger after OAuth2 authentication has been successful
      * @param request The request which is the response of the IDP
      * @param response The response to send to the host that authenticated successfully
@@ -58,7 +67,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
      */
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-       String targetUrl = determineTargetUrl(request, response, authentication);
+        String targetUrl = determineTargetUrl(request, response, authentication);
 
         if (response.isCommitted()) {
             LOGGER.debug("Response has already been committed. Unable to redirect to {}", targetUrl);
@@ -84,12 +93,15 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         Optional<String> redirectUri = CookieUtils.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME).map(Cookie::getValue);
 
-        if (!redirectUri.isPresent()) {
-            redirectUri = Optional.ofNullable(request.getHeader("Referer"));
-            redirectUri.ifPresent(redirect -> LOGGER.debug("Using url {} from Referer header", request.getHeader("Referer")));
+        if (!redirectUri.isPresent() && applicationProperties.getAuthentication().getOauth2().isUseReferer()) {
+            redirectUri = Optional.ofNullable(request.getHeader(HttpHeaders.REFERER));
+            redirectUri.ifPresent(redirect -> LOGGER.debug("Using url {} from Referer header", request.getHeader(HttpHeaders.REFERER)));
         }
 
-        String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
+        String targetUrl = redirectUri.orElse(applicationProperties.getAuthentication().getOauth2().getDefaultTargetUrl());
+        if (StringUtils.isBlank(targetUrl)) {
+            targetUrl = "/";
+        }
 
         OAuth2AuthenticationToken auth = (OAuth2AuthenticationToken) authentication;
         OAuth2AuthorizedClient authorizedClient = oAuth2AuthorizedClientRepository.loadAuthorizedClient(auth.getAuthorizedClientRegistrationId(), authentication, request);

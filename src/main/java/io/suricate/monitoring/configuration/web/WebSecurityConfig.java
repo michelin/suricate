@@ -69,6 +69,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private OIDCUserService oidcUserService;
 
     /**
+     * The authentication success handler
+     */
+    @Autowired
+    private OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
+
+    /**
      * The authentication failure handler
      */
     @Autowired
@@ -140,19 +146,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .userService(userService)
                     .oidcUserService(oidcUserService)
                 .and()
-                    .successHandler(oAuth2AuthenticationSuccessHandler())
+                    .successHandler(oAuth2AuthenticationSuccessHandler)
                     .failureHandler(oAuth2AuthenticationFailureHandler);
-    }
-
-    /**
-     * Handler processing OAuth2 successful authentications
-     * @return The OAuth2 authentication success handler bean
-     */
-    @Bean
-    public OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler() {
-        OAuth2AuthenticationSuccessHandler handler = new OAuth2AuthenticationSuccessHandler();
-        handler.setDefaultTargetUrl(applicationProperties.getAuthentication().getOauth2().getDefaultTargetUrl());
-        return handler;
     }
 
     /**

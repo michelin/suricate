@@ -217,6 +217,11 @@ public class ApplicationProperties {
          * A default redirect URL after being logged in with OAuth2
          */
         public String defaultTargetUrl;
+
+        /**
+         * Should the referer be considered to redirect after oauth2 authentication
+         */
+        public boolean useReferer;
     }
 
     /**
