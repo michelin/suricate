@@ -6,7 +6,14 @@
 
     <suricate-spinner *ngIf="loading"></suricate-spinner>
 
-    <form *ngIf="!loading && (isDatabaseAuthenticationActivated() || isLdapAuthenticationActivated())" class="login-form" fxLayout="column" fxLayoutAlign="center" [formGroup]="loginForm" (submit)="login()">
+    <form
+      *ngIf="!loading && (isDatabaseAuthenticationActivated() || isLdapAuthenticationActivated())"
+      class="login-form"
+      fxLayout="column"
+      fxLayoutAlign="center"
+      [formGroup]="loginForm"
+      (submit)="login()"
+    >
       <suricate-input *ngFor="let field of formFields" [formGroup]="loginForm" [field]="field"> </suricate-input>
       <suricate-buttons [configurations]="buttonConfigurations" fxLayout="row" fxLayoutAlign="center center"></suricate-buttons>
       <p *ngIf="isDatabaseAuthenticationActivated()">
@@ -27,13 +34,13 @@
       <ul>
         <li *ngIf="isGithubAuthenticationActivated()" style="background-color: rgb(68, 68, 68)">
           <a class="identity-provider-link" href="{{ this.githubAuthenticationEndpoint }}">
-            <img src="../../../../../assets/images/github-white.svg">
+            <img src="../../../../../assets/images/github-white.svg" />
             <span>{{ 'github' | translate }}</span>
           </a>
         </li>
         <li *ngIf="isGitlabAuthenticationActivated()" style="background-color: rgb(41, 41, 97)">
           <a class="identity-provider-link" href="{{ this.gitlabAuthenticationEndpoint }}">
-            <img src="../../../../../assets/images/gitlab.svg">
+            <img src="../../../../../assets/images/gitlab.svg" />
             <span>{{ 'gitlab' | translate }}</span>
           </a>
         </li>

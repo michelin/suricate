@@ -31,7 +31,11 @@
           </div>
 
           <div *ngIf="listConfiguration.buttons" class="list-buttons" fxFlex="20%" fxLayout="row" fxLayoutAlign="end center">
-            <suricate-buttons [configurations]="listConfiguration.buttons" [object]="object" [disableAllButtons]="disableAllButtons"></suricate-buttons>
+            <suricate-buttons
+              [configurations]="listConfiguration.buttons"
+              [object]="object"
+              [disableAllButtons]="disableAllButtons"
+            ></suricate-buttons>
           </div>
         </div>
       </div>
