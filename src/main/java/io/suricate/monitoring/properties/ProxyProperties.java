@@ -31,31 +31,46 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "proxy")
 public class ProxyProperties {
     /**
-     * Proxy host
+     * Proxy http host
      */
-    private String host;
+    private String httpHost;
 
     /**
-     * Proxy port
+     * Proxy http port
      */
-    private String port;
+    private String httpPort;
+
+    /**
+     * Proxy https host
+     */
+    private String httpsHost;
+
+    /**
+     * Proxy https port
+     */
+    private String httpsPort;
 
     /**
      * List of all proxy domain to ignore
      */
-    private String noProxyDomains;
+    private String nonProxyHosts;
 
     /**
      * Set JVM settings for http proxy
      */
     public void setProxy() {
-        if (!StringUtils.isAllEmpty(host, port) && StringUtils.isNumeric(port)) {
-            System.setProperty("http.proxyHost", host);
-            System.setProperty("http.proxyPort", port);
+        if (!StringUtils.isAllEmpty(httpHost, httpPort) && StringUtils.isNumeric(httpPort)) {
+            System.setProperty("http.proxyHost", httpHost);
+            System.setProperty("http.proxyPort", httpPort);
+        }
 
-            if (!StringUtils.isAllEmpty(noProxyDomains)) {
-                System.setProperty("http.nonProxyHosts", noProxyDomains);
-            }
+        if (!StringUtils.isAllEmpty(httpsHost, httpsPort) && StringUtils.isNumeric(httpsPort)) {
+            System.setProperty("https.proxyHost", httpsHost);
+            System.setProperty("https.proxyPort", httpsPort);
+        }
+
+        if (!StringUtils.isAllEmpty(nonProxyHosts)) {
+            System.setProperty("http.nonProxyHosts", nonProxyHosts);
         }
     }
 }

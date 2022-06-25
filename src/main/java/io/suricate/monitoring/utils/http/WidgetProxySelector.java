@@ -41,22 +41,20 @@ public class WidgetProxySelector extends ProxySelector {
     private static final Logger LOGGER = LoggerFactory.getLogger(WidgetProxySelector.class);
 
     /**
-     * Select the proxy settings from the application configuration for the given URI.
-     * If the URI is defined is the no proxy domains configuration, then no proxy is applied.
-     *
-     * @param uri The URI to check if it needs a proxy or not
-     * @return A list of proxies
+     * Set the proxy for the URI that will be called by the widget HTTP client
+     * @param uri The URI
+     * @return A proxy
      */
     @Override
     public List<Proxy> select(URI uri) {
         Proxy proxy = Proxy.NO_PROXY;
         ProxyProperties proxyProperties = SpringContextUtils.getApplicationContext().getBean(ProxyProperties.class);
 
-        if (StringUtils.isNotBlank(proxyProperties.getNoProxyDomains())) {
-            try (Stream<String> stream = Arrays.stream(proxyProperties.getNoProxyDomains().split(","))) {
-                if (StringUtils.isNotBlank(proxyProperties.getNoProxyDomains()) &&
-                    stream.noneMatch(h -> StringUtils.containsIgnoreCase(uri.getHost(), h))) {
-                    proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyProperties.getHost(), Integer.parseInt(proxyProperties.getPort())));
+        if (StringUtils.isNotBlank(proxyProperties.getNonProxyHosts())) {
+            try (Stream<String> domains = Arrays.stream(proxyProperties.getNonProxyHosts().split("\\|"))) {
+                // Check if the URI is defined in the "no proxy domains" config before setting the proxy
+                if (domains.noneMatch(domain -> StringUtils.containsIgnoreCase(uri.getHost(), domain.replace("*", StringUtils.EMPTY)))) {
+                    proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyProperties.getHttpPort(), Integer.parseInt(proxyProperties.getHttpPort())));
                 }
             }
         }
