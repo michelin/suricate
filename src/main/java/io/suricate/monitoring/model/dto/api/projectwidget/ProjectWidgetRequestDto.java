@@ -41,13 +41,13 @@ public class ProjectWidgetRequestDto extends AbstractDto {
      * The start col number on the grid
      */
     @ApiModelProperty(value = "The start col number on the grid")
-    private int gridColumn = 0;
+    private int gridColumn = 1;
 
     /**
      * The start row number on the grid
      */
     @ApiModelProperty(value = "The start row number on the grid")
-    private int gridRow = 0;
+    private int gridRow = 1;
 
     /**
      * The number of row taken on the grid

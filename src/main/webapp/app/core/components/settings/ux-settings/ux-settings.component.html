@@ -1,0 +1,11 @@
+<div *ngIf="formGroup" class="form-container" fxLayout="column">
+  <div fxLayout="column" fxLayoutAlign="space-between" fxFlex="100">
+    <div fxLayout="column">
+      <suricate-input *ngFor="let field of formFields" [formGroup]="formGroup" [field]="field"> </suricate-input>
+    </div>
+
+    <div class="save-ux-settings-button">
+      <suricate-buttons [configurations]="buttons"> </suricate-buttons>
+    </div>
+  </div>
+</div>

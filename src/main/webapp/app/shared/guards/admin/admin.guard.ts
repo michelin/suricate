@@ -27,14 +27,12 @@ import { AuthenticationService } from '../../services/frontend/authentication/au
 export class AdminGuard implements CanActivate, CanActivateChild {
   /**
    * The constructor
-   *
-   * @param {Router} router The router
+   * @param router The router
    */
   constructor(private readonly router: Router) {}
 
   /**
-   * Activate root routes
-   * @returns {Observable<boolean>}
+   * Can admin routes be activated or not ?
    */
   public canActivate(): Observable<boolean> {
     if (AuthenticationService.isAdmin()) {
@@ -46,8 +44,7 @@ export class AdminGuard implements CanActivate, CanActivateChild {
   }
 
   /**
-   * For Child routes
-   * @returns {Observable<boolean>}
+   * Can child admin routes be activated or not ?
    */
   public canActivateChild(): Observable<boolean> {
     return this.canActivate();

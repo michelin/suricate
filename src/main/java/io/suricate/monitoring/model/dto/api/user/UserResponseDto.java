@@ -18,7 +18,7 @@ package io.suricate.monitoring.model.dto.api.user;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
 import io.suricate.monitoring.model.dto.api.role.RoleResponseDto;
-import io.suricate.monitoring.model.enums.AuthenticationMethod;
+import io.suricate.monitoring.model.enums.AuthenticationProvider;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -30,7 +30,6 @@ import java.util.List;
 /**
  * Represent a user used for communication with the clients via webservices
  */
-
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
@@ -77,7 +76,7 @@ public class UserResponseDto extends AbstractDto {
      * The authentication method
      */
     @ApiModelProperty(value = "The authentication method for this user")
-    private AuthenticationMethod authenticationMethod;
+    private AuthenticationProvider authenticationMethod;
 
     /**
      * The list of roles for this user

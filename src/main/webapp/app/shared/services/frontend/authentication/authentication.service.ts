@@ -16,7 +16,7 @@
  *
  */
 
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
@@ -30,6 +30,7 @@ import { RoleEnum } from '../../../enums/role.enum';
 import { UserRequest } from '../../../models/backend/user/user-request';
 import { AbstractHttpService } from '../../backend/abstract-http/abstract-http.service';
 import { HttpUserService } from '../../backend/http-user/http-user.service';
+import { EnvironmentService } from '../environment/environment.service';
 
 /**
  * The authentication service
@@ -37,9 +38,29 @@ import { HttpUserService } from '../../backend/http-user/http-user.service';
 @Injectable({ providedIn: 'root' })
 export class AuthenticationService {
   /**
+   * OAuth2 URL
+   */
+  public static readonly OAUTH2_URL = `${AbstractHttpService.baseApiEndpoint}/oauth2/authorization`;
+
+  /**
+   * OAuth2 authentication with GitHub endpoint
+   */
+  public static readonly GITHUB_AUTH_URL = `${AuthenticationService.OAUTH2_URL}/github?redirect_uri=${EnvironmentService.OAUTH2_FRONTEND_REDIRECT_URL}`;
+
+  /**
+   * OAuth2 authentication with GitLab endpoint
+   */
+  public static readonly GITLAB_AUTH_URL = `${AuthenticationService.OAUTH2_URL}/gitlab?redirect_uri=${EnvironmentService.OAUTH2_FRONTEND_REDIRECT_URL}`;
+
+  /**
    * Global endpoint for Authentication
    */
-  private static readonly authenticationApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/oauth/token`;
+  private static readonly authenticationApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/auth`;
+
+  /**
+   * The access token local storage key
+   */
+  private static readonly ACCESS_TOKEN_KEY = 'jwt';
 
   /**
    * Auth0 service used to manage JWT with Angular
@@ -47,23 +68,7 @@ export class AuthenticationService {
   private static readonly jwtHelperService = new JwtHelperService();
 
   /**
-   * The local storage key where the access token is store
-   */
-  private static readonly localStorageAccessTokenKey = 'suricate_access_token';
-
-  /**
-   * The local storage key where the refresh token is store
-   */
-  private static readonly localStorageRefreshTokenKey = 'suricate_refresh_token';
-
-  /**
-   * The local storage key where the token type is store
-   */
-  private static readonly localStorageTokenTypeKey = 'suricate_token_type';
-
-  /**
    * Constructor
-   *
    * @param httpClient Angular service used make http calls
    */
   constructor(private readonly httpClient: HttpClient) {}
@@ -71,58 +76,30 @@ export class AuthenticationService {
   /**
    * Get the access token store in local storage
    */
-  private static getAccessToken(): string {
-    return localStorage.getItem(AuthenticationService.localStorageAccessTokenKey);
+  public static getAccessToken(): string {
+    return localStorage.getItem(AuthenticationService.ACCESS_TOKEN_KEY);
   }
+
   /**
    * Set a new access token in local storage
-   *
    * @param accessToken The access token to set
    */
   public static setAccessToken(accessToken: string): void {
-    localStorage.setItem(AuthenticationService.localStorageAccessTokenKey, accessToken);
+    localStorage.setItem(AuthenticationService.ACCESS_TOKEN_KEY, accessToken);
   }
 
   /**
    * Remove the access token from the local storage
    */
   private static removeAccessToken(): void {
-    localStorage.removeItem(AuthenticationService.localStorageAccessTokenKey);
+    localStorage.removeItem(AuthenticationService.ACCESS_TOKEN_KEY);
   }
+
   /**
    * Function used to decode the access token
    */
   private static decodeAccessToken(): AccessTokenDecoded {
     return AuthenticationService.jwtHelperService.decodeToken(AuthenticationService.getAccessToken());
-  }
-
-  /**
-   * Return the token type stored in local storage
-   */
-  private static getTokenType(): string {
-    return localStorage.getItem(AuthenticationService.localStorageTokenTypeKey);
-  }
-  /**
-   * Set a new token type in local storage
-   *
-   * @param tokenType The type of token stored
-   */
-  private static setTokenType(tokenType: string): void {
-    localStorage.setItem(AuthenticationService.localStorageTokenTypeKey, tokenType);
-  }
-  /**
-   * Remove the token type from the local storage
-   */
-  private static removeTokenType(): void {
-    localStorage.removeItem(AuthenticationService.localStorageTokenTypeKey);
-  }
-  /**
-   * Set a new refresh token in local storage
-   *
-   * @param refreshToken The refresh token to set
-   */
-  private static setRefreshToken(refreshToken: string): void {
-    localStorage.setItem(AuthenticationService.localStorageRefreshTokenKey, refreshToken);
   }
 
   /**
@@ -140,24 +117,20 @@ export class AuthenticationService {
   }
 
   /**
-   * Return the full token (token type + access token)
-   */
-  public static getFullToken(): string {
-    return `${AuthenticationService.getTokenType()} ${AuthenticationService.getAccessToken()}`;
-  }
-  /**
    * Used to know if the connected user is admin or not
    */
   public static isAdmin(): boolean {
-    return AuthenticationService.decodeAccessToken().authorities.includes(RoleEnum.ROLE_ADMIN);
+    const token = AuthenticationService.decodeAccessToken();
+    return token.authorities && token.authorities.includes(RoleEnum.ROLE_ADMIN);
   }
+
   /**
-   * Used to logout the used
+   * Log out the user
    */
   public static logout(): void {
     AuthenticationService.removeAccessToken();
-    AuthenticationService.removeTokenType();
   }
+
   /**
    * Return the connected user with information store in the token
    */
@@ -165,15 +138,20 @@ export class AuthenticationService {
     const decodedToken = AuthenticationService.decodeAccessToken();
 
     const user = new User();
-    user.username = decodedToken.user_name;
+    user.username = decodedToken.sub;
     user.lastname = decodedToken.lastname;
     user.firstname = decodedToken.firstname;
-    user.email = decodedToken.mail;
-    user.roles = decodedToken.authorities.map((roleEnum: RoleEnum) => {
-      const role = new Role();
-      role.name = roleEnum;
-      return role;
-    });
+    user.email = decodedToken.email;
+    user.avatarUrl = decodedToken.avatar_url;
+    user.mode = decodedToken.mode;
+
+    if (decodedToken.authorities) {
+      user.roles = decodedToken.authorities.map((roleEnum: RoleEnum) => {
+        const role = new Role();
+        role.name = roleEnum;
+        return role;
+      });
+    }
 
     return user;
   }
@@ -181,42 +159,29 @@ export class AuthenticationService {
   /**
    * Authenticate the user throw OAuth2 Password grant
    *
-   * @param {Credentials} credentials The user credentials
-   * @returns {Observable<AuthenticationResponse>} The response as Observable
+   * @param credentials The user credentials
+   * @returns The response as Observable
    */
   public authenticate(credentials: Credentials): Observable<AuthenticationResponse> {
-    let headers = new HttpHeaders();
-    headers = headers.append('Content-Type', 'application/x-www-form-urlencoded');
-    headers = headers.append('Authorization', `Basic ${btoa('suricateAngular:suricateAngularSecret')}`);
+    const url = `${AuthenticationService.authenticationApiEndpoint}/signin`;
 
-    const params = new URLSearchParams();
-    params.append('grant_type', 'password');
-    params.append('username', credentials.username.toLowerCase());
-    params.append('password', credentials.password);
-
-    const url = `${AuthenticationService.authenticationApiEndpoint}`;
-
-    return this.httpClient
-      .post<AuthenticationResponse>(url, params.toString(), { headers: headers })
-      .pipe(
-        tap((authenticationResponse: AuthenticationResponse) => {
-          if (authenticationResponse && authenticationResponse.access_token) {
-            AuthenticationService.setTokenType(authenticationResponse.token_type);
-            AuthenticationService.setAccessToken(authenticationResponse.access_token);
-            AuthenticationService.setRefreshToken(authenticationResponse.refresh_token);
-          }
-        })
-      );
+    return this.httpClient.post<AuthenticationResponse>(url, credentials).pipe(
+      tap((authenticationResponse: AuthenticationResponse) => {
+        if (authenticationResponse && authenticationResponse.accessToken) {
+          AuthenticationService.setAccessToken(authenticationResponse.accessToken);
+        }
+      })
+    );
   }
 
   /**
    * Register a new user
    *
    * @param userRequest The user Request
-   * @returns {Observable<User>} The user registered
+   * @returns The user registered
    */
-  public register(userRequest: UserRequest): Observable<User> {
-    const url = `${HttpUserService.usersApiEndpoint}/register`;
+  public signup(userRequest: UserRequest): Observable<User> {
+    const url = `${HttpUserService.usersApiEndpoint}/signup`;
 
     return this.httpClient.post<User>(url, userRequest);
   }

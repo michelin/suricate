@@ -6,7 +6,10 @@ import io.suricate.monitoring.model.entities.Widget;
 import io.suricate.monitoring.model.entities.Widget_;
 import org.apache.commons.lang3.StringUtils;
 
-import javax.persistence.criteria.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.util.List;
 
 

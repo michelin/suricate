@@ -17,22 +17,6 @@
 import { inject, TestBed } from '@angular/core/testing';
 
 import { SettingsService } from './settings.service';
-import {
-  DEFAULT_LANGUAGE,
-  MissingTranslationHandler,
-  TranslateCompiler,
-  TranslateLoader,
-  TranslateModule,
-  TranslateParser,
-  TranslateService,
-  TranslateStore,
-  USE_DEFAULT_LANG,
-  USE_EXTEND,
-  USE_STORE
-} from '@ngx-translate/core';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { HttpClient } from '@angular/common/http';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { MockModule } from '../../mock/mock.module';
 
 describe('SettingsService', () => {

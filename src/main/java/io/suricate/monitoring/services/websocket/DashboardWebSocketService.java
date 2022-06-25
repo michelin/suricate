@@ -54,11 +54,11 @@ public class DashboardWebSocketService {
     /**
      * The scheduler scheduling the widget execution through Nashorn
      */
-    private final NashornRequestWidgetExecutionScheduler nashornWidgetScheduler;
+    @Autowired
+    private NashornRequestWidgetExecutionScheduler nashornWidgetScheduler;
 
     /**
      * Save all websocket clients by project token.
-     * 
      * Represents all the connected screens to a project
      */
     private final Multimap<String, WebsocketClient> websocketClientByProjectToken = Multimaps.synchronizedListMultimap(ArrayListMultimap.create());
@@ -66,44 +66,28 @@ public class DashboardWebSocketService {
     /**
      * The stomp websocket message template
      */
-    private final SimpMessagingTemplate simpMessagingTemplate;
+    @Autowired
+    private SimpMessagingTemplate simpMessagingTemplate;
 
     /**
      * The project service
      */
-    private final ProjectService projectService;
+    @Lazy
+    @Autowired
+    private ProjectService projectService;
 
     /**
      * The project mapper
      */
-    private final ProjectMapper projectMapper;
+    @Lazy
+    @Autowired
+    private ProjectMapper projectMapper;
 
     /**
      * The nashorn service
      */
-    private final NashornService nashornService;
-
-    /**
-     * Constructor
-     *
-     * @param simpMessagingTemplate  message template used for send messages through stomp websockets
-     * @param projectService         The project service
-     * @param projectMapper          The project mapper
-     * @param nashornService         The nashorn service
-     * @param nashornWidgetScheduler The nashorn scheduler
-     */
     @Autowired
-    public DashboardWebSocketService(final SimpMessagingTemplate simpMessagingTemplate,
-                                     @Lazy final ProjectService projectService,
-                                     @Lazy final ProjectMapper projectMapper,
-                                     final NashornService nashornService,
-                                     final NashornRequestWidgetExecutionScheduler nashornWidgetScheduler) {
-        this.simpMessagingTemplate = simpMessagingTemplate;
-        this.projectService = projectService;
-        this.projectMapper = projectMapper;
-        this.nashornService = nashornService;
-        this.nashornWidgetScheduler = nashornWidgetScheduler;
-    }
+    private NashornService nashornService;
 
     /**
      * Send a connect project event through the associated websocket to the unique subscriber.
@@ -217,8 +201,8 @@ public class DashboardWebSocketService {
      * and a client materialized by its WebsocketClient.
      * Triggered when a new subscription to a dashboard is done.
      *
-     * Initialize a Nashorn request for each widget of the project.
-     * Schedule the Nashorn requests execution.
+     * If no client is connected to the dashboard already,
+     * initialize a Nashorn request for each widget of the project to refresh them.
      *
      * @param project         The connected project
      * @param websocketClient The related websocket client
@@ -257,8 +241,15 @@ public class DashboardWebSocketService {
     }
 
     /**
+     * Count the number of connected clients
+     * @return The websocket
+     */
+    public int countWebsocketClients() {
+        return this.websocketClientByProjectToken.values().size();
+    }
+
+   /**
      * Get a websocket by session ID and subscription ID
-     *
      * @param sessionId The session ID
      * @param subscriptionId The subscription ID
      * @return The websocket

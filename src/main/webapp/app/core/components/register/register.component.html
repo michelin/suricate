@@ -1,5 +1,9 @@
 <div class="container without-header" fxLayout="column" fxLayoutAlign="center center">
   <div class="wrapper mat-elevation-z12" fxLayout="column" fxLayoutAlign="center center">
+    <div class="brand-image">
+      <img src="../../../../../assets/images/logo.png" alt="brand image" />
+    </div>
+
     <suricate-spinner *ngIf="loading"></suricate-spinner>
 
     <form *ngIf="!loading" class="register-form" fxLayout="column" fxLayoutAlign="center" [formGroup]="registerForm" (ngSubmit)="signUp()">

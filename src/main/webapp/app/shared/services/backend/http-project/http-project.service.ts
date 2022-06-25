@@ -21,10 +21,8 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { Project } from '../../../models/backend/project/project';
-import { ProjectWidget } from '../../../models/backend/project-widget/project-widget';
 import { ProjectRequest } from '../../../models/backend/project/project-request';
 import { ProjectWidgetPositionRequest } from '../../../models/backend/project-widget/project-widget-position-request';
-import { ProjectWidgetRequest } from '../../../models/backend/project-widget/project-widget-request';
 import { User } from '../../../models/backend/user/user';
 import { WebsocketClient } from '../../../models/backend/websocket-client';
 import { AbstractHttpService } from '../abstract-http/abstract-http.service';
@@ -71,7 +69,7 @@ export class HttpProjectService implements AbstractHttpService<Project | Project
   /**
    * Add/Update a dashboard and update the subject list
    *
-   * @param {ProjectRequest} projectRequest The project request
+   * @param projectRequest The project request
    */
   public create(projectRequest: ProjectRequest): Observable<Project> {
     const url = `${HttpProjectService.projectsApiEndpoint}`;
@@ -98,18 +96,6 @@ export class HttpProjectService implements AbstractHttpService<Project | Project
    */
   public delete(projectToken: string): Observable<void> {
     const url = `${HttpProjectService.projectsApiEndpoint}/${projectToken}`;
-
-    return this.httpClient.delete<void>(url);
-  }
-
-  /**
-   * Delete a given grid of a project
-   *
-   * @param projectToken The project token
-   * @param gridId The grid id
-   */
-  public deleteGrid(projectToken: string, gridId: number): Observable<void> {
-    const url = `${HttpProjectService.projectsApiEndpoint}/${projectToken}/${gridId}`;
 
     return this.httpClient.delete<void>(url);
   }

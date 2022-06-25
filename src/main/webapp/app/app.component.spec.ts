@@ -17,12 +17,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { AppComponent } from './app.component';
-import { MatDialogModule } from '@angular/material/dialog';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { HttpClient } from '@angular/common/http';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ToastComponent } from './shared/components/toast/toast.component';
 import { AuthenticationService } from './shared/services/frontend/authentication/authentication.service';
 import { MockModule } from './mock/mock.module';
 

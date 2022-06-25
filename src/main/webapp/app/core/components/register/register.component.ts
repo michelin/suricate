@@ -22,12 +22,10 @@ import { throwError } from 'rxjs';
 
 import { AuthenticationService } from '../../../shared/services/frontend/authentication/authentication.service';
 import { ToastService } from '../../../shared/services/frontend/toast/toast.service';
-import { ApplicationProperties } from '../../../shared/models/backend/application-properties';
-import { HttpCategoryParametersService } from '../../../shared/services/backend/http-category-parameters/http-category-parameters.service';
 import { Credentials } from '../../../shared/models/backend/user/credentials';
 import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
 import { UserRequest } from '../../../shared/models/backend/user/user-request';
-import { AuthenticationProviderEnum } from '../../../shared/enums/authentication-provider.enum';
+import { AuthenticationProvider } from '../../../shared/enums/authentication-provider.enum';
 import { FormService } from '../../../shared/services/frontend/form/form.service';
 import { CustomValidator } from '../../../shared/validators/custom-validator';
 import { FormField } from '../../../shared/models/frontend/form/form-field';
@@ -35,6 +33,7 @@ import { ButtonConfiguration } from '../../../shared/models/frontend/button/butt
 import { RegisterFormFieldsService } from '../../../shared/services/frontend/form-fields/register-form-fields/register-form-fields.service';
 import { ButtonTypeEnum } from '../../../shared/enums/button-type.enum';
 import { HttpConfigurationService } from '../../../shared/services/backend/http-configuration/http-configuration.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 /**
  * Component used to register a new user
@@ -91,8 +90,8 @@ export class RegisterComponent implements OnInit {
       return;
     }
 
-    this.httpConfigurationService.getAuthenticationProvider().subscribe((applicationProperties: ApplicationProperties) => {
-      if (applicationProperties.value === AuthenticationProviderEnum.LDAP) {
+    this.httpConfigurationService.getAuthenticationProviders().subscribe((authenticationProviders: AuthenticationProvider[]) => {
+      if (authenticationProviders.indexOf(AuthenticationProvider.LDAP) > -1) {
         this.router.navigate(['/login']);
       }
     });
@@ -114,7 +113,7 @@ export class RegisterComponent implements OnInit {
       const userRequest: UserRequest = this.registerForm.value;
 
       this.authenticationService
-        .register(userRequest)
+        .signup(userRequest)
         .pipe(
           flatMap(() => {
             const credentials: Credentials = { username: userRequest.username, password: userRequest.password };
@@ -126,7 +125,10 @@ export class RegisterComponent implements OnInit {
         )
         .subscribe(
           () => this.navigateToHomePage(),
-          () => (this.loading = false)
+          (error: HttpErrorResponse) => {
+            this.loading = false;
+            this.toastService.sendMessage(error.error.key, ToastTypeEnum.DANGER);
+          }
         );
     } else {
       this.toastService.sendMessage('form.error.fields', ToastTypeEnum.DANGER);

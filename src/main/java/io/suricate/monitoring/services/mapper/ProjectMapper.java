@@ -16,17 +16,19 @@
 
 package io.suricate.monitoring.services.mapper;
 
+import io.suricate.monitoring.model.dto.api.export.ImportExportProjectDto;
 import io.suricate.monitoring.model.dto.api.project.ProjectRequestDto;
 import io.suricate.monitoring.model.dto.api.project.ProjectResponseDto;
 import io.suricate.monitoring.model.entities.Project;
 import io.suricate.monitoring.services.api.LibraryService;
-import org.mapstruct.*;
+import org.mapstruct.IterableMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Manage the generation DTO/Model objects for project class
@@ -37,13 +39,9 @@ import java.util.stream.Collectors;
         uses = {
             AssetMapper.class,
             ProjectGridMapper.class
-        },
-        imports = {
-            Collection.class,
-            Collectors.class
-        })
+        }
+)
 public abstract class ProjectMapper {
-
     /**
      * The library service
      */
@@ -61,7 +59,7 @@ public abstract class ProjectMapper {
     @Mapping(target = "gridProperties.widgetHeight", source = "project.widgetHeight")
     @Mapping(target = "gridProperties.cssStyle", source = "project.cssStyle")
     @Mapping(target = "screenshotToken", expression = "java( project.getScreenshot() != null ? io.suricate.monitoring.utils.IdUtils.encrypt(project.getScreenshot().getId()) : null )")
-    @Mapping(target = "librariesToken", expression = "java(libraryService.getLibrariesToken(project.getGrids().stream().map(ProjectGrid::getWidgets).flatMap(Collection::stream).collect(Collectors.toSet())))")
+    @Mapping(target = "librariesToken", expression = "java( libraryService.getLibraryTokensByProject(project) )")
     @Mapping(target = "image", source = "project.screenshot", qualifiedByName = "toAssetDTO")
     @Mapping(target = "grids", qualifiedByName = "toProjectGridDTO")
     public abstract ProjectResponseDto toProjectDTO(Project project);
@@ -73,14 +71,14 @@ public abstract class ProjectMapper {
      * @param project The project to map
      * @return The project as DTO
      */
-    @Named("toProjectDTONoWidgets")
+    @Named("toProjectDTONoLibrary")
     @Mapping(target = "gridProperties.maxColumn", source = "project.maxColumn")
     @Mapping(target = "gridProperties.widgetHeight", source = "project.widgetHeight")
     @Mapping(target = "gridProperties.cssStyle", source = "project.cssStyle")
     @Mapping(target = "screenshotToken", expression = "java( project.getScreenshot() != null ? io.suricate.monitoring.utils.IdUtils.encrypt(project.getScreenshot().getId()) : null )")
     @Mapping(target = "image", source = "project.screenshot", qualifiedByName = "toAssetDTO")
     @Mapping(target = "grids", qualifiedByName = "toProjectGridDTO")
-    public abstract ProjectResponseDto toProjectDTONoWidgets(Project project);
+    public abstract ProjectResponseDto toProjectDTONoLibrary(Project project);
 
     /**
      * Map a project into a DTO without assets
@@ -102,7 +100,7 @@ public abstract class ProjectMapper {
      * @return The list of projects as DTOs
      */
     @Named("toProjectsDTOs")
-    @IterableMapping(qualifiedByName = "toProjectDTONoWidgets")
+    @IterableMapping(qualifiedByName = "toProjectDTONoLibrary")
     public abstract List<ProjectResponseDto> toProjectsDTOs(List<Project> projects);
 
     /**
@@ -113,4 +111,31 @@ public abstract class ProjectMapper {
      */
     @Named("toProjectEntity")
     public abstract Project toProjectEntity(ProjectRequestDto projectRequestDto);
+
+    /**
+     * Map a project into an import export project DTO
+     * @param project The project to map
+     * @return The project as DTO
+     */
+    @Named("toImportExportProjectDTO")
+    @Mapping(target = "gridProperties.maxColumn", source = "project.maxColumn")
+    @Mapping(target = "gridProperties.widgetHeight", source = "project.widgetHeight")
+    @Mapping(target = "gridProperties.cssStyle", source = "project.cssStyle")
+    @Mapping(target = "image", source = "project.screenshot", qualifiedByName = "toImportExportAssetDTO")
+    @Mapping(target = "grids", qualifiedByName = "toImportExportProjectGridDTO")
+    public abstract ImportExportProjectDto toImportExportProjectDTO(Project project);
+
+    /**
+     * Map an import project DTO into a project entity
+     *
+     * @param importProjectRequestDto The import project DTO to map
+     * @return The project as entity
+     */
+    @Named("toProjectEntity")
+    @Mapping(target = "maxColumn", source = "gridProperties.maxColumn")
+    @Mapping(target = "widgetHeight", source = "gridProperties.widgetHeight")
+    @Mapping(target = "cssStyle", source = "gridProperties.cssStyle")
+    @Mapping(target = "screenshot", source = "image", qualifiedByName = "toAssetEntity")
+    @Mapping(target = "grids", qualifiedByName = "toProjectGridEntity")
+    public abstract Project toProjectEntity(ImportExportProjectDto importProjectRequestDto);
 }

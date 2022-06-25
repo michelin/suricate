@@ -22,6 +22,8 @@ import { RoutesService } from '../../../shared/services/frontend/route/route.ser
 import { MenuService } from '../../../shared/services/frontend/menu/menu.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { HttpUserService } from '../../../shared/services/backend/http-user/http-user.service';
+import { AuthenticationService } from '../../../shared/services/frontend/authentication/authentication.service';
 
 /**
  * Hold the sidenav behavior and the main view
@@ -51,11 +53,17 @@ export class SidenavComponent implements OnInit, OnDestroy {
 
   /**
    * Constructor
-   *
    * @param router Angular service used to manage routes
    * @param activatedRoute Angular service used to retrieve the component activated route
+   * @param httpUserService The HTTP user service
+   * @param authenticationService The authentication service
    */
-  constructor(private readonly router: Router, private readonly activatedRoute: ActivatedRoute) {}
+  constructor(
+    private readonly router: Router,
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly httpUserService: HttpUserService,
+    private readonly authenticationService: AuthenticationService
+  ) {}
 
   /**
    * Init method

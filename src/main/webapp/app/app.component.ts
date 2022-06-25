@@ -146,7 +146,7 @@ export class AppComponent implements OnInit, OnDestroy {
       .subscribe((actionsDialogConfiguration: ActionsDialogConfiguration) => {
         const dialogConfig: MatDialogConfig = {
           role: 'dialog',
-          width: '500px',
+          width: '600px',
           height: '200px',
           data: actionsDialogConfiguration
         };

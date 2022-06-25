@@ -18,7 +18,7 @@
 
 package io.suricate.monitoring.utils.http;
 
-import io.suricate.monitoring.configuration.web.ProxyConfiguration;
+import io.suricate.monitoring.properties.ProxyProperties;
 import io.suricate.monitoring.utils.SpringContextUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -35,29 +35,26 @@ import java.util.stream.Stream;
  * Custom proxy selector
  */
 public class WidgetProxySelector extends ProxySelector {
-
     /**
-     * Class logger
+     * The logger
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(WidgetProxySelector.class);
 
     /**
-     * Select the proxy settings from the application configuration for the given URI.
-     * If the URI is defined is the no proxy domains configuration, then no proxy is applied.
-     *
-     * @param uri The URI to check if it needs a proxy or not
-     * @return A list of proxies
+     * Set the proxy for the URI that will be called by the widget HTTP client
+     * @param uri The URI
+     * @return A proxy
      */
     @Override
     public List<Proxy> select(URI uri) {
         Proxy proxy = Proxy.NO_PROXY;
-        ProxyConfiguration proxyConfiguration = SpringContextUtils.getApplicationContext().getBean(ProxyConfiguration.class);
+        ProxyProperties proxyProperties = SpringContextUtils.getApplicationContext().getBean(ProxyProperties.class);
 
-        if (StringUtils.isNotBlank(proxyConfiguration.getNoProxyDomains())) {
-            try (Stream<String> stream = Arrays.stream(proxyConfiguration.getNoProxyDomains().split(","))) {
-                if (StringUtils.isNotBlank(proxyConfiguration.getNoProxyDomains()) &&
-                    stream.noneMatch(h -> StringUtils.containsIgnoreCase(uri.getHost(), h))) {
-                    proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyConfiguration.getHost(), Integer.parseInt(proxyConfiguration.getPort())));
+        if (StringUtils.isNotBlank(proxyProperties.getNonProxyHosts())) {
+            try (Stream<String> domains = Arrays.stream(proxyProperties.getNonProxyHosts().split("\\|"))) {
+                // Check if the URI is defined in the "no proxy domains" config before setting the proxy
+                if (domains.noneMatch(domain -> StringUtils.containsIgnoreCase(uri.getHost(), domain.replace("*", StringUtils.EMPTY)))) {
+                    proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyProperties.getHttpHost(), Integer.parseInt(proxyProperties.getHttpPort())));
                 }
             }
         }

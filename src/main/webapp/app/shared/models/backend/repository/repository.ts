@@ -63,7 +63,7 @@ export class Repository {
   type: RepositoryTypeEnum;
 
   /**
-   * If the repository is enable or not
+   * If the repository is enabled or not
    */
   enabled: boolean;
 

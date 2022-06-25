@@ -34,9 +34,8 @@ import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 public final class OkHttpClientUtils {
-
     /**
-     * Class logger
+     * The logger
      */
     private static final Logger LOGGER = LoggerFactory.getLogger(OkHttpClientUtils.class);
 

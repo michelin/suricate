@@ -32,7 +32,6 @@ CREATE TABLE category (
     last_modified_date  timestamp without time zone DEFAULT now(),
     CONSTRAINT pk_category_id                       PRIMARY KEY (id),
     CONSTRAINT uk_category_technical_name           UNIQUE (technical_name)
-
 );
 
 CREATE TABLE category_param (
@@ -60,6 +59,20 @@ CREATE TABLE library (
     CONSTRAINT pk_library_id                        PRIMARY KEY (id),
     CONSTRAINT uk_library_technical_name            UNIQUE (technical_name)
 
+);
+
+CREATE TABLE personal_access_token (
+    id                  bigserial                   NOT NULL,
+    name                character varying(255)      NOT NULL,
+    checksum            bigint                      NOT NULL,
+    user_id             bigint,
+    created_by          character varying(255)      DEFAULT 'APPLICATION'::character varying NOT NULL,
+    created_date        timestamp without time zone DEFAULT now() NOT NULL,
+    last_modified_by    character varying(255)      DEFAULT 'APPLICATION'::character varying,
+    last_modified_date  timestamp without time zone DEFAULT now(),
+    CONSTRAINT pk_personal_access_token_id          PRIMARY KEY (id),
+    CONSTRAINT uk_personal_access_token_name        UNIQUE (name),
+    CONSTRAINT uk_personal_access_token_checksum    UNIQUE (checksum)
 );
 
 CREATE TABLE project (
@@ -168,9 +181,11 @@ CREATE TABLE users (
     lastname    character varying(250),
     email       character varying(250),
     password    character varying(250),
+    avatar_url  character varying(500),
     auth_mode   character varying(20)   DEFAULT 'LDAP'::character varying NOT NULL,
     CONSTRAINT pk_users_id              PRIMARY KEY (id),
-    CONSTRAINT uk_user_username         UNIQUE (username)
+    CONSTRAINT uk_user_username         UNIQUE (username),
+    CONSTRAINT uk_user_email            UNIQUE (email)
 );
 
 CREATE TABLE widget (
@@ -246,6 +261,7 @@ ALTER TABLE user_role               ADD CONSTRAINT fk_user_role_user_id         
 ALTER TABLE user_role               ADD CONSTRAINT fk_user_role_role_id                     FOREIGN KEY (role_id)                   REFERENCES role (id) ;
 ALTER TABLE user_project            ADD CONSTRAINT fk_user_project_user_id                  FOREIGN KEY (user_id)                   REFERENCES users (id) ;
 ALTER TABLE user_project            ADD CONSTRAINT fk_user_project_project_id               FOREIGN KEY (project_id)                REFERENCES project (id) ;
+ALTER TABLE personal_access_token   ADD CONSTRAINT fk_personal_access_token_user_id         FOREIGN KEY (user_id)                   REFERENCES users (id) ;
 ALTER TABLE project_grid            ADD CONSTRAINT fk_project_grid_project_id               FOREIGN KEY (project_id)                REFERENCES project (id) ;
 ALTER TABLE project_widget          ADD CONSTRAINT fk_project_widget_widget_id              FOREIGN KEY (widget_id)                 REFERENCES widget (id) ;
 ALTER TABLE project_widget          ADD CONSTRAINT fk_project_widget_project_grid_id        FOREIGN KEY (project_grid_id)           REFERENCES project_grid (id) ;

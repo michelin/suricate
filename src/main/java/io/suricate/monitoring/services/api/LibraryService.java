@@ -17,17 +17,20 @@
 package io.suricate.monitoring.services.api;
 
 import io.suricate.monitoring.model.entities.Library;
-import io.suricate.monitoring.model.entities.ProjectWidget;
+import io.suricate.monitoring.model.entities.Project;
+import io.suricate.monitoring.model.entities.ProjectGrid;
 import io.suricate.monitoring.repositories.LibraryRepository;
+import io.suricate.monitoring.services.specifications.LibrarySearchSpecification;
 import io.suricate.monitoring.utils.IdUtils;
-import io.suricate.monitoring.utils.logging.LogExecutionTime;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -35,7 +38,6 @@ import java.util.stream.Collectors;
  */
 @Service
 public class LibraryService {
-
     /**
      * The library repository
      */
@@ -47,8 +49,7 @@ public class LibraryService {
     private final AssetService assetService;
 
     /**
-     * The constructor
-     *
+     * Constructor
      * @param libraryRepository The library repository
      * @param assetService      The asset repository
      */
@@ -59,38 +60,67 @@ public class LibraryService {
     }
 
     /**
-     * Get all libraries of the given widgets
-     *
-     * @param widgetInstances The widgets
+     * Get all the libraries
+     * @return The list of libraries
+     */
+    @Transactional(readOnly = true)
+    public Page<Library> getAll(String search, Pageable pageable) {
+        return libraryRepository.findAll(new LibrarySearchSpecification(search), pageable);
+    }
+
+    /**
+     * Find libraries by technical names
+     * @param technicalNames The technical names
      * @return The libraries
      */
-    @LogExecutionTime
-    public List<String> getLibrariesToken(Set<ProjectWidget> widgetInstances) {
-        List<Long> widgetList = widgetInstances
+    @Transactional(readOnly = true)
+    public List<Library> findByTechnicalNameIn(List<String> technicalNames) {
+        return libraryRepository.findByTechnicalNameIn(technicalNames);
+    }
+
+    /**
+     * Get all libraries of a project
+     * @param project The project
+     * @return The libraries
+     */
+    @Transactional(readOnly = true)
+    public List<Library> getLibrariesByProject(Project project) {
+        List<Long> widgetIds = project.getGrids()
                 .stream()
+                .map(ProjectGrid::getWidgets)
+                .flatMap(Collection::stream)
                 .map(projectWidget -> projectWidget.getWidget().getId())
                 .distinct()
                 .collect(Collectors.toList());
 
-        if (widgetList.isEmpty()) {
+        if (widgetIds.isEmpty()) {
             return Collections.emptyList();
         }
 
-        return libraryRepository.getLibs(widgetList)
+        return libraryRepository.findDistinctByWidgetsIdIn(widgetIds);
+    }
+
+    /**
+     * Get all library tokens of a project
+     * @param project The project
+     * @return The library tokens
+     */
+    @Transactional(readOnly = true)
+    public List<String> getLibraryTokensByProject(Project project) {
+        return getLibrariesByProject(project)
                 .stream()
+                .map(Library::getId)
                 .map(IdUtils::encrypt)
                 .collect(Collectors.toList());
     }
 
-
     /**
-     * Update a list of libraries
-     *
-     * @param libraries All the libraries to add
-     * @return All the available libraries
+     * Create or update a list of libraries
+     * @param libraries All the libraries to create/update
+     * @return The created/updated libraries
      */
     @Transactional
-    public List<Library> updateLibraryInDatabase(List<Library> libraries) {
+    public List<Library> createUpdateLibraries(List<Library> libraries) {
         if (libraries == null) {
             return Collections.emptyList();
         }
@@ -114,5 +144,4 @@ public class LibraryService {
 
         return libraryRepository.findAll();
     }
-
 }

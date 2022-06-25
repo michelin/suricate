@@ -24,8 +24,8 @@ import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.widgetconfiguration.WidgetConfigurationRequestDto;
 import io.suricate.monitoring.model.dto.api.widgetconfiguration.WidgetConfigurationResponseDto;
 import io.suricate.monitoring.model.entities.CategoryParameter;
-import io.suricate.monitoring.services.CacheService;
 import io.suricate.monitoring.services.api.CategoryParametersService;
+import io.suricate.monitoring.services.cache.CacheService;
 import io.suricate.monitoring.services.mapper.CategoryMapper;
 import io.suricate.monitoring.utils.exceptions.ObjectNotFoundException;
 import io.swagger.annotations.*;
@@ -46,7 +46,6 @@ import java.util.Optional;
 @RequestMapping("/api")
 @Api(value = "Category Parameters Controller", tags = {"Category Parameters"})
 public class CategoryParametersController {
-
     /**
      * The category parameters service
      */
@@ -64,7 +63,6 @@ public class CategoryParametersController {
 
     /**
      * Constructor
-     *
      * @param categoryParametersService The category parameters services
      * @param categoryMapper The category mapper
      * @param cacheService The cache service
@@ -80,7 +78,6 @@ public class CategoryParametersController {
 
     /**
      * Get all parameters of all categories
-     *
      * @return The list of parameters of all categories
      */
     @ApiOperation(value = "Get all parameters of all categories", response = WidgetConfigurationResponseDto.class, nickname = "getAllConfigs")
@@ -101,7 +98,6 @@ public class CategoryParametersController {
 
     /**
      * Get a configuration by the key (Id)
-     *
      * @param key The key to find
      * @return The related configuration
      */
@@ -130,7 +126,6 @@ public class CategoryParametersController {
 
     /**
      * Update the configuration by the key
-     *
      * @param key                           The key of the config
      * @param widgetConfigurationRequestDto The new configuration values
      * @return The config updated
@@ -162,7 +157,6 @@ public class CategoryParametersController {
 
     /**
      * Delete a configuration by key
-     *
      * @param key The configuration key
      * @return The config deleted
      */

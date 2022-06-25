@@ -19,8 +19,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { EMPTY, Observable } from 'rxjs';
-
-import { ApplicationProperties } from '../../../models/backend/application-properties';
 import { WidgetConfigurationRequest } from '../../../models/backend/widget-configuration/widget-configuration-request';
 import { AbstractHttpService } from '../abstract-http/abstract-http.service';
 import { HttpFilter } from '../../../models/backend/http-filter';

@@ -1,0 +1,62 @@
+<div *ngIf="createdToken" class="created-token-container settings-container">
+  <mat-card class="token-created">
+    <mat-card-title fxLayout="row">
+      <div fxLayout="row" fxLayoutGap="10px" fxFlex="100">
+        <mat-icon>done</mat-icon>
+        <div>{{ 'settings.security.token.created.title' | translate: { tokenName: createdToken.name } }}</div>
+      </div>
+    </mat-card-title>
+
+    <mat-card-content>
+      <mat-card class="token-value-container">
+        <mat-card-content>
+          {{ createdToken.value }}
+        </mat-card-content>
+      </mat-card>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <button mat-stroked-button class="copy-token-button" (click)="copy()" color="primary">
+        <mat-icon>{{ materialIconRecords[iconEnum.COPY] }}</mat-icon>
+        {{ 'copy' | translate }}
+      </button>
+    </mat-card-actions>
+  </mat-card>
+</div>
+
+<div *ngIf="formGroup" class="form-container settings-container" fxLayout="column">
+  <h2 class="little">{{ 'settings.security.generate.tokens.title' | translate }}</h2>
+  <div fxLayout="column" fxLayoutAlign="space-between" fxFlex="100">
+    <div fxLayout="column">
+      <suricate-input *ngFor="let field of formFields" [formGroup]="formGroup" [field]="field"> </suricate-input>
+    </div>
+
+    <div class="save-security-settings-button">
+      <suricate-buttons [configurations]="[generateTokenButton]"> </suricate-buttons>
+    </div>
+  </div>
+</div>
+
+<div class="settings-container">
+  <table mat-table [dataSource]="tokens" class="mat-elevation-z8">
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>{{ 'settings.security.token.table.header.name' | translate }}</th>
+      <td mat-cell *matCellDef="let token">{{ token.name }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="created">
+      <th mat-header-cell *matHeaderCellDef>{{ 'settings.security.token.table.header.created' | translate }}</th>
+      <td mat-cell *matCellDef="let token">{{ token.createdDate | date: 'longDate' }}</td>
+    </ng-container>
+
+    <ng-container matColumnDef="revoke">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let token">
+        <suricate-buttons [configurations]="[revokeButton]" [object]="token"> </suricate-buttons>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="tokenTableColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: tokenTableColumns"></tr>
+  </table>
+</div>

@@ -28,22 +28,17 @@ import { NumberUtils } from '../../../shared/utils/number.utils';
 export class DashboardService {
   /**
    * Define the min bound for the screen code random generation
-   * @type {number}
-   * @private
    */
   private static readonly minScreenCodeBound = 100000;
 
   /**
    * Define the max bound for the screen code random generation
-   * @type {number}
-   * @private
    */
   private static readonly maxScreenCodeBound = 999999;
 
   /**
    * Constructor
-   *
-   * @param {HttpProjectService} httpProjectService Suricate service used to manage http calls for project
+   * @param httpProjectService Service used to manage http calls for project
    */
   constructor(private readonly httpProjectService: HttpProjectService) {}
 
@@ -56,7 +51,6 @@ export class DashboardService {
 
   /**
    * Check if the dashboard should be displayed without rights
-   *
    * @param dashboardToken The dashboard token
    */
   public shouldDisplayedReadOnly(dashboardToken: string): Observable<boolean> {

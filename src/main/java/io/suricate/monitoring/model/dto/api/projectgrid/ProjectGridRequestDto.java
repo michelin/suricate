@@ -58,5 +58,4 @@ public class ProjectGridRequestDto extends AbstractDto {
         @ApiModelProperty(value = "The time")
         private Integer time;
     }
-
 }

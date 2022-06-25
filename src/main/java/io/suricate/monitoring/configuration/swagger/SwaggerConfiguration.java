@@ -17,8 +17,8 @@
 package io.suricate.monitoring.configuration.swagger;
 
 import com.google.common.base.Predicates;
-import io.suricate.monitoring.configuration.ApplicationProperties;
-import io.suricate.monitoring.configuration.security.ConnectedUser;
+import io.suricate.monitoring.properties.ApplicationProperties;
+import io.suricate.monitoring.security.LocalUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Bean;
@@ -116,7 +116,7 @@ public class SwaggerConfiguration {
             .groupName(applicationProperties.swagger.groupName)
             .securitySchemes(Collections.singletonList(apiKey()))
             .securityContexts(Collections.singletonList(securityContext()))
-            .ignoredParameterTypes(ConnectedUser.class, ResponseEntity.class, Pageable.class)
+            .ignoredParameterTypes(LocalUser.class, ResponseEntity.class, Pageable.class)
             .forCodeGeneration(true)
             .useDefaultResponseMessages(false)
             .directModelSubstitute(ByteBuffer.class, String.class)

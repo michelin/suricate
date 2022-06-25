@@ -18,7 +18,6 @@
 
 package io.suricate.monitoring.services.git;
 
-import io.suricate.monitoring.services.GitService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

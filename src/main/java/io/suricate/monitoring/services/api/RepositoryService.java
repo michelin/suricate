@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,17 +36,8 @@ public class RepositoryService {
     /**
      * The repository for repository
      */
-    private final RepositoryRepository repositoryRepository;
-
-    /**
-     * Constructor
-     *
-     * @param repositoryRepository The repository used for manage repository to inject
-     */
     @Autowired
-    public RepositoryService(final RepositoryRepository repositoryRepository) {
-        this.repositoryRepository = repositoryRepository;
-    }
+    private RepositoryRepository repositoryRepository;
 
     /**
      * Get all repositories
@@ -54,6 +46,7 @@ public class RepositoryService {
      * @param pageable The pageable object
      * @return The paginated list of repositories
      */
+    @Transactional(readOnly = true)
     public Page<Repository> getAll(String search, Pageable pageable) {
         return repositoryRepository.findAll(new RepositorySearchSpecification(search), pageable);
     }
@@ -64,18 +57,30 @@ public class RepositoryService {
      * @param enabled Tru if we want every enabled repositories
      * @return The related list
      */
+    @Transactional(readOnly = true)
     public Optional<List<Repository>> getAllByEnabledOrderByName(final boolean enabled) {
         return repositoryRepository.findAllByEnabledOrderByName(enabled);
     }
 
     /**
-     * Get the repository by name
+     * Get the repository by id
      *
      * @param repositoryId The repository id to find
      * @return The repository as optional
      */
+    @Transactional(readOnly = true)
     public Optional<Repository> getOneById(final Long repositoryId) {
         return repositoryRepository.findById(repositoryId);
+    }
+
+    /**
+     * Get the repository by name
+     * @param name The repository name
+     * @return The repository as optional
+     */
+    @Transactional(readOnly = true)
+    public Optional<Repository> findByName(final String name) {
+        return repositoryRepository.findByName(name);
     }
 
     /**
@@ -84,16 +89,36 @@ public class RepositoryService {
      * @param repositoryId The repository id to check
      * @return True if exist false otherwise
      */
+    @Transactional(readOnly = true)
     public boolean existsById(final Long repositoryId) {
         return this.repositoryRepository.existsById(repositoryId);
     }
 
     /**
+     * Check if a repository exists by given name
+     * @param name The repository name
+     * @return true if it is, false otherwise
+     */
+    @Transactional(readOnly = true)
+    public boolean existsByName(final String name) {
+        return this.repositoryRepository.existsByName(name);
+    }
+
+    /**
      * Add or update a repository
-     *
      * @param repository The repository to process
      */
+    @Transactional
     public void addOrUpdateRepository(Repository repository) {
         repositoryRepository.save(repository);
+    }
+
+    /**
+     * Add or update a list of repositories
+     * @param repositories All the repositories to add/update
+     */
+    @Transactional
+    public void addOrUpdateRepositories(List<Repository> repositories) {
+        repositoryRepository.saveAll(repositories);
     }
 }

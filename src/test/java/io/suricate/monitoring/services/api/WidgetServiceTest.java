@@ -322,7 +322,7 @@ public class WidgetServiceTest {
         lib.setTechnicalName("lib1");
         lib.setAsset(asset);
 
-        List<Library> libs = libraryService.updateLibraryInDatabase(Collections.singletonList(lib));
+        List<Library> libs = libraryService.createUpdateLibraries(Collections.singletonList(lib));
         assertEquals(1, libs.size());
 
         // Create widget list

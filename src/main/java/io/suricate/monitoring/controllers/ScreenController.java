@@ -19,6 +19,7 @@
 package io.suricate.monitoring.controllers;
 
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
+import io.suricate.monitoring.model.dto.api.role.RoleResponseDto;
 import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
 import io.suricate.monitoring.model.entities.Project;
 import io.suricate.monitoring.model.enums.UpdateType;
@@ -26,6 +27,8 @@ import io.suricate.monitoring.services.api.ProjectService;
 import io.suricate.monitoring.services.websocket.DashboardWebSocketService;
 import io.suricate.monitoring.utils.exceptions.ObjectNotFoundException;
 import io.swagger.annotations.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -111,7 +114,6 @@ public class ScreenController {
 
     /**
      * Refresh every screen for a project token
-     *
      * @param projectToken The project token used for the refresh
      */
     @ApiOperation(value = "Refresh every connected client for this project")
@@ -130,7 +132,6 @@ public class ScreenController {
 
     /**
      * Display the screen code on every connected dashboard
-     *
      * @param projectToken The project token
      */
     @ApiOperation(value = "Send the notification to the project screens to display their screen code")
@@ -156,5 +157,23 @@ public class ScreenController {
         return ResponseEntity
                 .noContent()
                 .build();
+    }
+
+    /**
+     * Count the number of connected dashboards through websockets
+     */
+    @ApiOperation(value = "Count the number of connected dashboards through websockets")
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "Ok", response = Integer.class),
+            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
+            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
+    })
+    @GetMapping(value = "/v1/screens/count")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    public ResponseEntity<Integer> getConnectedScreensQuantity() {
+        return ResponseEntity
+                .ok()
+                .contentType(MediaType.APPLICATION_JSON)
+                .body(dashboardWebSocketService.countWebsocketClients());
     }
 }

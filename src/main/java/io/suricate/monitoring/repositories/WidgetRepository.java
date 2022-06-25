@@ -59,6 +59,7 @@ public interface WidgetRepository extends JpaRepository<Widget, Long> {
      * @param technicalName The technical name
      * @return The widget
      */
+    @EntityGraph(attributePaths = {"category.configurations", "widgetParams.possibleValuesMap"})
     Optional<Widget> findByTechnicalName(String technicalName);
 
     /**

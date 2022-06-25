@@ -20,7 +20,6 @@ import { TestBed } from '@angular/core/testing';
 
 import { RoutesService } from './route.service';
 import { MockModule } from '../../../../mock/mock.module';
-import { MenuService } from '../menu/menu.service';
 
 describe('RoutesService', () => {
   beforeEach(() => {

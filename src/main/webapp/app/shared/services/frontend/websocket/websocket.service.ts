@@ -30,7 +30,7 @@ export class WebsocketService {
   /**
    * The base WS url
    */
-  private static readonly baseWsEndpoint = `${EnvironmentService.baseEndpoint}/ws`;
+  private static readonly baseWsEndpoint = `${EnvironmentService.backendUrl}/ws`;
 
   /**
    * The constructor

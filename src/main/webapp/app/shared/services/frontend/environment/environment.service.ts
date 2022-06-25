@@ -26,9 +26,14 @@ import { environment } from '../../../../../environments/environment';
 @Injectable({ providedIn: 'root' })
 export class EnvironmentService {
   /**
-   * Base url for http/ws calls
+   * Backend URL
    */
-  public static readonly baseEndpoint = `${environment.base_url}`;
+  public static readonly backendUrl = `${environment.backend_url}`;
+
+  /**
+   * When authenticating with OAuth2, frontend URL the backend has to redirect to
+   */
+  public static readonly OAUTH2_FRONTEND_REDIRECT_URL = `${environment.oauth2_frontend_redirect_url}`;
 
   /**
    * The global app version

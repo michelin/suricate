@@ -23,39 +23,42 @@ import { RoleEnum } from '../../../enums/role.enum';
  */
 export interface AccessTokenDecoded {
   /**
-   * Unique identifier of the token
+   * The subject
    */
-  jti: string;
-  /**
-   * The OAuth2 client id
-   */
-  client_id: string;
-  /**
-   * The scope the token (read, write)
-   */
-  scope: ['read'] | ['write'] | ['read', 'write'];
-  /**
-   * The expiration date as long
-   */
-  exp: number;
-  /**
-   * The username
-   */
-  user_name: string;
+  sub: string;
+
   /**
    * User firstname
    */
   firstname: string;
+
   /**
    * User mail
    */
   lastname: string;
+
   /**
    * User mail
    */
-  mail: string;
+  email: string;
+
+  /**
+   * The avatar URL
+   */
+  avatar_url: string;
+
+  /**
+   * The authentication method
+   */
+  mode: string;
+
   /**
    * The list of roles of the user
    */
   authorities: RoleEnum[];
+
+  /**
+   * The expiration date as long
+   */
+  exp: number;
 }

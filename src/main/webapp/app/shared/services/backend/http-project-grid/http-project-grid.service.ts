@@ -39,6 +39,17 @@ export class HttpProjectGridService {
   constructor(private readonly httpClient: HttpClient) {}
 
   /**
+   * Get grid by project token and grid id
+   * @param projectToken The project token
+   * @param gridId The grid id
+   */
+  public get(projectToken: string, gridId: number): Observable<ProjectGrid> {
+    const url = `${HttpProjectGridService.projectGridsApiEndpoint}/${projectToken}/${gridId}`;
+
+    return this.httpClient.get<ProjectGrid>(url);
+  }
+
+  /**
    * Create a new project grid
    *
    * @param projectToken The project token

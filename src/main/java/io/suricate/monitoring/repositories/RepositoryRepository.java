@@ -28,12 +28,25 @@ import java.util.Optional;
  */
 @org.springframework.stereotype.Repository
 public interface RepositoryRepository extends JpaRepository<Repository, Long>, JpaSpecificationExecutor<Repository> {
-
     /**
      * Find All by enabled order by name
      *
-     * @param enabled True if the we want every enabled repository, false otherwise
+     * @param enabled True if we want every enabled repository, false otherwise
      * @return The list of repositories
      */
     Optional<List<Repository>> findAllByEnabledOrderByName(final boolean enabled);
+
+    /**
+     * Find repository by name
+     * @param name The repository name
+     * @return An optional repository
+     */
+    Optional<Repository> findByName(final String name);
+
+    /**
+     * Check if a repository exists by given name
+     * @param name The repository name
+     * @return true if it is, false otherwise
+     */
+    boolean existsByName(final String name);
 }

@@ -20,7 +20,6 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { MosaicComponent } from './mosaic.component';
 import { MockedModelBuilderService } from '../../../../mock/services/mocked-model-builder/mocked-model-builder.service';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DataTypeEnum } from '../../../enums/data-type.enum';
 import { MockModule } from '../../../../mock/mock.module';
 

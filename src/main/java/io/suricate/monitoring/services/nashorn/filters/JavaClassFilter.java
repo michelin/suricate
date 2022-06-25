@@ -22,7 +22,6 @@ import io.suricate.monitoring.services.nashorn.script.NashornWidgetScript;
 import jdk.nashorn.api.scripting.ClassFilter;
 
 public class JavaClassFilter implements ClassFilter {
-
     /**
      * Method used to authorize access to some Java class
      *

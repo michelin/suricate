@@ -16,7 +16,6 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value = "CategoryParamResponse", description = "Describe a category parameter")
 public class CategoryParameterResponseDto extends AbstractDto {
-
     /**
      * The category parameter key
      */

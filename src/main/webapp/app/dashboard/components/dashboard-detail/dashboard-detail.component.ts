@@ -228,8 +228,8 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
       tap((projectWidgets: ProjectWidget[]) => {
         this.allWidgets = projectWidgets;
 
-        if (this.gridId && this.allWidgets) {
-          this.currentWidgets = this.allWidgets.filter(widget => widget.gridId === this.gridId);
+        if (this.gridId) {
+          this.currentWidgets = this.allWidgets ? this.allWidgets.filter(widget => widget.gridId === this.gridId) : [];
         }
       })
     );
@@ -486,6 +486,9 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Delete a single dashboard
+   */
   private deleteDashboard(): void {
     this.dialogService.confirm({
       title: 'dashboard.delete',
@@ -513,8 +516,10 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
           color: 'warn',
           callback: () => {
             this.httpProjectGridsService.delete(this.project.token, this.gridId).subscribe(() => {
-              this.toastService.sendMessage('dashboard.grid.delete.success', ToastTypeEnum.SUCCESS);
-              this.router.navigate(['/dashboards', this.dashboardToken, this.project.grids[0].id]);
+              this.refreshProject().subscribe(() => {
+                this.toastService.sendMessage('dashboard.grid.delete.success', ToastTypeEnum.SUCCESS);
+                this.router.navigate(['/dashboards', this.dashboardToken, this.project.grids[0].id]);
+              });
             });
           }
         },

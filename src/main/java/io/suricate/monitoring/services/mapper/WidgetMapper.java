@@ -18,13 +18,14 @@ package io.suricate.monitoring.services.mapper;
 
 import io.suricate.monitoring.model.dto.api.widget.WidgetResponseDto;
 import io.suricate.monitoring.model.entities.Widget;
+import io.suricate.monitoring.services.api.LibraryService;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -34,10 +35,20 @@ import java.util.List;
     componentModel = "spring",
     uses = {
         WidgetParamMapper.class,
-        CategoryMapper.class
+        CategoryMapper.class,
+        AssetMapper.class
+    },
+    imports = {
+        java.util.stream.Collectors.class,
+        com.google.common.collect.Sets.class
     }
 )
 public abstract class WidgetMapper {
+    /**
+     * The project widget service
+     */
+    @Autowired
+    protected LibraryService libraryService;
 
     /**
      * Map a widget into a DTO
@@ -46,6 +57,8 @@ public abstract class WidgetMapper {
      * @return The widget DTO
      */
     @Named("toWidgetDTO")
+    @Mapping(target = "image", ignore = true)
+    @Mapping(target = "libraryTechnicalNames", ignore = true)
     @Mapping(target = "imageToken", expression = "java( widget.getImage() != null ? io.suricate.monitoring.utils.IdUtils.encrypt(widget.getImage().getId()) : null )")
     @Mapping(target = "category", qualifiedByName = "toCategoryWithHiddenValueParametersDTO")
     @Mapping(target = "repositoryId", source = "widget.repository.id")
@@ -59,6 +72,8 @@ public abstract class WidgetMapper {
      * @return The widget DTO
      */
     @Named("toWidgetWithoutCategoryParametersDTO")
+    @Mapping(target = "image", ignore = true)
+    @Mapping(target = "libraryTechnicalNames", ignore = true)
     @Mapping(target = "imageToken", expression = "java( widget.getImage() != null ? io.suricate.monitoring.utils.IdUtils.encrypt(widget.getImage().getId()) : null )")
     @Mapping(target = "category", qualifiedByName = "toCategoryWithoutParametersDTO")
     @Mapping(target = "repositoryId", source = "widget.repository.id")

@@ -18,7 +18,9 @@
 
 package io.suricate.monitoring.model.entities;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 

@@ -175,10 +175,20 @@ export class RepositoriesComponent extends ListComponent<Repository> {
       repositoryRequest.password = null;
     }
 
-    this.httpRepositoryService.update(this.repository.id, repositoryRequest).subscribe(() => {
-      this.toastService.sendMessage('repository.update.success', ToastTypeEnum.SUCCESS);
-      super.refreshList();
-    });
+    this.disableAllButtons = true;
+    this.toastService.sendMessage('repository.synchronize.running', ToastTypeEnum.INFO);
+
+    this.httpRepositoryService.update(this.repository.id, repositoryRequest).subscribe(
+      () => {
+        this.disableAllButtons = false;
+        this.toastService.sendMessage('repository.update.success', ToastTypeEnum.SUCCESS);
+        super.refreshList();
+      },
+      () => {
+        this.disableAllButtons = false;
+        this.toastService.sendMessage('repository.synchronize.failure', ToastTypeEnum.DANGER);
+      }
+    );
   }
 
   /**
@@ -187,10 +197,20 @@ export class RepositoriesComponent extends ListComponent<Repository> {
    * @param repository The repository to reload
    */
   private reloadRepository(repository: Repository): void {
-    this.httpRepositoryService.reload(repository.id).subscribe(() => {
-      this.toastService.sendMessage('repository.synchronize.success', ToastTypeEnum.SUCCESS);
-      super.refreshList();
-    });
+    this.disableAllButtons = true;
+    this.toastService.sendMessage('repository.synchronize.running', ToastTypeEnum.INFO);
+
+    this.httpRepositoryService.reload(repository.id).subscribe(
+      () => {
+        this.disableAllButtons = false;
+        this.toastService.sendMessage('repository.synchronize.success', ToastTypeEnum.SUCCESS);
+        super.refreshList();
+      },
+      () => {
+        this.disableAllButtons = false;
+        this.toastService.sendMessage('repository.synchronize.failure', ToastTypeEnum.DANGER);
+      }
+    );
   }
 
   /**
@@ -199,14 +219,6 @@ export class RepositoriesComponent extends ListComponent<Repository> {
    * @param repositoryRequest The new repository to add with the modification made on the form
    */
   private addRepository(repositoryRequest: RepositoryRequest): void {
-    if (repositoryRequest.login.trim().length === 0) {
-      repositoryRequest.login = null;
-    }
-
-    if (repositoryRequest.password.trim().length === 0) {
-      repositoryRequest.password = null;
-    }
-
     this.httpRepositoryService.create(repositoryRequest).subscribe(() => {
       this.refreshList();
     });

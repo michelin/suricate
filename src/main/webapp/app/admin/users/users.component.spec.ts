@@ -17,23 +17,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { UsersComponent } from './users.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import {
-  DEFAULT_LANGUAGE,
-  MissingTranslationHandler,
-  TranslateCompiler,
-  TranslateLoader,
-  TranslateModule,
-  TranslateParser,
-  TranslateService,
-  TranslateStore,
-  USE_DEFAULT_LANG,
-  USE_EXTEND,
-  USE_STORE
-} from '@ngx-translate/core';
-import { RouterTestingModule } from '@angular/router/testing';
-import { HttpClient } from '@angular/common/http';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { MockModule } from '../../mock/mock.module';
 
 describe('UsersComponent', () => {

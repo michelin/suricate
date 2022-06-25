@@ -102,6 +102,12 @@ export class ListComponent<T> implements OnInit, OnDestroy {
   public listConfiguration = new ListConfiguration<T>();
 
   /**
+   * Disable all buttons of all objects.
+   * Used to disable actions during repository sync
+   */
+  public disableAllButtons = false;
+
+  /**
    * The object list to display
    */
   public objectsPaged: Page<T>;

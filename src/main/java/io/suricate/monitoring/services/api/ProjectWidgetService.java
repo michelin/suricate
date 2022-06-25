@@ -31,9 +31,8 @@ import io.suricate.monitoring.model.enums.DataTypeEnum;
 import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.model.enums.WidgetStateEnum;
 import io.suricate.monitoring.repositories.ProjectWidgetRepository;
-import io.suricate.monitoring.services.mapper.ProjectMapper;
-import io.suricate.monitoring.services.nashorn.services.DashboardScheduleService;
 import io.suricate.monitoring.services.nashorn.scheduler.NashornRequestWidgetExecutionScheduler;
+import io.suricate.monitoring.services.nashorn.services.DashboardScheduleService;
 import io.suricate.monitoring.services.websocket.DashboardWebSocketService;
 import io.suricate.monitoring.utils.JavaScriptUtils;
 import io.suricate.monitoring.utils.PropertiesUtils;
@@ -46,8 +45,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-
 import org.springframework.transaction.annotation.Transactional;
+
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
@@ -132,7 +131,6 @@ public class ProjectWidgetService {
 
     /**
      * Get all the project widget in database
-     *
      * @return The list of project widget
      */
     public List<ProjectWidget> getAll() {
@@ -141,7 +139,6 @@ public class ProjectWidgetService {
 
     /**
      * Get the project widget by id
-     *
      * @param projectWidgetId The project widget id
      * @return The project widget
      */
@@ -151,24 +148,45 @@ public class ProjectWidgetService {
     }
 
     /**
+     * Get the project widget by id
+     * @param id The project widget id
+     * @param gridId The grid id
+     * @return The project widget
+     */
+    @Transactional(readOnly = true)
+    public Optional<ProjectWidget> findByIdAndProjectGridId(final Long id, final Long gridId) {
+        return projectWidgetRepository.findByIdAndProjectGridId(id, gridId);
+    }
+
+    /**
+     * Persist a given project widget
+     * Encrypt the secret configuration of the widget instance before saving it
+     *
+     * @param projectWidget The project widget
+     */
+    @Transactional
+    public ProjectWidget create(ProjectWidget projectWidget) {
+        projectWidget.setBackendConfig(encryptSecretParamsIfNeeded(projectWidget.getWidget(), projectWidget.getBackendConfig()));
+        return projectWidgetRepository.save(projectWidget);
+    }
+
+    /**
      * Add a new widget instance to a project
      * Encrypt the secret configuration of the widget instance then save it
      *
      * @param widgetInstance The widget instance
      */
     @Transactional
-    public void addWidgetInstanceToProject(ProjectWidget widgetInstance) {
-        widgetInstance.setBackendConfig(
-            encryptSecretParamsIfNeeded(widgetInstance.getWidget(), widgetInstance.getBackendConfig())
-        );
+    public void createAndRefreshDashboards(ProjectWidget projectWidget) {
+        projectWidget.setBackendConfig(encryptSecretParamsIfNeeded(projectWidget.getWidget(), projectWidget.getBackendConfig()));
 
-        projectWidgetRepository.saveAndFlush(widgetInstance);
+        projectWidgetRepository.saveAndFlush(projectWidget);
 
         UpdateEvent updateEvent = UpdateEvent.builder()
                 .type(UpdateType.REFRESH_DASHBOARD)
                 .build();
 
-        dashboardWebsocketService.sendEventToProjectSubscribers(widgetInstance.getProjectGrid().getProject().getToken(), updateEvent);
+        dashboardWebsocketService.sendEventToProjectSubscribers(projectWidget.getProjectGrid().getProject().getToken(), updateEvent);
     }
 
     /**

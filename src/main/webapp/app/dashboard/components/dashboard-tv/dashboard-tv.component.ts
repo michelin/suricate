@@ -16,7 +16,7 @@
  *
  */
 
-import { Component, OnDestroy, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import { flatMap, takeUntil, tap } from 'rxjs/operators';
 import { Observable, Subject } from 'rxjs';
 import { ActivatedRoute, Params, Router } from '@angular/router';
@@ -28,7 +28,6 @@ import { HttpProjectService } from '../../../shared/services/backend/http-projec
 import { WebsocketService } from '../../../shared/services/frontend/websocket/websocket.service';
 import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';
 import { DashboardService } from '../../services/dashboard/dashboard.service';
-import { DashboardScreenComponent } from '../dashboard-screen/dashboard-screen.component';
 import { HttpProjectWidgetService } from '../../../shared/services/backend/http-project-widget/http-project-widget.service';
 
 /**

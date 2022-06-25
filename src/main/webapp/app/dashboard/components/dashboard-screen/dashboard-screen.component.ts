@@ -29,7 +29,7 @@ import {
 } from '@angular/core';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { NgGridConfig, NgGridItem, NgGridItemConfig } from 'angular2-grid';
+import { NgGridConfig, NgGridItemConfig } from 'angular2-grid';
 import * as Stomp from '@stomp/stompjs';
 import { Project } from '../../../shared/models/backend/project/project';
 import { ProjectWidget } from '../../../shared/models/backend/project-widget/project-widget';

@@ -25,3 +25,40 @@
 .sidenav-section-container {
   flex-grow: 1;
 }
+
+.mat-expansion-panel-header {
+  padding: 0;
+
+  .mat-expansion-panel-header-title {
+    margin: 0;
+    align-items: center;
+    min-width: 22px;
+
+    .names-idp-container {
+      font-size: 12px;
+      text-align: center;
+      margin: auto;
+      align-items: center;
+
+      .names-container {
+        margin: 0 5px;
+      }
+
+      .idp-icon {
+        width: 22px;
+
+        img {
+          height: 22px;
+        }
+      }
+
+      .firstname-lastname {
+        font-weight: bold;
+      }
+    }
+  }
+
+  .mat-expansion-panel-header-description {
+    margin: 0;
+  }
+}

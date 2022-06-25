@@ -42,7 +42,8 @@ export class MenuService {
   }
 
   /**
-   * Function used to build the menu
+   * Build the menu
+   * @param admin Is the user admin or not ?
    */
   public static buildMenu(): MenuConfiguration {
     const menuConfiguration = new MenuConfiguration();

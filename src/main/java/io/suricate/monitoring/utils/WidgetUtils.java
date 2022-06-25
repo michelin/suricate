@@ -19,8 +19,8 @@ package io.suricate.monitoring.utils;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import io.suricate.monitoring.model.entities.Library;
 import io.suricate.monitoring.model.entities.Category;
+import io.suricate.monitoring.model.entities.Library;
 import io.suricate.monitoring.model.entities.Widget;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
@@ -56,25 +56,22 @@ public final class WidgetUtils {
      * @param rootFolder the root library folder
      * @return the list of library
      */
-    public static List<Library> parseLibraryFolder(File rootFolder) {
+    public static List<Library> parseLibraryFolder(File rootFolder) throws IOException {
         List<Library> libraries = null;
 
-        try {
-            List<File> list = FilesUtils.getFiles(rootFolder);
+        List<File> list = FilesUtils.getFiles(rootFolder);
 
-            if (!list.isEmpty()) {
-                libraries = new ArrayList<>();
+        if (!list.isEmpty()) {
+            libraries = new ArrayList<>();
 
-                for (File file : list) {
-                    Library lib = new Library();
-                    lib.setAsset(FilesUtils.readAsset(file));
-                    lib.setTechnicalName(file.getName());
-                    libraries.add(lib);
-                }
+            for (File file : list) {
+                Library lib = new Library();
+                lib.setAsset(FilesUtils.readAsset(file));
+                lib.setTechnicalName(file.getName());
+                libraries.add(lib);
             }
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
         }
+
         return libraries;
     }
 

@@ -43,6 +43,12 @@ export class ButtonsComponent<T> {
   public object: T;
 
   /**
+   * Disable all buttons of all objects
+   */
+  @Input()
+  public disableAllButtons: boolean;
+
+  /**
    * The different type of buttons
    */
   public buttonTypeEnum = ButtonTypeEnum;

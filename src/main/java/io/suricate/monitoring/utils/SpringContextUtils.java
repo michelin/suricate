@@ -17,7 +17,6 @@
 package io.suricate.monitoring.utils;
 
 import lombok.Getter;
-import lombok.Setter;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Lazy;

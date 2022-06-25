@@ -16,11 +16,11 @@
 
 package io.suricate.monitoring.services.mapper;
 
+import io.suricate.monitoring.model.dto.api.export.ImportExportRepositoryDto;
 import io.suricate.monitoring.model.dto.api.repository.RepositoryRequestDto;
 import io.suricate.monitoring.model.dto.api.repository.RepositoryResponseDto;
 import io.suricate.monitoring.model.entities.Repository;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 
 /**
@@ -28,15 +28,15 @@ import org.mapstruct.Named;
  */
 @Mapper(componentModel = "spring")
 public abstract class RepositoryMapper {
-
     /**
-     * Map a repository into a DTO
+     * Map a repository into a DTO.
+     * Ignore the widgets repository
      *
      * @param repository The repository to map
      * @return The repository as DTO
      */
-    @Named("toRepositoryDTO")
-    public abstract RepositoryResponseDto toRepositoryDTO(Repository repository);
+    @Named("toRepositoryDTONoWidgets")
+    public abstract RepositoryResponseDto toRepositoryDTONoWidgets(Repository repository);
 
     /**
      * Map a repository DTO as entity
@@ -46,6 +46,22 @@ public abstract class RepositoryMapper {
      * @return The repository as entity
      */
     @Named("toRepositoryEntity")
-    @Mapping(target = "widgets", ignore = true)
     public abstract Repository toRepositoryEntity(Long id, RepositoryRequestDto repositoryRequestDto);
+
+    /**
+     * Map a repository into an import export repository DTO
+     *
+     * @param repository The repository to map
+     * @return The import export repository as DTO
+     */
+    @Named("toImportExportRepositoryDTO")
+    public abstract ImportExportRepositoryDto toImportExportRepositoryDTO(Repository repository);
+
+    /**
+     * Map an import export repository DTO as entity
+     * @param repositoryRequestDto The repository DTO to map
+     * @return The repository as entity
+     */
+    @Named("toRepositoryEntity")
+    public abstract Repository toRepositoryEntity(ImportExportRepositoryDto importExportRepositoryDto);
 }
