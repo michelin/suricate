@@ -54,7 +54,7 @@ public class WidgetProxySelector extends ProxySelector {
             try (Stream<String> domains = Arrays.stream(proxyProperties.getNonProxyHosts().split("\\|"))) {
                 // Check if the URI is defined in the "no proxy domains" config before setting the proxy
                 if (domains.noneMatch(domain -> StringUtils.containsIgnoreCase(uri.getHost(), domain.replace("*", StringUtils.EMPTY)))) {
-                    proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyProperties.getHttpPort(), Integer.parseInt(proxyProperties.getHttpPort())));
+                    proxy = new Proxy(Proxy.Type.HTTP, new InetSocketAddress(proxyProperties.getHttpHost(), Integer.parseInt(proxyProperties.getHttpPort())));
                 }
             }
         }
