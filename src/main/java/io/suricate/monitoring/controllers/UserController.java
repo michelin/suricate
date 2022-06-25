@@ -40,7 +40,9 @@ import io.suricate.monitoring.services.mapper.PersonalAccessTokenMapper;
 import io.suricate.monitoring.services.mapper.UserMapper;
 import io.suricate.monitoring.services.mapper.UserSettingMapper;
 import io.suricate.monitoring.services.token.PersonalAccessTokenHelperService;
+import io.suricate.monitoring.utils.exceptions.EmailAlreadyExistException;
 import io.suricate.monitoring.utils.exceptions.ObjectNotFoundException;
+import io.suricate.monitoring.utils.exceptions.UsernameAlreadyExistException;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -307,12 +309,21 @@ public class UserController {
     @ApiOperation(value = "Register a new user", response = UserResponseDto.class)
     @ApiResponses(value = {
         @ApiResponse(code = 200, message = "Ok", response = UserResponseDto.class),
-        @ApiResponse(code = 400, message = "Bad request", response = ApiErrorDto.class)
+        @ApiResponse(code = 400, message = "Bad request", response = ApiErrorDto.class),
+        @ApiResponse(code = 409, message = "Username or email already taken", response = ApiErrorDto.class)
     })
     @PostMapping(value = "/v1/users/signup")
     @PreAuthorize("isAnonymous()")
     public ResponseEntity<UserResponseDto> signUp(@ApiParam(name = "userResponseDto", value = "The user information to create", required = true)
                                                   @RequestBody UserRequestDto userRequestDto) {
+        if (userService.getOneByUsername(userRequestDto.getUsername()).isPresent()) {
+            throw new UsernameAlreadyExistException(userRequestDto.getUsername());
+        }
+
+        if (userService.getOneByEmail(userRequestDto.getEmail()).isPresent()) {
+            throw new EmailAlreadyExistException(userRequestDto.getEmail());
+        }
+
         User user = userMapper.toUserEntity(userRequestDto, AuthenticationProvider.DATABASE);
         User savedUser = userService.create(user);
 

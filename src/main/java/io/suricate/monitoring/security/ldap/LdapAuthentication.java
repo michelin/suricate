@@ -100,7 +100,8 @@ public class LdapAuthentication {
         return new LdapUserDetailsMapper() {
             @Override
             public UserDetails mapUserFromContext(DirContextOperations ctx, String username, java.util.Collection<? extends GrantedAuthority> authorities) {
-                Optional<User> currentUser = userService.getOneByUsername(username);
+                String email = ctx.getStringAttribute(applicationProperties.getAuthentication().getLdap().mailAttributName);
+                Optional<User> currentUser = userService.getOneByEmail(email);
 
                 if (!currentUser.isPresent()) {
                     throw new UsernameNotFoundException("The specified user has not been found");

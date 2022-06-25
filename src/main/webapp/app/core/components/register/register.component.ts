@@ -33,6 +33,7 @@ import { ButtonConfiguration } from '../../../shared/models/frontend/button/butt
 import { RegisterFormFieldsService } from '../../../shared/services/frontend/form-fields/register-form-fields/register-form-fields.service';
 import { ButtonTypeEnum } from '../../../shared/enums/button-type.enum';
 import { HttpConfigurationService } from '../../../shared/services/backend/http-configuration/http-configuration.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 /**
  * Component used to register a new user
@@ -124,7 +125,10 @@ export class RegisterComponent implements OnInit {
         )
         .subscribe(
           () => this.navigateToHomePage(),
-          () => (this.loading = false)
+          (error: HttpErrorResponse) => {
+            this.loading = false;
+            this.toastService.sendMessage(error.error.key, ToastTypeEnum.DANGER);
+          }
         );
     } else {
       this.toastService.sendMessage('form.error.fields', ToastTypeEnum.DANGER);
