@@ -59,7 +59,6 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.net.URI;
-import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
@@ -372,7 +371,7 @@ public class UserController {
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<PersonalAccessTokenResponseDto> createPersonalAccessToken(@ApiIgnore Authentication authentication,
                                                                                     @ApiParam(name = "tokenRequestDto", value = "The token request", required = true)
-                                                        @RequestBody PersonalAccessTokenRequestDto personalAccessTokenRequestDto) throws NoSuchAlgorithmException {
+                                                        @RequestBody PersonalAccessTokenRequestDto personalAccessTokenRequestDto) {
         String personalAccessToken = patHelperService.createPersonalAccessToken();
         Long checksum = patHelperService.computePersonAccessTokenChecksum(personalAccessToken);
 
