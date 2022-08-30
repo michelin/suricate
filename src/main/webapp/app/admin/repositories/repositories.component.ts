@@ -181,7 +181,7 @@ export class RepositoriesComponent extends ListComponent<Repository> {
     this.httpRepositoryService.update(this.repository.id, repositoryRequest).subscribe(
       () => {
         this.disableAllButtons = false;
-        this.toastService.sendMessage('repository.update.success', ToastTypeEnum.SUCCESS);
+        this.toastService.sendMessage('repository.synchronize.success', ToastTypeEnum.SUCCESS);
         super.refreshList();
       },
       () => {
@@ -219,8 +219,17 @@ export class RepositoriesComponent extends ListComponent<Repository> {
    * @param repositoryRequest The new repository to add with the modification made on the form
    */
   private addRepository(repositoryRequest: RepositoryRequest): void {
-    this.httpRepositoryService.create(repositoryRequest).subscribe(() => {
-      this.refreshList();
-    });
+    this.toastService.sendMessage('repository.synchronize.running', ToastTypeEnum.INFO);
+
+    this.httpRepositoryService.create(repositoryRequest).subscribe(
+      () => {
+        this.toastService.sendMessage('repository.synchronize.success', ToastTypeEnum.SUCCESS);
+        this.refreshList();
+      },
+      () => {
+        this.toastService.sendMessage('repository.synchronize.failure', ToastTypeEnum.DANGER);
+        this.refreshList();
+      }
+    );
   }
 }

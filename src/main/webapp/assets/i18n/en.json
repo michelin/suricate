@@ -83,7 +83,6 @@
   "repository.synchronize.running": "Repository is being updated...",
   "repository.synchronize.success": "Repository updated",
   "repository.type.form.field": "Type",
-  "repository.update.success": "Repository updated",
   "revoke": "Revoke",
   "roles": "Roles",
   "row.height.px": "Row height (in px)",

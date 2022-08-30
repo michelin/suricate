@@ -83,7 +83,6 @@
   "repository.synchronize.running": "Le dépôt est en cours de mise à jour...",
   "repository.synchronize.success": "Dépôt mis à jour avec succès",
   "repository.type.form.field": "Type",
-  "repository.update.success": "Dépôt mis à jour avec succès",
   "revoke": "Révoquer",
   "roles": "Roles",
   "row.height.px": "Hauteur des lignes (en px)",
