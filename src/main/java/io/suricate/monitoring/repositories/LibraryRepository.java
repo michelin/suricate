@@ -43,11 +43,4 @@ public interface LibraryRepository extends JpaRepository<Library, Long>, JpaSpec
      * @return The library
      */
     Library findByTechnicalName(String technicalName);
-
-    /**
-     * Find libraries by technical names
-     * @param technicalNames The technical names
-     * @return The libraries
-     */
-    List<Library> findByTechnicalNameIn(List<String> technicalNames);
 }
