@@ -11,4 +11,5 @@ export class CategoryParameter {
   export: boolean;
   dataType: DataTypeEnum;
   category: Category;
+  showValue: boolean;
 }
