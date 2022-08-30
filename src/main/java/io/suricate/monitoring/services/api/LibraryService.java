@@ -69,16 +69,6 @@ public class LibraryService {
     }
 
     /**
-     * Find libraries by technical names
-     * @param technicalNames The technical names
-     * @return The libraries
-     */
-    @Transactional(readOnly = true)
-    public List<Library> findByTechnicalNameIn(List<String> technicalNames) {
-        return libraryRepository.findByTechnicalNameIn(technicalNames);
-    }
-
-    /**
      * Get all libraries of a project
      * @param project The project
      * @return The libraries
@@ -109,7 +99,7 @@ public class LibraryService {
     public List<String> getLibraryTokensByProject(Project project) {
         return getLibrariesByProject(project)
                 .stream()
-                .map(Library::getId)
+                .map(library -> library.getAsset().getId())
                 .map(IdUtils::encrypt)
                 .collect(Collectors.toList());
     }
