@@ -21,6 +21,7 @@ import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
 import { WidgetConfigurationFormFieldsService } from '../../shared/services/frontend/form-fields/widget-configuration-form-fields/widget-configuration-form-fields.service';
 import { HttpCategoryParametersService } from '../../shared/services/backend/http-category-parameters/http-category-parameters.service';
 import { CategoryParameter } from '../../shared/models/backend/category-parameters/category-parameter';
+import { DataTypeEnum } from '../../shared/enums/data-type.enum';
 
 /**
  * Component used to display the list of widgets
@@ -65,7 +66,9 @@ export class ConfigurationsComponent extends ListComponent<CategoryParameter> {
    * {@inheritDoc}
    */
   protected getSecondLabel(configuration: CategoryParameter): string {
-    return configuration.value;
+    return configuration.value && configuration.dataType === DataTypeEnum.PASSWORD && !configuration.showValue
+      ? '•'.repeat(configuration.value.length)
+      : configuration.value;
   }
 
   /**
@@ -90,6 +93,22 @@ export class ConfigurationsComponent extends ListComponent<CategoryParameter> {
   private initListConfiguration(): void {
     this.listConfiguration = {
       buttons: [
+        {
+          icon: IconEnum.SHOW_PASSWORD,
+          tooltip: { message: 'configuration.show.password' },
+          color: 'primary',
+          hidden: (configuration: CategoryParameter) =>
+            !configuration.value || configuration.dataType !== DataTypeEnum.PASSWORD || configuration.showValue,
+          callback: (event: Event, configuration: CategoryParameter) => (configuration.showValue = true)
+        },
+        {
+          icon: IconEnum.HIDE_PASSWORD,
+          tooltip: { message: 'configuration.hide.password' },
+          color: 'primary',
+          hidden: (configuration: CategoryParameter) =>
+            !configuration.value || configuration.dataType !== DataTypeEnum.PASSWORD || !configuration.showValue,
+          callback: (event: Event, configuration: CategoryParameter) => (configuration.showValue = false)
+        },
         {
           icon: IconEnum.EDIT,
           tooltip: { message: 'configuration.edit' },
