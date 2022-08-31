@@ -2,13 +2,11 @@ package io.suricate.monitoring.services.token;
 
 import io.seruco.encoding.base62.Base62;
 import io.suricate.monitoring.properties.ApplicationProperties;
-import io.suricate.monitoring.services.api.PersonalAccessTokenService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
@@ -30,10 +28,10 @@ public class PersonalAccessTokenHelperService {
      * Create personal access token
      * @return A random string
      */
-    public String createPersonalAccessToken() throws NoSuchAlgorithmException {
+    public String createPersonalAccessToken() {
         // Generate Base62 string of 32 chars length
         byte[] bytes = new byte[24];
-        SecureRandom.getInstanceStrong().nextBytes(bytes);
+        new SecureRandom().nextBytes(bytes);
 
         Base62 base62 = Base62.createInstance();
         final String randomString = new String(base62.encode(bytes));
