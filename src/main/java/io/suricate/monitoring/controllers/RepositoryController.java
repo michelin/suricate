@@ -151,7 +151,7 @@ public class RepositoryController {
     @GetMapping(value = "/v1/repositories/{repositoryId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Transactional
-    public ResponseEntity<RepositoryResponseDto> getOneById(@ApiParam(name = "repositoryId", value = "The repository id", required = true)
+    public ResponseEntity<RepositoryResponseDto> getOneById(@ApiParam(name = "repositoryId", value = "The repository id", required = true, example = "1")
                                                             @PathVariable Long repositoryId) {
         Optional<Repository> optionalRepository = this.repositoryService.getOneById(repositoryId);
         if (!optionalRepository.isPresent()) {
@@ -176,7 +176,7 @@ public class RepositoryController {
     })
     @PutMapping(value = "/v1/repositories/{repositoryId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Void> updateOneById(@ApiParam(name = "repositoryId", value = "The repository id", required = true)
+    public ResponseEntity<Void> updateOneById(@ApiParam(name = "repositoryId", value = "The repository id", required = true, example = "1")
                                               @PathVariable Long repositoryId,
                                               @ApiParam(name = "repositoryResponseDto", value = "The repository with the new info's to update", required = true)
                                               @RequestBody RepositoryRequestDto repositoryRequestDto) throws GitAPIException, IOException {
@@ -206,7 +206,7 @@ public class RepositoryController {
     })
     @PutMapping(value = "/v1/repositories/{repositoryId}/reload")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Void> reload(@ApiParam(name = "repositoryId", value = "The repository id", required = true)
+    public ResponseEntity<Void> reload(@ApiParam(name = "repositoryId", value = "The repository id", required = true, example = "1")
                                        @PathVariable Long repositoryId) throws GitAPIException, IOException {
         Optional<Repository> optionalRepository = this.repositoryService.getOneById(repositoryId);
         if (!optionalRepository.isPresent()) {
@@ -237,7 +237,7 @@ public class RepositoryController {
     @GetMapping(value = "/v1/repositories/{repositoryId}/widgets")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Transactional
-    public ResponseEntity<List<WidgetResponseDto>> getRepositoryWidget(@ApiParam(name = "repositoryId", value = "The repository id", required = true)
+    public ResponseEntity<List<WidgetResponseDto>> getRepositoryWidget(@ApiParam(name = "repositoryId", value = "The repository id", required = true, example = "1")
                                                                        @PathVariable Long repositoryId) {
         Optional<Repository> optionalRepository = this.repositoryService.getOneById(repositoryId);
         if (!optionalRepository.isPresent()) {

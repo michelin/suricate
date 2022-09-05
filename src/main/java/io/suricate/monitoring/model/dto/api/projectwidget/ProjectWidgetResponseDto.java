@@ -43,7 +43,7 @@ public class ProjectWidgetResponseDto extends AbstractDto {
     /**
      * The project widget id
      */
-    @ApiModelProperty(value = "The project widget id")
+    @ApiModelProperty(value = "The project widget id", example = "1")
     private Long id;
 
     /**
@@ -109,7 +109,7 @@ public class ProjectWidgetResponseDto extends AbstractDto {
     /**
      * The related widget id
      */
-    @ApiModelProperty(value = "The related widget id")
+    @ApiModelProperty(value = "The related widget id", example = "1")
     private Long widgetId;
 
     /**
@@ -121,6 +121,6 @@ public class ProjectWidgetResponseDto extends AbstractDto {
     /**
      * The project grid id
      */
-    @ApiModelProperty(value = "The project grid id")
+    @ApiModelProperty(value = "The project grid id", example = "1")
     private Long gridId;
 }

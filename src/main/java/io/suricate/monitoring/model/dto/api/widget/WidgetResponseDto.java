@@ -24,7 +24,7 @@ public class WidgetResponseDto extends AbstractDto {
     /**
      * The widget ID
      */
-    @ApiModelProperty(value = "Id")
+    @ApiModelProperty(value = "Id", example = "1")
     private Long id;
 
     /**
@@ -66,7 +66,7 @@ public class WidgetResponseDto extends AbstractDto {
     /**
      * The timeout of the nashorn execution
      */
-    @ApiModelProperty(value = "Timeout for nashorn execution (prevent infinity loop)")
+    @ApiModelProperty(value = "Timeout for nashorn execution (prevent infinity loop)", example = "30")
     private Long timeout;
 
     /**
@@ -96,7 +96,7 @@ public class WidgetResponseDto extends AbstractDto {
     /**
      * The repository used for this widget
      */
-    @ApiModelProperty(value = "The repository of this widget")
+    @ApiModelProperty(value = "The repository of this widget", example = "1")
     private Long repositoryId;
 
     /**

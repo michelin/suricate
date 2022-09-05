@@ -35,7 +35,7 @@ public class AllowedSettingValueResponseDto extends AbstractDto {
     /**
      * The setting id
      */
-    @ApiModelProperty(value = "The setting value id", required = true)
+    @ApiModelProperty(value = "The setting value id", required = true, example = "1")
     private Long id;
 
     /**

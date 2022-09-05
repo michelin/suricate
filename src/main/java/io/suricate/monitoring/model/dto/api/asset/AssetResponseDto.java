@@ -35,7 +35,7 @@ public class AssetResponseDto extends AbstractDto {
     /**
      * The asset id
      */
-    @ApiModelProperty(value = "Id")
+    @ApiModelProperty(value = "Id", example = "1")
     private Long id;
 
     /**
@@ -53,6 +53,6 @@ public class AssetResponseDto extends AbstractDto {
     /**
      * The size of the asset
      */
-    @ApiModelProperty(value = "The size of the asset")
+    @ApiModelProperty(value = "The size of the asset", example = "100")
     private long size;
 }
