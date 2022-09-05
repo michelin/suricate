@@ -40,7 +40,7 @@ public class CategoryResponseDto extends AbstractDto {
     /**
      * The category id
      */
-    @ApiModelProperty(value = "The category id")
+    @ApiModelProperty(value = "The category id", example = "1")
     private Long id;
 
     /**

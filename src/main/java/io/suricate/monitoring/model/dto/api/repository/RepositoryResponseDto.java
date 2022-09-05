@@ -19,7 +19,7 @@ public class RepositoryResponseDto extends AbstractDto {
     /**
      * The repository id
      */
-    @ApiModelProperty(value = "The repository id", required = true)
+    @ApiModelProperty(value = "The repository id", required = true, example = "1")
     private Long id;
 
     /**

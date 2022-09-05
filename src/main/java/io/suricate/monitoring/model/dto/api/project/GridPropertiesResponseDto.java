@@ -19,13 +19,13 @@ public class GridPropertiesResponseDto extends AbstractDto {
     /**
      * Number of column in the dashboard
      */
-    @ApiModelProperty(value = "The number of columns in the dashboard")
+    @ApiModelProperty(value = "The number of columns in the dashboard", example = "1")
     private Integer maxColumn;
 
     /**
      * The height for widgets contained
      */
-    @ApiModelProperty(value = "The height in pixel of the widget")
+    @ApiModelProperty(value = "The height in pixel of the widget", example = "1")
     private Integer widgetHeight;
 
     /**

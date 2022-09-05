@@ -114,7 +114,7 @@ public class RoleController {
     })
     @GetMapping(value = "/v1/roles/{roleId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<RoleResponseDto> getOne(@ApiParam(name = "roleId", value = "The role id", required = true)
+    public ResponseEntity<RoleResponseDto> getOne(@ApiParam(name = "roleId", value = "The role id", required = true, example = "1")
                                                   @PathVariable("roleId") Long roleId) {
         Optional<Role> roleOptional = roleService.getOneById(roleId);
         if (!roleOptional.isPresent()) {
@@ -141,7 +141,7 @@ public class RoleController {
     })
     @GetMapping(value = "/v1/roles/{roleId}/users")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<List<UserResponseDto>> getUsersByRole(@ApiParam(name = "roleId", value = "The role id", required = true)
+    public ResponseEntity<List<UserResponseDto>> getUsersByRole(@ApiParam(name = "roleId", value = "The role id", required = true, example = "1")
                                                                 @PathVariable("roleId") Long roleId) {
         Optional<Role> roleOptional = roleService.getOneById(roleId);
         if (!roleOptional.isPresent()) {

@@ -36,7 +36,7 @@ public class UserSettingRequestDto extends AbstractDto {
     /**
      * The allowed setting value
      */
-    @ApiModelProperty(value = "The selected value Id if it's a constrained setting")
+    @ApiModelProperty(value = "The selected value Id if it's a constrained setting", example = "1")
     @Nullable
     private Long allowedSettingValueId;
 

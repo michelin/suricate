@@ -120,7 +120,7 @@ public class CategoryController {
     })
     @GetMapping(value = "/v1/categories/{categoryId}/widgets")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<List<WidgetResponseDto>> getWidgetByCategory(@ApiParam(name = "categoryId", value = "The category id", required = true)
+    public ResponseEntity<List<WidgetResponseDto>> getWidgetByCategory(@ApiParam(name = "categoryId", value = "The category id", required = true, example = "1")
                                                                        @PathVariable("categoryId") Long categoryId) {
         Optional<List<Widget>> widgetsOptional = this.widgetService.getWidgetsByCategory(categoryId);
 

@@ -52,7 +52,7 @@ public class ApiErrorDto extends AbstractDto {
     /**
      * The HttpStatus number
      */
-    @ApiModelProperty(value = "HttpStatus number")
+    @ApiModelProperty(value = "HttpStatus number", example = "1")
     private int status;
 
     /**

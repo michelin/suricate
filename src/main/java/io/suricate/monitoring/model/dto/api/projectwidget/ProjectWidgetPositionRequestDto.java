@@ -36,30 +36,30 @@ public class ProjectWidgetPositionRequestDto extends AbstractDto {
     /**
      * The project widget id related to this project widget position
      */
-    @ApiModelProperty(value = "The related project widget id")
+    @ApiModelProperty(value = "The related project widget id", example = "1")
     private Long projectWidgetId;
 
     /**
      * The start column of this widget
      */
-    @ApiModelProperty(value = "The number of the column where the widget should start to be displayed")
+    @ApiModelProperty(value = "The number of the column where the widget should start to be displayed", example = "1")
     private int gridColumn;
 
     /**
      * The start row of the widget
      */
-    @ApiModelProperty(value = "The number of the row where the widget should start to be displayed")
+    @ApiModelProperty(value = "The number of the row where the widget should start to be displayed", example = "1")
     private int gridRow;
 
     /**
      * The number of columns for this widget
      */
-    @ApiModelProperty(value = "The number of columns taken by this widget")
+    @ApiModelProperty(value = "The number of columns taken by this widget", example = "1")
     private int width;
 
     /**
      * The number of rows
      */
-    @ApiModelProperty(value = "The number of rows taken by this widget")
+    @ApiModelProperty(value = "The number of rows taken by this widget", example = "1")
     private int height;
 }

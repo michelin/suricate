@@ -91,7 +91,7 @@ public class  ProjectWidgetController {
     })
     @GetMapping(value = "/v1/projectWidgets/{projectWidgetId}")
     @PermitAll
-    public ResponseEntity<ProjectWidgetResponseDto> getById(@ApiParam(name = "projectWidgetId", value = "The project widget id", required = true)
+    public ResponseEntity<ProjectWidgetResponseDto> getById(@ApiParam(name = "projectWidgetId", value = "The project widget id", required = true, example = "1")
                                                             @PathVariable("projectWidgetId") Long projectWidgetId) {
         Optional<ProjectWidget> projectWidgetOptional = this.projectWidgetService.getOne(projectWidgetId);
         if (!projectWidgetOptional.isPresent()) {
@@ -152,7 +152,7 @@ public class  ProjectWidgetController {
     @PutMapping(value = "/v1/projectWidgets/{projectWidgetId}")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<ProjectWidgetResponseDto> editByProject(@ApiIgnore @AuthenticationPrincipal LocalUser connectedUser,
-                                                                  @ApiParam(name = "projectWidgetId", value = "The project widget id", required = true)
+                                                                  @ApiParam(name = "projectWidgetId", value = "The project widget id", required = true, example = "1")
                                                                   @PathVariable("projectWidgetId") Long projectWidgetId,
                                                                   @ApiParam(name = "projectWidgetResponseDto", value = "The project widget informations to update", required = true)
                                                                   @RequestBody ProjectWidgetRequestDto projectWidgetRequestDto) {
@@ -194,7 +194,7 @@ public class  ProjectWidgetController {
     public ResponseEntity<ProjectWidgetResponseDto> addProjectWidgetToProject(@ApiIgnore @AuthenticationPrincipal LocalUser connectedUser,
                                                                               @ApiParam(name = "projectToken", value = "The project token", required = true)
                                                                               @PathVariable("projectToken") String projectToken,
-                                                                              @ApiParam(name = "gridId", value = "The grid id", required = true)
+                                                                              @ApiParam(name = "gridId", value = "The grid id", required = true, example = "1")
                                                                               @PathVariable("gridId") Long gridId,
                                                                               @ApiParam(name = "projectWidgetDto", value = "The project widget info's", required = true)
                                                                               @RequestBody ProjectWidgetRequestDto projectWidgetRequestDto) {
@@ -243,7 +243,7 @@ public class  ProjectWidgetController {
     @DeleteMapping(value = "/v1/projectWidgets/{projectWidgetId}")
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Void> deleteById(@ApiIgnore @AuthenticationPrincipal LocalUser connectedUser,
-                                           @ApiParam(name = "projectWidgetId", value = "The project widget id", required = true)
+                                           @ApiParam(name = "projectWidgetId", value = "The project widget id", required = true, example = "1")
                                            @PathVariable("projectWidgetId") Long projectWidgetId) {
         Optional<ProjectWidget> projectWidgetOptional = projectWidgetService.getOne(projectWidgetId);
 

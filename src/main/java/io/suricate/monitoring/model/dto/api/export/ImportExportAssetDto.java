@@ -30,6 +30,6 @@ public class ImportExportAssetDto extends AbstractDto {
     /**
      * The size of the asset
      */
-    @ApiModelProperty(value = "The size of the asset")
+    @ApiModelProperty(value = "The size of the asset", example = "1")
     private long size;
 }

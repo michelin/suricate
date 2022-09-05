@@ -37,13 +37,13 @@ public class UserSettingResponseDto extends AbstractDto {
     /**
      * The user setting id
      */
-    @ApiModelProperty(value = "The id line")
+    @ApiModelProperty(value = "The id line", example = "1")
     private Long id;
 
     /**
      * The related user id
      */
-    @ApiModelProperty(value = "The user id related to this setting")
+    @ApiModelProperty(value = "The user id related to this setting", example = "1")
     private Long userId;
 
     /**

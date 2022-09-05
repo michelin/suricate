@@ -35,7 +35,7 @@ public class LibraryResponseDto extends AbstractDto {
     /**
      * The library id
      */
-    @ApiModelProperty(value = "The database id")
+    @ApiModelProperty(value = "The database id", example = "1")
     private Long id;
 
     /**

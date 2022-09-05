@@ -458,7 +458,7 @@ public class ProjectController {
     public ResponseEntity<Void> deleteUserFromProject(@ApiIgnore @AuthenticationPrincipal LocalUser connectedUser,
                                                       @ApiParam(name = "projectToken", value = "The project token", required = true)
                                                       @PathVariable("projectToken") String projectToken,
-                                                      @ApiParam(name = "userId", value = "The user id", required = true)
+                                                      @ApiParam(name = "userId", value = "The user id", required = true, example = "1")
                                                       @PathVariable("userId") Long userId) {
         Optional<Project> projectOptional = projectService.getOneByToken(projectToken);
         if (!projectOptional.isPresent()) {

@@ -61,13 +61,13 @@ public class ImportExportProjectDto extends AbstractDto {
         /**
          * The ID
          */
-        @ApiModelProperty(value = "The ID")
+        @ApiModelProperty(value = "The ID", example = "1")
         private Long id;
 
         /**
          * The time
          */
-        @ApiModelProperty(value = "The time")
+        @ApiModelProperty(value = "The time", example = "15")
         private Integer time;
 
         /**
@@ -81,7 +81,7 @@ public class ImportExportProjectDto extends AbstractDto {
             /**
              * The ID
              */
-            @ApiModelProperty(value = "The ID")
+            @ApiModelProperty(value = "The ID", example = "1")
             private Long id;
 
             /**
