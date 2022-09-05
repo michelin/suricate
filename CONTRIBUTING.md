@@ -34,11 +34,9 @@ To suggest a new feature on suricate, [open a ticket](https://github.com/micheli
 
 #### Pull requests
 
-- Open a new GitHub pull request with the patch.
-
-- Ensure the PR description clearly describes the problem and solution. Include the relevant issue number in the description if applicable.
-
-- Before submitting, please read the [Open Code of Conduct](http://todogroup.org/opencodeofconduct/) guide to know more about coding conventions and benchmarks.
+- Open a new GitHub pull request with the patch. Pull requests are displayed in the release notes, be sure to:
+  - Use the past tense ("Added new feature...", "Fixed bug on...")
+  - Add tags to the PR ("documentation" for documentation updates, "bug" for bug fixing, ...)
 
 ### Styleguides
 
