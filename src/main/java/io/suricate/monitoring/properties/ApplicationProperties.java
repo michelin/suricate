@@ -30,7 +30,9 @@ import org.springframework.web.cors.CorsConfiguration;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Hold the custom properties from properties.yml files
@@ -102,6 +104,11 @@ public class ApplicationProperties {
          * Authentication social providers
          */
         public List<String> socialProviders;
+
+        /**
+         * Social providers custom configuration
+         */
+        public Map<String, SocialProvidersConfig> socialProvidersConfig = new HashMap<>();
     }
 
     /**
@@ -352,5 +359,11 @@ public class ApplicationProperties {
          * The swagger contact email
          */
         public String contactEmail;
+    }
+
+    @Getter
+    @Setter
+    public static class SocialProvidersConfig {
+        private boolean firstNameLastNameReverted;
     }
 }
