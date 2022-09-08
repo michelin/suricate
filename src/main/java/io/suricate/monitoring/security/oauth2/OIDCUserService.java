@@ -8,8 +8,6 @@ import io.suricate.monitoring.services.api.UserService;
 import io.suricate.monitoring.utils.exceptions.OAuth2AuthenticationProcessingException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserRequest;
 import org.springframework.security.oauth2.client.oidc.userinfo.OidcUserService;
@@ -17,14 +15,11 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
-import static java.lang.Boolean.TRUE;
 import static org.apache.commons.lang3.StringUtils.SPACE;
 
 @Slf4j
@@ -73,16 +68,15 @@ public class OIDCUserService extends OidcUserService {
             String name = oidcUser.getAttribute("name");
             if (StringUtils.isNotBlank(name)) {
                 List<String> splitName = new LinkedList<>(Arrays.asList(name.split(SPACE)));
-                int firstNamePosition = 0;
                 if (applicationProperties.getAuthentication().getSocialProvidersConfig().containsKey(userRequest.getClientRegistration().getRegistrationId().toLowerCase())
                         && applicationProperties.getAuthentication().getSocialProvidersConfig().get(userRequest.getClientRegistration().getRegistrationId().toLowerCase())
-                        .isFirstNameLastNameReverted()) {
-                    firstNamePosition = splitName.size() - 1;
+                        .isNameCaseParse()) {
+                    firstName = splitName.stream().filter(word -> !word.equals(word.toUpperCase())).collect(Collectors.joining(SPACE));
+                    lastName = splitName.stream().filter(word -> word.equals(word.toUpperCase())).collect(Collectors.joining(SPACE));
+                } else {
+                    firstName = splitName.get(0);
+                    lastName = String.join(SPACE, splitName.subList(1, splitName.size()));
                 }
-
-                firstName = splitName.get(firstNamePosition);
-                splitName.remove(firstNamePosition);
-                lastName = String.join(SPACE, splitName);
             }
 
             String avatarUrl = null;

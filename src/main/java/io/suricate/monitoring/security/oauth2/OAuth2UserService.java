@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.SPACE;
 
@@ -73,16 +74,15 @@ public class OAuth2UserService extends DefaultOAuth2UserService {
             String name = oAuth2User.getAttribute("name");
             if (StringUtils.isNotBlank(name)) {
                 List<String> splitName = new LinkedList<>(Arrays.asList(name.split(SPACE)));
-                int firstNamePosition = 0;
-                if (applicationProperties.getAuthentication().getSocialProvidersConfig().containsKey(userRequest.getClientRegistration().getRegistrationId().toLowerCase())
+                 if (applicationProperties.getAuthentication().getSocialProvidersConfig().containsKey(userRequest.getClientRegistration().getRegistrationId().toLowerCase())
                         && applicationProperties.getAuthentication().getSocialProvidersConfig().get(userRequest.getClientRegistration().getRegistrationId().toLowerCase())
-                        .isFirstNameLastNameReverted()) {
-                    firstNamePosition = splitName.size() - 1;
+                        .isNameCaseParse()) {
+                     firstName = splitName.stream().filter(word -> !word.equals(word.toUpperCase())).collect(Collectors.joining(SPACE));
+                     lastName = splitName.stream().filter(word -> word.equals(word.toUpperCase())).collect(Collectors.joining(SPACE));
+                } else {
+                    firstName = splitName.get(0);
+                    lastName = String.join(SPACE, splitName.subList(1, splitName.size()));
                 }
-
-                firstName = splitName.get(firstNamePosition);
-                splitName.remove(firstNamePosition);
-                lastName = String.join(SPACE, splitName);
             }
 
             String avatarUrl = null;

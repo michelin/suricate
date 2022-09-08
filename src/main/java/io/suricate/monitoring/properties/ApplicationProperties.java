@@ -364,6 +364,6 @@ public class ApplicationProperties {
     @Getter
     @Setter
     public static class SocialProvidersConfig {
-        private boolean firstNameLastNameReverted;
+        private boolean nameCaseParse;
     }
 }
