@@ -16,6 +16,16 @@
  *
  */
 
+.add-widget-grid {
+  color: inherit;
+  font-size: inherit;
+
+  .grid-widget-tile {
+    margin-top: 4px;
+    margin-left: 4px;
+  }
+}
+
 .mat-grid-tile {
   cursor: pointer;
 
