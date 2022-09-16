@@ -420,6 +420,10 @@ export class DashboardDetailComponent implements OnInit, OnDestroy {
 
       this.toastService.sendMessage('dashboard.update.success', ToastTypeEnum.SUCCESS);
       this.refreshConnectedScreens();
+
+      if (!this.currentWidgets || this.currentWidgets.length === 0) {
+        location.reload();
+      }
     });
   }
 
