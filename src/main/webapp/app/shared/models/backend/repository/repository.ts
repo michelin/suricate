@@ -68,6 +68,11 @@ export class Repository {
   enabled: boolean;
 
   /**
+   * The priority order
+   */
+  priority: number;
+
+  /**
    * Constructor
    */
   constructor() {}

@@ -53,7 +53,7 @@ export class RepositoriesComponent extends ListComponent<Repository> {
     private readonly repositoryFormFieldsService: RepositoryFormFieldsService,
     protected injector: Injector
   ) {
-    super(httpRepositoryService, injector);
+    super(httpRepositoryService, injector, () => this.onItemsLoaded());
     this.initHeaderConfiguration();
     this.initListConfiguration();
     this.initFilter();
@@ -102,7 +102,6 @@ export class RepositoriesComponent extends ListComponent<Repository> {
    * Function used to init the configuration of the list
    */
   private initListConfiguration(): void {
-    this.dragAndDropDisabled = false;
     this.listConfiguration = {
       buttons: [
         {
@@ -126,7 +125,14 @@ export class RepositoriesComponent extends ListComponent<Repository> {
    * Init filter for list component
    */
   private initFilter(): void {
-    this.httpFilter.sort = ['name,asc'];
+    this.httpFilter.sort = ['priority,name,asc'];
+  }
+
+  /**
+   * Callback called after items have been loaded
+   */
+  private onItemsLoaded() {
+    this.dragAndDropDisabled = !this.objectsPaged.content || this.objectsPaged.content.length <= 1;
   }
 
   /**

@@ -134,6 +134,7 @@ CREATE TABLE repository (
     enabled         character(1)            NOT NULL,
     local_path      character varying(255),
     type            character varying(255)  NOT NULL,
+    priority        integer                 NOT NULL,
     CONSTRAINT pk_repository_id             PRIMARY KEY (id),
     CONSTRAINT uk_repository_name           UNIQUE (name)
 );
