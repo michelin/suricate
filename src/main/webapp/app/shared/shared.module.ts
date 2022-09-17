@@ -53,6 +53,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ProgressBarComponent } from './components/progress-bar/progress-bar.component';
 import { ActionsDialogComponent } from './components/actions-dialog/actions-dialog.component';
 import { ClipboardModule } from '@angular/cdk/clipboard';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
   imports: [
@@ -69,7 +70,8 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
     RouterModule,
     TranslateModule,
     ColorPickerModule,
-    ClipboardModule
+    ClipboardModule,
+    DragDropModule
   ],
   declarations: [
     CommunicationDialogComponent,
@@ -109,6 +111,7 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
     MaterialCDKModule,
     MaterialModule,
     NgGridModule,
+    DragDropModule,
     ReactiveFormsModule,
     RouterModule,
     WidgetHtmlDirective,

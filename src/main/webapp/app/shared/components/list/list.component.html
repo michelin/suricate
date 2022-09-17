@@ -12,13 +12,21 @@
     </ng-container>
 
     <ng-container *ngIf="!isLoading">
-      <div class="list-container" fxFlex="1 1 100%">
+      <div
+        cdkDropList
+        [cdkDropListDisabled]="dragAndDropDisabled"
+        class="list-container"
+        fxFlex="1 1 100%"
+        (cdkDropListDropped)="drop($event)"
+      >
         <div
           (click)="redirectToBean(object)"
           *ngFor="let object of objectsPaged.content"
-          [ngClass]="{ 'list-item-show': listConfiguration.enableShowBean }"
+          [ngClass]="{ 'list-item-show': listConfiguration.enableShowBean, 'drag-drop-item': !dragAndDropDisabled }"
           class="list-item"
           fxLayout="row wrap"
+          cdkDrag
+          cdkDragBoundary=".list-container"
         >
           <div *ngIf="getObjectImageURL(object)" class="list-image" fxFlex="20%" fxLayoutAlign="center center">
             <img [src]="getObjectImageURL(object)" alt="Object image" fxFlex="0" fxGrow="0" />

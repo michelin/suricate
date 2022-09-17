@@ -102,6 +102,7 @@ export class RepositoriesComponent extends ListComponent<Repository> {
    * Function used to init the configuration of the list
    */
   private initListConfiguration(): void {
+    this.dragAndDropDisabled = false;
     this.listConfiguration = {
       buttons: [
         {

@@ -37,6 +37,7 @@ import { FormGroup } from '@angular/forms';
 import { FormField } from '../../models/frontend/form/form-field';
 import { FormService } from '../../services/frontend/form/form.service';
 import { ValueChangedEvent } from '../../models/frontend/form/value-changed-event';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 /**
  * Generic component used to display and manage lists
@@ -106,6 +107,11 @@ export class ListComponent<T> implements OnInit, OnDestroy {
    * Used to disable actions during repository sync
    */
   public disableAllButtons = false;
+
+  /**
+   * Is drag & drop disabled
+   */
+  public dragAndDropDisabled = true;
 
   /**
    * The object list to display
@@ -306,5 +312,13 @@ export class ListComponent<T> implements OnInit, OnDestroy {
    */
   public researchChangedEvent(event: ValueChangedEvent) {
     this.researchChanged.next(event.value);
+  }
+
+  /**
+   * When dragging & dropping an item, update its position
+   * @param event The drag & drop event
+   */
+  public drop(event: CdkDragDrop<string[]>) {
+    moveItemInArray(this.objectsPaged.content, event.previousIndex, event.currentIndex);
   }
 }

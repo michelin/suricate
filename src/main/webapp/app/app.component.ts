@@ -39,10 +39,9 @@ import { ActionsDialogComponent } from './shared/components/actions-dialog/actio
 })
 export class AppComponent implements OnInit, OnDestroy {
   /**
-   * The HTML class attribute
+   * The current theme
    */
-  @HostBinding('class')
-  public appHtmlClass: string;
+  public theme: string;
 
   /**
    * Subject used to unsubscribe all the subscriptions when the component is destroyed
@@ -92,9 +91,9 @@ export class AppComponent implements OnInit, OnDestroy {
       .getCurrentThemeValue()
       .pipe(takeUntil(this.unsubscribe))
       .subscribe((theme: string) => {
-        this.overlayContainer.getContainerElement().classList.remove(this.appHtmlClass);
-        this.overlayContainer.getContainerElement().classList.add(theme);
-        this.appHtmlClass = theme;
+        this.overlayContainer.getContainerElement().parentElement.classList.remove(this.theme);
+        this.overlayContainer.getContainerElement().parentElement.classList.add(theme);
+        this.theme = theme;
       });
   }
 
