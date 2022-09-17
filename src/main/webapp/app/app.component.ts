@@ -29,9 +29,6 @@ import { Subject } from 'rxjs';
 import { ActionsDialogConfiguration } from './shared/models/frontend/dialog/actions-dialog-configuration';
 import { ActionsDialogComponent } from './shared/components/actions-dialog/actions-dialog.component';
 
-/**
- * Main component init the application
- */
 @Component({
   selector: 'suricate-root',
   templateUrl: './app.component.html',
