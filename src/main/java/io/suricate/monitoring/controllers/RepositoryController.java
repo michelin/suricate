@@ -97,7 +97,7 @@ public class RepositoryController {
                                               Pageable pageable) {
         return repositoryService
                 .getAll(search, pageable)
-                .map(this.repositoryMapper::toRepositoryDTONoWidgets);
+                .map(repositoryMapper::toRepositoryDTONoWidgets);
     }
 
     /**
@@ -116,7 +116,7 @@ public class RepositoryController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<RepositoryResponseDto> createOne(@ApiParam(name = "repositoryResponseDto", value = "The repository to create", required = true)
                                                            @RequestBody RepositoryRequestDto repositoryRequestDto) throws GitAPIException, IOException {
-        Repository repository = this.repositoryMapper.toRepositoryEntity(null, repositoryRequestDto);
+        Repository repository = repositoryMapper.toRepositoryEntity(null, repositoryRequestDto);
         repositoryService.addOrUpdateRepository(repository);
 
         if (repository.isEnabled()) {
@@ -153,7 +153,7 @@ public class RepositoryController {
     @Transactional
     public ResponseEntity<RepositoryResponseDto> getOneById(@ApiParam(name = "repositoryId", value = "The repository id", required = true, example = "1")
                                                             @PathVariable Long repositoryId) {
-        Optional<Repository> optionalRepository = this.repositoryService.getOneById(repositoryId);
+        Optional<Repository> optionalRepository = repositoryService.getOneById(repositoryId);
         if (!optionalRepository.isPresent()) {
             throw new ObjectNotFoundException(Repository.class, repositoryId);
         }
@@ -161,7 +161,7 @@ public class RepositoryController {
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(this.repositoryMapper.toRepositoryDTONoWidgets(optionalRepository.get()));
+            .body(repositoryMapper.toRepositoryDTONoWidgets(optionalRepository.get()));
     }
 
     /**
@@ -180,12 +180,12 @@ public class RepositoryController {
                                               @PathVariable Long repositoryId,
                                               @ApiParam(name = "repositoryResponseDto", value = "The repository with the new info's to update", required = true)
                                               @RequestBody RepositoryRequestDto repositoryRequestDto) throws GitAPIException, IOException {
-        if (!this.repositoryService.existsById(repositoryId)) {
+        if (!repositoryService.existsById(repositoryId)) {
             throw new ObjectNotFoundException(Repository.class, repositoryId);
         }
 
-        Repository repository = this.repositoryMapper.toRepositoryEntity(repositoryId, repositoryRequestDto);
-        this.repositoryService.addOrUpdateRepository(repository);
+        Repository repository = repositoryMapper.toRepositoryEntity(repositoryId, repositoryRequestDto);
+        repositoryService.addOrUpdateRepository(repository);
 
         if (repository.isEnabled()) {
             gitService.updateWidgetsFromRepository(repository);
@@ -239,7 +239,7 @@ public class RepositoryController {
     @Transactional
     public ResponseEntity<List<WidgetResponseDto>> getRepositoryWidget(@ApiParam(name = "repositoryId", value = "The repository id", required = true, example = "1")
                                                                        @PathVariable Long repositoryId) {
-        Optional<Repository> optionalRepository = this.repositoryService.getOneById(repositoryId);
+        Optional<Repository> optionalRepository = repositoryService.getOneById(repositoryId);
         if (!optionalRepository.isPresent()) {
             throw new ObjectNotFoundException(Repository.class, repositoryId);
         }
@@ -247,6 +247,6 @@ public class RepositoryController {
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(this.widgetMapper.toWidgetsDTOs(optionalRepository.get().getWidgets()));
+            .body(widgetMapper.toWidgetsDTOs(optionalRepository.get().getWidgets()));
     }
 }

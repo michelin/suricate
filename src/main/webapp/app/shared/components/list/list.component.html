@@ -17,7 +17,7 @@
         [cdkDropListDisabled]="dragAndDropDisabled"
         class="list-container"
         fxFlex="1 1 100%"
-        (cdkDropListDropped)="drop($event)"
+        (cdkDropListDropped)="onDropEvent($event)"
       >
         <div
           (click)="redirectToBean(object)"

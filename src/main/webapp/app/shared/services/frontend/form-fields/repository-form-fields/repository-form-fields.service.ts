@@ -25,6 +25,7 @@ import { FormOption } from '../../../../models/frontend/form/form-option';
 import { TitleCasePipe } from '@angular/common';
 import { IconEnum } from '../../../../enums/icon.enum';
 import { TranslateService } from '@ngx-translate/core';
+import { CustomValidator } from '../../../../validators/custom-validator';
 
 /**
  * Service used to build the form fields related to a repository
@@ -164,6 +165,14 @@ export class RepositoryFormFieldsService {
         options: () => RepositoryFormFieldsService.getRepositoryTypeOptions(),
         value: repository ? repository?.type : null,
         validators: [Validators.required]
+      },
+      {
+        key: 'priority',
+        label: this.translateService.instant('repository.priority.form.field'),
+        iconPrefix: IconEnum.REPOSITORY_PRIORITY,
+        type: DataTypeEnum.NUMBER,
+        value: repository ? repository?.priority : null,
+        validators: [Validators.required, CustomValidator.isDigits, CustomValidator.greaterThan0]
       }
     ];
   }

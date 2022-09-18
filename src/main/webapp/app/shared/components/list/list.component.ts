@@ -324,9 +324,16 @@ export class ListComponent<T> implements OnInit, OnDestroy {
 
   /**
    * When dragging & dropping an item, update its position
-   * @param event The drag & drop event
+   * @param dropEvent The drag & drop event
    */
-  public drop(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.objectsPaged.content, event.previousIndex, event.currentIndex);
+  public onDropEvent(dropEvent: CdkDragDrop<string[]>) {
+    moveItemInArray(this.objectsPaged.content, dropEvent.previousIndex, dropEvent.currentIndex);
+    this.drop();
   }
+
+  /**
+   * Action to perform on drop
+   * Implemented in child component
+   */
+  public drop(): void {}
 }

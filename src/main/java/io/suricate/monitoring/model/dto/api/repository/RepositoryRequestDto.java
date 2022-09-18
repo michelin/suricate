@@ -64,4 +64,10 @@ public class RepositoryRequestDto extends AbstractDto {
      */
     @ApiModelProperty(value = "True if the repository is enabled for update", required = true)
     private boolean enabled;
+
+    /**
+     * The repository priority order
+     */
+    @ApiModelProperty(value = "The repository priority", required = true)
+    private int priority;
 }
