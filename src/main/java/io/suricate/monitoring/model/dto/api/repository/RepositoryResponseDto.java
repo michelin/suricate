@@ -7,6 +7,10 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+
+import javax.persistence.Column;
+import java.util.Date;
 
 /**
  * Describe a repository
@@ -75,4 +79,10 @@ public class RepositoryResponseDto extends AbstractDto {
      */
     @ApiModelProperty(value = "The priority order", required = true)
     private int priority;
+
+    /**
+     * The repository creation date
+     */
+    @ApiModelProperty(value = "The repository creation date", required = true)
+    private Date createdDate;
 }

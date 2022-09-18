@@ -18,6 +18,7 @@
 
 package io.suricate.monitoring.model.entities;
 
+import io.suricate.monitoring.model.entities.generic.AbstractAuditingEntity;
 import io.suricate.monitoring.model.enums.RepositoryTypeEnum;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,7 +36,7 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Repository {
+public class Repository extends AbstractAuditingEntity<Long> {
     /**
      * The repository id
      */

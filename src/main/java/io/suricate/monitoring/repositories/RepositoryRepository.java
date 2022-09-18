@@ -33,7 +33,7 @@ public interface RepositoryRepository extends JpaRepository<Repository, Long>, J
      * @param enabled True if we want every enabled repository, false otherwise
      * @return The list of repositories
      */
-    Optional<List<Repository>> findAllByEnabledOrderByPriorityDesc(final boolean enabled);
+    Optional<List<Repository>> findAllByEnabledOrderByPriorityDescCreatedDateAsc(final boolean enabled);
 
     /**
      * Find repository by name

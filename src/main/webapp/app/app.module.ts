@@ -28,6 +28,10 @@ import { AdminModule } from './admin/admin.module';
 import { SharedModule } from './shared/shared.module';
 import { WidgetModule } from './widget/widget.module';
 import { appRoutes } from './app.routes';
+import { registerLocaleData } from '@angular/common';
+import localeFr from '@angular/common/locales/fr';
+
+registerLocaleData(localeFr);
 
 @NgModule({
   imports: [

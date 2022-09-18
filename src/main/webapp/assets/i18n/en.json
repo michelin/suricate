@@ -88,6 +88,7 @@
   "repository.priority.form.field": "Priority",
   "repository.priority.running": "Repository priority is being updated...",
   "repository.priority.success": "Repository priority updated",
+  "repository.third.label": "{{type}} — Priority {{priority}} — Created on {{createdDate}}",
   "repository.type.form.field": "Type",
   "repository.update.and.synchronize.failure": "Repository update and synchronization failed",
   "repository.update.and.synchronize.running": "Updating repository and resynchronizing all...",

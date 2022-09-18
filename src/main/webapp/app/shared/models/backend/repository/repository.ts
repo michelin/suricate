@@ -73,6 +73,11 @@ export class Repository {
   priority: number;
 
   /**
+   * The repository created date
+   */
+  createdDate: Date;
+
+  /**
    * Constructor
    */
   constructor() {}

@@ -58,8 +58,8 @@ public class RepositoryService {
      * @return The related list
      */
     @Transactional(readOnly = true)
-    public Optional<List<Repository>> findAllByEnabledOrderByPriorityDesc(final boolean enabled) {
-        return repositoryRepository.findAllByEnabledOrderByPriorityDesc(enabled);
+    public Optional<List<Repository>> findAllByEnabledOrderByPriorityDescCreatedDateAsc(final boolean enabled) {
+        return repositoryRepository.findAllByEnabledOrderByPriorityDescCreatedDateAsc(enabled);
     }
 
     /**

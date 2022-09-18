@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
@@ -134,7 +134,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-    { provide: RxStompService }
+    { provide: RxStompService },
+    DatePipe
   ]
 })
 export class SharedModule {}

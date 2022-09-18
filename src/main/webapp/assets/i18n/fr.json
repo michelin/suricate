@@ -88,6 +88,7 @@
   "repository.priority.form.field": "Priorité",
   "repository.priority.running": "La priorité des dépôts est en cours de mise à jour...",
   "repository.priority.success": "Priorité mise à jour",
+  "repository.third.label": "{{type}} — Priorité {{priority}} — Créé le {{createdDate}}",
   "repository.type.form.field": "Type",
   "repository.update.and.synchronize.failure": "Échec de mise à jour et de synchronisation des dépôts",
   "repository.update.and.synchronize.running": "Mise à jour du dépôt et synchronisation globale en cours...",

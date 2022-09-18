@@ -135,6 +135,10 @@ CREATE TABLE repository (
     local_path      character varying(255),
     type            character varying(255)  NOT NULL,
     priority        integer                 NOT NULL,
+	created_by          character varying(255)          DEFAULT 'APPLICATION'::character varying NOT NULL,
+    created_date        timestamp without time zone     DEFAULT now() NOT NULL,
+    last_modified_by    character varying(255)          DEFAULT 'APPLICATION'::character varying,
+    last_modified_date  timestamp without time zone     DEFAULT now(),
     CONSTRAINT pk_repository_id             PRIMARY KEY (id),
     CONSTRAINT uk_repository_name           UNIQUE (name)
 );

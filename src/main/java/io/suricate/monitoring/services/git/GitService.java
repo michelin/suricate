@@ -134,7 +134,7 @@ public class GitService {
             return;
         }
 
-        Optional<List<Repository>> optionalRepositories = repositoryService.findAllByEnabledOrderByPriorityDesc(true);
+        Optional<List<Repository>> optionalRepositories = repositoryService.findAllByEnabledOrderByPriorityDescCreatedDateAsc(true);
         if (!optionalRepositories.isPresent()) {
             LOGGER.info("No remote or local repository found");
             return;
