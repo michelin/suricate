@@ -120,7 +120,7 @@ public class RepositoryController {
         repositoryService.addOrUpdateRepository(repository);
 
         if (repository.isEnabled()) {
-            gitService.updateWidgetsFromRepository(repository);
+            gitService.updateWidgetFromEnabledGitRepositories();
         }
 
         URI resourceLocation = ServletUriComponentsBuilder
@@ -137,7 +137,6 @@ public class RepositoryController {
 
     /**
      * Retrieve an existing repository by id
-     *
      * @param repositoryId The repository Id
      * @return The repository
      */
@@ -179,7 +178,9 @@ public class RepositoryController {
     public ResponseEntity<Void> updateOneById(@ApiParam(name = "repositoryId", value = "The repository id", required = true, example = "1")
                                               @PathVariable Long repositoryId,
                                               @ApiParam(name = "repositoryResponseDto", value = "The repository with the new info's to update", required = true)
-                                              @RequestBody RepositoryRequestDto repositoryRequestDto) throws GitAPIException, IOException {
+                                              @RequestBody RepositoryRequestDto repositoryRequestDto,
+                                              @ApiParam(name = "disableSync", value = "Disable the synchronization of the repository", example = "true")
+                                              @RequestParam boolean disableSync) throws GitAPIException, IOException {
         if (!repositoryService.existsById(repositoryId)) {
             throw new ObjectNotFoundException(Repository.class, repositoryId);
         }
@@ -187,36 +188,26 @@ public class RepositoryController {
         Repository repository = repositoryMapper.toRepositoryEntity(repositoryId, repositoryRequestDto);
         repositoryService.addOrUpdateRepository(repository);
 
-        if (repository.isEnabled()) {
-            gitService.updateWidgetsFromRepository(repository);
+        if (!disableSync && repository.isEnabled()) {
+            gitService.updateWidgetFromEnabledGitRepositories();
         }
 
         return ResponseEntity.noContent().build();
     }
 
     /**
-     * Reload a repository by id
+     * Synchronize all repositories
      */
-    @ApiOperation(value = "Reload an existing repository by id")
+    @ApiOperation(value = "RSynchronize all repositories")
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Repository reloaded"),
+            @ApiResponse(code = 204, message = "Repositories synchronized"),
             @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
-            @ApiResponse(code = 404, message = "Repository not found", response = ApiErrorDto.class)
+            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
-    @PutMapping(value = "/v1/repositories/{repositoryId}/reload")
+    @PutMapping(value = "/v1/repositories/synchronize")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Void> reload(@ApiParam(name = "repositoryId", value = "The repository id", required = true, example = "1")
-                                       @PathVariable Long repositoryId) throws GitAPIException, IOException {
-        Optional<Repository> optionalRepository = this.repositoryService.getOneById(repositoryId);
-        if (!optionalRepository.isPresent()) {
-            throw new ObjectNotFoundException(Repository.class, repositoryId);
-        }
-
-        Repository repository = optionalRepository.get();
-        if (repository.isEnabled()) {
-            gitService.updateWidgetsFromRepository(repository);
-        }
+    public ResponseEntity<Void> synchronize() throws GitAPIException, IOException {
+        gitService.updateWidgetFromEnabledGitRepositories();
 
         return ResponseEntity.noContent().build();
     }

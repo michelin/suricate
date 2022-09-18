@@ -81,21 +81,20 @@ export class HttpRepositoryService implements AbstractHttpService<Repository | R
    * Update a repository
    *
    * @param repositoryId The repository id
-   * @param repositoryRequest The repository with informations updated
+   * @param repositoryRequest The repository with information updated
+   * @param disableSync Disable the synchronization of the repository
    */
-  public update(repositoryId: number, repositoryRequest: RepositoryRequest): Observable<void> {
-    const url = `${HttpRepositoryService.repositoriesApiEndpoint}/${repositoryId}`;
+  public update(repositoryId: number, repositoryRequest: RepositoryRequest, disableSync: boolean = false): Observable<void> {
+    const url = `${HttpRepositoryService.repositoriesApiEndpoint}/${repositoryId}?disableSync=${disableSync}`;
 
     return this.httpClient.put<void>(url, repositoryRequest);
   }
 
   /**
-   * Reload a repository
-   *
-   * @param repositoryId The repository id
+   * Synchronize all repositories
    */
-  public reload(repositoryId: number): Observable<void> {
-    const url = `${HttpRepositoryService.repositoriesApiEndpoint}/${repositoryId}/reload`;
+  public synchronize(): Observable<void> {
+    const url = `${HttpRepositoryService.repositoriesApiEndpoint}/synchronize`;
 
     return this.httpClient.put<void>(url, null);
   }

@@ -327,8 +327,10 @@ export class ListComponent<T> implements OnInit, OnDestroy {
    * @param dropEvent The drag & drop event
    */
   public onDropEvent(dropEvent: CdkDragDrop<string[]>) {
-    moveItemInArray(this.objectsPaged.content, dropEvent.previousIndex, dropEvent.currentIndex);
-    this.drop();
+    if (dropEvent.previousIndex != dropEvent.currentIndex) {
+      moveItemInArray(this.objectsPaged.content, dropEvent.previousIndex, dropEvent.currentIndex);
+      this.drop();
+    }
   }
 
   /**
