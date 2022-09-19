@@ -47,7 +47,7 @@ export class HttpRepositoryService implements AbstractHttpService<Repository | R
   constructor(private readonly httpClient: HttpClient) {}
 
   /**
-   * Return the list of every repositories
+   * Return the list of every repository
    */
   public getAll(filter?: HttpFilter): Observable<Page<Repository>> {
     const url = `${HttpRepositoryService.repositoriesApiEndpoint}`;

@@ -141,6 +141,7 @@ CREATE TABLE repository (
     last_modified_date  timestamp without time zone     DEFAULT now(),
     CONSTRAINT pk_repository_id             PRIMARY KEY (id),
     CONSTRAINT uk_repository_name           UNIQUE (name)
+    CONSTRAINT uk_repository_priority       UNIQUE (priority)
 );
 
 CREATE TABLE role (
