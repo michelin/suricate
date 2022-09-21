@@ -64,7 +64,7 @@ export class RepositoriesComponent extends ListComponent<Repository> {
     private readonly datePipe: DatePipe,
     protected injector: Injector
   ) {
-    super(httpRepositoryService, injector, () => this.onItemsLoaded());
+    super(httpRepositoryService, injector);
     this.initListConfiguration();
     this.initFilter();
   }
@@ -146,9 +146,9 @@ export class RepositoriesComponent extends ListComponent<Repository> {
   }
 
   /**
-   * Callback called after items have been loaded
+   * {@inheritDoc}
    */
-  private onItemsLoaded() {
+  protected onItemsLoaded() {
     this.initHeaderConfiguration();
     this.dragAndDropDisabled = !this.objectsPaged.content || this.objectsPaged.content.length <= 1;
   }

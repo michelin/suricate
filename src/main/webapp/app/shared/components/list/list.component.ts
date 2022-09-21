@@ -147,13 +147,8 @@ export class ListComponent<T> implements OnInit, OnDestroy {
    *
    * @param childService The child http service
    * @param injector Manage services injection
-   * @param itemsLoadedCallback Callback when items are loaded
    */
-  constructor(
-    private readonly childService: AbstractHttpService<T>,
-    protected injector: Injector,
-    protected itemsLoadedCallback?: () => void
-  ) {
+  constructor(private readonly childService: AbstractHttpService<T>, protected injector: Injector) {
     this.dialogService = injector.get(DialogService);
     this.sidenavService = injector.get(SidenavService);
     this.translateService = injector.get(TranslateService);
@@ -202,9 +197,7 @@ export class ListComponent<T> implements OnInit, OnDestroy {
     this.childService.getAll(this.httpFilter).subscribe((objectsPaged: Page<T>) => {
       this.objectsPaged = objectsPaged;
       this.hideLoader();
-      if (this.itemsLoadedCallback) {
-        this.itemsLoadedCallback();
-      }
+      this.onItemsLoaded();
     });
   }
 
@@ -296,6 +289,11 @@ export class ListComponent<T> implements OnInit, OnDestroy {
    * @param object The object used for the redirection
    */
   public redirectToBean(object: T): void {}
+
+  /**
+   * Perform actions after items have been loaded
+   */
+  protected onItemsLoaded(): void {}
 
   /**
    * Subscribe to input search event
