@@ -132,7 +132,7 @@ public class UserController {
     })
     @ApiPageable
     @GetMapping(value = "/v1/users")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Page<UserResponseDto> getAll(@ApiParam(name = "search", value = "Search keyword")
                                         @RequestParam(value = "search", required = false) String search,
                                         Pageable pageable) {
@@ -152,7 +152,7 @@ public class UserController {
         @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
     })
     @GetMapping(value = "/v1/users/{userId}")
-    @PreAuthorize("hasRole('ROLE_USER')")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<UserResponseDto> getOne(@ApiParam(name = "userId", value = "The user id", required = true, example = "1")
                                                   @PathVariable("userId") Long userId) {
         Optional<User> userOptional = userService.getOne(userId);
