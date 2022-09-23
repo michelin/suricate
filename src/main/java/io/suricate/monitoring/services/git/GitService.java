@@ -110,63 +110,37 @@ public class GitService {
     private CacheService cacheService;
 
     /**
-     * Async method used to update widgets from the full list of git repositories
-     *
-     * @return True as Future when the process has been done
+     * Update widgets from the full list of git repositories asynchronously
      */
     @Async
     @Transactional
-    public Future<Boolean> updateWidgetFromEnabledGitRepositories() {
+    public void updateWidgetFromEnabledGitRepositoriesAsync() {
+        try {
+            updateWidgetFromEnabledGitRepositories();
+        } catch (Exception e) {
+            LOGGER.error("An error has occurred when cloning and updating the widgets from the repositories", e);
+        }
+    }
+
+    /**
+     * Update widgets from the full list of git repositories
+     */
+    @Transactional
+    public void updateWidgetFromEnabledGitRepositories() throws GitAPIException, IOException {
         LOGGER.info("Update widgets from Git repository");
 
         if (!applicationProperties.widgets.updateEnable) {
             LOGGER.info("Widget update disabled");
-            return null;
+            return;
         }
 
-        Optional<List<Repository>> optionalRepositories = repositoryService.getAllByEnabledOrderByName(true);
+        Optional<List<Repository>> optionalRepositories = repositoryService.findAllByEnabledOrderByPriorityDescCreatedDateAsc(true);
         if (!optionalRepositories.isPresent()) {
             LOGGER.info("No remote or local repository found");
-            return new AsyncResult<>(true);
+            return;
         }
 
-        try {
-            readWidgetRepositories(optionalRepositories.get());
-            return new AsyncResult<>(true);
-        } catch (Exception e) {
-            LOGGER.error("An error has occurred when cloning and updating the widgets from the repositories", e);
-        }
-
-        return new AsyncResult<>(false);
-    }
-
-    /**
-     * Update widgets contained in the given repository
-     * @param repository The repository
-     * @return true if the update worked, false otherwise
-     */
-    @Transactional
-    public boolean updateWidgetsFromRepository(Repository repository) throws GitAPIException, IOException {
-        if (repository == null) {
-            LOGGER.debug("The repository can't be null");
-            return false;
-        }
-
-        if (!applicationProperties.widgets.updateEnable) {
-            LOGGER.info("Widget update disabled");
-            return true;
-        } else {
-            LOGGER.info("Update widgets from Git repository {}", repository.getName());
-        }
-
-        if (!repository.isEnabled()) {
-            LOGGER.info("The repository {} is not enabled", repository.getName());
-            return true;
-        }
-
-        readWidgetRepositories(Collections.singletonList(repository));
-
-        return true;
+        readWidgetRepositories(optionalRepositories.get());
     }
 
     /**

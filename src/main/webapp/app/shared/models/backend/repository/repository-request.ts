@@ -18,9 +18,6 @@
 
 import { RepositoryTypeEnum } from '../../../enums/repository-type.enum';
 
-/**
- * Hold the repository informations
- */
 export interface RepositoryRequest {
   /**
    * The repository name
@@ -58,7 +55,12 @@ export interface RepositoryRequest {
   type: RepositoryTypeEnum;
 
   /**
-   * If the repository is enable or not
+   * If the repository is enabled or not
    */
   enabled: boolean;
+
+  /**
+   * The priority order
+   */
+  priority: number;
 }

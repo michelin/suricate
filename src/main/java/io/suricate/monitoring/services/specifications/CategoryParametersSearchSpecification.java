@@ -3,9 +3,6 @@ package io.suricate.monitoring.services.specifications;
 import io.suricate.monitoring.model.entities.CategoryParameter;
 import io.suricate.monitoring.model.entities.CategoryParameter_;
 
-/**
- * Class used to filter JPA queries
- */
 public class CategoryParametersSearchSpecification extends AbstractSearchSpecification<CategoryParameter> {
 
     /**

@@ -103,12 +103,6 @@ export class ListComponent<T> implements OnInit, OnDestroy {
   public listConfiguration = new ListConfiguration<T>();
 
   /**
-   * Disable all buttons of all objects.
-   * Used to disable actions during repository sync
-   */
-  public disableAllButtons = false;
-
-  /**
    * Is drag & drop disabled
    */
   public dragAndDropDisabled = true;
@@ -203,6 +197,7 @@ export class ListComponent<T> implements OnInit, OnDestroy {
     this.childService.getAll(this.httpFilter).subscribe((objectsPaged: Page<T>) => {
       this.objectsPaged = objectsPaged;
       this.hideLoader();
+      this.onItemsLoaded();
     });
   }
 
@@ -296,6 +291,11 @@ export class ListComponent<T> implements OnInit, OnDestroy {
   public redirectToBean(object: T): void {}
 
   /**
+   * Perform actions after items have been loaded
+   */
+  protected onItemsLoaded(): void {}
+
+  /**
    * Subscribe to input search event
    * Wait for a few time before triggering the refresh
    */
@@ -316,9 +316,18 @@ export class ListComponent<T> implements OnInit, OnDestroy {
 
   /**
    * When dragging & dropping an item, update its position
-   * @param event The drag & drop event
+   * @param dropEvent The drag & drop event
    */
-  public drop(event: CdkDragDrop<string[]>) {
-    moveItemInArray(this.objectsPaged.content, event.previousIndex, event.currentIndex);
+  public onDropEvent(dropEvent: CdkDragDrop<string[]>) {
+    if (dropEvent.previousIndex !== dropEvent.currentIndex) {
+      moveItemInArray(this.objectsPaged.content, dropEvent.previousIndex, dropEvent.currentIndex);
+      this.drop();
+    }
   }
+
+  /**
+   * Action to perform on drop
+   * Implemented in child component
+   */
+  public drop(): void {}
 }

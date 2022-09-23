@@ -126,15 +126,8 @@ public class ImportExportController {
             repositoryOptional.ifPresent(value -> repository.setId(value.getId()));
         });
 
-        List<Repository> nonExistingEnabledRepositories = repositories
-                .stream()
-                .filter(repository -> repository.getId() == null && repository.isEnabled())
-                .collect(Collectors.toList());
-
         repositoryService.addOrUpdateRepositories(repositories);
-        for (Repository repository : nonExistingEnabledRepositories) {
-            gitService.updateWidgetsFromRepository(repository);
-        }
+        gitService.updateWidgetFromEnabledGitRepositories();
 
         List<Project> projects = importDto.getProjects()
                 .stream()
