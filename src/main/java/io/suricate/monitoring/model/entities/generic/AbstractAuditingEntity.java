@@ -61,5 +61,4 @@ public abstract class AbstractAuditingEntity<T> extends AbstractEntity<T> {
     @LastModifiedDate
     @Column(name = "last_modified_date")
     private Date lastModifiedDate = new Date();
-
 }

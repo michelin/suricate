@@ -19,12 +19,16 @@ import { Observable, of } from 'rxjs';
 import { FormField } from '../../../../models/frontend/form/form-field';
 import { RepositoryTypeEnum } from '../../../../enums/repository-type.enum';
 import { DataTypeEnum } from '../../../../enums/data-type.enum';
-import { Validators } from '@angular/forms';
+import { AbstractControl, Validators } from '@angular/forms';
 import { Repository } from '../../../../models/backend/repository/repository';
 import { FormOption } from '../../../../models/frontend/form/form-option';
 import { TitleCasePipe } from '@angular/common';
 import { IconEnum } from '../../../../enums/icon.enum';
 import { TranslateService } from '@ngx-translate/core';
+import { CustomValidator } from '../../../../validators/custom-validator';
+import { HttpRepositoryService } from '../../../backend/http-repository/http-repository.service';
+import { map } from 'rxjs/operators';
+import { CustomAsyncValidatorService } from '../../../../validators/custom-async-validator.service';
 
 /**
  * Service used to build the form fields related to a repository
@@ -40,9 +44,14 @@ export class RepositoryFormFieldsService {
   };
 
   /**
-   * The constructor
+   * Constructor
+   * @param translateService The translate service
+   * @param customAsyncValidatorService The async validator service
    */
-  constructor(private readonly translateService: TranslateService) {}
+  constructor(
+    private readonly translateService: TranslateService,
+    private readonly customAsyncValidatorService: CustomAsyncValidatorService
+  ) {}
 
   /**
    * Get the form fields related to the local type
@@ -164,6 +173,15 @@ export class RepositoryFormFieldsService {
         options: () => RepositoryFormFieldsService.getRepositoryTypeOptions(),
         value: repository ? repository?.type : null,
         validators: [Validators.required]
+      },
+      {
+        key: 'priority',
+        label: this.translateService.instant('repository.priority.form.field'),
+        iconPrefix: IconEnum.REPOSITORY_PRIORITY,
+        type: DataTypeEnum.NUMBER,
+        value: repository ? repository?.priority : null,
+        validators: [Validators.required, CustomValidator.isDigits, CustomValidator.greaterThan0],
+        asyncValidators: [this.customAsyncValidatorService.validateRepositoryUniquePriority.bind(this.customAsyncValidatorService)]
       }
     ];
   }

@@ -26,7 +26,11 @@ import { RepositoryRequest } from '../../shared/models/backend/repository/reposi
 import { RepositoryTypeEnum } from '../../shared/enums/repository-type.enum';
 import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
 import { Observable } from 'rxjs/internal/Observable';
-import { EMPTY, of } from 'rxjs';
+import { BehaviorSubject, EMPTY, forkJoin, from, of, Subject } from 'rxjs';
+import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { concatMap, last } from 'rxjs/operators';
+import { TranslateService } from '@ngx-translate/core';
+import { DatePipe } from '@angular/common';
 
 /**
  * Component used to display the list of git repositories
@@ -42,19 +46,25 @@ export class RepositoriesComponent extends ListComponent<Repository> {
   private repository: Repository;
 
   /**
+   * Used to disable buttons during repos synchronization
+   */
+  private disableAllReposSync = new BehaviorSubject<boolean>(false);
+
+  /**
    * Constructor
    *
    * @param httpRepositoryService The HTTP repository service
    * @param repositoryFormFieldsService The repository form fields service
+   * @param datePipe The date pipe
    * @param injector The injector
    */
   constructor(
     private readonly httpRepositoryService: HttpRepositoryService,
     private readonly repositoryFormFieldsService: RepositoryFormFieldsService,
+    private readonly datePipe: DatePipe,
     protected injector: Injector
   ) {
     super(httpRepositoryService, injector);
-    this.initHeaderConfiguration();
     this.initListConfiguration();
     this.initFilter();
   }
@@ -77,7 +87,11 @@ export class RepositoriesComponent extends ListComponent<Repository> {
    * {@inheritDoc}
    */
   protected getThirdLabel(repository: Repository): string {
-    return repository.type;
+    return this.translateService.instant('repository.third.label', {
+      type: repository.type,
+      priority: repository.priority,
+      createdDate: this.datePipe.transform(repository.createdDate, 'd MMMM yyyy HH:mm:ss', undefined, this.translateService.currentLang)
+    });
   }
 
   /**
@@ -87,6 +101,15 @@ export class RepositoriesComponent extends ListComponent<Repository> {
     this.headerConfiguration = {
       title: 'repository.list',
       actions: [
+        {
+          icon: IconEnum.SYNCHRONIZE,
+          variant: 'miniFab',
+          color: 'primary',
+          callback: () => this.reloadAllRepositories(),
+          tooltip: { message: 'repositories.synchronize.all' },
+          hidden: () => !this.objectsPaged.content || this.objectsPaged.content.length === 0,
+          disabled: this.disableAllReposSync.asObservable()
+        },
         {
           icon: IconEnum.ADD,
           variant: 'miniFab',
@@ -105,17 +128,11 @@ export class RepositoriesComponent extends ListComponent<Repository> {
     this.listConfiguration = {
       buttons: [
         {
-          icon: IconEnum.SYNCHRONIZE,
-          tooltip: { message: 'repository.synchronize' },
-          color: 'primary',
-          callback: (event: Event, repository: Repository) => this.reloadRepository(repository),
-          hidden: (repository: Repository) => repository && !repository.enabled
-        },
-        {
           icon: IconEnum.EDIT,
           tooltip: { message: 'repository.edit' },
           color: 'primary',
-          callback: (event: Event, repository: Repository) => this.openFormSidenav(event, repository, this.updateRepository.bind(this))
+          callback: (event: Event, repository: Repository) => this.openFormSidenav(event, repository, this.updateRepository.bind(this)),
+          disabled: this.disableAllReposSync.asObservable()
         }
       ]
     };
@@ -125,7 +142,15 @@ export class RepositoriesComponent extends ListComponent<Repository> {
    * Init filter for list component
    */
   private initFilter(): void {
-    this.httpFilter.sort = ['name,asc'];
+    this.httpFilter.sort = ['priority,createdDate,name,asc'];
+  }
+
+  /**
+   * {@inheritDoc}
+   */
+  protected onItemsLoaded() {
+    this.initHeaderConfiguration();
+    this.dragAndDropDisabled = !this.objectsPaged.content || this.objectsPaged.content.length <= 1;
   }
 
   /**
@@ -162,8 +187,30 @@ export class RepositoriesComponent extends ListComponent<Repository> {
   }
 
   /**
+   * Reload all repositories in priority order
+   */
+  private reloadAllRepositories(): void {
+    this.disableAllReposSync.next(true);
+    this.dragAndDropDisabled = true;
+    this.toastService.sendMessage('repositories.synchronize.running', ToastTypeEnum.INFO);
+
+    this.httpRepositoryService.synchronize().subscribe(
+      () => {
+        this.disableAllReposSync.next(false);
+        this.dragAndDropDisabled = false;
+        this.toastService.sendMessage('repositories.synchronize.success', ToastTypeEnum.SUCCESS);
+      },
+      () => {
+        this.disableAllReposSync.next(false);
+        this.dragAndDropDisabled = false;
+        this.toastService.sendMessage('repositories.synchronize.failure', ToastTypeEnum.DANGER);
+      }
+    );
+  }
+
+  /**
    * Update a repository
-   *
+   * If the repository is enabled, all the repositories will be resynchronized in priority order
    * @param repositoryRequest The new repository with the modification made on the form
    */
   private updateRepository(repositoryRequest: RepositoryRequest): void {
@@ -175,60 +222,92 @@ export class RepositoriesComponent extends ListComponent<Repository> {
       repositoryRequest.password = null;
     }
 
-    this.disableAllButtons = true;
-    this.toastService.sendMessage('repository.synchronize.running', ToastTypeEnum.INFO);
+    this.dragAndDropDisabled = true;
+    if (repositoryRequest.enabled) {
+      this.toastService.sendMessage('repository.update.and.synchronize.running', ToastTypeEnum.INFO);
+    } else {
+      this.toastService.sendMessage('repository.update.running', ToastTypeEnum.INFO);
+    }
 
     this.httpRepositoryService.update(this.repository.id, repositoryRequest).subscribe(
-      () => {
-        this.disableAllButtons = false;
-        this.toastService.sendMessage('repository.synchronize.success', ToastTypeEnum.SUCCESS);
-        super.refreshList();
-      },
-      () => {
-        this.disableAllButtons = false;
-        this.toastService.sendMessage('repository.synchronize.failure', ToastTypeEnum.DANGER);
-      }
-    );
-  }
-
-  /**
-   * Reload a repository
-   *
-   * @param repository The repository to reload
-   */
-  private reloadRepository(repository: Repository): void {
-    this.disableAllButtons = true;
-    this.toastService.sendMessage('repository.synchronize.running', ToastTypeEnum.INFO);
-
-    this.httpRepositoryService.reload(repository.id).subscribe(
-      () => {
-        this.disableAllButtons = false;
-        this.toastService.sendMessage('repository.synchronize.success', ToastTypeEnum.SUCCESS);
-        super.refreshList();
-      },
-      () => {
-        this.disableAllButtons = false;
-        this.toastService.sendMessage('repository.synchronize.failure', ToastTypeEnum.DANGER);
-      }
+      () => this.onUpdateCreateSuccess(repositoryRequest),
+      () => this.onUpdateCreateError(repositoryRequest)
     );
   }
 
   /**
    * Function used to add a repository
-   *
    * @param repositoryRequest The new repository to add with the modification made on the form
    */
   private addRepository(repositoryRequest: RepositoryRequest): void {
-    this.toastService.sendMessage('repository.synchronize.running', ToastTypeEnum.INFO);
+    this.disableAllReposSync.next(true);
+    this.dragAndDropDisabled = true;
+    if (repositoryRequest.enabled) {
+      this.toastService.sendMessage('repository.update.and.synchronize.running', ToastTypeEnum.INFO);
+    } else {
+      this.toastService.sendMessage('repository.update.running', ToastTypeEnum.INFO);
+    }
 
     this.httpRepositoryService.create(repositoryRequest).subscribe(
+      () => this.onUpdateCreateSuccess(repositoryRequest),
+      () => this.onUpdateCreateError(repositoryRequest)
+    );
+  }
+
+  /**
+   * Call when a repository has been successfully created/updated
+   * @param repositoryRequest The repository request
+   */
+  private onUpdateCreateSuccess(repositoryRequest: RepositoryRequest): void {
+    this.disableAllReposSync.next(false);
+    this.dragAndDropDisabled = false;
+    if (repositoryRequest.enabled) {
+      this.toastService.sendMessage('repository.update.and.synchronize.success', ToastTypeEnum.SUCCESS);
+    } else {
+      this.toastService.sendMessage('repository.update.success', ToastTypeEnum.SUCCESS);
+    }
+    super.refreshList();
+  }
+
+  /**
+   * Call when a repository creation/update failed
+   * @param repositoryRequest The repository request
+   */
+  private onUpdateCreateError(repositoryRequest: RepositoryRequest): void {
+    this.disableAllReposSync.next(false);
+    this.dragAndDropDisabled = false;
+    if (repositoryRequest.enabled) {
+      this.toastService.sendMessage('repository.update.and.synchronize.failure', ToastTypeEnum.DANGER);
+    } else {
+      this.toastService.sendMessage('repository.update.failure', ToastTypeEnum.DANGER);
+    }
+    super.refreshList();
+  }
+
+  /**
+   * Update repositories priority when dropped and save them
+   */
+  public drop(): void {
+    this.objectsPaged.content.forEach(repository => {
+      repository.priority = this.objectsPaged.content.indexOf(repository) + 1;
+    });
+
+    this.disableAllReposSync.next(true);
+    this.dragAndDropDisabled = true;
+    this.toastService.sendMessage('repository.priority.running', ToastTypeEnum.INFO);
+
+    forkJoin(
+      this.objectsPaged.content.map(repository => this.httpRepositoryService.update(repository.id, Object.assign({}, repository), true))
+    ).subscribe(
       () => {
-        this.toastService.sendMessage('repository.synchronize.success', ToastTypeEnum.SUCCESS);
-        this.refreshList();
+        this.disableAllReposSync.next(false);
+        this.dragAndDropDisabled = false;
+        this.toastService.sendMessage('repository.priority.success', ToastTypeEnum.SUCCESS);
       },
       () => {
-        this.toastService.sendMessage('repository.synchronize.failure', ToastTypeEnum.DANGER);
-        this.refreshList();
+        this.disableAllReposSync.next(false);
+        this.dragAndDropDisabled = false;
+        this.toastService.sendMessage('repository.priority.failure', ToastTypeEnum.DANGER);
       }
     );
   }

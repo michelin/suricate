@@ -25,6 +25,7 @@
 @import '~sass/components/material/mat-grid-list-theme';
 @import '~sass/components/material/mat-tab-group-theme';
 @import '~sass/components/material/carousel-theme';
+@import '~app/shared/components/list/list.component';
 
 /**
  * Mixin that inject every custom components (used in theme definitions)
@@ -40,4 +41,5 @@
   @include custom-mat-form-field-theme($theme);
   @include custom-mat-tab-group-theme($theme);
   @include custom-carousel-theme($theme);
+  @include list-component-theme($theme);
 }

@@ -68,6 +68,16 @@ export class Repository {
   enabled: boolean;
 
   /**
+   * The priority order
+   */
+  priority: number;
+
+  /**
+   * The repository created date
+   */
+  createdDate: Date;
+
+  /**
    * Constructor
    */
   constructor() {}

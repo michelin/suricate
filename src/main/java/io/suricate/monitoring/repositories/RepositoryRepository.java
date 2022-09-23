@@ -29,12 +29,11 @@ import java.util.Optional;
 @org.springframework.stereotype.Repository
 public interface RepositoryRepository extends JpaRepository<Repository, Long>, JpaSpecificationExecutor<Repository> {
     /**
-     * Find All by enabled order by name
-     *
+     * Find all by enabled order by name
      * @param enabled True if we want every enabled repository, false otherwise
      * @return The list of repositories
      */
-    Optional<List<Repository>> findAllByEnabledOrderByName(final boolean enabled);
+    Optional<List<Repository>> findAllByEnabledOrderByPriorityDescCreatedDateAsc(final boolean enabled);
 
     /**
      * Find repository by name

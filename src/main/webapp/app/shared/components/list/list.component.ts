@@ -37,6 +37,7 @@ import { FormGroup } from '@angular/forms';
 import { FormField } from '../../models/frontend/form/form-field';
 import { FormService } from '../../services/frontend/form/form.service';
 import { ValueChangedEvent } from '../../models/frontend/form/value-changed-event';
+import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 
 /**
  * Generic component used to display and manage lists
@@ -102,10 +103,9 @@ export class ListComponent<T> implements OnInit, OnDestroy {
   public listConfiguration = new ListConfiguration<T>();
 
   /**
-   * Disable all buttons of all objects.
-   * Used to disable actions during repository sync
+   * Is drag & drop disabled
    */
-  public disableAllButtons = false;
+  public dragAndDropDisabled = true;
 
   /**
    * The object list to display
@@ -197,6 +197,7 @@ export class ListComponent<T> implements OnInit, OnDestroy {
     this.childService.getAll(this.httpFilter).subscribe((objectsPaged: Page<T>) => {
       this.objectsPaged = objectsPaged;
       this.hideLoader();
+      this.onItemsLoaded();
     });
   }
 
@@ -290,6 +291,11 @@ export class ListComponent<T> implements OnInit, OnDestroy {
   public redirectToBean(object: T): void {}
 
   /**
+   * Perform actions after items have been loaded
+   */
+  protected onItemsLoaded(): void {}
+
+  /**
    * Subscribe to input search event
    * Wait for a few time before triggering the refresh
    */
@@ -307,4 +313,21 @@ export class ListComponent<T> implements OnInit, OnDestroy {
   public researchChangedEvent(event: ValueChangedEvent) {
     this.researchChanged.next(event.value);
   }
+
+  /**
+   * When dragging & dropping an item, update its position
+   * @param dropEvent The drag & drop event
+   */
+  public onDropEvent(dropEvent: CdkDragDrop<string[]>) {
+    if (dropEvent.previousIndex !== dropEvent.currentIndex) {
+      moveItemInArray(this.objectsPaged.content, dropEvent.previousIndex, dropEvent.currentIndex);
+      this.drop();
+    }
+  }
+
+  /**
+   * Action to perform on drop
+   * Implemented in child component
+   */
+  public drop(): void {}
 }

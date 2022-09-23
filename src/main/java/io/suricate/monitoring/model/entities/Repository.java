@@ -18,6 +18,7 @@
 
 package io.suricate.monitoring.model.entities;
 
+import io.suricate.monitoring.model.entities.generic.AbstractAuditingEntity;
 import io.suricate.monitoring.model.enums.RepositoryTypeEnum;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,7 +36,7 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Repository {
+public class Repository extends AbstractAuditingEntity<Long> {
     /**
      * The repository id
      */
@@ -87,11 +88,17 @@ public class Repository {
     private RepositoryTypeEnum type;
 
     /**
-     * If the repository is enable or not
+     * If the repository is enabled or not
      */
     @Column(nullable = false)
     @Type(type = "yes_no")
     private boolean enabled = true;
+
+    /**
+     * The repository priority
+     */
+    @Column(nullable = false)
+    private int priority;
 
     /**
      * The list of widgets for this repository

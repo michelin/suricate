@@ -114,6 +114,6 @@ public class BackendApplication {
         proxyConfiguration.setProxy();
 
         // Update widgets
-        gitService.updateWidgetFromEnabledGitRepositories();
+        gitService.updateWidgetFromEnabledGitRepositoriesAsync();
     }
 }
