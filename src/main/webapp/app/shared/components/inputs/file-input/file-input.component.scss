@@ -15,7 +15,7 @@
  *  * limitations under the License.
  *
  */
-@import '../../../../../sass/dashboard-themes';
+@import '~@angular/material/theming';
 
 .file-upload-wrapper {
   & {
@@ -47,22 +47,28 @@
   }
 }
 
-.button-error {
-  border-color: mat-color(map-get($theme, warn)) !important;
-  color: mat-color(map-get($theme, warn));
-}
-
-.input-error {
+.file-input-error {
   top: 0.8em;
   position: relative;
   box-sizing: border-box;
   width: 100%;
   overflow: hidden;
   font-size: 75%;
-  color: mat-color(map-get($theme, warn));
 }
 
 .uploaded-file {
   min-height: 290px;
   max-height: 290px;
+}
+
+@mixin file-input-component-theme($theme) {
+  $warn: map-get($theme, warn);
+
+  .file-input-button-error {
+    color: mat-color($warn, 500) !important;
+  }
+
+  .file-input-error {
+    color: mat-color($warn, 500);
+  }
 }
