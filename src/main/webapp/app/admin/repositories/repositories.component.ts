@@ -115,7 +115,8 @@ export class RepositoriesComponent extends ListComponent<Repository> {
           variant: 'miniFab',
           color: 'primary',
           callback: (event: Event) => this.openFormSidenav(event, null, this.addRepository.bind(this)),
-          tooltip: { message: 'repository.add' }
+          tooltip: { message: 'repository.add' },
+          disabled: this.disableAllReposSync.asObservable()
         }
       ]
     };
