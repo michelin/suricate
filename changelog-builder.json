@@ -10,7 +10,7 @@
     },
     {
       "title": "## :bug: Bugfixes",
-      "labels": ["fix"]
+      "labels": ["bug"]
     },
     {
       "title": "## :memo: Documentation",
