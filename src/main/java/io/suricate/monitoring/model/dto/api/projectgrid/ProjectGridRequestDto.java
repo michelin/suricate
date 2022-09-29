@@ -49,13 +49,13 @@ public class ProjectGridRequestDto extends AbstractDto {
         /**
          * The project grid id
          */
-        @ApiModelProperty(value = "The project grid id")
+        @ApiModelProperty(value = "The project grid id", example = "1")
         private Long id;
 
         /**
          * The time
          */
-        @ApiModelProperty(value = "The time")
+        @ApiModelProperty(value = "The time", example = "30")
         private Integer time;
     }
 }

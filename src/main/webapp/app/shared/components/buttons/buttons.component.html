@@ -26,7 +26,7 @@
     [matTooltipPosition]="configuration.tooltip?.position ? $any(configuration.tooltip.position) : 'below'"
     [type]="configuration.type ? configuration.type : buttonTypeEnum.BUTTON"
     [color]="$any(configuration.color)"
-    [disabled]="disableAllButtons ? disableAllButtons : false"
+    [disabled]="configuration.disabled | async"
     (click)="configuration.callback ? configuration.callback($event, object) : null"
   >
     <ng-template *ngTemplateOutlet="buttonContent; context: { configuration: configuration }"></ng-template>
@@ -42,6 +42,7 @@
     [matTooltipPosition]="configuration.tooltip?.position ? $any(configuration.tooltip?.position) : 'below'"
     [type]="configuration.type ? configuration.type : buttonTypeEnum.BUTTON"
     [color]="$any(configuration.color)"
+    [disabled]="configuration.disabled | async"
     (click)="configuration.callback ? configuration.callback($event, object) : null"
   >
     <ng-template *ngTemplateOutlet="buttonContent; context: { configuration: configuration }"></ng-template>

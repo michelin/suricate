@@ -7,7 +7,7 @@
       fxFlex="100"
       class="upload-button"
       color="primary"
-      [ngClass]="{ 'button-error': isInputFieldOnError() }"
+      [ngClass]="{ 'file-input-button-error': isInputFieldOnError() }"
       (click)="file.click()"
     >
       <mat-icon> {{ materialIconRecords[iconEnum.UPLOAD] }} </mat-icon>
@@ -21,7 +21,7 @@
       fxFlex="100"
       class="take-screenshot-button"
       color="primary"
-      [ngClass]="{ 'button-error': isInputFieldOnError() }"
+      [ngClass]="{ 'file-input-button-error': isInputFieldOnError() }"
       (click)="takeScreenshot()"
     >
       <mat-icon> {{ materialIconRecords[iconEnum.UPLOAD] }} </mat-icon>
@@ -29,7 +29,7 @@
     </button>
 
     <!-- Error Message for file input -->
-    <div *ngIf="isInputFieldOnError()" [@animationError] class="input-error" fxFlex="100">
+    <div *ngIf="isInputFieldOnError()" [@animationError] class="file-input-error" fxFlex="100">
       <div>
         {{ getInputErrors() | translate }}
       </div>

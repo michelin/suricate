@@ -39,7 +39,7 @@ public class SettingResponseDto extends AbstractDto {
     /**
      * The setting id
      */
-    @ApiModelProperty(value = "The setting id")
+    @ApiModelProperty(value = "The setting id", example = "1")
     private Long id;
 
     /**

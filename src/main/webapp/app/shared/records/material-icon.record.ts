@@ -53,6 +53,7 @@ export const MaterialIconRecords: Record<IconEnum, string> = {
   [IconEnum.PROGRESS_BAR]: 'hourglass_bottom',
   [IconEnum.REFRESH]: 'refresh',
   [IconEnum.REPOSITORY_TYPE]: 'cloud_queue',
+  [IconEnum.REPOSITORY_PRIORITY]: 'low_priority',
   [IconEnum.SAVE]: 'done',
   [IconEnum.SEARCH]: 'search',
   [IconEnum.SETTINGS]: 'settings',

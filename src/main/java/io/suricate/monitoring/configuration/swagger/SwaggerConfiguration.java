@@ -38,9 +38,6 @@ import java.util.*;
 
 import static springfox.documentation.builders.PathSelectors.regex;
 
-/**
- * The swagger configuration, to see the swagger page go to : "/swagger-ui.html"
- */
 @Configuration
 @EnableSwagger2
 public class SwaggerConfiguration {

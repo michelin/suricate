@@ -172,7 +172,7 @@ public class ProjectGridController {
     public ResponseEntity<Void> deleteGridById(@ApiIgnore @AuthenticationPrincipal LocalUser connectedUser,
                                                @ApiParam(name = "projectToken", value = "The project token", required = true)
                                                @PathVariable("projectToken") String projectToken,
-                                               @ApiParam(name = "gridId", value = "The grid id", required = true)
+                                               @ApiParam(name = "gridId", value = "The grid id", required = true, example = "1")
                                                @PathVariable("gridId") Long gridId) {
         Optional<Project> projectOptional = projectService.getOneByToken(projectToken);
         if (!projectOptional.isPresent()) {

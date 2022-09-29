@@ -30,7 +30,7 @@ export class HttpFilterService {
   public static readonly DEFAULT_PAGE = 0;
 
   /**
-   * Used to ask for every elements in one request
+   * Used to ask for every element in one request
    */
   public static readonly INFINITE_PAGE_SIZE = 2000;
 

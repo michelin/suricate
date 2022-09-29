@@ -39,7 +39,7 @@ public class UserResponseDto extends AbstractDto {
     /**
      * Database id
      */
-    @ApiModelProperty(value = "The id of the user")
+    @ApiModelProperty(value = "The id of the user", example = "1")
     private Long id;
 
     /**

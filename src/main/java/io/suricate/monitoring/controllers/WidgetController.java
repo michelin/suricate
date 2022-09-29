@@ -105,7 +105,7 @@ public class WidgetController {
     })
     @GetMapping(value = "/v1/widgets/{widgetId}")
     @PermitAll
-    public ResponseEntity<WidgetResponseDto> getOneById(@ApiParam(name = "widgetId", value = "The widget id", required = true)
+    public ResponseEntity<WidgetResponseDto> getOneById(@ApiParam(name = "widgetId", value = "The widget id", required = true, example = "1")
                                                         @PathVariable("widgetId") Long widgetId) {
         Optional<Widget> widget = widgetService.findOne(widgetId);
 
@@ -135,7 +135,7 @@ public class WidgetController {
     })
     @PutMapping(value = "/v1/widgets/{widgetId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Void> updateWidget(@ApiParam(name = "widgetId", value = "The widget id", required = true)
+    public ResponseEntity<Void> updateWidget(@ApiParam(name = "widgetId", value = "The widget id", required = true, example = "1")
                                              @PathVariable("widgetId") Long widgetId,
                                              @ApiParam(name = "widgetRequestDto", value = "The widget with modifications", required = true)
                                              @RequestBody WidgetRequestDto widgetRequestDto) {

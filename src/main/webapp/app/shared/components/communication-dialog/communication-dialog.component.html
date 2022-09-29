@@ -1,7 +1,7 @@
-<div class="dialog-wrapper">
+<div class="communication-dialog-wrapper">
   <h2 mat-dialog-title>{{ configuration.title | translate }}</h2>
 
-  <mat-dialog-content class="spacer" [ngClass]="{ error: configuration.isErrorMessage }">
+  <mat-dialog-content class="spacer" [ngClass]="{ 'communication-dialog-error': configuration.isErrorMessage }">
     {{ configuration.message }}
   </mat-dialog-content>
 

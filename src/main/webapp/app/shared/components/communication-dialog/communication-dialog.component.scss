@@ -15,9 +15,9 @@
  *  * limitations under the License.
  *
  */
-@import '~sass/dashboard-themes';
+@import '~@angular/material/theming';
 
-.dialog-wrapper {
+.communication-dialog-wrapper {
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -30,12 +30,16 @@
       padding: 19px 20px;
     }
 
-    &.error {
-      color: mat-color(map-get($theme, warn));
-    }
-
     &.spacer {
       flex-grow: 1;
     }
+  }
+}
+
+@mixin communication-dialog-component-theme($theme) {
+  $warn: map-get($theme, warn);
+
+  .communication-dialog-wrapper .mat-dialog-content.communication-dialog-error {
+    color: mat-color($warn, 500);
   }
 }

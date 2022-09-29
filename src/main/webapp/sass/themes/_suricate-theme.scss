@@ -24,7 +24,11 @@
 @import '~sass/components/material/mat-form-field-theme';
 @import '~sass/components/material/mat-grid-list-theme';
 @import '~sass/components/material/mat-tab-group-theme';
-@import '~sass/components/material/carousel-theme';
+@import '~app/shared/components/communication-dialog/communication-dialog.component';
+@import '~app/shared/components/list/list.component';
+@import '~app/shared/components/inputs/input/input.component';
+@import '~app/shared/components/inputs/file-input/file-input.component';
+@import '~app/dashboard/components/dashboard-detail/dashboard-detail.component';
 
 /**
  * Mixin that inject every custom components (used in theme definitions)
@@ -39,5 +43,9 @@
   @include custom-mat-grid-list-theme($theme);
   @include custom-mat-form-field-theme($theme);
   @include custom-mat-tab-group-theme($theme);
-  @include custom-carousel-theme($theme);
+  @include list-component-theme($theme);
+  @include communication-dialog-component-theme($theme);
+  @include file-component-theme($theme);
+  @include file-input-component-theme($theme);
+  @include dashboard-detail-component-theme($theme);
 }

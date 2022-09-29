@@ -19,34 +19,37 @@
   ></suricate-dashboard-screen>
 
   <!-- Display the add card, if no widget inside the current grid -->
-  <mat-grid-list *ngIf="gridId && (!currentWidgets || currentWidgets.length === 0)" cols="4" rowHeight="250px" gutterSize="17px">
-    <mat-grid-tile class="mat-elevation-z3" (click)="displayProjectWidgetWizard()">
-      <div class="grid-tile-content-wrapper">
-        <div class="grid-tile-body">
-          <mat-icon color="primary"> {{ materialIconRecords[iconEnum.ADD] }} </mat-icon>
-        </div>
+  <div class="grid add-widget-grid">
+    <span [innerHTML]="'<style>' + project?.gridProperties.cssStyle + '</style>' | safeHtml"></span>
+    <mat-grid-list *ngIf="gridId && (!currentWidgets || currentWidgets.length === 0)" cols="4" rowHeight="250px" gutterSize="17px">
+      <mat-grid-tile class="mat-elevation-z3 grid-widget-tile" (click)="displayProjectWidgetWizard()">
+        <div class="grid-tile-content-wrapper">
+          <div class="grid-tile-body">
+            <mat-icon color="primary"> {{ materialIconRecords[iconEnum.ADD] }} </mat-icon>
+          </div>
 
-        <div class="grid-tile-footer">
-          {{ 'widget.add' | translate }}
+          <div class="grid-tile-footer">
+            {{ 'widget.add' | translate }}
+          </div>
         </div>
-      </div>
-    </mat-grid-tile>
-  </mat-grid-list>
+      </mat-grid-tile>
+    </mat-grid-list>
 
-  <!-- Display the add grid -->
-  <mat-grid-list *ngIf="!gridId" cols="4" rowHeight="250px" gutterSize="17px">
-    <mat-grid-tile class="mat-elevation-z3" (click)="openAddGridFormSidenav()">
-      <div class="grid-tile-content-wrapper">
-        <div class="grid-tile-body">
-          <mat-icon color="primary"> {{ materialIconRecords[iconEnum.ADD] }} </mat-icon>
-        </div>
+    <!-- Display the add grid -->
+    <mat-grid-list *ngIf="!gridId" cols="4" rowHeight="250px" gutterSize="17px">
+      <mat-grid-tile class="mat-elevation-z3 grid-widget-tile" (click)="openAddGridFormSidenav()">
+        <div class="grid-tile-content-wrapper">
+          <div class="grid-tile-body">
+            <mat-icon color="primary"> {{ materialIconRecords[iconEnum.ADD] }} </mat-icon>
+          </div>
 
-        <div class="grid-tile-footer">
-          {{ 'grid.add' | translate }}
+          <div class="grid-tile-footer">
+            {{ 'grid.add' | translate }}
+          </div>
         </div>
-      </div>
-    </mat-grid-tile>
-  </mat-grid-list>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </div>
 </ng-container>
 
 <div *ngIf="isDashboardLoading" class="container without-header" fxLayout="column" fxLayoutAlign="center center">

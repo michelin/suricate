@@ -20,6 +20,7 @@ import { Component, Input } from '@angular/core';
 import { ButtonConfiguration } from '../../models/frontend/button/button-configuration';
 import { MaterialIconRecords } from '../../records/material-icon.record';
 import { ButtonTypeEnum } from '../../enums/button-type.enum';
+import { map } from 'rxjs/operators';
 
 /**
  * Component used to generate buttons
@@ -41,12 +42,6 @@ export class ButtonsComponent<T> {
    */
   @Input()
   public object: T;
-
-  /**
-   * Disable all buttons of all objects
-   */
-  @Input()
-  public disableAllButtons: boolean;
 
   /**
    * The different type of buttons

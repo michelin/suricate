@@ -153,7 +153,7 @@ public class UserController {
     })
     @GetMapping(value = "/v1/users/{userId}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<UserResponseDto> getOne(@ApiParam(name = "userId", value = "The user id", required = true)
+    public ResponseEntity<UserResponseDto> getOne(@ApiParam(name = "userId", value = "The user id", required = true, example = "1")
                                                   @PathVariable("userId") Long userId) {
         Optional<User> userOptional = userService.getOne(userId);
         if (!userOptional.isPresent()) {
@@ -182,7 +182,7 @@ public class UserController {
     })
     @PutMapping(value = "/v1/users/{userId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Void> updateOne(@ApiParam(name = "userId", value = "The user id", required = true)
+    public ResponseEntity<Void> updateOne(@ApiParam(name = "userId", value = "The user id", required = true, example = "1")
                                           @PathVariable("userId") Long userId,
                                           @ApiParam(name = "userResponseDto", value = "The user info to update", required = true)
                                           @RequestBody UserRequestDto userRequestDto) {
@@ -217,7 +217,7 @@ public class UserController {
     @DeleteMapping(value = "/v1/users/{userId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Transactional
-    public ResponseEntity<Void> deleteOne(@ApiParam(name = "userId", value = "The user id", required = true)
+    public ResponseEntity<Void> deleteOne(@ApiParam(name = "userId", value = "The user id", required = true, example = "1")
                                           @PathVariable("userId") Long userId) {
         Optional<User> userOptional = userService.getOne(userId);
         if (!userOptional.isPresent()) {
@@ -275,7 +275,7 @@ public class UserController {
     public ResponseEntity<UserResponseDto> updateUserSettings(@ApiIgnore Principal principal,
                                                               @ApiParam(name = "userName", value = "The user name", required = true)
                                                               @PathVariable("username") String userName,
-                                                              @ApiParam(name = "settingId", value = "The setting id", required = true)
+                                                              @ApiParam(name = "settingId", value = "The setting id", required = true, example = "1")
                                                               @PathVariable("settingId") Long settingId,
                                                               @ApiParam(name = "userSettingRequestDto", value = "The new value of the setting", required = true)
                                                               @RequestBody UserSettingRequestDto userSettingRequestDto) {

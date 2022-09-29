@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
@@ -53,6 +53,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { ProgressBarComponent } from './components/progress-bar/progress-bar.component';
 import { ActionsDialogComponent } from './components/actions-dialog/actions-dialog.component';
 import { ClipboardModule } from '@angular/cdk/clipboard';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 @NgModule({
   imports: [
@@ -69,7 +70,8 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
     RouterModule,
     TranslateModule,
     ColorPickerModule,
-    ClipboardModule
+    ClipboardModule,
+    DragDropModule
   ],
   declarations: [
     CommunicationDialogComponent,
@@ -109,6 +111,7 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
     MaterialCDKModule,
     MaterialModule,
     NgGridModule,
+    DragDropModule,
     ReactiveFormsModule,
     RouterModule,
     WidgetHtmlDirective,
@@ -131,7 +134,8 @@ import { ClipboardModule } from '@angular/cdk/clipboard';
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true },
-    { provide: RxStompService }
+    { provide: RxStompService },
+    DatePipe
   ]
 })
 export class SharedModule {}

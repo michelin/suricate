@@ -169,6 +169,10 @@ export class InputComponent implements OnInit {
     if (this.getFormControl()['errors']?.gt0) {
       return 'field.error.gt0';
     }
+
+    if (this.getFormControl()['errors']?.uniquePriority) {
+      return 'field.error.repository.unique.priority';
+    }
   }
 
   /**

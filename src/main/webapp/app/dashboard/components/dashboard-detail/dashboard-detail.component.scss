@@ -15,6 +15,17 @@
  *  * limitations under the License.
  *
  */
+@import '~@angular/material/theming';
+
+.add-widget-grid {
+  color: inherit;
+  font-size: inherit;
+
+  .grid-widget-tile {
+    margin-top: 4px;
+    margin-left: 4px;
+  }
+}
 
 .mat-grid-tile {
   cursor: pointer;
@@ -24,5 +35,30 @@
   }
   .grid-tile-body {
     max-height: 200px;
+  }
+}
+
+@mixin dashboard-detail-component-theme($theme) {
+  $primary: map-get($theme, primary);
+
+  .carousel-indicators {
+    display: flex;
+    list-style: none;
+    width: 500px;
+    margin: 10px auto;
+    justify-content: center;
+
+    li {
+      background-color: mat-color($primary, 200);
+      cursor: pointer;
+      width: 30px;
+      height: 3px;
+      margin-right: 3px;
+      margin-left: 3px;
+    }
+
+    .indicator-selected {
+      background-color: mat-color($primary, 900);
+    }
   }
 }

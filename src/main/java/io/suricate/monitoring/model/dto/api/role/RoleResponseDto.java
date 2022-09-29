@@ -35,7 +35,7 @@ public class RoleResponseDto extends AbstractDto {
     /**
      * The role id
      */
-    @ApiModelProperty(value = "The id")
+    @ApiModelProperty(value = "The id", example = "1")
     private Long id;
 
     /**
