@@ -19,9 +19,9 @@
   ></suricate-dashboard-screen>
 
   <!-- Display the add card, if no widget inside the current grid -->
-  <div class="grid add-widget-grid">
+  <div *ngIf="!isDashboardLoading && (!currentWidgets || currentWidgets.length === 0)" class="grid add-widget-grid">
     <span [innerHTML]="'<style>' + project?.gridProperties.cssStyle + '</style>' | safeHtml"></span>
-    <mat-grid-list *ngIf="gridId && (!currentWidgets || currentWidgets.length === 0)" cols="4" rowHeight="250px" gutterSize="17px">
+    <mat-grid-list *ngIf="gridId" cols="4" rowHeight="250px" gutterSize="17px">
       <mat-grid-tile class="mat-elevation-z3 grid-widget-tile" (click)="displayProjectWidgetWizard()">
         <div class="grid-tile-content-wrapper">
           <div class="grid-tile-body">
