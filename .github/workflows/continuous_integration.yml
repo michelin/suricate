@@ -30,6 +30,12 @@ jobs:
           name: jar
           path: ${{ github.workspace }}/target/suricate.jar
 
+      - name: Upload Package Lock
+        uses: actions/upload-artifact@v2
+        with:
+          name: package-lock
+          path: ${{ github.workspace }}/package-lock.json
+
       - name: Test with Maven
         run: mvn -B test
 
