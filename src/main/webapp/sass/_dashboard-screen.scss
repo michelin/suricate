@@ -1,5 +1,5 @@
 // Animation colors
-@-webkit-keyframes status-warning-background {
+@keyframes status-warning-background {
   0% {
     background-color: #eeae32;
   }
@@ -11,7 +11,7 @@
   }
 }
 
-@-webkit-keyframes status-danger-background {
+@keyframes status-danger-background {
   0% {
     background-color: #e82711;
   }

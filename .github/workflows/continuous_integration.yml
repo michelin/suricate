@@ -22,7 +22,13 @@ jobs:
           distribution: 'adopt'
 
       - name: Build with Maven
-        run: mvn -B clean compile
+        run: mvn -B -DskipTests package -P production
+
+      - name: Upload Suricate JAR
+        uses: actions/upload-artifact@v2
+        with:
+          name: jar
+          path: ${{ github.workspace }}/target/suricate.jar
 
       - name: Test with Maven
         run: mvn -B test
