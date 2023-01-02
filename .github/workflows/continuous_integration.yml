@@ -82,7 +82,7 @@ jobs:
       - name: Docker
         id: package-application
         run: |
-          mvn clean package -P production jib:build -Djib.to.auth.username=$DOCKER_USER -Djib.to.auth.password=$DOCKER_TOKEN 
+          mvn -B clean package -P production jib:build -Djib.to.auth.username=$DOCKER_USER -Djib.to.auth.password=$DOCKER_TOKEN 
           echo ::set-output name=tag::${GITHUB_REF##*/}
         env:
           DOCKER_USER: ${{ secrets.DOCKER_USER }}

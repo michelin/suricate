@@ -1,23 +1,23 @@
 {
   "categories": [
     {
-      "title": "## :rocket: New",
+      "title": "# :sparkles: New",
       "labels": ["new feature"]
     },
     {
-      "title": "## :racehorse: Improvements",
+      "title": "# :zap: Improvements",
       "labels": ["enhancement"]
     },
     {
-      "title": "## :bug: Bugfixes",
+      "title": "# :bug: Bugfixes",
       "labels": ["bug"]
     },
     {
-      "title": "## :memo: Documentation",
+      "title": "# :memo: Documentation",
       "labels": ["documentation"]
     },
     {
-      "title": "## :hammer: Other",
+      "title": "# :hammer: Other",
       "labels": ["dependencies", "security"]
     }
   ],
