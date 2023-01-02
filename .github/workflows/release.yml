@@ -6,7 +6,7 @@ on:
       - 'v*.*.*'
 
 jobs:
-  GitHub-Release:
+  release:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout project
@@ -18,16 +18,16 @@ jobs:
           java-version: '8'
           distribution: 'adopt'
 
-      - name: Package application & Deploy Docker
+      - name: Docker
         id: package-application
         run: |
-          mvn -B -DskipTests package -P production jib:build -Djib.to.auth.username=$DOCKER_USER -Djib.to.auth.password=$DOCKER_TOKEN
+          mvn clean package -P production jib:build -Djib.to.auth.username=$DOCKER_USER -Djib.to.auth.password=$DOCKER_TOKEN 
           echo ::set-output name=tag::${GITHUB_REF##*/}
         env:
           DOCKER_USER: ${{ secrets.DOCKER_USER }}
           DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
 
-      - name: Generate Release Changelog
+      - name: Generate release changelog
         uses: mikepenz/release-changelog-builder-action@v1
         id: build_changelog
         with:
@@ -41,7 +41,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           body: ${{ steps.build_changelog.outputs.changelog }}
           artifacts: 'target/suricate.jar'
-          name: Release ${{ steps.package-application.outputs.tag }}
+          name: ${{ steps.package-application.outputs.tag }}
           draft: true
           prerelease: true
           allowUpdates: true
