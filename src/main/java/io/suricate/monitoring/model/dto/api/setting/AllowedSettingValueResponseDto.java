@@ -17,42 +17,25 @@
 package io.suricate.monitoring.model.dto.api.setting;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-/**
- * The Allowed setting value DTO used for REST communication
- */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "AllowedSettingValue", description = "Describe the possible values for a setting")
+@Schema(description = "Describe the possible values for a setting")
 public class AllowedSettingValueResponseDto extends AbstractDto {
-
-    /**
-     * The setting id
-     */
-    @ApiModelProperty(value = "The setting value id", required = true, example = "1")
+    @Schema(description = "The setting value id", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     private Long id;
 
-    /**
-     * The title to display for the user
-     */
-    @ApiModelProperty(value = "The title displayed to the user", required = true)
+    @Schema(description = "The title displayed to the user", requiredMode = Schema.RequiredMode.REQUIRED)
     private String title;
 
-    /**
-     * The value of the entry (used in the code)
-     */
-    @ApiModelProperty(value = "The value that will be used on the code for this setting", required = true)
-    private String value;
+    @Schema(description = "The value that will be used on the code for this setting", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String settingValue;
 
-    /**
-     * True if this setting is the default setting
-     */
-    @ApiModelProperty(value = "True if this value should be used as default", required = true)
+    @Schema(description = "True if this value should be used as default", requiredMode = Schema.RequiredMode.REQUIRED)
     private boolean isDefault;
 }

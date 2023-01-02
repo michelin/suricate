@@ -12,7 +12,13 @@ import io.suricate.monitoring.services.api.RepositoryService;
 import io.suricate.monitoring.services.git.GitService;
 import io.suricate.monitoring.services.mapper.ProjectMapper;
 import io.suricate.monitoring.services.mapper.RepositoryMapper;
-import io.swagger.annotations.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,47 +28,28 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import springfox.documentation.annotations.ApiIgnore;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-/**
- * Export controller
- */
 @RestController
 @RequestMapping("/api")
-@Api(value = "Export Controller", tags = {"Exports"})
+@Tag(name = "Import/Export", description = "Import/Export Controller")
 public class ImportExportController {
-    /**
-     * The repository service
-     */
     @Autowired
     private RepositoryService repositoryService;
 
-    /**
-     * The project service
-     */
     @Autowired
     private ProjectService projectService;
 
-    /**
-     * Git service
-     */
     @Autowired
     private GitService gitService;
 
-    /**
-     * The repository mapper
-     */
     @Autowired
     private RepositoryMapper repositoryMapper;
 
-    /**
-     * The project mapper
-     */
     @Autowired
     private ProjectMapper projectMapper;
 
@@ -70,11 +57,11 @@ public class ImportExportController {
      * Export the application data
      * @return The application data to export
      */
-    @ApiOperation(value = "Export the application data", response = ImportExportDto.class)
+    @Operation(summary = "Export the application data")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Ok", response = String.class),
-            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+            @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
     @GetMapping(value = "/v1/export")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -103,16 +90,16 @@ public class ImportExportController {
      * Import the application data
      * @param importDto The application data to import
      */
-    @ApiOperation(value = "Import the application data", response = ImportExportDto.class)
+    @Operation(summary = "Import the application data")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Ok", response = String.class),
-            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+            @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
     @PostMapping(value = "/v1/import")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Void> imports(@ApiIgnore @AuthenticationPrincipal LocalUser connectedUser,
-                                        @ApiParam(name = "importDto", value = "The data to import", required = true)
+    public ResponseEntity<Void> imports(@Parameter(hidden = true) @AuthenticationPrincipal LocalUser connectedUser,
+                                        @Parameter(name = "importDto", description = "The data to import", required = true)
                                         @RequestBody ImportExportDto importDto) throws GitAPIException, IOException {
         // Map repositories into entity
         List<Repository> repositories = importDto.getRepositories()

@@ -1,8 +1,7 @@
 package io.suricate.monitoring.model.dto.api.projectgrid;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -10,17 +9,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "ProjectGridResponseDto", description = "Describe a project grid")
+@Schema(description = "Describe a project grid")
 public class ProjectGridResponseDto extends AbstractDto {
-    /**
-     * The project grid id
-     */
-    @ApiModelProperty(value = "The project grid id", example = "1")
+    @Schema(description = "The project grid id", example = "1")
     private Long id;
 
-    /**
-     * The time
-     */
-    @ApiModelProperty(value = "The time", example = "30")
+    @Schema(description = "The time", example = "30")
     private Integer time;
 }

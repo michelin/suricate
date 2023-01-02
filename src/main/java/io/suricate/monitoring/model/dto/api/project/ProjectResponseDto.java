@@ -19,8 +19,7 @@ package io.suricate.monitoring.model.dto.api.project;
 import io.suricate.monitoring.model.dto.api.AbstractDto;
 import io.suricate.monitoring.model.dto.api.asset.AssetResponseDto;
 import io.suricate.monitoring.model.dto.api.projectgrid.ProjectGridResponseDto;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -28,60 +27,32 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Project object used for communication with clients of the webservice
- */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "ProjectResponse", description = "Describe a project/dashboard")
+@Schema(description = "Describe a project/dashboard")
 public class ProjectResponseDto extends AbstractDto {
-
-    /**
-     * The dashboard token
-     */
-    @ApiModelProperty(value = "The project token", required = true)
+    @Schema(description = "The project token", requiredMode = Schema.RequiredMode.REQUIRED)
     private String token;
 
-    /**
-     * The project name
-     */
-    @ApiModelProperty(value = "The project name", required = true)
+    @Schema(description = "The project name", requiredMode = Schema.RequiredMode.REQUIRED)
     private String name;
 
-    /**
-     * The grid properties for a dashboard
-     */
-    @ApiModelProperty(value = "The properties of the dashboard grid")
+    @Schema(description = "The properties of the dashboard grid")
     private GridPropertiesResponseDto gridProperties;
 
-    /**
-     * A representation by an image of the dashboard
-     */
-    @ApiModelProperty(value = "A representation by an image of the dashboard")
+    @Schema(description = "A representation by an image of the dashboard")
     private String screenshotToken;
 
-    /**
-     * In case of rotations, should the progress bar be displayed for the project
-     */
-    @ApiModelProperty(value = "In case of rotations, should the progress bar be displayed for the project")
+    @Schema(description = "In case of rotations, should the progress bar be displayed for the project")
     private boolean displayProgressBar;
 
-    /**
-     * Image of the dashboard
-     */
-    @ApiModelProperty(value = "Image of the dashboard")
+    @Schema(description = "Image of the dashboard")
     private AssetResponseDto image;
 
-    /**
-     * The libraries
-     */
-    @ApiModelProperty(value = "The list of the related JS libraries used for the execution of the widgets", dataType = "java.util.List")
+    @Schema(description = "The list of the related JS libraries used for the execution of the widgets", type = "java.util.List")
     private List<String> librariesToken = new ArrayList<>();
 
-    /**
-     * The grids
-     */
-    @ApiModelProperty(value = "The grids", dataType = "java.util.List")
+    @Schema(description = "The grids", type = "java.util.List")
     private List<ProjectGridResponseDto> grids = new ArrayList<>();
 }

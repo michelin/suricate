@@ -23,10 +23,10 @@ import io.suricate.monitoring.model.entities.Setting;
 import io.suricate.monitoring.services.api.SettingService;
 import io.suricate.monitoring.services.mapper.SettingMapper;
 import io.suricate.monitoring.utils.exceptions.NoContentException;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -37,46 +37,24 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Settings controller
- */
 @RestController
 @RequestMapping("/api")
-@Api(value = "Setting Controller", tags = {"Settings"})
+@Tag(name = "Setting", description = "Setting Controller")
 public class SettingController {
-
-    /**
-     * Settings service
-     */
-    private final SettingService settingService;
-
-    /**
-     * Settings mapper
-     */
-    private final SettingMapper settingMapper;
-
-    /**
-     * Constructor
-     *
-     * @param settingService The setting service
-     * @param settingMapper  The setting mapper
-     */
     @Autowired
-    public SettingController(final SettingService settingService,
-                             final SettingMapper settingMapper) {
-        this.settingService = settingService;
-        this.settingMapper = settingMapper;
-    }
+    private SettingService settingService;
+
+    @Autowired
+    private SettingMapper settingMapper;
 
     /**
      * Get the full list of settings
-     *
      * @return The full list of settings
      */
-    @ApiOperation(value = "Get the full list of settings", response = SettingResponseDto.class, nickname = "getAllSettings")
+    @Operation(summary = "Get the full list of settings")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = SettingResponseDto.class, responseContainer = "List"),
-        @ApiResponse(code = 204, message = "No Content")
+        @ApiResponse(responseCode = "200", description = "OK"),
+        @ApiResponse(responseCode = "204", description = "No Content")
     })
     @GetMapping(value = "/v1/settings")
     public ResponseEntity<List<SettingResponseDto>> getAll() {

@@ -19,42 +19,25 @@ package io.suricate.monitoring.model.dto.api.widgetconfiguration;
 import io.suricate.monitoring.model.dto.api.AbstractDto;
 import io.suricate.monitoring.model.dto.api.category.CategoryResponseDto;
 import io.suricate.monitoring.model.enums.DataTypeEnum;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-/**
- * Configuration used for communication with the clients via webservices
- */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "ConfigurationResponse", description = "Describe a configuration")
+@Schema(description = "Describe a configuration")
 public class WidgetConfigurationResponseDto extends AbstractDto {
-
-    /**
-     * The configuration key
-     */
-    @ApiModelProperty(value = "The configuration key")
+    @Schema(description = "The configuration key")
     private String key;
 
-    /**
-     * The configuration value
-     */
-    @ApiModelProperty(value = "The configuration value")
+    @Schema(description = "The configuration value")
     private String value;
 
-    /**
-     * The data type of the configuration
-     */
-    @ApiModelProperty(value = "Configuration data type")
+    @Schema(description = "Configuration data type")
     private DataTypeEnum dataType;
 
-    /**
-     * Make a link between category and configurations
-     */
-    @ApiModelProperty(value = "Related category for this config")
+    @Schema(description = "Related category for this config")
     private CategoryResponseDto category;
 }

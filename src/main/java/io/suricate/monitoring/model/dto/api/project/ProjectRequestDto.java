@@ -17,41 +17,24 @@
 package io.suricate.monitoring.model.dto.api.project;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-
-/**
- * Project object used to create a new project
- */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "ProjectRequest", description = "Create or update a project")
+@Schema(description = "Create or update a project")
 public class ProjectRequestDto extends AbstractDto {
-    /**
-     * The project name
-     */
-    @ApiModelProperty(value = "The project name", required = true)
+    @Schema(description = "The project name", requiredMode = Schema.RequiredMode.REQUIRED)
     private String name;
 
-    /**
-     * Number of column in the dashboard
-     */
-    @ApiModelProperty(value = "The number of columns in the dashboard", example = "5")
+    @Schema(description = "The number of columns in the dashboard", example = "5")
     private Integer maxColumn;
 
-    /**
-     * The height for widgets contained
-     */
-    @ApiModelProperty(value = "The height in pixel of the widget", example = "350")
+    @Schema(description = "The height in pixel of the widget", example = "350")
     private Integer widgetHeight;
 
-    /**
-     * The global css for the dashboard
-     */
-    @ApiModelProperty(value = "The css style of the dashboard grid")
+    @Schema(description = "The css style of the dashboard grid")
     private String cssStyle;
 }

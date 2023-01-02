@@ -19,8 +19,7 @@ package io.suricate.monitoring.model.dto.api.category;
 import io.suricate.monitoring.model.dto.api.AbstractDto;
 import io.suricate.monitoring.model.dto.api.asset.AssetResponseDto;
 import io.suricate.monitoring.model.dto.api.widget.WidgetResponseDto;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -29,53 +28,29 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-/**
- * Category response DTO
- */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "CategoryResponse", description = "Describe a widget category response")
+@Schema(description = "Describe a widget category response")
 public class CategoryResponseDto extends AbstractDto {
-    /**
-     * The category id
-     */
-    @ApiModelProperty(value = "The category id", example = "1")
+    @Schema(description = "The category id", example = "1")
     private Long id;
 
-    /**
-     * The category name
-     */
-    @ApiModelProperty(value = "Category name")
+    @Schema(description = "Category name")
     private String name;
 
-    /**
-     * The technical name of the category
-     */
-    @ApiModelProperty(value = "Category technical name, should be unique in table")
+    @Schema(description = "Category technical name, should be unique in table")
     private String technicalName;
 
-    /**
-     * The image token related to this category
-     */
-    @ApiModelProperty(value = "Asset token")
+    @Schema(description = "Asset token")
     private String assetToken;
 
-    /**
-     * The image
-     */
-    @ApiModelProperty(value = "The image")
+    @Schema(description = "The image")
     private AssetResponseDto image;
 
-    /**
-     * The category parameters
-     */
-    @ApiModelProperty(value = "Category parameters")
+    @Schema(description = "Category parameters")
     private List<CategoryParameterResponseDto> categoryParameters;
 
-    /**
-     * The widgets
-     */
-    @ApiModelProperty(value = "The widgets", required = true)
+    @Schema(description = "The widgets", requiredMode = Schema.RequiredMode.REQUIRED)
     private List<WidgetResponseDto> widgets = new ArrayList<>();
 }

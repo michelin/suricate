@@ -17,28 +17,19 @@
 package io.suricate.monitoring.model.dto.api.widget;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-/**
- * Widget param value response used for communication with the clients via webservices
- */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "WidgetParamValue", description = "Describe a possible param value")
+@Schema(description = "Describe a possible param value")
 public class WidgetParamValueResponseDto extends AbstractDto {
-    /**
-     * The key used in the js file
-     */
-    @ApiModelProperty(value = "The key used in the JS/HTML Template")
+    @Schema(description = "The key used in the JS/HTML Template")
     private String jsKey;
-    /**
-     * The value of this param
-     */
-    @ApiModelProperty(value = "The user displayed value")
-    private String value;
+
+    @Schema(description = "The user displayed value")
+    private String paramValue;
 }

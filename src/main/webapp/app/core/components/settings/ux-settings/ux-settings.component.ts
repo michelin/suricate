@@ -105,7 +105,7 @@ export class UxSettingsComponent implements OnInit {
           const userSettingRequest = new UserSettingRequest();
           if (setting.constrained && setting.allowedSettingValues) {
             const selectedAllowedSetting = setting.allowedSettingValues.find((allowedSettingValue: AllowedSettingValue) => {
-              return allowedSettingValue.value === formData[setting.type];
+              return allowedSettingValue.settingValue === formData[setting.type];
             });
 
             userSettingRequest.allowedSettingValueId = selectedAllowedSetting.id;

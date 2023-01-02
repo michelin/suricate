@@ -19,8 +19,7 @@
 package io.suricate.monitoring.model.dto.api.projectgrid;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -30,32 +29,20 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "ProjectGridRequestDto", description = "Create or update a project grid")
+@Schema(description = "Create or update a project grid")
 public class ProjectGridRequestDto extends AbstractDto {
-    /**
-     * In case of rotations, should the progress bar be displayed for the project
-     */
-    @ApiModelProperty(value = "In case of rotations, should the progress bar be displayed for the project")
+    @Schema(description = "In case of rotations, should the progress bar be displayed for the project")
     private boolean displayProgressBar;
 
-    /**
-     * The list of grids
-     */
-    @ApiModelProperty(value = "The list of grids")
+    @Schema(description = "The list of grids")
     List<GridRequestDto> grids;
 
     @Data
     public static class GridRequestDto {
-        /**
-         * The project grid id
-         */
-        @ApiModelProperty(value = "The project grid id", example = "1")
+        @Schema(description = "The project grid id", example = "1")
         private Long id;
 
-        /**
-         * The time
-         */
-        @ApiModelProperty(value = "The time", example = "30")
+        @Schema(description = "The time", example = "30")
         private Integer time;
     }
 }

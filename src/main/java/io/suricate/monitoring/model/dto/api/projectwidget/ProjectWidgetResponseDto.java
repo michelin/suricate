@@ -21,106 +21,57 @@ package io.suricate.monitoring.model.dto.api.projectwidget;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
 import io.suricate.monitoring.model.enums.WidgetStateEnum;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
-/**
- * Object representing a project widget used for communication with clients of the webservice
- * This is the instantiation of a widget
- * Link a widget with a dashboard/project
- */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "ProjectWidgetResponse", description = "Describe an instantiation of a widget")
+@Schema(description = "Describe an instantiation of a widget")
 public class ProjectWidgetResponseDto extends AbstractDto {
-
-    /**
-     * The project widget id
-     */
-    @ApiModelProperty(value = "The project widget id", example = "1")
+    @Schema(description = "The project widget id", example = "1")
     private Long id;
 
-    /**
-     * The data of the last execution
-     */
-    @ApiModelProperty(value = "The data of the last execution of this widget")
+    @Schema(description = "The data of the last execution of this widget")
     private String data;
 
-    /**
-     * The position of this instance of widget in the grid
-     */
-    @ApiModelProperty(value = "The position of the widget on the grid")
+    @Schema(description = "The position of the widget on the grid")
     private ProjectWidgetPositionResponseDto widgetPosition;
 
-    /**
-     * The css style for this instance
-     */
-    @ApiModelProperty(value = "The css for this instance of widget")
+    @Schema(description = "The css for this instance of widget")
     private String customStyle;
 
-    /**
-     * The instantiation of the html widget template
-     */
-    @ApiModelProperty(value = "The html of the widget instantiate with the params")
+    @Schema(description = "The html of the widget instantiate with the params")
     private String instantiateHtml;
 
-    /**
-     * Contains the configuration of the widget
-     */
-    @ApiModelProperty(value = "The configuration of this widget")
+    @Schema(description = "The configuration of this widget")
     private String backendConfig;
 
-    /**
-     * The log of the last nashorn execution
-     */
-    @ApiModelProperty(value = "The log of the execution")
+    @Schema(description = "The log of the execution")
     private String log;
 
-    /**
-     * The date of the last execution
-     */
-    @ApiModelProperty(value = "The last execution date")
+    @Schema(description = "The last execution date")
     private Date lastExecutionDate;
 
-    /**
-     * The date of the last execution success of nashorn
-     */
-    @ApiModelProperty(value = "The last successful execution date")
+    @Schema(description = "The last successful execution date")
     private Date lastSuccessDate;
 
-    /**
-     * The widget state {@link WidgetStateEnum}
-     */
-    @ApiModelProperty(value = "The current widget state")
+    @Schema(description = "The current widget state")
     private WidgetStateEnum state;
 
-    /**
-     * The related project token
-     */
-    @ApiModelProperty(value = "The related project token")
+    @Schema(description = "The related project token")
     private String projectToken;
 
-    /**
-     * The related widget id
-     */
-    @ApiModelProperty(value = "The related widget id", example = "1")
+    @Schema(description = "The related widget id", example = "1")
     private Long widgetId;
 
-    /**
-     * The related widget technical name
-     */
-    @ApiModelProperty(value = "The related widget technical name")
+    @Schema(description = "The related widget technical name")
     private String widgetTechnicalName;
 
-    /**
-     * The project grid id
-     */
-    @ApiModelProperty(value = "The project grid id", example = "1")
+    @Schema(description = "The project grid id", example = "1")
     private Long gridId;
 }

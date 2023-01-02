@@ -19,8 +19,7 @@ package io.suricate.monitoring.model.dto.api.setting;
 import io.suricate.monitoring.model.dto.api.AbstractDto;
 import io.suricate.monitoring.model.enums.DataTypeEnum;
 import io.suricate.monitoring.model.enums.SettingType;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -28,47 +27,26 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Setting DTO used for REST communication
- */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "SettingResponse", description = "Describe a setting")
+@Schema(description = "Describe a setting")
 public class SettingResponseDto extends AbstractDto {
-    /**
-     * The setting id
-     */
-    @ApiModelProperty(value = "The setting id", example = "1")
+    @Schema(description = "The setting id", example = "1")
     private Long id;
 
-    /**
-     * The setting name/description
-     */
-    @ApiModelProperty(value = "The description/name of the setting")
+    @Schema(description = "The description/name of the setting")
     private String description;
 
-    /**
-     * Tell if the settings have constrained values
-     */
-    @ApiModelProperty(value = "True if the setting have constrained values, or if it's a free field")
+    @Schema(description = "True if the setting have constrained values, or if it's a free field")
     private boolean constrained;
 
-    /**
-     * The setting data type
-     */
-    @ApiModelProperty(value = "The data type for this setting")
+    @Schema(description = "The data type for this setting")
     private DataTypeEnum dataType;
 
-    /**
-     * The setting type
-     */
-    @ApiModelProperty(value = "The setting type")
+    @Schema(description = "The setting type")
     private SettingType type;
 
-    /**
-     * Hold the possible values (if we have a select setting for example)
-     */
-    @ApiModelProperty(value = "The possible values for this setting if it's a constrained field", dataType = "java.util.List")
+    @Schema(description = "The possible values for this setting if it's a constrained field", type = "java.util.List")
     private List<AllowedSettingValueResponseDto> allowedSettingValues = new ArrayList<>();
 }

@@ -19,14 +19,19 @@
 package io.suricate.monitoring.controllers;
 
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
-import io.suricate.monitoring.model.dto.api.role.RoleResponseDto;
 import io.suricate.monitoring.model.dto.websocket.UpdateEvent;
 import io.suricate.monitoring.model.entities.Project;
 import io.suricate.monitoring.model.enums.UpdateType;
 import io.suricate.monitoring.services.api.ProjectService;
 import io.suricate.monitoring.services.websocket.DashboardWebSocketService;
 import io.suricate.monitoring.utils.exceptions.ObjectNotFoundException;
-import io.swagger.annotations.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -35,53 +40,33 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
-/**
- * Screen controller
- */
 @RestController
 @RequestMapping("/api")
-@Api(value = "Screen actions controller", tags = {"Screens"})
+@Tag(name = "Screen", description = "Screen Controller")
 public class ScreenController {
-    /**
-     * The project service
-     */
-    private final ProjectService projectService;
+    @Autowired
+    private ProjectService projectService;
 
-    /**
-     * The dashboard websocket service
-     */
-    private final DashboardWebSocketService dashboardWebSocketService;
-
-    /**
-     * Constructor
-     *
-     * @param projectService            The project service to inject
-     * @param dashboardWebSocketService The dashboard websocket to inject
-     */
-    public ScreenController(final ProjectService projectService,
-                            final DashboardWebSocketService dashboardWebSocketService) {
-        this.projectService = projectService;
-        this.dashboardWebSocketService = dashboardWebSocketService;
-    }
+    @Autowired
+    private DashboardWebSocketService dashboardWebSocketService;
 
     /**
      * Connect a new screen for a dashboard by screen code
-     *
      * @param projectToken The project id we want to display
      * @param screenCode   The screen code to enroll
      */
-    @ApiOperation(value = "Send the notification to connected a new screen")
+    @Operation(summary = "Send the notification to connected a new screen")
     @ApiResponses(value = {
-        @ApiResponse(code = 204, message = "Screen connected"),
-        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
-        @ApiResponse(code = 404, message = "Project not found", response = ApiErrorDto.class)
+        @ApiResponse(responseCode = "204", description = "Screen connected"),
+        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "404", description = "Project not found", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
     @GetMapping(value = "/v1/screens/{projectToken}/connect")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Void> connectProjectToScreen(@ApiParam(name = "projectToken", value = "The project token", required = true)
+    public ResponseEntity<Void> connectProjectToScreen(@Parameter(name = "projectToken", description = "The project token", required = true)
                                                        @PathVariable("projectToken") String projectToken,
-                                                       @ApiParam(name = "screenCode", value = "The screen code", required = true)
+                                                       @Parameter(name = "screenCode", description = "The screen code", required = true)
                                                        @RequestParam("screenCode") String screenCode) {
         Optional<Project> projectOptional = this.projectService.getOneByToken(projectToken);
         if (!projectOptional.isPresent()) {
@@ -95,20 +80,19 @@ public class ScreenController {
     /**
      * Disconnect a client from a project
      */
-    @ApiOperation(value = "Send the notification to disconnect a new screen")
+    @Operation(summary = "Send the notification to disconnect a new screen")
     @ApiResponses(value = {
-        @ApiResponse(code = 204, message = "Screen disconnected"),
-        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
+        @ApiResponse(responseCode = "204", description = "Screen disconnected"),
+        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
     @GetMapping(value = "/v1/screens/{projectToken}/disconnect")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Void> disconnectProjectFromScreen(@ApiParam(name = "projectToken", value = "The project token", required = true)
+    public ResponseEntity<Void> disconnectProjectFromScreen(@Parameter(name = "projectToken", description = "The project token", required = true)
                                                       @PathVariable("projectToken") String projectToken,
-                                                      @ApiParam(name = "screenCode", value = "The screen code", required = true)
+                                                      @Parameter(name = "screenCode", description = "The screen code", required = true)
                                                       @RequestParam("screenCode") String screenCode) {
         this.dashboardWebSocketService.disconnectClient(projectToken, screenCode);
-
         return ResponseEntity.noContent().build();
     }
 
@@ -116,15 +100,15 @@ public class ScreenController {
      * Refresh every screen for a project token
      * @param projectToken The project token used for the refresh
      */
-    @ApiOperation(value = "Refresh every connected client for this project")
+    @Operation(summary = "Refresh every connected client for this project")
     @ApiResponses(value = {
-        @ApiResponse(code = 204, message = "Screens refresh"),
-        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
+        @ApiResponse(responseCode = "204", description = "Screens refresh"),
+        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
     @GetMapping(value = "/v1/screens/{projectToken}/refresh")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Void> refreshEveryConnectedScreensForProject(@ApiParam(name = "projectToken", value = "The project token", required = true)
+    public ResponseEntity<Void> refreshEveryConnectedScreensForProject(@Parameter(name = "projectToken", description = "The project token", required = true)
                                                                        @PathVariable("projectToken") String projectToken) {
         this.dashboardWebSocketService.reloadAllConnectedClientsToAProject(projectToken);
         return ResponseEntity.noContent().build();
@@ -134,15 +118,15 @@ public class ScreenController {
      * Display the screen code on every connected dashboard
      * @param projectToken The project token
      */
-    @ApiOperation(value = "Send the notification to the project screens to display their screen code")
+    @Operation(summary = "Send the notification to the project screens to display their screen code")
     @ApiResponses(value = {
-        @ApiResponse(code = 204, message = "Screen code displayed"),
-        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
+        @ApiResponse(responseCode = "204", description = "Screen code displayed"),
+        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
     @GetMapping(value = "/v1/screens/{projectToken}/showscreencode")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Void> displayScreenCodeEveryConnectedScreensForProject(@ApiParam(name = "projectToken", value = "The project token", required = true)
+    public ResponseEntity<Void> displayScreenCodeEveryConnectedScreensForProject(@Parameter(name = "projectToken", description = "The project token", required = true)
                                                                                  @PathVariable("projectToken") String projectToken) {
         Optional<Project> projectOptional = this.projectService.getOneByToken(projectToken);
         if (!projectOptional.isPresent()) {
@@ -162,11 +146,11 @@ public class ScreenController {
     /**
      * Count the number of connected dashboards through websockets
      */
-    @ApiOperation(value = "Count the number of connected dashboards through websockets")
+    @Operation(summary = "Count the number of connected dashboards through websockets")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Ok", response = Integer.class),
-            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-            @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+            @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
     @GetMapping(value = "/v1/screens/count")
     @PreAuthorize("hasRole('ROLE_USER')")

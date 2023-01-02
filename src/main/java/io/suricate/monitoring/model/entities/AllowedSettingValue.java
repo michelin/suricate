@@ -33,35 +33,20 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 public class AllowedSettingValue {
-    /**
-     * The setting id
-     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /**
-     * The title to display for the user
-     */
     @Column(nullable = false)
     private String title;
 
-    /**
-     * The value of the entry (used in the code)
-     */
     @Column(nullable = false)
-    private String value;
+    private String settingValue;
 
-    /**
-     * True if this setting is the default setting
-     */
     @Column(nullable = false)
     @Type(type = "yes_no")
     private boolean isDefault;
 
-    /**
-     * The related setting
-     */
     @ManyToOne
     @JoinColumn(name = "setting_id", referencedColumnName = "id", nullable = false)
     private Setting setting;
