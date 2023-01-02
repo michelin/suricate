@@ -79,10 +79,15 @@ jobs:
     runs-on: ubuntu-latest
     needs: [front-end, back-end]
     steps:
+      - name: Checkout project
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          
       - name: Docker
         id: package-application
         run: |
-          mvn -B -DskipTests package -P production jib:build -Djib.to.auth.username=$DOCKER_USER -Djib.to.auth.password=$DOCKER_TOKEN
+          mvn package -P production jib:build -Djib.to.auth.username=$DOCKER_USER -Djib.to.auth.password=$DOCKER_TOKEN
           echo ::set-output name=tag::${GITHUB_REF##*/}
         env:
           DOCKER_USER: ${{ secrets.DOCKER_USER }}
