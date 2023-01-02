@@ -43,46 +43,24 @@ import org.springframework.web.cors.CorsUtils;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-    /**
-     * The authentication failure entrypoint
-     */
     @Autowired
     private AuthenticationFailureEntryPoint authenticationFailureEntryPoint;
 
-    /**
-     * The authentication request repository
-     * Store the authentication request in an HTTP cookie on the IDP response
-     */
     @Autowired
     private HttpCookieOAuth2AuthorizationRequestRepository authRequestRepository;
 
-    /**
-     * The OAuth2 user loader service
-     */
     @Autowired
     private OAuth2UserService userService;
 
-    /**
-     * The OAuth2 user loader service
-     */
     @Autowired
     private OIDCUserService oidcUserService;
 
-    /**
-     * The authentication success handler
-     */
-    @Autowired
+    @Autowired(required = false)
     private OAuth2AuthenticationSuccessHandler oAuth2AuthenticationSuccessHandler;
 
-    /**
-     * The authentication failure handler
-     */
     @Autowired
     private OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 
-    /**
-     * The application properties
-     */
     @Autowired
     private ApplicationProperties applicationProperties;
 
@@ -133,21 +111,25 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .antMatchers("/api/**").authenticated()
                 .and()
             .addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)
-            .addFilterBefore(personalAccessTokenFilter(), UsernamePasswordAuthenticationFilter.class)
-            .oauth2Login()
-                .authorizationEndpoint()
+            .addFilterBefore(personalAccessTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+
+        if (oAuth2AuthenticationSuccessHandler != null) {
+            http.oauth2Login()
+                    .authorizationEndpoint()
                     // Store auth request in a http cookie on the IDP response
                     .authorizationRequestRepository(authRequestRepository)
                     // Override default "oauth2/authorization/" endpoint by adding "/api"
                     // Endpoint that triggers the OAuth2 auth to given IDP
                     .baseUri("/api/oauth2/authorization")
-                .and()
-                .userInfoEndpoint()
+                    .and()
+                    .userInfoEndpoint()
+                    .userService(userService)
                     .userService(userService)
                     .oidcUserService(oidcUserService)
-                .and()
+                    .and()
                     .successHandler(oAuth2AuthenticationSuccessHandler)
                     .failureHandler(oAuth2AuthenticationFailureHandler);
+        }
     }
 
     /**

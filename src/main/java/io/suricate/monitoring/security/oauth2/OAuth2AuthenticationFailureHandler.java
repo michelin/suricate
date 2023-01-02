@@ -2,10 +2,10 @@ package io.suricate.monitoring.security.oauth2;
 
 import io.suricate.monitoring.properties.ApplicationProperties;
 import io.suricate.monitoring.utils.web.CookieUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler;
@@ -21,13 +21,9 @@ import java.util.Optional;
 
 import static io.suricate.monitoring.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
 
+@Slf4j
 @Component
 public class OAuth2AuthenticationFailureHandler extends SimpleUrlAuthenticationFailureHandler {
-    /**
-     * The logger
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(OAuth2AuthenticationFailureHandler.class);
-
     /**
      * The authentication request repository
      * Store the authentication request in an HTTP cookie on the IDP response
@@ -55,7 +51,7 @@ public class OAuth2AuthenticationFailureHandler extends SimpleUrlAuthenticationF
 
         if (!redirectUri.isPresent() && applicationProperties.getAuthentication().getOauth2().isUseReferer()) {
             redirectUri = Optional.ofNullable(request.getHeader(HttpHeaders.REFERER));
-            redirectUri.ifPresent(redirect -> LOGGER.debug("Using url {} from Referer header", request.getHeader(HttpHeaders.REFERER)));
+            redirectUri.ifPresent(redirect -> log.debug("Using url {} from Referer header", request.getHeader(HttpHeaders.REFERER)));
         }
 
         String targetUrl = redirectUri.orElse(applicationProperties.getAuthentication().getOauth2().getDefaultTargetUrl());
