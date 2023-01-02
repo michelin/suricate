@@ -76,7 +76,9 @@ export class SettingsService {
   initUserSettings(user: User): Observable<UserSetting[]> {
     return this.httpUserService.getUserSettings(user.username).pipe(
       tap((userSettings: UserSetting[]) => {
-        this.currentThemeValue = userSettings.find(userSetting => userSetting.setting.type === SettingsTypeEnum.THEME).settingValue.settingValue;
+        this.currentThemeValue = userSettings.find(
+          userSetting => userSetting.setting.type === SettingsTypeEnum.THEME
+        ).settingValue.settingValue;
 
         this.translateService.use(
           userSettings.find(userSetting => userSetting.setting.type === SettingsTypeEnum.LANGUAGE).settingValue.settingValue
