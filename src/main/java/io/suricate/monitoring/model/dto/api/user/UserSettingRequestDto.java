@@ -17,33 +17,22 @@
 package io.suricate.monitoring.model.dto.api.user;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
 
-/**
- * The user setting DTO for REST communication
- */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "UserSettingResponse", description = "The setting saved for the user")
+@Schema(description = "The setting saved for the user")
 public class UserSettingRequestDto extends AbstractDto {
-
-    /**
-     * The allowed setting value
-     */
-    @ApiModelProperty(value = "The selected value Id if it's a constrained setting", example = "1")
+    @Schema(description = "The selected value Id if it's a constrained setting", example = "1")
     @Nullable
     private Long allowedSettingValueId;
 
-    /**
-     * The unconstrained value
-     */
-    @ApiModelProperty(value = "The value typed by the user it's an unconstrained field")
+    @Schema(description = "The value typed by the user it's an unconstrained field")
     @Nullable
     private String unconstrainedValue;
 }

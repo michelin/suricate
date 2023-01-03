@@ -20,10 +20,10 @@ package io.suricate.monitoring.controllers;
 
 import io.suricate.monitoring.model.enums.AuthenticationProvider;
 import io.suricate.monitoring.properties.ApplicationProperties;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,16 +37,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Configuration controller
- */
 @RestController
 @RequestMapping("/api")
-@Api(value = "Configuration Controller", tags = {"Configuration"})
+@Tag(name = "Configuration", description = "Configuration Controller")
 public class ConfigurationController {
-    /**
-     * The configuration Service
-     */
     @Autowired
     private ApplicationProperties applicationProperties;
 
@@ -54,9 +48,9 @@ public class ConfigurationController {
      * Get the authentication providers defined in the backend (database, ldap, social providers, ...)
      * @return The authentication provider
      */
-    @ApiOperation(value = "Get the server configuration for authentication providers (DB, LDAP, Social providers)", response = AuthenticationProvider.class)
+    @Operation(summary = "Get the server configuration for authentication providers (DB, LDAP, Social providers)")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Ok", response = AuthenticationProvider.class)
+            @ApiResponse(responseCode = "200", description = "OK")
     })
     @GetMapping(value = "/v1/configurations/authentication-providers")
     public ResponseEntity<List<AuthenticationProvider>> getAuthenticationProviders() {
@@ -66,13 +60,15 @@ public class ConfigurationController {
             providers.add(AuthenticationProvider.valueOf(applicationProperties.getAuthentication().getProvider().toUpperCase()));
         }
 
-        List<AuthenticationProvider> socialProviders = applicationProperties.getAuthentication().socialProviders
-                .stream()
-                .filter(socialProvider -> EnumUtils.isValidEnum(AuthenticationProvider.class, socialProvider.toUpperCase()))
-                .map(socialProvider -> AuthenticationProvider.valueOf(socialProvider.toUpperCase()))
-                .collect(Collectors.toList());
+        if (applicationProperties.getAuthentication().getSocialProviders() != null) {
+            List<AuthenticationProvider> socialProviders = applicationProperties.getAuthentication().getSocialProviders()
+                    .stream()
+                    .filter(socialProvider -> EnumUtils.isValidEnum(AuthenticationProvider.class, socialProvider.toUpperCase()))
+                    .map(socialProvider -> AuthenticationProvider.valueOf(socialProvider.toUpperCase()))
+                    .collect(Collectors.toList());
 
-        providers.addAll(socialProviders);
+            providers.addAll(socialProviders);
+        }
 
         return ResponseEntity
                 .ok()

@@ -18,35 +18,22 @@ package io.suricate.monitoring.model.dto.api.role;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
 import io.suricate.monitoring.model.enums.UserRoleEnum;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-/**
- * Represent a role used for communication with the clients via webservices
- */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "RoleResponse", description = "Describe a role")
+@Schema(description = "Describe a role")
 public class RoleResponseDto extends AbstractDto {
-    /**
-     * The role id
-     */
-    @ApiModelProperty(value = "The id", example = "1")
+    @Schema(description = "The id", example = "1")
     private Long id;
 
-    /**
-     * The role name
-     */
-    @ApiModelProperty(value = "The Role name")
+    @Schema(description = "The Role name")
     private UserRoleEnum name;
 
-    /**
-     * The role description
-     */
-    @ApiModelProperty(value = "The description of the role")
+    @Schema(description = "The description of the role")
     private String description;
 }

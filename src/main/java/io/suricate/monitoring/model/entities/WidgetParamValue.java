@@ -25,36 +25,21 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
-/**
- * The widget param value entity in database
- */
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 public class WidgetParamValue extends AbstractAuditingEntity<Long> {
-    /**
-     * The id
-     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /**
-     * The param key used in the JS File of the widget
-     */
     @Column(nullable = false)
     private String jsKey;
 
-    /**
-     * The related value (for display)
-     */
     @Column(nullable = false)
     private String value;
 
-    /**
-     * The related widget param
-     */
     @ManyToOne
     @JoinColumn(name = "widget_param_id")
     private WidgetParam widgetParam;

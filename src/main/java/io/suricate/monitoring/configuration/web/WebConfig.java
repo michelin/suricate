@@ -28,14 +28,8 @@ import org.springframework.web.servlet.resource.PathResourceResolver;
 
 import java.io.IOException;
 
-/**
- * Class used to configure the path for the different resource of the app (index.html of angular, Swagger page, ...)
- */
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
-    /**
-     * Application properties
-     */
     @Autowired
     private ApplicationProperties applicationProperties;
 
@@ -62,7 +56,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addResourceHandler("swagger-ui.html")
             .addResourceLocations("classpath:/META-INF/resources/");
 
-        registry.addResourceHandler("/**/*")
+        registry.addResourceHandler("/**")
             .addResourceLocations("classpath:/public/")
             .resourceChain(true)
             .addResolver(new PathResourceResolver() {

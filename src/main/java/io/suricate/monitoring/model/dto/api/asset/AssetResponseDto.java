@@ -17,42 +17,25 @@
 package io.suricate.monitoring.model.dto.api.asset;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-/**
- * Asset class used for communicate through webservices
- */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "AssetResponse", description = "Describe an asset (Image, file, ...)")
+@Schema(description = "Describe an asset (Image, file, ...)")
 public class AssetResponseDto extends AbstractDto {
-
-    /**
-     * The asset id
-     */
-    @ApiModelProperty(value = "Id", example = "1")
+    @Schema(description = "Id", example = "1")
     private Long id;
 
-    /**
-     * The blob content
-     */
-    @ApiModelProperty(value = "The blob content")
+    @Schema(description = "The blob content")
     private byte[] content;
 
-    /**
-     * The content type
-     */
-    @ApiModelProperty(value = "The content type")
+    @Schema(description = "The content type")
     private String contentType;
 
-    /**
-     * The size of the asset
-     */
-    @ApiModelProperty(value = "The size of the asset", example = "100")
+    @Schema(description = "The size of the asset", example = "100")
     private long size;
 }

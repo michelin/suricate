@@ -1,8 +1,7 @@
 package io.suricate.monitoring.model.dto.api.token;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -12,23 +11,14 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "PersonalAccessTokenResponse", description = "Describe a personal access token response")
+@Schema(description = "Describe a personal access token response")
 public class PersonalAccessTokenResponseDto extends AbstractDto {
-    /**
-     * The token name
-     */
-    @ApiModelProperty(value = "The token name")
+    @Schema(description = "The token name")
     private String name;
 
-    /**
-     * The token value
-     */
-    @ApiModelProperty(value = "The token value")
+    @Schema(description = "The token value")
     private String value;
 
-    /**
-     * The token creation date
-     */
-    @ApiModelProperty(value = "The token creation date")
+    @Schema(description = "The token creation date")
     private Date createdDate;
 }

@@ -17,36 +17,22 @@
 package io.suricate.monitoring.model.dto.api.widget;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-/**
- * Library used for communication with the clients via webservices
- */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "LibraryResponse", description = "Describe a JS Library")
+@Schema(description = "Describe a JS Library")
 public class LibraryResponseDto extends AbstractDto {
-
-    /**
-     * The library id
-     */
-    @ApiModelProperty(value = "The database id", example = "1")
+    @Schema(description = "The database id", example = "1")
     private Long id;
 
-    /**
-     * The library technical name
-     */
-    @ApiModelProperty(value = "A unique technical name")
+    @Schema(description = "A unique technical name")
     private String technicalName;
 
-    /**
-     * The related asset
-     */
-    @ApiModelProperty(value = "The related asset token for this library")
+    @Schema(description = "The related asset token for this library")
     private String assetToken;
 }

@@ -324,7 +324,6 @@ public class WidgetService {
 
     /**
      * Get the widget param list as a Map
-     *
      * @param widgetParamValues The list of the widget param values
      * @return The list as a Map<String, String>
      */

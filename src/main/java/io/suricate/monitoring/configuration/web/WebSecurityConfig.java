@@ -16,7 +16,6 @@
 
 package io.suricate.monitoring.configuration.web;
 
-import io.suricate.monitoring.properties.ApplicationProperties;
 import io.suricate.monitoring.security.AuthenticationFailureEntryPoint;
 import io.suricate.monitoring.security.filter.JwtTokenFilter;
 import io.suricate.monitoring.security.filter.PersonalAccessTokenFilter;
@@ -29,7 +28,6 @@ import org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -61,22 +59,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private OAuth2AuthenticationFailureHandler oAuth2AuthenticationFailureHandler;
 
-    @Autowired
-    private ApplicationProperties applicationProperties;
-
-    /**
-     * Configure the web security of the application
-     */
-    @Override
-    public void configure(WebSecurity webSecurity) {
-        webSecurity
-            .ignoring()
-            .antMatchers(HttpMethod.OPTIONS);
-    }
-
-    /**
-     * Resource Security
-     */
     @Override
     public void configure(HttpSecurity http) throws Exception {
         http
@@ -96,6 +78,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
             .authorizeRequests()
             .requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
+            .antMatchers(HttpMethod.OPTIONS).permitAll()
             .antMatchers("/h2-console/**").permitAll()
             .antMatchers("/api/*/auth/signin").permitAll()
             .antMatchers("/api/*/users/signup").permitAll()

@@ -1,19 +1,22 @@
 package io.suricate.monitoring.configuration.swagger;
 
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-@Target({ElementType.METHOD, ElementType.ANNOTATION_TYPE, ElementType.TYPE})
+@Target({ElementType.METHOD, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@ApiImplicitParams({
-    @ApiImplicitParam(name = "page", dataType = "integer", paramType = "query", value = "Page number", defaultValue = "0"),
-    @ApiImplicitParam(name = "size", dataType = "integer", paramType = "query", value = "Number of records per page", defaultValue = "20"),
-    @ApiImplicitParam(name = "sort", allowMultiple = true, dataType = "string", paramType = "query", value = "Sorting criteria in the format: property(,asc|desc)")
-})
-public @interface ApiPageable {
-}
+@Parameter(name = "page", in = ParameterIn.QUERY, schema = @Schema(type = "integer", defaultValue = "0"),
+        description = "Zero-based page index (0..N)")
+@Parameter(name = "size", in = ParameterIn.QUERY, schema = @Schema(type = "integer", defaultValue = "20"),
+        description = "The size of the page to be returned")
+@Parameter(name = "sort", in = ParameterIn.QUERY,
+        array = @ArraySchema(schema = @Schema(type = "string")),
+        description = "Sorting criteria in the format: property(,asc|desc)")
+public @interface ApiPageable { }

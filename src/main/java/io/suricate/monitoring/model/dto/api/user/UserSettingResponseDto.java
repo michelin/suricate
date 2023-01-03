@@ -19,48 +19,28 @@ package io.suricate.monitoring.model.dto.api.user;
 import io.suricate.monitoring.model.dto.api.AbstractDto;
 import io.suricate.monitoring.model.dto.api.setting.AllowedSettingValueResponseDto;
 import io.suricate.monitoring.model.dto.api.setting.SettingResponseDto;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-/**
- * The user setting DTO for REST communication
- */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "UserSettingResponse", description = "The setting saved for the user")
+@Schema(description = "The setting saved for the user")
 public class UserSettingResponseDto extends AbstractDto {
-
-    /**
-     * The user setting id
-     */
-    @ApiModelProperty(value = "The id line", example = "1")
+    @Schema(description = "The id line", example = "1")
     private Long id;
 
-    /**
-     * The related user id
-     */
-    @ApiModelProperty(value = "The user id related to this setting", example = "1")
+    @Schema(description = "The user id related to this setting", example = "1")
     private Long userId;
 
-    /**
-     * The setting
-     */
-    @ApiModelProperty(value = "The related setting")
+    @Schema(description = "The related setting")
     private SettingResponseDto setting;
 
-    /**
-     * The allowed setting value
-     */
-    @ApiModelProperty(value = "The selected value if it's a constrained setting")
+    @Schema(description = "The selected value if it's a constrained setting")
     private AllowedSettingValueResponseDto settingValue;
 
-    /**
-     * The unconstrained value
-     */
-    @ApiModelProperty(value = "The value typed by the user it's an unconstrained field")
+    @Schema(description = "The value typed by the user it's an unconstrained field")
     private String unconstrainedValue;
 }
