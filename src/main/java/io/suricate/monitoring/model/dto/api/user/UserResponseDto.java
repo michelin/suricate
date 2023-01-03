@@ -17,41 +17,22 @@
 package io.suricate.monitoring.model.dto.api.user;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
-import io.suricate.monitoring.model.dto.api.role.RoleResponseDto;
-import io.suricate.monitoring.model.enums.AuthenticationProvider;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@Schema(description = "Describe a user of the app")
+@Schema(description = "Describe a user")
 public class UserResponseDto extends AbstractDto {
-    @Schema(description = "The id of the user", example = "1")
-    private Long id;
-
     @Schema(description = "The firstname of the user")
     private String firstname;
 
     @Schema(description = "The lastname of the user")
     private String lastname;
 
-    @Schema(description = "The fullname of the user")
-    private String fullname;
-
     @Schema(description = "The username used as login in the credentials")
     private String username;
-
-    @Schema(description = "The user email")
-    private String email;
-
-    @Schema(description = "The authentication method for this user")
-    private AuthenticationProvider authenticationMethod;
-
-    @Schema(description = "The list of roles for this user")
-    private List<RoleResponseDto> roles;
 }

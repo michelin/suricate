@@ -96,7 +96,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .addFilterBefore(jwtTokenFilter(), UsernamePasswordAuthenticationFilter.class)
             .addFilterBefore(personalAccessTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
-        if (oAuth2AuthenticationSuccessHandler != null) {
+        if (oAuth2AuthenticationSuccessHandler.getOAuth2AuthorizedClientRepository() != null) {
             http.oauth2Login()
                     .authorizationEndpoint()
                     // Store auth request in a http cookie on the IDP response

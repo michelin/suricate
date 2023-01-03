@@ -23,7 +23,6 @@ export interface UserRequest {
   username: string;
   firstname: string;
   lastname: string;
-  fullname: string;
   password: string;
   confirmPassword: string;
   email: string;

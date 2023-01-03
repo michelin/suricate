@@ -33,6 +33,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -70,7 +71,7 @@ public class WidgetController {
     @PreAuthorize("hasRole('ROLE_USER')")
     public Page<WidgetResponseDto> getWidgets(@Parameter(name = "search", description = "Search keyword")
                                               @RequestParam(value = "search", required = false) String search,
-                                              Pageable pageable) {
+                                              @ParameterObject Pageable pageable) {
         return widgetService.getAll(search, pageable)
                 .map(widgetMapper::toWidgetWithoutCategoryParametersDTO);
     }

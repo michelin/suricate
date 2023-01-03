@@ -22,10 +22,7 @@ import io.suricate.monitoring.configuration.swagger.ApiPageable;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.dto.api.token.PersonalAccessTokenRequestDto;
 import io.suricate.monitoring.model.dto.api.token.PersonalAccessTokenResponseDto;
-import io.suricate.monitoring.model.dto.api.user.UserRequestDto;
-import io.suricate.monitoring.model.dto.api.user.UserResponseDto;
-import io.suricate.monitoring.model.dto.api.user.UserSettingRequestDto;
-import io.suricate.monitoring.model.dto.api.user.UserSettingResponseDto;
+import io.suricate.monitoring.model.dto.api.user.*;
 import io.suricate.monitoring.model.entities.PersonalAccessToken;
 import io.suricate.monitoring.model.entities.Setting;
 import io.suricate.monitoring.model.entities.User;
@@ -97,7 +94,27 @@ public class UserController {
     private PersonalAccessTokenMapper personalAccessTokenMapper;
 
     /**
-     * List all user
+     * List all users for admins
+     * @return The list of all users
+     */
+    @Operation(summary = "Get the full list of users")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "204", description = "No Content"),
+            @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+            @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))})
+    })
+    @ApiPageable
+    @GetMapping(value = "/v1/admin/users")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public Page<AdminUserResponseDto> getAllForAdmins(@Parameter(name = "search", description = "Search keyword")
+                                                      @RequestParam(value = "search", required = false) String search,
+                                                      @ParameterObject Pageable pageable) {
+        return userService.getAll(search, pageable).map(userMapper::toAdminUserDTO);
+    }
+
+    /**
+     * List all users
      * @return The list of all users
      */
     @Operation(summary = "Get the full list of users")

@@ -19,22 +19,16 @@ import { HttpClient } from '@angular/common/http';
 import { EMPTY, Observable } from 'rxjs';
 
 import { User } from '../../../models/backend/user/user';
-import { UserRequest } from '../../../models/backend/user/user-request';
-import { UserSettingRequest } from '../../../models/backend/setting/user-setting-request';
-import { UserSetting } from '../../../models/backend/setting/user-setting';
 import { AbstractHttpService } from '../abstract-http/abstract-http.service';
 import { Page } from '../../../models/backend/page';
 import { HttpFilter } from '../../../models/backend/http-filter';
 import { HttpFilterService } from '../http-filter/http-filter.service';
-import { PersonalAccessTokenRequest } from '../../../models/backend/personal-access-token/personal-access-token-request';
-import { PersonalAccessToken } from '../../../models/backend/personal-access-token/personal-access-token';
+import { UserRequest } from '../../../models/backend/user/user-request';
+import { HttpUserService } from '../http-user/http-user.service';
 
-/**
- * Manage the http user calls
- */
 @Injectable({ providedIn: 'root' })
-export class HttpUserService implements AbstractHttpService<User | UserRequest> {
-  public static readonly usersApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/users`;
+export class HttpAdminUserService implements AbstractHttpService<User | UserRequest> {
+  public static readonly adminUsersApiEndpoint = `${AbstractHttpService.baseApiEndpoint}/v1/admin/users`;
 
   /**
    * Constructor
@@ -47,7 +41,7 @@ export class HttpUserService implements AbstractHttpService<User | UserRequest> 
    * @returns The list of users
    */
   public getAll(filter?: HttpFilter): Observable<Page<User>> {
-    const url = `${HttpUserService.usersApiEndpoint}`;
+    const url = `${HttpAdminUserService.adminUsersApiEndpoint}`;
     return this.httpClient.get<Page<User>>(HttpFilterService.getFilteredUrl(url, filter));
   }
 
@@ -88,54 +82,6 @@ export class HttpUserService implements AbstractHttpService<User | UserRequest> 
   public delete(userId: number): Observable<void> {
     const url = `${HttpUserService.usersApiEndpoint}/${userId}`;
 
-    return this.httpClient.delete<void>(url);
-  }
-
-  /**
-   * Get the user settings
-   * @param userName The username
-   */
-  public getUserSettings(userName: string): Observable<UserSetting[]> {
-    const url = `${HttpUserService.usersApiEndpoint}/${userName}/settings`;
-
-    return this.httpClient.get<UserSetting[]>(url);
-  }
-
-  /**
-   * Update user settings
-   * @param userName The user to update
-   * @param settingId The setting id
-   * @param userSettingRequest The user setting request
-   */
-  public updateUserSetting(userName: string, settingId: number, userSettingRequest: UserSettingRequest): Observable<void> {
-    const url = `${HttpUserService.usersApiEndpoint}/${userName}/settings/${settingId}`;
-
-    return this.httpClient.put<void>(url, userSettingRequest);
-  }
-
-  /**
-   * Get the current user tokens
-   */
-  public getUserTokens(): Observable<PersonalAccessToken[]> {
-    const url = `${HttpUserService.usersApiEndpoint}/personal-access-token`;
-    return this.httpClient.get<PersonalAccessToken[]>(url);
-  }
-
-  /**
-   * Create a JWT token for the user
-   * @param tokenRequest The token request
-   */
-  public createToken(tokenRequest: PersonalAccessTokenRequest): Observable<PersonalAccessToken> {
-    const url = `${HttpUserService.usersApiEndpoint}/personal-access-token`;
-    return this.httpClient.post<PersonalAccessToken>(url, tokenRequest);
-  }
-
-  /**
-   * Revoke a given token
-   * @param tokenName The token name
-   */
-  public revokeToken(tokenName: string): Observable<void> {
-    const url = `${HttpUserService.usersApiEndpoint}/personal-access-token/${tokenName}`;
     return this.httpClient.delete<void>(url);
   }
 }
