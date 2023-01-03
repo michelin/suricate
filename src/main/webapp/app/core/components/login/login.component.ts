@@ -183,6 +183,13 @@ export class LoginComponent implements OnInit {
   }
 
   /**
+   * Is any social authentication activated or not
+   */
+  public isSocialLoginActivated(): boolean {
+    return this.isGithubAuthenticationActivated() || this.isGitlabAuthenticationActivated();
+  }
+
+  /**
    * Is the GitLab authentication activated or not
    */
   public isGitlabAuthenticationActivated(): boolean {
