@@ -330,6 +330,6 @@ public class WidgetService {
     public Map<String, String> getWidgetParamValuesAsMap(Set<WidgetParamValue> widgetParamValues) {
         return widgetParamValues
                 .stream()
-                .collect(Collectors.toMap(WidgetParamValue::getJsKey, WidgetParamValue::getParamValue));
+                .collect(Collectors.toMap(WidgetParamValue::getJsKey, WidgetParamValue::getValue));
     }
 }

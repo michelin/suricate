@@ -41,7 +41,7 @@ public class AllowedSettingValue {
     private String title;
 
     @Column(nullable = false)
-    private String settingValue;
+    private String value;
 
     @Column(nullable = false)
     @Type(type = "yes_no")

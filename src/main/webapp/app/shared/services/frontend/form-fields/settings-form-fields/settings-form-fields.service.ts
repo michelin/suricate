@@ -57,7 +57,7 @@ export class SettingsFormFieldsService {
           label: userSetting.setting.description,
           iconPrefix: IconEnum[userSetting.setting.type],
           type: userSetting.setting.dataType,
-          value: userSetting.settingValue.settingValue,
+          value: userSetting.settingValue.value,
           validators: [Validators.required],
           options: () => this.generateOptions(userSetting.setting)
         };
@@ -78,7 +78,7 @@ export class SettingsFormFieldsService {
         map((allowedSettingValue: AllowedSettingValue) => {
           return {
             label: allowedSettingValue.title,
-            value: allowedSettingValue.settingValue
+            value: allowedSettingValue.value
           };
         }),
         toArray()

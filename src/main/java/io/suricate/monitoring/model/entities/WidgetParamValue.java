@@ -38,7 +38,7 @@ public class WidgetParamValue extends AbstractAuditingEntity<Long> {
     private String jsKey;
 
     @Column(nullable = false)
-    private String paramValue;
+    private String value;
 
     @ManyToOne
     @JoinColumn(name = "widget_param_id")

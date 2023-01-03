@@ -34,7 +34,7 @@ public class AllowedSettingValueResponseDto extends AbstractDto {
     private String title;
 
     @Schema(description = "The value that will be used on the code for this setting", requiredMode = Schema.RequiredMode.REQUIRED)
-    private String settingValue;
+    private String value;
 
     @Schema(description = "True if this value should be used as default", requiredMode = Schema.RequiredMode.REQUIRED)
     private boolean isDefault;

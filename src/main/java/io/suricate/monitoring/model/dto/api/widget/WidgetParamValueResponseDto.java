@@ -31,5 +31,5 @@ public class WidgetParamValueResponseDto extends AbstractDto {
     private String jsKey;
 
     @Schema(description = "The user displayed value")
-    private String paramValue;
+    private String value;
 }

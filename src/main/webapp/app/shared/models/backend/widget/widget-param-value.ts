@@ -19,5 +19,5 @@
  */
 export interface WidgetParamValue {
   jsKey: string;
-  paramValue: string;
+  value: string;
 }

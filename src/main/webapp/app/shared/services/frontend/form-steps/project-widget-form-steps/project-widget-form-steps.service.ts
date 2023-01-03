@@ -85,7 +85,7 @@ export class ProjectWidgetFormStepsService {
     if (widgetParam.values && widgetParam.values.length > 0) {
       formOptions = widgetParam.values.map((widgetParamValue: WidgetParamValue) => {
         return {
-          label: widgetParamValue.paramValue,
+          label: widgetParamValue.value,
           value: widgetParamValue.jsKey
         };
       });

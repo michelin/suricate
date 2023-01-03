@@ -22,6 +22,6 @@
 export interface AllowedSettingValue {
   id: number;
   title: string;
-  settingValue: string;
+  value: string;
   default: boolean;
 }

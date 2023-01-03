@@ -1,7 +1,7 @@
 CREATE TABLE allowed_setting_value (
     id              bigserial               NOT NULL,
     title           character varying(255)  NOT NULL,
-    setting_value   character varying(255)  NOT NULL,
+    `value`   character varying(255)  NOT NULL,
     is_default      character(1)            NOT NULL,
     setting_id      bigint                  NOT NULL,
     CONSTRAINT pk_allowed_setting_value_id  PRIMARY KEY (id)
@@ -240,7 +240,7 @@ CREATE TABLE widget_param (
 CREATE TABLE widget_param_value (
     id                  bigserial                   NOT NULL,
     js_key              character varying(255)      NOT NULL,
-    param_value         character varying(255)      NOT NULL,
+    `value`             character varying(255)      NOT NULL,
     widget_param_id     bigint,
     created_by          character varying(255)      DEFAULT 'APPLICATION'::character varying NOT NULL,
     created_date        timestamp without time zone DEFAULT now() NOT NULL,
@@ -277,10 +277,10 @@ ALTER TABLE allowed_setting_value   ADD CONSTRAINT fk_allowed_setting_value_sett
 -- Insert default settings
 INSERT INTO setting(constrained, data_type, type, description) VALUES (E'Y' , E'COMBO' , E'THEME' , E'Theme');
 INSERT INTO setting(constrained, data_type, type, description) VALUES (E'Y' , E'COMBO' , E'LANGUAGE' , E'Language');
-INSERT INTO allowed_setting_value(title, setting_value, is_default, setting_id) VALUES (E'Default' , E'default-theme' , E'Y' , 1);
-INSERT INTO allowed_setting_value(title, setting_value, is_default, setting_id) VALUES (E'Dark' , E'dark-theme' , E'N' , 1);
-INSERT INTO allowed_setting_value(title, setting_value, is_default, setting_id) VALUES (E'English' , E'en' , E'Y' , 2);
-INSERT INTO allowed_setting_value(title, setting_value, is_default, setting_id) VALUES (E'Français' , E'fr' , E'N' , 2);
+INSERT INTO allowed_setting_value(title, `value`, is_default, setting_id) VALUES (E'Default' , E'default-theme' , E'Y' , 1);
+INSERT INTO allowed_setting_value(title, `value`, is_default, setting_id) VALUES (E'Dark' , E'dark-theme' , E'N' , 1);
+INSERT INTO allowed_setting_value(title, `value`, is_default, setting_id) VALUES (E'English' , E'en' , E'Y' , 2);
+INSERT INTO allowed_setting_value(title, `value`, is_default, setting_id) VALUES (E'Français' , E'fr' , E'N' , 2);
 
 -- Insert default roles
 INSERT INTO role(description, name) VALUES (E'Administrator Role' , E'ROLE_ADMIN');
