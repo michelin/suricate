@@ -3,11 +3,10 @@ package io.suricate.monitoring.security.oauth2;
 import io.suricate.monitoring.properties.ApplicationProperties;
 import io.suricate.monitoring.services.token.JwtHelperService;
 import io.suricate.monitoring.utils.web.CookieUtils;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
@@ -28,7 +27,6 @@ import static io.suricate.monitoring.security.oauth2.HttpCookieOAuth2Authorizati
 
 @Slf4j
 @Component
-@ConditionalOnBean(OAuth2AuthorizedClientRepository.class) // OAuth2AuthorizedClientRepository is defined if "spring.security.oauth2.client.registration" is defined
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
     /**
      * The authentication request repository
@@ -37,15 +35,10 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     @Autowired
     private HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 
-    /**
-     * Store the OAuth2 authorized client
-     */
-    @Autowired
+    @Getter
+    @Autowired(required = false)
     private OAuth2AuthorizedClientRepository oAuth2AuthorizedClientRepository;
 
-    /**
-     * The token provider
-     */
     @Autowired
     private JwtHelperService tokenProvider;
 

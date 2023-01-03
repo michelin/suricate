@@ -16,6 +16,7 @@
 
 package io.suricate.monitoring.services.mapper;
 
+import io.suricate.monitoring.model.dto.api.user.AdminUserResponseDto;
 import io.suricate.monitoring.model.dto.api.user.UserRequestDto;
 import io.suricate.monitoring.model.dto.api.user.UserResponseDto;
 import io.suricate.monitoring.model.entities.User;
@@ -42,11 +43,17 @@ import java.util.List;
     }
 )
 public abstract class UserMapper {
-    /**
-     * The password encoder
-     */
     @Autowired
     protected PasswordEncoder passwordEncoder;
+
+    /**
+     * Map a user into a DTO for admins
+     * @param user The user to map
+     * @return The user as DTO
+     */
+    @Named("toAdminUserDTO")
+    @Mapping(target = "roles", qualifiedByName = "toRoleDTO")
+    public abstract AdminUserResponseDto toAdminUserDTO(User user);
 
     /**
      * Map a user into a DTO
@@ -54,8 +61,6 @@ public abstract class UserMapper {
      * @return The user as DTO
      */
     @Named("toUserDTO")
-    @Mapping(target = "fullname", expression = "java(String.format(\"%s %s\", user.getFirstname(), user.getLastname()))")
-    @Mapping(target = "roles", qualifiedByName = "toRoleDTO")
     public abstract UserResponseDto toUserDTO(User user);
 
     /**

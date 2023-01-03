@@ -34,6 +34,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -74,7 +75,7 @@ public class RoleController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Page<RoleResponseDto> getRoles(@Parameter(name = "search", description = "Search keyword")
                                           @RequestParam(value = "search", required = false) String search,
-                                          Pageable pageable) {
+                                          @ParameterObject Pageable pageable) {
         Page<Role> rolesPaged = roleService.getRoles(search, pageable);
         return rolesPaged.map(roleMapper::toRoleDTO);
     }

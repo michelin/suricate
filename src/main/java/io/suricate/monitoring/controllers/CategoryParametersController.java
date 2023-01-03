@@ -34,6 +34,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -73,7 +74,7 @@ public class CategoryParametersController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Page<CategoryParameterResponseDto> getAll(@Parameter(name = "search", description = "Search keyword")
                                                      @RequestParam(value = "search", required = false) String search,
-                                                     Pageable pageable) {
+                                                     @ParameterObject Pageable pageable) {
         return categoryParametersService.getAll(search, pageable).map(categoryMapper::toCategoryParameterDTO);
     }
 

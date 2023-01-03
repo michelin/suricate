@@ -37,6 +37,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -85,7 +86,7 @@ public class RepositoryController {
     @Transactional
     public Page<RepositoryResponseDto> getAll(@Parameter(name = "search", description = "Search keyword")
                                               @RequestParam(value = "search", required = false) String search,
-                                              Pageable pageable) {
+                                              @ParameterObject Pageable pageable) {
         return repositoryService
                 .getAll(search, pageable)
                 .map(repositoryMapper::toRepositoryDTONoWidgets);

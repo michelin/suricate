@@ -37,9 +37,6 @@ public class UserRequestDto extends AbstractDto {
     @Schema(description = "The lastname of the user")
     private String lastname;
 
-    @Schema(description = "The fullname of the user")
-    private String fullname;
-
     @Schema(description = "The username used as login in the credentials")
     private String username;
 
