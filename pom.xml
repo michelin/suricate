@@ -5,7 +5,7 @@
     <artifactId>suricate</artifactId>
     <version>2.6.1-SNAPSHOT</version>
     <packaging>${packaging.type}</packaging>
-    <name>Suricate</name>
+    <name>suricate</name>
 
     <scm>
         <connection>scm:git:https://github.com/michelin/suricate.git</connection>
