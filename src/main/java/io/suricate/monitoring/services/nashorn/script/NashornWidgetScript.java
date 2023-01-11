@@ -51,12 +51,13 @@ public final class NashornWidgetScript {
      * @param headerToReturn The name of the header to return
      * @param body The body of the request. Can be null in case of GET HTTP request
      * @param mediaType The requested media type
+     * @param returnCode true if you want to only return the http status code, false otherwise
      * @return The response body of the request or the value of the requested header
      * @throws IOException
      * @throws RemoteException
      * @throws RequestException
      */
-    private static String executeRequest(String url, String headerName, String headerValue, String headerToReturn, String body, String mediaType)
+    private static String executeRequest(String url, String headerName, String headerValue, String headerToReturn, String body, String mediaType, boolean returnCode)
             throws IOException, RemoteException, RequestException {
         Request.Builder builder = new Request.Builder().url(url);
 
@@ -72,6 +73,9 @@ public final class NashornWidgetScript {
         String returnedValue;
 
         try (Response response = client.newCall(request).execute()) {
+            if (returnCode) {
+                return String.valueOf(response.code());
+            }
             if (response.isSuccessful()) {
                 if (StringUtils.isNotBlank(headerToReturn)) {
                     returnedValue = response.header(headerToReturn);
@@ -104,7 +108,7 @@ public final class NashornWidgetScript {
      * @throws RequestException
      */
     public static String get(String url) throws RemoteException, IOException, RequestException {
-        return NashornWidgetScript.executeRequest(url, null, null, null, null, "application/json");
+        return NashornWidgetScript.executeRequest(url, null, null, null, null, "application/json", false);
     }
 
     /**
@@ -123,7 +127,7 @@ public final class NashornWidgetScript {
      * @throws RequestException
      */
     public static String get(String url, String headerName, String headerValue) throws RemoteException, IOException, RequestException {
-        return NashornWidgetScript.executeRequest(url, headerName, headerValue, null, null, "application/json");
+        return NashornWidgetScript.executeRequest(url, headerName, headerValue, null, null, "application/json", false);
     }
 
     /**
@@ -145,7 +149,22 @@ public final class NashornWidgetScript {
      * @throws RequestException
      */
     public static String get(String url, String headerName, String headerValue, String headerToReturn) throws RemoteException, IOException, RequestException {
-        return NashornWidgetScript.executeRequest(url, headerName, headerValue, headerToReturn, null, "application/json");
+        return NashornWidgetScript.executeRequest(url, headerName, headerValue, headerToReturn, null, "application/json", false);
+    }
+
+    /**
+     * Perform a GET HTTP call and returns the http status code
+     * This method is directly called by the widgets
+     *
+     * @param url The URL of the endpoint to call
+     * @param returnCode true if you want to only return the http status code, false otherwise
+     * @return The http status code
+     * @throws IOException
+     * @throws RemoteException
+     * @throws RequestException
+     */
+    public static String get(String url, boolean returnCode) throws IOException, RemoteException, RequestException {
+        return NashornWidgetScript.executeRequest(url, null, null, null, null, "application/json", returnCode);
     }
 
     /**
@@ -160,7 +179,7 @@ public final class NashornWidgetScript {
      * @throws RequestException
      */
     public static String post(String url, String body) throws RemoteException, IOException, RequestException {
-        return NashornWidgetScript.executeRequest(url, null, null, null, StringUtils.isBlank(body) ? "{}" : body, "application/json");
+        return NashornWidgetScript.executeRequest(url, null, null, null, StringUtils.isBlank(body) ? "{}" : body, "application/json", false);
     }
 
     /**
@@ -180,7 +199,7 @@ public final class NashornWidgetScript {
      * @throws RequestException
      */
     public static String post(String url, String body, String headerName, String headerValue) throws RemoteException, IOException, RequestException {
-        return NashornWidgetScript.executeRequest(url, headerName, headerValue, null, StringUtils.isBlank(body) ? "{}" : body, "application/json");
+        return NashornWidgetScript.executeRequest(url, headerName, headerValue, null, StringUtils.isBlank(body) ? "{}" : body, "application/json", false);
     }
 
     /**
@@ -203,7 +222,23 @@ public final class NashornWidgetScript {
      * @throws RequestException
      */
     public static String post(String url, String body, String headerName, String headerValue, String mediaType) throws RemoteException, IOException, RequestException {
-        return NashornWidgetScript.executeRequest(url, headerName, headerValue, null, StringUtils.isBlank(body) ? "{}" : body, mediaType);
+        return NashornWidgetScript.executeRequest(url, headerName, headerValue, null, StringUtils.isBlank(body) ? "{}" : body, mediaType, false);
+    }
+
+    /**
+     * Perform a POST HTTP call and returns the http status code
+     * This method is directly called by the widgets
+     *
+     * @param url The URL of the endpoint to call
+     * @param body The body of the POST request
+     * @param returnCode true if you want to only return the http status code, false otherwise
+     * @return The http status code
+     * @throws IOException
+     * @throws RemoteException
+     * @throws RequestException
+     */
+    public static String post(String url, String body, boolean returnCode) throws RemoteException, IOException, RequestException {
+        return NashornWidgetScript.executeRequest(url, null, null, null, StringUtils.isBlank(body) ? "{}" : body, "application/json", returnCode);
     }
 
     /**
