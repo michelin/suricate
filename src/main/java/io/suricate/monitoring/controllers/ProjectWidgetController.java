@@ -146,7 +146,7 @@ public class ProjectWidgetController {
                                                                   @PathVariable("projectWidgetId") Long projectWidgetId,
                                                                   @Parameter(name = "projectWidgetResponseDto", description = "The project widget information to update", required = true)
                                                                   @RequestBody ProjectWidgetRequestDto projectWidgetRequestDto) {
-        Optional<ProjectWidget> projectWidgetOptional = this.projectWidgetService.getOne(projectWidgetId);
+        Optional<ProjectWidget> projectWidgetOptional = projectWidgetService.getOne(projectWidgetId);
         if (!projectWidgetOptional.isPresent()) {
             throw new ObjectNotFoundException(ProjectWidget.class, projectWidgetId);
         }
@@ -155,13 +155,13 @@ public class ProjectWidgetController {
             throw new ApiException(USER_NOT_ALLOWED_PROJECT, ApiErrorEnum.NOT_AUTHORIZED);
         }
 
-        this.projectWidgetService.updateProjectWidget(projectWidgetOptional.get(), projectWidgetRequestDto.getCustomStyle(),
+        projectWidgetService.updateProjectWidget(projectWidgetOptional.get(), projectWidgetRequestDto.getCustomStyle(),
                 projectWidgetRequestDto.getBackendConfig());
 
         return ResponseEntity
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(this.projectWidgetMapper.toProjectWidgetDTO(projectWidgetOptional.get()));
+                .body(projectWidgetMapper.toProjectWidgetDTO(projectWidgetOptional.get()));
     }
 
     /**

@@ -32,46 +32,19 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
-/**
- * Manage the categories
- */
 @Service
 public class CategoryService {
-
-    /**
-     * The asset service
-     */
-    private final AssetService assetService;
-
-    /**
-     * The category repository
-     */
-    private final CategoryRepository categoryRepository;
-
-    /**
-     * The category parameters service
-     */
-    private final CategoryParametersService categoryParametersService;
-
-    /**
-     * Constructor
-     *
-     * @param assetService               The asset service
-     * @param categoryRepository         The category repository
-     * @param categoryParametersService  The category parameters service
-     */
     @Autowired
-    public CategoryService(final AssetService assetService,
-                           final CategoryRepository categoryRepository,
-                           final CategoryParametersService categoryParametersService) {
-        this.assetService = assetService;
-        this.categoryRepository = categoryRepository;
-        this.categoryParametersService = categoryParametersService;
-    }
+    private AssetService assetService;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
+
+    @Autowired
+    private CategoryParametersService categoryParametersService;
 
     /**
      * Get all the categories
-     *
      * @return The list of categories
      */
     @Cacheable("widget-categories")
@@ -82,7 +55,6 @@ public class CategoryService {
 
     /**
      * Find a category by technical name
-     *
      * @param technicalName The technical name of the category
      * @return The related category
      */
@@ -92,7 +64,6 @@ public class CategoryService {
 
     /**
      * Add or update a category
-     *
      * @param category The category to add or update
      */
     @Transactional
@@ -144,7 +115,6 @@ public class CategoryService {
 
     /**
      * Get the parameters of the category linked with the given widget
-     *
      * @param widget The widget
      * @return The category parameters
      */

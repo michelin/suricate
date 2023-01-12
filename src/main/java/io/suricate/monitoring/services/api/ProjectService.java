@@ -38,69 +38,29 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-/**
- * Manage the projects
- */
 @Service
 public class ProjectService {
-    /**
-     * String encryptor
-     */
-    private final StringEncryptor stringEncryptor;
-
-    /**
-     * Project repository
-     */
-    private final ProjectRepository projectRepository;
-
-    /**
-     * dashboard Socket service
-     */
-    private final DashboardWebSocketService dashboardWebsocketService;
-
-    /**
-     * The asset service to inject
-     */
-    private final AssetService assetService;
-
-    /**
-     * The project grid service
-     */
-    private final ProjectGridService projectGridService;
-
-    /**
-     * The project widget service
-     */
-    private final ProjectWidgetService projectWidgetService;
-
-    /**
-     * Constructor
-     *
-     * @param stringEncryptor           The string encryptor to inject
-     * @param projectRepository         The project repository to inject
-     * @param dashboardWebSocketService The dashboard web socket service to inject
-     * @param assetService              The asset service
-     * @param projectGridService        The project grid service
-     * @param projectWidgetService      The project widget service
-     */
     @Autowired
-    public ProjectService(@Qualifier("jasyptStringEncryptor") final StringEncryptor stringEncryptor,
-                          final ProjectRepository projectRepository,
-                          final DashboardWebSocketService dashboardWebSocketService,
-                          final AssetService assetService,
-                          final ProjectGridService projectGridService,
-                          final ProjectWidgetService projectWidgetService) {
-        this.stringEncryptor = stringEncryptor;
-        this.projectRepository = projectRepository;
-        this.dashboardWebsocketService = dashboardWebSocketService;
-        this.assetService = assetService;
-        this.projectGridService = projectGridService;
-        this.projectWidgetService = projectWidgetService;
-    }
+    @Qualifier("jasyptStringEncryptor")
+    private StringEncryptor stringEncryptor;
+
+    @Autowired
+    private ProjectRepository projectRepository;
+
+    @Autowired
+    private DashboardWebSocketService dashboardWebsocketService;
+
+    @Autowired
+    private AssetService assetService;
+
+    @Autowired
+    private ProjectGridService projectGridService;
+
+    @Autowired
+    private ProjectWidgetService projectWidgetService;
 
     /**
      * Get the list of projects
-     *
      * @param search   The search string
      * @param pageable The page configurations
      * @return The list paginated
@@ -112,7 +72,6 @@ public class ProjectService {
 
     /**
      * Get all projects by user
-     *
      * @param user The user
      * @return A list of projects
      */
@@ -123,7 +82,6 @@ public class ProjectService {
 
     /**
      * Get a project by the project id
-     *
      * @param id The id of the project
      * @return The project associated
      */
@@ -135,7 +93,6 @@ public class ProjectService {
 
     /**
      * Get a project by its token
-     *
      * @param token The token to find
      * @return The project
      */
@@ -229,7 +186,6 @@ public class ProjectService {
 
     /**
      * Method used to update a project
-     *
      * @param project      the project to update
      * @param newName      the new name
      * @param widgetHeight The new widget height
@@ -262,20 +218,7 @@ public class ProjectService {
     }
 
     /**
-     * Add a user to a project
-     *
-     * @param user    The user to add
-     * @param project The project to edit
-     */
-    @Transactional
-    public void addUserToProject(User user, Project project) {
-        project.getUsers().add(user);
-        projectRepository.save(project);
-    }
-
-    /**
      * Delete a user from a project
-     *
      * @param user    The user to delete
      * @param project The project related
      */
@@ -286,7 +229,6 @@ public class ProjectService {
 
     /**
      * Method used for retrieve a project token from a project id
-     *
      * @param projectId The project id
      * @return The related token
      */
@@ -307,19 +249,16 @@ public class ProjectService {
 
     /**
      * Method used to delete a project with its ID
-     *
      * @param project The project to delete
      */
     @Transactional
     public void deleteProject(Project project) {
-        this.dashboardWebsocketService.sendEventToProjectSubscribers(project.getToken(), UpdateEvent.builder().type(UpdateType.DISCONNECT).build());
-
-        this.projectRepository.delete(project);
+        dashboardWebsocketService.sendEventToProjectSubscribers(project.getToken(), UpdateEvent.builder().type(UpdateType.DISCONNECT).build());
+        projectRepository.delete(project);
     }
 
     /**
      * Add or update a screenshot for a project
-     *
      * @param project     The project
      * @param content     The image content
      * @param contentType The image content type
@@ -333,11 +272,11 @@ public class ProjectService {
 
         if (project.getScreenshot() != null) {
             screenshotAsset.setId(project.getScreenshot().getId());
-            this.assetService.save(screenshotAsset);
+            assetService.save(screenshotAsset);
         } else {
-            this.assetService.save(screenshotAsset);
+            assetService.save(screenshotAsset);
             project.setScreenshot(screenshotAsset);
-            this.projectRepository.save(project);
+            projectRepository.save(project);
         }
     }
 }

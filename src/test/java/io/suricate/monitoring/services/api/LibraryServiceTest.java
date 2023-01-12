@@ -1,97 +1,198 @@
 package io.suricate.monitoring.services.api;
 
-import io.suricate.monitoring.model.entities.Asset;
-import io.suricate.monitoring.model.entities.Library;
-import io.suricate.monitoring.repositories.AssetRepository;
+import io.suricate.monitoring.model.entities.*;
 import io.suricate.monitoring.repositories.LibraryRepository;
-import org.apache.commons.io.FileUtils;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import io.suricate.monitoring.services.specifications.LibrarySearchSpecification;
+import io.suricate.monitoring.utils.IdUtils;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
-import java.io.File;
-import java.io.IOException;
+import javax.persistence.metamodel.SingularAttribute;
 import java.util.Collections;
+import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@ActiveProfiles("test")
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class LibraryServiceTest {
-    @Autowired
-    LibraryService libraryService;
+@ExtendWith(MockitoExtension.class)
+class LibraryServiceTest {
+    @Mock
+    private LibraryRepository libraryRepository;
 
-    @Autowired
-    LibraryRepository libraryRepository;
+    @Mock
+    private AssetService assetService;
 
-    @Autowired
-    AssetRepository assetRepository;
+    @Mock
+    private SingularAttribute<Library, String> technicalName;
+
+    @InjectMocks
+    private LibraryService libraryService;
 
     @Test
-    public void testUpdateLibraryNull() throws IOException {
-        assertEquals(0, libraryRepository.count());
-        assertEquals(0 ,assetRepository.count());
-        assertEquals(0, libraryService.createUpdateLibraries(null).size());
-        assertEquals(0, libraryRepository.count());
-        assertEquals(0, assetRepository.count());
+    void shouldGetAll() {
+        Library library = new Library();
+        library.setId(1L);
+
+        Library_.technicalName = technicalName;
+        when(libraryRepository.findAll(any(LibrarySearchSpecification.class), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(Collections.singletonList(library)));
+
+        Page<Library> actual = libraryService.getAll("search", Pageable.unpaged());
+        assertThat(actual)
+                .isNotEmpty()
+                .contains(library);
+
+        verify(libraryRepository, times(1))
+                .findAll(any(LibrarySearchSpecification.class), any(Pageable.class));
     }
 
     @Test
-    public void testUpdateLibrary() throws IOException {
-        assertEquals(0, libraryRepository.count());
-        assertEquals(0 ,assetRepository.count());
+    void shouldGetLibrariesByProjectWhenNoWidget() {
+        Project project = new Project();
+        project.setGrids(Collections.singleton(new ProjectGrid()));
+
+        List<Library> actual = libraryService.getLibrariesByProject(project);
+        assertThat(actual).isEmpty();
+
+        verify(libraryRepository, times(0))
+                .findDistinctByWidgetsIdIn(any());
+    }
+
+    @Test
+    void shouldGetLibrariesByProject() {
+        Widget widget = new Widget();
+        widget.setId(1L);
+
+        ProjectWidget projectWidget = new ProjectWidget();
+        projectWidget.setWidget(widget);
+
+        ProjectGrid projectGrid = new ProjectGrid();
+        projectGrid.setWidgets(Collections.singleton(projectWidget));
+
+        Project project = new Project();
+        project.setGrids(Collections.singleton(projectGrid));
 
         Library library = new Library();
-        library.setTechnicalName("Technical name");
+
+        when(libraryRepository.findDistinctByWidgetsIdIn(any())).thenReturn(Collections.singletonList(library));
+
+        List<Library> actual = libraryService.getLibrariesByProject(project);
+        assertThat(actual)
+                .isNotEmpty()
+                .contains(library);
+
+        verify(libraryRepository, times(1))
+                .findDistinctByWidgetsIdIn(Collections.singletonList(1L));
+    }
+
+    @Test
+    void shouldGetLibraryTokensByProject() {
+        try (MockedStatic<IdUtils> mocked = mockStatic(IdUtils.class)) {
+            Widget widget = new Widget();
+            widget.setId(1L);
+
+            ProjectWidget projectWidget = new ProjectWidget();
+            projectWidget.setWidget(widget);
+
+            ProjectGrid projectGrid = new ProjectGrid();
+            projectGrid.setWidgets(Collections.singleton(projectWidget));
+
+            Project project = new Project();
+            project.setGrids(Collections.singleton(projectGrid));
+
+            Asset asset = new Asset();
+            asset.setId(1L);
+
+            Library library = new Library();
+            library.setAsset(asset);
+
+            mocked.when(() -> IdUtils.encrypt(1L)).thenReturn("token");
+            when(libraryRepository.findDistinctByWidgetsIdIn(any())).thenReturn(Collections.singletonList(library));
+
+            List<String> actual = libraryService.getLibraryTokensByProject(project);
+            assertThat(actual)
+                    .isNotEmpty()
+                    .contains("token");
+
+            verify(libraryRepository, times(1))
+                    .findDistinctByWidgetsIdIn(Collections.singletonList(1L));
+        }
+    }
+
+    @Test
+    void shouldCreateUpdateLibrariesWhenNull() {
+        List<Library> actual = libraryService.createUpdateLibraries(null);
+        assertThat(actual).isEmpty();
+
+        verify(libraryRepository, times(0)).findByTechnicalName(any());
+        verify(assetService, times(0)).save(any());
+        verify(libraryRepository, times(0)).saveAll(any());
+        verify(libraryRepository, times(0)).findAll();
+    }
+
+    @Test
+    void shouldCreateLibraries() {
+        Asset asset = new Asset();
+        asset.setId(1L);
+
+        Library library = new Library();
+        library.setAsset(asset);
+        library.setTechnicalName("technicalName");
+
+        when(libraryRepository.findByTechnicalName(any())).thenReturn(null);
+        when(assetService.save(any())).thenReturn(asset);
+        when(libraryRepository.saveAll(any())).thenReturn(Collections.singletonList(library));
+        when(libraryRepository.findAll()).thenReturn(Collections.singletonList(library));
+
+        List<Library> actual = libraryService.createUpdateLibraries(Collections.singletonList(library));
+        assertThat(actual)
+                .isNotEmpty()
+                .contains(library);
+
+        verify(libraryRepository, times(1)).findByTechnicalName("technicalName");
+        verify(assetService, times(1)).save(asset);
+        verify(libraryRepository, times(1)).saveAll(Collections.singletonList(library));
+        verify(libraryRepository, times(1)).findAll();
+    }
+
+    @Test
+    void shouldUpdateLibraries() {
+        Asset oldAsset = new Asset();
+        oldAsset.setId(2L);
+
+        Library oldLibrary = new Library();
+        oldLibrary.setId(2L);
+        oldLibrary.setAsset(oldAsset);
 
         Asset asset = new Asset();
-        asset.setContentType("text/plain");
-        asset.setContent(FileUtils.readFileToByteArray(new File(LibraryServiceTest.class.getResource("/libraries/d3.min.js").getFile())));
+        asset.setId(1L);
+
+        Library library = new Library();
         library.setAsset(asset);
+        library.setTechnicalName("technicalName");
 
-        libraryService.createUpdateLibraries(Collections.singletonList(library));
+        when(libraryRepository.findByTechnicalName(any())).thenReturn(oldLibrary);
+        when(assetService.save(any())).thenReturn(oldAsset);
+        when(libraryRepository.saveAll(any())).thenReturn(Collections.singletonList(library));
+        when(libraryRepository.findAll()).thenReturn(Collections.singletonList(library));
 
-        assertEquals(1, libraryRepository.count());
+        List<Library> actual = libraryService.createUpdateLibraries(Collections.singletonList(library));
+        assertThat(actual).isNotEmpty();
+        assertThat(actual.get(0)).isEqualTo(library);
+        assertThat(actual.get(0).getId()).isEqualTo(2L);
+        assertThat(actual.get(0).getAsset().getId()).isEqualTo(2L);
 
-        Library libraryByTechnicalName = libraryRepository.findByTechnicalName("Technical name");
-        assertNotNull(libraryByTechnicalName.getAsset());
-        assertEquals(3, libraryByTechnicalName.getAsset().getSize());
-        assertEquals(1, assetRepository.count());
-
-        asset = new Asset();
-        asset.setContentType("text/plain");
-        asset.setContent(FileUtils.readFileToByteArray(new File(LibraryServiceTest.class.getResource("/libraries/d3.min.js").getFile())));
-        asset.setSize(10);
-        library.setAsset(asset);
-
-        // Update same library
-        libraryService.createUpdateLibraries(Collections.singletonList(library));
-        assertEquals(1, libraryRepository.count());
-
-        library = libraryRepository.findByTechnicalName("Technical name");
-
-        assertNotNull(library.getAsset());
-        assertEquals(10, library.getAsset().getSize());
-        assertEquals(1, assetRepository.count());
-
-        library = new Library();
-        library.setTechnicalName("Technical name 2");
-
-        asset = new Asset();
-        asset.setContentType("text/plain");
-        asset.setContent(FileUtils.readFileToByteArray(new File(LibraryServiceTest.class.getResource("/libraries/d3.min.js").getFile())));
-        asset.setSize(10);
-        library.setAsset(asset);
-
-        libraryService.createUpdateLibraries(Collections.singletonList(library));
-        assertEquals(2, libraryRepository.count());
-        assertEquals(2, assetRepository.count());
+        verify(libraryRepository, times(1)).findByTechnicalName("technicalName");
+        verify(assetService, times(1)).save(asset);
+        verify(libraryRepository, times(1)).saveAll(Collections.singletonList(library));
+        verify(libraryRepository, times(1)).findAll();
     }
 }

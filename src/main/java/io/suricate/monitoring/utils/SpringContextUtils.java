@@ -25,10 +25,6 @@ import org.springframework.stereotype.Component;
 @Lazy(false)
 @Component
 public class SpringContextUtils implements ApplicationContextAware {
-
-    /**
-     * Application context
-     */
     @Getter
     private static ApplicationContext applicationContext;
 

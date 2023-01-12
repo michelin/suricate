@@ -25,30 +25,13 @@ import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-/**
- * Manage the assets
- */
 @Service
 public class AssetService {
-
-    /**
-     * The asset repository
-     */
-    private final AssetRepository assetRepository;
-
-    /**
-     * Constructor
-     *
-     * @param assetRepository The asset repository
-     */
     @Autowired
-    public AssetService(final AssetRepository assetRepository) {
-        this.assetRepository = assetRepository;
-    }
+    private AssetRepository assetRepository;
 
     /**
      * Find an asset by ID
-     *
      * @param token the asset token used to identify the asset
      * @return The related asset
      */
@@ -64,7 +47,6 @@ public class AssetService {
 
     /**
      * Save an asset
-     *
      * @param asset The asset to save
      * @return The saved asset
      */

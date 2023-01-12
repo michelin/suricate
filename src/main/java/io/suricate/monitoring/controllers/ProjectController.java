@@ -412,7 +412,7 @@ public class ProjectController {
             throw new ObjectNotFoundException(User.class, usernameMap.get("username"));
         }
 
-        projectService.addUserToProject(userOptional.get(), projectOptional.get());
+        projectService.createProjectForUser(userOptional.get(), projectOptional.get());
         return ResponseEntity.ok().build();
     }
 

@@ -18,27 +18,15 @@ import java.util.Optional;
 
 @Service
 public class ProjectGridService {
-    /**
-     * The application context
-     */
     @Autowired
     private ApplicationContext ctx;
 
-    /**
-     * The dashboard websocket service
-     */
     @Autowired
     private DashboardWebSocketService dashboardWebsocketService;
 
-    /**
-     * Project repository
-     */
     @Autowired
     private ProjectRepository projectRepository;
 
-    /**
-     * Project repository
-     */
     @Autowired
     private ProjectGridRepository projectGridRepository;
 

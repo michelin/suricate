@@ -1,106 +1,178 @@
 package io.suricate.monitoring.services.api;
 
-import io.suricate.monitoring.model.entities.Asset;
-import io.suricate.monitoring.model.entities.Category;
-import io.suricate.monitoring.repositories.AssetRepository;
+import io.suricate.monitoring.model.entities.*;
+import io.suricate.monitoring.model.enums.DataTypeEnum;
 import io.suricate.monitoring.repositories.CategoryRepository;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
+import io.suricate.monitoring.services.specifications.CategorySearchSpecification;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import javax.persistence.metamodel.SingularAttribute;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
-@ActiveProfiles("test")
-@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
-public class CategoryServiceTest {
-    @Autowired
-    CategoryRepository categoryRepository;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
-    @Autowired
-    AssetRepository assetRepository;
+@ExtendWith(MockitoExtension.class)
+class CategoryServiceTest {
+    @Mock
+    private AssetService assetService;
 
-    @Autowired
-    CategoryService categoryService;
+    @Mock
+    private CategoryRepository categoryRepository;
+
+    @Mock
+    private CategoryParametersService categoryParametersService;
+
+    @Mock
+    private SingularAttribute<Category, String> name;
+
+    @InjectMocks
+    private CategoryService categoryService;
 
     @Test
-    public void addOrUpdateCategoryNullTest() {
-        assertEquals(0, categoryRepository.count());
-        assertEquals(0, assetRepository.count());
+    void shouldGetAll() {
+        Category category = new Category();
+        category.setId(1L);
+        category.setName("name");
 
-        categoryService.addOrUpdateCategory(null);
+        Category_.name = name;
+        when(categoryRepository.findAll(any(CategorySearchSpecification.class), any(Pageable.class)))
+                .thenReturn(new PageImpl<>(Collections.singletonList(category)));
 
-        assertEquals(0, categoryRepository.count());
-        assertEquals(0, assetRepository.count());
+        Page<Category> actual = categoryService.getAll("search", Pageable.unpaged());
+        assertThat(actual).isNotEmpty();
+        assertThat(actual.get()).hasSize(1);
+        verify(categoryRepository, times(1)).findAll(any(CategorySearchSpecification.class), any(Pageable.class));
     }
 
     @Test
-    public void addOrUpdateCategoryTest() {
-        assertEquals(0, categoryRepository.count());
-        assertEquals(0, assetRepository.count());
-
+    void shouldFindByTechnicalName() {
         Category category = new Category();
-        category.setName("Category 1");
-        category.setTechnicalName("Technical name 1");
+        category.setId(1L);
+        category.setName("name");
+        category.setTechnicalName("technicalName");
+
+        when(categoryRepository.findByTechnicalName("technicalName"))
+                .thenReturn(category);
+
+        Category actual = categoryRepository.findByTechnicalName("technicalName");
+        assertThat(actual)
+                .isNotNull()
+                .isEqualTo(category);
+
+        verify(categoryRepository, times(1)).findByTechnicalName("technicalName");
+    }
+
+    @Test
+    void shouldAddCategoryWhenNull() {
+        categoryService.addOrUpdateCategory(null);
+
+        verify(assetService, times(0)).save(any());
+        verify(categoryRepository, times(0)).save(any());
+        verify(categoryParametersService, times(0)).deleteOneByKey(any());
+        verify(categoryParametersService, times(0)).addOrUpdateCategoryConfiguration(any(), any());
+    }
+
+    @Test
+    void shouldAddCategory() {
+        CategoryParameter categoryParameter = new CategoryParameter();
+        categoryParameter.setKey("key");
 
         Asset asset = new Asset();
-        asset.setContent(new byte[1]);
-        asset.setContentType("text/plain");
-        asset.setSize(10);
+        asset.setId(1L);
 
+        Category category = new Category();
+        category.setName("name");
+        category.setTechnicalName("technicalName");
         category.setImage(asset);
+        category.setConfigurations(Collections.singleton(categoryParameter));
+
+        when(categoryRepository.findByTechnicalName("technicalName")).thenReturn(null);
 
         categoryService.addOrUpdateCategory(category);
 
-        assertNotNull(category.getId());
-        assertEquals(1, categoryRepository.count());
-        assertEquals(1, assetRepository.count());
+        verify(assetService, times(1)).save(asset);
+        verify(categoryRepository, times(1)).save(category);
+        verify(categoryParametersService, times(0)).deleteOneByKey("key");
+        verify(categoryParametersService, times(1))
+                .addOrUpdateCategoryConfiguration(Collections.singleton(categoryParameter), category);
+    }
 
-        Category category1 = categoryRepository.findByTechnicalName("Technical name 1");
-        assertNotNull(category1);
-        assertEquals("Category 1", category1.getName());
-        assertEquals("Technical name 1", category1.getTechnicalName());
-        assertEquals(10, category1.getImage().getSize());
+    @Test
+    void shouldUpdateCategory() {
+        Asset oldAsset = new Asset();
+        oldAsset.setId(1L);
 
-        category.setId(null);
-        asset.setId(null);
-        asset.setSize(100);
+        CategoryParameter oldCategoryParameter = new CategoryParameter();
+        oldCategoryParameter.setKey("oldKey");
+
+        Category oldCategory = new Category();
+        oldCategory.setId(2L);
+        oldCategory.setName("oldName");
+        oldCategory.setTechnicalName("oldTechnicalName");
+        oldCategory.setImage(oldAsset);
+        oldCategory.setConfigurations(Collections.singleton(oldCategoryParameter));
+
+        CategoryParameter categoryParameter = new CategoryParameter();
+        categoryParameter.setKey("key");
+
+        Asset asset = new Asset();
+        asset.setId(1L);
+
+        Category category = new Category();
+        category.setName("name");
+        category.setTechnicalName("technicalName");
+        category.setImage(asset);
+        category.setConfigurations(Collections.singleton(categoryParameter));
+
+        when(categoryRepository.findByTechnicalName("technicalName")).thenReturn(oldCategory);
 
         categoryService.addOrUpdateCategory(category);
+        assertThat(category).isNotNull().isEqualTo(category);
+        assertThat(category.getId()).isEqualTo(2L);
+        assertThat(category.getImage().getId()).isEqualTo(1L);
 
-        assertNotNull(category.getId());
-        assertEquals(1, categoryRepository.count());
-        assertEquals(1, assetRepository.count());
+        verify(assetService, times(1)).save(asset);
+        verify(categoryRepository, times(1)).save(category);
+        verify(categoryParametersService, times(1)).deleteOneByKey("oldKey");
+        verify(categoryParametersService, times(1))
+                .addOrUpdateCategoryConfiguration(Collections.singleton(categoryParameter), category);
+    }
 
-        category1 = categoryRepository.findByTechnicalName("Technical name 1");
-        assertNotNull(category1);
-        assertEquals("Category 1", category1.getName());
-        assertEquals("Technical name 1", category1.getTechnicalName());
-        assertEquals(100, category1.getImage().getSize());
+    @Test
+    void shouldGetCategoryParametersByWidget() {
+        CategoryParameter categoryParameter = new CategoryParameter();
+        categoryParameter.setKey("key");
+        categoryParameter.setValue("value");
+        categoryParameter.setDataType(DataTypeEnum.TEXT);
 
-        category.setName("Category 2");
-        category.setTechnicalName("Technical name 2");
-        category.setId(null);
-        asset.setId(null);
-        asset.setSize(110);
+        Category category = new Category();
+        category.setId(1L);
+        category.setName("name");
+        category.setTechnicalName("technicalName");
 
-        categoryService.addOrUpdateCategory(category);
+        Widget widget = new Widget();
+        widget.setCategory(category);
 
-        assertNotNull(category.getId());
-        assertEquals(2, categoryRepository.count());
-        assertEquals(2, assetRepository.count());
+        when(categoryParametersService.getParametersByCategoryId(any()))
+                .thenReturn(Optional.of(Collections.singletonList(categoryParameter)));
 
-        Category category2 = categoryRepository.findByTechnicalName("Technical name 2");
-
-        assertNotNull(category2);
-        assertEquals("Category 2", category2.getName());
-        assertEquals("Technical name 2", category2.getTechnicalName());
-        assertEquals(110, category2.getImage().getSize());
+        List<WidgetParam> actual = categoryService.getCategoryParametersByWidget(widget);
+        assertThat(actual).hasSize(1);
+        assertThat(actual.get(0).getName()).isEqualTo("key");
+        assertThat(actual.get(0).getDefaultValue()).isEqualTo("value");
+        assertThat(actual.get(0).getType()).isEqualTo(DataTypeEnum.TEXT);
+        assertThat(actual.get(0).getDescription()).isEqualTo("key");
+        assertThat(actual.get(0).isRequired()).isTrue();
     }
 }

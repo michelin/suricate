@@ -40,7 +40,6 @@ public class StringEncryptorConfiguration {
 
     /**
      * Configure the default string encryptor without salt
-     *
      * @return The default encryptor
      */
     @Bean(name = "noSaltEncryptor")

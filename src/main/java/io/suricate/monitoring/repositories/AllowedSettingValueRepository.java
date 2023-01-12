@@ -20,9 +20,6 @@ import io.suricate.monitoring.model.entities.AllowedSettingValue;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-/**
- * AllowedSettingValue repository
- */
 @Repository
 public interface AllowedSettingValueRepository extends CrudRepository<AllowedSettingValue, Long> {
 }

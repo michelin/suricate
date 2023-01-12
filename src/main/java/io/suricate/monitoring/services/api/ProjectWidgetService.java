@@ -36,10 +36,9 @@ import io.suricate.monitoring.services.nashorn.services.DashboardScheduleService
 import io.suricate.monitoring.services.websocket.DashboardWebSocketService;
 import io.suricate.monitoring.utils.JavaScriptUtils;
 import io.suricate.monitoring.utils.PropertiesUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jasypt.encryption.StringEncryptor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
@@ -56,85 +55,39 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-/**
- * Project widget service
- */
+@Slf4j
 @Service
 public class ProjectWidgetService {
-    /**
-     * Class logger
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(ProjectWidgetService.class);
-
-    /**
-     * The project widget repository
-     */
-    private final ProjectWidgetRepository projectWidgetRepository;
-
-    /**
-     * The dashboard websocket service
-     */
-    private final DashboardWebSocketService dashboardWebsocketService;
-
-    /**
-     * The dashboard schedule service
-     */
-    private final DashboardScheduleService dashboardScheduleService;
-
-    /**
-     * The widget service
-     */
-    private final WidgetService widgetService;
-
-    /**
-     * The mustacheFactory
-     */
-    private final MustacheFactory mustacheFactory;
-
-    /**
-     * The application context
-     */
-    private final ApplicationContext ctx;
-
-    /**
-     * The string encryptor
-     */
-    private final StringEncryptor stringEncryptor;
-
-    /**
-     * Constructor
-     *
-     * @param projectWidgetRepository   The project widget repository
-     * @param dashboardWebSocketService The dashboard websocket service
-     * @param dashboardScheduleService  The dashboard scheduler
-     * @param widgetService             The widget service
-     * @param mustacheFactory           The mustache factory (HTML template)
-     * @param ctx                       The application context
-     * @param stringEncryptor           The string encryptor
-     */
     @Autowired
-    public ProjectWidgetService(final ProjectWidgetRepository projectWidgetRepository,
-                                final MustacheFactory mustacheFactory,
-                                final DashboardWebSocketService dashboardWebSocketService,
-                                @Lazy final DashboardScheduleService dashboardScheduleService,
-                                final WidgetService widgetService,
-                                final ApplicationContext ctx,
-                                @Qualifier("jasyptStringEncryptor") final StringEncryptor stringEncryptor) {
-        this.projectWidgetRepository = projectWidgetRepository;
-        this.dashboardWebsocketService = dashboardWebSocketService;
-        this.dashboardScheduleService = dashboardScheduleService;
-        this.widgetService = widgetService;
-        this.mustacheFactory = mustacheFactory;
-        this.ctx = ctx;
-        this.stringEncryptor = stringEncryptor;
-    }
+    private ProjectWidgetRepository projectWidgetRepository;
+
+    @Autowired
+    private DashboardWebSocketService dashboardWebsocketService;
+
+    @Autowired
+    @Lazy
+    private DashboardScheduleService dashboardScheduleService;
+
+    @Autowired
+    private WidgetService widgetService;
+
+    @Autowired
+    private MustacheFactory mustacheFactory;
+
+    @Autowired
+    private ApplicationContext ctx;
+
+    @Autowired
+    @Qualifier("jasyptStringEncryptor")
+    private StringEncryptor stringEncryptor;
 
     /**
      * Get all the project widget in database
      * @return The list of project widget
      */
+    @Transactional(readOnly = true)
     public List<ProjectWidget> getAll() {
-        return this.projectWidgetRepository.findAll();
+        return projectWidgetRepository.findAll();
     }
 
     /**
@@ -173,8 +126,7 @@ public class ProjectWidgetService {
     /**
      * Add a new widget instance to a project
      * Encrypt the secret configuration of the widget instance then save it
-     *
-     * @param widgetInstance The widget instance
+     * @param projectWidget The widget instance
      */
     @Transactional
     public void createAndRefreshDashboards(ProjectWidget projectWidget) {
@@ -236,7 +188,7 @@ public class ProjectWidgetService {
      */
     @Transactional
     public void removeWidgetFromDashboard(Long projectWidgetId) {
-        Optional<ProjectWidget> projectWidgetOptional = this.getOne(projectWidgetId);
+        Optional<ProjectWidget> projectWidgetOptional = getOne(projectWidgetId);
 
         if (projectWidgetOptional.isPresent()) {
             ctx.getBean(NashornRequestWidgetExecutionScheduler.class).cancelWidgetExecution(projectWidgetId);
@@ -258,12 +210,11 @@ public class ProjectWidgetService {
      * Reset the execution state of a project widget
      */
     public void resetProjectWidgetsState() {
-        this.projectWidgetRepository.resetProjectWidgetsState();
+        projectWidgetRepository.resetProjectWidgetsState();
     }
 
     /**
-     * Method used to update application state
-     *
+     * Update widget state
      * @param widgetState widget state
      * @param id          project widget id
      */
@@ -274,14 +225,13 @@ public class ProjectWidgetService {
 
     /**
      * Update the state of a widget instance
-     *
      * @param widgetState The widget state
      * @param id          The project widget ID
      * @param date        The last execution date
      */
     @Transactional
     public void updateState(WidgetStateEnum widgetState, Long id, Date date) {
-        Optional<ProjectWidget> projectWidgetOptional = this.getOne(id);
+        Optional<ProjectWidget> projectWidgetOptional = getOne(id);
 
         if (projectWidgetOptional.isPresent()) {
             projectWidgetOptional.get().setState(widgetState);
@@ -310,11 +260,7 @@ public class ProjectWidgetService {
         String instantiateHtml = widget.getHtmlContent();
         if (StringUtils.isNotEmpty(projectWidget.getData())) {
             try {
-                map = objectMapper.readValue(
-                    projectWidget.getData(),
-                    new TypeReference<Map<String, Object>>() {
-                    }
-                );
+                map = objectMapper.readValue(projectWidget.getData(), new TypeReference<Map<String, Object>>() {});
                 // Add backend config
                 map.putAll(PropertiesUtils.convertStringWidgetPropertiesToMap(projectWidget.getBackendConfig()));
                 map.put(JavaScriptUtils.WIDGET_INSTANCE_ID_VARIABLE, projectWidget.getId());
@@ -325,9 +271,8 @@ public class ProjectWidgetService {
                         map.put(widgetParam.getName(), widgetParam.getDefaultValue());
                     }
                 }
-
             } catch (IOException e) {
-                LOGGER.error(e.getMessage(), e);
+                log.error(e.getMessage(), e);
             }
 
             StringWriter stringWriter = new StringWriter();
@@ -335,7 +280,7 @@ public class ProjectWidgetService {
                 Mustache mustache = mustacheFactory.compile(new StringReader(instantiateHtml), widget.getTechnicalName());
                 mustache.execute(stringWriter, map);
             } catch (MustacheException me) {
-                LOGGER.error("Error with mustache template for widget {}", widget.getTechnicalName(), me);
+                log.error("Error with mustache template for widget {}", widget.getTechnicalName(), me);
             }
             stringWriter.flush();
             instantiateHtml = stringWriter.toString();
@@ -431,7 +376,7 @@ public class ProjectWidgetService {
      * @param backendConfig The backend config of project widget
      * @return The backend config with the secret params encrypted
      */
-    private String encryptSecretParamsIfNeeded(final Widget widget, String backendConfig) {
+    public String encryptSecretParamsIfNeeded(final Widget widget, String backendConfig) {
         Map<String, String> backendConfigAsMap = PropertiesUtils.convertStringWidgetPropertiesToMap(backendConfig);
 
         List<WidgetParam> widgetParams = widgetService.getWidgetParametersWithCategoryParameters(widget);

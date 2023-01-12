@@ -25,9 +25,6 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 
-/**
- * Contains every possible value for a setting
- */
 @Entity(name = "allowed_setting_value")
 @Getter
 @Setter

@@ -145,7 +145,7 @@ public class WidgetService {
     @Transactional
     public List<WidgetParam> getWidgetParametersWithCategoryParameters(final Widget widget) {
         List<WidgetParam> widgetParameters = new ArrayList<>(widget.getWidgetParams());
-        widgetParameters.addAll(this.categoryService.getCategoryParametersByWidget(widget));
+        widgetParameters.addAll(categoryService.getCategoryParametersByWidget(widget));
 
         return widgetParameters;
     }

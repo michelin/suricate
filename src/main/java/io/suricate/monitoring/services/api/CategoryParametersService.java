@@ -25,6 +25,7 @@ import io.suricate.monitoring.model.enums.DataTypeEnum;
 import io.suricate.monitoring.repositories.CategoryParametersRepository;
 import io.suricate.monitoring.services.specifications.CategoryParametersSearchSpecification;
 import org.jasypt.encryption.StringEncryptor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -35,36 +36,17 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-/**
- * Manager the parameters of categories
- */
 @Service
 public class CategoryParametersService {
-    /**
-     * The category repository
-     */
-    private final CategoryParametersRepository categoryParametersRepository;
+    @Autowired
+    private CategoryParametersRepository categoryParametersRepository;
 
-    /**
-     * The String encryptor
-     */
-    private final StringEncryptor stringEncryptor;
-
-    /**
-     * Constructor
-     *
-     * @param categoryParametersRepository The category parameters service
-     * @param stringEncryptor              The String encryptor
-     */
-    public CategoryParametersService(CategoryParametersRepository categoryParametersRepository,
-                                     @Qualifier("jasyptStringEncryptor") final StringEncryptor stringEncryptor) {
-        this.categoryParametersRepository = categoryParametersRepository;
-        this.stringEncryptor = stringEncryptor;
-    }
+    @Autowired
+    @Qualifier("jasyptStringEncryptor")
+    private StringEncryptor stringEncryptor;
 
     /**
      * Get the list of parameters by category ID
-     *
      * @param categoryId The category ID
      * @return The list of parameters
      */
@@ -75,7 +57,6 @@ public class CategoryParametersService {
 
     /**
      * Get all the category parameters
-     *
      * @return The list of category parameters
      */
     @Transactional(readOnly = true)
@@ -85,7 +66,6 @@ public class CategoryParametersService {
 
     /**
      * Get a parameter by key
-     *
      * @param key The key
      * @return The category parameter as optional
      */
@@ -96,7 +76,6 @@ public class CategoryParametersService {
 
     /**
      * Update a category parameter
-     *
      * @param categoryParameter The category parameter to update
      * @param newValue          The new value to set
      */
@@ -110,7 +89,6 @@ public class CategoryParametersService {
 
     /**
      * Delete a category parameter by its key
-     *
      * @param key The key of the configuration
      */
     public void deleteOneByKey(String key) {
@@ -119,7 +97,6 @@ public class CategoryParametersService {
 
     /**
      * Add or update a list of category parameters
-     *
      * @param categoryParameters The category parameters
      * @param category           The related category
      */
@@ -140,7 +117,6 @@ public class CategoryParametersService {
 
     /**
      * Convert category parameters into widget parameters
-     *
      * @param categoryParameter The category parameters to convert
      * @return The widget parameters
      */

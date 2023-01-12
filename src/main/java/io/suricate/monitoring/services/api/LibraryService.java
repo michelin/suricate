@@ -33,31 +33,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Manage the libraries
- */
 @Service
 public class LibraryService {
-    /**
-     * The library repository
-     */
-    private final LibraryRepository libraryRepository;
-
-    /**
-     * The asset repository
-     */
-    private final AssetService assetService;
-
-    /**
-     * Constructor
-     * @param libraryRepository The library repository
-     * @param assetService      The asset repository
-     */
     @Autowired
-    public LibraryService(final LibraryRepository libraryRepository, final AssetService assetService) {
-        this.libraryRepository = libraryRepository;
-        this.assetService = assetService;
-    }
+    private LibraryRepository libraryRepository;
+
+    @Autowired
+    private AssetService assetService;
 
     /**
      * Get all the libraries

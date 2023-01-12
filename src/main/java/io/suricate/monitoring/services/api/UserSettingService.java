@@ -146,7 +146,7 @@ public class UserSettingService {
         UserSetting userSetting = userSettingOptional.get();
         if (userSetting.getSetting().isConstrained()) {
             allowedSettingValueService
-                .getOneById(userSettingRequestDto.getAllowedSettingValueId())
+                .findById(userSettingRequestDto.getAllowedSettingValueId())
                 .ifPresent(userSetting::setSettingValue);
         } else {
             userSetting.setUnconstrainedValue(userSettingRequestDto.getUnconstrainedValue());

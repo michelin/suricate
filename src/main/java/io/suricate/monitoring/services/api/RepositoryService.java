@@ -28,20 +28,13 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Manage the repository
- */
 @Service
 public class RepositoryService {
-    /**
-     * The repository for repository
-     */
     @Autowired
     private RepositoryRepository repositoryRepository;
 
     /**
      * Get all repositories
-     *
      * @param search The search string
      * @param pageable The pageable object
      * @return The paginated list of repositories
@@ -53,7 +46,6 @@ public class RepositoryService {
 
     /**
      * Get the full list of repository by enabled
-     *
      * @param enabled Tru if we want every enabled repositories
      * @return The related list
      */
@@ -64,7 +56,6 @@ public class RepositoryService {
 
     /**
      * Get the repository by id
-     *
      * @param repositoryId The repository id to find
      * @return The repository as optional
      */
@@ -91,17 +82,7 @@ public class RepositoryService {
      */
     @Transactional(readOnly = true)
     public boolean existsById(final Long repositoryId) {
-        return this.repositoryRepository.existsById(repositoryId);
-    }
-
-    /**
-     * Check if a repository exists by given name
-     * @param name The repository name
-     * @return true if it is, false otherwise
-     */
-    @Transactional(readOnly = true)
-    public boolean existsByName(final String name) {
-        return this.repositoryRepository.existsByName(name);
+        return repositoryRepository.existsById(repositoryId);
     }
 
     /**

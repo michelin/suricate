@@ -41,11 +41,4 @@ public interface RepositoryRepository extends JpaRepository<Repository, Long>, J
      * @return An optional repository
      */
     Optional<Repository> findByName(final String name);
-
-    /**
-     * Check if a repository exists by given name
-     * @param name The repository name
-     * @return true if it is, false otherwise
-     */
-    boolean existsByName(final String name);
 }

@@ -14,9 +14,6 @@ import java.util.Optional;
 
 @Service
 public class PersonalAccessTokenService {
-    /**
-     * The token repository
-     */
     @Autowired
     private PersonalAccessTokenRepository personalAccessTokenRepository;
 

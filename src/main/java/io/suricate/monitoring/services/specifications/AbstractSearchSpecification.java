@@ -41,7 +41,7 @@ public abstract class AbstractSearchSpecification<T> implements Specification<T>
      * @param search           The search query
      * @param filterAttributes The attribute used to filter on search attribute
      */
-    public AbstractSearchSpecification(final String search, final SingularAttribute<T, String>... filterAttributes) {
+    protected AbstractSearchSpecification(final String search, final SingularAttribute<T, String>... filterAttributes) {
         this.search = search;
         this.attributes = Arrays.stream(filterAttributes).map(Attribute::getName).collect(Collectors.toList());
     }

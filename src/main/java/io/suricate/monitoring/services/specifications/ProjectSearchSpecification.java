@@ -15,12 +15,6 @@ import java.util.List;
  * Class used to filter JPA queries
  */
 public class ProjectSearchSpecification extends AbstractSearchSpecification<Project> {
-
-    /**
-     * Constructor
-     *
-     * @param search The string to search
-     */
     public ProjectSearchSpecification(final String search) {
         super(search);
     }

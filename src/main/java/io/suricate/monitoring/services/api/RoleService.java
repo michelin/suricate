@@ -19,34 +19,20 @@ package io.suricate.monitoring.services.api;
 import io.suricate.monitoring.model.entities.Role;
 import io.suricate.monitoring.repositories.RoleRepository;
 import io.suricate.monitoring.services.specifications.RoleSearchSpecification;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-/**
- * Role service
- */
 @Service
 public class RoleService {
-    /**
-     * Role repository
-     */
-    private final RoleRepository roleRepository;
-
-    /**
-     * Constructor
-     *
-     * @param roleRepository inject the role repository
-     */
-    public RoleService(final RoleRepository roleRepository) {
-        this.roleRepository = roleRepository;
-    }
+    @Autowired
+    private RoleRepository roleRepository;
 
     /**
      * Get a role by name
-     *
      * @param roleName The role name to find
      * @return The role as optional
      */
@@ -56,7 +42,6 @@ public class RoleService {
 
     /**
      * Get the full list of roles
-     *
      * @return The roles
      */
     public Page<Role> getRoles(String search, Pageable pageable) {
@@ -65,7 +50,6 @@ public class RoleService {
 
     /**
      * Get a role by id
-     *
      * @param id The id of the role
      * @return The related role
      */

@@ -73,7 +73,7 @@ public final class PropertiesUtils {
                 properties = new Properties();
                 properties.load(reader);
             } catch (IOException e) {
-                LOGGER.error("An error has occurred converting widget parameters values from string to Properties: {}", widgetProperties, e);
+                LOGGER.error("An error has occurred converting widget parameters values from string to properties: {}", widgetProperties, e);
             }
         }
 
