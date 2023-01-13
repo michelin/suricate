@@ -24,9 +24,8 @@ import io.suricate.monitoring.repositories.UserRepository;
 import io.suricate.monitoring.services.mapper.UserMapper;
 import io.suricate.monitoring.services.specifications.UserSearchSpecification;
 import io.suricate.monitoring.utils.exceptions.ObjectNotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -39,43 +38,21 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-/**
- * Service used to manage user
- */
+@Slf4j
 @Service
 public class UserService {
-    /**
-     * Logger
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserService.class);
-
-    /**
-     * The user repository
-     */
     @Autowired
     private UserRepository userRepository;
 
-    /**
-     * The user mapper
-     */
     @Autowired
     private UserMapper userMapper;
 
-    /**
-     * The role service
-     */
     @Autowired
     private RoleService roleService;
 
-    /**
-     * The project service
-     */
     @Autowired
     private ProjectService projectService;
 
-    /**
-     * The user setting service
-     */
     @Autowired
     private UserSettingService userSettingService;
 
@@ -88,7 +65,7 @@ public class UserService {
         UserRoleEnum roleEnum = userRepository.count() > 0 ? UserRoleEnum.ROLE_USER : UserRoleEnum.ROLE_ADMIN;
         Optional<Role> role = roleService.getRoleByName(roleEnum.name());
         if (!role.isPresent()) {
-            LOGGER.error("Role {} not available in database", roleEnum);
+            log.error("Role {} not available in database", roleEnum);
             throw new ObjectNotFoundException(Role.class, roleEnum);
         }
 
@@ -117,9 +94,11 @@ public class UserService {
 
         if (!optionalUser.isPresent()) {
             int countUsername = 1;
-            while (existsByUsername(username)) {
-                username = username + countUsername;
+            String availableUsername = username;
+            while (existsByUsername(availableUsername)) {
+                availableUsername = username + countUsername++;
             }
+            username = availableUsername;
 
             User user = userMapper.connectedUserToUserEntity(username, firstname, lastname, email, avatarUrl, authenticationMethod);
             return create(user);

@@ -25,45 +25,27 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Setting service that manage the settings
- */
 @Service
 public class SettingService {
-
-    /**
-     * The setting repository
-     */
-    private final SettingRepository settingRepository;
-
-    /**
-     * Constructor
-     *
-     * @param settingRepository The setting repository to inject
-     */
     @Autowired
-    public SettingService(final SettingRepository settingRepository) {
-        this.settingRepository = settingRepository;
-    }
+    private SettingRepository settingRepository;
 
     /**
      * Get setting by id
-     *
      * @param settingId The setting id
      * @return The setting
      */
     @Transactional
     public Optional<Setting> getOneById(final Long settingId) {
-        return this.settingRepository.findById(settingId);
+        return settingRepository.findById(settingId);
     }
 
     /**
      * Get settings by description
-     *
      * @return The list of the settings
      */
     @Transactional
     public Optional<List<Setting>> getAll() {
-        return this.settingRepository.findAllByOrderByDescription();
+        return settingRepository.findAllByOrderByDescription();
     }
 }
