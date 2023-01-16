@@ -31,46 +31,19 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-/**
- * The user setting service
- */
 @Service
 public class UserSettingService {
-
-    /**
-     * The user setting repository
-     */
-    private final UserSettingRepository userSettingRepository;
-
-    /**
-     * The setting service
-     */
-    private final SettingService settingService;
-
-    /**
-     * The allowed setting value service
-     */
-    private final AllowedSettingValueService allowedSettingValueService;
-
-    /**
-     * Controller
-     *
-     * @param userSettingRepository      The user setting repository
-     * @param settingService             The setting service
-     * @param allowedSettingValueService The allowed setting service
-     */
     @Autowired
-    public UserSettingService(final UserSettingRepository userSettingRepository,
-                              final SettingService settingService,
-                              final AllowedSettingValueService allowedSettingValueService) {
-        this.userSettingRepository = userSettingRepository;
-        this.settingService = settingService;
-        this.allowedSettingValueService = allowedSettingValueService;
-    }
+    private UserSettingRepository userSettingRepository;
+
+    @Autowired
+    private SettingService settingService;
+
+    @Autowired
+    private AllowedSettingValueService allowedSettingValueService;
 
     /**
      * Create the default list of user settings (in case of new user for example)
-     *
      * @param user The user that we have to create settings for
      */
     @Transactional
@@ -82,19 +55,18 @@ public class UserSettingService {
                 .stream()
                 .flatMap(setting -> setting.getAllowedSettingValues().stream())
                 .filter(AllowedSettingValue::isDefault)
-                .map(allowedSettingValue -> this.createUserSettingFromAllowedSettingValue(allowedSettingValue, user))
+                .map(allowedSettingValue -> createUserSettingFromAllowedSettingValue(allowedSettingValue, user))
                 .collect(Collectors.toList())
         ));
 
-        this.userSettingRepository.saveAll(userSettings);
-        this.userSettingRepository.flush();
+        userSettingRepository.saveAll(userSettings);
+        userSettingRepository.flush();
 
         return userSettings;
     }
 
     /**
      * Create a user setting from AllowedSettingValue (constrained value)
-     *
      * @param allowedSettingValue The allowed setting value
      * @return The related user setting
      */
@@ -110,7 +82,6 @@ public class UserSettingService {
 
     /**
      * Get a user setting
-     *
      * @param userName The username
      * @param settingId The setting ID
      * @return The user setting
@@ -121,7 +92,6 @@ public class UserSettingService {
 
     /**
      * Get user settings
-     *
      * @param username The username
      * @return The user settings
      */
@@ -131,8 +101,7 @@ public class UserSettingService {
 
     /**
      * Update the settings for a user
-     *
-     * @param userName              The user name
+     * @param userName              The username
      * @param settingId             The setting id
      * @param userSettingRequestDto The new user setting value
      */

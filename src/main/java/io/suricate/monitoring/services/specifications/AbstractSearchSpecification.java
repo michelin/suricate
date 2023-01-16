@@ -1,5 +1,6 @@
 package io.suricate.monitoring.services.specifications;
 
+import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.jpa.domain.Specification;
 
@@ -15,29 +16,17 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-/**
- * Used to build JPA Queries
- */
 public abstract class AbstractSearchSpecification<T> implements Specification<T> {
-
-    /**
-     * Like formatter
-     */
     protected static final String LIKE_OPERATOR_FORMATTER = "%%%s%%";
 
-    /**
-     * The list of attributes to use to filter the Object
-     */
+    @Getter
     private final List<String> attributes;
 
-    /**
-     * The string to search
-     */
+    @Getter
     protected final String search;
 
     /**
      * Constructor
-     *
      * @param search           The search query
      * @param filterAttributes The attribute used to filter on search attribute
      */
@@ -48,7 +37,6 @@ public abstract class AbstractSearchSpecification<T> implements Specification<T>
 
     /**
      * Used to add search predicates
-     *
      * @param root            The root entity
      * @param criteriaBuilder Used to build new predicate
      * @param predicates      The list of predicates to add for this entity
@@ -65,7 +53,6 @@ public abstract class AbstractSearchSpecification<T> implements Specification<T>
 
     /**
      * Used to add predicates to the search query
-     *
      * @param root            The root entity
      * @param criteriaQuery   Used to build queries
      * @param criteriaBuilder Used to build new predicate

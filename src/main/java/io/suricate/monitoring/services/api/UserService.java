@@ -131,7 +131,6 @@ public class UserService {
 
     /**
      * Get a user by id
-     *
      * @param userId The user id
      * @return The user as optional
      */
@@ -183,7 +182,6 @@ public class UserService {
 
     /**
      * Delete a user
-     *
      * @param user the user to delete
      */
     @Transactional
@@ -234,7 +232,7 @@ public class UserService {
         }
 
         if (roleNames != null && !roleNames.isEmpty()) {
-            this.updateUserRoles(user, roleNames);
+            updateUserRoles(user, roleNames);
         }
 
         userRepository.save(user);
@@ -249,9 +247,10 @@ public class UserService {
      * @param roleNames The roles to set
      */
     private void updateUserRoles(User user, List<UserRoleEnum> roleNames) {
-        Set<Role> rolesToSet = roleNames.stream()
-            .map(roleName -> roleService.getRoleByName(roleName.name()).orElse(null))
-            .collect(Collectors.toSet());
+        Set<Role> rolesToSet = roleNames
+                .stream()
+                .map(roleName -> roleService.getRoleByName(roleName.name()).orElse(null))
+                .collect(Collectors.toSet());
 
         if (!rolesToSet.isEmpty()) {
             user.setRoles(rolesToSet);

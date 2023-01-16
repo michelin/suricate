@@ -25,9 +25,6 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 
-/**
- * Library entity
- */
 @Entity
 @Getter
 @Setter

@@ -85,28 +85,28 @@ public class BackendApplication {
     @PostConstruct
     protected void init() throws FileNotFoundException {
         // Define Trust Store properties
-        if (StringUtils.isNotBlank(applicationProperties.ssl.trustStore.path)) {
-            if (!new File(applicationProperties.ssl.trustStore.path).exists()) {
-                throw new FileNotFoundException("Trust store not found under path : '" + applicationProperties.ssl.trustStore.path);
+        if (StringUtils.isNotBlank(applicationProperties.getSsl().getTrustStore().getPath())) {
+            if (!new File(applicationProperties.getSsl().getTrustStore().getPath()).exists()) {
+                throw new FileNotFoundException("Trust store not found under path : '" + applicationProperties.getSsl().getTrustStore().getPath());
             }
-            System.setProperty("javax.net.ssl.trustStore", applicationProperties.ssl.trustStore.path);
-            System.setProperty("javax.net.ssl.trustStorePassword", applicationProperties.ssl.trustStore.password);
+            System.setProperty("javax.net.ssl.trustStore", applicationProperties.getSsl().getTrustStore().getPath());
+            System.setProperty("javax.net.ssl.trustStorePassword", applicationProperties.getSsl().getTrustStore().getPassword());
 
-            if (StringUtils.isNotBlank(applicationProperties.ssl.trustStore.type)) {
-                System.setProperty("javax.net.ssl.trustStoreType", applicationProperties.ssl.trustStore.type);
+            if (StringUtils.isNotBlank(applicationProperties.getSsl().getTrustStore().getType())) {
+                System.setProperty("javax.net.ssl.trustStoreType", applicationProperties.getSsl().getTrustStore().getType());
             }
         }
 
         //Define Key Store properties
-        if (StringUtils.isNotBlank(applicationProperties.ssl.keyStore.path)) {
-            if (!new File(applicationProperties.ssl.keyStore.path).exists()) {
-                throw new FileNotFoundException("Key store not found under path : '" + applicationProperties.ssl.keyStore.path);
+        if (StringUtils.isNotBlank(applicationProperties.getSsl().getKeyStore().getPath())) {
+            if (!new File(applicationProperties.getSsl().getKeyStore().getPath()).exists()) {
+                throw new FileNotFoundException("Key store not found under path : '" + applicationProperties.getSsl().getKeyStore().getPath());
             }
-            System.setProperty("javax.net.ssl.keyStore", applicationProperties.ssl.keyStore.path);
-            System.setProperty("javax.net.ssl.keyStorePassword", applicationProperties.ssl.keyStore.password);
+            System.setProperty("javax.net.ssl.keyStore", applicationProperties.getSsl().getKeyStore().getPath());
+            System.setProperty("javax.net.ssl.keyStorePassword", applicationProperties.getSsl().getKeyStore().getPassword());
 
-            if (StringUtils.isNotBlank(applicationProperties.ssl.keyStore.type)) {
-                System.setProperty("javax.net.ssl.keyStoreType", applicationProperties.ssl.keyStore.type);
+            if (StringUtils.isNotBlank(applicationProperties.getSsl().getKeyStore().getType())) {
+                System.setProperty("javax.net.ssl.keyStoreType", applicationProperties.getSsl().getKeyStore().getType());
             }
         }
 

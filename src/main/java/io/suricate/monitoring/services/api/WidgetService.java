@@ -25,9 +25,8 @@ import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
 import io.suricate.monitoring.repositories.WidgetParamRepository;
 import io.suricate.monitoring.repositories.WidgetRepository;
 import io.suricate.monitoring.services.specifications.WidgetSearchSpecification;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,58 +36,23 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
-/**
- * Widget service
- */
+@Slf4j
 @Service
 public class WidgetService {
-    /**
-     * Logger
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(WidgetService.class);
-
-    /**
-     * Asset repository
-     */
-    private final AssetService assetService;
-
-    /**
-     * Widget repository
-     */
-    private final WidgetRepository widgetRepository;
-
-    /**
-     * Widget parameter repository
-     */
-    private final WidgetParamRepository widgetParamRepository;
-
-    /**
-     * Category service
-     */
-    private final CategoryService categoryService;
-
-    /**
-     * Constructor
-     *
-     * @param widgetRepository           The widget repository
-     * @param widgetParamRepository      The widget param repository
-     * @param categoryService            The category service
-     * @param assetService               The asset service
-     */
     @Autowired
-    public WidgetService(final WidgetRepository widgetRepository,
-                         final WidgetParamRepository widgetParamRepository,
-                         final CategoryService categoryService,
-                         final AssetService assetService) {
-        this.widgetRepository = widgetRepository;
-        this.widgetParamRepository = widgetParamRepository;
-        this.categoryService = categoryService;
-        this.assetService = assetService;
-    }
+    private AssetService assetService;
+
+    @Autowired
+    private WidgetRepository widgetRepository;
+
+    @Autowired
+    private WidgetParamRepository widgetParamRepository;
+
+    @Autowired
+    private CategoryService categoryService;
 
     /**
      * Find a widget by id
-     *
      * @param id The id
      * @return The widget
      */
@@ -99,7 +63,6 @@ public class WidgetService {
 
     /**
      * Find a widget by technical name
-     *
      * @param technicalName The technical name
      * @return The widget
      */
@@ -110,7 +73,6 @@ public class WidgetService {
 
     /**
      * Return every widgets order by category name
-     *
      * @return The list of widgets order by category name
      */
     @Transactional(readOnly = true)
@@ -119,8 +81,7 @@ public class WidgetService {
     }
 
     /**
-     * Get every widgets for a category
-     *
+     * Get every widget for a category
      * @param categoryId The category id used for found widgets
      * @return The list of related widgets
      */
@@ -138,7 +99,6 @@ public class WidgetService {
     /**
      * Return the full list of parameters of a widget including the parameters of the widget
      * and the global parameters of the category
-     *
      * @param widget The widget
      * @return A list of parameters
      */
@@ -152,7 +112,6 @@ public class WidgetService {
 
     /**
      * Get the list of widget parameters
-     *
      * @param widget The widget
      * @return The list of widget parameters
      */
@@ -174,7 +133,7 @@ public class WidgetService {
                     case COMBO:
 
                     case MULTIPLE:
-                        widgetVariableResponse.setValues(this.getWidgetParamValuesAsMap(widgetParameter.getPossibleValuesMap()));
+                        widgetVariableResponse.setValues(getWidgetParamValuesAsMap(widgetParameter.getPossibleValuesMap()));
                         break;
 
                     default:
@@ -191,22 +150,15 @@ public class WidgetService {
 
     /**
      * Update a widget
-     *
      * @param widgetId         The widget id to update
      * @param widgetRequestDto The object that holds changes
      * @return The widget update
      */
     @Transactional
     public Optional<Widget> updateWidget(final Long widgetId, final WidgetRequestDto widgetRequestDto) {
-        if (!widgetRepository.existsById(widgetId)) {
-            return Optional.empty();
-        }
-
         Optional<Widget> widgetToBeModified = findOne(widgetId);
-
         if (widgetToBeModified.isPresent()) {
             widgetToBeModified.get().setWidgetAvailability(widgetRequestDto.getWidgetAvailability());
-
             return Optional.of(widgetRepository.save(widgetToBeModified.get()));
         }
 
@@ -215,20 +167,13 @@ public class WidgetService {
 
     /**
      * Add or update the given widgets from the given repository
-     *
      * Find the matching existing widget if it exists.
-     *
      * Update the libraries of the widget.
-     *
      * Update the image of the widget.
-     *
      * Update the parameters of the widget. If the new widget does not contain some
      * parameters anymore, then delete these parameters.
-     *
      * Set the activated state by default to the widget.
-     *
      * Set the category and the repository to the widget.
-     *
      * @param category   The category
      * @param libraries The libraries
      * @param repository The git repository
@@ -317,7 +262,7 @@ public class WidgetService {
 
             widgetRepository.save(widget);
 
-            LOGGER.info("Widget {} updated from the branch {} of the repository {}", widget.getTechnicalName(),
+            log.info("Widget {} updated from the branch {} of the repository {}", widget.getTechnicalName(),
                     widget.getRepository().getBranch(), widget.getRepository().getName());
         }
     }

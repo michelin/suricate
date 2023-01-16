@@ -68,7 +68,7 @@ public class LdapAuthentication {
      */
     @PostConstruct
     private void checkLdapConfiguration() {
-        if (StringUtils.isBlank(applicationProperties.getAuthentication().getLdap().url)) {
+        if (StringUtils.isBlank(applicationProperties.getAuthentication().getLdap().getUrl())) {
             throw new ConfigurationException("The Ldap url is mandatory when the provider is ldap", "application.authentication.ldap.url");
         }
     }
@@ -83,12 +83,12 @@ public class LdapAuthentication {
         auth.ldapAuthentication()
             .userDetailsContextMapper(userDetailsContextMapper())
             .ldapAuthoritiesPopulator(userDetailsServiceLdapAuthoritiesPopulator)
-            .userSearchFilter(applicationProperties.getAuthentication().getLdap().userSearchFilter)
-            .groupRoleAttribute(applicationProperties.getAuthentication().getLdap().groupRoleAttribute)
-            .groupSearchBase(applicationProperties.getAuthentication().getLdap().groupSearchBase)
-            .groupSearchFilter(applicationProperties.getAuthentication().getLdap().groupSearchFilter)
-            .rolePrefix(applicationProperties.getAuthentication().getLdap().rolePrefix)
-            .userSearchBase(applicationProperties.getAuthentication().getLdap().userSearchBase)
+            .userSearchFilter(applicationProperties.getAuthentication().getLdap().getUserSearchFilter())
+            .groupRoleAttribute(applicationProperties.getAuthentication().getLdap().getGroupRoleAttribute())
+            .groupSearchBase(applicationProperties.getAuthentication().getLdap().getGroupSearchBase())
+            .groupSearchFilter(applicationProperties.getAuthentication().getLdap().getGroupSearchFilter())
+            .rolePrefix(applicationProperties.getAuthentication().getLdap().getRolePrefix())
+            .userSearchBase(applicationProperties.getAuthentication().getLdap().getUserSearchBase())
             .contextSource(contextSource());
     }
 
@@ -100,7 +100,7 @@ public class LdapAuthentication {
         return new LdapUserDetailsMapper() {
             @Override
             public UserDetails mapUserFromContext(DirContextOperations ctx, String username, java.util.Collection<? extends GrantedAuthority> authorities) {
-                String email = ctx.getStringAttribute(applicationProperties.getAuthentication().getLdap().mailAttributName);
+                String email = ctx.getStringAttribute(applicationProperties.getAuthentication().getLdap().getMailAttributName());
                 Optional<User> currentUser = userService.getOneByEmail(email);
 
                 if (!currentUser.isPresent()) {
@@ -117,23 +117,23 @@ public class LdapAuthentication {
      * @return The default context source configured
      */
     private DefaultSpringSecurityContextSource contextSource() {
-        DefaultSpringSecurityContextSource contextSource = new DefaultSpringSecurityContextSource(applicationProperties.getAuthentication().getLdap().url);
+        DefaultSpringSecurityContextSource contextSource = new DefaultSpringSecurityContextSource(applicationProperties.getAuthentication().getLdap().getUrl());
 
-        if (!StringUtils.isEmpty(applicationProperties.getAuthentication().getLdap().referral)) {
-            contextSource.setReferral(applicationProperties.getAuthentication().getLdap().referral);
+        if (!StringUtils.isEmpty(applicationProperties.getAuthentication().getLdap().getReferral())) {
+            contextSource.setReferral(applicationProperties.getAuthentication().getLdap().getReferral());
         }
 
-        if (!StringUtils.isEmpty(applicationProperties.getAuthentication().getLdap().username)
-                && !StringUtils.isEmpty(applicationProperties.getAuthentication().getLdap().password) ) {
+        if (!StringUtils.isEmpty(applicationProperties.getAuthentication().getLdap().getUsername())
+                && !StringUtils.isEmpty(applicationProperties.getAuthentication().getLdap().getPassword()) ) {
             contextSource.setAuthenticationSource(new AuthenticationSource() {
                 @Override
                 public String getPrincipal() {
-                    return applicationProperties.getAuthentication().getLdap().username;
+                    return applicationProperties.getAuthentication().getLdap().getUsername();
                 }
 
                 @Override
                 public String getCredentials() {
-                    return applicationProperties.getAuthentication().getLdap().password;
+                    return applicationProperties.getAuthentication().getLdap().getPassword();
                 }
             });
         }

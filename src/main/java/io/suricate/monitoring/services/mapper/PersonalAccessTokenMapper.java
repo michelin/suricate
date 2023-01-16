@@ -10,9 +10,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-@Mapper(
-        componentModel = "spring"
-)
+@Mapper(componentModel = "spring")
 public abstract class PersonalAccessTokenMapper {
     /**
      * Map a token into a DTO

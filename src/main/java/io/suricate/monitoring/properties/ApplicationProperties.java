@@ -34,248 +34,105 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Hold the custom properties from properties.yml files
- */
 @Getter
 @Setter
 @Configuration
 @PropertySource("classpath:application.properties")
 @ConfigurationProperties(prefix = "application", ignoreUnknownFields = false)
 public class ApplicationProperties {
-    /**
-     * Cors properties
-     */
-    public final CorsConfiguration cors = new CorsConfiguration();
-
-    /**
-     * Authentication properties
-     */
-    public final Authentication authentication = new Authentication();
-
-    /**
-     * SSL properties
-     */
-    public final Ssl ssl = new Ssl();
-
-    /**
-     * Widgets properties
-     */
-    public final Widgets widgets = new Widgets();
-
-    public final Swagger swagger = new Swagger();
+    private CorsConfiguration cors;
+    private Authentication authentication;
+    private Ssl ssl;
+    private Widgets widgets;
+    private Swagger swagger;
 
     @Getter
     @Setter
     public static class Authentication {
-        public final Ldap ldap = new Ldap();
-
-        public final Jwt jwt = new Jwt();
-
-        public final PersonalAccessToken pat = new PersonalAccessToken();
-
-        public final OAuth2 oauth2 = new OAuth2();
-
+        private Ldap ldap;
+        private Jwt jwt;
+        private PersonalAccessToken pat;
+        private OAuth2 oauth2;
         @Pattern(regexp = "ldap|database")
-        public String provider;
-
+        private String provider;
         private List<String> socialProviders;
-
         private Map<String, SocialProvidersConfig> socialProvidersConfig = new HashMap<>();
     }
 
-    /**
-     * Hold the LDAP properties info
-     */
     @Getter
     @Setter
     public static class Ldap {
-        /**
-         * The LDAP URL
-         */
-        public String url;
-        /**
-         * The filter to search user
-         */
-        public String userSearchFilter;
-        /**
-         * Attribute for user group role
-         */
-        public String groupRoleAttribute;
-        /**
-         * The group search base
-         */
-        public String groupSearchBase = StringUtils.EMPTY;
-        /**
-         * Filter to search group
-         */
-        public String groupSearchFilter;
-        /**
-         * Role prefix
-         */
-        public String rolePrefix = "ROLE_";
-        /**
-         * The user search base
-         */
-        public String userSearchBase = StringUtils.EMPTY;
-        /**
-         * The user  Distinguished Name patterns
-         */
-        public String userDnPatterns;
-        /**
-         * The username used to start the connection with the LDAP
-         */
-        public String username = StringUtils.EMPTY;
-        /**
-         * The password used to start the connection with the LDAP
-         */
-        public String password = StringUtils.EMPTY;
-        /**
-         * The LDAP attribute to retrieve the user firstname
-         */
-        public String firstNameAttributName;
-        /**
-         * The LDAP attribute to retrieve the user lastname
-         */
-        public String lastNameAttributName;
-        /**
-         * The LDAP attribute to retrieve the user mail
-         */
-        public String mailAttributName;
-        /**
-         * The Ldap referral (behavior when the LDAP search executor find a reference to another LDAP server)
-         */
-        public String referral = ReferralHandlingMode.IGNORE.getJndiValue();
+        private String url;
+        private String userSearchFilter;
+        private String groupRoleAttribute;
+        private String groupSearchBase = StringUtils.EMPTY;
+        private String groupSearchFilter;
+        private String rolePrefix = "ROLE_";
+        private String userSearchBase = StringUtils.EMPTY;
+        private String userDnPatterns;
+        private String username = StringUtils.EMPTY;
+        private String password = StringUtils.EMPTY;
+        private String firstNameAttributName;
+        private String lastNameAttributName;
+        private String mailAttributName;
+        private String referral = ReferralHandlingMode.IGNORE.getJndiValue();
     }
 
-    /**
-     * Hold the JWT properties info
-     */
     @Getter
     @Setter
     public static class Jwt {
-
-        /**
-         * JWT validity in second
-         */
         @NotNull
-        public long tokenValidityMs;
+        private long tokenValidityMs;
 
-        /**
-         * JWT signing key
-         */
         @NotNull
-        public String signingKey;
+        private String signingKey;
     }
 
-    /**
-     * Hold the personal access token properties info
-     */
     @Getter
     @Setter
     public static class PersonalAccessToken {
-        /**
-         * Personal access token prefix
-         */
         @NotNull
-        public String prefix;
+        private String prefix;
 
-        /**
-         * Personal access token checksum secret
-         */
         @NotNull
-        public String checksumSecret;
+        private String checksumSecret;
     }
 
-    /**
-     * Hold the OAuth2 properties info
-     */
     @Getter
     @Setter
     public static class OAuth2 {
-        /**
-         * A default redirect URL after being logged in with OAuth2
-         */
-        public String defaultTargetUrl;
-
-        /**
-         * Should the referer be considered to redirect after oauth2 authentication
-         */
-        public boolean useReferer;
+        private String defaultTargetUrl;
+        private boolean useReferer;
     }
 
-    /**
-     * Hold the SSL properties info
-     */
     @Getter
     @Setter
     public static class Ssl {
-        /**
-         * Key Store configuration
-         */
-        public final KeyStore keyStore = new KeyStore();
-
-        /**
-         * Trust store configuration
-         */
-        public final TrustStore trustStore = new TrustStore();
+        private KeyStore keyStore;
+        private TrustStore trustStore;
     }
 
-    /**
-     * Hold the KeyStore properties info
-     */
     @Getter
     @Setter
     public static class KeyStore {
-        /**
-         * Key Store path
-         */
-        public String path;
-
-        /**
-         * Key Store password
-         */
-        public String password;
-
-        /**
-         * Key Store type
-         */
-        public String type;
+        private String path;
+        private String password;
+        private String type;
     }
 
-    /**
-     * Hold the TrustStore properties info
-     */
     @Getter
     @Setter
     public static class TrustStore {
-        /**
-         * Trust Store path
-         */
-        public String path;
-
-        /**
-         * Trust Store password
-         */
-        public String password;
-
-        /**
-         * Trust Store type
-         */
-        public String type;
+        private String path;
+        private String password;
+        private String type;
     }
 
-    /**
-     * Hold the Widgets properties info
-     */
     @Getter
     @Setter
     public static class Widgets {
-        /**
-         * Enable the widget update (Local and Git)
-         */
         @NotNull
-        public boolean updateEnable;
+        private boolean updateEnable;
     }
 
     @Getter

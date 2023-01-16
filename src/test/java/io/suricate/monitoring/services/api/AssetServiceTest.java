@@ -34,15 +34,19 @@ class AssetServiceTest {
             asset.setSize(1L);
             asset.setContentType("contentType");
 
-            mocked.when(() -> IdUtils.decrypt("token")).thenReturn(1L);
-            when(assetRepository.findById(1L)).thenReturn(Optional.of(asset));
+            mocked.when(() -> IdUtils.decrypt("token"))
+                    .thenReturn(1L);
+            when(assetRepository.findById(1L))
+                    .thenReturn(Optional.of(asset));
 
             Asset actual = assetService.getAssetById("token");
+
             assertThat(actual)
                     .isNotNull()
                     .isEqualTo(asset);
 
-            verify(assetRepository, times(1)).findById(1L);
+            verify(assetRepository, times(1))
+                    .findById(1L);
         }
     }
 
@@ -55,8 +59,10 @@ class AssetServiceTest {
             asset.setSize(1L);
             asset.setContentType("contentType");
 
-            mocked.when(() -> IdUtils.decrypt("token")).thenReturn(1L);
-            when(assetRepository.findById(1L)).thenReturn(Optional.empty());
+            mocked.when(() -> IdUtils.decrypt("token"))
+                    .thenReturn(1L);
+            when(assetRepository.findById(1L))
+                    .thenReturn(Optional.empty());
 
             assertThatThrownBy(() -> assetService.getAssetById("token"))
                     .isInstanceOf(ObjectNotFoundException.class);
@@ -71,12 +77,16 @@ class AssetServiceTest {
         asset.setSize(1L);
         asset.setContentType("contentType");
 
-        when(assetRepository.save(any())).thenReturn(asset);
+        when(assetRepository.save(any()))
+                .thenAnswer(answer -> answer.getArgument(0));
+
         Asset actual = assetService.save(asset);
+
         assertThat(actual)
                 .isNotNull()
                 .isEqualTo(asset);
 
-        verify(assetRepository, times(1)).save(asset);
+        verify(assetRepository, times(1))
+                .save(asset);
     }
 }

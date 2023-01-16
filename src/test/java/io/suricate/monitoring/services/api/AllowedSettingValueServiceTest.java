@@ -28,13 +28,16 @@ class AllowedSettingValueServiceTest {
         allowedSettingValue.setTitle("title");
         allowedSettingValue.setValue("value");
 
-        when(allowedSettingValueRepository.findById(1L)).thenReturn(Optional.of(allowedSettingValue));
+        when(allowedSettingValueRepository.findById(1L))
+                .thenReturn(Optional.of(allowedSettingValue));
 
         Optional<AllowedSettingValue> actual = allowedSettingValueService.findById(1L);
+
         assertThat(actual)
                 .isPresent()
                 .contains(allowedSettingValue);
 
-        verify(allowedSettingValueRepository, times(1)).findById(1L);
+        verify(allowedSettingValueRepository, times(1))
+                .findById(1L);
     }
 }

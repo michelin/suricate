@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -50,11 +51,13 @@ class CategoryParametersServiceTest {
                 .thenReturn(Optional.of(Collections.singletonList(categoryParameter)));
 
         Optional<List<CategoryParameter>> actual = categoryParametersService.getParametersByCategoryId(1L);
+
         assertThat(actual).isPresent();
         assertThat(actual.get()).hasSize(1);
         assertThat(actual.get().get(0)).isEqualTo(categoryParameter);
 
-        verify(categoryParametersRepository, times(1)).findCategoryParametersByCategoryId(1L);
+        verify(categoryParametersRepository, times(1))
+                .findCategoryParametersByCategoryId(1L);
     }
 
     @Test
@@ -69,12 +72,15 @@ class CategoryParametersServiceTest {
                 .thenReturn(new PageImpl<>(Collections.singletonList(categoryParameter)));
 
         Page<CategoryParameter> actual = categoryParametersService.getAll("search", Pageable.unpaged());
+
         assertThat(actual)
                 .isNotEmpty()
                 .contains(categoryParameter);
 
         verify(categoryParametersRepository, times(1))
-                .findAll(any(CategoryParametersSearchSpecification.class), any(Pageable.class));
+                .findAll(Mockito.<CategoryParametersSearchSpecification>argThat(specification -> specification.getSearch().equals("search") &&
+                                specification.getAttributes().contains(description.getName())),
+                        Mockito.<Pageable>argThat(pageable -> pageable.equals(Pageable.unpaged())));
     }
 
     @Test
@@ -88,11 +94,13 @@ class CategoryParametersServiceTest {
                 .thenReturn(Optional.of(categoryParameter));
 
         Optional<CategoryParameter> actual = categoryParametersService.getOneByKey("key");
+
         assertThat(actual)
                 .isPresent()
                 .contains(categoryParameter);
 
-        verify(categoryParametersRepository, times(1)).findById("key");
+        verify(categoryParametersRepository, times(1))
+                .findById("key");
     }
 
     @Test
@@ -102,13 +110,16 @@ class CategoryParametersServiceTest {
         categoryParameter.setValue("value");
         categoryParameter.setDataType(DataTypeEnum.TEXT);
 
-        when(categoryParametersRepository.save(any())).thenReturn(categoryParameter);
+        when(categoryParametersRepository.save(any()))
+                .thenAnswer(answer -> answer.getArgument(0));
 
         categoryParametersService.updateConfiguration(categoryParameter, "newValue");
+
         assertThat(categoryParameter.getValue())
                 .isEqualTo("newValue");
 
-        verify(categoryParametersRepository, times(1)).save(categoryParameter);
+        verify(categoryParametersRepository, times(1))
+                .save(categoryParameter);
     }
 
     @Test
@@ -118,14 +129,18 @@ class CategoryParametersServiceTest {
         categoryParameter.setValue("value");
         categoryParameter.setDataType(DataTypeEnum.PASSWORD);
 
-        when(categoryParametersRepository.save(any())).thenReturn(categoryParameter);
-        when(stringEncryptor.encrypt("newValue")).thenReturn("encrypted");
+        when(categoryParametersRepository.save(any()))
+                .thenAnswer(answer -> answer.getArgument(0));
+        when(stringEncryptor.encrypt("newValue"))
+                .thenReturn("encrypted");
 
         categoryParametersService.updateConfiguration(categoryParameter, "newValue");
+
         assertThat(categoryParameter.getValue())
                 .isEqualTo("encrypted");
 
-        verify(categoryParametersRepository, times(1)).save(categoryParameter);
+        verify(categoryParametersRepository, times(1))
+                .save(categoryParameter);
     }
 
     @Test
@@ -135,11 +150,13 @@ class CategoryParametersServiceTest {
         categoryParameter.setValue("value");
         categoryParameter.setDataType(DataTypeEnum.TEXT);
 
-        doNothing().when(categoryParametersRepository).deleteById("key");
+        doNothing().when(categoryParametersRepository)
+                .deleteById("key");
 
         categoryParametersService.deleteOneByKey("key");
 
-        verify(categoryParametersRepository, times(1)).deleteById("key");
+        verify(categoryParametersRepository, times(1))
+                .deleteById("key");
     }
 
     @Test
@@ -153,17 +170,22 @@ class CategoryParametersServiceTest {
         category.setId(1L);
         category.setName("name");
 
-        when(categoryParametersRepository.findById(any())).thenReturn(Optional.empty());
-        when(categoryParametersRepository.save(any())).thenReturn(categoryParameter);
+        when(categoryParametersRepository.findById(any()))
+                .thenReturn(Optional.empty());
+        when(categoryParametersRepository.save(any()))
+                .thenAnswer(answer -> answer.getArgument(0));
 
         categoryParametersService.addOrUpdateCategoryConfiguration(Collections.singleton(categoryParameter), category);
+
         assertThat(categoryParameter.getCategory()).isEqualTo(category);
         assertThat(categoryParameter.getKey()).isEqualTo("key");
         assertThat(categoryParameter.getValue()).isEqualTo("value");
         assertThat(categoryParameter.isExport()).isFalse();
 
-        verify(categoryParametersRepository, times(1)).findById("key");
-        verify(categoryParametersRepository, times(1)).save(categoryParameter);
+        verify(categoryParametersRepository, times(1))
+                .findById("key");
+        verify(categoryParametersRepository, times(1))
+                .save(categoryParameter);
     }
 
     @Test
@@ -183,17 +205,22 @@ class CategoryParametersServiceTest {
         category.setId(1L);
         category.setName("name");
 
-        when(categoryParametersRepository.findById(any())).thenReturn(Optional.of(currentCategoryParameter));
-        when(categoryParametersRepository.save(any())).thenReturn(categoryParameter);
+        when(categoryParametersRepository.findById(any()))
+                .thenReturn(Optional.of(currentCategoryParameter));
+        when(categoryParametersRepository.save(any()))
+                .thenAnswer(answer -> answer.getArgument(0));
 
         categoryParametersService.addOrUpdateCategoryConfiguration(Collections.singleton(categoryParameter), category);
+
         assertThat(categoryParameter.getCategory()).isEqualTo(category);
         assertThat(categoryParameter.getKey()).isEqualTo("key");
         assertThat(categoryParameter.getValue()).isEqualTo("oldValue");
         assertThat(categoryParameter.isExport()).isTrue();
 
-        verify(categoryParametersRepository, times(1)).findById("key");
-        verify(categoryParametersRepository, times(1)).save(categoryParameter);
+        verify(categoryParametersRepository, times(1))
+                .findById("key");
+        verify(categoryParametersRepository, times(1))
+                .save(categoryParameter);
     }
 
     @Test

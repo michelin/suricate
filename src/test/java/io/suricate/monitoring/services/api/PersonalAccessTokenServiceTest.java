@@ -38,11 +38,13 @@ class PersonalAccessTokenServiceTest {
                 .thenReturn(Collections.singletonList(personalAccessToken));
 
         List<PersonalAccessToken> actual = personalAccessTokenService.findAllByUser(user);
+
         assertThat(actual)
                 .hasSize(1)
                 .contains(personalAccessToken);
 
-        verify(personalAccessTokenRepository, times(1)).findAllByUser(user);
+        verify(personalAccessTokenRepository, times(1))
+                .findAllByUser(user);
     }
 
     @Test
@@ -57,11 +59,13 @@ class PersonalAccessTokenServiceTest {
                 .thenReturn(Optional.of(personalAccessToken));
 
         Optional<PersonalAccessToken> actual = personalAccessTokenService.findByNameAndUser("name", user);
+
         assertThat(actual)
                 .isPresent()
                 .contains(personalAccessToken);
 
-        verify(personalAccessTokenRepository, times(1)).findByNameAndUser("name", user);
+        verify(personalAccessTokenRepository, times(1))
+                .findByNameAndUser("name", user);
     }
 
     @Test
@@ -69,14 +73,17 @@ class PersonalAccessTokenServiceTest {
         PersonalAccessToken personalAccessToken = new PersonalAccessToken();
         personalAccessToken.setId(1L);
 
-        when(personalAccessTokenRepository.findByChecksum(any())).thenReturn(Optional.of(personalAccessToken));
+        when(personalAccessTokenRepository.findByChecksum(any()))
+                .thenReturn(Optional.of(personalAccessToken));
 
         Optional<PersonalAccessToken> actual = personalAccessTokenService.findByChecksum(1L);
+
         assertThat(actual)
                 .isPresent()
                 .contains(personalAccessToken);
 
-        verify(personalAccessTokenRepository, times(1)).findByChecksum(1L);
+        verify(personalAccessTokenRepository, times(1))
+                .findByChecksum(1L);
     }
 
     @Test
@@ -126,27 +133,29 @@ class PersonalAccessTokenServiceTest {
             }
         };
 
-        PersonalAccessToken personalAccessToken = new PersonalAccessToken();
-        personalAccessToken.setId(1L);
-        personalAccessToken.setName("name");
-        personalAccessToken.setChecksum(1L);
-        personalAccessToken.setUser(new User());
-
-        when(personalAccessTokenRepository.save(any())).thenReturn(personalAccessToken);
+        when(personalAccessTokenRepository.save(any()))
+                .thenAnswer(answer -> answer.getArgument(0));
 
         PersonalAccessToken actual = personalAccessTokenService.create("token", 1L, authentication);
-        assertThat(actual)
-                .isEqualTo(personalAccessToken);
 
-        verify(personalAccessTokenRepository, times(1)).save(any());
+        assertThat(actual.getName()).isEqualTo("token");
+        assertThat(actual.getChecksum()).isEqualTo(1L);
+        assertThat(actual.getUser()).isEqualTo(((LocalUser) authentication.getPrincipal()).getUser());
+
+        verify(personalAccessTokenRepository, times(1))
+                .save(argThat(createdPersonalAccessToken -> createdPersonalAccessToken.getName().equals("token") &&
+                        createdPersonalAccessToken.getChecksum().equals(1L) &&
+                        createdPersonalAccessToken.getUser().equals(((LocalUser) authentication.getPrincipal()).getUser())));
     }
 
     @Test
     void shouldDeleteById() {
-        doNothing().when(personalAccessTokenRepository).deleteById(any());
+        doNothing().when(personalAccessTokenRepository)
+                .deleteById(any());
 
         personalAccessTokenService.deleteById(1L);
 
-        verify(personalAccessTokenRepository, times(1)).deleteById(1L);
+        verify(personalAccessTokenRepository, times(1))
+                .deleteById(1L);
     }
 }

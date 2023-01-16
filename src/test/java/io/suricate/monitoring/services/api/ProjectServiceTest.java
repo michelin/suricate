@@ -7,11 +7,13 @@ import io.suricate.monitoring.repositories.ProjectRepository;
 import io.suricate.monitoring.security.LocalUser;
 import io.suricate.monitoring.services.specifications.ProjectSearchSpecification;
 import io.suricate.monitoring.services.websocket.DashboardWebSocketService;
+import org.apache.commons.lang3.StringUtils;
 import org.jasypt.encryption.StringEncryptor;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -21,6 +23,7 @@ import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -55,11 +58,15 @@ class ProjectServiceTest {
                 .thenReturn(new PageImpl<>(Collections.singletonList(project)));
 
         Page<Project> actual = projectService.getAll("search", Pageable.unpaged());
+
         assertThat(actual)
                 .isNotEmpty()
                 .contains(project);
 
-        verify(projectRepository, times(1)).findAll(any(ProjectSearchSpecification.class), any(Pageable.class));
+        verify(projectRepository, times(1))
+                .findAll(Mockito.<ProjectSearchSpecification>argThat(specification -> specification.getSearch().equals("search") &&
+                                specification.getAttributes().isEmpty()),
+                        Mockito.<Pageable>argThat(pageable -> pageable.equals(Pageable.unpaged())));
     }
 
     @Test
@@ -70,14 +77,17 @@ class ProjectServiceTest {
         User user = new User();
         user.setId(1L);
 
-        when(projectRepository.findByUsersIdOrderByName(any())).thenReturn(Collections.singletonList(project));
+        when(projectRepository.findByUsersIdOrderByName(any()))
+                .thenReturn(Collections.singletonList(project));
 
         List<Project> actual = projectService.getAllByUser(user);
+
         assertThat(actual)
                 .isNotEmpty()
                 .contains(project);
 
-        verify(projectRepository, times(1)).findByUsersIdOrderByName(1L);
+        verify(projectRepository, times(1))
+                .findByUsersIdOrderByName(1L);
     }
 
     @Test
@@ -85,14 +95,17 @@ class ProjectServiceTest {
         Project project = new Project();
         project.setId(1L);
 
-        when(projectRepository.findById(any())).thenReturn(Optional.of(project));
+        when(projectRepository.findById(any()))
+                .thenReturn(Optional.of(project));
 
         Optional<Project> actual = projectService.getOneById(1L);
+
         assertThat(actual)
                 .isPresent()
                 .contains(project);
 
-        verify(projectRepository, times(1)).findById(1L);
+        verify(projectRepository, times(1))
+                .findById(1L);
     }
 
     @Test
@@ -100,14 +113,17 @@ class ProjectServiceTest {
         Project project = new Project();
         project.setId(1L);
 
-        when(projectRepository.findProjectByToken(any())).thenReturn(Optional.of(project));
+        when(projectRepository.findProjectByToken(any()))
+                .thenReturn(Optional.of(project));
 
         Optional<Project> actual = projectService.getOneByToken("token");
+
         assertThat(actual)
                 .isPresent()
                 .contains(project);
 
-        verify(projectRepository, times(1)).findProjectByToken("token");
+        verify(projectRepository, times(1))
+                .findProjectByToken("token");
     }
 
     @Test
@@ -115,12 +131,15 @@ class ProjectServiceTest {
         Project project = new Project();
         project.setId(1L);
 
-        when(projectRepository.getToken(any())).thenReturn("token");
+        when(projectRepository.getToken(any()))
+                .thenReturn("token");
 
         String actual = projectService.getTokenByProjectId(1L);
+
         assertThat(actual).isEqualTo("token");
 
-        verify(projectRepository, times(1)).getToken(1L);
+        verify(projectRepository, times(1))
+                .getToken(1L);
     }
 
     @Test
@@ -128,15 +147,20 @@ class ProjectServiceTest {
         Project project = new Project();
         project.setId(1L);
 
-        when(stringEncryptor.encrypt(any())).thenReturn("encrypted");
-        when(projectRepository.save(any())).thenReturn(project);
+        when(stringEncryptor.encrypt(any()))
+                .thenReturn("encrypted");
+        when(projectRepository.save(any()))
+                .thenAnswer(answer -> answer.getArgument(0));
 
         Project actual = projectService.createProject(project);
+
         assertThat(actual).isNotNull();
         assertThat(actual.getToken()).isEqualTo("encrypted");
 
-        verify(stringEncryptor, times(1)).encrypt(any());
-        verify(projectRepository, times(1)).save(project);
+        verify(stringEncryptor, times(1))
+                .encrypt(any(String.class));
+        verify(projectRepository, times(1))
+                .save(project);
     }
 
     @Test
@@ -145,14 +169,18 @@ class ProjectServiceTest {
         project.setId(1L);
         project.setToken("token");
 
-        when(projectRepository.save(any())).thenReturn(project);
+        when(projectRepository.save(any()))
+                .thenAnswer(answer -> answer.getArgument(0));
 
         Project actual = projectService.createProject(project);
+
         assertThat(actual).isNotNull();
         assertThat(actual.getToken()).isEqualTo("token");
 
-        verify(stringEncryptor, times(0)).encrypt(any());
-        verify(projectRepository, times(1)).save(project);
+        verify(stringEncryptor, times(0))
+                .encrypt(any(String.class));
+        verify(projectRepository, times(1))
+                .save(project);
     }
 
     @Test
@@ -164,16 +192,20 @@ class ProjectServiceTest {
         project.setId(1L);
         project.setToken("token");
 
-        when(projectRepository.save(any())).thenReturn(project);
+        when(projectRepository.save(any()))
+                .thenAnswer(answer -> answer.getArgument(0));
 
         Project actual = projectService.createProjectForUser(user, project);
+
         assertThat(actual).isNotNull();
         assertThat(actual.getUsers())
                 .hasSize(1)
                 .contains(user);
 
-        verify(stringEncryptor, times(0)).encrypt(any());
-        verify(projectRepository, times(1)).save(project);
+        verify(stringEncryptor, times(0))
+                .encrypt(any(String.class));
+        verify(projectRepository, times(1))
+                .save(project);
     }
 
     @Test
@@ -193,23 +225,36 @@ class ProjectServiceTest {
         project.setToken("token");
         project.setGrids(Collections.singleton(projectGrid));
 
-        when(projectRepository.findProjectByToken(any())).thenReturn(Optional.empty());
-        when(projectGridService.findByIdAndProjectToken(any(), any())).thenReturn(Optional.empty());
-        when(projectGridService.create(any())).thenReturn(projectGrid);
-        when(projectWidgetService.findByIdAndProjectGridId(any(), any())).thenReturn(Optional.empty());
-        when(projectWidgetService.create(any())).thenReturn(projectWidget);
-        when(projectRepository.findAll(any())).thenReturn(Collections.singletonList(project));
+        when(projectRepository.findProjectByToken(any()))
+                .thenReturn(Optional.empty());
+        when(projectGridService.findByIdAndProjectToken(any(), any()))
+                .thenReturn(Optional.empty());
+        when(projectGridService.create(any()))
+                .thenAnswer(answer -> answer.getArgument(0));
+        when(projectWidgetService.findByIdAndProjectGridId(any(), any()))
+                .thenReturn(Optional.empty());
+        when(projectWidgetService.create(any()))
+                .thenAnswer(answer -> answer.getArgument(0));
+        when(projectRepository.findAll(any()))
+                .thenReturn(Collections.singletonList(project));
 
         List<Project> actual = projectService.createUpdateProjects(Collections.singletonList(project), user);
+
         assertThat(actual)
                 .hasSize(1)
                 .contains(project);
 
-        verify(projectRepository, times(1)).findProjectByToken("token");
-        verify(projectGridService, times(1)).findByIdAndProjectToken(1L, "token");
-        verify(projectGridService, times(1)).create(projectGrid);
-        verify(projectWidgetService, times(1)).findByIdAndProjectGridId(1L, null);
-        verify(projectRepository, times(1)).findAll(any(ProjectSearchSpecification.class));
+        verify(projectRepository, times(1))
+                .findProjectByToken("token");
+        verify(projectGridService, times(1))
+                .findByIdAndProjectToken(1L, "token");
+        verify(projectGridService, times(1))
+                .create(projectGrid);
+        verify(projectWidgetService, times(1))
+                .findByIdAndProjectGridId(1L, null);
+        verify(projectRepository, times(1))
+                .findAll(Mockito.<ProjectSearchSpecification>argThat(specification -> specification.getSearch().equals(StringUtils.EMPTY) &&
+                                specification.getAttributes().isEmpty()));
     }
 
     @Test
@@ -249,14 +294,21 @@ class ProjectServiceTest {
         existingProject.setScreenshot(existingAsset);
         existingProject.setGrids(Collections.singleton(existingProjectGrid));
 
-        when(projectRepository.findProjectByToken(any())).thenReturn(Optional.of(existingProject));
-        when(projectGridService.findByIdAndProjectToken(any(), any())).thenReturn(Optional.of(existingProjectGrid));
-        when(projectGridService.create(any())).thenReturn(projectGrid);
-        when(projectWidgetService.findByIdAndProjectGridId(any(), any())).thenReturn(Optional.of(existingProjectWidget));
-        when(projectWidgetService.create(any())).thenReturn(projectWidget);
-        when(projectRepository.findAll(any())).thenReturn(Collections.singletonList(project));
+        when(projectRepository.findProjectByToken(any()))
+                .thenReturn(Optional.of(existingProject));
+        when(projectGridService.findByIdAndProjectToken(any(), any()))
+                .thenReturn(Optional.of(existingProjectGrid));
+        when(projectGridService.create(any()))
+                .thenAnswer(answer -> answer.getArgument(0));
+        when(projectWidgetService.findByIdAndProjectGridId(any(), any()))
+                .thenReturn(Optional.of(existingProjectWidget));
+        when(projectWidgetService.create(any()))
+                .thenAnswer(answer -> answer.getArgument(0));
+        when(projectRepository.findAll(any()))
+                .thenReturn(Collections.singletonList(project));
 
         List<Project> actual = projectService.createUpdateProjects(Collections.singletonList(project), user);
+
         assertThat(actual)
                 .hasSize(1)
                 .contains(project);
@@ -267,11 +319,17 @@ class ProjectServiceTest {
         assertThat(new ArrayList<>(new ArrayList<>(actual.get(0).getGrids()).get(0).getWidgets()).get(0).getId())
                 .isEqualTo(1L);
 
-        verify(projectRepository, times(1)).findProjectByToken("token");
-        verify(projectGridService, times(1)).findByIdAndProjectToken(1L, "token");
-        verify(projectGridService, times(1)).create(projectGrid);
-        verify(projectWidgetService, times(1)).findByIdAndProjectGridId(1L, 1L);
-        verify(projectRepository, times(1)).findAll(any(ProjectSearchSpecification.class));
+        verify(projectRepository, times(1))
+                .findProjectByToken("token");
+        verify(projectGridService, times(1))
+                .findByIdAndProjectToken(1L, "token");
+        verify(projectGridService, times(1))
+                .create(projectGrid);
+        verify(projectWidgetService, times(1))
+                .findByIdAndProjectGridId(1L, 1L);
+        verify(projectRepository, times(1))
+                .findAll(Mockito.<ProjectSearchSpecification>argThat(specification -> specification.getSearch().equals(StringUtils.EMPTY) &&
+                        specification.getAttributes().isEmpty()));
     }
 
     @Test
@@ -280,8 +338,10 @@ class ProjectServiceTest {
         project.setId(1L);
         project.setToken("token");
 
-        when(projectRepository.save(any())).thenReturn(project);
-        doNothing().when(dashboardWebsocketService).sendEventToProjectSubscribers(any(), any());
+        when(projectRepository.save(any()))
+                .thenAnswer(answer -> answer.getArgument(0));
+        doNothing().when(dashboardWebsocketService)
+                .sendEventToProjectSubscribers(any(), any());
 
         projectService.updateProject(project, "newName", 1, 1, "css");
         assertThat(project.getName()).isEqualTo("newName");
@@ -289,7 +349,8 @@ class ProjectServiceTest {
         assertThat(project.getMaxColumn()).isEqualTo(1);
         assertThat(project.getCssStyle()).isEqualTo("css");
 
-        verify(projectRepository, times(1)).save(project);
+        verify(projectRepository, times(1))
+                .save(project);
         verify(dashboardWebsocketService, times(1))
                 .sendEventToProjectSubscribers("token", UpdateEvent.builder().type(UpdateType.REFRESH_DASHBOARD).build());
     }
@@ -303,12 +364,14 @@ class ProjectServiceTest {
         project.setId(1L);
         project.setUsers(new HashSet<>(Collections.singletonList(user)));
 
-        when(projectRepository.save(any())).thenReturn(project);
+        when(projectRepository.save(any()))
+                .thenAnswer(answer -> answer.getArgument(0));
 
         projectService.deleteUserFromProject(user, project);
         assertThat(project.getUsers()).isEmpty();
 
-        verify(projectRepository, times(1)).save(project);
+        verify(projectRepository, times(1))
+                .save(project);
     }
 
     @Test
@@ -329,7 +392,9 @@ class ProjectServiceTest {
         project.setId(1L);
 
         boolean actual = projectService.isConnectedUserCanAccessToProject(project, localUser);
-        assertThat(actual).isTrue();
+
+        assertThat(actual)
+                .isTrue();
     }
 
     @Test
@@ -351,7 +416,9 @@ class ProjectServiceTest {
         project.setUsers(Collections.singleton(user));
 
         boolean actual = projectService.isConnectedUserCanAccessToProject(project, localUser);
-        assertThat(actual).isTrue();
+
+        assertThat(actual)
+                .isTrue();
     }
 
     @Test
@@ -372,7 +439,9 @@ class ProjectServiceTest {
         project.setId(1L);
 
         boolean actual = projectService.isConnectedUserCanAccessToProject(project, localUser);
-        assertThat(actual).isFalse();
+
+        assertThat(actual)
+                .isFalse();
     }
 
     @Test
@@ -385,7 +454,8 @@ class ProjectServiceTest {
 
         verify(dashboardWebsocketService, times(1))
                 .sendEventToProjectSubscribers("token", UpdateEvent.builder().type(UpdateType.DISCONNECT).build());
-        verify(projectRepository, times(1)).delete(project);
+        verify(projectRepository, times(1))
+                .delete(project);
     }
 
     @Test
@@ -394,13 +464,23 @@ class ProjectServiceTest {
         project.setId(1L);
         project.setToken("token");
 
-        when(assetService.save(any())).thenReturn(new Asset());
-        when(projectRepository.save(any())).thenReturn(project);
+        when(assetService.save(any()))
+                .thenAnswer(answer -> answer.getArgument(0));
+        when(projectRepository.save(any()))
+                .thenAnswer(answer -> answer.getArgument(0));
 
         projectService.addOrUpdateScreenshot(project, new byte[10], "contentType", 10L);
 
-        verify(assetService, times(1)).save(any());
-        verify(projectRepository, times(1)).save(any());
+        verify(assetService, times(1))
+                .save(argThat(asset -> asset.getSize() == 10L &&
+                        asset.getContentType().equals("contentType") &&
+                        Arrays.equals(asset.getContent(), new byte[10])));
+        verify(projectRepository, times(1))
+                .save(argThat(createdProject -> createdProject.getId().equals(1L) &&
+                        createdProject.getToken().equals("token") &&
+                        Arrays.equals(createdProject.getScreenshot().getContent(), new byte[10]) &&
+                        createdProject.getScreenshot().getSize() == 10L &&
+                        createdProject.getScreenshot().getContentType().equals("contentType")));
     }
 
     @Test
@@ -410,11 +490,16 @@ class ProjectServiceTest {
         project.setToken("token");
         project.setScreenshot(new Asset());
 
-        when(assetService.save(any())).thenReturn(new Asset());
+        when(assetService.save(any()))
+                .thenAnswer(answer -> answer.getArgument(0));
 
         projectService.addOrUpdateScreenshot(project, new byte[10], "contentType", 10L);
 
-        verify(assetService, times(1)).save(any());
-        verify(projectRepository, times(0)).save(any());
+        verify(assetService, times(1))
+                .save(argThat(asset -> asset.getSize() == 10L &&
+                        asset.getContentType().equals("contentType") &&
+                        Arrays.equals(asset.getContent(), new byte[10])));
+        verify(projectRepository, times(0))
+                .save(any());
     }
 }

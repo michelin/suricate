@@ -29,14 +29,17 @@ class SettingServiceTest {
         Setting setting = new Setting();
         setting.setId(1L);
 
-        when(settingRepository.findById(any())).thenReturn(Optional.of(setting));
+        when(settingRepository.findById(any()))
+                .thenReturn(Optional.of(setting));
 
         Optional<Setting> actual = settingService.getOneById(1L);
+
         assertThat(actual)
                 .isPresent()
                 .contains(setting);
 
-        verify(settingRepository, times(1)).findById(1L);
+        verify(settingRepository, times(1))
+                .findById(1L);
     }
 
     @Test
@@ -45,14 +48,17 @@ class SettingServiceTest {
         setting.setId(1L);
         List<Setting> settings = Collections.singletonList(setting);
 
-        when(settingRepository.findAllByOrderByDescription()).thenReturn(Optional.of(settings));
+        when(settingRepository.findAllByOrderByDescription())
+                .thenReturn(Optional.of(settings));
 
         Optional<List<Setting>> actual = settingService.getAll();
+
         assertThat(actual).isPresent();
         assertThat(actual.get())
                 .isNotEmpty()
                 .contains(setting);
 
-        verify(settingRepository, times(1)).findAllByOrderByDescription();
+        verify(settingRepository, times(1))
+                .findAllByOrderByDescription();
     }
 }

@@ -18,12 +18,10 @@ package io.suricate.monitoring.services.mapper;
 
 import io.suricate.monitoring.model.dto.api.widget.WidgetResponseDto;
 import io.suricate.monitoring.model.entities.Widget;
-import io.suricate.monitoring.services.api.LibraryService;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collection;
 import java.util.List;
@@ -38,18 +36,12 @@ import java.util.List;
         CategoryMapper.class,
         AssetMapper.class
     },
-    imports = {
+        imports = {
         java.util.stream.Collectors.class,
         com.google.common.collect.Sets.class
     }
 )
 public abstract class WidgetMapper {
-    /**
-     * The project widget service
-     */
-    @Autowired
-    protected LibraryService libraryService;
-
     /**
      * Map a widget into a DTO
      *

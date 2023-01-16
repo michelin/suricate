@@ -1,8 +1,0 @@
-name: Jira release timeline
-description: Widget used to display the timeline of all jira release for the specified project
-info: To use this widget, you must first add the jira user '<b>monitoring-bss</b>' as viewer of your project
-technicalName: jiratimeline
-delay: 1500
-libraries:
-  - d3.js
-  - timeknots.js

@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -50,9 +51,14 @@ class CategoryServiceTest {
                 .thenReturn(new PageImpl<>(Collections.singletonList(category)));
 
         Page<Category> actual = categoryService.getAll("search", Pageable.unpaged());
+
         assertThat(actual).isNotEmpty();
         assertThat(actual.get()).hasSize(1);
-        verify(categoryRepository, times(1)).findAll(any(CategorySearchSpecification.class), any(Pageable.class));
+
+        verify(categoryRepository, times(1))
+                .findAll(Mockito.<CategorySearchSpecification>argThat(specification -> specification.getSearch().equals("search") &&
+                                specification.getAttributes().contains(name.getName())),
+                        Mockito.<Pageable>argThat(pageable -> pageable.equals(Pageable.unpaged())));
     }
 
     @Test
@@ -66,21 +72,27 @@ class CategoryServiceTest {
                 .thenReturn(category);
 
         Category actual = categoryRepository.findByTechnicalName("technicalName");
+
         assertThat(actual)
                 .isNotNull()
                 .isEqualTo(category);
 
-        verify(categoryRepository, times(1)).findByTechnicalName("technicalName");
+        verify(categoryRepository, times(1))
+                .findByTechnicalName("technicalName");
     }
 
     @Test
     void shouldAddCategoryWhenNull() {
         categoryService.addOrUpdateCategory(null);
 
-        verify(assetService, times(0)).save(any());
-        verify(categoryRepository, times(0)).save(any());
-        verify(categoryParametersService, times(0)).deleteOneByKey(any());
-        verify(categoryParametersService, times(0)).addOrUpdateCategoryConfiguration(any(), any());
+        verify(assetService, times(0))
+                .save(any());
+        verify(categoryRepository, times(0))
+                .save(any());
+        verify(categoryParametersService, times(0))
+                .deleteOneByKey(any());
+        verify(categoryParametersService, times(0))
+                .addOrUpdateCategoryConfiguration(any(), any());
     }
 
     @Test
@@ -97,13 +109,17 @@ class CategoryServiceTest {
         category.setImage(asset);
         category.setConfigurations(Collections.singleton(categoryParameter));
 
-        when(categoryRepository.findByTechnicalName("technicalName")).thenReturn(null);
+        when(categoryRepository.findByTechnicalName("technicalName"))
+                .thenReturn(null);
 
         categoryService.addOrUpdateCategory(category);
 
-        verify(assetService, times(1)).save(asset);
-        verify(categoryRepository, times(1)).save(category);
-        verify(categoryParametersService, times(0)).deleteOneByKey("key");
+        verify(assetService, times(1))
+                .save(asset);
+        verify(categoryRepository, times(1))
+                .save(category);
+        verify(categoryParametersService, times(0))
+                .deleteOneByKey("key");
         verify(categoryParametersService, times(1))
                 .addOrUpdateCategoryConfiguration(Collections.singleton(categoryParameter), category);
     }
@@ -135,16 +151,21 @@ class CategoryServiceTest {
         category.setImage(asset);
         category.setConfigurations(Collections.singleton(categoryParameter));
 
-        when(categoryRepository.findByTechnicalName("technicalName")).thenReturn(oldCategory);
+        when(categoryRepository.findByTechnicalName("technicalName"))
+                .thenReturn(oldCategory);
 
         categoryService.addOrUpdateCategory(category);
+
         assertThat(category).isNotNull().isEqualTo(category);
         assertThat(category.getId()).isEqualTo(2L);
         assertThat(category.getImage().getId()).isEqualTo(1L);
 
-        verify(assetService, times(1)).save(asset);
-        verify(categoryRepository, times(1)).save(category);
-        verify(categoryParametersService, times(1)).deleteOneByKey("oldKey");
+        verify(assetService, times(1))
+                .save(asset);
+        verify(categoryRepository, times(1))
+                .save(category);
+        verify(categoryParametersService, times(1))
+                .deleteOneByKey("oldKey");
         verify(categoryParametersService, times(1))
                 .addOrUpdateCategoryConfiguration(Collections.singleton(categoryParameter), category);
     }
@@ -168,6 +189,7 @@ class CategoryServiceTest {
                 .thenReturn(Optional.of(Collections.singletonList(categoryParameter)));
 
         List<WidgetParam> actual = categoryService.getCategoryParametersByWidget(widget);
+
         assertThat(actual).hasSize(1);
         assertThat(actual.get(0).getName()).isEqualTo("key");
         assertThat(actual.get(0).getDefaultValue()).isEqualTo("value");

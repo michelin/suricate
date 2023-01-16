@@ -29,83 +29,48 @@ import io.suricate.monitoring.services.cache.CacheService;
 import io.suricate.monitoring.services.nashorn.scheduler.NashornRequestWidgetExecutionScheduler;
 import io.suricate.monitoring.services.websocket.DashboardWebSocketService;
 import io.suricate.monitoring.utils.WidgetUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jgit.api.CloneCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.AsyncResult;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.Future;
 
-/**
- * Manage git calls
- */
+@Slf4j
 @Service
 public class GitService {
-    /**
-     * Class logger
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(GitService.class);
-
-    /**
-     * The scheduler scheduling the widget execution through Nashorn
-     */
     @Autowired
     private NashornRequestWidgetExecutionScheduler nashornWidgetScheduler;
 
-    /**
-     * The application properties
-     */
     @Autowired
     private ApplicationProperties applicationProperties;
 
-    /**
-     * The widget service
-     */
     @Autowired
     private WidgetService widgetService;
 
-    /**
-     * The widget service
-     */
     @Autowired
     private CategoryService categoryService;
 
-    /**
-     * The library service
-     */
     @Autowired
     private LibraryService libraryService;
 
-    /**
-     * The repository service
-     */
     @Autowired
     private RepositoryService repositoryService;
 
-    /**
-     * The dashboard websocket service
-     */
     @Autowired
     private DashboardWebSocketService dashboardWebSocketService;
 
-    /**
-     * Cache service
-     */
     @Autowired
     private CacheService cacheService;
 
@@ -118,7 +83,7 @@ public class GitService {
         try {
             updateWidgetFromEnabledGitRepositories();
         } catch (Exception e) {
-            LOGGER.error("An error has occurred when cloning and updating the widgets from the repositories", e);
+            log.error("An error has occurred when cloning and updating the widgets from the repositories", e);
         }
     }
 
@@ -127,16 +92,16 @@ public class GitService {
      */
     @Transactional
     public void updateWidgetFromEnabledGitRepositories() throws GitAPIException, IOException {
-        LOGGER.info("Update widgets from Git repository");
+        log.info("Update widgets from Git repository");
 
-        if (!applicationProperties.widgets.updateEnable) {
-            LOGGER.info("Widget update disabled");
+        if (!applicationProperties.getWidgets().isUpdateEnable()) {
+            log.info("Widget update disabled");
             return;
         }
 
         Optional<List<Repository>> optionalRepositories = repositoryService.findAllByEnabledOrderByPriorityDescCreatedDateAsc(true);
         if (!optionalRepositories.isPresent()) {
-            LOGGER.info("No remote or local repository found");
+            log.info("No remote or local repository found");
             return;
         }
 
@@ -151,7 +116,7 @@ public class GitService {
         try {
             for (Repository repository : repositories) {
                 if (repository.getType() == RepositoryTypeEnum.LOCAL) {
-                    LOGGER.info("Loading widgets from the local folder {}", repository.getLocalPath());
+                    log.info("Loading widgets from the local folder {}", repository.getLocalPath());
 
                     updateWidgetsFromRepositoryFolder(new File(repository.getLocalPath()), true, repository);
                 } else {
@@ -165,7 +130,6 @@ public class GitService {
             nashornWidgetScheduler.init();
             dashboardWebSocketService.reloadAllConnectedClientsToAllProjects();
         }
-
     }
 
     /**
@@ -178,7 +142,7 @@ public class GitService {
      * @return File object on local repo
      */
     public File cloneRemoteRepository(String url, String branch, String login, String password) throws IOException, GitAPIException {
-        LOGGER.info("Cloning the branch {} of the remote repository {}", branch, url);
+        log.info("Cloning the branch {} of the remote repository {}", branch, url);
 
         File localRepository = File.createTempFile("tmp", Long.toString(System.nanoTime()));
 
@@ -199,9 +163,9 @@ public class GitService {
         }
 
         try (Git git = cloneCmd.call()) {
-            LOGGER.info("The branch {} from the remote repository {} was successfully cloned", git.getRepository().getBranch(), url);
+            log.info("The branch {} from the remote repository {} was successfully cloned", git.getRepository().getBranch(), url);
         } catch (Exception e) {
-            LOGGER.error("An error has occurred while trying to clone the branch {} of the remote repository {}", branch, url, e);
+            log.error("An error has occurred while trying to clone the branch {} of the remote repository {}", branch, url, e);
             FileUtils.deleteQuietly(localRepository);
             throw e;
         }
@@ -235,7 +199,6 @@ public class GitService {
 
                 categories.forEach(category -> {
                     categoryService.addOrUpdateCategory(category);
-
                     widgetService.addOrUpdateWidgets(category, allLibraries, repository);
                 });
 
