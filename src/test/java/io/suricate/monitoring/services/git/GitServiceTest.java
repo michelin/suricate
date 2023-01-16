@@ -288,8 +288,7 @@ class GitServiceTest {
                 .reloadAllConnectedClientsToAllProjects();
 
         assertThatThrownBy(() -> gitService.readWidgetRepositories(Collections.singletonList(repository)))
-                .isInstanceOf(IOException.class)
-                .hasMessage("E:\\Projects\\suricate\\unknown\\libraries");
+                .isInstanceOf(IOException.class);
 
         verify(nashornWidgetScheduler, times(1))
                 .init();
