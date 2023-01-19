@@ -17,7 +17,7 @@
       "labels": ["documentation"]
     },
     {
-      "title": "# :speech_balloon: Other",
+      "title": "# :hammer: Other",
       "labels": ["dependencies", "security"]
     }
   ],
