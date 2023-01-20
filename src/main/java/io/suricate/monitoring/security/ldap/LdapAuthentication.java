@@ -51,9 +51,6 @@ public class LdapAuthentication {
     @Autowired
     private ApplicationProperties applicationProperties;
 
-    @Autowired
-    private UserDetailsServiceLdapAuthoritiesPopulator userDetailsServiceLdapAuthoritiesPopulator;
-
     @PostConstruct
     private void checkLdapConfiguration() {
         if (StringUtils.isBlank(applicationProperties.getAuthentication().getLdap().url)) {
@@ -62,7 +59,7 @@ public class LdapAuthentication {
     }
 
     @Bean
-    public LdapAuthenticationProvider authenticationProvider() {
+    public LdapAuthenticationProvider authenticationProvider(UserDetailsServiceLdapAuthoritiesPopulator userDetailsServiceLdapAuthoritiesPopulator) {
         FilterBasedLdapUserSearch filterBasedLdapUserSearch = new FilterBasedLdapUserSearch(applicationProperties.getAuthentication().getLdap().userSearchBase,
                 applicationProperties.getAuthentication().getLdap().userSearchFilter, contextSource());
 
@@ -76,25 +73,6 @@ public class LdapAuthentication {
     }
 
     /**
-     * Configure the ldap
-     * @param auth the authentication manager
-     * @throws Exception Any triggered exception during the configuration
-     */
-    //@Autowired
-    //public void configureLdap(AuthenticationManagerBuilder auth) throws Exception {
-        //auth.ldapAuthentication()
-            //.userDetailsContextMapper(userDetailsContextMapper())
-            //.ldapAuthoritiesPopulator(userDetailsServiceLdapAuthoritiesPopulator)
-            //.userSearchFilter(applicationProperties.getAuthentication().getLdap().userSearchFilter)
-            //.groupRoleAttribute(applicationProperties.getAuthentication().getLdap().groupRoleAttribute)
-            //.groupSearchBase(applicationProperties.getAuthentication().getLdap().groupSearchBase)
-            //.groupSearchFilter(applicationProperties.getAuthentication().getLdap().groupSearchFilter)
-            //.rolePrefix(applicationProperties.getAuthentication().getLdap().rolePrefix)
-            //.userSearchBase(applicationProperties.getAuthentication().getLdap().userSearchBase)
-            //.contextSource(contextSource());
-    //}
-
-    /**
      * Method used to store all user Ldap attribute inside the Security context holder
      * @return the userDetails context
      */
@@ -102,7 +80,7 @@ public class LdapAuthentication {
         return new LdapUserDetailsMapper() {
             @Override
             public UserDetails mapUserFromContext(DirContextOperations ctx, String username, java.util.Collection<? extends GrantedAuthority> authorities) {
-                String email = ctx.getStringAttribute(applicationProperties.getAuthentication().getLdap().mailAttributName);
+                String email = ctx.getStringAttribute(applicationProperties.getAuthentication().getLdap().mailAttributeName);
                 Optional<User> currentUser = userService.getOneByEmail(email);
 
                 if (!currentUser.isPresent()) {
@@ -120,6 +98,10 @@ public class LdapAuthentication {
      */
     private DefaultSpringSecurityContextSource contextSource() {
         DefaultSpringSecurityContextSource contextSource = new DefaultSpringSecurityContextSource(applicationProperties.getAuthentication().getLdap().url);
+
+        if (!StringUtils.isEmpty(applicationProperties.getAuthentication().getLdap().userDnPatterns)) {
+            contextSource.setUserDn(applicationProperties.getAuthentication().getLdap().userDnPatterns);
+        }
 
         if (!StringUtils.isEmpty(applicationProperties.getAuthentication().getLdap().referral)) {
             contextSource.setReferral(applicationProperties.getAuthentication().getLdap().referral);
@@ -144,5 +126,4 @@ public class LdapAuthentication {
         contextSource.afterPropertiesSet();
         return contextSource;
     }
-
 }

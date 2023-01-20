@@ -53,9 +53,9 @@ public class UserDetailsServiceLdapAuthoritiesPopulator implements LdapAuthoriti
     public Collection<? extends GrantedAuthority> getGrantedAuthorities(DirContextOperations userData, String username) {
         log.debug("Authenticating user <{}> with LDAP", username);
 
-        String firstname = userData.getStringAttribute(applicationProperties.authentication.ldap.firstNameAttributName);
-        String lastname = userData.getStringAttribute(applicationProperties.authentication.ldap.lastNameAttributName);
-        String email = userData.getStringAttribute(applicationProperties.authentication.ldap.mailAttributName);
+        String firstname = userData.getStringAttribute(applicationProperties.authentication.ldap.firstNameAttributeName);
+        String lastname = userData.getStringAttribute(applicationProperties.authentication.ldap.lastNameAttributeName);
+        String email = userData.getStringAttribute(applicationProperties.authentication.ldap.mailAttributeName);
         AuthenticationProvider authenticationMethod = AuthenticationProvider.LDAP;
 
         User registeredUser = userService.registerUser(username, firstname, lastname, email, StringUtils.EMPTY, authenticationMethod);
