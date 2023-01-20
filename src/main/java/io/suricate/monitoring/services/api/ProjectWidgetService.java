@@ -64,8 +64,8 @@ public class ProjectWidgetService {
     @Autowired
     private DashboardWebSocketService dashboardWebsocketService;
 
-    @Autowired
     @Lazy
+    @Autowired
     private DashboardScheduleService dashboardScheduleService;
 
     @Autowired

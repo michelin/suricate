@@ -18,11 +18,10 @@
 
 package io.suricate.monitoring.utils.http;
 
+import lombok.extern.slf4j.Slf4j;
 import okhttp3.ConnectionSpec;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
@@ -33,35 +32,18 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
+@Slf4j
 public final class OkHttpClientUtils {
-    /**
-     * The logger
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(OkHttpClientUtils.class);
-
-    /**
-     * Read timeout
-     */
     private static final int READ_TIMEOUT = 300;
 
-    /**
-     * Write timeout
-     */
     private static final int WRITE_TIMEOUT = 300;
 
-    /**
-     * Connect timeout
-     */
     private static final int CONNECT_TIMEOUT = 300;
 
-    /**
-     * Private constructor
-     */
     private OkHttpClientUtils() { }
 
     /**
      * Get an instance of OkHttpClient without certificates validation
-     *
      * @return An OkHttpClient instance
      */
     public static OkHttpClient getUnsafeOkHttpClient() {
@@ -94,9 +76,9 @@ public final class OkHttpClientUtils {
 
             return builder.build();
         } catch (NoSuchAlgorithmException e) {
-            LOGGER.error("An error occurred during the OKHttpClient configuration: SSL algorithm not found", e);
+            log.error("An error occurred during the OKHttpClient configuration: SSL algorithm not found", e);
         } catch (KeyManagementException e) {
-            LOGGER.error("An error occurred during the OKHttpClient configuration: Cannot init the SSL context", e);
+            log.error("An error occurred during the OKHttpClient configuration: Cannot init the SSL context", e);
         }
 
         return null;

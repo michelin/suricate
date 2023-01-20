@@ -16,23 +16,18 @@
 
 package io.suricate.monitoring.utils.logging;
 
+import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
+@Slf4j
 @Aspect
 @Profile("prod")
 @Component
 public class LoggingAspect {
-    /**
-     * The logger
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(LoggingAspect.class);
-
     @Around("@annotation(LogExecutionTime)")
     public Object logExecutionTime(ProceedingJoinPoint joinPoint) throws Throwable {
         long start = System.currentTimeMillis();
@@ -41,7 +36,7 @@ public class LoggingAspect {
 
         long executionTime = System.currentTimeMillis() - start;
 
-        LOGGER.debug("{} executed in {} ms",joinPoint.getSignature(), executionTime);
+        log.debug("{} executed in {} ms",joinPoint.getSignature(), executionTime);
         return proceed;
     }
 

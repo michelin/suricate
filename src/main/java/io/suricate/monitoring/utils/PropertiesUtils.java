@@ -16,9 +16,8 @@
 
 package io.suricate.monitoring.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.StringReader;
@@ -26,16 +25,8 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
 
+@Slf4j
 public final class PropertiesUtils {
-
-    /**
-     * Logger
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(PropertiesUtils.class);
-
-    /**
-     * Constructor
-     */
     private PropertiesUtils() { }
 
     /**
@@ -73,7 +64,7 @@ public final class PropertiesUtils {
                 properties = new Properties();
                 properties.load(reader);
             } catch (IOException e) {
-                LOGGER.error("An error has occurred converting widget parameters values from string to properties: {}", widgetProperties, e);
+                log.error("An error has occurred converting widget parameters values from string to Properties: {}", widgetProperties, e);
             }
         }
 

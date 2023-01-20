@@ -20,9 +20,8 @@ import io.suricate.monitoring.model.entities.User;
 import io.suricate.monitoring.model.enums.AuthenticationProvider;
 import io.suricate.monitoring.properties.ApplicationProperties;
 import io.suricate.monitoring.services.api.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.ldap.core.DirContextOperations;
@@ -34,26 +33,13 @@ import org.springframework.stereotype.Service;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-/**
- * User details service for LDAP
- */
+@Slf4j
 @Service
 @ConditionalOnProperty(name = "application.authentication.provider", havingValue = "ldap")
 public class UserDetailsServiceLdapAuthoritiesPopulator implements LdapAuthoritiesPopulator {
-    /**
-     * The logger
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(UserDetailsServiceLdapAuthoritiesPopulator.class);
-
-    /**
-     * The user service
-     */
     @Autowired
     private UserService userService;
 
-    /**
-     * The application properties
-     */
     @Autowired
     private ApplicationProperties applicationProperties;
 
@@ -65,11 +51,11 @@ public class UserDetailsServiceLdapAuthoritiesPopulator implements LdapAuthoriti
      */
     @Override
     public Collection<? extends GrantedAuthority> getGrantedAuthorities(DirContextOperations userData, String username) {
-        LOGGER.debug("Authenticating user <{}> with LDAP", username);
+        log.debug("Authenticating user <{}> with LDAP", username);
 
-        String firstname = userData.getStringAttribute(applicationProperties.getAuthentication().getLdap().getFirstNameAttributName());
-        String lastname = userData.getStringAttribute(applicationProperties.getAuthentication().getLdap().getLastNameAttributName());
-        String email = userData.getStringAttribute(applicationProperties.getAuthentication().getLdap().getMailAttributName());
+        String firstname = userData.getStringAttribute(applicationProperties.getAuthentication().getLdap().getFirstNameAttributeName());
+        String lastname = userData.getStringAttribute(applicationProperties.getAuthentication().getLdap().getLastNameAttributeName());
+        String email = userData.getStringAttribute(applicationProperties.getAuthentication().getLdap().getMailAttributeName());
         AuthenticationProvider authenticationMethod = AuthenticationProvider.LDAP;
 
         User registeredUser = userService.registerUser(username, firstname, lastname, email, StringUtils.EMPTY, authenticationMethod);

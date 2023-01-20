@@ -24,9 +24,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class DatabasePasswordEncoder {
 
-    /**
-     * Configure the password encoder
-     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder(11);

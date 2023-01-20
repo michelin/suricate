@@ -1,6 +1,7 @@
 {
   "admin": "Admin",
   "authentication.failed.with.providers": "Échec d'authentification",
+  "authentication.bad.credentials": "Les identifiants sont erronés",
   "back": "Retour",
   "background.color": "Couleur de fond",
   "branch": "Branche",
@@ -20,7 +21,6 @@
   "configuration.reveal.value": "Afficher la configuration",
   "copy": "Copier",
   "copy.success": "Copié dans le presse-papiers",
-  "credentials.error": "Erreur de login ou de mot de passe",
   "dashboard.add.success": "Tableau de bord créé avec succès",
   "dashboard.create": "Créer un tableau de bord",
   "dashboard.delete": "Supprimer un tableau de bord",

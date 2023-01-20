@@ -64,17 +64,13 @@ public class ApplicationProperties {
     public static class Ldap {
         private String url;
         private String userSearchFilter;
-        private String groupRoleAttribute;
-        private String groupSearchBase = StringUtils.EMPTY;
-        private String groupSearchFilter;
-        private String rolePrefix = "ROLE_";
         private String userSearchBase = StringUtils.EMPTY;
-        private String userDnPatterns;
+        private String userDnPatterns = StringUtils.EMPTY;
         private String username = StringUtils.EMPTY;
         private String password = StringUtils.EMPTY;
-        private String firstNameAttributName;
-        private String lastNameAttributName;
-        private String mailAttributName;
+        private String firstNameAttributeName;
+        private String lastNameAttributeName;
+        private String mailAttributeName;
         private String referral = ReferralHandlingMode.IGNORE.getJndiValue();
     }
 

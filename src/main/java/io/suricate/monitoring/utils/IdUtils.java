@@ -17,16 +17,12 @@
 package io.suricate.monitoring.utils;
 
 import io.suricate.monitoring.utils.exceptions.ProjectTokenInvalidException;
+import lombok.extern.slf4j.Slf4j;
 import org.jasypt.encryption.StringEncryptor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+@Slf4j
 public final class IdUtils {
-
-    /**
-     * Class logger
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(IdUtils.class);
+    private IdUtils() { }
 
     /**
      * Method used to decode id without salt
@@ -36,11 +32,11 @@ public final class IdUtils {
      */
     public static Long decrypt(String token) {
         StringEncryptor stringEncryptor = (StringEncryptor) SpringContextUtils.getApplicationContext().getBean("noSaltEncryptor");
-        Long id = null;
+        long id;
         try {
             id = Long.parseLong(stringEncryptor.decrypt(token));
         } catch (Exception e) {
-            LOGGER.debug(e.getMessage(), e);
+            log.debug(e.getMessage(), e);
             throw new ProjectTokenInvalidException(token);
         }
         return id;
@@ -59,14 +55,9 @@ public final class IdUtils {
             try {
                 token = stringEncryptor.encrypt(String.valueOf(id));
             } catch (Exception e) {
-                LOGGER.error(e.getMessage(), e);
+                log.error(e.getMessage(), e);
             }
         }
         return token;
     }
-
-    /**
-     * Private constructor
-     */
-    private IdUtils() { }
 }

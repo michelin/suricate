@@ -2,8 +2,7 @@ package io.suricate.monitoring.services.token;
 
 import io.seruco.encoding.base62.Base62;
 import io.suricate.monitoring.properties.ApplicationProperties;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,16 +10,9 @@ import java.security.SecureRandom;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
 
+@Slf4j
 @Service
 public class PersonalAccessTokenHelperService {
-    /**
-     * Class logger
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(PersonalAccessTokenHelperService.class);
-
-    /**
-     * The application properties
-     */
     @Autowired
     private ApplicationProperties applicationProperties;
 
@@ -61,7 +53,7 @@ public class PersonalAccessTokenHelperService {
     public boolean validateToken(String personalAccessToken) {
         String[] splitPersonalAccessToken = personalAccessToken.split("_");
         if (splitPersonalAccessToken.length != 2 || !splitPersonalAccessToken[0].equals(applicationProperties.getAuthentication().getPat().getPrefix())) {
-            LOGGER.error("Invalid personal access token format");
+            log.error("Invalid personal access token format");
             return false;
         }
 
