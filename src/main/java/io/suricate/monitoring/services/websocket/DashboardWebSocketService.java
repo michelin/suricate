@@ -28,8 +28,7 @@ import io.suricate.monitoring.services.api.ProjectService;
 import io.suricate.monitoring.services.mapper.ProjectMapper;
 import io.suricate.monitoring.services.nashorn.scheduler.NashornRequestWidgetExecutionScheduler;
 import io.suricate.monitoring.services.nashorn.services.NashornService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -40,54 +39,28 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * Manage the dashboards messaging through websockets
- */
+@Slf4j
 @Lazy(false)
 @Service
 public class DashboardWebSocketService {
-    /**
-     * Class logger
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(DashboardWebSocketService.class);
-
-    /**
-     * The scheduler scheduling the widget execution through Nashorn
-     */
     @Autowired
     private NashornRequestWidgetExecutionScheduler nashornWidgetScheduler;
 
-    /**
-     * Save all websocket clients by project token.
-     * Represents all the connected screens to a project
-     */
-    private final Multimap<String, WebsocketClient> websocketClientByProjectToken = Multimaps.synchronizedListMultimap(ArrayListMultimap.create());
-
-    /**
-     * The stomp websocket message template
-     */
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
 
-    /**
-     * The project service
-     */
     @Lazy
     @Autowired
     private ProjectService projectService;
 
-    /**
-     * The project mapper
-     */
     @Lazy
     @Autowired
     private ProjectMapper projectMapper;
 
-    /**
-     * The nashorn service
-     */
     @Autowired
     private NashornService nashornService;
+
+    private final Multimap<String, WebsocketClient> websocketClientByProjectToken = Multimaps.synchronizedListMultimap(ArrayListMultimap.create());
 
     /**
      * Send a connect project event through the associated websocket to the unique subscriber.
@@ -106,7 +79,7 @@ public class DashboardWebSocketService {
                 .content(this.projectMapper.toProjectDTO(project))
                 .build();
 
-        LOGGER.debug("Sending the event {} to the screen {}", updateEvent.getType(), screenCode.replaceAll("[\n\r\t]", "_"));
+        log.debug("Sending the event {} to the screen {}", updateEvent.getType(), screenCode.replaceAll("[\n\r\t]", "_"));
 
         simpMessagingTemplate.convertAndSendToUser(
                 screenCode,
@@ -127,14 +100,14 @@ public class DashboardWebSocketService {
      */
     @Async
     public void sendEventToWidgetInstanceSubscribers(final String projectToken, final Long projectWidgetId, final UpdateEvent payload) {
-        LOGGER.debug("Sending the event {} for the widget instance {} of the project {}", payload.getType(), projectWidgetId, projectToken);
+        log.debug("Sending the event {} for the widget instance {} of the project {}", payload.getType(), projectWidgetId, projectToken);
 
         if (projectToken == null) {
-            LOGGER.error("Project token null for payload: {}", payload);
+            log.error("Project token null for payload: {}", payload);
             return;
         }
         if (projectWidgetId == null) {
-            LOGGER.error("Widget instance ID null for payload: {}", payload);
+            log.error("Widget instance ID null for payload: {}", payload);
             return;
         }
 
@@ -160,10 +133,10 @@ public class DashboardWebSocketService {
      */
     @Async
     public void sendEventToProjectSubscribers(String projectToken, UpdateEvent payload) {
-        LOGGER.debug("Sending the event {} to the project {}", payload.getType(), projectToken);
+        log.debug("Sending the event {} to the project {}", payload.getType(), projectToken);
 
         if (projectToken == null) {
-            LOGGER.error("Project token null for payload: {}", payload);
+            log.error("Project token null for payload: {}", payload);
             return;
         }
 
@@ -186,7 +159,7 @@ public class DashboardWebSocketService {
      */
     @Async
     public void sendEventToScreenProjectSubscriber(String projectToken, String screenCode, UpdateEvent payload) {
-        LOGGER.debug("Sending the event {} to the project {} of the screen {}", payload.getType(), projectToken,
+        log.debug("Sending the event {} to the project {} of the screen {}", payload.getType(), projectToken,
                 screenCode.replaceAll("[\n\r\t]", "_"));
 
         simpMessagingTemplate.convertAndSendToUser(

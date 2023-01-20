@@ -26,9 +26,8 @@ import io.suricate.monitoring.model.entities.ProjectWidget;
 import io.suricate.monitoring.model.enums.WidgetStateEnum;
 import io.suricate.monitoring.services.api.ProjectWidgetService;
 import io.suricate.monitoring.utils.JsonUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -37,31 +36,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
-/**
- * The nashorn service
- */
+@Slf4j
 @Service
 public class NashornService {
-
-    /**
-     * Logger
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(NashornService.class);
-
-    /**
-     * The project widget service
-     */
-    private final ProjectWidgetService projectWidgetService;
-
-    /**
-     * Constructor
-     *
-     * @param projectWidgetService The project widget service
-     */
+    @Lazy
     @Autowired
-    public NashornService(@Lazy final ProjectWidgetService projectWidgetService) {
-        this.projectWidgetService = projectWidgetService;
-    }
+    private ProjectWidgetService projectWidgetService;
 
     /**
      * Get the list of related Nashorn requests for each widget of a project
@@ -118,19 +98,19 @@ public class NashornService {
      */
     public boolean isNashornRequestExecutable(final NashornRequest nashornRequest) {
         if (!StringUtils.isNotEmpty(nashornRequest.getScript())) {
-            LOGGER.debug("The widget instance {} has no script. Stopping Nashorn request execution",
+            log.debug("The widget instance {} has no script. Stopping Nashorn request execution",
                     nashornRequest.getProjectWidgetId());
             return false;
         }
 
         if (!JsonUtils.isValid(nashornRequest.getPreviousData())) {
-            LOGGER.debug("The widget instance {} has bad formed previous data. Stopping Nashorn request execution",
+            log.debug("The widget instance {} has bad formed previous data. Stopping Nashorn request execution",
                     nashornRequest.getProjectWidgetId());
             return false;
         }
 
         if (nashornRequest.getDelay() == null || nashornRequest.getDelay() < 0) {
-            LOGGER.debug("The widget instance {} has no delay or delay is < 0. Stopping Nashorn request execution",
+            log.debug("The widget instance {} has no delay or delay is < 0. Stopping Nashorn request execution",
                     nashornRequest.getProjectWidgetId());
             return false;
         }

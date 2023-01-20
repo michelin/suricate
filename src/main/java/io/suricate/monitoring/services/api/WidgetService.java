@@ -25,9 +25,8 @@ import io.suricate.monitoring.model.enums.WidgetAvailabilityEnum;
 import io.suricate.monitoring.repositories.WidgetParamRepository;
 import io.suricate.monitoring.repositories.WidgetRepository;
 import io.suricate.monitoring.services.specifications.WidgetSearchSpecification;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -37,54 +36,20 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.*;
 import java.util.stream.Collectors;
 
-/**
- * Widget service
- */
+@Slf4j
 @Service
 public class WidgetService {
-    /**
-     * Logger
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(WidgetService.class);
-
-    /**
-     * Asset repository
-     */
-    private final AssetService assetService;
-
-    /**
-     * Widget repository
-     */
-    private final WidgetRepository widgetRepository;
-
-    /**
-     * Widget parameter repository
-     */
-    private final WidgetParamRepository widgetParamRepository;
-
-    /**
-     * Category service
-     */
-    private final CategoryService categoryService;
-
-    /**
-     * Constructor
-     *
-     * @param widgetRepository           The widget repository
-     * @param widgetParamRepository      The widget param repository
-     * @param categoryService            The category service
-     * @param assetService               The asset service
-     */
     @Autowired
-    public WidgetService(final WidgetRepository widgetRepository,
-                         final WidgetParamRepository widgetParamRepository,
-                         final CategoryService categoryService,
-                         final AssetService assetService) {
-        this.widgetRepository = widgetRepository;
-        this.widgetParamRepository = widgetParamRepository;
-        this.categoryService = categoryService;
-        this.assetService = assetService;
-    }
+    private AssetService assetService;
+
+    @Autowired
+    private WidgetRepository widgetRepository;
+
+    @Autowired
+    private WidgetParamRepository widgetParamRepository;
+
+    @Autowired
+    private CategoryService categoryService;
 
     /**
      * Find a widget by id
@@ -317,7 +282,7 @@ public class WidgetService {
 
             widgetRepository.save(widget);
 
-            LOGGER.info("Widget {} updated from the branch {} of the repository {}", widget.getTechnicalName(),
+            log.info("Widget {} updated from the branch {} of the repository {}", widget.getTechnicalName(),
                     widget.getRepository().getBranch(), widget.getRepository().getName());
         }
     }

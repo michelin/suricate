@@ -21,8 +21,7 @@ package io.suricate.monitoring.controllers.handlers;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.utils.exceptions.ApiException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
@@ -38,20 +37,10 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import javax.validation.ConstraintViolationException;
 import java.util.Objects;
 
-/**
- * Manage Rest exceptions
- */
+@Slf4j
 @RestControllerAdvice
 public class GlobalDefaultExceptionHandler {
-    /**
-     * Log message when an exception is caught by the handler
-     */
     private static final String LOG_MESSAGE = "An exception has occurred in the API controllers part";
-
-    /**
-     * Logger
-     */
-    public static final Logger LOGGER = LoggerFactory.getLogger(GlobalDefaultExceptionHandler.class);
 
     /**
      * Manage the API exception.
@@ -60,7 +49,7 @@ public class GlobalDefaultExceptionHandler {
      */
     @ExceptionHandler(ApiException.class)
     public ResponseEntity<ApiErrorDto> handleApiException(ApiException exception) {
-        GlobalDefaultExceptionHandler.LOGGER.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
+        log.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
 
         return ResponseEntity
             .status(exception.getError().getStatus())
@@ -74,7 +63,7 @@ public class GlobalDefaultExceptionHandler {
      */
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<ApiErrorDto> handleApiException(BadCredentialsException exception) {
-        GlobalDefaultExceptionHandler.LOGGER.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
+        log.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
 
         return ResponseEntity
                 .status(ApiErrorEnum.BAD_CREDENTIALS_ERROR.getStatus())
@@ -88,7 +77,7 @@ public class GlobalDefaultExceptionHandler {
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ApiErrorDto> handleRequestException(MethodArgumentNotValidException exception) {
-        GlobalDefaultExceptionHandler.LOGGER.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
+        log.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
 
         return ResponseEntity
             .status(ApiErrorEnum.BAD_REQUEST.getStatus())
@@ -103,7 +92,7 @@ public class GlobalDefaultExceptionHandler {
      */
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<ApiErrorDto> handleAccessDeniedException(AccessDeniedException exception) {
-        GlobalDefaultExceptionHandler.LOGGER.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
+        log.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
 
         return ResponseEntity
             .status(ApiErrorEnum.FORBIDDEN.getStatus())
@@ -118,7 +107,7 @@ public class GlobalDefaultExceptionHandler {
      */
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<ApiErrorDto> handleRequestException(HttpRequestMethodNotSupportedException exception) {
-        GlobalDefaultExceptionHandler.LOGGER.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
+        log.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
 
         return ResponseEntity
             .status(ApiErrorEnum.BAD_REQUEST.getStatus())
@@ -133,7 +122,7 @@ public class GlobalDefaultExceptionHandler {
      */
     @ExceptionHandler({ConstraintViolationException.class})
     public ResponseEntity<ApiErrorDto> handleRequestException(ConstraintViolationException exception) {
-        GlobalDefaultExceptionHandler.LOGGER.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
+        log.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
 
         return ResponseEntity
             .status(ApiErrorEnum.BAD_REQUEST.getStatus())
@@ -148,7 +137,7 @@ public class GlobalDefaultExceptionHandler {
      */
     @ExceptionHandler({DataIntegrityViolationException.class})
     public ResponseEntity<ApiErrorDto> handleRequestException(DataIntegrityViolationException exception) {
-        GlobalDefaultExceptionHandler.LOGGER.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
+        log.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
 
         return ResponseEntity
             .status(ApiErrorEnum.BAD_REQUEST.getStatus())
@@ -162,7 +151,7 @@ public class GlobalDefaultExceptionHandler {
      */
     @ExceptionHandler(HttpMediaTypeNotAcceptableException.class)
     public ResponseEntity<ApiErrorDto> handleRequestException(HttpMediaTypeNotAcceptableException exception) {
-        GlobalDefaultExceptionHandler.LOGGER.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
+        log.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
 
         return ResponseEntity
                 .status(ApiErrorEnum.BAD_REQUEST.getStatus())
@@ -176,7 +165,7 @@ public class GlobalDefaultExceptionHandler {
      */
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ApiErrorDto> handleException(Exception exception) {
-        GlobalDefaultExceptionHandler.LOGGER.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
+        log.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
 
         return ResponseEntity
                 .status(ApiErrorEnum.INTERNAL_SERVER_ERROR.getStatus())

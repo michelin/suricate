@@ -17,10 +17,9 @@
 package io.suricate.monitoring.utils;
 
 import io.suricate.monitoring.model.entities.Asset;
+import lombok.extern.slf4j.Slf4j;
 import net.sf.jmimemagic.*;
 import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,16 +30,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Slf4j
 public final class FilesUtils {
-
-    /**
-     * Class logger
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(FilesUtils.class);
+    private FilesUtils() { }
 
     /**
      * Method used to list all folder inside a root folder
-     *
      * @param rootFolder the root folder used to find folder
      * @return the list of folder
      * @throws IOException exception with file
@@ -91,7 +86,7 @@ public final class FilesUtils {
             MagicMatch match = Magic.getMagicMatch(asset.getContent());
             asset.setContentType(match.getMimeType());
         } catch (MagicParseException | MagicMatchNotFoundException | MagicException e) {
-            LOGGER.trace(e.getMessage(), e);
+            log.trace(e.getMessage(), e);
             asset.setContentType("text/plain");
         }
 
@@ -101,8 +96,5 @@ public final class FilesUtils {
         }
 
         return asset;
-    }
-
-    private FilesUtils() {
     }
 }

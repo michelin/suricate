@@ -16,33 +16,17 @@
 
 package io.suricate.monitoring.services.cache;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class CacheService {
-    /**
-     * The logger
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(CacheService.class);
-
-    /**
-     * The cache manager
-     */
-    private final CacheManager cacheManager;
-
-    /**
-     * Default constructor
-     * @param cacheManager application cache manager instance
-     */
     @Autowired
-    public CacheService(final CacheManager cacheManager) {
-        this.cacheManager = cacheManager;
-    }
+    private CacheManager cacheManager;
 
     /**
      * Clear all caches
@@ -60,7 +44,7 @@ public class CacheService {
         Cache cache = cacheManager.getCache(cacheName);
         if (cache != null) {
             cache.clear();
-            LOGGER.debug("Cache {} cleared", cacheName);
+            log.debug("Cache {} cleared", cacheName);
         }
     }
 }
