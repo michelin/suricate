@@ -20,68 +20,37 @@
 package io.suricate.monitoring.model.dto.api.projectwidget;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-/**
- * Object representing a project widget used for communication with clients of the webservice
- * This is the instantiation of a widget
- * Link a widget with a dashboard/project
- */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "ProjectWidgetRequest", description = "Create/update project widget")
+@Schema(description = "Create/update project widget")
 public class ProjectWidgetRequestDto extends AbstractDto {
-
-    /**
-     * The start col number on the grid
-     */
-    @ApiModelProperty(value = "The start col number on the grid", example = "1")
+    @Schema(description = "The start col number on the grid", example = "1")
     private int gridColumn = 1;
 
-    /**
-     * The start row number on the grid
-     */
-    @ApiModelProperty(value = "The start row number on the grid", example = "1")
+    @Schema(description = "The start row number on the grid", example = "1")
     private int gridRow = 1;
 
-    /**
-     * The number of row taken on the grid
-     */
-    @ApiModelProperty(value = "The number of row taken on the grid", example = "1")
+    @Schema(description = "The number of row taken on the grid", example = "1")
     private int height = 1;
 
-    /**
-     * The number of col taken on the grid
-     */
-    @ApiModelProperty(value = "The number of col taken on the grid", example = "1")
+    @Schema(description = "The number of col taken on the grid", example = "1")
     private int width = 1;
 
-    /**
-     * The data of the last execution
-     */
-    @ApiModelProperty(value = "The data of the last execution")
+    @Schema(description = "The data of the last execution")
     private String data = "{}";
 
-    /**
-     * The css style for this instance
-     */
-    @ApiModelProperty(value = "The css for this instance of widget")
+    @Schema(description = "The css for this instance of widget")
     private String customStyle;
 
-    /**
-     * Contains the configuration of the widget
-     */
-    @ApiModelProperty(value = "The configuration of this widget")
+    @Schema(description = "The configuration of this widget")
     private String backendConfig;
 
-    /**
-     * The widgetId related to this project widget
-     */
-    @ApiModelProperty(value = "The widgetId related to this project widget", example = "1")
+    @Schema(description = "The widgetId related to this project widget", example = "1")
     private Long widgetId;
 }

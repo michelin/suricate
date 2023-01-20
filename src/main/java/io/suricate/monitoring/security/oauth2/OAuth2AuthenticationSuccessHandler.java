@@ -3,6 +3,7 @@ package io.suricate.monitoring.security.oauth2;
 import io.suricate.monitoring.properties.ApplicationProperties;
 import io.suricate.monitoring.services.token.JwtHelperService;
 import io.suricate.monitoring.utils.web.CookieUtils;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,21 +35,13 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     @Autowired
     private HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
 
-    /**
-     * Store the OAuth2 authorized client
-     */
-    @Autowired
+    @Getter
+    @Autowired(required = false)
     private OAuth2AuthorizedClientRepository oAuth2AuthorizedClientRepository;
 
-    /**
-     * The token provider
-     */
     @Autowired
     private JwtHelperService tokenProvider;
 
-    /**
-     * The application properties
-     */
     @Autowired
     private ApplicationProperties applicationProperties;
 

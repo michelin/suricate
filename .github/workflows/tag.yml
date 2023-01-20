@@ -8,8 +8,9 @@ on:
         required: true
 
 jobs:
-  Tag:
+  tag:
     runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
     steps:
       - name: Checkout project
         uses: actions/checkout@v2
@@ -34,7 +35,7 @@ jobs:
           git_user_signingkey: true
           git_commit_gpgsign: true
 
-      - name: Update Front-End release version
+      - name: Update front-end
         run: |
           npm --no-git-tag-version version ${{ github.event.inputs.release_version }} 
           git config --global user.email "loic.greffier_ext@michelin.com"
@@ -43,7 +44,7 @@ jobs:
           git commit -S -m "Update Front-End with new release version ${{ github.event.inputs.release_version }}"
           git push
 
-      - name: Release Back-End
+      - name: Tag
         run: |
-          mvn -B release:clean
-          mvn -B release:prepare -DreleaseVersion=${{ github.event.inputs.release_version }}
+          mvn release:clean
+          mvn release:prepare -DreleaseVersion=${{ github.event.inputs.release_version }} -DsignTag

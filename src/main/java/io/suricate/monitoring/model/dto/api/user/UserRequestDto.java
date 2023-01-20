@@ -18,8 +18,7 @@ package io.suricate.monitoring.model.dto.api.user;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
 import io.suricate.monitoring.model.enums.UserRoleEnum;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -27,59 +26,29 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Represent a user used for communication with the clients via webservices
- */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "UserRequest", description = "Create/Update a user")
+@Schema(description = "Create/Update a user")
 public class UserRequestDto extends AbstractDto {
-    /**
-     * User firstname
-     */
-    @ApiModelProperty(value = "The firstname of the user")
+    @Schema(description = "The firstname of the user")
     private String firstname;
 
-    /**
-     * User lastname
-     */
-    @ApiModelProperty(value = "The lastname of the user")
+    @Schema(description = "The lastname of the user")
     private String lastname;
 
-    /**
-     * User fullname
-     */
-    @ApiModelProperty(value = "The fullname of the user")
-    private String fullname;
-
-    /**
-     * username
-     */
-    @ApiModelProperty(value = "The username used as login in the credentials")
+    @Schema(description = "The username used as login in the credentials")
     private String username;
 
-    /**
-     * Password of the user
-     */
-    @ApiModelProperty(value = "The user password")
+    @Schema(description = "The user password")
     private String password;
 
-    /**
-     * The confirmation password
-     */
-    @ApiModelProperty(value = "The user password confirmation")
+    @Schema(description = "The user password confirmation")
     private String confirmPassword;
 
-    /**
-     * Mail
-     */
-    @ApiModelProperty(value = "The user email")
+    @Schema(description = "The user email")
     private String email;
 
-    /**
-     * User roles
-     */
-    @ApiModelProperty(value = "The list of related roles", dataType = "java.util.List")
+    @Schema(description = "The list of related roles", type = "java.util.List")
     private List<UserRoleEnum> roles = new ArrayList<>();
 }

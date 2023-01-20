@@ -18,8 +18,7 @@ package io.suricate.monitoring.model.dto.api.widget;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
 import io.suricate.monitoring.model.enums.DataTypeEnum;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -27,66 +26,35 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Represent a widget param response used for communication with the clients via webservices
- */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "WidgetParam", description = "Describe the params for an instance of widget")
+@Schema(description = "Describe the params for an instance of widget")
 public class WidgetParamResponseDto extends AbstractDto {
-    /**
-     * The param name
-     */
-    @ApiModelProperty(value = "The param name", required = true)
+    @Schema(description = "The param name", requiredMode = Schema.RequiredMode.REQUIRED)
     private String name;
 
-    /**
-     * The param description
-     */
-    @ApiModelProperty(value = "Describe how to set this param", required = true)
+    @Schema(description = "Describe how to set this param", requiredMode = Schema.RequiredMode.REQUIRED)
     private String description;
 
-    /**
-     * The default value of the param
-     */
-    @ApiModelProperty(value = "HTML Default value to insert on the field")
+    @Schema(description = "HTML Default value to insert on the field")
     private String defaultValue;
 
-    /**
-     * The param type {@link DataTypeEnum}
-     */
-    @ApiModelProperty(value = "The type of this param define the HTML element to display", required = true)
+    @Schema(description = "The type of this param define the HTML element to display", requiredMode = Schema.RequiredMode.REQUIRED)
     private DataTypeEnum type;
 
-    /**
-     * The regex used for accept a file while uploading it if the type is a FILE
-     */
-    @ApiModelProperty(value = "A regex to respect for the field")
+    @Schema(description = "A regex to respect for the field")
     private String acceptFileRegex;
 
-    /**
-     * An example of the usage of this param
-     */
-    @ApiModelProperty(value = "An example of the usage of this field")
+    @Schema(description = "An example of the usage of this field")
     private String usageExample;
 
-
-    /**
-     * The usage tooltip of the parameter
-     */
-    @ApiModelProperty(value = "The usage tooltip of the parameter")
+    @Schema(description = "The usage tooltip of the parameter")
     private String usageTooltip;
 
-    /**
-     * If the param is required True by default
-     */
-    @ApiModelProperty(value = "If the field is required or not", required = true)
+    @Schema(description = "If the field is required or not", requiredMode = Schema.RequiredMode.REQUIRED)
     private boolean required = true;
 
-    /**
-     * The list of param values if the type is COMBO or a MULTIPLE
-     */
-    @ApiModelProperty(value = "The list of possible values if the type is COMBO or MULTIPLE", dataType = "java.util.List")
+    @Schema(description = "The list of possible values if the type is COMBO or MULTIPLE", type = "java.util.List")
     private List<WidgetParamValueResponseDto> values = new ArrayList<>();
 }

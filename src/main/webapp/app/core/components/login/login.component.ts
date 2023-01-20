@@ -30,6 +30,7 @@ import { HttpConfigurationService } from '../../../shared/services/backend/http-
 import { ToastService } from '../../../shared/services/frontend/toast/toast.service';
 import { ToastTypeEnum } from '../../../shared/enums/toast-type.enum';
 import { TranslateService } from '@ngx-translate/core';
+import { HttpErrorResponse } from '@angular/common/http';
 
 /**
  * Manage the login page
@@ -135,7 +136,10 @@ export class LoginComponent implements OnInit {
 
       this.authenticationService.authenticate(this.loginForm.value).subscribe(
         () => this.navigateToHomePage(),
-        () => (this.loading = false)
+        (error: HttpErrorResponse) => {
+          this.loading = false;
+          this.toastService.sendMessage(error.error.key, ToastTypeEnum.DANGER);
+        }
       );
     }
   }
@@ -180,6 +184,13 @@ export class LoginComponent implements OnInit {
    */
   public isLdapAuthenticationActivated(): boolean {
     return this.authenticationProviders && this.authenticationProviders.indexOf(AuthenticationProvider.LDAP) > -1;
+  }
+
+  /**
+   * Is any social authentication activated or not
+   */
+  public isSocialLoginActivated(): boolean {
+    return this.isGithubAuthenticationActivated() || this.isGitlabAuthenticationActivated();
   }
 
   /**

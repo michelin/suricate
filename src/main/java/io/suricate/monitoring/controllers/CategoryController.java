@@ -28,7 +28,14 @@ import io.suricate.monitoring.services.api.WidgetService;
 import io.suricate.monitoring.services.mapper.CategoryMapper;
 import io.suricate.monitoring.services.mapper.WidgetMapper;
 import io.suricate.monitoring.utils.exceptions.NoContentException;
-import io.swagger.annotations.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -40,68 +47,39 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
-/**
- * The widget controller
- */
 @RestController
 @RequestMapping("/api")
-@Api(value = "Category Controller", tags = {"Categories"})
+@Tag(name = "Category", description = "Category Controller")
 public class CategoryController {
-    /**
-     * The category service
-     */
-    private final CategoryService categoryService;
-
-    /**
-     * The category dto/object mapper
-     */
-    private final CategoryMapper categoryMapper;
-
-    /**
-     * The widget service to inject
-     */
-    private final WidgetService widgetService;
-
-    /**
-     * The widget mapper to inject
-     */
-    private final WidgetMapper widgetMapper;
-
-    /**
-     * Constructor
-     * @param categoryService            The category service to inject
-     * @param categoryMapper             The category mapper to inject
-     * @param widgetService              The widget service to inject
-     * @param widgetMapper               The widget mapper to inject
-     */
     @Autowired
-    public CategoryController(final CategoryService categoryService,
-                              final CategoryMapper categoryMapper,
-                              final WidgetService widgetService,
-                              final WidgetMapper widgetMapper) {
-        this.categoryService = categoryService;
-        this.categoryMapper = categoryMapper;
-        this.widgetService = widgetService;
-        this.widgetMapper = widgetMapper;
-    }
+    private CategoryService categoryService;
+
+    @Autowired
+    private CategoryMapper categoryMapper;
+
+    @Autowired
+    private WidgetService widgetService;
+
+    @Autowired
+    private WidgetMapper widgetMapper;
 
     /**
      * Get the list of widget categories
      * @return A list of category
      */
-    @ApiOperation(value = "Get the full list of widget categories", response = CategoryResponseDto.class)
+    @Operation(summary = "Get the full list of widget categories")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = CategoryResponseDto.class, responseContainer = "List"),
-        @ApiResponse(code = 204, message = "No Content"),
-        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
+        @ApiResponse(responseCode = "200", description = "OK"),
+        @ApiResponse(responseCode = "204", description = "No Content", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
     @ApiPageable
     @GetMapping(value = "/v1/categories")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public Page<CategoryResponseDto> getCategories(@ApiParam(name = "search", value = "Search keyword")
+    public Page<CategoryResponseDto> getCategories(@Parameter(name = "search", description = "Search keyword")
                                                    @RequestParam(value = "search", required = false) String search,
-                                                   Pageable pageable) {
+                                                   @ParameterObject Pageable pageable) {
         return this.categoryService.getAll(search, pageable).map(categoryMapper::toCategoryWithoutParametersDTO);
     }
 
@@ -110,17 +88,17 @@ public class CategoryController {
      * @param categoryId The category id
      * @return The list of related widgets
      */
-    @ApiOperation(value = "Get the list of widgets by category id", response = WidgetResponseDto.class)
+    @Operation(summary = "Get the list of widgets by category id")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = WidgetResponseDto.class, responseContainer = "List"),
-        @ApiResponse(code = 204, message = "No Content"),
-        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
-        @ApiResponse(code = 404, message = "Category not found", response = ApiErrorDto.class)
+        @ApiResponse(responseCode = "200", description = "OK"),
+        @ApiResponse(responseCode = "204", description = "No Content"),
+        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid"),
+        @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource"),
+        @ApiResponse(responseCode = "404", description = "Category not found")
     })
     @GetMapping(value = "/v1/categories/{categoryId}/widgets")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<List<WidgetResponseDto>> getWidgetByCategory(@ApiParam(name = "categoryId", value = "The category id", required = true, example = "1")
+    public ResponseEntity<List<WidgetResponseDto>> getWidgetByCategory(@Parameter(name = "categoryId", description = "The category id", required = true, example = "1")
                                                                        @PathVariable("categoryId") Long categoryId) {
         Optional<List<Widget>> widgetsOptional = this.widgetService.getWidgetsByCategory(categoryId);
 

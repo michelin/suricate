@@ -24,6 +24,7 @@ import { TitleCasePipe } from '@angular/common';
 import { ToastTypeEnum } from '../../shared/enums/toast-type.enum';
 import { UserFormFieldsService } from '../../shared/services/frontend/form-fields/user-form-fields/user-form-fields.service';
 import { UserRequest } from '../../shared/models/backend/user/user-request';
+import { HttpAdminUserService } from '../../shared/services/backend/http-admin-user/http-admin-user.service';
 
 /**
  * Component used to display the list of users
@@ -41,16 +42,16 @@ export class UsersComponent extends ListComponent<User> implements OnInit {
   /**
    * Constructor
    *
-   * @param httpUserService Suricate service used to manage the http calls for users
-   * @param userFormFieldsService Frontend service used to build the form fields for a user
-   * @param injector Angular Service used to manage the injection of services
+   * @param httpAdminUserService Manage the http calls for users as admin
+   * @param userFormFieldsService Build the form fields for a user
+   * @param injector Manage the injection of services
    */
   constructor(
-    private readonly httpUserService: HttpUserService,
+    private readonly httpAdminUserService: HttpAdminUserService,
     private readonly userFormFieldsService: UserFormFieldsService,
     protected injector: Injector
   ) {
-    super(httpUserService, injector);
+    super(httpAdminUserService, injector);
 
     this.initHeaderConfiguration();
     this.initListConfiguration();
@@ -140,11 +141,10 @@ export class UsersComponent extends ListComponent<User> implements OnInit {
 
   /**
    * Edit a user
-   *
    * @param userRequest The user request to make
    */
   private editUser(userRequest: UserRequest): void {
-    this.httpUserService.update(this.userSelected.id, userRequest).subscribe(() => {
+    this.httpAdminUserService.update(this.userSelected.id, userRequest).subscribe(() => {
       super.refreshList();
     });
   }
@@ -161,7 +161,7 @@ export class UsersComponent extends ListComponent<User> implements OnInit {
       title: 'user.delete',
       message: `${this.translateService.instant('user.delete.confirm')} ${titleCasePipe.transform(user.username)} ?`,
       accept: () => {
-        this.httpUserService.delete(user.id).subscribe(() => {
+        this.httpAdminUserService.delete(user.id).subscribe(() => {
           this.toastService.sendMessage('user.delete.success', ToastTypeEnum.SUCCESS);
           this.refreshList();
         });

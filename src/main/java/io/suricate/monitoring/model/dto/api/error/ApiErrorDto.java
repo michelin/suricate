@@ -19,8 +19,7 @@ package io.suricate.monitoring.model.dto.api.error;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.suricate.monitoring.model.dto.api.AbstractDto;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -34,39 +33,21 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "ApiError", description = "Api error response")
+@Schema(description = "Api error response")
 public class ApiErrorDto extends AbstractDto {
-
-    /**
-     * The error message to send
-     */
-    @ApiModelProperty(value = "Error message")
+    @Schema(description = "Error message")
     private String message;
 
-    /**
-     * The key code
-     */
-    @ApiModelProperty(value = "Error key")
+    @Schema(description = "Error key")
     private String key;
 
-    /**
-     * The HttpStatus number
-     */
-    @ApiModelProperty(value = "HttpStatus number", example = "1")
+    @Schema(description = "HttpStatus number", example = "1")
     private int status;
 
-    /**
-     * The datetime of the error
-     */
-    @ApiModelProperty(value = "Date of the error")
+    @Schema(description = "Date of the error")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date timestamp;
 
-    /**
-     * Constructor
-     *
-     * @param apiErrorEnum The API error enum
-     */
     public ApiErrorDto(ApiErrorEnum apiErrorEnum) {
         this.message = apiErrorEnum.getMessage();
         this.key = apiErrorEnum.getKey();
@@ -74,12 +55,6 @@ public class ApiErrorDto extends AbstractDto {
         this.status = apiErrorEnum.getStatus().value();
     }
 
-    /**
-     * Constructor
-     *
-     * @param message The error message
-     * @param apiError The API error enum
-     */
     public ApiErrorDto(String message, ApiErrorEnum apiError) {
         this(apiError);
         this.message = StringUtils.isBlank(message) ? apiError.getMessage() : message;

@@ -21,7 +21,13 @@ package io.suricate.monitoring.controllers;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.entities.Asset;
 import io.suricate.monitoring.services.api.AssetService;
-import io.swagger.annotations.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.CacheControl;
 import org.springframework.http.HttpStatus;
@@ -32,45 +38,28 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
-import springfox.documentation.annotations.ApiIgnore;
 
-/**
- * Asset controller
- */
 @RestController
 @RequestMapping("/api")
-@Api(value = "Asset Controller", tags = {"Assets"})
+@Tag(name = "Asset", description = "Asset Controller")
 public class AssetController {
-    /**
-     * Asset Service
-     */
-    private final AssetService assetService;
-
-    /**
-     * The constructor
-     *
-     * @param assetService The asset service
-     */
     @Autowired
-    public AssetController(final AssetService assetService) {
-        this.assetService = assetService;
-    }
+    private AssetService assetService;
 
     /**
      * Get asset for the specified token
-     *
      * @param token the asset token used to identify the asset
      * @return the asset data
      */
-    @ApiOperation(value = "Get an asset by its token", response = byte.class)
+    @Operation(summary = "Get an asset by its token")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok"),
-        @ApiResponse(code = 400, response = ApiErrorDto.class, message = "Cannot decrypt token"),
-        @ApiResponse(code = 401, response = ApiErrorDto.class, message = "Invalid token")
+        @ApiResponse(responseCode = "200", description = "OK"),
+        @ApiResponse(responseCode = "400", description = "Cannot decrypt token", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "401", description = "Invalid token", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
     @GetMapping(path = "/v1/assets/{token}/content")
-    public ResponseEntity<byte[]> getAsset(@ApiIgnore WebRequest webRequest,
-                                           @ApiParam(name = "token", value = "The asset Token", required = true)
+    public ResponseEntity<byte[]> getAsset(@Parameter(hidden = true) WebRequest webRequest,
+                                           @Parameter(name = "token", description = "The asset Token", required = true)
                                            @PathVariable("token") String token) {
         Asset asset = this.assetService.getAssetById(token);
 

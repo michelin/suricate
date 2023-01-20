@@ -1,6 +1,7 @@
 {
   "admin": "Admin",
   "authentication.failed.with.providers": "Authentication failed",
+  "authentication.bad.credentials": "The credentials are wrong",
   "back": "Back",
   "background.color": "Background color",
   "branch": "Branch",
@@ -20,7 +21,6 @@
   "configuration.show.password": "Show configuration",
   "copy": "Copy",
   "copy.success": "Copied to clipboard",
-  "credentials.error": "Wrong credentials",
   "dashboard.add.success": "Dashboard created successfully",
   "dashboard.create": "Create a dashboard",
   "dashboard.delete": "Delete dashboard",

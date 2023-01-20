@@ -63,52 +63,25 @@ public class ApplicationProperties {
      */
     public final Widgets widgets = new Widgets();
 
-    /**
-     * The swagger properties
-     */
     public final Swagger swagger = new Swagger();
 
-    /**
-     * Hold the Authentication properties info
-     */
     @Getter
     @Setter
     public static class Authentication {
-        /**
-         * LDAP configuration
-         */
         public final Ldap ldap = new Ldap();
 
-        /**
-         * JWT configuration
-         */
         public final Jwt jwt = new Jwt();
 
-        /**
-         * Personal access token configuration
-         */
         public final PersonalAccessToken pat = new PersonalAccessToken();
 
-        /**
-         * OAuth2 configuration
-         */
         public final OAuth2 oauth2 = new OAuth2();
 
-        /**
-         * Authentication provider
-         */
         @Pattern(regexp = "ldap|database")
         public String provider;
 
-        /**
-         * Authentication social providers
-         */
-        public List<String> socialProviders;
+        private List<String> socialProviders;
 
-        /**
-         * Social providers custom configuration
-         */
-        public Map<String, SocialProvidersConfig> socialProvidersConfig = new HashMap<>();
+        private Map<String, SocialProvidersConfig> socialProvidersConfig = new HashMap<>();
     }
 
     /**
@@ -126,29 +99,13 @@ public class ApplicationProperties {
          */
         public String userSearchFilter;
         /**
-         * Attribute for user group role
-         */
-        public String groupRoleAttribute;
-        /**
-         * The group search base
-         */
-        public String groupSearchBase = StringUtils.EMPTY;
-        /**
-         * Filter to search group
-         */
-        public String groupSearchFilter;
-        /**
-         * Role prefix
-         */
-        public String rolePrefix = "ROLE_";
-        /**
          * The user search base
          */
         public String userSearchBase = StringUtils.EMPTY;
         /**
          * The user  Distinguished Name patterns
          */
-        public String userDnPatterns;
+        public String userDnPatterns = StringUtils.EMPTY;
         /**
          * The username used to start the connection with the LDAP
          */
@@ -160,15 +117,15 @@ public class ApplicationProperties {
         /**
          * The LDAP attribute to retrieve the user firstname
          */
-        public String firstNameAttributName;
+        public String firstNameAttributeName;
         /**
          * The LDAP attribute to retrieve the user lastname
          */
-        public String lastNameAttributName;
+        public String lastNameAttributeName;
         /**
          * The LDAP attribute to retrieve the user mail
          */
-        public String mailAttributName;
+        public String mailAttributeName;
         /**
          * The Ldap referral (behavior when the LDAP search executor find a reference to another LDAP server)
          */
@@ -305,60 +262,20 @@ public class ApplicationProperties {
         public boolean updateEnable;
     }
 
-    /**
-     * Hold the swagger properties info
-     */
     @Getter
     @Setter
     public static class Swagger {
-        /**
-         * The Swagger API Title
-         */
-        public String title;
-        /**
-         * The Swagger API Description
-         */
-        public String description;
-        /**
-         * The API Version
-         */
-        public String version;
-        /**
-         * The site url for terms of service
-         */
-        public String termsOfServiceUrl;
-        /**
-         * The licence name
-         */
-        public String license;
-        /**
-         * The licence URL
-         */
-        public String licenseUrl;
-        /**
-         * The API group name
-         */
-        public String groupName;
-        /**
-         * The list of protocols
-         */
-        public String protocols;
-        /**
-         * The default include pattern
-         */
-        public String defaultIncludePattern;
-        /**
-         * The swagger contact name
-         */
-        public String contactName;
-        /**
-         * The swagger contact url
-         */
-        public String contactUrl;
-        /**
-         * The swagger contact email
-         */
-        public String contactEmail;
+        private String title;
+        private String description;
+        private String version;
+        private String termsOfServiceUrl;
+        private String license;
+        private String licenseUrl;
+        private String groupName;
+        private String protocols;
+        private String contactName;
+        private String contactUrl;
+        private String contactEmail;
     }
 
     @Getter

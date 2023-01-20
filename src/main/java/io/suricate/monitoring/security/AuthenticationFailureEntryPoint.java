@@ -22,8 +22,7 @@ package io.suricate.monitoring.security;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
 import io.suricate.monitoring.model.enums.ApiErrorEnum;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -35,13 +34,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+@Slf4j
 @Component
 public class AuthenticationFailureEntryPoint implements AuthenticationEntryPoint, AccessDeniedHandler {
-    /**
-     * The logger
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(AuthenticationFailureEntryPoint.class);
-
     /**
      * Handle authentication exception
      * @param httpServletRequest The request
@@ -77,7 +72,7 @@ public class AuthenticationFailureEntryPoint implements AuthenticationEntryPoint
      */
     private static void resolveException(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, RuntimeException e) throws IOException {
         String path = httpServletRequest.getRequestURI().substring(httpServletRequest.getContextPath().length());
-        LOGGER.debug("Authentication error - {}", path, e);
+        log.debug("Authentication error - {}", path, e);
 
         httpServletResponse.setStatus(ApiErrorEnum.AUTHENTICATION_ERROR.getStatus().value());
         httpServletResponse.setHeader("Content-type", "application/json");

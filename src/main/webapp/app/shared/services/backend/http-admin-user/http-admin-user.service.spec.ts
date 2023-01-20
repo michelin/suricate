@@ -1,5 +1,5 @@
 /*
- *
+ *  /*
  *  * Copyright 2012-2021 the original author or authors.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -16,31 +16,20 @@
  *
  */
 
-package io.suricate.monitoring.model.entities;
+import { inject, TestBed } from '@angular/core/testing';
 
-import io.suricate.monitoring.model.entities.generic.AbstractAuditingEntity;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import { HttpAdminUserService } from './http-admin-user.service';
+import { MockModule } from '../../../../mock/mock.module';
 
-import javax.persistence.*;
+describe('HttpAdminUserService', () => {
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [MockModule],
+      providers: [HttpAdminUserService]
+    });
+  });
 
-@Entity
-@Getter
-@Setter
-@NoArgsConstructor
-public class WidgetParamValue extends AbstractAuditingEntity<Long> {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(nullable = false)
-    private String jsKey;
-
-    @Column(nullable = false)
-    private String value;
-
-    @ManyToOne
-    @JoinColumn(name = "widget_param_id")
-    private WidgetParam widgetParam;
-}
+  it('should create', inject([HttpAdminUserService], (service: HttpAdminUserService) => {
+    expect(service).toBeTruthy();
+  }));
+});

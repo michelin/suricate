@@ -28,11 +28,11 @@ import io.suricate.monitoring.utils.PropertiesUtils;
 import io.suricate.monitoring.utils.ToStringUtils;
 import io.suricate.monitoring.utils.exceptions.nashorn.RemoteException;
 import jdk.nashorn.api.scripting.NashornScriptEngineFactory;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.jasypt.encryption.StringEncryptor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.script.*;
 import java.io.InterruptedIOException;
@@ -43,44 +43,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
-/**
- * Class creating a asynchronous task which will execute a Nashorn request updating a widget instance
- */
+@Slf4j
+@AllArgsConstructor
 public class NashornRequestWidgetExecutionAsyncTask implements Callable<NashornResponse> {
-    /**
-     * Class logger
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(NashornRequestWidgetExecutionAsyncTask.class);
-
-    /**
-     * The Nashorn request to execute
-     */
     private final NashornRequest nashornRequest;
 
-    /**
-     * The string encryptor used to encrypt/decrypt the encrypted/decrypted secret properties
-     */
     private final StringEncryptor stringEncryptor;
 
-    /**
-     * The list of widget parameters
-     */
     private final List<WidgetVariableResponse> widgetParameters;
-
-    /**
-     * Constructor
-     *
-     * @param nashornRequest          The Nashorn request
-     * @param stringEncryptor         The string encryptor bean
-     * @param widgetParameters The widget parameters
-     */
-    public NashornRequestWidgetExecutionAsyncTask(NashornRequest nashornRequest,
-                                                  StringEncryptor stringEncryptor,
-                                                  List<WidgetVariableResponse> widgetParameters) {
-        this.nashornRequest = nashornRequest;
-        this.stringEncryptor = stringEncryptor;
-        this.widgetParameters = widgetParameters;
-    }
 
     /**
      * Method automatically called by the scheduler after the given delay.
@@ -105,7 +75,7 @@ public class NashornRequestWidgetExecutionAsyncTask implements Callable<NashornR
      */
     @Override
     public NashornResponse call() {
-        LOGGER.debug("Executing the Nashorn request of the widget instance {}", nashornRequest.getProjectWidgetId());
+        log.debug("Executing the Nashorn request of the widget instance {}", nashornRequest.getProjectWidgetId());
 
         NashornResponse nashornResponse = new NashornResponse();
         nashornResponse.setLaunchDate(new Date());
@@ -151,8 +121,8 @@ public class NashornRequestWidgetExecutionAsyncTask implements Callable<NashornR
                     nashornResponse.setData(json);
                     nashornResponse.setLog(ToStringUtils.hideWidgetConfigurationInLogs(sw.toString(), widgetProperties.values()));
                 } else {
-                    LOGGER.debug("The JSON response obtained after the execution of the Nashorn request of the widget instance {} is invalid", nashornRequest.getProjectWidgetId());
-                    LOGGER.debug("The JSON response is: {}", json);
+                    log.debug("The JSON response obtained after the execution of the Nashorn request of the widget instance {} is invalid", nashornRequest.getProjectWidgetId());
+                    log.debug("The JSON response is: {}", json);
 
                     nashornResponse.setLog(ToStringUtils.hideWidgetConfigurationInLogs(sw + "\nThe JSON response is not valid - " + json, widgetProperties.values()));
                     nashornResponse.setError(nashornRequest.isAlreadySuccess() ? NashornErrorTypeEnum.ERROR : NashornErrorTypeEnum.FATAL);
@@ -164,9 +134,9 @@ public class NashornRequestWidgetExecutionAsyncTask implements Callable<NashornR
             // Do not set logs during an interruption, as it is caused by a canceling
             // of the Nashorn request, the return Nashorn response will not be processed by the NashornRequestResultAsyncTask
             if (rootCause instanceof InterruptedIOException) {
-                LOGGER.info("The execution of the widget instance {} has been interrupted", nashornRequest.getProjectWidgetId());
+                log.info("The execution of the widget instance {} has been interrupted", nashornRequest.getProjectWidgetId());
             } else {
-                LOGGER.error("An error has occurred during the Nashorn request execution of the widget instance {}", nashornRequest.getProjectWidgetId(), exception);
+                log.error("An error has occurred during the Nashorn request execution of the widget instance {}", nashornRequest.getProjectWidgetId(), exception);
 
                 if (isFatalError(exception, rootCause)) {
                     nashornResponse.setError(NashornErrorTypeEnum.FATAL);

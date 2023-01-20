@@ -24,7 +24,7 @@
       </p>
     </form>
 
-    <div class="title-container">
+    <div *ngIf="isSocialLoginActivated()" class="title-container">
       <div class="line"><mat-divider></mat-divider></div>
       <div class="text mat-typography">{{ 'sign.in.with' | translate }}</div>
       <div class="line"><mat-divider></mat-divider></div>

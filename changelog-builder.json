@@ -1,24 +1,28 @@
 {
   "categories": [
     {
-      "title": "## :rocket: New",
+      "title": "# :sparkles: New",
       "labels": ["new feature"]
     },
     {
-      "title": "## :racehorse: Improvements",
+      "title": "# :zap: Improvements",
       "labels": ["enhancement"]
     },
     {
-      "title": "## :bug: Bugfixes",
+      "title": "# :bug: Bugfixes",
       "labels": ["bug"]
     },
     {
-      "title": "## :memo: Documentation",
+      "title": "# :memo: Documentation",
       "labels": ["documentation"]
     },
     {
-      "title": "## :hammer: Other",
-      "labels": ["dependencies", "security"]
+      "title": "# :arrow_up: Dependency Updates",
+      "labels": ["dependencies"]
+    },
+    {
+      "title": "# :speech_balloon: Other",
+      "labels": ["security"]
     }
   ],
   "template": "${{CHANGELOG}}\n\n<details>\n<summary>Uncategorized</summary>\n\n${{UNCATEGORIZED}}\n</details>",

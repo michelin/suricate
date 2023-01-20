@@ -17,49 +17,28 @@
 package io.suricate.monitoring.model.dto.api.projectwidget;
 
 import io.suricate.monitoring.model.dto.api.AbstractDto;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-/**
- * Widget position used for communication with the clients via webservices
- * (For example when a widget change of position)
- */
 @Data
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-@ApiModel(value = "ProjectWidgetPositionRequest", description = "Modify the position of a widget")
+@Schema(description = "Modify the position of a widget")
 public class ProjectWidgetPositionRequestDto extends AbstractDto {
-
-    /**
-     * The project widget id related to this project widget position
-     */
-    @ApiModelProperty(value = "The related project widget id", example = "1")
+    @Schema(description = "The related project widget id", example = "1")
     private Long projectWidgetId;
 
-    /**
-     * The start column of this widget
-     */
-    @ApiModelProperty(value = "The number of the column where the widget should start to be displayed", example = "1")
+    @Schema(description = "The number of the column where the widget should start to be displayed", example = "1")
     private int gridColumn;
 
-    /**
-     * The start row of the widget
-     */
-    @ApiModelProperty(value = "The number of the row where the widget should start to be displayed", example = "1")
+    @Schema(description = "The number of the row where the widget should start to be displayed", example = "1")
     private int gridRow;
 
-    /**
-     * The number of columns for this widget
-     */
-    @ApiModelProperty(value = "The number of columns taken by this widget", example = "1")
+    @Schema(description = "The number of columns taken by this widget", example = "1")
     private int width;
 
-    /**
-     * The number of rows
-     */
-    @ApiModelProperty(value = "The number of rows taken by this widget", example = "1")
+    @Schema(description = "The number of rows taken by this widget", example = "1")
     private int height;
 }

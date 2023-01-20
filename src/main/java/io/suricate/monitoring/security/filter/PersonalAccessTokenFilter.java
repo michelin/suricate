@@ -5,8 +5,7 @@ import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.security.LocalUser;
 import io.suricate.monitoring.services.api.PersonalAccessTokenService;
 import io.suricate.monitoring.services.token.PersonalAccessTokenHelperService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,28 +15,17 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Optional;
 
+@Slf4j
 public class PersonalAccessTokenFilter extends OncePerRequestFilter {
-    /**
-     * Class logger
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(PersonalAccessTokenFilter.class);
-
-    /**
-     * The personal access token helper service
-     */
     @Autowired
     private PersonalAccessTokenHelperService patHelperService;
 
-    /**
-     * The personal access token service
-     */
     @Autowired
     private PersonalAccessTokenService patService;
 
@@ -67,7 +55,7 @@ public class PersonalAccessTokenFilter extends OncePerRequestFilter {
 
             filterChain.doFilter(request, response);
         } catch (Exception e) {
-            LOGGER.error("Could not set user authentication in security context", e);
+            log.error("Could not set user authentication in security context", e);
             response.sendError(HttpStatus.UNAUTHORIZED.value(), ApiErrorEnum.AUTHENTICATION_ERROR.getMessage());
         }
     }

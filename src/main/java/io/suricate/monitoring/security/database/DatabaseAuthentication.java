@@ -16,40 +16,20 @@
 
 package io.suricate.monitoring.security.database;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-/**
- * Database authentication configurations
- */
 @Configuration
 @ConditionalOnProperty(name = "application.authentication.provider", havingValue = "database")
 public class DatabaseAuthentication {
-    /**
-     * User details service for database connection type
-     */
-    @Autowired
-    private UserDetailsDatabaseService userDetailsDatabaseService;
-
-    /**
-     * Password encoder/decoder service
-     */
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    /**
-     * Database configuration
-     *
-     * @param auth The authentication manager
-     * @throws Exception When errors occurred while retrieving users
-     */
-    @Autowired
-    public void configureDatabase(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-            .userDetailsService(userDetailsDatabaseService)
-            .passwordEncoder(passwordEncoder);
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider(UserDetailsDatabaseService userDetailsDatabaseService, PasswordEncoder passwordEncoder) {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+        authProvider.setUserDetailsService(userDetailsDatabaseService);
+        authProvider.setPasswordEncoder(passwordEncoder);
+        return authProvider;
     }
 }

@@ -5,7 +5,7 @@
     <artifactId>suricate</artifactId>
     <version>2.7.3-SNAPSHOT</version>
     <packaging>${packaging.type}</packaging>
-    <name>Suricate Application</name>
+    <name>suricate</name>
 
     <scm>
         <connection>scm:git:https://github.com/michelin/suricate.git</connection>
@@ -17,13 +17,13 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.5.8</version>
+        <version>2.7.7</version>
     </parent>
 
     <properties>
 	    <packaging.type>jar</packaging.type>
         <java.version>1.8</java.version>
-        <org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
+        <org.mapstruct.version>1.5.3.Final</org.mapstruct.version>
         <apacheds.version>2.0.0.AM26</apacheds.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <sonar.organization>michelin</sonar.organization>
@@ -32,7 +32,6 @@
     </properties>
 
     <dependencies>
-        <!-- Spring Boot -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -79,7 +78,6 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Spring Security -->
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-ldap</artifactId>
@@ -97,7 +95,6 @@
             <version>0.9.1</version>
         </dependency>
 
-        <!-- Spring Retry -->
         <dependency>
             <groupId>org.springframework.retry</groupId>
             <artifactId>spring-retry</artifactId>
@@ -116,7 +113,12 @@
             </exclusions>
         </dependency>
 
-        <!-- Apache DS -->
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>1.6.14</version>
+        </dependency>
+
         <dependency>
             <groupId>org.apache.directory.server</groupId>
             <artifactId>apacheds-core</artifactId>
@@ -141,7 +143,6 @@
             <version>${apacheds.version}</version>
         </dependency>
 
-        <!-- Hibernate -->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-jpamodelgen</artifactId>
@@ -150,84 +151,60 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-search-orm</artifactId>
-            <version>5.11.10.Final</version>
+            <version>5.11.11.Final</version>
         </dependency>
 
-        <!-- PostgreSQL -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
 
-        <!-- H2 -->
         <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
         </dependency>
 
-        <!-- Flyway -->
         <dependency>
             <groupId>org.flywaydb</groupId>
             <artifactId>flyway-core</artifactId>
         </dependency>
 
-        <!-- Lombok -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.24</version>
         </dependency>
 
-        <!-- Google -->
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>31.0.1-jre</version>
+            <version>31.1-jre</version>
         </dependency>
 
-        <!-- Swagger -->
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <version>2.9.2</version>
-        </dependency>
-
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger-ui</artifactId>
-            <version>2.10.5</version>
-        </dependency>
-
-        <!-- JGit -->
         <dependency>
             <groupId>org.eclipse.jgit</groupId>
             <artifactId>org.eclipse.jgit</artifactId>
-            <version>5.10.0.202012080955-r</version>
+            <version>5.13.1.202206130422-r</version>
         </dependency>
 
-        <!-- Mustache -->
         <dependency>
             <groupId>com.github.spullara.mustache.java</groupId>
             <artifactId>compiler</artifactId>
-            <version>0.9.7</version>
+            <version>0.9.10</version>
         </dependency>
 
-        <!-- OKHttp -->
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
-            <version>4.2.2</version>
         </dependency>
 
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>logging-interceptor</artifactId>
-            <version>4.2.2</version>
         </dependency>
 
-        <!-- Mapstruct -->
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
@@ -240,11 +217,10 @@
             <version>${org.mapstruct.version}</version>
         </dependency>
 
-        <!-- Cache -->
         <dependency>
             <groupId>org.ehcache</groupId>
             <artifactId>ehcache</artifactId>
-            <version>3.9.2</version>
+            <version>3.10.6</version>
         </dependency>
 
         <dependency>
@@ -256,7 +232,7 @@
         <dependency>
             <groupId>com.github.ulisesbocchio</groupId>
             <artifactId>jasypt-spring-boot-starter</artifactId>
-            <version>3.0.3</version>
+            <version>3.0.5</version>
         </dependency>
 
         <dependency>
@@ -271,7 +247,6 @@
             </exclusions>
         </dependency>
 
-        <!-- File upload -->
         <dependency>
             <groupId>commons-fileupload</groupId>
             <artifactId>commons-fileupload</artifactId>
@@ -281,7 +256,7 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.8.0</version>
+            <version>2.11.0</version>
         </dependency>
 
         <dependency>
@@ -305,7 +280,6 @@
     <build>
         <finalName>${project.artifactId}</finalName>
         <plugins>
-            <!-- Fat jar configuration -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
@@ -315,7 +289,6 @@
                 </configuration>
             </plugin>
 
-            <!-- Force cleaning the /target folder. Used to force the deletion of the node.exe -->
             <plugin>
                 <artifactId>maven-clean-plugin</artifactId>
                 <configuration>
@@ -377,60 +350,10 @@
                 </executions>
             </plugin>
 
-            <!-- Generate swagger file -->
-            <plugin>
-                <groupId>com.github.kongchen</groupId>
-                <artifactId>swagger-maven-plugin</artifactId>
-                <version>3.1.7</version>
-                <configuration>
-                    <apiSources>
-                        <apiSource>
-                            <basePath>/api</basePath>
-                            <springmvc>true</springmvc>
-                            <locations>
-                                <location>io.suricate.monitoring.controllers.api</location>
-                            </locations>
-                            <modelConverters>io.swagger.validator.BeanValidator</modelConverters>
-                            <info>
-                                <title>Swagger 4 Suricate</title>
-                                <version>${project.version}</version>
-                                <!-- use markdown here  -->
-                                <description>
-                                    Suricate all APIs description
-                                </description>
-                            </info>
-                            <swaggerDirectory>${basedir}/target/generated/swagger-ui</swaggerDirectory>
-                            <schemes>
-                                <scheme>http</scheme>
-                                <scheme>https</scheme>
-                            </schemes>
-                            <host>example.com</host>
-                        </apiSource>
-                    </apiSources>
-                </configuration>
-                <executions>
-                    <execution>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>generate</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <!-- Adding dependency to swagger-hibernate-validations to enable the BeanValidator as a custom
-                         model converter -->
-                    <dependency>
-                        <groupId>io.swagger</groupId>
-                        <artifactId>swagger-hibernate-validations</artifactId>
-                        <version>1.6.2</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
-
             <plugin>
                 <groupId>com.google.cloud.tools</groupId>
                 <artifactId>jib-maven-plugin</artifactId>
-                <version>3.0.0</version>
+                <version>3.3.1</version>
                 <configuration>
                     <from>
                         <image>adoptopenjdk:8-jre-hotspot</image>

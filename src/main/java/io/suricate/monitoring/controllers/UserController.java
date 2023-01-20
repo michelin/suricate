@@ -20,20 +20,17 @@ package io.suricate.monitoring.controllers;
 
 import io.suricate.monitoring.configuration.swagger.ApiPageable;
 import io.suricate.monitoring.model.dto.api.error.ApiErrorDto;
-import io.suricate.monitoring.model.dto.api.token.PersonalAccessTokenResponseDto;
 import io.suricate.monitoring.model.dto.api.token.PersonalAccessTokenRequestDto;
-import io.suricate.monitoring.model.dto.api.user.UserRequestDto;
-import io.suricate.monitoring.model.dto.api.user.UserResponseDto;
-import io.suricate.monitoring.model.dto.api.user.UserSettingRequestDto;
-import io.suricate.monitoring.model.dto.api.user.UserSettingResponseDto;
-import io.suricate.monitoring.model.entities.Setting;
+import io.suricate.monitoring.model.dto.api.token.PersonalAccessTokenResponseDto;
+import io.suricate.monitoring.model.dto.api.user.*;
 import io.suricate.monitoring.model.entities.PersonalAccessToken;
+import io.suricate.monitoring.model.entities.Setting;
 import io.suricate.monitoring.model.entities.User;
 import io.suricate.monitoring.model.entities.UserSetting;
 import io.suricate.monitoring.model.enums.AuthenticationProvider;
 import io.suricate.monitoring.security.LocalUser;
-import io.suricate.monitoring.services.api.SettingService;
 import io.suricate.monitoring.services.api.PersonalAccessTokenService;
+import io.suricate.monitoring.services.api.SettingService;
 import io.suricate.monitoring.services.api.UserService;
 import io.suricate.monitoring.services.api.UserSettingService;
 import io.suricate.monitoring.services.mapper.PersonalAccessTokenMapper;
@@ -43,7 +40,14 @@ import io.suricate.monitoring.services.token.PersonalAccessTokenHelperService;
 import io.suricate.monitoring.utils.exceptions.EmailAlreadyExistException;
 import io.suricate.monitoring.utils.exceptions.ObjectNotFoundException;
 import io.suricate.monitoring.utils.exceptions.UsernameAlreadyExistException;
-import io.swagger.annotations.*;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -56,88 +60,77 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import springfox.documentation.annotations.ApiIgnore;
 
 import java.net.URI;
 import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
-
-/**
- * User controller
- */
 @RestController
 @RequestMapping("/api")
-@Api(value = "User Controller", tags = {"Users"})
+@Tag(name = "User", description = "User Controller")
 public class UserController {
-    /**
-     * The user service
-     */
     @Autowired
     private UserService userService;
 
-    /**
-     * The user setting service
-     */
     @Autowired
     private UserSettingService userSettingService;
 
-    /**
-     * The setting service
-     */
     @Autowired
     private SettingService settingService;
 
-    /**
-     * The personal access token helper service
-     */
     @Autowired
     private PersonalAccessTokenHelperService patHelperService;
 
-    /**
-     * The personal access token service
-     */
     @Autowired
     private PersonalAccessTokenService patService;
 
-    /**
-     * The user mapper
-     */
     @Autowired
     private UserMapper userMapper;
 
-    /**
-     * The user setting mapper
-     */
     @Autowired
     private UserSettingMapper userSettingMapper;
 
-    /**
-     * The token mapper
-     */
     @Autowired
     private PersonalAccessTokenMapper personalAccessTokenMapper;
 
     /**
-     * List all user
-     *
+     * List all users for admins
      * @return The list of all users
      */
-    @ApiOperation(value = "Get the full list of users", response = UserResponseDto.class, nickname = "getAllUsers")
+    @Operation(summary = "Get the full list of users")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok"),
-        @ApiResponse(code = 204, message = "No Content"),
-        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "204", description = "No Content"),
+            @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+            @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))})
+    })
+    @ApiPageable
+    @GetMapping(value = "/v1/admin/users")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public Page<AdminUserResponseDto> getAllForAdmins(@Parameter(name = "search", description = "Search keyword")
+                                                      @RequestParam(value = "search", required = false) String search,
+                                                      @ParameterObject Pageable pageable) {
+        return userService.getAll(search, pageable).map(userMapper::toAdminUserDTO);
+    }
+
+    /**
+     * List all users
+     * @return The list of all users
+     */
+    @Operation(summary = "Get the full list of users")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "OK"),
+        @ApiResponse(responseCode = "204", description = "No Content"),
+        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
     @ApiPageable
     @GetMapping(value = "/v1/users")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public Page<UserResponseDto> getAll(@ApiParam(name = "search", value = "Search keyword")
+    public Page<UserResponseDto> getAll(@Parameter(name = "search", description = "Search keyword")
                                         @RequestParam(value = "search", required = false) String search,
-                                        Pageable pageable) {
-        return userService.getAll(search, pageable)
-                .map(userMapper::toUserDTO);
+                                        @ParameterObject Pageable pageable) {
+        return userService.getAll(search, pageable).map(userMapper::toUserDTO);
     }
 
     /**
@@ -145,15 +138,15 @@ public class UserController {
      * @param userId The user id to get
      * @return The user
      */
-    @ApiOperation(value = "Get a user by id", response = UserResponseDto.class)
+    @Operation(summary = "Get a user by id")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = UserResponseDto.class),
-        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
+        @ApiResponse(responseCode = "200", description = "OK"),
+        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
     @GetMapping(value = "/v1/users/{userId}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<UserResponseDto> getOne(@ApiParam(name = "userId", value = "The user id", required = true, example = "1")
+    public ResponseEntity<UserResponseDto> getOne(@Parameter(name = "userId", description = "The user id", required = true, example = "1")
                                                   @PathVariable("userId") Long userId) {
         Optional<User> userOptional = userService.getOne(userId);
         if (!userOptional.isPresent()) {
@@ -168,23 +161,22 @@ public class UserController {
 
     /**
      * Update a user
-     *
      * @param userId         The user id
      * @param userRequestDto The information to update
      * @return The user updated
      */
-    @ApiOperation(value = "Update a user by id")
+    @Operation(summary = "Update a user by id")
     @ApiResponses(value = {
-        @ApiResponse(code = 204, message = "User updated"),
-        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
-        @ApiResponse(code = 404, message = "User not found", response = ApiErrorDto.class)
+        @ApiResponse(responseCode = "204", description = "User updated"),
+        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "404", description = "User not found", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
     @PutMapping(value = "/v1/users/{userId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Void> updateOne(@ApiParam(name = "userId", value = "The user id", required = true, example = "1")
+    public ResponseEntity<Void> updateOne(@Parameter(name = "userId", description = "The user id", required = true, example = "1")
                                           @PathVariable("userId") Long userId,
-                                          @ApiParam(name = "userResponseDto", value = "The user info to update", required = true)
+                                          @Parameter(name = "userResponseDto", description = "The user info to update", required = true)
                                           @RequestBody UserRequestDto userRequestDto) {
         Optional<User> userOptional = userService.updateUser(
             userId,
@@ -204,20 +196,19 @@ public class UserController {
 
     /**
      * Delete a user
-     *
      * @param userId The user id to delete
      * @return The user deleted
      */
-    @ApiOperation(value = "Delete a user by id")
+    @Operation(summary = "Delete a user by id")
     @ApiResponses(value = {
-        @ApiResponse(code = 204, message = "User deleted"),
-        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class)
+        @ApiResponse(responseCode = "204", description = "User deleted"),
+        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
     @DeleteMapping(value = "/v1/users/{userId}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Transactional
-    public ResponseEntity<Void> deleteOne(@ApiParam(name = "userId", value = "The user id", required = true, example = "1")
+    public ResponseEntity<Void> deleteOne(@Parameter(name = "userId", description = "The user id", required = true, example = "1")
                                           @PathVariable("userId") Long userId) {
         Optional<User> userOptional = userService.getOne(userId);
         if (!userOptional.isPresent()) {
@@ -232,16 +223,16 @@ public class UserController {
      * Retrieve the user settings
      * @param username The username
      */
-    @ApiOperation(value = "Retrieve the user settings", response = UserSettingResponseDto.class)
+    @Operation(summary = "Retrieve the user settings")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = UserSettingResponseDto.class, responseContainer = "List"),
-        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
-        @ApiResponse(code = 404, message = "User not found", response = ApiErrorDto.class)
+        @ApiResponse(responseCode = "200", description = "OK"),
+        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "404", description = "User not found", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
     @GetMapping(value = "/v1/users/{username}/settings")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<List<UserSettingResponseDto>> getUserSettings(@ApiParam(name = "userName", value = "The user name", required = true)
+    public ResponseEntity<List<UserSettingResponseDto>> getUserSettings(@Parameter(name = "userName", description = "The user name", required = true)
                                                                         @PathVariable("username") String username) {
         Optional<List<UserSetting>> userSettings = userSettingService.getUserSettingsByUsername(username);
 
@@ -257,27 +248,26 @@ public class UserController {
 
     /**
      * Update the user settings for a user
-     *
      * @param principal             The connected user
      * @param userName              The username used in the url
      * @param userSettingRequestDto The new setting value
      * @return The user updated
      */
-    @ApiOperation(value = "Update the user settings for a user")
+    @Operation(summary = "Update the user settings for a user")
     @ApiResponses(value = {
-        @ApiResponse(code = 204, message = "Settings updated"),
-        @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-        @ApiResponse(code = 403, message = "You don't have permission to access to this resource", response = ApiErrorDto.class),
-        @ApiResponse(code = 404, message = "User not found", response = ApiErrorDto.class)
+        @ApiResponse(responseCode = "204", description = "Settings updated"),
+        @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "404", description = "User not found", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
     @PutMapping(value = "/v1/users/{username}/settings/{settingId}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<UserResponseDto> updateUserSettings(@ApiIgnore Principal principal,
-                                                              @ApiParam(name = "userName", value = "The user name", required = true)
+    public ResponseEntity<UserResponseDto> updateUserSettings(@Parameter(hidden = true) Principal principal,
+                                                              @Parameter(name = "userName", description = "The user name", required = true)
                                                               @PathVariable("username") String userName,
-                                                              @ApiParam(name = "settingId", value = "The setting id", required = true, example = "1")
+                                                              @Parameter(name = "settingId", description = "The setting id", required = true, example = "1")
                                                               @PathVariable("settingId") Long settingId,
-                                                              @ApiParam(name = "userSettingRequestDto", value = "The new value of the setting", required = true)
+                                                              @Parameter(name = "userSettingRequestDto", description = "The new value of the setting", required = true)
                                                               @RequestBody UserSettingRequestDto userSettingRequestDto) {
         Optional<User> userOptional = this.userService.getOneByUsername(principal.getName());
 
@@ -305,15 +295,15 @@ public class UserController {
      * @param userRequestDto The user to register
      * @return The user registered
      */
-    @ApiOperation(value = "Register a new user", response = UserResponseDto.class)
+    @Operation(summary = "Register a new user")
     @ApiResponses(value = {
-        @ApiResponse(code = 200, message = "Ok", response = UserResponseDto.class),
-        @ApiResponse(code = 400, message = "Bad request", response = ApiErrorDto.class),
-        @ApiResponse(code = 409, message = "Username or email already taken", response = ApiErrorDto.class)
+        @ApiResponse(responseCode = "200", description = "OK"),
+        @ApiResponse(responseCode = "400", description = "Bad request", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+        @ApiResponse(responseCode = "409", description = "Username or email already taken", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
     @PostMapping(value = "/v1/users/signup")
     @PreAuthorize("isAnonymous()")
-    public ResponseEntity<UserResponseDto> signUp(@ApiParam(name = "userResponseDto", value = "The user information to create", required = true)
+    public ResponseEntity<UserResponseDto> signUp(@Parameter(name = "userResponseDto", description = "The user information to create", required = true)
                                                   @RequestBody UserRequestDto userRequestDto) {
         if (userService.getOneByUsername(userRequestDto.getUsername()).isPresent()) {
             throw new UsernameAlreadyExistException(userRequestDto.getUsername());
@@ -343,14 +333,14 @@ public class UserController {
      * @param connectedUser The authentication principal as LocalUser
      * @return A list of personal access tokens
      */
-    @ApiOperation(value = "Get all user personal access tokens", response = List.class)
+    @Operation(summary = "Get all user personal access tokens")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Ok", response = List.class),
-            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class)
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
     @GetMapping(value = "/v1/users/personal-access-token")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<List<PersonalAccessTokenResponseDto>> getPersonalAccessTokens(@ApiIgnore @AuthenticationPrincipal LocalUser connectedUser) {
+    public ResponseEntity<List<PersonalAccessTokenResponseDto>> getPersonalAccessTokens(@Parameter(hidden = true) @AuthenticationPrincipal LocalUser connectedUser) {
         return ResponseEntity
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
@@ -361,16 +351,16 @@ public class UserController {
      * Generate a new user token
      * @param personalAccessTokenRequestDto The token request
      */
-    @ApiOperation(value = "Generate a new user personal access token", response = PersonalAccessTokenResponseDto.class)
+    @Operation(summary = "Generate a new user personal access token")
     @ApiResponses(value = {
-            @ApiResponse(code = 200, message = "Ok", response = PersonalAccessTokenResponseDto.class),
-            @ApiResponse(code = 400, message = "Bad request", response = ApiErrorDto.class),
-            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class)
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "400", description = "Bad request", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+            @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
     @PostMapping(value = "/v1/users/personal-access-token")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<PersonalAccessTokenResponseDto> createPersonalAccessToken(@ApiIgnore Authentication authentication,
-                                                                                    @ApiParam(name = "tokenRequestDto", value = "The token request", required = true)
+    public ResponseEntity<PersonalAccessTokenResponseDto> createPersonalAccessToken(@Parameter(hidden = true) Authentication authentication,
+                                                                                    @Parameter(name = "tokenRequestDto", description = "The token request", required = true)
                                                         @RequestBody PersonalAccessTokenRequestDto personalAccessTokenRequestDto) {
         String personalAccessToken = patHelperService.createPersonalAccessToken();
         Long checksum = patHelperService.computePersonAccessTokenChecksum(personalAccessToken);
@@ -384,16 +374,16 @@ public class UserController {
     /**
      * Delete a user personal access token
      */
-    @ApiOperation(value = "Delete a user personal access token", response = PersonalAccessTokenResponseDto.class)
+    @Operation(summary = "Delete a user personal access token")
     @ApiResponses(value = {
-            @ApiResponse(code = 204, message = "Personal access token deleted"),
-            @ApiResponse(code = 401, message = "Authentication error, token expired or invalid", response = ApiErrorDto.class),
-            @ApiResponse(code = 404, message = "Personal access token not found", response = ApiErrorDto.class)
+            @ApiResponse(responseCode = "204", description = "Personal access token deleted"),
+            @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+            @ApiResponse(responseCode = "404", description = "Personal access token not found", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
     @DeleteMapping(value = "/v1/users/personal-access-token/{tokenName}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<Void> deletePersonalAccessToken(@ApiIgnore @AuthenticationPrincipal LocalUser connectedUser,
-                                            @ApiParam(name = "tokenName", value = "The token name", required = true)
+    public ResponseEntity<Void> deletePersonalAccessToken(@Parameter(hidden = true) @AuthenticationPrincipal LocalUser connectedUser,
+                                            @Parameter(name = "tokenName", description = "The token name", required = true)
                                             @PathVariable("tokenName") String tokenName) {
         Optional<PersonalAccessToken> tokenOptional = patService.findByNameAndUser(tokenName, connectedUser.getUser());
         if (!tokenOptional.isPresent()) {
