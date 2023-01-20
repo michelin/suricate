@@ -47,4 +47,4 @@ jobs:
       - name: Tag
         run: |
           mvn release:clean
-          mvn release:prepare -DreleaseVersion=${{ github.event.inputs.release_version }}
+          mvn release:prepare -DreleaseVersion=${{ github.event.inputs.release_version }} -DsignTag
