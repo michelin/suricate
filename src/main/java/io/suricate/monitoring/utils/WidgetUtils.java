@@ -22,27 +22,19 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import io.suricate.monitoring.model.entities.Category;
 import io.suricate.monitoring.model.entities.Library;
 import io.suricate.monitoring.model.entities.Widget;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
+@Slf4j
+
 public final class WidgetUtils {
-
-    /**
-     * Class logger
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(WidgetUtils.class);
-
-    /**
-     * Object mapper for jackson
-     */
     private static final ObjectMapper mapper;
 
     static {
@@ -101,7 +93,7 @@ public final class WidgetUtils {
                 }
             }
         } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
+            log.error(e.getMessage(), e);
         }
         return categories;
     }
@@ -133,9 +125,9 @@ public final class WidgetUtils {
             }
         }
 
-        // Avoid not well formed category
+        // Avoid not well formatted category
         if (StringUtils.isBlank(category.getName())) {
-            LOGGER.error("Category {} invalid it's name must not be empty", folderCategory.getPath());
+            log.error("Category {} invalid it's name must not be empty", folderCategory.getPath());
             return null;
         }
 
@@ -180,17 +172,17 @@ public final class WidgetUtils {
             }
 
             if (widget.getDelay() == null) {
-                LOGGER.error("Widget delay must no be null : {}", folder.getPath());
+                log.error("Widget delay must no be null : {}", folder.getPath());
                 return null;
             }
 
             if (widget.getDelay() > 0 && StringUtils.isBlank(widget.getBackendJs())) {
-                LOGGER.error("Widget script must not be empty when delay > 0 : {}", folder.getPath());
+                log.error("Widget script must not be empty when delay > 0 : {}", folder.getPath());
                 return null;
             }
 
             if (StringUtils.isAnyBlank(widget.getCssContent(), widget.getDescription(), widget.getHtmlContent(), widget.getTechnicalName(), widget.getName())) {
-                LOGGER.error("Widget is not well formatted : {}", folder.getPath());
+                log.error("Widget is not well formatted : {}", folder.getPath());
                 return null;
             }
         }

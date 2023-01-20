@@ -30,8 +30,7 @@ import io.suricate.monitoring.services.api.ProjectWidgetService;
 import io.suricate.monitoring.services.mapper.ProjectWidgetMapper;
 import io.suricate.monitoring.services.nashorn.scheduler.NashornRequestWidgetExecutionScheduler;
 import io.suricate.monitoring.services.websocket.DashboardWebSocketService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
@@ -39,68 +38,26 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 
+@Slf4j
 @Service
 public class DashboardScheduleService {
-
-    /**
-     * Class logger
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(DashboardScheduleService.class);
-
-    /**
-     * The application context
-     */
-    private final ApplicationContext applicationContext;
-
-    /**
-     * The dashboard websocket service
-     */
-    private final DashboardWebSocketService dashboardWebSocketService;
-
-    /**
-     * The project widget service
-     */
-    private final ProjectWidgetService projectWidgetService;
-
-    /**
-     * The project widget mapper
-     */
-    private final ProjectWidgetMapper projectWidgetMapper;
-
-    /**
-     * The nashorn service
-     */
-    private final NashornService nashornService;
-
-    /**
-     * The project service
-     */
-    private final ProjectService projectService;
-
-    /**
-     * Constructor
-     *
-     * @param dashboardWebSocketService The dashboard websocket service
-     * @param projectService            The project service
-     * @param projectWidgetService      The project widget service
-     * @param projectWidgetMapper       The project widget mapper
-     * @param nashornService            The nashorn service to inject
-     * @param applicationContext        The application context to inject
-     */
     @Autowired
-    public DashboardScheduleService(final DashboardWebSocketService dashboardWebSocketService,
-                                    final ProjectService projectService,
-                                    final ProjectWidgetService projectWidgetService,
-                                    final ProjectWidgetMapper projectWidgetMapper,
-                                    final NashornService nashornService,
-                                    final ApplicationContext applicationContext) {
-        this.dashboardWebSocketService = dashboardWebSocketService;
-        this.projectService = projectService;
-        this.projectWidgetService = projectWidgetService;
-        this.projectWidgetMapper = projectWidgetMapper;
-        this.nashornService = nashornService;
-        this.applicationContext = applicationContext;
-    }
+    private ApplicationContext applicationContext;
+
+    @Autowired
+    private DashboardWebSocketService dashboardWebSocketService;
+
+    @Autowired
+    private ProjectWidgetService projectWidgetService;
+
+    @Autowired
+    private ProjectWidgetMapper projectWidgetMapper;
+
+    @Autowired
+    private NashornService nashornService;
+
+    @Autowired
+    private ProjectService projectService;
 
     /**
      * Process the Nashorn response
@@ -118,7 +75,7 @@ public class DashboardScheduleService {
     public void processNashornRequestResponse(NashornResponse nashornResponse,
                                               NashornRequestWidgetExecutionScheduler scheduler) {
         if (nashornResponse.isValid()) {
-            LOGGER.debug("The Nashorn response is valid for the widget instance: {}. Updating widget in database",
+            log.debug("The Nashorn response is valid for the widget instance: {}. Updating widget in database",
                     nashornResponse.getProjectWidgetId());
 
             projectWidgetService.updateWidgetInstanceAfterSucceededExecution(nashornResponse.getLaunchDate(),
@@ -127,7 +84,7 @@ public class DashboardScheduleService {
                     nashornResponse.getProjectWidgetId(),
                     WidgetStateEnum.RUNNING);
         } else {
-            LOGGER.debug("The Nashorn response is not valid for the widget instance: {}. Logs: {}. Response data: {}",
+            log.debug("The Nashorn response is not valid for the widget instance: {}. Logs: {}. Response data: {}",
                     nashornResponse.getProjectWidgetId(), nashornResponse.getLog(), nashornResponse);
 
             projectWidgetService.updateWidgetInstanceAfterFailedExecution(nashornResponse.getLaunchDate(),
@@ -137,7 +94,7 @@ public class DashboardScheduleService {
         }
 
         if (nashornResponse.isFatal()) {
-            LOGGER.debug("The Nashorn response contains a fatal error for the widget instance: {}. Logs: {}. Response data: {}",
+            log.debug("The Nashorn response contains a fatal error for the widget instance: {}. Logs: {}. Response data: {}",
                     nashornResponse.getProjectWidgetId(), nashornResponse.getLog(), nashornResponse);
         } else {
             NashornRequest newNashornRequest = nashornService.getNashornRequestByProjectWidgetId(nashornResponse.getProjectWidgetId());

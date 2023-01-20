@@ -5,8 +5,7 @@ import io.suricate.monitoring.model.enums.ApiErrorEnum;
 import io.suricate.monitoring.security.LocalUser;
 import io.suricate.monitoring.services.api.UserService;
 import io.suricate.monitoring.services.token.JwtHelperService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,21 +21,11 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Collections;
 
+@Slf4j
 public class JwtTokenFilter extends OncePerRequestFilter {
-    /**
-     * The logger
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(JwtTokenFilter.class);
-
-    /**
-     * The jwt service
-     */
     @Autowired
     private JwtHelperService jwtHelperService;
 
-    /**
-     * The user service
-     */
     @Autowired
     private UserService userService;
 
@@ -65,7 +54,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
             filterChain.doFilter(request, response);
         } catch (Exception e) {
-            LOGGER.error("Could not set user authentication in security context", e);
+            log.error("Could not set user authentication in security context", e);
             response.sendError(HttpStatus.UNAUTHORIZED.value(), ApiErrorEnum.AUTHENTICATION_ERROR.getMessage());
         }
     }

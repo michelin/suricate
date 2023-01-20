@@ -20,9 +20,8 @@ package io.suricate.monitoring.utils.http;
 
 import io.suricate.monitoring.properties.ProxyProperties;
 import io.suricate.monitoring.utils.SpringContextUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.*;
@@ -31,15 +30,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
-/**
- * Custom proxy selector
- */
+@Slf4j
 public class WidgetProxySelector extends ProxySelector {
-    /**
-     * The logger
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(WidgetProxySelector.class);
-
     /**
      * Set the proxy for the URI that will be called by the widget HTTP client
      * @param uri The URI
@@ -71,6 +63,6 @@ public class WidgetProxySelector extends ProxySelector {
      */
     @Override
     public void connectFailed(URI uri, SocketAddress socketAddress, IOException e) {
-        LOGGER.error("An error occurred trying to connect to the configured proxy for the URI {} during the widget execution", uri, e);
+        log.error("An error occurred trying to connect to the configured proxy for the URI {} during the widget execution", uri, e);
     }
 }

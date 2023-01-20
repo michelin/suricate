@@ -17,27 +17,17 @@
 package io.suricate.monitoring.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
+@Slf4j
 public final class JsonUtils {
-
-    /**
-     * Logger
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(JsonUtils.class);
-
-    /**
-     * Constructor
-     */
     private JsonUtils() { }
 
     /**
      * Validate the JSON parameter
-     *
      * @param jsonInString the json string to test
      * @return true if the json is isValid false otherwise
      */
@@ -49,10 +39,9 @@ public final class JsonUtils {
                 return true;
             } catch (IOException e) {
                 // do nothing
-                LOGGER.trace(e.getMessage(), e);
+                log.trace(e.getMessage(), e);
             }
         }
-
         return false;
     }
 }

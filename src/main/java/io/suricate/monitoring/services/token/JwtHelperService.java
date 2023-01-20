@@ -4,9 +4,8 @@ import io.jsonwebtoken.*;
 import io.suricate.monitoring.model.entities.Role;
 import io.suricate.monitoring.properties.ApplicationProperties;
 import io.suricate.monitoring.security.LocalUser;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.map.HashedMap;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -15,16 +14,9 @@ import java.util.Date;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class JwtHelperService {
-    /**
-     * The logger
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(JwtHelperService.class);
-
-    /**
-     * The application properties
-     */
     @Autowired
     private ApplicationProperties applicationProperties;
 
@@ -82,17 +74,17 @@ public class JwtHelperService {
                     .parseClaimsJws(authToken);
             return true;
         } catch (SignatureException e) {
-            LOGGER.error("Invalid JWT signature", e);
+            log.error("Invalid JWT signature", e);
         } catch (MalformedJwtException e) {
-            LOGGER.error("Invalid JWT token", e);
+            log.error("Invalid JWT token", e);
         } catch (ExpiredJwtException e) {
-            LOGGER.error("Expired JWT token", e);
+            log.error("Expired JWT token", e);
         } catch (UnsupportedJwtException e) {
-            LOGGER.error("Unsupported JWT token", e);
+            log.error("Unsupported JWT token", e);
         } catch (IllegalArgumentException e) {
-            LOGGER.error("JWT claims string is empty", e);
+            log.error("JWT claims string is empty", e);
         } catch (Exception e) {
-            LOGGER.error("Error reading public key", e);
+            log.error("Error reading public key", e);
         }
         return false;
     }

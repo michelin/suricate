@@ -20,9 +20,8 @@ import io.suricate.monitoring.model.dto.nashorn.NashornRequest;
 import io.suricate.monitoring.model.dto.nashorn.NashornResponse;
 import io.suricate.monitoring.services.nashorn.scheduler.NashornRequestWidgetExecutionScheduler;
 import io.suricate.monitoring.services.nashorn.services.DashboardScheduleService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.retry.backoff.UniformRandomBackOffPolicy;
@@ -32,64 +31,31 @@ import org.springframework.stereotype.Component;
 
 import java.util.concurrent.*;
 
+@Slf4j
 @Component
 @Scope(value="prototype")
 public class NashornRequestResultAsyncTask implements Callable<Void>{
-
-    /**
-     * Class logger
-     */
-    private static final Logger LOGGER = LoggerFactory.getLogger(NashornRequestResultAsyncTask.class.getName());
-
-    /**
-     * Minimum time to wait for a result from the Nashorn request
-     */
     private static final int TIMEOUT = 60;
 
-    /**
-     * Maximum number of retry to update the widget
-     */
     public static final int MAX_RETRY = 10;
 
-    /**
-     * Maximum backoff period to wait before retrying
-     */
     private static final int MAX_BACK_OFF_PERIOD = 10000;
 
-    /**
-     * Minimum backoff period to wait before retrying
-     */
     private static final int MIN_BACK_OFF_PERIOD = 1000;
 
-    /**
-     * The dashboard schedule service
-     */
     @Autowired
     private DashboardScheduleService dashboardScheduleService;
 
-    /**
-     * The scheduled asynchronous task which will execute the Nashorn request executing the widget
-     */
     private final ScheduledFuture<NashornResponse> scheduledNashornRequestTask;
 
-    /**
-     * The Nashorn request itself
-     */
     private final NashornRequest nashornRequest;
 
-    /**
-     * The Nashorn requests scheduler
-     */
     private final NashornRequestWidgetExecutionScheduler scheduler;
 
-    /**
-     * Retry template which will perform some retries on the widget update
-     */
     private RetryTemplate retryTemplate;
 
     /**
      * Constructor
-     *
      * @param scheduledNashornRequestTask The scheduled asynchronous task which will execute the Nashorn request executing the widget
      * @param nashornRequest The Nashorn request itself
      * @param scheduler The Nashorn requests scheduler
@@ -119,33 +85,33 @@ public class NashornRequestResultAsyncTask implements Callable<Void>{
         try {
             long nashornRequestExecutionTimeout = nashornRequest.getTimeout() == null || nashornRequest.getTimeout() < TIMEOUT ? TIMEOUT : nashornRequest.getTimeout();
 
-            LOGGER.debug("Waiting for the response of the Nashorn request of the widget instance {} (until {} seconds before timeout)",
+            log.debug("Waiting for the response of the Nashorn request of the widget instance {} (until {} seconds before timeout)",
                     nashornRequest.getProjectWidgetId(), nashornRequestExecutionTimeout);
 
             // Wait for a response of the Nashorn request task
             NashornResponse nashornResponse = scheduledNashornRequestTask.get(nashornRequestExecutionTimeout, TimeUnit.SECONDS);
 
             retryTemplate.execute(retryContext -> {
-                LOGGER.debug("Update the widget instance {} (try {}/{})", nashornResponse.getProjectWidgetId(), retryContext.getRetryCount(), MAX_RETRY);
+                log.debug("Update the widget instance {} (try {}/{})", nashornResponse.getProjectWidgetId(), retryContext.getRetryCount(), MAX_RETRY);
 
                 dashboardScheduleService.processNashornRequestResponse(nashornResponse, scheduler);
 
                 return null;
             }, context -> {
-                LOGGER.error("Updating the widget instance {} failed after {} attempts", nashornRequest.getProjectWidgetId(), MAX_RETRY);
+                log.error("Updating the widget instance {} failed after {} attempts", nashornRequest.getProjectWidgetId(), MAX_RETRY);
 
                 scheduler.schedule(nashornRequest, false);
 
                 return null;
             });
         } catch (InterruptedException ie) {
-            LOGGER.error("Interrupted exception caught. Re-interrupting the thread for the widget instance {}",
+            log.error("Interrupted exception caught. Re-interrupting the thread for the widget instance {}",
                     nashornRequest.getProjectWidgetId());
 
             Thread.currentThread().interrupt();
         } catch (CancellationException cancellationException) {
             if (scheduledNashornRequestTask.isCancelled()) {
-                LOGGER.debug("The Nashorn request has been canceled for the widget instance {}", nashornRequest.getProjectWidgetId());
+                log.debug("The Nashorn request has been canceled for the widget instance {}", nashornRequest.getProjectWidgetId());
             }
         } catch (Exception exception) {
             Throwable rootCause = ExceptionUtils.getRootCause(exception);
@@ -157,11 +123,11 @@ public class NashornRequestResultAsyncTask implements Callable<Void>{
             if (rootCause instanceof TimeoutException) {
                 widgetLogs = "The Nashorn request exceeded the timeout defined by the widget";
 
-                LOGGER.error("The Nashorn request exceeded the timeout defined by the widget instance {}. The Nashorn request is going to be cancelled.", nashornRequest.getProjectWidgetId());
+                log.error("The Nashorn request exceeded the timeout defined by the widget instance {}. The Nashorn request is going to be cancelled.", nashornRequest.getProjectWidgetId());
             } else {
                 widgetLogs = rootCause.toString();
 
-                LOGGER.error("An error has occurred in the Nashorn request result task for the widget instance {}. The Nashorn request is going to be canceled.", nashornRequest.getProjectWidgetId(), exception);
+                log.error("An error has occurred in the Nashorn request result task for the widget instance {}. The Nashorn request is going to be canceled.", nashornRequest.getProjectWidgetId(), exception);
             }
 
             scheduledNashornRequestTask.cancel(true);
@@ -169,7 +135,7 @@ public class NashornRequestResultAsyncTask implements Callable<Void>{
             try {
                 dashboardScheduleService.updateWidgetInstanceNoNashornResponse(widgetLogs, nashornRequest.getProjectWidgetId(), nashornRequest.getProjectId());
             } catch (Exception exception1) {
-                LOGGER.error("Cannot update the widget instance {} with no Nashorn response cause of database issue. Rescheduling a new Nashorn request", nashornRequest.getProjectWidgetId(), exception1);
+                log.error("Cannot update the widget instance {} with no Nashorn response cause of database issue. Rescheduling a new Nashorn request", nashornRequest.getProjectWidgetId(), exception1);
 
                 scheduler.schedule(nashornRequest, false);
             }
