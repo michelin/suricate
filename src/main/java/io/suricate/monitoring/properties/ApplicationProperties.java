@@ -99,29 +99,13 @@ public class ApplicationProperties {
          */
         public String userSearchFilter;
         /**
-         * Attribute for user group role
-         */
-        public String groupRoleAttribute;
-        /**
-         * The group search base
-         */
-        public String groupSearchBase = StringUtils.EMPTY;
-        /**
-         * Filter to search group
-         */
-        public String groupSearchFilter;
-        /**
-         * Role prefix
-         */
-        public String rolePrefix = "ROLE_";
-        /**
          * The user search base
          */
         public String userSearchBase = StringUtils.EMPTY;
         /**
          * The user  Distinguished Name patterns
          */
-        public String userDnPatterns;
+        public String userDnPatterns = StringUtils.EMPTY;
         /**
          * The username used to start the connection with the LDAP
          */
@@ -133,15 +117,15 @@ public class ApplicationProperties {
         /**
          * The LDAP attribute to retrieve the user firstname
          */
-        public String firstNameAttributName;
+        public String firstNameAttributeName;
         /**
          * The LDAP attribute to retrieve the user lastname
          */
-        public String lastNameAttributName;
+        public String lastNameAttributeName;
         /**
          * The LDAP attribute to retrieve the user mail
          */
-        public String mailAttributName;
+        public String mailAttributeName;
         /**
          * The Ldap referral (behavior when the LDAP search executor find a reference to another LDAP server)
          */

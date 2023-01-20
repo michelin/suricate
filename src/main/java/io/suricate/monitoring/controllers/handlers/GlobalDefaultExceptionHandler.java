@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
@@ -54,7 +55,6 @@ public class GlobalDefaultExceptionHandler {
 
     /**
      * Manage the API exception.
-     *
      * @param exception The exception
      * @return The exception as Response Entity
      */
@@ -68,8 +68,21 @@ public class GlobalDefaultExceptionHandler {
     }
 
     /**
+     * Manage the API exception.
+     * @param exception The exception
+     * @return The exception as Response Entity
+     */
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ApiErrorDto> handleApiException(BadCredentialsException exception) {
+        GlobalDefaultExceptionHandler.LOGGER.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
+
+        return ResponseEntity
+                .status(ApiErrorEnum.BAD_CREDENTIALS_ERROR.getStatus())
+                .body(new ApiErrorDto(ApiErrorEnum.BAD_CREDENTIALS_ERROR));
+    }
+
+    /**
      * Manage the MethodArgumentNotValidException exception.
-     *
      * @param exception The exception
      * @return The exception as Response Entity
      */
@@ -85,7 +98,6 @@ public class GlobalDefaultExceptionHandler {
     /**
      * Manage the AccessDeniedException exception.
      * Throw when a user try access a resource that he can't.
-     *
      * @param exception the exception
      * @return The related response entity
      */
@@ -101,7 +113,6 @@ public class GlobalDefaultExceptionHandler {
     /**
      * Manage the HttpRequestMethodNotSupportedException exception.
      * Throw when a user try to access a resource with a not supported Http Verb.
-     *
      * @param exception The exception
      * @return The response
      */
@@ -115,24 +126,8 @@ public class GlobalDefaultExceptionHandler {
     }
 
     /**
-     * Manage the default Exception exception.
-     *
-     * @param exception the exception
-     * @return The related response entity
-     */
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiErrorDto> handleException(Exception exception) {
-        GlobalDefaultExceptionHandler.LOGGER.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
-
-        return ResponseEntity
-            .status(ApiErrorEnum.INTERNAL_SERVER_ERROR.getStatus())
-            .body(new ApiErrorDto(ApiErrorEnum.INTERNAL_SERVER_ERROR));
-    }
-
-    /**
      * Manage the ConstraintViolationException exception.
      * Throw when Spring fails to validate a bean in the service layer.
-     *
      * @param exception the exception being raised
      * @return the response entity
      */
@@ -148,7 +143,6 @@ public class GlobalDefaultExceptionHandler {
     /**
      * Manage the DataIntegrityViolationException exception.
      * Throw when Hibernate validators fail to validate a bean in the JPA layer.
-     *
      * @param exception the exception being raised
      * @return the response entity
      */
@@ -163,7 +157,6 @@ public class GlobalDefaultExceptionHandler {
 
     /**
      * Manage the HttpMediaTypeNotAcceptableException exception.
-     *
      * @param exception The exception
      * @return The exception as Response Entity
      */
@@ -177,8 +170,21 @@ public class GlobalDefaultExceptionHandler {
     }
 
     /**
+     * Manage the default Exception exception.
+     * @param exception the exception
+     * @return The related response entity
+     */
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiErrorDto> handleException(Exception exception) {
+        GlobalDefaultExceptionHandler.LOGGER.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
+
+        return ResponseEntity
+                .status(ApiErrorEnum.INTERNAL_SERVER_ERROR.getStatus())
+                .body(new ApiErrorDto(ApiErrorEnum.INTERNAL_SERVER_ERROR));
+    }
+
+    /**
      * Method used to extract message from MethodArgumentNotValidException exception
-     *
      * @param bindingResult Binding result
      * @return an error string
      */
