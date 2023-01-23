@@ -33,10 +33,9 @@ import java.util.List;
     componentModel = "spring",
     uses = {
         WidgetParamMapper.class,
-        CategoryMapper.class,
-        AssetMapper.class
+        CategoryMapper.class
     },
-        imports = {
+    imports = {
         java.util.stream.Collectors.class,
         com.google.common.collect.Sets.class
     }

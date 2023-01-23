@@ -94,7 +94,7 @@ public class NashornRequestResultAsyncTask implements Callable<Void>{
             retryTemplate.execute(retryContext -> {
                 log.debug("Update the widget instance {} (try {}/{})", nashornResponse.getProjectWidgetId(), retryContext.getRetryCount(), MAX_RETRY);
 
-                dashboardScheduleService.processNashornRequestResponse(nashornResponse, scheduler);
+                dashboardScheduleService.processNashornResponse(nashornResponse, scheduler);
 
                 return null;
             }, context -> {

@@ -77,7 +77,6 @@ public class NashornResponse extends AbstractDto {
 
     /**
      * Check if the Nashorn error response type is fatal
-     *
      * @return true if the Nashorn error response is fatal, false otherwise
      */
     public boolean isFatal() {

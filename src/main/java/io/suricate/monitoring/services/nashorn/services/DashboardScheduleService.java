@@ -72,7 +72,7 @@ public class DashboardScheduleService {
      * @param scheduler       The Nashorn requests scheduler
      */
     @Transactional
-    public void processNashornRequestResponse(NashornResponse nashornResponse,
+    public void processNashornResponse(NashornResponse nashornResponse,
                                               NashornRequestWidgetExecutionScheduler scheduler) {
         if (nashornResponse.isValid()) {
             log.debug("The Nashorn response is valid for the widget instance: {}. Updating widget in database",
@@ -130,7 +130,7 @@ public class DashboardScheduleService {
 
         UpdateEvent event = UpdateEvent.builder()
                 .type(UpdateType.REFRESH_WIDGET)
-                .content(this.projectWidgetMapper.toProjectWidgetDTO(projectWidget))
+                .content(projectWidgetMapper.toProjectWidgetDTO(projectWidget))
                 .build();
 
         dashboardWebSocketService.sendEventToWidgetInstanceSubscribers(projectService.getTokenByProjectId(projectId), projectWidgetId, event);

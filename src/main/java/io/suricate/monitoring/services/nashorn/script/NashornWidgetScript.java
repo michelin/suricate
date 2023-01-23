@@ -31,8 +31,6 @@ import java.util.Objects;
 import java.util.concurrent.TimeoutException;
 
 public final class NashornWidgetScript {
-    private static final OkHttpClient client = OkHttpClientUtils.getUnsafeOkHttpClient();
-
     private NashornWidgetScript() { }
 
     /**
@@ -63,7 +61,7 @@ public final class NashornWidgetScript {
         Request request = builder.build();
         String returnedValue;
 
-        try (Response response = client.newCall(request).execute()) {
+        try (Response response = OkHttpClientUtils.getUnsafeOkHttpClient().newCall(request).execute()) {
             if (returnCode) {
                 return String.valueOf(response.code());
             }
@@ -196,7 +194,7 @@ public final class NashornWidgetScript {
      * @throws InterruptedException an exception if the thread is interrupted
      */
     public static void checkInterrupted() throws InterruptedException {
-        if (Thread.currentThread().isInterrupted()){
+        if (Thread.currentThread().isInterrupted()) {
             throw new InterruptedException("Script Interrupted");
         }
     }
@@ -217,7 +215,6 @@ public final class NashornWidgetScript {
 
     /**
      * Throw a remote error
-     *
      * @throws RemoteException The error thrown
      */
     public static void throwError() throws RemoteException {
@@ -226,7 +223,6 @@ public final class NashornWidgetScript {
 
     /**
      * Throw a fatal error
-     *
      * @throws FatalException The error thrown
      */
     public static void throwFatalError(String msg) throws FatalException {
@@ -235,7 +231,6 @@ public final class NashornWidgetScript {
 
     /**
      * Throw a timeout exception
-     *
      * @throws TimeoutException The error thrown
      */
     public static void throwTimeout() throws TimeoutException {

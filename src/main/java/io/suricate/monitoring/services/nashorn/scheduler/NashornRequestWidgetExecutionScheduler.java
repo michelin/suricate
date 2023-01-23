@@ -68,6 +68,9 @@ public class NashornRequestWidgetExecutionScheduler {
     private ProjectWidgetService projectWidgetService;
 
     @Autowired
+    private WidgetService widgetService;
+
+    @Autowired
     private NashornService nashornService;
 
     @Autowired
@@ -108,9 +111,7 @@ public class NashornRequestWidgetExecutionScheduler {
      */
     public void scheduleNashornRequests(final List<NashornRequest> nashornRequests, boolean startNashornRequestNow) {
         try {
-            nashornRequests
-                    .forEach(nashornRequest -> this.schedule(nashornRequest,
-                            startNashornRequestNow));
+            nashornRequests.forEach(nashornRequest -> schedule(nashornRequest, startNashornRequestNow));
         } catch (Exception e) {
             log.error("An error has occurred when scheduling a Nashorn request for a new project subscription", e);
         }
@@ -141,21 +142,17 @@ public class NashornRequestWidgetExecutionScheduler {
 
         log.debug("Scheduling the Nashorn request of the widget instance {}", nashornRequest.getProjectWidgetId());
 
-        // Get the beans inside schedule
-        ProjectWidgetService projectWidgetServiceInjected = applicationContext.getBean(ProjectWidgetService.class);
-        WidgetService widgetService = applicationContext.getBean(WidgetService.class);
-
         if (!nashornService.isNashornRequestExecutable(nashornRequest)) {
-            projectWidgetServiceInjected.updateState(WidgetStateEnum.STOPPED, nashornRequest.getProjectWidgetId(), new Date());
+            projectWidgetService.updateState(WidgetStateEnum.STOPPED, nashornRequest.getProjectWidgetId(), new Date());
             return;
         }
 
         if (WidgetStateEnum.STOPPED == nashornRequest.getWidgetState()) {
             log.debug("The widget instance {} of the Nashorn request was stopped. Setting the widget instance to running", nashornRequest.getProjectWidgetId());
-            projectWidgetServiceInjected.updateState(WidgetStateEnum.RUNNING, nashornRequest.getProjectWidgetId(), new Date());
+            projectWidgetService.updateState(WidgetStateEnum.RUNNING, nashornRequest.getProjectWidgetId(), new Date());
         }
 
-        ProjectWidget projectWidget = projectWidgetServiceInjected
+        ProjectWidget projectWidget = projectWidgetService
                 .getOne(nashornRequest.getProjectWidgetId()).orElse(new ProjectWidget());
 
         List<WidgetVariableResponse> widgetParameters = widgetService
@@ -188,8 +185,8 @@ public class NashornRequestWidgetExecutionScheduler {
      * @param nashornRequest The new Nashorn request to schedule
      */
     public void cancelAndScheduleNashornRequest(NashornRequest nashornRequest) {
-        this.cancelWidgetExecution(nashornRequest.getProjectWidgetId());
-        this.schedule(nashornRequest, true);
+       cancelWidgetExecution(nashornRequest.getProjectWidgetId());
+       schedule(nashornRequest, true);
     }
 
     /**
@@ -226,8 +223,8 @@ public class NashornRequestWidgetExecutionScheduler {
         Pair<WeakReference<ScheduledFuture<NashornResponse>>, WeakReference<ScheduledFuture<Void>>> pairOfNashornFutureTasks = nashornTasksByProjectWidgetId.get(projectWidgetId);
 
         if (pairOfNashornFutureTasks != null) {
-            this.cancelScheduledFutureTask(projectWidgetId, pairOfNashornFutureTasks.getLeft());
-            this.cancelScheduledFutureTask(projectWidgetId, pairOfNashornFutureTasks.getRight());
+            cancelScheduledFutureTask(projectWidgetId, pairOfNashornFutureTasks.getLeft());
+            cancelScheduledFutureTask(projectWidgetId, pairOfNashornFutureTasks.getRight());
         }
 
         projectWidgetService.updateState(WidgetStateEnum.STOPPED, projectWidgetId);
@@ -239,7 +236,7 @@ public class NashornRequestWidgetExecutionScheduler {
      * @param projectWidgetId The widget instance ID
      * @param scheduledFutureTaskReference The reference containing the future task
      */
-    private void cancelScheduledFutureTask(Long projectWidgetId, WeakReference<? extends ScheduledFuture<?>> scheduledFutureTaskReference) {
+    public void cancelScheduledFutureTask(Long projectWidgetId, WeakReference<? extends ScheduledFuture<?>> scheduledFutureTaskReference) {
         if (scheduledFutureTaskReference != null) {
             ScheduledFuture<?> scheduledFutureTask = scheduledFutureTaskReference.get();
 

@@ -26,10 +26,8 @@ import org.mapstruct.Named;
  */
 @Mapper(componentModel = "spring")
 public abstract class RoleMapper {
-
     /**
      * Map a role into a DTO
-     *
      * @param role The project to map
      * @return The role as DTO
      */

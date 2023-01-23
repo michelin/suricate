@@ -16,36 +16,23 @@
 
 package io.suricate.monitoring.services.search;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
-/**
- * Method used to initialize lucene index
- */
 @Component
 public class SearchIndexBuilder implements ApplicationListener<ApplicationReadyEvent> {
-
-    /**
-     * The search service
-     */
-    private final SearchService searchService;
-
-    /**
-     * Constructor
-     */
     @Autowired
-    public SearchIndexBuilder(final SearchService searchService) {
-        this.searchService = searchService;
-    }
+    private SearchService searchService;
 
     /**
      * Re-index on startup.
      * This method is called on Spring's startup.
      */
     @Override
-    public void onApplicationEvent(final ApplicationReadyEvent event) {
+    public void onApplicationEvent(@NotNull final ApplicationReadyEvent event) {
         searchService.runSearchIndexer();
     }
 }

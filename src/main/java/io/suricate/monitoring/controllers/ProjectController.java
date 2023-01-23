@@ -73,50 +73,30 @@ import static io.suricate.monitoring.utils.exceptions.constants.ErrorMessage.USE
 @RequestMapping("/api")
 @Tag(name = "Project", description = "Project Controller")
 public class ProjectController {
-    private final ProjectService projectService;
-
-    private final ProjectGridService projectGridService;
-
-    private final ProjectWidgetService projectWidgetService;
-
-    private final UserService userService;
-
-    private final ProjectMapper projectMapper;
-
-    private final ProjectGridMapper projectGridMapper;
-
-    private final UserMapper userMapper;
-
-    private final DashboardWebSocketService dashboardWebSocketService;
-
-    /**
-     * Constructor
-     * @param projectService            The project service
-     * @param projectGridService        The project grid service
-     * @param userService               The user service
-     * @param projectMapper             The project mapper
-     * @param projectGridMapper         The project grid mapper
-     * @param userMapper                The user mapper
-     * @param dashboardWebSocketService The dashboard websocket service
-     */
     @Autowired
-    public ProjectController(final ProjectService projectService,
-                             final ProjectGridService projectGridService,
-                             @Lazy final ProjectWidgetService projectWidgetService,
-                             final UserService userService,
-                             final ProjectMapper projectMapper,
-                             final ProjectGridMapper projectGridMapper,
-                             final UserMapper userMapper,
-                             final DashboardWebSocketService dashboardWebSocketService) {
-        this.projectService = projectService;
-        this.projectGridService = projectGridService;
-        this.projectWidgetService = projectWidgetService;
-        this.userService = userService;
-        this.projectMapper = projectMapper;
-        this.projectGridMapper = projectGridMapper;
-        this.userMapper = userMapper;
-        this.dashboardWebSocketService = dashboardWebSocketService;
-    }
+    private ProjectService projectService;
+
+    @Autowired
+    private ProjectGridService projectGridService;
+
+    @Lazy
+    @Autowired
+    private ProjectWidgetService projectWidgetService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private ProjectMapper projectMapper;
+
+    @Autowired
+    private ProjectGridMapper projectGridMapper;
+
+    @Autowired
+    private UserMapper userMapper;
+
+    @Autowired
+    private DashboardWebSocketService dashboardWebSocketService;
 
     /**
      * Get every project in database

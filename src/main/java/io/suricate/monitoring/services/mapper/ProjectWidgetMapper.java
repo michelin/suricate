@@ -44,39 +44,17 @@ import java.util.stream.Collectors;
         }
 )
 public abstract class ProjectWidgetMapper {
-    /**
-     * The project widget service
-     */
     @Autowired
     protected ProjectWidgetService projectWidgetService;
 
-    /**
-     * The project service
-     */
-    @Autowired
-    protected ProjectService projectService;
-
-    /**
-     * The project service
-     */
     @Autowired
     protected ProjectGridService projectGridService;
 
-    /**
-     * The widget service
-     */
     @Autowired
     protected WidgetService widgetService;
 
     /**
-     * The library service
-     */
-    @Autowired
-    protected LibraryService libraryService;
-
-    /**
      * Map a project widget into a DTO
-     *
      * @param projectWidget The project widget to map
      * @return The project widget as DTO
      */
