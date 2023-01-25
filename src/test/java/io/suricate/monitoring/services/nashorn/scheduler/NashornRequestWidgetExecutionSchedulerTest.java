@@ -96,7 +96,7 @@ class NashornRequestWidgetExecutionSchedulerTest {
                 .thenReturn(Optional.of(projectWidget));
         when(widgetService.getWidgetParametersForNashorn(any()))
                 .thenReturn(Collections.singletonList(widgetVariableResponse));
-        when(applicationContext.getBean(eq(NashornRequestResultAsyncTask.class), any(), any(), any()))
+        when(applicationContext.getBean(eq(NashornRequestResultAsyncTask.class), any(), any(), any(), any()))
                 .thenReturn(nashornRequestResultAsyncTask);
 
         NashornRequest nashornRequest = new NashornRequest();
@@ -137,7 +137,7 @@ class NashornRequestWidgetExecutionSchedulerTest {
                 .thenReturn(Optional.of(projectWidget));
         when(widgetService.getWidgetParametersForNashorn(any()))
                 .thenReturn(Collections.singletonList(widgetVariableResponse));
-        when(applicationContext.getBean(eq(NashornRequestResultAsyncTask.class), any(), any(), any()))
+        when(applicationContext.getBean(eq(NashornRequestResultAsyncTask.class), any(), any(), any(), any()))
                 .thenReturn(nashornRequestResultAsyncTask);
 
         NashornRequest nashornRequest = new NashornRequest();
@@ -177,7 +177,7 @@ class NashornRequestWidgetExecutionSchedulerTest {
                 .thenReturn(Optional.of(projectWidget));
         when(widgetService.getWidgetParametersForNashorn(any()))
                 .thenReturn(Collections.singletonList(widgetVariableResponse));
-        when(applicationContext.getBean(eq(NashornRequestResultAsyncTask.class), any(), any(), any()))
+        when(applicationContext.getBean(eq(NashornRequestResultAsyncTask.class), any(), any(), any(), any()))
                 .thenReturn(nashornRequestResultAsyncTask);
 
         NashornRequest nashornRequest = new NashornRequest();
@@ -250,7 +250,7 @@ class NashornRequestWidgetExecutionSchedulerTest {
                 .thenReturn(Optional.of(projectWidget));
         when(widgetService.getWidgetParametersForNashorn(any()))
                 .thenReturn(Collections.singletonList(widgetVariableResponse));
-        when(applicationContext.getBean(eq(NashornRequestResultAsyncTask.class), any(), any(), any()))
+        when(applicationContext.getBean(eq(NashornRequestResultAsyncTask.class), any(), any(), any(), any()))
                 .thenReturn(nashornRequestResultAsyncTask);
 
         NashornRequest nashornRequest = new NashornRequest();
@@ -295,7 +295,7 @@ class NashornRequestWidgetExecutionSchedulerTest {
                 .thenReturn(Optional.of(projectWidget));
         when(widgetService.getWidgetParametersForNashorn(any()))
                 .thenReturn(Collections.singletonList(widgetVariableResponse));
-        when(applicationContext.getBean(eq(NashornRequestResultAsyncTask.class), any(), any(), any()))
+        when(applicationContext.getBean(eq(NashornRequestResultAsyncTask.class), any(), any(), any(), any()))
                 .thenReturn(nashornRequestResultAsyncTask);
 
         NashornRequest nashornRequest = new NashornRequest();

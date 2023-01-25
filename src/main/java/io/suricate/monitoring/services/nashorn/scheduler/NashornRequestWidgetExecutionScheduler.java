@@ -25,6 +25,7 @@ import io.suricate.monitoring.model.entities.ProjectWidget;
 import io.suricate.monitoring.model.enums.WidgetStateEnum;
 import io.suricate.monitoring.services.api.ProjectWidgetService;
 import io.suricate.monitoring.services.api.WidgetService;
+import io.suricate.monitoring.services.nashorn.services.DashboardScheduleService;
 import io.suricate.monitoring.services.nashorn.services.NashornService;
 import io.suricate.monitoring.services.nashorn.tasks.NashornRequestResultAsyncTask;
 import io.suricate.monitoring.services.nashorn.tasks.NashornRequestWidgetExecutionAsyncTask;
@@ -72,6 +73,9 @@ public class NashornRequestWidgetExecutionScheduler {
 
     @Autowired
     private NashornService nashornService;
+
+    @Autowired
+    private DashboardScheduleService dashboardScheduleService;
 
     @Autowired
     @Qualifier("jasyptStringEncryptor")
@@ -168,7 +172,7 @@ public class NashornRequestWidgetExecutionScheduler {
                         TimeUnit.SECONDS);
 
         NashornRequestResultAsyncTask nashornRequestResultAsyncTask = applicationContext
-                .getBean(NashornRequestResultAsyncTask.class, scheduledNashornRequestExecutionTask, nashornRequest, this);
+                .getBean(NashornRequestResultAsyncTask.class, scheduledNashornRequestExecutionTask, nashornRequest, this, dashboardScheduleService);
 
         ScheduledFuture<Void> scheduledNashornRequestResponseTask = nashornRequestResponseExecutor
                 .schedule(nashornRequestResultAsyncTask, nashornRequestExecutionDelay, TimeUnit.SECONDS);

@@ -22,9 +22,6 @@ import lombok.*;
 
 import java.util.Date;
 
-/**
- * Nashorn request, used to execute the widget JS, with Nashorn
- */
 @Getter
 @Setter
 @NoArgsConstructor

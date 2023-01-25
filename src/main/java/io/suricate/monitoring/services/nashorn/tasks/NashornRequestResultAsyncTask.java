@@ -22,17 +22,14 @@ import io.suricate.monitoring.services.nashorn.scheduler.NashornRequestWidgetExe
 import io.suricate.monitoring.services.nashorn.services.DashboardScheduleService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.retry.backoff.UniformRandomBackOffPolicy;
 import org.springframework.retry.policy.SimpleRetryPolicy;
 import org.springframework.retry.support.RetryTemplate;
-import org.springframework.stereotype.Component;
 
 import java.util.concurrent.*;
 
 @Slf4j
-@Component
 @Scope(value="prototype")
 public class NashornRequestResultAsyncTask implements Callable<Void>{
     private static final int TIMEOUT = 60;
@@ -43,8 +40,7 @@ public class NashornRequestResultAsyncTask implements Callable<Void>{
 
     private static final int MIN_BACK_OFF_PERIOD = 1000;
 
-    @Autowired
-    private DashboardScheduleService dashboardScheduleService;
+    private final DashboardScheduleService dashboardScheduleService;
 
     private final ScheduledFuture<NashornResponse> scheduledNashornRequestTask;
 
@@ -59,15 +55,17 @@ public class NashornRequestResultAsyncTask implements Callable<Void>{
      * @param scheduledNashornRequestTask The scheduled asynchronous task which will execute the Nashorn request executing the widget
      * @param nashornRequest The Nashorn request itself
      * @param scheduler The Nashorn requests scheduler
+     * @param dashboardScheduleService The dashboard schedule service
      */
     public NashornRequestResultAsyncTask(ScheduledFuture<NashornResponse> scheduledNashornRequestTask,
                                          NashornRequest nashornRequest,
-                                         NashornRequestWidgetExecutionScheduler scheduler) {
+                                         NashornRequestWidgetExecutionScheduler scheduler,
+                                         DashboardScheduleService dashboardScheduleService) {
         this.scheduledNashornRequestTask = scheduledNashornRequestTask;
         this.nashornRequest = nashornRequest;
         this.scheduler = scheduler;
-
-        this.initRetryTemplate();
+        this.dashboardScheduleService = dashboardScheduleService;
+        initRetryTemplate();
     }
 
     /**
