@@ -351,14 +351,14 @@ class ProjectControllerTest {
 
         LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
-        MockMultipartFile file = new MockMultipartFile("name", new byte[10]);
+        MockMultipartFile file = new MockMultipartFile("name", "originalName", "image/png", new byte[10]);
 
         when(projectService.getOneByToken(any()))
                 .thenReturn(Optional.of(project));
         when(projectService.isConnectedUserCanAccessToProject(any(), any()))
                 .thenReturn(true);
         doNothing().when(projectService)
-                .addOrUpdateScreenshot(any(), any(), any(), any());
+                .addOrUpdateScreenshot(any(), any(), anyString(), anyLong());
 
         ResponseEntity<Void> actual = projectController.updateProjectScreenshot(localUser, "token", file);
 

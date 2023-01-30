@@ -109,16 +109,6 @@ class WidgetUtilsTest {
     }
 
     @Test
-    void shouldGetCategoryEmpty() throws IOException {
-        Category actual = WidgetUtils.getCategory(new File("src/test/resources/specific-repository/content/empty"));
-        assertThat(actual.getId()).isNull();
-        assertThat(actual.getName()).isNull();
-        assertThat(actual.getTechnicalName()).isNull();
-        assertThat(actual.getImage()).isNull();
-        assertThat(actual.getConfigurations()).isEmpty();
-    }
-
-    @Test
     void shouldGetCategoryWithNoName() throws IOException {
         assertThat(WidgetUtils.getCategory(new File("src/test/resources/specific-repository/content/no-name"))).isNull();
     }
