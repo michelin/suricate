@@ -473,4 +473,35 @@ class ProjectControllerTest {
                 .isInstanceOf(ObjectNotFoundException.class)
                 .hasMessage("Project 'token' not found");
     }
+
+    @Test
+    void shouldUpdateProjectWidgetsPositionForProjectNotAuthorized() {
+        Project project = new Project();
+        project.setId(1L);
+
+        ProjectWidgetPositionRequestDto projectWidgetPositionRequestDto = new ProjectWidgetPositionRequestDto();
+        projectWidgetPositionRequestDto.setProjectWidgetId(1L);
+        List<ProjectWidgetPositionRequestDto> projectWidgetPositionRequestDtos = Collections.singletonList(projectWidgetPositionRequestDto);
+
+        Role role = new Role();
+        role.setId(1L);
+        role.setName("ROLE_ADMIN");
+
+        User user = new User();
+        user.setId(1L);
+        user.setUsername("username");
+        user.setPassword("password");
+        user.setRoles(Collections.singleton(role));
+
+        LocalUser localUser = new LocalUser(user, Collections.emptyMap());
+
+        when(projectService.getOneByToken(any()))
+                .thenReturn(Optional.of(project));
+        when(projectService.isConnectedUserCanAccessToProject(any(), any()))
+                .thenReturn(false);
+
+        assertThatThrownBy(() -> projectController.updateProjectWidgetsPositionForProject(localUser, "token", projectWidgetPositionRequestDtos))
+                .isInstanceOf(ApiException.class)
+                .hasMessage("The user is not allowed to modify this project");
+    }
 }
