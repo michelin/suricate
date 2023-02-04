@@ -93,7 +93,7 @@ public class ProjectWidgetController {
         return ResponseEntity
             .ok()
             .contentType(MediaType.APPLICATION_JSON)
-            .body(this.projectWidgetMapper.toProjectWidgetDTO(projectWidgetOptional.get()));
+            .body(projectWidgetMapper.toProjectWidgetDTO(projectWidgetOptional.get()));
     }
 
     /**
@@ -103,7 +103,8 @@ public class ProjectWidgetController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "401", description = "Authentication error, token expired or invalid", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
-            @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))})
+            @ApiResponse(responseCode = "403", description = "You don't have permission to access to this resource", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))}),
+            @ApiResponse(responseCode = "404", description = "Project not found", content = { @Content(schema = @Schema(implementation = ApiErrorDto.class))})
     })
     @GetMapping(value = "/v1/projectWidgets/{projectToken}/projectWidgets")
     @PermitAll
@@ -111,7 +112,7 @@ public class ProjectWidgetController {
                                                                        @PathVariable("projectToken") String projectToken) {
         Optional<Project> projectOptional = projectService.getOneByToken(projectToken);
         if (!projectOptional.isPresent()) {
-            return ResponseEntity.notFound().build();
+            throw new ObjectNotFoundException(Project.class, projectToken);
         }
 
         Project project = projectOptional.get();
@@ -151,7 +152,7 @@ public class ProjectWidgetController {
             throw new ObjectNotFoundException(ProjectWidget.class, projectWidgetId);
         }
 
-        if (!this.projectService.isConnectedUserCanAccessToProject(projectWidgetOptional.get().getProjectGrid().getProject(), connectedUser)) {
+        if (!projectService.isConnectedUserCanAccessToProject(projectWidgetOptional.get().getProjectGrid().getProject(), connectedUser)) {
             throw new ApiException(USER_NOT_ALLOWED_PROJECT, ApiErrorEnum.NOT_AUTHORIZED);
         }
 
@@ -187,13 +188,13 @@ public class ProjectWidgetController {
                                                                               @PathVariable("gridId") Long gridId,
                                                                               @Parameter(name = "projectWidgetDto", description = "The project widget info's", required = true)
                                                                               @RequestBody ProjectWidgetRequestDto projectWidgetRequestDto) {
-        Optional<Project> projectOptional = this.projectService.getOneByToken(projectToken);
+        Optional<Project> projectOptional = projectService.getOneByToken(projectToken);
         if (!projectOptional.isPresent()) {
             throw new ObjectNotFoundException(Project.class, projectToken);
         }
 
         Project project = projectOptional.get();
-        if (!this.projectService.isConnectedUserCanAccessToProject(project, connectedUser)) {
+        if (!projectService.isConnectedUserCanAccessToProject(project, connectedUser)) {
             throw new ApiException(USER_NOT_ALLOWED_PROJECT, ApiErrorEnum.NOT_AUTHORIZED);
         }
 
@@ -201,8 +202,8 @@ public class ProjectWidgetController {
             throw new GridNotFoundException(gridId, projectToken);
         }
 
-        ProjectWidget projectWidget = this.projectWidgetMapper.toProjectWidgetEntity(projectWidgetRequestDto, gridId);
-        this.projectWidgetService.createAndRefreshDashboards(projectWidget);
+        ProjectWidget projectWidget = projectWidgetMapper.toProjectWidgetEntity(projectWidgetRequestDto, gridId);
+        projectWidgetService.createAndRefreshDashboards(projectWidget);
 
         URI resourceLocation = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
@@ -213,7 +214,7 @@ public class ProjectWidgetController {
         return ResponseEntity
                 .created(resourceLocation)
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(this.projectWidgetMapper.toProjectWidgetDTO(projectWidget));
+                .body(projectWidgetMapper.toProjectWidgetDTO(projectWidget));
     }
 
     /**

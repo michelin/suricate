@@ -68,12 +68,12 @@ public class ScreenController {
                                                        @PathVariable("projectToken") String projectToken,
                                                        @Parameter(name = "screenCode", description = "The screen code", required = true)
                                                        @RequestParam("screenCode") String screenCode) {
-        Optional<Project> projectOptional = this.projectService.getOneByToken(projectToken);
+        Optional<Project> projectOptional = projectService.getOneByToken(projectToken);
         if (!projectOptional.isPresent()) {
-            throw new ObjectNotFoundException(Project.class, projectOptional);
+            throw new ObjectNotFoundException(Project.class, projectToken);
         }
 
-        this.dashboardWebSocketService.sendConnectProjectEventToScreenSubscriber(projectOptional.get(), screenCode);
+        dashboardWebSocketService.sendConnectProjectEventToScreenSubscriber(projectOptional.get(), screenCode);
         return ResponseEntity.noContent().build();
     }
 
@@ -92,7 +92,7 @@ public class ScreenController {
                                                       @PathVariable("projectToken") String projectToken,
                                                       @Parameter(name = "screenCode", description = "The screen code", required = true)
                                                       @RequestParam("screenCode") String screenCode) {
-        this.dashboardWebSocketService.disconnectClient(projectToken, screenCode);
+        dashboardWebSocketService.disconnectClient(projectToken, screenCode);
         return ResponseEntity.noContent().build();
     }
 
@@ -110,7 +110,7 @@ public class ScreenController {
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Void> refreshEveryConnectedScreensForProject(@Parameter(name = "projectToken", description = "The project token", required = true)
                                                                        @PathVariable("projectToken") String projectToken) {
-        this.dashboardWebSocketService.reloadAllConnectedClientsToAProject(projectToken);
+        dashboardWebSocketService.reloadAllConnectedClientsToAProject(projectToken);
         return ResponseEntity.noContent().build();
     }
 
@@ -128,12 +128,12 @@ public class ScreenController {
     @PreAuthorize("hasRole('ROLE_USER')")
     public ResponseEntity<Void> displayScreenCodeEveryConnectedScreensForProject(@Parameter(name = "projectToken", description = "The project token", required = true)
                                                                                  @PathVariable("projectToken") String projectToken) {
-        Optional<Project> projectOptional = this.projectService.getOneByToken(projectToken);
+        Optional<Project> projectOptional = projectService.getOneByToken(projectToken);
         if (!projectOptional.isPresent()) {
-            throw new ObjectNotFoundException(Project.class, projectOptional);
+            throw new ObjectNotFoundException(Project.class, projectToken);
         }
 
-        this.dashboardWebSocketService
+        dashboardWebSocketService
                 .sendEventToProjectSubscribers(projectToken, UpdateEvent.builder()
                         .type(UpdateType.DISPLAY_NUMBER)
                         .build());

@@ -1,6 +1,7 @@
 package com.michelin.suricate.services.api;
 
 import com.michelin.suricate.model.entities.PersonalAccessToken;
+import com.michelin.suricate.model.entities.Role;
 import com.michelin.suricate.model.entities.User;
 import com.michelin.suricate.repositories.PersonalAccessTokenRepository;
 import com.michelin.suricate.security.LocalUser;
@@ -9,10 +10,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -88,64 +89,31 @@ class PersonalAccessTokenServiceTest {
 
     @Test
     void shouldCreate() {
-        Authentication authentication = new Authentication() {
-            @Override
-            public Collection<? extends GrantedAuthority> getAuthorities() {
-                return null;
-            }
+        Role role = new Role();
+        role.setId(1L);
+        role.setName("ROLE_ADMIN");
 
-            @Override
-            public Object getCredentials() {
-                return null;
-            }
+        User user = new User();
+        user.setId(1L);
+        user.setUsername("username");
+        user.setPassword("password");
+        user.setRoles(Collections.singleton(role));
 
-            @Override
-            public Object getDetails() {
-                return null;
-            }
-
-            @Override
-            public LocalUser getPrincipal() {
-                Map<String, Object> attributes = new HashMap<>();
-                attributes.put("key", "value");
-
-                User user = new User();
-                user.setId(1L);
-                user.setUsername("username");
-                user.setPassword("password");
-
-                return new LocalUser(user, attributes);
-            }
-
-            @Override
-            public boolean isAuthenticated() {
-                return false;
-            }
-
-            @Override
-            public void setAuthenticated(boolean isAuthenticated) throws IllegalArgumentException {
-
-            }
-
-            @Override
-            public String getName() {
-                return null;
-            }
-        };
+        LocalUser localUser = new LocalUser(user, Collections.emptyMap());
 
         when(personalAccessTokenRepository.save(any()))
                 .thenAnswer(answer -> answer.getArgument(0));
 
-        PersonalAccessToken actual = personalAccessTokenService.create("token", 1L, authentication);
+        PersonalAccessToken actual = personalAccessTokenService.create("token", 1L, localUser);
 
         assertThat(actual.getName()).isEqualTo("token");
         assertThat(actual.getChecksum()).isEqualTo(1L);
-        assertThat(actual.getUser()).isEqualTo(((LocalUser) authentication.getPrincipal()).getUser());
+        assertThat(actual.getUser()).isEqualTo(localUser.getUser());
 
         verify(personalAccessTokenRepository, times(1))
                 .save(argThat(createdPersonalAccessToken -> createdPersonalAccessToken.getName().equals("token") &&
                         createdPersonalAccessToken.getChecksum().equals(1L) &&
-                        createdPersonalAccessToken.getUser().equals(((LocalUser) authentication.getPrincipal()).getUser())));
+                        createdPersonalAccessToken.getUser().equals(localUser.getUser())));
     }
 
     @Test

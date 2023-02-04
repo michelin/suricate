@@ -131,7 +131,7 @@ public class ProjectGridController {
         }
 
         Project project = projectOptional.get();
-        if (!this.projectService.isConnectedUserCanAccessToProject(project, connectedUser)) {
+        if (!projectService.isConnectedUserCanAccessToProject(project, connectedUser)) {
             throw new ApiException(USER_NOT_ALLOWED_PROJECT, ApiErrorEnum.NOT_AUTHORIZED);
         }
 

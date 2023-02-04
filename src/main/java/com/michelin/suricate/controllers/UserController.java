@@ -55,14 +55,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 @RestController
@@ -262,24 +260,24 @@ public class UserController {
     })
     @PutMapping(value = "/v1/users/{username}/settings/{settingId}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<UserResponseDto> updateUserSettings(@Parameter(hidden = true) Principal principal,
+    public ResponseEntity<UserResponseDto> updateUserSettings(@Parameter(hidden = true) @AuthenticationPrincipal LocalUser connectedUser,
                                                               @Parameter(name = "userName", description = "The user name", required = true)
                                                               @PathVariable("username") String userName,
                                                               @Parameter(name = "settingId", description = "The setting id", required = true, example = "1")
                                                               @PathVariable("settingId") Long settingId,
                                                               @Parameter(name = "userSettingRequestDto", description = "The new value of the setting", required = true)
                                                               @RequestBody UserSettingRequestDto userSettingRequestDto) {
-        Optional<User> userOptional = this.userService.getOneByUsername(principal.getName());
+        Optional<User> userOptional = userService.getOneByUsername(connectedUser.getUsername());
 
         if (!userOptional.isPresent()) {
             throw new ObjectNotFoundException(User.class, userName);
         }
 
-        if (!principal.getName().equals(userName)) {
-            throw new AccessDeniedException(String.format("User %s is not allowed to modify this resource", principal.getName()));
+        if (!connectedUser.getUsername().equals(userName)) {
+            throw new AccessDeniedException(String.format("User %s is not allowed to modify this resource", connectedUser.getUsername()));
         }
 
-        Optional<Setting> settingOptional = this.settingService.getOneById(settingId);
+        Optional<Setting> settingOptional = settingService.getOneById(settingId);
 
         if (!settingOptional.isPresent()) {
             throw new ObjectNotFoundException(Setting.class, settingId);
@@ -359,7 +357,7 @@ public class UserController {
     })
     @PostMapping(value = "/v1/users/personal-access-token")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<PersonalAccessTokenResponseDto> createPersonalAccessToken(@Parameter(hidden = true) Authentication authentication,
+    public ResponseEntity<PersonalAccessTokenResponseDto> createPersonalAccessToken(@Parameter(hidden = true) @AuthenticationPrincipal LocalUser connectedUser,
                                                                                     @Parameter(name = "tokenRequestDto", description = "The token request", required = true)
                                                         @RequestBody PersonalAccessTokenRequestDto personalAccessTokenRequestDto) {
         String personalAccessToken = patHelperService.createPersonalAccessToken();
@@ -368,7 +366,7 @@ public class UserController {
         return ResponseEntity
                 .ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(personalAccessTokenMapper.toPersonalAccessTokenDTO(patService.create(personalAccessTokenRequestDto.getName(), checksum, authentication), personalAccessToken));
+                .body(personalAccessTokenMapper.toPersonalAccessTokenDTO(patService.create(personalAccessTokenRequestDto.getName(), checksum, connectedUser), personalAccessToken));
     }
 
     /**

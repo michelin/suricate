@@ -3,6 +3,8 @@ package com.michelin.suricate.controllers;
 import com.michelin.suricate.model.dto.api.project.ProjectRequestDto;
 import com.michelin.suricate.model.dto.api.project.ProjectResponseDto;
 import com.michelin.suricate.model.dto.api.projectwidget.ProjectWidgetPositionRequestDto;
+import com.michelin.suricate.model.dto.api.user.UserResponseDto;
+import com.michelin.suricate.model.dto.websocket.WebsocketClient;
 import com.michelin.suricate.model.entities.Project;
 import com.michelin.suricate.model.entities.ProjectGrid;
 import com.michelin.suricate.model.entities.Role;
@@ -36,6 +38,7 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -503,5 +506,356 @@ class ProjectControllerTest {
         assertThatThrownBy(() -> projectController.updateProjectWidgetsPositionForProject(localUser, "token", projectWidgetPositionRequestDtos))
                 .isInstanceOf(ApiException.class)
                 .hasMessage("The user is not allowed to modify this project");
+    }
+
+    @Test
+    void shouldUpdateProjectWidgetsPositionForProject() {
+        Project project = new Project();
+        project.setId(1L);
+
+        ProjectWidgetPositionRequestDto projectWidgetPositionRequestDto = new ProjectWidgetPositionRequestDto();
+        projectWidgetPositionRequestDto.setProjectWidgetId(1L);
+        List<ProjectWidgetPositionRequestDto> projectWidgetPositionRequestDtos = Collections.singletonList(projectWidgetPositionRequestDto);
+
+        Role role = new Role();
+        role.setId(1L);
+        role.setName("ROLE_ADMIN");
+
+        User user = new User();
+        user.setId(1L);
+        user.setUsername("username");
+        user.setPassword("password");
+        user.setRoles(Collections.singleton(role));
+
+        LocalUser localUser = new LocalUser(user, Collections.emptyMap());
+
+        when(projectService.getOneByToken(any()))
+                .thenReturn(Optional.of(project));
+        when(projectService.isConnectedUserCanAccessToProject(any(), any()))
+                .thenReturn(true);
+        doNothing().when(projectWidgetService)
+                .updateWidgetPositionByProject(any(), any());
+
+        ResponseEntity<Void> actual = projectController.updateProjectWidgetsPositionForProject(localUser, "token", projectWidgetPositionRequestDtos);
+
+        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertThat(actual.getBody()).isNull();
+    }
+
+    @Test
+    void shouldGetProjectUsersNotFound() {
+        when(projectService.getOneByToken(any()))
+                .thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> projectController.getProjectUsers("token"))
+                .isInstanceOf(ObjectNotFoundException.class)
+                .hasMessage("Project 'token' not found");
+    }
+
+    @Test
+    void shouldGetProjectUser() {
+        Project project = new Project();
+        project.setId(1L);
+
+        UserResponseDto userResponseDto = new UserResponseDto();
+        userResponseDto.setUsername("username");
+
+        when(projectService.getOneByToken(any()))
+                .thenReturn(Optional.of(project));
+        when(userMapper.toUsersDTOs(any()))
+                .thenReturn(Collections.singletonList(userResponseDto));
+
+        ResponseEntity<List<UserResponseDto>> actual = projectController.getProjectUsers("token");
+
+        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(actual.getBody()).contains(userResponseDto);
+    }
+
+    @Test
+    void shouldAddUserToProjectNotFound() {
+        Role role = new Role();
+        role.setId(1L);
+        role.setName("ROLE_ADMIN");
+
+        User user = new User();
+        user.setId(1L);
+        user.setUsername("username");
+        user.setPassword("password");
+        user.setRoles(Collections.singleton(role));
+
+        LocalUser localUser = new LocalUser(user, Collections.emptyMap());
+
+        Map<String, String> usernameMap = Collections.singletonMap("username", "username");
+
+        when(projectService.getOneByToken(any()))
+                .thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> projectController.addUserToProject(localUser, "token", usernameMap))
+                .isInstanceOf(ObjectNotFoundException.class)
+                .hasMessage("Project 'token' not found");
+    }
+
+    @Test
+    void shouldAddUserToProjectNotAuthorized() {
+        Project project = new Project();
+        project.setId(1L);
+
+        Role role = new Role();
+        role.setId(1L);
+        role.setName("ROLE_ADMIN");
+
+        User user = new User();
+        user.setId(1L);
+        user.setUsername("username");
+        user.setPassword("password");
+        user.setRoles(Collections.singleton(role));
+
+        LocalUser localUser = new LocalUser(user, Collections.emptyMap());
+
+        Map<String, String> usernameMap = Collections.singletonMap("username", "username");
+
+        when(projectService.getOneByToken(any()))
+                .thenReturn(Optional.of(project));
+        when(projectService.isConnectedUserCanAccessToProject(any(), any()))
+                .thenReturn(false);
+
+        assertThatThrownBy(() -> projectController.addUserToProject(localUser, "token", usernameMap))
+                .isInstanceOf(ApiException.class)
+                .hasMessage("The user is not allowed to modify this project");
+    }
+
+    @Test
+    void shouldAddUserToProjectUserNotFound() {
+        Project project = new Project();
+        project.setId(1L);
+
+        Role role = new Role();
+        role.setId(1L);
+        role.setName("ROLE_ADMIN");
+
+        User user = new User();
+        user.setId(1L);
+        user.setUsername("username");
+        user.setPassword("password");
+        user.setRoles(Collections.singleton(role));
+
+        LocalUser localUser = new LocalUser(user, Collections.emptyMap());
+
+        Map<String, String> usernameMap = Collections.singletonMap("username", "username");
+
+        when(projectService.getOneByToken(any()))
+                .thenReturn(Optional.of(project));
+        when(projectService.isConnectedUserCanAccessToProject(any(), any()))
+                .thenReturn(true);
+        when(userService.getOneByUsername(any()))
+                .thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> projectController.addUserToProject(localUser, "token", usernameMap))
+                .isInstanceOf(ApiException.class)
+                .hasMessage("User 'username' not found");
+    }
+
+    @Test
+    void shouldAddUserToProject() {
+        Project project = new Project();
+        project.setId(1L);
+
+        Role role = new Role();
+        role.setId(1L);
+        role.setName("ROLE_ADMIN");
+
+        User user = new User();
+        user.setId(1L);
+        user.setUsername("username");
+        user.setPassword("password");
+        user.setRoles(Collections.singleton(role));
+
+        LocalUser localUser = new LocalUser(user, Collections.emptyMap());
+
+        Map<String, String> usernameMap = Collections.singletonMap("username", "username");
+
+        when(projectService.getOneByToken(any()))
+                .thenReturn(Optional.of(project));
+        when(projectService.isConnectedUserCanAccessToProject(any(), any()))
+                .thenReturn(true);
+        when(userService.getOneByUsername(any()))
+                .thenReturn(Optional.of(user));
+        when(projectService.createProjectForUser(any(), any()))
+                .thenReturn(project);
+
+        ResponseEntity<Void> actual = projectController.addUserToProject(localUser, "token", usernameMap);
+
+        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(actual.getBody()).isNull();
+    }
+
+    @Test
+    void shouldDeleteUserFromProjectNotFound() {
+        Role role = new Role();
+        role.setId(1L);
+        role.setName("ROLE_ADMIN");
+
+        User user = new User();
+        user.setId(1L);
+        user.setUsername("username");
+        user.setPassword("password");
+        user.setRoles(Collections.singleton(role));
+
+        LocalUser localUser = new LocalUser(user, Collections.emptyMap());
+
+        when(projectService.getOneByToken(any()))
+                .thenReturn(Optional.empty());
+        
+        assertThatThrownBy(() -> projectController.deleteUserFromProject(localUser, "token", 1L))
+                .isInstanceOf(ObjectNotFoundException.class)
+                .hasMessage("Project 'token' not found");
+    }
+
+    @Test
+    void shouldDeleteUserFromProjectNotAuthorized() {
+        Project project = new Project();
+        project.setId(1L);
+
+        Role role = new Role();
+        role.setId(1L);
+        role.setName("ROLE_ADMIN");
+
+        User user = new User();
+        user.setId(1L);
+        user.setUsername("username");
+        user.setPassword("password");
+        user.setRoles(Collections.singleton(role));
+
+        LocalUser localUser = new LocalUser(user, Collections.emptyMap());
+
+        when(projectService.getOneByToken(any()))
+                .thenReturn(Optional.of(project));
+        when(projectService.isConnectedUserCanAccessToProject(any(), any()))
+                .thenReturn(false);
+
+        assertThatThrownBy(() -> projectController.deleteUserFromProject(localUser, "token", 1L))
+                .isInstanceOf(ApiException.class)
+                .hasMessage("The user is not allowed to modify this project");
+    }
+
+    @Test
+    void shouldDeleteUserFromProjectUserNotFound() {
+        Project project = new Project();
+        project.setId(1L);
+
+        Role role = new Role();
+        role.setId(1L);
+        role.setName("ROLE_ADMIN");
+
+        User user = new User();
+        user.setId(1L);
+        user.setUsername("username");
+        user.setPassword("password");
+        user.setRoles(Collections.singleton(role));
+
+        LocalUser localUser = new LocalUser(user, Collections.emptyMap());
+
+        when(projectService.getOneByToken(any()))
+                .thenReturn(Optional.of(project));
+        when(projectService.isConnectedUserCanAccessToProject(any(), any()))
+                .thenReturn(true);
+        when(userService.getOne(any()))
+                .thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> projectController.deleteUserFromProject(localUser, "token", 1L))
+                .isInstanceOf(ApiException.class)
+                .hasMessage("User '1' not found");
+    }
+
+    @Test
+    void shouldDeleteUserFromProject() {
+        Project project = new Project();
+        project.setId(1L);
+
+        Role role = new Role();
+        role.setId(1L);
+        role.setName("ROLE_ADMIN");
+
+        User user = new User();
+        user.setId(1L);
+        user.setUsername("username");
+        user.setPassword("password");
+        user.setRoles(Collections.singleton(role));
+
+        LocalUser localUser = new LocalUser(user, Collections.emptyMap());
+
+        when(projectService.getOneByToken(any()))
+                .thenReturn(Optional.of(project));
+        when(projectService.isConnectedUserCanAccessToProject(any(), any()))
+                .thenReturn(true);
+        when(userService.getOne(any()))
+                .thenReturn(Optional.of(user));
+        doNothing().when(projectService)
+                .deleteUserFromProject(any(), any());
+
+        ResponseEntity<Void> actual = projectController.deleteUserFromProject(localUser, "token", 1L);
+
+        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+        assertThat(actual.getBody()).isNull();
+    }
+
+    @Test
+    void shouldGetProjectWebsocketClientsNotFound() {
+        when(projectService.getOneByToken(any()))
+                .thenReturn(Optional.empty());
+
+        assertThatThrownBy(() -> projectController.getProjectWebsocketClients("token"))
+                .isInstanceOf(ObjectNotFoundException.class)
+                .hasMessage("Project 'token' not found");
+    }
+
+    @Test
+    void shouldGetProjectWebsocketClients() {
+        Project project = new Project();
+        project.setId(1L);
+
+        WebsocketClient websocketClient = new WebsocketClient();
+        websocketClient.setSessionId("1");
+
+        when(projectService.getOneByToken(any()))
+                .thenReturn(Optional.of(project));
+        when(dashboardWebSocketService.getWebsocketClientsByProjectToken(any()))
+                .thenReturn(Collections.singletonList(websocketClient));
+
+        ResponseEntity<List<WebsocketClient>> actual = projectController.getProjectWebsocketClients("token");
+
+        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(actual.getBody()).contains(websocketClient);
+    }
+
+    @Test
+    void shouldGetAllForCurrentUser() {
+        Project project = new Project();
+        project.setId(1L);
+
+        Role role = new Role();
+        role.setId(1L);
+        role.setName("ROLE_ADMIN");
+
+        User user = new User();
+        user.setId(1L);
+        user.setUsername("username");
+        user.setPassword("password");
+        user.setRoles(Collections.singleton(role));
+
+        LocalUser localUser = new LocalUser(user, Collections.emptyMap());
+
+        ProjectResponseDto projectResponseDto = new ProjectResponseDto();
+        projectResponseDto.setName("name");
+
+        when(projectService.getAllByUser(any()))
+                .thenReturn(Collections.singletonList(project));
+        when(projectMapper.toProjectsDTOs(any()))
+                .thenReturn(Collections.singletonList(projectResponseDto));
+
+        ResponseEntity<List<ProjectResponseDto>> actual = projectController.getAllForCurrentUser(localUser);
+
+        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(actual.getBody()).contains(projectResponseDto);
     }
 }

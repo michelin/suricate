@@ -76,8 +76,7 @@ public class RoleController {
     public Page<RoleResponseDto> getRoles(@Parameter(name = "search", description = "Search keyword")
                                           @RequestParam(value = "search", required = false) String search,
                                           @ParameterObject Pageable pageable) {
-        Page<Role> rolesPaged = roleService.getRoles(search, pageable);
-        return rolesPaged.map(roleMapper::toRoleDTO);
+        return roleService.getRoles(search, pageable).map(roleMapper::toRoleDTO);
     }
 
     /**

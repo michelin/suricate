@@ -26,7 +26,7 @@ public class UsernameAlreadyExistException extends ApiException {
     /**
      * Message for username already exist
      */
-    private static final String MSG_USERNAME_ALREADY_EXIST = "Username {0} already exist";
+    private static final String MSG_USERNAME_ALREADY_EXIST = "Username ''{0}'' already exist";
 
     /**
      * Constructor

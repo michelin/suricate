@@ -1,11 +1,10 @@
 package com.michelin.suricate.services.api;
 
-import com.michelin.suricate.repositories.PersonalAccessTokenRepository;
 import com.michelin.suricate.model.entities.PersonalAccessToken;
 import com.michelin.suricate.model.entities.User;
+import com.michelin.suricate.repositories.PersonalAccessTokenRepository;
 import com.michelin.suricate.security.LocalUser;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,13 +51,14 @@ public class PersonalAccessTokenService {
      * Create a JWT token
      * @param tokenName The token name
      * @param checksum The token checksum
+     * @param connectedUser The authenticated user
      */
     @Transactional
-    public PersonalAccessToken create(String tokenName, Long checksum, Authentication authentication) {
+    public PersonalAccessToken create(String tokenName, Long checksum, LocalUser connectedUser) {
         PersonalAccessToken personalAccessToken = new PersonalAccessToken();
         personalAccessToken.setName(tokenName);
         personalAccessToken.setChecksum(checksum);
-        personalAccessToken.setUser(((LocalUser) authentication.getPrincipal()).getUser());
+        personalAccessToken.setUser(connectedUser.getUser());
 
         return personalAccessTokenRepository.save(personalAccessToken);
     }

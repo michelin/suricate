@@ -26,7 +26,7 @@ public class EmailAlreadyExistException extends ApiException {
     /**
      * Message for email already exist
      */
-    private static final String MSG_EMAIL_ALREADY_EXIST = "Email {0} already exist";
+    private static final String MSG_EMAIL_ALREADY_EXIST = "Email ''{0}'' already exist";
 
     /**
      * Constructor
