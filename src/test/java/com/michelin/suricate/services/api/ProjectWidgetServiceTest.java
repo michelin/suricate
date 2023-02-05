@@ -4,7 +4,6 @@ import com.github.mustachejava.DefaultMustacheFactory;
 import com.github.mustachejava.MustacheException;
 import com.github.mustachejava.MustacheFactory;
 import com.michelin.suricate.model.dto.api.projectwidget.ProjectWidgetPositionRequestDto;
-import com.michelin.suricate.model.dto.websocket.UpdateEvent;
 import com.michelin.suricate.model.entities.*;
 import com.michelin.suricate.model.enums.DataTypeEnum;
 import com.michelin.suricate.model.enums.UpdateType;
@@ -175,9 +174,8 @@ class ProjectWidgetServiceTest {
         verify(projectWidgetRepository, times(1))
                 .saveAndFlush(projectWidget);
         verify(dashboardWebsocketService, times(1))
-                .sendEventToProjectSubscribers("token", UpdateEvent.builder()
-                        .type(UpdateType.REFRESH_DASHBOARD)
-                        .build());
+                .sendEventToProjectSubscribers(eq("token"), argThat(event -> event.getType().equals(UpdateType.REFRESH_DASHBOARD) &&
+                        event.getDate() != null));
     }
 
     @Test
