@@ -22,8 +22,6 @@ import com.michelin.suricate.model.entities.generic.AbstractAuditingEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Indexed;
 
 import javax.persistence.*;
 import java.util.LinkedHashSet;
@@ -34,7 +32,6 @@ import java.util.Set;
  *
  */
 @Entity
-@Indexed
 @Getter
 @Setter
 @NoArgsConstructor
@@ -50,7 +47,6 @@ public class Category extends AbstractAuditingEntity<Long> {
      * The category name
      */
     @Column(nullable = false)
-    @Field
     private String name;
 
     /**

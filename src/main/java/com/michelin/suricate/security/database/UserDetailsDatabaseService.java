@@ -49,7 +49,7 @@ public class UserDetailsDatabaseService implements UserDetailsService {
         Optional<User> currentUser = userService.getOneByUsername(username);
 
         if (!currentUser.isPresent()) {
-            throw new UsernameNotFoundException("The specified user has not been found");
+            throw new UsernameNotFoundException("Bad credentials");
         }
 
         return new LocalUser(currentUser.get(), Collections.emptyMap());

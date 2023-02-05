@@ -30,6 +30,7 @@ import java.util.Date;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class UpdateEvent extends AbstractDto {
+    @Builder.Default
     private Date date = new Date();
     private UpdateType type;
     private Serializable content;

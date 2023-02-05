@@ -129,6 +129,7 @@ public class ApplicationProperties {
     public static class Widgets {
         @NotNull
         private boolean updateEnable;
+        private String cloneDir = "/tmp";
     }
 
     @Getter

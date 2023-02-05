@@ -74,6 +74,7 @@ public class NashornRequestWidgetExecutionScheduler {
     @Autowired
     private NashornService nashornService;
 
+    @Lazy
     @Autowired
     private DashboardScheduleService dashboardScheduleService;
 

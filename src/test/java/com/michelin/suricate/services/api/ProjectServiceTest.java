@@ -1,6 +1,5 @@
 package com.michelin.suricate.services.api;
 
-import com.michelin.suricate.model.dto.websocket.UpdateEvent;
 import com.michelin.suricate.model.entities.*;
 import com.michelin.suricate.model.enums.UpdateType;
 import com.michelin.suricate.repositories.ProjectRepository;
@@ -352,7 +351,8 @@ class ProjectServiceTest {
         verify(projectRepository, times(1))
                 .save(project);
         verify(dashboardWebsocketService, times(1))
-                .sendEventToProjectSubscribers("token", UpdateEvent.builder().type(UpdateType.REFRESH_DASHBOARD).build());
+                .sendEventToProjectSubscribers(eq("token"),
+                        argThat(event -> event.getType().equals(UpdateType.REFRESH_DASHBOARD) && event.getDate() != null));
     }
 
     @Test
@@ -453,7 +453,8 @@ class ProjectServiceTest {
         projectService.deleteProject(project);
 
         verify(dashboardWebsocketService, times(1))
-                .sendEventToProjectSubscribers("token", UpdateEvent.builder().type(UpdateType.DISCONNECT).build());
+                .sendEventToProjectSubscribers(eq("token"), argThat(event ->
+                        event.getType().equals(UpdateType.DISCONNECT) && event.getDate() != null));
         verify(projectRepository, times(1))
                 .delete(project);
     }

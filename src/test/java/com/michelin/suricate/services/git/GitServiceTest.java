@@ -298,6 +298,9 @@ class GitServiceTest {
 
     @Test
     void shouldReadWidgetRemoteRepository() throws GitAPIException, IOException {
+        ApplicationProperties.Widgets widgetsProperties = new ApplicationProperties.Widgets();
+        widgetsProperties.setCloneDir("/tmp");
+
         Library library = new Library();
         library.setTechnicalName("test.js");
 
@@ -310,6 +313,8 @@ class GitServiceTest {
 
         when(libraryService.createUpdateLibraries(any()))
                 .thenReturn(Collections.singletonList(library));
+        when(applicationProperties.getWidgets())
+                .thenReturn(widgetsProperties);
         doNothing().when(categoryService)
                 .addOrUpdateCategory(any());
         doNothing().when(widgetService)
@@ -331,6 +336,9 @@ class GitServiceTest {
 
     @Test
     void shouldThrowExceptionWhenReadWidgetRemoteRepository() {
+        ApplicationProperties.Widgets widgetsProperties = new ApplicationProperties.Widgets();
+        widgetsProperties.setCloneDir("/tmp");
+
         Library library = new Library();
         library.setTechnicalName("test.js");
 
@@ -343,6 +351,8 @@ class GitServiceTest {
         repository.setPassword("password");
         repository.setType(RepositoryTypeEnum.REMOTE);
 
+        when(applicationProperties.getWidgets())
+                .thenReturn(widgetsProperties);
         doNothing().when(nashornWidgetScheduler)
                 .init();
         doNothing().when(dashboardWebSocketService)

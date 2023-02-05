@@ -1,7 +1,6 @@
 package com.michelin.suricate.services.api;
 
 import com.michelin.suricate.model.dto.api.projectgrid.ProjectGridRequestDto;
-import com.michelin.suricate.model.dto.websocket.UpdateEvent;
 import com.michelin.suricate.model.entities.Project;
 import com.michelin.suricate.model.entities.ProjectGrid;
 import com.michelin.suricate.model.entities.ProjectWidget;
@@ -17,7 +16,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.context.ApplicationContext;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -165,9 +166,8 @@ class ProjectGridServiceTest {
         verify(projectGridRepository, times(1))
                 .deleteByProjectIdAndId(1L, 1L);
         verify(dashboardWebsocketService, times(1))
-                .sendEventToProjectSubscribers("token", UpdateEvent.builder()
-                        .type(UpdateType.REFRESH_DASHBOARD)
-                        .build());
+                .sendEventToProjectSubscribers(eq("token"), argThat(event -> event.getType().equals(UpdateType.REFRESH_DASHBOARD) &&
+                        event.getDate() != null));
         verify(nashornRequestWidgetExecutionScheduler, times(1))
                 .cancelWidgetsExecutionByGrid(projectGrid);
     }

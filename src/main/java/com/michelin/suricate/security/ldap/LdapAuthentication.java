@@ -84,7 +84,7 @@ public class LdapAuthentication {
                 Optional<User> currentUser = userService.getOneByEmail(email);
 
                 if (!currentUser.isPresent()) {
-                    throw new UsernameNotFoundException("The specified user has not been found");
+                    throw new UsernameNotFoundException("Bad credentials");
                 }
 
                 return new LocalUser(currentUser.get(), Collections.emptyMap());

@@ -214,9 +214,7 @@ class ProjectWidgetServiceTest {
         verify(projectWidgetRepository, times(1))
                 .flush();
         verify(dashboardWebsocketService, times(1))
-                .sendEventToProjectSubscribers("token", UpdateEvent.builder()
-                        .type(UpdateType.REFRESH_DASHBOARD)
-                        .build());
+                .sendEventToProjectSubscribers(eq("token"), argThat(event -> event.getType().equals(UpdateType.REFRESH_DASHBOARD)));
     }
 
     @Test
@@ -260,9 +258,7 @@ class ProjectWidgetServiceTest {
         verify(projectWidgetRepository, times(1))
                 .flush();
         verify(dashboardWebsocketService, times(1))
-                .sendEventToProjectSubscribers("token", UpdateEvent.builder()
-                        .type(UpdateType.REFRESH_DASHBOARD)
-                        .build());
+                .sendEventToProjectSubscribers(eq("token"), argThat(event -> event.getType().equals(UpdateType.REFRESH_DASHBOARD)));
         verify(projectWidgetRepository, times(1))
                 .findById(1L);
     }

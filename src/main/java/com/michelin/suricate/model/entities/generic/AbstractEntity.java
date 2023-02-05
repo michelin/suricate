@@ -18,7 +18,6 @@
 
 package com.michelin.suricate.model.entities.generic;
 
-import com.michelin.suricate.utils.ToStringUtils;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.EntityListeners;
@@ -39,16 +38,6 @@ public abstract class AbstractEntity<T> implements Serializable {
      * @return the entity ID
      */
     public abstract T getId();
-
-    /**
-     * Default toString
-     *
-     * @return
-     */
-    @Override
-    public String toString() {
-        return ToStringUtils.toStringEntity(this);
-    }
 
     /**
      * Default equals

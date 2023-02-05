@@ -144,7 +144,7 @@ public class GitService {
     public File cloneRemoteRepository(String url, String branch, String login, String password) throws IOException, GitAPIException {
         log.info("Cloning the branch {} of the remote repository {}", branch, url);
 
-        File localRepository = File.createTempFile("tmp", Long.toString(System.nanoTime()));
+        File localRepository = File.createTempFile("tmp", Long.toString(System.nanoTime()), new File(applicationProperties.getWidgets().getCloneDir()));
 
         if (localRepository.exists()) {
             FileUtils.deleteQuietly(localRepository);

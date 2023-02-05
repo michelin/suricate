@@ -54,7 +54,7 @@ public final class OkHttpClientUtils {
             };
 
             // Install the all-trusting trust manager
-            final SSLContext sslContext = SSLContext.getInstance("SSL");
+            final SSLContext sslContext = SSLContext.getInstance("TLS");
             sslContext.init(null, trustManager, new java.security.SecureRandom());
 
             // Create a ssl socket factory with our all-trusting manager
@@ -76,7 +76,7 @@ public final class OkHttpClientUtils {
 
             return builder.build();
         } catch (NoSuchAlgorithmException e) {
-            log.error("An error occurred during the OKHttpClient configuration: SSL algorithm not found", e);
+            log.error("An error occurred during the OKHttpClient configuration: TLS algorithm not found", e);
         } catch (KeyManagementException e) {
             log.error("An error occurred during the OKHttpClient configuration: Cannot init the SSL context", e);
         }

@@ -1,16 +1,16 @@
 package com.michelin.suricate.security.filter;
 
-import com.michelin.suricate.services.api.UserService;
-import com.michelin.suricate.services.token.JwtHelperService;
 import com.michelin.suricate.model.entities.User;
 import com.michelin.suricate.model.enums.ApiErrorEnum;
 import com.michelin.suricate.security.LocalUser;
+import com.michelin.suricate.services.api.UserService;
+import com.michelin.suricate.services.token.JwtHelperService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -44,7 +44,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
             if (StringUtils.hasText(token) && jwtHelperService.validateToken(token)) {
                 String username = jwtHelperService.getUsernameFromToken(token);
-                User user = userService.getOneByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User " + username + " is not authorized"));
+                User user = userService.getOneByUsername(username).orElseThrow(() -> new BadCredentialsException("Bad credentials"));
                 LocalUser localUser = new LocalUser(user, Collections.emptyMap());
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(localUser, null, localUser.getAuthorities());
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

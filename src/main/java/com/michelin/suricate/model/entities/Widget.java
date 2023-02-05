@@ -24,21 +24,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.Type;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.annotations.IndexedEmbedded;
-import org.hibernate.search.annotations.SortableField;
 
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-/**
- * Widget entity
- */
 @Entity
-@Indexed
 @Getter
 @Setter
 @NoArgsConstructor
@@ -54,15 +46,12 @@ public class Widget extends AbstractAuditingEntity<Long> {
      * The widget name
      */
     @Column(nullable = false)
-    @SortableField
-    @Field
     private String name;
 
     /**
      * The widget description
      */
     @Column(nullable = false)
-    @Field
     private String description;
 
     /**
@@ -120,7 +109,7 @@ public class Widget extends AbstractAuditingEntity<Long> {
      * The list of instances related to it
      */
     @OneToMany(mappedBy = "widget")
-    private Set<ProjectWidget> widgetInstances = new LinkedHashSet<>();;
+    private Set<ProjectWidget> widgetInstances = new LinkedHashSet<>();
 
     /**
      * The related JS libraries used for displaying it on the clients
@@ -133,7 +122,6 @@ public class Widget extends AbstractAuditingEntity<Long> {
      * The category of this widget
      */
     @ManyToOne
-    @IndexedEmbedded(depth = 1)
     private Category category;
 
     /**
@@ -141,7 +129,6 @@ public class Widget extends AbstractAuditingEntity<Long> {
      */
     @Column
     @Enumerated(EnumType.STRING)
-    @Field
     private WidgetAvailabilityEnum widgetAvailability;
 
     /**
