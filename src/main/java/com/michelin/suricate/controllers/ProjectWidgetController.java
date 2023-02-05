@@ -117,7 +117,7 @@ public class ProjectWidgetController {
 
         Project project = projectOptional.get();
         List<ProjectWidget> allWidgets = project.getGrids().stream().map(ProjectGrid::getWidgets).flatMap(Collection::stream).collect(Collectors.toList());
-        if (project.getGrids().isEmpty() || allWidgets.isEmpty()) {
+        if (allWidgets.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
 

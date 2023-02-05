@@ -12,7 +12,7 @@ public class InvalidFileException extends ApiException {
     /**
      * Message for Object not found
      */
-    private static final String MSG_OBJECT_INVALID_FILE = "The file {0} cannot be read for entity {1} '{2}'";
+    private static final String MSG_OBJECT_INVALID_FILE = "The file {0} cannot be read for entity {1} ''{2}''";
 
     /**
      * @param filename The filename

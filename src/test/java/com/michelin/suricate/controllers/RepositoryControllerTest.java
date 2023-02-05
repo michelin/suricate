@@ -33,8 +33,8 @@ import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 class RepositoryControllerTest {
@@ -99,6 +99,9 @@ class RepositoryControllerTest {
 
         assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(actual.getBody()).isEqualTo(repositoryResponseDto);
+
+        verify(gitService, times(1))
+                .updateWidgetFromEnabledGitRepositories();
     }
 
     @Test
@@ -111,6 +114,7 @@ class RepositoryControllerTest {
 
         Repository repository = new Repository();
         repository.setId(1L);
+        repository.setEnabled(false);
 
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(new MockHttpServletRequest()));
         when(repositoryMapper.toRepositoryEntity(any(), any()))
@@ -124,6 +128,9 @@ class RepositoryControllerTest {
 
         assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(actual.getBody()).isEqualTo(repositoryResponseDto);
+
+        verify(gitService, times(0))
+                .updateWidgetFromEnabledGitRepositories();
     }
 
     @Test
@@ -190,6 +197,27 @@ class RepositoryControllerTest {
                 .addOrUpdateRepository(any());
 
         ResponseEntity<Void> actual = repositoryController.updateOneById(1L, repositoryRequestDto, true);
+
+        assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+    }
+
+    @Test
+    void shouldUpdateOneByIdSyncDisabledOnRepo() throws GitAPIException, IOException {
+        RepositoryRequestDto repositoryRequestDto = new RepositoryRequestDto();
+        repositoryRequestDto.setName("name");
+
+        Repository repository = new Repository();
+        repository.setId(1L);
+        repository.setEnabled(false);
+
+        when(repositoryService.existsById(any()))
+                .thenReturn(true);
+        when(repositoryMapper.toRepositoryEntity(any(), any()))
+                .thenReturn(repository);
+        doNothing().when(repositoryService)
+                .addOrUpdateRepository(any());
+
+        ResponseEntity<Void> actual = repositoryController.updateOneById(1L, repositoryRequestDto, false);
 
         assertThat(actual.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
     }

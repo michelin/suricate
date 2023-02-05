@@ -171,4 +171,27 @@ class ProjectGridServiceTest {
         verify(nashornRequestWidgetExecutionScheduler, times(1))
                 .cancelWidgetsExecutionByGrid(projectGrid);
     }
+
+    @Test
+    void shouldDeleteByProjectIdAndIdNoProjectWidget() {
+        ProjectGrid projectGrid = new ProjectGrid();
+        projectGrid.setId(1L);
+
+        Project project = new Project();
+        project.setId(1L);
+        project.setToken("token");
+
+        when(projectGridRepository.findById(any()))
+                .thenReturn(Optional.of(projectGrid));
+
+        projectGridService.deleteByProjectIdAndId(project, 1L);
+
+        verify(projectGridRepository, times(1))
+                .deleteByProjectIdAndId(1L, 1L);
+        verify(dashboardWebsocketService, times(1))
+                .sendEventToProjectSubscribers(eq("token"), argThat(event -> event.getType().equals(UpdateType.REFRESH_DASHBOARD) &&
+                        event.getDate() != null));
+        verify(nashornRequestWidgetExecutionScheduler, times(0))
+                .cancelWidgetsExecutionByGrid(any());
+    }
 }

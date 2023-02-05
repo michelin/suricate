@@ -19,6 +19,7 @@ import com.michelin.suricate.services.mapper.ProjectMapper;
 import com.michelin.suricate.services.mapper.UserMapper;
 import com.michelin.suricate.services.websocket.DashboardWebSocketService;
 import com.michelin.suricate.utils.exceptions.ApiException;
+import com.michelin.suricate.utils.exceptions.InvalidFileException;
 import com.michelin.suricate.utils.exceptions.ObjectNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -36,6 +37,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -45,8 +47,7 @@ import java.util.stream.Collectors;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ProjectControllerTest {
@@ -335,6 +336,39 @@ class ProjectControllerTest {
         assertThatThrownBy(() -> projectController.updateProjectScreenshot(localUser, "token", file))
                 .isInstanceOf(ApiException.class)
                 .hasMessage("The user is not allowed to modify this project");
+    }
+
+    @Test
+    void shouldThrowExceptionWhenUpdatingProjectScreenshot() throws IOException {
+        Project project = new Project();
+        project.setId(1L);
+
+        Role role = new Role();
+        role.setId(1L);
+        role.setName("ROLE_ADMIN");
+
+        User user = new User();
+        user.setId(1L);
+        user.setUsername("username");
+        user.setPassword("password");
+        user.setRoles(Collections.singleton(role));
+
+        LocalUser localUser = new LocalUser(user, Collections.emptyMap());
+
+        MockMultipartFile file = mock(MockMultipartFile.class);
+
+        when(projectService.getOneByToken(any()))
+                .thenReturn(Optional.of(project));
+        when(projectService.isConnectedUserCanAccessToProject(any(), any()))
+                .thenReturn(true);
+        doThrow(new IOException("error")).when(file)
+                .getBytes();
+        when(file.getOriginalFilename())
+                .thenReturn("originalName");
+
+        assertThatThrownBy(() -> projectController.updateProjectScreenshot(localUser, "token", file))
+                .isInstanceOf(InvalidFileException.class)
+                .hasMessage("The file originalName cannot be read for entity Project '1'");
     }
 
     @Test
