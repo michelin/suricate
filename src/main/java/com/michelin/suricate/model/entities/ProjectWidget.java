@@ -23,109 +23,74 @@ import com.michelin.suricate.model.enums.WidgetStateEnum;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.Date;
 
-/**
- * ProjectWidget entity
- */
 @Entity
 @Getter
 @Setter
+@ToString(callSuper = true)
 @NoArgsConstructor
 public class ProjectWidget extends AbstractAuditingEntity<Long> {
-    /**
-     * The project widget id
-     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /**
-     * The data of the widget (result of nashorn execution)
-     */
     @Column
     @Lob
     @Type(type = "org.hibernate.type.TextType")
     private String data;
 
-    /**
-     * Row position in the grid
-     */
     @Column
     private int gridRow;
 
-    /**
-     * Column position in the grid
-     */
     @Column
     private int gridColumn;
 
-    /**
-     * The number of rows taken by the widget
-     */
     @Column
     private int width;
 
-    /**
-     * The number of columns taken by the widget
-     */
     @Column
     private int height;
 
-    /**
-     * The css style added by the user
-     */
     @Lob
     @Type(type = "org.hibernate.type.TextType")
     private String customStyle;
 
-    /**
-     * The configuration of the widget (Result of the widget params)
-     */
     @Lob
     @Type(type = "org.hibernate.type.TextType")
     private String backendConfig;
 
-    /**
-     * The nashorn execution log
-     */
     @Lob
     @Type(type = "org.hibernate.type.TextType")
     private String log;
 
-    /**
-     * The last execution date
-     */
     @Column
     private Date lastExecutionDate;
 
-    /**
-     * The last success execution date
-     */
     @Column
     private Date lastSuccessDate;
-    
-    /**
-     * The widget state {@link WidgetStateEnum}
-     */
+
     @Column
     @Enumerated(EnumType.STRING)
     private WidgetStateEnum state;
 
-    /**
-     * The related project grid, if exists
-     */
+    @ToString.Exclude
     @ManyToOne
     @PrimaryKeyJoinColumn(name = "projectGridId", referencedColumnName = "ID")
     private ProjectGrid projectGrid;
 
-    /**
-     * The related widget
-     */
+    @ToString.Exclude
     @ManyToOne
     @PrimaryKeyJoinColumn(name = "widgetId", referencedColumnName = "ID")
     private Widget widget;
+
+    @Override
+    public int hashCode() { return super.hashCode(); }
+
+    @Override
+    public boolean equals(Object other) { return super.equals(other); }
 }

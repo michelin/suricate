@@ -19,57 +19,42 @@
 package com.michelin.suricate.model.entities;
 
 import com.michelin.suricate.model.entities.generic.AbstractAuditingEntity;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-/**
- * Category entity
- *
- */
 @Entity
 @Getter
 @Setter
+@ToString(callSuper = true)
 @NoArgsConstructor
 public class Category extends AbstractAuditingEntity<Long> {
-    /**
-     * The category id
-     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /**
-     * The category name
-     */
     @Column(nullable = false)
     private String name;
 
-    /**
-     * The technical name
-     */
     @Column(nullable = false, unique = true)
     private String technicalName;
 
-    /**
-     * The image related to this category
-     */
     @OneToOne(cascade = CascadeType.REMOVE)
     private Asset image;
 
-    /**
-     * The list of widgets in this category
-     */
+    @ToString.Exclude
     @OneToMany(mappedBy = "category")
     private Set<Widget> widgets = new LinkedHashSet<>();
 
-    /**
-     * The associated categories for this configuration
-     */
+    @ToString.Exclude
     @OneToMany(mappedBy = "category", cascade = CascadeType.REMOVE)
     private Set<CategoryParameter> configurations = new LinkedHashSet<>();
+
+    @Override
+    public int hashCode() { return super.hashCode(); }
+
+    @Override
+    public boolean equals(Object other) { return super.equals(other); }
 }

@@ -1,43 +1,34 @@
 package com.michelin.suricate.model.entities;
 
 import com.michelin.suricate.model.entities.generic.AbstractAuditingEntity;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
-/**
- * PersonalAccessToken entity
- */
 @Entity
 @Getter
 @Setter
+@ToString(callSuper = true)
 @NoArgsConstructor
 public class PersonalAccessToken extends AbstractAuditingEntity<Long> {
-    /**
-     * The category id
-     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /**
-     * The token name
-     */
     @Column(nullable = false, unique = true)
     private String name;
 
-    /**
-     * The checksum of the generated token
-     */
     @Column(nullable = false, unique = true)
     private Long checksum;
 
-    /**
-     * The owner
-     */
+    @ToString.Exclude
     @ManyToOne
     @PrimaryKeyJoinColumn(name = "userId", referencedColumnName = "ID")
     private User user;
+
+    @Override
+    public int hashCode() { return super.hashCode(); }
+
+    @Override
+    public boolean equals(Object other) { return super.equals(other); }
 }

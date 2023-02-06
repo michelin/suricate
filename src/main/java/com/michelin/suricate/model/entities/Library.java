@@ -17,53 +17,39 @@
 package com.michelin.suricate.model.entities;
 
 import com.michelin.suricate.model.entities.generic.AbstractAuditingEntity;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-/**
- * Library entity
- */
 @Entity
 @Getter
 @Setter
+@ToString(callSuper = true)
 @NoArgsConstructor
 public class Library extends AbstractAuditingEntity<Long> {
-    /**
-     * The id
-     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /**
-     * The technical name
-     */
     @Column(nullable = false, unique = true)
     private String technicalName;
 
-    /**
-     * The asset
-     */
     @OneToOne(cascade = {CascadeType.REMOVE, CascadeType.DETACH})
     private Asset asset;
 
-    /**
-     * The list of widgets related to it
-     */
+    @ToString.Exclude
     @ManyToMany(mappedBy = "libraries")
     private Set<Widget> widgets = new LinkedHashSet<>();
 
-    /**
-     * Constructor used for mapping from the description.yml of widgets
-     *
-     * @param technicalName The name of the library
-     */
     public Library(String technicalName) {
         this.technicalName = technicalName;
     }
+
+    @Override
+    public int hashCode() { return super.hashCode(); }
+
+    @Override
+    public boolean equals(Object other) { return super.equals(other); }
 }

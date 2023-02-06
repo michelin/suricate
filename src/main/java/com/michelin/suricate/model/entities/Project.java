@@ -23,80 +23,63 @@ import com.michelin.suricate.model.entities.generic.AbstractAuditingEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Entity
 @Getter
 @Setter
+@ToString(callSuper = true)
 @NoArgsConstructor
 public class Project extends AbstractAuditingEntity<Long> {
-    /**
-     * The project id
-     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /**
-     * The project name
-     */
+    @NotBlank
     @Column(nullable = false)
     private String name;
 
-    /**
-     * The project token
-     */
+    @NotBlank
     @Column(nullable = false)
     private String token;
 
-    /**
-     * The height of the widgets
-     */
     @Column
     private Integer widgetHeight;
 
-    /**
-     * The number of column
-     */
     @Column
     private Integer maxColumn;
 
-    /**
-     * The css style of the grid
-     */
     @Lob
     @Type(type = "org.hibernate.type.TextType")
     private String cssStyle;
 
-    /**
-     * If the progress bar should be displayed in case of rotations
-     */
     @Column(nullable = false)
     @Type(type = "yes_no")
     private boolean displayProgressBar;
 
-    /**
-     * The screenshot of the dashboard
-     */
     @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "screenshot_id")
     private Asset screenshot;
 
-    /**
-     * The list of related grids
-     */
+    @ToString.Exclude
     @OneToMany(mappedBy = "project", cascade = CascadeType.REMOVE)
     @OrderBy("id ASC")
     private Set<ProjectGrid> grids = new LinkedHashSet<>();
 
-    /**
-     * The list of users of the project
-     */
+    @ToString.Exclude
     @ManyToMany
     @JoinTable(name = "user_project", joinColumns = {@JoinColumn(name = "project_id")}, inverseJoinColumns = {@JoinColumn(name = "user_id")})
     private Set<User> users = new LinkedHashSet<>();
+
+    @Override
+    public int hashCode() { return super.hashCode(); }
+
+    @Override
+    public boolean equals(Object other) { return super.equals(other); }
 }

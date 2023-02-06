@@ -18,9 +18,9 @@
 
 package com.michelin.suricate.model.entities.generic;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
@@ -32,33 +32,31 @@ import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import java.util.Date;
 
-/**
- * Base abstract class for entity auditing (CreatedBy, CreatedDate, LastModifiedBy, LastModifiedDate)
- */
-@MappedSuperclass
-@EntityListeners(AuditingEntityListener.class)
-@EqualsAndHashCode(callSuper = true)
 @Getter
 @Setter
+@ToString
+@MappedSuperclass
+@EntityListeners(AuditingEntityListener.class)
 public abstract class AbstractAuditingEntity<T> extends AbstractEntity<T> {
-
-    /** Created by attribute */
     @CreatedBy
     @Column(name = "created_by", nullable = false, updatable = false)
     private String createdBy;
 
-    /** Created date attribute */
     @CreatedDate
     @Column(name = "created_date", nullable = false, updatable = false)
     private Date createdDate = new Date();
 
-    /** Last Modified by attribute */
     @LastModifiedBy
     @Column(name = "last_modified_by", length = 50)
     private String lastModifiedBy;
 
-    /** Last Modified date attribute */
     @LastModifiedDate
     @Column(name = "last_modified_date")
     private Date lastModifiedDate = new Date();
+
+    @Override
+    public int hashCode() { return super.hashCode(); }
+
+    @Override
+    public boolean equals(Object other) { return super.equals(other); }
 }

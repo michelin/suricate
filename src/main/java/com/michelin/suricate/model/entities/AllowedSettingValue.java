@@ -18,9 +18,8 @@
 
 package com.michelin.suricate.model.entities;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.michelin.suricate.model.entities.generic.AbstractEntity;
+import lombok.*;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -28,8 +27,9 @@ import javax.persistence.*;
 @Entity(name = "allowed_setting_value")
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
-public class AllowedSettingValue {
+public class AllowedSettingValue extends AbstractEntity<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -44,7 +44,14 @@ public class AllowedSettingValue {
     @Type(type = "yes_no")
     private boolean isDefault;
 
+    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "setting_id", referencedColumnName = "id", nullable = false)
     private Setting setting;
+
+    @Override
+    public int hashCode() { return super.hashCode(); }
+
+    @Override
+    public boolean equals(Object other) { return super.equals(other); }
 }

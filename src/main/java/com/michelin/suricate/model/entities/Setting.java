@@ -18,62 +18,48 @@
 
 package com.michelin.suricate.model.entities;
 
+import com.michelin.suricate.model.entities.generic.AbstractEntity;
 import com.michelin.suricate.model.enums.DataTypeEnum;
 import com.michelin.suricate.model.enums.SettingType;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-/**
- * Setting entity
- */
 @Entity
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
-public class Setting {
-    /**
-     * The setting id
-     */
+public class Setting extends AbstractEntity<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /**
-     * The setting name/description
-     */
     @Column(nullable = false)
     private String description;
 
-    /**
-     * Tell if the settings have constrained values
-     */
     @Column(nullable = false)
     @Type(type = "yes_no")
     private boolean constrained;
 
-    /**
-     * The setting data type
-     */
     @Column(nullable = false, name = "data_type")
     @Enumerated(EnumType.STRING)
     private DataTypeEnum dataType;
 
-    /**
-     * The setting type
-     */
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private SettingType type;
 
-    /**
-     * Hold the possible values
-     */
+    @ToString.Exclude
     @OneToMany(mappedBy = "setting")
     private Set<AllowedSettingValue> allowedSettingValues = new LinkedHashSet<>();
+
+    @Override
+    public int hashCode() { return super.hashCode(); }
+
+    @Override
+    public boolean equals(Object other) { return super.equals(other); }
 }

@@ -31,6 +31,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.util.Locale;
 
 /**
  * Spring Boot application class
@@ -41,38 +42,21 @@ import java.io.FileNotFoundException;
 @SpringBootApplication
 @EnableConfigurationProperties({ApplicationProperties.class})
 public class BackendApplication {
-
-    /**
-     * Application properties
-     */
-    private final ApplicationProperties applicationProperties;
-
-    /**
-     * Git Service
-     */
-    private final GitService gitService;
-
-    /**
-     * Proxy configuration
-     */
-    private final ProxyProperties proxyConfiguration;
-
-    /**
-     * The constructor
-     *
-     * @param applicationProperties application properties to inject
-     * @param gitService            git service to inject
-     */
     @Autowired
-    public BackendApplication(final ApplicationProperties applicationProperties, final GitService gitService, final ProxyProperties proxyConfiguration) {
-        this.applicationProperties = applicationProperties;
-        this.gitService = gitService;
-        this.proxyConfiguration = proxyConfiguration;
+    private ApplicationProperties applicationProperties;
+
+    @Autowired
+    private GitService gitService;
+
+    @Autowired
+    private ProxyProperties proxyConfiguration;
+
+    static {
+        Locale.setDefault(Locale.ENGLISH);
     }
 
     /**
      * Main springboot class
-     *
      * @param args command line arguments
      */
     public static void main(String[] args) {

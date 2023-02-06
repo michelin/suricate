@@ -18,67 +18,48 @@ package com.michelin.suricate.model.entities;
 
 import com.michelin.suricate.model.entities.generic.AbstractAuditingEntity;
 import com.michelin.suricate.model.enums.DataTypeEnum;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
-/**
- * The configuration entity
- */
 @Entity
 @Table(name = "category_param")
 @Getter
 @Setter
+@ToString(callSuper = true)
 @NoArgsConstructor
 public class CategoryParameter extends AbstractAuditingEntity<String> {
-    /**
-     * The key of the configuration (used in JS Files)
-     */
     @Id
     @Column(name = "config_key", nullable = false, unique = true)
     private String key;
 
-    /**
-     * The related value enter by the user
-     */
     @Column(name = "config_value")
     private String value;
 
-    /**
-     * The description
-     */
     @Column
     private String description;
 
-    /**
-     * export
-     */
     @Column(name = "config_export")
     private boolean export;
 
-    /**
-     * The data type of the configuration
-     */
     @Column
     @Enumerated(value = EnumType.STRING)
     private DataTypeEnum dataType;
 
-    /**
-     * Make a link between category and configurations
-     */
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "category_id", referencedColumnName = "id")
     private Category category;
 
-    /**
-     * Get the ID of this entity
-     *
-     * @return The key
-     */
     @Override
     public String getId() {
         return key;
     }
+
+    @Override
+    public int hashCode() { return super.hashCode(); }
+
+    @Override
+    public boolean equals(Object other) { return super.equals(other); }
 }

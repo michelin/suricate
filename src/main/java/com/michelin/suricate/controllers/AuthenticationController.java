@@ -24,6 +24,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/api")
 @Tag(name = "Authentication", description = "Authentication Controller")
@@ -47,7 +49,7 @@ public class AuthenticationController {
     @PostMapping(value = "/v1/auth/signin")
     @PreAuthorize("isAnonymous()")
     public ResponseEntity<JwtAuthenticationResponseDto> signIn(@Parameter(name = "signInRequestDto", description = "The sign in request", required = true)
-                                                               @RequestBody SignInRequestDto signInRequestDto) {
+                                                               @Valid @RequestBody SignInRequestDto signInRequestDto) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signInRequestDto.getUsername(), signInRequestDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = jwtHelperService.createToken(authentication);

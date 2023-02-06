@@ -33,9 +33,12 @@ import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
+import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.util.Objects;
+import java.util.Set;
 
 @Slf4j
 @RestControllerAdvice
@@ -57,12 +60,12 @@ public class GlobalDefaultExceptionHandler {
     }
 
     /**
-     * Manage the API exception.
+     * Manage the Bad Credentials exception.
      * @param exception The exception
      * @return The exception as Response Entity
      */
     @ExceptionHandler(BadCredentialsException.class)
-    public ResponseEntity<ApiErrorDto> handleApiException(BadCredentialsException exception) {
+    public ResponseEntity<ApiErrorDto> handleBadCredentialsException(BadCredentialsException exception) {
         log.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
 
         return ResponseEntity
@@ -82,6 +85,20 @@ public class GlobalDefaultExceptionHandler {
         return ResponseEntity
             .status(ApiErrorEnum.BAD_REQUEST.getStatus())
             .body(new ApiErrorDto(extractMessage(exception.getBindingResult()), ApiErrorEnum.BAD_REQUEST));
+    }
+
+    /**
+     * Manage the MethodArgumentTypeMismatchException exception.
+     * @param exception The exception
+     * @return The exception as Response Entity
+     */
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ApiErrorDto> handleRequestException(MethodArgumentTypeMismatchException exception) {
+        log.debug(GlobalDefaultExceptionHandler.LOG_MESSAGE, exception);
+
+        return ResponseEntity
+                .status(ApiErrorEnum.BAD_REQUEST.getStatus())
+                .body(new ApiErrorDto(ApiErrorEnum.BAD_REQUEST));
     }
 
     /**
@@ -126,7 +143,7 @@ public class GlobalDefaultExceptionHandler {
 
         return ResponseEntity
             .status(ApiErrorEnum.BAD_REQUEST.getStatus())
-            .body(new ApiErrorDto(exception.getMessage(), ApiErrorEnum.BAD_REQUEST));
+            .body(new ApiErrorDto(extractMessage(exception.getConstraintViolations()), ApiErrorEnum.BAD_REQUEST));
     }
 
     /**
@@ -175,16 +192,42 @@ public class GlobalDefaultExceptionHandler {
     /**
      * Method used to extract message from MethodArgumentNotValidException exception
      * @param bindingResult Binding result
-     * @return an error string
+     * @return An error string
      */
     private static String extractMessage(BindingResult bindingResult) {
         StringBuilder builder = new StringBuilder();
 
         for (FieldError error : bindingResult.getFieldErrors()) {
             if (builder.length() > 0) {
-                builder.append(", ");
+                builder.append(". ");
             }
-            builder.append(error.getField()).append(' ').append(error.getDefaultMessage());
+            builder
+                    .append(error.getField().substring(0, 1).toUpperCase())
+                    .append(error.getField().substring(1))
+                    .append(" ")
+                    .append(error.getDefaultMessage());
+        }
+
+        return builder.toString();
+    }
+
+    /**
+     * Method used to extract message from ConstraintViolationException exception
+     * @param constraintViolations The violated constraints
+     * @return An error string
+     */
+    private static String extractMessage(Set<ConstraintViolation<?>> constraintViolations) {
+        StringBuilder builder = new StringBuilder();
+
+        for (ConstraintViolation<?> error : constraintViolations) {
+            if (builder.length() > 0) {
+                builder.append(". ");
+            }
+            builder
+                    .append(error.getPropertyPath().toString().substring(0, 1).toUpperCase())
+                    .append(error.getPropertyPath().toString().substring(1))
+                    .append(" ")
+                    .append(error.getMessage());
         }
 
         return builder.toString();

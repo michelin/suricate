@@ -23,6 +23,7 @@ import com.michelin.suricate.model.enums.WidgetAvailabilityEnum;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -33,143 +34,89 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
+@ToString(callSuper = true)
 @NoArgsConstructor
 public class Widget extends AbstractAuditingEntity<Long> {
-    /**
-     * The widget id
-     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /**
-     * The widget name
-     */
     @Column(nullable = false)
     private String name;
 
-    /**
-     * The widget description
-     */
     @Column(nullable = false)
     private String description;
 
-    /**
-     * The technical name of the widget
-     */
     @Column(unique = true)
     private String technicalName;
 
-    /**
-     * The html content of the widget
-     */
     @Lob
     @Type(type = "org.hibernate.type.TextType")
     private String htmlContent;
 
-    /**
-     * The css content of the widget
-     */
     @Lob
     @Type(type = "org.hibernate.type.TextType")
     private String cssContent;
 
-    /**
-     * The JS of this widget
-     */
     @Lob
     @Type(type = "org.hibernate.type.TextType")
     private String backendJs;
 
-    /**
-     * Some information on the usage of the widget
-     */
     @Column
     private String info;
 
-    /**
-     * The default refresh delay (Nashorn)
-     */
     @Column
     private Long delay;
 
-    /**
-     * The default timeout (Nashorn)
-     */
     @Column
     private Long timeout;
 
-    /**
-     * The representation image
-     */
-    @OneToOne(cascade = CascadeType.REMOVE)
-    private Asset image;
-
-    /**
-     * The list of instances related to it
-     */
-    @OneToMany(mappedBy = "widget")
-    private Set<ProjectWidget> widgetInstances = new LinkedHashSet<>();
-
-    /**
-     * The related JS libraries used for displaying it on the clients
-     */
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name = "widget_library", joinColumns = {@JoinColumn(name = "widget_id")}, inverseJoinColumns = {@JoinColumn(name = "library_id")})
-    private Set<Library> libraries = new LinkedHashSet<>();
-
-    /**
-     * The category of this widget
-     */
-    @ManyToOne
-    private Category category;
-
-    /**
-     * The widget availability {@link WidgetAvailabilityEnum}
-     */
     @Column
     @Enumerated(EnumType.STRING)
     private WidgetAvailabilityEnum widgetAvailability;
 
-    /**
-     * The related repository
-     */
+    @OneToOne(cascade = CascadeType.REMOVE)
+    private Asset image;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "widget")
+    private Set<ProjectWidget> widgetInstances = new LinkedHashSet<>();
+
+    @ToString.Exclude
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "widget_library", joinColumns = {@JoinColumn(name = "widget_id")}, inverseJoinColumns = {@JoinColumn(name = "library_id")})
+    private Set<Library> libraries = new LinkedHashSet<>();
+
+    @ToString.Exclude
+    @ManyToOne
+    private Category category;
+
+    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "repository_id")
     private Repository repository;
 
-    /**
-     * The list of params for this widget
-     */
+    @ToString.Exclude
     @OneToMany(mappedBy = "widget", cascade = CascadeType.ALL)
     @OrderBy("id ASC")
     private Set<WidgetParam> widgetParams = new LinkedHashSet<>();
 
-    /**
-     * Widget params setter
-     *
-     * @param widgetParams The list of params to set
-     */
     public void setWidgetParams(Collection<WidgetParam> widgetParams) {
-        this.addWidgetParams(widgetParams);
+        addWidgetParams(widgetParams);
     }
 
-    /**
-     * The list of widget params to add
-     *
-     * @param widgetParams The list of widget params
-     */
     public void addWidgetParams(Collection<WidgetParam> widgetParams) {
         widgetParams.forEach(this::addWidgetParam);
     }
 
-    /**
-     * Add a new param into the list
-     *
-     * @param widgetParam The param to ass
-     */
     public void addWidgetParam(WidgetParam widgetParam) {
-        this.widgetParams.add(widgetParam);
+        widgetParams.add(widgetParam);
         widgetParam.setWidget(this);
     }
+
+    @Override
+    public int hashCode() { return super.hashCode(); }
+
+    @Override
+    public boolean equals(Object other) { return super.equals(other); }
 }

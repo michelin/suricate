@@ -20,89 +20,61 @@ package com.michelin.suricate.model.entities;
 
 import com.michelin.suricate.model.entities.generic.AbstractEntity;
 import com.michelin.suricate.model.enums.AuthenticationProvider;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-/**
- * The user entity in database
- */
 @Entity
 @Table(name = "users")
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 public class User extends AbstractEntity<Long> {
-    /**
-     * The user id
-     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /**
-     * The username (login) of the user
-     */
     @Column(nullable = false, unique = true)
     private String username;
 
-    /**
-     * The encrypted password of the user
-     */
     @Column
     private String password;
 
-    /**
-     * The authentication method {@link AuthenticationProvider}
-     */
+    @Column
+    private String firstname;
+
+    @Column
+    private String lastname;
+
+    @Column(unique = true)
+    private String email;
+
+    @Column
+    private String avatarUrl;
+
     @Enumerated(value = EnumType.STRING)
     @Column(name = "auth_mode", nullable = false, length = 20)
     private AuthenticationProvider authenticationMethod;
 
-    /**
-     * The first name of the user
-     */
-    @Column
-    private String firstname;
-
-    /**
-     * The lastname of the user
-     */
-    @Column
-    private String lastname;
-
-    /**
-     * The mail of the user
-     */
-    @Column(unique = true)
-    private String email;
-
-    /**
-     * The avatar URL of the user
-     */
-    @Column
-    private String avatarUrl;
-
-    /**
-     * The list of roles
-     */
+    @ToString.Exclude
     @ManyToMany
     @JoinTable(name = "user_role", joinColumns = {@JoinColumn(name = "user_id")}, inverseJoinColumns = {@JoinColumn(name = "role_id")})
     private Set<Role> roles = new LinkedHashSet<>();
 
-    /**
-     * The projects of the user
-     */
+    @ToString.Exclude
     @ManyToMany(mappedBy = "users")
     private Set<Project> projects = new LinkedHashSet<>();
 
-    /**
-     * The list of user settings
-     */
+    @ToString.Exclude
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private Set<UserSetting> userSettings = new LinkedHashSet<>();
+
+    @Override
+    public int hashCode() { return super.hashCode(); }
+
+    @Override
+    public boolean equals(Object other) { return super.equals(other); }
 }

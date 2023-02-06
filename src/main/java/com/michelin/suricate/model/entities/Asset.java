@@ -21,6 +21,7 @@ import com.michelin.suricate.model.entities.generic.AbstractAuditingEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
@@ -28,42 +29,33 @@ import javax.persistence.*;
 @Entity
 @Getter
 @Setter
+@ToString(callSuper = true)
 @NoArgsConstructor
 public class Asset extends AbstractAuditingEntity<Long> {
-    /**
-     * The id
-     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /**
-     * The content of this asset
-     */
+    @ToString.Exclude
     @Type(type = "org.hibernate.type.BinaryType")
     @Basic(fetch = FetchType.LAZY)
     @Column(nullable = false)
     private byte[] content;
 
-    /**
-     * The content type
-     */
     @Column(length = 100)
     private String contentType;
 
-    /**
-     * The size
-     */
     @Column
     private long size;
 
-    /**
-     * Set the content and the size of the asset
-     *
-     * @param content The content to set
-     */
     public void setContent(byte[] content) {
         this.content = content;
         this.size = content.length;
     }
+
+    @Override
+    public int hashCode() { return super.hashCode(); }
+
+    @Override
+    public boolean equals(Object other) { return super.equals(other); }
 }

@@ -61,6 +61,7 @@ public class UserService {
      * @param user User to register
      * @return The user registered
      */
+    @Transactional
     public User create(User user) {
         UserRoleEnum roleEnum = userRepository.count() > 0 ? UserRoleEnum.ROLE_USER : UserRoleEnum.ROLE_ADMIN;
         Optional<Role> role = roleService.getRoleByName(roleEnum.name());

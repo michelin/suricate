@@ -35,7 +35,7 @@ public class ProjectGridRequestDto extends AbstractDto {
     private boolean displayProgressBar;
 
     @Schema(description = "The list of grids")
-    List<GridRequestDto> grids;
+    private List<GridRequestDto> grids;
 
     @Data
     public static class GridRequestDto {

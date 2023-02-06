@@ -24,41 +24,26 @@ import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
 
-/**
- * Abstract Model
- *
- * @param <ID> Entity id type
- */
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public abstract class AbstractEntity<T> implements Serializable {
-
-    /**
-     * Method used to get the Entity ID
-     * @return the entity ID
-     */
     public abstract T getId();
 
-    /**
-     * Default equals
-     */
     @Override
     public boolean equals(Object o) {
         if (this == o){
             return true;
         }
+
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
 
-        AbstractEntity model = (AbstractEntity) o;
+        AbstractEntity<T> model = (AbstractEntity<T>) o;
 
         return getId() != null && getId().equals(model.getId());
     }
 
-    /**
-     * Default hashCode
-     */
     @Override
     public int hashCode() {
         return getId() != null ? getId().hashCode() : 0;

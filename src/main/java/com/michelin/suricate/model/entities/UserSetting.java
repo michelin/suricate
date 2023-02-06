@@ -18,51 +18,42 @@
 
 package com.michelin.suricate.model.entities;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.michelin.suricate.model.entities.generic.AbstractEntity;
+import lombok.*;
 
 import javax.persistence.*;
 
-/**
- * Class linked the table user and settings
- */
 @Entity(name = "user_setting")
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
-public class UserSetting {
-    /**
-     * The user setting id
-     */
+public class UserSetting extends AbstractEntity<Long> {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /**
-     * The related user
-     */
+    @Column(name = "unconstrained_value")
+    private String unconstrainedValue;
+
+    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private User user;
 
-    /**
-     * The setting reference
-     */
+    @ToString.Exclude
     @OneToOne
     @JoinColumn(name = "setting_id", nullable = false)
     private Setting setting;
 
-    /**
-     * The allowed setting value
-     */
+    @ToString.Exclude
     @OneToOne
     @JoinColumn(name = "allowed_setting_value_id")
     private AllowedSettingValue settingValue;
 
-    /**
-     * The unconstrained value
-     */
-    @Column(name = "unconstrained_value")
-    private String unconstrainedValue;
+    @Override
+    public int hashCode() { return super.hashCode(); }
+
+    @Override
+    public boolean equals(Object other) { return super.equals(other); }
 }

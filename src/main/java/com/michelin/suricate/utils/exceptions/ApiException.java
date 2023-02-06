@@ -21,14 +21,7 @@ import com.michelin.suricate.model.dto.api.error.ApiErrorDto;
 import com.michelin.suricate.model.enums.ApiErrorEnum;
 import org.apache.commons.lang3.StringUtils;
 
-/**
- * API Exception management
- */
 public class ApiException extends RuntimeException {
-
-    /**
-     * API error
-     */
     private final ApiErrorEnum error;
 
     /**

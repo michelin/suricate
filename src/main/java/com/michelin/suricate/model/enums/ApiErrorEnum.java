@@ -21,9 +21,6 @@ import com.michelin.suricate.model.dto.api.error.ApiErrorDto;
 import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
-/**
- * Api Errors
- */
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
 @Getter
 public enum ApiErrorEnum {
@@ -31,7 +28,7 @@ public enum ApiErrorEnum {
      * Enums
      */
     NO_CONTENT("No Content", "no.content", HttpStatus.NO_CONTENT),
-    BAD_REQUEST("Bad Request", "bad.request", HttpStatus.BAD_REQUEST),
+    BAD_REQUEST("Bad request", "bad.request", HttpStatus.BAD_REQUEST),
     PROJECT_TOKEN_INVALID("Cannot decrypt project token", "project.token.invalid", HttpStatus.BAD_REQUEST),
     AUTHENTICATION_ERROR("Authentication error, token expired or invalid", "authentication.error", HttpStatus.UNAUTHORIZED),
     NOT_AUTHORIZED("User not authorized", "not.authorized", HttpStatus.UNAUTHORIZED),
@@ -46,29 +43,14 @@ public enum ApiErrorEnum {
     PRECONDITION_FAILED("Precondition failed for this request", "precondition.failed", HttpStatus.PRECONDITION_FAILED),
     INTERNAL_SERVER_ERROR("Internal Server Error", "internal.server.error", HttpStatus.INTERNAL_SERVER_ERROR);
 
-    /**
-     * The Error Message
-     */
-    private String message;
+    private final String message;
+    private final int ordinal;
+    private final String key;
 
-    /**
-     * The HttpStatus ordinal
-     */
-    private int ordinal;
-
-    /**
-     * The Error key
-     */
-    private String key;
-
-    /**
-     * The related HttpStatus
-     */
-    private HttpStatus status;
+    private final HttpStatus status;
 
     /**
      * The Constructor
-     *
      * @param message The message
      * @param key     The key
      * @param status  The HttpStatus

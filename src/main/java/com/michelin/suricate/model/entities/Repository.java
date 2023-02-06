@@ -20,89 +20,59 @@ package com.michelin.suricate.model.entities;
 
 import com.michelin.suricate.model.entities.generic.AbstractAuditingEntity;
 import com.michelin.suricate.model.enums.RepositoryTypeEnum;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-/**
- * Describe a repository
- */
 @Entity
 @Getter
 @Setter
+@ToString(callSuper = true)
 @NoArgsConstructor
 public class Repository extends AbstractAuditingEntity<Long> {
-    /**
-     * The repository id
-     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /**
-     * The repository name
-     */
     @Column(unique = true)
     private String name;
 
-    /**
-     * The repository url
-     */
     @Column
     private String url;
 
-    /**
-     * The repository branch to clone
-     */
     @Column
     private String branch;
 
-    /**
-     * The login to use for the connection to the remote repository
-     */
     @Column
     private String login;
 
-    /**
-     * The password to use for the connection to the remote repository
-     */
     @Column
     private String password;
 
-    /**
-     * The path of the repository in case of a local folder
-     */
     @Column
     private String localPath;
 
-    /**
-     * The type of repository
-     */
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private RepositoryTypeEnum type;
 
-    /**
-     * If the repository is enabled or not
-     */
     @Column(nullable = false)
     @Type(type = "yes_no")
     private boolean enabled = true;
 
-    /**
-     * The repository priority
-     */
     @Column(nullable = false)
     private int priority;
 
-    /**
-     * The list of widgets for this repository
-     */
+    @ToString.Exclude
     @OneToMany(mappedBy = "repository")
     private Set<Widget> widgets = new LinkedHashSet<>();
+
+    @Override
+    public int hashCode() { return super.hashCode(); }
+
+    @Override
+    public boolean equals(Object other) { return super.equals(other); }
 }

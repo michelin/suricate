@@ -19,50 +19,35 @@
 package com.michelin.suricate.model.entities;
 
 import com.michelin.suricate.model.entities.generic.AbstractEntity;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-/**
- * Role entity
- */
 @Entity(name = "Role")
 @Getter
 @Setter
+@ToString
 @NoArgsConstructor
 public class Role extends AbstractEntity<Long> {
-    /**
-     * The id
-     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /**
-     * The role name
-     */
-    @NotNull
-    @Size(max = 50)
     @Column(nullable = false, unique = true)
     private String name;
 
-    /**
-     * The role description
-     */
-    @NotNull
-    @Size(max = 100)
     @Column(nullable = false)
     private String description;
 
-    /**
-     * The list of user related to it
-     */
+    @ToString.Exclude
     @ManyToMany(mappedBy = "roles")
     private Set<User> users = new LinkedHashSet<>();
+
+    @Override
+    public int hashCode() { return super.hashCode(); }
+
+    @Override
+    public boolean equals(Object other) { return super.equals(other); }
 }

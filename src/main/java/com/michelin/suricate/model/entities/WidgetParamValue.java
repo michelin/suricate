@@ -22,12 +22,14 @@ import com.michelin.suricate.model.entities.generic.AbstractAuditingEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 
 @Entity
 @Getter
 @Setter
+@ToString(callSuper = true)
 @NoArgsConstructor
 public class WidgetParamValue extends AbstractAuditingEntity<Long> {
     @Id
@@ -40,7 +42,14 @@ public class WidgetParamValue extends AbstractAuditingEntity<Long> {
     @Column(nullable = false)
     private String value;
 
+    @ToString.Exclude
     @ManyToOne
     @JoinColumn(name = "widget_param_id")
     private WidgetParam widgetParam;
+
+    @Override
+    public int hashCode() { return super.hashCode(); }
+
+    @Override
+    public boolean equals(Object other) { return super.equals(other); }
 }
