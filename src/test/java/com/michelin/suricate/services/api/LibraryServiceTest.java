@@ -187,6 +187,34 @@ class LibraryServiceTest {
     }
 
     @Test
+    void shouldCreateLibrariesNoAsset() {
+        Library library = new Library();
+        library.setTechnicalName("technicalName");
+
+        when(libraryRepository.findByTechnicalName(any()))
+                .thenReturn(null);
+        when(libraryRepository.saveAll(any()))
+                .thenAnswer(answer -> answer.getArgument(0));
+        when(libraryRepository.findAll())
+                .thenReturn(Collections.singletonList(library));
+
+        List<Library> actual = libraryService.createUpdateLibraries(Collections.singletonList(library));
+
+        assertThat(actual)
+                .isNotEmpty()
+                .contains(library);
+
+        verify(libraryRepository, times(1))
+                .findByTechnicalName("technicalName");
+        verify(assetService, times(0))
+                .save(any());
+        verify(libraryRepository, times(1))
+                .saveAll(Collections.singletonList(library));
+        verify(libraryRepository, times(1))
+                .findAll();
+    }
+
+    @Test
     void shouldUpdateLibraries() {
         Asset oldAsset = new Asset();
         oldAsset.setId(2L);
@@ -195,11 +223,8 @@ class LibraryServiceTest {
         oldLibrary.setId(2L);
         oldLibrary.setAsset(oldAsset);
 
-        Asset asset = new Asset();
-        asset.setId(1L);
-
         Library library = new Library();
-        library.setAsset(asset);
+        library.setAsset(new Asset());
         library.setTechnicalName("technicalName");
 
         when(libraryRepository.findByTechnicalName(any()))
@@ -221,7 +246,42 @@ class LibraryServiceTest {
         verify(libraryRepository, times(1))
                 .findByTechnicalName("technicalName");
         verify(assetService, times(1))
-                .save(asset);
+                .save(argThat(createdAsset -> createdAsset.getId().equals(2L)));
+        verify(libraryRepository, times(1))
+                .saveAll(Collections.singletonList(library));
+        verify(libraryRepository, times(1))
+                .findAll();
+    }
+
+    @Test
+    void shouldUpdateLibrariesNoAssetBefore() {
+        Library oldLibrary = new Library();
+        oldLibrary.setId(2L);
+
+        Library library = new Library();
+        library.setAsset(new Asset());
+        library.setTechnicalName("technicalName");
+
+        when(libraryRepository.findByTechnicalName(any()))
+                .thenReturn(oldLibrary);
+        when(assetService.save(any()))
+                .thenAnswer(answer -> answer.getArgument(0));
+        when(libraryRepository.saveAll(any()))
+                .thenAnswer(answer -> answer.getArgument(0));
+        when(libraryRepository.findAll())
+                .thenReturn(Collections.singletonList(library));
+
+        List<Library> actual = libraryService.createUpdateLibraries(Collections.singletonList(library));
+
+        assertThat(actual).isNotEmpty();
+        assertThat(actual.get(0)).isEqualTo(library);
+        assertThat(actual.get(0).getId()).isEqualTo(2L);
+        assertThat(actual.get(0).getAsset()).isNotNull();
+
+        verify(libraryRepository, times(1))
+                .findByTechnicalName("technicalName");
+        verify(assetService, times(1))
+                .save(argThat(createdAsset -> createdAsset.getId() == null));
         verify(libraryRepository, times(1))
                 .saveAll(Collections.singletonList(library));
         verify(libraryRepository, times(1))
