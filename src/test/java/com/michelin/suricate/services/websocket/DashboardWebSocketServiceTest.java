@@ -283,6 +283,11 @@ class DashboardWebSocketServiceTest {
                 .getWebsocketClientsBySessionIdAndSubscriptionId("unknownSession", "unknownSubscription");
 
         assertThat(actual).isEmpty();
+
+        actual = dashboardWebSocketService
+                .getWebsocketClientsBySessionIdAndSubscriptionId("session", "unknownSubscription");
+
+        assertThat(actual).isEmpty();
     }
 
     @Test
