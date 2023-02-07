@@ -530,7 +530,8 @@ class UserServiceTest {
         when(userRepository.save(any()))
                 .thenAnswer(answer -> answer.getArgument(0));
 
-        Optional<User> actual = userService.updateUser(1L, "username", "firstname", "lastname", "email", Collections.singletonList(UserRoleEnum.ROLE_USER));
+        Optional<User> actual = userService.updateUser(1L, "username", "firstname", "lastname",
+                "email", Collections.singletonList(UserRoleEnum.ROLE_USER));
 
         assertThat(actual)
                 .isPresent();
@@ -542,8 +543,6 @@ class UserServiceTest {
                 .isEqualTo("lastname");
         assertThat(actual.get().getEmail())
                 .isEqualTo("email");
-        assertThat(actual.get().getUsername())
-                .isEqualTo("username");
         assertThat(actual.get().getRoles())
                 .contains(role);
 
@@ -556,7 +555,7 @@ class UserServiceTest {
     }
 
     @Test
-    void shouldUpdateUserWhenRoleNotFound() {
+    void shouldUpdateUserRoleNotFound() {
         Role role = new Role();
         role.setId(1L);
 
@@ -564,10 +563,13 @@ class UserServiceTest {
 
         when(userRepository.findById(any()))
                 .thenReturn(Optional.of(user));
+        when(roleService.getRoleByName(any()))
+                .thenReturn(Optional.empty());
         when(userRepository.save(any()))
                 .thenAnswer(answer -> answer.getArgument(0));
 
-        Optional<User> actual = userService.updateUser(1L, "username", "firstname", "lastname", "email", Collections.emptyList());
+        Optional<User> actual = userService.updateUser(1L, "username", "firstname", "lastname",
+                "email", Collections.singletonList(UserRoleEnum.ROLE_USER));
 
         assertThat(actual)
                 .isPresent();
@@ -579,8 +581,41 @@ class UserServiceTest {
                 .isEqualTo("lastname");
         assertThat(actual.get().getEmail())
                 .isEqualTo("email");
+        assertThat(actual.get().getRoles())
+                .contains((Role) null);
+
+        verify(userRepository, times(1))
+                .findById(1L);
+        verify(roleService, times(1))
+                .getRoleByName(UserRoleEnum.ROLE_USER.name());
+        verify(userRepository, times(1))
+                .save(user);
+    }
+
+    @Test
+    void shouldUpdateUserWhenNullInputs() {
+        Role role = new Role();
+        role.setId(1L);
+
+        User user = new User();
+
+        when(userRepository.findById(any()))
+                .thenReturn(Optional.of(user));
+        when(userRepository.save(any()))
+                .thenAnswer(answer -> answer.getArgument(0));
+
+        Optional<User> actual = userService.updateUser(1L, null, null, null, null, Collections.emptyList());
+
+        assertThat(actual)
+                .isPresent();
         assertThat(actual.get().getUsername())
-                .isEqualTo("username");
+                .isNull();
+        assertThat(actual.get().getFirstname())
+                .isNull();
+        assertThat(actual.get().getLastname())
+                .isNull();
+        assertThat(actual.get().getEmail())
+                .isNull();
         assertThat(actual.get().getRoles())
                 .isEmpty();
 
@@ -598,7 +633,8 @@ class UserServiceTest {
         when(userRepository.findById(any()))
                 .thenReturn(Optional.empty());
 
-        Optional<User> actual = userService.updateUser(1L, "username", "firstname", "lastname", "email", Collections.singletonList(UserRoleEnum.ROLE_USER));
+        Optional<User> actual = userService.updateUser(1L, "username", "firstname", "lastname",
+                "email", Collections.singletonList(UserRoleEnum.ROLE_USER));
 
         assertThat(actual)
                 .isNotPresent();

@@ -268,8 +268,7 @@ public class DashboardWebSocketService {
     }
 
     /**
-     * Method that force the reload of every connected clients for a project
-     *
+     * Method that force the reloading of every connected clients for a project
      * @param projectToken The project token
      */
     public void reloadAllConnectedClientsToAProject(final String projectToken) {

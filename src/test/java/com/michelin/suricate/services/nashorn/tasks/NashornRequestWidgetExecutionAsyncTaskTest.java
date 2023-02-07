@@ -82,6 +82,43 @@ class NashornRequestWidgetExecutionAsyncTaskTest {
     }
 
     @Test
+    void shouldSuccessWithWidgetProperties() {
+        WidgetVariableResponse widgetParameter = new WidgetVariableResponse();
+        widgetParameter.setName("SURI_TITLE");
+        widgetParameter.setDescription("title");
+        widgetParameter.setType(DataTypeEnum.TEXT);
+        widgetParameter.setDefaultValue("defaultValue");
+        widgetParameter.setRequired(true);
+
+        WidgetVariableResponse widgetParameterNotRequired = new WidgetVariableResponse();
+        widgetParameterNotRequired.setName("NOT_REQUIRED_SURI_TITLE");
+        widgetParameterNotRequired.setDescription("not_required_title");
+        widgetParameterNotRequired.setType(DataTypeEnum.TEXT);
+
+        List<WidgetVariableResponse> widgetParameters = new ArrayList<>();
+        widgetParameters.add(widgetParameter);
+        widgetParameters.add(widgetParameterNotRequired);
+
+        NashornRequest nashornRequest = new NashornRequest();
+        nashornRequest.setProjectId(1L);
+        nashornRequest.setProjectWidgetId(1L);
+        nashornRequest.setDelay(0L);
+        nashornRequest.setPreviousData(null);
+        nashornRequest.setScript("function run () { print('title='+SURI_TITLE); print('notRequiredTitle='+NOT_REQUIRED_SURI_TITLE); return '{}' }");
+
+        NashornRequestWidgetExecutionAsyncTask task = new NashornRequestWidgetExecutionAsyncTask(nashornRequest, null, widgetParameters);
+        NashornResponse actual = task.call();
+
+        assertThat(actual.getError()).isNull();
+        assertThat(actual.isFatal()).isFalse();
+        assertThat(actual.getProjectId()).isEqualTo(1L);
+        assertThat(actual.getProjectWidgetId()).isEqualTo(1L);
+        assertThat(actual.getData()).isEqualTo("{}");
+        assertThat(actual.getLog()).contains("title=************");
+        assertThat(actual.getLog()).contains("notRequiredTitle=null");
+    }
+
+    @Test
     void shouldSuccessWithLogs() {
         NashornRequest nashornRequest = new NashornRequest();
         nashornRequest.setProjectId(1L);
@@ -90,7 +127,7 @@ class NashornRequestWidgetExecutionAsyncTaskTest {
         nashornRequest.setPreviousData(null);
         nashornRequest.setScript("function run() { print('This is a log'); return '{}'; }");
 
-        NashornRequestWidgetExecutionAsyncTask task = new NashornRequestWidgetExecutionAsyncTask(nashornRequest, null, Collections.emptyList());
+        NashornRequestWidgetExecutionAsyncTask task = new NashornRequestWidgetExecutionAsyncTask(nashornRequest, null, null);
         NashornResponse actual = task.call();
 
         assertThat(actual.getError()).isNull();

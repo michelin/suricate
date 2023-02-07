@@ -128,7 +128,7 @@ public class NashornService {
     private String getProjectWidgetConfigurationsWithGlobalOne(final ProjectWidget projectWidget, final Set<CategoryParameter> categoryParameters) {
         StringBuilder builder = new StringBuilder(Objects.toString(projectWidget.getBackendConfig(), StringUtils.EMPTY));
 
-        if (categoryParameters != null && !categoryParameters.isEmpty()) {
+        if (!categoryParameters.isEmpty()) {
             builder.append('\n');
 
             for (CategoryParameter categoryParameter : categoryParameters) {

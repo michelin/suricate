@@ -1,5 +1,6 @@
 package com.michelin.suricate.services.nashorn.services;
 
+import com.google.common.collect.Sets;
 import com.michelin.suricate.model.dto.nashorn.NashornRequest;
 import com.michelin.suricate.model.entities.*;
 import com.michelin.suricate.model.enums.WidgetStateEnum;
@@ -11,10 +12,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.Instant;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -82,9 +80,13 @@ class NashornServiceTest {
         categoryParameter.setKey("categoryKey");
         categoryParameter.setValue("categoryValue");
 
+        CategoryParameter categoryParameterInBackendConfig = new CategoryParameter();
+        categoryParameterInBackendConfig.setKey("key");
+        categoryParameterInBackendConfig.setValue("value");
+
         Category category = new Category();
         category.setId(1L);
-        category.setConfigurations(Collections.singleton(categoryParameter));
+        category.setConfigurations(Sets.newHashSet(categoryParameter, categoryParameterInBackendConfig));
 
         Widget widget = new Widget();
         widget.setId(1L);
@@ -116,6 +118,51 @@ class NashornServiceTest {
         NashornRequest actual = nashornService.getNashornRequestByProjectWidgetId(1L);
 
         assertThat(actual.getProperties()).isEqualTo("key=value\ncategoryKey=categoryValue\n");
+        assertThat(actual.getScript()).isEqualTo("backendJs");
+        assertThat(actual.getPreviousData()).isEqualTo("data");
+        assertThat(actual.getProjectId()).isEqualTo(1L);
+        assertThat(actual.getProjectWidgetId()).isEqualTo(1L);
+        assertThat(actual.getDelay()).isEqualTo(10L);
+        assertThat(actual.getTimeout()).isEqualTo(15L);
+        assertThat(actual.getWidgetState()).isEqualTo(WidgetStateEnum.RUNNING);
+        assertThat(actual.isAlreadySuccess()).isTrue();
+    }
+
+    @Test
+    void shouldGetNashornRequestByProjectWidgetIdEmptyCategoryParams() {
+        Category category = new Category();
+        category.setId(1L);
+
+        Widget widget = new Widget();
+        widget.setId(1L);
+        widget.setCategory(category);
+        widget.setBackendJs("backendJs");
+        widget.setDelay(10L);
+        widget.setTimeout(15L);
+
+        Project project = new Project();
+        project.setId(1L);
+
+        ProjectGrid projectGrid = new ProjectGrid();
+        projectGrid.setId(1L);
+        projectGrid.setProject(project);
+        project.setGrids(Collections.singleton(projectGrid));
+
+        ProjectWidget projectWidget = new ProjectWidget();
+        projectWidget.setId(1L);
+        projectWidget.setWidget(widget);
+        projectWidget.setData("data");
+        projectWidget.setBackendConfig("key=value");
+        projectWidget.setState(WidgetStateEnum.RUNNING);
+        projectWidget.setLastSuccessDate(Date.from(Instant.parse("2000-01-01T01:00:00.00Z")));
+        projectWidget.setProjectGrid(projectGrid);
+        projectGrid.setWidgets(Collections.singleton(projectWidget));
+
+        when(projectWidgetService.getOne(any())).thenReturn(Optional.of(projectWidget));
+
+        NashornRequest actual = nashornService.getNashornRequestByProjectWidgetId(1L);
+
+        assertThat(actual.getProperties()).isEqualTo("key=value");
         assertThat(actual.getScript()).isEqualTo("backendJs");
         assertThat(actual.getPreviousData()).isEqualTo("data");
         assertThat(actual.getProjectId()).isEqualTo(1L);

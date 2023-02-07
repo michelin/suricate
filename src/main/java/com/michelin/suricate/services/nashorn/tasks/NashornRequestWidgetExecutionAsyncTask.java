@@ -163,8 +163,8 @@ public class NashornRequestWidgetExecutionAsyncTask implements Callable<NashornR
      * @param widgetProperties        The widget properties
      */
     private void decryptWidgetProperties(Map<String, String> widgetProperties) {
-        if (this.widgetParameters != null) {
-            for (WidgetVariableResponse widgetParameter : this.widgetParameters) {
+        if (widgetParameters != null) {
+            for (WidgetVariableResponse widgetParameter : widgetParameters) {
                 if (widgetParameter.getType() == DataTypeEnum.PASSWORD) {
                     widgetProperties.put(widgetParameter.getName(), stringEncryptor.decrypt(widgetProperties.get(widgetParameter.getName())));
                 }
@@ -178,8 +178,8 @@ public class NashornRequestWidgetExecutionAsyncTask implements Callable<NashornR
      * @param widgetProperties        The widget properties
      */
     private void setDefaultValueToWidgetProperties(Map<String, String> widgetProperties) {
-        if (this.widgetParameters != null) {
-            for (WidgetVariableResponse widgetVariableResponse : this.widgetParameters) {
+        if (widgetParameters != null) {
+            for (WidgetVariableResponse widgetVariableResponse : widgetParameters) {
                 if (!widgetProperties.containsKey(widgetVariableResponse.getName())) {
                     if (!widgetVariableResponse.isRequired()) {
                         widgetProperties.put(widgetVariableResponse.getName(), null);

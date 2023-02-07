@@ -87,6 +87,7 @@ class NashornRequestResultAsyncTaskTest {
         nashornRequest.setProjectId(1L);
         nashornRequest.setProjectWidgetId(1L);
         nashornRequest.setDelay(0L);
+        nashornRequest.setTimeout(30L);
         nashornRequest.setPreviousData(null);
         nashornRequest.setScript("function run() { return '{}'; }");
 
@@ -149,7 +150,36 @@ class NashornRequestResultAsyncTaskTest {
 
         scheduledFuture.cancel(true);
 
-        when(scheduledFuture.get(anyLong(), any())).thenThrow(new CancellationException("error"));
+        when(scheduledFuture.get(anyLong(), any()))
+                .thenThrow(new CancellationException("error"));
+
+        NashornRequestResultAsyncTask task = new NashornRequestResultAsyncTask(scheduledFuture,
+                nashornRequest, nashornRequestWidgetExecutionScheduler, dashboardScheduleService);
+
+        task.call();
+
+        verify(scheduledFuture, times(1))
+                .get(60, TimeUnit.SECONDS);
+    }
+
+    @Test
+    void shouldCatchCancellationExceptionAndCancelImmediately() throws ExecutionException, InterruptedException, TimeoutException {
+        NashornRequest nashornRequest = new NashornRequest();
+        nashornRequest.setProjectId(1L);
+        nashornRequest.setProjectWidgetId(1L);
+        nashornRequest.setDelay(0L);
+        nashornRequest.setPreviousData(null);
+        nashornRequest.setScript("function run() { return '{}'; }");
+
+        NashornResponse nashornResponse = new NashornResponse();
+        nashornResponse.setProjectId(1L);
+
+        scheduledFuture.cancel(true);
+
+        when(scheduledFuture.isCancelled())
+                .thenReturn(true);
+        when(scheduledFuture.get(anyLong(), any()))
+                .thenThrow(new CancellationException("error"));
 
         NashornRequestResultAsyncTask task = new NashornRequestResultAsyncTask(scheduledFuture,
                 nashornRequest, nashornRequestWidgetExecutionScheduler, dashboardScheduleService);

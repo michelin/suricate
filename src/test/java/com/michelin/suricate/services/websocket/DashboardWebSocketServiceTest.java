@@ -153,7 +153,7 @@ class DashboardWebSocketServiceTest {
     }
 
     @Test
-    void shouldAddClientToProjectAndRefresh() {
+    void shouldAddClientToProjectAndRefreshFirstClient() {
         WebsocketClient websocketClient = new WebsocketClient();
         websocketClient.setProjectToken("token");
 
@@ -168,6 +168,7 @@ class DashboardWebSocketServiceTest {
         when(nashornService.getNashornRequestsByProject(any())).thenReturn(nashornRequests);
         doNothing().when(nashornWidgetScheduler).scheduleNashornRequests(any(), anyBoolean());
 
+        dashboardWebSocketService.addClientToProject(project, websocketClient);
         dashboardWebSocketService.addClientToProject(project, websocketClient);
         List<WebsocketClient> actual = dashboardWebSocketService.getWebsocketClientsByProjectToken("token");
 
@@ -257,15 +258,35 @@ class DashboardWebSocketServiceTest {
         Optional<WebsocketClient> actual = dashboardWebSocketService.getWebsocketClientsBySessionIdAndSubscriptionId("session", "subscription");
 
         assertThat(actual).contains(websocketClient);
-
-        verify(nashornService, times(1))
-                .getNashornRequestsByProject(project);
-        verify(nashornWidgetScheduler, times(1))
-                .scheduleNashornRequests(nashornRequests, true);
     }
 
     @Test
-    void shouldRemoveClientFromProject() {
+    void shouldNotGetWebsocketClientsBySessionIdAndSubscriptionIdWhenNotfound() {
+        WebsocketClient websocketClient = new WebsocketClient();
+        websocketClient.setProjectToken("token");
+        websocketClient.setSessionId("session");
+        websocketClient.setSubscriptionId("subscription");
+
+        Project project = new Project();
+        project.setId(1L);
+        project.setToken("token");
+
+        NashornRequest nashornRequest = new NashornRequest();
+        nashornRequest.setProjectId(1L);
+        List<NashornRequest> nashornRequests = Collections.singletonList(nashornRequest);
+
+        when(nashornService.getNashornRequestsByProject(any())).thenReturn(nashornRequests);
+        doNothing().when(nashornWidgetScheduler).scheduleNashornRequests(any(), anyBoolean());
+
+        dashboardWebSocketService.addClientToProject(project, websocketClient);
+        Optional<WebsocketClient> actual = dashboardWebSocketService
+                .getWebsocketClientsBySessionIdAndSubscriptionId("unknownSession", "unknownSubscription");
+
+        assertThat(actual).isEmpty();
+    }
+
+    @Test
+    void shouldRemoveClientAndCancelTask() {
         WebsocketClient websocketClient = new WebsocketClient();
         websocketClient.setProjectToken("token");
         websocketClient.setSessionId("session");
@@ -286,10 +307,12 @@ class DashboardWebSocketServiceTest {
 
         dashboardWebSocketService.addClientToProject(project, websocketClient);
         List<WebsocketClient> actual = dashboardWebSocketService.getWebsocketClientsByProjectToken("token");
-
         assertThat(actual).contains(websocketClient);
 
         dashboardWebSocketService.removeClientFromProject(websocketClient);
+
+        actual = dashboardWebSocketService.getWebsocketClientsByProjectToken("token");
+        assertThat(actual).isEmpty();
 
         verify(nashornService, times(1))
                 .getNashornRequestsByProject(project);
@@ -299,6 +322,52 @@ class DashboardWebSocketServiceTest {
                 .getOneByToken("token");
         verify(nashornWidgetScheduler, times(1))
                 .cancelWidgetsExecutionByProject(project);
+    }
+
+    @Test
+    void shouldRemoveClientAndNotCancelTask() {
+        WebsocketClient websocketClient = new WebsocketClient();
+        websocketClient.setProjectToken("token");
+        websocketClient.setSessionId("session");
+        websocketClient.setSubscriptionId("subscription");
+
+        WebsocketClient websocketClient2 = new WebsocketClient();
+        websocketClient2.setProjectToken("token2");
+        websocketClient2.setSessionId("session2");
+        websocketClient2.setSubscriptionId("subscription2");
+
+        Project project = new Project();
+        project.setId(1L);
+        project.setToken("token");
+
+        NashornRequest nashornRequest = new NashornRequest();
+        nashornRequest.setProjectId(1L);
+        List<NashornRequest> nashornRequests = Collections.singletonList(nashornRequest);
+
+        when(nashornService.getNashornRequestsByProject(any())).thenReturn(nashornRequests);
+        doNothing().when(nashornWidgetScheduler).scheduleNashornRequests(any(), anyBoolean());
+
+        dashboardWebSocketService.addClientToProject(project, websocketClient);
+        dashboardWebSocketService.addClientToProject(project, websocketClient2);
+        List<WebsocketClient> actual = dashboardWebSocketService.getWebsocketClientsByProjectToken("token");
+
+        assertThat(actual)
+                .contains(websocketClient)
+                .contains(websocketClient2);
+
+        dashboardWebSocketService.removeClientFromProject(websocketClient);
+
+        actual = dashboardWebSocketService.getWebsocketClientsByProjectToken("token");
+        assertThat(actual).contains(websocketClient2);
+
+        verify(nashornService, times(1))
+                .getNashornRequestsByProject(project);
+        verify(nashornWidgetScheduler, times(1))
+                .scheduleNashornRequests(nashornRequests, true);
+        verify(projectService, times(0))
+                .getOneByToken(any());
+        verify(nashornWidgetScheduler, times(0))
+                .cancelWidgetsExecutionByProject(any());
     }
 
     @Test
@@ -322,6 +391,10 @@ class DashboardWebSocketServiceTest {
         Project project = new Project();
         project.setId(1L);
         project.setToken("token");
+
+        Project project2 = new Project();
+        project2.setId(2L);
+        project2.setToken("token2");
 
         NashornRequest nashornRequest = new NashornRequest();
         nashornRequest.setProjectId(1L);

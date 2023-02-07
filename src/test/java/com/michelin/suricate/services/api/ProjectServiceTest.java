@@ -354,6 +354,31 @@ class ProjectServiceTest {
                 .sendEventToProjectSubscribers(eq("token"),
                         argThat(event -> event.getType().equals(UpdateType.REFRESH_DASHBOARD) && event.getDate() != null));
     }
+    @Test
+    void shouldUpdateProjectNullInputs() {
+        Project project = new Project();
+        project.setId(1L);
+        project.setToken("token");
+
+        when(projectRepository.save(any()))
+                .thenAnswer(answer -> answer.getArgument(0));
+        doNothing().when(dashboardWebsocketService)
+                .sendEventToProjectSubscribers(any(), any());
+
+        projectService.updateProject(project, null, 0, 0, null);
+
+        assertThat(project.getName()).isNull();
+        assertThat(project.getWidgetHeight()).isNull();
+        assertThat(project.getMaxColumn()).isNull();
+        assertThat(project.getCssStyle()).isNull();
+
+        verify(projectRepository, times(1))
+                .save(project);
+        verify(dashboardWebsocketService, times(1))
+                .sendEventToProjectSubscribers(eq("token"),
+                        argThat(event -> event.getType().equals(UpdateType.REFRESH_DASHBOARD) && event.getDate() != null));
+    }
+
 
     @Test
     void shouldDeleteUserFromProject() {

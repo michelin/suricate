@@ -23,10 +23,7 @@ import org.springframework.context.ApplicationContext;
 
 import java.io.StringReader;
 import java.time.Instant;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
@@ -378,13 +375,31 @@ class ProjectWidgetServiceTest {
     void shouldInstantiateProjectWidgetHtml() {
         WidgetParam widgetParam = new WidgetParam();
         widgetParam.setId(1L);
+        widgetParam.setName("name");
         widgetParam.setType(DataTypeEnum.TEXT);
+
+        WidgetParam widgetParamNotRequired = new WidgetParam();
+        widgetParamNotRequired.setId(2L);
+        widgetParamNotRequired.setName("notRequired");
+        widgetParamNotRequired.setRequired(false);
+        widgetParamNotRequired.setType(DataTypeEnum.TEXT);
+
+        WidgetParam widgetParamAlreadyContained = new WidgetParam();
+        widgetParamAlreadyContained.setId(3L);
+        widgetParamAlreadyContained.setName("param");
+        widgetParamAlreadyContained.setType(DataTypeEnum.TEXT);
+
+        WidgetParam widgetParamAlreadyContainedNotRequired = new WidgetParam();
+        widgetParamAlreadyContainedNotRequired.setId(3L);
+        widgetParamAlreadyContainedNotRequired.setName("param");
+        widgetParamAlreadyContainedNotRequired.setRequired(false);
+        widgetParamAlreadyContainedNotRequired.setType(DataTypeEnum.TEXT);
 
         Widget widget = new Widget();
         widget.setId(1L);
         widget.setHtmlContent("<h1>{{DATA}}</h1>");
         widget.setTechnicalName("technicalName");
-        widget.setWidgetParams(Collections.singleton(widgetParam));
+        widget.setWidgetParams(Arrays.asList(widgetParam, widgetParamNotRequired, widgetParamAlreadyContained, widgetParamAlreadyContainedNotRequired));
 
         ProjectWidget projectWidget = new ProjectWidget();
         projectWidget.setId(1L);
@@ -395,7 +410,7 @@ class ProjectWidgetServiceTest {
         when(mustacheFactory.compile(any(), any()))
                 .thenReturn(new DefaultMustacheFactory().compile(new StringReader(widget.getHtmlContent()), widget.getTechnicalName()));
         when(widgetService.getWidgetParametersWithCategoryParameters(any()))
-                .thenReturn(Collections.singletonList(widgetParam));
+                .thenReturn(Arrays.asList(widgetParam, widgetParamNotRequired, widgetParamAlreadyContained, widgetParamAlreadyContainedNotRequired));
 
         String actual = projectWidgetService.instantiateProjectWidgetHtml(projectWidget);
 
@@ -499,6 +514,39 @@ class ProjectWidgetServiceTest {
     }
 
     @Test
+    void shouldUpdateProjectWidgetNoStyleNoBackend() {
+        WidgetParam widgetParam = new WidgetParam();
+        widgetParam.setId(1L);
+        widgetParam.setType(DataTypeEnum.TEXT);
+
+        ProjectWidget projectWidget = new ProjectWidget();
+        projectWidget.setId(1L);
+
+        when(ctx.getBean(NashornRequestWidgetExecutionScheduler.class))
+                .thenReturn(nashornRequestWidgetExecutionScheduler);
+        doNothing().when(nashornRequestWidgetExecutionScheduler)
+                .cancelWidgetExecution(any());
+        doNothing().when(dashboardScheduleService)
+                .scheduleWidget(any());
+        when(projectWidgetRepository.save(any()))
+                .thenAnswer(answer -> answer.getArgument(0));
+
+        projectWidgetService.updateProjectWidget(projectWidget, null, null);
+
+        assertThat(projectWidget.getCustomStyle())
+                .isNull();
+        assertThat(projectWidget.getBackendConfig())
+                .isNull();
+
+        verify(nashornRequestWidgetExecutionScheduler, times(1))
+                .cancelWidgetExecution(1L);
+        verify(projectWidgetRepository, times(1))
+                .save(projectWidget);
+        verify(dashboardScheduleService, times(1))
+                .scheduleWidget(1L);
+    }
+
+    @Test
     void shouldUpdateWidgetInstanceAfterFailedExecution() {
         doNothing().when(projectWidgetRepository)
                 .updateLastExecutionDateAndStateAndLog(any(), any(), any(), any());
@@ -570,6 +618,29 @@ class ProjectWidgetServiceTest {
     }
 
     @Test
+    void shouldDecryptSecretParamsWhenNotInBackendConfig() {
+        WidgetParam widgetParam = new WidgetParam();
+        widgetParam.setId(1L);
+        widgetParam.setName("param");
+        widgetParam.setType(DataTypeEnum.PASSWORD);
+
+        Widget widget = new Widget();
+        widget.setId(1L);
+
+        when(widgetService.getWidgetParametersWithCategoryParameters(any()))
+                .thenReturn(Collections.singletonList(widgetParam));
+
+        String actual = projectWidgetService.decryptSecretParamsIfNeeded(widget, "otherParam=");
+
+        assertThat(actual).isEmpty();
+
+        verify(widgetService, times(1))
+                .getWidgetParametersWithCategoryParameters(widget);
+        verify(stringEncryptor, times(0))
+                .decrypt(any());
+    }
+
+    @Test
     void shouldEncryptSecretParamsIfNeeded() {
         WidgetParam widgetParam = new WidgetParam();
         widgetParam.setId(1L);
@@ -614,5 +685,29 @@ class ProjectWidgetServiceTest {
                 .getWidgetParametersWithCategoryParameters(widget);
         verify(stringEncryptor, times(1))
                 .encrypt("value");
+    }
+
+    @Test
+    void shouldEncryptSecretParamsWithPasswordNotInBackendConfig() {
+        WidgetParam widgetParam = new WidgetParam();
+        widgetParam.setId(1L);
+        widgetParam.setName("param");
+        widgetParam.setType(DataTypeEnum.PASSWORD);
+
+        Widget widget = new Widget();
+        widget.setId(1L);
+
+        when(widgetService.getWidgetParametersWithCategoryParameters(any()))
+                .thenReturn(Collections.singletonList(widgetParam));
+
+        String actual = projectWidgetService.encryptSecretParamsIfNeeded(widget, "otherParam=value");
+
+        assertThat(actual)
+                .isEqualTo("otherParam=value");
+
+        verify(widgetService, times(1))
+                .getWidgetParametersWithCategoryParameters(widget);
+        verify(stringEncryptor, times(0))
+                .encrypt(any());
     }
 }
